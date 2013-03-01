@@ -1,0 +1,2 @@
+map1$b	B
+map2$c	C

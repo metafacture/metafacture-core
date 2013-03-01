@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph-test version="1.0"
+	xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph"
+	xmlns:cgxml="http://www.culturegraph.org/cgxml">
+
+	<test-case name="multiple nested entities">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1x">
+						<cgxml:entity name="E">
+							<cgxml:literal name="d1" value="a" />
+							<cgxml:literal name="d2" value="b" />
+						</cgxml:entity>
+						<cgxml:entity name="E">
+							<cgxml:literal name="d1" value="x" />
+						</cgxml:entity>
+						<cgxml:entity name="E">
+							<cgxml:literal name="d1" value="c" />
+							<cgxml:literal name="d2" value="d" />
+						</cgxml:entity>
+						<cgxml:literal name="d" value="c" />
+					</cgxml:record>
+					<cgxml:record id="2x">
+						<cgxml:literal name="d" value="c" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:entity name="uber" flushWith="record">
+						<mm:data source="d" name="l" />
+						<mm:entity name="unter" sameEntity="true">
+							<mm:data source="E.d1" name="l" />
+							<mm:data source="E.d2" name="l" />
+						</mm:entity>
+						<mm:entity name="void" sameEntity="true">
+							<mm:data source="nothing" />
+						</mm:entity>
+					</mm:entity>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml" strict-key-order="false">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1x">
+						<cgxml:entity name="uber">
+							<cgxml:literal name="l" value="c" />
+							<cgxml:entity name="unter">
+								<cgxml:literal name="l" value="a" />
+								<cgxml:literal name="l" value="b" />
+							</cgxml:entity>
+							<cgxml:entity name="unter">
+								<cgxml:literal name="l" value="c" />
+								<cgxml:literal name="l" value="d" />
+							</cgxml:entity>
+						</cgxml:entity>
+					</cgxml:record>
+					<cgxml:record id="2x">
+						<cgxml:entity name="uber">
+							<cgxml:literal name="l" value="c" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="super nested entities">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1x">
+						<cgxml:literal name="1" value="a" />
+						<cgxml:literal name="2" value="b" />
+						<cgxml:literal name="4" value="c" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:entity name="1">
+						<mm:data source="1" />
+						<mm:entity name="2">
+							<mm:data source="2" />
+							<mm:entity name="3">
+								<mm:entity name="4">
+									<mm:data source="4" />
+								</mm:entity>
+							</mm:entity>
+						</mm:entity>
+					</mm:entity>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml" strict-key-order="false">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1x">
+						<cgxml:entity name="1">
+							<cgxml:literal name="1" value="a" />
+							<cgxml:entity name="2">
+								<cgxml:literal name="2" value="b" />
+								<cgxml:entity name="3">
+									<cgxml:entity name="4">
+										<cgxml:literal name="4" value="c" />
+									</cgxml:entity>
+								</cgxml:entity>
+							</cgxml:entity>
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+</metamorph-test>

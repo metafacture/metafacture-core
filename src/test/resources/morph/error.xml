@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="
+		http://www.culturegraph.org/metamorph phony.xsd"
+	version="1" >
+
+	<meta>
+		<name>Transformation with error</name>
+	</meta>
+
+	<rules>
+		<data source="028A.a" name="surname" phonyArgument="nonsense" />
+	</rules>
+
+
+</metamorph>

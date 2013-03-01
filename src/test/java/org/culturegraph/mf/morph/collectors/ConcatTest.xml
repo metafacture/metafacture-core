@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph-test version="1.0"
+	xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph"
+	xmlns:cgxml="http://www.culturegraph.org/cgxml">
+
+	<test-case name="concat simple">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data1" value="a" />
+						<cgxml:literal name="data1" value="b" />
+						<cgxml:literal name="data2" value="c" />
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="data1" value="d" />
+						<cgxml:literal name="data1" value="e" />
+						<cgxml:literal name="data2" value="f" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:concat delimiter=", " name="concat" prefix="{"
+						postfix="}">
+						<mm:data source="data1" />
+						<mm:data source="data2" />
+					</mm:concat>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="concat" value="{a, b, c}" />
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="concat" value="{d, e, f}" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="concat entity">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="d">
+							<cgxml:literal name="1" value="a" />
+							<cgxml:literal name="1" value="b" />
+						</cgxml:entity>
+						<cgxml:entity name="d">
+							<cgxml:literal name="1" value="e" />
+							<cgxml:literal name="1" value="f" />
+						</cgxml:entity>
+						<cgxml:entity name="d">
+							<cgxml:literal name="2" value="e" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:concat delimiter=", " name="concat" prefix="{"
+						postfix="}" flushWith="d" reset="true">
+						<mm:data source="d.1" />
+					</mm:concat>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="concat" value="{a, b}" />
+						<cgxml:literal name="concat" value="{e, f}" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+<test-case name="concat data flush">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+
+							<cgxml:literal name="d" value="1" />
+
+							<cgxml:literal name="d" value="2" />
+							<cgxml:literal name="d" value="3" />
+							<cgxml:literal name="f" value="" />
+							<cgxml:literal name="d" value="4" />
+							<cgxml:literal name="f" value="" />
+
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:concat delimiter="" name="c">
+						<mm:data source="d"/>
+						<mm:data source="f" name="_flush"/>
+					</mm:concat>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="c" value="123" />
+						<cgxml:literal name="c" value="4" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+</metamorph-test>

@@ -1,0 +1,80 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<metamorph-test version="1.0"
+	xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph">
+
+	<test-case name="All inline test: Namespaced Metamorph">
+		<input type="application/x-cgentity">id-1&#x001e;-data&#x001f;Hallo Welt!&#x001e;</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:data name="output" source="data" />
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+		
+		<result type="text/x-cg+xml">
+			<cgxml xmlns="http://www.culturegraph.org/cgxml" version="1.0">
+				<records>
+					<record id="id-1">
+						<literal name="output" value="Hallo Welt!" />
+					</record>
+				</records>
+			</cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="All inline test: Inline Metamorph">
+		<input type="application/x-cgentity">id-1&#x001e;-data&#x001f;Hallo Welt!&#x001e;</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph xmlns="http://www.culturegraph.org/metamorph"
+				version="1">
+				<rules>
+					<data name="output" source="data" />
+				</rules>
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml version="1.0" xmlns="http://www.culturegraph.org/cgxml">
+				<records>
+					<record id="id-1">
+						<literal name="output" value="Hallo Welt!" />
+					</record>
+				</records>
+			</cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="Referenced Metamorph">
+		<input type="application/x-cgentity">id-1&#x001e;-data&#x001f;Hallo Welt!&#x001e;</input>
+
+		<transformation type="text/x-metamorph+xml" src="test/FrameworkTest-transformation.xml" />
+
+		<result type="text/x-cg+xml">
+			<cgxml xmlns="http://www.culturegraph.org/cgxml" version="1.0">
+				<records>
+					<record id="id-1">
+						<literal name="output" value="Hallo Welt!" />
+					</record>
+				</records>
+			</cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="Ignored test" ignore="true">
+		<input type="application/x-cgentity">Glibberish</input>
+
+		<result type="text/x-cg+xml">
+			<cgxml xmlns="http://www.culturegraph.org/cgxml" version="1.0">
+				<records>
+					<record>
+						<literal name="output" value="Glibberish" />
+					</record>
+				</records>
+			</cgxml>
+		</result>
+	</test-case>
+
+</metamorph-test>

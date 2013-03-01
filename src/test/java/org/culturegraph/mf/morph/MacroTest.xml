@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph-test version="1.0"
+	xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph"
+	xmlns:cgxml="http://www.culturegraph.org/cgxml">
+
+	<test-case name="basic macro test">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data" value="Aloha" />
+						<cgxml:literal name="data" value="Hawaii" />
+						<cgxml:literal name="abd" value="sdf" />
+						<cgxml:literal name="data2" value="Wasabi"/>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1" entityMarker="X">
+				<mm:macros>
+					<mm:macro name="concat-up">
+						<mm:concat delimiter=", " name="$[literal_name]">
+							<mm:data source="$[literal_name]" >
+								<mm:case to="upper"/>
+							</mm:data>
+						</mm:concat>
+					</mm:macro>
+				</mm:macros>
+				<mm:rules>
+					<mm:call-macro name="concat-up" literal_name="data"/>
+					<mm:call-macro name="concat-up" literal_name="data2"/>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data" value="ALOHA, HAWAII" />
+						<cgxml:literal name="data2" value="WASABI"/>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+
+
+</metamorph-test>

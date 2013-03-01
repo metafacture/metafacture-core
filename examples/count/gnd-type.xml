@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph"
+	version="1" entityMarker=".">
+
+	<rules>
+
+		<data source="002@.0" name="">
+			<substring start="1" end="2" />
+		</data>
+
+		
+
+	</rules>
+
+	<maps>
+	</maps>
+</metamorph>

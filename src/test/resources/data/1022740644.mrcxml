@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection xmlns="http://www.loc.gov/MARC21/slim">
+  <record type="Bibliographic">
+    <leader>02785nam a2200577uc 4500</leader>
+    <controlfield tag="001">1022740644</controlfield>
+    <controlfield tag="003">DE-101</controlfield>
+    <controlfield tag="005">20120526024113.0</controlfield>
+    <controlfield tag="007">cr||||||||||||</controlfield>
+    <controlfield tag="008">120525s2012    gw |||||o|||| 00||||ger  </controlfield>
+    <datafield tag="015" ind1=" " ind2=" ">
+      <subfield code="a">12,O06</subfield>
+      <subfield code="2">dnb</subfield>
+    </datafield>
+    <datafield tag="016" ind1="7" ind2=" ">
+      <subfield code="2">DE-101</subfield>
+      <subfield code="a">1022740644</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">9783639416879</subfield>
+      <subfield code="9">978-3-639-41687-9</subfield>
+    </datafield>
+    <datafield tag="024" ind1="7" ind2=" ">
+      <subfield code="2">urn</subfield>
+      <subfield code="a">urn:nbn:de:101:1-201205253327</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(DE-599)DNB1022740644</subfield>
+    </datafield>
+    <datafield tag="040" ind1=" " ind2=" ">
+      <subfield code="a">1240</subfield>
+      <subfield code="b">ger</subfield>
+      <subfield code="c">DE-101</subfield>
+      <subfield code="d">9999</subfield>
+    </datafield>
+    <datafield tag="041" ind1=" " ind2=" ">
+      <subfield code="a">ger</subfield>
+    </datafield>
+    <datafield tag="044" ind1=" " ind2=" ">
+      <subfield code="c">XA-DE-SL</subfield>
+    </datafield>
+    <datafield tag="082" ind1="0" ind2="4">
+      <subfield code="8">1\x</subfield>
+      <subfield code="a">832.914</subfield>
+      <subfield code="q">DE-101</subfield>
+      <subfield code="2">22/ger</subfield>
+    </datafield>
+    <datafield tag="084" ind1=" " ind2=" ">
+      <subfield code="a">830</subfield>
+      <subfield code="a">792</subfield>
+      <subfield code="q">DE-101</subfield>
+      <subfield code="2">sdnb</subfield>
+    </datafield>
+    <datafield tag="085" ind1=" " ind2=" ">
+      <subfield code="8">1\x</subfield>
+      <subfield code="b">832</subfield>
+    </datafield>
+    <datafield tag="100" ind1="1" ind2=" ">
+      <subfield code="0">(DE-588)102064964X</subfield>
+      <subfield code="0">(DE-101)102064964X</subfield>
+      <subfield code="a">Sharifi, Azadeh</subfield>
+      <subfield code="d">1980-</subfield>
+      <subfield code="4">aut</subfield>
+    </datafield>
+    <datafield tag="245" ind1="1" ind2="0">
+      <subfield code="a">Das Theater Thomas Bernhard zwischen Artaud und Brecht</subfield>
+      <subfield code="h">[Elektronische Ressource]</subfield>
+      <subfield code="b">Der Ignorant und der Wahnsinnige</subfield>
+      <subfield code="c">Azadeh Sharifi</subfield>
+    </datafield>
+    <datafield tag="250" ind1=" " ind2=" ">
+      <subfield code="a">neue Ausg.</subfield>
+    </datafield>
+    <datafield tag="259" ind1=" " ind2=" ">
+      <subfield code="a">nea</subfield>
+    </datafield>
+    <datafield tag="260" ind1="3" ind2=" ">
+      <subfield code="a">Saarbrücken</subfield>
+      <subfield code="b">AV Akademikerverlag</subfield>
+      <subfield code="c">2012</subfield>
+    </datafield>
+    <datafield tag="300" ind1=" " ind2=" ">
+      <subfield code="a">Online-Ressource</subfield>
+    </datafield>
+    <datafield tag="500" ind1=" " ind2=" ">
+      <subfield code="a">Lizenzpflichtig. - Vom Verlag als Druckwerk on demand angeboten</subfield>
+    </datafield>
+    <datafield tag="583" ind1="1" ind2=" ">
+      <subfield code="a">Langzeitarchivierung gewährleistet</subfield>
+      <subfield code="i">LZA</subfield>
+    </datafield>
+    <datafield tag="600" ind1="1" ind2="7">
+      <subfield code="0">(DE-588)118514768</subfield>
+      <subfield code="0">(DE-101)118514768</subfield>
+      <subfield code="a">Brecht, Bertolt</subfield>
+      <subfield code="d">1898-1956</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="600" ind1="1" ind2="7">
+      <subfield code="0">(DE-588)118509861</subfield>
+      <subfield code="0">(DE-101)952740192</subfield>
+      <subfield code="a">Bernhard, Thomas</subfield>
+      <subfield code="d">1931-1989</subfield>
+      <subfield code="t">Der Ignorant und der Wahnsinnige</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="600" ind1="1" ind2="7">
+      <subfield code="0">(DE-588)118504495</subfield>
+      <subfield code="0">(DE-101)118504495</subfield>
+      <subfield code="a">Artaud, Antonin</subfield>
+      <subfield code="d">1896-1948</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="600" ind1="1" ind2="7">
+      <subfield code="0">(DE-588)118509861</subfield>
+      <subfield code="0">(DE-101)952740192</subfield>
+      <subfield code="a">Bernhard, Thomas</subfield>
+      <subfield code="d">1931-1989</subfield>
+      <subfield code="t">Der Ignorant und der Wahnsinnige</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)4015051-3</subfield>
+      <subfield code="0">(DE-101)040150518</subfield>
+      <subfield code="a">Episches Theater</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)4049716-1</subfield>
+      <subfield code="0">(DE-101)04049716X</subfield>
+      <subfield code="a">Rezeption</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)4185037-3</subfield>
+      <subfield code="0">(DE-101)041850378</subfield>
+      <subfield code="a">Theater der Grausamkeit</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="7">
+      <subfield code="0">(DE-588)4049716-1</subfield>
+      <subfield code="0">(DE-101)04049716X</subfield>
+      <subfield code="a">Rezeption</subfield>
+      <subfield code="2">gnd</subfield>
+    </datafield>
+    <datafield tag="689" ind1="0" ind2="0">
+      <subfield code="0">(DE-588)118514768</subfield>
+      <subfield code="0">(DE-101)118514768</subfield>
+      <subfield code="D">p</subfield>
+      <subfield code="a">Brecht, Bertolt</subfield>
+      <subfield code="d">1898-1956</subfield>
+    </datafield>
+    <datafield tag="689" ind1="0" ind2="1">
+      <subfield code="0">(DE-588)4015051-3</subfield>
+      <subfield code="0">(DE-101)040150518</subfield>
+      <subfield code="D">s</subfield>
+      <subfield code="a">Episches Theater</subfield>
+    </datafield>
+    <datafield tag="689" ind1="0" ind2="2">
+      <subfield code="0">(DE-588)4049716-1</subfield>
+      <subfield code="0">(DE-101)04049716X</subfield>
+      <subfield code="D">s</subfield>
+      <subfield code="a">Rezeption</subfield>
+    </datafield>
+    <datafield tag="689" ind1="0" ind2="3">
+      <subfield code="0">(DE-588)118509861</subfield>
+      <subfield code="0">(DE-101)952740192</subfield>
+      <subfield code="D">p</subfield>
+      <subfield code="a">Bernhard, Thomas</subfield>
+      <subfield code="d">1931-1989</subfield>
+      <subfield code="t">Der Ignorant und der Wahnsinnige</subfield>
+    </datafield>
+    <datafield tag="689" ind1="0" ind2=" ">
+      <subfield code="5">DE-101</subfield>
+      <subfield code="5">DE-101</subfield>
+    </datafield>
+    <datafield tag="689" ind1="1" ind2="0">
+      <subfield code="0">(DE-588)118504495</subfield>
+      <subfield code="0">(DE-101)118504495</subfield>
+      <subfield code="D">p</subfield>
+      <subfield code="a">Artaud, Antonin</subfield>
+      <subfield code="d">1896-1948</subfield>
+    </datafield>
+    <datafield tag="689" ind1="1" ind2="1">
+      <subfield code="0">(DE-588)4185037-3</subfield>
+      <subfield code="0">(DE-101)041850378</subfield>
+      <subfield code="D">s</subfield>
+      <subfield code="a">Theater der Grausamkeit</subfield>
+    </datafield>
+    <datafield tag="689" ind1="1" ind2="2">
+      <subfield code="0">(DE-588)4049716-1</subfield>
+      <subfield code="0">(DE-101)04049716X</subfield>
+      <subfield code="D">s</subfield>
+      <subfield code="a">Rezeption</subfield>
+    </datafield>
+    <datafield tag="689" ind1="1" ind2="3">
+      <subfield code="0">(DE-588)118509861</subfield>
+      <subfield code="0">(DE-101)952740192</subfield>
+      <subfield code="D">p</subfield>
+      <subfield code="a">Bernhard, Thomas</subfield>
+      <subfield code="d">1931-1989</subfield>
+      <subfield code="t">Der Ignorant und der Wahnsinnige</subfield>
+    </datafield>
+    <datafield tag="689" ind1="1" ind2=" ">
+      <subfield code="5">DE-101</subfield>
+      <subfield code="5">DE-101</subfield>
+    </datafield>
+    <datafield tag="856" ind1="4" ind2="0">
+      <subfield code="u">http://nbn-resolving.de/urn:nbn:de:101:1-201205253327</subfield>
+      <subfield code="x">Resolving-System</subfield>
+    </datafield>
+    <datafield tag="856" ind1=" " ind2="0">
+      <subfield code="u">http://d-nb.info/1022740644/34</subfield>
+      <subfield code="x">Langzeitarchivierung Nationalbibliothek</subfield>
+    </datafield>
+    <datafield tag="925" ind1="r" ind2=" ">
+      <subfield code="a">ro</subfield>
+      <subfield code="a">ra</subfield>
+    </datafield>
+    <datafield tag="925" ind1="p" ind2=" ">
+      <subfield code="a">pd</subfield>
+    </datafield>
+  </record>
+</collection>

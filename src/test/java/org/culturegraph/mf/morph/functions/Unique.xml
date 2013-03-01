@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph-test version="1.0"
+	xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph"
+	xmlns:cgxml="http://www.culturegraph.org/cgxml">
+
+	<test-case name="unique in record/entity">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="e">
+							<cgxml:literal name="data" value="d" />
+							<cgxml:literal name="data" value="d" />
+						</cgxml:entity>
+						<cgxml:entity name="e">
+							<cgxml:literal name="data" value="d" />
+							<cgxml:literal name="data" value="d" />
+						</cgxml:entity>
+						<cgxml:literal name="data" value="d" />
+						<cgxml:literal name="data" value="d" />
+						<cgxml:literal name="data" value="d" />
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:entity name="e">
+							<cgxml:literal name="data" value="d" />
+							<cgxml:literal name="data" value="d" />
+						</cgxml:entity>
+						<cgxml:entity name="e">
+							<cgxml:literal name="data" value="d" />
+							<cgxml:literal name="data" value="d" />
+						</cgxml:entity>
+						<cgxml:literal name="data" value="d" />
+						<cgxml:literal name="data" value="d" />
+						<cgxml:literal name="data" value="d" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:data source="data" name="unique in record">
+						<mm:unique />
+					</mm:data>
+					<mm:data source="e.data" name="unique in entity">
+						<mm:unique in="entity" />
+					</mm:data>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="unique in entity" value="d" />
+						<cgxml:literal name="unique in entity" value="d" />
+						<cgxml:literal name="unique in record" value="d" />
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="unique in entity" value="d" />
+						<cgxml:literal name="unique in entity" value="d" />
+						<cgxml:literal name="unique in record" value="d" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="unique part">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data1" value="d1" />
+						<cgxml:literal name="data1" value="d1" />
+
+						<cgxml:literal name="data1" value="d2" />
+						<cgxml:literal name="data1" value="d2" />
+
+						<cgxml:literal name="data2" value="d2" />
+						<cgxml:literal name="data2" value="d2" />
+					</cgxml:record>
+
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+
+					<mm:group name="name">
+						<mm:group>
+							<mm:data source="data1" />
+							<mm:data source="data2" />
+							<mm:postprocess>
+								<mm:unique part="name" />
+							</mm:postprocess>
+						</mm:group>
+					</mm:group>
+
+					<mm:group name="value">
+						<mm:group>
+							<mm:data source="data1" />
+							<mm:data source="data2" />
+							<mm:postprocess>
+								<mm:unique part="value" />
+							</mm:postprocess>
+						</mm:group>
+					</mm:group>
+
+					<mm:group name="both">
+						<mm:group>
+							<mm:data source="data1" />
+							<mm:data source="data2" />
+							<mm:postprocess>
+								<mm:unique part="name-value" />
+							</mm:postprocess>
+						</mm:group>
+					</mm:group>
+
+
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="name" value="d1" />
+						<cgxml:literal name="value" value="d1" />
+						<cgxml:literal name="both" value="d1" />
+
+						<cgxml:literal name="value" value="d2" />
+						<cgxml:literal name="both" value="d2" />
+
+						<cgxml:literal name="name" value="d2" />
+						<cgxml:literal name="both" value="d2" />
+
+					</cgxml:record>
+
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+
+</metamorph-test>

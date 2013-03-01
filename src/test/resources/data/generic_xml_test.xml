@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testdata>
+	<metadata lang="en">This file contains two records</metadata>
+	<records>
+		<record id="1" del="no">
+			<name>Record 1</name>
+			<description lang="de">Erster Datensatz</description>
+		</record>
+		<comment lang="en">
+			This is a comment: <b>Please ignore!</b>
+		</comment>
+		<record id="2" del="yes">
+			<name>Record 2</name>
+			<description lang="de">Zweiter Datensatz</description>		
+		</record>
+	</records>
+</testdata>

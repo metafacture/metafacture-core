@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph-test version="1.0"
+	xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph"
+	xmlns:cgxml="http://www.culturegraph.org/cgxml">
+
+	<test-case name="local lookup">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="1" value="a" />
+						<cgxml:literal name="1" value="b" />
+						<cgxml:literal name="2" value="a" />
+						<cgxml:literal name="2" value="b" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:data source="1">
+						<mm:lookup>
+							<mm:entry name="a" value="A" />
+						</mm:lookup>
+					</mm:data>
+					<mm:data source="2">
+						<mm:lookup default="B">
+							<mm:entry name="a" value="A" />
+						</mm:lookup>
+					</mm:data>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="1" value="A" />
+						<cgxml:literal name="2" value="A" />
+						<cgxml:literal name="2" value="B" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="map lookup">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="1" value="a" />
+						<cgxml:literal name="1" value="b" />
+						<cgxml:literal name="2" value="a" />
+						<cgxml:literal name="2" value="b" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:data source="1">
+						<mm:lookup in="map1" />
+					</mm:data>
+					<mm:data source="2">
+						<mm:lookup in="map2" />
+					</mm:data>
+				</mm:rules>
+				<mm:maps>
+					<mm:map name="map1">
+						<mm:entry name="a" value="A" />
+					</mm:map>
+					<mm:map name="map2" default="B">
+						<mm:entry name="a" value="A" />
+					</mm:map>
+				</mm:maps>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="1" value="A" />
+						<cgxml:literal name="2" value="A" />
+						<cgxml:literal name="2" value="B" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+</metamorph-test>

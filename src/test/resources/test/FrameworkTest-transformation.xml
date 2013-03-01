@@ -1,0 +1,5 @@
+<metamorph xmlns="http://www.culturegraph.org/metamorph" version="1">
+	<rules>
+		<data name="output" source="data" />
+	</rules>
+</metamorph>

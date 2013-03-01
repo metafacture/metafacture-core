@@ -1,0 +1,1820 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 27.07.2011 09:07, xportiert aus LIDO.Repository (Instanz 1100) -->
+<lido:lidoWrap xmlns:lido="http://www.lido-schema.org"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml"
+	xsi:schemaLocation="http://www.lido-schema.org lido-v1.0.xsd">
+
+	<lido:lido>
+		<lido:lidoRecID lido:type="local" lido:source="digiCULT Verbund e.G.">DE-MUS-924614/lido/2008-003-021</lido:lidoRecID>
+		<lido:category>
+			<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E22</lido:conceptID>
+			<lido:term xml:lang="en">Man-Made Object</lido:term>
+		</lido:category>
+		<lido:descriptiveMetadata xml:lang="de">
+			<lido:objectClassificationWrap>
+				<lido:objectWorkTypeWrap>
+					<lido:objectWorkType>
+						<lido:term>Handwaschbürste</lido:term>
+					</lido:objectWorkType>
+				</lido:objectWorkTypeWrap>
+				<lido:classificationWrap>
+					<lido:classification lido:type="Sachgruppe">
+						<lido:conceptID lido:type="local" lido:source="xTree">10.255</lido:conceptID>
+						<lido:term lido:addedSearchTerm="yes" xml:lang="de">Geburtshilfe
+							und Hebammenwesen</lido:term>
+						<lido:term lido:addedSearchTerm="no" xml:lang="de">Hebammentaschen</lido:term>
+					</lido:classification>
+				</lido:classificationWrap>
+			</lido:objectClassificationWrap>
+			<lido:objectIdentificationWrap>
+				<lido:titleWrap>
+					<lido:titleSet lido:type="Objektbezeichnung">
+						<lido:appellationValue>Handwaschbürste</lido:appellationValue>
+					</lido:titleSet>
+				</lido:titleWrap>
+				<lido:repositoryWrap>
+					<lido:repositorySet lido:type="current">
+						<lido:repositoryName>
+							<lido:legalBodyID lido:type="URI">info:isil/DE-MUS-924614</lido:legalBodyID>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+							<lido:legalBodyWeblink>http://www.museen-sh.de/ml/inst.php?inst=19</lido:legalBodyWeblink>
+						</lido:repositoryName>
+						<lido:workID lido:type="Inventarnummer">2008-003-021</lido:workID>
+						<lido:repositoryLocation>
+							<lido:namePlaceSet>
+								<lido:appellationValue>Kiel</lido:appellationValue>
+							</lido:namePlaceSet>
+							<lido:gml>
+								<gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+									<gml:name>Medizin- und Pharmaziehistorische Sammlung der
+										Christian-Albrechts-Universität Kiel</gml:name>
+									<gml:pos>54.328788 10.133912</gml:pos>
+								</gml:Point>
+							</lido:gml>
+						</lido:repositoryLocation>
+					</lido:repositorySet>
+				</lido:repositoryWrap>
+				<lido:objectDescriptionWrap>
+				</lido:objectDescriptionWrap>
+				<lido:objectMeasurementsWrap>
+					<lido:objectMeasurementsSet>
+						<lido:displayObjectMeasurements>H: 4,2 cm, B: 9,1 cm, T: 2,5 cm</lido:displayObjectMeasurements>
+					</lido:objectMeasurementsSet>
+				</lido:objectMeasurementsWrap>
+			</lido:objectIdentificationWrap>
+			<lido:eventWrap>
+				<lido:eventSet>
+					<lido:event>
+						<lido:eventType>
+							<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E12</lido:conceptID>
+							<lido:term>Herstellung</lido:term>
+						</lido:eventType>
+						<lido:eventActor>
+							<lido:actorInRole>
+								<lido:actor>
+									<lido:nameActorSet>
+										<lido:appellationValue lido:pref="preferred">unbekannt</lido:appellationValue>
+									</lido:nameActorSet>
+								</lido:actor>
+								<lido:roleActor>
+									<lido:term xml:lang="en">manufacturer</lido:term>
+								</lido:roleActor>
+								<lido:extentActor></lido:extentActor>
+							</lido:actorInRole>
+						</lido:eventActor>
+						<lido:eventDate>
+							<lido:displayDate>2. Drittel 20. Jahrhundert</lido:displayDate>
+							<lido:date>
+								<lido:earliestDate>1934</lido:earliestDate>
+								<lido:latestDate>1966</lido:latestDate>
+							</lido:date>
+						</lido:eventDate>
+						<lido:eventPlace>
+							<lido:place>
+								<lido:placeID lido:type="local" lido:source="xTree"></lido:placeID>
+								<lido:namePlaceSet>
+									<lido:appellationValue>unbekannt</lido:appellationValue>
+								</lido:namePlaceSet>
+							</lido:place>
+						</lido:eventPlace>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.3</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4025668-6</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Holz</lido:term>
+								</lido:termMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.274</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4112813-8</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Borsten</lido:term>
+									<lido:term lido:addedSearchTerm="yes">Borstenhaar</lido:term>
+								</lido:termMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.18</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4025684-4</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Holztechnik</lido:term>
+								</lido:termMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+					</lido:event>
+				</lido:eventSet>
+			</lido:eventWrap>
+		</lido:descriptiveMetadata>
+		<lido:administrativeMetadata xml:lang="de">
+			<lido:rightsWorkWrap>
+				<lido:rightsWorkSet>
+					<lido:rightsHolder>
+						<lido:legalBodyName>
+							<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+								der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+						</lido:legalBodyName>
+					</lido:rightsHolder>
+				</lido:rightsWorkSet>
+			</lido:rightsWorkWrap>
+			<lido:recordWrap>
+				<lido:recordID lido:type="local">19_2008-003-021</lido:recordID>
+				<lido:recordType>
+					<lido:term xml:lang="en">item</lido:term>
+				</lido:recordType>
+				<lido:recordSource>
+					<lido:legalBodyName>
+						<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+							der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+					</lido:legalBodyName>
+				</lido:recordSource>
+				<lido:recordInfoSet>
+					<lido:recordInfoLink>http://www.museen-sh.de/ml/digi_einzBild.php?s=1&amp;pi=19_2008-003-021</lido:recordInfoLink>
+					<lido:recordMetadataDate lido:type="modification date">2011-07-21
+						09:26:16</lido:recordMetadataDate>
+				</lido:recordInfoSet>
+			</lido:recordWrap>
+			<lido:resourceWrap>
+				<lido:resourceSet>
+					<lido:resourceRepresentation lido:type="image_overview">
+						<lido:linkResource>http://www.museen-sh.de/eingabe/bilder/data/mitte/19/2008-003-021_2.jpg</lido:linkResource>
+					</lido:resourceRepresentation>
+					<lido:rightsResource>
+						<lido:rightsHolder>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+						</lido:rightsHolder>
+					</lido:rightsResource>
+				</lido:resourceSet>
+			</lido:resourceWrap>
+		</lido:administrativeMetadata>
+	</lido:lido>
+	<lido:lido>
+		<lido:lidoRecID lido:type="local" lido:source="digiCULT Verbund e.G.">DE-MUS-924614/lido/2008-003-020</lido:lidoRecID>
+		<lido:category>
+			<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E22</lido:conceptID>
+			<lido:term xml:lang="en">Man-Made Object</lido:term>
+		</lido:category>
+		<lido:descriptiveMetadata xml:lang="de">
+			<lido:objectClassificationWrap>
+				<lido:objectWorkTypeWrap>
+					<lido:objectWorkType>
+						<lido:term>Schlagaderpresse</lido:term>
+					</lido:objectWorkType>
+				</lido:objectWorkTypeWrap>
+				<lido:classificationWrap>
+					<lido:classification lido:type="Sachgruppe">
+						<lido:conceptID lido:type="local" lido:source="xTree">10.255</lido:conceptID>
+						<lido:term lido:addedSearchTerm="yes" xml:lang="de">Geburtshilfe
+							und Hebammenwesen</lido:term>
+						<lido:term lido:addedSearchTerm="no" xml:lang="de">Hebammentaschen</lido:term>
+					</lido:classification>
+				</lido:classificationWrap>
+			</lido:objectClassificationWrap>
+			<lido:objectIdentificationWrap>
+				<lido:titleWrap>
+					<lido:titleSet lido:type="Objektbezeichnung">
+						<lido:appellationValue>Schlagaderpresse</lido:appellationValue>
+					</lido:titleSet>
+				</lido:titleWrap>
+				<lido:repositoryWrap>
+					<lido:repositorySet lido:type="current">
+						<lido:repositoryName>
+							<lido:legalBodyID lido:type="URI">info:isil/DE-MUS-924614</lido:legalBodyID>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+							<lido:legalBodyWeblink>http://www.museen-sh.de/ml/inst.php?inst=19</lido:legalBodyWeblink>
+						</lido:repositoryName>
+						<lido:workID lido:type="Inventarnummer">2008-003-020</lido:workID>
+						<lido:repositoryLocation>
+							<lido:namePlaceSet>
+								<lido:appellationValue>Kiel</lido:appellationValue>
+							</lido:namePlaceSet>
+							<lido:gml>
+								<gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+									<gml:name>Medizin- und Pharmaziehistorische Sammlung der
+										Christian-Albrechts-Universität Kiel</gml:name>
+									<gml:pos>54.328788 10.133912</gml:pos>
+								</gml:Point>
+							</lido:gml>
+						</lido:repositoryLocation>
+					</lido:repositorySet>
+				</lido:repositoryWrap>
+				<lido:objectDescriptionWrap>
+				</lido:objectDescriptionWrap>
+				<lido:objectMeasurementsWrap>
+					<lido:objectMeasurementsSet>
+						<lido:displayObjectMeasurements>H: 10,5 cm, B: 10,2 cm (am
+							Holzgriff direkt), H: 3,5 cm (Aussparung am Holzgriff), B: 8 cm
+							(Aussparung am Holzgriff), B: 12,2 cm (breiteste Stelle am
+							unteren Bereich)</lido:displayObjectMeasurements>
+					</lido:objectMeasurementsSet>
+				</lido:objectMeasurementsWrap>
+			</lido:objectIdentificationWrap>
+			<lido:eventWrap>
+				<lido:eventSet>
+					<lido:event>
+						<lido:eventType>
+							<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E12</lido:conceptID>
+							<lido:term>Herstellung</lido:term>
+						</lido:eventType>
+						<lido:eventActor>
+							<lido:actorInRole>
+								<lido:actor>
+									<lido:nameActorSet>
+										<lido:appellationValue lido:pref="preferred">unbekannt</lido:appellationValue>
+									</lido:nameActorSet>
+								</lido:actor>
+								<lido:roleActor>
+									<lido:term xml:lang="en">manufacturer</lido:term>
+								</lido:roleActor>
+								<lido:extentActor></lido:extentActor>
+							</lido:actorInRole>
+						</lido:eventActor>
+						<lido:eventDate>
+							<lido:displayDate>2. Drittel 20. Jahrhundert</lido:displayDate>
+							<lido:date>
+								<lido:earliestDate>1934</lido:earliestDate>
+								<lido:latestDate>1966</lido:latestDate>
+							</lido:date>
+						</lido:eventDate>
+						<lido:eventPlace>
+							<lido:place>
+								<lido:placeID lido:type="local" lido:source="xTree"></lido:placeID>
+								<lido:namePlaceSet>
+									<lido:appellationValue>unbekannt</lido:appellationValue>
+								</lido:namePlaceSet>
+							</lido:place>
+						</lido:eventPlace>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.3</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4025668-6</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Holz</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>eigentlicher Griff</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.235</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4137836-2</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Kunstleder</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Bespann des Griffes</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.26</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4038860-8</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Metall</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Nägel zur Befestigung des Leders</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.194</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Holztechnik</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">genagelt</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Kunstleder am Holz</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.116</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4171095-2</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Textiltechnik</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">genäht</lido:term>
+									<lido:term lido:addedSearchTerm="yes">Näharbeit</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Kunstleder</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.12</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4140816-0</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4025755-1</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Holztechnik</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">geleimt</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Holzgriff</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.267</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4160077-0</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Holztechnik</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">gehobelt</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Holzgriff</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+					</lido:event>
+				</lido:eventSet>
+			</lido:eventWrap>
+		</lido:descriptiveMetadata>
+		<lido:administrativeMetadata xml:lang="de">
+			<lido:rightsWorkWrap>
+				<lido:rightsWorkSet>
+					<lido:rightsHolder>
+						<lido:legalBodyName>
+							<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+								der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+						</lido:legalBodyName>
+					</lido:rightsHolder>
+				</lido:rightsWorkSet>
+			</lido:rightsWorkWrap>
+			<lido:recordWrap>
+				<lido:recordID lido:type="local">19_2008-003-020</lido:recordID>
+				<lido:recordType>
+					<lido:term xml:lang="en">item</lido:term>
+				</lido:recordType>
+				<lido:recordSource>
+					<lido:legalBodyName>
+						<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+							der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+					</lido:legalBodyName>
+				</lido:recordSource>
+				<lido:recordInfoSet>
+					<lido:recordInfoLink>http://www.museen-sh.de/ml/digi_einzBild.php?s=1&amp;pi=19_2008-003-020</lido:recordInfoLink>
+					<lido:recordMetadataDate lido:type="modification date">2011-07-21
+						09:23:13</lido:recordMetadataDate>
+				</lido:recordInfoSet>
+			</lido:recordWrap>
+			<lido:resourceWrap>
+				<lido:resourceSet>
+					<lido:resourceRepresentation lido:type="image_overview">
+						<lido:linkResource>http://www.museen-sh.de/eingabe/bilder/data/mitte/19/2008-003-020.jpg</lido:linkResource>
+					</lido:resourceRepresentation>
+					<lido:rightsResource>
+						<lido:rightsHolder>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+						</lido:rightsHolder>
+					</lido:rightsResource>
+				</lido:resourceSet>
+			</lido:resourceWrap>
+		</lido:administrativeMetadata>
+	</lido:lido>
+	<lido:lido>
+		<lido:lidoRecID lido:type="local" lido:source="digiCULT Verbund e.G.">DE-MUS-924614/lido/2008-003-019</lido:lidoRecID>
+		<lido:category>
+			<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E22</lido:conceptID>
+			<lido:term xml:lang="en">Man-Made Object</lido:term>
+		</lido:category>
+		<lido:descriptiveMetadata xml:lang="de">
+			<lido:objectClassificationWrap>
+				<lido:objectWorkTypeWrap>
+					<lido:objectWorkType>
+						<lido:term>Handwaschbürste</lido:term>
+					</lido:objectWorkType>
+				</lido:objectWorkTypeWrap>
+				<lido:classificationWrap>
+					<lido:classification lido:type="Sachgruppe">
+						<lido:conceptID lido:type="local" lido:source="xTree">10.255</lido:conceptID>
+						<lido:term lido:addedSearchTerm="yes" xml:lang="de">Geburtshilfe
+							und Hebammenwesen</lido:term>
+						<lido:term lido:addedSearchTerm="no" xml:lang="de">Hebammentaschen</lido:term>
+					</lido:classification>
+				</lido:classificationWrap>
+			</lido:objectClassificationWrap>
+			<lido:objectIdentificationWrap>
+				<lido:titleWrap>
+					<lido:titleSet lido:type="Objektbezeichnung">
+						<lido:appellationValue>Handwaschbürste</lido:appellationValue>
+					</lido:titleSet>
+				</lido:titleWrap>
+				<lido:repositoryWrap>
+					<lido:repositorySet lido:type="current">
+						<lido:repositoryName>
+							<lido:legalBodyID lido:type="URI">info:isil/DE-MUS-924614</lido:legalBodyID>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+							<lido:legalBodyWeblink>http://www.museen-sh.de/ml/inst.php?inst=19</lido:legalBodyWeblink>
+						</lido:repositoryName>
+						<lido:workID lido:type="Inventarnummer">2008-003-019</lido:workID>
+						<lido:repositoryLocation>
+							<lido:namePlaceSet>
+								<lido:appellationValue>Kiel</lido:appellationValue>
+							</lido:namePlaceSet>
+							<lido:gml>
+								<gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+									<gml:name>Medizin- und Pharmaziehistorische Sammlung der
+										Christian-Albrechts-Universität Kiel</gml:name>
+									<gml:pos>54.328788 10.133912</gml:pos>
+								</gml:Point>
+							</lido:gml>
+						</lido:repositoryLocation>
+					</lido:repositorySet>
+				</lido:repositoryWrap>
+				<lido:objectDescriptionWrap>
+				</lido:objectDescriptionWrap>
+				<lido:objectMeasurementsWrap>
+					<lido:objectMeasurementsSet>
+						<lido:displayObjectMeasurements>B: 3,6 cm, T: 2,5 cm, L: 9,5 cm</lido:displayObjectMeasurements>
+					</lido:objectMeasurementsSet>
+				</lido:objectMeasurementsWrap>
+			</lido:objectIdentificationWrap>
+			<lido:eventWrap>
+				<lido:eventSet>
+					<lido:event>
+						<lido:eventType>
+							<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E12</lido:conceptID>
+							<lido:term>Herstellung</lido:term>
+						</lido:eventType>
+						<lido:eventActor>
+							<lido:actorInRole>
+								<lido:actor>
+									<lido:nameActorSet>
+										<lido:appellationValue lido:pref="preferred">unbekannt</lido:appellationValue>
+									</lido:nameActorSet>
+								</lido:actor>
+								<lido:roleActor>
+									<lido:term xml:lang="en">manufacturer</lido:term>
+								</lido:roleActor>
+								<lido:extentActor></lido:extentActor>
+							</lido:actorInRole>
+						</lido:eventActor>
+						<lido:eventDate>
+							<lido:displayDate>2. Drittel 20. Jahrhundert</lido:displayDate>
+							<lido:date>
+								<lido:earliestDate>1934</lido:earliestDate>
+								<lido:latestDate>1966</lido:latestDate>
+							</lido:date>
+						</lido:eventDate>
+						<lido:eventPlace>
+							<lido:place>
+								<lido:placeID lido:type="local" lido:source="xTree"></lido:placeID>
+								<lido:namePlaceSet>
+									<lido:appellationValue>unbekannt</lido:appellationValue>
+								</lido:namePlaceSet>
+							</lido:place>
+						</lido:eventPlace>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.274</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4112813-8</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Borsten</lido:term>
+									<lido:term lido:addedSearchTerm="yes">Borstenhaar</lido:term>
+								</lido:termMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.3</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4025668-6</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Holz</lido:term>
+								</lido:termMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.18</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4025684-4</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Holztechnik</lido:term>
+								</lido:termMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+					</lido:event>
+				</lido:eventSet>
+			</lido:eventWrap>
+		</lido:descriptiveMetadata>
+		<lido:administrativeMetadata xml:lang="de">
+			<lido:rightsWorkWrap>
+				<lido:rightsWorkSet>
+					<lido:rightsHolder>
+						<lido:legalBodyName>
+							<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+								der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+						</lido:legalBodyName>
+					</lido:rightsHolder>
+				</lido:rightsWorkSet>
+			</lido:rightsWorkWrap>
+			<lido:recordWrap>
+				<lido:recordID lido:type="local">19_2008-003-019</lido:recordID>
+				<lido:recordType>
+					<lido:term xml:lang="en">item</lido:term>
+				</lido:recordType>
+				<lido:recordSource>
+					<lido:legalBodyName>
+						<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+							der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+					</lido:legalBodyName>
+				</lido:recordSource>
+				<lido:recordInfoSet>
+					<lido:recordInfoLink>http://www.museen-sh.de/ml/digi_einzBild.php?s=1&amp;pi=19_2008-003-019</lido:recordInfoLink>
+					<lido:recordMetadataDate lido:type="modification date">2011-07-21
+						09:19:23</lido:recordMetadataDate>
+				</lido:recordInfoSet>
+			</lido:recordWrap>
+			<lido:resourceWrap>
+				<lido:resourceSet>
+					<lido:resourceRepresentation lido:type="image_overview">
+						<lido:linkResource>http://www.museen-sh.de/eingabe/bilder/data/mitte/19/2008-003-019_2.jpg</lido:linkResource>
+					</lido:resourceRepresentation>
+					<lido:rightsResource>
+						<lido:rightsHolder>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+						</lido:rightsHolder>
+					</lido:rightsResource>
+				</lido:resourceSet>
+			</lido:resourceWrap>
+		</lido:administrativeMetadata>
+	</lido:lido>
+	<lido:lido>
+		<lido:lidoRecID lido:type="local" lido:source="digiCULT Verbund e.G.">DE-MUS-924614/lido/2008-003-017</lido:lidoRecID>
+		<lido:category>
+			<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E22</lido:conceptID>
+			<lido:term xml:lang="en">Man-Made Object</lido:term>
+		</lido:category>
+		<lido:descriptiveMetadata xml:lang="de">
+			<lido:objectClassificationWrap>
+				<lido:objectWorkTypeWrap>
+					<lido:objectWorkType>
+						<lido:term>Seifendose</lido:term>
+					</lido:objectWorkType>
+				</lido:objectWorkTypeWrap>
+				<lido:classificationWrap>
+					<lido:classification lido:type="Sachgruppe">
+						<lido:conceptID lido:type="local" lido:source="xTree">10.255</lido:conceptID>
+						<lido:term lido:addedSearchTerm="yes" xml:lang="de">Geburtshilfe
+							und Hebammenwesen</lido:term>
+						<lido:term lido:addedSearchTerm="no" xml:lang="de">Hebammentaschen</lido:term>
+					</lido:classification>
+				</lido:classificationWrap>
+			</lido:objectClassificationWrap>
+			<lido:objectIdentificationWrap>
+				<lido:titleWrap>
+					<lido:titleSet lido:type="Objektbezeichnung">
+						<lido:appellationValue>Seifendose</lido:appellationValue>
+					</lido:titleSet>
+				</lido:titleWrap>
+				<lido:repositoryWrap>
+					<lido:repositorySet lido:type="current">
+						<lido:repositoryName>
+							<lido:legalBodyID lido:type="URI">info:isil/DE-MUS-924614</lido:legalBodyID>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+							<lido:legalBodyWeblink>http://www.museen-sh.de/ml/inst.php?inst=19</lido:legalBodyWeblink>
+						</lido:repositoryName>
+						<lido:workID lido:type="Inventarnummer">2008-003-017</lido:workID>
+						<lido:repositoryLocation>
+							<lido:namePlaceSet>
+								<lido:appellationValue>Kiel</lido:appellationValue>
+							</lido:namePlaceSet>
+							<lido:gml>
+								<gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+									<gml:name>Medizin- und Pharmaziehistorische Sammlung der
+										Christian-Albrechts-Universität Kiel</gml:name>
+									<gml:pos>54.328788 10.133912</gml:pos>
+								</gml:Point>
+							</lido:gml>
+						</lido:repositoryLocation>
+					</lido:repositorySet>
+				</lido:repositoryWrap>
+				<lido:objectDescriptionWrap>
+				</lido:objectDescriptionWrap>
+				<lido:objectMeasurementsWrap>
+					<lido:objectMeasurementsSet>
+						<lido:displayObjectMeasurements>H: 2,5 cm, B: 8,3 cm, T: 4,5 cm</lido:displayObjectMeasurements>
+					</lido:objectMeasurementsSet>
+				</lido:objectMeasurementsWrap>
+			</lido:objectIdentificationWrap>
+			<lido:eventWrap>
+				<lido:eventSet>
+					<lido:event>
+						<lido:eventType>
+							<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E12</lido:conceptID>
+							<lido:term>Herstellung</lido:term>
+						</lido:eventType>
+						<lido:eventActor>
+							<lido:actorInRole>
+								<lido:actor>
+									<lido:nameActorSet>
+										<lido:appellationValue lido:pref="preferred">unbekannt</lido:appellationValue>
+									</lido:nameActorSet>
+								</lido:actor>
+								<lido:roleActor>
+									<lido:term xml:lang="en">manufacturer</lido:term>
+								</lido:roleActor>
+								<lido:extentActor></lido:extentActor>
+							</lido:actorInRole>
+						</lido:eventActor>
+						<lido:eventDate>
+							<lido:displayDate>2. Drittel 20. Jahrhundert</lido:displayDate>
+							<lido:date>
+								<lido:earliestDate>1934</lido:earliestDate>
+								<lido:latestDate>1966</lido:latestDate>
+							</lido:date>
+						</lido:eventDate>
+						<lido:eventPlace>
+							<lido:place>
+								<lido:placeID lido:type="local" lido:source="xTree"></lido:placeID>
+								<lido:namePlaceSet>
+									<lido:appellationValue>unbekannt</lido:appellationValue>
+								</lido:namePlaceSet>
+							</lido:place>
+						</lido:eventPlace>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.26</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4038860-8</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Metall</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>verchromt</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.182</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Metalltechnik</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">gepresst</lido:term>
+								</lido:termMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+					</lido:event>
+				</lido:eventSet>
+			</lido:eventWrap>
+		</lido:descriptiveMetadata>
+		<lido:administrativeMetadata xml:lang="de">
+			<lido:rightsWorkWrap>
+				<lido:rightsWorkSet>
+					<lido:rightsHolder>
+						<lido:legalBodyName>
+							<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+								der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+						</lido:legalBodyName>
+					</lido:rightsHolder>
+				</lido:rightsWorkSet>
+			</lido:rightsWorkWrap>
+			<lido:recordWrap>
+				<lido:recordID lido:type="local">19_2008-003-017</lido:recordID>
+				<lido:recordType>
+					<lido:term xml:lang="en">item</lido:term>
+				</lido:recordType>
+				<lido:recordSource>
+					<lido:legalBodyName>
+						<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+							der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+					</lido:legalBodyName>
+				</lido:recordSource>
+				<lido:recordInfoSet>
+					<lido:recordInfoLink>http://www.museen-sh.de/ml/digi_einzBild.php?s=1&amp;pi=19_2008-003-017</lido:recordInfoLink>
+					<lido:recordMetadataDate lido:type="modification date">2011-07-21
+						08:58:22</lido:recordMetadataDate>
+				</lido:recordInfoSet>
+			</lido:recordWrap>
+			<lido:resourceWrap>
+				<lido:resourceSet>
+					<lido:resourceRepresentation lido:type="image_overview">
+						<lido:linkResource>http://www.museen-sh.de/eingabe/bilder/data/mitte/19/2008-003-017_1.jpg</lido:linkResource>
+					</lido:resourceRepresentation>
+					<lido:rightsResource>
+						<lido:rightsHolder>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+						</lido:rightsHolder>
+					</lido:rightsResource>
+				</lido:resourceSet>
+			</lido:resourceWrap>
+		</lido:administrativeMetadata>
+	</lido:lido>
+	<lido:lido>
+		<lido:lidoRecID lido:type="local" lido:source="digiCULT Verbund e.G.">DE-MUS-924614/lido/2008-003-016</lido:lidoRecID>
+		<lido:category>
+			<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E22</lido:conceptID>
+			<lido:term xml:lang="en">Man-Made Object</lido:term>
+		</lido:category>
+		<lido:descriptiveMetadata xml:lang="de">
+			<lido:objectClassificationWrap>
+				<lido:objectWorkTypeWrap>
+					<lido:objectWorkType>
+						<lido:term>Mullkompressen</lido:term>
+					</lido:objectWorkType>
+				</lido:objectWorkTypeWrap>
+				<lido:classificationWrap>
+					<lido:classification lido:type="Sachgruppe">
+						<lido:conceptID lido:type="local" lido:source="xTree">10.255</lido:conceptID>
+						<lido:term lido:addedSearchTerm="yes" xml:lang="de">Geburtshilfe
+							und Hebammenwesen</lido:term>
+						<lido:term lido:addedSearchTerm="no" xml:lang="de">Hebammentaschen</lido:term>
+					</lido:classification>
+				</lido:classificationWrap>
+			</lido:objectClassificationWrap>
+			<lido:objectIdentificationWrap>
+				<lido:titleWrap>
+					<lido:titleSet lido:type="Objektbezeichnung">
+						<lido:appellationValue>Mullkompressen</lido:appellationValue>
+					</lido:titleSet>
+				</lido:titleWrap>
+				<lido:repositoryWrap>
+					<lido:repositorySet lido:type="current">
+						<lido:repositoryName>
+							<lido:legalBodyID lido:type="URI">info:isil/DE-MUS-924614</lido:legalBodyID>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+							<lido:legalBodyWeblink>http://www.museen-sh.de/ml/inst.php?inst=19</lido:legalBodyWeblink>
+						</lido:repositoryName>
+						<lido:workID lido:type="Inventarnummer">2008-003-016</lido:workID>
+						<lido:repositoryLocation>
+							<lido:namePlaceSet>
+								<lido:appellationValue>Kiel</lido:appellationValue>
+							</lido:namePlaceSet>
+							<lido:gml>
+								<gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+									<gml:name>Medizin- und Pharmaziehistorische Sammlung der
+										Christian-Albrechts-Universität Kiel</gml:name>
+									<gml:pos>54.328788 10.133912</gml:pos>
+								</gml:Point>
+							</lido:gml>
+						</lido:repositoryLocation>
+					</lido:repositorySet>
+				</lido:repositoryWrap>
+				<lido:objectDescriptionWrap>
+				</lido:objectDescriptionWrap>
+				<lido:objectMeasurementsWrap>
+					<lido:objectMeasurementsSet>
+						<lido:displayObjectMeasurements>H: 6,5 cm, T: 3 cm, L: 10 cm</lido:displayObjectMeasurements>
+					</lido:objectMeasurementsSet>
+				</lido:objectMeasurementsWrap>
+			</lido:objectIdentificationWrap>
+			<lido:eventWrap>
+				<lido:eventSet>
+					<lido:event>
+						<lido:eventType>
+							<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E12</lido:conceptID>
+							<lido:term>Herstellung</lido:term>
+						</lido:eventType>
+						<lido:eventActor>
+							<lido:actorInRole>
+								<lido:actor>
+									<lido:nameActorSet>
+										<lido:appellationValue lido:pref="preferred">Ruhrstern</lido:appellationValue>
+									</lido:nameActorSet>
+								</lido:actor>
+								<lido:roleActor>
+									<lido:term xml:lang="en">manufacturer</lido:term>
+								</lido:roleActor>
+								<lido:extentActor></lido:extentActor>
+							</lido:actorInRole>
+						</lido:eventActor>
+						<lido:eventDate>
+							<lido:displayDate>2. Drittel 20. Jahrhundert</lido:displayDate>
+							<lido:date>
+								<lido:earliestDate>1934</lido:earliestDate>
+								<lido:latestDate>1966</lido:latestDate>
+							</lido:date>
+						</lido:eventDate>
+						<lido:eventPlace>
+							<lido:place>
+								<lido:placeID lido:type="local" lido:source="xTree">6.610</lido:placeID>
+								<lido:namePlaceSet>
+									<lido:appellationValue>Düsseldorf</lido:appellationValue>
+								</lido:namePlaceSet>
+							</lido:place>
+						</lido:eventPlace>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.8</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4044522-7</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Papier</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Verpackung der einzelnen Kompressen</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.76</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4044549-5</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Papier</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Pappe</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Umverpackung</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.190</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Papiertechnik</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">bedruckt</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Papp- Verpackung, Firmenlogo &amp;
+									Produktangaben</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.158</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4056944-5</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Metalltechnik</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">gestanzt</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Verpackung der einzelnen Kompressen</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+					</lido:event>
+				</lido:eventSet>
+			</lido:eventWrap>
+		</lido:descriptiveMetadata>
+		<lido:administrativeMetadata xml:lang="de">
+			<lido:rightsWorkWrap>
+				<lido:rightsWorkSet>
+					<lido:rightsHolder>
+						<lido:legalBodyName>
+							<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+								der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+						</lido:legalBodyName>
+					</lido:rightsHolder>
+				</lido:rightsWorkSet>
+			</lido:rightsWorkWrap>
+			<lido:recordWrap>
+				<lido:recordID lido:type="local">19_2008-003-016</lido:recordID>
+				<lido:recordType>
+					<lido:term xml:lang="en">item</lido:term>
+				</lido:recordType>
+				<lido:recordSource>
+					<lido:legalBodyName>
+						<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+							der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+					</lido:legalBodyName>
+				</lido:recordSource>
+				<lido:recordInfoSet>
+					<lido:recordInfoLink>http://www.museen-sh.de/ml/digi_einzBild.php?s=1&amp;pi=19_2008-003-016</lido:recordInfoLink>
+					<lido:recordMetadataDate lido:type="modification date">2011-07-21
+						08:55:47</lido:recordMetadataDate>
+				</lido:recordInfoSet>
+			</lido:recordWrap>
+			<lido:resourceWrap>
+				<lido:resourceSet>
+					<lido:resourceRepresentation lido:type="image_overview">
+						<lido:linkResource>http://www.museen-sh.de/eingabe/bilder/data/mitte/19/2008-003-016.jpg</lido:linkResource>
+					</lido:resourceRepresentation>
+					<lido:rightsResource>
+						<lido:rightsHolder>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+						</lido:rightsHolder>
+					</lido:rightsResource>
+				</lido:resourceSet>
+			</lido:resourceWrap>
+		</lido:administrativeMetadata>
+	</lido:lido>
+	<lido:lido>
+		<lido:lidoRecID lido:type="local" lido:source="digiCULT Verbund e.G.">DE-MUS-924614/lido/2008-003-015</lido:lidoRecID>
+		<lido:category>
+			<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E22</lido:conceptID>
+			<lido:term xml:lang="en">Man-Made Object</lido:term>
+		</lido:category>
+		<lido:descriptiveMetadata xml:lang="de">
+			<lido:objectClassificationWrap>
+				<lido:objectWorkTypeWrap>
+					<lido:objectWorkType>
+						<lido:term>Keil</lido:term>
+					</lido:objectWorkType>
+				</lido:objectWorkTypeWrap>
+				<lido:classificationWrap>
+					<lido:classification lido:type="Sachgruppe">
+						<lido:conceptID lido:type="local" lido:source="xTree">10.255</lido:conceptID>
+						<lido:term lido:addedSearchTerm="yes" xml:lang="de">Geburtshilfe
+							und Hebammenwesen</lido:term>
+						<lido:term lido:addedSearchTerm="no" xml:lang="de">Hebammentaschen</lido:term>
+					</lido:classification>
+				</lido:classificationWrap>
+			</lido:objectClassificationWrap>
+			<lido:objectIdentificationWrap>
+				<lido:titleWrap>
+					<lido:titleSet lido:type="Objektbezeichnung">
+						<lido:appellationValue>Keil</lido:appellationValue>
+					</lido:titleSet>
+				</lido:titleWrap>
+				<lido:repositoryWrap>
+					<lido:repositorySet lido:type="current">
+						<lido:repositoryName>
+							<lido:legalBodyID lido:type="URI">info:isil/DE-MUS-924614</lido:legalBodyID>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+							<lido:legalBodyWeblink>http://www.museen-sh.de/ml/inst.php?inst=19</lido:legalBodyWeblink>
+						</lido:repositoryName>
+						<lido:workID lido:type="Inventarnummer">2008-003-015</lido:workID>
+						<lido:repositoryLocation>
+							<lido:namePlaceSet>
+								<lido:appellationValue>Kiel</lido:appellationValue>
+							</lido:namePlaceSet>
+							<lido:gml>
+								<gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+									<gml:name>Medizin- und Pharmaziehistorische Sammlung der
+										Christian-Albrechts-Universität Kiel</gml:name>
+									<gml:pos>54.328788 10.133912</gml:pos>
+								</gml:Point>
+							</lido:gml>
+						</lido:repositoryLocation>
+					</lido:repositorySet>
+				</lido:repositoryWrap>
+				<lido:objectDescriptionWrap>
+				</lido:objectDescriptionWrap>
+				<lido:objectMeasurementsWrap>
+					<lido:objectMeasurementsSet>
+						<lido:displayObjectMeasurements>L: 10,8 cm, B: 3,9 cm (breiteste
+							Stelle des Keils), T: 1,9 cm (breiteste Tiefe des Keils), T: 1,4
+							cm (kleinste Tiefe des Keils)</lido:displayObjectMeasurements>
+					</lido:objectMeasurementsSet>
+				</lido:objectMeasurementsWrap>
+			</lido:objectIdentificationWrap>
+			<lido:eventWrap>
+				<lido:eventSet>
+					<lido:event>
+						<lido:eventType>
+							<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E12</lido:conceptID>
+							<lido:term>Herstellung</lido:term>
+						</lido:eventType>
+						<lido:eventActor>
+							<lido:actorInRole>
+								<lido:actor>
+									<lido:nameActorSet>
+										<lido:appellationValue lido:pref="preferred">unbekannt</lido:appellationValue>
+									</lido:nameActorSet>
+								</lido:actor>
+								<lido:roleActor>
+									<lido:term xml:lang="en">manufacturer</lido:term>
+								</lido:roleActor>
+								<lido:extentActor></lido:extentActor>
+							</lido:actorInRole>
+						</lido:eventActor>
+						<lido:eventDate>
+							<lido:displayDate>2. Drittel 20. Jahrhundert</lido:displayDate>
+							<lido:date>
+								<lido:earliestDate>1934</lido:earliestDate>
+								<lido:latestDate>1966</lido:latestDate>
+							</lido:date>
+						</lido:eventDate>
+						<lido:eventPlace>
+							<lido:place>
+								<lido:placeID lido:type="local" lido:source="xTree"></lido:placeID>
+								<lido:namePlaceSet>
+									<lido:appellationValue>unbekannt</lido:appellationValue>
+								</lido:namePlaceSet>
+							</lido:place>
+						</lido:eventPlace>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.37</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4351125-9</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Holz</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Buche</lido:term>
+								</lido:termMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.124</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4077146-5</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Holztechnik</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">geschnitzt</lido:term>
+								</lido:termMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.14</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4012912-3</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Holztechnik</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">gedrechselt</lido:term>
+								</lido:termMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+					</lido:event>
+				</lido:eventSet>
+			</lido:eventWrap>
+		</lido:descriptiveMetadata>
+		<lido:administrativeMetadata xml:lang="de">
+			<lido:rightsWorkWrap>
+				<lido:rightsWorkSet>
+					<lido:rightsHolder>
+						<lido:legalBodyName>
+							<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+								der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+						</lido:legalBodyName>
+					</lido:rightsHolder>
+				</lido:rightsWorkSet>
+			</lido:rightsWorkWrap>
+			<lido:recordWrap>
+				<lido:recordID lido:type="local">19_2008-003-015</lido:recordID>
+				<lido:recordType>
+					<lido:term xml:lang="en">item</lido:term>
+				</lido:recordType>
+				<lido:recordSource>
+					<lido:legalBodyName>
+						<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+							der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+					</lido:legalBodyName>
+				</lido:recordSource>
+				<lido:recordInfoSet>
+					<lido:recordInfoLink>http://www.museen-sh.de/ml/digi_einzBild.php?s=1&amp;pi=19_2008-003-015</lido:recordInfoLink>
+					<lido:recordMetadataDate lido:type="modification date">2011-07-21
+						08:48:45</lido:recordMetadataDate>
+				</lido:recordInfoSet>
+			</lido:recordWrap>
+			<lido:resourceWrap>
+				<lido:resourceSet>
+					<lido:resourceRepresentation lido:type="image_overview">
+						<lido:linkResource>http://www.museen-sh.de/eingabe/bilder/data/mitte/19/2008-003-015.jpg</lido:linkResource>
+					</lido:resourceRepresentation>
+					<lido:rightsResource>
+						<lido:rightsHolder>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+						</lido:rightsHolder>
+					</lido:rightsResource>
+				</lido:resourceSet>
+			</lido:resourceWrap>
+		</lido:administrativeMetadata>
+	</lido:lido>
+	<lido:lido>
+		<lido:lidoRecID lido:type="local" lido:source="digiCULT Verbund e.G.">DE-MUS-924614/lido/2008-003-014</lido:lidoRecID>
+		<lido:category>
+			<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E22</lido:conceptID>
+			<lido:term xml:lang="en">Man-Made Object</lido:term>
+		</lido:category>
+		<lido:descriptiveMetadata xml:lang="de">
+			<lido:objectClassificationWrap>
+				<lido:objectWorkTypeWrap>
+					<lido:objectWorkType>
+						<lido:term>Glasflasche</lido:term>
+					</lido:objectWorkType>
+				</lido:objectWorkTypeWrap>
+				<lido:classificationWrap>
+					<lido:classification lido:type="Sachgruppe">
+						<lido:conceptID lido:type="local" lido:source="xTree">10.255</lido:conceptID>
+						<lido:term lido:addedSearchTerm="yes" xml:lang="de">Geburtshilfe
+							und Hebammenwesen</lido:term>
+						<lido:term lido:addedSearchTerm="no" xml:lang="de">Hebammentaschen</lido:term>
+					</lido:classification>
+				</lido:classificationWrap>
+			</lido:objectClassificationWrap>
+			<lido:objectIdentificationWrap>
+				<lido:titleWrap>
+					<lido:titleSet lido:type="Objektbezeichnung">
+						<lido:appellationValue>Glasflasche</lido:appellationValue>
+					</lido:titleSet>
+				</lido:titleWrap>
+				<lido:repositoryWrap>
+					<lido:repositorySet lido:type="current">
+						<lido:repositoryName>
+							<lido:legalBodyID lido:type="URI">info:isil/DE-MUS-924614</lido:legalBodyID>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+							<lido:legalBodyWeblink>http://www.museen-sh.de/ml/inst.php?inst=19</lido:legalBodyWeblink>
+						</lido:repositoryName>
+						<lido:workID lido:type="Inventarnummer">2008-003-014</lido:workID>
+						<lido:repositoryLocation>
+							<lido:namePlaceSet>
+								<lido:appellationValue>Kiel</lido:appellationValue>
+							</lido:namePlaceSet>
+							<lido:gml>
+								<gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+									<gml:name>Medizin- und Pharmaziehistorische Sammlung der
+										Christian-Albrechts-Universität Kiel</gml:name>
+									<gml:pos>54.328788 10.133912</gml:pos>
+								</gml:Point>
+							</lido:gml>
+						</lido:repositoryLocation>
+					</lido:repositorySet>
+				</lido:repositoryWrap>
+				<lido:objectDescriptionWrap>
+				</lido:objectDescriptionWrap>
+				<lido:objectMeasurementsWrap>
+					<lido:objectMeasurementsSet>
+						<lido:displayObjectMeasurements>H: 19 cm, D: 2,8 cm
+							(Flaschenhals), D: 8,3 cm (Flaschenrumpf), D: 4,5 cm (Verschluss)</lido:displayObjectMeasurements>
+					</lido:objectMeasurementsSet>
+				</lido:objectMeasurementsWrap>
+			</lido:objectIdentificationWrap>
+			<lido:eventWrap>
+				<lido:eventSet>
+					<lido:event>
+						<lido:eventType>
+							<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E12</lido:conceptID>
+							<lido:term>Herstellung</lido:term>
+						</lido:eventType>
+						<lido:eventActor>
+							<lido:actorInRole>
+								<lido:actor>
+									<lido:nameActorSet>
+										<lido:appellationValue lido:pref="preferred">Fa.
+											Breuer</lido:appellationValue>
+									</lido:nameActorSet>
+								</lido:actor>
+								<lido:roleActor>
+									<lido:term xml:lang="en">manufacturer</lido:term>
+								</lido:roleActor>
+								<lido:extentActor></lido:extentActor>
+							</lido:actorInRole>
+						</lido:eventActor>
+						<lido:eventDate>
+							<lido:displayDate>2. Drittel 20. Jahrhundert</lido:displayDate>
+							<lido:date>
+								<lido:earliestDate>1934</lido:earliestDate>
+								<lido:latestDate>1966</lido:latestDate>
+							</lido:date>
+						</lido:eventDate>
+						<lido:eventPlace>
+							<lido:place>
+								<lido:placeID lido:type="local" lido:source="xTree"></lido:placeID>
+								<lido:namePlaceSet>
+									<lido:appellationValue>unbekannt</lido:appellationValue>
+								</lido:namePlaceSet>
+							</lido:place>
+						</lido:eventPlace>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.2</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4021142-3</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Glas</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Flasche</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.26</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4038860-8</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Metall</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Teil des Verschlusses</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.71</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4318613-0</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Glastechniken</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">gepresst
+										(fabrikmäßig)</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Glasflasche</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.190</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Papiertechnik</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">bedruckt</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Etikett</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.19</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4038872-4</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Metalltechnik</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>metallener Verschluss</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+					</lido:event>
+				</lido:eventSet>
+			</lido:eventWrap>
+		</lido:descriptiveMetadata>
+		<lido:administrativeMetadata xml:lang="de">
+			<lido:rightsWorkWrap>
+				<lido:rightsWorkSet>
+					<lido:rightsHolder>
+						<lido:legalBodyName>
+							<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+								der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+						</lido:legalBodyName>
+					</lido:rightsHolder>
+				</lido:rightsWorkSet>
+			</lido:rightsWorkWrap>
+			<lido:recordWrap>
+				<lido:recordID lido:type="local">19_2008-003-014</lido:recordID>
+				<lido:recordType>
+					<lido:term xml:lang="en">item</lido:term>
+				</lido:recordType>
+				<lido:recordSource>
+					<lido:legalBodyName>
+						<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+							der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+					</lido:legalBodyName>
+				</lido:recordSource>
+				<lido:recordInfoSet>
+					<lido:recordInfoLink>http://www.museen-sh.de/ml/digi_einzBild.php?s=1&amp;pi=19_2008-003-014</lido:recordInfoLink>
+					<lido:recordMetadataDate lido:type="modification date">2011-07-21
+						08:44:15</lido:recordMetadataDate>
+				</lido:recordInfoSet>
+			</lido:recordWrap>
+			<lido:resourceWrap>
+				<lido:resourceSet>
+					<lido:resourceRepresentation lido:type="image_overview">
+						<lido:linkResource>http://www.museen-sh.de/eingabe/bilder/data/mitte/19/2008-003-014.jpg</lido:linkResource>
+					</lido:resourceRepresentation>
+					<lido:rightsResource>
+						<lido:rightsHolder>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+						</lido:rightsHolder>
+					</lido:rightsResource>
+				</lido:resourceSet>
+			</lido:resourceWrap>
+		</lido:administrativeMetadata>
+	</lido:lido>
+	<lido:lido>
+		<lido:lidoRecID lido:type="local" lido:source="digiCULT Verbund e.G.">DE-MUS-924614/lido/2008-003-012</lido:lidoRecID>
+		<lido:category>
+			<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E22</lido:conceptID>
+			<lido:term xml:lang="en">Man-Made Object</lido:term>
+		</lido:category>
+		<lido:descriptiveMetadata xml:lang="de">
+			<lido:objectClassificationWrap>
+				<lido:objectWorkTypeWrap>
+					<lido:objectWorkType>
+						<lido:term>Hörrohr</lido:term>
+					</lido:objectWorkType>
+				</lido:objectWorkTypeWrap>
+				<lido:classificationWrap>
+					<lido:classification lido:type="Sachgruppe">
+						<lido:conceptID lido:type="local" lido:source="xTree">10.255</lido:conceptID>
+						<lido:term lido:addedSearchTerm="yes" xml:lang="de">Geburtshilfe
+							und Hebammenwesen</lido:term>
+						<lido:term lido:addedSearchTerm="no" xml:lang="de">Hebammentaschen</lido:term>
+					</lido:classification>
+				</lido:classificationWrap>
+			</lido:objectClassificationWrap>
+			<lido:objectIdentificationWrap>
+				<lido:titleWrap>
+					<lido:titleSet lido:type="Objektbezeichnung">
+						<lido:appellationValue>Hörrohr</lido:appellationValue>
+					</lido:titleSet>
+				</lido:titleWrap>
+				<lido:repositoryWrap>
+					<lido:repositorySet lido:type="current">
+						<lido:repositoryName>
+							<lido:legalBodyID lido:type="URI">info:isil/DE-MUS-924614</lido:legalBodyID>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+							<lido:legalBodyWeblink>http://www.museen-sh.de/ml/inst.php?inst=19</lido:legalBodyWeblink>
+						</lido:repositoryName>
+						<lido:workID lido:type="Inventarnummer">2008-003-012</lido:workID>
+						<lido:repositoryLocation>
+							<lido:namePlaceSet>
+								<lido:appellationValue>Kiel</lido:appellationValue>
+							</lido:namePlaceSet>
+							<lido:gml>
+								<gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+									<gml:name>Medizin- und Pharmaziehistorische Sammlung der
+										Christian-Albrechts-Universität Kiel</gml:name>
+									<gml:pos>54.328788 10.133912</gml:pos>
+								</gml:Point>
+							</lido:gml>
+						</lido:repositoryLocation>
+					</lido:repositorySet>
+				</lido:repositoryWrap>
+				<lido:objectDescriptionWrap>
+				</lido:objectDescriptionWrap>
+				<lido:objectMeasurementsWrap>
+					<lido:objectMeasurementsSet>
+						<lido:displayObjectMeasurements>H: 17,7 cm, D: 6 cm (Bauchseite),
+							D: 4,5 cm (Ohrseite)</lido:displayObjectMeasurements>
+					</lido:objectMeasurementsSet>
+				</lido:objectMeasurementsWrap>
+			</lido:objectIdentificationWrap>
+			<lido:eventWrap>
+				<lido:eventSet>
+					<lido:event>
+						<lido:eventType>
+							<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E12</lido:conceptID>
+							<lido:term>Herstellung</lido:term>
+						</lido:eventType>
+						<lido:eventActor>
+							<lido:actorInRole>
+								<lido:actor>
+									<lido:nameActorSet>
+										<lido:appellationValue lido:pref="preferred">unbekannt</lido:appellationValue>
+									</lido:nameActorSet>
+								</lido:actor>
+								<lido:roleActor>
+									<lido:term xml:lang="en">manufacturer</lido:term>
+								</lido:roleActor>
+								<lido:extentActor></lido:extentActor>
+							</lido:actorInRole>
+						</lido:eventActor>
+						<lido:eventDate>
+							<lido:displayDate>2. Drittel 20. Jahrhundert</lido:displayDate>
+							<lido:date>
+								<lido:earliestDate>1934</lido:earliestDate>
+								<lido:latestDate>1966</lido:latestDate>
+							</lido:date>
+						</lido:eventDate>
+						<lido:eventPlace>
+							<lido:place>
+								<lido:placeID lido:type="local" lido:source="xTree"></lido:placeID>
+								<lido:namePlaceSet>
+									<lido:appellationValue>unbekannt</lido:appellationValue>
+								</lido:namePlaceSet>
+							</lido:place>
+						</lido:eventPlace>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.3</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4025668-6</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Holz</lido:term>
+								</lido:termMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.14</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4012912-3</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Holztechnik</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">gedrechselt</lido:term>
+								</lido:termMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+					</lido:event>
+				</lido:eventSet>
+			</lido:eventWrap>
+		</lido:descriptiveMetadata>
+		<lido:administrativeMetadata xml:lang="de">
+			<lido:rightsWorkWrap>
+				<lido:rightsWorkSet>
+					<lido:rightsHolder>
+						<lido:legalBodyName>
+							<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+								der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+						</lido:legalBodyName>
+					</lido:rightsHolder>
+				</lido:rightsWorkSet>
+			</lido:rightsWorkWrap>
+			<lido:recordWrap>
+				<lido:recordID lido:type="local">19_2008-003-012</lido:recordID>
+				<lido:recordType>
+					<lido:term xml:lang="en">item</lido:term>
+				</lido:recordType>
+				<lido:recordSource>
+					<lido:legalBodyName>
+						<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+							der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+					</lido:legalBodyName>
+				</lido:recordSource>
+				<lido:recordInfoSet>
+					<lido:recordInfoLink>http://www.museen-sh.de/ml/digi_einzBild.php?s=1&amp;pi=19_2008-003-012</lido:recordInfoLink>
+					<lido:recordMetadataDate lido:type="modification date">2011-07-21
+						08:36:35</lido:recordMetadataDate>
+				</lido:recordInfoSet>
+			</lido:recordWrap>
+			<lido:resourceWrap>
+				<lido:resourceSet>
+					<lido:resourceRepresentation lido:type="image_overview">
+						<lido:linkResource>http://www.museen-sh.de/eingabe/bilder/data/mitte/19/2008-003-012_1.jpg</lido:linkResource>
+					</lido:resourceRepresentation>
+					<lido:rightsResource>
+						<lido:rightsHolder>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+						</lido:rightsHolder>
+					</lido:rightsResource>
+				</lido:resourceSet>
+			</lido:resourceWrap>
+		</lido:administrativeMetadata>
+	</lido:lido>
+	<lido:lido>
+		<lido:lidoRecID lido:type="local" lido:source="digiCULT Verbund e.G.">DE-MUS-924614/lido/2008-003-011</lido:lidoRecID>
+		<lido:category>
+			<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E22</lido:conceptID>
+			<lido:term xml:lang="en">Man-Made Object</lido:term>
+		</lido:category>
+		<lido:descriptiveMetadata xml:lang="de">
+			<lido:objectClassificationWrap>
+				<lido:objectWorkTypeWrap>
+					<lido:objectWorkType>
+						<lido:term>Wundwatte</lido:term>
+					</lido:objectWorkType>
+				</lido:objectWorkTypeWrap>
+				<lido:classificationWrap>
+					<lido:classification lido:type="Sachgruppe">
+						<lido:conceptID lido:type="local" lido:source="xTree">10.255</lido:conceptID>
+						<lido:term lido:addedSearchTerm="yes" xml:lang="de">Geburtshilfe
+							und Hebammenwesen</lido:term>
+						<lido:term lido:addedSearchTerm="no" xml:lang="de">Hebammentaschen</lido:term>
+					</lido:classification>
+				</lido:classificationWrap>
+			</lido:objectClassificationWrap>
+			<lido:objectIdentificationWrap>
+				<lido:titleWrap>
+					<lido:titleSet lido:type="Titel">
+						<lido:appellationValue>Ruhrstein- Wundwatte</lido:appellationValue>
+					</lido:titleSet>
+				</lido:titleWrap>
+				<lido:repositoryWrap>
+					<lido:repositorySet lido:type="current">
+						<lido:repositoryName>
+							<lido:legalBodyID lido:type="URI">info:isil/DE-MUS-924614</lido:legalBodyID>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+							<lido:legalBodyWeblink>http://www.museen-sh.de/ml/inst.php?inst=19</lido:legalBodyWeblink>
+						</lido:repositoryName>
+						<lido:workID lido:type="Inventarnummer">2008-003-011</lido:workID>
+						<lido:repositoryLocation>
+							<lido:namePlaceSet>
+								<lido:appellationValue>Kiel</lido:appellationValue>
+							</lido:namePlaceSet>
+							<lido:gml>
+								<gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+									<gml:name>Medizin- und Pharmaziehistorische Sammlung der
+										Christian-Albrechts-Universität Kiel</gml:name>
+									<gml:pos>54.328788 10.133912</gml:pos>
+								</gml:Point>
+							</lido:gml>
+						</lido:repositoryLocation>
+					</lido:repositorySet>
+				</lido:repositoryWrap>
+				<lido:objectDescriptionWrap>
+				</lido:objectDescriptionWrap>
+				<lido:objectMeasurementsWrap>
+					<lido:objectMeasurementsSet>
+						<lido:displayObjectMeasurements>H: 12,5 cm, B: 9,5 cm, T: 7 cm</lido:displayObjectMeasurements>
+					</lido:objectMeasurementsSet>
+				</lido:objectMeasurementsWrap>
+			</lido:objectIdentificationWrap>
+			<lido:eventWrap>
+				<lido:eventSet>
+					<lido:event>
+						<lido:eventType>
+							<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E12</lido:conceptID>
+							<lido:term>Herstellung</lido:term>
+						</lido:eventType>
+						<lido:eventActor>
+							<lido:actorInRole>
+								<lido:actor>
+									<lido:nameActorSet>
+										<lido:appellationValue lido:pref="preferred">Ruhrstern</lido:appellationValue>
+									</lido:nameActorSet>
+								</lido:actor>
+								<lido:roleActor>
+									<lido:term xml:lang="en">manufacturer</lido:term>
+								</lido:roleActor>
+								<lido:extentActor></lido:extentActor>
+							</lido:actorInRole>
+						</lido:eventActor>
+						<lido:eventDate>
+							<lido:displayDate>2. Drittel 20. Jahrhundert</lido:displayDate>
+							<lido:date>
+								<lido:earliestDate>1934</lido:earliestDate>
+								<lido:latestDate>1966</lido:latestDate>
+							</lido:date>
+						</lido:eventDate>
+						<lido:eventPlace>
+							<lido:place>
+								<lido:placeID lido:type="local" lido:source="xTree">6.71</lido:placeID>
+								<lido:namePlaceSet>
+									<lido:appellationValue>Nordrhein-Westfalen</lido:appellationValue>
+								</lido:namePlaceSet>
+							</lido:place>
+						</lido:eventPlace>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.8</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4044522-7</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Papier</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>verpackung</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.216</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Watte</lido:term>
+								</lido:termMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.190</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Papiertechnik</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">bedruckt</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Verpackung -Produktbezeichnung</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+					</lido:event>
+				</lido:eventSet>
+			</lido:eventWrap>
+		</lido:descriptiveMetadata>
+		<lido:administrativeMetadata xml:lang="de">
+			<lido:rightsWorkWrap>
+				<lido:rightsWorkSet>
+					<lido:rightsHolder>
+						<lido:legalBodyName>
+							<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+								der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+						</lido:legalBodyName>
+					</lido:rightsHolder>
+				</lido:rightsWorkSet>
+			</lido:rightsWorkWrap>
+			<lido:recordWrap>
+				<lido:recordID lido:type="local">19_2008-003-011</lido:recordID>
+				<lido:recordType>
+					<lido:term xml:lang="en">item</lido:term>
+				</lido:recordType>
+				<lido:recordSource>
+					<lido:legalBodyName>
+						<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+							der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+					</lido:legalBodyName>
+				</lido:recordSource>
+				<lido:recordInfoSet>
+					<lido:recordInfoLink>http://www.museen-sh.de/ml/digi_einzBild.php?s=1&amp;pi=19_2008-003-011</lido:recordInfoLink>
+					<lido:recordMetadataDate lido:type="modification date">2011-07-21
+						08:34:57</lido:recordMetadataDate>
+				</lido:recordInfoSet>
+			</lido:recordWrap>
+			<lido:resourceWrap>
+				<lido:resourceSet>
+					<lido:resourceRepresentation lido:type="image_overview">
+						<lido:linkResource>http://www.museen-sh.de/eingabe/bilder/data/mitte/19/2008-003-011.jpg</lido:linkResource>
+					</lido:resourceRepresentation>
+					<lido:rightsResource>
+						<lido:rightsHolder>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+						</lido:rightsHolder>
+					</lido:rightsResource>
+				</lido:resourceSet>
+			</lido:resourceWrap>
+		</lido:administrativeMetadata>
+	</lido:lido>
+	<lido:lido>
+		<lido:lidoRecID lido:type="local" lido:source="digiCULT Verbund e.G.">DE-MUS-924614/lido/2008-003-010</lido:lidoRecID>
+		<lido:category>
+			<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E22</lido:conceptID>
+			<lido:term xml:lang="en">Man-Made Object</lido:term>
+		</lido:category>
+		<lido:descriptiveMetadata xml:lang="de">
+			<lido:objectClassificationWrap>
+				<lido:objectWorkTypeWrap>
+					<lido:objectWorkType>
+						<lido:term>Verbandzellstoff</lido:term>
+					</lido:objectWorkType>
+				</lido:objectWorkTypeWrap>
+				<lido:classificationWrap>
+					<lido:classification lido:type="Sachgruppe">
+						<lido:conceptID lido:type="local" lido:source="xTree">10.255</lido:conceptID>
+						<lido:term lido:addedSearchTerm="yes" xml:lang="de">Geburtshilfe
+							und Hebammenwesen</lido:term>
+						<lido:term lido:addedSearchTerm="no" xml:lang="de">Hebammentaschen</lido:term>
+					</lido:classification>
+				</lido:classificationWrap>
+			</lido:objectClassificationWrap>
+			<lido:objectIdentificationWrap>
+				<lido:titleWrap>
+					<lido:titleSet lido:type="Titel">
+						<lido:appellationValue>Hartmann Verbandzellstoff</lido:appellationValue>
+					</lido:titleSet>
+				</lido:titleWrap>
+				<lido:repositoryWrap>
+					<lido:repositorySet lido:type="current">
+						<lido:repositoryName>
+							<lido:legalBodyID lido:type="URI">info:isil/DE-MUS-924614</lido:legalBodyID>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+							<lido:legalBodyWeblink>http://www.museen-sh.de/ml/inst.php?inst=19</lido:legalBodyWeblink>
+						</lido:repositoryName>
+						<lido:workID lido:type="Inventarnummer">2008-003-010</lido:workID>
+						<lido:repositoryLocation>
+							<lido:namePlaceSet>
+								<lido:appellationValue>Kiel</lido:appellationValue>
+							</lido:namePlaceSet>
+							<lido:gml>
+								<gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326">
+									<gml:name>Medizin- und Pharmaziehistorische Sammlung der
+										Christian-Albrechts-Universität Kiel</gml:name>
+									<gml:pos>54.328788 10.133912</gml:pos>
+								</gml:Point>
+							</lido:gml>
+						</lido:repositoryLocation>
+					</lido:repositorySet>
+				</lido:repositoryWrap>
+				<lido:objectDescriptionWrap>
+				</lido:objectDescriptionWrap>
+				<lido:objectMeasurementsWrap>
+					<lido:objectMeasurementsSet>
+						<lido:displayObjectMeasurements>H: 5,8 cm, T: 10,5 cm, L: 22,5 cm</lido:displayObjectMeasurements>
+					</lido:objectMeasurementsSet>
+				</lido:objectMeasurementsWrap>
+			</lido:objectIdentificationWrap>
+			<lido:eventWrap>
+				<lido:eventSet>
+					<lido:event>
+						<lido:eventType>
+							<lido:conceptID lido:type="URI">http://www.cidoc-crm.org/crm-concepts/E12</lido:conceptID>
+							<lido:term>Herstellung</lido:term>
+						</lido:eventType>
+						<lido:eventActor>
+							<lido:actorInRole>
+								<lido:actor>
+									<lido:nameActorSet>
+										<lido:appellationValue lido:pref="preferred">Paul
+											Hartmann AG</lido:appellationValue>
+									</lido:nameActorSet>
+								</lido:actor>
+								<lido:roleActor>
+									<lido:term xml:lang="en">manufacturer</lido:term>
+								</lido:roleActor>
+								<lido:extentActor></lido:extentActor>
+							</lido:actorInRole>
+						</lido:eventActor>
+						<lido:eventDate>
+							<lido:displayDate>2. Drittel 20. Jahrhundert</lido:displayDate>
+							<lido:date>
+								<lido:earliestDate>1934</lido:earliestDate>
+								<lido:latestDate>1966</lido:latestDate>
+							</lido:date>
+						</lido:eventDate>
+						<lido:eventPlace>
+							<lido:place>
+								<lido:placeID lido:type="local" lido:source="xTree">6.3225</lido:placeID>
+								<lido:placeID lido:type="local" lido:source="TGN">7012419</lido:placeID>
+								<lido:namePlaceSet>
+									<lido:appellationValue>Heidenheim / Brenz</lido:appellationValue>
+									<lido:appellationValue lido:pref="alternative">Heidenheim</lido:appellationValue>
+								</lido:namePlaceSet>
+							</lido:place>
+						</lido:eventPlace>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.76</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4044549-5</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Papier</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Pappe</lido:term>
+								</lido:termMaterialsTech>
+								<lido:extentMaterialsTech>Karton als Verpackung</lido:extentMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="material">
+									<lido:conceptID lido:type="local" lido:source="xTree">7.16</lido:conceptID>
+									<lido:conceptID lido:type="URI">http://d-nb.info/gnd/4067554-3</lido:conceptID>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">Zellstoff</lido:term>
+								</lido:termMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+						<lido:eventMaterialsTech>
+							<lido:materialsTech>
+								<lido:termMaterialsTech lido:type="technique">
+									<lido:conceptID lido:type="local" lido:source="xTree">8.190</lido:conceptID>
+									<lido:term lido:addedSearchTerm="yes" xml:lang="de">Papiertechnik</lido:term>
+									<lido:term lido:addedSearchTerm="no" xml:lang="de">bedruckt</lido:term>
+								</lido:termMaterialsTech>
+							</lido:materialsTech>
+						</lido:eventMaterialsTech>
+					</lido:event>
+				</lido:eventSet>
+			</lido:eventWrap>
+		</lido:descriptiveMetadata>
+		<lido:administrativeMetadata xml:lang="de">
+			<lido:rightsWorkWrap>
+				<lido:rightsWorkSet>
+					<lido:rightsHolder>
+						<lido:legalBodyName>
+							<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+								der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+						</lido:legalBodyName>
+					</lido:rightsHolder>
+				</lido:rightsWorkSet>
+			</lido:rightsWorkWrap>
+			<lido:recordWrap>
+				<lido:recordID lido:type="local">19_2008-003-010</lido:recordID>
+				<lido:recordType>
+					<lido:term xml:lang="en">item</lido:term>
+				</lido:recordType>
+				<lido:recordSource>
+					<lido:legalBodyName>
+						<lido:appellationValue>Medizin- und Pharmaziehistorische Sammlung
+							der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+					</lido:legalBodyName>
+				</lido:recordSource>
+				<lido:recordInfoSet>
+					<lido:recordInfoLink>http://www.museen-sh.de/ml/digi_einzBild.php?s=1&amp;pi=19_2008-003-010</lido:recordInfoLink>
+					<lido:recordMetadataDate lido:type="modification date">2011-07-21
+						08:32:40</lido:recordMetadataDate>
+				</lido:recordInfoSet>
+			</lido:recordWrap>
+			<lido:resourceWrap>
+				<lido:resourceSet>
+					<lido:resourceRepresentation lido:type="image_overview">
+						<lido:linkResource>http://www.museen-sh.de/eingabe/bilder/data/mitte/19/2008-003-010.jpg</lido:linkResource>
+					</lido:resourceRepresentation>
+					<lido:rightsResource>
+						<lido:rightsHolder>
+							<lido:legalBodyName>
+								<lido:appellationValue>Medizin- und Pharmaziehistorische
+									Sammlung der Christian-Albrechts-Universität Kiel</lido:appellationValue>
+							</lido:legalBodyName>
+						</lido:rightsHolder>
+					</lido:rightsResource>
+				</lido:resourceSet>
+			</lido:resourceWrap>
+		</lido:administrativeMetadata>
+	</lido:lido>
+
+</lido:lidoWrap>

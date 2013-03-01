@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cgxml version="1.0" xmlns="http://www.culturegraph.org/cgxml">
+	<records>
+		<record id="id-1">
+			<literal name="output" value="Hallo Welt!" />
+		</record>
+	</records>
+</cgxml>

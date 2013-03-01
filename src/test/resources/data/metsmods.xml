@@ -1,0 +1,101 @@
+<item oaipmhurl="http://digital.slub-dresden.de/oai" partner_id="oai:de:hmt-leipzig:db:id-286875586" ingestevent="1318330939">
+
+<mets:mets xmlns:mets="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:slub="http://slub-dresden.de/" xmlns:dv="http://dfg-viewer.de/" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/version17/mets.v1-7.xsd">
+  <mets:dmdSec ID="DMDLOG_0000">
+    <mets:mdWrap MDTYPE="MODS">
+      <mets:xmlData>
+        <mods:mods>
+          <mods:relatedItem type="series">
+            <mods:titleInfo>
+              <mods:title lang="ger">Musik</mods:title>
+            </mods:titleInfo>
+          </mods:relatedItem>
+          <mods:relatedItem type="series">
+            <mods:titleInfo>
+              <mods:title lang="ger">Projekt: Konservatorium Leipzig</mods:title>
+            </mods:titleInfo>
+          </mods:relatedItem>
+          <mods:relatedItem type="series">
+            <mods:titleInfo>
+              <mods:title lang="ger">Saxonica</mods:title>
+            </mods:titleInfo>
+          </mods:relatedItem>
+          <mods:recordInfo>
+            <mods:recordIdentifier source="http://digital.slub-dresden.de/oai/">oai:de:hmt-leipzig:db:id-286875586</mods:recordIdentifier>
+          </mods:recordInfo>
+          <mods:physicalDescription>
+            <mods:digitalOrigin>reformatted digital</mods:digitalOrigin>
+          </mods:physicalDescription>
+          <mods:identifier type="swb-ppn">286875586</mods:identifier>
+          <mods:identifier type="purl">http://digital.slub-dresden.de/id286875586</mods:identifier>
+          <mods:identifier type="urn">urn:nbn:de:bsz:14-db-id2868755865</mods:identifier>
+          <mods:extension>
+            <slub:slub>
+              <slub:id type="digital">286875586</slub:id>
+            </slub:slub>
+          </mods:extension>
+          <mods:titleInfo>
+            <mods:title>[Prüfungsprotokolle] / Conservatorium der Musik Leipzig</mods:title>
+          </mods:titleInfo>
+          <mods:language>
+            <mods:languageTerm authority="rfc3066" type="code">de</mods:languageTerm>
+          </mods:language>
+          <mods:originInfo>
+            <mods:place>
+              <mods:placeTerm type="text">[Leipzig]</mods:placeTerm>
+            </mods:place>
+            <mods:dateIssued keyDate="yes">18XX</mods:dateIssued>
+            <mods:publisher>Conservatorium der Musik</mods:publisher>
+          </mods:originInfo>
+          <mods:subject authority="slub">
+            <mods:topic>pru</mods:topic>
+          </mods:subject>
+          <mods:name>
+            <mods:role>
+              <mods:roleTerm authority="marcrelator" type="code">len</mods:roleTerm>
+            </mods:role>
+            <mods:displayForm>Hochschule für Musik und Theater Leipzig, Bibliothek</mods:displayForm>
+          </mods:name>
+          <mods:name>
+            <mods:role>
+              <mods:roleTerm authority="marcrelator" type="code">own</mods:roleTerm>
+            </mods:role>
+            <mods:displayForm>hmtl</mods:displayForm>
+          </mods:name>
+        </mods:mods>
+      </mets:xmlData>
+    </mets:mdWrap>
+  </mets:dmdSec>
+  <mets:amdSec ID="AMD">
+    <mets:rightsMD ID="RIGHTS">
+      <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml" OTHERMDTYPE="DVRIGHTS">
+        <mets:xmlData>
+          <dv:rights>
+            <dv:owner>Hochschule für Musik und Theater Felix Mendelssohn Bartholdy Leipzig</dv:owner>
+            <dv:ownerLogo>http://digital.slub-dresden.de/fileadmin/images/dfgviewer_logo_hmtl.gif</dv:ownerLogo>
+            <dv:ownerSiteURL>http://www.hmt-leipzig.de/</dv:ownerSiteURL>
+            <dv:ownerContact>mailto:wiermann@hmt-leipzig.de</dv:ownerContact>
+          </dv:rights>
+        </mets:xmlData>
+      </mets:mdWrap>
+    </mets:rightsMD>
+    <mets:digiprovMD ID="DIGIPROV">
+      <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml" OTHERMDTYPE="DVLINKS">
+        <mets:xmlData>
+          <dv:links>
+            <dv:reference/>
+            <dv:presentation>http://digital.slub-dresden.de/id286875896</dv:presentation>
+          </dv:links>
+        </mets:xmlData>
+      </mets:mdWrap>
+    </mets:digiprovMD>
+  </mets:amdSec>
+  <mets:structMap TYPE="LOGICAL">
+    <mets:div ADMID="AMD" CONTENTIDS="http://digital.slub-dresden.de/id286875896" DMDID="DMDLOG_0000" ID="LOG_0000" LABEL="[Prüfungsprotokolle] / Conservatorium der Musik Leipzig" TYPE="multipart_manuscript">
+      <mets:div ID="LOG_0001" LABEL="Privat-Prüfungen betreffend Neujahr 1844 - Michael 1848" TYPE="manuscript_part">
+        <mets:mptr LOCTYPE="URL" xlink:href="http://digital.slub-dresden.de/fileadmin/data/286875896/286875896.xml"></mets:mptr>
+      </mets:div>
+    </mets:div>
+  </mets:structMap>
+</mets:mets>
+</item>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
+	<meta>
+		<name>Mab2 to PropertyRecord</name>
+	</meta>
+
+
+	<rules>
+
+		<data source="001" name="cg:sourceRecordId" />
+		<data source="003" name="xbib:lastModifiedByInstitution" />
+		<data source="025a" name="xbib:identifierAuthorityDNB" />
+		<data source="025b" name="xbib:identifierAuthorityBNB" />
+		<data source="025c" name="xbib:identifierAuthorityCasaliniLibri" />
+		<data source="025f" name="xbib:identifierAuthorityBNF" />
+		<data source="025l" name="xbib:identifierAuthorityLOC" />
+		<data source="025o" name="xbib:identifierAuthorityOCLC" />
+		<data source="025z" name="xbib:identifierAuthorityZDB" />
+		<data source="026" name="xbib:identifierAuthorityEKI" />
+		<data source="037b" name="dcterms:language" />
+		<data source="089" name="xbib:titleVolume" />
+		<data source="089" name="xbib:titleVolume" />
+
+		<group name="xbib:creatorDNBGND">
+			<data source="102a" />
+			<data source="106a" />
+		</group>
+
+		<group name="dcterms:titleUniform">
+			<data source="304" />
+			<data source="304a" />
+			<data source="304b" />
+		</group>
+
+		<group name="dcterms:title">
+			<data source="310" />
+			<data source="310.1" />
+			<data source="310a" />
+			<data source="310a.1" />
+			<data source="310b" />
+			<data source="310b.1" />
+			<data source="331" />
+			<data source="331.1" />
+			<data source="331a" />
+			<data source="331b" />
+			<data source="333" />
+			<data source="333.1" />
+			<data source="360" />
+			<data source="360.1" />
+		</group>
+
+		<data source="410" name="xbib:publicationPlace" />
+		<data source="412" name="xbib:publisherName" />
+		<data source="425" name="dcterms:issued" />
+
+		<group name="dcterms:titleSeries">
+			<data source="451" />
+			<data source="451a" />
+			<data source="451b" />
+		</group>
+
+		<data source="455" name="xbib:titleVolume" />
+
+		<data source="540a" name="xbib:identifierAuthorityISBN">
+			<isbn to="clean" />
+
+		</data>
+
+		<data source="541a" name="xbib:identifierAuthorityOriginalISMN" />
+		<data source="542a" name="xbib:identifierAuthorityISSN" />
+		<data source="551a" name="xbib:identifierAudioPublisher" />
+		<data source="552a" name="xbib:uniformResourceDoi" />
+		<data source="552b" name="xbib:uniformResourceName" />
+		<data source="552c" name="xbib:uniformResourceHandle" />
+		<data source="554" name="xbib:identifierUniversityScript" />
+		<data source="556" name="xbib:identifierReport" />
+		<data source="562" name="xbib:identifierPatent" />
+		<data source="580" name="xbib:identifierVD18" />
+
+		<combine name="ISBN_YEAR_KEY" value="${isbn}-${year}" reset="true">
+			<data source="540a" name="isbn">
+				<isbn to="isbn13" />
+			</data>
+			<data source="425" name="year" />
+		</combine>
+	</rules>
+</metamorph>

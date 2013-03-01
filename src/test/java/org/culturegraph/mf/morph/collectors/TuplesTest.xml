@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph-test version="1.0"
+	xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph"
+	xmlns:cgxml="http://www.culturegraph.org/cgxml">
+
+	<test-case name="2 and 3 tuples">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="1" value="a" />
+						<cgxml:literal name="1" value="b" />
+						<cgxml:literal name="2" value="A" />
+						<cgxml:literal name="2" value="B" />
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="3" value="X" />
+						<cgxml:literal name="1" value="c" />
+						<cgxml:literal name="1" value="d" />
+						<cgxml:literal name="2" value="C" />
+						<cgxml:literal name="3" value="Y" />
+						<cgxml:literal name="2" value="D" />
+
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:tuples name="product">
+						<mm:data source="1" />
+						<mm:data source="3" />
+						<mm:data source="2" />
+					</mm:tuples>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml" strict-value-order="true">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="product" value="aA" />
+						<cgxml:literal name="product" value="bA" />
+						<cgxml:literal name="product" value="aB" />
+						<cgxml:literal name="product" value="bB" />
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="product" value="cCX" />
+						<cgxml:literal name="product" value="dCX" />
+						<cgxml:literal name="product" value="cDX" />
+						<cgxml:literal name="product" value="dDX" />
+						<cgxml:literal name="product" value="cCY" />
+						<cgxml:literal name="product" value="dCY" />
+						<cgxml:literal name="product" value="cDY" />
+						<cgxml:literal name="product" value="dDY" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="tuples min n=3">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="1" value="a" />
+						<cgxml:literal name="1" value="b" />
+						<cgxml:literal name="2" value="A" />
+						<cgxml:literal name="2" value="B" />
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="3" value="X" />
+						<cgxml:literal name="1" value="c" />
+						<cgxml:literal name="1" value="d" />
+						<cgxml:literal name="2" value="C" />
+						<cgxml:literal name="3" value="Y" />
+						<cgxml:literal name="2" value="D" />
+
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:tuples name="product" minN="3">
+						<mm:data source="1" />
+						<mm:data source="3" />
+						<mm:data source="2" />
+					</mm:tuples>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml" strict-value-order="true">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="product" value="cCX" />
+						<cgxml:literal name="product" value="dCX" />
+						<cgxml:literal name="product" value="cDX" />
+						<cgxml:literal name="product" value="dDX" />
+						<cgxml:literal name="product" value="cCY" />
+						<cgxml:literal name="product" value="dCY" />
+						<cgxml:literal name="product" value="cDY" />
+						<cgxml:literal name="product" value="dDY" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="tuples min n=1">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="1" value="a" />
+						<cgxml:literal name="1" value="b" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:tuples name="product" minN="1">
+						<mm:data source="1" />
+						<mm:data source="3" />
+						<mm:data source="2" />
+					</mm:tuples>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml" strict-value-order="true">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="product" value="a" />
+						<cgxml:literal name="product" value="b" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+</metamorph-test>

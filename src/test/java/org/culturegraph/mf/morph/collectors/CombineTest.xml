@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph-test version="1.0"
+	xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph"
+	xmlns:cgxml="http://www.culturegraph.org/cgxml">
+
+	<test-case name="combine simple">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data1" value="a" />
+						<cgxml:literal name="data2" value="b" />
+						<cgxml:literal name="data2" value="c" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:combine name="combination" value="${one}${two}">
+						<mm:data source="data2" name="one" />
+						<mm:data source="data1" name="two" />
+					</mm:combine>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="combination" value="ba" />
+						<cgxml:literal name="combination" value="ca" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="combine same entity">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="entity">
+							<cgxml:literal name="data1" value="b" />
+							<cgxml:literal name="data2" value="a" />
+						</cgxml:entity>
+						<cgxml:entity name="entity">
+							<cgxml:literal name="data2" value="c" />
+							<cgxml:literal name="data2" value="d" />
+						</cgxml:entity>
+						<cgxml:entity name="entity">
+							<cgxml:literal name="data1" value="e" />
+						</cgxml:entity>
+						<cgxml:entity name="entity">
+							<cgxml:literal name="data2" value="f" />
+							<cgxml:literal name="data1" value="g" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:combine name="combination" value="${A}${B}"
+						sameEntity="true">
+						<mm:data source="entity.data1" name="B" />
+						<mm:data source="entity.data2" name="A" />
+					</mm:combine>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="combination" value="ab" />
+						<cgxml:literal name="combination" value="fg" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="combine reset">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data1" value="b" />
+						<cgxml:literal name="data2" value="a" />
+						<cgxml:literal name="data2" value="c" />
+						<cgxml:literal name="data2" value="d" />
+						<cgxml:literal name="data1" value="e" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:combine name="combination" value="${A}${B}" reset="true">
+						<mm:data source="data1" name="B" />
+						<mm:data source="data2" name="A" />
+					</mm:combine>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="combination" value="ab" />
+						<cgxml:literal name="combination" value="de" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="combine flush">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="e">
+							<cgxml:literal name="l" value="1" />
+						</cgxml:entity>
+						<cgxml:entity name="e">
+							<cgxml:literal name="l" value="2" />
+							<cgxml:literal name="m" value="2" />
+						</cgxml:entity>
+						<cgxml:entity name="e">
+							<cgxml:literal name="l" value="3" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:combine name="combi" value="${one}${two}" flushWith="e" reset="true">
+						<mm:data source="e.l" name="one" />
+						<mm:data source="e.m" name="two" />
+					</mm:combine>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="combi" value="1" />
+						<cgxml:literal name="combi" value="22" />
+						<cgxml:literal name="combi" value="3" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+	
+	
+
+</metamorph-test>

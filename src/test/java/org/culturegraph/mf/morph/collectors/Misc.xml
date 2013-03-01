@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph-test version="1.0"
+	xmlns="http://www.culturegraph.org/metamorph-test" xmlns:cgxml="http://www.culturegraph.org/cgxml">
+
+	<test-case name="entity open info">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="e1">
+							<cgxml:entity name="e2">
+								<cgxml:literal name="d" value="a" />
+							</cgxml:entity>
+						</cgxml:entity>
+
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph version="1" xmlns="http://www.culturegraph.org/metamorph">
+				<rules>
+					<data source="e1" />
+					<data source="e1.e2" />
+					<data source="e1.e2.d" />
+				</rules>
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="e1" value="" />
+						<cgxml:literal name="e1.e2" value="" />
+						<cgxml:literal name="e1.e2.d" value="a" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+</metamorph-test>
