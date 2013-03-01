@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:tns="http://www.culturegraph.org/cgxml"
+	targetNamespace="http://www.culturegraph.org/cgxml" xmlns="http://www.w3.org/2001/XMLSchema">
+
+	<element name="cgxml">
+		<complexType>
+			<sequence>
+				<element ref="tns:records" />
+			</sequence>
+			<attribute name="version" type="string" use="required" fixed="1.0"/>
+		</complexType>
+	</element>
+
+	<element name="records">
+		<complexType>
+			<sequence>
+				<element ref="tns:record" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+		</complexType>
+	</element>
+	
+	<element name="record">
+		<complexType>
+			<complexContent>
+				<extension base="tns:EntitiesAndLiterals">
+					<attribute name="id" type="string" use="optional" />
+				</extension>
+			</complexContent>	
+		</complexType>
+	</element>
+	
+	<element name="entity">
+		<complexType>
+			<complexContent>
+				<extension base="tns:EntitiesAndLiterals">
+					<attribute name="name" type="string" use="required" />
+				</extension>
+			</complexContent>	
+		</complexType>
+	</element>
+	
+	<element name="literal">
+		<complexType>
+			<attribute name="name" type="string" use="required" />
+			<attribute name="value" type="string" use="optional" />
+		</complexType>
+	</element>
+	
+	<complexType name="EntitiesAndLiterals" abstract="true">
+		<sequence>
+			<choice minOccurs="0" maxOccurs="unbounded" >
+				<element ref="tns:entity" />
+				<element ref="tns:literal" />
+			</choice>
+		</sequence>
+	</complexType>
+</schema>

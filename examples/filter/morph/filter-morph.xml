@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph"
+	version="1" entityMarker=".">
+	<meta>
+		<name>Filter Morph</name>
+		<annotation>Filters Tp records of physicians (Arzt)</annotation>
+	</meta>
+	<rules>
+
+		<combine name="OK" value="OK">
+			<data source="002@.0">
+				<substring start="0" end="2" />
+				<equals string="Tp" />
+			</data>
+			<data source="041R.a">
+				<case to="lower" />
+				<regexp match="arzt" />
+			</data>
+		</combine>
+
+	</rules>
+
+	<maps>
+	</maps>
+</metamorph>
