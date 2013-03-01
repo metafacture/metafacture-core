@@ -30,6 +30,12 @@
 		<antlr.version>3.4</antlr.version>
 	</properties>
 
+	<scm>
+		<connection>scm:git:git://github.com/culturegraph/metafacture-core.git</connection>
+		<developerConnection>scm:git:git@github.com:culturegraph/metafacture-core.git</developerConnection>
+		<url>http://github.com/culturegraph/metafacture-core</url>
+	</scm>
+
 	<build>
 		<testResources>
 			<testResource>
