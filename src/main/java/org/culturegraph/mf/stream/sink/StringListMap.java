@@ -77,8 +77,8 @@ public final class StringListMap extends DefaultStreamReceiver
 		return listMap.keySet();
 	}
 
-	public void put(final String name, final String value) {
-		listMap.put(name, value);
+	public void add(final String name, final String value) {
+		listMap.add(name, value);
 	}
 
 	public void putAll(final String name, final Collection<String> addValues) {
@@ -177,7 +177,7 @@ public final class StringListMap extends DefaultStreamReceiver
 	
 	@Override
 	public void literal(final String name, final String value) {
-		listMap.put(name, value);
+		listMap.add(name, value);
 	}
 
 	@Override

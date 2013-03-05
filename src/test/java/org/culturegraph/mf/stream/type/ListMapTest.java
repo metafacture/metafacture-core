@@ -38,11 +38,11 @@ public final class ListMapTest {
 		final ListMap<String, String> listMap = new ListMap<String, String>();
 		
 		Assert.assertNull(listMap.getFirst(NAME1));
-		listMap.put(NAME1, VALUE1);
+		listMap.add(NAME1, VALUE1);
 		Assert.assertNotNull(listMap.getFirst(NAME1));
 		Assert.assertEquals(VALUE1, listMap.getFirst(NAME1));
 		
-		listMap.put(NAME1, VALUE2);
+		listMap.add(NAME1, VALUE2);
 		Assert.assertNotNull(listMap.getFirst(NAME1));
 		Assert.assertEquals(VALUE1, listMap.getFirst(NAME1));
 		
@@ -53,7 +53,7 @@ public final class ListMapTest {
 		Assert.assertNotNull(listMap.get(NAME2));
 		Assert.assertEquals(0, listMap.get(NAME2).size());
 		
-		listMap.put(NAME2, VALUE2);
+		listMap.add(NAME2, VALUE2);
 		Assert.assertNotNull(listMap.getFirst(NAME2));
 		listMap.clearKey(NAME2);
 		Assert.assertNull(listMap.getFirst(NAME2));

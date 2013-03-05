@@ -60,7 +60,7 @@ public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver>
 			final String[] parts = SPLIT_PATTERN.split(entry.getValue().toString());
 			final String name = entry.getKey().toString();
 			for (String value : parts) {
-				AGGREGATED_ENTITIES.put(name, value);
+				AGGREGATED_ENTITIES.add(name, value);
 			}
 		}
 	}
@@ -123,13 +123,13 @@ public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver>
 			if (AGGREGATION_ID.equals(name)) {
 				aggregationId = value;
 			} else {
-				aggregation.put(name, value);
+				aggregation.add(name, value);
 			}
 			return;
 		}
 
 		if (entityStack.size()==1 && RDF_ABOUT.equals(name) && AGGREGATED_ENTITIES.containsKey(entityStack.peek())) {
-			aggregation.put(entityStack.peek(), value);
+			aggregation.add(entityStack.peek(), value);
 		}
 		getReceiver().literal(name, value);
 	}

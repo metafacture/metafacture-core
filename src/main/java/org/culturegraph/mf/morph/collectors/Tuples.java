@@ -52,7 +52,7 @@ public final class Tuples extends AbstractCollect {
 
 	@Override
 	protected void receive(final String name, final String value, final NamedValueSource source) {
-		listMap.put(name, value);
+		listMap.add(name, value);
 	}
 
 	@Override

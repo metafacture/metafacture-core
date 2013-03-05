@@ -33,6 +33,7 @@ public class DefaultSender<T extends LifeCycle> implements Sender<T> {
 
 	private T receiver;
 	
+	
 	@Override
 	public final <R extends T> R setReceiver(final R receiver) {
 		this.receiver = receiver;

@@ -87,7 +87,7 @@ public class ListMap<K, V> implements Map<K, List<V>> {
 	}
 
 	
-	public final void put(final K name, final V value) {
+	public final void add(final K name, final V value) {
 
 		List<V> values = map.get(name);
 		if (values == null) {
@@ -98,6 +98,7 @@ public class ListMap<K, V> implements Map<K, List<V>> {
 		values.add(value);
 	}
 
+	//@Override
 	public final void putAll(final K name, final Collection<V> addValues) {
 
 		List<V> values = map.get(name);
