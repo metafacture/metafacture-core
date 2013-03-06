@@ -223,7 +223,7 @@
 
 	<profiles>
 		<profile>
-			<id>maven-central</id>
+			<id>sonatype-oss-release</id>
 			<build>
 				<plugins>
 					<plugin>
