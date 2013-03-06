@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
 
 
@@ -34,7 +34,7 @@ public final class Square extends AbstractCollect {
 	private String postfix = "";
 	private String delimiter = "";
 
-	public Square(final Morph metamorph) {
+	public Square(final Metamorph metamorph) {
 		super(metamorph);
 		setNamedValueReceiver(metamorph);
 	}

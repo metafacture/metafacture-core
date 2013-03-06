@@ -16,7 +16,7 @@
 package org.culturegraph.mf.morph;
 
 /**
- * Used by {@link Morph} to flush collected data in {@link Collect}.
+ * Used by {@link Metamorph} to flush collected data in {@link Collect}.
  * @author Markus Michael Geipel
  */
 public interface EntityEndListener {

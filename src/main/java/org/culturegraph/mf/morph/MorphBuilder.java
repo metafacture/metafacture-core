@@ -28,7 +28,7 @@ import org.w3c.dom.Node;
 
 
 /**
- * Builds a {@link Morph} from an xml description
+ * Builds a {@link Metamorph} from an xml description
  * 
  * @author Markus Michael Geipel
  */
@@ -37,11 +37,11 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	private static final String NOT_FOUND = " not found.";
 	private static final String JAVA = "java";
 	// private final String morphDef;
-	private final Morph metamorph;
+	private final Metamorph metamorph;
 	private final Deque<Collect> collectStack;
 	private Data data;
 
-	protected MorphBuilder(final Morph metamorph) {
+	protected MorphBuilder(final Metamorph metamorph) {
 		super();
 		this.collectStack = new LinkedList<Collect>();
 		this.metamorph = metamorph;
@@ -105,7 +105,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 
 	@Override
 	protected void handleMetaEntry(final String name, final String value) {
-		metamorph.putValue(Morph.METADATA, name, value);
+		metamorph.putValue(Metamorph.METADATA, name, value);
 	}
 
 	@Override

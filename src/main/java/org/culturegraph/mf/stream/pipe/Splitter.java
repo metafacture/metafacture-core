@@ -23,7 +23,7 @@ import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.sink.SingleValue;
 
 
@@ -40,14 +40,14 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
 	private final StreamBuffer buffer = new StreamBuffer();
 	private final SingleValue singleValue = new SingleValue();
 	private final Map<String, StreamReceiver> receiverMap = new HashMap<String, StreamReceiver>();
-	private final Morph metamorph;
+	private final Metamorph metamorph;
 	
 	public Splitter(final String morphDef) {
-		metamorph = new Morph(morphDef);
+		metamorph = new Metamorph(morphDef);
 		metamorph.setReceiver(singleValue);
 	}
 	
-	public Splitter(final Morph metamorph) {
+	public Splitter(final Metamorph metamorph) {
 		this.metamorph = metamorph;
 		metamorph.setReceiver(singleValue);
 	}

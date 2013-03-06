@@ -23,7 +23,7 @@ import java.io.StringReader;
 
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.converter.xml.CGXmlHandler;
 import org.culturegraph.mf.stream.converter.xml.XmlDecoder;
 import org.culturegraph.mf.stream.reader.MultiFormatReader;
@@ -130,7 +130,7 @@ public final class TestCase {
 			} else {
 				ioReader = getDataFromSource(src);
 			}
-			return new Morph(ioReader);
+			return new Metamorph(ioReader);
 
 		} else if (MIME_JAVACLASS.equals(type)) {
 			if (src.isEmpty()) {

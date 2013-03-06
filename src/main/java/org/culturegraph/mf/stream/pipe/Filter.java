@@ -21,7 +21,7 @@ import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.sink.SingleValue;
 
 /**
@@ -35,15 +35,15 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
 
 	private final StreamBuffer buffer = new StreamBuffer();
 	private final SingleValue singleValue = new SingleValue();
-	private final Morph metamorph;
+	private final Metamorph metamorph;
 	
 	public Filter(final String morphDef) {
 		super();
-		metamorph = new Morph(morphDef);
+		metamorph = new Metamorph(morphDef);
 		metamorph.setReceiver(singleValue);
 	}
 	
-	public Filter(final Morph metamorph) {
+	public Filter(final Metamorph metamorph) {
 		super();
 		this.metamorph = metamorph;
 		metamorph.setReceiver(singleValue);

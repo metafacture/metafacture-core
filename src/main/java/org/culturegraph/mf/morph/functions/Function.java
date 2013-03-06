@@ -17,12 +17,12 @@ package org.culturegraph.mf.morph.functions;
 
 
 import org.culturegraph.mf.morph.EntityEndIndicator;
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValuePipe;
 import org.culturegraph.mf.types.MultiMap;
 
 /**
- * Interface for functions used in {@link Morph}
+ * Interface for functions used in {@link Metamorph}
  * @author Markus Michael Geipel
  */
 public interface Function extends NamedValuePipe{

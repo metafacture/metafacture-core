@@ -22,7 +22,7 @@ import java.util.Map;
 import org.culturegraph.mf.framework.DefaultStreamReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.morph.Data;
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueReceiver;
 import org.culturegraph.mf.morph.NamedValueSource;
 import org.culturegraph.mf.types.MultiMap;
@@ -32,7 +32,7 @@ import org.junit.Test;
 
 
 /**
- * tests {@link Morph}
+ * tests {@link Metamorph}
  * 
  * @author Markus Michael Geipel
  */
@@ -56,8 +56,8 @@ public final class MetamorphBasicTest implements NamedValueReceiver {
 
 	private NamedValue namedValue;
 	
-	private static Morph newMetamorphWithData(final NamedValueReceiver receiver){
-		final Morph metamorph = new Morph();
+	private static Metamorph newMetamorphWithData(final NamedValueReceiver receiver){
+		final Metamorph metamorph = new Metamorph();
 		metamorph.setReceiver(EMPTY_RECEIVER);
 		final Data data = new Data(MATCHING_PATH);
 		data.setName(NAME);
@@ -68,7 +68,7 @@ public final class MetamorphBasicTest implements NamedValueReceiver {
 	
 	@Test
 	public void testSimpleMapping() {
-		final Morph metamorph = newMetamorphWithData(this);
+		final Metamorph metamorph = newMetamorphWithData(this);
 		namedValue = null;
 		metamorph.startRecord(null);
 		
@@ -98,7 +98,7 @@ public final class MetamorphBasicTest implements NamedValueReceiver {
 	
 	@Test
 	public void testMultiMap(){
-		final Morph metamorph = new Morph();
+		final Metamorph metamorph = new Metamorph();
 		final Map<String, String> map = new HashMap<String, String>();
 		map.put(NAME, VALUE);
 		
@@ -116,7 +116,7 @@ public final class MetamorphBasicTest implements NamedValueReceiver {
 	@Test
 	public void testFeedback() {
 	
-		final Morph metamorph = new Morph();
+		final Metamorph metamorph = new Metamorph();
 		metamorph.setReceiver(EMPTY_RECEIVER);
 		Data data;
 		
@@ -144,7 +144,7 @@ public final class MetamorphBasicTest implements NamedValueReceiver {
 
 	@Test(expected=IllegalStateException.class)
 	public void testEntityBorderBalanceCheck1(){
-		final Morph metamorph = new Morph();
+		final Metamorph metamorph = new Metamorph();
 		metamorph.setReceiver(EMPTY_RECEIVER);
 		
 		metamorph.startRecord(null);
@@ -156,7 +156,7 @@ public final class MetamorphBasicTest implements NamedValueReceiver {
 	
 	@Test(expected=IllegalStateException.class)
 	public void testEntityBorderBalanceCheck2(){
-		final Morph metamorph = new Morph();
+		final Metamorph metamorph = new Metamorph();
 		metamorph.setReceiver(EMPTY_RECEIVER);
 		
 		metamorph.startRecord(null);
