@@ -16,12 +16,12 @@
 package org.culturegraph.mf.morph.collectors;
 
 import org.culturegraph.mf.morph.EntityEndListener;
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValuePipeHead;
 import org.culturegraph.mf.morph.NamedValueSource;
 
 /**
- * Base interface for all classes which act as collectors in {@link Morph}
+ * Base interface for all classes which act as collectors in {@link Metamorph}
  * 
  * @author Markus Michael Geipel
  *

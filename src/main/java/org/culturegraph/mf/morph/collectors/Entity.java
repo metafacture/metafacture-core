@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueReceiver;
 import org.culturegraph.mf.morph.NamedValueSource;
 import org.culturegraph.mf.stream.pipe.StreamBuffer;
@@ -42,7 +42,7 @@ public final class Entity extends AbstractCollect {
 	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
 	private final StreamBuffer buffer = new StreamBuffer();
 
-	public Entity(final Morph metamorph) {
+	public Entity(final Metamorph metamorph) {
 		super(metamorph);
 	}
 

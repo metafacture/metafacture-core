@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
 
 /**
@@ -29,7 +29,7 @@ public final class Concat extends AbstractCollect{
 	private String postfix = "";
 	private String delimiter = "";
 	
-	public Concat(final Morph metamorph) {
+	public Concat(final Metamorph metamorph) {
 		super(metamorph);
 		setNamedValueReceiver(metamorph);
 	}

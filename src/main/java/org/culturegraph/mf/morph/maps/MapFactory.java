@@ -17,7 +17,7 @@ package org.culturegraph.mf.morph.maps;
 
 import java.util.Map;
 
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.MorphBuilder;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
@@ -25,7 +25,7 @@ import org.culturegraph.mf.util.reflection.ObjectFactory;
 
 
 /**
- * Factory for all collectors used by {@link Morph} and {@link MorphBuilder}
+ * Factory for all collectors used by {@link Metamorph} and {@link MorphBuilder}
  * 
  * @author Markus Michael Geipel
  *

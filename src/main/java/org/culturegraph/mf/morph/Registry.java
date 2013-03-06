@@ -18,7 +18,7 @@ package org.culturegraph.mf.morph;
 import java.util.List;
 
 /**
- * used to access zero to n {@link Data} instances based on a {@link String} path. Used in {@link Morph}
+ * used to access zero to n {@link Data} instances based on a {@link String} path. Used in {@link Metamorph}
  * 
  * @author Markus Michael Geipel
  *

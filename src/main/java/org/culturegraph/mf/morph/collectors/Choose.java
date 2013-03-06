@@ -21,7 +21,7 @@ package org.culturegraph.mf.morph.collectors;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
 import org.culturegraph.mf.util.StringUtil;
 
@@ -46,7 +46,7 @@ public final class Choose extends AbstractCollect{
 	/**
 	 * @param metamorph
 	 */
-	public Choose(final Morph metamorph) {
+	public Choose(final Metamorph metamorph) {
 		super(metamorph);
 		setNamedValueReceiver(metamorph);
 	}

@@ -37,7 +37,7 @@ import org.w3c.dom.Node;
  */
 public final class MorphVisualizer extends AbstractMetamorphDomWalker {
 
-	private static final String RECURSION_INDICATOR = Character.toString(Morph.FEEDBACK_CHAR);
+	private static final String RECURSION_INDICATOR = Character.toString(Metamorph.FEEDBACK_CHAR);
 	private static final Set<String> ORDERED_COLLECTS = new HashSet<String>();
 	private final Map<String, String> meta = new HashMap<String, String>();
 	private final PrintWriter writer;

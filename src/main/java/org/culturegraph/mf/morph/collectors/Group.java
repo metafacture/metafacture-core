@@ -16,7 +16,7 @@
 package org.culturegraph.mf.morph.collectors;
 
 
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
 import org.culturegraph.mf.util.StringUtil;
 
@@ -28,7 +28,7 @@ import org.culturegraph.mf.util.StringUtil;
 public final class Group extends AbstractCollect{
 
 
-	public Group(final Morph metamorph) {
+	public Group(final Metamorph metamorph) {
 		super(metamorph);
 	}
 	

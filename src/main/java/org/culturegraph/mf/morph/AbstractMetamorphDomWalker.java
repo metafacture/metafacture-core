@@ -36,7 +36,7 @@ import org.xml.sax.InputSource;
 
 
 /**
- * Builds a {@link Morph} from an xml description
+ * Builds a {@link Metamorph} from an xml description
  * 
  * @author Markus Michael Geipel
  */
@@ -157,7 +157,7 @@ public abstract class AbstractMetamorphDomWalker {
 	}
 	
 	protected  final String resolveVars(final String string){
-		return StringUtil.format(string, Morph.VAR_START, Morph.VAR_END, ignoreMissingVars, vars);
+		return StringUtil.format(string, Metamorph.VAR_START, Metamorph.VAR_END, ignoreMissingVars, vars);
 	}
 	
 	protected final void setIgnoreMissingVars(final boolean ignoreMissingVars) {

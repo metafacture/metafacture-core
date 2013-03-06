@@ -15,11 +15,11 @@
  */
 package org.culturegraph.mf.exceptions;
 
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 
 
 /**
- * Thrown if an error occurs during the processing in {@link Morph}
+ * Thrown if an error occurs during the processing in {@link Metamorph}
  * 
  * @author Markus Michael Geipel
  */
