@@ -16,13 +16,13 @@
 package org.culturegraph.mf.morph.collectors;
 
 
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.MorphBuilder;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 
 /**
- * Factory for all maps used by {@link Morph} and {@link MorphBuilder}
+ * Factory for all maps used by {@link Metamorph} and {@link MorphBuilder}
  * 
  * @author Markus Michael Geipel
  *

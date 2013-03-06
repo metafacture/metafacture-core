@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
 import org.culturegraph.mf.types.ListMap;
 
@@ -37,7 +37,7 @@ public final class Tuples extends AbstractCollect {
 	private int minN = 1;
 	private String separator = "";
 
-	public Tuples(final Morph metamorph) {
+	public Tuples(final Metamorph metamorph) {
 		super(metamorph);
 		setNamedValueReceiver(metamorph);
 	}

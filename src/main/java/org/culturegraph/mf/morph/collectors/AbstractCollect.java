@@ -16,7 +16,7 @@
 package org.culturegraph.mf.morph.collectors;
 
 import org.culturegraph.mf.morph.AbstractNamedValuePipeHead;
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
 
 /**
@@ -36,16 +36,16 @@ private static final String FLUSH = "_flush";
 	private boolean sameEntity;
 	private String name;
 	private String value;
-	private final Morph metamorph;
+	private final Metamorph metamorph;
 	private boolean waitForFlush;
 
 
-	public AbstractCollect(final Morph metamorph) {
+	public AbstractCollect(final Metamorph metamorph) {
 		super();
 		this.metamorph = metamorph;
 	}
 	
-	protected final Morph getMetamorph(){
+	protected final Metamorph getMetamorph(){
 		return metamorph;
 	}
 

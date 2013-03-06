@@ -16,12 +16,12 @@
 package org.culturegraph.mf.morph.functions;
 
 
-import org.culturegraph.mf.morph.Morph;
+import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 
 /**
- * Provides the functions for {@link Morph}. By the default it contains the
+ * Provides the functions for {@link Metamorph}. By the default it contains the
  * standard function set. New functions can be registered during runtime.
  * 
  * @author Markus Michael Geipel

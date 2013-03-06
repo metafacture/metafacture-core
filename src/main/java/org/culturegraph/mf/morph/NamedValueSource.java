@@ -16,7 +16,7 @@
 package org.culturegraph.mf.morph;
 
 /**
- * Base interface for all classes in {@link Morph} which emit name-value-pairs
+ * Base interface for all classes in {@link Metamorph} which emit name-value-pairs
  * 
  * @author Markus Michael Geipel
  *

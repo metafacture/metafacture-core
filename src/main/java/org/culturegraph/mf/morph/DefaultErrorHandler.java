@@ -19,7 +19,7 @@ import org.culturegraph.mf.exceptions.MorphException;
 
 
 /**
- * Default error handler used by {@link Morph}. Just repackages exceptions as {@link MorphException}s.
+ * Default error handler used by {@link Metamorph}. Just repackages exceptions as {@link MorphException}s.
  * 
  * @author Markus Michael Geipel
  *
