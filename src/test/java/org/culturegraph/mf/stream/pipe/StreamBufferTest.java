@@ -15,7 +15,12 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import org.culturegraph.mf.stream.pipe.StreamBuffer;
+import static org.junit.Assert.fail;
+
+import org.culturegraph.mf.exceptions.FormatException;
+import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.stream.sink.EventList;
+import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -24,45 +29,40 @@ import org.junit.Test;
  * Tests {@link StreamBuffer}.
  * 
  * @author Markus Michael Geipel
+ * @author Christoph Böhme
  */
 public final class StreamBufferTest {
 
 	@Test
 	@Ignore
 	public void testCorrectBuffering(){
-//		// prepare reference
-//		final ResourceOpener opener = new ResourceOpener();
-//		final PicaDecoder picaDecoder = new PicaDecoder();
-//		final StringWriter referenceWriter = new StringWriter();
-//
-//		opener.setReceiver(new LineReader())
-//				.setReceiver(picaDecoder)
-//				.setReceiver(new StreamWriter(referenceWriter));
-//		
-//		opener.process(DataFilePath.PND_PICA);
-//		opener.closeStream();
-//
-//		// prepare buffer
-//		final StreamBuffer buffer = new StreamBuffer();
-//		final StringWriter finalWriter = new StringWriter();
-//
-//		picaDecoder.setReceiver(buffer)
-//				.setReceiver(new StreamWriter(finalWriter));
-//
-//		// buffer
-//		opener.process(DataFilePath.PND_PICA);
-//		
-//		// replay
-//		try {
-//			buffer.replay();
-//		} catch (FormatException e) {
-//			Assert.fail("Error during replay: " + e);
-//		}
-//		
-//		opener.closeStream();
-//		
-//		// check result
-//		Assert.assertEquals(referenceWriter.toString(), finalWriter.toString());
-//
+		final EventList list = new EventList();
+		execTestEvents(list);
+		final StreamValidator validator = new StreamValidator(list.getEvents());
+
+		final StreamBuffer buffer = new StreamBuffer();
+		buffer.setReceiver(validator);	
+		execTestEvents(buffer);
+
+		try {
+			buffer.replay();
+			buffer.closeStream();
+		} catch (FormatException e) {
+			fail("Error during replay: " + e);
+		}
 	}
+	
+	private void execTestEvents(final StreamReceiver receiver) {
+		receiver.startRecord("1");
+		receiver.literal("l1", "value1");
+		receiver.literal("l1", "value2");
+		receiver.startEntity("e1");
+		receiver.literal("l2", "value3");
+		receiver.endEntity();
+		receiver.endRecord();
+		receiver.startRecord("2");
+		receiver.literal("l3", "value4");
+		receiver.endRecord();
+	}
+	
 }
