@@ -18,7 +18,9 @@
  */
 package org.culturegraph.mf.stream.sink;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,6 +45,8 @@ public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
 	private String path;
 	private int count;
 	private Writer writer;
+	
+	private String encoding = "UTF-8";
 
 	public ObjectFileWriter(final String path) {
 		this.path = path;
@@ -53,12 +57,31 @@ public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
 			this.path = this.path + VAR;
 		}
 	}
+	
+	/**
+	 * Returns the encoding used to open the resource.
+	 * 
+	 * @return current default setting
+	 */
+	public String getEncoding() {
+		return encoding;
+	}
 
+	/**
+	 * Sets the encoding used to open the resource.
+	 * 
+	 * @param encoding
+	 *            new encoding
+	 */
+	public void setEncoding(final String encoding) {
+		this.encoding = encoding;
+	}
+	
 	private void startNewFile() {
 		final Matcher matcher = VAR_PATTERN.matcher(this.path);
 		final String path = matcher.replaceAll(String.valueOf(count));
 		try {
-			writer = new java.io.FileWriter(path);
+			writer = new OutputStreamWriter(new FileOutputStream(path), encoding);
 		} catch (IOException e) {
 			throw new MetafactureException("Error creating file '" + path + "'.", e);
 		}
