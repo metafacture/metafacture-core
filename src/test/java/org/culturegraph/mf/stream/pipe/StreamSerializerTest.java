@@ -18,7 +18,6 @@ package org.culturegraph.mf.stream.pipe;
 import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.stream.converter.CGTextDecoder;
 import org.culturegraph.mf.stream.converter.CGTextEncoder;
-import org.culturegraph.mf.stream.pipe.StreamSerializer;
 import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.culturegraph.mf.util.StreamConstants;

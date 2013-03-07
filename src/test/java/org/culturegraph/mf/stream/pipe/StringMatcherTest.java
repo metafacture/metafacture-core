@@ -15,10 +15,9 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import junit.framework.Assert;
 
-import org.culturegraph.mf.stream.pipe.ObjectBuffer;
-import org.culturegraph.mf.stream.pipe.StringMatcher;
+
+import org.junit.Assert;
 import org.junit.Test;
 
 

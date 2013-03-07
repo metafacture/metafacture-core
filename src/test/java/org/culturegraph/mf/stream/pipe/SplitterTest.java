@@ -21,7 +21,6 @@ import java.io.IOException;
 import junit.framework.Assert;
 
 import org.culturegraph.mf.morph.DataFilePath;
-import org.culturegraph.mf.stream.pipe.Splitter;
 import org.culturegraph.mf.stream.reader.PicaReader;
 import org.culturegraph.mf.stream.reader.Reader;
 import org.culturegraph.mf.stream.sink.Counter;

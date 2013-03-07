@@ -16,7 +16,6 @@
 package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.framework.DefaultObjectReceiver;
-import org.culturegraph.mf.stream.pipe.ObjectTimer;
 import org.junit.Test;
 
 
@@ -37,7 +36,7 @@ public final class ObjectTimerTest {
 		@Override
 		public void process(final Long duration) {
 			try {
-				Thread.sleep(duration);
+				Thread.sleep(duration.longValue());
 			} catch (InterruptedException e) {
 				return;
 			}
@@ -52,7 +51,7 @@ public final class ObjectTimerTest {
 		timer.setReceiver(benchmarkedModule);
 		
 		for (int i=0; i < DURATIONS.length; ++i) {
-			timer.process(DURATIONS[i]);
+			timer.process(Long.valueOf(DURATIONS[i]));
 		}
 		
 		timer.closeStream();

@@ -18,13 +18,8 @@ package org.culturegraph.mf.morph;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import org.culturegraph.mf.framework.DefaultStreamReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.morph.Data;
-import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.morph.NamedValueReceiver;
-import org.culturegraph.mf.morph.NamedValueSource;
 import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.types.NamedValue;
 import org.junit.Assert;
@@ -84,7 +79,7 @@ public final class MetamorphBasicTest implements NamedValueReceiver {
 		// mapping with entity
 		metamorph.startEntity(ENTITY_NAME);
 		metamorph.literal(LITERAL_NAME, VALUE);
-		Assert.assertNotNull(namedValue);
+		Assert.assertFalse(namedValue==null);
 		Assert.assertEquals(VALUE, namedValue.getValue());
 		namedValue = null;
 		
@@ -134,7 +129,7 @@ public final class MetamorphBasicTest implements NamedValueReceiver {
 		
 		metamorph.startRecord(null);
 		metamorph.literal(MATCHING_PATH, VALUE);
-		Assert.assertNotNull(namedValue);
+		Assert.assertFalse(namedValue==null);
 		Assert.assertEquals(VALUE, namedValue.getValue());
 		namedValue = null;
 		
