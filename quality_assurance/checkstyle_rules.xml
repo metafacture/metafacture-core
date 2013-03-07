@@ -11,6 +11,7 @@
 <module name="Checker">
   <property name="severity" value="warning"/>
   <module name="TreeWalker">
+    <module name="FileContentsHolder"/>
     <module name="ClassTypeParameterName"/>
     <module name="ConstantName"/>
     <module name="LocalFinalVariableName"/>
@@ -64,7 +65,7 @@
     <module name="MagicNumber"/>
     <module name="MissingSwitchDefault"/>
     <module name="ModifiedControlVariable"/>
-     <module name="MultipleStringLiterals">
+    <module name="MultipleStringLiterals">
       <property name="ignoreStringsRegexp" value="^&quot;.?.?&quot;$"/>
     </module>
     <module name="MultipleVariableDeclarations"/>
@@ -110,4 +111,14 @@
     <module name="JavadocType"/>
   </module>
   <module name="StrictDuplicateCode"/>
+  <module name="SuppressionCommentFilter">
+    <property name="offCommentFormat" value="CHECKSTYLE OFF\: ([\w\|]+)"/>
+    <property name="onCommentFormat" value="CHECKSTYLE ON\: ([\w\|]+)"/>
+    <property name="checkFormat" value="$1"/>
+  </module>
+  <module name="SuppressWithNearbyCommentFilter">
+    <property name="commentFormat" value="NO CHECKSTYLE ([\w\|]+) FOR ([+-]?\d+) LINES:"/>
+    <property name="checkFormat" value="$1"/>
+    <property name="influenceFormat" value="$2"/>
+  </module>
 </module>
