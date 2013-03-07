@@ -34,7 +34,6 @@ import org.junit.Test;
 public final class StreamBufferTest {
 
 	@Test
-	@Ignore
 	public void testCorrectBuffering(){
 		final EventList list = new EventList();
 		execTestEvents(list);
