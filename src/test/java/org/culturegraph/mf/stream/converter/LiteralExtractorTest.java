@@ -15,11 +15,8 @@
  */
 package org.culturegraph.mf.stream.converter;
 
-import junit.framework.Assert;
-
-import org.culturegraph.mf.stream.converter.CGTextDecoder;
-import org.culturegraph.mf.stream.converter.LiteralExtractor;
 import org.culturegraph.mf.stream.pipe.ObjectBuffer;
+import org.junit.Assert;
 import org.junit.Test;
 
 

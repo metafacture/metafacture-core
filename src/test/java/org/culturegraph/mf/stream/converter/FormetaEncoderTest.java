@@ -15,11 +15,9 @@
  */
 package org.culturegraph.mf.stream.converter;
 
-import junit.framework.Assert;
-
-import org.culturegraph.mf.stream.converter.FormetaEncoder;
 import org.culturegraph.mf.stream.converter.FormetaEncoder.Style;
 import org.culturegraph.mf.stream.pipe.ObjectBuffer;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
