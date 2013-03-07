@@ -71,7 +71,7 @@ public abstract class AbstractMetamorphDomWalker {
 	private static final String MAP = "map";
 	private static final String MACRO = "call-macro";
 	private static final String POSTPROCESS = "postprocess";
-	private static final String SCHEMA_FILE = "schema/metamorph.xsd";
+	private static final String SCHEMA_FILE = "schemata/metamorph.xsd";
 	private static final int LOWEST_COMPATIBLE_VERSION = 1;
 	private static final int CURRENT_VERSION = 1;
 
@@ -117,18 +117,18 @@ public abstract class AbstractMetamorphDomWalker {
 		walk(DomLoader.parse(SCHEMA_FILE, new InputSource(reader)));
 	}
 	
-	public void walk(final Reader morphDefReader, final Map<String, String> vars) {
+	public final void walk(final Reader morphDefReader, final Map<String, String> vars) {
 		this.vars.putAll(vars);
 		walk(morphDefReader);
 	}
 
 
-	public void walk(final String morphDef, final Map<String, String> vars) {
+	public final void walk(final String morphDef, final Map<String, String> vars) {
 		this.vars.putAll(vars);
 		walk(morphDef);
 	}
 	
-	public void walk(final InputStream inputStream, final Map<String, String> vars) {
+	public final void walk(final InputStream inputStream, final Map<String, String> vars) {
 		this.vars.putAll(vars);
 		walk(inputStream);
 	}

@@ -51,7 +51,7 @@ public final class TestCaseLoader {
 	 */
 	private static final String FILE_NOT_FOUND = "Could not find test case file: ";
 
-	private static final String SCHEMA_FILE = "schema/metamorph-test.xsd";
+	private static final String SCHEMA_FILE = "schemata/metamorph-test.xsd";
 	
 	private static final String TEST_CASE_TAG = "test-case";
 	
