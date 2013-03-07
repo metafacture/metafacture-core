@@ -48,12 +48,12 @@ public final class FileOpenerTest {
 			"whether FileOpener sets the encoding to UTF-8 correctly.";
 	
 	// NO CHECKSTYLE VisibilityModifier FOR 3 LINES:
-	// Junit expects rules to be public.
+	// JUnit requires rules to be public
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
 	
 	@Test
-	public void testUtf8Encoding() throws IOException {
+	public void testUtf8IsDefaultEncoding() throws IOException {
 		final Charset charsetUTF8 = Charset.forName("UTF-8");
 		assumeThat(UTF8_MESSAGE, Charset.defaultCharset(), not(equalTo(charsetUTF8)));
 		
@@ -68,9 +68,7 @@ public final class FileOpenerTest {
 		
 		final FileOpener opener = new FileOpener();
 		final ObjectBuffer<Reader> buffer = new ObjectBuffer<Reader>(); 
-		
-		opener.setReceiver(buffer);
-		
+		opener.setReceiver(buffer);	
 		opener.process(file.getAbsolutePath());
 		opener.closeStream();
 		
