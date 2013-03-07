@@ -112,6 +112,13 @@
     <module name="JavadocType"/>
   </module>
   <module name="StrictDuplicateCode"/>
+  <module name="Header">
+    <property name="headerFile" value="${basedir}/quality_assurance/java-header.txt"/>
+    <property name="fileExtensions" value="java"/>
+  </module>
+  <module name="SuppressionFilter">
+    <property name="file" value="${basedir}/quality_assurance/checkstyle-suppressions.xml"/>
+  </module>
   <module name="SuppressionCommentFilter">
     <property name="offCommentFormat" value="CHECKSTYLE OFF\: ([\w\|]+)"/>
     <property name="onCommentFormat" value="CHECKSTYLE ON\: ([\w\|]+)"/>
