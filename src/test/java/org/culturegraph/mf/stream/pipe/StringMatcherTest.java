@@ -15,8 +15,6 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-
-
 import org.junit.Assert;
 import org.junit.Test;
 

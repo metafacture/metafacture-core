@@ -15,11 +15,10 @@
  */
 package org.culturegraph.mf.morph.maps;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
 
-import junit.framework.Assert;
-
-import org.culturegraph.mf.morph.maps.JndiSqlMap;
 import org.junit.Test;
 
 
@@ -34,7 +33,8 @@ public final class JndiSqlMapTest {
 		final JndiSqlMap map = new JndiSqlMap();
 		map.setDatasource("testDataSource");
 		
-		Assert.assertNotNull(map.getDatasource());
+		assertNotNull(map.getDatasource());
 		map.close();
 	}
+	
 }

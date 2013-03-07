@@ -15,10 +15,13 @@
  */
 package org.culturegraph.mf.stream.sink;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import junit.framework.Assert;
 
 import org.culturegraph.mf.stream.sink.Histogram;
 import org.junit.Test;
@@ -42,9 +45,9 @@ public final class HistogramTest {
 		final Histogram histogram = new Histogram();
 		histogram.setCountEntities(true);
 
-		Assert.assertTrue(histogram.isCountEntities());
-		Assert.assertFalse(histogram.isCountLiterals());
-		Assert.assertNull(histogram.getCountField());
+		assertTrue(histogram.isCountEntities());
+		assertFalse(histogram.isCountLiterals());
+		assertNull(histogram.getCountField());
 		
 		histogram.startRecord(RECORD_ID);
 		histogram.startEntity(ENTITIES[0]);
@@ -61,7 +64,7 @@ public final class HistogramTest {
 		expected.put(ENTITIES[0], Integer.valueOf(2));
 		expected.put(ENTITIES[1], Integer.valueOf(1));
 		
-		Assert.assertEquals(expected, histogram.getHistogram());
+		assertEquals(expected, histogram.getHistogram());
 	}
 
 	@Test
@@ -69,9 +72,9 @@ public final class HistogramTest {
 		final Histogram histogram = new Histogram();
 		histogram.setCountLiterals(true);
 
-		Assert.assertFalse(histogram.isCountEntities());
-		Assert.assertTrue(histogram.isCountLiterals());
-		Assert.assertNull(histogram.getCountField());
+		assertFalse(histogram.isCountEntities());
+		assertTrue(histogram.isCountLiterals());
+		assertNull(histogram.getCountField());
 		
 		histogram.startRecord(RECORD_ID);
 		histogram.startEntity(ENTITIES[0]);
@@ -86,7 +89,7 @@ public final class HistogramTest {
 		expected.put(LITERALS[0], Integer.valueOf(2));
 		expected.put(LITERALS[1], Integer.valueOf(1));
 		
-		Assert.assertEquals(expected, histogram.getHistogram());
+		assertEquals(expected, histogram.getHistogram());
 	}
 
 	@Test
@@ -94,9 +97,9 @@ public final class HistogramTest {
 		final Histogram histogram = new Histogram();
 		histogram.setCountField(LITERALS[0]);
 
-		Assert.assertFalse(histogram.isCountEntities());
-		Assert.assertFalse(histogram.isCountLiterals());
-		Assert.assertEquals(LITERALS[0], histogram.getCountField());
+		assertFalse(histogram.isCountEntities());
+		assertFalse(histogram.isCountLiterals());
+		assertEquals(LITERALS[0], histogram.getCountField());
 		
 		histogram.startRecord(RECORD_ID);
 		histogram.startEntity(ENTITIES[0]);
@@ -112,16 +115,16 @@ public final class HistogramTest {
 		expected.put(VALUES[0], Integer.valueOf(1));
 		expected.put(VALUES[1], Integer.valueOf(2));
 		
-		Assert.assertEquals(expected, histogram.getHistogram());
+		assertEquals(expected, histogram.getHistogram());
 	}
 	
 	@Test
 	public void testCountFieldConstructor() {
 		final Histogram histogram = new Histogram(LITERALS[0]);
 
-		Assert.assertFalse(histogram.isCountEntities());
-		Assert.assertFalse(histogram.isCountLiterals());
-		Assert.assertEquals(LITERALS[0], histogram.getCountField());
+		assertFalse(histogram.isCountEntities());
+		assertFalse(histogram.isCountLiterals());
+		assertEquals(LITERALS[0], histogram.getCountField());
 		
 	}
 
@@ -131,9 +134,9 @@ public final class HistogramTest {
 		final Histogram histogram = new Histogram();		
 		histogram.setCountEntities(true);
 
-		Assert.assertTrue(histogram.isCountEntities());
-		Assert.assertFalse(histogram.isCountLiterals());
-		Assert.assertNull(histogram.getCountField());
+		assertTrue(histogram.isCountEntities());
+		assertFalse(histogram.isCountLiterals());
+		assertNull(histogram.getCountField());
 		
 		histogram.startRecord(RECORD_ID);
 		histogram.startEntity(ENTITIES[0]);
@@ -143,13 +146,13 @@ public final class HistogramTest {
 		final Map<String, Integer> expected = new HashMap<String, Integer>();
 		expected.put(ENTITIES[0], Integer.valueOf(1));		
 		
-		Assert.assertEquals(expected, histogram.getHistogram());
+		assertEquals(expected, histogram.getHistogram());
 	
 		histogram.resetStream();
 		
 		expected.clear();
 		
-		Assert.assertEquals(expected, histogram.getHistogram());
+		assertEquals(expected, histogram.getHistogram());
 	}
 
 }

@@ -15,10 +15,10 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.FileReader;
 import java.io.IOException;
-
-import junit.framework.Assert;
 
 import org.culturegraph.mf.morph.DataFilePath;
 import org.culturegraph.mf.stream.reader.PicaReader;
@@ -53,7 +53,8 @@ public final class SplitterTest {
 
 		picaReader.process(new FileReader(DataFilePath.PND_PICA));
 
-		Assert.assertEquals(NUM_TN_RECORDS, countingWriterTn.getNumRecords());
-		Assert.assertEquals(NUM_TP_RECORDS, countingWriterTp.getNumRecords());
+		assertEquals(NUM_TN_RECORDS, countingWriterTn.getNumRecords());
+		assertEquals(NUM_TP_RECORDS, countingWriterTp.getNumRecords());
 	}
+	
 }

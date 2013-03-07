@@ -15,12 +15,10 @@
  */
 package org.culturegraph.mf.util.tries;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
-import org.culturegraph.mf.util.tries.SetMatcher;
 import org.culturegraph.mf.util.tries.SetMatcher.Match;
 import org.junit.Test;
-
 
 /**
  * tests {@link SetMatcher}
@@ -48,11 +46,12 @@ public final class SetMatchTest {
 		//System.out.println(text);
 		for (Match<String> match : setMatch.match(text)) {
 			//System.out.println(match.getValue() + " " + match.getStart());
-			Assert.assertEquals(cities[matches[index]], match.getValue());
+			assertEquals(cities[matches[index]], match.getValue());
 			++index;
 		}
 		// setMatch.printDebug(System.err);
 
-		Assert.assertEquals("missing matches", matches.length, index);
+		assertEquals("missing matches", matches.length, index);
 	}
+	
 }

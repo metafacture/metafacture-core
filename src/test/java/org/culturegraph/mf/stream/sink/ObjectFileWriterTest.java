@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.nio.charset.Charset;
 
 import org.junit.Rule;
@@ -37,7 +36,6 @@ import org.junit.rules.TemporaryFolder;
  * 
  * @author Christoph Böhme
  */
-// TODO: Add category for integration tests.
 public final class ObjectFileWriterTest {
 
 	private static final String OUTPUT = "Überfacture";

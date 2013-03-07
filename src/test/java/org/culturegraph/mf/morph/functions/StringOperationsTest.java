@@ -15,15 +15,10 @@
  */
 package org.culturegraph.mf.morph.functions;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-import org.culturegraph.mf.morph.functions.Compose;
-import org.culturegraph.mf.morph.functions.Regexp;
-import org.culturegraph.mf.morph.functions.Replace;
-import org.culturegraph.mf.morph.functions.Substring;
 import org.junit.Test;
-
-
 
 
 /**
@@ -44,32 +39,33 @@ public final class StringOperationsTest {
 	public void testRegexp() {
 		final Regexp regexp = new Regexp();
 		regexp.setMatch(VALUE2);
-		Assert.assertEquals(VALUE2, regexp.process(VALUE1+VALUE2));
-		Assert.assertNull(regexp.process(VALUE3+VALUE1));
+		assertEquals(VALUE2, regexp.process(VALUE1+VALUE2));
+		assertNull(regexp.process(VALUE3+VALUE1));
 		regexp.setFormat(VALUE3 + " ${1}.");
 		regexp.setMatch("((K)).*$");
-		Assert.assertEquals(VALUE3 + " K.", regexp.process(VALUE1 + VALUE2));
+		assertEquals(VALUE3 + " K.", regexp.process(VALUE1 + VALUE2));
 	}
 	
 	@Test
 	public void testSubstring() {
 		final Substring substring = new Substring();
-		Assert.assertEquals(VALUE1,substring.process(VALUE1));
+		assertEquals(VALUE1,substring.process(VALUE1));
 		
 		final int position = 2;
 		substring.setStart(String.valueOf(position));
-		Assert.assertEquals(VALUE1.substring(position),substring.process(VALUE1));
+		assertEquals(VALUE1.substring(position),substring.process(VALUE1));
 		
 		substring.setStart("0");
 		substring.setEnd(String.valueOf(VALUE1.length()+1));
-		Assert.assertEquals(VALUE1, substring.process(VALUE1));
+		assertEquals(VALUE1, substring.process(VALUE1));
 		
 		substring.setStart(String.valueOf(VALUE1.length()+1));
 		substring.setEnd(String.valueOf(position));
-		Assert.assertNull(substring.process(VALUE1));
+		assertNull(substring.process(VALUE1));
 	
 	}
 	
+// TODO: Can we remove this test?
 //	@Test(expected=Regexp.PatternNotFoundException.class)
 //	public void testRegexpExceptionOnFail() {
 //		final Regexp regexp = new Regexp();
@@ -82,10 +78,10 @@ public final class StringOperationsTest {
 	public void testCompose() {
 		final Compose compose = new Compose();
 		compose.setPrefix(VALUE1);
-		Assert.assertEquals(VALUE1+VALUE2, compose.process(VALUE2));
+		assertEquals(VALUE1+VALUE2, compose.process(VALUE2));
 		compose.setPrefix("");
 		compose.setPostfix(VALUE1);
-		Assert.assertEquals(VALUE2+VALUE1, compose.process(VALUE2));
+		assertEquals(VALUE2+VALUE1, compose.process(VALUE2));
 		
 	}
 	
@@ -94,6 +90,7 @@ public final class StringOperationsTest {
 		final Replace replace = new Replace();
 		replace.setPattern(VALUE2);
 		replace.setWith(VALUE3);
-		Assert.assertEquals(VALUE1+VALUE3, replace.process(VALUE1+VALUE2));
+		assertEquals(VALUE1+VALUE3, replace.process(VALUE1+VALUE2));
 	}
+	
 }

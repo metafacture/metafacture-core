@@ -15,9 +15,8 @@
  */
 package org.culturegraph.mf.util.tries;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
-import org.culturegraph.mf.util.tries.SetReplacer;
 import org.junit.Test;
 
 
@@ -43,9 +42,7 @@ public final class SetReplaceTest {
 		setReplace.addReplacement("krabben", "shirt");
 		setReplace.addReplacement("super krabben entsafter", "Mai Tai");
 		
-		Assert.assertEquals(target, setReplace.replaceIn(text));
-
-		
+		assertEquals(target, setReplace.replaceIn(text));	
 	}
 
 }

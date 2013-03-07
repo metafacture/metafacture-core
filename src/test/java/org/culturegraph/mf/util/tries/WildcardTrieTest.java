@@ -15,7 +15,8 @@
  */
 package org.culturegraph.mf.util.tries;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.culturegraph.mf.util.tries.WildcardTrie;
 import org.junit.Test;
@@ -46,23 +47,23 @@ public final class WildcardTrieTest {
 	@Test
 	public void testWithQWildcard() {
 		final WildcardTrie<String> trie = new WildcardTrie<String>();
-		Assert.assertTrue(trie.get("").isEmpty());
-		Assert.assertTrue(trie.get("x").isEmpty());
+		assertTrue(trie.get("").isEmpty());
+		assertTrue(trie.get("x").isEmpty());
 
 		trie.put(ABC, ABC);
-		Assert.assertTrue(trie.get(ABC).contains(ABC));
+		assertTrue(trie.get(ABC).contains(ABC));
 
 		trie.put(AAQBB, AAQBB);
-		Assert.assertTrue(trie.get(AACBB).contains(AAQBB));
-		Assert.assertTrue(trie.get(AABB).isEmpty());
+		assertTrue(trie.get(AACBB).contains(AAQBB));
+		assertTrue(trie.get(AABB).isEmpty());
 
 		trie.put(AABB, AABB);
-		Assert.assertTrue(trie.get(AABB).contains(AABB));
-		Assert.assertTrue(trie.get(AABB).size() == 1);
+		assertTrue(trie.get(AABB).contains(AABB));
+		assertTrue(trie.get(AABB).size() == 1);
 
 		trie.put(AACBB, AACBB);
-		Assert.assertTrue(trie.get(AACBB).contains(AACBB));
-		Assert.assertTrue(trie.get(AACBB).contains(AAQBB));
+		assertTrue(trie.get(AACBB).contains(AACBB));
+		assertTrue(trie.get(AACBB).contains(AAQBB));
 	}
 
 	@Test
@@ -70,19 +71,19 @@ public final class WildcardTrieTest {
 		final WildcardTrie<String> trie = new WildcardTrie<String>();
 
 		trie.put(A_STAR_B, A_STAR_B);
-		Assert.assertTrue(AACBB + NOT_FOUND_BY + A_STAR_B, trie.get(AACBB).contains(A_STAR_B));
-		Assert.assertTrue(AABB + NOT_FOUND_BY + A_STAR_B, trie.get(AABB).contains(A_STAR_B));
-		Assert.assertTrue(AB + NOT_FOUND_BY + A_STAR_B, trie.get(AB).contains(A_STAR_B));
-		Assert.assertTrue(ABC + FOUND_BY + A_STAR_B, trie.get(ABC).isEmpty());
-		Assert.assertTrue(CCB + FOUND_BY + A_STAR_B, trie.get(CCB).isEmpty());
+		assertTrue(AACBB + NOT_FOUND_BY + A_STAR_B, trie.get(AACBB).contains(A_STAR_B));
+		assertTrue(AABB + NOT_FOUND_BY + A_STAR_B, trie.get(AABB).contains(A_STAR_B));
+		assertTrue(AB + NOT_FOUND_BY + A_STAR_B, trie.get(AB).contains(A_STAR_B));
+		assertTrue(ABC + FOUND_BY + A_STAR_B, trie.get(ABC).isEmpty());
+		assertTrue(CCB + FOUND_BY + A_STAR_B, trie.get(CCB).isEmpty());
 
 		trie.put(AABB, AABB);
-		Assert.assertTrue(trie.get(AABB).contains(AABB));
-		Assert.assertEquals(2, trie.get(AABB).size());
+		assertTrue(trie.get(AABB).contains(AABB));
+		assertEquals(2, trie.get(AABB).size());
 
 		trie.put(AACBB, AACBB);
-		Assert.assertTrue(trie.get(AACBB).contains(AACBB));
-		Assert.assertTrue(trie.get(AACBB).contains(A_STAR_B));
+		assertTrue(trie.get(AACBB).contains(AACBB));
+		assertTrue(trie.get(AACBB).contains(A_STAR_B));
 	}
 	
 	@Test
@@ -90,19 +91,19 @@ public final class WildcardTrieTest {
 		final WildcardTrie<String> trie = new WildcardTrie<String>();
 
 		trie.put(A_STAR, A_STAR);
-		Assert.assertTrue(AACBB + NOT_FOUND_BY + A_STAR, trie.get(AACBB).contains(A_STAR));
-		Assert.assertTrue(AABB + NOT_FOUND_BY + A_STAR, trie.get(AABB).contains(A_STAR));
-		Assert.assertTrue(AB + NOT_FOUND_BY + A_STAR, trie.get(AB).contains(A_STAR));
-		Assert.assertTrue(ABC + NOT_FOUND_BY + A_STAR_B, trie.get(ABC).contains(A_STAR));
-		Assert.assertTrue(CCB + FOUND_BY + A_STAR_B, trie.get(CCB).isEmpty());
+		assertTrue(AACBB + NOT_FOUND_BY + A_STAR, trie.get(AACBB).contains(A_STAR));
+		assertTrue(AABB + NOT_FOUND_BY + A_STAR, trie.get(AABB).contains(A_STAR));
+		assertTrue(AB + NOT_FOUND_BY + A_STAR, trie.get(AB).contains(A_STAR));
+		assertTrue(ABC + NOT_FOUND_BY + A_STAR_B, trie.get(ABC).contains(A_STAR));
+		assertTrue(CCB + FOUND_BY + A_STAR_B, trie.get(CCB).isEmpty());
 
 		trie.put(AABB, AABB);
-		Assert.assertTrue(trie.get(AABB).contains(AABB));
-		Assert.assertEquals(2, trie.get(AABB).size());
+		assertTrue(trie.get(AABB).contains(AABB));
+		assertEquals(2, trie.get(AABB).size());
 
 		trie.put(AACBB, AACBB);
-		Assert.assertTrue(trie.get(AACBB).contains(AACBB));
-		Assert.assertTrue(trie.get(AACBB).contains(A_STAR));
+		assertTrue(trie.get(AACBB).contains(AACBB));
+		assertTrue(trie.get(AACBB).contains(A_STAR));
 	}
 	
 	@Test
@@ -110,19 +111,19 @@ public final class WildcardTrieTest {
 		final WildcardTrie<String> trie = new WildcardTrie<String>();
 
 		trie.put(STAR_B, STAR_B);
-		Assert.assertTrue(AACBB + NOT_FOUND_BY + STAR_B, trie.get(AACBB).contains(STAR_B));
-		Assert.assertTrue(AABB + NOT_FOUND_BY + STAR_B, trie.get(AABB).contains(STAR_B));
+		assertTrue(AACBB + NOT_FOUND_BY + STAR_B, trie.get(AACBB).contains(STAR_B));
+		assertTrue(AABB + NOT_FOUND_BY + STAR_B, trie.get(AABB).contains(STAR_B));
 
-		Assert.assertTrue(ABC + FOUND_BY + A_STAR_B, trie.get(ABC).isEmpty());
-		Assert.assertTrue(CCB + NOT_FOUND_BY + A_STAR_B, trie.get(CCB).contains(STAR_B));
+		assertTrue(ABC + FOUND_BY + A_STAR_B, trie.get(ABC).isEmpty());
+		assertTrue(CCB + NOT_FOUND_BY + A_STAR_B, trie.get(CCB).contains(STAR_B));
 
 		trie.put(AABB, AABB);
-		Assert.assertTrue(trie.get(AABB).contains(AABB));
-		Assert.assertEquals(2, trie.get(AABB).size());
+		assertTrue(trie.get(AABB).contains(AABB));
+		assertEquals(2, trie.get(AABB).size());
 
 		trie.put(AACBB, AACBB);
-		Assert.assertTrue(trie.get(AACBB).contains(AACBB));
-		Assert.assertTrue(trie.get(AACBB).contains(STAR_B));
+		assertTrue(trie.get(AACBB).contains(AACBB));
+		assertTrue(trie.get(AACBB).contains(STAR_B));
 	}
 	
 	@Test
@@ -133,16 +134,16 @@ public final class WildcardTrieTest {
 		trie.put(A_STAR, A_STAR);
 		trie.put(A_STAR_B, A_STAR_B);
 		
-		Assert.assertEquals(3, trie.get(AACBB).size());
+		assertEquals(3, trie.get(AACBB).size());
 		
 		
 		trie.put(AA_STAR_BB, AA_STAR_BB);
-		Assert.assertEquals(4, trie.get(AACBB).size());
+		assertEquals(4, trie.get(AACBB).size());
 		
-		Assert.assertEquals(3, trie.get(AB).size());
-		Assert.assertEquals(1, trie.get(CCB).size());
+		assertEquals(3, trie.get(AB).size());
+		assertEquals(1, trie.get(CCB).size());
 		
-		Assert.assertEquals(3, trie.get("acb").size());
+		assertEquals(3, trie.get("acb").size());
 	}
 	
 	@Test
@@ -152,8 +153,8 @@ public final class WildcardTrieTest {
 		trie.put(ABC,ABC);
 		trie.put(A_STAR_BC,A_STAR_BC);
 
-		Assert.assertEquals(2, trie.get(ABC).size());
-		Assert.assertEquals(1, trie.get("abbc").size());
+		assertEquals(2, trie.get(ABC).size());
+		assertEquals(1, trie.get("abbc").size());
 	}
 	
 	@Test
@@ -161,7 +162,7 @@ public final class WildcardTrieTest {
 		final WildcardTrie<String> trie = new WildcardTrie<String>();
 		
 		trie.put("",ABC);
-		Assert.assertEquals(1, trie.get("").size());
+		assertEquals(1, trie.get("").size());
 	}
 	
 	@Test
@@ -170,11 +171,11 @@ public final class WildcardTrieTest {
 
 		final String key = ABC + WildcardTrie.OR_STRING + CCB; 
 		trie.put(key, "");
-		Assert.assertTrue(ABC  + NOT_FOUND_BY + key, trie.get(ABC).contains(""));
-		Assert.assertTrue(CCB + NOT_FOUND_BY + key, trie.get(CCB).contains(""));
+		assertTrue(ABC  + NOT_FOUND_BY + key, trie.get(ABC).contains(""));
+		assertTrue(CCB + NOT_FOUND_BY + key, trie.get(CCB).contains(""));
 
-		Assert.assertTrue(AABB + FOUND_BY + key, trie.get(AABB).isEmpty());
-		Assert.assertTrue(AB + FOUND_BY + key, trie.get(AB).isEmpty());
+		assertTrue(AABB + FOUND_BY + key, trie.get(AABB).isEmpty());
+		assertTrue(AB + FOUND_BY + key, trie.get(AB).isEmpty());
 	}
 
 }

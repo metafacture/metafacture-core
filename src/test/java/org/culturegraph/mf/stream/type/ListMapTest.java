@@ -15,7 +15,10 @@
  */
 package org.culturegraph.mf.stream.type;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.culturegraph.mf.types.ListMap;
 import org.junit.Test;
@@ -37,30 +40,29 @@ public final class ListMapTest {
 	public void test() {
 		final ListMap<String, String> listMap = new ListMap<String, String>();
 		
-		Assert.assertNull(listMap.getFirst(NAME1));
+		assertNull(listMap.getFirst(NAME1));
 		listMap.add(NAME1, VALUE1);
-		Assert.assertNotNull(listMap.getFirst(NAME1));
-		Assert.assertEquals(VALUE1, listMap.getFirst(NAME1));
+		assertNotNull(listMap.getFirst(NAME1));
+		assertEquals(VALUE1, listMap.getFirst(NAME1));
 		
 		listMap.add(NAME1, VALUE2);
-		Assert.assertNotNull(listMap.getFirst(NAME1));
-		Assert.assertEquals(VALUE1, listMap.getFirst(NAME1));
+		assertNotNull(listMap.getFirst(NAME1));
+		assertEquals(VALUE1, listMap.getFirst(NAME1));
 		
-		Assert.assertNotNull(listMap.get(NAME1));
-		Assert.assertEquals(2, listMap.get(NAME1).size());
-		Assert.assertTrue(listMap.get(NAME1).contains(VALUE2));
+		assertNotNull(listMap.get(NAME1));
+		assertEquals(2, listMap.get(NAME1).size());
+		assertTrue(listMap.get(NAME1).contains(VALUE2));
 		
-		Assert.assertNotNull(listMap.get(NAME2));
-		Assert.assertEquals(0, listMap.get(NAME2).size());
+		assertNotNull(listMap.get(NAME2));
+		assertEquals(0, listMap.get(NAME2).size());
 		
 		listMap.add(NAME2, VALUE2);
-		Assert.assertNotNull(listMap.getFirst(NAME2));
+		assertNotNull(listMap.getFirst(NAME2));
 		listMap.clearKey(NAME2);
-		Assert.assertNull(listMap.getFirst(NAME2));
-		Assert.assertNotNull(listMap.getFirst(NAME1));
+		assertNull(listMap.getFirst(NAME2));
+		assertNotNull(listMap.getFirst(NAME1));
 		
 		listMap.clearAllKeys();
-		Assert.assertNull(listMap.getFirst(NAME1));
-		
+		assertNull(listMap.getFirst(NAME1));	
 	}
 }

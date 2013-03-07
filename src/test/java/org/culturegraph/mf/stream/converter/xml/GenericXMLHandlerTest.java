@@ -15,13 +15,11 @@
  */
 package org.culturegraph.mf.stream.converter.xml;
 
-import junit.framework.Assert;
+import static org.junit.Assert.fail;
 
 import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.stream.DataFilePath;
 import org.culturegraph.mf.stream.converter.CGTextDecoder;
-import org.culturegraph.mf.stream.converter.xml.GenericXmlHandler;
-import org.culturegraph.mf.stream.converter.xml.XmlDecoder;
 import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.culturegraph.mf.stream.source.ResourceOpener;
@@ -61,7 +59,7 @@ public final class GenericXMLHandlerTest {
 			opener.process(DataFilePath.GENERIC_XML);
 			opener.closeStream();
 		} catch(FormatException e) {
-			Assert.fail(e.toString());
+			fail(e.toString());
 		}
 	}
 }

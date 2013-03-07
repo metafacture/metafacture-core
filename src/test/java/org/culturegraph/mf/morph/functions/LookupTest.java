@@ -15,17 +15,15 @@
  */
 package org.culturegraph.mf.morph.functions;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.Assert;
-
-import org.culturegraph.mf.morph.functions.Lookup;
 import org.culturegraph.mf.types.MultiHashMap;
 import org.culturegraph.mf.types.MultiMap;
 import org.junit.Test;
-
-
 
 
 /**
@@ -53,16 +51,15 @@ public final class LookupTest {
 		
 		lookup.setMultiMap(multiMapProvider);
 		lookup.setIn(MAP_NAME_WRONG);
-		Assert.assertNull(lookup.process(KEY));
-		Assert.assertNull(lookup.process(KEY_WRONG));
+		assertNull(lookup.process(KEY));
+		assertNull(lookup.process(KEY_WRONG));
 				
 		lookup.setIn(MAP_NAME);
-		Assert.assertEquals(VALUE, lookup.process(KEY));
-		Assert.assertNull(lookup.process(KEY_WRONG));
+		assertEquals(VALUE, lookup.process(KEY));
+		assertNull(lookup.process(KEY_WRONG));
 		
 		map.put(MultiMap.DEFAULT_MAP_KEY, VALUE);
-		Assert.assertEquals(VALUE, lookup.process(KEY_WRONG));
+		assertEquals(VALUE, lookup.process(KEY_WRONG));
 	}
-	
-	
+
 }

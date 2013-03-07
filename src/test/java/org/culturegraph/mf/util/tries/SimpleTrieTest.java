@@ -15,11 +15,11 @@
  */
 package org.culturegraph.mf.util.tries;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import java.util.Locale;
 
-import junit.framework.Assert;
-
-import org.culturegraph.mf.util.tries.SimpleTrie;
 import org.junit.Test;
 
 
@@ -37,9 +37,9 @@ public final class SimpleTrieTest {
 	@Test
 	public void testAdd() {
 		final SimpleTrie<String> trie = new SimpleTrie<String>();
-		Assert.assertNull(trie.get(KEY));
+		assertNull(trie.get(KEY));
 		trie.put(KEY, VALUE);
-		Assert.assertEquals(VALUE, trie.get(KEY));
+		assertEquals(VALUE, trie.get(KEY));
 	}
 	
 	@Test
@@ -55,7 +55,8 @@ public final class SimpleTrieTest {
 		
 		for (int i = 0; i < megacities.length; ++i) {
 			final String city = megacities[i];
-			Assert.assertEquals(city.toUpperCase(Locale.US), trie.get(city));
+			assertEquals(city.toUpperCase(Locale.US), trie.get(city));
 		}
 	}
+	
 }

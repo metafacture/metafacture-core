@@ -15,12 +15,12 @@
  */
 package org.culturegraph.mf.morph.functions;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.culturegraph.mf.morph.functions.ISBN;
 import org.junit.Test;
-
-
 
 
 /**
@@ -53,27 +53,27 @@ public final class ISBNTest {
 	public void testProcess(){
 		final ISBN isbn = new ISBN();
 		isbn.setTo("isbn13");
-		Assert.assertEquals(ISBN13A, isbn.process(ISBN10A));
+		assertEquals(ISBN13A, isbn.process(ISBN10A));
 		isbn.setTo("isbn10");
-		Assert.assertEquals(ISBN10A, isbn.process(ISBN13A));
+		assertEquals(ISBN10A, isbn.process(ISBN13A));
 		isbn.setTo("cleanse");
-		Assert.assertEquals(ISBN10A, isbn.process(ISBN10A_DIRTY));
+		assertEquals(ISBN10A, isbn.process(ISBN10A_DIRTY));
 		
 	}
 	
 	@Test
 	public void testTo13() {
-		Assert.assertEquals(ISBN13A, ISBN.isbn10to13(ISBN10A));
+		assertEquals(ISBN13A, ISBN.isbn10to13(ISBN10A));
 	}
 	
 	@Test
 	public void testTo10() {
-		Assert.assertEquals(ISBN10A,ISBN.isbn13to10(ISBN13A));
+		assertEquals(ISBN10A,ISBN.isbn13to10(ISBN13A));
 	}
 	
 	@Test
 	public void testCleanse() {
-		Assert.assertEquals(ISBN10A,ISBN.cleanse(ISBN10A_DIRTY));
+		assertEquals(ISBN10A,ISBN.cleanse(ISBN10A_DIRTY));
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -88,18 +88,18 @@ public final class ISBNTest {
 	
 	@Test
 	public void testIsValid() {
-		Assert.assertFalse(ISBN.isValid(ISBN_INCORRECT_CHECK13));
-		Assert.assertFalse(ISBN.isValid(ISBN_INCORRECT_CHECK10));
-		Assert.assertFalse(ISBN.isValid(ISBN_INCORRECT_SIZE1));
-		Assert.assertFalse(ISBN.isValid(ISBN_INCORRECT_SIZE2));
-		Assert.assertFalse(ISBN.isValid(ISBN_INCORRECT_SIZE3));
+		assertFalse(ISBN.isValid(ISBN_INCORRECT_CHECK13));
+		assertFalse(ISBN.isValid(ISBN_INCORRECT_CHECK10));
+		assertFalse(ISBN.isValid(ISBN_INCORRECT_SIZE1));
+		assertFalse(ISBN.isValid(ISBN_INCORRECT_SIZE2));
+		assertFalse(ISBN.isValid(ISBN_INCORRECT_SIZE3));
 		
-		Assert.assertTrue(ISBN.isValid(ISBN10B));
-		Assert.assertTrue(ISBN.isValid(ISBN10A));
-		Assert.assertTrue(ISBN.isValid(ISBN13A ));
-		Assert.assertTrue(ISBN.isValid(ISBN.cleanse(ISBN10C_DIRTY)));
-		Assert.assertTrue(ISBN.isValid(ISBN.cleanse(ISBN13D_DIRTY)));
-		Assert.assertTrue(ISBN.isValid(ISBN.cleanse(ISBN10F_DIRTY)));
+		assertTrue(ISBN.isValid(ISBN10B));
+		assertTrue(ISBN.isValid(ISBN10A));
+		assertTrue(ISBN.isValid(ISBN13A ));
+		assertTrue(ISBN.isValid(ISBN.cleanse(ISBN10C_DIRTY)));
+		assertTrue(ISBN.isValid(ISBN.cleanse(ISBN13D_DIRTY)));
+		assertTrue(ISBN.isValid(ISBN.cleanse(ISBN10F_DIRTY)));
 	}
 	
 	@Test(expected = ISBN.InvalidISBNLengthException.class)

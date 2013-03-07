@@ -15,14 +15,17 @@
  */
 package org.culturegraph.mf.util;
 
-import junit.framework.Assert;
-
 import org.culturegraph.mf.exceptions.WellformednessException;
 import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.junit.Test;
 
-
+/**
+ * Tests for {@link StreamValidator}.
+ * 
+ * @author Christoph Böhme
+ * 
+ */
 public final class StreamValidatorTest {
 
 	private static final String ID = "1";
@@ -39,8 +42,6 @@ public final class StreamValidatorTest {
 		
 		validator.startRecord(ID);
 		validator.closeStream();
-		
-		Assert.assertTrue(true);
 	}
 
 }

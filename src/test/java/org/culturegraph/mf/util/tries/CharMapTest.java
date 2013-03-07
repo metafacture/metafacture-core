@@ -15,11 +15,11 @@
  */
 package org.culturegraph.mf.util.tries;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import java.util.Map;
 
-import junit.framework.Assert;
-
-import org.culturegraph.mf.util.tries.CharMap;
 import org.junit.Test;
 
 
@@ -38,7 +38,7 @@ public final class CharMapTest {
 		final Map<Character, Integer> map = new CharMap<Integer>();
 		
 		for (byte i = Byte.MIN_VALUE; i < Byte.MAX_VALUE; ++i) {
-			Assert.assertNull(map.get(Byte.valueOf(i)));
+			assertNull(map.get(Byte.valueOf(i)));
 		}
 		
 	}
@@ -49,7 +49,7 @@ public final class CharMapTest {
 		final char beite = 'ü';
 		map.put(Character.valueOf(beite), UML);
 		
-		Assert.assertEquals(UML,map.get(Character.valueOf(beite)));
+		assertEquals(UML,map.get(Character.valueOf(beite)));
 		
 	}
 	
@@ -62,7 +62,7 @@ public final class CharMapTest {
 		}
 		
 		for (char i = Character.MIN_VALUE; i < Character.MAX_VALUE; ++i) {
-			Assert.assertEquals(Integer.valueOf(i),map.get(Character.valueOf(i)));
+			assertEquals(Integer.valueOf(i),map.get(Character.valueOf(i)));
 		}
 		
 	}
@@ -76,7 +76,8 @@ public final class CharMapTest {
 		}
 		
 		for (char i = 0; i < Character.MAX_VALUE-1; i+=2) {
-			Assert.assertEquals(Integer.valueOf(i),map.get(Character.valueOf(i)));
+			assertEquals(Integer.valueOf(i),map.get(Character.valueOf(i)));
 		}
 	}
+	
 }
