@@ -61,7 +61,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<targetJdk>1.6</targetJdk>
-		<junit.version>4.8.2</junit.version>
+		<junit.version>4.11</junit.version>
 		<antlr.version>3.4</antlr.version>
 	</properties>
 
@@ -361,5 +361,4 @@
 			</build>
 		</profile>
 	</profiles>
-
 </project>
