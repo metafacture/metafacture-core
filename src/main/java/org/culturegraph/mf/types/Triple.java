@@ -101,7 +101,7 @@ public final class Triple  implements Comparable<Triple> {
 		if (result == 0) {
 			result = predicate.compareTo(namedValue.predicate);
 			if(result == 0){
-				return object.compareTo(object);
+				return object.compareTo(namedValue.object);
 			}
 		}
 		return result;
