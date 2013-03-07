@@ -18,10 +18,10 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import junit.framework.Assert;
+
 
 import org.culturegraph.mf.framework.DefaultObjectReceiver;
-import org.culturegraph.mf.stream.pipe.ObjectExceptionCatcher;
+import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -39,7 +39,7 @@ public final class ObjectExceptionCatcherTest {
 	 * is not passed accidentally on a different 
 	 * exception.
 	 */
-	private static final class ModuleException 
+	protected static final class ModuleException 
 		extends RuntimeException {
 
 		private static final long serialVersionUID = 1L;		
@@ -51,7 +51,7 @@ public final class ObjectExceptionCatcherTest {
 	 * 
 	 * @param <T> object type
 	 */
-	private static final class FailingModule<T>
+	protected static final class FailingModule<T>
 		extends DefaultObjectReceiver<T> {
 		
 		@Override
