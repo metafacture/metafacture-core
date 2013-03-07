@@ -1,6 +1,3 @@
-/**
- * 
- */
 /*
  *  Copyright 2013 Deutsche Nationalbibliothek
  *
