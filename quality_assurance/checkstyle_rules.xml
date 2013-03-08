@@ -111,7 +111,9 @@
     <module name="Regexp"/>
     <module name="JavadocType"/>
   </module>
-  <module name="StrictDuplicateCode"/>
+  <module name="StrictDuplicateCode">
+  	<property name="fileExtensions" value="java"/>
+  </module>
   <module name="Header">
     <property name="headerFile" value="${basedir}/quality_assurance/java-header.txt"/>
     <property name="fileExtensions" value="java"/>
