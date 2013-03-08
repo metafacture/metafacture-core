@@ -29,7 +29,7 @@ import org.junit.Test;
  */
 public final class JndiSqlMapTest {
 	@Test
-	public void name() throws IOException {
+	public void testGetDatasource() throws IOException {
 		final JndiSqlMap map = new JndiSqlMap();
 		map.setDatasource("testDataSource");
 		
