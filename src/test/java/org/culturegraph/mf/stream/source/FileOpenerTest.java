@@ -18,16 +18,20 @@ package org.culturegraph.mf.stream.source;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeThat;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
 
+import org.apache.commons.io.IOUtils;
+import org.culturegraph.mf.stream.DataFilePath;
 import org.culturegraph.mf.stream.pipe.ObjectBuffer;
 import org.junit.Rule;
 import org.junit.Test;
@@ -46,7 +50,7 @@ public final class FileOpenerTest {
 	private static final String UTF8_MESSAGE = 
 			"Default encoding is UTF-8: It is not possible to test " +
 			"whether FileOpener sets the encoding to UTF-8 correctly.";
-	
+		
 	// NO CHECKSTYLE VisibilityModifier FOR 3 LINES:
 	// JUnit requires rules to be public
 	@Rule

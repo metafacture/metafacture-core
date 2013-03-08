@@ -35,6 +35,13 @@ public final class DataFilePath {
 	
 	public static final String GENERIC_XML = DATA_PREFIX + "generic_xml_test.xml";
 	
+	public static final String COMPRESSED_NONE = DATA_PREFIX + "compressed.txt";
+	public static final String COMPRESSED_BZ2 = DATA_PREFIX + "compressed.txt.bz2";
+	public static final String COMPRESSED_BZIP2 = DATA_PREFIX + "compressed.txt.bzip2";
+	public static final String COMPRESSED_GZ = DATA_PREFIX + "compressed.txt.gz";
+	public static final String COMPRESSED_GZIP = DATA_PREFIX + "compressed.txt.gzip";
+	public static final String COMPRESSED_XZ = DATA_PREFIX + "compressed.txt.xz";
+	
 	private DataFilePath() {/*no instances exist*/}
 	
 

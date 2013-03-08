@@ -15,9 +15,9 @@
  */
 package org.culturegraph.mf.stream.source;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
@@ -27,16 +27,13 @@ import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.util.FileCompression;
 
 
 /**
  * Opens a file and passes a reader for it to the receiver.
  * 
- * @author Markus Geipel
- * 
- */
-/**
- * @author geipel
+ * @author Christoph Böhme
  * 
  */
 @Description("Opens a file.")
@@ -44,9 +41,8 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Out(java.io.Reader.class)
 public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> implements Opener {
 
-	private static final int DEFAULT_BUFFER_SIZE = 8 * 1024 * 1024;
-	private int bufferSize = DEFAULT_BUFFER_SIZE;
 	private String encoding = "UTF-8";
+	private FileCompression compression = FileCompression.AUTO;
 
 	/**
 	 * Returns the encoding used to open the resource.
@@ -66,20 +62,42 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 	public void setEncoding(final String encoding) {
 		this.encoding = encoding;
 	}
-
-	/**
-	 * @param bufferSize
-	 *            in MB
-	 */
-	public void setBufferSize(final int bufferSize) {
-		this.bufferSize = bufferSize * 1024 * 1024;
+	
+	public FileCompression getCompression() {
+		return compression;
+	}
+	
+	public void setCompression(final FileCompression compression) {
+		this.compression = compression;
+	}
+	
+	public void setCompression(final String compression) {
+		setCompression(FileCompression.valueOf(compression.toUpperCase()));
 	}
 
 	@Override
 	public void process(final String file) {
 		try {
-			getReceiver().process(
-					new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding), bufferSize));
+			final InputStream fileStream = new FileInputStream(file);
+			try {
+				final InputStream decompressor = compression.createDecompressor(fileStream);
+				try {
+					final Reader reader = new InputStreamReader(decompressor, encoding);
+					getReceiver().process(reader);
+				} catch (IOException e) {
+					decompressor.close();
+					throw e;
+				} catch (MetafactureException e) {
+					decompressor.close();
+					throw e;
+				}
+			} catch (IOException e) {
+				fileStream.close();
+				throw e;
+			} catch (MetafactureException e) {
+				fileStream.close();
+				throw e;
+			}
 		} catch (IOException e) {
 			throw new MetafactureException(e);
 		}

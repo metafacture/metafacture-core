@@ -34,12 +34,15 @@ import org.culturegraph.mf.framework.annotations.Out;
 /**
  * Opens a gz file and passes a reader for it to the receiver.
  * 
+ * @deprecated Use FileOpener instead and set compression to AUTO or bzip2
+
  * @author Markus Geipel
  * 
  */
 @Description("Opens a gz file.")
 @In(String.class)
 @Out(java.io.Reader.class)
+@Deprecated
 public final class GzipOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> implements Opener {
 
 	private static final int DEFAULT_BUFFER_SIZE = 16 * 1024 * 1024;

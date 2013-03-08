@@ -34,12 +34,15 @@ import org.culturegraph.mf.framework.annotations.Out;
 /**
  * Opens a bzip2 file and passes a reader for it to the receiver.
  * 
- * @author Markus Geipel
+ * @deprecated Use FileOpener instead and set compression to AUTO or bzip2
+ * 
+ * @author Christoph Böhme
  * 
  */
 @Description("Opens a bzip2 file.")
 @In(String.class)
 @Out(java.io.Reader.class)
+@Deprecated
 public final class Bzip2Opener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> implements Opener {
 
 	private static final int DEFAULT_BUFFER_SIZE = 16 * 1024 * 1024;
