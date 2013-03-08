@@ -21,7 +21,6 @@ import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.stream.sink.StreamValidator;
-import org.junit.Ignore;
 import org.junit.Test;
 
 

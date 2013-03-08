@@ -15,42 +15,52 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import org.culturegraph.mf.stream.pipe.StreamLogger;
-import org.junit.Ignore;
+import static org.junit.Assert.fail;
+
+import org.culturegraph.mf.exceptions.FormatException;
+import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.stream.sink.EventList;
+import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.junit.Test;
 
 
 /**
  * Tests if {@link StreamLogger} is correctly piping all events.
  * 
- * @author Markus Michael Geipel
+ * @author Markus Michael Geipel, Christoph Böhme
  */
 
 public final class StreamLoggerTest {
 
 	@Test
-	@Ignore
 	public void testCorrectPipeFunction() {
-//		final ResourceOpener opener = new ResourceOpener();
-//		final PicaDecoder picaDecoder = new PicaDecoder();
-//		final StringWriter referenceWriter = new StringWriter();
-//				
-//		opener.setReceiver(new LineReader())
-//				.setReceiver(picaDecoder)
-//				.setReceiver(new StreamWriter(referenceWriter));
-//
-//		opener.process(DataFilePath.PND_PICA);
-//		opener.closeStream();
-//
-//		final StringWriter finalWriter = new StringWriter();
-//
-//		picaDecoder.setReceiver(new StreamLogger("test-logger"))
-//				.setReceiver(new StreamWriter(finalWriter));
-//
-//		opener.process(DataFilePath.PND_PICA);
-//		opener.closeStream();
-//
-//		Assert.assertEquals(referenceWriter.toString(), finalWriter.toString());
-//
+		final EventList list = new EventList();
+		execTestEvents(list);
+		
+		final StreamValidator validator = new StreamValidator(list.getEvents());
+		final StreamLogger logger = new StreamLogger("test-logger");
+		logger.setReceiver(validator);
+		
+		try {
+			execTestEvents(logger);
+			logger.closeStream();
+		} catch (FormatException e) {
+			fail("Logger did not forward data as expected: " + e);
+		}
+
 	}
+	
+	private void execTestEvents(final StreamReceiver receiver) {
+		receiver.startRecord("1");
+		receiver.literal("l1", "value1");
+		receiver.literal("l1", "value2");
+		receiver.startEntity("e1");
+		receiver.literal("l2", "value3");
+		receiver.endEntity();
+		receiver.endRecord();
+		receiver.startRecord("2");
+		receiver.literal("l3", "value4");
+		receiver.endRecord();
+	}
+
 }

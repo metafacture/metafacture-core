@@ -15,13 +15,17 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import org.culturegraph.mf.framework.Tee;
-import org.junit.Ignore;
+import static org.junit.Assert.fail;
+
+import org.culturegraph.mf.exceptions.FormatException;
+import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.stream.sink.EventList;
+import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.junit.Test;
 
 
 /**
- * Tests if {@link Tee} is correctly piping all events.
+ * Tests if {@link StreamTee} is correctly piping all events.
  * 
  * @author Markus Michael Geipel
  *
@@ -29,30 +33,35 @@ import org.junit.Test;
 public final class StreamTeeTest {
 	
 	@Test
-	@Ignore
 	public void testCorrectTeeFunction() {
-//		final ResourceOpener opener = new ResourceOpener();
-//		final PicaDecoder picaDecoder = new PicaDecoder();
-//		
-//		final StringWriter referenceWriter = new StringWriter();
-//		
-//		opener.setReceiver(new LineReader())
-//				.setReceiver(picaDecoder)
-//				.setReceiver(new StreamWriter(referenceWriter));
-//		
-//		opener.process(DataFilePath.PND_PICA);
-//		opener.closeStream();
-//		
-//		final StringWriter finalWriter1 = new StringWriter();
-//		final StringWriter finalWriter2 = new StringWriter();
-//		
-//		picaDecoder.setReceiver(new StreamTee())
-//				.setReceivers(new StreamWriter(finalWriter1), new StreamWriter(finalWriter2));
-//		
-//		opener.process(DataFilePath.PND_PICA);
-//		opener.closeStream();
-//		
-//		Assert.assertEquals(referenceWriter.toString(), finalWriter1.toString());
-//		Assert.assertEquals(referenceWriter.toString(), finalWriter2.toString());
+		final EventList list = new EventList();
+		execTestEvents(list);
+		
+		final StreamValidator validator1 = new StreamValidator(list.getEvents());
+		final StreamValidator validator2 = new StreamValidator(list.getEvents());
+		final StreamTee tee = new StreamTee();
+		tee.addReceiver(validator1)
+			.addReceiver(validator2);
+		
+		try {
+			execTestEvents(tee);
+			tee.closeStream();
+		} catch (FormatException e) {
+			fail("Tee did not forward data as expected: " + e);
+		}
 	}
+	
+	private void execTestEvents(final StreamReceiver receiver) {
+		receiver.startRecord("1");
+		receiver.literal("l1", "value1");
+		receiver.literal("l1", "value2");
+		receiver.startEntity("e1");
+		receiver.literal("l2", "value3");
+		receiver.endEntity();
+		receiver.endRecord();
+		receiver.startRecord("2");
+		receiver.literal("l3", "value4");
+		receiver.endRecord();
+	}
+
 }
