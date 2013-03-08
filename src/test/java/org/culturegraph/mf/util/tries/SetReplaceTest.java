@@ -28,10 +28,8 @@ import org.junit.Test;
  */
 public final class SetReplaceTest {
 
-
-
 	@Test
-	public void testReplece() {
+	public void testReplace() {
 	
 		final SetReplacer setReplace = new SetReplacer();
 		final String text = "auf sylt mit super krabben entsafter und apfel";
