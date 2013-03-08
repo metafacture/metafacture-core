@@ -25,7 +25,7 @@ import java.util.Set;
  *
  * @param <P>
  */
-final public class ACNode<P> {
+public final class ACNode<P> {
 	private P value;
 	private final CharMap<ACNode<P>> links = new CharMap<ACNode<P>>();
 	private ACNode<P> failure;

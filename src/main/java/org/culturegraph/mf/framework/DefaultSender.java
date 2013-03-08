@@ -35,7 +35,7 @@ public class DefaultSender<T extends LifeCycle> implements Sender<T> {
 	private T receiver;
 	private boolean isClosed;
 
-	public boolean isClosed() {
+	public final boolean isClosed() {
 		return isClosed;
 	}
 		
