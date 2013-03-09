@@ -17,6 +17,7 @@ package org.culturegraph.mf.stream.sink;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.regex.Matcher;
@@ -24,6 +25,7 @@ import java.util.regex.Pattern;
 
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.ObjectReceiver;
+import org.culturegraph.mf.util.FileCompression;
 
 
 /**
@@ -44,6 +46,7 @@ public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
 	private Writer writer;
 	
 	private String encoding = "UTF-8";
+	private FileCompression compression = FileCompression.AUTO;
 
 	public ObjectFileWriter(final String path) {
 		this.path = path;
@@ -73,12 +76,36 @@ public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
 	public void setEncoding(final String encoding) {
 		this.encoding = encoding;
 	}
+
+	public FileCompression getCompression() {
+		return compression;
+	}
+	
+	public void setCompression(final FileCompression compression) {
+		this.compression  = compression;
+	}
+	
+	public void setCompression(final String compression) {
+		setCompression(FileCompression.valueOf(compression.toUpperCase()));
+	}
 	
 	private void startNewFile() {
 		final Matcher matcher = VAR_PATTERN.matcher(this.path);
 		final String path = matcher.replaceAll(String.valueOf(count));
 		try {
-			writer = new OutputStreamWriter(new FileOutputStream(path), encoding);
+			final OutputStream file = new FileOutputStream(path);
+			try {
+				final OutputStream compressor = compression.createCompressor(file, path);
+				try {
+					writer = new OutputStreamWriter(compressor, encoding);
+				} catch (IOException e) {
+					compressor.close();
+					throw e;
+				}
+			} catch (IOException e) {
+				file.close();
+				throw e;
+			}
 		} catch (IOException e) {
 			throw new MetafactureException("Error creating file '" + path + "'.", e);
 		}
