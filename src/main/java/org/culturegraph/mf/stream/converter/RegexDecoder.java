@@ -125,10 +125,12 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 	public void process(final String string) {
 		matcher.reset(string);
 
-		String id = null;
+		final String id;
 		final int groupIndex = captureGroupNames.indexOf(ID_CAPTURE_GROUP) + 1;
 		if (groupIndex > 0 && matcher.find()) {
 			id = matcher.group(groupIndex);
+		} else {
+			id = "";
 		}
 		getReceiver().startRecord(id);
 		

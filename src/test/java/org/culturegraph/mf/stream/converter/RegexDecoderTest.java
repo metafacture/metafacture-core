@@ -44,7 +44,7 @@ public final class RegexDecoderTest {
 	public void testRegex() {
 		final EventList expected = new EventList();
 		
-		expected.startRecord(null);
+		expected.startRecord("");
 		expected.literal(DEFAULT_LITERAL_NAME, INPUT);
 		expected.literal(GROUP_NAME_1, "42");
 		expected.literal(GROUP_NAME_2, "xyzzy");
