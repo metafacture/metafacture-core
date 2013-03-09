@@ -18,20 +18,16 @@ package org.culturegraph.mf.stream.source;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeThat;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
-import org.culturegraph.mf.stream.DataFilePath;
 import org.culturegraph.mf.stream.pipe.ObjectBuffer;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,7 +41,7 @@ import org.junit.rules.TemporaryFolder;
  */
 public final class FileOpenerTest {
 
-	private static final String INPUT = "Überfacture";
+	private static final String DATA = "Überfacture";
 	
 	private static final String UTF8_MESSAGE = 
 			"Default encoding is UTF-8: It is not possible to test " +
@@ -59,35 +55,27 @@ public final class FileOpenerTest {
 	@Test
 	public void testUtf8IsDefaultEncoding() throws IOException {
 		final Charset charsetUTF8 = Charset.forName("UTF-8");
+		
 		assumeThat(UTF8_MESSAGE, Charset.defaultCharset(), not(equalTo(charsetUTF8)));
 		
 		final File file = tempFolder.newFile();
 		
 		final OutputStream stream = new FileOutputStream(file);
-		try {
-			stream.write(INPUT.getBytes(charsetUTF8));
-		} finally {
-			stream.close();
-		}
+		try { stream.write(DATA.getBytes(charsetUTF8)); }
+		finally { stream.close(); }
 		
 		final FileOpener opener = new FileOpener();
 		final ObjectBuffer<Reader> buffer = new ObjectBuffer<Reader>(); 
-		opener.setReceiver(buffer);	
+		opener.setReceiver(buffer);		
 		opener.process(file.getAbsolutePath());
 		opener.closeStream();
 		
 		final Reader reader = buffer.pop();
-		try {
-			int i = 0;
-			int c;
-			while ((c = reader.read()) != -1) {
-				assertTrue("File contains more data than expected", i < INPUT.length());
-				assertEquals("File contains unexpected characters", INPUT.charAt(i), c);
-				i += 1;
-			}
-		} finally {
-			reader.close();
-		}
+		final String charsFromFile;
+		try { charsFromFile = IOUtils.toString(reader); }
+		finally { reader.close(); }
+		
+		assertEquals(DATA, charsFromFile);
 	}
 	
 }

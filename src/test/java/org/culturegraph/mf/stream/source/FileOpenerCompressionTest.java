@@ -16,7 +16,6 @@
 package org.culturegraph.mf.stream.source;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,14 +37,15 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
+ * Tests for file compression in {@link FileOpener}.
+ * 
  * @author Christoph Böhme
  *
  */
 @RunWith(Parameterized.class)
 public final class FileOpenerCompressionTest {
 	
-	private static final String COMPRESSED_INPUT = 
-			"This could have been a remarkable sentence.";
+	private static final String DATA = "This could have been a remarkable sentence.";
 	
 	// NO CHECKSTYLE VisibilityModifier FOR 3 LINES:
 	// JUnit requires rules to be public
@@ -80,36 +80,28 @@ public final class FileOpenerCompressionTest {
 	
 	@Test
 	public void testOpenCompressedFiles() throws IOException {
-		final File file = prepareFile(resourcePath);
+		final File file = tempFolder.newFile();
+
+		final InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
+		try {
+			final OutputStream out = new FileOutputStream(file);
+			try { IOUtils.copy(in, out); }
+			finally { out.close(); }
+		} finally { in.close(); }
 		
 		final FileOpener opener = new FileOpener();
 		opener.setCompression(compression);
 		final ObjectBuffer<Reader> buffer = new ObjectBuffer<Reader>();
-		opener.setReceiver(buffer);
-		
+		opener.setReceiver(buffer);	
 		opener.process(file.getAbsolutePath());
 		opener.closeStream();
 		
-		final String test = IOUtils.toString(buffer.pop());
-		assertEquals(COMPRESSED_INPUT, test);
-		assertNull("Buffer contains more readers than expected", buffer.pop());
+		final Reader reader = buffer.pop();
+		final String charsFromFile;
+		try { charsFromFile = IOUtils.toString(reader); }
+		finally { reader.close(); }
+		
+		assertEquals(DATA, charsFromFile);
 	}
 	
-	private File prepareFile(final String resource) throws IOException {
-		final File file = tempFolder.newFile();
-		
-		final InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
-		try {
-			final OutputStream out = new FileOutputStream(file);
-			try {
-				IOUtils.copy(in, out);
-			} finally {
-				out.close();
-			}
-		} finally {
-			in.close();
-		}
-		
-		return file;
-	}
 }
