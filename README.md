@@ -1,3 +1,5 @@
+![Metafacture](https://raw.github.com/wiki/culturegraph/metafacture-core/img/metafacture.png)
+
 metafacture-core
 ================
 
