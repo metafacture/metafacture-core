@@ -27,8 +27,13 @@ import org.junit.Test;
  */
 public final class NormalizeUTF8Test {
 
-	private static final String INPUT_STR = "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
-	private static final String OUTPUT_STR = "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
+	// The umlauts in this string are composed of two characters (u and ", e.g.):
+	private static final String INPUT_STR = 
+			"Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
+	
+	// The umlauts in this string are individual characters:
+	private static final String OUTPUT_STR = 
+			"Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 	
 	@Test
 	public void testProcess() {
