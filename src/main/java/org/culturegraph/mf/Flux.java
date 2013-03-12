@@ -38,7 +38,6 @@ import org.culturegraph.mf.flux.parser.FluxLexer;
 import org.culturegraph.mf.flux.parser.FluxParser;
 import org.culturegraph.mf.util.ResourceUtil;
 
-
 /**
  * @author Markus Michael Geipel
  * 
@@ -77,41 +76,38 @@ public final class Flux {
 		}
 
 		if (args.length < 1) {
-			Flow.printHelp();
+			Flow.printHelp(System.out);
 			System.exit(2);
-			return;
-		}
-		
-		final File fluxFile = new File(args[0]);
-		if(!fluxFile.exists()){
-			System.err.println("File not found: " + args[0]);
-			System.exit(1);
-			return;
-		}
-		
+		} else {
 
-		// get variable assignments
-		final Map<String, String> vars = new HashMap<String, String>();
-		vars.put(SCRIPT_HOME, fluxFile.getAbsoluteFile().getParent() + System.getProperty("file.separator"));
-		
-		
-		for (int i = 1; i < args.length; ++i) {
-			final Matcher matcher = VAR_PATTERN.matcher(args[i]);
-			if (!matcher.find()) {
-				Flow.printHelp();
+			final File fluxFile = new File(args[0]);
+			if (!fluxFile.exists()) {
+				System.err.println("File not found: " + args[0]);
+				System.exit(1);
 				return;
 			}
-			vars.put(matcher.group(1), matcher.group(2));
-		}
 
-		// run parser and builder
-		final Flow flow = compileFlow(compileAst(ResourceUtil.getStream(fluxFile)), vars);
-		flow.start();
+			// get variable assignments
+			final Map<String, String> vars = new HashMap<String, String>();
+			vars.put(SCRIPT_HOME, fluxFile.getAbsoluteFile().getParent() + System.getProperty("file.separator"));
+
+			for (int i = 1; i < args.length; ++i) {
+				final Matcher matcher = VAR_PATTERN.matcher(args[i]);
+				if (!matcher.find()) {
+					Flow.printHelp(System.err);
+					return;
+				}
+				vars.put(matcher.group(1), matcher.group(2));
+			}
+
+			// run parser and builder
+			final Flow flow = compileFlow(compileAst(ResourceUtil.getStream(fluxFile)), vars);
+			flow.start();
+		}
 	}
 
 	public static CommonTreeNodeStream compileAst(final InputStream flowDef) throws IOException, RecognitionException {
-		final FluxParser parser = new FluxParser(new CommonTokenStream(new FluxLexer(new ANTLRInputStream(
-				flowDef))));
+		final FluxParser parser = new FluxParser(new CommonTokenStream(new FluxLexer(new ANTLRInputStream(flowDef))));
 		return new CommonTreeNodeStream(parser.flux().getTree());
 	}
 
