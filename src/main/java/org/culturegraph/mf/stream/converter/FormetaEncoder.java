@@ -45,6 +45,7 @@ public final class FormetaEncoder extends
 		 * Good for automatic processing. 
 		 */
 		CONCISE {
+			@Override
 			public Formatter createFormatter() {
 				return new ConciseFormatter();
 			}
@@ -56,6 +57,7 @@ public final class FormetaEncoder extends
 		 * quotation marks extensively. 
 		 */
 		VERBOSE {
+			@Override
 			public Formatter createFormatter() {
 				return new VerboseFormatter();
 			}			 
@@ -66,6 +68,7 @@ public final class FormetaEncoder extends
 		 * adds line breaks and indents to support readability.
 		 */
 		MULTILINE {
+			@Override
 			public Formatter createFormatter() {
 				return new MultilineFormatter();
 			}			
@@ -366,10 +369,7 @@ public final class FormetaEncoder extends
 		formatter = style.createFormatter();
 	}
 	
-	public void setStyle(final String style) {
-		setStyle(Style.valueOf(style.toUpperCase()));
-	}
-	
+
 	@Override
 	public void startRecord(final String identifier) {
 		formatter.reset();

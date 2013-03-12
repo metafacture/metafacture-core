@@ -43,7 +43,7 @@ public class ObjectFactory<O> {
 
 	private static final String INSTANTIATION_PROBLEM = " could not be instantiated";
 
-	private static final String SET = "set";
+	private static final String SETTER_PREFIX = "set";
 
 	private static final Set<Class<?>> ELIGIBLE_TYPES = new HashSet<Class<?>>();
 
@@ -68,7 +68,7 @@ public class ObjectFactory<O> {
 		final Map<String, Method> methodMap = new HashMap<String, Method>();
 		for (Method method : clazz.getMethods()) {
 			if (methodIsEligible(method)) {
-				final String methodName = method.getName().substring(SET.length()).toLowerCase();
+				final String methodName = method.getName().substring(SETTER_PREFIX.length()).toLowerCase();
 				methodMap.put(methodName, method);
 			}
 		}
@@ -78,8 +78,8 @@ public class ObjectFactory<O> {
 	private static boolean methodIsEligible(final Method method) {
 		if (method.getParameterTypes().length == 1) {
 			final Class<?> type = method.getParameterTypes()[0];
-			if (ELIGIBLE_TYPES.contains(type)) {
-				return method.getName().startsWith(SET);
+			if (ELIGIBLE_TYPES.contains(type) || type.isEnum()) {
+				return method.getName().startsWith(SETTER_PREFIX);
 			}
 		}
 		return false;
@@ -89,12 +89,17 @@ public class ObjectFactory<O> {
 		return classes.get(name);
 	}
 
-	public final Set<String> getAttributes(final String key) {
-		if (classes.containsKey(key)) {
-			return Collections.unmodifiableSet(classMethodMaps.get(classes.get(key)).keySet());
+	public final Map<String, Class<?>> getAttributes(final String classKey) {
+		if (classes.containsKey(classKey)) {
+			final Map<String, Class<?>> attributes = new HashMap<String, Class<?>>();
+			for(Entry<String, Method> entry:classMethodMaps.get(classes.get(classKey)).entrySet()){
+				attributes.put(entry.getKey(), entry.getValue().getParameterTypes()[0]);
+				return attributes;
+			}
 		}
-		return Collections.emptySet();
+		return Collections.emptyMap();
 	}
+	
 
 	public final Set<String> keySet() {
 		return availableClasses;
@@ -174,6 +179,7 @@ public class ObjectFactory<O> {
 		applySetters(instance, extractMethods(instance.getClass()), attributes);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" }) // OK, because type.isEnum() is checked before casting to Enum
 	private static <O> void applySetters(final O instance, final Map<String, Method> methodMap,
 			final Map<String, String> attributes) {
 
@@ -191,7 +197,9 @@ public class ObjectFactory<O> {
 					method.invoke(instance, Boolean.valueOf(attribute.getValue()));
 				} else if (type == int.class) {
 					method.invoke(instance, Integer.valueOf(attribute.getValue()));
-				} else {
+				} else if (type.isEnum()) {
+					method.invoke(instance, Enum.valueOf((Class<Enum>)type, attribute.getValue().toUpperCase()));
+				}else {
 					method.invoke(instance, attribute.getValue());
 				}
 			} catch (IllegalArgumentException e) {

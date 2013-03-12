@@ -34,8 +34,8 @@ public final class TripleSort extends AbstractTripleSort {
 		getReceiver().process(triple);
 	}
 	
-	public void setSortBy(final String sortBy){
-		setComparator(CompareBy.valueOf(sortBy.toUpperCase()));
+	public void setSortBy(final CompareBy sortBy){
+		setComparator(sortBy);
 	}
 
 }
