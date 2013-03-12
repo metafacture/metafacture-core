@@ -16,6 +16,7 @@
 package org.culturegraph.mf.flux;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -45,8 +46,8 @@ public final class Flow {
 	private static final ObjectFactory<LifeCycle> COMMAND_FACTORY = new ObjectFactory<LifeCycle>();
 	private static final String PROPERTIES_LOCATION = "flux-commands.properties";
 
-	private Deque<Tee<?>> teeStack = new LinkedList<Tee<?>>();
-	private Deque<List<LifeCycle>> looseEndsStack = new LinkedList<List<LifeCycle>>();
+	private final Deque<Tee<?>> teeStack = new LinkedList<Tee<?>>();
+	private final Deque<List<LifeCycle>> looseEndsStack = new LinkedList<List<LifeCycle>>();
 
 	static {
 		try {
@@ -141,8 +142,8 @@ public final class Flow {
 		start.closeStream();
 	}
 
-	public static void printHelp() {
-		HelpPrinter.print(COMMAND_FACTORY);
+	public static void printHelp(final PrintStream out) {
+		HelpPrinter.print(COMMAND_FACTORY, out);
 	}
 
 }

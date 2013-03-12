@@ -15,12 +15,16 @@
  */
 package org.culturegraph.mf.flux;
 
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
@@ -28,50 +32,61 @@ import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.annotations.ReturnsAvailableArguments;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 
-
-
 /**
  * prints Flux help for a given {@link ObjectFactory}
  * 
  * @author Markus Michael Geipel
- *
+ * 
  */
 public final class HelpPrinter {
 	private HelpPrinter() {
-		//no instances
+		// no instances
 	}
-	
-	public static void print(final ObjectFactory<?> factory) {
-		System.err.println("Usage:\tMetaflow FLOW_FILE [VARNAME=VALUE ...]\n");
-		System.err.println("Available pipe elements:\n");
-		
+
+	public static void print(final ObjectFactory<?> factory, final PrintStream out) {
+		out.println("Usage:\tMetaflow FLOW_FILE [VARNAME=VALUE ...]\n");
+		out.println("Available pipe elements:\n");
+
 		final List<String> keyWords = new ArrayList<String>();
 		keyWords.addAll(factory.keySet());
 		Collections.sort(keyWords);
 		for (String name : keyWords) {
-			describe(name, factory);
+			describe(name, factory, out);
 		}
-		
+
 	}
 
-	private static void describe(final String name, final ObjectFactory<?> factory) {
-		final Class<?> clazz = factory.getClass(name);
+	private static <T> void  describe(final String name, final ObjectFactory<T> factory, final PrintStream out) {
+		final Class<? extends T> clazz = factory.getClass(name);
 		final Description desc = clazz.getAnnotation(Description.class);
-		System.err.println(name);
-		
+
+		out.println(name);
+
 		if (desc != null) {
-			System.err.println("description:\t" + desc.value());
+			out.println("description:\t" + desc.value());
 		}
 		final Collection<String> arguments = getAvailableArguments(clazz);
-		if(!arguments.isEmpty()){
-			System.err.println("argument in\t" + arguments);
-		}
-		final Collection<String> options = factory.getAttributes(name);
-		if(!options.isEmpty()){
-			System.err.println("options:\t" + options);
+		if (!arguments.isEmpty()) {
+			out.println("argument in\t" + arguments);
 		}
 		
-		System.err.println("implementation:\t" + clazz.getCanonicalName());
+		final Map<String, Class<?>> attributes = factory.getAttributes(name);
+				
+		if (!attributes.isEmpty()) {
+			out.print("options:\t");
+			final StringBuilder builder = new StringBuilder();
+			for (Entry<String, Class<?>> entry: attributes.entrySet()) {
+				if (entry.getValue().isEnum()) {
+					builder.append(entry.getKey() + " " + Arrays.toString(entry.getValue().getEnumConstants())	+", ");
+				}else{
+					builder.append(entry.getKey() + " (" + entry.getValue().getName()+"), ");
+				}
+				
+			}
+			out.println(builder.substring(0, builder.length()-2));
+		}
+
+		out.println("implementation:\t" + clazz.getCanonicalName());
 		String inString = "<unknown>";
 		String outString = "";
 		final In inClass = clazz.getAnnotation(In.class);
@@ -82,14 +97,14 @@ public final class HelpPrinter {
 		if (outClass != null) {
 			outString = outClass.value().getCanonicalName();
 		}
-		System.err.println("signature:\t" + inString + " -> " + outString);
-		System.err.println();
+		out.println("signature:\t" + inString + " -> " + outString);
+		out.println();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private static Collection<String> getAvailableArguments(final Class<?> clazz){
+	private static Collection<String> getAvailableArguments(final Class<?> clazz) {
 		for (Method method : clazz.getMethods()) {
-			if(method.getAnnotation(ReturnsAvailableArguments.class)!=null){
+			if (method.getAnnotation(ReturnsAvailableArguments.class) != null) {
 				try {
 					return (Collection<String>) method.invoke(clazz, new Object[0]);
 				} catch (IllegalAccessException e) {

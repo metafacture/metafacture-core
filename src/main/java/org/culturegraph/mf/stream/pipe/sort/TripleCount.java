@@ -64,7 +64,6 @@ public final class TripleCount extends AbstractTripleSort {
 		final CompareBy compareBy = getComparatorType();
 		switch (compareBy) {
 		case ALL:
-		default:
 			getReceiver().process(new Triple(current.toString(), countPredicate , String.valueOf(count)));
 			break;
 		case OBJECT:
@@ -74,13 +73,14 @@ public final class TripleCount extends AbstractTripleSort {
 			getReceiver().process(new Triple(current.getPredicate(), countPredicate, String.valueOf(count)));
 			break;
 		case SUBJECT:
+		default:
 			getReceiver().process(new Triple(current.getSubject(), countPredicate, String.valueOf(count)));
 			break;
 		}
 	}
 
-	public void setCountBy(final String countBy){
-		setComparator(CompareBy.valueOf(countBy.toUpperCase()));
+	public void setCountBy(final CompareBy countBy){
+		setComparator(countBy);
 	}
 
 }

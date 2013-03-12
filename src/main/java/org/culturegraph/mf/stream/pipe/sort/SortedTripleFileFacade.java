@@ -31,7 +31,7 @@ import org.culturegraph.mf.types.Triple;
  *
  */
 public final class SortedTripleFileFacade {
-	public static int BUFFERSIZE = 2048;
+	public static final int BUFFERSIZE = 2048;
 	private final ObjectInputStream in;
 	private final File file;
 	private Triple triple;
