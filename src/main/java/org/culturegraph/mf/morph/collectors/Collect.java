@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-import org.culturegraph.mf.morph.EntityEndListener;
+import org.culturegraph.mf.morph.FlushListener;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValuePipeHead;
 import org.culturegraph.mf.morph.NamedValueSource;
@@ -26,9 +26,9 @@ import org.culturegraph.mf.morph.NamedValueSource;
  * @author Markus Michael Geipel
  *
  */
-public interface Collect extends EntityEndListener, NamedValuePipeHead{
+public interface Collect extends FlushListener, NamedValuePipeHead{
 
-	void setFlushWith(String flushEntity);
+	void setWaitForFlush(final boolean waitForFlush);
 	void setSameEntity(boolean sameEntity);
 	void addNamedValueSource(final NamedValueSource namedValueSource);
 	void setReset(boolean reset);

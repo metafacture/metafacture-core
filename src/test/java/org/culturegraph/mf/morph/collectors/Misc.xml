@@ -2,7 +2,49 @@
 <metamorph-test version="1.0"
 	xmlns="http://www.culturegraph.org/metamorph-test" xmlns:cgxml="http://www.culturegraph.org/cgxml">
 
-	<test-case name="entity open info">
+
+	<test-case name="arbitrary literal for flush">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="d" value="1"/>
+						<cgxml:literal name="d" value="2"/>
+						<cgxml:literal name="f" value=""/>
+						<cgxml:literal name="d" value="3"/>
+						<cgxml:literal name="d" value="4"/>
+						<cgxml:literal name="d" value="5"/>
+						<cgxml:literal name="f" value=""/>
+						<cgxml:literal name="d" value="6"/>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph version="1" xmlns="http://www.culturegraph.org/metamorph">
+				<rules>
+					<concat delimiter="" name="d" flushWith="f">
+						<data source="d"/>
+					</concat>
+				</rules>
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="d" value="12"/>
+						<cgxml:literal name="d" value="345"/>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+
+	<test-case name="entity end info">
 		<input type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
@@ -32,9 +74,9 @@
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
 					<cgxml:record id="1">
-						<cgxml:literal name="e1" value="" />
-						<cgxml:literal name="e1.e2" value="" />
 						<cgxml:literal name="e1.e2.d" value="a" />
+						<cgxml:literal name="e1.e2" value="" />
+						<cgxml:literal name="e1" value="" />
 					</cgxml:record>
 				</cgxml:records>
 			</cgxml:cgxml>

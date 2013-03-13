@@ -27,7 +27,7 @@ import org.culturegraph.mf.morph.NamedValueSource;
  */
 public abstract class AbstractCollect extends AbstractNamedValuePipeHead implements Collect {
 
-private static final String FLUSH = "_flush";
+//private static final String FLUSH = "_flush";
 //	private static final Logger LOG = LoggerFactory.getLogger(AbstractCollect.class);
 
 	private int oldRecord;
@@ -58,9 +58,9 @@ private static final String FLUSH = "_flush";
 	}
 
 	@Override
-	public final void setFlushWith(final String flushEntity) {
-		waitForFlush = true;
-		metamorph.addEntityEndListener(this, flushEntity);
+	public final void setWaitForFlush(final boolean waitForFlush) {
+		this.waitForFlush = waitForFlush;
+		//metamorph.addEntityEndListener(this, flushEntity);
 	}
 
 
@@ -126,9 +126,9 @@ private static final String FLUSH = "_flush";
 	public final void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
 		updateCounts(recordCount, entityCount);
 
-		if(FLUSH.equals(name)){
-			onEntityEnd(name, recordCount, entityCount);
-		}
+//		if(FLUSH.equals(name)){
+//			flush(name, recordCount, entityCount);
+//		}
 		
 		receive(name, value, source);
 
@@ -151,7 +151,7 @@ private static final String FLUSH = "_flush";
 	}
 
 	@Override
-	public final void onEntityEnd(final String entityName, final int recordCount, final int entityCount) {
+	public final void flush(final int recordCount, final int entityCount) {
 		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount)) {
 			emit();
 			if (resetAfterEmit) {

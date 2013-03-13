@@ -16,7 +16,7 @@
 package org.culturegraph.mf.morph.functions;
 
 
-import org.culturegraph.mf.morph.EntityEndIndicator;
+import org.culturegraph.mf.morph.FlushListener;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValuePipe;
 import org.culturegraph.mf.types.MultiMap;
@@ -25,9 +25,9 @@ import org.culturegraph.mf.types.MultiMap;
  * Interface for functions used in {@link Metamorph}
  * @author Markus Michael Geipel
  */
-public interface Function extends NamedValuePipe{
+public interface Function  extends NamedValuePipe, FlushListener{
 
 	void putValue(String key, String value);
 	void setMultiMap(MultiMap multiMapProvider);
-	void setEntityEndIndicator(EntityEndIndicator indicator);
+	//void setEntityEndIndicator(EntityEndIndicator indicator);
 }

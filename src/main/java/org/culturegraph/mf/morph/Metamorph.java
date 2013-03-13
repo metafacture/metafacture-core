@@ -48,8 +48,7 @@ import org.culturegraph.mf.util.StreamConstants;
 @Description("applies a metamorph transformation to the event stream. Metamorph definition is given in brackets.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
-public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueReceiver, MultiMap,
-		EntityEndIndicator {
+public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueReceiver, MultiMap {
 
 	public static final String ELSE_KEYWORD = "_else";
 	public static final char FEEDBACK_CHAR = '@';
@@ -59,9 +58,10 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 
 	private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
 
-	private final Registry<Data> dataRegistry = new WildcardRegistry<Data>();
-	private final List<Data> elseSources = new ArrayList<Data>();
-	private final Registry<EntityEndListener> entityEndListenerRegistry = new WildcardRegistry<EntityEndListener>();
+	private final Registry<NamedValueReceiver> dataRegistry = new WildcardRegistry<NamedValueReceiver>();
+	private final List<NamedValueReceiver> elseSources = new ArrayList<NamedValueReceiver>();
+	
+//rivate final Registry<FlushListener> entityEndListenerRegistry = new WildcardRegistry<FlushListener>();
 
 	private final MultiMap multiMap = new MultiHashMap();
 	private final List<Closeable> resources = new ArrayList<Closeable>();
@@ -75,6 +75,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 	private StreamReceiver outputStreamReceiver;
 	private MorphErrorHandler errorHandler = new DefaultErrorHandler();
 	private int recordCount;
+	private final List<FlushListener> recordEndListener = new ArrayList<FlushListener>();
 
 	protected Metamorph() {
 		// package private
@@ -126,7 +127,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 		});
 	}
 
-	protected List<Data> getElseSources() {
+	protected List<NamedValueReceiver> getElseSources() {
 		return elseSources;
 	}
 
@@ -138,14 +139,14 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 		this.errorHandler = errorHandler;
 	}
 
-	protected void registerData(final Data data) {
+	protected void registerNamedValueReceiver(final String source, final NamedValueReceiver data) {
 
-		final String path = data.getSource();
+		//final String path = data.getSource();
 
-		if (ELSE_KEYWORD.equals(path)) {
+		if (ELSE_KEYWORD.equals(source)) {
 			elseSources.add(data);
 		} else {
-			dataRegistry.register(path, data);
+			dataRegistry.register(source, data);
 		}
 	}
 
@@ -171,8 +172,10 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 	@Override
 	public void endRecord() {
 
-		notifyEntityEndListeners(RECORD_KEYWORD);
-
+		for(FlushListener listener: recordEndListener){
+			listener.flush(recordCount, currentEntityCount);
+		}
+		
 		outputStreamReceiver.endRecord();
 		entityCountStack.removeLast();
 		if (!entityCountStack.isEmpty()) {
@@ -194,32 +197,18 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 
 		flattener.startEntity(name);
 
-		dispatch(flattener.getCurrentPath(), "", null);
+		
 
 	}
 
 	@Override
 	public void endEntity() {
-
+		dispatch(flattener.getCurrentPath(), "", null);
 		currentEntityCount = entityCountStack.pop().intValue();
-
-		final String currentEntityName = flattener.getCurrentEntityName();
-		if (currentEntityName != null) {
-			notifyEntityEndListeners(currentEntityName);
-		}
-
 		flattener.endEntity();
 
 	}
 
-	private void notifyEntityEndListeners(final String name) {
-		final List<EntityEndListener> matchingListeners = entityEndListenerRegistry.get(name);
-
-		for (EntityEndListener listener : matchingListeners) {
-			listener.onEntityEnd(name, recordCount, currentEntityCount);
-		}
-
-	}
 
 	@Override
 	public void literal(final String name, final String value) {
@@ -245,15 +234,15 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 		outputStreamReceiver.closeStream();
 	}
 
-	protected void dispatch(final String path, final String value, final List<Data> fallback) {
-		final List<Data> matchingData = findMatchingData(path, fallback);
+	protected void dispatch(final String path, final String value, final List<NamedValueReceiver> fallback) {
+		final List<NamedValueReceiver> matchingData = findMatchingData(path, fallback);
 		if (null != matchingData) {
 			send(path, value, matchingData);
 		}
 	}
 
-	private List<Data> findMatchingData(final String path, final List<Data> fallback) {
-		final List<Data> matchingData = dataRegistry.get(path);
+	private List<NamedValueReceiver> findMatchingData(final String path, final List<NamedValueReceiver> fallback) {
+		final List<NamedValueReceiver> matchingData = dataRegistry.get(path);
 		if (matchingData == null || matchingData.isEmpty()) {
 			return fallback;
 		}
@@ -266,8 +255,8 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 	 * @param dataList
 	 *            destination
 	 */
-	private void send(final String key, final String value, final List<Data> dataList) {
-		for (Data data : dataList) {
+	private void send(final String key, final String value, final List<NamedValueReceiver> dataList) {
+		for (NamedValueReceiver data : dataList) {
 			try {
 				data.receive(key, value, null, recordCount, currentEntityCount);
 			} catch (RuntimeException e) {
@@ -322,10 +311,10 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 	// //entityMap.put(from, toParam);
 	// }
 
-	@Override
-	public void addEntityEndListener(final EntityEndListener entityEndListener, final String entityName) {
-		entityEndListenerRegistry.register(entityName, entityEndListener);
-	}
+//	@Override
+//	public void addEntityEndListener(final FlushListener entityEndListener, final String entityName) {
+//		entityEndListenerRegistry.register(entityName, entityEndListener);
+//	}
 
 	@Override
 	public Map<String, String> getMap(final String mapName) {
@@ -354,6 +343,10 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 	@Override
 	public Collection<String> getMapNames() {
 		return multiMap.getMapNames();
+	}
+
+	public void registerRecordEndFlush(final FlushListener flushListener) {
+		recordEndListener.add(flushListener);
 	}
 
 }

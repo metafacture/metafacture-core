@@ -91,46 +91,46 @@
 		</result>
 	</test-case>
 
-<test-case name="concat data flush">
-		<input type="text/x-cg+xml">
-			<cgxml:cgxml version="1.0">
-				<cgxml:records>
-					<cgxml:record id="1">
+<!-- <test-case name="concat data flush"> -->
+<!-- 		<input type="text/x-cg+xml"> -->
+<!-- 			<cgxml:cgxml version="1.0"> -->
+<!-- 				<cgxml:records> -->
+<!-- 					<cgxml:record id="1"> -->
 
-							<cgxml:literal name="d" value="1" />
+<!-- 							<cgxml:literal name="d" value="1" /> -->
 
-							<cgxml:literal name="d" value="2" />
-							<cgxml:literal name="d" value="3" />
-							<cgxml:literal name="f" value="" />
-							<cgxml:literal name="d" value="4" />
-							<cgxml:literal name="f" value="" />
+<!-- 							<cgxml:literal name="d" value="2" /> -->
+<!-- 							<cgxml:literal name="d" value="3" /> -->
+<!-- 							<cgxml:literal name="f" value="" /> -->
+<!-- 							<cgxml:literal name="d" value="4" /> -->
+<!-- 							<cgxml:literal name="f" value="" /> -->
 
-					</cgxml:record>
-				</cgxml:records>
-			</cgxml:cgxml>
-		</input>
+<!-- 					</cgxml:record> -->
+<!-- 				</cgxml:records> -->
+<!-- 			</cgxml:cgxml> -->
+<!-- 		</input> -->
 
-		<transformation type="text/x-metamorph+xml">
-			<mm:metamorph version="1">
-				<mm:rules>
-					<mm:concat delimiter="" name="c">
-						<mm:data source="d"/>
-						<mm:data source="f" name="_flush"/>
-					</mm:concat>
-				</mm:rules>
-			</mm:metamorph>
-		</transformation>
+<!-- 		<transformation type="text/x-metamorph+xml"> -->
+<!-- 			<mm:metamorph version="1"> -->
+<!-- 				<mm:rules> -->
+<!-- 					<mm:concat delimiter="" name="c"> -->
+<!-- 						<mm:data source="d"/> -->
+<!-- 						<mm:data source="f" name="_flush"/> -->
+<!-- 					</mm:concat> -->
+<!-- 				</mm:rules> -->
+<!-- 			</mm:metamorph> -->
+<!-- 		</transformation> -->
 
-		<result type="text/x-cg+xml">
-			<cgxml:cgxml version="1.0">
-				<cgxml:records>
-					<cgxml:record id="1">
-						<cgxml:literal name="c" value="123" />
-						<cgxml:literal name="c" value="4" />
-					</cgxml:record>
-				</cgxml:records>
-			</cgxml:cgxml>
-		</result>
-	</test-case>
+<!-- 		<result type="text/x-cg+xml"> -->
+<!-- 			<cgxml:cgxml version="1.0"> -->
+<!-- 				<cgxml:records> -->
+<!-- 					<cgxml:record id="1"> -->
+<!-- 						<cgxml:literal name="c" value="123" /> -->
+<!-- 						<cgxml:literal name="c" value="4" /> -->
+<!-- 					</cgxml:record> -->
+<!-- 				</cgxml:records> -->
+<!-- 			</cgxml:cgxml> -->
+<!-- 		</result> -->
+<!-- 	</test-case> -->
 
 </metamorph-test>

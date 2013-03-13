@@ -18,21 +18,15 @@ package org.culturegraph.mf.morph.functions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.culturegraph.mf.morph.EntityEndIndicator;
-import org.culturegraph.mf.morph.EntityEndListener;
 import org.culturegraph.mf.morph.NamedValueReceiver;
 import org.culturegraph.mf.morph.NamedValueSource;
-
-
 /**
- * @author Markus Michael Geipel
- * 
+ * @author markus geipel
+ *
  */
-public final class Buffer extends AbstractFunction implements EntityEndListener {
+public final class Buffer extends AbstractFunction{
 
 	private final List<Receipt> receipts = new ArrayList<Receipt>();
-
-	private String flushWith = EntityEndIndicator.RECORD_KEYWORD;
 	private int currentRecord;
 
 	@Override
@@ -49,21 +43,12 @@ public final class Buffer extends AbstractFunction implements EntityEndListener 
 	}
 
 	@Override
-	public void onEntityEnd(final String name, final int recordCount, final int entityCount) {
+	public void flush(final int recordCount, final int entityCount) {
 		
 		for (Receipt receipt : receipts) {
 			receipt.send(getNamedValueReceiver());
 		}
 		receipts.clear();
-	}
-
-	@Override
-	public void setEntityEndIndicator(final EntityEndIndicator indicator) {
-		indicator.addEntityEndListener(this, flushWith);
-	}
-	
-	public void setFlushWith(final String flushWith){
-		this.flushWith = flushWith;
 	}
 
 	/**

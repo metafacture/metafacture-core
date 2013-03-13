@@ -54,10 +54,10 @@ public final class MetamorphBasicTest implements NamedValueReceiver {
 	private static Metamorph newMetamorphWithData(final NamedValueReceiver receiver){
 		final Metamorph metamorph = new Metamorph();
 		metamorph.setReceiver(EMPTY_RECEIVER);
-		final Data data = new Data(MATCHING_PATH);
+		final Data data = new Data();
 		data.setName(NAME);
 		data.setNamedValueReceiver(receiver);
-		metamorph.registerData(data);
+		metamorph.registerNamedValueReceiver(MATCHING_PATH, data);
 		return metamorph;
 	}
 	
@@ -115,15 +115,15 @@ public final class MetamorphBasicTest implements NamedValueReceiver {
 		metamorph.setReceiver(EMPTY_RECEIVER);
 		Data data;
 		
-		data = new Data(MATCHING_PATH);
+		data = new Data();
 		data.setName(FEEDBACK_VAR);
 		data.setNamedValueReceiver(metamorph);
-		metamorph.registerData(data);
+		metamorph.registerNamedValueReceiver(MATCHING_PATH,data);
 		
-		data = new Data(FEEDBACK_VAR);
+		data = new Data();
 		data.setName(NAME);
 		data.setNamedValueReceiver(this);
-		metamorph.registerData(data);
+		metamorph.registerNamedValueReceiver(FEEDBACK_VAR, data);
 		
 		namedValue = null;
 		

@@ -15,14 +15,12 @@
  */
 package org.culturegraph.mf.morph;
 
-/**
- * Interface for classes which signal entity end events
- * 
- * @author Markus Michael Geipel
- *
- */
-public interface EntityEndIndicator {
-	String RECORD_KEYWORD = "record";
+import org.culturegraph.mf.morph.collectors.Collect;
 
-	void addEntityEndListener(EntityEndListener entityEndListener, String entityName) ;
+/**
+ * Used by {@link Metamorph} to flush collected data in {@link Collect}.
+ * @author Markus Michael Geipel
+ */
+public interface FlushListener {
+	void flush(final int recordCount, final int entityCount);
 }

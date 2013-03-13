@@ -26,7 +26,6 @@ import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 import org.w3c.dom.Node;
 
-
 /**
  * Builds a {@link Metamorph} from an xml description
  * 
@@ -36,6 +35,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 
 	private static final String NOT_FOUND = " not found.";
 	private static final String JAVA = "java";
+	private static final String RECORD = "record";
 	// private final String morphDef;
 	private final Metamorph metamorph;
 	private final Deque<Collect> collectStack;
@@ -121,10 +121,9 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	@Override
 	protected void enterData(final Node dataNode) {
 		final String source = resolvedAttribute(dataNode, ATTRITBUTE.SOURCE);
-		data = new Data(source);
+		data = new Data();
 		data.setName(resolvedAttribute(dataNode, ATTRITBUTE.NAME));
-		// data.setValue(getAttr(dataNode, ATTRITBUTE.VALUE));
-		metamorph.registerData(data);
+		metamorph.registerNamedValueReceiver(source, data);
 	}
 
 	@Override
@@ -166,28 +165,43 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		// must be set after recursive calls to flush decendents before parent
 		final String flushWith = resolvedAttribute(node, ATTRITBUTE.FLUSH_WITH);
 		if (null != flushWith) {
-			collect.setFlushWith(flushWith);
+			collect.setWaitForFlush(true);
+			registerFlush(flushWith, collect);
 		}
+	}
+
+	private void registerFlush(final String flushWith, final FlushListener flushListener) {
+
+		if (flushWith.equals(RECORD)) {
+			metamorph.registerRecordEndFlush(flushListener);
+		} else {
+			metamorph.registerNamedValueReceiver(flushWith, new Flush(flushListener));
+		}
+
 	}
 
 	@Override
 	protected void handleFunction(final Node functionNode) {
 		final Function function;
+		final Map<String, String> attributes = resolvedAttributeMap(functionNode);
 		if (functionNode.getLocalName().equals(JAVA)) {
 			final String className = resolvedAttribute(functionNode, ATTRITBUTE.CLASS);
 			function = ObjectFactory.newInstance(ObjectFactory.loadClass(className, Function.class));
-			final Map<String, String> attributes = resolvedAttributeMap(functionNode);
+
 			attributes.remove(ATTRITBUTE.CLASS.getString());
 			ObjectFactory.applySetters(function, attributes);
 		} else if (getFunctionFactory().containsKey(functionNode.getLocalName())) {
-			function = getFunctionFactory()
-					.newInstance(functionNode.getLocalName(), resolvedAttributeMap(functionNode));
+			final String flushWith = attributes.remove(ATTRITBUTE.FLUSH_WITH.getString());
+			function = getFunctionFactory().newInstance(functionNode.getLocalName(), attributes);
+			if (null != flushWith) {
+				registerFlush(flushWith, function);
+			}
 		} else {
 			throw new IllegalArgumentException(functionNode.getLocalName() + NOT_FOUND);
 		}
 
 		function.setMultiMap(metamorph);
-		function.setEntityEndIndicator(metamorph);
+		// nction.setEntityEndIndicator(metamorph);
 
 		// add key value entries...
 		for (Node mapEntryNode = functionNode.getFirstChild(); mapEntryNode != null; mapEntryNode = mapEntryNode

@@ -13,12 +13,27 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package org.culturegraph.mf.morph;
 
+
 /**
- * Used by {@link Metamorph} to flush collected data in {@link Collect}.
- * @author Markus Michael Geipel
+ * flushes a {@link FlushListener}
+ * 
+ * @author markus geipel
+ *
  */
-public interface EntityEndListener {
-	void onEntityEnd(final String name, int recordCount, int entityCount);
+public final class Flush implements NamedValueReceiver {
+
+	private final FlushListener listener;
+
+	public Flush(final FlushListener listener) {
+		this.listener = listener;
+	}
+	
+	@Override
+	public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
+		listener.flush(recordCount, entityCount);
+	}
+
 }

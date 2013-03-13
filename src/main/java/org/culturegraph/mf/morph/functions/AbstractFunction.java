@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.culturegraph.mf.morph.AbstractNamedValuePipeHead;
-import org.culturegraph.mf.morph.EntityEndIndicator;
 import org.culturegraph.mf.types.MultiMap;
 
 
@@ -71,9 +70,10 @@ public abstract class AbstractFunction extends AbstractNamedValuePipeHead implem
 	public final void setMultiMap(final MultiMap multiMapProvider) {
 		this.multiMap = multiMapProvider;
 	}
-
+	
 	@Override
-	public void setEntityEndIndicator(final EntityEndIndicator indicator) {
+	public void flush(final int recordCount, final int entityCount) {
 		// nothing by default
 	}
+
 }
