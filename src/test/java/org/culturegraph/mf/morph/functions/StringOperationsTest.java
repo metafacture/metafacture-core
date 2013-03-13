@@ -34,18 +34,7 @@ public final class StringOperationsTest {
 	private static final String VALUE2 = "Kafka";
 	private static final String VALUE3 = "Josef";
 	
-	
-	@Test
-	public void testRegexp() {
-		final Regexp regexp = new Regexp();
-		regexp.setMatch(VALUE2);
-		assertEquals(VALUE2, regexp.process(VALUE1+VALUE2));
-		assertNull(regexp.process(VALUE3+VALUE1));
-		regexp.setFormat(VALUE3 + " ${1}.");
-		regexp.setMatch("((K)).*$");
-		assertEquals(VALUE3 + " K.", regexp.process(VALUE1 + VALUE2));
-	}
-	
+
 	@Test
 	public void testSubstring() {
 		final Substring substring = new Substring();

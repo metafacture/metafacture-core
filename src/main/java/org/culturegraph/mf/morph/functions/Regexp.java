@@ -21,68 +21,67 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.culturegraph.mf.exceptions.MorphException;
+import org.culturegraph.mf.morph.NamedValueSource;
 import org.culturegraph.mf.util.StringUtil;
-
-
-
 
 /**
  * Performs regexp matching
+ * 
  * @author Markus Michael Geipel
  */
-public final class Regexp extends AbstractSimpleStatelessFunction {
+public final class Regexp extends AbstractFunction {
 
-	//private static final String TRUE = "true";
+	// private static final String TRUE = "true";
 	private Matcher matcher;
 	private String format;
 	private final Map<String, String> tempVars = new HashMap<String, String>();
-	
+
 	@Override
-	public String process(final String value) {
+	public void receive(final String name, final String value, final NamedValueSource source, final int recordCount,
+			final int entityCount) {
 		matcher.reset(value);
-		final String result;
-		
-		if(matcher.find()){
-			if(null==format){
-				result = matcher.group();
-			}else{
-				result = matchAndFormat();
+		if (null == format) {
+			while (matcher.find()) {
+				getNamedValueReceiver().receive(name, matcher.group(), source, recordCount, entityCount);
 			}
-		}else{
-			result = null;
+		} else {
+			while (matcher.find()) {
+				getNamedValueReceiver().receive(name, matchAndFormat(), source, recordCount, entityCount);
+			}
 		}
-		return result;
 	}
-	
-	private String matchAndFormat(){
+
+	private String matchAndFormat() {
 		tempVars.clear();
 		for (int i = 0; i <= matcher.groupCount(); ++i) {
 			tempVars.put(String.valueOf(i), matcher.group(i));
 		}
-		return StringUtil.format(format, tempVars); 
+		return StringUtil.format(format, tempVars);
 	}
-	
-	
+
 	/**
-	 * @param match the match to set
+	 * @param match
+	 *            the match to set
 	 */
 	public void setMatch(final String match) {
 		this.matcher = Pattern.compile(match).matcher("");
 	}
 
 	/**
-	 * @param format the output to set
+	 * @param format
+	 *            the output to set
 	 */
 	public void setFormat(final String format) {
 		this.format = format;
 	}
-	
+
 	/**
 	 * Thrown if no match was found
-	 *
+	 * 
 	 */
-	public static final class PatternNotFoundException extends MorphException{
+	public static final class PatternNotFoundException extends MorphException {
 		private static final long serialVersionUID = 4113458605196557204L;
+
 		public PatternNotFoundException(final Pattern pattern, final String input) {
 			super("Pattern '" + pattern + "' not found in '" + input + "'");
 		}
