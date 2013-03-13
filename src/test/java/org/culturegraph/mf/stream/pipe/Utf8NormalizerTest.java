@@ -13,19 +13,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.morph.functions;
+package org.culturegraph.mf.stream.pipe;
 
 import static org.junit.Assert.assertEquals;
 
-import org.culturegraph.mf.morph.functions.NormalizeUTF8;
+import org.culturegraph.mf.framework.DefaultObjectReceiver;
 import org.junit.Test;
 
-
 /**
- * @author Christoph Böhme <c.boehme@dnb.de>
+ * Tests {@link Utf8Normalizer}.
+ * 
+ * @author Christoph Böhme
  *
  */
-public final class NormalizeUTF8Test {
+public final class Utf8NormalizerTest {
 
 	// The umlauts in this string are composed of two characters (u and ", e.g.):
 	private static final String INPUT_STR = 
@@ -36,8 +37,17 @@ public final class NormalizeUTF8Test {
 			"Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 	
 	@Test
-	public void testProcess() {
-		final NormalizeUTF8 normalize = new NormalizeUTF8();
-		assertEquals("Normalization incorrect", OUTPUT_STR, normalize.process(INPUT_STR));
+	public void testNormalization() {
+		final Utf8Normalizer normalizer = new Utf8Normalizer();
+		
+		normalizer.setReceiver(new DefaultObjectReceiver<String>() {
+			@Override
+			public void process(final String obj) {
+				assertEquals(OUTPUT_STR, obj);
+			}
+		});
+		
+		normalizer.process(INPUT_STR);
 	}
+
 }
