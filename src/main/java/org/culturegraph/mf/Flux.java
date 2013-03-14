@@ -18,7 +18,6 @@ package org.culturegraph.mf;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
@@ -28,14 +27,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.antlr.runtime.ANTLRInputStream;
-import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.culturegraph.mf.flux.Flow;
-import org.culturegraph.mf.flux.parser.FlowBuilder;
-import org.culturegraph.mf.flux.parser.FluxLexer;
-import org.culturegraph.mf.flux.parser.FluxParser;
+import org.culturegraph.mf.flux.FluxCompiler;
 import org.culturegraph.mf.util.ResourceUtil;
 
 /**
@@ -101,21 +95,10 @@ public final class Flux {
 			}
 
 			// run parser and builder
-			final Flow flow = compileFlow(compileAst(ResourceUtil.getStream(fluxFile)), vars);
-			flow.start();
+			FluxCompiler.compile(ResourceUtil.getStream(fluxFile), vars).start();
+			//flow.start();
 		}
 	}
 
-	public static CommonTreeNodeStream compileAst(final InputStream flowDef) throws IOException, RecognitionException {
-		final FluxParser parser = new FluxParser(new CommonTokenStream(new FluxLexer(new ANTLRInputStream(flowDef))));
-		return new CommonTreeNodeStream(parser.flux().getTree());
-	}
 
-	public static Flow compileFlow(final CommonTreeNodeStream treeNodes, final Map<String, String> vars)
-			throws RecognitionException {
-		final FlowBuilder flowBuilder = new FlowBuilder(treeNodes);
-		flowBuilder.addVaribleAssignements(vars);
-		final Flow flow = flowBuilder.flux();
-		return flow;
-	}
 }
