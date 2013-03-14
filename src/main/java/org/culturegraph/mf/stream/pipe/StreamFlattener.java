@@ -55,6 +55,7 @@ public final class StreamFlattener extends DefaultStreamPipe<StreamReceiver> {
 
 	@Override
 	public void startRecord(final String identifier) {
+		assert !isClosed();
 		entityStack.clear();
 		currentEntityPath = "";
 		if (entityPath.length() != 0) {
@@ -65,6 +66,7 @@ public final class StreamFlattener extends DefaultStreamPipe<StreamReceiver> {
 
 	@Override
 	public void endRecord() {
+		assert !isClosed();
 		currentEntityPath = "";
 		getReceiver().endRecord();
 
@@ -72,6 +74,7 @@ public final class StreamFlattener extends DefaultStreamPipe<StreamReceiver> {
 
 	@Override
 	public void startEntity(final String name) {
+		assert !isClosed();
 		entityStack.push(name);
 		entityPath.append(name);
 		entityPath.append(entityMarker);
@@ -81,6 +84,7 @@ public final class StreamFlattener extends DefaultStreamPipe<StreamReceiver> {
 
 	@Override
 	public void endEntity() {
+		assert !isClosed();
 		try {
 			final int end = entityPath.length();
 			final String name = entityStack.pop();
@@ -93,6 +97,7 @@ public final class StreamFlattener extends DefaultStreamPipe<StreamReceiver> {
 
 	@Override
 	public void literal(final String name, final String value) {
+		assert !isClosed();
 		getReceiver().literal(currentEntityPath + name, value);
 	}
 

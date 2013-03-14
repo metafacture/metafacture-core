@@ -187,8 +187,11 @@ public final class FormetaEncoder extends
 	 * A formatter for concise output.
 	 */
 	private static final class ConciseFormatter extends AbstractFormatter {
-
 		private boolean appendItemSeparator;
+		
+
+		
+		
 
 		@Override
 		public void startGroup(final String name) {

@@ -46,26 +46,31 @@ public final class EventList implements StreamReceiver {
 	
 	@Override
 	public void startRecord(final String identifier) {
+		assert !closed;
 		events.add(new Event(Event.Type.START_RECORD, identifier));
 	}
 
 	@Override
 	public void endRecord() {
+		assert !closed;
 		events.add(new Event(Event.Type.END_RECORD));
 	}
 
 	@Override
 	public void startEntity(final String name) {
+		assert !closed;
 		events.add(new Event(Event.Type.START_ENTITY, name));
 	}
 
 	@Override
 	public void endEntity() {
+		assert !closed;
 		events.add(new Event(Event.Type.END_ENTITY));
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
+		assert !closed;
 		events.add(new Event(Event.Type.LITERAL, name, value));
 	}
 	

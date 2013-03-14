@@ -45,6 +45,8 @@ public final class ObjectToLiteral<T> extends
 	
 	@Override
 	public void process(final T obj) {
+		assert obj!=null;
+		assert !isClosed();
 		getReceiver().startRecord(null);
 		getReceiver().literal(literalName, obj.toString());
 		getReceiver().endRecord();

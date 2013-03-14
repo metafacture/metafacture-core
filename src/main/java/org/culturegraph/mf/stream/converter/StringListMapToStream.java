@@ -34,10 +34,12 @@ public final class StringListMapToStream
 	
 	@Override
 	public void process(final ListMap<String, String> listMap){
+		assert !isClosed();
 		process(listMap, getReceiver());
 	}
 	
 	public static void process(final ListMap<String, String> listMap, final StreamReceiver receiver) {
+		
 		receiver.startRecord(listMap.getId());
 		for(Entry<String, List<String>> entry: listMap.entrySet()){
 			final String name = entry.getKey();

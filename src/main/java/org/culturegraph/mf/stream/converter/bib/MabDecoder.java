@@ -49,6 +49,7 @@ public final class MabDecoder
 	
 	@Override
 	public void process(final String record) {
+		assert !isClosed();
 		process(record, getReceiver());
 	}
 
@@ -65,6 +66,7 @@ public final class MabDecoder
 	}
 	
 	public static void process(final String record, final StreamReceiver receiver) {
+
 		if (record.trim().isEmpty()) {
 			return;
 		}

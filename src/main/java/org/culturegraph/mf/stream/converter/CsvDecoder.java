@@ -57,6 +57,7 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
 	
 	@Override
 	public void process(final String string) { 
+		assert !isClosed();
 		final String[] parts = separator.split(string);
 		if(hasHeader){
 			if(header.length==0){

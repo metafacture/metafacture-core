@@ -52,7 +52,8 @@ public final class ObjectBuffer<T>
 	}
 	
 	@Override
-	public void process(final T obj) {	
+	public void process(final T obj) {
+		assert !closed;
 		if (closed) {
 			throw new IllegalStateException("Module has been closed.");
 		}

@@ -63,16 +63,19 @@ public final class Counter extends DefaultStreamReceiver {
 
 	@Override
 	public void startRecord(final String identifier) {
+		assert !closed;
 		++numRecords;
 	}
 
 	@Override
 	public void startEntity(final String name) {
+		assert !closed;
 		++numEntities;
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
+		assert !closed;
 		++numLiterals;
 	}
 

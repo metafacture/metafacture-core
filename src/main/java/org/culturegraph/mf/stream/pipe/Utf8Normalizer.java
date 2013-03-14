@@ -38,6 +38,8 @@ public final class Utf8Normalizer extends
 
 	@Override
 	public void process(final String str) {
+		assert null!=str;
+		assert !isClosed();
 		getReceiver().process(Normalizer.normalize(str, Form.NFC));
 	}
 	

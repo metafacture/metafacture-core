@@ -53,6 +53,7 @@ public final class StreamLogger
 	
 	@Override
 	public void startRecord(final String identifier) {
+		assert !isClosed();
 		LOG.debug("{}start record {}", logPrefix, identifier);
 		if (null != getReceiver()) {
 			getReceiver().startRecord(identifier);
@@ -61,6 +62,7 @@ public final class StreamLogger
 
 	@Override
 	public void endRecord() {
+		assert !isClosed();
 		LOG.debug("{}end record", logPrefix);
 		if (null != getReceiver()) {
 			getReceiver().endRecord();
@@ -69,6 +71,7 @@ public final class StreamLogger
 
 	@Override
 	public void startEntity(final String name) {
+		assert !isClosed();
 		LOG.debug("{}start entity {}", logPrefix, name);
 		if (null != getReceiver()) {
 			getReceiver().startEntity(name);
@@ -77,6 +80,7 @@ public final class StreamLogger
 
 	@Override
 	public void endEntity() {
+		assert !isClosed();
 		LOG.debug("{}end entity", logPrefix);
 		if (null != getReceiver()) {
 			getReceiver().endEntity();
@@ -86,6 +90,7 @@ public final class StreamLogger
 
 	@Override
 	public void literal(final String name, final String value) {
+		assert !isClosed();
 		LOG.debug("{}literal {}={}", logPrefix, name, value);
 		if (null != getReceiver()) {
 			getReceiver().literal(name, value);

@@ -58,6 +58,8 @@ public final class StringMatcher extends
 	
 	@Override
 	public void process(final String obj) {
+		assert !isClosed();
+		assert null!=obj;
 		matcher.reset(obj);
 		getReceiver().process(matcher.replaceAll(replacement));
 	}

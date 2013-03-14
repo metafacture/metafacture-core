@@ -42,6 +42,7 @@ public final class JDomDocumentToStream  implements ObjectReceiver<Document>, Se
 
 	@Override
 	public void process(final Document document) {
+		assert null!=document;
 		try {
 			saxOutputer.output(document);
 		} catch (JDOMException e) {

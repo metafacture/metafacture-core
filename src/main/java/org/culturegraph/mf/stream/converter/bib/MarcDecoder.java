@@ -53,6 +53,7 @@ public final class MarcDecoder
 
 	@Override
 	public void process(final String record) {
+		assert !isClosed();
 		process(record, getReceiver(), checkUtf8Encoding);
 	}
 

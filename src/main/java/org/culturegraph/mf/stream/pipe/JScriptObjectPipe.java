@@ -46,7 +46,11 @@ public final class JScriptObjectPipe extends DefaultObjectPipe<Object, ObjectRec
 	private static final String PROCESS = "process";
 	private String invoke = PROCESS;
 	private Invocable invocable;
-
+	
+	public JScriptObjectPipe(final String script) {
+		setScript(script);
+	}
+	
 	public void setInvoke(final String invoke) {
 		this.invoke = invoke;
 	}
@@ -66,12 +70,11 @@ public final class JScriptObjectPipe extends DefaultObjectPipe<Object, ObjectRec
 		invocable = (Invocable) engine;
 	}
 
-	public JScriptObjectPipe(final String script) {
-		setScript(script);
-	}
+
 
 	@Override
 	public void process(final Object obj) {
+		assert !isClosed();
 		try {
 
 			// LOG.info("processing: " + value);

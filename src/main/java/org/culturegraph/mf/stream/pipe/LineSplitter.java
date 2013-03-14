@@ -36,6 +36,7 @@ public final class LineSplitter
 
 	@Override
 	public void process(final String lines) {
+		assert !isClosed();
 		for (String record : LINE_PATTERN.split(lines)) {
 			getReceiver().process(record);
 		}

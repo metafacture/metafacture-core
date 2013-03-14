@@ -55,12 +55,13 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 
 	@Override
 	public void startRecord(final String identifier) {
+		assert !isClosed();
 		this.currentId = identifier;
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
-
+		assert !isClosed();
 		if (redirect) {
 			if (ID.equals(name)) {
 				currentId = value;
@@ -80,9 +81,9 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 
 	@Override
 	public void endRecord() {
-
+		assert !isClosed();
 		if (redirect) {
-			for (int i = 0; i < nameBuffer.size(); i++) {
+			for (int i = 0; i < nameBuffer.size(); ++i) {
 				getReceiver().process(new Triple(currentId, nameBuffer.get(i), valueBuffer.get(i)));
 			}
 			nameBuffer.clear();

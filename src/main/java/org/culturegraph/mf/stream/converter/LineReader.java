@@ -42,6 +42,8 @@ public final class LineReader
 
 	@Override
 	public void process(final Reader reader) {
+		assert !isClosed();
+		assert null!=reader;
 		process(reader, getReceiver());
 	}
 

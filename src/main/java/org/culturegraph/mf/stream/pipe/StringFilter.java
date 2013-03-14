@@ -58,6 +58,8 @@ public final class StringFilter extends
 	
 	@Override
 	public void process(final String obj) {
+		assert !isClosed();
+		assert null!=obj;
 		matcher.reset(obj);
 		if (matcher.find() == passMatches) {
 			getReceiver().process(obj);

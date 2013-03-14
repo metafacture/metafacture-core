@@ -26,11 +26,11 @@ import org.culturegraph.mf.framework.annotations.Out;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * creates a new thread in which subsequent flow elements run.
  * 
- * @param <T> Object type
+ * @param <T>
+ *            Object type
  * 
  * @author Markus Micheal Geipel
  */
@@ -41,66 +41,66 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
 
 	public static final int DEFUALT_CAPACITY = 10000;
 	private static final Logger LOG = LoggerFactory.getLogger(ObjectPipeDecoupler.class);
-	
-	private BlockingQueue<Object> queue;
+
+	private final BlockingQueue<Object> queue;
 	private Thread thread;
 	private ObjectReceiver<T> receiver;
 	private boolean debug;
-	
+
 	public ObjectPipeDecoupler() {
 		queue = new LinkedBlockingQueue<Object>(DEFUALT_CAPACITY);
 	}
-	
+
 	public ObjectPipeDecoupler(final int capacity) {
 		queue = new LinkedBlockingQueue<Object>(capacity);
 	}
-	
+
 	public ObjectPipeDecoupler(final String capacity) {
 		queue = new LinkedBlockingQueue<Object>(Integer.parseInt(capacity));
 	}
-	
+
 	public void setDebug(final boolean debug) {
 		this.debug = debug;
 	}
-	
+
 	@Override
 	public void process(final T obj) {
-		if(null==thread){
+
+		if (null == thread) {
 			start();
 		}
 		try {
 			queue.put(obj);
-			if(debug){
+			if (debug) {
 				LOG.info("Current buffer size: " + queue.size());
 			}
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
 	}
-	
+
 	private void start() {
 		thread = new Thread(new Feeder<T>(receiver, queue));
 		thread.start();
 	}
-	
 
 	@Override
-	public final <R extends ObjectReceiver<T>> R setReceiver(final R receiver) {
-		if(null!=thread){
+	public <R extends ObjectReceiver<T>> R setReceiver(final R receiver) {
+		if (null != thread) {
 			throw new IllegalStateException("Receiver cannot be changed while processing thread is running.");
 		}
-		
+
 		this.receiver = receiver;
 		return receiver;
 	}
 
 	@Override
-	public final void resetStream() {
+	public void resetStream() {
 		queue.add(Feeder.BLUE_PILL);
 	}
-	
+
 	@Override
-	public final void closeStream() {
+	public void closeStream() {
 		queue.add(Feeder.RED_PILL);
 		try {
 			thread.join();
@@ -109,11 +109,15 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
 		}
 		thread = null;
 	}
-	
-	final static class Feeder<T> implements Runnable{
+
+	/**
+	 * Pushes the content in the {@link BlockingQueue} to the receiver.
+	 * @param <T>
+	 */
+	static final class Feeder<T> implements Runnable {
 		public static final Object RED_PILL = new Object();
 		public static final Object BLUE_PILL = new Object();
-		
+
 		private final ObjectReceiver<T> receiver;
 		private final BlockingQueue<Object> queue;
 
@@ -122,23 +126,24 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
 			this.queue = queue;
 		}
 
-		@SuppressWarnings("unchecked") // OK because queue is only filled with T by Decoupler<T>
+		@SuppressWarnings("unchecked")
+		// OK because queue is only filled with T by Decoupler<T>
 		@Override
 		public void run() {
-			try{
-				while(true){
-					final Object object = queue.take(); 
-					if(RED_PILL==object){
+			try {
+				while (true) {
+					final Object object = queue.take();
+					if (RED_PILL == object) {
 						receiver.closeStream();
 						break;
 					}
-					if(BLUE_PILL==object){
+					if (BLUE_PILL == object) {
 						receiver.resetStream();
 						continue;
 					}
-					receiver.process((T)object);
+					receiver.process((T) object);
 				}
-			}catch(InterruptedException e){
+			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}
 		}

@@ -46,6 +46,7 @@ public final class CGTextEncoder extends DefaultStreamPipe<ObjectReceiver<String
 
 	@Override
 	public void startRecord(final String identifier) {
+		assert !isClosed();
 		builder.delete(0, builder.length());
 		builder.append(escape(identifier));
 		builder.append(START_GROUP);
@@ -54,12 +55,14 @@ public final class CGTextEncoder extends DefaultStreamPipe<ObjectReceiver<String
 
 	@Override
 	public void endRecord() {
+		assert !isClosed();
 		builder.append(END_GROUP);
 		getReceiver().process(builder.toString());
 	}
 
 	@Override
 	public void startEntity(final String name) {
+		assert !isClosed();
 		builder.append(listSep);
 		builder.append(escape(name));
 		builder.append(START_GROUP);
@@ -68,12 +71,14 @@ public final class CGTextEncoder extends DefaultStreamPipe<ObjectReceiver<String
 
 	@Override
 	public void endEntity() {
+		assert !isClosed();
 		builder.append(END_GROUP);
 		listSep = LIST_SEP;
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
+		assert !isClosed();
 		builder.append(listSep);
 		builder.append(escape(name));
 		builder.append(SET_LITERAL);

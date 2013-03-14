@@ -39,6 +39,7 @@ public final class StreamMerger
 	
 	@Override
 	public void startRecord(final String identifier) {
+		assert !isClosed();
 		if (!currentId.equals(identifier)) {
 			if (!firstRecord) {
 				getReceiver().endRecord();
@@ -52,16 +53,19 @@ public final class StreamMerger
 
 	@Override
 	public void startEntity(final String name) {
+		assert !isClosed();
 		getReceiver().startEntity(name);
 	}
 
 	@Override
 	public void endEntity() {
+		assert !isClosed();
 		getReceiver().endEntity();
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
+		assert !isClosed();
 		getReceiver().literal(name, value);
 	}
 

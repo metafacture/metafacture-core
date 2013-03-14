@@ -123,6 +123,7 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 
 	@Override
 	public void process(final String string) {
+		assert !isClosed();
 		matcher.reset(string);
 
 		final String id;

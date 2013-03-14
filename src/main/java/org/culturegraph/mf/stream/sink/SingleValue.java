@@ -65,6 +65,7 @@ public final class SingleValue extends DefaultStreamReceiver
 
 	@Override
 	public void endRecord() {
+		assert !closed;
 		if (collection != null) {
 			collection.add(value);
 		}
@@ -72,6 +73,7 @@ public final class SingleValue extends DefaultStreamReceiver
 
 	@Override
 	public void literal(final String name, final String value) {
+		assert !closed;
 		this.setValue(value);
 	}
 	

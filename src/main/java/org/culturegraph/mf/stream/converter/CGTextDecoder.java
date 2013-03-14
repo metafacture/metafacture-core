@@ -62,6 +62,7 @@ public final class CGTextDecoder
 		
 	@Override
 	public void process(final String str) {
+		assert !isClosed();
 		final Matcher record = RECORD.matcher(str);
 		if (!record.matches()) {
 			throw new FormatException("expecting only a single record");

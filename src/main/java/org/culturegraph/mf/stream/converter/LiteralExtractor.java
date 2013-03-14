@@ -57,6 +57,7 @@ public final class LiteralExtractor extends DefaultStreamPipe<ObjectReceiver<Str
 	
 	@Override
 	public void literal(final String name, final String value) {
+		assert !isClosed();
 		matcher.reset(name);
 		if (matcher.matches()) {
 			getReceiver().process(value);

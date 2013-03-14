@@ -86,28 +86,33 @@ public final class StreamBuffer
 
 	@Override
 	public void startRecord(final String identifier) {
+		assert !isClosed();
 		typeBuffer.add(MessageType.RECORD_START);
 		valueBuffer.add(identifier);
 	}
 
 	@Override
 	public void endRecord() {
+		assert !isClosed();
 		typeBuffer.add(MessageType.RECORD_END);
 	}
 
 	@Override
 	public void startEntity(final String name) {
+		assert !isClosed();
 		typeBuffer.add(MessageType.ENTITY_START);
 		valueBuffer.add(name);
 	}
 
 	@Override
 	public void endEntity() {
+		assert !isClosed();
 		typeBuffer.add(MessageType.ENTITY_END);
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
+		assert !isClosed();
 		typeBuffer.add(MessageType.LITERAL);
 		valueBuffer.add(name);
 		valueBuffer.add(value);

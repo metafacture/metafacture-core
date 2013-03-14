@@ -68,6 +68,8 @@ public final class UniformSampler<T> extends
 	
 	@Override
 	public void process(final T obj) {
+		assert !isClosed();
+		assert null!=obj;
 		count += 1;
 		if (sample.size() < sampleSize) {
 			sample.add(obj);

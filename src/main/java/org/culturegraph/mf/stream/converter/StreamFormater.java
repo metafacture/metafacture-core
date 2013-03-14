@@ -47,18 +47,21 @@ public final class StreamFormater extends DefaultStreamPipe<ObjectReceiver<Strin
 		
 	@Override
 	public void startRecord(final String identifier) {
+		assert !isClosed();
 		count += 1;
 		getReceiver().process("RECORD " + count + ": " + identifier);
 	}
 	
 	@Override
 	public void endRecord() {
+		assert !isClosed();
 		getReceiver().process("END");
 	}
 
 
 	@Override
 	public void startEntity(final String name) {
+		assert !isClosed();
 		getReceiver().process(indent + "> " + name);
 		indentBuilder.append(INDENT_CHAR);
 		indent = indentBuilder.toString();
@@ -66,6 +69,7 @@ public final class StreamFormater extends DefaultStreamPipe<ObjectReceiver<Strin
 
 	@Override
 	public void endEntity() {
+		assert !isClosed();
 		getReceiver().process(indent + "< ");
 		indentBuilder.deleteCharAt(indentBuilder.length() - 1);
 		indent = indentBuilder.toString();
@@ -73,6 +77,7 @@ public final class StreamFormater extends DefaultStreamPipe<ObjectReceiver<Strin
 
 	@Override
 	public void literal(final String name, final String value) {
+		assert !isClosed();
 		getReceiver().process(indent + name + " = " + value);
 	}
 }

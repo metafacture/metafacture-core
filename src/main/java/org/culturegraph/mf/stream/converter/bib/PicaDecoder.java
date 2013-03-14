@@ -70,6 +70,7 @@ public final class PicaDecoder
 	 */
 	@Override
 	public void process(final String record) {
+		assert !isClosed();
 		process(record, getReceiver());
 	}
 

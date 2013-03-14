@@ -59,12 +59,14 @@ public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
 	
 	@Override
 	public void startRecord(final String identifier) {
+		assert !isClosed();
 		currentIdentifier = null;
 		depth = 0;
 	}
 
 	@Override
 	public void endRecord() {
+		assert !isClosed();
 		if (null != currentIdentifier || keepIdless) {
 			getReceiver().startRecord(currentIdentifier);
 			streamBuffer.replay();

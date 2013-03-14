@@ -136,11 +136,13 @@ public final class StringMap extends DefaultStreamReceiver
 	
 	@Override
 	public void startRecord(final String identifier) {
+		assert !closed;
 		map.clear();
 	}
 
 	@Override
 	public void endRecord() {
+		assert !closed;
 		if (collection != null) {
 			collection.add(map);
 			map = new HashMap<String, String>();
@@ -150,6 +152,7 @@ public final class StringMap extends DefaultStreamReceiver
 
 	@Override
 	public void literal(final String name, final String value) {
+		assert !closed;
 		map.put(name, value);
 	}
 
