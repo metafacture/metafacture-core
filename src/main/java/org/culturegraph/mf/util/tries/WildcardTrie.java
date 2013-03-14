@@ -61,18 +61,14 @@ public final class WildcardTrie<P> {
 
 	private void simplyPut(final String key, final P value) {
 
-		final char[] keyChars = key.toCharArray();
-
-		final int length;
-		length = keyChars.length;
-
+		final int length = key.length();
 
 		Node<P> node = root;
 		Node<P> next = null;
 		for (int i = 0; i < length; ++i) {
-			next = node.getNext(keyChars[i]);
+			next = node.getNext(key.charAt(i));
 			if (next == null) {
-				next = node.addNext(keyChars[i]);
+				next = node.addNext(key.charAt(i));
 			}
 			node = next;
 		}
@@ -81,14 +77,13 @@ public final class WildcardTrie<P> {
 
 	public List<P> get(final String key) {
 
-		final char[] keyChars = key.toCharArray();
 
 		nodes.add(root);
-
-		for (int i = 0; i < keyChars.length; ++i) {
+		final int length = key.length();
+		for (int i = 0; i < length; ++i) {
 			for (Node<P> node : nodes) {
 				Node<P> temp;
-				temp = node.getNext(keyChars[i]);
+				temp = node.getNext(key.charAt(i));
 				if (temp != null) {
 					nextNodes.add(temp);
 				}
@@ -101,7 +96,7 @@ public final class WildcardTrie<P> {
 				if (temp != null) {
 					nextNodes.add(temp);
 					if (temp != node) {
-						temp = temp.getNext(keyChars[i]);
+						temp = temp.getNext(key.charAt(i));
 						if (temp != null) {
 							nextNodes.add(temp);
 						}
