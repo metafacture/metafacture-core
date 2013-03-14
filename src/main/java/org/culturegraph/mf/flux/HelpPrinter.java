@@ -30,6 +30,7 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.annotations.ReturnsAvailableArguments;
+import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 
 /**
@@ -44,7 +45,12 @@ public final class HelpPrinter {
 	}
 
 	public static void print(final ObjectFactory<?> factory, final PrintStream out) {
-		out.println("Usage:\tMetaflow FLOW_FILE [VARNAME=VALUE ...]\n");
+		
+	
+		out.println("WELCOME TO METAFACTURE");
+		out.println(ResourceUtil.loadProperties("build.properties").toString());
+		
+		out.println("\nUsage:\tflux FLOW_FILE [VARNAME=VALUE ...]\n");
 		out.println("Available pipe elements:\n");
 
 		final List<String> keyWords = new ArrayList<String>();
