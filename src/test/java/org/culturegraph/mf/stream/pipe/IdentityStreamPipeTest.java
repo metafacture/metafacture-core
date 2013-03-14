@@ -17,7 +17,6 @@ package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.stream.converter.CGTextDecoder;
-import org.culturegraph.mf.stream.pipe.IdentityStreamPipe;
 import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.junit.Assert;
@@ -42,7 +41,8 @@ public final class IdentityStreamPipeTest {
 		
 		decoder.process(INPUT1);
 		decoder.process(INPUT2);
-		decoder.closeStream();
+	//	decoder.closeStream();
+	//	decoder.resetStream();
 		
 		final IdentityStreamPipe identityPipe = new IdentityStreamPipe();
 		final StreamValidator validator = new StreamValidator(buffer.getEvents());

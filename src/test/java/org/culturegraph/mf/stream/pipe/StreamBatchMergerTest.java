@@ -17,7 +17,6 @@ package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.stream.converter.CGTextDecoder;
-import org.culturegraph.mf.stream.pipe.StreamBatchMerger;
 import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.junit.Assert;
@@ -52,7 +51,7 @@ public final class StreamBatchMergerTest {
 		decoder.process(EXPECTED_RESULT1);
 		decoder.process(EXPECTED_RESULT2);
 		decoder.process(EXPECTED_RESULT3);
-		decoder.closeStream();
+		//decoder.closeStream();
 		
 		final StreamBatchMerger merger = new StreamBatchMerger();
 		merger.setBatchSize(2);

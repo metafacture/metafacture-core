@@ -17,7 +17,6 @@ package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.stream.converter.CGTextDecoder;
-import org.culturegraph.mf.stream.pipe.IdChangePipe;
 import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.junit.Assert;
@@ -46,7 +45,7 @@ public final class IdChangePipeTest {
 		decoder.process("1={ name=test, _id=1, entity={ name=test } }");
 		decoder.process("2={ name=test, _id=2}");
 		//decoder.process(RECORD3);
-		decoder.closeStream();
+		//decoder.closeStream();
 				
 		final IdChangePipe idChangePipe = new IdChangePipe();
 		idChangePipe.setKeepIdless(false);
