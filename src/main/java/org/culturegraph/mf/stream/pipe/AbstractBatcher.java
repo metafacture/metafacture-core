@@ -81,9 +81,14 @@ public abstract class AbstractBatcher
 	}
 	
 	@Override
-	protected void onResetStream() {
+	protected final void onResetStream() {
 		recordCount = 0;
 		batchCount = 0;
+		onReset();
+	}
+
+	protected void onReset(){
+		//default: do nothing
 	}
 
 	protected abstract void onBatchComplete();

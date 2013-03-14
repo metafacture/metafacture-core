@@ -48,8 +48,7 @@ public final class StreamBatchMerger extends AbstractBatcher {
 	}
 	
 	@Override
-	protected void onResetStream() {
-		super.onResetStream();
+	protected void onReset() {
 		inRecord = false;
 	}
 
