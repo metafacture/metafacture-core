@@ -15,10 +15,14 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 
-import org.culturegraph.mf.framework.DefaultObjectReceiver;
+import org.culturegraph.mf.framework.ObjectReceiver;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
  * Tests {@link Utf8Normalizer}.
@@ -28,26 +32,35 @@ import org.junit.Test;
  */
 public final class Utf8NormalizerTest {
 
-	// The umlauts in this string are composed of two characters (u and ", e.g.):
-	private static final String INPUT_STR = 
+	private static final String STRING_WITH_DIACRITICS = 
 			"Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 	
-	// The umlauts in this string are individual characters:
-	private static final String OUTPUT_STR = 
+	private static final String STRING_WITH_PRECOMPOSED_CHARS = 
 			"Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 	
+	private Utf8Normalizer normalizer;
+	
+	@Mock
+	private ObjectReceiver<String> receiver;
+	
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		
+		normalizer = new Utf8Normalizer();
+		normalizer.setReceiver(receiver);
+	}
+	
+	@After
+	public void cleanup() {
+		normalizer.closeStream();
+	}
+	
 	@Test
-	public void testNormalization() {
-		final Utf8Normalizer normalizer = new Utf8Normalizer();
+	public void testShouldReplaceDiacriticsWithPrecomposedChars() {		
+		normalizer.process(STRING_WITH_DIACRITICS);
 		
-		normalizer.setReceiver(new DefaultObjectReceiver<String>() {
-			@Override
-			public void process(final String obj) {
-				assertEquals(OUTPUT_STR, obj);
-			}
-		});
-		
-		normalizer.process(INPUT_STR);
+		verify(receiver).process(STRING_WITH_PRECOMPOSED_CHARS);
 	}
 
 }
