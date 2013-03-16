@@ -31,7 +31,7 @@ import org.mockito.MockitoAnnotations;
 
 
 /**
- * Tests for {@link UniformSampler}
+ * Tests for {@link UniformSampler}.
  * 
  * @author Christoph Böhme
  *
