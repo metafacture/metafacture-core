@@ -15,57 +15,76 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import org.culturegraph.mf.stream.pipe.ObjectBuffer;
-import org.culturegraph.mf.stream.pipe.StringFilter;
-import org.junit.Assert;
+import static org.mockito.Mockito.inOrder;
+
+import org.culturegraph.mf.framework.ObjectReceiver;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 
 /**
+ * Tests for {@link StringFilter}.
+ * 
  * @author Christoph Böhme
  *
  */
 public final class StringFilterTest {
 
-	private static final String[] RECORDS = { "Record 1: Data", "Record 42: Data", "Record 3: Data" };
+	private static final String[] RECORDS = { 
+		"Record 1: Data", 
+		"Record 42: Data", 
+		"Record 3: Data",
+	};
+	
 	private static final String PATTERN = "\\d\\d";
 	
 	private StringFilter filter;
-	private ObjectBuffer<String> buffer;
+	
+	@Mock
+	private ObjectReceiver<String> receiver;
 
 	@Before
-	public void configFlow() {
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		
 		filter = new StringFilter(PATTERN);
-		buffer = new ObjectBuffer<String>();
-		filter.setReceiver(buffer);		
+		filter.setReceiver(receiver);		
+	}
+	
+	@After
+	public void cleanup() {
+		filter.closeStream();
 	}
 	
 	@Test
-	public void testPassMatches() {
+	public void testShouldPassMatchingInput() {
 		filter.setPassMatches(true);
 		
-		processRecords();
-		
-		Assert.assertEquals(RECORDS[1], buffer.pop());
-		Assert.assertNull(buffer.pop());
-	}
-	
-	@Test
-	public void testFilterMatches() {
-		filter.setPassMatches(false);
-		
-		processRecords();		
-
-		Assert.assertEquals(RECORDS[0], buffer.pop());
-		Assert.assertEquals(RECORDS[2], buffer.pop());
-		Assert.assertNull(buffer.pop());
-}
-
-	private void processRecords() {
 		filter.process(RECORDS[0]);
 		filter.process(RECORDS[1]);
 		filter.process(RECORDS[2]);
-		filter.closeStream();		
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).process(RECORDS[1]);
+		ordered.verifyNoMoreInteractions();
 	}
+	
+	@Test
+	public void testShouldPassNonMatchingInput() {
+		filter.setPassMatches(false);
+		
+		filter.process(RECORDS[0]);
+		filter.process(RECORDS[1]);
+		filter.process(RECORDS[2]);
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).process(RECORDS[0]);
+		ordered.verify(receiver).process(RECORDS[2]);
+		ordered.verifyNoMoreInteractions();
+	}
+	
 }
