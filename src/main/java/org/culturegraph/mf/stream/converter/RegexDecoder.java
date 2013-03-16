@@ -76,7 +76,7 @@ import org.slf4j.LoggerFactory;
  * </blockquote>
  * </p>
  * 
- * @author Thomas Seidel
+ * @author Thomas Seidel, Christoph Böhme
  * 
  */
 @Description("Decodes an incoming string based on a regular expression using named-capturing groups")
@@ -122,25 +122,32 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 	}
 
 	@Override
-	public void process(final String string) {
+	public void process(final String str) {
 		assert !isClosed();
-		matcher.reset(string);
+		
+		matcher.reset(str);
+		if (!matcher.find()) {
+			LOG.info("Ignoring non-matching input: {}", str);
+			return;
+		}
 
+		// Extract the record id:
 		final String id;
 		final int groupIndex = captureGroupNames.indexOf(ID_CAPTURE_GROUP) + 1;
-		if (groupIndex > 0 && matcher.find()) {
+		if (groupIndex > 0) {
 			id = matcher.group(groupIndex);
 		} else {
 			id = "";
 		}
 		getReceiver().startRecord(id);
 		
+		// Add a literal containing the unmodified input string:
 		if (defaultLiteralName != null) {
-			getReceiver().literal(defaultLiteralName, string);
+			getReceiver().literal(defaultLiteralName, str);
 		}
 		
-		matcher.reset();
-		while (matcher.find()) {
+		// Emit literals:
+		do {
 			final int groupCount = matcher.groupCount();
 			LOG.debug("groupCount() is: {}", Integer.valueOf(groupCount));
 			for (int group = 1; group <= groupCount; ++group) {
@@ -150,7 +157,7 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 						Integer.valueOf(group), literalName, literalValue);
 				getReceiver().literal(literalName, literalValue);
 			}
-		}
+		} while (matcher.find());
 		
 		getReceiver().endRecord();
 	}

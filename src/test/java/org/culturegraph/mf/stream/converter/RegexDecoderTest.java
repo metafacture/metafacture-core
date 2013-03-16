@@ -15,18 +15,18 @@
  */
 package org.culturegraph.mf.stream.converter;
 
+import static org.junit.Assert.fail;
+
 import org.culturegraph.mf.exceptions.FormatException;
-import org.culturegraph.mf.stream.converter.RegexDecoder;
 import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.stream.sink.StreamValidator;
-import org.junit.Assert;
 import org.junit.Test;
 
 
 /**
  * Test {@link RegexDecoderTest}.
  * 
- * @author Thomas Seidel
+ * @author Thomas Seidel, Christoph Böhme
  * 
  */
 public final class RegexDecoderTest {
@@ -62,8 +62,8 @@ public final class RegexDecoderTest {
 		try {
 			regexDecoder.process(INPUT);
 			regexDecoder.closeStream();
-		} catch(FormatException e) {
-			Assert.fail(e.toString());
+		} catch (FormatException e) {
+			fail(e.toString());
 		}
 	}
 	
@@ -85,10 +85,37 @@ public final class RegexDecoderTest {
 		try {
 			regexDecoder.process("RECORD-ID:28,DATA:test");
 			regexDecoder.closeStream();
-		} catch(FormatException e) {
-			Assert.fail(e.toString());
+		} catch (FormatException e) {
+			fail(e.toString());
 		}
 		
+	}
+	
+	@Test
+	public void testIgnoreNonMatching() {
+		final EventList expected = new EventList();
+		
+		expected.startRecord("");
+		expected.literal("l", "v1");
+		expected.endRecord();
+		expected.startRecord("");
+		expected.literal("l", "v2");
+		expected.endRecord();
+		expected.closeStream();
+		
+		final RegexDecoder regexDecoder = new RegexDecoder("^l:(?<l>.*?)$");
+		final StreamValidator validator = new StreamValidator(expected.getEvents());
+		
+		regexDecoder.setReceiver(validator);
+		
+		try {
+			regexDecoder.process("l:v1");
+			regexDecoder.process("garbage should be ignored");
+			regexDecoder.process("l:v2");
+			regexDecoder.closeStream();
+		} catch (FormatException e) {
+			fail(e.toString());
+		}
 	}
 
 }
