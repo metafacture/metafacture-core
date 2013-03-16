@@ -15,15 +15,19 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
+import static org.mockito.Mockito.inOrder;
+
 import java.util.Arrays;
 
-import org.culturegraph.mf.stream.pipe.ObjectBuffer;
-import org.culturegraph.mf.stream.pipe.UniformSampler;
-import org.junit.Assert;
+import org.culturegraph.mf.framework.ObjectReceiver;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 
 /**
@@ -35,11 +39,16 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public final class UniformSamplerTest {
 
-	private static final long SEED = 1;  // Use a fixed random seed to make the test repeatable.
+	private static final long SEED = 1;  // Use a fixed random seed to make the test repeatable
 	private static final int SAMPLE_SIZE = 5;
 	
 	private static final int LARGE_SET = 100;
 	private static final int SMALL_SET = 3;
+	
+	private UniformSampler<String> sampler;
+	
+	@Mock
+	private ObjectReceiver<String> receiver;
 	
 	private final int setSize;
 	private final String[] expected;
@@ -57,23 +66,27 @@ public final class UniformSamplerTest {
 			});
 	}
 	
-	@Test
-	public void test() {
-		final UniformSampler<String> sampler = new UniformSampler<String>(SAMPLE_SIZE);
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		
+		sampler = new UniformSampler<String>(SAMPLE_SIZE);
 		sampler.setSeed(SEED);
-		final ObjectBuffer<String> buffer = new ObjectBuffer<String>();
-		
-		sampler.setReceiver(buffer);
-		
+		sampler.setReceiver(receiver);
+	}
+	
+	@Test
+	public void testShouldEmitARandomSubsetOfTheInputObjects() {
 		for(int i = 0; i < setSize; ++i) {
 			sampler.process(Integer.toString(i));
 		}
 		sampler.closeStream();
 		
+		final InOrder ordered = inOrder(receiver); 
 		for(int i = 0; i < expected.length; ++i) {
-			Assert.assertEquals(expected[i], buffer.pop());
+			ordered.verify(receiver).process(expected[i]);
 		}
-		Assert.assertNull("The sample contains more than " + expected.length + " records", buffer.pop());		
+		ordered.verify(receiver).closeStream();
 	}
 	
 }
