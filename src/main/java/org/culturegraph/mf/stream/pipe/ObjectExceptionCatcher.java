@@ -60,7 +60,8 @@ public final class ObjectExceptionCatcher<T> extends
 	public void process(final T obj) {
 		try {
 			getReceiver().process(obj);
-		} catch(final Exception e) {  // NO CHECKSTYLE: IllegalCatch
+		} catch(final Exception e) {  
+			// NO CHECKSTYLE IllegalCatch FOR -1 LINES:
 			// This module is supposed to intercept _all_ exceptions
 			// thrown by downstream modules. Hence, we have to catch
 			// Exception.
