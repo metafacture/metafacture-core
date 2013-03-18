@@ -1,4 +1,4 @@
-// $ANTLR 3.5 D:\\Git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g 2013-03-07 15:28:41
+// $ANTLR 3.5 D:\\Git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g 2013-03-15 16:51:35
 
 package org.culturegraph.mf.flux.parser;
 
@@ -287,7 +287,7 @@ public class FluxParser extends Parser {
 					stream_28.add(char_literal9);
 
 					// AST REWRITE
-					// elements: exp, Identifier
+					// elements: Identifier, exp
 					// token labels: 
 					// rule labels: retval
 					// token list labels: 
@@ -1157,7 +1157,7 @@ public class FluxParser extends Parser {
 
 			stream_exp.add(exp41.getTree());
 			// AST REWRITE
-			// elements: exp, Identifier
+			// elements: Identifier, exp
 			// token labels: 
 			// rule labels: retval
 			// token list labels: 

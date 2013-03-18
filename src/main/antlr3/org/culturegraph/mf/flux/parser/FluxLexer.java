@@ -1,4 +1,4 @@
-// $ANTLR 3.5 D:\\Git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g 2013-03-07 15:28:41
+// $ANTLR 3.5 D:\\Git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g 2013-03-15 16:51:35
 
 package org.culturegraph.mf.flux.parser;
 import org.apache.commons.lang.StringEscapeUtils;
