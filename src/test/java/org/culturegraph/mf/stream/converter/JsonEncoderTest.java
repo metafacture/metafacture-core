@@ -32,6 +32,23 @@ import org.mockito.MockitoAnnotations;
  */
 public final class JsonEncoderTest {
 
+	private static final String LITERAL1 = "L1";
+	private static final String LITERAL2 = "L2";
+	private static final String LITERAL3 = "L3";
+	private static final String LITERAL4 = "L4";
+	
+	private static final String VALUE1 = "V1";
+	private static final String VALUE2 = "V2";
+	private static final String VALUE3 = "V3";
+	private static final String VALUE4 = "V4";
+	
+	private static final String ENTITY1 = "En1";
+	private static final String ENTITY2 = "En2";
+	
+	private static final String LIST1 = "Li1[]";
+	private static final String LIST2 = "Li2[]";
+	private static final String LIST3 = "Li3[]";
+	
 	private JsonEncoder encoder;
 	
 	@Mock
@@ -51,29 +68,92 @@ public final class JsonEncoderTest {
 	}
 	
 	@Test
-	public void testShouldEncodeLiteralsAndEntities() {
+	public void testShouldEncodeLiterals() {
 		encoder.startRecord("");
-		encoder.literal("lit1", "val1");
-		encoder.startEntity("ent1");
-		encoder.literal("lit2", "val2");
-		encoder.literal("lit3", "val3");
+		encoder.literal(LITERAL1, VALUE1);
+		encoder.literal(LITERAL2, VALUE2);
+		encoder.literal(LITERAL3, VALUE3);
+		encoder.endRecord();
+		
+		verify(receiver).process(fixQuotes("{'L1':'V1','L2':'V2','L3':'V3'}"));
+	}
+	
+	@Test
+	public void testShouldEncodeEntities() {
+		encoder.startRecord("");
+		encoder.startEntity(ENTITY1);
+		encoder.literal(LITERAL1, VALUE1);
+		encoder.literal(LITERAL2, VALUE2);
+		encoder.endEntity();
+		encoder.startEntity(ENTITY2);
+		encoder.literal(LITERAL1, VALUE1);
+		encoder.literal(LITERAL2, VALUE2);
 		encoder.endEntity();
 		encoder.endRecord();
 		
-		verify(receiver).process(fixQuotes("{'lit1':'val1','ent1':{'lit2':'val2','lit3':'val3'}}"));
+		verify(receiver).process(fixQuotes("{'En1':{'L1':'V1','L2':'V2'},'En2':{'L1':'V1','L2':'V2'}}"));
+	}
+	
+	@Test
+	public void testShouldEncodeNestedEntities() {
+		encoder.startRecord("");
+		encoder.startEntity(ENTITY1);
+		encoder.startEntity(ENTITY2);
+		encoder.literal(LITERAL1, VALUE1);
+		encoder.endEntity();
+		encoder.endEntity();
+		encoder.endRecord();
+		
+		verify(receiver).process(fixQuotes("{'En1':{'En2':{'L1':'V1'}}}"));
 	}
 	
 	@Test
 	public void testShouldEncodeMarkedEntitiesAsList() {	
 		encoder.startRecord("");
-		encoder.startEntity("list[]");
-		encoder.literal("a", "1");
-		encoder.literal("b", "2");
-		encoder.literal("c", "3");
+		encoder.startEntity(LIST1);
+		encoder.literal(LITERAL1, VALUE1);
+		encoder.literal(LITERAL2, VALUE2);
+		encoder.literal(LITERAL3, VALUE3);
 		encoder.endEntity();
 		encoder.endRecord();
 		
-		verify(receiver).process(fixQuotes("{'list':['1','2','3']}"));
+		verify(receiver).process(fixQuotes("{'Li1':['V1','V2','V3']}"));
+	}
+	
+	@Test
+	public void testShouldEncodeEntitiesInLists() {
+		encoder.startRecord("");
+		encoder.startEntity(LIST1);
+		encoder.startEntity(ENTITY1);
+		encoder.literal(LITERAL1, VALUE1);
+		encoder.literal(LITERAL2, VALUE2);
+		encoder.endEntity();
+		encoder.startEntity(ENTITY2);
+		encoder.literal(LITERAL3, VALUE3);
+		encoder.literal(LITERAL4, VALUE4);
+		encoder.endEntity();
+		encoder.endEntity();
+		encoder.endRecord();
+		
+		verify(receiver).process(fixQuotes("{'Li1':[{'L1':'V1','L2':'V2'},{'L3':'V3','L4':'V4'}]}"));
+	}
+
+	@Test
+	public void testShouldEncodeNestedLists() {
+		encoder.startRecord("");
+		encoder.startEntity(LIST1);
+		encoder.startEntity(LIST2);
+		encoder.literal(LITERAL1, VALUE1);
+		encoder.literal(LITERAL2, VALUE2);
+		encoder.endEntity();
+		encoder.startEntity(LIST3);
+		encoder.literal(LITERAL3, VALUE3);
+		encoder.literal(LITERAL4, VALUE4);
+		encoder.endEntity();
+		encoder.endEntity();
+		encoder.endRecord();
+		
+		verify(receiver).process(fixQuotes("{'Li1':[['V1','V2'],['V3','V4']]}"));
 	}
 
 	/*
@@ -84,4 +164,5 @@ public final class JsonEncoderTest {
 	private String fixQuotes(final String str) {
 		return str.replace('\'', '"');
 	}
+	
 }
