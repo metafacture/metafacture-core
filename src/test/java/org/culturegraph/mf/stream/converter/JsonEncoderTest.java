@@ -15,10 +15,14 @@
  */
 package org.culturegraph.mf.stream.converter;
 
-import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 
-import org.culturegraph.mf.framework.DefaultObjectReceiver;
+import org.culturegraph.mf.framework.ObjectReceiver;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
  * Test for {@link JsonEncoder}.
@@ -28,19 +32,26 @@ import org.junit.Test;
  */
 public final class JsonEncoderTest {
 
-	private static final String SIMPLE_JSON = "{\"lit1\":\"val1\",\"ent1\":{\"lit2\":\"val2\",\"lit3\":\"val3\"}}";
-	private static final String LIST_JSON = "{\"list\":[\"1\",\"2\",\"3\"],\"lit\":\"val\"}";
-
-	@Test
-	public void testSimpleJson() {
-		final JsonEncoder encoder = new JsonEncoder();
-		encoder.setReceiver(new DefaultObjectReceiver<String>() {
-			@Override
-			public void process(final String str) {
-				assertEquals(SIMPLE_JSON, str);
-			}
-		});
+	private JsonEncoder encoder;
+	
+	@Mock
+	private ObjectReceiver<String> receiver;
+	
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
 		
+		encoder = new JsonEncoder();
+		encoder.setReceiver(receiver); 
+	}
+	
+	@After
+	public void cleanup() {
+		encoder.closeStream();
+	}
+	
+	@Test
+	public void testShouldEncodeLiteralsAndEntities() {
 		encoder.startRecord("");
 		encoder.literal("lit1", "val1");
 		encoder.startEntity("ent1");
@@ -48,28 +59,29 @@ public final class JsonEncoderTest {
 		encoder.literal("lit3", "val3");
 		encoder.endEntity();
 		encoder.endRecord();
-		encoder.closeStream();
+		
+		verify(receiver).process(fixQuotes("{'lit1':'val1','ent1':{'lit2':'val2','lit3':'val3'}}"));
 	}
 	
 	@Test
-	public void testListJson() {
-		final JsonEncoder encoder = new JsonEncoder();
-		encoder.setReceiver(new DefaultObjectReceiver<String>() {
-			@Override
-			public void process(final String str) {
-				assertEquals(LIST_JSON, str);
-			}
-		});
-		
+	public void testShouldEncodeMarkedEntitiesAsList() {	
 		encoder.startRecord("");
 		encoder.startEntity("list[]");
-		encoder.literal("", "1");
-		encoder.literal("", "2");
-		encoder.literal("", "3");
+		encoder.literal("a", "1");
+		encoder.literal("b", "2");
+		encoder.literal("c", "3");
 		encoder.endEntity();
-		encoder.literal("lit", "val");
 		encoder.endRecord();
-		encoder.closeStream();
+		
+		verify(receiver).process(fixQuotes("{'list':['1','2','3']}"));
 	}
 
+	/*
+	 * Utility method which replaces all single quotes in a string with double quotes.
+	 * This allows to specify the JSON output in the test cases without having to wrap
+	 * each bit of text in escaped double quotes.
+	 */
+	private String fixQuotes(final String str) {
+		return str.replace('\'', '"');
+	}
 }
