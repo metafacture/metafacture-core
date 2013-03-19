@@ -30,11 +30,12 @@ import org.culturegraph.mf.types.CGEntity;
  * 
  * @author Markus Michael Geipel, Christoph Böhme
  *
+ * @deprecated Use FormetaEncoder instead
  */
-
 @Description("Encodes a stream in CGE Format")
 @In(StreamReceiver.class)
 @Out(String.class)
+@Deprecated
 public final class CGEntityEncoder 
  extends DefaultStreamPipe<ObjectReceiver<String>>  {
 

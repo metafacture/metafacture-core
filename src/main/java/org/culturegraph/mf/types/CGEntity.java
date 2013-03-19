@@ -22,7 +22,11 @@ package org.culturegraph.mf.types;
  *
  * @see CGEntityDecoder
  * @see CGEntityEncoder
+ * 
+ * @deprecated Use FormetaDecoder and FormetaEncoder instead
+ * 
  */
+@Deprecated
 public final class CGEntity {
 	public static final char FIELD_DELIMITER = '\u001e';
 	public static final char SUB_DELIMITER = '\u001f';

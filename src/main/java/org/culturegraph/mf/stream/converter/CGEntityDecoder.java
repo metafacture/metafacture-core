@@ -35,10 +35,13 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Markus Michael Geipel, Christoph Böhme
  * 
+ * @deprecated Use FormetaDecoder instead
+ * 
  */
 @Description("Reads Strings CGEntity format.")
 @In(String.class)
 @Out(StreamReceiver.class)
+@Deprecated
 public final class CGEntityDecoder 
 		extends DefaultObjectPipe<String, StreamReceiver> {
 

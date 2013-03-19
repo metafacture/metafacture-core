@@ -19,7 +19,11 @@ import org.culturegraph.mf.stream.converter.CGEntityDecoder;
 
 /**
  * @author Christoph Böhme
+ * 
+ * @deprecated Use FormetaDecoder instead
+ * 
  */
+@Deprecated
 public class CGEntityReader extends ReaderBase<CGEntityDecoder> {
 
 	public CGEntityReader() {
