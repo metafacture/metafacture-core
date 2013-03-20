@@ -239,7 +239,7 @@
 			</sequence>
 			<attribute name="name" type="string" use="optional" />
 			<attribute name="value" type="string" use="optional" />
-			<attribute name="defaultValue" type="string" use="optional" />
+<!-- 			<attribute name="defaultValue" type="string" use="optional" /> -->
 			<attribute name="flushWith" type="string" use="optional"
 				default="record" />
 		</complexType>
