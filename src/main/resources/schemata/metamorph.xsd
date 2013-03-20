@@ -24,6 +24,7 @@
 			</sequence>
 
 			<attribute name="entityMarker">
+			    <annotation><documentation>defines the character which separates entities and literals</documentation></annotation>
 				<simpleType>
 					<restriction base="string">
 						<length value="1" />
@@ -44,6 +45,7 @@
 	</element>
 
 	<element name="meta">
+		<annotation><documentation>Holds meta information</documentation></annotation>
 		<complexType>
 			<sequence>
 				<element ref="tns:name" maxOccurs="1" minOccurs="0" />
@@ -56,6 +58,7 @@
 	<element name="name" type="string" />
 
 	<element name="macros">
+		<annotation><documentation>Holds macro definitions</documentation></annotation>
 		<complexType>
 			<choice minOccurs="0" maxOccurs="unbounded">
 				<element ref="tns:macro" />
@@ -65,25 +68,32 @@
 	</element>
 
 	<element name="macro">
+		<annotation><documentation>One macro definition</documentation></annotation>
 		<complexType>
 			<choice minOccurs="0" maxOccurs="1">
 				<group ref="tns:literal-rule" />
 				<group ref="tns:entity-rule" />
 			</choice>
 			<attribute ref="xml:base" />
-			<attribute name="name" use="required" type="string" />
+			<attribute name="name" use="required" type="string" >
+				<annotation><documentation>unique name of the macro</documentation></annotation>
+			</attribute>
 		</complexType>
 	</element>
 
 	<element name="call-macro">
+		<annotation><documentation>Calls a macro. Use attributes to set parameters</documentation></annotation>
 		<complexType>
-			<attribute name="name" type="string" use="required" />
-			<attribute name="literal_name" type="string" use="optional" />
+			<attribute name="name" type="string" use="required" >
+				<annotation><documentation>the unique name of the macro</documentation></annotation>
+			</attribute>
+<!-- 			<attribute name="literal_name" type="string" use="optional" /> -->
 			<anyAttribute processContents="lax" namespace="##local" />
 		</complexType>
 	</element>
 
 	<element name="rules">
+	<annotation><documentation>Holds the transformation rules</documentation></annotation>
 		<complexType>
 			<choice minOccurs="0" maxOccurs="unbounded">
 				<group ref="tns:literal-rule" />
@@ -97,13 +107,14 @@
 	</element>
 
 	<element name="maps">
+	<annotation><documentation>Holds lookup tables</documentation></annotation>
 		<complexType>
 			<choice minOccurs="0" maxOccurs="unbounded">
 				<element ref="tns:map" />
 				<element ref="tns:filemap" />
 				<element ref="tns:sqlmap" />
 				<element ref="tns:jndisqlmap" />
-				<element ref="tns:restmap" />
+<!-- 				<element ref="tns:restmap" /> -->
 				<element ref="tns:javamap" />
 				<element ref="xi:include" />
 			</choice>
@@ -112,6 +123,7 @@
 	</element>
 
 	<element name="vars">
+		<annotation><documentation>Holds default values for variables (parameters to the metamorph definition)</documentation></annotation>
 		<complexType>
 			<choice minOccurs="0" maxOccurs="unbounded">
 				<element ref="tns:var" />
@@ -128,8 +140,10 @@
 	</element>
 
 	<element name="java">
+		<annotation><documentation>Process data with in custom java class. Use attributes to call setters.</documentation></annotation>
 		<complexType>
 			<attribute name="class" use="required">
+				<annotation><documentation>Fully qualified class name</documentation></annotation>
 				<simpleType>
 					<restriction base="string">
 						<pattern value="([\p{L}_$][\p{L}\p{N}_$]*\.)*[\p{L}_$][\p{L}\p{N}_$]*">
@@ -137,19 +151,26 @@
 					</restriction>
 				</simpleType>
 			</attribute>
-			<anyAttribute namespace="##local" processContents="lax" />
+			<anyAttribute namespace="##local" processContents="lax" >
+				<annotation><documentation>Will be mapped to the corresponding setter method.</documentation></annotation>
+			</anyAttribute>
 		</complexType>
 	</element>
 	
 		
 	<element name="group">
+		<annotation><documentation>groups an arbitrary number of data or collector tags</documentation></annotation>
 		<complexType>
 			<sequence>
 				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
 				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
 			</sequence>
-			<attribute name="name" type="string" use="optional" />
-			<attribute name="value" type="string" use="optional" />
+			<attribute name="name" type="string" use="optional" >
+				<annotation><documentation>set the name of all literals</documentation></annotation>
+			</attribute>
+			<attribute name="value" type="string" use="optional" >
+				<annotation><documentation>set the value of all literals</documentation></annotation>
+			</attribute>
 		</complexType>
 	</element>
 
@@ -171,6 +192,7 @@
 	</element>
 
 	<element name="concat">
+	<annotation><documentation>Concatinates all received literals</documentation></annotation>
 		<complexType>
 			<sequence>
 				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
@@ -190,6 +212,7 @@
 	</element>
 
 	<element name="square">
+	<annotation><documentation>Builds all 2-sets of received literal values</documentation></annotation>
 		<complexType>
 			<sequence>
 				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
@@ -208,6 +231,7 @@
 	</element>
 
 	<element name="choose">
+	<annotation><documentation>Take only one literal of the received ones. Preference corresponds to decreasing order of definition.</documentation></annotation>
 		<complexType>
 			<sequence>
 				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
@@ -242,6 +266,7 @@
 	</element>
 
 	<element name="entity">
+	<annotation><documentation>Create an entity</documentation></annotation>
 		<complexType>
 			<choice minOccurs="1" maxOccurs="unbounded">
 				<group ref="tns:literal-rule" minOccurs="0" maxOccurs="unbounded" />
@@ -259,12 +284,17 @@
 
 
 	<element name="data">
+		<annotation><documentation>Used to receive literals</documentation></annotation>
 		<complexType>
 			<sequence>
 				<group ref="tns:function" minOccurs="0" maxOccurs="unbounded" />
 			</sequence>
-			<attribute name="source" type="string" use="required" />
-			<attribute name="name" type="string" use="optional" />
+			<attribute name="source" type="string" use="required" >
+				<annotation><documentation>name of the literal to receive</documentation></annotation>
+			</attribute>
+			<attribute name="name" type="string" use="optional" >
+				<annotation><documentation>new name of the literal</documentation></annotation>
+			</attribute>
 			<!-- <attribute name="value" type="string" use="optional" /> -->
 		</complexType>
 	</element>
@@ -272,6 +302,7 @@
 
 
 	<element name="postprocess">
+		<annotation><documentation>The functions contained here are applied to the final output of the collector.</documentation></annotation>
 		<complexType>
 			<sequence>
 				<group ref="tns:function" maxOccurs="unbounded" minOccurs="0" />
@@ -281,6 +312,7 @@
 
 
 	<element name="map">
+		<annotation><documentation>Defines a lookup table to be referenced by different functions.</documentation></annotation>
 		<complexType>
 			<sequence>
 				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded" />
@@ -292,9 +324,13 @@
 	</element>
 	
 	<element name="javamap">
+	<annotation><documentation>A custom java class acting as a lookup table.</documentation></annotation>
 		<complexType>
-			<attribute name="name" type="string" use="required" />
+			<attribute name="name" type="string" use="required" >
+				<annotation><documentation>Unique name of the lookup table</documentation></annotation>
+			</attribute>
 			<attribute name="class" use="required">
+				<annotation><documentation>Fully qualified class name</documentation></annotation>
 				<simpleType>
 					<restriction base="string">
 						<pattern value="([\p{L}_$][\p{L}\p{N}_$]*\.)*[\p{L}_$][\p{L}\p{N}_$]*">
@@ -308,11 +344,18 @@
 	
 
 	<element name="filemap">
+		<annotation><documentation>Lookup table defined by text files</documentation></annotation>
 		<complexType>
-			<attribute name="name" type="string" use="required" />
-			<attribute name="files" type="string" use="required" />
+			<attribute name="name" type="string" use="required" >
+			<annotation><documentation>Unique name of the lookup table</documentation></annotation>
+			</attribute>
+			<attribute name="files" type="string" use="required" >
+			<annotation><documentation>Filenames</documentation></annotation>
+			</attribute>
 			<attribute name="separator" type="string" use="optional"
-				default="\t" />
+				default="\t" >
+			<annotation><documentation>String used in the files to separate key from value.</documentation></annotation>
+			</attribute>
 			<attribute ref="xml:base" />
 		</complexType>
 	</element>
@@ -364,14 +407,6 @@
 			<enumeration value="clean" />
 		</restriction>
 	</simpleType>
-
-	<simpleType name="asAttribute">
-		<restriction base="string">
-			<enumeration value="value" />
-			<enumeration value="count" />
-		</restriction>
-	</simpleType>
-
 
 	<group name="entity-rule">
 		<choice>
@@ -434,6 +469,7 @@
 
 
 	<element name="occurrence">
+		<annotation><documentation>Filter by number of occurrence.</documentation></annotation>
 		<complexType>
 			<attribute name="only" use="required">
 				<simpleType>
@@ -449,6 +485,7 @@
 	</element>
 
 	<element name="regexp">
+		<annotation><documentation>Extract data based on a regular expression. Syntax corresponds to Java Regular Expressions.</documentation></annotation>
 		<complexType>
 			<attribute name="match" type="string" use="required" />
 			<attribute name="format" type="string" use="optional" />
@@ -456,50 +493,68 @@
 	</element>
 
 	<element name="lookup">
+		<annotation><documentation>Performs a table lookup</documentation></annotation>
 		<complexType>
 			<sequence>
 				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded" />
 			</sequence>
-			<attribute name="in" type="string" use="optional" />
-			<attribute name="default" type="string" use="optional" />
+			<attribute name="in" type="string" use="optional" >
+				<annotation><documentation>Unique name of the lookup table</documentation></annotation>
+			</attribute>
+			<attribute name="default" type="string" use="optional" >
+				<annotation><documentation>Value used if no corresponding key is found.</documentation></annotation>
+			</attribute>
 		</complexType>
 	</element>
 
 	<element name="whitelist">
+		<annotation><documentation>Whitelist filter.</documentation></annotation>
 		<complexType>
 			<sequence>
 				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded" />
 			</sequence>
-			<attribute name="map" type="string" use="optional" />
+			<attribute name="map" type="string" use="optional" >
+				<annotation><documentation>Unique name of the lookup table</documentation></annotation>
+			</attribute>
 		</complexType>
 	</element>
 
 	<element name="setreplace">
+	<annotation><documentation>Relace strings based on a replacement table.</documentation></annotation>
 		<complexType>
 			<sequence>
 				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded" />
 			</sequence>
-			<attribute name="map" type="string" use="optional" />
+			<attribute name="map" type="string" use="optional" >
+				<annotation><documentation>Unique name of the replacement table.</documentation></annotation>
+			</attribute>
 		</complexType>
 	</element>
 
 	<element name="blacklist">
+		<annotation><documentation>Blacklist filter</documentation></annotation>
 		<complexType>
 			<sequence>
 				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded" />
 			</sequence>
-			<attribute name="map" type="string" use="optional" />
+			<attribute name="map" type="string" use="optional" >
+			<annotation><documentation>Unique name of the lookup table.</documentation></annotation>
+			</attribute>
 		</complexType>
 	</element>
 
 	<element name="replace">
+		<annotation><documentation>String replace based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.</documentation></annotation>
 		<complexType>
 			<attribute name="pattern" type="string" use="required" />
-			<attribute name="with" type="string" use="required" />
+			<attribute name="with" type="string" use="required" >
+				<annotation><documentation>The replacement</documentation></annotation>
+			</attribute>
 		</complexType>
 	</element>
 
 	<element name="compose">
+		<annotation><documentation>Add pre- or postfix to a string.</documentation></annotation>
 		<complexType>
 			<attribute name="prefix" type="string" use="optional" />
 			<attribute name="postfix" type="string" use="optional" />
@@ -507,6 +562,7 @@
 	</element>
 
 	<element name="htmlanchor">
+		<annotation><documentation>Create an HTML anchor.</documentation></annotation>
 		<complexType>
 			<attribute name="prefix" type="string" use="required" />
 			<attribute name="postfix" type="string" use="optional" />
@@ -515,12 +571,16 @@
 	</element>
 
 	<element name="split">
+		<annotation><documentation>Split string based on a regular expression. Pattern syntax corresponds to Java Regular Expressions.</documentation></annotation>
 		<complexType>
-			<attribute name="delimiter" type="string" use="required" />
+			<attribute name="delimiter" type="string" use="required" >
+				<annotation><documentation>Regular expression, defining the split</documentation></annotation>
+			</attribute>
 		</complexType>
 	</element>
 
 	<element name="isbn">
+		<annotation><documentation>ISBN conversion and verification.</documentation></annotation>
 		<complexType>
 			<attribute name="to" type="tns:toIsbnAttribute" use="required" />
 			<attribute name="verifyCheckDigit" type="boolean" use="optional"
@@ -529,34 +589,41 @@
 	</element>
 
 	<element name="trim">
+	<annotation><documentation>Trimms the value</documentation></annotation>
 		<complexType>
 		</complexType>
 	</element>
 
 	<element name="switch-name-value">
+		<annotation><documentation>Switches name and value.</documentation></annotation>
 		<complexType>
 		</complexType>
 	</element>
 
 	<element name="count">
+		<annotation><documentation>Returns the an increasing count for each received literal.</documentation></annotation>
 		<complexType>
 		</complexType>
 	</element>
 
 	<element name="urlencode">
+		<annotation><documentation>Escapes value according to URL encoding rules.</documentation></annotation>
 		<complexType>
 		</complexType>
 	</element>
 
 	<element name="equals">
+		<annotation><documentation>Returns the value only if equality holds.</documentation></annotation>
 		<complexType>
 			<attribute name="string" type="string" use="required" />
 		</complexType>
 	</element>
 
 	<element name="unique">
+	<annotation><documentation>Filters out dublicate literals</documentation></annotation>
 		<complexType>
 			<attribute name="in" use="optional" default="record">
+				<annotation><documentation>Scope of 'sameness' (experimental)</documentation></annotation>
 				<simpleType>
 					<restriction base="string">
 						<enumeration value="record"></enumeration>
@@ -565,6 +632,7 @@
 				</simpleType>
 			</attribute>
 			<attribute name="part" use="optional" default="value">
+				<annotation><documentation>Part of the literal is tested for equality</documentation></annotation>
 				<simpleType>
 					<restriction base="string">
 						<enumeration value="name"></enumeration>
@@ -577,12 +645,14 @@
 	</element>
 
 	<element name="not-equals">
+		<annotation><documentation>Returns value only if equality does not hold.</documentation></annotation>
 		<complexType>
 			<attribute name="string" type="string" use="required" />
 		</complexType>
 	</element>
 
 	<element name="buffer">
+		<annotation><documentation>Buffers literals and resleases them on a flush signal. (Used to delay litereals)</documentation></annotation>
 		<complexType>
 			<attribute name="flushWith" type="string" use="optional"
 				default="record" />
@@ -590,6 +660,7 @@
 	</element>
 
 	<element name="case">
+		<annotation><documentation>Upper/lower-case transformation.</documentation></annotation>
 		<complexType>
 			<attribute name="to" use="required">
 				<simpleType>
@@ -604,15 +675,21 @@
 	</element>
 
 	<element name="constant">
+		<annotation><documentation>Sets literal value to a constant.</documentation></annotation>
 		<complexType>
 			<attribute name="value" type="string" use="required" />
 		</complexType>
 	</element>
 
 	<element name="script">
+		<annotation><documentation>Delegates literal processing to a JavaScript</documentation></annotation>
 		<complexType>
-			<attribute name="invoke" type="string" use="required" />
-			<attribute name="file" type="string" use="required" />
+			<attribute name="invoke" type="string" use="required" >
+				<annotation><documentation>Name of JavaScript function.</documentation></annotation>
+			</attribute>
+			<attribute name="file" type="string" use="required" >
+				<annotation><documentation>JavaScript file.</documentation></annotation>
+			</attribute>
 		</complexType>
 	</element>
 
@@ -621,6 +698,7 @@
 	</element>
 
 	<element name="substring">
+		<annotation><documentation>Returns a substring</documentation></annotation>
 		<complexType>
 			<attribute name="start" default="0" use="optional">
 				<simpleType>
