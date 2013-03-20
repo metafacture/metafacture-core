@@ -57,8 +57,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 
 	private final Registry<NamedValueReceiver> dataRegistry = MorphCollectionFactory.createRegistry();
 	private final List<NamedValueReceiver> elseSources = MorphCollectionFactory.createList();
-	
-//rivate final Registry<FlushListener> entityEndListenerRegistry = new WildcardRegistry<FlushListener>();
 
 	private final MultiMap multiMap = MorphCollectionFactory.createMultiMap();
 	private final List<Closeable> resources = MorphCollectionFactory.createList();
@@ -137,9 +135,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 	}
 
 	protected void registerNamedValueReceiver(final String source, final NamedValueReceiver data) {
-
-		//final String path = data.getSource();
-
 		if (ELSE_KEYWORD.equals(source)) {
 			elseSources.add(data);
 		} else {
