@@ -100,10 +100,11 @@
 		<complexType>
 			<choice minOccurs="0" maxOccurs="unbounded">
 				<element ref="tns:map" />
-				<element ref="tns:mapfile" />
+				<element ref="tns:filemap" />
 				<element ref="tns:sqlmap" />
 				<element ref="tns:jndisqlmap" />
 				<element ref="tns:restmap" />
+				<element ref="tns:javamap" />
 				<element ref="xi:include" />
 			</choice>
 			<attribute ref="xml:base" />
@@ -139,7 +140,8 @@
 			<anyAttribute namespace="##local" processContents="lax" />
 		</complexType>
 	</element>
-
+	
+		
 	<element name="group">
 		<complexType>
 			<sequence>
@@ -288,8 +290,24 @@
 			<attribute ref="xml:base" />
 		</complexType>
 	</element>
+	
+	<element name="javamap">
+		<complexType>
+			<attribute name="name" type="string" use="required" />
+			<attribute name="class" use="required">
+				<simpleType>
+					<restriction base="string">
+						<pattern value="([\p{L}_$][\p{L}\p{N}_$]*\.)*[\p{L}_$][\p{L}\p{N}_$]*">
+						</pattern>
+					</restriction>
+				</simpleType>
+			</attribute>
+			<anyAttribute namespace="##local" processContents="lax" />
+		</complexType>
+	</element>
+	
 
-	<element name="mapfile">
+	<element name="filemap">
 		<complexType>
 			<attribute name="name" type="string" use="required" />
 			<attribute name="files" type="string" use="required" />

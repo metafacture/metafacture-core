@@ -26,7 +26,7 @@
 
 				</mm:rules>
 				<mm:maps>
-					<mm:filemap name="map1" files="maps/MARCcountries.txt" />
+					<mm:javamap name="map1" class="org.culturegraph.mf.morph.maps.MapFile" files="maps/MARCcountries.txt" />
 				</mm:maps>
 			</mm:metamorph>
 		</transformation>

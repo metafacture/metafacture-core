@@ -35,6 +35,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 
 	private static final String NOT_FOUND = " not found.";
 	private static final String JAVA = "java";
+	private static final String JAVAMAP = "javamap";
 	private static final String RECORD = "record";
 	// private final String morphDef;
 	private final Metamorph metamorph;
@@ -75,12 +76,20 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	@Override
 	protected void handleMapClass(final Node mapNode) {
 		final Map<String, String> attributes = resolvedAttributeMap(mapNode);
-
 		final String mapName = resolveVars(attributes.remove(ATTRITBUTE.NAME.getString()));
-		if (!getMapFactory().containsKey(mapNode.getLocalName())) {
+		final Map<String, String> map;
+		
+		if (mapNode.getLocalName().equals(JAVA)) {
+			final String className = resolvedAttribute(mapNode, ATTRITBUTE.CLASS);
+			map = ObjectFactory.newInstance(ObjectFactory.loadClass(className, Map.class));
+			attributes.remove(ATTRITBUTE.CLASS.getString());
+			ObjectFactory.applySetters(map, attributes);
+		}else if (getMapFactory().containsKey(mapNode.getLocalName())){
+			map = getMapFactory().newInstance(mapNode.getLocalName(), attributes);
+		}else{
 			throw new IllegalArgumentException("Map " + mapNode.getLocalName() + NOT_FOUND);
 		}
-		final Map<String, String> map = getMapFactory().newInstance(mapNode.getLocalName(), attributes);
+		
 		metamorph.putMap(mapName, map);
 	}
 
