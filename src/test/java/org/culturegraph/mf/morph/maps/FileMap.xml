@@ -26,11 +26,7 @@
 
 				</mm:rules>
 				<mm:maps>
-<<<<<<< HEAD
 					<mm:filemap name="map1" files="maps/MARCcountries.txt" />
-=======
-					<mm:mapfile name="map1" files="maps/MARCcountries.txt" />
->>>>>>> aa24f65812c9ff505b222ab5642df5441f81f4e9
 				</mm:maps>
 			</mm:metamorph>
 		</transformation>

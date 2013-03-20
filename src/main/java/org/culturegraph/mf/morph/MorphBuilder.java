@@ -79,7 +79,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		final String mapName = resolveVars(attributes.remove(ATTRITBUTE.NAME.getString()));
 		final Map<String, String> map;
 		
-		if (mapNode.getLocalName().equals(JAVA)) {
+		if (mapNode.getLocalName().equals(JAVAMAP)) {
 			final String className = resolvedAttribute(mapNode, ATTRITBUTE.CLASS);
 			map = ObjectFactory.newInstance(ObjectFactory.loadClass(className, Map.class));
 			attributes.remove(ATTRITBUTE.CLASS.getString());

@@ -24,5 +24,5 @@ import org.junit.runner.RunWith;
  * @author Markus Michael Geipel
  */
 @RunWith(TestSuite.class)
-@TestDefinitions("FileMap.xml")
+@TestDefinitions({"FileMap.xml", "JavaMap.xml"})
 public final class MapsTest {/*bind to xml test*/}
