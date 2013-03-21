@@ -145,7 +145,8 @@
 			<lookup in="rights" />
 		</data>
 
-		<data source="60017.0|61017.0|650?7.0|61117.0|630??.0|655??.0"
+		<data
+			source="650?7.0|60017.0|61017.0|61017.0|61117.0|630??.0|655?7.0|651?7.0|648??.0"
 			name="@conceptID">
 			<regexp match="^\(DE-588\)((.*))" format="${1}" />
 			<compose prefix="http://d-nb.info/gnd/" />
@@ -153,7 +154,8 @@
 
 		<entity name="skos:Concept" sameEntity="true">
 			<data source="@conceptID" name="~rdf:resource" />
-			<data source="60017.a|61017.a|650?7.a|61117.a|630??.a|655??.a"
+			<data
+				source="650?7.a|60017.a|61017.a|61017.a|61117.a|630??.a|655?7.a|651?7.a|648??.a"
 				name="skos:prefLabel$de" />
 		</entity>
 
@@ -163,6 +165,17 @@
 				<count />
 			</data>
 		</combine>
+
+		<data name="@orgID" source="@isil">
+			<compose prefix="http://ld.zdb-services.de/data/organisations/" />
+		</data>
+
+		<entity name="edm:Agent">
+			<data source="@orgID" name="~rdf:about" />
+			<data name="skos:prefLabel$de" source="@isil">
+				<lookup in="isils" />
+			</data>
+		</entity>
 
 		<entity name="edm:Agent">
 			<data source="@publisherID" name="~rdf:about" />
@@ -195,13 +208,11 @@
 		</data>
 
 		<entity name="edm:Event" flushWith="record">
-			<data source="~rdf:about" name="@cEventID" />
-
+			<data name="~rdf:about" source="@cEventID" />
 			<data name="edm:hasType" source="_id">
 				<constant value="creation" />
 			</data>
-
-			<data name="*dc:creator" source="1001 .0|1101 .0|7001 .0|7101 .0">
+			<data name="*crm:P11_had_participant" source="1001 .0|1101 .0|7001 .0|7101 .0">
 				<regexp match="^\(DE-588\)(.*)" format="http://d-nb.info/gnd/${1}" />
 			</data>
 		</entity>
@@ -211,9 +222,40 @@
 			<data name="edm:hasType" source="_id">
 				<constant value="publication" />
 			</data>
-			<data name="*dc:publisher" source="@publisherID" />
-			<data name="edm:occuredAt" source="260  .c|2603 .c" />
+			<data name="*crm:P11_had_participant" source="@publisherID" />
+			<data name="*edm:occuredAt" source="@timeID" />
+			<data name="*edm:happenedAt" source="@placeID" />
 		</entity>
+
+		<data name="@place" source="2603 .a">
+			<replace pattern=" \[?u.a.\]?.*$" with="" />
+			<split delimiter=" ; " />
+		</data>
+
+		<combine name="@placeID" value="#/place/${id}_place${c}">
+			<data name="c" source="@place">
+				<count />
+			</data>
+			<data source="001" name="id" />
+		</combine>
+
+		<entity name="edm:Place">
+			<data name="~rdf:about" source="@placeID" />
+			<data name="skos:prefLabel" source="@place" />
+		</entity>
+
+		<combine name="@timeID" value="#/timespan/${id}_timespan${c}">
+			<data name="c" source="260  .c|2603 .c">
+				<count />
+			</data>
+			<data source="001" name="id" />
+		</combine>
+
+		<entity name="edm:TimeSpan">
+			<data name="~rdf:about" source="@timeID" />
+			<data name="skos:prefLabel" source="260  .c|2603 .c" />
+		</entity>
+
 
 
 		<!-- mandatory ELIB -->
@@ -256,23 +298,8 @@
 			<data name="dc:creator" source="1001 .a|1101 .a" />
 			<data name="dc:contributor" source="7001 .a|7101 .a" />
 
-
-<!-- 			<combine name="dc:subject$de" value="${v}" sameEntity="true"> -->
-<!-- 				<data name="v" -->
-<!-- 					source="650?7.a|60017.a|61017.a|61017.b|61117.a|630??.a|655?7.a|651?7.a|648??.a" /> -->
-<!-- 				<choose flushWith="650?7|60017|61017|61017|61117|630??|655?7|651?7|648??"> -->
-<!-- 					<data source="60017.0|61017.0|650?7.0|61117.0|630??.0|655??.0" /> -->
-<!-- 					<data source="650?7|60017|61017|61017|61117|630??|655?7|651?7|648??"> -->
-<!-- 						<constant value="ok" /> -->
-<!-- 					</data> -->
-<!-- 					<postprocess> -->
-<!-- 						<equals string="ok" /> -->
-<!-- 					</postprocess> -->
-<!-- 				</choose> -->
-<!-- 			</combine> -->
-
 			<data name="dc:subject"
-				source="650?7.a|60017.a|61017.a|61017.b|61117.a|630??.a|655?7.a|651?7.a|648??.a" />
+				source="650?7.a|60017.a|61017.a|61017.a|61117.a|630??.a|655?7.a|651?7.a|648??.a" />
 			<data name="*dc:subject" source="@conceptID" />
 
 
@@ -320,6 +347,9 @@
 					</data>
 				</combine>
 			</choose>
+			<data name="*edm:rights" source="@isil">
+				<lookup in="rights" />
+			</data>
 		</entity>
 	</rules>
 
