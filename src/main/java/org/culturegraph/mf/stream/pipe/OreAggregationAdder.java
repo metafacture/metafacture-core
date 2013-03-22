@@ -48,7 +48,7 @@ public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver>
 	private static final String ORE_AGGREGATION_PROPERTIES = "ore-aggregation.properties";
 	private static final String ORE_AGGREGATION = "ore:Aggregation";
 	private static final String AGGREGATION_ID = "aggregation_id";
-	private static final String RDF_REFERENCE = "~rdf:reference";
+	private static final String RDF_REFERENCE = "~rdf:resource";
 	private static final Pattern SPLIT_PATTERN = Pattern.compile("\\s*,\\s*");
 	private final Deque<String> entityStack = new LinkedList<String>();
 	private final ListMap<String, String> aggregation = new ListMap<String, String>();
