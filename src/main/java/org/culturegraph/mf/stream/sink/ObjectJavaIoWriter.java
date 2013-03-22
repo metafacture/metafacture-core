@@ -22,23 +22,25 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.ObjectReceiver;
 
 /**
- * @param <T> object type
+ * @param <T>
+ *            object type
  * 
  * @author Christoph Böhme, Markus Geipel
- *
+ * 
  */
-
 
 public final class ObjectJavaIoWriter<T> implements ObjectReceiver<T> {
 
 	private final Writer writer;
-	
+	private boolean closed;
+
 	public ObjectJavaIoWriter(final Writer writer) {
 		this.writer = writer;
 	}
-	
+
 	@Override
 	public void process(final T obj) {
+		assert !closed;
 		try {
 			writer.write(obj.toString());
 			writer.append('\n');
@@ -51,13 +53,18 @@ public final class ObjectJavaIoWriter<T> implements ObjectReceiver<T> {
 	public void resetStream() {
 		throw new UnsupportedOperationException("Cannot reset ObjectJavaIoWriter");
 	}
-	
+
 	@Override
 	public void closeStream() {
-		try {
-			writer.close();
-		} catch (IOException e) {
-			throw new MetafactureException(e);
+		if (!closed) {
+			try {
+				writer.close();
+			} catch (IOException e) {
+				throw new MetafactureException(e);
+			}finally{
+				closed=true;
+			}
+			
 		}
 	}
 }

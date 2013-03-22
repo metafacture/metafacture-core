@@ -30,7 +30,7 @@ import org.culturegraph.mf.util.StringUtil;
 
 
 /**
- * Builds a {@link String} from a template and an {@link Object}. ${obj} marks
+ * Builds a {@link String} from a template and an {@link Object}. ${o} marks
  * the place where the object is to be inserted.
  * 
  * @param <T>
