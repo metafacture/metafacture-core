@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
@@ -32,7 +31,7 @@ import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.ResourceUtil;
-
+//import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * 
@@ -44,9 +43,9 @@ import org.culturegraph.mf.util.ResourceUtil;
 @Description("writes a stream to xml")
 @In(StreamReceiver.class)
 @Out(String.class)
-public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<String>>{
+public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<String>> {
 	public static final String ATTRIBUTE_MARKER = "~";
-	//public static final String TEXT_CONTENT_MARKER = "_text";
+	// public static final String TEXT_CONTENT_MARKER = "_text";
 	public static final String NAMESPACES = "namespaces";
 	public static final String NEW_LINE = "\n";
 
@@ -76,7 +75,7 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 			builder.append(" xmlns:");
 			builder.append(entry.getKey());
 			builder.append("=\"");
-			builder.append(StringEscapeUtils.escapeXml(entry.getValue()));
+			escape(builder, entry.getValue());
 			builder.append("\"");
 		}
 		builder.append(">");
@@ -149,7 +148,7 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 	 */
 	private static final class Element {
 		private static final List<Element> NO_CHILDREN = Collections.emptyList();
-		
+
 		private final StringBuilder attributes = new StringBuilder();
 		private String text = "";
 		private List<Element> children = NO_CHILDREN;
@@ -174,7 +173,7 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 			attributes.append(" ");
 			attributes.append(name);
 			attributes.append("=\"");
-			attributes.append(StringEscapeUtils.escapeXml(value));
+			escape(attributes,value);
 			attributes.append("\"");
 		}
 
@@ -214,7 +213,7 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 
 			builder.append(">");
 
-			builder.append(StringEscapeUtils.escapeXml(text));
+			escape(builder,text);
 
 			for (Element element : children) {
 				element.writeToStringBuilder(builder, indent + 1);
@@ -237,11 +236,48 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onResetStream() {
 		writeFooter();
 		start = true;
+	}
+
+	protected static void escape(final StringBuilder builder, final String str) {
+
+		final int len = str.length();
+		for (int i = 0; i < len; ++i) {
+			final char c = str.charAt(i);
+			final String entityName;
+			switch (c) {
+			case '&':
+				entityName = "amp";
+				break;
+			case '<':
+				entityName = "lt";
+				break;
+			case '>':
+				entityName = "gt";
+				break;
+			case '\'':
+				entityName = "apos";
+				break;
+			case '"':
+				entityName = "quot";
+				break;
+			default:
+				entityName = null;
+				break;
+			}
+
+			if (entityName == null) {
+				builder.append(c);
+			} else {
+				builder.append('&');
+				builder.append(entityName);
+				builder.append(';');
+			}
+		}
 	}
 
 }
