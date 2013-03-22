@@ -54,9 +54,19 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 	private String recordTag = "record";
 	private String rootTag = "records";
 	private boolean start = true;
+	private boolean separateRoots;
+	private boolean writeXmlHeader=true;
 
 	public void setRootTag(final String rootTag) {
 		this.rootTag = rootTag;
+	}
+	
+	public void setWriteXmlHeader(final boolean writeXmlHeader) {
+		this.writeXmlHeader = writeXmlHeader;
+	}
+	
+	public void setSeparateRoots(final boolean separateRoots) {
+		this.separateRoots = separateRoots;
 	}
 
 	public void setNamespaceFile(final String file) {
@@ -68,7 +78,11 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 
 	private void writeHeader() {
 		final StringBuilder builder = new StringBuilder();
-		builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+		
+		if(writeXmlHeader){
+			builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+		}
+		
 		builder.append("<");
 		builder.append(rootTag);
 		for (Entry<String, String> entry : namespaces.entrySet()) {
@@ -85,7 +99,7 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 
 	@Override
 	public void startRecord(final String identifier) {
-		if (start) {
+		if (separateRoots || start) {
 			writeHeader();
 		}
 		element = new Element(recordTag);
@@ -101,6 +115,9 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 			getReceiver().process(builder.toString());
 		} else {
 			getReceiver().process(element.toString());
+		}
+		if(separateRoots){
+			writeFooter();
 		}
 	}
 
