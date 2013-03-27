@@ -44,7 +44,6 @@ public final class StringMatcherTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		
 		matcher = new StringMatcher();
 		matcher.setReceiver(receiver);
 	}

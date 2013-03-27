@@ -16,6 +16,7 @@
 package org.culturegraph.mf.stream.pipe;
 
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.junit.After;
@@ -49,8 +50,7 @@ public final class StringFilterTest {
 
 	@Before
 	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		
+		MockitoAnnotations.initMocks(this);		
 		filter = new StringFilter(PATTERN);
 		filter.setReceiver(receiver);		
 	}
@@ -70,7 +70,7 @@ public final class StringFilterTest {
 		
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).process(RECORDS[1]);
-		ordered.verifyNoMoreInteractions();
+		verifyNoMoreInteractions(receiver);
 	}
 	
 	@Test
@@ -84,7 +84,7 @@ public final class StringFilterTest {
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).process(RECORDS[0]);
 		ordered.verify(receiver).process(RECORDS[2]);
-		ordered.verifyNoMoreInteractions();
+		verifyNoMoreInteractions(receiver);
 	}
 	
 }

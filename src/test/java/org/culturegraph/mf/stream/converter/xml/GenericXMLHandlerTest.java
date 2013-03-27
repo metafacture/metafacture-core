@@ -15,15 +15,17 @@
  */
 package org.culturegraph.mf.stream.converter.xml;
 
-import static org.junit.Assert.fail;
+import static org.mockito.Mockito.inOrder;
 
-import org.culturegraph.mf.exceptions.FormatException;
+import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.stream.DataFilePath;
-import org.culturegraph.mf.stream.converter.CGTextDecoder;
-import org.culturegraph.mf.stream.sink.EventList;
-import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.culturegraph.mf.stream.source.ResourceOpener;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 
 /**
@@ -31,35 +33,57 @@ import org.junit.Test;
  */
 public final class GenericXMLHandlerTest {
 
-	@Test
-	public void ignoreCharDataNotInRecord() {
-		
-		final CGTextDecoder decoder = new CGTextDecoder();
-		final EventList expectedStream = new EventList();
-		
-		decoder.setReceiver(expectedStream);
-		
-		decoder.process("1={ id=1, del=no, name={ value='Record 1' }, description={ lang=de, value='Erster Datensatz' } }");
-		decoder.process("2={ id=2, del=yes, name={ value='Record 2' }, description={ lang=de, value='Zweiter Datensatz' } }");
-		decoder.closeStream();
-		
-		final ResourceOpener opener = new ResourceOpener();
-		final XmlDecoder saxReader = new XmlDecoder();
-		final GenericXmlHandler genericXmlHandler = new GenericXmlHandler("record");
-		final StreamValidator validator = new StreamValidator(expectedStream.getEvents());
-		validator.setStrictRecordOrder(true);
-		validator.setStrictKeyOrder(true);
-		validator.setStrictValueOrder(true);
-		
-		opener.setReceiver(saxReader)
+	private ResourceOpener opener;
+	private XmlDecoder xmlDecoder;
+	private GenericXmlHandler genericXmlHandler;
+	
+	@Mock
+	private StreamReceiver receiver;
+	
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		opener = new ResourceOpener();
+		xmlDecoder = new XmlDecoder();
+		genericXmlHandler = new GenericXmlHandler("record");
+		opener.setReceiver(xmlDecoder)
 				.setReceiver(genericXmlHandler)
-				.setReceiver(validator);
-		
-		try {
-			opener.process(DataFilePath.GENERIC_XML);
-			opener.closeStream();
-		} catch(FormatException e) {
-			fail(e.toString());
-		}
+				.setReceiver(receiver);
 	}
+	
+	@After
+	public void cleanup() {
+		opener.closeStream();
+	}
+	
+	@Test
+	public void testShouldIgnoreCharDataNotInARecord() {
+		
+		opener.process(DataFilePath.GENERIC_XML);
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("1");
+		ordered.verify(receiver).literal("id", "1");
+		ordered.verify(receiver).literal("del", "no");
+		ordered.verify(receiver).startEntity("name");
+		ordered.verify(receiver).literal("value", "Record 1");
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).startEntity("description");
+		ordered.verify(receiver).literal("lang", "de");
+		ordered.verify(receiver).literal("value", "Erster Datensatz");
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).endRecord();
+		ordered.verify(receiver).startRecord("2");
+		ordered.verify(receiver).literal("id", "2");
+		ordered.verify(receiver).literal("del", "yes");
+		ordered.verify(receiver).startEntity("name");
+		ordered.verify(receiver).literal("value", "Record 2");
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).startEntity("description");
+		ordered.verify(receiver).literal("lang", "de");
+		ordered.verify(receiver).literal("value", "Zweiter Datensatz");
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).endRecord();	
+	}
+	
 }

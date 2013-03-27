@@ -15,9 +15,15 @@
  */
 package org.culturegraph.mf.stream.converter;
 
-import org.culturegraph.mf.stream.pipe.ObjectBuffer;
-import org.junit.Assert;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
+import org.culturegraph.mf.framework.ObjectReceiver;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 
 /**
@@ -25,22 +31,68 @@ import org.junit.Test;
  *
  */
 public final class LiteralExtractorTest {
-
-	private static final String RECORD = "1={ignore1=Value, entity={ignore2='Another value'}, important='This is the expected result'}";
-	private static final String EXPECTED_RESULT = "This is the expected result";
+	
+	private static final String LITERAL_NAME = "extract_this";
+	private static final String LITERAL_VALUE1 = "I've been extracted from a record";
+	private static final String LITERAL_VALUE2 = "I've been extracted from a record, too";
+	
+	private LiteralExtractor extractor;
+	
+	@Mock
+	private ObjectReceiver<String> receiver;
+	
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		extractor = new LiteralExtractor();
+		extractor.setReceiver(receiver);
+	}
+	
+	@After
+	public void cleanup() {
+		extractor.closeStream();
+	}
 	
 	@Test
-	public void test() {
-		final CGTextDecoder decoder = new CGTextDecoder();
-		final LiteralExtractor extractor = new LiteralExtractor("important");
-		final ObjectBuffer<String> buffer = new ObjectBuffer<String>(1);
+	public void testShouldEmitLiteralValueAsObject() {
+		extractor.setPattern(LITERAL_NAME);
 		
-		decoder.setReceiver(extractor).setReceiver(buffer);
+		extractor.startRecord("");
+		extractor.literal("L1", "V1");
+		extractor.literal(LITERAL_NAME, LITERAL_VALUE1);
+		extractor.literal("L2", "V2");
+		extractor.endRecord();
 		
-		decoder.process(RECORD);
-		decoder.closeStream();
-		
-		Assert.assertEquals(EXPECTED_RESULT, buffer.pop());
+		verify(receiver).process(LITERAL_VALUE1);
+		verifyNoMoreInteractions(receiver);
 	}
 
+	@Test
+	public void testShouldEmitValueOfNestedLiteralsAsObject() {
+		extractor.setPattern(LITERAL_NAME);
+		
+		extractor.startRecord("");
+		extractor.startEntity("En1");
+		extractor.literal(LITERAL_NAME, LITERAL_VALUE1);
+		extractor.endEntity();
+		extractor.endRecord();
+		
+		verify(receiver).process(LITERAL_VALUE1);
+		verifyNoMoreInteractions(receiver);
+	}
+	
+	@Test
+	public void testShouldUseRegExForMatchingLiteralNames() {
+		extractor.setPattern("^ex_\\d$");
+		
+		extractor.startRecord("");
+		extractor.literal("ex_1", LITERAL_VALUE1);
+		extractor.literal("L1", "V1");
+		extractor.literal("ex_2", LITERAL_VALUE2);
+		extractor.endRecord();
+		
+		verify(receiver).process(LITERAL_VALUE1);
+		verify(receiver).process(LITERAL_VALUE2);
+		verifyNoMoreInteractions(receiver);		
+	}
 }

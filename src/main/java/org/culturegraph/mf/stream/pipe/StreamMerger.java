@@ -34,21 +34,21 @@ import org.culturegraph.mf.framework.StreamReceiver;
 public final class StreamMerger 
 		extends DefaultStreamPipe<StreamReceiver> {
 	
-	private boolean firstRecord = true;
+	private boolean hasRecordsReceived;
 	private String currentId = "";
 	
 	@Override
 	public void startRecord(final String identifier) {
 		assert !isClosed();
 		if (!currentId.equals(identifier)) {
-			if (!firstRecord) {
+			if (hasRecordsReceived) {
 				getReceiver().endRecord();
 			}
 			getReceiver().startRecord(identifier);
 			currentId = identifier;
 		}
 		
-		firstRecord = false;
+		hasRecordsReceived = true;
 	}
 
 	@Override
@@ -71,13 +71,13 @@ public final class StreamMerger
 
 	@Override
 	protected void onResetStream() {
-		firstRecord = true;
+		hasRecordsReceived = false;
 		currentId = "";
 	}
 	
 	@Override
 	protected void onCloseStream() {
-		if (!firstRecord) {
+		if (hasRecordsReceived) {
 			getReceiver().endRecord();
 		}
 		onResetStream();

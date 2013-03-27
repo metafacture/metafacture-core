@@ -69,7 +69,6 @@ public final class UniformSamplerTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		
 		sampler = new UniformSampler<String>(SAMPLE_SIZE);
 		sampler.setSeed(SEED);
 		sampler.setReceiver(receiver);

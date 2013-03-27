@@ -42,7 +42,7 @@ public final class StreamBatchMergerTest {
 	private static final String EXPECTED_RESULT3 = INPUT5;
 	
 	@Test
-	public void test() {
+	public void testShouldMergeNConsecutiveRecords() {
 		final CGTextDecoder decoder = new CGTextDecoder();
 		final EventList buffer = new EventList();
 		

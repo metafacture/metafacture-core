@@ -15,52 +15,139 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
 import org.culturegraph.mf.exceptions.FormatException;
+import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.stream.converter.CGTextDecoder;
 import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.stream.sink.StreamValidator;
+import org.culturegraph.mf.util.StreamConstants;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 
 /**
- * tests {@link IdChangePipe}.
+ * Tests for {@link IdChangePipe}.
  * 
  * @author Christoph Böhme
  *
  */
 public final class IdChangePipeTest {
 
-	private static final String RECORD3 = "3={ name=test }";
+	private static final String OLD_RECORD_ID1 = "OLD ID 1";
+	private static final String OLD_RECORD_ID2 = "OLD ID 2";
+	private static final String NEW_RECORD_ID1 = "NEW ID 1";
+	private static final String NEW_RECORD_ID2 = "NEW ID 2";
+	private static final String ENTITY = "En";
+	private static final String LITERAL_NAME = "Li";
+	private static final String LITERAL_VALUE = "Va";
+	
+	private IdChangePipe idChangePipe;
+	
+	@Mock
+	private StreamReceiver receiver;
+	
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		idChangePipe = new IdChangePipe();
+		idChangePipe.setReceiver(receiver);
+	}
+	
+	@After
+	public void cleanup() {
+		idChangePipe.closeStream();
+	}
 	
 	@Test
-	public void test() {
+	public void testShouldChangeIdsOfRecords() {
+		idChangePipe.startRecord(OLD_RECORD_ID1);
+		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID1);
+		idChangePipe.endRecord();
+		idChangePipe.startRecord(OLD_RECORD_ID2);
+		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID2);
+		idChangePipe.endRecord();
 		
-		final CGTextDecoder decoder = new CGTextDecoder();
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
+		ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID1);
+		ordered.verify(receiver).endRecord();
+		ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
+		ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID2);
+		ordered.verify(receiver).endRecord();
+	}
+	
+	@Test
+	public void testShouldKeepRecordsWithoutIdLiteral() {
+		idChangePipe.startRecord(OLD_RECORD_ID1);
+		idChangePipe.literal(LITERAL_NAME, LITERAL_VALUE);
+		idChangePipe.endRecord();
+		idChangePipe.startRecord(OLD_RECORD_ID2);
+		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID2);
+		idChangePipe.endRecord();
 		
-		final EventList expected = new EventList();
-		
-		decoder.setReceiver(expected);
-		
-		decoder.process("1={ name=test, _id=1, entity={ name=test } }");
-		decoder.process("2={ name=test, _id=2}");
-		//decoder.process(RECORD3);
-		//decoder.closeStream();
-				
-		final IdChangePipe idChangePipe = new IdChangePipe();
-		idChangePipe.setKeepIdless(false);
-		final StreamValidator validator = new StreamValidator(expected.getEvents());
-		
-		decoder.setReceiver(idChangePipe).setReceiver(validator);
-
-		try {
-			decoder.process("one={ name=test, _id=1, entity={ name=test } }");
-			decoder.process("two={ name=test, _id=2}");
-			decoder.process(RECORD3);
-			decoder.closeStream();
-		} catch(FormatException e) {
-			Assert.fail(e.toString());
-		}
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(OLD_RECORD_ID1);
+		ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
+		ordered.verify(receiver).endRecord();
+		ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
+		ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID2);
+		ordered.verify(receiver).endRecord();
 	}
 
+	@Test
+	public void testShouldRemoveRecordsWithoutIdLiteral() {
+		idChangePipe.setKeepIdless(false);
+
+		idChangePipe.startRecord(OLD_RECORD_ID1);
+		idChangePipe.literal(LITERAL_NAME, LITERAL_VALUE);
+		idChangePipe.endRecord();
+		idChangePipe.startRecord(OLD_RECORD_ID2);
+		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID2);
+		idChangePipe.endRecord();
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
+		ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID2);
+		ordered.verify(receiver).endRecord();
+		verifyNoMoreInteractions(receiver);
+	}
+	
+	@Test
+	public void testShouldNotUseNestedIdLiteralAsNewId() {
+		idChangePipe.startRecord(OLD_RECORD_ID1);
+		idChangePipe.startEntity(ENTITY);
+		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID1);
+		idChangePipe.endEntity();
+		idChangePipe.endRecord();
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(OLD_RECORD_ID1);
+		ordered.verify(receiver).startEntity(ENTITY);
+		ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID1);
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).endRecord();
+	}
+	
+	@Test 
+	public void testShouldUseLastIdLiteralAsNewId() {
+		idChangePipe.startRecord(OLD_RECORD_ID1);
+		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID1);
+		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID2);
+		idChangePipe.endRecord();
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
+		ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID1);
+		ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID2);
+		ordered.verify(receiver).endRecord();
+	}
+	
 }

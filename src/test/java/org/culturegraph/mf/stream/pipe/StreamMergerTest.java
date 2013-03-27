@@ -16,14 +16,19 @@
 package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.exceptions.FormatException;
-import org.culturegraph.mf.stream.pipe.StreamMerger;
+import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 
 /**
+ * Tests for {@link StreamMerger}.
+ * 
  * @author Christoph Böhme
  *
  */
@@ -41,8 +46,20 @@ public final class StreamMergerTest {
 	private static final String VALUE3 = "v3";
 	private static final String VALUE4 = "v4";
 	
+	private StreamMerger streamMerger;
+	
+	@Mock
+	private StreamReceiver receiver;
+	
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		streamMerger = new StreamMerger();
+		streamMerger.setReceiver(receiver);
+	}
+	
 	@Test
-	public  void testMerge() {
+	public  void testShouldMergeSequencesOfRecordsWithTheSameId() {
 		final EventList buffer = new EventList();
 
 		buffer.startRecord(ID1);

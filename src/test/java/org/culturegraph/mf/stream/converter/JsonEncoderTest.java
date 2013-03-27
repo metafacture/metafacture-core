@@ -57,7 +57,6 @@ public final class JsonEncoderTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		
 		encoder = new JsonEncoder();
 		encoder.setReceiver(receiver); 
 	}

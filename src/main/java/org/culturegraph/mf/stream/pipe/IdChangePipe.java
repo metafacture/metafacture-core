@@ -37,8 +37,9 @@ public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
 	private String idName = StreamConstants.ID;
 	private final StreamBuffer streamBuffer = new StreamBuffer();
 	private String currentIdentifier;
+	private String originalIdentifier;
 	private int depth;
-	private boolean keepIdless;
+	private boolean keepIdless = true;
 
 	public IdChangePipe() {
 		super();
@@ -61,20 +62,23 @@ public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
 	public void startRecord(final String identifier) {
 		assert !isClosed();
 		currentIdentifier = null;
+		originalIdentifier = identifier;
 		depth = 0;
 	}
 
 	@Override
 	public void endRecord() {
 		assert !isClosed();
-		if (null != currentIdentifier || keepIdless) {
-			getReceiver().startRecord(currentIdentifier);
+		if (currentIdentifier != null || keepIdless) {
+			if (currentIdentifier == null) {
+				getReceiver().startRecord(originalIdentifier);
+			} else {
+				getReceiver().startRecord(currentIdentifier);
+			}
 			streamBuffer.replay();
-			streamBuffer.clear();
 			getReceiver().endRecord();
-		}else{
-			streamBuffer.clear();
 		}
+		streamBuffer.clear();
 	}
 
 	@Override

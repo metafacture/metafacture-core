@@ -46,7 +46,6 @@ public final class Utf8NormalizerTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		
 		normalizer = new Utf8Normalizer();
 		normalizer.setReceiver(receiver);
 	}
