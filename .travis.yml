@@ -5,8 +5,8 @@ jdk:
 env:
   global:
     - SONATYPE_USERNAME=culturegraph
-    - secure: "SUVokr6x5uqPnSBgtc/5AqN2ZKXhbW5/lIt0UQ3agVXH6nGuINdgZ3mNN0v2VrzxXpc0NUldwrDqfwY9r1JJZFq4jX+6iVRQ3b8e5efGKO+eEFAPna48Z5UE6RgGjHEnY7h7m/ptQoLouR514Z31ZUTQpq7vTyGSNZyEOvBZOQ4="
-    
+    - secure:"IofaduUmiYcS340quETGzFcQkyLC+zYnn4FT4WuafMia7xW+WzM25XXkRauGU+J3xpW3w/2msCkXNdnlER3tl78nsE71X2etEIokHxBOhRYSZxD6JMiBAdDEdl4Qqkyws1huSJmzCZE3L/yP5P+BathKTf6jtjZqnC3KJZPl6U8="
+
 after_success:
   - python travis-ci/configure-mvn.py
   - mvn clean deploy --settings ~/.m2/mySettings.xml -Dgpg.skip=true -Psonatype-oss-release
