@@ -28,13 +28,14 @@ import org.slf4j.LoggerFactory;
  * Logs the string representation of every object.
  * 
  * @param <T> object type
- * 
+ * @deprecated use {@link ObjectExceptionLogger} instead.
  * @author Christoph Böhme
  * 
  */
 @Description("logs objects with the toString method")
 @In(Object.class)
 @Out(Object.class)
+@Deprecated
 public final class ObjectExceptionLogger<T> 
 		extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 	
