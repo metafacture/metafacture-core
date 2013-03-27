@@ -5,7 +5,7 @@ jdk:
 env:
   global:
     - SONATYPE_USERNAME=culturegraph
-    - secure:"MHD7Pu9itlb4SHcf1PUkJIG3kdUEA7ZWMIFyotFNnI+FfatTsZahTN4/HBXx+99d+YLijzm9psSItLh35RPSau8GfW0fQQYSNrv9jGiDug/3boi2FB1XASNONs+wW6RGwZtv+ayvqMxXZ7y/LIXuHcPN1hcm504aAe3MwSmMUV8="
+    - secure: "MHD7Pu9itlb4SHcf1PUkJIG3kdUEA7ZWMIFyotFNnI+FfatTsZahTN4/HBXx+99d+YLijzm9psSItLh35RPSau8GfW0fQQYSNrv9jGiDug/3boi2FB1XASNONs+wW6RGwZtv+ayvqMxXZ7y/LIXuHcPN1hcm504aAe3MwSmMUV8="
 
 
 
