@@ -33,14 +33,14 @@ public final class ObjectJavaIoWriter<T> implements ObjectReceiver<T> {
 
 	private Writer writer;
 	private boolean closed;
-	private final IOWriterFactory writerFactory;
+	private final IoWriterFactory writerFactory;
 
 	public ObjectJavaIoWriter(final Writer writer) {
 		this.writer = writer;
 		writerFactory = null;
 	}
 	
-	public ObjectJavaIoWriter(final IOWriterFactory writerFactory) {
+	public ObjectJavaIoWriter(final IoWriterFactory writerFactory) {
 		this.writerFactory = writerFactory;
 		this.writer = writerFactory.createWriter();
 	}
