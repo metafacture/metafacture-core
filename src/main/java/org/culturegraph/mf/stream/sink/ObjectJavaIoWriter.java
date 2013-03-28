@@ -31,11 +31,18 @@ import org.culturegraph.mf.framework.ObjectReceiver;
 
 public final class ObjectJavaIoWriter<T> implements ObjectReceiver<T> {
 
-	private final Writer writer;
+	private Writer writer;
 	private boolean closed;
+	private final IOWriterFactory writerFactory;
 
 	public ObjectJavaIoWriter(final Writer writer) {
 		this.writer = writer;
+		writerFactory = null;
+	}
+	
+	public ObjectJavaIoWriter(final IOWriterFactory writerFactory) {
+		this.writerFactory = writerFactory;
+		this.writer = writerFactory.createWriter();
 	}
 
 	@Override
@@ -51,7 +58,11 @@ public final class ObjectJavaIoWriter<T> implements ObjectReceiver<T> {
 
 	@Override
 	public void resetStream() {
-		throw new UnsupportedOperationException("Cannot reset ObjectJavaIoWriter");
+		if(writerFactory==null){
+			throw new UnsupportedOperationException("Cannot reset ObjectJavaIoWriter. No IOWriterFactory set.");
+		}
+		writer = writerFactory.createWriter();
+		
 	}
 
 	@Override
