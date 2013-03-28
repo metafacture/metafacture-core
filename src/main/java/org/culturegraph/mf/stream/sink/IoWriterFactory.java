@@ -24,6 +24,6 @@ import java.io.Writer;
  * @author markus geipel
  *
  */
-public interface IOWriterFactory {
+public interface IoWriterFactory {
 	Writer createWriter();
 }
