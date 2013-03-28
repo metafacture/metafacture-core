@@ -17,6 +17,8 @@ package org.culturegraph.mf.stream.sink;
 
 
 
+import org.culturegraph.mf.framework.DefaultObjectReceiver;
+import org.culturegraph.mf.framework.StreamReceiver;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,6 +31,9 @@ import org.junit.Test;
 public final class SimpleXmlWriterTest {
 
 	
+	private static final String TAG = "tag";
+	private static final String VALUE = "value";
+
 	//TODO add more tests!
 	
 	
@@ -39,4 +44,59 @@ public final class SimpleXmlWriterTest {
 		SimpleXmlWriter.escape(builder , "&<>'\" üäö");
 		Assert.assertEquals("&amp;&lt;&gt;&apos;&quot; üäö", builder.toString());
 	}
+	
+	@Test
+	public void testShouldHandleSeparateRoots(){
+		final SimpleXmlWriter writer = new SimpleXmlWriter();
+		writer.setRootTag("root");
+		writer.setRecordTag("record");
+		writer.setWriteXmlHeader(false);
+		
+		//separateRoots=false
+		final StringBuilder builder1 = new StringBuilder();
+		writer.setReceiver(new DefaultObjectReceiver<String>() {
+			@Override
+			public void process(final String obj) {
+				builder1.append(obj);
+			}
+		});
+
+		writer.setSeparateRoots(false);
+
+		
+		writeTwoRecords(writer);
+		
+		Assert.assertEquals("<root><record><tag>value</tag></record><record><tag>value</tag></record></root>", builder1.toString().replaceAll("[\\n\\s]", ""));
+	
+		//separateRoots=true
+		final StringBuilder builder2 = new StringBuilder();
+		writer.setReceiver(new DefaultObjectReceiver<String>() {
+			@Override
+			public void process(final String obj) {
+				builder2.append(obj);
+			}
+		});
+
+		writer.setSeparateRoots(true);
+		
+		writeTwoRecords(writer);
+		
+		Assert.assertEquals("<root><record><tag>value</tag></record></root><root><record><tag>value</tag></record></root>", builder2.toString().replaceAll("[\\n\\s]", ""));
+	
+	
+	}
+	
+
+
+	private static void writeTwoRecords(final StreamReceiver writer) {
+		writer.startRecord("X");
+		writer.literal(TAG, VALUE);
+		writer.endRecord();
+		writer.startRecord("Y");
+		writer.literal(TAG, VALUE);
+		writer.endRecord();
+		writer.closeStream();
+	}
+	
+	
 }

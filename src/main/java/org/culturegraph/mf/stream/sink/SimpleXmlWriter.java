@@ -31,6 +31,7 @@ import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.ResourceUtil;
+
 //import org.apache.commons.lang.StringEscapeUtils;
 
 /**
@@ -55,16 +56,16 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 	private String rootTag = "records";
 	private boolean start = true;
 	private boolean separateRoots;
-	private boolean writeXmlHeader=true;
+	private boolean writeXmlHeader = true;
 
 	public void setRootTag(final String rootTag) {
 		this.rootTag = rootTag;
 	}
-	
+
 	public void setWriteXmlHeader(final boolean writeXmlHeader) {
 		this.writeXmlHeader = writeXmlHeader;
 	}
-	
+
 	public void setSeparateRoots(final boolean separateRoots) {
 		this.separateRoots = separateRoots;
 	}
@@ -78,11 +79,11 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 
 	private void writeHeader() {
 		final StringBuilder builder = new StringBuilder();
-		
-		if(writeXmlHeader){
+
+		if (writeXmlHeader) {
 			builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 		}
-		
+
 		builder.append("<");
 		builder.append(rootTag);
 		for (Entry<String, String> entry : namespaces.entrySet()) {
@@ -116,7 +117,7 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 		} else {
 			getReceiver().process(element.toString());
 		}
-		if(separateRoots){
+		if (separateRoots) {
 			writeFooter();
 		}
 	}
@@ -153,7 +154,9 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 
 	@Override
 	protected void onCloseStream() {
-		writeFooter();
+		if (!separateRoots) {
+			writeFooter();
+		}
 	}
 
 	private void writeFooter() {
@@ -190,7 +193,7 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 			attributes.append(" ");
 			attributes.append(name);
 			attributes.append("=\"");
-			escape(attributes,value);
+			escape(attributes, value);
 			attributes.append("\"");
 		}
 
@@ -230,7 +233,7 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 
 			builder.append(">");
 
-			escape(builder,text);
+			escape(builder, text);
 
 			for (Element element : children) {
 				element.writeToStringBuilder(builder, indent + 1);
