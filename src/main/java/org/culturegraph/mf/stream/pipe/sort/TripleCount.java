@@ -15,6 +15,8 @@
  */
 package org.culturegraph.mf.stream.pipe.sort;
 
+import java.util.Comparator;
+
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
@@ -29,20 +31,25 @@ import org.culturegraph.mf.types.Triple;
 @In(NamedValue.class)
 @Out(NamedValue.class)
 public final class TripleCount extends AbstractTripleSort {
-
+	
 	public static final String DEFAULT_COUNTP_REDICATE = "count";
-	private Triple current;
+
+	private static final Triple INIT = new Triple("", "", "");
+		
+	private Triple current = INIT;
 	private int count;
 	private String countPredicate = DEFAULT_COUNTP_REDICATE;
+	private Comparator<Triple> comparator;
 	
 	@Override
 	protected void sortedTriple(final Triple triple) {
 		
-		if(current==null){
+		if(current==INIT){
 			current = triple;
+			comparator = createComparator();
 		}
 
-		if(getComparator().compare(current, triple)==0){
+		if(comparator.compare(current, triple)==0){
 			++count;
 		}else{
 			writeResult();
@@ -61,7 +68,7 @@ public final class TripleCount extends AbstractTripleSort {
 	}
 	
 	private void writeResult() {
-		final CompareBy compareBy = getComparatorType();
+		final Compare compareBy = getCompare();
 		switch (compareBy) {
 		case ALL:
 			getReceiver().process(new Triple(current.toString(), countPredicate , String.valueOf(count)));
@@ -79,8 +86,7 @@ public final class TripleCount extends AbstractTripleSort {
 		}
 	}
 
-	public void setCountBy(final CompareBy countBy){
-		setComparator(countBy);
+	public void setCountBy(final Compare countBy){
+		setCompare(countBy);
 	}
-
 }

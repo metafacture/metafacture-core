@@ -13,63 +13,51 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe;
+package org.culturegraph.mf.stream.converter;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
- * Logs the string representation of every object.
+ * Adds a String preamle and/or epilogue to the stream
  * 
- * @param <T> object type
- * 
- * @author Christoph Böhme
+ * @author Markus Geipel
  * 
  */
-@Description("logs objects with the toString method")
-@In(Object.class)
-@Out(Object.class)
-public final class ObjectExceptionLogger<T> 
-		extends DefaultObjectPipe<T, ObjectReceiver<T>> {
+@Description("Adds a String preamle and/or epilogue to the stream")
+@In(String.class)
+@Out(String.class)
+public final class PreambleEpilogueAdder extends DefaultObjectPipe<String, ObjectReceiver<String>> {
+
+	private String preamble = "";
+	private String epilogue = "";
+	private boolean init = true;
 	
-	private static final Logger LOG = LoggerFactory.getLogger(ObjectExceptionLogger.class);
-
-	private final String logPrefix;
-
-	public ObjectExceptionLogger() {
-		this("");
+	public void setEpilogue(final String epilogue) {
+		this.epilogue = epilogue;
 	}
 	
-	public ObjectExceptionLogger(final String logPrefix) {
-		super();
-		this.logPrefix = logPrefix;
+	public void setPreamble(final String preamble) {
+		this.preamble = preamble;
 	}
 
 	@Override
-	public void process(final T obj) {
-		
-		try{
-			getReceiver().process(obj);
-		}catch(Exception e){
-			LOG.error(logPrefix, e);
+	public void process(final String obj) {
+		if(init){
+			getReceiver().process(preamble);
+			init = false;
 		}
-		
-	}
-
-	@Override
-	protected void onResetStream() {
-		LOG.debug("{}resetStream", logPrefix);
+		getReceiver().process(obj);
 	}
 	
 	@Override
 	protected void onCloseStream() {
-		LOG.debug("{}closeStream", logPrefix);
+		if(!epilogue.isEmpty()){
+			getReceiver().process(epilogue);
+		}
 	}
-
 }

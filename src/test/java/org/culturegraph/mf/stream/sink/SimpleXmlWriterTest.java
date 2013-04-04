@@ -13,16 +13,30 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.morph.maps;
+package org.culturegraph.mf.stream.sink;
 
-import org.culturegraph.mf.test.TestSuite;
-import org.culturegraph.mf.test.TestSuite.TestDefinitions;
-import org.junit.runner.RunWith;
 
+
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
- * @author Markus Michael Geipel
+ * Tests {@link SimpleXmlWriter}.
+ * 
+ * @author Markus Geipel
+ *
  */
-@RunWith(TestSuite.class)
-@TestDefinitions({"FileMap.xml", "JavaMap.xml"})
-public final class MapsTest {/*bind to xml test*/}
+public final class SimpleXmlWriterTest {
+
+	
+	//TODO add more tests!
+	
+	
+	@Test
+	public void testShouldOnlyEscapeFiveChars() {
+		
+		final StringBuilder builder = new StringBuilder();
+		SimpleXmlWriter.escape(builder , "&<>'\" üäö");
+		Assert.assertEquals("&amp;&lt;&gt;&apos;&quot; üäö", builder.toString());
+	}
+}

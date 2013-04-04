@@ -89,8 +89,7 @@ public final class JsonEncoder extends
 	@Override
 	public void literal(final String name, final String value) {
 		try {
-			final JsonStreamContext ctx = jsonGenerator.getOutputContext();
-			if (ctx.inObject()) {
+			if (jsonGenerator.getOutputContext().inObject()) {
 				jsonGenerator.writeFieldName(name);
 			}
 			if (value == null) {
@@ -110,12 +109,12 @@ public final class JsonEncoder extends
 		try {
 			final JsonStreamContext ctx = jsonGenerator.getOutputContext();
 			if (name.endsWith(ARRAY_MARKER)) {
-				if (ctx.inObject()) {
+				if (!ctx.inRoot()) {
 					jsonGenerator.writeFieldName(name.substring(0, name.length() - ARRAY_MARKER.length()));
 				}
 				jsonGenerator.writeStartArray(); 				
 			} else {		
-				if (ctx.inObject()) {
+				if (!ctx.inRoot()) {
 					jsonGenerator.writeFieldName(name);
 				}
 				jsonGenerator.writeStartObject();
