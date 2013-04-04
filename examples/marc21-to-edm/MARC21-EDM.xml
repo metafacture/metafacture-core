@@ -123,7 +123,7 @@
 			<compose prefix="http://d-nb.info/gnd/"/>
 		</data>
 		<entity name="skos:Concept" sameEntity="true">
-			<data source="@conceptID" name="~rdf:resource"/>
+			<data source="@conceptID" name="~rdf:about"/>
 			<data source="650?7.a|60017.a|61017.a|61017.a|61117.a|630??.a|655?7.a|651?7.a|648??.a" name="skos:prefLabel$de"/>
 		</entity>
 		<combine name="@publisherID" value="#/agent/${id}-${c}" reset="false">
@@ -222,7 +222,7 @@
 			<data source="@recordID" name="~rdf:about"/>
 			<data name="*edm:wasPresent" source="@pEventID|@cEventID"/>
 			<data source="@mat" name="dc:type"/>
-			<data source="@mat" name="edm:type"/>
+			
 			<data name="dc:publisher" source="2603 .b"/>
 			<data name="dcterms:extent" source="300??.a">
 				<not-equals string="Online-Ressource"/>
@@ -324,6 +324,7 @@
 					</data>
 				</combine>
 			</choose>
+			<data source="@mat" name="edm:type"/>
 			<data name="*edm:rights" source="@isil">
 				<lookup in="rights"/>
 			</data>
