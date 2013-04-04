@@ -1,17 +1,13 @@
-# Set default behaviour, in case users don't have core.autocrlf set:
-* text=auto
-
-# Explicitly declare text files we want to always be normalized 
-# and converted to native line endings on checkout
-*.java text diff=java
-*.xml text
-*.xsd text
-*.flux text
-*.g text
-*.properties text
-*.txt text
-*.js text
-*.fom text
+# Explicitly declare text files we want to always be normalized:
+*.java eol=lf diff=java
+*.xml eol=lf
+*.xsd eol=lf
+*.flux eol=lf
+*.g eol=lf
+*.properties eol=lf
+*.txt eol=lf
+*.js eol=lf
+*.fom eol=lf
 
 # Platform-specific scripts should always use  
 # their native end-of-line markers:
