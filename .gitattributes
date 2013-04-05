@@ -5,6 +5,7 @@
 *.flux eol=lf
 *.g eol=lf
 *.properties eol=lf
+*.pica eol=lf
 *.txt eol=lf
 *.js eol=lf
 *.fom eol=lf
