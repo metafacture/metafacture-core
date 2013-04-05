@@ -15,6 +15,7 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +44,11 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
 	private final Metamorph metamorph;
 	
 	public Splitter(final String morphDef) {
+		metamorph = new Metamorph(morphDef);
+		metamorph.setReceiver(singleValue);
+	}
+	
+	public Splitter(final Reader morphDef) {
 		metamorph = new Metamorph(morphDef);
 		metamorph.setReceiver(singleValue);
 	}

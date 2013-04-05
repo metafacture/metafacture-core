@@ -42,6 +42,44 @@
 			</cgxml:cgxml>
 		</result>
 	</test-case>
+	
+	<test-case name="flush literal should be received before flush">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="f" value="1"/>
+						<cgxml:literal name="f" value="2"/>
+						<cgxml:literal name="d" value="a"/>
+						<cgxml:literal name="f" value="3"/>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph version="1" xmlns="http://www.culturegraph.org/metamorph">
+				<rules>
+					<concat delimiter="" name="d" flushWith="f">
+						<data source="d"/>
+						<data source="f"/>
+					</concat>
+				</rules>
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="d" value="1"/>
+						<cgxml:literal name="d" value="2"/>
+						<cgxml:literal name="d" value="a3"/>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
 
 
 	<test-case name="entity end info">

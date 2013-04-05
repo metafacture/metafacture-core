@@ -19,10 +19,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +31,6 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.stream.pipe.StreamFlattener;
-import org.culturegraph.mf.types.MultiHashMap;
 import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.StreamConstants;
 
@@ -58,24 +55,22 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 
 	private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
 
-	private final Registry<NamedValueReceiver> dataRegistry = new WildcardRegistry<NamedValueReceiver>();
-	private final List<NamedValueReceiver> elseSources = new ArrayList<NamedValueReceiver>();
-	
-//rivate final Registry<FlushListener> entityEndListenerRegistry = new WildcardRegistry<FlushListener>();
+	private final Registry<NamedValueReceiver> dataRegistry = MorphCollectionFactory.createRegistry();
+	private final List<NamedValueReceiver> elseSources = MorphCollectionFactory.createList();
 
-	private final MultiMap multiMap = new MultiHashMap();
-	private final List<Closeable> resources = new ArrayList<Closeable>();
+	private final MultiMap multiMap = MorphCollectionFactory.createMultiMap();
+	private final List<Closeable> resources = MorphCollectionFactory.createList();
 
 	private final StreamFlattener flattener = new StreamFlattener();
 
-	private final Deque<Integer> entityCountStack = new LinkedList<Integer>();
+	private final Deque<Integer> entityCountStack = MorphCollectionFactory.createDeque();
 	private int entityCount;
 	private int currentEntityCount;
 
 	private StreamReceiver outputStreamReceiver;
 	private MorphErrorHandler errorHandler = new DefaultErrorHandler();
 	private int recordCount;
-	private final List<FlushListener> recordEndListener = new ArrayList<FlushListener>();
+	private final List<FlushListener> recordEndListener = MorphCollectionFactory.createList();
 
 	protected Metamorph() {
 		// package private
@@ -140,9 +135,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 	}
 
 	protected void registerNamedValueReceiver(final String source, final NamedValueReceiver data) {
-
-		//final String path = data.getSource();
-
 		if (ELSE_KEYWORD.equals(source)) {
 			elseSources.add(data);
 		} else {
@@ -300,21 +292,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 		}
 
 	}
-
-	// /**
-	// * @param from
-	// * @param to
-	// */
-	// protected void addEntityMapping(final String from, final String toParam)
-	// {
-	// throw new NotImplementedException();
-	// //entityMap.put(from, toParam);
-	// }
-
-//	@Override
-//	public void addEntityEndListener(final FlushListener entityEndListener, final String entityName) {
-//		entityEndListenerRegistry.register(entityName, entityEndListener);
-//	}
 
 	@Override
 	public Map<String, String> getMap(final String mapName) {

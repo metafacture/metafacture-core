@@ -35,7 +35,7 @@
 						<entity name="ore:Aggregation">
 							<literal name="~rdf:about" value="hawaii_aggregation" />
 							<entity name="edm:isShownBy">
-								<literal name="~rdf:reference" value="hawaii" />
+								<literal name="~rdf:resource" value="hawaii" />
 							</entity>
 							<literal name="copyright" value="CC-0" />
 						</entity>

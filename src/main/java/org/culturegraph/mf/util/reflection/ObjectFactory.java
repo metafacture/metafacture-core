@@ -92,10 +92,11 @@ public class ObjectFactory<O> {
 	public final Map<String, Class<?>> getAttributes(final String classKey) {
 		if (classes.containsKey(classKey)) {
 			final Map<String, Class<?>> attributes = new HashMap<String, Class<?>>();
-			for(Entry<String, Method> entry:classMethodMaps.get(classes.get(classKey)).entrySet()){
+			final Set<Entry<String, Method>> entrySet = classMethodMaps.get(classes.get(classKey)).entrySet();
+			for(Entry<String, Method> entry:entrySet ){
 				attributes.put(entry.getKey(), entry.getValue().getParameterTypes()[0]);
-				return attributes;
 			}
+			return attributes;
 		}
 		return Collections.emptyMap();
 	}

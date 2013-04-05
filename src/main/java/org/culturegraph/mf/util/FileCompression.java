@@ -45,6 +45,7 @@ public enum FileCompression {
 		@Override
 		public InputStream createDecompressor(final InputStream readFrom) {
 			return new ProxyInputStream(readFrom) {
+				//nothing to do
 			};
 		}
 	},

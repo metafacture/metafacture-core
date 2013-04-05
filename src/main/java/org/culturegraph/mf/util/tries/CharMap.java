@@ -23,7 +23,7 @@ import java.util.Set;
 import org.apache.commons.lang.NotImplementedException;
 
 /**
- * A {@link Map} with byte as key. Used for set matching, tries etc. <br>
+ * A {@link Map} with char as key. Used for set matching, tries etc. <br>
  * <strong>Important:</strong> It is optimized for size in memory. No extra information for fast entry/keySet/values iteration etc. is held.
  * 
  * @author Markus Michael Geipel
@@ -32,7 +32,8 @@ import org.apache.commons.lang.NotImplementedException;
  */
 final class CharMap<V> implements Map<Character, V> {
 
-	private static final int INITIAL_CAPACITY = 1;
+	private static final int INITIAL_CAPACITY = 2;
+	private static final float LOAD_FACTOR = 1f;
 	private Entry<V>[] table;
 
 	private int size;
@@ -70,7 +71,7 @@ final class CharMap<V> implements Map<Character, V> {
 		}
 		return null;
 	}
-
+	
 	public V get(final char key) {
 		
 		Entry<V> entry = table[key % table.length];
@@ -95,7 +96,7 @@ final class CharMap<V> implements Map<Character, V> {
 	 * @return the parameter value
 	 */
 	public void put(final char key, final V value) {
-		if (size == table.length) {
+		if (size > LOAD_FACTOR * table.length) {
 			expand();
 		}
 		put(table, key, value);
@@ -194,7 +195,7 @@ final class CharMap<V> implements Map<Character, V> {
 	 * 
 	 * @param <V>
 	 */
-	private static class Entry<V> implements Map.Entry<Character, V> {
+	private static final class Entry<V> implements Map.Entry<Character, V> {
 		private final char key;
 		private V value;
 		private Entry<V> next;
