@@ -25,13 +25,22 @@ import net.b3e.mf.extra.util.DigestAlgorithm;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
+import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.In;
+import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.types.Triple;
 
 /**
+ * Uses the input string as a file name and computes a cryptographic hash the file.
+ * 
  * @author Christoph Böhme
  *
  */
+@Description("Uses the input string as a file name and computes a cryptographic hash the file")
+@In(String.class)
+@Out(Triple.class)
 public final class FileDigestCalculator extends
-		DefaultObjectPipe<String, ObjectReceiver<String>> {
+		DefaultObjectPipe<String, ObjectReceiver<Triple>> {
 
 	private static final int BUFFER_SIZE = 1024;
 	
@@ -40,15 +49,18 @@ public final class FileDigestCalculator extends
 	private static final char[] NIBBLE_TO_HEX = 
 			{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 	
+	private final DigestAlgorithm algorithm;
 	private final MessageDigest messageDigest;
 
 	
 	public FileDigestCalculator(final DigestAlgorithm algorithm) {
-		this.messageDigest = algorithm.getInstance();
+		this.algorithm = algorithm;
+		this.messageDigest = this.algorithm.getInstance();
 	}
 	
 	public FileDigestCalculator(final String algorithm) {
-		this.messageDigest = DigestAlgorithm.valueOf(algorithm.toUpperCase()).getInstance();
+		this.algorithm = DigestAlgorithm.valueOf(algorithm.toUpperCase());
+		this.messageDigest = this.algorithm.getInstance();
 	}
 
 	@Override
@@ -56,11 +68,10 @@ public final class FileDigestCalculator extends
 		final String digest;
 		try (final InputStream stream = new FileInputStream(file)) {
 			digest = bytesToHex(getDigest(stream, messageDigest));
-			
 		} catch (IOException e) {
 			throw new MetafactureException(e);
 		}
-		getReceiver().process(digest);
+		getReceiver().process(new Triple(file, algorithm.name(), digest));
 	}
 	
 	private static byte[] getDigest(final InputStream stream, final MessageDigest messageDigest) throws IOException {
