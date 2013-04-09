@@ -18,6 +18,7 @@ package org.culturegraph.mf.flux;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 import org.antlr.runtime.ANTLRInputStream;
@@ -39,7 +40,7 @@ public final class FluxCompiler {
 		// no instances
 	}
 	
-	public static Flow compile(final InputStream flux, final Map<String,String> vars ) throws RecognitionException, IOException{
+	public static List<Flow> compile(final InputStream flux, final Map<String,String> vars ) throws RecognitionException, IOException{
 		return compileFlow(compileAst(flux), vars);
 	}
 	
@@ -48,11 +49,11 @@ public final class FluxCompiler {
 		return new CommonTreeNodeStream(parser.flux().getTree());
 	}
 
-	private static Flow compileFlow(final CommonTreeNodeStream treeNodes, final Map<String, String> vars)
+	private static List<Flow> compileFlow(final CommonTreeNodeStream treeNodes, final Map<String, String> vars)
 			throws RecognitionException {
 		final FlowBuilder flowBuilder = new FlowBuilder(treeNodes);
 		flowBuilder.addVaribleAssignements(vars);
-		final Flow flow = flowBuilder.flux();
-		return flow;
+		final List<Flow> flows = flowBuilder.flux();
+		return flows;
 	}
 }

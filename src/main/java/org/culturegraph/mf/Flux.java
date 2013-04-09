@@ -95,8 +95,10 @@ public final class Flux {
 			}
 
 			// run parser and builder
-			FluxCompiler.compile(ResourceUtil.getStream(fluxFile), vars).start();
-			//flow.start();
+			final List<Flow> flows = FluxCompiler.compile(ResourceUtil.getStream(fluxFile), vars);
+			for (Flow flow : flows) {
+				flow.start();
+			}
 		}
 	}
 

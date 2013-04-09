@@ -34,87 +34,93 @@ import org.culturegraph.mf.exceptions.FluxParseException;
 }
 
 @members {
-Flow flow = new Flow();
-Map<String, String> vars = new HashMap<String, String>();
+private Flow flow;
+private Map<String, String> vars = new HashMap<String, String>();
 
 public final void addVaribleAssignements(final Map<String, String> vars) {
 	this.vars.putAll(vars);
 }
 }
 
-flux returns [Flow flow]
+flux returns [List<Flow> flows = new ArrayList<Flow>()]
   :
-  varDefs mainflow 
-                   {
-                    $flow = this.flow;
-                   }
+  varDefs
+  (
+    flow 
+        {
+         $flows.add(this.flow);
+        }
+  )*
+  ;
+
+flow
+@init {
+this.flow = new Flow();
+}
+  :
+  (
+    StdIn 
+         {
+          flow.setStdInStart();
+         }
+    | e=exp 
+           {
+            flow.setStringStart($e.value);
+           }
+  )
+  flowtail
   ;
 
 varDefs
   :
   varDef* 
-          {
-           
-          }
+         {
+          
+         }
   ;
 
 varDef
   :
   ^(ASSIGN name=Identifier e=exp?)
   
-   {
-    vars.put($name.text, $e.value);
-   }
+  {
+   vars.put($name.text, $e.value);
+  }
   |
   ^(DEFAULT name=Identifier e=exp?)
   
-   {
-    if (!vars.containsKey($name.text)) {
-    	vars.put($name.text, $e.value);
-    }
+  {
+   if (!vars.containsKey($name.text)) {
+   	vars.put($name.text, $e.value);
    }
-  ;
-
-mainflow
-  :
-  (
-    StdIn 
-          {
-           flow.setStdInStart();
-          }
-    | e=exp 
-            {
-             flow.setStringStart($e.value);
-            }
-  )
-  flow
+  }
   ;
 
 tee
   :
   ^(
     TEE 
-        {
-         flow.startTee();
-         //System.out.println("start tee");
-        }
-    (
-      ^(SUBFLOW flow)
-      
        {
-        flow.endSubFlow();
-        // System.out.println("end subflow");
+        flow.startTee();
+        //System.out.println("start tee");
        }
+    (
+      ^(SUBFLOW flowtail)
+      
+      {
+       flow.endSubFlow();
+       // System.out.println("end subflow");
+      }
     )+
    )
   
-   {
-    flow.endTee();
-    //System.out.println("end tee");
-   }
+  {
+   flow.endTee();
+   //System.out.println("end tee");
+  }
   ;
 
-flow
+flowtail
   :
   (
     pipe
@@ -125,22 +131,22 @@ flow
 exp returns [String value]
   :
   s=StringLiteral 
-                  {
-                   $value = $s.text;
-                  }
+                 {
+                  $value = $s.text;
+                 }
   | id=Identifier 
-                  {
-                   $value = vars.get($id.text);
-                   if ($value == null) {
-                   	throw new FluxParseException("Variable " + $id.text + " not assigned.");
-                   }
+                 {
+                  $value = vars.get($id.text);
+                  if ($value == null) {
+                  	throw new FluxParseException("Variable " + $id.text + " not assigned.");
                   }
+                 }
   |
   ^('+' e1=exp e2=exp)
   
-   {
-    $value = $e1.value + $e2.value;
-   }
+  {
+   $value = $e1.value + $e2.value;
+  }
   ;
 
 pipe
@@ -153,35 +159,35 @@ final List<Object> cArgs = new ArrayList<Object>();
     name=QualifiedName
     (
       e=exp 
-            {
-             cArgs.add($e.value);
-            }
+           {
+            cArgs.add($e.value);
+           }
     )?
     (
       VarRef 
-             {
-              cArgs.add(Collections.unmodifiableMap(vars));
-             }
+            {
+             cArgs.add(Collections.unmodifiableMap(vars));
+            }
     )?
     (
       a=arg 
-            {
-             namedArgs.put($a.key, $a.value);
-            }
+           {
+            namedArgs.put($a.key, $a.value);
+           }
     )*
    )
   
-   {
-    flow.addElement(flow.createElement($name.text, namedArgs, cArgs));
-   }
+  {
+   flow.addElement(flow.createElement($name.text, namedArgs, cArgs));
+  }
   ;
 
 arg returns [String key, String value]
   :
   ^(ARG k=Identifier e=exp)
   
-   {
-    $key = $k.text;
-    $value = $e.value;
-   }
+  {
+   $key = $k.text;
+   $value = $e.value;
+  }
   ;

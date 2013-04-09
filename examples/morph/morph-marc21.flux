@@ -7,4 +7,3 @@ decode-marc21|
 morph(FLUX_DIR + "morph-marc21.xml")|
 encode("literals")|
 write("stdout");
-//write("file://???");

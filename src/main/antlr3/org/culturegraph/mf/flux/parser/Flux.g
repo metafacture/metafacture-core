@@ -42,10 +42,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 flux
   :
-  varDef* mainflow
-  // {
-  //System.out.println($mainflow.tree.toStringTree());
-  // }
+  varDef* flow*
   ;
 
 varDef
@@ -58,26 +55,26 @@ varDef
       ^(ASSIGN Identifier exp)
   ;
 
-mainflow
+flow
   :
   (
     StdIn
     | exp
   )
-  '|'! flow ';'!
+  '|'! flowtail ';'!
   ;
 
 tee
   :
-  ('{' flow '}')+
+  ('{' flowtail '}')+
     ->
       ^(
         TEE
-        ^(SUBFLOW flow)+
+        ^(SUBFLOW flowtail)+
        )
   ;
 
-flow
+flowtail
   :
   (
     pipe
