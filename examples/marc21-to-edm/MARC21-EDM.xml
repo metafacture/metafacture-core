@@ -118,13 +118,13 @@
 		<data name="*edm:rights" source="@isil">
 			<lookup in="rights"/>
 		</data>
-		<data source="650?7.0|60017.0|61017.0|61017.0|61117.0|630??.0|655?7.0|651?7.0|648??.0" name="@conceptID">
+		<data source="650?7.0|60017.0|61017.0|61017.0|630??.0|655?7.0|651?7.0|648??.0" name="@conceptID">
 			<regexp match="^\(DE-588\)((.*))" format="${1}"/>
 			<compose prefix="http://d-nb.info/gnd/"/>
 		</data>
 		<entity name="skos:Concept" sameEntity="true">
 			<data source="@conceptID" name="~rdf:about"/>
-			<data source="650?7.a|60017.a|61017.a|61017.a|61117.a|630??.a|655?7.a|651?7.a|648??.a" name="skos:prefLabel$de"/>
+			<data source="650?7.a|60017.a|61017.a|61017.a|630??.a|655?7.a|651?7.a|648??.a" name="skos:prefLabel$de"/>
 		</entity>
 		<combine name="@publisherID" value="#/agent/${id}-${c}" reset="false">
 			<data source="001" name="id"/>
