@@ -21,12 +21,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.sql.Statement;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.culturegraph.mf.exceptions.MorphException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -35,23 +37,11 @@ import org.culturegraph.mf.exceptions.MorphException;
  */
 public final class JndiSqlMap extends AbstractReadOnlyMap<String, String> implements Closeable {
 
-	private boolean isUninitialized = true;
+	private static final Logger LOG = LoggerFactory.getLogger(JndiSqlMap.class);
 	private DataSource datasource;
 	private String query;
 	private Connection connection;
-
-	private PreparedStatement preparedStatement;
-
-	public void init() {
-
-		try {
-			connection = datasource.getConnection();
-			this.preparedStatement = connection.prepareStatement(query);
-		} catch (SQLException e) {
-			throw new MorphException(e);
-		}
-		isUninitialized = false;
-	}
+	
 
 	@Override
 	public void close() throws IOException {
@@ -82,20 +72,36 @@ public final class JndiSqlMap extends AbstractReadOnlyMap<String, String> implem
 
 	@Override
 	public String get(final Object key) {
-		if (isUninitialized) {
-			init();
-		}
 		String resultString = null;
 		final ResultSet resultSet;
+		PreparedStatement stmt = null;
+		Connection con = null;
 		try {
-			preparedStatement.setString(1, key.toString());
-			resultSet = preparedStatement.executeQuery();
+			con = datasource.getConnection();
+			stmt = con.prepareStatement(query);
+			stmt.setString(1, key.toString());
+			resultSet = stmt.executeQuery();
 			if (resultSet.first()) {
 				resultString = resultSet.getString(1);
 			}
 			resultSet.close();
 		} catch (SQLException e) {
 			throw new MorphException(e);
+		} finally {
+			if(stmt != null){
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					LOG.error("Can't close SQL-Statement.", e);
+				}
+			}
+			if(con != null){
+				try {
+					con.close();
+				} catch (SQLException e) {
+					LOG.error("Can't close Connection.", e);
+				}
+			}
 		}
 		return resultString;
 	}
