@@ -1,14 +1,16 @@
+* text=auto
+
 # Explicitly declare text files we want to always be normalized:
-*.java eol=lf diff=java
-*.xml eol=lf
-*.xsd eol=lf
-*.flux eol=lf
-*.g eol=lf
-*.properties eol=lf
-*.pica eol=lf
-*.txt eol=lf
-*.js eol=lf
-*.fom eol=lf
+*.java text diff=java
+*.xml text
+*.xsd text
+*.flux text
+*.g text
+*.properties text
+*.pica text
+*.txt text
+*.js text
+*.fom text
 
 # Platform-specific scripts should always use  
 # their native end-of-line markers:
