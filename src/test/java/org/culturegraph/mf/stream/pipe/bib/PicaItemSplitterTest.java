@@ -35,13 +35,13 @@ import org.mockito.MockitoAnnotations;
 public final class PicaItemSplitterTest {
 
 	private static final String RECORD_ID = "1";
-	private static final String ENTITY = "001@";
-	private static final String LITERAL1 = "a";
-	private static final String LITERAL2 = "b";
+	private static final String ENTITY = "001B";
+	private static final String LITERAL = "a";
 	private static final String VALUE = "val";
-	private static final String ENTITY_WITH_SUFFIX1 = "002/01";
-	private static final String ENTITY_WITH_SUFFIX2 = "002/02";
-	private static final String ENTITY_WITH_SUFFIX_STRIPPED = "002";
+	private static final String ITEM_MARKER_ENTITY = "101@";
+	private static final String ENTITY_WITH_SUFFIX1 = "002A/01";
+	private static final String ENTITY_WITH_SUFFIX2 = "002A/02";
+	private static final String ENTITY_WITH_SUFFIX_STRIPPED = "002A";
 	
 	private PicaItemSplitter picaItemSplitter;
 	
@@ -59,93 +59,142 @@ public final class PicaItemSplitterTest {
 	public void cleanup() {
 		picaItemSplitter.closeStream();
 	}
-	
+
 	@Test
-	public void testShouldSplitAtFirstEntityWithSuffix() {
+	public void testShouldSplitAtItemMarkerEntities() {
 		picaItemSplitter.startRecord(RECORD_ID);
-		picaItemSplitter.startEntity(ENTITY);
-		picaItemSplitter.literal(LITERAL1, VALUE);
-		picaItemSplitter.endEntity();
-		picaItemSplitter.startEntity(ENTITY_WITH_SUFFIX1);
-		picaItemSplitter.literal(LITERAL2, VALUE);
-		picaItemSplitter.endEntity();
+		emitEntity();
+		emitItemMarkerEntity();
+		emitEntity();
+		emitItemMarkerEntity();
+		emitEntity();
 		picaItemSplitter.endRecord();
 		
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
-		ordered.verify(receiver).startEntity(ENTITY);
-		ordered.verify(receiver).literal(LITERAL1, VALUE);
-		ordered.verify(receiver).endEntity();
+		verifyEntity(ordered);
 		ordered.verify(receiver).endRecord();
 		ordered.verify(receiver).startRecord(RECORD_ID);
-		ordered.verify(receiver).startEntity(ENTITY_WITH_SUFFIX_STRIPPED);
-		ordered.verify(receiver).literal(LITERAL2, VALUE);
-		ordered.verify(receiver).endEntity();
+		verifyEntity(ordered);
+		ordered.verify(receiver).endRecord();
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verifyEntity(ordered);
 		ordered.verify(receiver).endRecord();
 	}
 	
 	@Test
-	public void testShouldNotSplitIfTheFirstEntityHasASuffix() {
+	public void testShouldCreateEmptyRecordsIfNothingBeforeOrAfterItemMarkers() {
 		picaItemSplitter.startRecord(RECORD_ID);
-		picaItemSplitter.startEntity(ENTITY_WITH_SUFFIX1);
-		picaItemSplitter.literal(LITERAL1, VALUE);
-		picaItemSplitter.endEntity();
-		picaItemSplitter.endRecord();		
+		emitItemMarkerEntity();
+		emitItemMarkerEntity();
+		picaItemSplitter.endRecord();
+		
 
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
-		ordered.verify(receiver).startEntity(ENTITY_WITH_SUFFIX_STRIPPED);
-		ordered.verify(receiver).literal(LITERAL1, VALUE);
-		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).endRecord();
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		ordered.verify(receiver).endRecord();
+		ordered.verify(receiver).startRecord(RECORD_ID);
 		ordered.verify(receiver).endRecord();
 	}
 	
 	@Test
-	public void testShouldSplitAtFirstEntityWithoutSuffix() {
+	public void testShouldRemoveSuffix() {
 		picaItemSplitter.startRecord(RECORD_ID);
-		picaItemSplitter.startEntity(ENTITY_WITH_SUFFIX1);
-		picaItemSplitter.literal(LITERAL2, VALUE);
-		picaItemSplitter.endEntity();
-		picaItemSplitter.startEntity(ENTITY);
-		picaItemSplitter.literal(LITERAL1, VALUE);
-		picaItemSplitter.endEntity();
+		emitItemMarkerEntity();
+		emitSuffixedEntity1();
 		picaItemSplitter.endRecord();
 		
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
-		ordered.verify(receiver).startEntity(ENTITY_WITH_SUFFIX_STRIPPED);
-		ordered.verify(receiver).literal(LITERAL2, VALUE);
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();		
+		ordered.verify(receiver).endRecord();
 		ordered.verify(receiver).startRecord(RECORD_ID);
-		ordered.verify(receiver).startEntity(ENTITY);
-		ordered.verify(receiver).literal(LITERAL1, VALUE);
-		ordered.verify(receiver).endEntity();
+		verifySuffixedEntityStripped(ordered);
 		ordered.verify(receiver).endRecord();
 	}
 	
 	@Test
 	public void testShouldSplitWhenSuffixChanges() {
 		picaItemSplitter.startRecord(RECORD_ID);
-		picaItemSplitter.startEntity(ENTITY_WITH_SUFFIX1);
-		picaItemSplitter.literal(LITERAL1, VALUE);
-		picaItemSplitter.endEntity();
-		picaItemSplitter.startEntity(ENTITY_WITH_SUFFIX2);
-		picaItemSplitter.literal(LITERAL2, VALUE);
-		picaItemSplitter.endEntity();
+		emitItemMarkerEntity();		
+		emitSuffixedEntity1();
+		emitSuffixedEntity2();
 		picaItemSplitter.endRecord();
 		
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
-		ordered.verify(receiver).startEntity(ENTITY_WITH_SUFFIX_STRIPPED);
-		ordered.verify(receiver).literal(LITERAL1, VALUE);
-		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).endRecord();
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verifySuffixedEntityStripped(ordered);
 		ordered.verify(receiver).endRecord();		
 		ordered.verify(receiver).startRecord(RECORD_ID);
-		ordered.verify(receiver).startEntity(ENTITY_WITH_SUFFIX_STRIPPED);
-		ordered.verify(receiver).literal(LITERAL2, VALUE);
-		ordered.verify(receiver).endEntity();
+		verifySuffixedEntityStripped(ordered);
 		ordered.verify(receiver).endRecord();		
+	}
+
+	@Test
+	public void testShouldOnlySplitOnSuffixChangeAfterFirstItemMarkerEntity() {
+		picaItemSplitter.startRecord(RECORD_ID);
+		emitEntity();
+		emitSuffixedEntity1();
+		emitSuffixedEntity2();
+		picaItemSplitter.endRecord();
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verifyEntity(ordered);
+		verifySuffixedEntity1(ordered);
+		verifySuffixedEntity2(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+	
+	private void emitEntity() {
+		picaItemSplitter.startEntity(ENTITY);
+		picaItemSplitter.literal(LITERAL, VALUE);
+		picaItemSplitter.endEntity();		
+	}
+	
+	private void emitSuffixedEntity1() {
+		picaItemSplitter.startEntity(ENTITY_WITH_SUFFIX1);
+		picaItemSplitter.literal(LITERAL, VALUE);
+		picaItemSplitter.endEntity();		
+	}
+	
+	private void emitSuffixedEntity2() {
+		picaItemSplitter.startEntity(ENTITY_WITH_SUFFIX2);
+		picaItemSplitter.literal(LITERAL, VALUE);
+		picaItemSplitter.endEntity();		
+	}
+	
+	private void emitItemMarkerEntity() {
+		picaItemSplitter.startEntity(ITEM_MARKER_ENTITY);
+		picaItemSplitter.literal(LITERAL, VALUE);
+		picaItemSplitter.endEntity();
+	}
+	
+	private void verifyEntity(final InOrder ordered) {
+		ordered.verify(receiver).startEntity(ENTITY);
+		ordered.verify(receiver).literal(LITERAL, VALUE);
+		ordered.verify(receiver).endEntity();		
+	}
+	
+	private void verifySuffixedEntity1(final InOrder ordered) {
+		ordered.verify(receiver).startEntity(ENTITY_WITH_SUFFIX1);
+		ordered.verify(receiver).literal(LITERAL, VALUE);
+		ordered.verify(receiver).endEntity();		
+	}
+	
+	private void verifySuffixedEntity2(final InOrder ordered) {
+		ordered.verify(receiver).startEntity(ENTITY_WITH_SUFFIX2);
+		ordered.verify(receiver).literal(LITERAL, VALUE);
+		ordered.verify(receiver).endEntity();		
+	}
+	
+	private void verifySuffixedEntityStripped(final InOrder ordered) {
+		ordered.verify(receiver).startEntity(ENTITY_WITH_SUFFIX_STRIPPED);
+		ordered.verify(receiver).literal(LITERAL, VALUE);
+		ordered.verify(receiver).endEntity();		
 	}
 	
 }

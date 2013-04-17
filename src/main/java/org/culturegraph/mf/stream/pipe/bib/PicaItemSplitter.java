@@ -32,15 +32,18 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Out(StreamReceiver.class)
 public final class PicaItemSplitter extends DefaultStreamPipe<StreamReceiver> {
 
+	private static final String ITEM_MARKER = "101@";
 	private static final char SUFFIX_SEPARATOR = '/';
 	
 	private String currentSuffix;
+	private boolean inItemMarker;
 	private String identifier;
 	
 	@Override
 	public void startRecord(final String identifier) {
 		assert !isClosed();
 		this.currentSuffix = null;
+		this.inItemMarker = false;
 		this.identifier = identifier;
 		getReceiver().startRecord(identifier);
 	}
@@ -54,16 +57,28 @@ public final class PicaItemSplitter extends DefaultStreamPipe<StreamReceiver> {
 	@Override
 	public void startEntity(final String name) {
 		assert !isClosed();
+		
+		if (ITEM_MARKER.equals(name)) {
+			inItemMarker = true;
+			currentSuffix = "";
+			getReceiver().endRecord();
+			getReceiver().startRecord(identifier);
+			return;
+		}
+		
+		if (currentSuffix == null) {
+			getReceiver().startEntity(name);
+			return;
+		}
+		
 		int suffixStart = name.lastIndexOf(SUFFIX_SEPARATOR);
 		if (suffixStart == -1) {
 			suffixStart = name.length();
 		}
 		final String suffix = name.substring(suffixStart);
-		if (currentSuffix != null) {
-			if (!currentSuffix.equals(suffix)) {
-				getReceiver().endRecord();
-				getReceiver().startRecord(identifier);
-			}
+		if (!currentSuffix.equals(suffix)) {
+			getReceiver().endRecord();
+			getReceiver().startRecord(identifier);
 		}
 		currentSuffix = suffix;
 		getReceiver().startEntity(name.substring(0, suffixStart));
@@ -71,14 +86,21 @@ public final class PicaItemSplitter extends DefaultStreamPipe<StreamReceiver> {
 	
 	@Override 
 	public void endEntity() {
-		assert !isClosed();		
-		getReceiver().endEntity();
+		assert !isClosed();
+		
+		if (!inItemMarker) {
+			getReceiver().endEntity();
+		}
+		inItemMarker = false;		
 	}
 	
 	@Override
 	public void literal(final String name, final String value) {
-		assert !isClosed();		
-		getReceiver().literal(name, value);
+		assert !isClosed();	
+		
+		if (!inItemMarker) {
+			getReceiver().literal(name, value);
+		}
 	}
 	
 }
