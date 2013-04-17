@@ -16,6 +16,8 @@
 package org.culturegraph.mf.stream.pipe.bib;
 
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.junit.After;
@@ -83,7 +85,7 @@ public final class PicaItemSplitterTest {
 	}
 	
 	@Test
-	public void testShouldCreateEmptyRecordsIfNothingBeforeOrAfterItemMarkers() {
+	public void testShouldCreateEmptyRecordsIfNoContentIsBeforeOrAfterItemMarkers() {
 		picaItemSplitter.startRecord(RECORD_ID);
 		emitItemMarkerEntity();
 		emitItemMarkerEntity();
@@ -97,6 +99,25 @@ public final class PicaItemSplitterTest {
 		ordered.verify(receiver).endRecord();
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		ordered.verify(receiver).endRecord();
+		verifyNoMoreInteractions(receiver);
+	}
+
+	@Test
+	public void testShouldNotCreateTwoEmptyRecordsIfFirstEntityAfterItemMarkerHasSuffix() {
+		picaItemSplitter.startRecord(RECORD_ID);
+		emitEntity();
+		emitItemMarkerEntity();
+		emitSuffixedEntity1();
+		picaItemSplitter.endRecord();
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verifyEntity(ordered);
+		ordered.verify(receiver).endRecord();
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verifySuffixedEntityStripped(ordered);
+		ordered.verify(receiver).endRecord();	
+		verifyNoMoreInteractions(receiver);
 	}
 	
 	@Test
@@ -130,7 +151,7 @@ public final class PicaItemSplitterTest {
 		ordered.verify(receiver).endRecord();		
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verifySuffixedEntityStripped(ordered);
-		ordered.verify(receiver).endRecord();		
+		ordered.verify(receiver).endRecord();
 	}
 
 	@Test
@@ -147,6 +168,7 @@ public final class PicaItemSplitterTest {
 		verifySuffixedEntity1(ordered);
 		verifySuffixedEntity2(ordered);
 		ordered.verify(receiver).endRecord();
+		verifyNoMoreInteractions(receiver);
 	}
 	
 	private void emitEntity() {

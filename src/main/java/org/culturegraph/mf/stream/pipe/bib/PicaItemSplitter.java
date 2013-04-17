@@ -37,13 +37,14 @@ public final class PicaItemSplitter extends DefaultStreamPipe<StreamReceiver> {
 	
 	private String currentSuffix;
 	private boolean inItemMarker;
+	private boolean itemMarkerFound;
 	private String identifier;
 	
 	@Override
 	public void startRecord(final String identifier) {
 		assert !isClosed();
-		this.currentSuffix = null;
 		this.inItemMarker = false;
+		this.itemMarkerFound = false;
 		this.identifier = identifier;
 		getReceiver().startRecord(identifier);
 	}
@@ -60,13 +61,14 @@ public final class PicaItemSplitter extends DefaultStreamPipe<StreamReceiver> {
 		
 		if (ITEM_MARKER.equals(name)) {
 			inItemMarker = true;
-			currentSuffix = "";
+			itemMarkerFound = true;
+			currentSuffix = null;
 			getReceiver().endRecord();
 			getReceiver().startRecord(identifier);
 			return;
 		}
 		
-		if (currentSuffix == null) {
+		if (!itemMarkerFound) {
 			getReceiver().startEntity(name);
 			return;
 		}
@@ -76,7 +78,7 @@ public final class PicaItemSplitter extends DefaultStreamPipe<StreamReceiver> {
 			suffixStart = name.length();
 		}
 		final String suffix = name.substring(suffixStart);
-		if (!currentSuffix.equals(suffix)) {
+		if (currentSuffix != null && !currentSuffix.equals(suffix)) {
 			getReceiver().endRecord();
 			getReceiver().startRecord(identifier);
 		}
