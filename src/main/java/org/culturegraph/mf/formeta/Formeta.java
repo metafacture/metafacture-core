@@ -13,10 +13,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.types;
+package org.culturegraph.mf.formeta;
 
 /**
- * Constant definitions for the Metafor format.
+ * Constant definitions for the Formeta format.
  * 
  * @author Christoph Böhme
  *
@@ -38,4 +38,9 @@ public final class Formeta {
 	private Formeta() {
 		// No instances allowed
 	}
+
+	public static boolean isWhitespace(final char ch) {
+		return WHITESPACE.indexOf(ch) > -1;
+	}
+	
 }
