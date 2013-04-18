@@ -15,11 +15,16 @@
  */
 package org.culturegraph.mf.stream.converter;
 
-import org.culturegraph.mf.stream.converter.FormetaEncoder.Style;
-import org.culturegraph.mf.stream.pipe.ObjectBuffer;
-import org.junit.Assert;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
+import org.culturegraph.mf.formeta.formatter.FormatterStyle;
+import org.culturegraph.mf.framework.ObjectReceiver;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 
 /**
@@ -45,87 +50,65 @@ public final class FormetaEncoderTest {
 			"\t},\n" +
 			"\t'lit4': 'value \\'3\\''\n" +
 			"}";
-
-	private static final String INNER_RECORD = 
-			"inner{ lit1: value 1, ent1{ lit2: 'hello worlds\\'s end!' } }";
-	
-	private static final String OUTER_RECORD = 
-			"outer{" +
-			"nested:inner\\{ lit1\\: value 1\\, ent1\\{ lit2\\: \\'hello worlds\\\\\\'s end!\\' \\} \\}," +
-			"note:nested records" +
-			"}";
-	
-	private static final String BUFFER_NOT_EMPTY_MSG = "The buffer contains more records than expected";
 	
 	private FormetaEncoder encoder;
-	private ObjectBuffer<String> buffer;
+
+	@Mock
+	private ObjectReceiver<String> receiver;
 	
 	@Before
-	public void setupFlux() {
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
 		encoder = new FormetaEncoder();
-		buffer = new ObjectBuffer<String>();
-		
-		encoder.setReceiver(buffer);
+		encoder.setReceiver(receiver);
+	}
+	
+	@After
+	public void cleanup() {
+		encoder.closeStream();
 	}
 	
 	@Test
-	public void testConcise() {	
-		encoder.setStyle(Style.CONCISE);
+	public void testShouldOutputConciseRecordRepresentation() {	
+		encoder.setStyle(FormatterStyle.CONCISE);
 		
-		runEventSequence();
+		executeEvents();
 		
-		Assert.assertEquals(CONCISE_RECORD, buffer.pop());
-		Assert.assertNull(BUFFER_NOT_EMPTY_MSG, buffer.pop());
+		verify(receiver).process(CONCISE_RECORD);
 	}
 
 	@Test
-	public void testVerbose() {
-		encoder.setStyle(Style.VERBOSE);
+	public void testShouldOutputVerboseRecordRepresentation() {
+		encoder.setStyle(FormatterStyle.VERBOSE);
 		
-		runEventSequence();
+		executeEvents();
 		
-		Assert.assertEquals(VERBOSE_RECORD, buffer.pop());
-		Assert.assertNull(BUFFER_NOT_EMPTY_MSG, buffer.pop());
+		verify(receiver).process(VERBOSE_RECORD);
 	}
 
 	@Test
-	public void testMultiline() {
-		encoder.setStyle(Style.MULTILINE);
+	public void testShouldOutputMultilineRecordRepresentation() {
+		encoder.setStyle(FormatterStyle.MULTILINE);
 		
-		runEventSequence();
+		executeEvents();
 		
-		Assert.assertEquals(MULTILINE_RECORD, buffer.pop());
-		Assert.assertNull(BUFFER_NOT_EMPTY_MSG, buffer.pop());
+		verify(receiver).process(MULTILINE_RECORD);
 	}
 	
 	@Test
-	public void testIncompleteRecord() {
-		encoder.setStyle(Style.CONCISE);
+	public void testShouldIgnoreIncompleteRecord() {
+		encoder.setStyle(FormatterStyle.CONCISE);
 		
 		encoder.startRecord("incomplete");
 		encoder.literal("lit", "value");
 		encoder.startEntity("entity");
-		runEventSequence();
+		executeEvents();
 		
-		Assert.assertEquals(CONCISE_RECORD, buffer.pop());
-		Assert.assertNull(BUFFER_NOT_EMPTY_MSG, buffer.pop());
-	}
-	
-	@Test
-	public void testNestedRecords() {
-		encoder.setStyle(Style.CONCISE);
-		
-		encoder.startRecord("outer");
-		encoder.literal("nested", INNER_RECORD);
-		encoder.literal("note", "nested records");
-		encoder.endRecord();
-		encoder.closeStream();
-		
-		Assert.assertEquals(OUTER_RECORD, buffer.pop());
-		Assert.assertNull(BUFFER_NOT_EMPTY_MSG, buffer.pop());
+		verify(receiver).process(CONCISE_RECORD);
+		verifyNoMoreInteractions(receiver);
 	}
 
-	private void runEventSequence() {
+	private void executeEvents() {
 		encoder.startRecord("1");
 		encoder.literal("lit1", "value 1");
 		encoder.startEntity(" ent1");
@@ -134,6 +117,6 @@ public final class FormetaEncoderTest {
 		encoder.endEntity();
 		encoder.literal("lit4", "value '3'");
 		encoder.endRecord();
-		encoder.closeStream();
 	}
+	
 }
