@@ -20,40 +20,68 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /**
- * Stores an immutable name-value-pair. The hash code is 
- * precomputed during instantiation. 
+ * Stores an immutable name-value-pair. The hash code is precomputed during
+ * instantiation.
  * 
  * @author Markus Michael Geipel
  */
-public final class Triple  implements Comparable<Triple> {
-	
+public final class Triple implements Comparable<Triple> {
+
+	/**
+	 * Content type of triple object
+	 */
+	public enum ObjectType {
+		STRING, ENTITY
+	}
+
 	private static final int MAGIC1 = 23;
 	private static final int MAGIC2 = 31;
 	private static final int MAGIC3 = 17;
 	private final String subject;
 	private final String predicate;
 	private final String object;
+	private final ObjectType objectType;
+
 	private final int preCompHashCode;
-	
+
 	public Triple(final String subject, final String predicate, final String object) {
 		this.subject = subject;
 		this.predicate = predicate;
 		this.object = object;
+		objectType = ObjectType.STRING;
 		int result = MAGIC1;
 		result = MAGIC2 * result + predicate.hashCode();
 		result = MAGIC2 * result + object.hashCode();
 		result = MAGIC3 * result + subject.hashCode();
+		result = MAGIC3 * result + objectType.hashCode();
 		preCompHashCode = result;
+		
+
 	}
 	
-	
+	public Triple(final String subject, final String predicate, final String object, final ObjectType objectType) {
+		this.subject = subject;
+		this.predicate = predicate;
+		this.object = object;
+		this.objectType = objectType;
+		int result = MAGIC1;
+		result = MAGIC2 * result + predicate.hashCode();
+		result = MAGIC2 * result + object.hashCode();
+		result = MAGIC3 * result + subject.hashCode();
+		result = MAGIC3 * result + objectType.hashCode();
+		preCompHashCode = result;
+		
+
+	}
+
+
 	/**
 	 * @return object
 	 */
 	public String getObject() {
 		return object;
 	}
-	
+
 	/**
 	 * @return predicate
 	 */
@@ -62,17 +90,24 @@ public final class Triple  implements Comparable<Triple> {
 	}
 	
 	/**
+	 * @return object type
+	 */
+	public ObjectType getObjectType() {
+		return objectType;
+	}
+
+	/**
 	 * @return subject
 	 */
 	public String getSubject() {
 		return subject;
 	}
-	
-	public static Triple read(final ObjectInputStream in) throws IOException{
+
+	public static Triple read(final ObjectInputStream in) throws IOException {
 		return new Triple(in.readUTF(), in.readUTF(), in.readUTF());
 	}
-	
-	public void write(final ObjectOutputStream out) throws IOException{
+
+	public void write(final ObjectOutputStream out) throws IOException {
 		out.writeUTF(subject);
 		out.writeUTF(predicate);
 		out.writeUTF(object);
@@ -87,28 +122,29 @@ public final class Triple  implements Comparable<Triple> {
 	public boolean equals(final Object obj) {
 		if (obj instanceof Triple) {
 			final Triple triple = (Triple) obj;
-			return triple.preCompHashCode == preCompHashCode 
-					&& triple.predicate.equals(predicate) 
-					&& triple.object.equals(object)
-					&& triple.subject.equals(subject);
+			return triple.preCompHashCode == preCompHashCode && triple.predicate.equals(predicate)
+					&& triple.object.equals(object) && triple.subject.equals(subject) && triple.objectType == objectType;
 		}
 		return false;
 	}
 
 	@Override
-	public int compareTo(final Triple namedValue) {
-		int result = subject.compareTo(namedValue.subject);
+	public int compareTo(final Triple triple) {
+		int result = subject.compareTo(triple.subject);
 		if (result == 0) {
-			result = predicate.compareTo(namedValue.predicate);
-			if(result == 0){
-				return object.compareTo(namedValue.object);
+			result = predicate.compareTo(triple.predicate);
+			if (result == 0) {
+				result = object.compareTo(triple.object);
+				if(result == 0){
+					return objectType.compareTo(triple.objectType);
+				}
 			}
 		}
 		return result;
 	}
-	
+
 	@Override
 	public String toString() {
-		return subject + ":" + predicate + "=" + object; 
+		return subject + ":" + predicate + "=" + object + " (" + objectType + ")";
 	}
 }

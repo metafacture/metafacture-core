@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.culturegraph.mf.formeta.formatter.ConciseFormatter;
+import org.culturegraph.mf.formeta.formatter.Formatter;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
@@ -27,6 +29,8 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.Triple;
+import org.culturegraph.mf.types.Triple.ObjectType;
+import org.culturegraph.mf.util.StreamConstants;
 
 /**
  * 
@@ -42,12 +46,17 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 	public static final char SEPARATOR = '\u001e';
 
 	private static final Pattern REDIRECT_PATTERN = Pattern.compile("^\\{to:(.+)}(.+)$");
-	private static final String ID = "_id";
 
 	private final List<String> nameBuffer = new ArrayList<String>();
 	private final List<String> valueBuffer = new ArrayList<String>();
 	private String currentId;
 	private boolean redirect;
+	private final Formatter formatter = new ConciseFormatter();
+
+	private int entityDepth;
+	private String currentEntityName;
+
+
 
 	public void setRedirect(final boolean redirect) {
 		this.redirect = redirect;
@@ -56,26 +65,60 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 	@Override
 	public void startRecord(final String identifier) {
 		assert !isClosed();
+		entityDepth = 0;
 		this.currentId = identifier;
+	}
+
+	@Override
+	public void startEntity(final String name) {
+		if (entityDepth == 0) {
+			currentEntityName = name;
+			formatter.startGroup("");
+		} else {
+			formatter.startGroup(name);
+		}
+		++entityDepth;
+
+	}
+
+	@Override
+	public void endEntity() {
+		--entityDepth;
+		if (entityDepth == 0) {
+			formatter.endGroup();
+			dispatch(currentEntityName, formatter.toString(), ObjectType.ENTITY);
+			formatter.reset();
+		} else {
+			formatter.endGroup();
+		}
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
 		assert !isClosed();
+		if (entityDepth == 0) {
+			dispatch(name, value, ObjectType.STRING);
+		} else {
+			formatter.literal(name, value);
+		}
+
+	}
+
+	private void dispatch(final String name, final String value, final ObjectType type) {
 		if (redirect) {
-			if (ID.equals(name)) {
+			if (StreamConstants.ID.equals(name)) {
 				currentId = value;
 			} else {
 				final Matcher matcher = REDIRECT_PATTERN.matcher(name);
 				if (matcher.find()) {
-					getReceiver().process(new Triple(matcher.group(1), matcher.group(2), value));
+					getReceiver().process(new Triple(matcher.group(1), matcher.group(2), value, type));
 				} else {
 					nameBuffer.add(name);
 					valueBuffer.add(value);
 				}
 			}
 		} else {
-			getReceiver().process(new Triple(currentId, name, value));
+			getReceiver().process(new Triple(currentId, name, value, type));
 		}
 	}
 

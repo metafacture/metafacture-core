@@ -15,12 +15,15 @@
  */
 package org.culturegraph.mf.stream.pipe.sort;
 
+import org.culturegraph.mf.formeta.parser.FormetaParser;
+import org.culturegraph.mf.formeta.parser.PartialRecordEmitter;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.Triple;
+import org.culturegraph.mf.types.Triple.ObjectType;
 
 /**
  * Collects named values to form records.
@@ -32,8 +35,14 @@ import org.culturegraph.mf.types.Triple;
 @In(Triple.class)
 @Out(StreamReceiver.class)
 public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceiver> {
-
+	private final FormetaParser parser = new FormetaParser();
+	private final PartialRecordEmitter emitter = new PartialRecordEmitter();
+	
 	private String currentSubject;
+
+	public TripleCollect() {
+		parser.setEmitter(emitter);
+	}
 
 	@Override
 	public void process(final Triple triple) {
@@ -41,14 +50,25 @@ public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceive
 			currentSubject = triple.getSubject();
 			getReceiver().startRecord(currentSubject);
 		}
-
+		
 		if (currentSubject.equals(triple.getSubject())) {
-			getReceiver().literal(triple.getPredicate(), triple.getObject());
+			decodeTriple(triple);
 		} else {
 			getReceiver().endRecord();
 			currentSubject = triple.getSubject();
 			getReceiver().startRecord(currentSubject);
+			decodeTriple(triple);
+		}
+	}
+
+	public void decodeTriple(final Triple triple) {
+		if(triple.getObjectType() == ObjectType.STRING){
 			getReceiver().literal(triple.getPredicate(), triple.getObject());
+		}else if (triple.getObjectType() == ObjectType.ENTITY){
+			emitter.setDefaultName(triple.getPredicate());
+			parser.parse(triple.getObject());
+		}else{
+			throw new UnsupportedOperationException(triple.getObjectType() + " can not yet be decoded");
 		}
 	}
 
@@ -62,6 +82,11 @@ public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceive
 	protected void onCloseStream() {
 		currentSubject = null;
 		getReceiver().endRecord();
+	}
+	
+	@Override
+	protected void onSetReceiver() {
+		emitter.setReceiver(getReceiver());
 	}
 
 }

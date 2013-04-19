@@ -24,13 +24,15 @@ public final class PartialRecordEmitter implements Emitter {
 
 	private StreamReceiver receiver;
 	private String defaultName;
-	
-	public PartialRecordEmitter() {
-		this(null);
+
+
+
+	public void setDefaultName(final String defaultName) {
+		this.defaultName = defaultName;
 	}
 	
-	public PartialRecordEmitter(final String defaultName) {
-		this.defaultName = defaultName;
+	public String getDefaultName() {
+		return defaultName;
 	}
 	
 	@Override
@@ -40,7 +42,7 @@ public final class PartialRecordEmitter implements Emitter {
 
 	@Override
 	public void startGroup(final String name, final int nestingLevel) {
-		if (defaultName != null && name.isEmpty()) {
+		if (nestingLevel == 0 && defaultName != null && name.isEmpty()) {
 			receiver.startEntity(defaultName);
 		} else {
 			receiver.startEntity(name);
@@ -54,7 +56,7 @@ public final class PartialRecordEmitter implements Emitter {
 
 	@Override
 	public void literal(final String name, final String value, final int nestingLevel) {
-		if (defaultName != null && name.isEmpty()) {
+		if (nestingLevel == 0 && defaultName != null && name.isEmpty()) {
 			receiver.literal(defaultName, value);
 		} else {
 			receiver.literal(name, value);
