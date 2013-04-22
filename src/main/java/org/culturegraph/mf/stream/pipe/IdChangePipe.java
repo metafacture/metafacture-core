@@ -57,7 +57,7 @@ public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
 	public void setKeepIdless(final boolean keepIdless) {
 		this.keepIdless = keepIdless;
 	}
-	
+
 	@Override
 	public void startRecord(final String identifier) {
 		assert !isClosed();
@@ -98,8 +98,9 @@ public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
 	public void literal(final String name, final String value) {
 		if (depth == 0 && idName.equals(name)) {
 			currentIdentifier = value;
+		} else {
+			streamBuffer.literal(name, value);
 		}
-		streamBuffer.literal(name, value);
 	}
 
 	@Override
