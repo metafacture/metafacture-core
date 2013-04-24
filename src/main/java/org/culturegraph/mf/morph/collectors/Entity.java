@@ -29,7 +29,7 @@ import org.culturegraph.mf.stream.pipe.StreamBuffer;
 
 
 /**
- * Corresponds to the <code>&lt;collect-entity&gt;</code> tag.
+ * Corresponds to the <code>&lt;entity&gt;</code> tag.
  * 
  * @author Markus Michael Geipel
  */
@@ -41,9 +41,15 @@ public final class Entity extends AbstractCollect {
 	private final List<NamedValueSource> sourceList = new ArrayList<NamedValueSource>();
 	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
 	private final StreamBuffer buffer = new StreamBuffer();
+	
+	private NamedValueSource nameSource;
 
 	public Entity(final Metamorph metamorph) {
 		super(metamorph);
+	}
+
+	public void setNameSource(final NamedValueSource nameSource) {
+		this.nameSource = nameSource;
 	}
 
 	@Override
@@ -72,7 +78,9 @@ public final class Entity extends AbstractCollect {
 
 	@Override
 	protected void receive(final String name, final String value, final NamedValueSource source) {
-		if (source instanceof Entity) {
+		if (source == nameSource) {
+			setName(value);
+		} else if (source instanceof Entity) {
 			final Entity child = (Entity) source;
 			child.write(buffer);
 		}else{
@@ -97,4 +105,5 @@ public final class Entity extends AbstractCollect {
 		sourceList.add(namedValueSource);
 		sourcesLeft.add(namedValueSource);
 	}
+	
 }

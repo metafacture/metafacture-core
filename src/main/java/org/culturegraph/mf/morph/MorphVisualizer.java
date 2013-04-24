@@ -229,6 +229,18 @@ public final class MorphVisualizer extends AbstractMetamorphDomWalker {
 		
 	}
 
+	@Override
+	protected void enterName(final Node node) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void exitName(final Node node) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void exit(final Node node) {
 		String name = resolvedAttribute(node, ATTRITBUTE.NAME);
 		if (name == null) {

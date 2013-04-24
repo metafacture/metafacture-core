@@ -53,8 +53,14 @@ public abstract class AbstractMetamorphDomWalker {
 	 * XML attributes
 	 */
 	public static enum ATTRITBUTE {
-		VERSION("version"), SOURCE("source"), VALUE("value"), NAME("name"), CLASS("class"), DEFAULT("default"), ENTITY_MARKER(
-				"entityMarker"), FLUSH_WITH("flushWith");
+		VERSION("version"), 
+		SOURCE("source"), 
+		VALUE("value"), 
+		NAME("name"),
+		CLASS("class"), 
+		DEFAULT("default"), 
+		ENTITY_MARKER("entityMarker"), 
+		FLUSH_WITH("flushWith");
 
 		private final String string;
 
@@ -71,6 +77,7 @@ public abstract class AbstractMetamorphDomWalker {
 	private static final String MAP = "map";
 	private static final String MACRO = "call-macro";
 	private static final String POSTPROCESS = "postprocess";
+	private static final String ENTITY_NAME = "entity-name";
 	private static final String SCHEMA_FILE = "schemata/metamorph.xsd";
 	private static final int LOWEST_COMPATIBLE_VERSION = 1;
 	private static final int CURRENT_VERSION = 1;
@@ -255,13 +262,17 @@ public abstract class AbstractMetamorphDomWalker {
 
 	protected abstract void handleFunctionDefinition(final Node functionDefNode);
 
+	protected abstract void enterData(Node node);
+
 	protected abstract void exitData(Node node);
 
-	protected abstract void enterData(Node node);
+	protected abstract void enterCollect(Node node);
 
 	protected abstract void exitCollect(Node node);
 
-	protected abstract void enterCollect(Node node);
+	protected abstract void enterName(Node node);	
+	
+	protected abstract void exitName(Node node);
 
 	protected abstract void handleFunction(Node functionNode);
 
@@ -272,6 +283,10 @@ public abstract class AbstractMetamorphDomWalker {
 			for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
 				if (POSTPROCESS.equals(child.getLocalName())) {
 					handlePostprocess(child);
+				} else if (ENTITY_NAME.equals(child.getLocalName())) {
+					enterName(child);
+					handleRule(child.getFirstChild());
+					exitName(child);
 				} else {
 					handleRule(child);
 				}

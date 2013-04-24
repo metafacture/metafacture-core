@@ -54,8 +54,8 @@
 		</complexType>
 	</element>
 
-	<element name="annotation" type="string" />
 	<element name="name" type="string" />
+	<element name="annotation" type="string" />
 
 	<element name="macros">
 		<annotation><documentation>Holds macro definitions</documentation></annotation>
@@ -269,10 +269,13 @@
 	<annotation><documentation>Create an entity</documentation></annotation>
 		<complexType>
 			<choice minOccurs="1" maxOccurs="unbounded">
+				<element ref="tns:entity-name" minOccurs="0" maxOccurs="1" />
 				<group ref="tns:literal-rule" minOccurs="0" maxOccurs="unbounded" />
 				<element ref="tns:entity" />
 			</choice>
-			<attribute name="name" type="string" use="required" />
+			<attribute name="name" type="string" use="optional">
+				<annotation><documentation>Name of the entity. If not given the entity must have an entity-name element.</documentation></annotation>
+			</attribute>
 			<attribute name="reset" type="boolean" use="optional"
 				default="false" />
 			<attribute name="sameEntity" type="boolean" use="optional"
@@ -296,6 +299,20 @@
 				<annotation><documentation>new name of the literal</documentation></annotation>
 			</attribute>
 			<!-- <attribute name="value" type="string" use="optional" /> -->
+		</complexType>
+	</element>
+
+	
+	
+	<element name="entity-name">
+		<annotation><documentation>
+			The literal defined here is used as the name of the entity. 
+			It overrides the value of the name-attribute of the entity element.
+		</documentation></annotation>
+		<complexType>
+			<sequence>
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="1" />
+			</sequence>
 		</complexType>
 	</element>
 

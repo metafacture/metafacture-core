@@ -262,4 +262,113 @@
 		</result>
 	</test-case>
 
+	<test-case name="shouldGetNameFromDataInEntityName">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1x">
+						<cgxml:literal name="data1" value="a1" />
+						<cgxml:literal name="data1" value="a2" />
+						<cgxml:literal name="data2" value="b" />
+					</cgxml:record>
+					<cgxml:record id="2x">
+						<cgxml:literal name="data2" value="c" />
+						<cgxml:literal name="data1" value="d" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:entity>
+						<mm:entity-name>
+							<mm:data source="data1">
+								<mm:compose prefix="entity:" />
+							</mm:data>
+						</mm:entity-name>
+						<mm:data source="data1" name="l1" />
+						<mm:data source="data2" name="l2" />
+					</mm:entity>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1x">
+						<cgxml:entity name="entity:a2">
+							<cgxml:literal name="l1" value="a1" />
+							<cgxml:literal name="l1" value="a2" />
+							<cgxml:literal name="l2" value="b" />
+						</cgxml:entity>
+					</cgxml:record>
+					<cgxml:record id="2x">
+						<cgxml:entity name="entity:d">
+							<cgxml:literal name="l2" value="c" />
+							<cgxml:literal name="l1" value="d" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="shouldGetNameFromCollectInEntityName">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1x">
+						<cgxml:literal name="data1" value="a1" />
+						<cgxml:literal name="data1" value="a2" />
+						<cgxml:literal name="data2" value="b" />
+					</cgxml:record>
+					<cgxml:record id="2x">
+						<cgxml:literal name="data2" value="c" />
+						<cgxml:literal name="data1" value="d" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:entity>
+						<mm:entity-name>
+							<mm:combine name="" value="entity:${a},${b}">
+								<mm:data source="data1" name="a" />
+								<mm:data source="data2" name="b" />
+							</mm:combine>
+						</mm:entity-name>
+						<mm:data source="data1" name="l1" />
+						<mm:data source="data2" name="l2" />
+					</mm:entity>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1x">
+						<cgxml:entity name="entity:a2,b">
+							<cgxml:literal name="l1" value="a1" />
+							<cgxml:literal name="l1" value="a2" />
+							<cgxml:literal name="l2" value="b" />
+						</cgxml:entity>
+					</cgxml:record>
+					<cgxml:record id="2x">
+						<cgxml:entity name="entity:d,c">
+							<cgxml:literal name="l2" value="c" />
+							<cgxml:literal name="l1" value="d" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+	
 </metamorph-test>
