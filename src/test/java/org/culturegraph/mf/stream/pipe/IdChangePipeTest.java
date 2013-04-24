@@ -18,14 +18,9 @@ package org.culturegraph.mf.stream.pipe;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.stream.converter.CGTextDecoder;
-import org.culturegraph.mf.stream.sink.EventList;
-import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.culturegraph.mf.util.StreamConstants;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -71,16 +66,18 @@ public final class IdChangePipeTest {
 		idChangePipe.startRecord(OLD_RECORD_ID1);
 		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID1);
 		idChangePipe.endRecord();
+		
 		idChangePipe.startRecord(OLD_RECORD_ID2);
 		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID2);
 		idChangePipe.endRecord();
 		
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
-		ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID1);
+		//ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID1);
 		ordered.verify(receiver).endRecord();
+		
 		ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
-		ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID2);
+		//ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID2);
 		ordered.verify(receiver).endRecord();
 	}
 	
@@ -98,7 +95,7 @@ public final class IdChangePipeTest {
 		ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
 		ordered.verify(receiver).endRecord();
 		ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
-		ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID2);
+		//ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID2);
 		ordered.verify(receiver).endRecord();
 	}
 
@@ -115,7 +112,7 @@ public final class IdChangePipeTest {
 		
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
-		ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID2);
+		//ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID2);
 		ordered.verify(receiver).endRecord();
 		verifyNoMoreInteractions(receiver);
 	}
@@ -145,8 +142,8 @@ public final class IdChangePipeTest {
 		
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
-		ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID1);
-		ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID2);
+		//ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID1);
+		//ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID2);
 		ordered.verify(receiver).endRecord();
 	}
 	
