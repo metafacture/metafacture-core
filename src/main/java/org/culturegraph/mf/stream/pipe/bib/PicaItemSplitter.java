@@ -32,26 +32,31 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Out(StreamReceiver.class)
 public final class PicaItemSplitter extends DefaultStreamPipe<StreamReceiver> {
 
+	public static final String ITEM_ENTITY_NAME = "_item";
+	
 	private static final String ITEM_MARKER = "101@";
 	private static final char SUFFIX_SEPARATOR = '/';
 	
 	private String currentSuffix;
 	private boolean inItemMarker;
 	private boolean itemMarkerFound;
-	private String identifier;
 	
 	@Override
 	public void startRecord(final String identifier) {
 		assert !isClosed();
-		this.inItemMarker = false;
-		this.itemMarkerFound = false;
-		this.identifier = identifier;
+		
+		inItemMarker = false;
+		itemMarkerFound = false;
 		getReceiver().startRecord(identifier);
 	}
 	
 	@Override
 	public void endRecord() {
-		assert !isClosed();		
+		assert !isClosed();
+		
+		if (itemMarkerFound) {
+			getReceiver().endEntity();
+		}
 		getReceiver().endRecord();
 	}
 	
@@ -60,11 +65,13 @@ public final class PicaItemSplitter extends DefaultStreamPipe<StreamReceiver> {
 		assert !isClosed();
 		
 		if (ITEM_MARKER.equals(name)) {
+			if (itemMarkerFound) {
+				getReceiver().endEntity();
+			}
+			getReceiver().startEntity(ITEM_ENTITY_NAME);
 			inItemMarker = true;
 			itemMarkerFound = true;
 			currentSuffix = null;
-			getReceiver().endRecord();
-			getReceiver().startRecord(identifier);
 			return;
 		}
 		
@@ -79,8 +86,10 @@ public final class PicaItemSplitter extends DefaultStreamPipe<StreamReceiver> {
 		}
 		final String suffix = name.substring(suffixStart);
 		if (currentSuffix != null && !currentSuffix.equals(suffix)) {
-			getReceiver().endRecord();
-			getReceiver().startRecord(identifier);
+			if (itemMarkerFound) {
+				getReceiver().endEntity();
+			}
+			getReceiver().startEntity(ITEM_ENTITY_NAME);
 		}
 		currentSuffix = suffix;
 		getReceiver().startEntity(name.substring(0, suffixStart));
