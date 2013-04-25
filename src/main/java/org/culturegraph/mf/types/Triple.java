@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import org.culturegraph.mf.exceptions.ShouldNeverHappenException;
+
 /**
  * Stores an immutable name-value-pair. The hash code is precomputed during
  * instantiation.
@@ -104,13 +106,18 @@ public final class Triple implements Comparable<Triple> {
 	}
 
 	public static Triple read(final ObjectInputStream in) throws IOException {
-		return new Triple(in.readUTF(), in.readUTF(), in.readUTF());
+		try {
+			return new Triple(in.readUTF(), in.readUTF(), in.readUTF(), (ObjectType) in.readObject());
+		} catch (ClassNotFoundException e) {
+			throw new ShouldNeverHappenException(e);
+		}
 	}
 
 	public void write(final ObjectOutputStream out) throws IOException {
 		out.writeUTF(subject);
 		out.writeUTF(predicate);
 		out.writeUTF(object);
+		out.writeObject(objectType);
 	}
 
 	@Override
