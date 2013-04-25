@@ -20,8 +20,12 @@ import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.types.Triple;
 import org.culturegraph.mf.types.Triple.ObjectType;
 import org.culturegraph.mf.util.StreamConstants;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 /**
  * Tests {@link StreamToTriples}
@@ -36,15 +40,27 @@ public final class StreamToTriplesTest {
 	private static final String ENTITY_NAME = "ename";
 	private static final String REC_ID = "id";
 	private static final String REC_ALT_ID = "altid";
+	private static final String RECORD_PREDICATE = "rec_pred";
 
+	private StreamToTriples toTriples;
+	
+	@Mock
+	private ObjectReceiver<Triple> receiver;
+	
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		toTriples = new StreamToTriples();
+		toTriples.setReceiver(receiver);
+	}
+	
+	@After
+	public void cleanup() {
+		toTriples.closeStream();
+	}
+	
 	@Test
 	public void testShouldBuildTripleFromLiteral() {
-		final StreamToTriples toTriples = new StreamToTriples();
-		@SuppressWarnings("unchecked")
-		final ObjectReceiver<Triple> receiver = Mockito.mock(ObjectReceiver.class);
-
-		toTriples.setReceiver(receiver);
-
 		toTriples.startRecord(REC_ID);
 		toTriples.literal(NAME, VALUE);
 		toTriples.endRecord();
@@ -54,12 +70,6 @@ public final class StreamToTriplesTest {
 
 	@Test
 	public void testShouldEncodeEntities() {
-		final StreamToTriples toTriples = new StreamToTriples();
-		@SuppressWarnings("unchecked")
-		final ObjectReceiver<Triple> receiver = Mockito.mock(ObjectReceiver.class);
-
-		toTriples.setReceiver(receiver);
-
 		toTriples.startRecord(REC_ID);
 		toTriples.startEntity(ENTITY_NAME);
 		toTriples.literal(NAME, VALUE);
@@ -69,20 +79,19 @@ public final class StreamToTriplesTest {
 		toTriples.endEntity();
 		toTriples.endRecord();
 
-		Mockito.verify(receiver).process(
-				new Triple(REC_ID,  ENTITY_NAME, Formeta.GROUP_START +NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE
-						+ Formeta.ITEM_SEPARATOR + ENTITY_NAME + Formeta.GROUP_START + NAME
-						+ Formeta.NAME_VALUE_SEPARATOR + VALUE + Formeta.GROUP_END + Formeta.GROUP_END,
-						ObjectType.ENTITY));
+		final String objectValue = 
+				Formeta.GROUP_START +
+					NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE + Formeta.ITEM_SEPARATOR + 
+					ENTITY_NAME + Formeta.GROUP_START + 
+						NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE + 
+					Formeta.GROUP_END + 
+				Formeta.GROUP_END;
+		Mockito.verify(receiver).process(new Triple(REC_ID,  ENTITY_NAME, objectValue, ObjectType.ENTITY));
 	}
 
 	@Test
 	public void testShouldRedirectOnMoveToInName() {
-		final StreamToTriples toTriples = new StreamToTriples();
 		toTriples.setRedirect(true);
-		@SuppressWarnings("unchecked")
-		final ObjectReceiver<Triple> receiver = Mockito.mock(ObjectReceiver.class);
-		toTriples.setReceiver(receiver);
 
 		toTriples.startRecord(REC_ID);
 		toTriples.literal("{to:" + REC_ALT_ID + "}" + NAME, VALUE);
@@ -93,11 +102,7 @@ public final class StreamToTriplesTest {
 
 	@Test
 	public void testShouldRedirectIfAltIdGiven() {
-		final StreamToTriples toTriples = new StreamToTriples();
 		toTriples.setRedirect(true);
-		@SuppressWarnings("unchecked")
-		final ObjectReceiver<Triple> receiver = Mockito.mock(ObjectReceiver.class);
-		toTriples.setReceiver(receiver);
 
 		toTriples.startRecord(REC_ID);
 		toTriples.literal(StreamConstants.ID, REC_ALT_ID);
@@ -107,4 +112,46 @@ public final class StreamToTriplesTest {
 		Mockito.verify(receiver).process(new Triple(REC_ALT_ID, NAME, VALUE));
 	}
 
+	@Test
+	public void testShouldEncodeWholeRecordsIfRecordPredicateIsGiven() {
+		toTriples.setRecordPredicate(RECORD_PREDICATE);
+		
+		toTriples.startRecord(REC_ID);
+		toTriples.startEntity(ENTITY_NAME);
+		toTriples.literal(NAME, VALUE);
+		toTriples.endEntity();
+		toTriples.startEntity(ENTITY_NAME);
+		toTriples.literal(NAME, VALUE);
+		toTriples.endEntity();
+		toTriples.endRecord();
+		
+		final String objectValue = 
+				Formeta.GROUP_START + 
+					ENTITY_NAME + Formeta.GROUP_START + 
+						NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE + 
+					Formeta.GROUP_END +
+					ENTITY_NAME + Formeta.GROUP_START + 
+						NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE + 
+					Formeta.GROUP_END + 
+				Formeta.GROUP_END;
+		Mockito.verify(receiver).process(new Triple(REC_ID, RECORD_PREDICATE, objectValue, ObjectType.ENTITY));
+	}
+	
+	@Test
+	public void testShouldNotRedirectIfRecordPredicateIsGiven() {
+		toTriples.setRecordPredicate(RECORD_PREDICATE);
+		toTriples.setRedirect(true);		
+
+		toTriples.startRecord(REC_ID);
+		toTriples.literal(StreamConstants.ID, REC_ALT_ID);
+		toTriples.literal(NAME, VALUE);
+		toTriples.endRecord();
+
+		final String objectValue = 
+				Formeta.GROUP_START + 
+					StreamConstants.ID + Formeta.NAME_VALUE_SEPARATOR + REC_ALT_ID + Formeta.ITEM_SEPARATOR +
+					NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE + 
+				Formeta.GROUP_END;
+		Mockito.verify(receiver).process(new Triple(REC_ID, RECORD_PREDICATE, objectValue));
+	}
 }

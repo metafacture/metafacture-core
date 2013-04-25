@@ -38,8 +38,10 @@ import org.culturegraph.mf.util.StreamConstants;
  * 
  */
 @Description("Takes literals from a stream and emits them as triples such "
-		+ "that the name and value become predicate and object and the record id the subject."
-		+ "If 'redirect' is true, use '_id' to change the id, or '{to:ID}NAME' to change the id of a single literal.")
+		+ "that the name and value become predicate and object and the record id the subject. "
+		+ "If 'redirect' is true, use '_id' to change the id, or '{to:ID}NAME' to change the id of a single literal. "
+		+ "Set 'recordPredicate' to encode a complete record in one triple. The value of 'recordPredicate' is used "
+		+ "as the predicate of the triple. If 'recordPredicate' is set, no redirections will be made.")
 @In(StreamReceiver.class)
 @Out(Triple.class)
 public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Triple>> {
@@ -48,45 +50,86 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 
 	private final List<String> nameBuffer = new ArrayList<String>();
 	private final List<String> valueBuffer = new ArrayList<String>();
-	private String currentId;
-	private boolean redirect;
 	private final Formatter formatter = new ConciseFormatter();
 
-	private int entityDepth;
-	private String currentEntityName;
+	private boolean redirect;
+	private String recordPredicate;
+	
+	private int nestingLevel;
+	private int encodeLevel;
+	private String predicateName;
+	private String currentId;
 
-
-
+	public boolean isRedirect() {
+		return redirect;
+	}
+	
 	public void setRedirect(final boolean redirect) {
 		this.redirect = redirect;
+	}
+	
+	public String getRecordPredicate() {
+		return recordPredicate;
+	}
+	
+	public void setRecordPredicate(final String recordPredicate) {
+		this.recordPredicate = recordPredicate;
 	}
 
 	@Override
 	public void startRecord(final String identifier) {
 		assert !isClosed();
-		entityDepth = 0;
-		this.currentId = identifier;
+		
+		currentId = identifier;
+		
+		if (recordPredicate != null) {
+			encodeLevel = 0;
+			startEncode(recordPredicate);
+		} else {
+			encodeLevel = 1;
+		}
+		
+		nestingLevel = 1;
+	}
+
+	@Override
+	public void endRecord() {
+		assert !isClosed();
+		
+		nestingLevel = 0;
+		
+		if (nestingLevel == encodeLevel) {
+			endEncode();
+		}
+		
+		if (redirect) {
+			for (int i = 0; i < nameBuffer.size(); ++i) {
+				getReceiver().process(new Triple(currentId, nameBuffer.get(i), valueBuffer.get(i)));
+			}
+			nameBuffer.clear();
+			valueBuffer.clear();
+		}
 	}
 
 	@Override
 	public void startEntity(final String name) {
-		if (entityDepth == 0) {
-			currentEntityName = name;
-			formatter.startGroup("");
-		} else {
+		assert !isClosed();
+		
+		if (nestingLevel > encodeLevel) {
 			formatter.startGroup(name);
+		} else {
+			startEncode(name);
 		}
-		++entityDepth;
-
+		++nestingLevel;
 	}
 
 	@Override
 	public void endEntity() {
-		--entityDepth;
-		if (entityDepth == 0) {
-			formatter.endGroup();
-			dispatch(currentEntityName, formatter.toString(), ObjectType.ENTITY);
-			formatter.reset();
+		assert !isClosed();
+		
+		--nestingLevel;
+		if (nestingLevel == encodeLevel) {
+			endEncode();
 		} else {
 			formatter.endGroup();
 		}
@@ -95,12 +138,23 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 	@Override
 	public void literal(final String name, final String value) {
 		assert !isClosed();
-		if (entityDepth == 0) {
-			dispatch(name, value, ObjectType.STRING);
-		} else {
+		
+		if (nestingLevel > encodeLevel) {
 			formatter.literal(name, value);
+		} else {
+			dispatch(name, value, ObjectType.STRING);
 		}
-
+	}
+	
+	private void startEncode(final String predicate) {
+		predicateName = predicate;
+		formatter.reset();
+		formatter.startGroup("");		
+	}
+	
+	private void endEncode() {
+		formatter.endGroup();
+		dispatch(predicateName, formatter.toString(), ObjectType.ENTITY);
 	}
 
 	private void dispatch(final String name, final String value, final ObjectType type) {
@@ -121,15 +175,4 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 		}
 	}
 
-	@Override
-	public void endRecord() {
-		assert !isClosed();
-		if (redirect) {
-			for (int i = 0; i < nameBuffer.size(); ++i) {
-				getReceiver().process(new Triple(currentId, nameBuffer.get(i), valueBuffer.get(i)));
-			}
-			nameBuffer.clear();
-			valueBuffer.clear();
-		}
-	}
 }
