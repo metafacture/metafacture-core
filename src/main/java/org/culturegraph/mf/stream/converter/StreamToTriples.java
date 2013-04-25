@@ -43,7 +43,6 @@ import org.culturegraph.mf.util.StreamConstants;
 @In(StreamReceiver.class)
 @Out(Triple.class)
 public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Triple>> {
-	public static final char SEPARATOR = '\u001e';
 
 	private static final Pattern REDIRECT_PATTERN = Pattern.compile("^\\{to:(.+)}(.+)$");
 
