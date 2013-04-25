@@ -27,6 +27,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -226,6 +227,17 @@ public final class MorphVisualizer extends AbstractMetamorphDomWalker {
 		idStack.pop();
 		childCountStack.pop();
 		exit(node);
+		
+	}
+
+	@Override
+	protected void enterName(final Node node) {
+		((Element)node.getFirstChild()).setAttribute(ATTRITBUTE.NAME.getString(), "<entity-name>");
+	}
+
+	@Override
+	protected void exitName(final Node node) {
+		// TODO Auto-generated method stub
 		
 	}
 

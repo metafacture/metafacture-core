@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.morph.collectors.Collect;
+import org.culturegraph.mf.morph.collectors.Entity;
 import org.culturegraph.mf.morph.functions.Function;
 import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
@@ -41,6 +42,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	private final Metamorph metamorph;
 	private final Deque<Collect> collectStack;
 	private Data data;
+	private boolean setEntityName;
 
 	protected MorphBuilder(final Metamorph metamorph) {
 		super();
@@ -133,6 +135,11 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		data = new Data();
 		data.setName(resolvedAttribute(dataNode, ATTRITBUTE.NAME));
 		metamorph.registerNamedValueReceiver(source, data);
+		
+		if (setEntityName) {
+			((Entity) collectStack.peek()).setNameSource(data);
+			setEntityName = false;
+		}
 	}
 
 	@Override
@@ -142,15 +149,25 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		} else {
 			final Collect parent = collectStack.peek();
 			data.endPipe(parent);
-			parent.addNamedValueSource(data);
+			parent.addNamedValueSource(data);			
 		}
-		data = null;
+		data = null;		
+	}
+	
+	@Override
+	protected void enterName(final Node nameNode) {
+		setEntityName = true;
+	}
+	
+	@Override
+	protected void exitName(final Node nameNode) {
+		setEntityName = false;
 	}
 
 	@Override
 	protected void enterCollect(final Node node) {
 		final Map<String, String> attributes = resolvedAttributeMap(node);
-		// must be set after recursive calls to flush decendents before parent
+		// must be set after recursive calls to flush descendants before parent
 		attributes.remove(ATTRITBUTE.FLUSH_WITH.getString());
 
 		if (!getCollectFactory().containsKey(node.getLocalName())) {
@@ -158,6 +175,11 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		}
 		final Collect collect = getCollectFactory().newInstance(node.getLocalName(), attributes, metamorph);
 
+		if (setEntityName) {
+			((Entity) collectStack.peek()).setNameSource(collect);
+			setEntityName = false;
+		}
+		
 		collectStack.push(collect);
 	}
 
@@ -171,7 +193,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 			parent.addNamedValueSource(collect);
 			collect.endPipe(parent);
 		}
-		// must be set after recursive calls to flush decendents before parent
+		// must be set after recursive calls to flush descendants before parent
 		final String flushWith = resolvedAttribute(node, ATTRITBUTE.FLUSH_WITH);
 		if (null != flushWith) {
 			collect.setWaitForFlush(true);
