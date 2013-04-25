@@ -41,7 +41,7 @@ import org.culturegraph.mf.util.StreamConstants;
 		+ "that the name and value become predicate and object and the record id the subject. "
 		+ "If 'redirect' is true, use '_id' to change the id, or '{to:ID}NAME' to change the id of a single literal. "
 		+ "Set 'recordPredicate' to encode a complete record in one triple. The value of 'recordPredicate' is used "
-		+ "as the predicate of the triple. If 'recordPredicate' is set, no redirections will be made.")
+		+ "as the predicate of the triple. If 'recordPredicate' is set, no {to:ID}NAME-style redirects are possible.")
 @In(StreamReceiver.class)
 @Out(Triple.class)
 public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Triple>> {
@@ -140,7 +140,11 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 		assert !isClosed();
 		
 		if (nestingLevel > encodeLevel) {
-			formatter.literal(name, value);
+			if (nestingLevel == 1 && redirect && StreamConstants.ID.equals(name)) {
+				currentId = value;
+			} else {
+				formatter.literal(name, value);
+			}
 		} else {
 			dispatch(name, value, ObjectType.STRING);
 		}

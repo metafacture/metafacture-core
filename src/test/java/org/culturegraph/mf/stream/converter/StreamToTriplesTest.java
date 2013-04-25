@@ -138,7 +138,7 @@ public final class StreamToTriplesTest {
 	}
 	
 	@Test
-	public void testShouldNotRedirectIfRecordPredicateIsGiven() {
+	public void testShouldRedirectEvenIfRecordPredicateIsGiven() {
 		toTriples.setRecordPredicate(RECORD_PREDICATE);
 		toTriples.setRedirect(true);		
 
@@ -149,9 +149,8 @@ public final class StreamToTriplesTest {
 
 		final String objectValue = 
 				Formeta.GROUP_START + 
-					StreamConstants.ID + Formeta.NAME_VALUE_SEPARATOR + REC_ALT_ID + Formeta.ITEM_SEPARATOR +
 					NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE + 
 				Formeta.GROUP_END;
-		Mockito.verify(receiver).process(new Triple(REC_ID, RECORD_PREDICATE, objectValue));
+		Mockito.verify(receiver).process(new Triple(REC_ALT_ID, RECORD_PREDICATE, objectValue));
 	}
 }
