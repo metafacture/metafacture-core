@@ -154,6 +154,16 @@ public final class JsonEncoderTest {
 		
 		verify(receiver).process(fixQuotes("{'Li1':[['V1','V2'],['V3','V4']]}"));
 	}
+	
+	@Test
+	public void testShouldOutputDuplicateNames() {
+		encoder.startRecord("");
+		encoder.literal(LITERAL1, VALUE1);
+		encoder.literal(LITERAL1, VALUE2);
+		encoder.endRecord();
+		
+		verify(receiver).process(fixQuotes("{'L1':'V1','L1':'V2'}"));
+	}
 
 	/*
 	 * Utility method which replaces all single quotes in a string with double quotes.
