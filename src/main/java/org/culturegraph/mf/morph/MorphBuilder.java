@@ -42,7 +42,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	private final Metamorph metamorph;
 	private final Deque<Collect> collectStack;
 	private Data data;
-	private Entity entity;
+	private boolean setEntityName;
 
 	protected MorphBuilder(final Metamorph metamorph) {
 		super();
@@ -136,9 +136,9 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		data.setName(resolvedAttribute(dataNode, ATTRITBUTE.NAME));
 		metamorph.registerNamedValueReceiver(source, data);
 		
-		if (entity != null) {
-			entity.setNameSource(data);
-			entity = null;
+		if (setEntityName) {
+			((Entity) collectStack.peek()).setNameSource(data);
+			setEntityName = false;
 		}
 	}
 
@@ -156,18 +156,18 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	
 	@Override
 	protected void enterName(final Node nameNode) {
-		entity = (Entity) collectStack.peek();
+		setEntityName = true;
 	}
 	
 	@Override
 	protected void exitName(final Node nameNode) {
-		entity = null;
+		setEntityName = false;
 	}
 
 	@Override
 	protected void enterCollect(final Node node) {
 		final Map<String, String> attributes = resolvedAttributeMap(node);
-		// must be set after recursive calls to flush decendents before parent
+		// must be set after recursive calls to flush descendants before parent
 		attributes.remove(ATTRITBUTE.FLUSH_WITH.getString());
 
 		if (!getCollectFactory().containsKey(node.getLocalName())) {
@@ -175,13 +175,13 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		}
 		final Collect collect = getCollectFactory().newInstance(node.getLocalName(), attributes, metamorph);
 
-		collectStack.push(collect);
-
-		if (entity != null) {
-			entity.setNameSource(collect);
-			entity = null;
+		if (setEntityName) {
+			((Entity) collectStack.peek()).setNameSource(collect);
+			setEntityName = false;
 		}
-}
+		
+		collectStack.push(collect);
+	}
 
 	@Override
 	protected void exitCollect(final Node node) {
