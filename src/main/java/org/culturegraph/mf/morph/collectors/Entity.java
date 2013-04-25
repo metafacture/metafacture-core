@@ -25,6 +25,7 @@ import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueReceiver;
 import org.culturegraph.mf.morph.NamedValueSource;
 import org.culturegraph.mf.stream.pipe.StreamBuffer;
+import org.culturegraph.mf.util.StringUtil;
 
 
 
@@ -43,6 +44,7 @@ public final class Entity extends AbstractCollect {
 	private final StreamBuffer buffer = new StreamBuffer();
 	
 	private NamedValueSource nameSource;
+	private String currentName;
 
 	public Entity(final Metamorph metamorph) {
 		super(metamorph);
@@ -66,7 +68,7 @@ public final class Entity extends AbstractCollect {
 	private void write(final StreamReceiver receiver) {
 		if (!buffer.isEmpty()) {
 			
-			receiver.startEntity(getName());
+			receiver.startEntity(StringUtil.fallback(currentName, getName()));
 			buffer.setReceiver(receiver);
 			buffer.replay();
 			receiver.endEntity();
@@ -79,7 +81,7 @@ public final class Entity extends AbstractCollect {
 	@Override
 	protected void receive(final String name, final String value, final NamedValueSource source) {
 		if (source == nameSource) {
-			setName(value);
+			currentName = value;
 		} else if (source instanceof Entity) {
 			final Entity child = (Entity) source;
 			child.write(buffer);
@@ -98,6 +100,7 @@ public final class Entity extends AbstractCollect {
 	protected void clear() {
 		sourcesLeft.addAll(sourceList);
 		buffer.clear();
+		currentName = null;
 	}
 
 	@Override

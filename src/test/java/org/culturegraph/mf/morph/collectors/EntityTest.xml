@@ -371,4 +371,51 @@
 		</result>
 	</test-case>
 	
+		<test-case name="shouldResetNameToNameAttribute">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1x">
+						<cgxml:literal name="data1" value="a" />
+						<cgxml:literal name="data3" value="dynamicName" />
+					</cgxml:record>
+					<cgxml:record id="2x">
+
+						<cgxml:literal name="data1" value="b" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:entity name="defaultName" flushWith="record">
+						<mm:entity-name>
+							<mm:data source="data3" />
+						</mm:entity-name>
+						<mm:data source="data1" name="l1" />
+					</mm:entity>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1x">
+						<cgxml:entity name="dynamicName">
+							<cgxml:literal name="l1" value="a" />
+						</cgxml:entity>
+					</cgxml:record>
+					<cgxml:record id="2x">
+						<cgxml:entity name="defaultName">
+							<cgxml:literal name="l1" value="b" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+	
 </metamorph-test>
