@@ -86,7 +86,7 @@
 		<input type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
-					<cgxml:record id="1">
+					<cgxml:record id="entity end info">
 						<cgxml:entity name="e1">
 							<cgxml:entity name="e2">
 								<cgxml:literal name="d" value="a" />
@@ -111,7 +111,7 @@
 		<result type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
-					<cgxml:record id="1">
+					<cgxml:record id="entity end info">
 						<cgxml:literal name="e1.e2.d" value="a" />
 						<cgxml:literal name="e1.e2" value="" />
 						<cgxml:literal name="e1" value="" />
