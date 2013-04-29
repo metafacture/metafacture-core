@@ -29,23 +29,24 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.types.Triple;
-
+import org.culturegraph.mf.util.MemoryWarningSystem;
+import org.culturegraph.mf.util.MemoryWarningSystem.Listener;
 
 /**
  * @author markus geipel
- *
+ * 
  */
-public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
+public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> implements Listener {
 	/**
 	 * specifies the comparator
 	 */
 	public enum Compare {
 		SUBJECT, PREDICATE, OBJECT, ALL;
 	}
-	
+
 	/**
 	 * sort order
-	 *
+	 * 
 	 */
 	public enum Order {
 		INCREASING {
@@ -53,7 +54,8 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 			public int order(final int indicator) {
 				return indicator;
 			}
-		}, DECREASING {
+		},
+		DECREASING {
 			@Override
 			public int order(final int indicator) {
 				return -indicator;
@@ -62,25 +64,22 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 		public abstract int order(int indicator);
 	}
 
-
-	private static final int KILO = 1024;
-	private static final int DEFUALT_BLOCKSIZE = 128 * KILO * KILO;
-	private static final int STRING_OVERHEAD = 124;
-	
 	private final List<Triple> buffer = new ArrayList<Triple>();
-	private final List<File> tempFiles = new ArrayList<File>();
+	private final List<File> tempFiles;
 	private Compare compare = Compare.SUBJECT;
 	private Order order = Order.INCREASING;
-	//private Comparator<Triple> comparator = createComparator(compareBy, order);
-	private long bufferSizeEstimate;
+	private volatile boolean memoryLow;
 
-	private long blockSize = DEFUALT_BLOCKSIZE;
+	public AbstractTripleSort() {
+		MemoryWarningSystem.addListener(this);
+		tempFiles = new ArrayList<File>(); // Initialized here to let the
+											// compiler enforce the call to
+											// super() in subclasses.
+	}
 
-	/**
-	 * @param blockSize in MB
-	 */
-	public final void setBlockSize(final int blockSize) {
-		this.blockSize = blockSize * KILO * KILO;
+	@Override
+	public final void memoryLow(final long usedMemory, final long maxMemory) {
+		memoryLow = true;
 	}
 
 	protected final void setCompare(final Compare compare) {
@@ -90,29 +89,23 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 	protected final Compare getCompare() {
 		return compare;
 	}
-	
-	protected final void setSortOrder(final Order order){
+
+	protected final void setSortOrder(final Order order) {
 		this.order = order;
 	}
 
-
-
 	@Override
 	public final void process(final Triple namedValue) {
-
-		buffer.add(namedValue);
-		// padding is ignored for efficiency (overhead is 45 for name + 45 for
-		// value + 8 for namedValue + 28 goodwill)
-		bufferSizeEstimate += ((namedValue.getSubject().length() + namedValue.getPredicate().length() + namedValue.getObject().length()) * 2) + STRING_OVERHEAD;
-		if (bufferSizeEstimate > blockSize) {
-			bufferSizeEstimate = 0;
+		if (memoryLow) {
 			try {
 				nextBatch();
 			} catch (IOException e) {
 				throw new MetafactureException("Error writing to temp file after sorting", e);
+			} finally {
+				memoryLow = false;
 			}
-
 		}
+		buffer.add(namedValue);
 	}
 
 	private void nextBatch() throws IOException {
@@ -132,10 +125,8 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 		tempFiles.add(tempFile);
 	}
 
-
 	@Override
 	public final void onCloseStream() {
-
 
 		if (tempFiles.isEmpty()) {
 			Collections.sort(buffer, createComparator(compare, order));
@@ -147,7 +138,8 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 			final Comparator<Triple> comparator = createComparator(compare, order);
 			final PriorityQueue<SortedTripleFileFacade> queue = new PriorityQueue<SortedTripleFileFacade>(11,
 					new Comparator<SortedTripleFileFacade>() {
-					//	private final Comparator<Triple> comparator = getComparator();
+						// private final Comparator<Triple> comparator =
+						// getComparator();
 
 						@Override
 						public int compare(final SortedTripleFileFacade o1, final SortedTripleFileFacade o2) {
@@ -183,15 +175,15 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 
 	protected void onFinished() {
 		// nothing to do
-		
+
 	}
 
 	protected abstract void sortedTriple(Triple namedValue);
 
-	public final Comparator<Triple> createComparator(){
+	public final Comparator<Triple> createComparator() {
 		return createComparator(compare, order);
 	}
-	
+
 	public static Comparator<Triple> createComparator(final Compare compareBy, final Order order) {
 		final Comparator<Triple> comparator;
 		switch (compareBy) {
@@ -236,8 +228,8 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 	@Override
 	public final void onResetStream() {
 		buffer.clear();
-		for(File file: tempFiles){
-			if(file.exists()){
+		for (File file : tempFiles) {
+			if (file.exists()) {
 				file.delete();
 			}
 		}
