@@ -35,21 +35,22 @@ import org.culturegraph.mf.types.Triple.ObjectType;
 @In(Triple.class)
 @Out(StreamReceiver.class)
 public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceiver> {
-
-	private String currentSubject;
-	private final PartialRecordEmitter emitter = new PartialRecordEmitter();
 	private final FormetaParser parser = new FormetaParser();
+	private final PartialRecordEmitter emitter = new PartialRecordEmitter();
+	
+	private String currentSubject;
 
 	public TripleCollect() {
 		parser.setEmitter(emitter);
 	}
-	
+
 	@Override
 	public void process(final Triple triple) {
 		if (currentSubject == null) {
 			currentSubject = triple.getSubject();
 			getReceiver().startRecord(currentSubject);
 		}
+		
 		if (currentSubject.equals(triple.getSubject())) {
 			decodeTriple(triple);
 		} else {
@@ -60,14 +61,14 @@ public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceive
 		}
 	}
 
-	private void decodeTriple(final Triple triple) {
+	public void decodeTriple(final Triple triple) {
 		if(triple.getObjectType() == ObjectType.STRING){
 			getReceiver().literal(triple.getPredicate(), triple.getObject());
-		}else{
-			//getReceiver().startEntity(triple.getPredicate());
+		}else if (triple.getObjectType() == ObjectType.ENTITY){
 			emitter.setDefaultName(triple.getPredicate());
 			parser.parse(triple.getObject());
-			//getReceiver().endEntity();
+		}else{
+			throw new UnsupportedOperationException(triple.getObjectType() + " can not yet be decoded");
 		}
 	}
 
