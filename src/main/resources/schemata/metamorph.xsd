@@ -266,7 +266,7 @@
 	</element>
 
 	<element name="entity">
-	<annotation><documentation>Create an entity</documentation></annotation>
+		<annotation><documentation>Create an entity</documentation></annotation>
 		<complexType>
 			<choice minOccurs="1" maxOccurs="unbounded">
 				<element ref="tns:entity-name" minOccurs="0" maxOccurs="1" />
@@ -284,7 +284,19 @@
 		</complexType>
 	</element>
 
-
+	<element name="range">
+		<annotation><documentation>Interprets pairs of consecutive literals as integer range start and end. For each number between the two an additional literal is generated.</documentation></annotation>
+		<complexType>
+			<sequence>
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
+				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
+			</sequence>
+			<attribute name="name" type="string" use="required" />
+			<attribute name="reset" type="boolean" use="optional" default="false" />
+			<attribute name="sameEntity" type="boolean" use="optional" default="false" />
+			<attribute name="flushWith" type="string" use="optional" default="record"/>
+		</complexType>
+	</element>
 
 	<element name="data">
 		<annotation><documentation>Used to receive literals</documentation></annotation>
@@ -441,6 +453,7 @@
 			<element ref="tns:concat" />
 			<element ref="tns:square" />
 			<element ref="tns:tuples" />
+			<element ref="tns:range" />
 		</choice>
 	</group>
 
