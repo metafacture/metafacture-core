@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Böhme
- * 
+ *
  * @param <R>
  *            receiver type.
  */
@@ -42,13 +42,18 @@ public class TimerBase<R extends LifeCycle> implements Sender<R> {
 
 	private R receiver;
 
+	protected TimerBase(final String logPrefix) {
+		super();
+		this.logPrefix = logPrefix;
+	}
+
 	@Override
 	public final <S extends R> S setReceiver(final S receiver) {
 		this.receiver = receiver;
 		return receiver;
 	}
-	
-	public R getReceiver() {
+
+	public final R getReceiver() {
 		return receiver;
 	}
 
@@ -63,27 +68,27 @@ public class TimerBase<R extends LifeCycle> implements Sender<R> {
 
 	@Override
 	public final void closeStream() {
-		final long averageDuration = cumulativeDuration / count;
+		final long averageDuration;
+		if (count > 0) {
+			averageDuration = cumulativeDuration / count;
+		} else {
+			averageDuration = 0;
+		}
 		LOG.info(logPrefix
 				+ String.format("Executions: %d; Cumulative duration: %s; Average duration: %s", Long.valueOf(count),
 						scaleTime(cumulativeDuration), scaleTime(averageDuration)));
+
 		startMeasurement();
 		if (receiver != null) {
 			receiver.closeStream();
 		}
 		stopMeasurement("Time to close stream: ");
-				
-	}
-
-	protected TimerBase(final String logPrefix) {
-		super();
-		this.logPrefix = logPrefix;
 	}
 
 	protected final void startMeasurement() {
 		startTime = System.nanoTime();
 	}
-	
+
 	protected final void stopMeasurement(){
 		stopMeasurement("Execution %1$d:");
 	}
