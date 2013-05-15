@@ -36,10 +36,10 @@ public final class GenericXMLHandlerTest {
 	private ResourceOpener opener;
 	private XmlDecoder xmlDecoder;
 	private GenericXmlHandler genericXmlHandler;
-	
+
 	@Mock
 	private StreamReceiver receiver;
-	
+
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
@@ -50,17 +50,17 @@ public final class GenericXMLHandlerTest {
 				.setReceiver(genericXmlHandler)
 				.setReceiver(receiver);
 	}
-	
+
 	@After
 	public void cleanup() {
 		opener.closeStream();
 	}
-	
+
 	@Test
 	public void testShouldIgnoreCharDataNotInARecord() {
-		
+
 		opener.process(DataFilePath.GENERIC_XML);
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord("1");
 		ordered.verify(receiver).literal("id", "1");
@@ -83,7 +83,27 @@ public final class GenericXMLHandlerTest {
 		ordered.verify(receiver).literal("lang", "de");
 		ordered.verify(receiver).literal("value", "Zweiter Datensatz");
 		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();	
+		ordered.verify(receiver).endRecord();
 	}
-	
+
+	@Test
+	public void testShouldEmitEmptyStringIfRecordTagHasNoIdAttribute() {
+
+		opener.process(DataFilePath.DATA_PREFIX + "shouldEmitEmptyStringIfRecordTagHasNoIdAttribute.xml");
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("");
+		ordered.verify(receiver).endRecord();
+	}
+
+	@Test
+	public void testShouldEmitValueOfIdAttribute() {
+
+		opener.process(DataFilePath.DATA_PREFIX + "shouldEmitValueOfIdAttribute.xml");
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("theRecordID");
+		ordered.verify(receiver).endRecord();
+	}
+
 }
