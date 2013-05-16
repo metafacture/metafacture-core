@@ -25,6 +25,8 @@ public final class TimeUtil {
 	public static final String[] UNIT_SYMBOLS = { "ns", "µs", "ms", "s", "min", "h" };
 	public static final long[] UNIT_FACTORS = { 1L, 1000L, 1000L, 1000L, 60L, 60L };
 
+	public static final int BASE_UNIT_INDEX = 3;
+
 	public static final long HOURS = 60L * 60L * 1000L * 1000L * 1000L;
 	public static final long MINUTES = 60L * 1000L * 1000L * 1000L;
 	public static final long SECONDS = 1000L * 1000L * 1000L;
@@ -51,6 +53,9 @@ public final class TimeUtil {
 		}
 
 		if (i == 0 || minor == 0) {
+			if (i < 0) {
+				i = BASE_UNIT_INDEX;  // Use seconds as default unit
+			}
 			return String.format("%d%s", Long.valueOf(major), UNIT_SYMBOLS[i]);
 		}
 		return String.format("%d%s %d%s", Long.valueOf(major), UNIT_SYMBOLS[i], Long.valueOf(minor), UNIT_SYMBOLS[i - 1]);

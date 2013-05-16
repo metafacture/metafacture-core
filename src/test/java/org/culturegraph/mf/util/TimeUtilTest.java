@@ -141,6 +141,15 @@ public final class TimeUtilTest {
 		assertEquals("42min 2s", formattedDuration);
 	}
 
+	@Test
+	public void testShouldNotFailIfDurationIsZero() {
+		final long duration = 0L;
+
+		final String formattedDuration = TimeUtil.formatDuration(duration);
+
+		assertEquals("0s", formattedDuration);
+	}
+
 	/**
 	 *  Test for issue #82: TimerBase throws ArrayIndexOutOfBoundsException
 	 *  if the measured duration is longer than one hour.
