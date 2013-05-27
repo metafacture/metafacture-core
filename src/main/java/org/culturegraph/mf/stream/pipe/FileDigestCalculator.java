@@ -13,14 +13,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package net.b3e.mf.extra.pipe;
+package org.culturegraph.mf.stream.pipe;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 
-import net.b3e.mf.extra.util.DigestAlgorithm;
 
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
@@ -28,6 +27,7 @@ import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.stream.util.DigestAlgorithm;
 import org.culturegraph.mf.types.Triple;
 
 /**

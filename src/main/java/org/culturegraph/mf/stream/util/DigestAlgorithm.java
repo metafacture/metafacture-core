@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package net.b3e.mf.extra.util;
+package org.culturegraph.mf.stream.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

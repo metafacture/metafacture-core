@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package net.b3e.mf.extra.pipe;
+package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
