@@ -66,10 +66,17 @@ public final class FileDigestCalculator extends
 	@Override
 	public void process(final String file) {
 		final String digest;
-		try (final InputStream stream = new FileInputStream(file)) {
+		InputStream stream = null;
+		try {
+			stream = new FileInputStream(file);
 			digest = bytesToHex(getDigest(stream, messageDigest));
 		} catch (IOException e) {
 			throw new MetafactureException(e);
+		} finally {
+			if (stream != null) {
+				try { stream.close(); }
+				catch (final IOException e) { }
+			}
 		}
 		getReceiver().process(new Triple(file, algorithm.name(), digest));
 	}
