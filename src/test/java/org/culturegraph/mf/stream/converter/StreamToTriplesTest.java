@@ -151,6 +151,6 @@ public final class StreamToTriplesTest {
 				Formeta.GROUP_START + 
 					NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE + 
 				Formeta.GROUP_END;
-		Mockito.verify(receiver).process(new Triple(REC_ALT_ID, RECORD_PREDICATE, objectValue));
+		Mockito.verify(receiver).process(new Triple(REC_ALT_ID, RECORD_PREDICATE, objectValue, ObjectType.ENTITY));
 	}
 }
