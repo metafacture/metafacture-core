@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph-test version="1.0"
+	xmlns="http://www.culturegraph.org/metamorph-test" xmlns:cgxml="http://www.culturegraph.org/cgxml"
+	xmlns:mm="http://www.culturegraph.org/metamorph">
+	<test-case name="Regexp function">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="001">
+							<cgxml:literal name="" value="184000" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:data source="001." name="subject">
+						<mm:regexp match=".*" format="resource:P${0}" />
+					</mm:data>
+					<mm:data source="001." name="subject">
+						<mm:regexp match=".*" />
+					</mm:data>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="subject" value="resource:P184000" />
+						<cgxml:literal name="subject" value="184000" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+</metamorph-test>
