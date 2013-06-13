@@ -28,8 +28,8 @@ import org.culturegraph.mf.types.Triple;
  *
  */
 @Description("Counts triples")
-@In(NamedValue.class)
-@Out(NamedValue.class)
+@In(Triple.class)
+@Out(Triple.class)
 public final class TripleCount extends AbstractTripleSort {
 	
 	public static final String DEFAULT_COUNTP_REDICATE = "count";

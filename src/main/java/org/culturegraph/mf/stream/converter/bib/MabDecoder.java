@@ -20,6 +20,9 @@ import java.util.regex.Pattern;
 import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.In;
+import org.culturegraph.mf.framework.annotations.Out;
 
 
 /**
@@ -31,6 +34,9 @@ import org.culturegraph.mf.framework.StreamReceiver;
  * @author Markus Michael Geipel, Christoph Böhme
  *
  */
+@Description("Parses a raw Mab2 stream (UTF-8 encoding expected).")
+@In(String.class)
+@Out(StreamReceiver.class)
 public final class MabDecoder 
 		extends DefaultObjectPipe<String, StreamReceiver> {
 	
