@@ -49,7 +49,8 @@ public final class Regexp extends AbstractFunction {
 			}
 		} else {
 			while (matcher.find()) {
-				if (!matchAndFormatIsEmpty()) {
+				populateVars();
+				if (!tempVars.isEmpty()) {
 					getNamedValueReceiver().receive(name,
 							StringUtil.format(format, tempVars), source, recordCount, entityCount);
 				}
@@ -57,14 +58,13 @@ public final class Regexp extends AbstractFunction {
 		}
 	}
 
-	private boolean matchAndFormatIsEmpty() {
+	private void populateVars() {
 		tempVars.clear();
 		for (int i = 0; i <= matcher.groupCount(); ++i) {
 			if (!matcher.group(i).isEmpty()) {
 				tempVars.put(String.valueOf(i), matcher.group(i));
 			}
 		}
-		return tempVars.isEmpty();
 	}
 
 	/**
