@@ -183,6 +183,7 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 	}
 
 	private void writeFooter() {
+		builder.append(NEW_LINE);
 		builder.append(BEGIN_CLOSE_ELEMENT);
 		builder.append(rootTag);
 		builder.append(END_CLOSE_ELEMENT);
