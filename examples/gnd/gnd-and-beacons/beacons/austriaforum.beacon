@@ -1,0 +1,957 @@
+#FORMAT: BEACON
+#VERSION: 0.1
+#NAME: Austria-Forum
+#PREFIX: http://d-nb.info/gnd/
+#TARGET: 
+#FEED: http://www.andreas-praefcke.de/temp/BEACON-PND-AustriaForum.txt
+#CONTACT: Andreas Praefcke <mail@andreas-praefcke.de> http://de.wikipedia.org/wiki/Benutzer:AndreasPraefcke/PND (Hinweis: der Ersteller der BEACON-Datei steht in keiner Verbindung zum Projekt Austria-Forum)
+#MESSAGE: Biographie im Austria-Forum
+#DESCRIPTION: Biographie im Austria-Forum
+#INSTITUTION: TU Graz
+#TIMESTAMP: 2012-04-20T10:00
+#REVISIT: monthly
+#EXAMPLES: 118535315|118762141
+#REMARK: Stand der aufgenommenen Personen: Oktober 2010
+100166393|Hermann, Franz Benedikt|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hermann%2C_Franz_Benedikt
+101079702|Zessner-Spitzenberg, Hans Karl von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zessner-Spitzenberg%2C%20Hans%20Karl%20von
+101348274|Gabriel, Alfons|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gabriel%2C_Alfons
+102249725|Stigler, Robert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Stigler%2C_Robert
+102427593|Arlt, Ferdinand von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Arlt%2C_Ferdinand_von
+102461759|Diviš, Prokop|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Divi%C5%A1%2C_Prokop
+102506736|Leopold von Österreich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Leopold%20von%20%C3%96sterreich
+102661960|Mauthner, Ludwig|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mauthner%2C%20Ludwig
+104048220|Wickenburg, Eduard Graf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wickenburg%2C_Eduard_Graf
+104208899|Pohl, Johann Emanuel|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pohl%2C_Johann_Emanuel
+104241160|Röllig, Karl Leopold|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/R%C3%B6llig%2C%20Karl%20Leopold
+104379006|Rad, Jacob Christoph|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Rad%2C%20Jacob%20Christoph
+104594896|Dor, Milo|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Dor%2C_Milo
+104604484|Antoine, Tassilo|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Antoine%2C%20Tassilo
+104632798|Safar, Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Safar%2C_Peter
+105334774|Olshausen-Schönberger, Käthe|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Olshausen-Sch%C3%B6nberger%2C_K%C3%A4the
+105714828|Giesl-Gieslingen, Adolph|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Giesl-Gieslingen%2C%20Adolph
+105759597|Habeck, Fritz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Habeck%2C_Fritz
+106017705|Schwarzkopf, Paul|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Schwarzkopf%2C%20Paul
+106442589|Lukesch, Anton|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lukesch%2C_Anton
+106904558|Ottawa, Theodor|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ottawa%2C%20Theodor
+107436280|Übelhör, Richard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/%C3%9Cbelh%C3%B6r%2C%20Richard
+107547724|Lamarr, Hedy|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lamarr%2C_Hedy
+107616521|Missong, Alfred sen.|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Missong%2C%20Alfred%20sen.
+107654105|Orthofer, Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Orthofer%2C_Peter
+107808056|Winter, Ernst Florian |http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ernst_Florian_Winter
+108981924|Kopetz, Hermann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kopetz%2C_Hermann
+109429729|Jontes, Günther|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Jontes%2C_G%C3%BCnther
+109480945|Steinhauer, Erwin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Steinhauer%2C_Erwin
+109898605|Wegscheider, Wolfhard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wegscheider%2C_Wolfhard
+110087925|Puntscher-Riekmann, Sonja|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Puntscher-Riekmann%2C_Sonja
+110213416|Sünkel, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/S%C3%BCnkel%2C_Hans
+110676629|Schmied, Claudia|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schmied%2C_Claudia
+110677498|Aspöck, Ruth|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Asp%C3%B6ck%2C_Ruth
+111845181|Jontes, Lieselotte|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Jontes%2C_Lieselotte
+111921023|Posch, Reinhard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Posch%2C_Reinhard
+112735959|Muchitsch, Wolfgang|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Muchitsch%2C_Wolfgang
+112817351|Steyrer, Kurt|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Steyrer%2C_Kurt
+112872654|Kainz, Harald|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kainz%2C_Harald
+113482140|Gansterer, Helmut A|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gansterer%2C_Helmut_A
+113560095|Poto?nik, Herman|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Poto%C4%8Dnik%2C%20Herman
+113801955|Kandel, Eric R|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kandel%2C_Eric_R
+114042721|Kuhn, Gabriel|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kuhn%2C_Gabriel
+114101655|Gutschelhofer, Alfred|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gutschelhofer%2C_Alfred
+114968055|Schroeder, Renée|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schroeder%2C_Ren%C3%A9e
+115497102|Hahnl, Hans Heinz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hahnl%2C_Hans_Heinz
+115602011|Wogrolly, Monika|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wogrolly%2C_Monika
+115612815|Geiger, Arno|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Geiger%2C_Arno
+115662979|Pietschmann, Herbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pietschmann%2C_Herbert
+115713425|Gauß, Karl Markus|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gau%C3%9F%2C_Karl_Markus
+115783741|Amanshauser, Martin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Amanshauser%2C_Martin
+115802894|Kappacher, Walter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kappacher%2C_Walter
+115812431|Kehlmann, Daniel|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kehlmann%2C_Daniel
+115813586|Petrik, Dine|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Petrik%2C_Dine
+116021810|Pamberger, Ferdinand|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pamberger%2C_Ferdinand
+116055448|Deinhard-Deinhardstein, Johann Ludwig|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Deinhard-Deinhardstein%2C_Johann_Ludwig
+116076135|Basch, Samuel|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Basch%2C_Samuel
+116076747|Basil, Otto|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Basil%2C_Otto
+116081988|Pernter, Josef Maria|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pernter%2C_Josef_Maria
+116102225|Becke, Friedrich Johann Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Becke%2C%20Friedrich%20Johann_Karl
+116121130|Benndorf, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Benndorf%2C_Hans
+116152583|Döbler, Leopold Ludwig|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/D%C3%B6bler%2C%20Leopold%20Ludwig
+116175761|Kinzl, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kinzl%2C_Hans
+116224622|Boer, Johann Lukas|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Boer%2C_Johann_Lukas
+116247983|Pöch, Rudolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/P%C3%B6ch%2C_Rudolf
+116251107|Dumreicher, Johann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Dumreicher%2C_Johann
+116261706|Polak, Jacob Eduard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Polak%2C_Jacob_Eduard
+116280042|Prager, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Prager%2C%20Hans
+116303492|Anday, Rosette|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Anday%2C_Rosette
+116319542|Exner, Siegmund|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Exner%2C_Siegmund
+116339012|Koppers, Wilhelm|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Koppers%2C_Wilhelm
+116383690|Ehrenhaft, Felix|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ehrenhaft%2C_Felix
+116389613|Redtenbacher, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Redtenbacher%2C%20Josef
+116399252|Reichert, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Reichert%2C%20Karl
+116446722|Elbogen, Paul|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Elbogen%2C_Paul
+116499923|Geiringer, Hilda (Pollaczek, von Mises)|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Geiringer%2C_Hilda_%20%28Pollaczek%2C_von_Mises%29
+116513373|Hasenöhrl, Friedrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hasen%C3%B6hrl%2C_Friedrich
+116515597|Hassinger, Hugo|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hassinger%2C%20Hugo
+116518898|Hatschek, Berthold|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hatschek%2C_Berthold
+116539585|Claus, Carl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Claus%2C_Carl
+116555998|Hebra, Ferdinand von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hebra%2C_Ferdinand_von
+116567570|Schrötter, Leopold, Ritter von Kristelli|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schr%C3%B6tter%2C_Leopold%2C_Ritter_von_Kristelli
+116569352|Escherich, Gustav von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Escherich%2C_Gustav_von
+116577134|Kudler, Josef von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kudler%2C%20Josef%20von
+116585749|Ettingshausen, Andreas|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ettingshausen%2C_Andreas
+116674911|Heinzel, Richard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Heinzel%2C_Richard
+116687177|Lang, Viktor von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lang%2C%20Viktor%20von
+116710713|Russegger, Josef von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Russegger%2C_Josef_von
+116712821|Rziha, Franz von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Rziha%2C_Franz_von
+116776951|Czermak, Johann Nepomuk|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Czermak%2C_Johann_Nepomuk
+116781475|Freund, Leopold|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Freund%2C_Leopold
+116790741|Fried, Alfred Hermann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Fried%2C_Alfred_Hermann
+116826959|Buchta, Richard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Buchta%2C_Richard
+116856238|Grobben, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Grobben%2C_Karl
+116858281|Mauthner, Ludwig Wilhelm, Ritter von Mauthstein|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mauthner%2C_Ludwig_Wilhelm%2C_Ritter_von_Mauthstein
+116859601|Lecher, Ernst|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lecher%2C_Ernst
+116897430|Natterer, Johann August|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Natterer%2C%20Johann%20August
+116899336|Lendenfeld, Robert von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lendenfeld%2C_Robert_von
+116917180|Lenz, Oskar|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lenz%2C_Oskar
+116968621|Thun-Hohenstein, Paul|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Thun-Hohenstein%2C%20Paul
+116973854|Holzknecht, Guido|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Holzknecht%2C_Guido
+116987537|Lieben, Adolf von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lieben%2C%20Adolf%20von
+117009334|Meynert, Theodor|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Meynert%2C_Theodor
+117021261|Zuckerkandl, Emil|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zuckerkandl%2C_Emil
+117033499|Schrauf, Albrecht|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schrauf%2C_Albrecht
+117050199|Jacquin, Joseph von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Jacquin%2C%20Joseph%20von
+117065986|Littrow, Karl Ludwig von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Littrow%2C_Karl_Ludwig_von
+117083410|Obersteiner, Heinrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Obersteiner%2C_Heinrich
+117085405|Littrow, Joseph Johann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Littrow%2C%20Joseph%20Johann
+117114375|Wahlberg, Wilhelm Emil|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wahlberg%2C%20Wilhelm%20Emil
+117139270|Oppolzer, Johann von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Oppolzer%2C_Johann_von
+117139319|Oppolzer, Theodor Ritter von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Oppolzer%2C_Theodor_Ritter_von
+117146382|Much, Rudolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Much%2C%20Rudolf
+117172758|Müllner, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/M%C3%BCllner%2C_Josef
+117176052|Burian, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Burian%2C_Karl
+117219738|Wegscheider, Rudolf von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wegscheider%2C%20Rudolf%20von
+117222364|Scherzer, Karl von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Scherzer%2C_Karl_von
+117226645|Lotheissen, Ferdinand|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lotheissen%2C_Ferdinand
+117229938|Schenkl, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schenkl%2C_Karl
+117258547|Stifft, Andreas Joseph|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Stifft%2C_Andreas_Joseph
+117263834|Stöber, Franz Xaver|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/St%C3%B6ber%2C_Franz_Xaver
+117265977|Stoerk, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Stoerk%2C%20Karl
+117303240|Theyer, Leopold|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Theyer%2C_Leopold
+117308560|Ludwig, Ernst|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ludwig%2C_Ernst
+117328421|Wettstein, Richard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wettstein%2C_Richard
+117331899|Lux, Josef August|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lux%2C%20Josef%20August
+117332895|Weyprecht, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Weyprecht%2C_Karl
+117360384|Siegel, Heinrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Siegel%2C%20Heinrich
+117369705|Wiesner, Julius Ritter von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wiesner%2C_Julius_Ritter_von
+117383252|Silberbauer, Fritz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Silberbauer%2C_Fritz
+117425230|Skraup, Zdenko Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Skraup%2C%20Zdenko%20Hans
+117429309|Smekal, Adolf Gustav|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Smekal%2C_Adolf_Gustav
+117431613|Tschermak-Seysenegg, Gustav|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Tschermak-Seysenegg%2C_Gustav
+117443379|Seegen, Joseph|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Seegen%2C_Joseph
+117451770|Sölch, Johann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/S%C3%B6lch%2C_Johann
+117478245|Voigtländer, Peter Wilhelm Friedrich von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Voigtl%C3%A4nder%2C_Peter_Wilhelm_Friedrich_von
+117496170|Schmid, Erich (1896-1983)|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schmid%2C_Erich_%281896-1983%29
+117500267|Emperger, Friedrich Ignaz Edler...|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Emperger%2C%20Friedrich%20Ignaz%20Edler%20von
+117522724|Ressel, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ressel%2C_Josef
+117530468|Gegenbauer, Leopold|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gegenbauer%2C%20Leopold
+117533165|Ritter von Rittinger, Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ritter_von_Rittinger%2C_Peter
+117540439|Kreitner, Gustav|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kreitner%2C_Gustav
+117544949|Margules, Max|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Margules%2C_Max
+117552100|Marno, Ernst|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Marno%2C_Ernst
+117559067|Meyer, Hans Horst|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Meyer%2C_Hans_Horst
+117560405|Meissner, Paul Traugott|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Meissner%2C%20Paul%20Traugott
+117567825|Mertens, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mertens%2C_Franz
+117568643|Kapp, Gisbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kapp%2C_Gisbert
+117569380|Meyer, Stefan|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Meyer%2C_Stefan
+117571946|Welwitsch, Friedrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Welwitsch%2C_Friedrich
+117572543|Werndl, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Werndl%2C%20Josef
+117579688|Widerhofer, Hermann von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Widerhofer%2C%20Hermann%20von
+117599026|Rumpler, Edmund|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Rumpler%2C_Edmund
+117602787|Zsigmondy, Richard Adolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zsigmondy%2C_Richard_Adolf
+117606529|Ortwein, August|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ortwein%2C_August
+117606731|Oser, Leopold|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Oser%2C%20Leopold
+117609471|Müller, Emil|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/M%C3%BCller%2C_Emil
+117610690|Jäger von Jaxtthal, Eduard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/J%C3%A4ger_von_Jaxtthal%2C_Eduard
+117610712|Jäger, Gustav|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/J%C3%A4ger%2C_Gustav
+117620327|Schauta, Friedrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schauta%2C_Friedrich
+117626546|Leidesdorf, Maximilian|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Leidesdorf%2C_Maximilian
+117629634|Sigl, Georg|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Sigl%2C%20Georg
+117638536|Tuerck, Ludwig|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Tuerck%2C_Ludwig
+117638668|Tunner, Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Tunner%2C_Peter
+117645567|Dittel, Leopold von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Dittel%2C_Leopold_von
+117653756|Schweidler, Egon|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schweidler%2C_Egon
+117659363|Jüptner-Jonstorff, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/J%C3%BCptner-Jonstorff%2C%20Hans
+117668931|Auenbrugger, Johann Leopold, Edler von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Auenbrugger%2C_Johann_Leopold%2C_Edler_von
+117671053|Gärtner, Gustav|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/G%C3%A4rtner%2C_Gustav
+117674400|Strache, Hugo|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Strache%2C_Hugo
+117675245|Lindenthal, Gustav|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lindenthal%2C%20Gustav
+117680281|Uchatius, Franz Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Uchatius%2C%20Franz_Freiherr_von
+117683760|Pleischl, Adolf Martin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pleischl%2C_Adolf_Martin
+117685062|Plößl, Simon|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pl%C3%B6%C3%9Fl%2C_Simon
+117688940|Politzer, Adam|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Politzer%2C_Adam
+117689238|Pirquet, Clemens, Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pirquet%2C_Clemens%2C_Freiherr_von
+117696811|Pretsch, Paul|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pretsch%2C_Paul
+117703338|Petzval, Jozef Maximilian|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Petzval%2C%20Jozef%20Maximilian
+117703338|Petzval, Jozef Maximilián|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Petzval%2C_Jozef_Maximili%C3%A1n
+117724025|Schmetterer, Leopold|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schmetterer%2C%20Leopold
+117726095|Taußky, Olga|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Tau%C3%9Fky%2C_Olga
+117746770|Neusser, Edmund|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Neusser%2C_Edmund
+118164643|Längle, Ulrike|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/L%C3%A4ngle%2C_Ulrike
+118167995|Karl, Beatrix|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Karl%2C_Beatrix
+118175106|Havlicek, Alfred|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Havlicek%2C_Alfred
+118179527|Haas, Wolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Haas%2C_Wolf
+118201395|Loidolt, Gabriel|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Loidolt%2C_Gabriel
+118500686|Adler, Alfred|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Adler%2C_Alfred
+118501232|Aichinger, Ilse|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Aichinger%2C_Ilse
+118502204|Alt, Rudolf von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Alt%2C_Rudolf_von
+118502255|Altenberg, Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Altenberg%2C_Peter
+118502433|Ambrosi, Gustinus|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ambrosi%2C_Gustinus
+118503049|Androsch, Hannes|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Androsch%2C_Hannes
+118504533|Artmann, H C|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Artmann%2C_H_C
+118504681|Aslan, Raoul|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Aslan%2C_Raoul
+118504762|Astaire, Fred|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Astaire%2C%20Fred
+118504932|Attersee, Christian Ludwig|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Attersee%2C_Christian_Ludwig
+118505602|Bachmann, Ingeborg|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bachmann%2C_Ingeborg
+118505955|Bahr, Hermann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bahr%2C_Hermann
+118507397|Bauer, Wolfgang|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bauer%2C_Wolfgang
+118507753|Bayer, Konrad|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bayer%2C_Konrad
+118508288|Beethoven, Ludwig van|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Beethoven%2C%20Ludwig%20van
+118509322|Berg, Alban|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Berg%2C_Alban
+118509861|Bernhard, Thomas|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bernhard%2C_Thomas
+118510916|Billroth, Theodor|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Billroth%2C_Theodor
+118512544|Böhm, Max|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/B%C3%B6hm%2C_Max
+118513109|Boltzmann, Ludwig|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Boltzmann%2C_Ludwig
+118514571|Brauer, Arik|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Brauer%2C_Arik
+118514598|Braun, Felix|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Braun%2C_Felix
+118514997|Brendel, Alfred|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Brendel%2C_Alfred
+118515799|Bruckner, Anton|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bruckner%2C_Anton
+118516329|Brus, Günter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Brus%2C_G%C3%BCnter
+118516957|Bühler, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/B%C3%BChler%2C_Karl
+118518801|Canetti, Elias|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Canetti%2C_Elias
+118525190|Dichter, Ernest|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Dichter%2C_Ernest
+118526162|Doderer, Heimito von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Doderer%2C_Heimito_von
+118527568|Drucker, Peter Ferdinand|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Drucker%2C%20Peter%20Ferdinand
+118528661|Ebner-Eschenbach, Marie von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ebner-Eschenbach%2C_Marie_von
+118528815|Eckhardt, Fritz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Eckhardt%2C_Fritz
+118529447|Eichmann, Karl Adolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Eichmann%2C_Karl_Adolf
+118530267|Ender, Thomas|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ender%2C_Thomas
+118531484|Exner, Franz Serafin (1849-1926)|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Exner%2C_Franz_Serafin_%281849%E2%80%931926%29
+118531824|Faistauer, Anton|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Faistauer%2C_Anton
+118532634|Ferstel, Heinrich, Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ferstel%2C_Heinrich%2C_Freiherr_von
+118532987|Figl, Leopold|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Figl%2C_Leopold
+118533495|Fischer von Erlach, Johann Bernhard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Fischer_von_Erlach%2C_Johann_Bernhard
+118534025|Flora, Paul|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Flora%2C_Paul
+118534769|Frank, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Frank%2C_Josef
+118534904|Frankl, Viktor Emil|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Frankl%2C_Viktor_Emil
+118535307|Freud, Anna|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Freud%2C_Anna
+118535315|Freud, Sigmund|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Freud%2C_Sigmund
+118535560|Friedell, Egon|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Friedell%2C_Egon
+118536117|Frisch, Otto|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Frisch%2C_Otto
+118536362|Frohner, Adolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Frohner%2C_Adolf
+118536435|Fronius, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Fronius%2C_Hans
+118537814|Gauermann, Jakob|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gauermann%2C_Jakob
+118542192|Grillparzer, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Grillparzer%2C_Franz
+118542389|Grogger, Paula|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Grogger%2C_Paula
+118545426|Hammer-Purgstallm, Joseph Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hammer-Purgstall
+118545574|Handke, Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Handke%2C_Peter
+118545760|Hansen, Theophil, Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hansen%2C_Theophil%2C_Freiherr_von
+118547356|Haydn, Joseph|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Haydn%2C_Joseph
+118547666|Heer, Friedrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Heer%2C%20Friedrich
+118548832|Heller, André (Franz)|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Heller%2C_Andr%C3%A8_Franz
+118550241|Herzl, Theodor|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Herzl%2C_Theodor
+118550950|Hildebrandt, Johann Lucas von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hildebrandt%2C_Johann_Lucas_von
+118551809|Hodina, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hodina%2C_Karl
+118552147|Hörbiger, Hanns|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/H%C3%B6rbiger%2C_Hanns
+118552759|Hofmannsthal, Hugo von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hofmannsthal%2C_Hugo_von
+118553046|Holl, Adolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Holl%2C_Adolf
+118553313|Holzmeister, Clemens|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Holzmeister%2C_Clemens
+118553739|Horváth, Ödön von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Horv%C3%A1th%2C_%C3%96d%C3%B6n_von
+118553747|Horton, Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Horton%2C_Peter
+118553925|Hrdli?ka, Alfred|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hrdli%C4%8Dka%2C_Alfred
+118554239|Hudal, Alois|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hudal%2C_Alois
+118554786|Hundertwasser, Friedensreich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hundertwasser%2C_Friedensreich
+118556452|Jacquin, Nikolaus Joseph Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Jacquin%2C_Nikolaus_Joseph_Freiherr_von
+118556509|Jägerstätter, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/J%C3%A4gerst%C3%A4tter%2C_Franz
+118557750|Erzherzog Johann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Erzherzog_Johann
+118559230|Kafka, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kafka%2C_Franz
+118560492|Kassner, Rudolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kassner%2C%20Rudolf
+118561219|Kelsen, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kelsen%2C_Hans
+118561294|Kempelen, Wolfgang von (de Pámánd)|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Kempelen%2C%20Wolfgang%20von%20de%20P%C3%A1m%C3%A1nd
+118561448|Kepler, Johannes|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kepler%2C_Friedrich_Johannes
+118562533|Kisch, Egon Erwin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kisch%2C_Egon_Erwin
+118563289|Klimt, Gustav|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Klimt%2C_Gustav
+118564722|Kokoschka, Oscar|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kokoschka%2C_Oscar
+118565354|Korab, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Korab%2C_Karl
+118565885|Kräftner, Hertha|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kr%C3%A4ftner%2C_Hertha
+118566040|Krainer, Josef Jun.|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Krainer%2C_Josef_Jun.
+118566288|Kraus, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kraus%2C_Karl
+118566512|Kreisky, Bruno|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kreisky%2C_Bruno
+118567365|Kubin, Alfred|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kubin%2C_Alfred
+118567756|Kürenberger (der von Kürenberg)|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/K%C3%BCrenberger_%28der_von_K%C3%BCrenberg%29
+118570285|Lavant, Christine|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lavant%2C_Christine
+118571036|Lehár, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Leh%C3%A1r%2C%20Franz
+118571990|Lernet-Holenia, Alexander|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lernet-Holenia%2C_Alexander
+118574337|Lorenz, Konrad|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lorenz%2C_Konrad
+118575767|Mach, Ernst|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mach%2C_Ernst
+118578626|Masaryk, Thomas Garrigue|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Masaryk%2C_Thomas_Garrigue
+118580477|Meitner, Lise|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Meitner%2C_Lise
+118580566|Mell, Max|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mell%2C%20Max
+118580698|Mendel, Johann Gregor|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mendel%2C_Johann_Gregor
+118580833|Menger, Anton|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Menger%2C%20Anton
+118580841|Menger, Carl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Menger%2C%20Carl
+118581163|Merkl, Adolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Merkl%2C_Adolf
+118583301|Molden, Fritz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Molden%2C_Fritz
+118585193|Müller, Robert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/M%C3%BCller%2C_Robert
+118585681|Muliar, Fritz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Muliar%2C_Fritz
+118585916|Musil, Robert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Musil%2C_Robert
+118586874|Neidhart von Reuental|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Neidhart_von_Reuental
+118587080|Nestroy, Johann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Nestroy%2C_Johann
+118587420|Neurath, Otto|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Neurath_Otto
+118587447|Neururer, Otto|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Neururer%2C_Otto
+118589229|Oberth, Hermann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Oberth%2C%20Hermann
+118589229|Oberth, Hermann|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Oberth%2C%20Hermann
+118589768|Olbrich, Joseph Maria|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Olbrich%2C_Joseph_Maria
+118590618|Oswald von Wolkenstein|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Oswald_von_Wolkenstein
+118591932|Passini, Johann Nepomuk|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Passini%2C_Johann_Nepomuk
+118592122|Pauli, Wolfgang|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pauli%2C_Wolfgang
+118592394|Peichl, Gustav|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Peichl%2C_Gustav
+118592750|Perkonig, Josef Friedrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Perkonig%2C_Josef_Friedrich
+118592866|Perutz, Max Ferdinand|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Perutz%2C_Max_Ferdinand
+118594990|Ple?nik, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ple%C4%8Dnik%2C%20Josef
+118595474|Polgar, Alfred|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Polgar%2C_Alfred
+118595679|Pongratz, Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pongratz%2C_Peter
+118595822|Popper-Lynkeus, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Popper-Lynkeus%2C_Josef
+118595830|Popper, Karl Raimund|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Popper%2C%20Karl%20Raimund
+118595881|Porsche, Ferdinand|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Porsche%2C_Ferdinand
+118597914|Raimund, Ferdinand|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Raimund%2C_Ferdinand
+118597930|Rainer, Arnulf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Rainer%2C_Arnulf
+118599461|Reininger, Robert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Reininger%2C%20Robert
+118599739|Renner, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Renner%2C_Karl
+118601024|Rilke, Rainer Maria|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Rilke%2C_Rainer_Maria
+118601113|Ringel, Erwin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ringel%2C_Erwin
+118602667|Rosegger, Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Rosegger%2C_Peter
+118603140|Roth, Joseph|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Roth%2C_Joseph
+118605267|Sammer, Luis|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sammer%2C_Luis
+118606662|Schaukal, Richard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schaukal%2C%20Richard
+118607499|Schiele, Egon|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schiele%2C_Egon
+118609653|Schneider, Romy|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schneider%2C%20Romy
+118609807|Schnitzler, Arthur|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schnitzler%2C_Arthur
+118613138|Semmelweis, Ignaz Philipp|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Semmelweis%2C_Ignaz_Philipp
+118613219|Senefelder, Alois|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Senefelder%2C%20Alois
+118615610|Sonnenfels, Joseph Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sonnenfels%2C_Joseph_Freiherr_von
+118617281|Stein, Lorenz von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Stein%2C_Lorenz_von
+118618156|Stifter, Adalbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Stifter%2C_Adalbert
+118620126|Suttner, Bertha von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Suttner%2C_Bertha_von
+118620657|Tandler, Julius|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Tandler%2C_Julius
+118622528|Tichy, Herbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Tichy%2C_Herbert
+118623362|Torberg, Friedrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Torberg%2C_Friedrich
+118625993|Valier, Max|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Valier%2C%20Max
+118628399|Wagner, Otto Koloman|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wagner%2C_Otto_Koloman
+118628445|Wagner-Jauregg, Julius|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wagner-Jauregg%2C_Julius
+118628674|Waldmüller, Ferdinand Georg|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Waldm%C3%BCller%2C_Ferdinand_Georg
+118629786|Webern, Anton von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Webern%2C%20_Anton_%20von
+118629913|Wegener, Alfred Lothar|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wegener%2C_Alfred_Lothar
+118630083|Weigel, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Weigel%2C_Hans
+118630180|Weiler, Max|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Weiler%2C_Max
+118630601|Weisskopf, Viktor|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Weisskopf%2C_Viktor
+118631373|Werfel, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Werfel%2C%20Franz
+118632256|Wickenburg, Alfred von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wickenburg%2C_Alfred_von
+118632655|Wiesenthal, Simon|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wiesenthal%2C_Simon
+118632841|Wildgans, Anton|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wildgans%2C%20Anton
+118634313|Wittgenstein, Ludwig Josef Johann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wittgenstein%2C_Ludwig_Josef_Johann
+118636367|Zeiller, Franz von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zeiller%2C_Franz_von
+118637002|Zimmermann, Robert von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zimmermann%2C_Robert_von
+118637339|Zülow, Franz von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Z%C3%BClow%2C_Franz_von
+118637479|Zweig, Stefan|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zweig%2C_Stefan
+118639943|Gmunden, Johannes (Krafft) von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gmunden%2C%20Johannes%20%28Krafft%29%20von
+118640925|Mark, Hermann|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Mark%2C%20Hermann
+118641913|Regiomontanus|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Regiomontanus
+118651013|Auer von Welsbach, Carl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Auer_von_Welsbach%2C_Carl
+118653229|Born, Ludger|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Born_Ludger
+118653830|Baum, Vicki|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Baum%2C%20Vicki
+118653946|Baumgartner, Andreas|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Baumgartner%2C_Andreas
+118655272|Benatzky, Ralph|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Benatzky%2C_Ralph
+118660365|Bock, Fritz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bock%2C_Fritz
+118660527|Boeckl, Herbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Boeckl%2C_Herbert
+118660691|Böhm-Bawerk, Eugen von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/B%C3%B6hm-Bawerk%2C_Eugen_von
+118663046|Bieber, Friedrich Julius|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bieber%2C_Friedrich_Julius
+118665243|Burjan, Hildegard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Burjan%2C_Hildegard
+118676768|Conrad von Hötzendorf, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Conrad_von%20H%C3%B6tzendorf%2C_Franz
+118677101|Coudenhove-Kalergi, Richard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Coudenhove-Kalergi%2C_Richard
+118677705|Demelius, Heinrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Demelius%2C_Heinrich
+118678493|Dachauer, Wilhelm|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Dachauer%2C_Wilhelm
+118680625|Drach, Albert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Drach%2C_Albert
+118681737|Ehrenfest, Paul|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ehrenfest%2C_Paul
+118685430|Escherich, Theodor|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Escherich%2C%20Theodor
+118686623|Fellner, Ferdinand, d Jüngere|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Fellner%2C_Ferdinand%2C_d_J%C3%BCngere
+118687824|Eder, Josef Maria|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Eder%2C%20Josef%20Maria
+118692674|Frank, Johann Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Frank%2C_Johann_Peter
+118693670|Frisch, Karl Ritter von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Frisch%2C_Karl_Ritter_von
+118693727|Frischmuth, Barbara|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Frischmuth%2C_Barbara
+118693972|Fuchs, Ernst (geb 1930)|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Fuchs%2C_Ernst_%28geb_1930%29
+118694553|Ghega, Karl Ritter von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ghega%2C_Karl_Ritter_von
+118695223|Glaser, Eduard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Glaser%2C_Eduard
+118695932|Gösser, Wilhelm|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/G%C3%B6sser%2C_Wilhelm
+118698354|Grueber, Johannes|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Grueber%2C_Johannes
+118699725|Haas, Conrad|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Haas%2C%20Conrad
+118700243|Haenke, Thaddäus|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Haenke%2C_Thadd%C3%A4us
+118701703|Harrer, Heinrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Harrer%2C_Heinrich
+118701924|Adam, Adolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Adam%2C_Adolf
+118704095|Hess, Victor Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hess%2C_Victor_Franz
+118708449|Hutter, Wolfgang|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hutter%2C_Wolfgang
+118708481|Hyrtl, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hyrtl%2C_Josef
+118708945|Hass, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hass%2C_Hans
+118710230|Helmer, Hermann Gottlieb|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Helmer%2C_Hermann_Gottlieb
+118710656|Herberstein, Siegmund Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Herberstein%2C_Siegmund_Freiherr_von
+118710761|Innerhofer, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Innerhofer%2C_Franz
+118711458|Jagi?, Vatroslav von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Jagi%C4%87%2C_Vatroslav_von
+118715054|Korngold, Erich Wolfgang|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Korngold%2C_Erich_Wolfgang
+118715399|Krafft-Ebing, Richard von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Krafft-Ebing%2C_Richard_von
+118715461|Kramer, Theodor|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kramer%2C_Theodor
+118715895|Kreisler, Georg|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kreisler%2C_Georg
+118720783|Kaplan, Viktor|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kaplan%2C_Viktor
+118722026|Kernstock, Ottokar|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kernstock%2C%20Ottokar
+118726110|Lammasch, Heinrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lammasch%2C_Heinrich
+118726226|Landsteiner, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Landsteiner%2C_Karl
+118728881|Loewi, Otto|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Loewi%2C_Otto
+118729578|Lueger, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lueger%2C_Karl
+118731076|Marco d'Aviano|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Marco%20d%C2%B4Aviano
+118732382|Mayreder, Rosa|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mayreder%2C_Rosa
+118734253|Mitterhofer, Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mitterhofer%2C_Peter
+118734679|Neutra, Richard Joseph|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Neutra%2C_Richard_Joseph
+118735543|Nitsch, Hermann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Nitsch%2C_Hermann
+118735691|Nüll, Eduard van der|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/N%C3%BCll%2C_Eduard_van_der
+118738321|Negrelli, Alois von Moldelbe|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Negrelli%2C_Alois_von_Moldelbe
+118739883|Penck, Albrecht|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Penck%2C_Albrecht
+118740083|Perutz, Leo|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Perutz%2C_Leo
+118740792|Pfeiffer, Ida|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pfeiffer%2C_Ida
+118741721|Prandtauer, Jakob|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Prandtauer%2C_Jakob
+118742353|Pichler, Adolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pichler%2C_Adolf
+118742981|Purtscheller, Ludwig|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Purtscheller%2C_Ludwig
+118743309|Raab, Julius|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Raab%2C_Julius
+118744380|Reischek, Andreas, sen|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Reischek%2C_Andreas%2C_sen
+118744429|Reithmann, Christian|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Reithmann%2C_Christian
+118746278|Grazie, Marie Eugenie delle|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Grazie%2C_Marie_Eugenie_delle
+118746375|Ebner, Jeannie|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ebner%2C_Jeannie
+118747010|Kerschbaumer, Marie-Thérèse|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kerschbaumer%2C_Marie-Th%C3%A9r%C3%A8se
+118747649|Musil, Alois|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Musil%2C_Alois
+118748432|Slatin, Rudolf Karl Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Slatin%2C_Rudolf_Karl_Freiherr_von
+118752634|Stammel, Josef Thaddäus|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Stammel%2C_Josef_Thadd%C3%A4us
+118752855|Staudacher, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Staudacher%2C_Hans
+118755498|Störck, Anton Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/St%C3%B6rck%2C_Anton_Freiherr_von
+118756389|Tegetthoff, Admiral Wilhelm von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Tegetthoff%2C_Admiral_Wilhelm_von
+118756494|Terzaghi, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Terzaghi%2C_Karl
+118757180|Thöny, Wilhelm|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Th%C3%B6ny%2C_Wilhelm
+118757393|Thun-Hohenstein, Leo Graf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Thun-Hohenstein%2C%20Leo%20Graf
+118757709|Suess, Eduard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Suess%2C_Eduard
+118758055|Swieten, Gerard van|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Swieten%2C_Gerard_van
+118759949|Schmögner, Walter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schm%C3%B6gner%2C_Walter
+118762141|Schütte-Lihotzky, Margarete|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sch%C3%BCtte-Lihotzky%2C_Margarete
+118762915|Schwarz, David|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Schwarz%2C%20David
+118763040|Schwarzenegger, Arnold|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schwarzenegger%2C_Arnold
+118764934|Seyß-Inquart, Arthur|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sey%C3%9F-Inquart%2C%20Arthur
+118765108|Siccardsburg, August Siccard von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Siccardsburg%2C_August_Siccard_von
+118767143|Werner, Carl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Werner%2C_Carl
+118770543|Wacker, Rudolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wacker%2C_Rudolf
+118771000|Waldheim, Kurt|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Waldheim%2C_Kurt
+118771663|Wiesenthal, Grete|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wiesenthal%2C%20Grete
+118777750|Kollár, Ján|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Koll%C3%A1r%2C_J%C3%A1n
+118777920|Kralik, Richard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kralik%2C%20Richard
+118780166|Lissauer, Ernst|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lissauer%2C_Ernst
+118781820|Marcus, Siegfried|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Marcus%2C_Siegfried
+118790684|Peuerbach, Georg von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Peuerbach%2C_Georg_von
+118790684|Peuerbach, Georg von|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Peuerbach%2C%20Georg%20von
+118794701|Sauter, Ferdinand|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sauter%2C%20Ferdinand
+118795023|Schindler, Rudolph Michael|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schindler%2C_Rudolph_Michael
+118797026|Sickel, Theodor von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sickel%2C%20Theodor%20von
+118800760|Lampert, Carl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lampert_Carl
+118802100|Thonet, Michael|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Thonet%2C_Michael
+118802801|Trubetzkoy, Nikolai Sergejewitsch|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Trubetzkoy%2C%20Nikolai%20Sergejewitsch
+118809113|Hollein, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hollein%2C_Hans
+118810065|Hlawka, Edmund|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hlawka%2C_Edmund
+118810073|Hönel, Herbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/H%C3%B6nel%2C%20Herbert
+118811436|Loder, Matthäus|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Loder%2C_Matth%C3%A4us
+118811738|Nöstlinger, Christine|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/N%C3%B6stlinger%2C_Christine
+118812963|Fellinger, Leo|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Fellinger%2C%20Leo
+118814486|Jungwirth, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Jungwirth%2C%20Josef
+118815555|Brandauer, Klaus Maria|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Brandauer%2C_Klaus_Maria
+118817582|Lüthi, Kurt|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/L%C3%BCthi%2C_Kurt
+118822896|Soyfer, Jura|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Soyfer%2C_Jura
+118823574|Schrödinger, Erwin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schr%C3%B6dinger%2C_Erwin
+118828983|Qualtinger, Helmut|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Qualtinger%2C%20Helmut
+118831224|Radon, Johann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Radon%2C%20Johann
+118832352|Lampa, Anton|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lampa%2C_Anton
+118833057|Gapp, Jakob|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gapp%2C_Jakob
+118838687|Kumpf, Gottfried|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kumpf%2C_Gottfried
+118838776|Turrini, Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Turrini%2C_Peter
+118841424|Hell, Bodo|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hell%2C_Bodo
+118841548|Kornhäusel, Josph Georg|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kornh%C3%A4usel%2C_Josph_Georg
+118841750|Roth, Gerhard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Roth%2C_Gerhard
+118844253|Leopold, Rudolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Leopold%2C_Rudolf
+118847139|Abraham, Raimund|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Abraham%2C_Raimund
+118850237|Henisch, Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Henisch%2C_Peter
+118854208|Haider, Jörg|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Haider%2C_J%C3%B6rg
+118854372|Doppler, Christian|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Doppler%2C_Christian
+118855190|Zemanek, Heinz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zemanek%2C_Heinz
+118855921|Reiterer, Werner|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Reiterer%2C_Werner
+118877968|Szyszkowitz, Gerald|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Szyszkowitz%2C%20Gerald
+118885693|Hakel, Hermann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hakel%2C_Hermann
+118888455|Kretschmer, Paul|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kretschmer%2C_Paul
+118892983|Schmidt, Martin Johann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schmidt%2C_Martin_Johann
+118901133|Thirring, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Thirring%2C_Hans
+118902997|Tielsch, Ilse|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Tielsch%2C_Ilse
+118904728|Bárány, Róbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/B%C3%A1r%C3%A1ny%2C_R%C3%B3bert
+118911562|Aduatz, Friedrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Aduatz%2C_Friedrich
+118912984|Export, Valie|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Export%2C_Valie
+118925946|Hlávka, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hl%C3%A1vka%2C_Josef
+118931725|Schlosser, Julius Alwin von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schlosser%2C%20Julius%20Alwin%20von
+118937308|Olah, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Olah%2C_Franz
+118939874|Mälzel, Johann N.|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/M%C3%A4lzel%2C%20Johann%20N.
+118941518|Domenig, Günter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Domenig%2C_G%C3%BCnter
+118951513|Angerer, Paul|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Angerer%2C_Paul
+118951637|Schindler, Franz Martin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schindler%2C_Franz_Martin
+118953028|Sebestyén, György|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sebesty%C3%A9n%2C_Gy%C3%B6rgy
+118968866|Glück, Anselm|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gl%C3%BCck%2C_Anselm
+118973037|Kogelnik, Kiki|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kogelnik%2C_Kiki
+119001802|Jelinek, Elfriede|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Jelinek%2C_Elfriede
+119005735|Fürer-Haimendorf, Christoph von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/F%C3%BCrer-Haimendorf%2C_Christoph_von
+119012758|Alt, Jakob|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Alt%2C_Jakob
+119013584|Koschat, Thomas|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Koschat%2C_Thomas
+119017202|Kaltenbrunner, Ernst|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kaltenbrunner%2C_Ernst
+119018489|Fritz, Marianne|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Fritz%2C_Marianne
+119020874|Dörmann, Felix|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/D%C3%B6rmann%2C_Felix
+119022354|Busta, Christine|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Busta%2C_Christine
+119022370|Mitterer, Felix|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mitterer%2C_Felix
+119023911|Mitterer, Erika|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mitterer%2C_Erika
+119025698|Ava|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ava
+119029952|Nußbaumer, Otto|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Nu%C3%9Fbaumer%2C_Otto
+119032961|Askin, Leon|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Askin%2C_Leon
+119034603|Skoda, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/%C5%A0koda%2C_Josef
+119035030|Hartel, Wilhelm August von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hartel%2C_Wilhelm_August_von
+119040077|Gusinde, Martin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gusinde%2C_Martin
+119041308|Ringel, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ringel%2C_Franz
+119044382|Böhler, Lorenz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/B%C3%B6hler%2C_Lorenz
+119044749|Potiorek, Oskar|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Potiorek%2C_Oskar
+119059096|Stefan, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Stefan%2C_Josef
+119059304|Albert, Eduard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Albert%2C_Eduard
+119059509|Hauer, Franz von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hauer%2C_Franz_von
+119060116|Weiss, Leopold v. Muhammad Asad|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Weiss%2C%20Leopold%20v.%20Muhammad%20Asad
+119063336|Kolleritsch, Alfred|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kolleritsch%2C_Alfred
+119064138|Djerassi, Carl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Djerassi%2C_Carl
+119065932|Miklosich, Franz von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Miklosich%2C%20Franz%20von
+119071738|Klüger, Ruth|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kl%C3%BCger%2C_Ruth
+119073358|Morath, Inge|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Morath%2C_Inge
+119083108|Hafner, Toni|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hafner%2C_Toni
+119083906|Benya, Anton|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Benya%2C_Anton
+119090708|Neuwirth, Arnulf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Neuwirth%2C_Arnulf
+119096137|Dichand, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Dichand%2C_Hans
+119098962|Pröll, Erwin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pr%C3%B6ll%2C_Erwin
+119100215|Leser, Norbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Leser%2C%20Norbert
+119100266|Schönherr, Max|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sch%C3%B6nherr%2C%20Max
+119103354|Rickmer-Rickmers, Wilhelm|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Rickmer-Rickmers%2C_Wilhelm
+119111128|Bernatzik, Hugo|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bernatzik%2C_Hugo
+119111403|Wieser, Friedrich Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wieser%2C_Friedrich_Freiherr_von
+119131773|Elstner, Frank|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Elstner%2C%20Frank
+119132273|Schauberger, Viktor|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Schauberger%2C%20Viktor
+119151456|Zach, Franz Xaver, Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zach%2C_Franz_Xaver%2C_Freiherr_von
+119153327|Schmidtbauer, Paul|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schmidtbauer%2C_Paul
+119157004|Lessing, Erich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lessing%2C%20Erich
+119166631|Globocnik, Odilo|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Globocnik%2C_Odilo
+119166836|Hann, Julius|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hann%2C_Julius
+119167670|Kühn, Eusebius Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/K%C3%BChn%2C_Eusebius_Franz
+119171201|Kraner, Cissy|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kraner%2C_Cissy
+119171805|Kuhn, Richard Johann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kuhn%2C_Richard_Johann
+119173050|Ebner-Eschenbach, Moritz Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ebner-Eschenbach%2C_Moritz_Freiherr_von
+119183692|Kohr, Leopold|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kohr%2C%20Leopold
+119188449|Zilk, Helmut|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zilk%2C_Helmut
+119209519|Bürckel, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/B%C3%BCrckel%2C_Josef
+119212005|Truger, Ulrike|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Truger_Ulrike
+119219166|Tesla, Nikola|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Tesla%2C_Nikola
+119223554|Kreß, Wilhelm|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kre%C3%9F%2C_Wilhelm
+119232383|Leskoschek, Axl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Leskoschek%2C_Axl
+119238853|Kain, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kain%2C_Franz
+119242699|Maier, Heinrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Maier%2C_Heinrich
+119262339|Holub, Emil|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Holub%2C_Emil
+119264870|List, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/List%2C%20Hans
+119271524|Bronner, Gerhard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bronner%2C_Gerhard
+119272148|Stock, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Stock%2C_Karl
+119276690|Schenk, Otto|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schenk%2C_Otto
+119286386|Zawinul, Joe|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zawinul%2C%20Joe
+119294567|Höhnel, Ludwig von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/H%C3%B6hnel%2C_Ludwig_von
+119296055|Payer, Julius von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Payer%2C_Julius_von
+119296896|Hahn, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hahn%2C_Hans
+119298791|Herzig, Wolfgang|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Herzig%2C_Wolfgang
+119305429|Jodl, Friedrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Jodl%2C_Friedrich
+119312379|Bernardis, Robert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bernardis_Robert
+119313839|Zelman, Leon|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zelman%2C_Leon
+119325500|Essl, Karlheinz sen.|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Essl%2C_Karlheinz_sen.
+119328860|Hackl, Erich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hackl%2C_Erich
+119334739|Mölk, Josef Adam von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/M%C3%B6lk%2C_Josef_Adam_von
+119338467|Hochstetter, Ferdinand von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hochstetter%2C_Ferdinand_von
+119362252|Schutting, Julian|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schutting%2C_Julian
+119365146|Baumann, Oskar|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Baumann%2C_Oskar
+119368994|Schwaiger, Brigitte|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schwaiger%2C_Brigitte
+119369125|Achleitner, Friedrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Achleitner%2C_Friedrich
+119385686|Trenk, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Trenk%2C_Franz
+119407744|Martini, Karl Anton, Freiherr zu Wasserberg|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Martini%2C_Karl_Anton%2C_Freiherr_zu_Wasserberg
+119435810|Haidinger, Wilhelm von|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Haidinger%2C%20Wilhelm%20von
+119457415|Simony, Friedrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Simony%2C_Friedrich
+119463180|Degen, Jakob|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Degen%2C%20Jakob
+119480700|Friedjung, Heinrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Friedjung%2C_Heinrich
+119483467|Daim, Wilfried|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Daim%2C%20Wilfried
+119491567|Grieser, Dietmar|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Grieser%2C_Dietmar
+119495058|Angelus, Johannes|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Angelus%2C%20Johannes
+119497654|Kofler, Gerhard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kofler%2C_Gerhard
+119498022|Krainer, Josef sen.|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Krainer%2C_Josef_sen.
+119501244|Brezina, Thomas|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Brezina%2C_Thomas
+119513641|Franzobel|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Franzobel
+119524686|Lebert, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lebert%2C_Hans
+119527421|Mitgutsch, Anna|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mitgutsch%2C_Anna
+119529025|Kerner, Anton, Ritter von Marilaun|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kerner%2C_Anton%2C_Ritter_von_Marilaun
+119530929|Huber, Erwin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Huber%2C_Erwin
+119533049|Stampfer, Simon, Ritter von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Stampfer%2C_Simon%2C_Ritter_von
+119544199|Köhlmeier, Michael|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/K%C3%B6hlmeier%2C_Michael
+119550377|Lahner, Johann Georg|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Lahner%2C%20Johann%20Georg
+119550407|Loschmidt, (Johann) Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Loschmidt%2C_%28Johann%29_Josef
+119550725|Königer, Veit|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/K%C3%B6niger%2C_Veit
+119560496|Molisch, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Molisch%2C%20Hans
+119560518|Paneth, Fritz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Paneth%2C_Fritz
+120009188|Musger, August|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Musger%2C%20August
+120012502|Gruber, Reinhard P|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gruber%2C_Reinhard_P
+120023083|Mischkulnig, Lydia|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mischkulnig%2C_Lydia
+120093685|Lipuš, Florjan|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lipu%C5%A1%2C_Florjan
+120108615|Barényi, Béla|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bar%C3%A9nyi%2C_B%C3%A9la
+120110709|Chorherr, Thomas|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Chorherr%2C_Thomas
+120162784|Komarek, Alfred|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Komarek%2C_Alfred
+120166666|Glavinic, Thomas|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Glavinic%2C_Thomas
+120193213|Etrich, Igo|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Etrich%2C%20Igo
+120207931|Fian, Antonio|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Fian%2C_Antonio
+120305860|Voigtländer, Johann Christoph|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Voigtl%C3%A4nder%2C_Johann_Christoph
+120426145|Rauch, Wolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Rauch%2C_Wolf
+120434679|Werger, Stefanie|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Werger%2C_Stefanie
+120454874|Berger, Helmut|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Berger%2C_Helmut
+120474662|Mähr, Christian|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/M%C3%A4hr%2C_Christian
+120491796|Neuwirth, Olga|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Neuwirth%2C_Olga
+120508206|Mayer, Horst Friedrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mayer%2C_Horst_Friedrich
+120513854|Kilic, Ilse|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kilic%2C_Ilse
+120564718|Bartenbach, Christian|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Bartenbach%2C%20Christian
+120588161|Kafka, Helene|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kafka%2C_Helene
+120605406|Scholz, Roman Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Scholz_Roman_Karl
+120668890|Fischer, Heinz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Fischer%2C_Heinz
+120732807|Lugmayer Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lugmayer_Karl
+120735784|Koren, Johannes|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Koren%2C_Johannes
+120739674|Alt, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Alt%2C_Franz
+120765101|Kaip, Günther|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kaip%2C_G%C3%BCnther
+120837099|Schmidt-Dengler, Wendelin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schmidt-Dengler%2C_Wendelin
+120908050|Bilgeri, Georg|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bilgeri%2C_Georg
+120928159|Mairhofer, Till|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mairhofer%2C_Till
+120954001|Gottlob, Georg|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gottlob%2C_Georg
+120966638|Nordegg, Sepp|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Nordegg%2C%20Sepp
+121017265|Palfrader, Beate|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Palfrader%2C_Beate
+121029875|Kauffmann, Götz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kauffmann%2C_G%C3%B6tz
+121037053|Welan, Manfried|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Welan%2C%20Manfried
+121052745|Ganglbauer, Petra|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ganglbauer%2C_Petra
+121066215|Nobile, Peter von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Nobile%2C_Peter_von
+121073920|Mayer-Skumanz, Lene|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mayer-Skumanz%2C_Lene
+121084523|Khol, Andreas|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Khol%2C_Andreas
+121132676|Wohinz, Josef W|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wohinz%2C_Josef_W
+121263770|Swoboda, Hannes|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Swoboda%2C_Hannes
+121340775|Gruber, Sabine|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gruber%2C_Sabine
+121417344|Ferk, Janko|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ferk%2C_Janko
+121543285|Winckler, Georg|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Winckler%2C_Georg
+121621251|Millesi, Hanno|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Millesi%2C_Hanno
+121632822|Stöger, Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/St%C3%B6ger%2C_Peter
+121673995|Puch, Johann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Puch%2C_Johann
+121675211|Kuzmany, Karol|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kuzmany%2C_Karol
+121675777|Stabius, Johannes|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Stabius%2C%20Johannes
+121676803|Königsegg, Anna Bertha|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/K%C3%B6nigsegg%2C_Anna_Bertha
+121723747|Gstättner, Egyd|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gst%C3%A4ttner%2C_Egyd
+121796310|Leitl, Christoph|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Leitl%2C_Christoph
+121871967|Thirring, Walter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Thirring%2C_Walter
+121878864|Mayer, Doris|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mayer%2C_Doris
+121903311|Köberl, Christian|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/K%C3%B6berl%2C%20Christian
+121981029|Seelos, Anton Toni|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Seelos%2C%20Anton%20Toni
+122075781|Pühringer, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/P%C3%BChringer%2C_Josef
+122093615|Grünmandl, Otto|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gr%C3%BCnmandl%2C_Otto
+122095731|Gadolla, Josef Ritter von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gadolla%2C_Josef_Ritter_von
+122206886|Ferrari d' Ochieppo, Konradin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ferrari_d%27_Ochieppo%2C_Konradin
+122220722|Lingens, Peter Michael|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lingens%2C_Peter_Michael
+122235886|Gölsdorf, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/G%C3%B6lsdorf%2C%20Karl
+122363736|Sailer, Toni|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sailer%2C%20Toni
+122398084|Lahousen, Erwin von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lahousen%2C_Erwin_von
+122509692|Knaus, Friedrich von|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Knaus%2C%20Friedrich%20von
+122547497|Heppner, Harald|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Heppner%2C_Harald
+122548949|Kohlmaier, Herbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kohlmaier%2C_Herbert
+122596358|Ladstätter, Sabine|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ladst%C3%A4tter%2C_Sabine
+122679571|Bretschneider, Rudolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bretschneider%2C%20Rudolf
+122751647|Mühringer, Doris|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/M%C3%BChringer%2C_Doris
+122935942|Weissmüller, Johnny|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Weissm%C3%BCller%2C%20Johnny
+122967836|Molden, Otto|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Molden%2C_Otto
+122981367|Berger, Senta|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Berger%2C_Senta
+123035333|Madersperger, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Madersperger%2C_Josef
+123035333|Madersperger, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Madersperger%2C%20Josef
+123039711|Zadek, Hilde|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zadek%2C_Hilde
+123043107|Ruiss, Gerhard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ruiss%2C_Gerhard
+123213851|Rachinger, Johanna|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Rachinger%2C_Johanna
+123215331|Blau, Marietta|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Blau%2C_Marietta
+123483247|Kain, Eugenie|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kain%2C_Eugenie
+123602408|Csoklich, Fritz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Csoklich%2C%20Fritz
+123630797|Harand, Irene|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Harand%2C_Irene
+123814537|Zuna-Kratky, Gabriele|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zuna-Kratky%2C_Gabriele
+123933560|Flecker, Kurt|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Flecker%2C_Kurt
+123934605|Adametz, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Adametz%2C_Hans
+123955203|Swoboda, Heinrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Swoboda%2C_Heinrich
+123967791|Marginter, Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Marginter%2C_Peter
+124000029|Kravogl, Johann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kravogl%2C_Johann
+124000940|Sänger, Eugen|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/S%C3%A4nger%2C%20Eugen
+124050301|Maurer, Hermann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Maurer%2C%20Hermann
+124080340|Pribram, Karl H|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pribram%2C_Karl_H
+124165273|Maurer, Manfred|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Maurer%2C_Manfred
+124231063|Kodré, Heinrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kodr%C3%A9%2C_Heinrich
+124261736|Berres, Christian|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Berres%2C_Christian
+124453821|Ferra-Mikura, Vera|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ferra-Mikura%2C_Vera
+124481566|Merkel, Inge|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Merkel%2C_Inge
+124557414|Zeilinger, Anton|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zeilinger%2C_Anton
+124634443|Molterer, Wilhelm|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Molterer%2C_Wilhelm
+124671632|Lehner, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lehner%2C_Franz
+124712614|Schettina, Martina|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schettina%2C%20Martina
+124769578|Pieller, Wilhelm|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pieller%2C_Wilhelm
+124788343|Löhr, Alexander|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/L%C3%B6hr%2C_Alexander
+124790739|Kohn, Walter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kohn%2C_%20Walter
+124875262|Johnston, William M.|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Johnston%2C%20William%20M.
+124979645|Gregor, Nora|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gregor%2C_Nora
+125920873|Späth, Ernst|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sp%C3%A4th%2C%20Ernst
+126502862|Lössl, Friedrich Ritter von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/L%C3%B6ssl%2C_Friedrich_Ritter_von
+126695962|Harpner, Gustav|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Harpner%2C_Gustav
+126912319|Tauschek, Gustav|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Tauschek%2C%20Gustav
+127024891|Hatschek, Ludwig|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hatschek%2C_Ludwig
+127327452|Wilczek, Hans (Johann Nepomuk) Graf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wilczek_Hans_%28Johann_Nepomuk%29_Graf
+127483918|Wayß, Gustav Adolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Way%C3%9F%2C%20Gustav%20Adolf
+127510141|Melan, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Melan%2C%20Josef
+127514341|Wenckebach, Karel Frederik|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wenckebach%2C_Karel_Frederik
+127535837|Geyling, Remigius|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Geyling%2C%20Remigius
+127584145|Engerth, Wilhelm Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Engerth%2C%20Wilhelm%20Freiherr%20von
+127745467|Petrucci, Mario|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Petrucci%2C%20Mario
+127854827|Mitscha-Märheim, Herbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mitscha-M%C3%A4rheim%2C_Herbert
+127917802|Przibram, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Przibram%2C_Karl
+127937374|Wertheim, Ernst|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wertheim%2C_Ernst
+128182970|Sliškovi?, Josip|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sli%C5%A1kovi%C4%87%2C_Josip
+128378085|Blau, Luigi|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Blau%2C_Luigi
+128486155|Prinzhofer, August|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Prinzhofer%2C_August
+128523778|Krzyzanowski, Otfried|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Krzyzanowski%2C_Otfried
+128672005|Hubert von Goisern|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hubert%20von%20Goisern
+128808713|Dassanowsky, Robert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Dassanowsky%2C_Robert
+128870400|Essl, Karlheinz jun.|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Essl%2C_Karlheinz_jun.
+128872616|Gersdorff, Johann Rudolf Ritter von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gersdorff%2C_Johann_Rudolf_Ritter_von
+128891009|Häupl, Michael|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/H%C3%A4upl%2C_Michael
+128962143|Sindelar, Matthias|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sindelar%2C_Matthias
+128987537|Haas, Waltraut|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Haas%2C_Waltraut
+129029521|Podgorski, Thaddäus|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Podgorski%2C_Thadd%C3%A4us
+129035017|Rosenmayr, Leopold|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Rosenmayr_Leopold
+129073237|Viehböck, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Viehb%C3%B6ck%2C_Franz
+129084808|Kastelic, Jakob|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kastelic%2C_Jakob
+129177741|Regschek, Kurt|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Regschek%2C_Kurt
+129204544|Klang, Heinrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Klang%2C_Heinrich
+129263958|Steinbach, Emil|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Steinbach%2C_Emil
+129408530|Pollack, Martin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pollack%2C_Martin
+129561592|Schneider, Erwin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schneider%2C_Erwin
+129587354|Messner, Franz Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Messner_Franz_Josef
+129597473|Burger, Rudolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Burger%2C_Rudolf
+129623423|Faymann, Werner|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Faymann%2C_Werner
+129661260|Bharati, Agehananda|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bharati%2C%20Agehananda
+129677574|Richter, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Richter%2C_Franz
+129853666|Flor, Olga|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Flor%2C_Olga
+129938602|Heltau, Michael|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Heltau%2C_Michael
+129962627|Waltz, Christoph|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Waltz%2C%20Christoph
+129966568|Steinwender, Eduard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Steinwender_Eduard
+130100021|Benda, Oskar|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Benda%2C%20Oskar
+130136727|Damianos, Constantin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Damianos%2C_Constantin
+130139173|Hiesleitner-Singer, Emmy|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hiesleitner-Singer%2C_Emmy
+130143790|Scherer, Rudolf von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Scherer%2C%20Rudolf%20von
+130143979|Scheu, Leo|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Scheu%2C_Leo
+130163457|Görlich, Ernst Joseph|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/G%C3%B6rlich%2C_Ernst_Joseph
+130212695|Czeija, Oskar|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Czeija%2C_Oskar
+130235547|Dobrizhoffer, Martin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Dobrizhoffer%2C_Martin
+130250945|Roberts, Ina|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Roberts%2C_Ina
+130334812|Einzinger, Erwin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Einzinger%2C_Erwin
+130395234|Haslauer, Wilfried|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Haslauer%2C_Wilfried
+130403741|Bilgeri, Reinhold|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bilgeri%2C_Reinhold
+130452033|Smolle, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Smolle%2C_Josef
+130620351|Weihs, Oskar|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Weihs%2C%20Oskar
+130897876|Aufschnaiter, Peter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Aufschnaiter%2C_Peter
+131394428|Breisach, Emil|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Breisach%2C_Emil
+131438522|Lieben, Robert von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lieben%2C%20Robert%20von
+131610791|Pröll, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pr%C3%B6ll%2C_Josef
+132117622|Bast, Gerald|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bast%2C_Gerald
+132220024|Zehner, Wilhelm|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zehner%2C_Wilhelm
+132476150|Raunacher, Johann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Raunacher%2C_Johann
+132520524|Fuchs, Ernst (geb 1851)|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Fuchs%2C_Ernst%20%28geb%201851%29
+132765233|Wladar, Anton|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wladar%2C%20Anton
+132812592|Viesèr, Dolores|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Vies%C3%A8r_Dolores
+133105377|Niessl, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Niessl%2C_Hans
+133165825|Platter, Günther|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Platter%2C_G%C3%BCnther
+133181502|Klí? (Klietsch), Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Kl%C3%AD%C4%8D%20%28Klietsch%29%2C%20Karl
+133424006|Martinz, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Martinz%2C_Josef
+133623009|Chvostek, Franz, junior|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Chvostek%2C_Franz%2C_junior
+133746577|Denk, Wolfgang|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Denk%2C_Wolfgang
+133985733|Ferreira, Fatima|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ferreira%2C_Fatima
+134052951|Mache, Heinrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mache%2C_Heinrich
+134197046|Voves, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Voves%2C_Franz
+134386612|Goebel, Alexander|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Goebel%2C_Alexander
+134436717|Kummer, Eberhard|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kummer%2C%20Eberhard
+134447581|Einzinger, Edith|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Einzinger%2C_Edith
+134749170|Fatty George|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Fatty_George
+134867610|Martini, Louise|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Martini%2C_Louise
+135360382|Proll, Nina|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Proll%2C_Nina
+135549396|Bleckmann, Johann Heinrich August|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Bleckmann%2C%20Johann%20Heinrich%20August
+135553768|Boykow, Johann Maria|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Boykow%2C%20Johann%20Maria
+135619653|Mateschitz, Dietrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mateschitz%2C_Dietrich
+135677416|Haswell, John|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Haswell%2C%20John
+135684234|Schulz, Georg|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schulz%2C_Georg
+135720346|Collmann, Alfred|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Collmann%2C%20Alfred
+135932696|Bischof, Horst|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bischof%2C_Horst
+135932750|Kohlrausch, Karl Wilhelm Friedrich (Fritz)|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kohlrausch%2C%20Karl%20Wilhelm%20Friedrich%20%28Fritz%29
+135936284|Brandl, Ernst|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Brandl%2C%20Ernst
+135969840|Philipp, Walter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Philipp%2C_Walter
+136000258|Fleissner, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Fleissner%2C%20Hans
+136105122|Schweiger, Heinrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schweiger%2C_Heinrich
+136160832|Imrich, Wilfried|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Imrich%2C_Wilfried
+136202322|Hermann, Johann Ritter von|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Hermann%2C%20Johann%20Ritter%20von
+136288030|Sausgruber, Herbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sausgruber%2C_Herbert
+136291643|Langer von Edenberg, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Langer%20von%20Edenberg%2C%20Karl
+136366422|Schäffler, Theodor Heinrich Otto|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sch%C3%A4ffler%2C_Theodor_Heinrich_Otto
+136408192|Koller, Carl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Koller%2C_Carl
+136416241|Dassanowsky, Elfriede|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Dassanowsky%2C_Elfriede
+136524052|Pichler, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pichler%2C_Franz
+136611834|Leitenberger, Friedrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Leitenberger%2C%20Friedrich
+136622410|Leitenberger, Johann Joseph|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Leitenberger%2C%20Johann%20Joseph
+136672779|Mauermann, Max|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Mauermann%2C%20Max
+136725546|Pleskow, Eric|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pleskow%2C%20Eric
+136782965|Pirquet, Guido|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pirquet%2C_Guido
+136784542|Schliefsteiner, Herbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schliefsteiner%2C_Herbert
+136812651|Pfanhauser, Wilhelm (sen.)|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Pfanhauser%2C%20Wilhelm
+137436394|Schauer, Helmut|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schauer%2C_Helmut
+137444877|Maass, Wolfgang|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Maass%2C_Wolfgang
+137634129|Hornbostel, Christian Georg|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Hornbostel%2C%20Christian%20Georg
+137901003|Muestinger, Georg|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Muestinger%2C%20Georg
+138371806|Hawlik, Johannes|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hawlik%2C_Johannes
+139080120|Reithoffer, Johann Nepomuk|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Reithoffer%2C%20Johann%20Nepomuk
+139206566|Komenda, Erwin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Komenda%2C_Erwin
+139220038|Pollak von Rudin, Adolf M.|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Pollak%20von%20Rudin%2C%20Adolf%20M.
+139380280|Pfretzschner, Norbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pfretzschner%2C%20Norbert
+139418016|Grosz, Paul|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Grosz%2C_Paul
+139534520|Seidl, Franziska|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Seidl%2C_Franziska
+139575324|Becker-Donner, Etta|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Becker-Donner%2C_Etta
+139619550|Schmidt, Rudolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Schmidt%2C%20Rudolf
+139842977|Kaltenbrunner, Gerlinde|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kaltenbrunner%2C_Gerlinde
+139892419|Rebitsch, Mathias|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Rebitsch%2C_Mathias
+140013512|Peteln, Pipo|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Peteln%2C_Pipo
+140131760|Peschka, Heinrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Peschka%2C%20Heinrich
+140131760|Peschka, Heinrich Stefan|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Peschka%2C%20Heinrich%20Stefan
+140269010|Kubinzky, Albrecht|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kubinzky%2C_Albrecht
+140352554|Pfanhauser, Wilhelm (jun.)|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Pfanhauser%2C%20Wilhelm
+140702601|Schöpfer, Friedrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sch%C3%B6pfer%2C_Friedrich
+140750770|Rupp, Sieghardt|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Rupp%2C_Sieghardt
+141012447|Molny, Erika|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Molny%2C_Erika
+141228032|Jesserer, Gertraud|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Jesserer%2C_Gertraud
+141412704|Ultzmann, Robert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ultzmann%2C%20Robert
+141884231|Winkler, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Winkler%2C_Josef
+143116150|Stelzer, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Stelzer%2C_Franz
+143756443|Vyslozil, Wolfgang|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Vyslozil%2C_Wolfgang
+143887475|Baudiß, Leo|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Baudi%C3%9F%2C%20Leo
+143951246|Dietl, Gottlieb|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Dietl%2C_Gottlieb
+170368599|Kraus, Herbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kraus%2C_Herbert
+170605086|Janko, Wolfgang H|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Janko%2C_Wolfgang_H
+170958000|Schaumayer, Maria|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schaumayer%2C_Maria
+171538609|Buchberger, Bruno|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Buchberger%2C_Bruno
+171623797|Fekter, Maria|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Fekter%2C_Maria
+172489733|Jilek, Wolfgang|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Jilek%2C_Wolfgang
+174099754|Cori, Carl Ferdinand|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Cori%2C_Carl_Ferdinand
+1011393174|Grohs-Fligely, Anton von|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Grohs-Fligely%2C%20Anton%20von
+1011481197|Hackstock, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hackstock%2C_Karl
+1013164474|Edlinger-Ploder, Kristina|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Edlinger-Ploder%2C_Kristina
+1013800125|Lederer, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lederer%2C_Karl
+1013937902|Schruf, Toni|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schruf%2C_Toni
+1015002706|Jurasek, Hubert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Jurasek%2C_Hubert
+1015551475|Löwinger, Sissy|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/L%C3%B6winger%2C_Sissy
+1017828334|Chorherr, Christoph|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Chorherr%2C_Christoph
+1018000283|Kreisler, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kreisler%2C_Karl
+1018698507|Leb, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Leb%2C%20Josef
+1018977023|Trost, Andreas|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Trost%2C_Andreas
+1019059419|Bures, Doris|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bures%2C_Doris
+1020039078|Luppis von Rammer, Giovanni|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Luppis_von_Rammer%2C_Giovanni
+1020590505|Schützenhöfer, Hermann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sch%C3%BCtzenh%C3%B6fer%2C_Hermann
+101417192X|Wrabetz, Alexander|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Wrabetz%2C_Alexander
+10951985X|Riedler, Willibald|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Riedler%2C_Willibald
+11503756X|Kasy, Friedrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kasy%2C_Friedrich
+11555565X|Lobe, Mira|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lobe%2C_Mira
+11610841X|Beer, Rudolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Beer%2C_Rudolf
+11629535X|Altmütter, Georg|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Altm%C3%BCtter%2C_Georg
+11629535X|Altmütter, Georg|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Altm%C3%BCtter%2C%20Georg
+11631754X|Quarin, Joseph Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Quarin%2C%20Joseph%20Freiherr%20von
+11642396X|Braun-Prager, Käthe|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Braun-Prager%2C%20K%C3%A4the
+11674698X|Hermann, Emanuel|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hermann%2C_Emanuel
+11698385X|Neumayr, Melchior|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Neumayr%2C_Melchior
+11718912X|Mussafia, Adolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mussafia%2C_Adolf
+11724936X|Weigl, Vally|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Weigl%2C_Vally
+11729277X|Unger, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Unger%2C_Franz
+11734950X|Thomas, Oswald|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Thomas%2C_Oswald
+11762974X|Ficker, Cenci von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ficker%2C_Cenci_von
+11764708X|Schuh, Franz, geb. 1804|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schuh%2C_Franz%2C_geb._1804
+11801028X|Fink, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Fink%2C_Josef
+11850021X|Abraham a Sancta Clara|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Abraham_a_Sancta_Clara
+11850357X|Anzengruber, Ludwig|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Anzengruber%2C_Ludwig
+11852660X|Dombrowski, Ernst von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Dombrowski%2C_Ernst_von
+11853694X|Fussenegger, Gertrud|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Fussenegger%2C_Gertrud
+11854716X|Hausner, Rudolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hausner%2C_Rudolf
+11855252X|Hoffmann, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hoffmann%2C_Josef
+11857423X|Loos, Adolf|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Loos%2C_Adolf
+11859169X|Paracelsus|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Paracelsus
+11859947X|Reinisch, Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Reinisch%2C_Franz
+11861293X|Seipel, Ignaz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Seipel%2C_Ignaz
+11861469X|Sinowatz, Fred|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sinowatz%2C_Fred
+11869569X|Gödel, Kurt|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/G%C3%B6del%2C_Kurt
+11870396X|Herzmanovsky-Orlando, Fritz von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Herzmanovsky-Orlando%2C_Fritz_von
+11870639X|Hoke, Giselbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hoke%2C_Giselbert
+11874951X|Rokitansky, Carl Freiherr von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Rokitansky%2C_Carl_Freiherr_von
+11875419X|Schebesta, Paul|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schebesta%2C_Paul
+11877221X|Zand, Herbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Zand%2C_Herbert
+11879504X|Schipper, Jakob Markus|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schipper%2C_Jakob_Markus
+11883309X|Gasteiger, Albert Josef Freiherr von Raabenstein und Kobach|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gasteiger%2C_Albert_Josef_Freiherr_von_Raabenstein_und_Kobach
+11884539X|Luick, Karl|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Luick%2C_Karl
+11890986X|Pregl, Fritz|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pregl%2C_Fritz
+11892849X|Ledwinka, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Ledwinka%2C%20Hans
+11894293X|Gstrein, Norbert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Gstrein%2C_Norbert
+11894777X|Hardtmuth, Joseph|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hardtmuth%2C_Joseph
+11903462X|Nothnagel, Hermann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Nothnagel%2C_Hermann
+11907835X|Mohs, Carl Friedrich Christian|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mohs%2C_Carl_Friedrich_Christian
+11908919X|Schmiedl, Friedrich|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Schmiedl%2C%20Friedrich
+11913134X|Brandstetter, Hans|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Brandstetter%2C_Hans
+11917698X|Jonke, Gert|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Jonke%2C_Gert
+11925476X|Martini, Martin|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Martini%2C_Martin
+11944786X|Stoll, Maximilian|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Stoll%2C_Maximilian
+11955447X|Winter, Ernst Karl |http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Ernst_Karl_Winter
+12011464X|Maier, Hermann|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Maier%2C_Hermann
+12041032X|Riegler, Josef ( geb 1938)|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Riegler%2C_Josef%20%28%20geb_1938%29
+12053391X|Eichberger, Günter|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Eichberger%2C_G%C3%BCnter
+12066688X|Burg, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Burg%2C_Josef
+12162692X|Harnoncourt, Nikolaus|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Harnoncourt%2C%20Nikolaus
+12194946X|Habsburg, Wilhelm|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Habsburg%2C%20Wilhelm
+12296974X|Beer, Georg Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Beer%2C_Georg_Josef
+12311151X|Cap, Josef|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Cap%2C_Josef
+12335935X|Bydlinski, Georg|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Bydlinski%2C_Georg
+12393740X|Fritz, Samuel|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Fritz%2C_Samuel
+12398565X|Pomis, Giovanni Pietro de|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Pomis%2C_Giovanni_Pietro_de
+12400279X|Hartmuth, Joseph|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Hartmuth%2C%20Joseph
+12784208X|Lhotsky, Alphons|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lhotsky%2C%20Alphons
+12829017X|Hoefft, Franz von|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Hoefft%2C%20Franz%20von
+12910602X|Riegler, Josef ( geb 1951)|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Riegler%2C_Josef%20%28%20geb_1951%29
+12919896X|Kadletz, Wilhelm|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Kadletz%2C_Wilhelm
+12976101X|Schöpfer, Gerald|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Sch%C3%B6pfer%2C_Gerald
+13016416X|Steiner, Ludwig|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Steiner%2C_Ludwig
+13029246X|Burgstaller, Gabi|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Burgstaller%2C_Gabi
+13189451X|Missong, Alfred jun|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Missong%2C%20Alfred%20jun
+13299187X|Lohner, Ludwig|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Lohner%2C_Ludwig
+13621150X|Zeidler, Othmar|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Zeidler%2C%20Othmar
+13791105X|Maier, Fritz Franz|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Maier%2C%20Fritz%20Franz
+14245530X|Spindelegger, Michael|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Spindelegger%2C_Michael
+14249058X|Mallitsch, Ferdinand|http://www.austria-lexikon.at/af/Wissenssammlungen/Biographien/Mallitsch%2C_Ferdinand
+14401761X|Freissler, Anton|http://www.austria-lexikon.at/af/Wissenssammlungen/Erfinder/Freissler%2C%20Anton
