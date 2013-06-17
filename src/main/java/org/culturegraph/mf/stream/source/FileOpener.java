@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import org.apache.commons.io.input.BOMInputStream;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -82,7 +83,8 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 			try {
 				final InputStream decompressor = compression.createDecompressor(fileStream);
 				try {
-					final Reader reader = new InputStreamReader(decompressor, encoding);
+			
+					final Reader reader = new InputStreamReader(new BOMInputStream(decompressor), encoding);
 					getReceiver().process(reader);
 				} catch (IOException e) {
 					decompressor.close();
