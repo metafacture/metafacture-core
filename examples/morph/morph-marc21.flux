@@ -5,5 +5,6 @@ open-file|
 as-lines|
 decode-marc21|
 morph(FLUX_DIR + "morph-marc21.xml")|
-encode("literals")|
+stream-to-triples|
+template("${o}")|
 write("stdout");
