@@ -60,8 +60,9 @@ flow
   (
     StdIn
     | exp
+    | Wormhole
   )
-  '|'! flowtail ';'!
+  '|'! flowtail ('|'! Wormhole)? ';'!
   ;
 
 tee
@@ -149,6 +150,14 @@ Identifier
   )*
   ;
 
+Wormhole
+  :
+  '@' id=Identifier 
+                   {
+                    setText(id.getText());
+                   }
+  ;
+
 StringLiteral
   :
   '"'
@@ -161,11 +170,11 @@ StringLiteral
      )
   )*
   '"' 
-      {
-       // strip the quotes from the resulting token and unescape
-       setText(StringEscapeUtils.unescapeJava(getText().substring(1,
-       		getText().length() - 1)));
-      }
+     {
+      // strip the quotes from the resulting token and unescape
+      setText(StringEscapeUtils.unescapeJava(getText().substring(1,
+      		getText().length() - 1)));
+     }
   ;
 
 fragment
@@ -243,9 +252,9 @@ LINE_COMMENT
     | '\r'
    )*
   '\r'? '\n' 
-             {
-              $channel = HIDDEN;
-             }
+            {
+             $channel = HIDDEN;
+            }
   ;
 
 WS
@@ -258,7 +267,7 @@ WS
     | '\n'
   )
   
-   {
-    $channel = HIDDEN;
-   }
+  {
+   $channel = HIDDEN;
+  }
   ;

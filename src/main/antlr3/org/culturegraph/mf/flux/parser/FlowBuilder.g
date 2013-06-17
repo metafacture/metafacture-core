@@ -29,12 +29,12 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
-import org.culturegraph.mf.flux.Flow;
+import org.culturegraph.mf.flux.parser.FluxProgramm;
 import org.culturegraph.mf.exceptions.FluxParseException;
 }
 
 @members {
-private Flow flow;
+private FluxProgramm flux = new FluxProgramm();
 private Map<String, String> vars = new HashMap<String, String>();
 
 public final void addVaribleAssignements(final Map<String, String> vars) {
@@ -42,41 +42,49 @@ public final void addVaribleAssignements(final Map<String, String> vars) {
 }
 }
 
-flux returns [List<Flow> flows = new ArrayList<Flow>()]
+flux returns [FluxProgramm retValue = flux]
   :
   varDefs
   (
     flow 
         {
-         $flows.add(this.flow);
+         flux.nextFlow();
         }
   )*
+  
+  {
+   flux.compile();
+  }
   ;
 
 flow
-@init {
-this.flow = new Flow();
-}
   :
   (
     StdIn 
          {
-          flow.setStdInStart();
+          flux.setStdInStart();
          }
     | e=exp 
            {
-            flow.setStringStart($e.value);
+            flux.setStringStart($e.value);
            }
+    | ws=Wormhole 
+                 {
+                  flux.setWormholeStart($ws.text);
+                 }
   )
   flowtail
+  (
+    we=Wormhole 
+               {
+                flux.setWormholeEnd($we.text);
+               }
+  )?
   ;
 
 varDefs
   :
-  varDef* 
-         {
-          
-         }
+  varDef*
   ;
 
 varDef
@@ -101,21 +109,21 @@ tee
   ^(
     TEE 
        {
-        flow.startTee();
+        flux.startTee();
         //System.out.println("start tee");
        }
     (
       ^(SUBFLOW flowtail)
       
       {
-       flow.endSubFlow();
+       flux.endSubFlow();
        // System.out.println("end subflow");
       }
     )+
    )
   
   {
-   flow.endTee();
+   flux.endTee();
    //System.out.println("end tee");
   }
   ;
@@ -178,7 +186,7 @@ final List<Object> cArgs = new ArrayList<Object>();
    )
   
   {
-   flow.addElement(flow.createElement($name.text, namedArgs, cArgs));
+   flux.addElement($name.text, namedArgs, cArgs);
   }
   ;
 
