@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph"
+	version="1">
+	<meta>
+		<name>Marc21</name>
+	</meta>
+
+	<rules>
+	    <data source="001" name="_id"/>
+	
+		<data source="_id" name="cg:type">
+			<constant value="bib" />
+		</data>
+
+		<data source="leader" name="@leader7">
+			<substring start="7" end="8" />
+		</data>
+
+		<data source="leader" name="@leader6">
+			<substring start="6" end="7" />
+		</data>
+
+		<data source="leader" name="@leader19">
+			<substring start="19" end="20" />
+		</data>
+
+		<data name="cg:level" source="@leader19">
+			<lookup default="undef">
+				<entry name=" " value="single" />
+				<entry name="a" value="set" />
+				<entry name="b" value="part-ind" />
+				<entry name="c" value="part-dep" />
+			</lookup>
+		</data>
+
+		<!-- Maps when Leader/06 contains code e (Cartographic material) or f (Manuscript 
+			cartographic material). -->
+
+		<data name="@mat" source="@leader6">
+			<whitelist>
+				<entry name="e" />
+				<entry name="f" />
+			</whitelist>
+			<constant value="map" />
+		</data>
+
+
+		<!-- Books when Leader/06 contains code a (Language material) or t (Manuscript 
+			language material) AND Leader/07 (Bibliographic level) contains code a (Monographic 
+			component part), c (Collection), d (Subunit), or m (Monograph). -->
+
+		<combine name="@mat" value="book">
+			<data source="@leader6">
+				<whitelist>
+					<entry name="a" />
+					<entry name="t" />
+				</whitelist>
+			</data>
+			<data source="@leader7">
+				<whitelist>
+					<entry name="a" />
+					<entry name="c" />
+					<entry name="d" />
+					<entry name="m" />
+				</whitelist>
+			</data>
+		</combine>
+
+		<!-- Music when Leader/06 contains code c (Notated music), d (Manuscript 
+			notated music), i (Nonmusical sound recording), or j (Musical sound recording). -->
+		<data name="@mat" source="@leader6">
+			<whitelist>
+				<entry name="c" />
+				<entry name="d" />
+				<entry name="i" />
+				<entry name="j" />
+			</whitelist>
+			<constant value="music" />
+		</data>
+
+		<!-- Visual materials used when Leader/06 contains code g (Projected medium), 
+			code k (Two-dimensional nonprojectable graphic, code o (Kit), or code r (Three-dimensional 
+			artifact or naturally occurring object). -->
+		<data name="@mat" source="@leader6">
+			<whitelist>
+				<entry name="g" />
+				<entry name="k" />
+				<entry name="o" />
+				<entry name="r" />
+			</whitelist>
+			<constant value="visual" />
+		</data>
+
+		<!-- Computer files when Leader/06 contains code m. -->
+		<data name="@mat" source="@leader6">
+			<whitelist>
+				<entry name="m" />
+			</whitelist>
+			<constant value="file" />
+		</data>
+
+		<!-- Continuing resources when Leader/06 contains code a (Language material) 
+			AND Leader/07 contains code b (Serial component part), i (Integrating resource), 
+			or code s (Serial). -->
+		<combine name="@mat" value="continuing resource">
+			<data source="@leader6">
+				<whitelist>
+					<entry name="a" />
+				</whitelist>
+			</data>
+			<data source="@leader7">
+				<whitelist>
+					<entry name="b" />
+					<entry name="i" />
+					<entry name="s" />
+				</whitelist>
+			</data>
+		</combine>
+
+		<data source="@mat" name="cg:material" />
+
+		<combine name="cg:form" value="${frm}">
+			<data name="mat" source="@mat">
+				<whitelist>
+					<entry name="book" />
+					<entry name="music" />
+					<entry name="continuing resource" />
+					<entry name="file" />
+				</whitelist>
+			</data>
+			<data name="frm" source="008">
+				<substring start="23" end="24" />
+				<!-- <lookup> -->
+				<!-- <entry name="a" value="microfilm" /> -->
+				<!-- <entry name="b" value="microfiche" /> -->
+				<!-- <entry name="c" value="microopaque" /> -->
+				<!-- <entry name="d" value="large print" /> -->
+				<!-- <entry name="f" value="braille" /> -->
+				<!-- <entry name="o" value="online" /> -->
+				<!-- <entry name="q" value="direct electronic" /> -->
+				<!-- <entry name="r" value="print" /> -->
+				<!-- <entry name="s" value="electronic" /> -->
+				<!-- <entry name="|" value="undef" /> -->
+				<!-- <entry name=" " value="undef" /> -->
+				<!-- </lookup> -->
+			</data>
+		</combine>
+
+
+		<data source="001" name="cg:srcId" />
+
+		<data source="010  .a" name="cg:loc" />
+
+		<combine name="${name}" value="${value}" reset="true">
+			<data source="0167 .2" name="name">
+				<lookup in="isilMap" />
+			</data>
+			<data source="0167 .a" name="value" />
+		</combine>
+
+		<!--BSZ uses wrong indicators/subfields-combination -->
+		<combine name="${name}" value="${value}" reset="true">
+			<data source="016  .a" name="name">
+				<regexp match="^\(((.*))\)" format="${1}" />
+				<lookup in="isilMap" />
+			</data>
+			<data source="016  .a" name="value">
+				<regexp match="^\(.*\)((.*))" format="${1}" />
+			</data>
+		</combine>
+
+
+		<data source="020  .a" name="bibo:isbn13">
+			<isbn to="isbn13" />
+		</data>
+
+		<data source="022  .a" name="bibo:issn" />
+
+		<data source="0242 .a" name="cg:ismn" />
+
+		<data source="0243 .a" name="bibo:gtin14" />
+
+		<combine name="${name}" value="${value}" reset="true">
+			<data source="0247 .2" name="name">
+				<lookup in="doiMap" />
+			</data>
+			<data source="0247 .a" name="value" />
+		</combine>
+
+
+		<combine name="${name}" value="${value}" reset="true">
+			<data source="035  .a" name="name">
+				<regexp match="^\((.*)\)" format="${1}" />
+				<lookup in="isilMap" />
+			</data>
+			<data source="035  .a" name="value">
+				<regexp match="^\(.*\)((.*))" format="${1}" />
+			</data>
+		</combine>
+
+
+		<data name="cg:oLang" source="041? .h" />
+
+		<data name="dcterms:language" source="041? .a" />
+
+
+		<data source="044  .c" name="cg:country" />
+
+
+		<entity name="cg:creator" flushWith="100? |700? " reset="true">
+			<data name="name" source="100? .a|700? .a" />
+			<data name="ref" source="100? .0|700? .0">
+				<regexp match="^\(DE-588.?\)((.*))" format="${1}" />
+			</data>
+
+			<choose name="rel" flushWith="100? |700? ">
+				<data source="100? .4|700? .4" />
+				<data source="100? |700? ">
+					<constant value="und" />
+				</data>
+			</choose>
+
+			<data source="100? |700? ">
+				<constant value="nt" />
+				<switch-name-value />
+				<substring start="3" end="4" />
+				<lookup>
+					<entry name="0" value="for" />
+					<entry name="1" value="sur" />
+					<entry name="2" value="fam" />
+				</lookup>
+			</data>
+			<data name="cnt" source="100? |700? ">
+				<count />
+			</data>
+		</entity>
+
+
+		<data name="dcterms:title" source="245??.a" />
+		<data name="cg:addTitle" source="245??.b" />
+		<data name="cg:partTitle" source="245??.p" />
+
+<!-- 		<data name="cg:uniTitle" source="7300 .a" /> -->
+		<data name="cg:uniTitle" source="240??.a" />
+		<data name="cg:volume" source="245??.n|245??.p" />
+
+		<data name="cg:edition" source="250??.a" />
+
+
+		<data name="cg:pubPlace" source="260??.a" />
+		<data name="cg:pubName" source="260??.b" />
+		<!-- <data name="dcterms:issued" source="2603 .c" /> -->
+
+		<data name="dcterms:issued" source="008">
+			<substring start="7" end="11" />
+		</data>
+
+
+		<data source="300  .a" name="dcterms:extent" />
+
+		<data source="502  .o" name="cg:uniscript" />
+
+
+		<data name="cg:partOf" source="773??.w">
+			<regexp match="^\(.*\)((.*))" format="${1}" />
+		</data>
+
+
+		<!-- TOC2 Projekt -->
+		<entity name="cg:onlineRes" flushWith="85642" reset="true">
+			<data source="85642.3" name="type" />
+			<data source="85642.u" name="url" />
+		</entity>
+
+		<!-- RVK-DDC Projekt -->
+		<entity name="cg:subj" flushWith="600??|610??|611??|630??|648??|650??|651??|655??"
+			reset="true">
+			<data
+				source="600??.a|610??.a|611??.a|630??.a|648??.a|650??.a|651??.a|655??.a"
+				name="name" />
+			<data
+				source="600??.0|610??.0|611??.0|630??.0|648??.0|650??.0|651??.0|655??.0"
+				name="ref">
+				<regexp match="^\(DE-588.?\)((.*))" format="${1}" />
+			</data>
+		</entity>
+
+		<data name="cg:ddc" source="082??.a|083??.a|085??.a" />
+
+		<combine name="cg:${type}" value="${value}" reset="true"
+			sameEntity="true">
+			<data source="084??.a" name="value" />
+			<data source="084??.2" name="type">
+				<case to="lower" />
+				<trim/>
+				<whitelist>
+					<entry name="udc" />
+					<entry name="ddc" />
+					<entry name="lcc" />
+					<entry name="sswd" />
+					<entry name="methepp" />
+					<entry name="bkl" />
+					<entry name="rvk" />
+					<entry name="ghbs" />
+					<entry name="njb" />
+					<entry name="kktb" />
+					<entry name="rpb" />
+					<entry name="msc" />
+					<entry name="nwbib" />
+					<entry name="asb" />
+					<entry name="ssd" />
+					<entry name="sfb" />
+					<entry name="kab" />
+					<entry name="stub" />
+					<entry name="dopaed" />
+					<entry name="ifzs" />
+					<entry name="sbb" />
+				</whitelist>
+			</data>
+		</combine>
+	</rules>
+
+	<maps>
+		<map name="isilMap">
+			<entry name="DE-101" value="cg:dnb" />
+			<entry name="DE-600" value="cg:zdb" />
+			<entry name="Uk" value="cg:bnb" />
+			<entry name="ItFiC" value="cg:cll" />
+			<entry name="FrPBN" value="cg:bnf" />
+			<entry name="OCoLC" value="cg:oclc" />
+			<entry name="DE-599" value="cg:eki" />
+
+			<!-- Falsch aufgeführte EKI in hbz Daten -->
+			<entry name="DE-605" value="cg:eki" />
+
+			<entry name="XXXxUND" value="cg:eki!" />
+		</map>
+
+		<map name="doiMap" default="undefDoi">
+			<entry name="doi" value="bibo:doi" />
+			<entry name="urn" value="cg:urn" />
+			<entry name="handle" value="bibo:handle" />
+		</map>
+
+		<!-- <mapfile name="DNBcountries" files="mapping/DNBcountries.txt" /> -->
+
+	</maps>
+</metamorph>	
