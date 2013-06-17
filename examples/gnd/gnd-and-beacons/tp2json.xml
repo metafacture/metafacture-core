@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph"
+	version="1" entityMarker=".">
+	<meta>
+		<name>Umsetzung der GND Personen</name>
+	</meta>
+	<macros>
+		<macro name="name">
+			<combine name="$[out]"
+				value="${personalname}${surname}${forename}${prefix}${add}"
+				flushWith="028$[post]" reset="true">
+				<data source="028$[post].P" name="personalname" />
+				<data source="028$[post].a" name="surname" />
+				<data source="028$[post].d" name="forename">
+					<compose prefix=", " />
+				</data>
+				<data source="028$[post].c" name="prefix">
+					<compose prefix=" " />
+				</data>
+				<concat name="add" prefix=" &lt;" postfix="&gt;" delimiter=", "
+					flushWith="028$[post]" reset="true">
+					<data source="028$[post].n" />
+					<data source="028$[post].l" />
+					<data source="028$[post].g" />
+				</concat>
+				<postprocess>
+					<normalize-utf8 />
+				</postprocess>
+			</combine>
+
+		</macro>
+	</macros>
+	<rules>
+
+		<call-macro name="name" post="A" out="@name" />
+		<call-macro name="name" post="@" out="@varName" />
+
+		<data source="_id" name="id" />
+
+		<data source="_id" name="type">
+			<constant value="person" />
+		</data>
+
+		<entity name="thumbnail">
+			<data source="_id" name="link">
+				<constant
+					value="http://art-eater.com/wp-content/uploads/2012/08/ecce_mono.jpg" />
+			</data>
+			<data name="caption" source="_id">
+				<constant value="Fresco by Cecilia Giménez (2012)" />
+			</data>
+		</entity>
+
+		<entity name="seeAlso[]" flushWith="record">
+			<entity name="" flushWith="seeAlso">
+				<choose name="name" flushWith="seeAlso">
+					<data source="seeAlso.name" />
+					<data source="seeAlso.description" />
+				</choose>
+
+				<data source="seeAlso.url" name="url" />
+			</entity>
+		</entity>
+
+		<entity name="person" flushWith="record">
+			<data source="@name" name="name" />
+			<data source="050G.b" name="description" />
+			<entity name="variantname[]" flushWith="record">
+				<data source="@varName" />
+			</entity>
+			<data name="birth" source="032Aa.a">
+				<replace pattern=" " with="" />
+				<regexp match="((\d+?))-" format="${1}" />
+			</data>
+
+			<data name="death" source="032Aa.a">
+				<replace pattern=" " with="" />
+				<regexp match="-((\d+?))$" format="${1}" />
+			</data>
+
+			<entity name="occupations[]" flushWith="record">
+				<data source="032Fa.a" />
+			</entity>
+		</entity>
+
+	</rules>
+</metamorph>
