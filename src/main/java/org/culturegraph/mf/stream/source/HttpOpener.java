@@ -33,34 +33,30 @@ import org.culturegraph.mf.framework.annotations.Out;
  * Opens a {@link URLConnection} and passes a reader to the receiver.
  * 
  * @author Christoph Böhme
+ * @author Jan Schnasse
  * 
  */
-@Description("Opens a http resource.")
+@Description("Opens a http resource. Supports the setting of Accept and Accept-Charset as http header fields.")
 @In(String.class)
 @Out(java.io.Reader.class)
 public final class HttpOpener 
 		extends DefaultObjectPipe<String, ObjectReceiver<Reader>> implements Opener {
+	private String encoding = "UTF-8";
+	private String accept = "*/*";
 
-	private String defaultEncoding = "UTF-8";
-	
-	/**
-	 * Returns the default encoding used when no encoding is
-	 * provided by the server. The default setting is UTF-8.
-	 * 
-	 * @return current default setting
+	/**  
+	 * @param accept The accept header in the form type/subtype, e.g. text/plain.
 	 */
-	public String getDefaultEncoding() {
-		return defaultEncoding;
+	public void setAccept(final String accept) {
+		this.accept = accept;
 	}
 
 	/**
-	 * Sets the default encoding to use when no encoding is 
-	 * provided by the server. The default setting is UTF-8.
-	 * 
-	 * @param defaultEncoding new default encoding
+	 * @param encoding The encoding is used to encode the output and is passed 
+	 * as Accept-Charset to the http connection.
 	 */
-	public void setDefaultEncoding(final String defaultEncoding) {
-		this.defaultEncoding = defaultEncoding;
+	public void setEncoding(final String encoding) {
+		this.encoding = encoding;
 	}
 
 	@Override
@@ -68,9 +64,11 @@ public final class HttpOpener
 		try {
 			final URL url = new URL(urlStr);
 			final URLConnection con = url.openConnection();
+			con.addRequestProperty("Accept", accept);
+			con.addRequestProperty("Accept-Charset", encoding);
 			String enc = con.getContentEncoding();
 			if (enc == null) {
-				enc = defaultEncoding;
+				enc = encoding;
 			}
 			getReceiver().process(new InputStreamReader(con.getInputStream(), enc));
 		} catch (IOException e) {
