@@ -38,14 +38,27 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
 	public static final String RDF_REFERENCE = "~rdf:resource";
 	public static final String RDF_ABOUT = "~rdf:about";
 	public static final String XML_LANG = "~xml:lang";
+	private String autoAddedSubject = "";
 
+	public void setAutoAddedSubject(final String autoAddedSubject) {
+		this.autoAddedSubject = autoAddedSubject;
+	}
+
+	
 	@Override
 	public void startRecord(final String identifier) {
 		getReceiver().startRecord(identifier);
+		if(!autoAddedSubject.isEmpty()){
+			getReceiver().startEntity(autoAddedSubject);
+			getReceiver().literal(RDF_ABOUT, identifier);
+		}
 	}
 
 	@Override
 	public void endRecord() {
+		if(!autoAddedSubject.isEmpty()){
+			getReceiver().endEntity();
+		}
 		getReceiver().endRecord();
 	}
 
