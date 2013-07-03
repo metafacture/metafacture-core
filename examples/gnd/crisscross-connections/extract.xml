@@ -221,7 +221,7 @@
 			</choose>
 
 			<choose name="ent">
-				<concat delimiter="; " name="ent">
+				<concat delimiter=" | " name="ent">
 					<data source="004B.a" />
 				</concat>
 				<data source="_id">
