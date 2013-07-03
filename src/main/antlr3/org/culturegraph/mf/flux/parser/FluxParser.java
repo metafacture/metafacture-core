@@ -1,4 +1,4 @@
-// $ANTLR 3.4 D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g 2013-06-17 09:35:26
+// $ANTLR 3.4 D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g 2013-07-03 10:40:33
 
 package org.culturegraph.mf.flux.parser;
 
