@@ -292,6 +292,7 @@
 				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
 			</sequence>
 			<attribute name="name" type="string" use="required" />
+			<attribute name="increment" type="integer" use="optional" default="1" />
 			<attribute name="reset" type="boolean" use="optional" default="false" />
 			<attribute name="sameEntity" type="boolean" use="optional" default="false" />
 			<attribute name="flushWith" type="string" use="optional" default="record"/>
