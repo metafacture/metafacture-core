@@ -15,12 +15,15 @@
  */
 package org.culturegraph.mf.stream.converter;
 
-import org.culturegraph.mf.exceptions.FormatException;
-import org.culturegraph.mf.stream.converter.ObjectToLiteral;
-import org.culturegraph.mf.stream.sink.EventList;
-import org.culturegraph.mf.stream.sink.StreamValidator;
-import org.junit.Assert;
+import static org.mockito.Mockito.inOrder;
+
+import org.culturegraph.mf.framework.StreamReceiver;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 
 /**
@@ -28,30 +31,48 @@ import org.junit.Test;
  *
  */
 public final class ObjectToLiteralTest {
-	
+
 	private static final String LITERAL_NAME = "myObject";
 	private static final String OBJ_DATA = "This is a data object";
-	
+
+	private ObjectToLiteral<String> objectToLiteral;
+
+	@Mock
+	private StreamReceiver receiver;
+
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		objectToLiteral = new ObjectToLiteral<String>();
+		objectToLiteral.setReceiver(receiver);
+	}
+
+	@After
+	public void cleanup() {
+		objectToLiteral.closeStream();
+	}
+
 	@Test
-	public void test() {
-		final EventList buffer = new EventList();
-		buffer.startRecord(null);
-		buffer.literal(LITERAL_NAME, OBJ_DATA);
-		buffer.endRecord();
-		buffer.closeStream();
-		
-		final ObjectToLiteral<String> objectToLiteral = new ObjectToLiteral<String>();
+	public void testShouldUseObjectAsLiteralValue() {
+
+		objectToLiteral.process(OBJ_DATA);
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("");
+		ordered.verify(receiver).literal(ObjectToLiteral.DEFAULT_LITERAL_NAME, OBJ_DATA);
+		ordered.verify(receiver).endRecord();
+	}
+
+	@Test
+	public void testShouldUseCustomLiteralName() {
 		objectToLiteral.setLiteralName(LITERAL_NAME);
-		final StreamValidator validator = new StreamValidator(buffer.getEvents());
-		
-		objectToLiteral.setReceiver(validator);
-		
-		try {
-			objectToLiteral.process(OBJ_DATA);
-			objectToLiteral.closeStream();
-		} catch(FormatException e) {
-			Assert.fail(e.toString());
-		}
+
+		objectToLiteral.process(OBJ_DATA);
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("");
+		ordered.verify(receiver).literal(LITERAL_NAME, OBJ_DATA);
+		ordered.verify(receiver).endRecord();
 	}
 
 }
