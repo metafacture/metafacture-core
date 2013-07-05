@@ -7,9 +7,6 @@
 
 	<vars>
 		<var name="dnb_subject" value="" />
-		<!-- <var name="media_type" value="" /> -->
-		<!-- <var name="sector" value="" /> -->
-		<var name="language" value="" />
 	</vars>
 
 	<rules>
@@ -23,8 +20,7 @@
 			<substring start="19" end="20" />
 		</data>
 
-		<data source="_id" name="@lang">
-			<constant value="$[language]" />
+		<data source="041? .a" name="@lang">
 			<not-equals string="" />
 		</data>
 
@@ -135,10 +131,17 @@
 		<entity name="edm:Agent">
 			<data source="@sectorID" name="*rdf:type" />
 			<data source="@orgID" name="~rdf:about" />
-			<!-- <data name="skos:prefLabel$de" source="@isil"> -->
-			<!-- <lookup in="isils" /> -->
-			<!-- </data> -->
+			<data name="skos:prefLabel$de" source="@isil">
+				<lookup in="isils" />
+			</data>
 		</entity>
+		
+<!-- 		<entity name="skos:Concept"> -->
+<!-- 			<data source="@sectorID" name="~rdf:about" /> -->
+<!-- 			<data source="_id" name="skos:Notation"> -->
+<!-- 				<constant value="$[sector]" /> -->
+<!-- 			</data> -->
+<!-- 		</entity> -->
 
 		<entity name="skos:Concept">
 			<data source="@sectorID" name="~rdf:about" />
@@ -248,7 +251,22 @@
 			</data>
 		</entity>
 
+		<entity name="dcterm:LinguisticSystem">
+			<data source="@lang" name="rdf:value">
 
+			</data>
+			<data source="@lang" name="~rdf:about">
+				<compose prefix="http://id.loc.gov/vocabulary/iso639-2/" />
+			</data>
+		</entity>
+
+		<data name="edm:rights" source="@isil">
+			<lookup in="rights" />
+		</data>
+		
+		<data source="_id" name="*dcterms:rights">
+			<constant value="http://creativecommons.org/publicdomain/zero/1.0/"/>
+		</data>
 
 
 		<entity name="edm:ProvidedCHO" flushWith="record">
@@ -264,7 +282,7 @@
 			</data>
 
 			<data source="@lang" name="dc:language" />
-			<data source="041??.a" name="*dcterms:language">
+			<data source="@lang" name="*dcterms:language">
 				<compose prefix="http://id.loc.gov/vocabulary/iso639-2/" />
 			</data>
 
@@ -284,6 +302,8 @@
 				<compose prefix="http://d-nb.info/" />
 				<occurrence only="1" />
 			</data>
+
+
 
 
 			<!-- hierarchy: aggregation entity status -->
@@ -374,9 +394,7 @@
 
 			<data source="@mediatypeID" name="dc:type" />
 
-			<data name="edm:rights" source="@isil">
-				<lookup in="rights" />
-			</data>
+
 
 			<data name="dcterms:rights" source="_id">
 				<constant
