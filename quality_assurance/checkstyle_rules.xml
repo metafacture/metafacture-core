@@ -116,6 +116,8 @@
   </module>
   <module name="Header">
     <property name="headerFile" value="${basedir}/quality_assurance/java-header.txt"/>
+    <!-- Ignore copyright line as it may contain varying names: -->
+    <property name="ignoreLines" value="2"/>
     <property name="fileExtensions" value="java"/>
   </module>
   <module name="SuppressionFilter">
