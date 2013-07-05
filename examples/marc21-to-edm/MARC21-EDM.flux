@@ -1,7 +1,7 @@
 default out = "stdout";
 default file = FLUX_DIR + "Test_DNB_Mono.xml";
 default id = "1025374754";
-default sector = "sec_003";
+default sector = "sec_002";
 default media_type = "mediatype_003";
 
 file|
