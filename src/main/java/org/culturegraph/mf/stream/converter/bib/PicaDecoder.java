@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013 Deutsche Nationalbibliothek
+ *  Copyright 2013 Christoph Böhme
  *
  *  Licensed under the Apache License, Version 2.0 the "License";
  *  you may not use this file except in compliance with the License.
@@ -15,11 +15,6 @@
  */
 package org.culturegraph.mf.stream.converter.bib;
 
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
@@ -29,101 +24,172 @@ import org.culturegraph.mf.framework.annotations.Out;
 
 
 /**
- * Parses a raw Picaplus stream (utf8 encoding assumed). Events are handled by a
- * {@link StreamReceiver}.
+ * Parses a PICA+ record with UTF8 encoding assumed.
  * 
- * @see StreamReceiver
+ * For each field in the stream the module calls:
+ * <ol>
+ * <li>receiver.startEntity</li>
+ * <li>receiver.literal for each subfield of the field</li>
+ * <li>receiver.endEntity</li>
+ * </ol>
  * 
- * @author Markus Michael Geipel, Christoph Böhme
+ * Spaces in the field name are not included in the entity name.
+ * 
+ * Empty subfields are skipped. For instance, processing the following input
+ * would NOT produce an empty literal: 003@ \u001f\u001e
+ * 
+ * If {@code ignoreMissingIdn} is false and field 003@$0 is not found in the
+ * record a {@link MissingIdException} is thrown.
+ * 
+ * @author Christoph Böhme
  * 
  */
-@Description("Parses a raw Picaplus stream (utf8 encoding assumed).")
+@Description("Parses a PICA+ record with UTF8 encoding assumed.")
 @In(String.class)
 @Out(StreamReceiver.class)
-public final class PicaDecoder 
+public final class PicaDecoder
 		extends DefaultObjectPipe<String, StreamReceiver> {
 
-	private static final String FIELD_DELIMITER = "\u001e";
-	private static final String SUB_DELIMITER = "\u001f";
-	private static final Pattern FIELD_PATTERN = Pattern.compile(
-			FIELD_DELIMITER, Pattern.LITERAL);
-	private static final Pattern SUBFIELD_PATTERN = Pattern.compile(
-			SUB_DELIMITER, Pattern.LITERAL);
-	private static final String ID_PATTERN_STRING = FIELD_DELIMITER + "003@ "
-			+ SUB_DELIMITER + "0(.*?)" + FIELD_DELIMITER;
-	private static final Pattern ID_PATTERN = Pattern
-			.compile(ID_PATTERN_STRING);
-	private static boolean appendControlSubField = true;
+	private static final char[] ID_FIELD = {'0', '0', '3', '@', ' ', PicaConstants.SUBFIELD_DELIMITER, '0'};
 
-	/**
-	 * For each field in the stream the method calls:
-	 * <ol>
-	 * <li>receiver.startEntity</li>
-	 * <li>receiver.literal for each subfield of the field</li>
-	 * <li>receiver.endEntity</li>
-	 * </ol>
-	 * Fields without any subfield will be skipped.<br>
-	 * <strong>Special handling of subfield 'S':</strong> the code of
-	 * "control subfields" (subfield name='S') will be appended to the
-	 * fieldName. E.g.: 041A $Sa would be mapped to the fieldName 041Aa
-	 * 
-	 * @param record
-	 */
+	private static final int BUFFER_SIZE = 1024 * 1024;
+	
+	private final StringBuilder idBuilder = new StringBuilder();
+	private final PicaParserContext parserContext = new PicaParserContext();
+	
+	private char[] buffer = new char[BUFFER_SIZE];
+	private int recordLen;
+	
+	private boolean ignoreMissingIdn;
+	private boolean fixUnexpectedEOR;
+
+	public void setIgnoreMissingIdn(final boolean ignoreMissingIdn) {
+		this.ignoreMissingIdn = ignoreMissingIdn;
+	}
+	
+	public boolean getIgnoreMissingIdn() {
+		return ignoreMissingIdn;
+	}
+	
+	public void setFixUnexpectedEOR(final boolean fixUnexpectedEOR) {
+		this.fixUnexpectedEOR = fixUnexpectedEOR;
+	}
+	
+	public boolean getFixUnexpectedEOR() {
+		return fixUnexpectedEOR;
+	}
+	
+	public void setNormalizeUTF8(final boolean normalizeUTF8) {
+		parserContext.setNormalizeUTF8(normalizeUTF8);
+	}
+	
+	public boolean getNormalizeUTF8() {
+		return parserContext.getNormalizeUTF8();
+	}
+	
+	public void setSkipEmptyFields(final boolean skipEmptyFields) {
+		parserContext.setSkipEmptyFields(skipEmptyFields);
+	}
+	
+	public boolean getSkipEmptyFields() {
+		return parserContext.getSkipEmptyFields();
+	}
+	
 	@Override
 	public void process(final String record) {
 		assert !isClosed();
-		process(record, getReceiver());
-	}
-
-	public static void setAppendControlSubField(final boolean appendControlSubField) {
-		PicaDecoder.appendControlSubField = appendControlSubField;
-	}
-	
-	public static String extractIdFromRecord(final String record) {
-		final Matcher idMatcher = ID_PATTERN.matcher(record);
-		if (idMatcher.find()) {
-			return idMatcher.group(1);
-		}
-		throw new MissingIdException(record);
-	}
-	
-	public static void process(final String rawRecord, final StreamReceiver receiver) {
-		if (rawRecord.trim().isEmpty()) {
+		
+		copyToBuffer(record);
+		
+		if (recordIsEmpty()) {
 			return;
 		}
 		
-		final String record = Normalizer.normalize(rawRecord, Form.NFC);
-		try {
-			receiver.startRecord(extractIdFromRecord(record));
-			
-			for (String field : FIELD_PATTERN.split(record)) {
-				final String[] subfields = SUBFIELD_PATTERN.split(field);
-				if (subfields.length > 1) {
-					final String fieldName;
-					final int firstSubfield;
-					if (subfields[1].charAt(0) == 'S' && appendControlSubField ) {
-						fieldName = subfields[0].trim() + subfields[1].charAt(1);
-						firstSubfield = 2;
+		String id = extractRecordId();
+		if (id == null) {
+			if (!ignoreMissingIdn) {
+				throw new MissingIdException("Record has no id");
+			}
+			id = "";
+		}
+		getReceiver().startRecord(id);
+
+		PicaParserState state = PicaParserState.FIELD_NAME;
+		for (int i = 0; i < recordLen; ++i) {
+			state = state.parseChar(buffer[i], parserContext);
+		}
+		if (state != PicaParserState.FIELD_NAME || parserContext.hasUnprocessedText()) {
+			if (fixUnexpectedEOR) {
+				state = state.parseChar(PicaConstants.FIELD_DELIMITER, parserContext);
+				assert state == PicaParserState.FIELD_NAME;
+				assert !parserContext.hasUnprocessedText();
+			} else {
+				throw new FormatException("Unexpected end of record");
+			}
+		}
+		
+		getReceiver().endRecord();
+	}
+	
+	@Override
+	protected void onSetReceiver() {
+		parserContext.setReceiver(getReceiver());
+	}
+	
+	@Override
+	protected void onResetStream() {
+		parserContext.reset();
+	}
+	
+	private void copyToBuffer(final String record) {
+		recordLen = record.length();
+		if(recordLen > buffer.length) {
+			buffer = new char[buffer.length * 2];
+		}
+		record.getChars(0, recordLen, buffer, 0);
+	}
+	
+	private boolean recordIsEmpty() {
+		for (int i = 0; i < recordLen; ++i) {
+			if (buffer[i] != ' ' && buffer[i] != '\t') {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private String extractRecordId() {
+		idBuilder.setLength(0);
+		
+		int fieldPos = 0;
+		boolean skip = false;
+		for (int i = 0; i < recordLen; ++i) {
+			if (buffer[i] == PicaConstants.FIELD_DELIMITER) {
+				if (idBuilder.length() > 0) {
+					return idBuilder.toString();
+				}
+				fieldPos = 0;
+				skip = false;
+				continue;
+			}
+			if (!skip) {
+				if (fieldPos < ID_FIELD.length) {
+					if (buffer[i] == ID_FIELD[fieldPos]) {
+						fieldPos += 1;
 					} else {
-						fieldName = subfields[0].trim();
-						firstSubfield = 1;
+						skip = true;
 					}
-	
-					receiver.startEntity(fieldName);
-	
-					for (int i = firstSubfield; i < subfields.length; ++i) {
-						final String subfield = subfields[i];
-						receiver.literal(subfield.substring(0, 1),
-								subfield.substring(1));
+				} else {
+					if (buffer[i] == PicaConstants.SUBFIELD_DELIMITER) {
+						skip = true;
+					} else {
+						idBuilder.append(buffer[i]);
 					}
-					receiver.endEntity();
 				}
 			}
-			
-			receiver.endRecord();
-		} catch (IndexOutOfBoundsException e) {
-			throw new FormatException(e);
-		} 
+		}
+		
+		return null;
 	}
 	
 }
