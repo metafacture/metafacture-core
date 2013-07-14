@@ -19,34 +19,48 @@ package org.culturegraph.mf.stream.converter.bib;
 /**
  * A parser for PICA+ records. Only single records can be parsed as the parser
  * does not recognise end-of-record markers (usually new lines). The initial
- * parser state is FIELD_NAME. A valid state for termination is FIELD_NAME with
- * no unprocessed text being held in {@link PicaParserContext}. The parser
- * processes any input, there is no error state.
+ * parser state is FIELD_START. A valid state for termination is FIELD_START.
+ * The parser processes any input, there is no error state.
  * 
  * The parser ignores spaces in field names. They are not included in the
  * field name.
  * 
  * Empty subfields are skipped. For instance, parsing the following input
- * would NOT produce an empty literal: 003@ \u001f\u001e
+ * would NOT produce an empty literal: 003@ \u001f\u001e. The parser also
+ * skips unnamed fields without any subfields.
  * 
  * @author Christoph Böhme
  * 
  */
 enum PicaParserState {
 	
+	FIELD_START {
+		@Override
+		protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
+			if (ch == PicaConstants.FIELD_DELIMITER || ch == ' ') {
+				return FIELD_START;
+			}
+			return FIELD_NAME.parseChar(ch, ctx);
+		}
+	},
 	FIELD_NAME {
 		@Override
 		protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
+			final PicaParserState next;
 			if (ch == PicaConstants.FIELD_DELIMITER) {
 				ctx.emitStartEntity();
 				ctx.emitEndEntity();
+				next = FIELD_START;
 			} else if (ch == PicaConstants.SUBFIELD_DELIMITER) {
 				ctx.emitStartEntity();
-				return SUBFIELD_NAME;
-			} else if (ch != ' ') {
-				ctx.appendText(ch);
+				next = SUBFIELD_NAME;
+			} else {
+				if (ch != ' ') {
+					ctx.appendText(ch);
+				}
+				next = this;
 			}
-			return this;
+			return next;
 		}
 	},
 	SUBFIELD_NAME {
@@ -55,7 +69,7 @@ enum PicaParserState {
 			final PicaParserState next;
 			if (ch == PicaConstants.FIELD_DELIMITER) {
 				ctx.emitEndEntity();
-				next = FIELD_NAME;
+				next = FIELD_START;
 			} else if (ch == PicaConstants.SUBFIELD_DELIMITER) {
 				next = SUBFIELD_NAME;
 			} else {
@@ -72,7 +86,7 @@ enum PicaParserState {
 			if (ch == PicaConstants.FIELD_DELIMITER) {
 				ctx.emitLiteral();
 				ctx.emitEndEntity();
-				next = FIELD_NAME;
+				next = FIELD_START;
 			} else if (ch == PicaConstants.SUBFIELD_DELIMITER) {
 				ctx.emitLiteral();
 				next = SUBFIELD_NAME;

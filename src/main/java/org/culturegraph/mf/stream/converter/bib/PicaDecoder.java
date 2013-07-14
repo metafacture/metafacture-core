@@ -36,7 +36,8 @@ import org.culturegraph.mf.framework.annotations.Out;
  * Spaces in the field name are not included in the entity name.
  * 
  * Empty subfields are skipped. For instance, processing the following input
- * would NOT produce an empty literal: 003@ \u001f\u001e
+ * would NOT produce an empty literal: 003@ \u001f\u001e. The parser also
+ * skips unnamed fields without any subfields.
  * 
  * If {@code ignoreMissingIdn} is false and field 003@$0 is not found in the
  * record a {@link MissingIdException} is thrown.
@@ -114,15 +115,14 @@ public final class PicaDecoder
 		}
 		getReceiver().startRecord(id);
 
-		PicaParserState state = PicaParserState.FIELD_NAME;
+		PicaParserState state = PicaParserState.FIELD_START;
 		for (int i = 0; i < recordLen; ++i) {
 			state = state.parseChar(buffer[i], parserContext);
 		}
-		if (state != PicaParserState.FIELD_NAME || parserContext.hasUnprocessedText()) {
+		if (state != PicaParserState.FIELD_START) {
 			if (fixUnexpectedEOR) {
 				state = state.parseChar(PicaConstants.FIELD_DELIMITER, parserContext);
-				assert state == PicaParserState.FIELD_NAME;
-				assert !parserContext.hasUnprocessedText();
+				assert state == PicaParserState.FIELD_START;
 			} else {
 				throw new FormatException("Unexpected end of record");
 			}

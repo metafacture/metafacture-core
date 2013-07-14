@@ -16,6 +16,7 @@
 package org.culturegraph.mf.stream.converter.bib;
 
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.StreamReceiver;
@@ -48,6 +49,9 @@ public final class PicaDecoderTest {
 	private static final String SUBFIELD_D = SUBFIELD + "dUmberto";
 	private static final String EMPTY_SUBFIELD = SUBFIELD;
 	private static final String FIELD_028A_END = FIELD_END;
+	private static final String EMPTY_FIELD_START = "";
+	private static final String SUBFIELD_X = SUBFIELD + "Xyz";
+	private static final String EMPTY_FIELD_END = FIELD_END;
 	
 	private PicaDecoder picaDecoder;
 	
@@ -88,6 +92,60 @@ public final class PicaDecoderTest {
 	}
 	
 	@Test
+	public void testShouldSkipUnnamedFieldsWithNoSubFields() {
+		picaDecoder.setSkipEmptyFields(false);
+		
+		picaDecoder.process(
+				FIELD_001AT +
+				FIELD_003AT +
+				EMPTY_FIELD_START +
+				EMPTY_FIELD_END);
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify001At(ordered);
+		verify003At(ordered);
+		ordered.verify(receiver).endRecord();
+		verifyNoMoreInteractions(receiver);
+	}
+	
+	@Test
+	public void testShouldSkipUnnamedFieldsWithEmptySubFieldsOnly() {
+		picaDecoder.setSkipEmptyFields(false);
+
+		picaDecoder.process(
+				FIELD_001AT +
+				FIELD_003AT +
+				EMPTY_FIELD_START +
+				EMPTY_SUBFIELD +
+				EMPTY_FIELD_END);
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify001At(ordered);
+		verify003At(ordered);
+		ordered.verify(receiver).endRecord();
+		verifyNoMoreInteractions(receiver);
+	}
+	
+	@Test
+	public void testShouldNotSkipUnnamedFieldsWithSubFields() {
+		picaDecoder.process(
+				FIELD_001AT +
+				FIELD_003AT +
+				EMPTY_FIELD_START +
+				SUBFIELD_X +
+				EMPTY_FIELD_END);
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify001At(ordered);
+		verify003At(ordered);
+		verifySubfieldX(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+
+	@Test
 	public void testShouldSkipEmptySubfields() {
 		picaDecoder.process(
 				FIELD_001AT +
@@ -105,6 +163,7 @@ public final class PicaDecoderTest {
 		verifySubfieldD(ordered);
 		verify028AEnd(ordered);
 		ordered.verify(receiver).endRecord();
+		verifyNoMoreInteractions(receiver);
 	}
 	
 	@Test
@@ -120,6 +179,7 @@ public final class PicaDecoderTest {
 		verify001At(ordered);
 		verify003At(ordered);
 		ordered.verify(receiver).endRecord();
+		verifyNoMoreInteractions(receiver);
 	}
 	
 	@Test
@@ -155,6 +215,7 @@ public final class PicaDecoderTest {
 		verify001At(ordered);
 		verify003At(ordered);
 		ordered.verify(receiver).endRecord();
+		verifyNoMoreInteractions(receiver);
 	}
 	
 	@Test
@@ -297,6 +358,12 @@ public final class PicaDecoderTest {
 	}
 
 	private void verify028AEnd(final InOrder ordered) {
+		ordered.verify(receiver).endEntity();
+	}
+	
+	private void verifySubfieldX(final InOrder ordered) {
+		ordered.verify(receiver).startEntity("");
+		ordered.verify(receiver).literal("X", "yz");
 		ordered.verify(receiver).endEntity();
 	}
 	

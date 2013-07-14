@@ -62,10 +62,6 @@ final class PicaParserContext {
 		this.receiver = receiver;
 	}
 	
-	public boolean hasUnprocessedText() {
-		return builder.length() != 0;
-	}
-	
 	public void reset() {
 		getTextAndReset();
 		entityName = null;
@@ -88,7 +84,7 @@ final class PicaParserContext {
 	
 	protected void emitEndEntity() {
 		if (!literalsEmitted) {
-			if (skipEmptyFields) {
+			if (skipEmptyFields || entityName.isEmpty()) {
 				return;
 			}
 			receiver.startEntity(entityName);
