@@ -16,50 +16,75 @@
 package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.framework.DefaultStreamReceiver;
-import org.culturegraph.mf.stream.pipe.ObjectTimer;
-import org.culturegraph.mf.stream.pipe.StreamTimer;
+import org.junit.Before;
 import org.junit.Test;
 
 
 /**
  * Tests {@link ObjectTimer}.
- * 
+ *
  * @author Christoph Böhme
  */
 public final class StreamTimerTest {
 
-	private static final long[] DURATIONS = { 150L, 20L, 30L, 202L };
-	
 	/**
 	 * A module with a slow process method.
 	 */
 	private static final class BenchmarkedModule extends DefaultStreamReceiver {
-		
+
+		private static final long[] DURATIONS = { 150L, 20L, 30L, 202L };
+
+		private int i;
+
 		@Override
-		public void literal(final String name, final String value) {
-			final long duration = Long.parseLong(value);
+		public void startRecord(final String id) {
 			try {
-				Thread.sleep(duration);
-			} catch (InterruptedException e) {
+				Thread.sleep(getDuration());
+			} catch (final InterruptedException e) {
 				return;
 			}
 		}
-	}
-	
-	@Test
-	public void testObjectTimer() {
-		final StreamTimer timer = new StreamTimer();
-		final BenchmarkedModule benchmarkedModule = new BenchmarkedModule();
-		
-		timer.setReceiver(benchmarkedModule);
-		
-		for (int i=0; i < DURATIONS.length; ++i) {
-			timer.startRecord(Integer.toString(i));
-			timer.literal("duration", Long.toString(DURATIONS[i]));
-			timer.endRecord();
+
+		private long getDuration() {
+			final long duration = DURATIONS[i];
+			i += 1;
+			if (i == DURATIONS.length) {
+				i = 0;
+			}
+			return duration;
 		}
-		
-		timer.closeStream();
+
+	}
+
+	private StreamTimer streamTimer;
+	private BenchmarkedModule benchmarkedModule;
+
+	@Before
+	public void setup() {
+		streamTimer = new StreamTimer();
+		benchmarkedModule = new BenchmarkedModule();
+		streamTimer.setReceiver(benchmarkedModule);
+	}
+
+	@Test
+	public void testShouldMeasureExecutionTime() {
+
+		streamTimer.startRecord("");
+		streamTimer.endRecord();
+		streamTimer.startRecord("");
+		streamTimer.endRecord();
+		streamTimer.startRecord("");
+		streamTimer.endRecord();
+		streamTimer.startRecord("");
+		streamTimer.endRecord();
+
+		streamTimer.closeStream();
+	}
+
+	@Test
+	public void testShouldHandleImmediateCloseStreamWithNoProcessing() {
+
+		streamTimer.closeStream();
 	}
 
 }

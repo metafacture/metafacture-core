@@ -16,45 +16,70 @@
 package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.framework.DefaultObjectReceiver;
+import org.junit.Before;
 import org.junit.Test;
 
 
 /**
  * Tests {@link ObjectTimer}.
- * 
+ *
  * @author Christoph Böhme
  */
 public final class ObjectTimerTest {
 
-	private static final long[] DURATIONS = { 150L, 20L, 30L, 202L };
-	
 	/**
 	 * A module with a slow process method.
 	 */
-	private static final class BenchmarkedModule extends DefaultObjectReceiver<Long> {
-		
+	private static final class BenchmarkedModule extends DefaultObjectReceiver<String> {
+
+		private static final long[] DURATIONS = { 150L, 20L, 30L, 202L };
+
+		private int i;
+
 		@Override
-		public void process(final Long duration) {
+		public void process(final String obj) {
 			try {
-				Thread.sleep(duration.longValue());
-			} catch (InterruptedException e) {
+				Thread.sleep(getDuration());
+			} catch (final InterruptedException e) {
 				return;
 			}
 		}
-	}
-	
-	@Test
-	public void testObjectTimer() {
-		final ObjectTimer<Long> timer = new ObjectTimer<Long>();
-		final BenchmarkedModule benchmarkedModule = new BenchmarkedModule();
-		
-		timer.setReceiver(benchmarkedModule);
-		
-		for (int i=0; i < DURATIONS.length; ++i) {
-			timer.process(Long.valueOf(DURATIONS[i]));
+
+		private long getDuration() {
+			final long duration = DURATIONS[i];
+			i += 1;
+			if (i == DURATIONS.length) {
+				i = 0;
+			}
+			return duration;
 		}
-		
-		timer.closeStream();
+
+	}
+
+	private ObjectTimer<String> objectTimer;
+	private BenchmarkedModule benchmarkedModule;
+
+	@Before
+	public void setup() {
+		objectTimer = new ObjectTimer<String>();
+		benchmarkedModule = new BenchmarkedModule();
+		objectTimer.setReceiver(benchmarkedModule);
+	}
+
+	@Test
+	public void testShouldMeasureExecutionTime() {
+
+		objectTimer.process("");
+		objectTimer.process("");
+		objectTimer.process("");
+		objectTimer.process("");
+		objectTimer.closeStream();
+	}
+
+	@Test
+	public void testShouldHandleImmediateCloseStreamWithNoProcessing() {
+
+		objectTimer.closeStream();
 	}
 
 }
