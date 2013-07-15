@@ -22,7 +22,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Outputs a record containing the input object as literal.
- * 
+ *
  * @param <T> input object type
  * @author Christoph Böhme
  */
@@ -32,24 +32,24 @@ public final class ObjectToLiteral<T> extends
 		DefaultObjectPipe<T, StreamReceiver> {
 
 	public static final String DEFAULT_LITERAL_NAME = "obj";
-	
+
 	private String literalName = DEFAULT_LITERAL_NAME;
-	
+
 	public void setLiteralName(final String literalName) {
 		this.literalName = literalName;
 	}
-	
+
 	public String getLiteralName() {
 		return literalName;
 	}
-	
+
 	@Override
 	public void process(final T obj) {
 		assert obj!=null;
 		assert !isClosed();
-		getReceiver().startRecord(null);
+		getReceiver().startRecord("");
 		getReceiver().literal(literalName, obj.toString());
 		getReceiver().endRecord();
 	}
-	
+
 }

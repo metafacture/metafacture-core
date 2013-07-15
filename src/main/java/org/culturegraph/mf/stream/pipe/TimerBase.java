@@ -17,6 +17,7 @@ package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.framework.LifeCycle;
 import org.culturegraph.mf.framework.Sender;
+import org.culturegraph.mf.util.TimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,9 +31,6 @@ import org.slf4j.LoggerFactory;
 public class TimerBase<R extends LifeCycle> implements Sender<R> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TimerBase.class);
-
-	private static final String[] UNIT_NAMES = { "ns", "µs", "ms", "s", "min", "h" };
-	private static final long[] UNIT_FACTORS = { 1, 1000, 1000, 1000, 60, 60 };
 
 	private final String logPrefix;
 
@@ -76,8 +74,7 @@ public class TimerBase<R extends LifeCycle> implements Sender<R> {
 		}
 		LOG.info(logPrefix
 				+ String.format("Executions: %d; Cumulative duration: %s; Average duration: %s", Long.valueOf(count),
-						scaleTime(cumulativeDuration), scaleTime(averageDuration)));
-
+						TimeUtil.formatDuration(cumulativeDuration), TimeUtil.formatDuration(averageDuration)));
 		startMeasurement();
 		if (receiver != null) {
 			receiver.closeStream();
@@ -99,23 +96,7 @@ public class TimerBase<R extends LifeCycle> implements Sender<R> {
 		count += 1;
 		cumulativeDuration += duration;
 
-		LOG.info(logPrefix + String.format(prefix + " %2$s", Long.valueOf(count), scaleTime(duration)));
-	}
-
-	private static String scaleTime(final long time) {
-		long major = time;
-		long minor;
-		int i = -1;
-		do {
-			i += 1;
-			minor = major % UNIT_FACTORS[i];
-			major /= UNIT_FACTORS[i];
-		} while (i == UNIT_FACTORS.length || major >= UNIT_FACTORS[i + 1]);
-
-		if (i == 0) {
-			return String.format("%d%s", Long.valueOf(major), UNIT_NAMES[0]);
-		}
-		return String.format("%d%s %d%s", Long.valueOf(major), UNIT_NAMES[i], Long.valueOf(minor), UNIT_NAMES[i - 1]);
+		LOG.info(logPrefix + String.format(prefix + " %2$s", Long.valueOf(count), TimeUtil.formatDuration(duration)));
 	}
 
 }

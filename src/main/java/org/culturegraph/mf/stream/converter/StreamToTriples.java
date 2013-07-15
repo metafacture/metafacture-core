@@ -50,6 +50,7 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 
 	private final List<String> nameBuffer = new ArrayList<String>();
 	private final List<String> valueBuffer = new ArrayList<String>();
+	private final List<ObjectType> typeBuffer = new ArrayList<ObjectType>();
 	private final Formatter formatter = new ConciseFormatter();
 
 	private boolean redirect;
@@ -104,10 +105,11 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 		
 		if (redirect) {
 			for (int i = 0; i < nameBuffer.size(); ++i) {
-				getReceiver().process(new Triple(currentId, nameBuffer.get(i), valueBuffer.get(i)));
+				getReceiver().process(new Triple(currentId, nameBuffer.get(i), valueBuffer.get(i), typeBuffer.get(i)));
 			}
 			nameBuffer.clear();
 			valueBuffer.clear();
+			typeBuffer.clear();
 		}
 	}
 
@@ -172,6 +174,7 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 				} else {
 					nameBuffer.add(name);
 					valueBuffer.add(value);
+					typeBuffer.add(type);
 				}
 			}
 		} else {

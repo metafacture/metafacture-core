@@ -53,6 +53,7 @@ public final class PicaDecoder
 			+ SUB_DELIMITER + "0(.*?)" + FIELD_DELIMITER;
 	private static final Pattern ID_PATTERN = Pattern
 			.compile(ID_PATTERN_STRING);
+	private static boolean appendControlSubField = true;
 
 	/**
 	 * For each field in the stream the method calls:
@@ -74,6 +75,10 @@ public final class PicaDecoder
 		process(record, getReceiver());
 	}
 
+	public static void setAppendControlSubField(final boolean appendControlSubField) {
+		PicaDecoder.appendControlSubField = appendControlSubField;
+	}
+	
 	public static String extractIdFromRecord(final String record) {
 		final Matcher idMatcher = ID_PATTERN.matcher(record);
 		if (idMatcher.find()) {
@@ -96,7 +101,7 @@ public final class PicaDecoder
 				if (subfields.length > 1) {
 					final String fieldName;
 					final int firstSubfield;
-					if (subfields[1].charAt(0) == 'S') {
+					if (subfields[1].charAt(0) == 'S' && appendControlSubField ) {
 						fieldName = subfields[0].trim() + subfields[1].charAt(1);
 						firstSubfield = 2;
 					} else {

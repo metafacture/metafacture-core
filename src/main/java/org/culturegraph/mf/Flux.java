@@ -28,8 +28,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.antlr.runtime.RecognitionException;
-import org.culturegraph.mf.flux.Flow;
 import org.culturegraph.mf.flux.FluxCompiler;
+import org.culturegraph.mf.flux.parser.FluxProgramm;
 import org.culturegraph.mf.util.ResourceUtil;
 
 /**
@@ -70,7 +70,7 @@ public final class Flux {
 		}
 
 		if (args.length < 1) {
-			Flow.printHelp(System.out);
+			FluxProgramm.printHelp(System.out);
 			System.exit(2);
 		} else {
 
@@ -88,17 +88,15 @@ public final class Flux {
 			for (int i = 1; i < args.length; ++i) {
 				final Matcher matcher = VAR_PATTERN.matcher(args[i]);
 				if (!matcher.find()) {
-					Flow.printHelp(System.err);
+					FluxProgramm.printHelp(System.err);
 					return;
 				}
 				vars.put(matcher.group(1), matcher.group(2));
 			}
 
 			// run parser and builder
-			final List<Flow> flows = FluxCompiler.compile(ResourceUtil.getStream(fluxFile), vars);
-			for (Flow flow : flows) {
-				flow.start();
-			}
+			FluxCompiler.compile(ResourceUtil.getStream(fluxFile), vars).start();
+
 		}
 	}
 

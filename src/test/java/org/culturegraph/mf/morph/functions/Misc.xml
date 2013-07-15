@@ -9,7 +9,8 @@
 				<cgxml:records>
 					<cgxml:record id="1">
 						<cgxml:literal name="data" value="Aloha!" />
-						<cgxml:literal name="data" value="Oahu island, Hawaii island, Maui island" />
+						<cgxml:literal name="data"
+							value="Oahu island, Hawaii island, Maui island" />
 						<cgxml:literal name="data" value="year 1960!" />
 					</cgxml:record>
 				</cgxml:records>
@@ -20,10 +21,10 @@
 			<mm:metamorph version="1">
 				<mm:rules>
 					<mm:data source="data" name="island">
-						<mm:regexp match="(\w*) island" format="${1}"/>
+						<mm:regexp match="(\w*) island" format="${1}" />
 					</mm:data>
 					<mm:data source="data" name="year">
-						<mm:regexp match="\d\d\d\d"/>
+						<mm:regexp match="\d\d\d\d" />
 					</mm:data>
 				</mm:rules>
 			</mm:metamorph>
@@ -36,14 +37,50 @@
 						<cgxml:literal name="island" value="Oahu" />
 						<cgxml:literal name="island" value="Hawaii" />
 						<cgxml:literal name="island" value="Maui" />
-						<cgxml:literal name="year" value="1960"/>
+						<cgxml:literal name="year" value="1960" />
 					</cgxml:record>
 				</cgxml:records>
 			</cgxml:cgxml>
 		</result>
 	</test-case>
-	
-		<test-case name="substring">
+
+	<test-case name="split">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data"
+							value="Oahu,Hawaii,Maui" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:data source="data" name="island">
+						<mm:split delimiter=","/>
+					</mm:data>
+
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="island" value="Oahu" />
+						<cgxml:literal name="island" value="Hawaii" />
+						<cgxml:literal name="island" value="Maui" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="substring">
 		<input type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
@@ -58,7 +95,7 @@
 			<mm:metamorph version="1">
 				<mm:rules>
 					<mm:data source="a">
-						<mm:substring  start="3"  end="5"/>
+						<mm:substring start="3" end="5" />
 					</mm:data>
 				</mm:rules>
 			</mm:metamorph>

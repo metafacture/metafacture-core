@@ -77,8 +77,7 @@ public final class BatchLogger extends AbstractBatcher {
 		vars.put(BATCH_COUNT_VAR, Long.toString(getBatchCount()));
 		vars.put(BATCH_SIZE_VAR, Long.toString(getBatchSize()));
 		vars.put(TOTAL_RECORD_COUNT_VAR, Long.toString((getBatchSize() * getBatchCount())+getRecordCount()));
-		LOG.info(StringUtil.format(format, vars));
-		
+		LOG.info(StringUtil.format(format, vars));		
 	}
 
 	@Override

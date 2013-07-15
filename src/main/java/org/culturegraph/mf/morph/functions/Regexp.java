@@ -42,21 +42,29 @@ public final class Regexp extends AbstractFunction {
 		matcher.reset(value);
 		if (null == format) {
 			while (matcher.find()) {
-				getNamedValueReceiver().receive(name, matcher.group(), source, recordCount, entityCount);
+				final String group = matcher.group();
+				if (!group.isEmpty()) {
+					getNamedValueReceiver().receive(name, group, source, recordCount, entityCount);
+				}
 			}
 		} else {
 			while (matcher.find()) {
-				getNamedValueReceiver().receive(name, matchAndFormat(), source, recordCount, entityCount);
+				populateVars();
+				if (!tempVars.isEmpty()) {
+					getNamedValueReceiver().receive(name,
+							StringUtil.format(format, tempVars), source, recordCount, entityCount);
+				}
 			}
 		}
 	}
 
-	private String matchAndFormat() {
+	private void populateVars() {
 		tempVars.clear();
 		for (int i = 0; i <= matcher.groupCount(); ++i) {
-			tempVars.put(String.valueOf(i), matcher.group(i));
+			if (!matcher.group(i).isEmpty()) {
+				tempVars.put(String.valueOf(i), matcher.group(i));
+			}
 		}
-		return StringUtil.format(format, tempVars);
 	}
 
 	/**

@@ -18,7 +18,6 @@ package org.culturegraph.mf.flux;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 
 import org.antlr.runtime.ANTLRInputStream;
@@ -28,6 +27,7 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.culturegraph.mf.flux.parser.FlowBuilder;
 import org.culturegraph.mf.flux.parser.FluxLexer;
 import org.culturegraph.mf.flux.parser.FluxParser;
+import org.culturegraph.mf.flux.parser.FluxProgramm;
 
 /**
  * Creates a {@link Flow} based on a flux script
@@ -40,7 +40,7 @@ public final class FluxCompiler {
 		// no instances
 	}
 	
-	public static List<Flow> compile(final InputStream flux, final Map<String,String> vars ) throws RecognitionException, IOException{
+	public static FluxProgramm compile(final InputStream flux, final Map<String,String> vars ) throws RecognitionException, IOException{
 		return compileFlow(compileAst(flux), vars);
 	}
 	
@@ -49,11 +49,10 @@ public final class FluxCompiler {
 		return new CommonTreeNodeStream(parser.flux().getTree());
 	}
 
-	private static List<Flow> compileFlow(final CommonTreeNodeStream treeNodes, final Map<String, String> vars)
+	private static FluxProgramm compileFlow(final CommonTreeNodeStream treeNodes, final Map<String, String> vars)
 			throws RecognitionException {
 		final FlowBuilder flowBuilder = new FlowBuilder(treeNodes);
 		flowBuilder.addVaribleAssignements(vars);
-		final List<Flow> flows = flowBuilder.flux();
-		return flows;
+		return flowBuilder.flux();
 	}
 }

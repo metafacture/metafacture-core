@@ -31,13 +31,13 @@ import org.xml.sax.SAXException;
 /**
  * A generic xml reader.
  * @author Markus Michael Geipel
- * 
+ *
  */
 @Description("A generic xml reader")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
 public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
-	
+
 	private static final Pattern TABS = Pattern.compile("\t+");
 	private final String recordTagName;
 	private boolean inRecord;
@@ -55,7 +55,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 		super();
 		this.recordTagName = recordTagName;
 	}
-	
+
 	@Override
 	public void startElement(final String uri, final String localName, final String qName, final Attributes attributes)
 			throws SAXException {
@@ -66,7 +66,11 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 			writeAttributes(attributes);
 		} else if (localName.equals(recordTagName)) {
 			final String identifier = attributes.getValue("id");
-			getReceiver().startRecord(identifier);
+			if (identifier == null) {
+				getReceiver().startRecord("");
+			} else {
+				getReceiver().startRecord(identifier);
+			}
 			writeAttributes(attributes);
 			inRecord = true;
 		}

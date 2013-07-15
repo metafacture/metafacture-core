@@ -19,6 +19,7 @@ package org.culturegraph.mf.flux;
 import java.io.PrintStream;
 
 import org.apache.commons.io.output.NullOutputStream;
+import org.culturegraph.mf.flux.parser.FluxProgramm;
 import org.junit.Test;
 
 /**
@@ -32,7 +33,7 @@ public final class FlowTest {
 	@Test
 	public void testCommandRegistration() {
 		// all commands must properly load to print the help
-		Flow.printHelp(new PrintStream(new NullOutputStream()));
+		FluxProgramm.printHelp(new PrintStream(new NullOutputStream()));
 
 	}
 }
