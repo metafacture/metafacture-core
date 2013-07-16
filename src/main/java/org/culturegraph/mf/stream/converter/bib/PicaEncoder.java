@@ -17,7 +17,10 @@ package org.culturegraph.mf.stream.converter.bib;
 
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 
 import org.culturegraph.mf.framework.DefaultStreamPipe;
@@ -31,22 +34,37 @@ import org.culturegraph.mf.framework.annotations.Out;
 /**
  * Encodes an event stream in pica+ format.
  * 
- * @see PicaEncoder
+ * <strong>Special handling of subfield 'S':</strong> the code of
+ * "control subfields" (subfield name='S') will be appended to the fieldName.
+ * E.g.: 041A $Saxx would be mapped to the fieldName 041Aa, and xx will be
+ * ignored. A recovery of such field to original is not implemented. So the
+ * encoder cannot identify an S-field. 
+ * The S-field special processing can be turned on if the decoder is called
+ * with the option: (appendcontrolsubfield="true")
+ * The default value of this option is set to "false".
  * 
- * @author Markus Michael Geipel, Christoph Böhme, Yining Li
- *
+ * @see PicaDecoder
+ * 
+ * @author Yining Li
+ * 
  */
 @Description("Encodes a stream in pica+ Format")
 @In(StreamReceiver.class)
 @Out(String.class)
-public class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
+public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
 	private static final String FIELD_DELIMITER = "\u001e";
 	private static final String SUB_DELIMITER = "\u001f";
-	private static boolean idnControlSubField = false;
+	private boolean idnControlSubField;
+	private boolean recordOpen;
+	private boolean entityOpen;
 	private StringBuilder builder = new StringBuilder();
-	private String idn="";
+	private String id="";
 
+	private static final String FIELD_NAME_PATTERN_STRING = "\\d{3}.(/..)?";
+	private static final Pattern FIELD_NAME_PATTERN = Pattern.compile(FIELD_NAME_PATTERN_STRING);
+	private boolean ignoreRecordId;
+	
 	/**
 	 * For each field in the stream the method calls:
 	 * <ol>
@@ -55,68 +73,96 @@ public class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 	 * <li>receiver.endEntity</li>
 	 * </ol>
 	 * Fields without any subfield will be skipped.<br>
-	 * <strong>Special handling of subfield 'S':</strong> the code of
-	 * "control subfields" (subfield name='S') will be appended to the
-	 * fieldName. E.g.: 041A $Saxx would be mapped to the fieldName 041Aa,
-	 * and xx will be ignored. A recovery of such field to original is not implemented.
-	 * So the encoder cannot identify a S-field. The S-field special processing 
-	 * can be turn of if the call of decode with the option:
-	 * (appendcontrolsubfield="false")
-	 * which default is set to true. 
 	 * 
 	 * @param record
 	 */
 	@Override
-	public final void startRecord(final String name) {
+	public void startRecord(final String recordId) {
 		// the name is a idn, which should be found in the encoded data under 003@.
-		this.idn = name;
+		//any rest of the previous record is cleared before the new begins.
+		builder.setLength(0); 
+		this.id = recordId;
+		//Now an entity can be opened. But no literal is allowed.
+		this.recordOpen = true;
+		this.entityOpen = false;
 	}
 
-	public final boolean compareIdFromRecord(final String gndId) {
-		if (this.idn.equals(gndId)) {
+	public void setIgnoreRecordId(final boolean ignoreRecordId) {
+		this.ignoreRecordId = ignoreRecordId;
+	}
+	
+	public boolean getIgnoreRecordId() {
+		return this.ignoreRecordId;
+	}
+	
+	protected void compareIdFromRecord(final String recordId) {
+		if (this.id.equals(recordId)) {
 			idnControlSubField = false; //only test this context.
-			return true;
+			return;
 		}
-		throw new MissingIdException(gndId);
+		throw new MissingIdException(recordId);
 	}
 	
 
 	@Override
-	public final void startEntity(final String name) {
+	public void startEntity(final String name) {
 	// Here begins a field (i.e. "028A ", which is given in the name.
 	// It is unknown, whether there are any subfields in the field.
-		builder.append(name.trim()+ " ");
-		if (name.trim().equals("003@")) {
-			//Time to check nid
+		final Matcher fieldNameMatcher = FIELD_NAME_PATTERN.matcher(name);
+		if (fieldNameMatcher.find()) {
+			builder.append(name.trim()+ " ");
+		}
+		else {
+			throw new FormatException(name);
+		}
+		if (name.trim().equals("003@") && !getIgnoreRecordId()) {
+			//Time to check record Id in the following subfield.
 			idnControlSubField = true;
 		}else {
-			//No check is necessary.
+			//No check is necessary. 
 			idnControlSubField = false;
 		}
+		//Now literals can be opened. But no entities are allowed.
+		if (recordOpen)
+			this.entityOpen = true;
 	}
 
 	@Override
-	public final void literal(final String name, final String value) {
-		//
-		final String value_new = Normalizer.normalize(value, Form.NFD);
-		if (idnControlSubField == true){
-			// it is a 003@ field, the same nid delivered with record should follow
-			if (compareIdFromRecord(value)) idnControlSubField = false;
+	public void literal(final String name, final String value) {
+		//A Subfield has one character or digit exactly.
+		if (name.length()!=1){
+			throw new FormatException(name);
+		} else if (!entityOpen){
+			throw new FormatException(name); //new exceptions define!!!! tODo
+		}
+		final String valueNew = Normalizer.normalize(value, Form.NFD);
+		if (idnControlSubField){
+			// it is a 003@ field, the same record id delivered with record should follow
+			compareIdFromRecord(value);
 		}
 		builder.append(SUB_DELIMITER);
 		builder.append(name);
-		builder.append(value_new);
-	}
+		builder.append(valueNew);
+}
 
 	@Override
-	public final void endEntity() {
+	public void endEntity() {
 		builder.append(FIELD_DELIMITER);
+		//Now an entity can be opened. But no literal is allowed.
+		this.entityOpen = false;
 	}
 
 	@Override
-	public final void endRecord() {
+	public void endRecord() {
 		getReceiver().process(builder.toString());
-		builder = new StringBuilder();
+		builder.setLength(0);
+		//Now a record can be opened. But no literal and entity are allowed.
+		this.recordOpen = false;
+		this.entityOpen = false;
+	}
+	@Override
+	protected void onResetStream() {
+		builder.setLength(0);
 	}
 
 }
