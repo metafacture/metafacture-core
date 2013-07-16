@@ -26,9 +26,9 @@ import org.xml.sax.Attributes;
 
 /**
  * Reads CG-XML files.
- * 
+ *
  * @author Christoph Böhme
- * 
+ *
  */
 @Description("Reads CG-XML files")
 @In(XmlReceiver.class)
@@ -46,7 +46,12 @@ public final class CGXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 	public void startElement(final String uri, final String localName,
 			final String qName, final Attributes attributes) {
 		if (RECORD_TAG.equals(localName)) {
-			getReceiver().startRecord(attributes.getValue("", ID_ATTR));
+			final String recordId = attributes.getValue("", ID_ATTR);
+			if (recordId == null) {
+				getReceiver().startRecord("");
+			} else {
+				getReceiver().startRecord(recordId);
+			}
 		} else if (ENTITY_TAG.equals(localName)) {
 			getReceiver().startEntity(attributes.getValue("", NAME_ATTR));
 		} else if (LITERAL_TAG.equals(localName)) {

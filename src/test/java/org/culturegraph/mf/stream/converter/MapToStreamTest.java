@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.culturegraph.mf.exceptions.FormatException;
-import org.culturegraph.mf.stream.converter.MapToStream;
 import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.culturegraph.mf.util.StreamConstants;
@@ -29,9 +28,9 @@ import org.junit.Test;
 
 /**
  * Test {@link MapToStream}
- * 
+ *
  * @author Christoph Böhme
- * 
+ *
  */
 public final class MapToStreamTest {
 
@@ -51,16 +50,16 @@ public final class MapToStreamTest {
 		expected.literal(KEYS[1], VALUES[1]);
 		expected.literal(StreamConstants.ID, RECORD_ID);
 		expected.endRecord();
-		
+
 		final Map<String, String> map = new HashMap<String, String>();
 		map.put(KEYS[0], VALUES[0]);
 		map.put(KEYS[1], VALUES[1]);
 		map.put(StreamConstants.ID, RECORD_ID);
 
 		final MapToStream mapToStream = new MapToStream();
-		
+
 		Assert.assertEquals(StreamConstants.ID, mapToStream.getIdKey());
-		
+
 		checkResults(expected, mapToStream, map);
 	}
 
@@ -73,48 +72,48 @@ public final class MapToStreamTest {
 		expected.literal(KEYS[1], VALUES[1]);
 		expected.literal(Integer.toString(INT_ID_KEY), RECORD_ID);
 		expected.endRecord();
-		
+
 		final Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 		map.put(INT_KEYS[0], INT_VALUES[0]);
 		map.put(INT_KEYS[1], INT_VALUES[1]);
 		map.put(INT_ID_KEY, INT_RECORD_ID);
-		
+
 		final MapToStream mapToStream = new MapToStream();
 		mapToStream.setIdKey(-1);
-		
+
 		Assert.assertEquals(-1, mapToStream.getIdKey());
-		
+
 		checkResults(expected, mapToStream, map);
 	}
-	
+
 	@Test
 	public void testStringIntMap() {
 		final EventList expected = new EventList();
-		expected.startRecord(null);
+		expected.startRecord("");
 		expected.literal(KEYS[0], VALUES[0]);
 		expected.literal(KEYS[1], VALUES[1]);
 		expected.endRecord();
-		
+
 		final Map<String, Integer> map = new HashMap<String, Integer>();
 		map.put(KEYS[0], INT_VALUES[0]);
 		map.put(KEYS[1], INT_VALUES[1]);
-		
+
 		final MapToStream mapToStream = new MapToStream();
-		
+
 		checkResults(expected, mapToStream, map);
 	}
-	
+
 	private void checkResults(final EventList expected, final MapToStream mapToStream, final Map<?, ?> map) {
-		
+
 		final StreamValidator validator = new StreamValidator(expected.getEvents());
-		
+
 		mapToStream.setReceiver(validator);
-		
+
 		try {
 			mapToStream.process(map);
 			mapToStream.closeStream();
-		} catch (FormatException e){
+		} catch (final FormatException e){
 			Assert.fail(e.toString());
-		}		
+		}
 	}
 }
