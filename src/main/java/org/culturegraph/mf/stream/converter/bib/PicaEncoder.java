@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 
-import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
@@ -55,14 +54,18 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
 	private static final String FIELD_DELIMITER = "\u001e";
 	private static final String SUB_DELIMITER = "\u001f";
-	private boolean idnControlSubField;
-	private boolean entityOpen;
-	private StringBuilder builder = new StringBuilder();
-	private String id="";
-
+	private static final String FIELD_IDN_INTERN = "003@";
 	private static final String FIELD_NAME_PATTERN_STRING = "\\d{3}.(/..)?";
 	private static final Pattern FIELD_NAME_PATTERN = Pattern.compile(FIELD_NAME_PATTERN_STRING);
-	private boolean ignoreRecordId;
+
+	private static StringBuilder builder = new StringBuilder(); //Result of the encoding process
+
+	private boolean entityOpen;         //Flag to inform whether an entity is opened.
+	private boolean idnControlSubField; //Flag to inform whether it is the 003@ field.
+	private boolean ignoreRecordId;     //Flag to decide whether the record Id is checked.
+	
+	private String id;
+
 	
 
 	@Override
@@ -91,10 +94,13 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 		if (!fieldNameMatcher.matches()) {
 			throw new FormatException(name);
 		}
+		if (entityOpen) { //No nested entities are allowed in pica+.
+			throw new FormatException(name);
+		}
 		builder.append(name.trim()+ " ");
 
-		idnControlSubField = !ignoreRecordId && name.trim().equals("003@");
-		//Now literals can be opened.
+		idnControlSubField = !ignoreRecordId && FIELD_IDN_INTERN.equals(name.trim());
+		//Now literals can be opened but no more entities.
 		this.entityOpen = true;
 	}
 
