@@ -19,29 +19,33 @@ import org.culturegraph.mf.exceptions.WellformednessException;
 import org.culturegraph.mf.framework.StreamReceiver;
 
 /**
- * A stream receiver that throws an {@link WellformednessException} if 
- * the stream event methods are called in an invalid order. Additionally, 
+ * A stream receiver that throws an {@link WellformednessException} if
+ * the stream event methods are called in an invalid order. Additionally,
  * the stream receiver checks that entity and literal names are not null.
- * 
+ *
  * @see StreamValidator
  * @see WellformednessException
- * 
+ *
  * @author Christoph Böhme
- * 
+ *
  */
 public final class WellFormednessChecker implements StreamReceiver {
-	
+
+	private static final String ID_MUST_NOT_BE_NULL = "id must not be null";
 	private static final String NAME_MUST_NOT_BE_NULL = "name must not be null";
-	
+
 	private static final String NOT_IN_RECORD = "Not in record";
 	private static final String NOT_IN_ENTITY = "Not in entity";
 	private static final String IN_ENTITY = "In entity";
 	private static final String IN_RECORD = "In record";
-	
+
 	private int nestingLevel;
-	
+
 	@Override
 	public void startRecord(final String identifier) {
+		if (identifier == null) {
+			throw new WellformednessException(ID_MUST_NOT_BE_NULL);
+		}
 		if (nestingLevel > 0) {
 			throw new WellformednessException(IN_RECORD);
 		}
@@ -50,10 +54,10 @@ public final class WellFormednessChecker implements StreamReceiver {
 
 	@Override
 	public void endRecord() {
-		if (nestingLevel < 1) { 
+		if (nestingLevel < 1) {
 			throw new WellformednessException(NOT_IN_RECORD);
 		} else if (nestingLevel > 1) {
-			throw new WellformednessException(IN_ENTITY);			
+			throw new WellformednessException(IN_ENTITY);
 		}
 		nestingLevel -= 1;
 	}
@@ -86,7 +90,7 @@ public final class WellFormednessChecker implements StreamReceiver {
 			throw new WellformednessException(NOT_IN_RECORD);
 		}
 	}
-	
+
 	@Override
 	public void resetStream() {
 		nestingLevel = 0;
