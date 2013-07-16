@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 
 import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
-
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
@@ -32,22 +31,22 @@ import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Encodes an event stream in pica+ format.
- * 
+ *
  * <strong>Special handling of subfield 'S':</strong> the code of
  * "control subfields" (subfield name='S') will be appended to the fieldName.
  * E.g.: 041A $Saxx would be mapped to the fieldName 041Aa, and xx will be
  * ignored. A recovery of such field to original is not implemented. So the
- * encoder cannot identify an S-field. 
+ * encoder cannot identify an S-field.
  * The S-field special processing can be turned on if the decoder is called
  * with the option: (appendcontrolsubfield="true")
  * The default value of this option is set to "false".
- * 
+ *
  * @see PicaDecoder
- * 
+ *
  * @author Yining Li
- * 
+ *
  */
-@Description("Encodes a stream in pica+ Format")
+@Description("Encodes a stream in pica+ format")
 @In(StreamReceiver.class)
 @Out(String.class)
 public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
@@ -63,16 +62,14 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 	private boolean entityOpen;         //Flag to inform whether an entity is opened.
 	private boolean idnControlSubField; //Flag to inform whether it is the 003@ field.
 	private boolean ignoreRecordId;     //Flag to decide whether the record Id is checked.
-	
-	private String id;
 
-	
+	private String id;
 
 	@Override
 	public void startRecord(final String recordId) {
 		// the name is a idn, which should be found in the encoded data under 003@.
 		//any rest of the previous record is cleared before the new begins.
-		builder.setLength(0); 
+		builder.setLength(0);
 		this.id = recordId;
 		//Now an entity can be opened. But no literal is allowed.
 		this.entityOpen = false;
@@ -81,15 +78,15 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 	public void setIgnoreRecordId(final boolean ignoreRecordId) {
 		this.ignoreRecordId = ignoreRecordId;
 	}
-	
+
 	public boolean getIgnoreRecordId() {
 		return this.ignoreRecordId;
 	}
-	
+
 	@Override
 	public void startEntity(final String name) {
-	// Here begins a field (i.e. "028A ", which is given in the name.
-	// It is unknown, whether there are any subfields in the field.
+		// Here begins a field (i.e. "028A ", which is given in the name.
+		// It is unknown, whether there are any subfields in the field.
 		final Matcher fieldNameMatcher = FIELD_NAME_PATTERN.matcher(name);
 		if (!fieldNameMatcher.matches()) {
 			throw new FormatException(name);
@@ -107,14 +104,14 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 	@Override
 	public void literal(final String name, final String value) {
 		//A Subfield has one character or digit exactly.
-		if (name.length()!=1){
+		if (name.length() != 1) {
 			throw new FormatException(name);
 		}
-		if (!entityOpen){
+		if (!entityOpen) {
 			throw new FormatException(name); //new exceptions definition for literal out of entity
 		}
 		final String valueNew = Normalizer.normalize(value, Form.NFD);
-		if (idnControlSubField){
+		if (idnControlSubField) {
 			// it is a 003@ field, the same record id delivered with record should follow
 			if (!this.id.equals(value)) {
 				throw new MissingIdException(value);
@@ -139,6 +136,7 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 		//No literal is allowed.
 		this.entityOpen = false;
 	}
+
 	@Override
 	protected void onResetStream() {
 		builder.setLength(0);
