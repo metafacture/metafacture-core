@@ -56,7 +56,6 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 	private static final String FIELD_DELIMITER = "\u001e";
 	private static final String SUB_DELIMITER = "\u001f";
 	private boolean idnControlSubField;
-	private boolean recordOpen;
 	private boolean entityOpen;
 	private StringBuilder builder = new StringBuilder();
 	private String id="";
@@ -65,17 +64,7 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 	private static final Pattern FIELD_NAME_PATTERN = Pattern.compile(FIELD_NAME_PATTERN_STRING);
 	private boolean ignoreRecordId;
 	
-	/**
-	 * For each field in the stream the method calls:
-	 * <ol>
-	 * <li>receiver.startEntity</li>
-	 * <li>receiver.literal for each subfield of the field</li>
-	 * <li>receiver.endEntity</li>
-	 * </ol>
-	 * Fields without any subfield will be skipped.<br>
-	 * 
-	 * @param record
-	 */
+
 	@Override
 	public void startRecord(final String recordId) {
 		// the name is a idn, which should be found in the encoded data under 003@.
@@ -83,7 +72,6 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 		builder.setLength(0); 
 		this.id = recordId;
 		//Now an entity can be opened. But no literal is allowed.
-		this.recordOpen = true;
 		this.entityOpen = false;
 	}
 
@@ -95,36 +83,19 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 		return this.ignoreRecordId;
 	}
 	
-	protected void compareIdFromRecord(final String recordId) {
-		if (this.id.equals(recordId)) {
-			idnControlSubField = false; //only test this context.
-			return;
-		}
-		throw new MissingIdException(recordId);
-	}
-	
-
 	@Override
 	public void startEntity(final String name) {
 	// Here begins a field (i.e. "028A ", which is given in the name.
 	// It is unknown, whether there are any subfields in the field.
 		final Matcher fieldNameMatcher = FIELD_NAME_PATTERN.matcher(name);
-		if (fieldNameMatcher.find()) {
-			builder.append(name.trim()+ " ");
-		}
-		else {
+		if (!fieldNameMatcher.matches()) {
 			throw new FormatException(name);
 		}
-		if (name.trim().equals("003@") && !getIgnoreRecordId()) {
-			//Time to check record Id in the following subfield.
-			idnControlSubField = true;
-		}else {
-			//No check is necessary. 
-			idnControlSubField = false;
-		}
-		//Now literals can be opened. But no entities are allowed.
-		if (recordOpen)
-			this.entityOpen = true;
+		builder.append(name.trim()+ " ");
+
+		idnControlSubField = !ignoreRecordId && name.trim().equals("003@");
+		//Now literals can be opened.
+		this.entityOpen = true;
 	}
 
 	@Override
@@ -132,13 +103,17 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 		//A Subfield has one character or digit exactly.
 		if (name.length()!=1){
 			throw new FormatException(name);
-		} else if (!entityOpen){
-			throw new FormatException(name); //new exceptions define!!!! tODo
+		}
+		if (!entityOpen){
+			throw new FormatException(name); //new exceptions definition for literal out of entity
 		}
 		final String valueNew = Normalizer.normalize(value, Form.NFD);
 		if (idnControlSubField){
 			// it is a 003@ field, the same record id delivered with record should follow
-			compareIdFromRecord(value);
+			if (!this.id.equals(value)) {
+				throw new MissingIdException(value);
+			}
+			idnControlSubField = false; //only one record Id will be checked.
 		}
 		builder.append(SUB_DELIMITER);
 		builder.append(name);
@@ -155,9 +130,7 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 	@Override
 	public void endRecord() {
 		getReceiver().process(builder.toString());
-		builder.setLength(0);
-		//Now a record can be opened. But no literal and entity are allowed.
-		this.recordOpen = false;
+		//No literal is allowed.
 		this.entityOpen = false;
 	}
 	@Override
