@@ -29,7 +29,7 @@ import org.culturegraph.mf.framework.StreamReceiver;
  * @author Christoph Böhme
  *
  */
-public final class WellFormednessChecker implements StreamReceiver {
+public final class WellformednessChecker implements StreamReceiver {
 
 	private static final String ID_MUST_NOT_BE_NULL = "id must not be null";
 	private static final String NAME_MUST_NOT_BE_NULL = "name must not be null";

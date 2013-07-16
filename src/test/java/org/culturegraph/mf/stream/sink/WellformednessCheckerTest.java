@@ -20,12 +20,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests for {@link WellFormednessChecker}.
+ * Tests for {@link WellformednessChecker}.
  *
  * @author Christoph Böhme
  *
  */
-public final class WellFormednessCheckerTest {
+public final class WellformednessCheckerTest {
 
 	private static final String RECORD_ID1 = "id1";
 	private static final String RECORD_ID2 = "id2";
@@ -41,120 +41,120 @@ public final class WellFormednessCheckerTest {
 	private static final String VALUE3 = "value3";
 	private static final String VALUE4 = "value4";
 
-	private WellFormednessChecker wellFormednessChecker;
+	private WellformednessChecker wellformednessChecker;
 
 	@Before
 	public void setup() {
-		wellFormednessChecker = new WellFormednessChecker();
+		wellformednessChecker = new WellformednessChecker();
 	}
 
 	@Test
 	public void testShouldAcceptValidStream() {
-		wellFormednessChecker.startRecord(RECORD_ID1);
-		wellFormednessChecker.literal(LITERAL1, VALUE1);
-		wellFormednessChecker.startEntity(ENTITY1);
-		wellFormednessChecker.literal(LITERAL2, VALUE2);
-		wellFormednessChecker.startEntity(ENTITY2);
-		wellFormednessChecker.literal(LITERAL3, VALUE3);
-		wellFormednessChecker.endEntity();
-		wellFormednessChecker.endEntity();
-		wellFormednessChecker.endRecord();
-		wellFormednessChecker.startRecord(RECORD_ID2);
-		wellFormednessChecker.startEntity(ENTITY3);
-		wellFormednessChecker.literal(LITERAL4, VALUE4);
-		wellFormednessChecker.endEntity();
-		wellFormednessChecker.endRecord();
-		wellFormednessChecker.closeStream();
+		wellformednessChecker.startRecord(RECORD_ID1);
+		wellformednessChecker.literal(LITERAL1, VALUE1);
+		wellformednessChecker.startEntity(ENTITY1);
+		wellformednessChecker.literal(LITERAL2, VALUE2);
+		wellformednessChecker.startEntity(ENTITY2);
+		wellformednessChecker.literal(LITERAL3, VALUE3);
+		wellformednessChecker.endEntity();
+		wellformednessChecker.endEntity();
+		wellformednessChecker.endRecord();
+		wellformednessChecker.startRecord(RECORD_ID2);
+		wellformednessChecker.startEntity(ENTITY3);
+		wellformednessChecker.literal(LITERAL4, VALUE4);
+		wellformednessChecker.endEntity();
+		wellformednessChecker.endRecord();
+		wellformednessChecker.closeStream();
 	}
 
 	@Test
 	public void testShouldAcceptEmptyStream() {
-		wellFormednessChecker.closeStream();
+		wellformednessChecker.closeStream();
 	}
 
 	@Test(expected=WellformednessException.class)
 	public void testShouldFailOnNullRecordId() {
-		wellFormednessChecker.startRecord(null);
-		wellFormednessChecker.endRecord();
-		wellFormednessChecker.closeStream();
+		wellformednessChecker.startRecord(null);
+		wellformednessChecker.endRecord();
+		wellformednessChecker.closeStream();
 	}
 
 	@Test(expected=WellformednessException.class)
 	public void testShouldFailOnNullEntityName() {
-		wellFormednessChecker.startRecord(RECORD_ID1);
-		wellFormednessChecker.startEntity(null);
-		wellFormednessChecker.endEntity();
-		wellFormednessChecker.endRecord();
-		wellFormednessChecker.closeStream();
+		wellformednessChecker.startRecord(RECORD_ID1);
+		wellformednessChecker.startEntity(null);
+		wellformednessChecker.endEntity();
+		wellformednessChecker.endRecord();
+		wellformednessChecker.closeStream();
 	}
 
 	@Test(expected=WellformednessException.class)
 	public void testShouldFailOnNullLiteralName() {
-		wellFormednessChecker.startRecord(RECORD_ID1);
-		wellFormednessChecker.literal(null, VALUE1);
-		wellFormednessChecker.endRecord();
-		wellFormednessChecker.closeStream();
+		wellformednessChecker.startRecord(RECORD_ID1);
+		wellformednessChecker.literal(null, VALUE1);
+		wellformednessChecker.endRecord();
+		wellformednessChecker.closeStream();
 	}
 
 	@Test(expected=WellformednessException.class)
 	public void testShouldFailOnStartRecordInsideRecord() {
-		wellFormednessChecker.startRecord(RECORD_ID1);
-		wellFormednessChecker.startRecord(RECORD_ID2);
-		wellFormednessChecker.endRecord();
-		wellFormednessChecker.closeStream();
+		wellformednessChecker.startRecord(RECORD_ID1);
+		wellformednessChecker.startRecord(RECORD_ID2);
+		wellformednessChecker.endRecord();
+		wellformednessChecker.closeStream();
 	}
 
 	@Test(expected=WellformednessException.class)
 	public void testShouldFailOnEndRecordOutsideRecord() {
-		wellFormednessChecker.endRecord();
-		wellFormednessChecker.closeStream();
+		wellformednessChecker.endRecord();
+		wellformednessChecker.closeStream();
 	}
 
 	@Test(expected=WellformednessException.class)
 	public void testShouldFailOnStartEntityOutsideRecord() {
-		wellFormednessChecker.startEntity(ENTITY1);
-		wellFormednessChecker.closeStream();
+		wellformednessChecker.startEntity(ENTITY1);
+		wellformednessChecker.closeStream();
 	}
 
 	@Test(expected=WellformednessException.class)
 	public void testShouldFailOnEndEntityOutsideRecord() {
-		wellFormednessChecker.endEntity();
-		wellFormednessChecker.closeStream();
+		wellformednessChecker.endEntity();
+		wellformednessChecker.closeStream();
 	}
 
 	@Test(expected=WellformednessException.class)
 	public void testShouldFailOnUnmatchedEndEntity() {
-		wellFormednessChecker.startRecord(RECORD_ID1);
-		wellFormednessChecker.endEntity();
-		wellFormednessChecker.endRecord();
-		wellFormednessChecker.closeStream();
+		wellformednessChecker.startRecord(RECORD_ID1);
+		wellformednessChecker.endEntity();
+		wellformednessChecker.endRecord();
+		wellformednessChecker.closeStream();
 	}
 
 	@Test(expected=WellformednessException.class)
 	public void testShouldFailOnLiteralOutsideRecord() {
-		wellFormednessChecker.literal(LITERAL1, VALUE1);
-		wellFormednessChecker.closeStream();
+		wellformednessChecker.literal(LITERAL1, VALUE1);
+		wellformednessChecker.closeStream();
 	}
 
 	@Test(expected=WellformednessException.class)
 	public void testShouldFailOnUnclosedRecord() {
-		wellFormednessChecker.startRecord(RECORD_ID1);
-		wellFormednessChecker.closeStream();
+		wellformednessChecker.startRecord(RECORD_ID1);
+		wellformednessChecker.closeStream();
 	}
 
 	@Test(expected=WellformednessException.class)
 	public void testShouldFailOnUnclosedEntityAtEndRecord() {
-		wellFormednessChecker.startRecord(RECORD_ID1);
-		wellFormednessChecker.startEntity(ENTITY1);
-		wellFormednessChecker.endRecord();
-		wellFormednessChecker.closeStream();
+		wellformednessChecker.startRecord(RECORD_ID1);
+		wellformednessChecker.startEntity(ENTITY1);
+		wellformednessChecker.endRecord();
+		wellformednessChecker.closeStream();
 	}
 
 	@Test(expected=WellformednessException.class)
 	public void testShouldFailOnUnclosedEntityAtCloseStream() {
-		wellFormednessChecker.startRecord(RECORD_ID1);
-		wellFormednessChecker.startEntity(ENTITY1);
-		wellFormednessChecker.closeStream();
+		wellformednessChecker.startRecord(RECORD_ID1);
+		wellformednessChecker.startEntity(ENTITY1);
+		wellformednessChecker.closeStream();
 	}
 
 }
