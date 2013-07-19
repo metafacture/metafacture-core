@@ -22,12 +22,18 @@ import java.io.ObjectOutputStream;
 
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectReceiver;
+import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.In;
+import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.Triple;
 
 /**
  * @author Christoph Böhme
  *
  */
+@Description("Writes triples into a file.")
+@In(Triple.class)
+@Out(Void.class)
 public final class TripleWriter extends DefaultObjectReceiver<Triple> {
 
 	public static final int BUFFERSIZE = 2048;
