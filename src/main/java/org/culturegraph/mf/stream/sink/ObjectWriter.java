@@ -23,6 +23,7 @@ import java.util.List;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
+import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.annotations.ReturnsAvailableArguments;
 
 
@@ -36,6 +37,7 @@ import org.culturegraph.mf.framework.annotations.ReturnsAvailableArguments;
 
 @Description("Writes objects to stdout or a file")
 @In(Object.class)
+@Out(Void.class)
 public final class ObjectWriter<T> implements ObjectReceiver<T> {
 
 	private static final String STDOUT = "stdout";

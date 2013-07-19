@@ -27,6 +27,7 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
+import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.Triple;
 
 /**
@@ -46,6 +47,7 @@ import org.culturegraph.mf.types.Triple;
 		+ "within `baseDir`. THIS MODULE SHOULD NOT BE USED IN ENVIRONMENTS IN WHICH "
 		+ "THE VALUES OF SUBJECT AND PREDICATE A PROVIDED BY AN UNTRUSTED SOURCE!")
 @In(Triple.class)
+@Out(Void.class)
 public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
 
 	private final String baseDir;
