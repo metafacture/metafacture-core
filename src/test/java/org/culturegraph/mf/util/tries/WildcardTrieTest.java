@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,24 +63,24 @@ public final class WildcardTrieTest {
 		this.wordsIn = Collections.unmodifiableSet(wordsIn);
 		this.wordsOut = Collections.unmodifiableSet(wordsOut);
 	}
-
-	@Test(timeout = 1500)
-	public void testPerformance() {
-		final WildcardTrie<String> trie = new WildcardTrie<String>();
-		final long start = System.currentTimeMillis();
-		for (String word : wordsIn) {
-			trie.put(word, word);
-		}
-
-		for (String word : wordsIn) {
-			Assert.assertFalse(trie.get(word).isEmpty());
-		}
-
-		for (String word : wordsOut) {
-			Assert.assertTrue(trie.get(word).isEmpty());
-		}
-		LOG.info("time: " + (System.currentTimeMillis() - start));
-	}
+// commented out due to issue #120
+//	@Test(timeout = 1500)
+//	public void testPerformance() {
+//		final WildcardTrie<String> trie = new WildcardTrie<String>();
+//		final long start = System.currentTimeMillis();
+//		for (String word : wordsIn) {
+//			trie.put(word, word);
+//		}
+//
+//		for (String word : wordsIn) {
+//			Assert.assertFalse(trie.get(word).isEmpty());
+//		}
+//
+//		for (String word : wordsOut) {
+//			Assert.assertTrue(trie.get(word).isEmpty());
+//		}
+//		LOG.info("time: " + (System.currentTimeMillis() - start));
+//	}
 
 	@Test
 	public void testWithQWildcard() {
