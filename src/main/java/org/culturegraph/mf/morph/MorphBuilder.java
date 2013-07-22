@@ -18,6 +18,7 @@ package org.culturegraph.mf.morph;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.morph.collectors.Collect;
@@ -38,6 +39,9 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	private static final String JAVA = "java";
 	private static final String JAVAMAP = "javamap";
 	private static final String RECORD = "record";
+	private static final String OR_STRING = "|";
+	private static final Pattern OR_PATTERN = Pattern.compile(OR_STRING, Pattern.LITERAL);
+
 	// private final String morphDef;
 	private final Metamorph metamorph;
 	private final Deque<Collect> collectStack;
@@ -80,18 +84,18 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		final Map<String, String> attributes = resolvedAttributeMap(mapNode);
 		final String mapName = resolveVars(attributes.remove(ATTRITBUTE.NAME.getString()));
 		final Map<String, String> map;
-		
+
 		if (mapNode.getLocalName().equals(JAVAMAP)) {
 			final String className = resolvedAttribute(mapNode, ATTRITBUTE.CLASS);
 			map = ObjectFactory.newInstance(ObjectFactory.loadClass(className, Map.class));
 			attributes.remove(ATTRITBUTE.CLASS.getString());
 			ObjectFactory.applySetters(map, attributes);
-		}else if (getMapFactory().containsKey(mapNode.getLocalName())){
+		} else if (getMapFactory().containsKey(mapNode.getLocalName())) {
 			map = getMapFactory().newInstance(mapNode.getLocalName(), attributes);
-		}else{
+		} else {
 			throw new IllegalArgumentException("Map " + mapNode.getLocalName() + NOT_FOUND);
 		}
-		
+
 		metamorph.putMap(mapName, map);
 	}
 
@@ -135,7 +139,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		data = new Data();
 		data.setName(resolvedAttribute(dataNode, ATTRITBUTE.NAME));
 		metamorph.registerNamedValueReceiver(source, data);
-		
+
 		if (setEntityName) {
 			((Entity) collectStack.peek()).setNameSource(data);
 			setEntityName = false;
@@ -149,16 +153,16 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		} else {
 			final Collect parent = collectStack.peek();
 			data.endPipe(parent);
-			parent.addNamedValueSource(data);			
+			parent.addNamedValueSource(data);
 		}
-		data = null;		
+		data = null;
 	}
-	
+
 	@Override
 	protected void enterName(final Node nameNode) {
 		setEntityName = true;
 	}
-	
+
 	@Override
 	protected void exitName(final Node nameNode) {
 		setEntityName = false;
@@ -179,7 +183,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 			((Entity) collectStack.peek()).setNameSource(collect);
 			setEntityName = false;
 		}
-		
+
 		collectStack.push(collect);
 	}
 
@@ -202,13 +206,14 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	}
 
 	private void registerFlush(final String flushWith, final FlushListener flushListener) {
-
-		if (flushWith.equals(RECORD)) {
-			metamorph.registerRecordEndFlush(flushListener);
-		} else {
-			metamorph.registerNamedValueReceiver(flushWith, new Flush(flushListener));
+		final String[] keysSplit = OR_PATTERN.split(flushWith);
+		for (String key : keysSplit) {
+			if (key.equals(RECORD)) {
+				metamorph.registerRecordEndFlush(flushListener);
+			} else {
+				metamorph.registerNamedValueReceiver(key, new Flush(flushListener));
+			}
 		}
-
 	}
 
 	@Override
