@@ -13,43 +13,45 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.stream.converter;
+package org.culturegraph.mf.stream.pipe;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
-import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.types.Triple;
 
 /**
- * Outputs a record containing the input object as literal.
+ * Filters consecutive duplicated data objects. 
+ * 
+ * @param <T> object type
  *
- * @param <T> input object type
- * @author Christoph Böhme
+ * @author Alexander Haffner
+ *
  */
-@Description("Outputs a record containing the input object as literal")
-@Out(StreamReceiver.class)
-public final class ObjectToLiteral<T> extends
-		DefaultObjectPipe<T, StreamReceiver> {
+@Description("Filters consecutive duplicated data objects.")
+@In(Object.class)
+@Out(Object.class)
+public final class DuplicateObjectFilter<T> extends
+		DefaultObjectPipe<T, ObjectReceiver<T>> {
 
-	public static final String DEFAULT_LITERAL_NAME = "obj";
-
-	private String literalName = DEFAULT_LITERAL_NAME;
-
-	public void setLiteralName(final String literalName) {
-		this.literalName = literalName;
-	}
-
-	public String getLiteralName() {
-		return literalName;
-	}
-
+	private T lastObj;
+	
 	@Override
 	public void process(final T obj) {
-		assert obj!=null;
-		assert !isClosed();
-		getReceiver().startRecord("");
-		getReceiver().literal(literalName, obj.toString());
-		getReceiver().endRecord();
+		if (!obj.equals(lastObj)) {
+			lastObj = obj;
+			getReceiver().process(obj);
+		}		
+	}
+	
+	@Override
+	protected void onResetStream() {
+		lastObj = null;
 	}
 
 }

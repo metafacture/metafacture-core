@@ -160,5 +160,79 @@
 			</cgxml:cgxml>
 		</result>
 	</test-case>
+
+	<test-case name="should use user-defined increment">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="first" value="1789" />
+						<cgxml:literal name="last" value="1799" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:range name="range" increment="3" flushWith="record">
+						<mm:data source="first" />
+						<mm:data source="last" />						
+					</mm:range>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="range" value="1789" />
+						<cgxml:literal name="range" value="1792" />
+						<cgxml:literal name="range" value="1795" />
+						<cgxml:literal name="range" value="1798" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+	
+	<test-case name="should allow negative increments">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="first" value="1799" />
+						<cgxml:literal name="last" value="1789" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:range name="range" increment="-3" flushWith="record">
+						<mm:data source="first" />
+						<mm:data source="last" />						
+					</mm:range>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="range" value="1799" />
+						<cgxml:literal name="range" value="1796" />
+						<cgxml:literal name="range" value="1793" />
+						<cgxml:literal name="range" value="1790" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
 	
 </metamorph-test>
