@@ -15,11 +15,14 @@
  */
 package org.culturegraph.mf.stream.pipe.bib;
 
+import org.culturegraph.mf.stream.pipe.OreAggregationAdder;
 import org.culturegraph.mf.test.TestSuite;
 import org.junit.runner.RunWith;
 
 
 /**
+ * Tests {@link OreAggregationAdder}
+ * 
  * @author Markus Michael Geipel
  */
 @RunWith(TestSuite.class)
