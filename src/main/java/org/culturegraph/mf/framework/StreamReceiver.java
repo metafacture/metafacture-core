@@ -25,7 +25,7 @@ package org.culturegraph.mf.framework;
  * ENTITY_OR_LITERAL = ENTITY | literal
  * ENTITY = startEntity, ENTITY_OR_LITERAL*, endEntity)
  * 
- * The {@link WellFormednessChecker} can be used to check if a stream conforms 
+ * The {@link WellformednessChecker} can be used to check if a stream conforms 
  * to these rules.
  * 
  * @see DefaultStreamReceiver

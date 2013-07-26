@@ -16,8 +16,6 @@
 package org.culturegraph.mf.stream.converter.xml;
 
 import org.culturegraph.mf.stream.DataFilePath;
-import org.culturegraph.mf.stream.converter.xml.CGXmlHandler;
-import org.culturegraph.mf.stream.converter.xml.XmlDecoder;
 import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.culturegraph.mf.stream.source.ResourceOpener;
@@ -35,27 +33,27 @@ public final class CGXmlReaderTest {
 	private static final String NUMBER = "Number";
 	private static final String POSTCODE = "Postcode";
 	private static final String CITY = "City";
-	
+
 	@Test
 	public void testReadStringStreamReceiver() {
 		final ResourceOpener opener = new ResourceOpener();
 		final XmlDecoder saxReader = new XmlDecoder();
 		final CGXmlHandler cgHandler = new CGXmlHandler();
 		final EventList writer = new EventList();
-		
-		
+
+
 		opener.setReceiver(saxReader)
 				.setReceiver(cgHandler)
 				.setReceiver(writer);
-		
+
 		opener.process(DataFilePath.CG_XML);
 		opener.closeStream();
-		
+
 		final StreamValidator validator = new StreamValidator(writer.getEvents());
 		validator.setStrictRecordOrder(true);
 		validator.setStrictKeyOrder(true);
 		validator.setStrictValueOrder(true);
-		
+
 		validator.startRecord("1");
 			validator.literal(NAME, "Thomas Mann");
 			validator.startEntity(ADDRESS);
@@ -67,7 +65,7 @@ public final class CGXmlReaderTest {
 				validator.literal(POSTCODE, null);
 			validator.endEntity();
 		validator.endRecord();
-		validator.startRecord(null);
+		validator.startRecord("");
 			validator.literal(NAME, "Günter Grass");
 			validator.startEntity(ADDRESS);
 				validator.startEntity(STREET);

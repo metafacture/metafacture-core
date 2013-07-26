@@ -24,32 +24,32 @@ import org.culturegraph.mf.util.StreamConstants;
 
 /**
  * Creates a literal for each entry in a map.
- * 
+ *
  * @author Christoph Böhme
  */
 public final class MapToStream extends
 		DefaultObjectPipe<Map<?, ?>, StreamReceiver> {
 
-	
+
 	private Object idKey = StreamConstants.ID;
-	
+
 	public Object getIdKey() {
 		return idKey;
 	}
-	
+
 	public void setIdKey(final Object idKey) {
 		this.idKey = idKey;
 	}
-	
+
 	@Override
 	public void process(final Map<?, ?> map) {
 		final Object id = map.get(idKey);
 		if (id == null) {
-			getReceiver().startRecord(null);
+			getReceiver().startRecord("");
 		} else {
 			getReceiver().startRecord(id.toString());
 		}
-		for (Map.Entry<?, ?> entry: map.entrySet()) {
+		for (final Map.Entry<?, ?> entry: map.entrySet()) {
 			getReceiver().literal(entry.getKey().toString(), entry.getValue().toString());
 		}
 		getReceiver().endRecord();
