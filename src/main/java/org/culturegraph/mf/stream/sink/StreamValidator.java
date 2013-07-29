@@ -156,7 +156,7 @@ public final class StreamValidator implements StreamReceiver {
 	private boolean strictKeyOrder;
 	private boolean strictValueOrder;
 
-	private final WellFormednessChecker wellFormednessChecker = new WellFormednessChecker();
+	private final WellformednessChecker wellformednessChecker = new WellformednessChecker();
 
 	public StreamValidator(final List<Event> expectedStream) {
 		this.eventStream = new EventNode(null, null);
@@ -207,7 +207,7 @@ public final class StreamValidator implements StreamReceiver {
 			throw new ValidationException(VALIDATION_FAILED);
 		}
 
-		wellFormednessChecker.startRecord(identifier);
+		wellformednessChecker.startRecord(identifier);
 
 		validating = true;
 
@@ -224,7 +224,7 @@ public final class StreamValidator implements StreamReceiver {
 			throw new ValidationException(VALIDATION_FAILED);
 		}
 
-		wellFormednessChecker.endRecord();
+		wellformednessChecker.endRecord();
 
 		if (!closeGroups()) {
 			validationFailed = true;
@@ -240,7 +240,7 @@ public final class StreamValidator implements StreamReceiver {
 			throw new ValidationException(VALIDATION_FAILED);
 		}
 
-		wellFormednessChecker.startEntity(name);
+		wellformednessChecker.startEntity(name);
 
 		if (!openGroups(Event.Type.START_ENTITY, name, strictKeyOrder, strictValueOrder)) {
 			validationFailed = true;
@@ -255,7 +255,7 @@ public final class StreamValidator implements StreamReceiver {
 			throw new ValidationException(VALIDATION_FAILED);
 		}
 
-		wellFormednessChecker.endEntity();
+		wellformednessChecker.endEntity();
 
 		if (!closeGroups()) {
 			validationFailed = true;
@@ -270,7 +270,7 @@ public final class StreamValidator implements StreamReceiver {
 			throw new ValidationException(VALIDATION_FAILED);
 		}
 
-		wellFormednessChecker.literal(name, value);
+		wellformednessChecker.literal(name, value);
 
 		final List<EventNode> stackFrame = stack.peek();
 
@@ -292,7 +292,7 @@ public final class StreamValidator implements StreamReceiver {
 
 	@Override
 	public void resetStream() {
-		wellFormednessChecker.resetStream();
+		wellformednessChecker.resetStream();
 
 		validating = false;
 		validationFailed = false;
@@ -308,7 +308,7 @@ public final class StreamValidator implements StreamReceiver {
 			throw new ValidationException(VALIDATION_FAILED);
 		}
 
-		wellFormednessChecker.closeStream();
+		wellformednessChecker.closeStream();
 
 		validating = false;
 

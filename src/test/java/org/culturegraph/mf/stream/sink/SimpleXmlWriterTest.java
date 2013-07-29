@@ -24,34 +24,35 @@ import org.junit.Test;
 
 /**
  * Tests {@link SimpleXmlWriter}.
- * 
+ *
  * @author Markus Geipel
  *
  */
 public final class SimpleXmlWriterTest {
 
-	
+
 	private static final String TAG = "tag";
 	private static final String VALUE = "value";
 
 	//TODO add more tests!
-	
-	
+
+
 	@Test
 	public void testShouldOnlyEscapeFiveChars() {
-		
 		final StringBuilder builder = new StringBuilder();
-		SimpleXmlWriter.escape(builder , "&<>'\" üäö");
+
+		SimpleXmlWriter.writeEscaped(builder , "&<>'\" üäö");
+
 		Assert.assertEquals("&amp;&lt;&gt;&apos;&quot; üäö", builder.toString());
 	}
-	
+
 	@Test
 	public void testShouldHandleSeparateRoots(){
 		final SimpleXmlWriter writer = new SimpleXmlWriter();
 		writer.setRootTag("root");
 		writer.setRecordTag("record");
 		writer.setWriteXmlHeader(false);
-		
+
 		//separateRoots=false
 		final StringBuilder builder1 = new StringBuilder();
 		writer.setReceiver(new DefaultObjectReceiver<String>() {
@@ -63,11 +64,11 @@ public final class SimpleXmlWriterTest {
 
 		writer.setSeparateRoots(false);
 
-		
+
 		writeTwoRecords(writer);
-		
+
 		Assert.assertEquals("<root><record><tag>value</tag></record><record><tag>value</tag></record></root>", builder1.toString().replaceAll("[\\n\\s]", ""));
-	
+
 		//separateRoots=true
 		final StringBuilder builder2 = new StringBuilder();
 		writer.setReceiver(new DefaultObjectReceiver<String>() {
@@ -78,14 +79,14 @@ public final class SimpleXmlWriterTest {
 		});
 
 		writer.setSeparateRoots(true);
-		
+
 		writeTwoRecords(writer);
-		
+
 		Assert.assertEquals("<root><record><tag>value</tag></record></root><root><record><tag>value</tag></record></root>", builder2.toString().replaceAll("[\\n\\s]", ""));
-	
-	
+
+
 	}
-	
+
 
 
 	private static void writeTwoRecords(final StreamReceiver writer) {
@@ -97,6 +98,6 @@ public final class SimpleXmlWriterTest {
 		writer.endRecord();
 		writer.closeStream();
 	}
-	
-	
+
+
 }

@@ -33,31 +33,61 @@ import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.ResourceUtil;
 
 /**
- * 
+ *
  * writes a stream to XML
- * 
- * @author Markus Michael Geipel
- * 
+ *
+ * @author Markus Michael Geipel, Christoph Böhme
+ *
  */
 @Description("writes a stream to xml")
 @In(StreamReceiver.class)
 @Out(String.class)
 public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<String>> {
+
 	public static final String ATTRIBUTE_MARKER = "~";
-	// public static final String TEXT_CONTENT_MARKER = "_text";
 	public static final String NAMESPACES = "namespaces";
-	public static final String NEW_LINE = "\n";
+
+	public static final String DEFAULT_ROOT_TAG = "records";
+	public static final String DEFAULT_RECORD_TAG = "record";
+
+	private static final String NEW_LINE = "\n";
+	private static final String INDENT = "\t";
+
+	private static final String BEGIN_ATTRIBUTE = "=\"";
+	private static final String END_ATTRIBUTE = "\"";
+	private static final String BEGIN_OPEN_ELEMENT = "<";
+	private static final String END_OPEN_ELEMENT = ">";
+	private static final String END_EMPTY_ELEMENT = " />";
+	private static final String BEGIN_CLOSE_ELEMENT = "</";
+	private static final String END_CLOSE_ELEMENT = ">";
+
+	private static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+	private static final String XMLNS_MARKER = " xmlns:";
+
+	private final StringBuilder builder = new StringBuilder();
+
+	private String rootTag = DEFAULT_ROOT_TAG;
+	private String recordTag = DEFAULT_RECORD_TAG;
+	private Map<String, String> namespaces = new HashMap<String, String>();
+	private boolean writeXmlHeader = true;
+	private boolean separateRoots;
 
 	private Element element;
-	private Map<String, String> namespaces = new HashMap<String, String>();
-	private String recordTag = "record";
-	private String rootTag = "records";
-	private boolean start = true;
-	private boolean separateRoots;
-	private boolean writeXmlHeader = true;
+	private boolean atStreamStart = true;
 
 	public void setRootTag(final String rootTag) {
 		this.rootTag = rootTag;
+	}
+
+	public void setRecordTag(final String tag) {
+		recordTag = tag;
+	}
+
+	public void setNamespaceFile(final String file) {
+		final Properties properties = ResourceUtil.loadProperties(file);
+		for (final Entry<Object, Object> entry : properties.entrySet()) {
+			namespaces.put(entry.getKey().toString(), entry.getValue().toString());
+		}
 	}
 
 	public void setWriteXmlHeader(final boolean writeXmlHeader) {
@@ -68,56 +98,30 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 		this.separateRoots = separateRoots;
 	}
 
-	public void setNamespaceFile(final String file) {
-		final Properties properties = ResourceUtil.loadProperties(file);
-		for (Entry<Object, Object> entry : properties.entrySet()) {
-			namespaces.put(entry.getKey().toString(), entry.getValue().toString());
-		}
-	}
-
-	private void writeHeader() {
-		final StringBuilder builder = new StringBuilder();
-
-		if (writeXmlHeader) {
-			builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-		}
-
-		builder.append("<");
-		builder.append(rootTag);
-		for (Entry<String, String> entry : namespaces.entrySet()) {
-			builder.append(" xmlns:");
-			builder.append(entry.getKey());
-			builder.append("=\"");
-			escape(builder, entry.getValue());
-			builder.append("\"");
-		}
-		builder.append(">");
-		getReceiver().process(builder.toString());
-		start = false;
+	public void configure(final MultiMap multimap) {
+		this.namespaces = multimap.getMap(NAMESPACES);
 	}
 
 	@Override
 	public void startRecord(final String identifier) {
-		if (separateRoots || start) {
+		if (separateRoots) {
 			writeHeader();
+		} else if (atStreamStart) {
+			writeHeader();
+			sendAndClearData();
 		}
+		atStreamStart = false;
+
 		element = new Element(recordTag);
 	}
 
 	@Override
 	public void endRecord() {
-		if (recordTag.isEmpty()) {
-			final StringBuilder builder = new StringBuilder();
-			for (Element child : element.getChildren()) {
-				child.writeToStringBuilder(builder, 1);
-			}
-			getReceiver().process(builder.toString());
-		} else {
-			getReceiver().process(element.toString());
-		}
+		element.writeElement(builder, 1);
 		if (separateRoots) {
 			writeFooter();
 		}
+		sendAndClearData();
 	}
 
 	@Override
@@ -137,131 +141,55 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 		} else if (name.startsWith(ATTRIBUTE_MARKER)) {
 			element.addAttribute(name.substring(1), value);
 		} else {
-			final Element temp = element.createChild(name);
-			temp.setText(value);
-		}
-	}
-
-	public void configure(final MultiMap multimap) {
-		this.namespaces = multimap.getMap(NAMESPACES);
-	}
-
-	public void setRecordTag(final String tag) {
-		recordTag = tag;
-	}
-
-	@Override
-	protected void onCloseStream() {
-		if (!separateRoots) {
-			writeFooter();
-		}
-	}
-
-	private void writeFooter() {
-		getReceiver().process("</" + rootTag + ">");
-	}
-
-	/**
-	 *
-	 */
-	private static final class Element {
-		private static final List<Element> NO_CHILDREN = Collections.emptyList();
-
-		private final StringBuilder attributes = new StringBuilder();
-		private String text = "";
-		private List<Element> children = NO_CHILDREN;
-		private final Element parent;
-		private final String name;
-
-		public Element(final String name) {
-			this.name = name;
-			this.parent = null;
-		}
-
-		private Element(final String name, final Element parent) {
-			this.name = name;
-			this.parent = parent;
-		}
-
-		public List<Element> getChildren() {
-			return children;
-		}
-
-		public void addAttribute(final String name, final String value) {
-			attributes.append(" ");
-			attributes.append(name);
-			attributes.append("=\"");
-			escape(attributes, value);
-			attributes.append("\"");
-		}
-
-		public void setText(final String text) {
-			this.text = text;
-		}
-
-		public Element createChild(final String name) {
-			final Element child = new Element(name, this);
-			if (children == NO_CHILDREN) {
-				children = new ArrayList<SimpleXmlWriter.Element>();
-			}
-			children.add(child);
-			return child;
-		}
-
-		public Element getParent() {
-			return parent;
-		}
-
-		@Override
-		public String toString() {
-			final StringBuilder builder = new StringBuilder();
-			writeToStringBuilder(builder, 1);
-			return builder.toString();
-		}
-
-		public void writeToStringBuilder(final StringBuilder builder, final int indent) {
-			builder.append(NEW_LINE);
-			indent(builder, indent);
-			builder.append("<");
-			builder.append(name);
-			builder.append(attributes);
-			if (text.isEmpty() && children.isEmpty()) {
-				builder.append(" /");
-			}
-
-			builder.append(">");
-
-			escape(builder, text);
-
-			for (Element element : children) {
-				element.writeToStringBuilder(builder, indent + 1);
-			}
-			if (text.isEmpty() && !children.isEmpty()) {
-				builder.append(NEW_LINE);
-				indent(builder, indent);
-			}
-
-			if (!text.isEmpty() || !children.isEmpty()) {
-				builder.append("</");
-				builder.append(name);
-				builder.append(">");
-			}
-		}
-
-		private static void indent(final StringBuilder builder, final int indent) {
-			for (int i = 0; i < indent; ++i) {
-				builder.append("\t");
-			}
+			element.createChild(name).setText(value);
 		}
 	}
 
 	@Override
 	protected void onResetStream() {
 		writeFooter();
-		start = true;
+		sendAndClearData();
+		atStreamStart = true;
 	}
 
-	protected static void escape(final StringBuilder builder, final String str) {
+	@Override
+	protected void onCloseStream() {
+		if (!separateRoots) {
+			writeFooter();
+			sendAndClearData();
+		}
+	}
+
+	private void sendAndClearData() {
+		getReceiver().process(builder.toString());
+		builder.delete(0, builder.length());
+	}
+
+	private void writeHeader() {
+		if (writeXmlHeader) {
+			builder.append(XML_HEADER);
+		}
+
+		builder.append(BEGIN_OPEN_ELEMENT);
+		builder.append(rootTag);
+		for (final Entry<String, String> entry : namespaces.entrySet()) {
+			builder.append(XMLNS_MARKER);
+			builder.append(entry.getKey());
+			builder.append(BEGIN_ATTRIBUTE);
+			writeEscaped(builder, entry.getValue());
+			builder.append(END_ATTRIBUTE);
+		}
+		builder.append(END_OPEN_ELEMENT);
+	}
+
+	private void writeFooter() {
+		builder.append(NEW_LINE);
+		builder.append(BEGIN_CLOSE_ELEMENT);
+		builder.append(rootTag);
+		builder.append(END_CLOSE_ELEMENT);
+	}
+
+	protected static void writeEscaped(final StringBuilder builder, final String str) {
 
 		final int len = str.length();
 		for (int i = 0; i < len; ++i) {
@@ -296,6 +224,96 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 				builder.append(';');
 			}
 		}
+	}
+
+	/**
+	 * An XML element.
+	 *
+	 */
+	private static final class Element {
+
+		private static final List<Element> NO_CHILDREN = Collections.emptyList();
+
+		private final StringBuilder attributes = new StringBuilder();
+		private final Element parent;
+		private final String name;
+
+		private String text = "";
+		private List<Element> children = NO_CHILDREN;
+
+		public Element(final String name) {
+			this.name = name;
+			this.parent = null;
+		}
+
+		private Element(final String name, final Element parent) {
+			this.name = name;
+			this.parent = parent;
+		}
+
+		public void addAttribute(final String name, final String value) {
+			attributes.append(" ");
+			attributes.append(name);
+			attributes.append(BEGIN_ATTRIBUTE);
+			writeEscaped(attributes, value);
+			attributes.append(END_ATTRIBUTE);
+		}
+
+		public void setText(final String text) {
+			this.text = text;
+		}
+
+		public Element createChild(final String name) {
+			final Element child = new Element(name, this);
+			if (children == NO_CHILDREN) {
+				children = new ArrayList<SimpleXmlWriter.Element>();
+			}
+			children.add(child);
+			return child;
+		}
+
+		public Element getParent() {
+			return parent;
+		}
+
+		public void writeElement(final StringBuilder builder, final int indent) {
+			if (!name.isEmpty()) {
+				builder.append(NEW_LINE);
+				writeIndent(builder, indent);
+				builder.append(BEGIN_OPEN_ELEMENT);
+				builder.append(name);
+				builder.append(attributes);
+				if (text.isEmpty() && children.isEmpty()) {
+					builder.append(END_EMPTY_ELEMENT);
+					return;
+				}
+				builder.append(END_OPEN_ELEMENT);
+			}
+
+			writeEscaped(builder, text);
+
+			for (final Element element : children) {
+				element.writeElement(builder, indent + 1);
+			}
+
+			if (text.isEmpty() && !children.isEmpty()) {
+				builder.append(NEW_LINE);
+				writeIndent(builder, indent);
+			}
+
+			if (!name.isEmpty()) {
+				builder.append(BEGIN_CLOSE_ELEMENT);
+				builder.append(name);
+				builder.append(END_CLOSE_ELEMENT);
+			}
+		}
+
+		private static void writeIndent(final StringBuilder builder, final int indent) {
+			for (int i = 0; i < indent; ++i) {
+				builder.append(INDENT);
+			}
+		}
+
 	}
 
 }
