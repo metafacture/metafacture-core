@@ -27,7 +27,6 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.util.FileCompression;
 
-
 /**
  * @param <T>
  *            object type
@@ -44,7 +43,8 @@ public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
 	private String path;
 	private int count;
 	private Writer writer;
-	
+	private boolean closed;
+
 	private String encoding = "UTF-8";
 	private FileCompression compression = FileCompression.AUTO;
 
@@ -57,7 +57,7 @@ public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
 			this.path = this.path + VAR;
 		}
 	}
-	
+
 	/**
 	 * Returns the encoding used to open the resource.
 	 * 
@@ -80,15 +80,15 @@ public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
 	public FileCompression getCompression() {
 		return compression;
 	}
-	
+
 	public void setCompression(final FileCompression compression) {
-		this.compression  = compression;
+		this.compression = compression;
 	}
-	
+
 	public void setCompression(final String compression) {
 		setCompression(FileCompression.valueOf(compression.toUpperCase()));
 	}
-	
+
 	private void startNewFile() {
 		final Matcher matcher = VAR_PATTERN.matcher(this.path);
 		final String path = matcher.replaceAll(String.valueOf(count));
@@ -98,6 +98,7 @@ public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
 				final OutputStream compressor = compression.createCompressor(file, path);
 				try {
 					writer = new OutputStreamWriter(compressor, encoding);
+					closed = false;
 				} catch (IOException e) {
 					compressor.close();
 					throw e;
@@ -113,6 +114,7 @@ public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
 
 	@Override
 	public void process(final T obj) {
+		assert !closed;
 		try {
 			writer.write(obj.toString());
 			writer.append('\n');
@@ -123,10 +125,14 @@ public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
 
 	@Override
 	public void resetStream() {
-		try {
-			writer.close();
-		} catch (IOException e) {
-			throw new MetafactureException(e);
+		if (!closed) {
+			try {
+				writer.close();
+			} catch (IOException e) {
+				throw new MetafactureException(e);
+			} finally {
+				closed = true;
+			}
 		}
 		startNewFile();
 		++count;
@@ -134,11 +140,14 @@ public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
 
 	@Override
 	public void closeStream() {
-		try {
-			writer.close();
-		} catch (IOException e) {
-			throw new MetafactureException(e);
+		if (!closed) {
+			try {
+				writer.close();
+			} catch (IOException e) {
+				throw new MetafactureException(e);
+			} finally {
+				closed = true;
+			}
 		}
 	}
-
 }
