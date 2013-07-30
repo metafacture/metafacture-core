@@ -23,13 +23,13 @@ import org.culturegraph.mf.flux.parser.FluxProgramm;
 import org.junit.Test;
 
 /**
- * Tests {@link Flow}
+ * Tests {@link FluxProgramm}
  * 
  * @author markus geipel
  * 
  */
 
-public final class FlowTest {
+public final class FluxProgrammTest {
 	@Test
 	public void testCommandRegistration() {
 		// all commands must properly load to print the help
