@@ -44,13 +44,48 @@
 		</result>
 	</test-case>
 
+	<test-case name="isbn">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="isbn" value="123 invalid" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:data source="isbn" name="withError">
+						<mm:isbn to="isbn13" errorString="error" />
+					</mm:data>
+					<mm:data source="isbn" name="withoutError">
+						<mm:isbn to="isbn13" />
+					</mm:data>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="withError" value="error" />
+
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
 	<test-case name="split">
 		<input type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
 					<cgxml:record id="1">
-						<cgxml:literal name="data"
-							value="Oahu,Hawaii,Maui" />
+						<cgxml:literal name="data" value="Oahu,Hawaii,Maui" />
 					</cgxml:record>
 				</cgxml:records>
 			</cgxml:cgxml>
@@ -60,7 +95,7 @@
 			<mm:metamorph version="1">
 				<mm:rules>
 					<mm:data source="data" name="island">
-						<mm:split delimiter=","/>
+						<mm:split delimiter="," />
 					</mm:data>
 
 				</mm:rules>
