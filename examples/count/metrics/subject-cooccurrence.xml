@@ -16,7 +16,7 @@
 		</square>
 
 		<data source="@subj" name="">
-			<compose prefix="2:"/>
+			<compose prefix="1:"/>
 		</data>
 
 		<data source="@subj" name="">
