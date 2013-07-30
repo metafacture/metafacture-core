@@ -69,6 +69,7 @@ public final class CloseSupressor<T> implements ObjectPipe<T, ObjectReceiver<T>>
 
 	@Override
 	public void closeStream() {
+		
 		++count;
 		if (count == numCloses && receiver != null) {
 			receiver.closeStream();
