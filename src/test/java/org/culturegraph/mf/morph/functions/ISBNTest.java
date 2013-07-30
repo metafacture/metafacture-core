@@ -19,7 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.culturegraph.mf.morph.functions.ISBN;
 import org.junit.Test;
 
 
@@ -46,7 +45,9 @@ public final class ISBNTest {
 	
 	private static final String ISBN_INCORRECT_SIZE1 = "12345678901234"; 
 	private static final String ISBN_INCORRECT_SIZE2 = "123456789012"; 
-	private static final String ISBN_INCORRECT_SIZE3 = "123456789"; 
+	private static final String ISBN_INCORRECT_SIZE3 = "123456789";
+	private static final String ERROR = "invalid";
+
 	
 	
 	@Test
@@ -102,16 +103,18 @@ public final class ISBNTest {
 		assertTrue(ISBN.isValid(ISBN.cleanse(ISBN10F_DIRTY)));
 	}
 	
-	@Test(expected = ISBN.InvalidISBNLengthException.class)
+
 	public void testCleanseException1(){
 		final ISBN isbn = new ISBN();
-		isbn.process(ISBN_INCORRECT_SIZE3);
+		isbn.setErrorString(ERROR);
+		assertTrue(isbn.process(ISBN_INCORRECT_SIZE3).startsWith(ERROR));
 	}
 	
-	@Test(expected = ISBN.InvalidISBNLengthException.class)
+
 	public void testCleanseException2(){
 		final ISBN isbn = new ISBN();
-		isbn.process(ISBN_INCORRECT_SIZE1);
+		isbn.setErrorString(ERROR);
+		assertTrue(isbn.process(ISBN_INCORRECT_SIZE1).startsWith(ERROR));
 	}
 
 }

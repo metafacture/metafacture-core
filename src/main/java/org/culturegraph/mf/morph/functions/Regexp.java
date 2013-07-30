@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.culturegraph.mf.exceptions.MorphException;
 import org.culturegraph.mf.morph.NamedValueSource;
 import org.culturegraph.mf.util.StringUtil;
 
@@ -81,18 +80,6 @@ public final class Regexp extends AbstractFunction {
 	 */
 	public void setFormat(final String format) {
 		this.format = format;
-	}
-
-	/**
-	 * Thrown if no match was found
-	 * 
-	 */
-	public static final class PatternNotFoundException extends MorphException {
-		private static final long serialVersionUID = 4113458605196557204L;
-
-		public PatternNotFoundException(final Pattern pattern, final String input) {
-			super("Pattern '" + pattern + "' not found in '" + input + "'");
-		}
 	}
 
 }

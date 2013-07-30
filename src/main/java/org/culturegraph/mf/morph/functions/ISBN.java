@@ -18,19 +18,16 @@ package org.culturegraph.mf.morph.functions;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.culturegraph.mf.exceptions.MorphException;
-
-
 /**
  * Offers ISBN conversions
  * 
  * @author Markus Michael Geipel
  */
 public final class ISBN extends AbstractSimpleStatelessFunction {
+
+	
 	private static final String CHECK = "0123456789X0";
-	
-	private static final String APOSTROPH = "'";
-	
+
 	private static final String ISBN10 = "isbn10";
 	private static final String ISBN13 = "isbn13";
 	private static final Pattern ISBN_PATTERN = Pattern.compile("[\\dX]+");
@@ -42,28 +39,33 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
 	private static final int ISBN10_MOD = 11;
 	private static final int ISBN13_MOD = 10;
 
+	
+
 	private boolean to10;
 	private boolean to13;
 	private boolean verifyCheckDigit;
+	private String errorString;
 
-
-
+	
+	public void setErrorString(final String errorString) {
+		this.errorString = errorString;
+	}
+	
 	@Override
 	public String process(final String value) {
 		String result = cleanse(value);
 		final int size = result.length();
-		
-		if(verifyCheckDigit && !isValid(result)){
-			throw new InvalidISBNCheckDigitException(value);
-		}else if(!(size == ISBN10_SIZE || size == ISBN13_SIZE)){
-			throw new InvalidISBNLengthException(value);
-		}
-		
-		if (to10 && ISBN13_SIZE == size) {
-			result = isbn13to10(result);
-	
-		} else if (to13 && ISBN10_SIZE == size) {
-			result = isbn10to13(result);
+
+		if (verifyCheckDigit && !isValid(result)) {
+			result = errorString;
+		} else if (!(size == ISBN10_SIZE || size == ISBN13_SIZE)) {
+			result = errorString;
+		} else {
+			if (to10 && ISBN13_SIZE == size) {
+				result = isbn13to10(result);
+			} else if (to13 && ISBN10_SIZE == size) {
+				result = isbn10to13(result);
+			}
 		}
 		return result;
 	}
@@ -121,8 +123,7 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
 
 	public static String isbn13to10(final String isbn) {
 		if (isbn.length() != ISBN13_SIZE) {
-			throw new IllegalArgumentException(
-					"isbn must be 13 characters long");
+			throw new IllegalArgumentException("isbn must be 13 characters long");
 		}
 		final String isbn10Data = isbn.substring(3, 12);
 
@@ -131,8 +132,7 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
 
 	public static String isbn10to13(final String isbn) {
 		if (isbn.length() != ISBN10_SIZE) {
-			throw new IllegalArgumentException(
-					"isbn must be 10 characters long");
+			throw new IllegalArgumentException("isbn must be 10 characters long");
 		}
 
 		final String isbn13Data = "978" + isbn.substring(0, ISBN10_SIZE - 1);
@@ -148,40 +148,15 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
 		boolean result = false;
 
 		if (isbn.length() == ISBN10_SIZE) {
-			result = check10(isbn.substring(0, ISBN10_SIZE - 1)) == isbn
-					.charAt(ISBN10_SIZE - 1);
+			result = check10(isbn.substring(0, ISBN10_SIZE - 1)) == isbn.charAt(ISBN10_SIZE - 1);
 		} else if (isbn.length() == ISBN13_SIZE) {
-			result = check13(isbn.substring(0, ISBN13_SIZE - 1)) == isbn
-					.charAt(ISBN13_SIZE - 1);
+			result = check13(isbn.substring(0, ISBN13_SIZE - 1)) == isbn.charAt(ISBN13_SIZE - 1);
 		}
 		return result;
 	}
-	
+
 	public void setVerifyCheckDigit(final String verifyCheckDigit) {
 		this.verifyCheckDigit = "true".equals(verifyCheckDigit);
-	}
-	
-	/**
-	 * Thrown if the ISBN length does not correspond to specification
-	 *
-	 */
-	public static final class InvalidISBNLengthException extends MorphException{
-		private static final long serialVersionUID = 921922231931724504L;
-		
-		public InvalidISBNLengthException(final String isbn) {
-			super(APOSTROPH + isbn + APOSTROPH);
-		} 
-	}
-	
-	/**
-	 * Thrown if the ISBN check digit is wrong
-	 *
-	 */
-	public static final class InvalidISBNCheckDigitException extends MorphException{
-		private static final long serialVersionUID = 921922231931724504L;
-		public InvalidISBNCheckDigitException(final String isbn) {
-			super(APOSTROPH + isbn + APOSTROPH);
-		}
 	}
 
 }
