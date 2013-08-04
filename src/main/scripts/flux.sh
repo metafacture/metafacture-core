@@ -1,13 +1,19 @@
 #!/bin/bash
 
-dir=`dirname $0`
+DEFAULT_JAVA_OPTS=-Xmx512M
 
-jarfile="${project.build.finalName}.jar"
+DIR=`dirname $0`
+
+JARFILE="${project.build.finalName}.jar"
+
+if $JAVA_OPTS == "" ; then
+	JAVA_OPTS = $DEFAULT_JAVA_OPTS
+fi
 
 if uname | grep -iq cygwin; then
-    java -Xmx512M -jar "`cygpath -am $dir/$jarfile`" $*
+    java $JAVA_OPTS -jar "`cygpath -am $DIR/$JARFILE`" $*
 else
-    java -Xmx512M -jar "$dir/$jarfile" $*
+    java $JAVA_OPTS -jar "$DIR/$JARFILE" $*
 fi
 
 
