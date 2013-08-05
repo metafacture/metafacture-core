@@ -6,8 +6,8 @@ DIR=`dirname $0`
 
 JARFILE="${project.build.finalName}.jar"
 
-if $JAVA_OPTS == "" ; then
-	JAVA_OPTS = $DEFAULT_JAVA_OPTS
+if [ "$JAVA_OPTS" == "" ] ; then
+	JAVA_OPTS=$DEFAULT_JAVA_OPTS
 fi
 
 if uname | grep -iq cygwin; then
