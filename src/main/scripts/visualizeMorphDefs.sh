@@ -8,8 +8,8 @@ then
   exit 65
 fi
 
-if $JAVA_OPTS == "" ; then
-	JAVA_OPTS = $DEFAULT_JAVA_OPTS
+if [ "$JAVA_OPTS" == "" ] ; then
+	JAVA_OPTS=$DEFAULT_JAVA_OPTS
 fi
 
 FORMAT=$1
