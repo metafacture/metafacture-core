@@ -50,8 +50,8 @@ public final class Regexp extends AbstractFunction {
 			while (matcher.find()) {
 				populateVars();
 				if (!tempVars.isEmpty()) {
-					getNamedValueReceiver().receive(name,
-							StringUtil.format(format, tempVars), source, recordCount, entityCount);
+					getNamedValueReceiver().receive(name, StringUtil.format(format, tempVars), source, recordCount,
+							entityCount);
 				}
 			}
 		}
@@ -60,8 +60,9 @@ public final class Regexp extends AbstractFunction {
 	private void populateVars() {
 		tempVars.clear();
 		for (int i = 0; i <= matcher.groupCount(); ++i) {
-			if (!matcher.group(i).isEmpty()) {
-				tempVars.put(String.valueOf(i), matcher.group(i));
+			final String group = matcher.group(i);
+			if (group != null && !group.isEmpty()) {
+				tempVars.put(String.valueOf(i), group);
 			}
 		}
 	}
