@@ -33,7 +33,7 @@ public final class SetReplaceTest {
 	
 		final SetReplacer setReplace = new SetReplacer();
 		final String text = "auf sylt mit super krabben entsafter und apfel";
-		final String target = "auf hawaii mit super shirt entsafter und surfboard";
+		final String target = "auf hawaii mit Mai Tai und surfboard";
 		
 		setReplace.addReplacement("sylt", "hawaii");
 		setReplace.addReplacement("apfel", "surfboard");
@@ -43,6 +43,7 @@ public final class SetReplaceTest {
 		assertEquals(target, setReplace.replaceIn(text));	
 	}
 	
+	@Test
 	public void testReplaceWithInclusion() {
 		
 		final SetReplacer setReplace = new SetReplacer();
@@ -52,7 +53,7 @@ public final class SetReplaceTest {
 		setReplace.addReplacement("fünfzig", "50");
 		
 		assertEquals("50 äpfel", setReplace.replaceIn("fünfzig äpfel"));	
-		assertEquals("5 äpfel", setReplace.replaceIn("fünfz äpfel"));
+		assertEquals("5 äpfel", setReplace.replaceIn("fünf äpfel"));
 	}
 
 }
