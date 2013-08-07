@@ -42,5 +42,17 @@ public final class SetReplaceTest {
 		
 		assertEquals(target, setReplace.replaceIn(text));	
 	}
+	
+	public void testReplaceWithInclusion() {
+		
+		final SetReplacer setReplace = new SetReplacer();
+
+		
+		setReplace.addReplacement("fünf", "5");
+		setReplace.addReplacement("fünfzig", "50");
+		
+		assertEquals("50 äpfel", setReplace.replaceIn("fünfzig äpfel"));	
+		assertEquals("5 äpfel", setReplace.replaceIn("fünfz äpfel"));
+	}
 
 }
