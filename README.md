@@ -3,4 +3,7 @@
 metafacture-core
 ================
 
-Core package of the Metafacture tool suite for metadata processing. See the wiki for more information: https://github.com/culturegraph/metafacture-core/wiki
+Metafacture is a toolkit for processing semi-structured data with a focus on library metadata. It provides tools for reading, writing and transforming data. Metafacture can be used as a stand-alone application or as a java library.
+
+See the wiki for more information: https://github.com/culturegraph/metafacture-core/wiki
+For support and discussion join the mailing list: http://lists.dnb.de/mailman/listinfo/metafacture
