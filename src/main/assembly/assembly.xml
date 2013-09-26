@@ -54,6 +54,16 @@
 			<lineEnding>lf</lineEnding>
 		</fileSet>
 		<fileSet>
+			<directory>${project.basedir}/src/main/config/</directory>
+			<outputDirectory></outputDirectory>
+			<includes>
+				<include>java-options.conf</include>
+				<include>log4j.xml</include>
+			</includes>
+			<directoryMode>0755</directoryMode>
+			<fileMode>0644</fileMode>
+		</fileSet>
+		<fileSet>
 			<directory>examples/</directory>
 			<outputDirectory>examples/</outputDirectory>
 			<includes>
