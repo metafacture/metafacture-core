@@ -62,6 +62,7 @@
 			</includes>
 			<directoryMode>0755</directoryMode>
 			<fileMode>0644</fileMode>
+			<lineEnding>crlf</lineEnding>
 		</fileSet>
 		<fileSet>
 			<directory>examples/</directory>
