@@ -11,7 +11,7 @@ IF "x%FLUX_JAVA_BIN%" == "x" (
 	SET FLUX_JAVA_BIN=java
 )
 
-SET JAVA_OPTS_FILE="%METAFACTURE_HOME%/config/java-options.conf"
+SET JAVA_OPTS_FILE="%METAFACTURE_HOME%\config\java-options.conf"
 SET JAR_FILE="%METAFACTURE_HOME%${project.build.finalName}.jar"
 
 REM Read JVM options from configuration file. Lines starting
