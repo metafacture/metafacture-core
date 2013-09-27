@@ -14,7 +14,7 @@ if [ -z "$FLUX_JAVA_BIN" ] ; then
 	FLUX_JAVA_BIN=java
 fi
 
-java_opts_file="$METAFACTURE_HOME/java-options.conf"
+java_opts_file="$METAFACTURE_HOME/config/java-options.conf"
 jar_file="$METAFACTURE_HOME/${project.build.finalName}.jar"
 
 # Load java options from configuration file. Lines starting 

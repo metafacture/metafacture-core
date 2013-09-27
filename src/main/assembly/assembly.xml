@@ -55,7 +55,7 @@
 		</fileSet>
 		<fileSet>
 			<directory>${project.basedir}/src/main/config/</directory>
-			<outputDirectory></outputDirectory>
+			<outputDirectory>config/</outputDirectory>
 			<includes>
 				<include>java-options.conf</include>
 				<include>log4j.xml</include>
