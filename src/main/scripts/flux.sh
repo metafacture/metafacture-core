@@ -45,10 +45,13 @@ java_opts=$( echo "$java_opts" | sed "$substitute_vars_script")
 # Turn java options string into an array to allow passing
 # the options as command parameters. Options may be partially
 # quoted with single or double quotes and may contain 
-# escape sequences:
+# escape sequences. Quotes are removed after splitting because
+# the shell quotes the parameters again:
 option_pattern="[^\"' ]*(\"[^\"\\]*(\\\\.[^\"\\]*)*\"|'[^'\\]*(\\\\.[^'\\]*)*'|\\.[^\"' ]*)*"
+remove_quotes="s/(^[\"'])|(([^\\])[\"'])/\3/g"
 java_opts_array=()
 while read line ; do
+	line=$( echo "$line" | sed -r "$remove_quotes" )
 	java_opts_array+=("$line")
 done < <( echo "$java_opts" | grep -Eo "$option_pattern" )
 
