@@ -17,6 +17,7 @@ package org.culturegraph.mf.morph;
 
 import java.util.List;
 
+import org.culturegraph.mf.util.tries.SimpleRegexTrie;
 import org.culturegraph.mf.util.tries.WildcardTrie;
 
 
@@ -28,7 +29,7 @@ import org.culturegraph.mf.util.tries.WildcardTrie;
  */
 final class WildcardRegistry<T> implements Registry<T> {
 
-	private final WildcardTrie<T> trie = new WildcardTrie<T>();
+	private final SimpleRegexTrie<T> trie = new SimpleRegexTrie<T>();
 	
 	@Override
 	public void register(final String path, final T value) {
