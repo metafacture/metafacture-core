@@ -133,7 +133,7 @@
 				</mm:rules>
 			</mm:metamorph>
 		</transformation>
-
+		
 		<result type="text/x-cg+xml" strict-key-order="false">
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
@@ -141,6 +141,52 @@
 						<cgxml:literal name="Oahu" value="Aloha1" />
 						<cgxml:literal name="Hawaii" value="Aloha1" />
 						<cgxml:literal name="Hawaii" value="Aloha2" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+		
+			<test-case name="[abc] simple character class match">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="ABA">
+							<cgxml:literal name="d" value="Aloha1" />
+						</cgxml:entity>
+						<cgxml:entity name="ABA">
+							<cgxml:literal name="e" value="Aloha2" />
+						</cgxml:entity>
+						<cgxml:entity name="ABC">
+							<cgxml:literal name="d" value="Aloha3" />
+						</cgxml:entity>
+						<cgxml:entity name="ABC">
+							<cgxml:literal name="e" value="Aloha4" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:data source="AB[AC].[de]" name="Hawaii" />
+					<mm:data source="ABC.d" name="Oahu" />
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml" strict-key-order="false">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="Oahu" value="Aloha3" />
+						<cgxml:literal name="Hawaii" value="Aloha1" />
+						<cgxml:literal name="Hawaii" value="Aloha2" />
+						<cgxml:literal name="Hawaii" value="Aloha3" />
+						<cgxml:literal name="Hawaii" value="Aloha4" />
 					</cgxml:record>
 				</cgxml:records>
 			</cgxml:cgxml>
