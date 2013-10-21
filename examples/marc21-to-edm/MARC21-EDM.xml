@@ -251,7 +251,7 @@
 			</data>
 		</entity>
 
-		<entity name="dcterm:LinguisticSystem">
+		<entity name="dcterms:LinguisticSystem">
 			<data source="@lang" name="rdf:value">
 
 			</data>
