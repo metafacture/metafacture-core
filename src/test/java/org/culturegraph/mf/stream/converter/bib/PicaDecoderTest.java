@@ -276,7 +276,7 @@ public final class PicaDecoderTest {
 				FIELD_003AT +
 				FIELD_028A_START +
 				SUBFIELD_A +
-				SUBFIELD_D);
+				SUBFIELD);
 	}
 	
 	@Test
