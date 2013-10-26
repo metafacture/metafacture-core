@@ -300,7 +300,39 @@ public final class PicaDecoderTest {
 		verify028AEnd(ordered);
 		ordered.verify(receiver).endRecord();
 	}
+
 	
+	@Test(expected=FormatException.class)
+	public void testShouldFailIfRecordEndsWithSubfieldIndicatorByDefault() {
+		picaDecoder.process(
+				FIELD_001AT +
+				FIELD_003AT +
+				FIELD_028A_START +
+				SUBFIELD_A +
+				EMPTY_SUBFIELD);
+	}
+	
+	@Test
+	public void testShouldFixRecordEndingWithSubfieldIndicatorIfConfigured() {
+		picaDecoder.setFixUnexpectedEOR(true);
+		
+		picaDecoder.process(
+				FIELD_001AT +
+				FIELD_003AT +
+				FIELD_028A_START +
+				SUBFIELD_A +
+				EMPTY_SUBFIELD);
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify001At(ordered);
+		verify003At(ordered);
+		verify028AStart(ordered);
+		verifySubfieldA(ordered);
+		verify028AEnd(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+
 	@Test
 	public void testShouldNotNormalizeUTF8ByDefault() {
 		picaDecoder.process(
