@@ -41,8 +41,9 @@ public final class PicaDecoderTest {
 	private static final String SUBFIELD = "\u001f";
 	private static final String FIELD_END = "\u001e";
 	
+	private static final String FIELD_003AT0_START = "003@ " + SUBFIELD + "0";
 	private static final String FIELD_001AT = "001@ " + SUBFIELD + "0test" + FIELD_END;
-	private static final String FIELD_003AT = "003@ " + SUBFIELD + "0" + RECORD_ID + FIELD_END;
+	private static final String FIELD_003AT = FIELD_003AT0_START + RECORD_ID + FIELD_END;
 	private static final String FIELD_021A = "021A " + SUBFIELD + "a" + COMPOSED_UTF8 + FIELD_END;
 	private static final String FIELD_028A_START = "028A ";
 	private static final String SUBFIELD_A = SUBFIELD + "aEco";
@@ -235,6 +236,20 @@ public final class PicaDecoderTest {
 		verify003At(ordered);
 		verify028AStart(ordered);
 		verify028AEnd(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+	
+	@Test
+	public void testShouldProcessRecordIdAtRecordEnd() {
+		picaDecoder.setFixUnexpectedEOR(true);
+
+		picaDecoder.process(
+				FIELD_003AT0_START +
+				RECORD_ID);
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify003At(ordered);
 		ordered.verify(receiver).endRecord();
 	}
 

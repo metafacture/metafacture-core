@@ -158,6 +158,20 @@ public final class PicaDecoder
 		return true;
 	}
 	
+	/**
+	 * Searches the record for the sequence specified in {@code ID_FIELD}
+	 * and returns all characters following this sequence until the next
+	 * {@link PicaConstants.FIELD_DELIMITER},
+	 * {@link PicaConstants.SUBFIELD_DELIMITER} or the end of the record
+	 * is reached. Only the first occurrence of the sequence is processed,
+	 * later occurrences are ignored.
+	 * 
+	 * If the sequence is not found in the string or if it is not followed
+	 * by any characters then {@code null} is returned.
+	 * 
+	 * @return value of subfield 003@$0 or null if the
+	 *         field is not found or is empty.
+	 */
 	private String extractRecordId() {
 		idBuilder.setLength(0);
 		
@@ -166,29 +180,31 @@ public final class PicaDecoder
 		for (int i = 0; i < recordLen; ++i) {
 			if (buffer[i] == PicaConstants.FIELD_DELIMITER) {
 				if (idBuilder.length() > 0) {
-					return idBuilder.toString();
+					break;
 				}
 				fieldPos = 0;
 				skip = false;
-				continue;
-			}
-			if (!skip) {
-				if (fieldPos < ID_FIELD.length) {
-					if (buffer[i] == ID_FIELD[fieldPos]) {
-						fieldPos += 1;
+			} else {
+				if (!skip) {
+					if (fieldPos < ID_FIELD.length) {
+						if (buffer[i] == ID_FIELD[fieldPos]) {
+							fieldPos += 1;
+						} else {
+							skip = true;
+						}
 					} else {
-						skip = true;
-					}
-				} else {
-					if (buffer[i] == PicaConstants.SUBFIELD_DELIMITER) {
-						skip = true;
-					} else {
+						if (buffer[i] == PicaConstants.SUBFIELD_DELIMITER) {
+							break;
+						}
 						idBuilder.append(buffer[i]);
 					}
 				}
 			}
 		}
 		
+		if (idBuilder.length() > 0) {
+			return idBuilder.toString();
+		}
 		return null;
 	}
 	
