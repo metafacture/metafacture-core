@@ -15,7 +15,6 @@
  */
 package org.culturegraph.mf.stream.converter.bib;
 
-import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
@@ -62,7 +61,6 @@ public final class PicaDecoder
 	private int recordLen;
 	
 	private boolean ignoreMissingIdn;
-	private boolean fixUnexpectedEOR;
 
 	public void setIgnoreMissingIdn(final boolean ignoreMissingIdn) {
 		this.ignoreMissingIdn = ignoreMissingIdn;
@@ -70,14 +68,6 @@ public final class PicaDecoder
 	
 	public boolean getIgnoreMissingIdn() {
 		return ignoreMissingIdn;
-	}
-	
-	public void setFixUnexpectedEOR(final boolean fixUnexpectedEOR) {
-		this.fixUnexpectedEOR = fixUnexpectedEOR;
-	}
-	
-	public boolean getFixUnexpectedEOR() {
-		return fixUnexpectedEOR;
 	}
 	
 	public void setNormalizeUTF8(final boolean normalizeUTF8) {
@@ -115,18 +105,11 @@ public final class PicaDecoder
 		}
 		getReceiver().startRecord(id);
 
-		PicaParserState state = PicaParserState.FIELD_START;
+		PicaParserState state = PicaParserState.FIELD_NAME;
 		for (int i = 0; i < recordLen; ++i) {
 			state = state.parseChar(buffer[i], parserContext);
 		}
-		if (state != PicaParserState.FIELD_START) {
-			if (fixUnexpectedEOR) {
-				state = state.parseChar(PicaConstants.FIELD_DELIMITER, parserContext);
-				assert state == PicaParserState.FIELD_START;
-			} else {
-				throw new FormatException("Unexpected end of record");
-			}
-		}
+		state.endOfInput(parserContext);
 		
 		getReceiver().endRecord();
 	}

@@ -19,8 +19,8 @@ package org.culturegraph.mf.stream.converter.bib;
 /**
  * A parser for PICA+ records. Only single records can be parsed as the parser
  * does not recognise end-of-record markers (usually new lines). The initial
- * parser state is FIELD_START. A valid state for termination is FIELD_START.
- * The parser processes any input, there is no error state.
+ * parser state is FIELD_NAME. All states are valid end states. The parser
+ * processes any input, there is no error state.
  * 
  * The parser ignores spaces in field names. They are not included in the
  * field name.
@@ -34,15 +34,6 @@ package org.culturegraph.mf.stream.converter.bib;
  */
 enum PicaParserState {
 	
-	FIELD_START {
-		@Override
-		protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
-			if (ch == PicaConstants.FIELD_DELIMITER || ch == ' ') {
-				return FIELD_START;
-			}
-			return FIELD_NAME.parseChar(ch, ctx);
-		}
-	},
 	FIELD_NAME {
 		@Override
 		protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
@@ -50,7 +41,7 @@ enum PicaParserState {
 			if (ch == PicaConstants.FIELD_DELIMITER) {
 				ctx.emitStartEntity();
 				ctx.emitEndEntity();
-				next = FIELD_START;
+				next = FIELD_NAME;
 			} else if (ch == PicaConstants.SUBFIELD_DELIMITER) {
 				ctx.emitStartEntity();
 				next = SUBFIELD_NAME;
@@ -62,6 +53,12 @@ enum PicaParserState {
 			}
 			return next;
 		}
+		
+		@Override
+		protected void endOfInput(final PicaParserContext ctx) {
+			ctx.emitStartEntity();
+			ctx.emitEndEntity();
+		}
 	},
 	SUBFIELD_NAME {
 		@Override
@@ -69,14 +66,19 @@ enum PicaParserState {
 			final PicaParserState next;
 			if (ch == PicaConstants.FIELD_DELIMITER) {
 				ctx.emitEndEntity();
-				next = FIELD_START;
+				next = FIELD_NAME;
 			} else if (ch == PicaConstants.SUBFIELD_DELIMITER) {
-				next = SUBFIELD_NAME;
+				next = this;
 			} else {
 				ctx.setSubfieldName(ch);
 				next = SUBFIELD_VALUE;
 			}
 			return next;
+		}
+		
+		@Override
+		protected void endOfInput(final PicaParserContext ctx) {
+			ctx.emitEndEntity();
 		}
 	},
 	SUBFIELD_VALUE {
@@ -86,7 +88,7 @@ enum PicaParserState {
 			if (ch == PicaConstants.FIELD_DELIMITER) {
 				ctx.emitLiteral();
 				ctx.emitEndEntity();
-				next = FIELD_START;
+				next = FIELD_NAME;
 			} else if (ch == PicaConstants.SUBFIELD_DELIMITER) {
 				ctx.emitLiteral();
 				next = SUBFIELD_NAME;
@@ -96,8 +98,16 @@ enum PicaParserState {
 			}
 			return next;
 		}
+		
+		@Override
+		protected void endOfInput(final PicaParserContext ctx) {
+			ctx.emitLiteral();
+			ctx.emitEndEntity();
+		}
 	};
 
 	protected abstract PicaParserState parseChar(final char ch, final PicaParserContext ctx);
+	
+	protected abstract void endOfInput(final PicaParserContext ctx);
 	
 }

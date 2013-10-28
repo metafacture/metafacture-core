@@ -18,7 +18,6 @@ package org.culturegraph.mf.stream.converter.bib;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.junit.After;
 import org.junit.Before;
@@ -38,21 +37,22 @@ public final class PicaDecoderTest {
 	private static final String RECORD_ID = "2809";
 	private static final String COMPOSED_UTF8 = "Über";  // 'Ü' constructed from U and diacritics
 	private static final String STANDARD_UTF8 = "Über";  // 'Ü' is a single character
-	private static final String SUBFIELD = "\u001f";
-	private static final String FIELD_END = "\u001e";
+	private static final String SUBFIELD_MARKER = "\u001f";
+	private static final String FIELD_MARKER = "\u001e";
 	
-	private static final String FIELD_003AT0_START = "003@ " + SUBFIELD + "0";
-	private static final String FIELD_001AT = "001@ " + SUBFIELD + "0test" + FIELD_END;
-	private static final String FIELD_003AT = FIELD_003AT0_START + RECORD_ID + FIELD_END;
-	private static final String FIELD_021A = "021A " + SUBFIELD + "a" + COMPOSED_UTF8 + FIELD_END;
+	private static final String FIELD_003AT0_START = "003@ " + SUBFIELD_MARKER + "0";
+	private static final String FIELD_001AT = "001@ " + SUBFIELD_MARKER + "0test" + FIELD_MARKER;
+	private static final String FIELD_003AT = FIELD_003AT0_START + RECORD_ID + FIELD_MARKER;
+	private static final String FIELD_021A = "021A " + SUBFIELD_MARKER + "a" + COMPOSED_UTF8 + FIELD_MARKER;
 	private static final String FIELD_028A_START = "028A ";
-	private static final String SUBFIELD_A = SUBFIELD + "aEco";
-	private static final String SUBFIELD_D = SUBFIELD + "dUmberto";
-	private static final String EMPTY_SUBFIELD = SUBFIELD;
-	private static final String FIELD_028A_END = FIELD_END;
+	private static final String SUBFIELD_A = SUBFIELD_MARKER + "aEco";
+	private static final String SUBFIELD_D = SUBFIELD_MARKER + "dUmberto";
+	private static final String FIELD_028A_END = FIELD_MARKER;
+	private static final String EMPTY_UNNAMED_SUBFIELD = SUBFIELD_MARKER;
+	private static final String EMPTY_SUBFIELD = SUBFIELD_MARKER + "Y";
 	private static final String EMPTY_FIELD_START = "";
-	private static final String SUBFIELD_X = SUBFIELD + "Xyz";
-	private static final String EMPTY_FIELD_END = FIELD_END;
+	private static final String SUBFIELD_X = SUBFIELD_MARKER + "Xyz";
+	private static final String EMPTY_FIELD_END = FIELD_MARKER;
 	
 	private PicaDecoder picaDecoder;
 	
@@ -72,7 +72,7 @@ public final class PicaDecoderTest {
 	}
 	
 	@Test
-	public void testShouldParseValidPica() {
+	public void testShouldParseRecordEndingWithFieldDelimiter() {
 		picaDecoder.process(
 				FIELD_001AT +
 				FIELD_003AT +
@@ -93,7 +93,96 @@ public final class PicaDecoderTest {
 	}
 	
 	@Test
+	public void testShouldParseRecordEndingWithSubfieldDelimiter() {
+		picaDecoder.process(
+				FIELD_001AT +
+				FIELD_003AT +
+				FIELD_028A_START +
+				SUBFIELD_A +
+				EMPTY_UNNAMED_SUBFIELD);
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify001At(ordered);
+		verify003At(ordered);
+		verify028AStart(ordered);
+		verifySubfieldA(ordered);
+		verify028AEnd(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+	
+	@Test
+	public void testShouldParseRecordEndingInFieldName() {
+		// Do not skip the last field. We want to make
+		// sure that it is processed properly:
+		picaDecoder.setSkipEmptyFields(false);
+		
+		picaDecoder.process(
+				FIELD_001AT +
+				FIELD_003AT +
+				FIELD_028A_START);
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify001At(ordered);
+		verify003At(ordered);
+		verify028AStart(ordered);
+		verify028AEnd(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+	
+	@Test
+	public void testShouldParseRecordEndingInSubfieldName() {
+		picaDecoder.process(
+				FIELD_001AT +
+				FIELD_003AT +
+				FIELD_028A_START +
+				SUBFIELD_A +
+				EMPTY_SUBFIELD);
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify001At(ordered);
+		verify003At(ordered);
+		verify028AStart(ordered);
+		verifySubfieldA(ordered);
+		verifyEmptySubfield(ordered);
+		verify028AEnd(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+	
+	@Test
+	public void testShouldParseRecordStartingWithFieldDelimiter() {
+		picaDecoder.process(
+				FIELD_MARKER +
+				FIELD_001AT +
+				FIELD_003AT);
+
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify001At(ordered);
+		verify003At(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+
+	@Test
+	public void testShouldParseRecordIdAtRecordEnd() {
+		picaDecoder.process(
+				FIELD_003AT0_START +
+				RECORD_ID);
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify003At(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+	
+	@Test
 	public void testShouldSkipUnnamedFieldsWithNoSubFields() {
+		// Make sure that the field is skipped because
+		// it is empty and not because it has no sub
+		// fields:
 		picaDecoder.setSkipEmptyFields(false);
 		
 		picaDecoder.process(
@@ -112,13 +201,16 @@ public final class PicaDecoderTest {
 	
 	@Test
 	public void testShouldSkipUnnamedFieldsWithEmptySubFieldsOnly() {
+		// Make sure that the field is skipped because
+		// it is empty and not because it only has empty
+		// sub fields:
 		picaDecoder.setSkipEmptyFields(false);
 
 		picaDecoder.process(
 				FIELD_001AT +
 				FIELD_003AT +
 				EMPTY_FIELD_START +
-				EMPTY_SUBFIELD +
+				EMPTY_UNNAMED_SUBFIELD +
 				EMPTY_FIELD_END);
 
 		final InOrder ordered = inOrder(receiver);
@@ -152,7 +244,7 @@ public final class PicaDecoderTest {
 				FIELD_001AT +
 				FIELD_003AT +
 				FIELD_028A_START +
-				EMPTY_SUBFIELD +
+				EMPTY_UNNAMED_SUBFIELD +
 				SUBFIELD_D +
 				FIELD_028A_END);
 		
@@ -208,7 +300,7 @@ public final class PicaDecoderTest {
 				FIELD_001AT +
 				FIELD_003AT +
 				FIELD_028A_START +
-				EMPTY_SUBFIELD +
+				EMPTY_UNNAMED_SUBFIELD +
 				FIELD_028A_END);
 		
 		final InOrder ordered = inOrder(receiver);
@@ -227,7 +319,7 @@ public final class PicaDecoderTest {
 				FIELD_001AT +
 				FIELD_003AT +
 				FIELD_028A_START +
-				EMPTY_SUBFIELD +
+				EMPTY_UNNAMED_SUBFIELD +
 				FIELD_028A_END);
 		
 		final InOrder ordered = inOrder(receiver);
@@ -236,20 +328,6 @@ public final class PicaDecoderTest {
 		verify003At(ordered);
 		verify028AStart(ordered);
 		verify028AEnd(ordered);
-		ordered.verify(receiver).endRecord();
-	}
-	
-	@Test
-	public void testShouldProcessRecordIdAtRecordEnd() {
-		picaDecoder.setFixUnexpectedEOR(true);
-
-		picaDecoder.process(
-				FIELD_003AT0_START +
-				RECORD_ID);
-
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID);
-		verify003At(ordered);
 		ordered.verify(receiver).endRecord();
 	}
 
@@ -283,71 +361,7 @@ public final class PicaDecoderTest {
 		verify028AEnd(ordered);
 		ordered.verify(receiver).endRecord();
 	}
-	
-	@Test(expected=FormatException.class)
-	public void testShouldFailIfRecordIsIncompleteByDefault() {
-		picaDecoder.process(
-				FIELD_001AT +
-				FIELD_003AT +
-				FIELD_028A_START +
-				SUBFIELD_A +
-				SUBFIELD_D);
-	}
-	
-	@Test
-	public void testShouldFixIncompleteRecordIfConfigured() {
-		picaDecoder.setFixUnexpectedEOR(true);
 		
-		picaDecoder.process(
-				FIELD_001AT +
-				FIELD_003AT +
-				FIELD_028A_START +
-				SUBFIELD_A +
-				SUBFIELD_D);
-		
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID);
-		verify001At(ordered);
-		verify003At(ordered);
-		verify028AStart(ordered);
-		verifySubfieldA(ordered);
-		verifySubfieldD(ordered);
-		verify028AEnd(ordered);
-		ordered.verify(receiver).endRecord();
-	}
-
-	
-	@Test(expected=FormatException.class)
-	public void testShouldFailIfRecordEndsWithSubfieldIndicatorByDefault() {
-		picaDecoder.process(
-				FIELD_001AT +
-				FIELD_003AT +
-				FIELD_028A_START +
-				SUBFIELD_A +
-				EMPTY_SUBFIELD);
-	}
-	
-	@Test
-	public void testShouldFixRecordEndingWithSubfieldIndicatorIfConfigured() {
-		picaDecoder.setFixUnexpectedEOR(true);
-		
-		picaDecoder.process(
-				FIELD_001AT +
-				FIELD_003AT +
-				FIELD_028A_START +
-				SUBFIELD_A +
-				EMPTY_SUBFIELD);
-		
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID);
-		verify001At(ordered);
-		verify003At(ordered);
-		verify028AStart(ordered);
-		verifySubfieldA(ordered);
-		verify028AEnd(ordered);
-		ordered.verify(receiver).endRecord();
-	}
-
 	@Test
 	public void testShouldNotNormalizeUTF8ByDefault() {
 		picaDecoder.process(
@@ -412,6 +426,10 @@ public final class PicaDecoderTest {
 		ordered.verify(receiver).startEntity("");
 		ordered.verify(receiver).literal("X", "yz");
 		ordered.verify(receiver).endEntity();
+	}
+	
+	private void verifyEmptySubfield(final InOrder ordered) {
+		ordered.verify(receiver).literal("Y", "");
 	}
 	
 	private void verify021A(final InOrder ordered, final String value) {
