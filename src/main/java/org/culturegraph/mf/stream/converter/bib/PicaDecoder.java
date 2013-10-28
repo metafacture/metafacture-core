@@ -119,7 +119,10 @@ public final class PicaDecoder
 		for (int i = 0; i < recordLen; ++i) {
 			state = state.parseChar(buffer[i], parserContext);
 		}
-		if (state != PicaParserState.FIELD_START) {
+		if (state == PicaParserState.SUBFIELD_VALUE) {
+			parserContext.emitLiteral();
+			parserContext.emitEndEntity();
+		} else if (state != PicaParserState.FIELD_START) {
 			if (fixUnexpectedEOR) {
 				state = state.parseChar(PicaConstants.FIELD_DELIMITER, parserContext);
 				assert state == PicaParserState.FIELD_START;
