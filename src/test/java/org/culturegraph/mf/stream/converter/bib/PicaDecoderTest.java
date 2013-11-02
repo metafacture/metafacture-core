@@ -42,9 +42,10 @@ public final class PicaDecoderTest {
 	private static final String VALUE_D = "Umberto";
 	private static final String COMPOSED_UTF8 = "Über";  // 'Ü' constructed from U and diacritics
 	private static final String STANDARD_UTF8 = "Über";  // 'Ü' is a single character
-		
-	private static final String SUBFIELD_MARKER = "\u001f";
+
+	private static final String RECORD_MARKER = "\u001d";
 	private static final String FIELD_MARKER = "\u001e";
+	private static final String SUBFIELD_MARKER = "\u001f";
 	private static final String FIELD_END_MARKER = "\n";
 	
 	private static final String FIELD_001AT_0_TEST = "001@ " + SUBFIELD_MARKER + "0test";
@@ -70,7 +71,103 @@ public final class PicaDecoderTest {
 	}
 	
 	@Test
-	public void testShouldParseRecordStartingWithFieldNameAndEndingWithFieldMarker() {
+	public void testShouldParseRecordStartingWithRecordMarker() {
+		picaDecoder.process(
+				RECORD_MARKER + FIELD_001AT_0_TEST +
+				FIELD_MARKER + FIELD_003AT_0_ID);
+
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify001At0Test(ordered);
+		verify003At0ID(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+	
+	@Test
+	public void testShouldParseRecordStartingWithFieldMarker() {
+		picaDecoder.process(
+				FIELD_MARKER + FIELD_001AT_0_TEST +
+				FIELD_MARKER + FIELD_003AT_0_ID);
+
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify001At0Test(ordered);
+		verify003At0ID(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+	
+	@Test
+	public void testShouldParseRecordStartingWithSubfieldMarker() {
+		picaDecoder.process(
+				SUBFIELD_MARKER + NAME_A + VALUE_A +
+				FIELD_MARKER + FIELD_003AT_0_ID);
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		ordered.verify(receiver).startEntity("");
+		ordered.verify(receiver).literal(NAME_A, VALUE_A);
+		ordered.verify(receiver).endEntity();
+		verify003At0ID(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+	
+	@Test
+	public void testShouldParseRecordStartingWithEmptySubfield() {
+		picaDecoder.process(
+				SUBFIELD_MARKER +
+				FIELD_MARKER + FIELD_003AT_0_ID);
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify003At0ID(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+	
+	@Test
+	public void testShouldParseRecordStartingWithFieldEndMarker() {
+		picaDecoder.process(
+				FIELD_END_MARKER + FIELD_001AT_0_TEST +
+				FIELD_MARKER + FIELD_003AT_0_ID);
+
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify001At0Test(ordered);
+		verify003At0ID(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+	
+	@Test
+	public void testShouldParseRecordStartingWithFieldName() {
+		picaDecoder.process(
+				FIELD_001AT_0_TEST +
+				FIELD_MARKER + FIELD_003AT_0_ID);
+
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify001At0Test(ordered);
+		verify003At0ID(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+
+	@Test
+	public void testShouldParseRecordEndingWithRecordMarker() {
+		picaDecoder.process(
+				FIELD_003AT_0_ID + FIELD_MARKER +
+				FIELD_001AT_0_TEST + RECORD_MARKER);
+		
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify003At0ID(ordered);
+		verify001At0Test(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+
+	@Test
+	public void testShouldParseRecordEndingWithFieldMarker() {
 		picaDecoder.process(
 				FIELD_003AT_0_ID + FIELD_MARKER +
 				FIELD_001AT_0_TEST + FIELD_MARKER);
@@ -138,69 +235,59 @@ public final class PicaDecoderTest {
 	}
 	
 	@Test
-	public void testShouldParseRecordStartingWithFieldMarker() {
+	public void testShouldParseMultiLineRecordFormat() {
 		picaDecoder.process(
-				FIELD_MARKER + FIELD_001AT_0_TEST +
-				FIELD_MARKER + FIELD_003AT_0_ID);
-
-		
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID);
-		verify001At0Test(ordered);
-		verify003At0ID(ordered);
-		ordered.verify(receiver).endRecord();
-	}
-	
-	@Test
-	public void testShouldParseRecordStartingWithSubfieldMarker() {
-		picaDecoder.process(
-				SUBFIELD_MARKER + NAME_A + VALUE_A +
-				FIELD_MARKER + FIELD_003AT_0_ID);
-		
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID);
-		ordered.verify(receiver).startEntity("");
-		ordered.verify(receiver).literal(NAME_A, VALUE_A);
-		ordered.verify(receiver).endEntity();
-		verify003At0ID(ordered);
-		ordered.verify(receiver).endRecord();
-	}
-	
-	@Test
-	public void testShouldParseRecordStartingWithEmptySubfield() {
-		picaDecoder.process(
-				SUBFIELD_MARKER +
-				FIELD_MARKER + FIELD_003AT_0_ID);
-
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID);
-		verify003At0ID(ordered);
-		ordered.verify(receiver).endRecord();
-	}
-	
-	@Test
-	public void testShouldParseRecordStartingWithFieldEndMarker() {
-		picaDecoder.process(
-				FIELD_END_MARKER + FIELD_001AT_0_TEST +
-				FIELD_MARKER + FIELD_003AT_0_ID);
-
-		
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID);
-		verify001At0Test(ordered);
-		verify003At0ID(ordered);
-		ordered.verify(receiver).endRecord();
-	}
-	
-	@Test
-	public void testShouldParseRecordWitFieldEndMarkers() {
-		picaDecoder.process(
+				RECORD_MARKER + FIELD_END_MARKER +
 				FIELD_MARKER + FIELD_001AT_0_TEST + FIELD_END_MARKER +
 				FIELD_MARKER + FIELD_003AT_0_ID + FIELD_END_MARKER);
 
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify001At0Test(ordered);
+		verify003At0ID(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+
+	@Test
+	public void testShouldParseRecordIdAfterRecordMarker() {
+		picaDecoder.process(
+				RECORD_MARKER + FIELD_003AT_0_ID);
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify003At0ID(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+
+	@Test
+	public void testShouldParseRecordIdAfterFieldMarker() {
+		picaDecoder.process(
+				FIELD_MARKER + FIELD_003AT_0_ID);
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify003At0ID(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+	
+	@Test
+	public void testShouldParseRecordIdAfterFieldEndMarker() {
+		picaDecoder.process(
+				FIELD_END_MARKER + FIELD_003AT_0_ID);
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verify003At0ID(ordered);
+		ordered.verify(receiver).endRecord();
+	}
+
+	@Test
+	public void testShouldParseRecordIdFollowedByRecordMarker() {
+		picaDecoder.process(
+				FIELD_003AT_0_ID + RECORD_MARKER);
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify003At0ID(ordered);
 		ordered.verify(receiver).endRecord();
 	}
@@ -242,28 +329,6 @@ public final class PicaDecoderTest {
 	public void testShouldParseRecordIdAtRecordEnd() {
 		picaDecoder.process(
 				FIELD_003AT_0_ID);
-
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID);
-		verify003At0ID(ordered);
-		ordered.verify(receiver).endRecord();
-	}
-	
-	@Test
-	public void testShouldParseRecordIdAfterFieldMarker() {
-		picaDecoder.process(
-				FIELD_MARKER + FIELD_003AT_0_ID);
-
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID);
-		verify003At0ID(ordered);
-		ordered.verify(receiver).endRecord();
-	}
-	
-	@Test
-	public void testShouldParseRecordIdAfterFieldEndMarker() {
-		picaDecoder.process(
-				FIELD_END_MARKER + FIELD_003AT_0_ID);
 
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);

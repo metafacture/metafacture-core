@@ -144,10 +144,9 @@ public final class PicaDecoder
 	/**
 	 * Searches the record for the sequence specified in {@code ID_FIELD}
 	 * and returns all characters following this sequence until the next
-	 * {@link PicaConstants.FIELD_MARKER},
-	 * {@link PicaConstants.SUBFIELD_MARKER}, {@link PicaConstants.LINE_END_MARKER}
-	 * or the end of the record is reached. Only the first occurrence of the
-	 * sequence is processed, later occurrences are ignored.
+	 * control character (see {@link PicaConstants} is found or the end of
+	 * the record is reached. Only the first occurrence of the sequence is
+	 * processed, later occurrences are ignored.
 	 * 
 	 * If the sequence is not found in the string or if it is not followed
 	 * by any characters then {@code null} is returned.
@@ -161,8 +160,7 @@ public final class PicaDecoder
 		int fieldPos = 0;
 		boolean skip = false;
 		for (int i = 0; i < recordLen; ++i) {
-			if (buffer[i] == PicaConstants.FIELD_MARKER
-					|| buffer[i] == PicaConstants.FIELD_END_MARKER) {
+			if (isFieldDelimiter(buffer[i])) {
 				if (idBuilder.length() > 0) {
 					break;
 				}
@@ -190,6 +188,12 @@ public final class PicaDecoder
 			return idBuilder.toString();
 		}
 		return null;
+	}
+	
+	private static boolean isFieldDelimiter(final char ch) {
+		return ch == PicaConstants.RECORD_MARKER
+				|| ch == PicaConstants.FIELD_MARKER
+				|| ch == PicaConstants.FIELD_END_MARKER;
 	}
 	
 }

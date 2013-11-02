@@ -18,9 +18,9 @@ package org.culturegraph.mf.stream.converter.bib;
 
 /**
  * A parser for PICA+ records. Only single records can be parsed as the parser
- * does not recognise end-of-record markers (usually new lines). The initial
- * parser state is FIELD_NAME. All states are valid end states. The parser
- * processes any input, there is no error state.
+ * ignores end of record markers. The initial parser state is FIELD_NAME. All
+ * states are valid end states. The parser processes any input, there is no
+ * error state.
  * 
  * The parser ignores spaces in field names. They are not included in the
  * field name.
@@ -39,6 +39,7 @@ enum PicaParserState {
 		protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
 			final PicaParserState next;
 			switch (ch) {
+			case PicaConstants.RECORD_MARKER:
 			case PicaConstants.FIELD_MARKER:
 			case PicaConstants.FIELD_END_MARKER:
 				ctx.emitStartEntity();
@@ -69,6 +70,7 @@ enum PicaParserState {
 		protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
 			final PicaParserState next;
 			switch (ch) {
+			case PicaConstants.RECORD_MARKER:
 			case PicaConstants.FIELD_MARKER:
 			case PicaConstants.FIELD_END_MARKER:
 				ctx.emitEndEntity();
@@ -94,6 +96,7 @@ enum PicaParserState {
 		protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
 			final PicaParserState next;
 			switch (ch) {
+			case PicaConstants.RECORD_MARKER:
 			case PicaConstants.FIELD_MARKER:
 			case PicaConstants.FIELD_END_MARKER:
 				ctx.emitLiteral();
