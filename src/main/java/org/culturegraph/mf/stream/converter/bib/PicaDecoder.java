@@ -50,7 +50,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 public final class PicaDecoder
 		extends DefaultObjectPipe<String, StreamReceiver> {
 
-	private static final char[] ID_FIELD = {'0', '0', '3', '@', ' ', PicaConstants.SUBFIELD_DELIMITER, '0'};
+	private static final char[] ID_FIELD = {'0', '0', '3', '@', ' ', PicaConstants.SUBFIELD_MARKER, '0'};
 
 	private static final int BUFFER_SIZE = 1024 * 1024;
 	
@@ -144,10 +144,10 @@ public final class PicaDecoder
 	/**
 	 * Searches the record for the sequence specified in {@code ID_FIELD}
 	 * and returns all characters following this sequence until the next
-	 * {@link PicaConstants.FIELD_DELIMITER},
-	 * {@link PicaConstants.SUBFIELD_DELIMITER} or the end of the record
-	 * is reached. Only the first occurrence of the sequence is processed,
-	 * later occurrences are ignored.
+	 * {@link PicaConstants.FIELD_MARKER},
+	 * {@link PicaConstants.SUBFIELD_MARKER}, {@link PicaConstants.LINE_END_MARKER}
+	 * or the end of the record is reached. Only the first occurrence of the
+	 * sequence is processed, later occurrences are ignored.
 	 * 
 	 * If the sequence is not found in the string or if it is not followed
 	 * by any characters then {@code null} is returned.
@@ -161,7 +161,8 @@ public final class PicaDecoder
 		int fieldPos = 0;
 		boolean skip = false;
 		for (int i = 0; i < recordLen; ++i) {
-			if (buffer[i] == PicaConstants.FIELD_DELIMITER) {
+			if (buffer[i] == PicaConstants.FIELD_MARKER
+					|| buffer[i] == PicaConstants.FIELD_END_MARKER) {
 				if (idBuilder.length() > 0) {
 					break;
 				}
@@ -176,7 +177,7 @@ public final class PicaDecoder
 							skip = true;
 						}
 					} else {
-						if (buffer[i] == PicaConstants.SUBFIELD_DELIMITER) {
+						if (buffer[i] == PicaConstants.SUBFIELD_MARKER) {
 							break;
 						}
 						idBuilder.append(buffer[i]);

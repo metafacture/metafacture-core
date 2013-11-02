@@ -23,8 +23,10 @@ package org.culturegraph.mf.stream.converter.bib;
  */
 final class PicaConstants {
 
-	public static final char FIELD_DELIMITER = '\u001e';
-	public static final char SUBFIELD_DELIMITER = '\u001f';
+	public static final char RECORD_MARKER = '\u001d';
+	public static final char FIELD_MARKER = '\u001e';
+	public static final char SUBFIELD_MARKER = '\u001f';
+	public static final char FIELD_END_MARKER = '\n';
 	
 	private PicaConstants() {
 		// No instances allowed

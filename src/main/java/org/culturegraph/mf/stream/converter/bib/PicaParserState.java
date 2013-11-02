@@ -38,14 +38,18 @@ enum PicaParserState {
 		@Override
 		protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
 			final PicaParserState next;
-			if (ch == PicaConstants.FIELD_DELIMITER) {
+			switch (ch) {
+			case PicaConstants.FIELD_MARKER:
+			case PicaConstants.FIELD_END_MARKER:
 				ctx.emitStartEntity();
 				ctx.emitEndEntity();
 				next = FIELD_NAME;
-			} else if (ch == PicaConstants.SUBFIELD_DELIMITER) {
+				break;
+			case PicaConstants.SUBFIELD_MARKER:
 				ctx.emitStartEntity();
 				next = SUBFIELD_NAME;
-			} else {
+				break;
+			default:
 				if (ch != ' ') {
 					ctx.appendText(ch);
 				}
@@ -64,12 +68,16 @@ enum PicaParserState {
 		@Override
 		protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
 			final PicaParserState next;
-			if (ch == PicaConstants.FIELD_DELIMITER) {
+			switch (ch) {
+			case PicaConstants.FIELD_MARKER:
+			case PicaConstants.FIELD_END_MARKER:
 				ctx.emitEndEntity();
 				next = FIELD_NAME;
-			} else if (ch == PicaConstants.SUBFIELD_DELIMITER) {
+				break;
+			case PicaConstants.SUBFIELD_MARKER:
 				next = this;
-			} else {
+				break;
+			default:
 				ctx.setSubfieldName(ch);
 				next = SUBFIELD_VALUE;
 			}
@@ -85,14 +93,18 @@ enum PicaParserState {
 		@Override
 		protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
 			final PicaParserState next;
-			if (ch == PicaConstants.FIELD_DELIMITER) {
+			switch (ch) {
+			case PicaConstants.FIELD_MARKER:
+			case PicaConstants.FIELD_END_MARKER:
 				ctx.emitLiteral();
 				ctx.emitEndEntity();
 				next = FIELD_NAME;
-			} else if (ch == PicaConstants.SUBFIELD_DELIMITER) {
+				break;
+			case PicaConstants.SUBFIELD_MARKER:
 				ctx.emitLiteral();
 				next = SUBFIELD_NAME;
-			} else {
+				break;
+			default:
 				ctx.appendText(ch);
 				next = this;
 			}
