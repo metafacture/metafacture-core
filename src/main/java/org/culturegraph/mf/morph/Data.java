@@ -42,4 +42,8 @@ final class Data  extends AbstractNamedValuePipeHead{
 		this.name = name;
 	}
 
+	@Override
+	public String toString() {
+		return name;
+	}
 }
