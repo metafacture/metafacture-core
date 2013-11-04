@@ -18,6 +18,8 @@ package org.culturegraph.mf.util.tries;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -26,6 +28,7 @@ import java.util.regex.Pattern;
  * A simple Trie, which accepts a trailing wildcard
  * 
  * @author Markus Michael Geipel
+ * @author Pascal Christoph
  * 
  * @param <P>
  *            type of value stored
@@ -76,7 +79,6 @@ public final class WildcardTrie<P> {
 	}
 
 	public List<P> get(final String key) {
-
 
 		nodes.add(root);
 		final int length = key.length();
@@ -130,7 +132,7 @@ public final class WildcardTrie<P> {
 	 */
 	private final class Node<T> {
 
-		private List<T> values = Collections.emptyList();
+		private LinkedHashSet<T> values = new LinkedHashSet<T>();
 		private final CharMap<Node<T>> links = new CharMap<Node<T>>();
 
 		protected Node() {
@@ -143,19 +145,18 @@ public final class WildcardTrie<P> {
 			if (key == STAR_WILDCARD) {
 				next.links.put(STAR_WILDCARD, next);
 			}
-
 			return next;
 		}
 
 		public void addValue(final T value) {
 			if (values == Collections.emptyList()) {
-				values = new ArrayList<T>();
+				values = new LinkedHashSet<T>();
 			}
 			this.values.add(value);
 		}
 
 		public List<T> getValues() {
-			return values;
+			return new LinkedList<T>(values);
 		}
 
 		public Node<T> getNext(final char key) {
