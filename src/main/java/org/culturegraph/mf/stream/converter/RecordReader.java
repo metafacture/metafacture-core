@@ -28,10 +28,10 @@ import org.culturegraph.mf.framework.annotations.Out;
 /**
  * <p>Reads data from a {@code Reader} and splits it into individual
  * records.</p>
- * 
- * <p>The default separator is the new line character (0x0a). Empty
- * records are skipped by default.</p>
- * 
+ *
+ * <p>The default separator is the global separator character (0x001d).
+ * Empty records are skipped by default.</p>
+ *
  * @author Christoph Böhme
  *
  */
@@ -41,28 +41,28 @@ import org.culturegraph.mf.framework.annotations.Out;
 public final class RecordReader extends
 		DefaultObjectPipe<Reader, ObjectReceiver<String>> {
 
-	public static final char DEFAULT_SEPARATOR = '\n';
-	
+	public static final char DEFAULT_SEPARATOR = '\u001d';
+
 	private static final int BUFFER_SIZE = 1024 * 1024 * 16;
 
 	private final StringBuilder builder = new StringBuilder();
 	private final char[] buffer = new char[BUFFER_SIZE];
-	
+
 	private char separator = DEFAULT_SEPARATOR;
 	private boolean skipEmptyRecords = true;
-	
+
 	public void setSeparator(final char separator) {
 		this.separator = separator;
 	}
-	
+
 	public char getSeparator() {
 		return separator;
 	}
-	
+
 	public void setSkipEmptyRecords(final boolean skipEmptyRecords) {
 		this.skipEmptyRecords = skipEmptyRecords;
 	}
-	
+
 	public boolean getSkipEmptyRecords() {
 		return skipEmptyRecords;
 	}
@@ -89,12 +89,12 @@ public final class RecordReader extends
 			if (!nothingRead) {
 				emitRecord();
 			}
-			
+
 		} catch (final IOException e) {
 			throw new MetafactureException(e);
 		}
 	}
-	
+
 	private void emitRecord() {
 		final String record = builder.toString();
 		if (!skipEmptyRecords || !record.isEmpty()) {
@@ -102,5 +102,5 @@ public final class RecordReader extends
 			builder.delete(0, builder.length());
 		}
 	}
-	
+
 }
