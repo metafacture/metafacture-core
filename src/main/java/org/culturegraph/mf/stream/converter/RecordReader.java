@@ -51,6 +51,14 @@ public final class RecordReader extends
 	private char separator = DEFAULT_SEPARATOR;
 	private boolean skipEmptyRecords = true;
 
+	public void setSeparator(final String separator) {
+		if (separator.length() >= 1) {
+			this.separator = separator.charAt(0);
+		} else {
+			this.separator = DEFAULT_SEPARATOR;
+		}
+	}
+
 	public void setSeparator(final char separator) {
 		this.separator = separator;
 	}
