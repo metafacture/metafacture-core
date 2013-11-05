@@ -113,7 +113,7 @@ public final class WildcardTrie<P> {
 
 		List<P> matches = Collections.emptyList();
 		for (Node<P> node : nodes) {
-			final List<P> values = node.getValues();
+			final Set<P> values = node.getValues();
 			if (!values.isEmpty()) {
 				if (matches == Collections.emptyList()) {
 					matches = new ArrayList<P>();
@@ -132,7 +132,7 @@ public final class WildcardTrie<P> {
 	 */
 	private final class Node<T> {
 
-		private LinkedHashSet<T> values = new LinkedHashSet<T>();
+		private Set<T> values =  Collections.emptySet();
 		private final CharMap<Node<T>> links = new CharMap<Node<T>>();
 
 		protected Node() {
@@ -149,14 +149,14 @@ public final class WildcardTrie<P> {
 		}
 
 		public void addValue(final T value) {
-			if (values == Collections.emptyList()) {
+			if (values == Collections.emptySet()) {
 				values = new LinkedHashSet<T>();
 			}
 			this.values.add(value);
 		}
 
-		public List<T> getValues() {
-			return new LinkedList<T>(values);
+		public Set<T> getValues() {
+			return values;
 		}
 
 		public Node<T> getNext(final char key) {
