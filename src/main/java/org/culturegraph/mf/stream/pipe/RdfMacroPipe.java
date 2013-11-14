@@ -15,6 +15,7 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
+import org.apache.commons.lang.StringUtils;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
@@ -76,7 +77,7 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
 	@Override
 	public void literal(final String name, final String value) {
 		final int index = name.indexOf(LANGUAGE_MARKER);
-		if (name.charAt(0)==REFERENCE_MARKER) {
+		if (StringUtils.isNotEmpty(name) && name.charAt(0)==REFERENCE_MARKER) {
 			getReceiver().startEntity(name.substring(1));
 			getReceiver().literal(RDF_REFERENCE, value);
 			getReceiver().endEntity();
