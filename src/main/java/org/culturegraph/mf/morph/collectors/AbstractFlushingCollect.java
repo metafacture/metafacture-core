@@ -15,40 +15,31 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-
 import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.morph.NamedValueSource;
-import org.culturegraph.mf.util.StringUtil;
 
 /**
- * Implementation of the <code>&lt;group&gt;</code> tag.
+ * Common basis for {@link Entity}, {@link Combine} etc.
  * 
  * @author Markus Michael Geipel
+
  */
-public final class Group extends AbstractFlushingCollect{
+public abstract class AbstractFlushingCollect extends AbstractCollect {
 
+//private static final String FLUSH = "_flush";
+//	private static final Logger LOG = LoggerFactory.getLogger(AbstractCollect.class);
 
-	public Group(final Metamorph metamorph) {
+	public AbstractFlushingCollect(final Metamorph metamorph) {
 		super(metamorph);
 	}
 	
 	@Override
-	protected void receive(final String recName, final String recValue, final NamedValueSource source) {
-		getNamedValueReceiver().receive(StringUtil.fallback(getName(), recName), StringUtil.fallback(getValue(), recValue), this, getRecordCount(), getEntityCount());
+	public final void flush(final int recordCount, final int entityCount) {
+		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount)) {
+			emit();
+			if (getReset()) {
+				clear();
+			}
+		}
 	}
 
-	@Override
-	protected boolean isComplete() {
-		return false; //nothing
-	}
-
-	@Override
-	protected void clear() {
-		//nothing
-	}
-
-	@Override
-	protected void emit() {
-		//nothing
-	}
 }

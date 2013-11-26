@@ -34,7 +34,7 @@ import org.culturegraph.mf.util.StringUtil;
  * 
  * @author Markus Michael Geipel
  */
-public final class Entity extends AbstractCollect {
+public final class Entity extends AbstractFlushingCollect {
 	// private static final Logger LOG = LoggerFactory.getLogger(Entity.class);
 
 	// public static final String ENTITY_NAME = "_entity_name";
