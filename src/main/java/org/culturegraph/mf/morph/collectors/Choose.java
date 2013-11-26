@@ -25,7 +25,7 @@ import org.culturegraph.mf.util.StringUtil;
 
 
 /**
- * Corresponds to the <code>&lt;choose-literal&gt;</code> tag.
+ * Corresponds to the <code>&lt;choose&gt;</code> tag.
  * 
  * @author Christoph Böhme <c.boehme@dnb.de>,  Markus Michael Geipel
  *
