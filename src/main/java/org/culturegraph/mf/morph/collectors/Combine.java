@@ -27,7 +27,7 @@ import org.culturegraph.mf.util.StringUtil;
 
 
 /**
- * Corresponds to the <code>&lt;collect-literal&gt;</code> tag.
+ * Corresponds to the <code>&lt;collect&gt;</code> tag.
  * 
  * @author Markus Michael Geipel
  */
@@ -59,7 +59,6 @@ public final class Combine extends AbstractCollect{
 		variables.put(name, value);
 		sourcesLeft.remove(source);
 	}
-
 	
 	@Override
 	public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
