@@ -78,7 +78,7 @@ public final class MorphVisualizer extends AbstractMetamorphDomWalker {
 			builder.append("<TR><TD COLSPAN=\"2\" BGCOLOR=\"" + color + "\"><B>" + name + "</B></TD></TR>");
 		}
 
-		for (Entry<String, String> entry : attributes.entrySet()) {
+		for (final Entry<String, String> entry : attributes.entrySet()) {
 			builder.append("<TR><TD>" + StringEscapeUtils.escapeXml(entry.getKey()) + "</TD><TD>'" + StringEscapeUtils.escapeXml(entry.getValue())
 					+ "'</TD></TR>");
 		}
@@ -94,7 +94,7 @@ public final class MorphVisualizer extends AbstractMetamorphDomWalker {
 			builder.append("<TR><TD COLSPAN=\"2\"><B>" + name + "</B></TD></TR>");
 		}
 
-		for (Entry<String, String> entry : attributes.entrySet()) {
+		for (final Entry<String, String> entry : attributes.entrySet()) {
 			builder.append("<TR><TD>" + StringEscapeUtils.escapeXml(entry.getKey()) + "</TD><TD>'" + StringEscapeUtils.escapeXml(entry.getValue())
 					+ "'</TD></TR>");
 		}
@@ -122,7 +122,7 @@ public final class MorphVisualizer extends AbstractMetamorphDomWalker {
 	@Override
 	protected void finish() {
 
-		for (String source : sources) {
+		for (final String source : sources) {
 			final String color;
 			if (source.startsWith(RECURSION_INDICATOR)) {
 				color = "lemonchiffon";
@@ -237,8 +237,7 @@ public final class MorphVisualizer extends AbstractMetamorphDomWalker {
 
 	@Override
 	protected void exitName(final Node node) {
-		// TODO Auto-generated method stub
-		
+		// Nothing to do
 	}
 
 	private void exit(final Node node) {
@@ -298,6 +297,16 @@ public final class MorphVisualizer extends AbstractMetamorphDomWalker {
 	
 	private void incrementChildCount() {
 		childCountStack.push(Integer.valueOf(1 + childCountStack.pop().intValue()));
+	}
+
+	@Override
+	protected void enterIf(final Node node) {
+		((Element)node.getFirstChild()).setAttribute(ATTRITBUTE.NAME.getString(), "<if>");
+	}
+
+	@Override
+	protected void exitIf(final Node node) {
+		// Nothing to do
 	}
 
 }

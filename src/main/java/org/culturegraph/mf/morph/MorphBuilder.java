@@ -47,7 +47,8 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	private final Deque<Collect> collectStack;
 	private Data data;
 	private boolean setEntityName;
-
+	private boolean setCondition;
+	
 	protected MorphBuilder(final Metamorph metamorph) {
 		super();
 		this.collectStack = new LinkedList<Collect>();
@@ -107,7 +108,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		final String className = resolvedAttribute(functionDefNode, ATTRITBUTE.CLASS);
 		try {
 			clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			throw new MorphDefException("Function " + className + NOT_FOUND, e);
 		}
 		if (Function.class.isAssignableFrom(clazz)) {
@@ -144,6 +145,11 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 			((Entity) collectStack.peek()).setNameSource(data);
 			setEntityName = false;
 		}
+	
+		if (setCondition) {
+			collectStack.peek().setConditionSource(data);
+			setCondition = false;
+		}
 	}
 
 	@Override
@@ -169,6 +175,16 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	}
 
 	@Override
+	protected void enterIf(final Node nameNode) {
+		setCondition = true;
+	}
+
+	@Override
+	protected void exitIf(final Node nameNode) {
+		setCondition = false;
+	}
+
+	@Override
 	protected void enterCollect(final Node node) {
 		final Map<String, String> attributes = resolvedAttributeMap(node);
 		// must be set after recursive calls to flush descendants before parent
@@ -182,6 +198,11 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		if (setEntityName) {
 			((Entity) collectStack.peek()).setNameSource(collect);
 			setEntityName = false;
+		}
+		
+		if (setCondition) {
+			collectStack.peek().setConditionSource(collect);
+			setCondition = false;
 		}
 
 		collectStack.push(collect);
@@ -204,10 +225,10 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 			registerFlush(flushWith, collect);
 		}
 	}
-
+	
 	private void registerFlush(final String flushWith, final FlushListener flushListener) {
 		final String[] keysSplit = OR_PATTERN.split(flushWith);
-		for (String key : keysSplit) {
+		for (final String key : keysSplit) {
 			if (key.equals(RECORD)) {
 				metamorph.registerRecordEndFlush(flushListener);
 			} else {
