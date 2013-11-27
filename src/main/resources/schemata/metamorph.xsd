@@ -196,6 +196,7 @@
 		</annotation>
 		<complexType>
 			<sequence>
+				<element ref="tns:if" minOccurs="0" maxOccurs="1" />
 				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
 				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
 			</sequence>
@@ -272,6 +273,7 @@
 	<element name="combine">
 		<complexType>
 			<sequence>
+				<element ref="tns:if" minOccurs="0" maxOccurs="1" />
 				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
 				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
 			</sequence>
@@ -288,12 +290,12 @@
 
 	<element name="concat">
 		<annotation>
-			<documentation>Concatinates all received literals</documentation>
+			<documentation>Concatenates all received literals</documentation>
 		</annotation>
 		<complexType>
 			<sequence>
+				<element ref="tns:if" minOccurs="0" maxOccurs="1" />			
 				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
-
 				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
 			</sequence>
 			<attribute name="name" type="string" use="required" />
@@ -315,6 +317,7 @@
 		</annotation>
 		<complexType>
 			<sequence>
+				<element ref="tns:if" minOccurs="0" maxOccurs="1" />
 				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
 				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
 			</sequence>
@@ -337,6 +340,7 @@
 		</annotation>
 		<complexType>
 			<sequence>
+				<element ref="tns:if" minOccurs="0" maxOccurs="1" />
 				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
 				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
 			</sequence>
@@ -351,6 +355,7 @@
 	<element name="tuples">
 		<complexType>
 			<sequence>
+				<element ref="tns:if" minOccurs="0" maxOccurs="1" />
 				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
 				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
 			</sequence>
@@ -374,6 +379,7 @@
 		</annotation>
 		<complexType>
 			<choice minOccurs="1" maxOccurs="unbounded">
+				<element ref="tns:if" minOccurs="0" maxOccurs="1" />
 				<element ref="tns:entity-name" minOccurs="0" maxOccurs="1" />
 				<group ref="tns:literal-rule" minOccurs="0" maxOccurs="unbounded" />
 				<element ref="tns:entity" />
@@ -400,6 +406,7 @@
 		</annotation>
 		<complexType>
 			<sequence>
+				<element ref="tns:if" minOccurs="0" maxOccurs="1" />
 				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
 				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
 			</sequence>
@@ -454,7 +461,20 @@
 	</element>
 
 
-
+	<element name="if">
+		<annotation>
+			<documentation>
+				The literal defined here is used as a condition for deciding
+				whether the collector should generate any output.
+			</documentation>
+		</annotation>
+		<complexType>
+			<sequence>
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="1" />
+			</sequence>
+		</complexType>
+	</element>
+	
 	<element name="postprocess">
 		<annotation>
 			<documentation>The functions contained here are applied to the final
