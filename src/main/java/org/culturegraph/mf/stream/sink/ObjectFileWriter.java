@@ -24,7 +24,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.culturegraph.mf.exceptions.MetafactureException;
-import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.util.FileCompression;
 
 /**
@@ -32,10 +31,10 @@ import org.culturegraph.mf.util.FileCompression;
  *            object type
  * 
  * @author Markus Geipel
+ * @author Christoph Böhme
  * 
  */
-
-public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
+public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
 
 	private static final String VAR = "${i}";
 	private static final Pattern VAR_PATTERN = Pattern.compile(VAR, Pattern.LITERAL);
@@ -43,12 +42,15 @@ public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
 	private String path;
 	private int count;
 	private Writer writer;
+	private boolean firstObject;
 	private boolean closed;
 
 	private String encoding = "UTF-8";
 	private FileCompression compression = FileCompression.AUTO;
-
+	
 	public ObjectFileWriter(final String path) {
+		super();
+		
 		this.path = path;
 		startNewFile();
 
@@ -58,67 +60,43 @@ public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
 		}
 	}
 
-	/**
-	 * Returns the encoding used to open the resource.
-	 * 
-	 * @return current default setting
-	 */
+	@Override
 	public String getEncoding() {
 		return encoding;
 	}
 
-	/**
-	 * Sets the encoding used to open the resource.
-	 * 
-	 * @param encoding
-	 *            new encoding
-	 */
+	@Override
 	public void setEncoding(final String encoding) {
 		this.encoding = encoding;
 	}
 
+	@Override
 	public FileCompression getCompression() {
 		return compression;
 	}
 
+	@Override
 	public void setCompression(final FileCompression compression) {
 		this.compression = compression;
 	}
 
+	@Override
 	public void setCompression(final String compression) {
 		setCompression(FileCompression.valueOf(compression.toUpperCase()));
-	}
-
-	private void startNewFile() {
-		final Matcher matcher = VAR_PATTERN.matcher(this.path);
-		final String path = matcher.replaceAll(String.valueOf(count));
-		try {
-			final OutputStream file = new FileOutputStream(path);
-			try {
-				final OutputStream compressor = compression.createCompressor(file, path);
-				try {
-					writer = new OutputStreamWriter(compressor, encoding);
-					closed = false;
-				} catch (IOException e) {
-					compressor.close();
-					throw e;
-				}
-			} catch (IOException e) {
-				file.close();
-				throw e;
-			}
-		} catch (IOException e) {
-			throw new MetafactureException("Error creating file '" + path + "'.", e);
-		}
 	}
 
 	@Override
 	public void process(final T obj) {
 		assert !closed;
 		try {
+			if (firstObject) {
+				writer.write(getHeader());
+				firstObject = false;
+			} else {
+				writer.write(getSeparator());
+			}
 			writer.write(obj.toString());
-			writer.append('\n');
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new MetafactureException(e);
 		}
 	}
@@ -127,8 +105,11 @@ public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
 	public void resetStream() {
 		if (!closed) {
 			try {
+				if (!firstObject) {
+					writer.write(getFooter());
+				}
 				writer.close();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				throw new MetafactureException(e);
 			} finally {
 				closed = true;
@@ -142,12 +123,40 @@ public final class ObjectFileWriter<T> implements ObjectReceiver<T> {
 	public void closeStream() {
 		if (!closed) {
 			try {
+				if (!firstObject) {
+					writer.write(getFooter());
+				}
 				writer.close();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				throw new MetafactureException(e);
 			} finally {
 				closed = true;
 			}
 		}
 	}
+
+	private void startNewFile() {
+		final Matcher matcher = VAR_PATTERN.matcher(this.path);
+		final String path = matcher.replaceAll(String.valueOf(count));
+		try {
+			final OutputStream file = new FileOutputStream(path);
+			try {
+				final OutputStream compressor = compression.createCompressor(file, path);
+				try {
+					writer = new OutputStreamWriter(compressor, encoding);
+					firstObject = true;
+					closed = false;
+				} catch (final IOException e) {
+					compressor.close();
+					throw e;
+				}
+			} catch (final IOException e) {
+				file.close();
+				throw e;
+			}
+		} catch (final IOException e) {
+			throw new MetafactureException("Error creating file '" + path + "'.", e);
+		}
+	}
+
 }
