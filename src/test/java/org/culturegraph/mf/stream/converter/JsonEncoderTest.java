@@ -15,12 +15,14 @@
  */
 package org.culturegraph.mf.stream.converter;
 
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -58,7 +60,7 @@ public final class JsonEncoderTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		encoder = new JsonEncoder();
-		encoder.setReceiver(receiver); 
+		encoder.setReceiver(receiver);
 	}
 	
 	@After
@@ -107,7 +109,7 @@ public final class JsonEncoderTest {
 	}
 	
 	@Test
-	public void testShouldEncodeMarkedEntitiesAsList() {	
+	public void testShouldEncodeMarkedEntitiesAsList() {
 		encoder.startRecord("");
 		encoder.startEntity(LIST1);
 		encoder.literal(LITERAL1, VALUE1);
@@ -163,6 +165,20 @@ public final class JsonEncoderTest {
 		encoder.endRecord();
 		
 		verify(receiver).process(fixQuotes("{'L1':'V1','L1':'V2'}"));
+	}
+	
+	@Test
+	public void testIssue152ShouldNotPrefixOutputWithSpaces() {
+		encoder.startRecord("");
+		encoder.literal(LITERAL1, VALUE1);
+		encoder.endRecord();
+		encoder.startRecord("");
+		encoder.literal(LITERAL2, VALUE2);
+		encoder.endRecord();
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).process(fixQuotes("{'L1':'V1'}"));
+		ordered.verify(receiver).process(fixQuotes("{'L2':'V2'}"));
 	}
 
 	/*

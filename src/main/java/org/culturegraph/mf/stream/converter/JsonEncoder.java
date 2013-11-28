@@ -53,7 +53,8 @@ public final class JsonEncoder extends
 	public JsonEncoder() {
 		try {
 			jsonGenerator = new JsonFactory().createGenerator(writer);
-		} catch (IOException e) {
+			jsonGenerator.setRootValueSeparator(null);
+		} catch (final IOException e) {
 			throw new MetafactureException(e);
 		}
 	}
@@ -70,8 +71,8 @@ public final class JsonEncoder extends
 		endGroup();
 		try {
 			jsonGenerator.flush();
-		} catch (IOException e) {
-			throw new MetafactureException(e); 
+		} catch (final IOException e) {
+			throw new MetafactureException(e);
 		}
 		getReceiver().process(writer.toString());
 	}
@@ -82,7 +83,7 @@ public final class JsonEncoder extends
 	}
 	
 	@Override
-	public void endEntity() {	
+	public void endEntity() {
 		endGroup();
 	}
 	
@@ -98,10 +99,10 @@ public final class JsonEncoder extends
 			} else {
 				jsonGenerator.writeString(value);
 			}
-		} catch (JsonGenerationException e) {
-			throw new MetafactureException(e); 
+		} catch (final JsonGenerationException e) {
+			throw new MetafactureException(e);
 		}
-		catch (IOException e) {
+		catch (final IOException e) {
 			throw new MetafactureException(e);
 		}
 	}
@@ -113,17 +114,17 @@ public final class JsonEncoder extends
 				if (ctx.inObject()) {
 					jsonGenerator.writeFieldName(name.substring(0, name.length() - ARRAY_MARKER.length()));
 				}
-				jsonGenerator.writeStartArray(); 				
-			} else {		
+				jsonGenerator.writeStartArray();
+			} else {
 				if (ctx.inObject()) {
 					jsonGenerator.writeFieldName(name);
 				}
 				jsonGenerator.writeStartObject();
 			}
-		} catch (JsonGenerationException e) {
-			throw new MetafactureException(e); 
+		} catch (final JsonGenerationException e) {
+			throw new MetafactureException(e);
 		}
-		catch (IOException e) {
+		catch (final IOException e) {
 			throw new MetafactureException(e);
 		}
 	}
@@ -136,10 +137,10 @@ public final class JsonEncoder extends
 			} else if (ctx.inArray()) {
 				jsonGenerator.writeEndArray();
 			}
-		} catch (JsonGenerationException e) {
-			throw new MetafactureException(e); 
+		} catch (final JsonGenerationException e) {
+			throw new MetafactureException(e);
 		}
-		catch (IOException e) {
+		catch (final IOException e) {
 			throw new MetafactureException(e);
 		}
 	}
