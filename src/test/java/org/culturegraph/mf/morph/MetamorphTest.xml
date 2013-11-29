@@ -147,7 +147,7 @@
 		</result>
 	</test-case>
 		
-			<test-case name="[abc] simple character class match">
+	<test-case name="[abc] simple character class match">
 		<input type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
