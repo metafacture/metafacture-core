@@ -15,9 +15,11 @@
  */
 package org.culturegraph.mf.stream.sink;
 
-import org.culturegraph.mf.framework.ObjectReceiver;
+import java.nio.charset.Charset;
+
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
+import org.culturegraph.mf.util.FileCompression;
 
 /**
  * @param <T> object type
@@ -28,22 +30,62 @@ import org.culturegraph.mf.framework.annotations.In;
 
 @Description("Writes objects to stdout")
 @In(Object.class)
-public final class ObjectStdoutWriter<T> implements ObjectReceiver<T> {
+public final class ObjectStdoutWriter<T> extends AbstractObjectWriter<T>  {
 
+	private static final String SET_COMPRESSION_ERROR = "Cannot compress standard out";
+	
+	private boolean firstObject = true;
+	private boolean closed;
+	
+	@Override
+	public String getEncoding() {
+		return Charset.defaultCharset().toString();
+	}
+
+	@Override
+	public void setEncoding(final String encoding) {
+		throw new UnsupportedOperationException("Cannot change encoding of standard out");
+	}
+
+	@Override
+	public FileCompression getCompression() {
+		return FileCompression.NONE;
+	}
+
+	@Override
+	public void setCompression(final FileCompression compression) {
+		throw new UnsupportedOperationException(SET_COMPRESSION_ERROR);
+	}
+
+	@Override
+	public void setCompression(final String compression) {
+		throw new UnsupportedOperationException(SET_COMPRESSION_ERROR);
+	}
 		
 	@Override
 	public void process(final T obj) {
-		System.out.println(obj);
+		assert !closed;
+		
+		if (firstObject) {
+			System.out.print(getHeader());
+			firstObject = false;
+		} else {
+			System.out.print(getSeparator());
+		}
+		System.out.print(obj);
 	}
 
 	@Override
 	public void resetStream() {
-		//nothing
+		firstObject = true;
 	}
 	
 	@Override
 	public void closeStream() {
-		//nothing
+		if (!firstObject) {
+			System.out.print(getFooter());
+		}
+		closed = true;
 	}
 
 }
