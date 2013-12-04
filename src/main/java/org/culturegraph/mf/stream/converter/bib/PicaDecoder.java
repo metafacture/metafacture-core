@@ -23,34 +23,89 @@ import org.culturegraph.mf.framework.annotations.Out;
 
 
 /**
- * Parses a PICA+ record with UTF8 encoding assumed.
+ * <p>Parses pica+ records. The parser only parses single records.
+ * A string containing multiple records must be split into
+ * individual records before passing it to {@code PicaDecoder}.</p>
  * 
- * For each field in the stream the module calls:
+ * <p>The parser is designed to accept any string as valid input and
+ * to parse pica plain format as well as normalised pica. To
+ * achieve this, the parser behaves as following:</p>
+ * 
+ * <ul>
+ * <li>Fields are separated by record markers (0x1d), field
+ * markers (0x1e) or field end markers (0x0a).</li>
+ * <li>The field name and the first subfield are separated by
+ * a subfield marker (0x01f).</li>
+ * <li>The parser assumes that the input starts with a field
+ * name.</li>
+ * <li>The parser assumes that the end of the input marks
+ * the end of the current field and the end of the record.
+ * </li>
+ * <li>Subfields are separated by subfield markers (0x1f).</li>
+ * <li>The first character of a subfield is the name of the
+ * subfield</li>
+ * <li>To handle input with multiple field and subfield separators
+ * following each  other directly (for instance 0x0a and 0x1e), it
+ * is assumed that field names, subfields, subfield names or
+ * subfield values can be empty.</li>
+ * </ul>
+ * 
+ * <p>Please not that the record markers is treated as a field
+ * delimiter and not as a record delimiter. Records need to be
+ * separated prior to parsing them.</p>
+ * 
+ * <p>As the behaviour of the parser may result in unnamed fields or
+ * subfields or fields with no subfields the {@code PicaDecoder}
+ * automatically filters empty fields and subfields:</p>
+ * 
+ * <ul>
+ * <li>Subfields without a name are ignored (such fields cannot
+ * have any value because then the first character of the value
+ * would be the field name).</li>
+ * <li>Subfields which only have a name but no value are always
+ * parsed.</li>
+ * <li>Unnamed Fields are only parsed if the contain not-ignored
+ * subfields.</li>
+ * <li>Named fields containing none or only ignored subfields are
+ * only parsed if {@code skipEmptyFields} is set to {@code false}
+ * otherwise they are ignored.</li>
+ * <li>Input containing only whitespace (spaces and tabs) is
+ * completely ignored</li>
+ * </ul>
+ * 
+ * <p>The {@code PicaDecoder} calls {@code receiver.startEntity} and
+ * {@code receiver.endEntity} for each parsed field and
+ * {@code receiver.literal} for each parsed subfield. Spaces in the
+ * field name are not included in the entity name. The input
+ * "028A \x1faAndy\x1fdWarhol\x1e" would produce the following
+ * sequence of calls:</p>
+ * 
  * <ol>
- * <li>receiver.startEntity</li>
- * <li>receiver.literal for each subfield of the field</li>
- * <li>receiver.endEntity</li>
+ * <li>receiver.startEntity("028A")</li>
+ * <li>receiver.literal("a", "Andy")</li>
+ * <li>receiver.literal("d", "Warhol")</li>
+ * <li>receiver.endEntity()</li>
  * </ol>
  * 
- * Spaces in the field name are not included in the entity name.
+ * <p>The content of subfield 003@$0 is used for the record id. If
+ * {@code ignoreMissingIdn} is false and field 003@$0 is not found
+ * in the record a {@link MissingIdException} is thrown.</p>
  * 
- * Empty subfields are skipped. For instance, processing the following input
- * would NOT produce an empty literal: 003@ \u001f\u001e. The parser also
- * skips unnamed fields without any subfields.
- * 
- * If {@code ignoreMissingIdn} is false and field 003@$0 is not found in the
- * record a {@link MissingIdException} is thrown.
+ * <p>The parser assumes that the input is utf-8 encoded. The parser
+ * does not support other pica encodings.</p>
  * 
  * @author Christoph Böhme
  * 
  */
-@Description("Parses a PICA+ record with UTF8 encoding assumed.")
+@Description("Parses pica+ records. The parser only parses single records. " +
+		"A string containing multiple records must be split into " +
+		"individual records before passing it to PicaDecoder.")
 @In(String.class)
 @Out(StreamReceiver.class)
 public final class PicaDecoder
 		extends DefaultObjectPipe<String, StreamReceiver> {
 
-	private static final char[] ID_FIELD = {'0', '0', '3', '@', ' ', PicaConstants.SUBFIELD_DELIMITER, '0'};
+	private static final char[] ID_FIELD = {'0', '0', '3', '@', ' ', PicaConstants.SUBFIELD_MARKER, '0'};
 
 	private static final int BUFFER_SIZE = 1024 * 1024;
 	
@@ -144,10 +199,9 @@ public final class PicaDecoder
 	/**
 	 * Searches the record for the sequence specified in {@code ID_FIELD}
 	 * and returns all characters following this sequence until the next
-	 * {@link PicaConstants.FIELD_DELIMITER},
-	 * {@link PicaConstants.SUBFIELD_DELIMITER} or the end of the record
-	 * is reached. Only the first occurrence of the sequence is processed,
-	 * later occurrences are ignored.
+	 * control character (see {@link PicaConstants}) is found or the end of
+	 * the record is reached. Only the first occurrence of the sequence is
+	 * processed, later occurrences are ignored.
 	 * 
 	 * If the sequence is not found in the string or if it is not followed
 	 * by any characters then {@code null} is returned.
@@ -161,7 +215,7 @@ public final class PicaDecoder
 		int fieldPos = 0;
 		boolean skip = false;
 		for (int i = 0; i < recordLen; ++i) {
-			if (buffer[i] == PicaConstants.FIELD_DELIMITER) {
+			if (isFieldDelimiter(buffer[i])) {
 				if (idBuilder.length() > 0) {
 					break;
 				}
@@ -176,7 +230,7 @@ public final class PicaDecoder
 							skip = true;
 						}
 					} else {
-						if (buffer[i] == PicaConstants.SUBFIELD_DELIMITER) {
+						if (buffer[i] == PicaConstants.SUBFIELD_MARKER) {
 							break;
 						}
 						idBuilder.append(buffer[i]);
@@ -189,6 +243,12 @@ public final class PicaDecoder
 			return idBuilder.toString();
 		}
 		return null;
+	}
+	
+	private static boolean isFieldDelimiter(final char ch) {
+		return ch == PicaConstants.RECORD_MARKER
+				|| ch == PicaConstants.FIELD_MARKER
+				|| ch == PicaConstants.FIELD_END_MARKER;
 	}
 	
 }
