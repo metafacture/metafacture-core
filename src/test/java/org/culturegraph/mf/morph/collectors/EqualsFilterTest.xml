@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph-test version="1.0"
+	xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph"
+	xmlns:cgxml="http://www.culturegraph.org/cgxml">
+
+	<test-case name="equalsFilter - all values are equal">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data1" value="a" />
+						<cgxml:literal name="data2" value="a" />
+						<cgxml:literal name="data3" value="a" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:equalsFilter name="equalsFilterd" value="${one}">
+						<mm:data source="data1" name="one" />
+						<mm:data source="data2" name="two" />
+						<mm:data source="data3" name="three" />
+					</mm:equalsFilter>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="equalsFilterd" value="a" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="equalsFilter - all values aren't equal">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data1" value="a" />
+						<cgxml:literal name="data2" value="a" />
+						<cgxml:literal name="data3" value="b" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:equalsFilter name="equalsFilterd" value="${one}">
+						<mm:data source="data1" name="one" />
+						<mm:data source="data2" name="two" />
+						<mm:data source="data3" name="three" />
+					</mm:equalsFilter>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+	
+	<test-case name="equalsFilter - only one value">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data1" value="a" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:equalsFilter name="equalsFilterd" value="${one}">
+						<mm:data source="data1" name="one" />
+					</mm:equalsFilter>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="equalsFilterd" value="a" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+	
+	<test-case name="equalsFilter - more values than defined">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data1" value="a" />
+						<cgxml:literal name="data2" value="a" />
+						<cgxml:literal name="data3" value="b" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:equalsFilter name="equalsFilterd" value="${one}">
+						<mm:data source="data1" name="one" />
+						<mm:data source="data2" name="two" />
+					</mm:equalsFilter>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="equalsFilterd" value="a" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+	
+	<test-case name="equalsFilter - with equal data in entity">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="field">
+							<cgxml:literal name="data1" value="a" />
+							<cgxml:literal name="data2" value="a" />
+							<cgxml:literal name="data3" value="a" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:equalsFilter name="equalsFilterd" value="${one}">
+						<mm:data source="field.data1" name="one" />
+						<mm:data source="field.data2" name="two" />
+						<mm:data source="field.data3" name="three" />
+					</mm:equalsFilter>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="equalsFilterd" value="a" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+	
+	<test-case name="equalsFilter - with unequal data in entity">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="field">
+							<cgxml:literal name="data1" value="a" />
+							<cgxml:literal name="data2" value="a" />
+							<cgxml:literal name="data3" value="b" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:equalsFilter name="equalsFilterd" value="${one}">
+						<mm:data source="field.data1" name="one" />
+						<mm:data source="field.data2" name="two" />
+						<mm:data source="field.data3" name="three" />
+					</mm:equalsFilter>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="equalsFilter - more defined than values">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="field1">
+							<cgxml:literal name="data1" value="a" />
+						</cgxml:entity>
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:entity name="field1">
+							<cgxml:literal name="data2" value="a" />
+						</cgxml:entity>
+					</cgxml:record>
+					<cgxml:record id="3">
+						<cgxml:entity name="field1">
+							<cgxml:literal name="data1" value="a" />
+							<cgxml:literal name="data2" value="a" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:equalsFilter name="equalsFilterd" value="${one}">
+						<mm:data source="field1.data1" name="one" />
+						<mm:data source="field1.data2" name="two" />
+					</mm:equalsFilter>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						
+					</cgxml:record>
+					<cgxml:record id="2">
+						
+					</cgxml:record>
+					<cgxml:record id="3">
+						<cgxml:literal name="equalsFilterd" value="a" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="equalsFilter - with combine">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="field1">
+							<cgxml:literal name="data1" value="a" />
+							<cgxml:literal name="data2" value="a" />
+						</cgxml:entity>
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:entity name="field1">
+							<cgxml:literal name="data1" value="a" />
+							<cgxml:literal name="data2" value="b" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:combine name="combine" value="${one} ${two}">
+						<mm:data source="field1.data1" name="one" />
+						<mm:data source="field1.data2" name="two" />
+						<mm:equalsFilter name="equalsFilterd" value="${one}">
+							<mm:data source="field1.data1" name="one" />
+							<mm:data source="field1.data2" name="two" />
+						</mm:equalsFilter>
+					</mm:combine>					
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="combine" value="a a" />
+					</cgxml:record>
+					<cgxml:record id="2">
+						
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+	
+		<test-case name="equalsFilter - with choose and combine">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="field1">
+							<cgxml:literal name="data1" value="a" />
+							<cgxml:literal name="data2" value="a" />
+						</cgxml:entity>
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:entity name="field1">
+							<cgxml:literal name="data1" value="a" />
+							<cgxml:literal name="data2" value="b" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:choose name="choose" flushWith="field1">
+						<mm:combine name="combine1" value="combine1 ${one} ${two}">
+							<mm:data source="field1.data1" name="one" />
+							<mm:data source="field1.data2" name="two" />
+							<mm:equalsFilter name="equalsFilterd" value="${one}">
+								<mm:data source="field1.data1" name="one" />
+								<mm:data source="field1.data2" name="two" />
+							</mm:equalsFilter>
+						</mm:combine>
+						<mm:combine name="combine2" value="combine2 ${one} ${two}">
+							<mm:data source="field1.data1" name="one" />
+							<mm:data source="field1.data2" name="two" />
+						</mm:combine>
+					</mm:choose>					
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="choose" value="combine1 a a" />
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="choose" value="combine2 a b" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+	
+	<test-case name="equalsFilter - with choose and combine and data in one record">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="field1">
+							<cgxml:literal name="data1" value="a" />
+							<cgxml:literal name="data2" value="a" />
+						</cgxml:entity>
+						<cgxml:entity name="field1">
+							<cgxml:literal name="data1" value="a" />
+							<cgxml:literal name="data2" value="b" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:choose name="choose" flushWith="field1">
+						<mm:combine name="combine1" value="combine1 ${one} ${two}" reset="true">
+							<mm:data source="field1.data1" name="one" />
+							<mm:data source="field1.data2" name="two" />
+							<mm:equalsFilter name="equalsFilterd" value="oneFilter" reset="true">
+								<mm:data source="field1.data1" name="oneFilter" />
+								<mm:data source="field1.data2" name="twoFilter" />
+							</mm:equalsFilter>
+						</mm:combine>
+						<mm:combine name="combine2" value="combine2 ${one} ${two}">
+							<mm:data source="field1.data1" name="one" />
+							<mm:data source="field1.data2" name="two" />
+						</mm:combine>
+					</mm:choose>					
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="choose" value="combine1 a a" />
+						<cgxml:literal name="choose" value="combine2 a b" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>	
+</metamorph-test>

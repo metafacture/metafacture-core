@@ -15,6 +15,7 @@
  */
 package org.culturegraph.mf.stream.sink;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -85,6 +86,13 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 
 	public void setNamespaceFile(final String file) {
 		final Properties properties = ResourceUtil.loadProperties(file);
+		for (final Entry<Object, Object> entry : properties.entrySet()) {
+			namespaces.put(entry.getKey().toString(), entry.getValue().toString());
+		}
+	}
+	
+	public void setNamespaceFile(final URL url) {
+		final Properties properties = ResourceUtil.loadProperties(url);
 		for (final Entry<Object, Object> entry : properties.entrySet()) {
 			namespaces.put(entry.getKey().toString(), entry.getValue().toString());
 		}
