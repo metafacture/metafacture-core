@@ -31,7 +31,7 @@ import org.culturegraph.mf.types.ListMap;
  * @author Markus Michael Geipel
  * 
  */
-public final class Tuples extends AbstractCollect {
+public final class Tuples extends AbstractFlushingCollect {
 
 	private final ListMap<String, String> listMap = new ListMap<String, String>();
 	private int minN = 1;

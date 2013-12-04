@@ -27,16 +27,16 @@ import org.culturegraph.mf.util.StringUtil;
 
 
 /**
- * Corresponds to the <code>&lt;equalsFilter-literal&gt;</code> tag. Emits data if values in variables are all equal. 
- * 
+ * Corresponds to the <code>&lt;equalsFilter-literal&gt;</code> tag. Emits data if values in variables are all equal.
+ *
  * @author Thomas Haidlas
  */
-public final class EqualsFilter extends AbstractCollect{
+public final class EqualsFilter extends AbstractFlushingCollect{
 	private final Map<String, String> variables = new HashMap<String, String>();
 	private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
 	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
-	private boolean isEqual = true; 
-	
+	private boolean isEqual = true;
+
 	public EqualsFilter(final Metamorph metamorph) {
 		super(metamorph);
 		setNamedValueReceiver(metamorph);
@@ -64,10 +64,10 @@ public final class EqualsFilter extends AbstractCollect{
 			this.isEqual = false;
 		}
 		this.variables.put(name, value);
-		this.sourcesLeft.remove(source);		
+		this.sourcesLeft.remove(source);
 	}
 
-	
+
 	@Override
 	public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
 		this.sources.add(namedValueSource);

@@ -15,16 +15,31 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-import org.culturegraph.mf.test.TestSuite;
-import org.culturegraph.mf.test.TestSuite.TestDefinitions;
-import org.junit.runner.RunWith;
-
+import org.culturegraph.mf.morph.Metamorph;
 
 /**
+ * Common basis for {@link Entity}, {@link Combine} etc.
+ * 
  * @author Markus Michael Geipel
+
  */
-@RunWith(TestSuite.class)
-@TestDefinitions({ "AllTest.xml", "AnyTest.xml", "CombineTest.xml", "GroupTest.xml", "ChooseTest.xml", "EntityTest.xml", "ConcatTest.xml",
-		"Nested.xml", "NestedEntity.xml", "TuplesTest.xml", "Misc.xml", "SquareTest.xml", "RangeTest.xml", "EqualsFilterTest.xml" })
-public final class CollectorTest {/* bind to xml test */
+public abstract class AbstractFlushingCollect extends AbstractCollect {
+
+//private static final String FLUSH = "_flush";
+//	private static final Logger LOG = LoggerFactory.getLogger(AbstractCollect.class);
+
+	public AbstractFlushingCollect(final Metamorph metamorph) {
+		super(metamorph);
+	}
+	
+	@Override
+	public final void flush(final int recordCount, final int entityCount) {
+		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount)) {
+			emit();
+			if (getReset()) {
+				clear();
+			}
+		}
+	}
+
 }

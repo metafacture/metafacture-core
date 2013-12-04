@@ -30,7 +30,7 @@ import org.culturegraph.mf.util.StringUtil;
  * @author Christoph Böhme <c.boehme@dnb.de>,  Markus Michael Geipel
  *
  */
-public final class Choose extends AbstractCollect{
+public final class Choose extends AbstractFlushingCollect{
 
 	private String value;
 	private String name;

@@ -31,7 +31,7 @@ import org.culturegraph.mf.util.StringUtil;
  * 
  * @author Markus Michael Geipel
  */
-public final class Combine extends AbstractCollect{
+public final class Combine extends AbstractFlushingCollect{
 	private final Map<String, String> variables = new HashMap<String, String>();
 	private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
 	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();

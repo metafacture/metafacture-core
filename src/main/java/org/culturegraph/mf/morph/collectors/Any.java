@@ -15,60 +15,60 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
 import org.culturegraph.mf.util.StringUtil;
 
 /**
- * Corresponds to the <code>&lt;all&gt;</code> tag.
+ * Corresponds to the <code>&lt;any&gt;</code> tag.
  * 
  * @author Christoph Böhme <c.boehme@dnb.de>
  *
  */
-public final class All extends AbstractFlushingCollect {
+public final class Any extends AbstractCollect {
 
 	private static final String DEFAULT_NAME = "";
 	private static final String DEFAULT_VALUE = "true";
-	
-	private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
-	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
 
-	public All(final Metamorph metamorph) {
+	private boolean receivedInput;
+	private boolean emittedResult;
+	
+	public Any(final Metamorph metamorph) {
 		super(metamorph);
 		setNamedValueReceiver(metamorph);
 	}
 
 	@Override
 	protected void receive(final String name, final String value, final NamedValueSource source) {
-		sourcesLeft.remove(source);
+		receivedInput = true;
 	}
 
 	@Override
 	protected boolean isComplete() {
-		return sourcesLeft.isEmpty();
+		return receivedInput;
 	}
 
 	@Override
 	protected void clear() {
-		sourcesLeft.addAll(sources);
+		receivedInput = false;
+		emittedResult = false;
 	}
 
 	@Override
 	protected void emit() {
-		if (sourcesLeft.isEmpty()) {
+		if (receivedInput && !emittedResult) {
 			final String name = StringUtil.fallback(getName(), DEFAULT_NAME);
 			final String value = StringUtil.fallback(getValue(), DEFAULT_VALUE);
 			getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
+			emittedResult = true;
 		}
 	}
-	
+
 	@Override
-	public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
-		sources.add(namedValueSource);
-		sourcesLeft.add(namedValueSource);
+	public void flush(final int recordCount, final int entityCount) {
+		emit();
+		receivedInput = false;
+		emittedResult = false;
 	}
 
 }
