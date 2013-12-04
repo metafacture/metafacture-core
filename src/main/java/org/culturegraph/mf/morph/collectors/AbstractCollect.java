@@ -95,7 +95,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 		this.value = value;
 	}
 
-	private void updateCounts(final int currentRecord, final int currentEntity) {
+	protected final void updateCounts(final int currentRecord, final int currentEntity) {
 		if (!isSameRecord(currentRecord)) {
 			clear();
 			oldRecord = currentRecord;
