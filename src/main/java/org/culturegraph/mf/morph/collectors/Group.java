@@ -25,7 +25,7 @@ import org.culturegraph.mf.util.StringUtil;
  * 
  * @author Markus Michael Geipel
  */
-public final class Group extends AbstractCollect{
+public final class Group extends AbstractFlushingCollect{
 
 
 	public Group(final Metamorph metamorph) {

@@ -25,12 +25,12 @@ import org.culturegraph.mf.util.StringUtil;
 
 
 /**
- * Corresponds to the <code>&lt;choose-literal&gt;</code> tag.
+ * Corresponds to the <code>&lt;choose&gt;</code> tag.
  * 
  * @author Christoph Böhme <c.boehme@dnb.de>,  Markus Michael Geipel
  *
  */
-public final class Choose extends AbstractCollect{
+public final class Choose extends AbstractFlushingCollect{
 
 	private String value;
 	private String name;

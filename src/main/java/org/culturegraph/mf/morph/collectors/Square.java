@@ -28,7 +28,7 @@ import org.culturegraph.mf.morph.NamedValueSource;
  * 
  * @author Markus Michael Geipel
  */
-public final class Square extends AbstractCollect {
+public final class Square extends AbstractFlushingCollect {
 	private List<String> values = new ArrayList<String>();
 	private String prefix = "";
 	private String postfix = "";

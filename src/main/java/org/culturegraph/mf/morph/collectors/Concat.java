@@ -23,7 +23,7 @@ import org.culturegraph.mf.morph.NamedValueSource;
  * 
  * @author Markus Michael Geipel
  */
-public final class Concat extends AbstractCollect{
+public final class Concat extends AbstractFlushingCollect{
 	private final StringBuilder builder = new StringBuilder();
 	private String prefix = "";
 	private String postfix = "";

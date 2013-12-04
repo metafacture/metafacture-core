@@ -23,12 +23,10 @@ import org.culturegraph.mf.morph.NamedValueSource;
  * Common basis for {@link Entity}, {@link Combine} etc.
  * 
  * @author Markus Michael Geipel
-
+ * @author Christoph Böhme
+ *
  */
 public abstract class AbstractCollect extends AbstractNamedValuePipeHead implements Collect {
-
-//private static final String FLUSH = "_flush";
-//	private static final Logger LOG = LoggerFactory.getLogger(AbstractCollect.class);
 
 	private int oldRecord;
 	private int oldEntity;
@@ -38,14 +36,16 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 	private String value;
 	private final Metamorph metamorph;
 	private boolean waitForFlush;
-
-
+	private boolean conditionMet;
+	
+	private NamedValueSource conditionSource;
+	
 	public AbstractCollect(final Metamorph metamorph) {
 		super();
 		this.metamorph = metamorph;
 	}
-	
-	protected final Metamorph getMetamorph(){
+
+	protected final Metamorph getMetamorph() {
 		return metamorph;
 	}
 
@@ -57,39 +57,50 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 		return oldEntity;
 	}
 
+	protected final boolean isConditionMet() {
+		return conditionMet;
+	}
+	
+	protected final void setConditionMet(final boolean conditionMet) {
+		this.conditionMet = conditionMet;
+	}
+	
 	@Override
 	public final void setWaitForFlush(final boolean waitForFlush) {
 		this.waitForFlush = waitForFlush;
 		//metamorph.addEntityEndListener(this, flushEntity);
 	}
 
-
-	
 	@Override
 	public final void setSameEntity(final boolean sameEntity) {
 		this.sameEntity = sameEntity;
 	}
-
+	
+	public final boolean getReset() {
+		return resetAfterEmit;
+	}
 
 	@Override
 	public final void setReset(final boolean reset) {
 		this.resetAfterEmit = reset;
 	}
 
-
-	
 	@Override
 	public final String getName() {
 		return name;
 	}
 
-	
 	@Override
 	public final void setName(final String name) {
 		this.name = name;
 	}
 
-
+	@Override
+	public final void setConditionSource(final NamedValueSource conditionSource) {
+		this.conditionSource = conditionSource;
+		this.conditionMet = conditionSource == null;
+	}
+	
 	public final String getValue() {
 		return value;
 	}
@@ -102,9 +113,9 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 		this.value = value;
 	}
 
-
-	private void updateCounts(final int currentRecord, final int currentEntity) {
+	protected final void updateCounts(final int currentRecord, final int currentEntity) {
 		if (!isSameRecord(currentRecord)) {
+			conditionMet = conditionSource == null;
 			clear();
 			oldRecord = currentRecord;
 		}
@@ -118,56 +129,51 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 		return sameEntity && oldEntity != currentEntity;
 	}
 
-	private boolean isSameRecord(final int currentRecord) {
+	protected final boolean isSameRecord(final int currentRecord) {
 		return currentRecord == oldRecord;
 	}
 
 	@Override
-	public final void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
+	public final void receive(final String name, final String value, final NamedValueSource source,
+			final int recordCount, final int entityCount) {
+
 		updateCounts(recordCount, entityCount);
-
-//		if(FLUSH.equals(name)){
-//			flush(name, recordCount, entityCount);
-//		}
 		
-		receive(name, value, source);
-
-		if (!waitForFlush && isComplete()) {
+		if (source == conditionSource) {
+			conditionMet = true;
+		} else {
+			receive(name, value, source);
+		}
+		
+		if (!waitForFlush && isConditionMet() && isComplete()) {
 			emit();
 			if (resetAfterEmit) {
 				clear();
 			}
 		}
 	}
-
 
 	@Override
 	public final void addNamedValueSource(final NamedValueSource namedValueSource) {
-		onNamedValueSourceAdded(namedValueSource);
-	}
-
-	protected  void onNamedValueSourceAdded(final NamedValueSource namedValueSource){
-		//nothing to do 
-	}
-
-	@Override
-	public final void flush(final int recordCount, final int entityCount) {
-		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount)) {
-			emit();
-			if (resetAfterEmit) {
-				clear();
-			}
+		if (namedValueSource != conditionSource) {
+			onNamedValueSourceAdded(namedValueSource);
 		}
 	}
-	
-	private boolean sameEntityConstraintSatisfied(final int entityCount) {
+
+	protected void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
+		//nothing to do
+	}
+
+	protected final boolean sameEntityConstraintSatisfied(final int entityCount) {
 		return !sameEntity || oldEntity == entityCount;
 	}
 
 	protected abstract void receive(final String name, final String value, final NamedValueSource source);
+
 	protected abstract boolean isComplete();
+
 	protected abstract void clear();
+
 	protected abstract void emit();
 
-	
 }

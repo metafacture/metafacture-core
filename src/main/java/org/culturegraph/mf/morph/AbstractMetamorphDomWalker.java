@@ -53,13 +53,13 @@ public abstract class AbstractMetamorphDomWalker {
 	 * XML attributes
 	 */
 	public static enum ATTRITBUTE {
-		VERSION("version"), 
-		SOURCE("source"), 
-		VALUE("value"), 
+		VERSION("version"),
+		SOURCE("source"),
+		VALUE("value"),
 		NAME("name"),
-		CLASS("class"), 
-		DEFAULT("default"), 
-		ENTITY_MARKER("entityMarker"), 
+		CLASS("class"),
+		DEFAULT("default"),
+		ENTITY_MARKER("entityMarker"),
 		FLUSH_WITH("flushWith");
 
 		private final String string;
@@ -76,6 +76,7 @@ public abstract class AbstractMetamorphDomWalker {
 	private static final String DATA = "data";
 	private static final String MAP = "map";
 	private static final String MACRO = "call-macro";
+	private static final String IF = "if";
 	private static final String POSTPROCESS = "postprocess";
 	private static final String ENTITY_NAME = "entity-name";
 	private static final String SCHEMA_FILE = "schemata/metamorph.xsd";
@@ -105,7 +106,7 @@ public abstract class AbstractMetamorphDomWalker {
 	public final void walk(final String morphDef) {
 		try {
 			walk(ResourceUtil.getStream(morphDef));
-		} catch (FileNotFoundException e) {
+		} catch (final FileNotFoundException e) {
 			throw new MorphDefException(e);
 		}
 	}
@@ -270,9 +271,13 @@ public abstract class AbstractMetamorphDomWalker {
 
 	protected abstract void exitCollect(Node node);
 
-	protected abstract void enterName(Node node);	
+	protected abstract void enterName(Node node);
 	
 	protected abstract void exitName(Node node);
+
+	protected abstract void enterIf(Node node);
+	
+	protected abstract void exitIf(Node node);
 
 	protected abstract void handleFunction(Node functionNode);
 
@@ -281,7 +286,11 @@ public abstract class AbstractMetamorphDomWalker {
 		if (getCollectFactory().containsKey(nodeName)) {
 			enterCollect(node);
 			for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
-				if (POSTPROCESS.equals(child.getLocalName())) {
+				if (IF.equals(child.getLocalName())) {
+					enterIf(child);
+					handleRule(child.getFirstChild());
+					exitIf(child);
+				} else if (POSTPROCESS.equals(child.getLocalName())) {
 					handlePostprocess(child);
 				} else if (ENTITY_NAME.equals(child.getLocalName())) {
 					enterName(child);
@@ -311,6 +320,10 @@ public abstract class AbstractMetamorphDomWalker {
 		}
 	}
 
+	private void handleIf(final Node node) {
+		
+	}
+	
 	private void handlePostprocess(final Node node) {
 		for (Node functionNode = node.getFirstChild(); functionNode != null; functionNode = functionNode
 				.getNextSibling()) {

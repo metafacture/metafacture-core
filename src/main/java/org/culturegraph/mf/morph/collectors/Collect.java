@@ -15,6 +15,7 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
+import org.culturegraph.mf.morph.ConditionAware;
 import org.culturegraph.mf.morph.FlushListener;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValuePipeHead;
@@ -26,7 +27,7 @@ import org.culturegraph.mf.morph.NamedValueSource;
  * @author Markus Michael Geipel
  *
  */
-public interface Collect extends FlushListener, NamedValuePipeHead{
+public interface Collect extends FlushListener, ConditionAware, NamedValuePipeHead{
 
 	void setWaitForFlush(final boolean waitForFlush);
 	void setSameEntity(boolean sameEntity);
@@ -35,7 +36,5 @@ public interface Collect extends FlushListener, NamedValuePipeHead{
 
 	String getName();
 	void setName(String name);
-
-	
 
 }
