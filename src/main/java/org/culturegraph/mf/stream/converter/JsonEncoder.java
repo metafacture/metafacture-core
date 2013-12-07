@@ -18,6 +18,7 @@ package org.culturegraph.mf.stream.converter;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -30,6 +31,9 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonStreamContext;
+import com.fasterxml.jackson.core.SerializableString;
+import com.fasterxml.jackson.core.io.CharacterEscapes;
+import com.fasterxml.jackson.core.io.SerializedString;
 
 /**
  * Serialises an object as JSON. Records and entities are represented
@@ -105,6 +109,54 @@ public final class JsonEncoder extends
 		catch (final IOException e) {
 			throw new MetafactureException(e);
 		}
+	}
+	
+	/**
+	 * Enabling a pretty print JSON output.
+	 */
+	public void usePrettyPrint() {
+		jsonGenerator.useDefaultPrettyPrinter();
+	}
+
+	/**
+	 * All JSON output does only have escaping where it is <li>really</li> necessary.
+	 * This is recommended in the most cases. Nevertheless it can be useful to
+	 * get even more escaping. With this method it is possible to use
+	 * {@link StringEscapeUtils#escapeJavaScript(String)} for escaping instead.
+	 * 
+	 * @param escapeCharacters
+	 *            This is an array which defines which characters should be
+	 *            escaped and how it will be done. See {@link CharacterEscapes}.
+	 *            In most cases this should be null. Usage: <pre>{@code
+	 * 	int[] esc = CharacterEscapes.standardAsciiEscapesForJSON();
+	 * 	// and force escaping of a few others:
+	 * 	esc['\''] = CharacterEscapes.ESCAPE_STANDARD;
+	 * JsonEncoder.useEscapeJavaScript(esc);
+	 * }</pre>
+	 */
+	public void useEscapeJavaScript(final int[] escapeCharacters) {
+		CharacterEscapes ce = new CharacterEscapes() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public int[] getEscapeCodesForAscii() {
+				if (escapeCharacters == null) {
+					return CharacterEscapes.standardAsciiEscapesForJSON();
+				}
+
+				return escapeCharacters;
+			}
+
+			@Override
+			public SerializableString getEscapeSequence(int ch) {
+				String c = Character.toString((char) ch);
+				String s = StringEscapeUtils.escapeJavaScript(c);
+				return new SerializedString(s);
+			}
+
+		};
+		jsonGenerator.setCharacterEscapes(ce);
 	}
 	
 	private void startGroup(final String name) {
