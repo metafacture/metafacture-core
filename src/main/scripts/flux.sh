@@ -1,6 +1,39 @@
 #!/bin/bash
 
-METAFACTURE_HOME=$( dirname "$( realpath "$0" )" )
+# `cd` is used with a relative path in this script. We may 
+# end in an unexpected location if CDPATH is not empty.
+unset CDPATH
+
+if [ -z "$BASH_SOURCE" ] ; then
+	echo "Error: cannot determine script location (\$BASH_SOURCE is not set)" >&2
+	exit 2
+fi
+# If a symbolic link is used to invoke this script this link 
+# needs to be resolved in order to find the directory where 
+# the actual script file lives. Several tools exist for
+# resolving symbolic links. However, none of these tools is
+# available on all platforms. Hence, we try different ones
+# until we succeed.
+if [ -L "$BASH_SOURCE" ] ; then
+	script_file=$( realpath "$BASH_SOURCE" 2> /dev/null ) ||
+	script_file=$( readlink -f "$BASH_SOURCE" 2> /dev/null ) ||
+	script_file=$(
+		file=$BASH_SOURCE
+		while [ -L "$file" ] ; do
+			cd "$( dirname "$file" )"
+			link_name=$( basename "$file" )
+			file=$( readlink "$link_name" 2> /dev/null ) ||
+			file=$( ls -ld "$link_name" | sed "s/^.\+ -> \(.\+\)$/\1/g" )
+		done
+		cd "$( dirname "$file" )"
+		echo "$( pwd )/$( basename "$file" )"
+	)
+else
+	script_file=$BASH_SOURCE
+fi
+# Remove script file name from the path and make sure 
+# that the path is absolute:
+METAFACTURE_HOME=$( cd "$( dirname "$script_file" )" ; pwd )
 
 # Fix path if running under cygwin:
 if uname | grep -iq cygwin ; then
