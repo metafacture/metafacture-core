@@ -25,13 +25,13 @@ import org.xml.sax.ext.LexicalHandler;
  * Interface for objects which receive XML events.
  * This is just a combination of the SAX handler interfaces
  * and the metastream {@link LifeCycle} interface.
- *  
+ * 
  * @see DefaultXmlReceiver
  * @see XmlPipe
 
  * @author Christoph Böhme
  *
  */
-public interface XmlReceiver extends LifeCycle, ContentHandler, DTDHandler, EntityResolver, ErrorHandler, LexicalHandler {
+public interface XmlReceiver extends Receiver, ContentHandler, DTDHandler, EntityResolver, ErrorHandler, LexicalHandler {
 	// Just a combination of LifeCycle and the SAX handler interfaces
 }

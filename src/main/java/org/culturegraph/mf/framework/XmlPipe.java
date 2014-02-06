@@ -27,6 +27,6 @@ package org.culturegraph.mf.framework;
  * @author Christoph Böhme
  *
  */
-public interface XmlPipe<R extends LifeCycle> extends XmlReceiver, Sender<R> {
+public interface XmlPipe<R extends Receiver> extends XmlReceiver, Sender<R> {
 	// Just a combination of sender and receiver
 }

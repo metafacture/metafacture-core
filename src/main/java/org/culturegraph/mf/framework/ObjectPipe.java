@@ -28,6 +28,6 @@ package org.culturegraph.mf.framework;
  * @author Christoph Böhme
  *
  */
-public interface ObjectPipe<T, R extends LifeCycle> extends ObjectReceiver<T>, Sender<R> {
+public interface ObjectPipe<T, R extends Receiver> extends ObjectReceiver<T>, Sender<R> {
 	// Just a combination of sender and receiver
 }

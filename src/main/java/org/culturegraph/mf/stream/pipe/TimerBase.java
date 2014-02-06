@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import org.culturegraph.mf.framework.LifeCycle;
+import org.culturegraph.mf.framework.Receiver;
 import org.culturegraph.mf.framework.Sender;
 import org.culturegraph.mf.util.TimeUtil;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @param <R>
  *            receiver type.
  */
-public class TimerBase<R extends LifeCycle> implements Sender<R> {
+public class TimerBase<R extends Receiver> implements Sender<R> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TimerBase.class);
 
