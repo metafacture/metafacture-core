@@ -1,25 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns:tns="http://www.culturegraph.org/metamorph"
-	targetNamespace="http://www.culturegraph.org/metamorph" xmlns="http://www.w3.org/2001/XMLSchema"
-	xmlns:xi="http://www.w3.org/2001/XInclude">
+<schema xmlns:tns="http://www.culturegraph.org/metamorph" targetNamespace="http://www.culturegraph.org/metamorph"
+	xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xi="http://www.w3.org/2001/XInclude">
 
-	<import namespace="http://www.w3.org/XML/1998/namespace"
-		schemaLocation="xml.xsd" />
-	<import namespace="http://www.w3.org/2001/XInclude"
-		schemaLocation="XInclude.xsd" />
+	<import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+	<import namespace="http://www.w3.org/2001/XInclude" schemaLocation="XInclude.xsd"/>
 
 	<!-- <include schemaLocation="" /> -->
 	<element name="metamorph">
 		<complexType>
 
 			<sequence minOccurs="1" maxOccurs="1">
-				<element ref="tns:meta" maxOccurs="1" minOccurs="0" />
-				<element ref="tns:vars" maxOccurs="1" minOccurs="0" />
-				<element ref="tns:macros" maxOccurs="unbounded" minOccurs="0" />
+				<element ref="tns:meta" maxOccurs="1" minOccurs="0"/>
+				<element ref="tns:vars" maxOccurs="1" minOccurs="0"/>
+				<element ref="tns:macros" maxOccurs="unbounded" minOccurs="0"/>
 				<choice maxOccurs="unbounded" minOccurs="0">
-					<element ref="tns:rules" maxOccurs="1" minOccurs="0" />
-					<element ref="tns:maps" maxOccurs="1" minOccurs="0" />
-					<element ref="xi:include" maxOccurs="1" minOccurs="0" />
+					<element ref="tns:rules" maxOccurs="1" minOccurs="0"/>
+					<element ref="tns:maps" maxOccurs="1" minOccurs="0"/>
+					<element ref="xi:include" maxOccurs="1" minOccurs="0"/>
 				</choice>
 			</sequence>
 
@@ -30,7 +27,7 @@
 				</annotation>
 				<simpleType>
 					<restriction base="string">
-						<length value="1" />
+						<length value="1"/>
 					</restriction>
 				</simpleType>
 			</attribute>
@@ -38,8 +35,8 @@
 			<attribute name="version" use="required" fixed="1">
 				<simpleType>
 					<restriction base="int">
-						<minInclusive value="1" />
-						<whiteSpace value="collapse" />
+						<minInclusive value="1"/>
+						<whiteSpace value="collapse"/>
 					</restriction>
 				</simpleType>
 			</attribute>
@@ -53,14 +50,14 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<element ref="tns:name" maxOccurs="1" minOccurs="0" />
-				<element ref="tns:annotation" maxOccurs="1" minOccurs="0" />
+				<element ref="tns:name" maxOccurs="1" minOccurs="0"/>
+				<element ref="tns:annotation" maxOccurs="1" minOccurs="0"/>
 			</sequence>
 		</complexType>
 	</element>
 
-	<element name="name" type="string" />
-	<element name="annotation" type="string" />
+	<element name="name" type="string"/>
+	<element name="annotation" type="string"/>
 
 	<element name="macros">
 		<annotation>
@@ -68,8 +65,8 @@
 		</annotation>
 		<complexType>
 			<choice minOccurs="0" maxOccurs="unbounded">
-				<element ref="tns:macro" />
-				<element ref="xi:include" />
+				<element ref="tns:macro"/>
+				<element ref="xi:include"/>
 			</choice>
 		</complexType>
 	</element>
@@ -80,10 +77,10 @@
 		</annotation>
 		<complexType>
 			<choice minOccurs="0" maxOccurs="1">
-				<group ref="tns:literal-rule" />
-				<group ref="tns:entity-rule" />
+				<group ref="tns:literal-rule"/>
+				<group ref="tns:entity-rule"/>
 			</choice>
-			<attribute ref="xml:base" />
+			<attribute ref="xml:base"/>
 			<attribute name="name" use="required" type="string">
 				<annotation>
 					<documentation>unique name of the macro</documentation>
@@ -104,7 +101,7 @@
 				</annotation>
 			</attribute>
 			<!-- <attribute name="literal_name" type="string" use="optional" /> -->
-			<anyAttribute processContents="lax" namespace="##local" />
+			<anyAttribute processContents="lax" namespace="##local"/>
 		</complexType>
 	</element>
 
@@ -114,12 +111,12 @@
 		</annotation>
 		<complexType>
 			<choice minOccurs="0" maxOccurs="unbounded">
-				<group ref="tns:literal-rule" />
-				<group ref="tns:entity-rule" />
-				<element ref="tns:call-macro" />
-				<element ref="xi:include" />
+				<group ref="tns:literal-rule"/>
+				<group ref="tns:entity-rule"/>
+				<element ref="tns:call-macro"/>
+				<element ref="xi:include"/>
 			</choice>
-			<attribute ref="xml:base" />
+			<attribute ref="xml:base"/>
 		</complexType>
 
 	</element>
@@ -130,15 +127,15 @@
 		</annotation>
 		<complexType>
 			<choice minOccurs="0" maxOccurs="unbounded">
-				<element ref="tns:map" />
-				<element ref="tns:filemap" />
-				<element ref="tns:sqlmap" />
-				<element ref="tns:jndisqlmap" />
+				<element ref="tns:map"/>
+				<element ref="tns:filemap"/>
+				<element ref="tns:sqlmap"/>
+				<element ref="tns:jndisqlmap"/>
 				<!-- <element ref="tns:restmap" /> -->
-				<element ref="tns:javamap" />
-				<element ref="xi:include" />
+				<element ref="tns:javamap"/>
+				<element ref="xi:include"/>
 			</choice>
-			<attribute ref="xml:base" />
+			<attribute ref="xml:base"/>
 		</complexType>
 	</element>
 
@@ -149,16 +146,16 @@
 		</annotation>
 		<complexType>
 			<choice minOccurs="0" maxOccurs="unbounded">
-				<element ref="tns:var" />
+				<element ref="tns:var"/>
 			</choice>
-			<attribute ref="xml:base" />
+			<attribute ref="xml:base"/>
 		</complexType>
 	</element>
 
 	<element name="var">
 		<complexType>
-			<attribute name="name" type="string" use="required" />
-			<attribute name="value" type="string" use="required" />
+			<attribute name="name" type="string" use="required"/>
+			<attribute name="value" type="string" use="required"/>
 		</complexType>
 	</element>
 
@@ -174,8 +171,7 @@
 				</annotation>
 				<simpleType>
 					<restriction base="string">
-						<pattern value="([\p{L}_$][\p{L}\p{N}_$]*\.)*[\p{L}_$][\p{L}\p{N}_$]*">
-						</pattern>
+						<pattern value="([\p{L}_$][\p{L}\p{N}_$]*\.)*[\p{L}_$][\p{L}\p{N}_$]*"> </pattern>
 					</restriction>
 				</simpleType>
 			</attribute>
@@ -196,9 +192,9 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<element ref="tns:if" minOccurs="0" maxOccurs="1" />
-				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
-				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
+				<element ref="tns:if" minOccurs="0" maxOccurs="1"/>
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded"/>
+				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1"/>
 			</sequence>
 			<attribute name="name" type="string" use="optional">
 				<annotation>
@@ -222,13 +218,12 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded"/>
 			</sequence>
-			<attribute name="name" type="string" use="optional" />
-			<attribute name="value" type="string" use="optional" />
-			<attribute name="flushWith" type="string" use="optional" />
-			<attribute name="reset" type="boolean" use="optional"
-				default="false" />
+			<attribute name="name" type="string" use="optional"/>
+			<attribute name="value" type="string" use="optional"/>
+			<attribute name="flushWith" type="string" use="optional"/>
+			<attribute name="reset" type="boolean" use="optional" default="false"/>
 		</complexType>
 	</element>
 
@@ -241,13 +236,12 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded"/>
 			</sequence>
-			<attribute name="name" type="string" use="optional" />
-			<attribute name="value" type="string" use="optional" />
-			<attribute name="flushWith" type="string" use="optional" />
-			<attribute name="reset" type="boolean" use="optional"
-				default="false" />
+			<attribute name="name" type="string" use="optional"/>
+			<attribute name="value" type="string" use="optional"/>
+			<attribute name="flushWith" type="string" use="optional"/>
+			<attribute name="reset" type="boolean" use="optional" default="false"/>
 		</complexType>
 	</element>
 
@@ -259,50 +253,44 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded"/>
 			</sequence>
-			<attribute name="name" type="string" use="optional" />
-			<attribute name="value" type="string" use="optional" />
-			<attribute name="flushWith" type="string" use="optional" 
-				default="record" />
-			<attribute name="reset" type="boolean" use="optional"
-				default="false" />
+			<attribute name="name" type="string" use="optional"/>
+			<attribute name="value" type="string" use="optional"/>
+			<attribute name="flushWith" type="string" use="optional" default="record"/>
+			<attribute name="reset" type="boolean" use="optional" default="false"/>
 		</complexType>
 	</element>
 
 	<element name="combine">
 		<complexType>
 			<sequence>
-				<element ref="tns:if" minOccurs="0" maxOccurs="1" />
-				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
-				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
+				<element ref="tns:if" minOccurs="0" maxOccurs="1"/>
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded"/>
+				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1"/>
 			</sequence>
-			<attribute name="name" type="string" use="required" />
-			<attribute name="value" type="string" use="required" />
+			<attribute name="name" type="string" use="required"/>
+			<attribute name="value" type="string" use="required"/>
 
-			<attribute name="reset" type="boolean" use="optional"
-				default="false" />
-			<attribute name="sameEntity" type="boolean" use="optional"
-				default="false" />
-			<attribute name="flushWith" type="string" use="optional" />
+			<attribute name="reset" type="boolean" use="optional" default="false"/>
+			<attribute name="sameEntity" type="boolean" use="optional" default="false"/>
+			<attribute name="flushWith" type="string" use="optional"/>
 		</complexType>
 	</element>
-	
+
 	<element name="equalsFilter">
 		<complexType>
 			<sequence>
-				<element ref="tns:if" minOccurs="0" maxOccurs="1" />
-				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
-				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
+				<element ref="tns:if" minOccurs="0" maxOccurs="1"/>
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded"/>
+				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1"/>
 			</sequence>
-			<attribute name="name" type="string" use="required" />
-			<attribute name="value" type="string" use="required" />
+			<attribute name="name" type="string" use="required"/>
+			<attribute name="value" type="string" use="required"/>
 
-			<attribute name="reset" type="boolean" use="optional"
-				default="false" />
-			<attribute name="sameEntity" type="boolean" use="optional"
-				default="false" />
-			<attribute name="flushWith" type="string" use="optional" />
+			<attribute name="reset" type="boolean" use="optional" default="false"/>
+			<attribute name="sameEntity" type="boolean" use="optional" default="false"/>
+			<attribute name="flushWith" type="string" use="optional"/>
 		</complexType>
 	</element>
 
@@ -312,19 +300,17 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<element ref="tns:if" minOccurs="0" maxOccurs="1" />			
-				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
-				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
+				<element ref="tns:if" minOccurs="0" maxOccurs="1"/>
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded"/>
+				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1"/>
 			</sequence>
-			<attribute name="name" type="string" use="required" />
-			<attribute name="delimiter" type="string" use="required" />
-			<attribute name="prefix" type="string" use="optional" />
-			<attribute name="postfix" type="string" use="optional" />
+			<attribute name="name" type="string" use="required"/>
+			<attribute name="delimiter" type="string" use="required"/>
+			<attribute name="prefix" type="string" use="optional"/>
+			<attribute name="postfix" type="string" use="optional"/>
 
-			<attribute name="flushWith" type="string" use="optional"
-				default="record" />
-			<attribute name="reset" type="boolean" use="optional"
-				default="true" />
+			<attribute name="flushWith" type="string" use="optional" default="record"/>
+			<attribute name="reset" type="boolean" use="optional" default="true"/>
 		</complexType>
 	</element>
 
@@ -335,19 +321,17 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<element ref="tns:if" minOccurs="0" maxOccurs="1" />
-				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
-				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
+				<element ref="tns:if" minOccurs="0" maxOccurs="1"/>
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded"/>
+				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1"/>
 			</sequence>
-			<attribute name="name" type="string" use="required" />
-			<attribute name="delimiter" type="string" use="required" />
-			<attribute name="prefix" type="string" use="optional" />
-			<attribute name="postfix" type="string" use="optional" />
+			<attribute name="name" type="string" use="required"/>
+			<attribute name="delimiter" type="string" use="required"/>
+			<attribute name="prefix" type="string" use="optional"/>
+			<attribute name="postfix" type="string" use="optional"/>
 
-			<attribute name="flushWith" type="string" use="optional"
-				default="record" />
-			<attribute name="reset" type="boolean" use="optional"
-				default="true" />
+			<attribute name="flushWith" type="string" use="optional" default="record"/>
+			<attribute name="reset" type="boolean" use="optional" default="true"/>
 		</complexType>
 	</element>
 
@@ -358,33 +342,31 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<element ref="tns:if" minOccurs="0" maxOccurs="1" />
-				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
-				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
+				<element ref="tns:if" minOccurs="0" maxOccurs="1"/>
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded"/>
+				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1"/>
 			</sequence>
-			<attribute name="name" type="string" use="optional" />
-			<attribute name="value" type="string" use="optional" />
+			<attribute name="name" type="string" use="optional"/>
+			<attribute name="value" type="string" use="optional"/>
 			<!-- <attribute name="defaultValue" type="string" use="optional" /> -->
-			<attribute name="flushWith" type="string" use="optional"
-				default="record" />
+			<attribute name="flushWith" type="string" use="optional" default="record"/>
 		</complexType>
 	</element>
 
 	<element name="tuples">
 		<complexType>
 			<sequence>
-				<element ref="tns:if" minOccurs="0" maxOccurs="1" />
-				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
-				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
+				<element ref="tns:if" minOccurs="0" maxOccurs="1"/>
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded"/>
+				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1"/>
 			</sequence>
-			<attribute name="name" type="string" use="required" />
-			<attribute name="flushWith" type="string" use="optional"
-				default="record" />
-			<attribute name="separator" type="string" use="optional" />
+			<attribute name="name" type="string" use="required"/>
+			<attribute name="flushWith" type="string" use="optional" default="record"/>
+			<attribute name="separator" type="string" use="optional"/>
 			<attribute name="minN" use="optional">
 				<simpleType>
 					<restriction base="int">
-						<minInclusive value="1" />
+						<minInclusive value="1"/>
 					</restriction>
 				</simpleType>
 			</attribute>
@@ -397,10 +379,10 @@
 		</annotation>
 		<complexType>
 			<choice minOccurs="1" maxOccurs="unbounded">
-				<element ref="tns:if" minOccurs="0" maxOccurs="1" />
-				<element ref="tns:entity-name" minOccurs="0" maxOccurs="1" />
-				<group ref="tns:literal-rule" minOccurs="0" maxOccurs="unbounded" />
-				<element ref="tns:entity" />
+				<element ref="tns:if" minOccurs="0" maxOccurs="1"/>
+				<element ref="tns:entity-name" minOccurs="0" maxOccurs="1"/>
+				<group ref="tns:literal-rule" minOccurs="0" maxOccurs="unbounded"/>
+				<element ref="tns:entity"/>
 			</choice>
 			<attribute name="name" type="string" use="optional">
 				<annotation>
@@ -408,11 +390,9 @@
 						have an entity-name element.</documentation>
 				</annotation>
 			</attribute>
-			<attribute name="reset" type="boolean" use="optional"
-				default="false" />
-			<attribute name="sameEntity" type="boolean" use="optional"
-				default="false" />
-			<attribute name="flushWith" type="string" use="optional" />
+			<attribute name="reset" type="boolean" use="optional" default="false"/>
+			<attribute name="sameEntity" type="boolean" use="optional" default="false"/>
+			<attribute name="flushWith" type="string" use="optional"/>
 		</complexType>
 	</element>
 
@@ -424,19 +404,15 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<element ref="tns:if" minOccurs="0" maxOccurs="1" />
-				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
-				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
+				<element ref="tns:if" minOccurs="0" maxOccurs="1"/>
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded"/>
+				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1"/>
 			</sequence>
-			<attribute name="name" type="string" use="required" />
-			<attribute name="increment" type="integer" use="optional"
-				default="1" />
-			<attribute name="reset" type="boolean" use="optional"
-				default="false" />
-			<attribute name="sameEntity" type="boolean" use="optional"
-				default="false" />
-			<attribute name="flushWith" type="string" use="optional"
-				default="record" />
+			<attribute name="name" type="string" use="required"/>
+			<attribute name="increment" type="integer" use="optional" default="1"/>
+			<attribute name="reset" type="boolean" use="optional" default="false"/>
+			<attribute name="sameEntity" type="boolean" use="optional" default="false"/>
+			<attribute name="flushWith" type="string" use="optional" default="record"/>
 		</complexType>
 	</element>
 
@@ -446,7 +422,7 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<group ref="tns:function" minOccurs="0" maxOccurs="unbounded" />
+				<group ref="tns:function" minOccurs="0" maxOccurs="unbounded"/>
 			</sequence>
 			<attribute name="source" type="string" use="required">
 				<annotation>
@@ -473,7 +449,7 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="1" />
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="1"/>
 			</sequence>
 		</complexType>
 	</element>
@@ -488,11 +464,11 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="1" />
+				<group ref="tns:literal-rule" minOccurs="1" maxOccurs="1"/>
 			</sequence>
 		</complexType>
 	</element>
-	
+
 	<element name="postprocess">
 		<annotation>
 			<documentation>The functions contained here are applied to the final
@@ -500,7 +476,7 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<group ref="tns:function" maxOccurs="unbounded" minOccurs="0" />
+				<group ref="tns:function" maxOccurs="unbounded" minOccurs="0"/>
 			</sequence>
 		</complexType>
 	</element>
@@ -513,11 +489,11 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded" />
+				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded"/>
 			</sequence>
-			<attribute name="name" type="string" use="required" />
-			<attribute name="default" type="string" use="optional" />
-			<attribute ref="xml:base" />
+			<attribute name="name" type="string" use="required"/>
+			<attribute name="default" type="string" use="optional"/>
+			<attribute ref="xml:base"/>
 		</complexType>
 	</element>
 
@@ -538,12 +514,11 @@
 				</annotation>
 				<simpleType>
 					<restriction base="string">
-						<pattern value="([\p{L}_$][\p{L}\p{N}_$]*\.)*[\p{L}_$][\p{L}\p{N}_$]*">
-						</pattern>
+						<pattern value="([\p{L}_$][\p{L}\p{N}_$]*\.)*[\p{L}_$][\p{L}\p{N}_$]*"> </pattern>
 					</restriction>
 				</simpleType>
 			</attribute>
-			<anyAttribute namespace="##local" processContents="lax" />
+			<anyAttribute namespace="##local" processContents="lax"/>
 		</complexType>
 	</element>
 
@@ -563,119 +538,115 @@
 					<documentation>Filenames</documentation>
 				</annotation>
 			</attribute>
-			<attribute name="separator" type="string" use="optional"
-				default="\t">
+			<attribute name="separator" type="string" use="optional" default="\t">
 				<annotation>
 					<documentation>String used in the files to separate key from value.
 					</documentation>
 				</annotation>
 			</attribute>
-			<attribute ref="xml:base" />
+			<attribute ref="xml:base"/>
 		</complexType>
 	</element>
 
 	<element name="restmap">
 		<complexType>
-			<attribute name="name" type="string" use="required" />
-			<attribute name="url" type="string" use="required" />
-			<attribute ref="xml:base" />
+			<attribute name="name" type="string" use="required"/>
+			<attribute name="url" type="string" use="required"/>
+			<attribute ref="xml:base"/>
 		</complexType>
 	</element>
 
 	<element name="sqlmap">
 		<complexType>
-			<attribute name="name" type="string" use="required" />
-			<attribute name="host" type="string" use="optional"
-				default="localhost" />
-			<attribute name="login" type="string" use="required" />
-			<attribute name="password" type="string" use="required" />
-			<attribute name="database" type="string" use="required" />
-			<attribute name="query" type="string" use="required" />
-			<attribute name="driver" type="string" use="optional"
-				default="com.mysql.jdbc.Driver" />
-			<attribute ref="xml:base" />
+			<attribute name="name" type="string" use="required"/>
+			<attribute name="host" type="string" use="optional" default="localhost"/>
+			<attribute name="login" type="string" use="required"/>
+			<attribute name="password" type="string" use="required"/>
+			<attribute name="database" type="string" use="required"/>
+			<attribute name="query" type="string" use="required"/>
+			<attribute name="driver" type="string" use="optional" default="com.mysql.jdbc.Driver"/>
+			<attribute ref="xml:base"/>
 		</complexType>
 	</element>
 
 	<element name="jndisqlmap">
 		<complexType>
-			<attribute name="name" type="string" use="required" />
-			<attribute name="datasource" type="string" use="required" />
-			<attribute name="query" type="string" use="required" />
-			<attribute ref="xml:base" />
+			<attribute name="name" type="string" use="required"/>
+			<attribute name="datasource" type="string" use="required"/>
+			<attribute name="query" type="string" use="required"/>
+			<attribute ref="xml:base"/>
 		</complexType>
 	</element>
 
 	<element name="entry">
 		<complexType>
-			<attribute name="name" type="string" use="required" />
-			<attribute name="value" type="string" use="optional"
-				default="" />
+			<attribute name="name" type="string" use="required"/>
+			<attribute name="value" type="string" use="optional" default=""/>
 		</complexType>
 	</element>
 
 	<simpleType name="toIsbnAttribute">
 		<restriction base="string">
-			<enumeration value="isbn13" />
-			<enumeration value="isbn10" />
-			<enumeration value="clean" />
+			<enumeration value="isbn13"/>
+			<enumeration value="isbn10"/>
+			<enumeration value="clean"/>
 		</restriction>
 	</simpleType>
 
 	<group name="entity-rule">
 		<choice>
-			<element ref="tns:entity" />
+			<element ref="tns:entity"/>
 		</choice>
 	</group>
 
 	<group name="literal-rule">
 		<choice>
 
-			<element ref="tns:group" />
-			<element ref="tns:data" />
-			<element ref="tns:all" />
-			<element ref="tns:any" />
-			<element ref="tns:choose" />
-			<element ref="tns:combine" />
-			<element ref="tns:concat" />
-			<element ref="tns:none" />
-			<element ref="tns:square" />
-			<element ref="tns:tuples" />
-			<element ref="tns:range" />
-			<element ref="tns:equalsFilter" />
+			<element ref="tns:group"/>
+			<element ref="tns:data"/>
+			<element ref="tns:all"/>
+			<element ref="tns:any"/>
+			<element ref="tns:choose"/>
+			<element ref="tns:combine"/>
+			<element ref="tns:concat"/>
+			<element ref="tns:none"/>
+			<element ref="tns:square"/>
+			<element ref="tns:tuples"/>
+			<element ref="tns:range"/>
+			<element ref="tns:equalsFilter"/>
 		</choice>
 	</group>
 
 	<group name="function">
 		<choice>
-			<element ref="tns:compose" />
-			<element ref="tns:regexp" />
-			<element ref="tns:replace" />
-			<element ref="tns:substring" />
-			<element ref="tns:lookup" />
-			<element ref="tns:whitelist" />
-			<element ref="tns:blacklist" />
-			<element ref="tns:isbn" />
-			<element ref="tns:equals" />
-			<element ref="tns:not-equals" />
-			<element ref="tns:case" />
-			<element ref="tns:timestamp" />
-			<element ref="tns:dateformat" />
-			<element ref="tns:htmlanchor" />
-			<element ref="tns:trim" />
-			<element ref="tns:split" />
-			<element ref="tns:normalize-utf8" />
-			<element ref="tns:occurrence" />
-			<element ref="tns:constant" />
-			<element ref="tns:count" />
-			<element ref="tns:urlencode" />
-			<element ref="tns:buffer" />
-			<element ref="tns:name" />
-			<element ref="tns:switch-name-value" />
-			<element ref="tns:unique" />
-			<element ref="tns:script" />
-			<element ref="tns:setreplace" />
-			<element ref="tns:java" />
+			<element ref="tns:compose"/>
+			<element ref="tns:regexp"/>
+			<element ref="tns:replace"/>
+			<element ref="tns:substring"/>
+			<element ref="tns:lookup"/>
+			<element ref="tns:whitelist"/>
+			<element ref="tns:blacklist"/>
+			<element ref="tns:isbn"/>
+			<element ref="tns:equals"/>
+			<element ref="tns:not-equals"/>
+			<element ref="tns:case"/>
+			<element ref="tns:timestamp"/>
+			<element ref="tns:dateformat"/>
+			<element ref="tns:htmlanchor"/>
+			<element ref="tns:trim"/>
+			<element ref="tns:split"/>
+			<element ref="tns:normalize-utf8"/>
+			<element ref="tns:occurrence"/>
+			<element ref="tns:constant"/>
+			<element ref="tns:count"/>
+			<element ref="tns:urlencode"/>
+			<element ref="tns:buffer"/>
+			<element ref="tns:name"/>
+			<element ref="tns:switch-name-value"/>
+			<element ref="tns:unique"/>
+			<element ref="tns:script"/>
+			<element ref="tns:setreplace"/>
+			<element ref="tns:java"/>
 		</choice>
 	</group>
 
@@ -697,13 +668,12 @@
 			<attribute name="only" use="required">
 				<simpleType>
 					<restriction base="string">
-						<whiteSpace value="collapse" />
-						<pattern value="(lessThen |moreThen )?\d+" />
+						<whiteSpace value="collapse"/>
+						<pattern value="(lessThen |moreThen )?\d+"/>
 					</restriction>
 				</simpleType>
 			</attribute>
-			<attribute name="sameEntity" type="boolean" use="optional"
-				default="false" />
+			<attribute name="sameEntity" type="boolean" use="optional" default="false"/>
 		</complexType>
 	</element>
 
@@ -713,8 +683,8 @@
 				corresponds to Java Regular Expressions.</documentation>
 		</annotation>
 		<complexType>
-			<attribute name="match" type="string" use="required" />
-			<attribute name="format" type="string" use="optional" />
+			<attribute name="match" type="string" use="required"/>
+			<attribute name="format" type="string" use="optional"/>
 		</complexType>
 	</element>
 
@@ -724,7 +694,7 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded" />
+				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded"/>
 			</sequence>
 			<attribute name="in" type="string" use="optional">
 				<annotation>
@@ -746,7 +716,7 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded" />
+				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded"/>
 			</sequence>
 			<attribute name="map" type="string" use="optional">
 				<annotation>
@@ -763,7 +733,7 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded" />
+				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded"/>
 			</sequence>
 			<attribute name="map" type="string" use="optional">
 				<annotation>
@@ -780,7 +750,7 @@
 		</annotation>
 		<complexType>
 			<sequence>
-				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded" />
+				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded"/>
 			</sequence>
 			<attribute name="map" type="string" use="optional">
 				<annotation>
@@ -796,7 +766,7 @@
 				syntax corresponds to Java Regular Expressions.</documentation>
 		</annotation>
 		<complexType>
-			<attribute name="pattern" type="string" use="required" />
+			<attribute name="pattern" type="string" use="required"/>
 			<attribute name="with" type="string" use="required">
 				<annotation>
 					<documentation>The replacement</documentation>
@@ -810,8 +780,8 @@
 			<documentation>Add pre- or postfix to a string.</documentation>
 		</annotation>
 		<complexType>
-			<attribute name="prefix" type="string" use="optional" />
-			<attribute name="postfix" type="string" use="optional" />
+			<attribute name="prefix" type="string" use="optional"/>
+			<attribute name="postfix" type="string" use="optional"/>
 		</complexType>
 	</element>
 
@@ -820,9 +790,9 @@
 			<documentation>Create an HTML anchor.</documentation>
 		</annotation>
 		<complexType>
-			<attribute name="prefix" type="string" use="required" />
-			<attribute name="postfix" type="string" use="optional" />
-			<attribute name="title" type="string" use="optional" />
+			<attribute name="prefix" type="string" use="required"/>
+			<attribute name="postfix" type="string" use="optional"/>
+			<attribute name="title" type="string" use="optional"/>
 		</complexType>
 	</element>
 
@@ -846,10 +816,9 @@
 			<documentation>ISBN conversion and verification.</documentation>
 		</annotation>
 		<complexType>
-			<attribute name="to" type="tns:toIsbnAttribute" use="required" />
-			<attribute name="verifyCheckDigit" type="boolean" use="optional"
-				default="false" />
-			<attribute name="errorString" use="optional" />
+			<attribute name="to" type="tns:toIsbnAttribute" use="required"/>
+			<attribute name="verifyCheckDigit" type="boolean" use="optional" default="false"/>
+			<attribute name="errorString" use="optional"/>
 		</complexType>
 	</element>
 
@@ -857,16 +826,14 @@
 		<annotation>
 			<documentation>Trimms the value</documentation>
 		</annotation>
-		<complexType>
-		</complexType>
+		<complexType> </complexType>
 	</element>
 
 	<element name="switch-name-value">
 		<annotation>
 			<documentation>Switches name and value.</documentation>
 		</annotation>
-		<complexType>
-		</complexType>
+		<complexType> </complexType>
 	</element>
 
 	<element name="count">
@@ -874,8 +841,7 @@
 			<documentation>Returns the an increasing count for each received
 				literal.</documentation>
 		</annotation>
-		<complexType>
-		</complexType>
+		<complexType> </complexType>
 	</element>
 
 	<element name="urlencode">
@@ -883,8 +849,7 @@
 			<documentation>Escapes value according to URL encoding rules.
 			</documentation>
 		</annotation>
-		<complexType>
-		</complexType>
+		<complexType> </complexType>
 	</element>
 
 	<element name="equals">
@@ -893,7 +858,7 @@
 			</documentation>
 		</annotation>
 		<complexType>
-			<attribute name="string" type="string" use="required" />
+			<attribute name="string" type="string" use="required"/>
 		</complexType>
 	</element>
 
@@ -908,8 +873,8 @@
 				</annotation>
 				<simpleType>
 					<restriction base="string">
-						<enumeration value="record"></enumeration>
-						<enumeration value="entity"></enumeration>
+						<enumeration value="record"/>
+						<enumeration value="entity"/>
 					</restriction>
 				</simpleType>
 			</attribute>
@@ -920,9 +885,9 @@
 				</annotation>
 				<simpleType>
 					<restriction base="string">
-						<enumeration value="name"></enumeration>
-						<enumeration value="value"></enumeration>
-						<enumeration value="name-value"></enumeration>
+						<enumeration value="name"/>
+						<enumeration value="value"/>
+						<enumeration value="name-value"/>
 					</restriction>
 				</simpleType>
 			</attribute>
@@ -935,7 +900,7 @@
 			</documentation>
 		</annotation>
 		<complexType>
-			<attribute name="string" type="string" use="required" />
+			<attribute name="string" type="string" use="required"/>
 		</complexType>
 	</element>
 
@@ -945,8 +910,7 @@
 				(Used to delay litereals)</documentation>
 		</annotation>
 		<complexType>
-			<attribute name="flushWith" type="string" use="optional"
-				default="record" />
+			<attribute name="flushWith" type="string" use="optional" default="record"/>
 		</complexType>
 	</element>
 
@@ -958,12 +922,12 @@
 			<attribute name="to" use="required">
 				<simpleType>
 					<restriction base="string">
-						<enumeration value="upper" />
-						<enumeration value="lower" />
+						<enumeration value="upper"/>
+						<enumeration value="lower"/>
 					</restriction>
 				</simpleType>
 			</attribute>
-			<attribute name="language" type="string" use="optional" />
+			<attribute name="language" type="string" use="optional"/>
 		</complexType>
 	</element>
 
@@ -974,7 +938,7 @@
 		<complexType>
 			<attribute name="format" type="string" use="optional" default="timestamp"/>
 			<attribute name="timezone" type="string" use="optional" default="UTC"/>
-			<attribute name="language" type="string" use="optional" />
+			<attribute name="language" type="string" use="optional"/>
 		</complexType>
 	</element>
 
@@ -983,9 +947,18 @@
 			<documentation>Format a date in a specific format.</documentation>
 		</annotation>
 		<complexType>
-			<attribute name="inputformat" type="string" use="optional" default="dd.MM.yyyy" />
-			<attribute name="outputformat" type="string" use="optional" default="dd. MMMM yyyy" />
-			<attribute name="language" type="string" use="optional" />
+			<attribute name="inputformat" type="string" use="optional" default="dd.MM.yyyy"/>
+			<attribute name="outputformat" use="optional" default="LONG">
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="FULL"/>
+						<enumeration value="LONG"/>
+						<enumeration value="MEDIUM"/>
+						<enumeration value="SHORT"/>
+					</restriction>
+				</simpleType>
+			</attribute>
+			<attribute name="language" type="string" use="optional"/>
 		</complexType>
 	</element>
 
@@ -994,7 +967,7 @@
 			<documentation>Sets literal value to a constant.</documentation>
 		</annotation>
 		<complexType>
-			<attribute name="value" type="string" use="required" />
+			<attribute name="value" type="string" use="required"/>
 		</complexType>
 	</element>
 
@@ -1018,7 +991,7 @@
 	</element>
 
 	<element name="normalize-utf8">
-		<complexType />
+		<complexType/>
 	</element>
 
 	<element name="substring">
@@ -1029,14 +1002,14 @@
 			<attribute name="start" default="0" use="optional">
 				<simpleType>
 					<restriction base="int">
-						<minInclusive value="0" />
+						<minInclusive value="0"/>
 					</restriction>
 				</simpleType>
 			</attribute>
 			<attribute name="end" use="optional" default="0">
 				<simpleType>
 					<restriction base="int">
-						<minInclusive value="0" />
+						<minInclusive value="0"/>
 					</restriction>
 				</simpleType>
 			</attribute>

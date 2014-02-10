@@ -1,11 +1,7 @@
 package org.culturegraph.mf.morph.functions;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 
 import org.culturegraph.mf.exceptions.MorphDefException;
 
@@ -25,26 +21,21 @@ import org.culturegraph.mf.exceptions.MorphDefException;
  */
 public class DateFormat extends AbstractSimpleStatelessFunction {
 
-	private static final Set<String> LANGUAGES;
-	private Locale locale = Locale.getDefault();
+	private Locale outputLocale = Locale.getDefault();
 	private String dateInputFormat = "dd.MM.yyyy";
-	private String dateOutputFormat = "dd. MMMM yyyy";
+	private int dateOutputFormat = java.text.DateFormat.LONG;
 
 	static {
-		final Set<String> set = new HashSet<String>();
-		Collections.addAll(set, Locale.getISOLanguages());
-		LANGUAGES = Collections.unmodifiableSet(set);
 	}
 
 	@Override
-	public final String process(final String value) {
-
-		// convert to Java Date
-		String ret = value;
+	public final String process(final String value) {   
+        
+		String ret = value;		
 		try {
-			final java.text.DateFormat dfi = new SimpleDateFormat(dateInputFormat, locale);
+			final java.text.SimpleDateFormat dfi = new java.text.SimpleDateFormat(dateInputFormat);
 			final java.util.Date date = dfi.parse(value);
-			final SimpleDateFormat dfo = new SimpleDateFormat(dateOutputFormat, locale);
+			final java.text.DateFormat dfo = java.text.DateFormat.getDateInstance(dateOutputFormat, outputLocale);
 			ret = dfo.format(date);
 		} catch (IllegalArgumentException iae) {
 			throw new MorphDefException("The date/time format is not supported. " + iae.getMessage());
@@ -57,15 +48,21 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
 	public final void setInputFormat(final String string) {
 		this.dateInputFormat = string;
 	}
-
+	
 	public final void setOutputFormat(final String string) {
-		this.dateOutputFormat = string;
+		if(string.equalsIgnoreCase("FULL")) dateOutputFormat = java.text.DateFormat.FULL;
+		else if(string.equalsIgnoreCase("LONG")) dateOutputFormat = java.text.DateFormat.LONG;
+		else if(string.equalsIgnoreCase("MEDIUM")) dateOutputFormat = java.text.DateFormat.MEDIUM;
+		else if(string.equalsIgnoreCase("SHORT")) dateOutputFormat = java.text.DateFormat.SHORT;
 	}
 
-	public final void setLanguage(final String language) {
-		if (!LANGUAGES.contains(language)) {
-			throw new MorphDefException("Language " + language + " not supported.");
-		}
-		this.locale = new Locale(language);
+	public final void setLanguage(final String string) {
+        this.outputLocale = Locale.getDefault();
+        for(final Locale l : Locale.getAvailableLocales()) {
+        	if(string.equals(l.toString())) {
+        		this.outputLocale = l;
+        		break;
+        	}
+        }
 	}
 }
