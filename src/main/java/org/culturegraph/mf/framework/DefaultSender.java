@@ -30,7 +30,7 @@ package org.culturegraph.mf.framework;
  * @author Christoph Böhme
  * 
  */
-public class DefaultSender<T extends LifeCycle> implements Sender<T> {
+public class DefaultSender<T extends Receiver> implements Sender<T> {
 
 	private T receiver;
 	private boolean isClosed;

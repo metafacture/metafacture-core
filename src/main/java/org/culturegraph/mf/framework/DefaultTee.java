@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @author Christoph Böhme
  */
-public class DefaultTee<T extends LifeCycle> implements Tee<T> {
+public class DefaultTee<T extends Receiver> implements Tee<T> {
 
 	private final List<T> receivers = new ArrayList<T>();
 
@@ -72,7 +72,7 @@ public class DefaultTee<T extends LifeCycle> implements Tee<T> {
 	@Override
 	public final void resetStream() {
 		onResetStream();
-		for (T receiver : receivers) {
+		for (final T receiver : receivers) {
 			receiver.resetStream();
 		}
 	}
@@ -80,7 +80,7 @@ public class DefaultTee<T extends LifeCycle> implements Tee<T> {
 	@Override
 	public final void closeStream() {
 		onCloseStream();
-		for (T receiver : receivers) {
+		for (final T receiver : receivers) {
 			receiver.closeStream();
 		}
 	}
@@ -92,37 +92,37 @@ public class DefaultTee<T extends LifeCycle> implements Tee<T> {
 	 * receivers.
 	 */
 	protected void onChangeReceivers() {
-		// Default implementation does nothing		
+		// Default implementation does nothing
 	}
 
 	/**
 	 * Invoked when the {@code resetStream()} method is called.
-	 * Override this method to perform a reset of the module. 
+	 * Override this method to perform a reset of the module.
 	 * 
-	 * Do not call the {@code resetStream()} method of the next modules downstream. 
-	 * This is handled by the implementation of {@code resetStream()} in 
+	 * Do not call the {@code resetStream()} method of the next modules downstream.
+	 * This is handled by the implementation of {@code resetStream()} in
 	 * {@code DefaultTee}.
 	 * 
 	 * {@code onResetStream()} is called before {@code DefaultTee} calls the
 	 * {@code resetStream()} method of the downstream modules.
 	 */
 	protected void onResetStream() {
-		// Default implementation does nothing		
+		// Default implementation does nothing
 	}
 	
 	/**
-	 * Invoked when the {@code closeStream()} method is called. Override 
-	 * this method to close any resources used by the module. 
+	 * Invoked when the {@code closeStream()} method is called. Override
+	 * this method to close any resources used by the module.
 	 * 
-	 * Do not call the {@code closeStream()} method of the next modules 
-	 * downstream. This is handled by the implementation of 
+	 * Do not call the {@code closeStream()} method of the next modules
+	 * downstream. This is handled by the implementation of
 	 * {@code closeStream()} in {@code DefaultTee}.
 	 * 
-	 * {@code onCloseStream()} is called before {@code DefaultTee} calls 
+	 * {@code onCloseStream()} is called before {@code DefaultTee} calls
 	 * the {@code closeStream()} method of the downstream modules.
 	 */
 	protected void onCloseStream() {
-		// Default implementation does nothing		
+		// Default implementation does nothing
 	}
 	
 	/**

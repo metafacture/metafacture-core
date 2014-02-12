@@ -16,17 +16,17 @@
 package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.framework.DefaultStreamPipe;
-import org.culturegraph.mf.framework.LifeCycle;
+import org.culturegraph.mf.framework.Receiver;
 
 /**
- * Base class for modules which may rely on internal sub-flows. 
+ * Base class for modules which may rely on internal sub-flows.
  * 
- *  
+ * 
  * @param <T> receiver type
  * 
  * @author Christoph Böhme
  */
-public class WrappingStreamPipe<T extends LifeCycle> extends
+public class WrappingStreamPipe<T extends Receiver> extends
 		DefaultStreamPipe<T> {
 
 	private T internalReceiver;

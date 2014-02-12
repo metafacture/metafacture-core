@@ -23,6 +23,7 @@ import java.util.List;
 import org.culturegraph.mf.exceptions.FluxParseException;
 import org.culturegraph.mf.framework.LifeCycle;
 import org.culturegraph.mf.framework.ObjectReceiver;
+import org.culturegraph.mf.framework.Receiver;
 import org.culturegraph.mf.framework.Sender;
 import org.culturegraph.mf.framework.Tee;
 import org.culturegraph.mf.stream.source.StdInOpener;
@@ -44,7 +45,7 @@ final class Flow {
 	private boolean joinLooseEnds;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void addElement(final LifeCycle nextElement) {
+	public void addElement(final Receiver nextElement) {
 		if(element==null){
 			setStart((ObjectReceiver<? extends Object>) nextElement);
 			return;
@@ -53,7 +54,7 @@ final class Flow {
 			final Sender sender = (Sender) element;
 			if (joinLooseEnds) {
 				teeStack.pop();
-				for (LifeCycle looseEnd : looseEndsStack.pop()) {
+				for (final LifeCycle looseEnd : looseEndsStack.pop()) {
 					if (looseEnd instanceof Tee) {
 						((Tee) looseEnd).addReceiver(nextElement);
 					} else {
@@ -115,7 +116,7 @@ final class Flow {
 		start.closeStream();
 	}
 
-	public LifeCycle getFirst() {
+	public Receiver getFirst() {
 		return start;
 	}
 }
