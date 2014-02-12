@@ -25,9 +25,9 @@ import org.culturegraph.mf.framework.annotations.Out;
 
 
 /**
- * 
+ *
  * @author Markus Michael Geipel
- * 
+ *
  */
 @Description("Formats litereals in a stream")
 @In(StreamReceiver.class)
@@ -39,16 +39,16 @@ public final class StreamLiteralFormater extends DefaultStreamPipe<ObjectReceive
 	public void setSeparator(final String separator) {
 		this.separator = separator;
 	}
-	
+
 
 	@Override
 	public void literal(final String name, final String value) {
-		if(name==null | name.isEmpty()){
+		if (name == null || name.isEmpty()) {
 			getReceiver().process(value);
-		}else{
-			getReceiver().process(name+ separator + value);
+		} else {
+			getReceiver().process(name + separator + value);
 		}
-		
 	}
+
 }
 
