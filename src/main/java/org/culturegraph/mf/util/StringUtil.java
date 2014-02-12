@@ -15,13 +15,14 @@
  */
 package org.culturegraph.mf.util;
 
+import java.nio.CharBuffer;
 import java.util.Map;
 
 /**
  * Basic utils
- * 
+ *
  * @author Markus Michael Geipel
- * 
+ *
  */
 public final class StringUtil {
 
@@ -94,6 +95,36 @@ public final class StringUtil {
 			oldEnd = varEnd + varEndIndicator.length();
 		}
 		return builder.toString();
+	}
+
+	/**
+	 * Copies the contents of {@code str} into the {@code currentBuffer}. If the size of
+	 * the buffer is not sufficient to store the string then a new buffer is allocated.
+	 *
+	 * @param str string to copy
+	 * @param currentBuffer array to store the string in. If it is too small a new buffer
+	 *                      is allocated
+	 * @return either currentBuffer or a new buffer if one was allocated.
+	 */
+	public static char[] copyToBuffer(final String str, final char[] currentBuffer) {
+		char[] buffer = currentBuffer;
+		final int strLen = str.length();
+		while(strLen > buffer.length) {
+			buffer = new char[buffer.length * 2];
+		}
+		str.getChars(0, strLen, buffer, 0);
+		return buffer;
+	}
+
+	/**
+	 * Creates a string which contains a sequence of repeated characters.
+	 *
+	 * @param ch to repeat
+	 * @param count number of repetitions
+	 * @return a string with {@code count} consisting only of {@code ch}
+	 */
+	public static String repeatChars(final char ch, final int count) {
+		return CharBuffer.allocate(count).toString().replace('\0', ch);
 	}
 
 }

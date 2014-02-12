@@ -16,60 +16,58 @@
 package org.culturegraph.mf.formeta.formatter;
 
 import org.culturegraph.mf.formeta.Formeta;
+import org.culturegraph.mf.util.StringUtil;
 
 /**
  * Base class for formatters.
- * 
+ *
  * @author Christoph Böhme.
- * 
+ *
  */
 public abstract class AbstractFormatter implements Formatter {
-	
-	public static final String ESCAPED_CHARS_QUOTED = "\n\r" 
-			+ Formeta.QUOT_CHAR 
+
+	public static final String ESCAPED_CHARS_QUOTED = "\n\r"
+			+ Formeta.QUOT_CHAR
 			+ Formeta.ESCAPE_CHAR;
-	
-	public static final String ESCAPED_CHARS = ESCAPED_CHARS_QUOTED 
-			+ Formeta.GROUP_START 
-			+ Formeta.GROUP_END 
-			+ Formeta.ITEM_SEPARATOR 
+
+	public static final String ESCAPED_CHARS = ESCAPED_CHARS_QUOTED
+			+ Formeta.GROUP_START
+			+ Formeta.GROUP_END
+			+ Formeta.ITEM_SEPARATOR
 			+ Formeta.NAME_VALUE_SEPARATOR;
 
-	private static final int BUFFER_SIZE = 1024;
+	protected static final int BUFFER_SIZE = 1024;
 
 	private final StringBuilder builder = new StringBuilder();
-	
+
 	private char[] buffer = new char[BUFFER_SIZE];
-	
+
 	@Override
 	public final void reset() {
 		builder.delete(0, builder.length());
 		onReset();
 	}
-	
+
 	@Override
 	public final String toString() {
 		return builder.toString();
 	}
-	
+
 	protected final void append(final char ch) {
 		builder.append(ch);
 	}
-	
+
 	protected final void append(final CharSequence charSeq) {
 		builder.append(charSeq);
 	}
 
 	protected final void escapeAndAppend(final String str) {
 		// According to http://stackoverflow.com/a/11876086 it is faster to copy
-		// the string into a char array than to use charAt():		
-		final int strLen = str.length();			
-		if(strLen > buffer.length) {
-			buffer = new char[buffer.length * 2];
-		}
-		str.getChars(0, strLen, buffer, 0);
-		
-		final boolean addQuotes = shouldQuoteText(buffer, strLen);
+		// a string into a char array then to use charAt():
+		buffer = StringUtil.copyToBuffer(str, buffer);
+		final int bufferLen = str.length();
+
+		final boolean addQuotes = shouldQuoteText(buffer, bufferLen);
 		final String charsToEscape;
 		if (addQuotes) {
 			builder.append(Formeta.QUOT_CHAR);
@@ -77,7 +75,7 @@ public abstract class AbstractFormatter implements Formatter {
 		} else {
 			charsToEscape = ESCAPED_CHARS;
 		}
-		for (int i = 0; i < strLen; ++i) {
+		for (int i = 0; i < bufferLen; ++i) {
 			final char ch = buffer[i];
 			if (charsToEscape.indexOf(ch) > -1) {
 				appendEscapedChar(ch);
@@ -89,11 +87,11 @@ public abstract class AbstractFormatter implements Formatter {
 			builder.append(Formeta.QUOT_CHAR);
 		}
 	}
-	
+
 	protected void onReset() {
 		// Default implementation does nothing
 	}
-	
+
 	protected abstract boolean shouldQuoteText(final char[] buffer, final int len);
 
 	private void appendEscapedChar(final char ch) {
@@ -109,5 +107,5 @@ public abstract class AbstractFormatter implements Formatter {
 			builder.append(ch);
 		}
 	}
-	
+
 }
