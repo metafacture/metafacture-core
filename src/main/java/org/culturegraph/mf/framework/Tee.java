@@ -29,7 +29,7 @@ package org.culturegraph.mf.framework;
  * @author Markus Michael Geipel, Christoph Böhme
  *
  */
-public interface Tee<T extends LifeCycle> extends Sender<T> {
+public interface Tee<T extends Receiver> extends Sender<T> {
 	
 	/**
 	 * Replaces all receivers attached to the module with {@code receiver}.
@@ -41,12 +41,12 @@ public interface Tee<T extends LifeCycle> extends Sender<T> {
 	<R extends T> R setReceiver(R receiver);
 	
 	/**
-	 * Sets two receivers and returns the first. All other 
+	 * Sets two receivers and returns the first. All other
 	 * receivers attached to the module are removed.
 	 * 
 	 * @param receiver
 	 * @param lateralReceiver
-	 * @return the parameter 'receiver' 
+	 * @return the parameter 'receiver'
 	 */
 	<R extends T> R setReceivers(R receiver, T lateralReceiver);
 

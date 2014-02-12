@@ -18,14 +18,14 @@ package org.culturegraph.mf.framework;
 /**
  * Interface for objects that can be connected to a downstream module (receiver).
  * 
- * @param <T> receiver base type of the downstream module 
+ * @param <T> receiver base type of the downstream module
  * 
  * @see DefaultSender
  * 
  * @author Christoph Böhme
  * 
  */
-public interface Sender<T extends LifeCycle> extends LifeCycle {
+public interface Sender<T extends Receiver> extends LifeCycle {
 
 	/**
 	 * Connect to a downstream module.

@@ -15,6 +15,8 @@
  */
 package org.culturegraph.mf.framework;
 
+import org.culturegraph.mf.stream.sink.WellformednessChecker;
+
 /**
  * Interface implemented by objects which can receive streams.
  * A stream is a sequence of calls to the methods of this interface.
@@ -25,7 +27,7 @@ package org.culturegraph.mf.framework;
  * ENTITY_OR_LITERAL = ENTITY | literal
  * ENTITY = startEntity, ENTITY_OR_LITERAL*, endEntity)
  * 
- * The {@link WellformednessChecker} can be used to check if a stream conforms 
+ * The {@link WellformednessChecker} can be used to check if a stream conforms
  * to these rules.
  * 
  * @see DefaultStreamReceiver
@@ -34,7 +36,7 @@ package org.culturegraph.mf.framework;
  * @author Markus Michael Geipel, Christoph Böhme
  * 
  */
-public interface StreamReceiver extends LifeCycle {
+public interface StreamReceiver extends Receiver {
 	
 	/**
 	 * Sent to mark the start of a record.
@@ -53,7 +55,7 @@ public interface StreamReceiver extends LifeCycle {
 	/**
 	 * Sent to mark the start of an entity.
 	 * This method is only called after {@code startRecord()} has been called and
-	 * before {@code endRecord()} is called. Each call of {@code startEntity()} is 
+	 * before {@code endRecord()} is called. Each call of {@code startEntity()} is
 	 * matched by a call of {@code endEntity()}.
 	 * 
 	 * @param name name of the entity. The name of the entity should never be null
@@ -64,14 +66,14 @@ public interface StreamReceiver extends LifeCycle {
 	 * Sent to mark the end of an entity.
 	 * Calls to {@code endEntity()} are always preceded by a call to {@code startEntity()}.
 	 * This method is only called after {@code startRecord()} has been called and
-	 * before {@code endRecord()} is called. 
+	 * before {@code endRecord()} is called.
 	 */
 	void endEntity();
 
 	/**
 	 * Sent to mark a key-value pair in the record.
 	 * This method is only called after {@code startRecord()} has been called and
-	 * before {@code endRecord()} is called. 
+	 * before {@code endRecord()} is called.
 	 * 
 	 * @param name the key-part of the literal. Should never be null
 	 * @param value the value-part of the literal. Can be null

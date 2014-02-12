@@ -26,10 +26,10 @@ package org.culturegraph.mf.framework;
  * @author Christoph Böhme
  * 
  */
-public interface ObjectReceiver<T> extends LifeCycle {
+public interface ObjectReceiver<T> extends Receiver {
 
 	/**
-	 * This method is called by upstream modules to trigger the 
+	 * This method is called by upstream modules to trigger the
 	 * processing of {@code obj}.
 	 * 
 	 * @param obj the object to be processed
