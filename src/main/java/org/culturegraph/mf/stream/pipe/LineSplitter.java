@@ -19,6 +19,9 @@ import java.util.regex.Pattern;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
+import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.In;
+import org.culturegraph.mf.framework.annotations.Out;
 
 
 /**
@@ -27,7 +30,10 @@ import org.culturegraph.mf.framework.ObjectReceiver;
  * @author Christoph Böhme
  *
  */
-public final class LineSplitter 
+@Description("Splits a string at new lines and sends each line to the receiver.")
+@In(String.class)
+@Out(String.class)
+public final class LineSplitter
 		extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 	
 	private static final char NEWLINE = '\n';
@@ -37,7 +43,7 @@ public final class LineSplitter
 	@Override
 	public void process(final String lines) {
 		assert !isClosed();
-		for (String record : LINE_PATTERN.split(lines)) {
+		for (final String record : LINE_PATTERN.split(lines)) {
 			getReceiver().process(record);
 		}
 	}
