@@ -16,7 +16,7 @@
 package org.culturegraph.mf.framework;
 
 /**
- * Default implementation for {@link StreamPipe}s which simply 
+ * Default implementation for {@link StreamPipe}s which simply
  * does nothing.
  * 
  * @param <R> receiver type of the downstream receiver
@@ -24,12 +24,12 @@ package org.culturegraph.mf.framework;
  * @author Markus Michael Geipel, Christoph Böhme
  * 
  */
-public class DefaultStreamPipe<R extends LifeCycle> 
+public class DefaultStreamPipe<R extends Receiver>
 		extends DefaultSender<R> implements StreamPipe<R> {
 
 	// CHECKSTYLE OFF: StrictDuplicateCode
 	// Code duplication in DefaultStreamPipe and DefaultStreamReceiver
-	// cannot be avoided. DefaultStreamPipe combines the logic 
+	// cannot be avoided. DefaultStreamPipe combines the logic
 	// from DefaultSender and DefaultStreamReceiver but can only
 	// have one of these classes as its base class. Hence, the
 	// logic from the second one must be duplicated here.

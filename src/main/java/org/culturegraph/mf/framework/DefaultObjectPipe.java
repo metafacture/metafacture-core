@@ -16,7 +16,7 @@
 package org.culturegraph.mf.framework;
 
 /**
- * Default implementation for {@link ObjectPipe}s which simply 
+ * Default implementation for {@link ObjectPipe}s which simply
  * does nothing.
  *
  * @param <T> object type that this module processes
@@ -25,19 +25,19 @@ package org.culturegraph.mf.framework;
  * @author Christoph Böhme
  *
  */
-public class DefaultObjectPipe<T, R extends LifeCycle> 
+public class DefaultObjectPipe<T, R extends Receiver>
 		extends DefaultSender<R> implements ObjectPipe<T, R> {
 
 	// CHECKSTYLE OFF: StrictDuplicateCode
 	// Code duplication in DefaultObjectPipe and DefaultObjectReceiver
-	// cannot be avoided. DefaultObjectPipe combines the logic 
+	// cannot be avoided. DefaultObjectPipe combines the logic
 	// from DefaultSender and DefaultObjectReceiver but can only
 	// have one of these classes as its base class. Hence, the
 	// logic from the second one must be duplicated here.
 
 	@Override
 	public void process(final T obj) {
-		// Default implementation does nothing		
+		// Default implementation does nothing
 	}
 	
 	// CHECKSTYLE ON: StrictDuplicateCode

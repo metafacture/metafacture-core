@@ -29,7 +29,7 @@ import java.util.Set;
 
 import org.culturegraph.mf.exceptions.FluxParseException;
 import org.culturegraph.mf.flux.HelpPrinter;
-import org.culturegraph.mf.framework.LifeCycle;
+import org.culturegraph.mf.framework.Receiver;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 
@@ -39,7 +39,7 @@ import org.culturegraph.mf.util.reflection.ObjectFactory;
  */
 public final class FluxProgramm {
 
-	private static final ObjectFactory<LifeCycle> COMMAND_FACTORY = new ObjectFactory<LifeCycle>();
+	private static final ObjectFactory<Receiver> COMMAND_FACTORY = new ObjectFactory<Receiver>();
 	private static final String PROPERTIES_LOCATION = "flux-commands.properties";
 
 	static {
@@ -48,9 +48,9 @@ public final class FluxProgramm {
 					.getResources(PROPERTIES_LOCATION);
 			while (enumeration.hasMoreElements()) {
 				final URL url = enumeration.nextElement();
-				COMMAND_FACTORY.loadClassesFromMap(ResourceUtil.loadProperties(url), LifeCycle.class);
+				COMMAND_FACTORY.loadClassesFromMap(ResourceUtil.loadProperties(url), Receiver.class);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new FluxParseException("unable to load properties.", e);
 		}
 	}
@@ -60,15 +60,15 @@ public final class FluxProgramm {
 	private final Map<String, Wormhole> wormholeNameMapping = new HashMap<String, Wormhole>();
 	private final Map<Flow, Wormhole> wormholeInFlowMapping = new Hashtable<Flow, Wormhole>();
 
-	private static LifeCycle createElement(final String name, final Map<String, String> namedArgs,
+	private static Receiver createElement(final String name, final Map<String, String> namedArgs,
 			final List<Object> cArgs) {
 
-		final LifeCycle newElement;
+		final Receiver newElement;
 		if (COMMAND_FACTORY.containsKey(name)) {
 			newElement = COMMAND_FACTORY.newInstance(name, namedArgs, cArgs.toArray());
 
 		} else {
-			newElement = ObjectFactory.newInstance(ObjectFactory.loadClass(name, LifeCycle.class), cArgs.toArray());
+			newElement = ObjectFactory.newInstance(ObjectFactory.loadClass(name, Receiver.class), cArgs.toArray());
 			ObjectFactory.applySetters(newElement, namedArgs);
 		}
 		return newElement;
@@ -136,12 +136,12 @@ public final class FluxProgramm {
 
 	protected void compile() {
 
-		for (Wormhole wormhole : wormholeNameMapping.values()) {
+		for (final Wormhole wormhole : wormholeNameMapping.values()) {
 			if (wormhole.getOut() == null) {
 				throw new FluxParseException("Wormhole " + wormhole.getName() + " is going nowhere");
 			}
 
-			for (Flow flow : wormhole.getIns()) {
+			for (final Flow flow : wormhole.getIns()) {
 
 				flow.addElement(wormhole.getOut().getFirst());
 			}
@@ -149,7 +149,7 @@ public final class FluxProgramm {
 	}
 
 	public void start() {
-		for (Flow flow : initialFlows) {
+		for (final Flow flow : initialFlows) {
 			flow.start();
 			if (!wormholeInFlowMapping.containsKey(flow)) {
 				flow.close();
@@ -197,7 +197,7 @@ public final class FluxProgramm {
 			insReady.remove(flow);
 			insFinished.add(flow);
 			if (insReady.isEmpty()) {
-				for (Flow finished : insFinished) {
+				for (final Flow finished : insFinished) {
 					finished.close();
 				}
 			}

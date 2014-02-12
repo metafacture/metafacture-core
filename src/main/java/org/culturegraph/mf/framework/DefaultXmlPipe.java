@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * Default implementation for {@link XmlPipe}s which simply 
+ * Default implementation for {@link XmlPipe}s which simply
  * does nothing.
  *
  * @param <R> receiver type of the downstream module
@@ -32,19 +32,19 @@ import org.xml.sax.SAXParseException;
  * @author Christoph Böhme
  *
  */
-public class DefaultXmlPipe <R extends LifeCycle>
+public class DefaultXmlPipe <R extends Receiver>
 		extends DefaultSender<R> implements XmlPipe<R> {
 
 	// CHECKSTYLE OFF: StrictDuplicateCode
 	// Code duplication in DefaultXmlPipe and DefaultXmlReceiver
-	// cannot be avoided. DefaultXmlPipe combines the logic 
+	// cannot be avoided. DefaultXmlPipe combines the logic
 	// from DefaultSender and DefaultXmlReceiver but can only
 	// have one of these classes as its base class. Hence, the
 	// logic from the second one must be duplicated here.
 	
 	@Override
 	public void setDocumentLocator(final Locator locator) {
-		// Default implementation does nothing		
+		// Default implementation does nothing
 	}
 
 	@Override
@@ -168,7 +168,7 @@ public class DefaultXmlPipe <R extends LifeCycle>
 	}
 
 	@Override
-	public void comment(final char[] chars, final int start, final int length) 
+	public void comment(final char[] chars, final int start, final int length)
 			throws SAXException {
 		// Default implementation does nothing
 	}
