@@ -34,7 +34,7 @@ import org.culturegraph.mf.util.MemoryWarningSystem.Listener;
 
 /**
  * @author markus geipel
- * 
+ *
  */
 public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> implements Listener {
 	/**
@@ -46,7 +46,7 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 
 	/**
 	 * sort order
-	 * 
+	 *
 	 */
 	public enum Order {
 		INCREASING {
@@ -98,8 +98,10 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 	public final void process(final Triple namedValue) {
 		if (memoryLow) {
 			try {
-				nextBatch();
-			} catch (IOException e) {
+				if (!buffer.isEmpty()) {
+					nextBatch();
+				}
+			} catch (final IOException e) {
 				throw new MetafactureException("Error writing to temp file after sorting", e);
 			} finally {
 				memoryLow = false;
@@ -115,7 +117,7 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 		final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));
 
 		try {
-			for (Triple triple : buffer) {
+			for (final Triple triple : buffer) {
 				triple.write(out);
 			}
 		} finally {
@@ -130,7 +132,7 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 
 		if (tempFiles.isEmpty()) {
 			Collections.sort(buffer, createComparator(compare, order));
-			for (Triple triple : buffer) {
+			for (final Triple triple : buffer) {
 				sortedTriple(triple);
 			}
 			onFinished();
@@ -148,7 +150,7 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 					});
 			try {
 				nextBatch();
-				for (File file : tempFiles) {
+				for (final File file : tempFiles) {
 					queue.add(new SortedTripleFileFacade(file));
 				}
 
@@ -163,10 +165,10 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 					}
 				}
 				onFinished();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				throw new MetafactureException("Error merging temp files", e);
 			} finally {
-				for (SortedTripleFileFacade sortedFileFacade : queue) {
+				for (final SortedTripleFileFacade sortedFileFacade : queue) {
 					sortedFileFacade.close();
 				}
 			}
@@ -228,7 +230,7 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 	@Override
 	public final void onResetStream() {
 		buffer.clear();
-		for (File file : tempFiles) {
+		for (final File file : tempFiles) {
 			if (file.exists()) {
 				file.delete();
 			}
