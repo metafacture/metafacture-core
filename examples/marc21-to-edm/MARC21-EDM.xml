@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph"
+	version="1">
+	<meta>
+		<name>Marc21 to EDM</name>
+	</meta>
+
+	<vars>
+		<var name="dnb_subject" value="" />
+	</vars>
+
+	<rules>
+		<data source="leader" name="@leader7">
+			<substring start="7" end="8" />
+		</data>
+		<data source="leader" name="@leader6">
+			<substring start="6" end="7" />
+		</data>
+		<data source="leader" name="@leader19">
+			<substring start="19" end="20" />
+		</data>
+
+		<data source="041? .a" name="@lang">
+			<not-equals string="" />
+		</data>
+
+		<!-- <data source="041??.a" name="@lang" /> -->
+
+		<data source="001" name="aggregation_id">
+			<compose prefix="http://www.dnb.de/" />
+		</data>
+		<!-- mandatory ELIB -->
+		<choose name="@isil">
+			<data source="003" />
+			<!-- BSB -->
+			<data source="040" />
+		</choose>
+		<data name="edm:dataProvider$de" source="@isil">
+			<lookup in="isils" />
+		</data>
+		<data name="*edm:dataProvider" source="@isil">
+			<compose prefix="http://ld.zdb-services.de/data/organisations/" />
+		</data>
+		<!-- hier Datenprovider immer identisch mit Provider des Objekts? derzeit 
+			auch für BSZ so gehandhabt, obwohl Aggregator -->
+		<data name="edm:provider" source="_id">
+			<constant value="Deutsche Digitale Bibliothek" />
+		</data>
+
+
+		<!-- DC:TYPE -->
+		<combine name="@mat" value="Monografie">
+			<data source="@leader7">
+				<equals string="m" />
+			</data>
+			<data source="@leader19">
+				<regexp match="[ b]" />
+			</data>
+		</combine>
+
+		<data name="@mat" source="@leader7">
+			<equals string="s" />
+			<constant value="fortlaufendes Sammelwerk" />
+		</data>
+
+		<data name="@mat" source="@leader19">
+			<equals string="a" />
+			<constant value="Mehrbändiges Werk" />
+		</data>
+
+
+		<data name="@mat" source="@leader19">
+			<equals string="c" />
+			<constant value="Band" />
+		</data>
+
+
+		<!-- mandatory ELIB, if edm:isShownBy is not provided -->
+		<combine name="edm:isShownAt" value="${url}${id}${suffix}">
+			<data name="id" source="001" />
+			<data name="url" source="@isil">
+				<lookup in="urls" />
+			</data>
+			<data name="suffix" source="@isil">
+				<lookup in="suffix" />
+			</data>
+		</combine>
+		<!-- mandatory ELIB, edm:object für Binärcontent, z. B. Thumbnails für 
+			Preview in Europeana, Problem: interner Binärcontent und Frage an Europeana: 
+			Ableitung von PDF zu jpg? <data name="edm:object" source="" /> -->
+		<!-- mandatory ELIB, richtig verortet? in ELIB unter WebResource, in EDM 
+			Mapping Guidelines unter WebRessource (recommended) und unter ore:aggregation 
+			(mandatory) ; values s. http://pro.europeana.eu/documents/900548/0d423921-23e0-45fa-82a4-2ac72b3e6f38 
+			; value für DNB-Objekte mit "Der Zugriff auf das Objekt ist unbeschränkt 
+			möglich." = zunächst http://www.europeana.eu/portal/rr-f.html gewählt, zu 
+			prüfen, ob ok! -->
+
+
+		<data
+			source="650?7.0|60017.0|61017.0|61017.0|630??.0|655?7.0|651?7.0|648??.0"
+			name="@conceptID">
+			<regexp match="^\(DE-588\)((.*))" format="${1}" />
+			<compose prefix="http://d-nb.info/gnd/" />
+		</data>
+		<entity name="skos:Concept" sameEntity="true">
+			<data source="@conceptID" name="~rdf:about" />
+			<data
+				source="650?7.a|60017.a|61017.a|61017.a|630??.a|655?7.a|651?7.a|648??.a"
+				name="skos:prefLabel$de" />
+		</entity>
+		<combine name="@publisherID" value="#/agent/${id}-${c}" reset="false">
+			<data source="001" name="id" />
+			<data name="c" source="2603 .b">
+				<count />
+			</data>
+			<postprocess>
+				<occurrence only="1" />
+			</postprocess>
+		</combine>
+		<data name="@orgID" source="@isil">
+			<compose prefix="http://ld.zdb-services.de/data/organisations/" />
+		</data>
+
+		<data source="_id" name="@sectorID">
+			<constant value="$[sector]" />
+			<not-equals string="" />
+			<replace pattern="sec_" with="" />
+			<compose prefix="http://ddb.vocnet.org/sparte/sparte" />
+		</data>
+
+		<entity name="edm:Agent">
+			<data source="@sectorID" name="*rdf:type" />
+			<data source="@orgID" name="~rdf:about" />
+			<data name="skos:prefLabel$de" source="@isil">
+				<lookup in="isils" />
+			</data>
+		</entity>
+		
+<!-- 		<entity name="skos:Concept"> -->
+<!-- 			<data source="@sectorID" name="~rdf:about" /> -->
+<!-- 			<data source="_id" name="skos:Notation"> -->
+<!-- 				<constant value="$[sector]" /> -->
+<!-- 			</data> -->
+<!-- 		</entity> -->
+
+		<entity name="skos:Concept">
+			<data source="@sectorID" name="~rdf:about" />
+			<data source="_id" name="skos:notation">
+				<constant value="$[sector]" />
+			</data>
+		</entity>
+
+		<entity name="edm:Agent">
+			<data source="@publisherID" name="~rdf:about" />
+			<data name="skos:prefLabel$de" source="2603 .b">
+				<occurrence only="1" />
+			</data>
+			<combine name="*edm:wasPresent" value="${id}" reset="false">
+				<data name="id" source="@pEventID" />
+				<data source="@publisherID" />
+			</combine>
+		</entity>
+		<data name="@creatorID" source="1001 .0|1101 .0|7001 .0|7101 .0">
+			<regexp match="^\(DE-588\)(.*)" format="http://d-nb.info/gnd/${1}" />
+		</data>
+		<entity name="edm:Agent" sameEntity="true">
+			<data name="~rdf:about" source="@creatorID" />
+			<data name="skos:prefLabel$de" source="1001 .a|1101 .a|7001 .a|7101 .a" />
+			<combine name="*edm:wasPresent" value="${id}" reset="false">
+				<data name="id" source="@cEventID" />
+				<data source="@creatorID" />
+			</combine>
+		</entity>
+		<data name="@cEventID" source="001">
+			<compose prefix="#/event/" postfix="-c" />
+		</data>
+		<data name="@pEventID" source="001">
+			<compose prefix="#/event/" postfix="-p" />
+		</data>
+		<entity name="edm:Event" flushWith="record">
+			<data name="~rdf:about" source="@cEventID" />
+			<data name="edm:hasType" source="_id">
+				<constant value="http://terminology.lido-schema.org/lido00012" />
+			</data>
+			<data name="*crm:P11_had_participant" source="1001 .0|1101 .0|7001 .0|7101 .0">
+				<regexp match="^\(DE-588\)(.*)" format="http://d-nb.info/gnd/${1}" />
+			</data>
+		</entity>
+		<entity name="edm:Event" flushWith="record">
+			<data name="~rdf:about" source="@pEventID" />
+			<!-- <data name="*edm:hasType" source="_id"> -->
+			<!-- <constant value="http://terminology.lido-schema.org/lido00228" /> -->
+			<!-- </data> -->
+			<data name="edm:hasType" source="_id">
+				<constant value="http://terminology.lido-schema.org/lido00228" />
+			</data>
+			<data name="*crm:P11_had_participant" source="@publisherID" />
+			<data name="*edm:occuredAt" source="@timeID" />
+			<data name="*edm:happenedAt" source="@placeID" />
+		</entity>
+		<data name="@place" source="2603 .a">
+			<replace pattern=" \[?u.a.\]?.*$" with="" />
+			<split delimiter=" ; " />
+			<occurrence only="1" />
+		</data>
+		<combine name="@placeID" value="#/place/${id}_place${c}">
+			<data name="c" source="@place">
+				<count />
+			</data>
+			<data source="001" name="id" />
+		</combine>
+		<entity name="edm:Place">
+			<data name="~rdf:about" source="@placeID" />
+			<data name="skos:prefLabel" source="@place" />
+		</entity>
+		<combine name="@timeID" value="#/timespan/${id}_timespan${c}">
+			<data name="c" source="260 .c|2603 .c">
+				<count />
+			</data>
+			<data source="001" name="id" />
+			<postprocess>
+				<occurrence only="1" />
+			</postprocess>
+		</combine>
+		<entity name="edm:TimeSpan">
+			<data name="~rdf:about" source="@timeID" />
+			<data name="skos:notation" source="260 .c|2603 .c" />
+		</entity>
+		<!-- mandatory ELIB -->
+		<combine name="@recordID" value="${url}${id}">
+			<data name="id" source="001" />
+			<data name="url" source="@isil">
+				<lookup in="urls" />
+			</data>
+			<data name="suffix" source="@isil">
+				<lookup in="suffix" />
+			</data>
+		</combine>
+
+		<data source="_id" name="@mediatypeID">
+			<constant value="$[media_type]" />
+			<lookup in="mediatype" />
+			<compose prefix="http://ddb.vocnet.org/medientyp/" />
+		</data>
+
+		<entity name="skos:Concept">
+			<data name="~rdf:about" source="@mediatypeID" />
+			<data source="_id" name="skos:notation">
+				<constant value="$[media_type]" />
+				<not-equals string="" />
+			</data>
+		</entity>
+
+		<entity name="dcterms:LinguisticSystem">
+			<data source="@lang" name="rdf:value">
+
+			</data>
+			<data source="@lang" name="~rdf:about">
+				<compose prefix="http://id.loc.gov/vocabulary/iso639-2/" />
+			</data>
+		</entity>
+
+		<data name="edm:rights" source="@isil">
+			<lookup in="rights" />
+		</data>
+		
+		<data source="_id" name="*dcterms:rights">
+			<constant value="http://creativecommons.org/publicdomain/zero/1.0/"/>
+		</data>
+
+
+		<entity name="edm:ProvidedCHO" flushWith="record">
+			<data source="@recordID" name="~rdf:about" />
+			<data name="*edm:wasPresent" source="@pEventID|@cEventID" />
+			<data source="@mat" name="dc:type" />
+			<data source="_id" name="edm:type">
+				<constant value="TEXT" />
+			</data>
+			<data name="dc:publisher" source="2603 .b" />
+			<data name="dcterms:extent" source="300??.a">
+				<not-equals string="Online-Ressource" />
+			</data>
+
+			<data source="@lang" name="dc:language" />
+			<data source="@lang" name="*dcterms:language">
+				<compose prefix="http://id.loc.gov/vocabulary/iso639-2/" />
+			</data>
+
+
+			<combine name="dcterms:bibliographicCitation" value="${a} ; ${v}">
+				<data source="490??.a" name="a" />
+				<data source="490??.v" name="v" />
+			</combine>
+			<data name="dc:creator" source="1001 .a|1101 .a" />
+			<data name="dc:contributor" source="7001 .a|7101 .a" />
+			<data name="dc:subject"
+				source="650?7.a|60017.a|61017.a|61117.a|630??.a|655?7.a|651?7.a|648??.a" />
+			<data name="*dc:subject" source="@conceptID" />
+
+			<data name="*dcterms:isPartOf" source="830??.w|800??.w|810??.w|811??.w">
+				<regexp match="^\(DE-101\)((.*))" format="${1}" />
+				<compose prefix="http://d-nb.info/" />
+				<occurrence only="1" />
+			</data>
+
+
+
+
+			<!-- hierarchy: aggregation entity status -->
+			<concat delimiter="; " name="ddb:techinfo">
+				<choose name="dc:description">
+					<data source="245 ?.n|490 ?.v|800 ?.v|810 ?.v|811 ?.v|830 ?.v">
+						<compose prefix="position:" />
+					</data>
+					<data source="_id">
+						<constant value="position:-1" />
+					</data>
+				</choose>
+				<data source="_id">
+					<constant value="aggregation_entity:false" />
+				</data>
+			</concat>
+
+			<combine name="dc:title" value="${title}${othtitleinfo}"
+				flushWith="24510">
+				<data name="title" source="24510.a" />
+				<data name="othtitleinfo" source="24510.b">
+					<compose prefix=" : " />
+				</data>
+			</combine>
+			<data name="dcterms:issued" source="260 .c|2603 .c" />
+
+
+			<data name="dc:description" source="250 .a|502??.a" />
+
+			<!-- dnb subject id -->
+			<data name="*dc:subject" source="@dnbSubjectID" />
+
+			<data name="*dc:subject" source="_id">
+				<constant value="$[dnb_subject]" />
+				<not-equals string="" />
+			</data>
+
+		</entity>
+
+		<!-- <combine name="@dnbSubjectID" value="${dnb}" sameEntity="true"> -->
+		<!-- <data name="dnb" source="084 ?.a"> -->
+		<!-- <compose prefix="http://d-nb.info/ddc-sg/" /> -->
+		<!-- </data> -->
+		<!-- <data source="084 ?.2"> -->
+		<!-- <regexp match="^sdnb" /> -->
+		<!-- </data> -->
+		<!-- </combine> -->
+
+
+
+		<!-- TODO: concordance-call or lookup for 084 ?.a -->
+		<!-- <entity name="skos:Concept"> -->
+		<!-- <data source="@dnbSubjectID" name="~rdf:about" /> -->
+		<!-- <data source="normed_value" name="skos:prefLabel$de" /> -->
+		<!-- </entity> -->
+
+		<choose name="@urn">
+			<combine name="~rdf:about" value="${urn}">
+				<data name="urn" source="85640.u" />
+				<data source="85640.x">
+					<regexp match="^Langzeitarchivierung" />
+				</data>
+			</combine>
+			<combine name="~rdf:about" value="${urn}">
+				<data name="urn" source="85640.u" />
+				<data source="85640.x">
+					<equals string="Resolving-System" />
+				</data>
+			</combine>
+		</choose>
+		<entity name="edm:WebResource">
+			<!-- mandatory ELIB, if edm:isShownAt is not provided ; nur if subfield 
+				x = "Langzeitarchivierung" - wie abfragen? -->
+			<choose>
+				<combine name="~rdf:about" value="${urn}">
+					<data name="urn" source="85640.u" />
+					<data source="85640.x">
+						<regexp match="^Langzeitarchivierung" />
+					</data>
+				</combine>
+				<combine name="~rdf:about" value="${urn}">
+					<data name="urn" source="85640.u" />
+					<data source="85640.x">
+						<equals string="Resolving-System" />
+					</data>
+				</combine>
+			</choose>
+
+			<data source="@mediatypeID" name="dc:type" />
+
+
+
+			<data name="dcterms:rights" source="_id">
+				<constant
+					value="http://www.deutsche-digitale-bibliothek.de/lizenzen/rv-fz/" />
+			</data>
+			<!-- TODO: mediatype -->
+		</entity>
+
+
+
+	</rules>
+	<maps>
+		<map name="rights">
+			<entry name="DE-101" value="http://www.europeana.eu/rights/rr-f/" />
+		</map>
+		<map name="isils">
+			<entry name="DE-101" value="Deutsche Nationalbibliothek" />
+		</map>
+		<map name="urls">
+			<entry name="DE-101" value="http://d-nb.info/" />
+		</map>
+		<map name="suffix" default="">
+
+		</map>
+
+		<map name="mediatype" default="unknown">
+			<entry name="mediatype_003" value="Text" />
+		</map>
+
+
+
+		<filemap name="timevoc" files="$[FLUX_DIR]timevoc.txt"
+			separator="\t" />
+	</maps>
+</metamorph>
