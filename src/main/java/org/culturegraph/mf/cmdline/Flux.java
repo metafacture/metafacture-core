@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf;
+package org.culturegraph.mf.cmdline;
 
 import java.io.File;
 import java.io.FilenameFilter;

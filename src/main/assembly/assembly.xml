@@ -65,8 +65,8 @@
 			<lineEnding>crlf</lineEnding>
 		</fileSet>
 		<fileSet>
-			<directory>examples/</directory>
-			<outputDirectory>examples/</outputDirectory>
+			<directory>${project.basedir}/src/main/resources/assembly-resources/</directory>
+			<outputDirectory></outputDirectory>
 			<includes>
 				<include>**/*</include>
 			</includes>
@@ -74,7 +74,7 @@
 			<fileMode>0644</fileMode>
 		</fileSet>
 		<fileSet>
-			<directory>${project.basedir}/src/main/resources/schemata/</directory>
+			<directory>${project.build.directory}/dependency/schemata</directory>
 			<outputDirectory>schemata/</outputDirectory>
 			<includes>
 				<include>*.xsd</include>
@@ -83,16 +83,11 @@
 			<fileMode>0644</fileMode>
 		</fileSet>
 		<fileSet>
-			<directory>modules/</directory>
-			<outputDirectory>modules/</outputDirectory>
-			<directoryMode>0755</directoryMode>
-			<fileMode>0644</fileMode>
-		</fileSet>
-		<fileSet>
 			<directory></directory>
 			<outputDirectory></outputDirectory>
 			<includes>
 				<include>*.md</include>
+				<include>LICENSE</include>
 			</includes>
 			<directoryMode>0755</directoryMode>
 			<fileMode>0644</fileMode>

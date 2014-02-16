@@ -12,5 +12,5 @@ shift
 for FILE in $@
 do
     echo visualizing $FILE
-    java org.culturegraph.mf.MorphVis "$FILE" | dot -T$FORMAT > "$FILE.$FORMAT"
+    java org.culturegraph.mf.cmdline.MorphVis "$FILE" | dot -T$FORMAT > "$FILE.$FORMAT"
 done
