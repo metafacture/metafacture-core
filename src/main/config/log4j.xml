@@ -9,10 +9,13 @@
 		</layout>
 	</appender>
 
-	
 	<root>
 		<priority value="info" />
 		<appender-ref ref="stdout" />
 	</root>
+
+	 <logger name="org.culturegraph.mf.runner.util.DirectoryClassLoader">
+		<priority value="warning" />
+	</logger>
 
 </log4j:configuration>

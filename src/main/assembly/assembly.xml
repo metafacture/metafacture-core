@@ -9,8 +9,8 @@
 		<format>zip</format>
 	</formats>
 
-	<!-- Adds dependencies to distribution package under lib directory -->
 	<dependencySets>
+
 		<dependencySet>
 			<useProjectArtifact>false</useProjectArtifact>
 			<outputDirectory>lib</outputDirectory>
@@ -18,6 +18,16 @@
 			<directoryMode>0755</directoryMode>
 			<fileMode>0644</fileMode>
 		</dependencySet>
+
+		<dependencySet>
+			<scope>provided</scope>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputDirectory>provided-libs</outputDirectory>
+			<unpack>false</unpack>
+			<directoryMode>0755</directoryMode>
+			<fileMode>0644</fileMode>
+		</dependencySet>
+
 	</dependencySets>
 
 	<fileSets>

@@ -105,7 +105,7 @@
 								used to specify that all needed libraries are found under lib/ directory. -->
 							<classpathPrefix>lib/</classpathPrefix>
 							<!-- Specifies the main class of the application -->
-							<mainClass>org.culturegraph.mf.cmdline.Flux</mainClass>
+							<mainClass>org.culturegraph.mf.runner.Flux</mainClass>
 						</manifest>
 						<manifestEntries>
 							<git-commit>${buildNumber}</git-commit>
@@ -224,11 +224,16 @@
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.2</version>
-			<scope>runtime</scope>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.6</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.2</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -237,7 +242,6 @@
 			<scope>test</scope>
 		</dependency>
 
-	
 	</dependencies>
 
 	<profiles>
