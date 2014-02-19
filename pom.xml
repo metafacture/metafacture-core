@@ -108,21 +108,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.3.1</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<!-- Configures the classpath prefix. This configuration option is 
-								used to specify that all needed libraries are found under lib/ directory. -->
-							<classpathPrefix>lib/</classpathPrefix>
-							<!-- Specifies the main class of the application -->
-							<mainClass>org.culturegraph.mf.Flux</mainClass>
-						</manifest>
-						<manifestEntries>
-							<git-commit>${buildNumber}</git-commit>
-						</manifestEntries>
-					</archive>
-				</configuration>
 			</plugin>
 		
 			<plugin>
@@ -141,36 +126,6 @@
 						<goals>
 							<goal>create</goal>
 						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2.1</version>
-				<executions>
-					<execution>
-						<id>create-distribution-package</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<descriptors>
-								<descriptor>/src/main/assembly/assembly.xml</descriptor>
-							</descriptors>
-							<archive>
-								<manifest>
-									<mainClass>org.culturegraph.mf.Flux</mainClass>
-									<addClasspath>true</addClasspath>
-									<classpathPrefix>lib/</classpathPrefix>
-								</manifest>
-								<manifestEntries>
-									<git-commit>${buildNumber}</git-commit>
-								</manifestEntries>
-							</archive>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -194,7 +149,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -241,7 +195,6 @@
 			<version>1.7.2</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr-runtime</artifactId>
@@ -254,21 +207,25 @@
 			<version>0.11.4.1</version>
 			<scope>test</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.1</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.jdom</groupId>
 			<artifactId>jdom</artifactId>
 			<version>1.1</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
 			<version>2.1.4</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
@@ -284,9 +241,6 @@
 			</exclusions>
 		</dependency>
 	</dependencies>
-
-
-
 
 	<profiles>
 		<profile>
