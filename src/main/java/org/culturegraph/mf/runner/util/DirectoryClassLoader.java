@@ -21,8 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.culturegraph.mf.exceptions.MetafactureException;
 
 /**
  * A class loader which allows adding directories to the class
@@ -32,8 +31,6 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class DirectoryClassLoader extends URLClassLoader {
-
-	private static final Logger LOG = LoggerFactory.getLogger(DirectoryClassLoader.class);
 
 	private static final String JAR_FILE_EXTENSION = ".jar";
 	private static final String CLASS_FILE_EXTENSION = ".class";
@@ -53,13 +50,11 @@ public final class DirectoryClassLoader extends URLClassLoader {
 	}
 
 	public void addDirectory(final File dir) {
-		LOG.info("Adding jar and class files in {} to class loader", dir);
 		for (final File file : dir.listFiles(JAR_AND_CLASS_FILTER)) {
 			try {
-				LOG.info("Adding {} to class loader", file);
 				addURL(file.toURI().toURL());
 			} catch (final MalformedURLException e) {
-				LOG.error("Could not add {} to class loader: {}", file, e);
+				throw new MetafactureException("Could not add " + file + " to class loader", e);
 			}
 		}
 	}
