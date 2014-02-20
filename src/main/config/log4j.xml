@@ -9,10 +9,6 @@
 		</layout>
 	</appender>
 
-	 <logger name="org.culturegraph.mf.runner.util.DirectoryClassLoader">
-		<level value="warning" />
-	</logger>
-
 	<root>
 		<priority value="info" />
 		<appender-ref ref="stdout" />
