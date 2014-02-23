@@ -13,9 +13,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.stream.sink;
+package org.culturegraph.mf.stream.pipe;
 
-import org.culturegraph.mf.framework.DefaultStreamReceiver;
+import org.culturegraph.mf.framework.DefaultStreamPipe;
+import org.culturegraph.mf.framework.StreamReceiver;
 
 
 /**
@@ -25,9 +26,8 @@ import org.culturegraph.mf.framework.DefaultStreamReceiver;
  * @author Markus Michael Geipel, Christoph Böhme
  * 
  */
-public final class Counter extends DefaultStreamReceiver {
+public final class Counter extends DefaultStreamPipe<StreamReceiver> {
 	
-	private boolean closed;
 	private int numRecords;
 	private int numEntities;
 	private int numLiterals;
@@ -53,49 +53,58 @@ public final class Counter extends DefaultStreamReceiver {
 		return numLiterals;
 	}
 	
-	/**
-	 * 
-	 * @return true if the stream is closed
-	 */
-	public boolean isClosed() {
-		return closed;
-	}
-
 	@Override
 	public void startRecord(final String identifier) {
-		assert !closed;
+		assert !isClosed();
 		++numRecords;
+		if(getReceiver() != null) {
+			getReceiver().startRecord(identifier);
+		}
 	}
 
 	@Override
 	public void startEntity(final String name) {
-		assert !closed;
+		assert !isClosed();
 		++numEntities;
+		if(getReceiver() != null) {
+			getReceiver().startEntity(name);
+		}
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
-		assert !closed;
+		assert !isClosed();
 		++numLiterals;
+		if(getReceiver() != null) {
+			getReceiver().literal(name, value);
+		}
+	}
+	
+	@Override
+	public void endRecord() {
+		if(getReceiver() != null) {
+			getReceiver().endRecord();
+		}
+	}
+	
+	@Override
+	public void endEntity() {
+		if(getReceiver() != null) {
+			getReceiver().endEntity();
+		}
 	}
 
 	@Override
-	public void resetStream() {
-		closed = false;
+	public void onResetStream() {
 		numRecords = 0;
 		numEntities = 0;
 		numLiterals = 0;
 	}
-	
-	@Override
-	public void closeStream() {
-		closed = true;
-	}
-	
+		
 	@Override
 	public String toString() {
 		String streamClosed = "";
-		if (closed) {
+		if (isClosed()) {
 			streamClosed =" Stream has been closed.";
 		}
 		

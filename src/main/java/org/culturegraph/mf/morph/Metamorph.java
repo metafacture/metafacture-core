@@ -49,6 +49,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 
 	public static final String ELSE_KEYWORD = "_else";
 	public static final char FEEDBACK_CHAR = '@';
+	public static final char ESCAPE_CHAR = '\\';
 	public static final String METADATA = "__meta";
 	public static final String VAR_START = "$[";
 	public static final String VAR_END = "]";
@@ -287,10 +288,14 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 
 		if (name.length() != 0 && name.charAt(0) == FEEDBACK_CHAR) {
 			dispatch(name, value, null);
-		} else {
-			outputStreamReceiver.literal(name, value);
+			return;
 		}
-
+		
+		String newname = name;
+		if(name.length() > 1 && name.charAt(0) == ESCAPE_CHAR && name.charAt(1) == FEEDBACK_CHAR) {
+			newname = name.substring(1);
+		}
+		outputStreamReceiver.literal(newname, value);
 	}
 
 	@Override
