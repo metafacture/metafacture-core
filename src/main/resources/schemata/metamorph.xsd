@@ -659,6 +659,7 @@
 			<element ref="tns:equals" />
 			<element ref="tns:not-equals" />
 			<element ref="tns:case" />
+			<element ref="tns:timestamp" />
 			<element ref="tns:htmlanchor" />
 			<element ref="tns:trim" />
 			<element ref="tns:split" />
@@ -961,6 +962,17 @@
 					</restriction>
 				</simpleType>
 			</attribute>
+			<attribute name="language" type="string" use="optional" />
+		</complexType>
+	</element>
+
+	<element name="timestamp">
+		<annotation>
+			<documentation>Current timestamp/time.</documentation>
+		</annotation>
+		<complexType>
+			<attribute name="format" type="string" use="optional" default="timestamp"/>
+			<attribute name="timezone" type="string" use="optional" default="UTC"/>
 			<attribute name="language" type="string" use="optional" />
 		</complexType>
 	</element>
