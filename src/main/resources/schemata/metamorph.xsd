@@ -660,6 +660,7 @@
 			<element ref="tns:not-equals" />
 			<element ref="tns:case" />
 			<element ref="tns:timestamp" />
+			<element ref="tns:dateformat" />
 			<element ref="tns:htmlanchor" />
 			<element ref="tns:trim" />
 			<element ref="tns:split" />
@@ -973,6 +974,26 @@
 		<complexType>
 			<attribute name="format" type="string" use="optional" default="timestamp"/>
 			<attribute name="timezone" type="string" use="optional" default="UTC"/>
+			<attribute name="language" type="string" use="optional" />
+		</complexType>
+	</element>
+
+	<element name="dateformat">
+		<annotation>
+			<documentation>Format a date in a specific format.</documentation>
+		</annotation>
+		<complexType>
+			<attribute name="inputformat" type="string" use="optional" default="dd.MM.yyyy" />
+			<attribute name="outputformat" use="optional" default="LONG">
+				<simpleType>
+					<restriction base="string">
+						<enumeration value="FULL" />
+						<enumeration value="LONG" />
+						<enumeration value="MEDIUM" />
+						<enumeration value="SHORT" />
+					</restriction>
+				</simpleType>
+			</attribute>
 			<attribute name="language" type="string" use="optional" />
 		</complexType>
 	</element>
