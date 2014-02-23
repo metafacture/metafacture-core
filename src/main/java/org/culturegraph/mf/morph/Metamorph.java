@@ -39,7 +39,7 @@ import org.culturegraph.mf.util.StreamConstants;
 /**
  * Transforms a data stream send via the {@link StreamReceiver} interface. Use
  * {@link MorphBuilder} to create an instance based on an xml description
- * 
+ *
  * @author Markus Michael Geipel
  */
 @Description("applies a metamorph transformation to the event stream. Metamorph definition is given in brackets.")
@@ -49,6 +49,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 
 	public static final String ELSE_KEYWORD = "_else";
 	public static final char FEEDBACK_CHAR = '@';
+	public static final char ESCAPE_CHAR = '\\';
 	public static final String METADATA = "__meta";
 	public static final String VAR_START = "$[";
 	public static final String VAR_END = "]";
@@ -82,19 +83,19 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 		builder.walk(morphDefReader);
 		init();
 	}
-	
+
 	public Metamorph(final Reader morphDefReader, final Map<String, String> vars) {
 		final MorphBuilder builder = new MorphBuilder(this);
 		builder.walk(morphDefReader, vars);
 		init();
 	}
-	
+
 	public Metamorph(final InputStream inputStream, final Map<String, String> vars) {
 		final MorphBuilder builder = new MorphBuilder(this);
 		builder.walk(inputStream, vars);
 		init();
 	}
-	
+
 	public Metamorph(final InputStream inputStream) {
 		final MorphBuilder builder = new MorphBuilder(this);
 		builder.walk(inputStream);
@@ -106,7 +107,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 		builder.walk(morphDef);
 		init();
 	}
-	
+
 	public Metamorph(final String morphDef, final Map<String, String> vars) {
 		final MorphBuilder builder = new MorphBuilder(this);
 		builder.walk(morphDef, vars);
@@ -164,10 +165,10 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 	@Override
 	public void endRecord() {
 
-		for(FlushListener listener: recordEndListener){
+		for(final FlushListener listener: recordEndListener){
 			listener.flush(recordCount, currentEntityCount);
 		}
-		
+
 		outputStreamReceiver.endRecord();
 		entityCountStack.removeLast();
 		if (!entityCountStack.isEmpty()) {
@@ -189,7 +190,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 
 		flattener.startEntity(name);
 
-		
+
 
 	}
 
@@ -216,10 +217,10 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 
 	@Override
 	public void closeStream() {
-		for (Closeable closeable : resources) {
+		for (final Closeable closeable : resources) {
 			try {
 				closeable.close();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				errorHandler.error(e);
 			}
 		}
@@ -248,10 +249,10 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 	 *            destination
 	 */
 	private void send(final String key, final String value, final List<NamedValueReceiver> dataList) {
-		for (NamedValueReceiver data : dataList) {
+		for (final NamedValueReceiver data : dataList) {
 			try {
 				data.receive(key, value, null, recordCount, currentEntityCount);
-			} catch (RuntimeException e) {
+			} catch (final RuntimeException e) {
 				errorHandler.error(e);
 			}
 		}
@@ -287,10 +288,15 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 
 		if (name.length() != 0 && name.charAt(0) == FEEDBACK_CHAR) {
 			dispatch(name, value, null);
-		} else {
-			outputStreamReceiver.literal(name, value);
+			return;
 		}
 
+		String unescapedName = name;
+		if(name.length() > 1 && name.charAt(0) == ESCAPE_CHAR
+				&& (name.charAt(1) == FEEDBACK_CHAR || name.charAt(1) == ESCAPE_CHAR)) {
+			unescapedName = name.substring(1);
+		}
+		outputStreamReceiver.literal(unescapedName, value);
 	}
 
 	@Override
