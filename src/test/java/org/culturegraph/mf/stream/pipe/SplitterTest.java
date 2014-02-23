@@ -23,15 +23,14 @@ import java.io.IOException;
 import org.culturegraph.mf.morph.DataFilePath;
 import org.culturegraph.mf.stream.reader.PicaReader;
 import org.culturegraph.mf.stream.reader.Reader;
-import org.culturegraph.mf.stream.sink.Counter;
 import org.junit.Test;
 
 
 /**
  * Tests {@link Splitter}.
- * 
+ *
  * @author Markus Michael Geipel
- * 
+ *
  */
 public final class SplitterTest {
 
@@ -56,5 +55,5 @@ public final class SplitterTest {
 		assertEquals(NUM_TN_RECORDS, countingWriterTn.getNumRecords());
 		assertEquals(NUM_TP_RECORDS, countingWriterTp.getNumRecords());
 	}
-	
+
 }
