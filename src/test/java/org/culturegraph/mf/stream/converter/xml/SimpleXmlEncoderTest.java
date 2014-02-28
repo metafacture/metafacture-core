@@ -13,22 +13,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.stream.sink;
+package org.culturegraph.mf.stream.converter.xml;
 
 
 
 import org.culturegraph.mf.framework.DefaultObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.stream.converter.xml.SimpleXmlEncoder;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Tests {@link SimpleXmlWriter}.
+ * Tests {@link SimpleXmlEncoder}.
  *
  * @author Markus Geipel
  *
  */
-public final class SimpleXmlWriterTest {
+public final class SimpleXmlEncoderTest {
 
 
 	private static final String TAG = "tag";
@@ -41,14 +42,14 @@ public final class SimpleXmlWriterTest {
 	public void testShouldOnlyEscapeFiveChars() {
 		final StringBuilder builder = new StringBuilder();
 
-		SimpleXmlWriter.writeEscaped(builder , "&<>'\" üäö");
+		SimpleXmlEncoder.writeEscaped(builder , "&<>'\" üäö");
 
 		Assert.assertEquals("&amp;&lt;&gt;&apos;&quot; üäö", builder.toString());
 	}
 
 	@Test
 	public void testShouldHandleSeparateRoots(){
-		final SimpleXmlWriter writer = new SimpleXmlWriter();
+		final SimpleXmlEncoder writer = new SimpleXmlEncoder();
 		writer.setRootTag("root");
 		writer.setRecordTag("record");
 		writer.setWriteXmlHeader(false);

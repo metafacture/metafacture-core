@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.stream.sink;
+package org.culturegraph.mf.stream.converter.xml;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,15 +35,16 @@ import org.culturegraph.mf.util.ResourceUtil;
 
 /**
  *
- * writes a stream to XML
+ * Encodes a stream as XML
  *
- * @author Markus Michael Geipel, Christoph Böhme
+ * @author Markus Michael Geipel
+ * @author Christoph Böhme
  *
  */
-@Description("writes a stream to xml")
+@Description("Encodes a stream as xml")
 @In(StreamReceiver.class)
 @Out(String.class)
-public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<String>> {
+public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
 	public static final String ATTRIBUTE_MARKER = "~";
 	public static final String NAMESPACES = "namespaces";
@@ -90,7 +91,7 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 			namespaces.put(entry.getKey().toString(), entry.getValue().toString());
 		}
 	}
-	
+
 	public void setNamespaceFile(final URL url) {
 		final Properties properties = ResourceUtil.loadProperties(url);
 		for (final Entry<Object, Object> entry : properties.entrySet()) {
@@ -274,7 +275,7 @@ public final class SimpleXmlWriter extends DefaultStreamPipe<ObjectReceiver<Stri
 		public Element createChild(final String name) {
 			final Element child = new Element(name, this);
 			if (children == NO_CHILDREN) {
-				children = new ArrayList<SimpleXmlWriter.Element>();
+				children = new ArrayList<SimpleXmlEncoder.Element>();
 			}
 			children.add(child);
 			return child;
