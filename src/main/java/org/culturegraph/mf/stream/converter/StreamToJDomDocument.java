@@ -27,7 +27,7 @@ import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.stream.sink.SimpleXmlWriter;
+import org.culturegraph.mf.stream.converter.xml.SimpleXmlEncoder;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -109,7 +109,7 @@ public final class StreamToJDomDocument extends DefaultSender<ObjectReceiver<Doc
 		assert !isClosed();
 		if (name.isEmpty()) {
 			currentElement.addContent(value);
-		} else if (name.startsWith(SimpleXmlWriter.ATTRIBUTE_MARKER)) {
+		} else if (name.startsWith(SimpleXmlEncoder.ATTRIBUTE_MARKER)) {
 			final String[] parts = NAMESPACE_DELIMITER.split(name);
 			if (parts.length == 2) {
 				currentElement.setAttribute(parts[1], value, getNamespace(parts[0].substring(1)));
