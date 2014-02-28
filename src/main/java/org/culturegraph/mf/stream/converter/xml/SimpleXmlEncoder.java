@@ -107,7 +107,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 		this.separateRoots = separateRoots;
 	}
 
-	public void configure(final MultiMap multimap) {
+	public void setNamespaces(final MultiMap multimap) {
 		this.namespaces = multimap.getMap(NAMESPACES);
 	}
 
