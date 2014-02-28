@@ -16,6 +16,7 @@
 package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.framework.DefaultStreamPipe;
+import org.culturegraph.mf.framework.DefaultStreamReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
@@ -25,9 +26,9 @@ import org.culturegraph.mf.util.StreamConstants;
 /**
  * Changes the record id to the value of the _id literal if present in the
  * record.
- * 
+ *
  * @author Markus Michael Geipel
- * 
+ *
  */
 @Description("By default changes the record id to the value of the '_id' literal (if present). Use the contructor to choose another literal as id source.")
 @In(StreamReceiver.class)
@@ -36,18 +37,21 @@ public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
 
 	private String idName = StreamConstants.ID;
 	private final StreamBuffer streamBuffer = new StreamBuffer();
+	private final StreamFlattener streamFlattener = new StreamFlattener();
+	private final DefaultStreamReceiver dummyReceiver = new DefaultStreamReceiver();
 	private String currentIdentifier;
 	private String originalIdentifier;
-	private int depth;
 	private boolean keepIdless = true;
+	private boolean keepIdLiteral;
 
 	public IdChangePipe() {
-		super();
+		this(StreamConstants.ID);
 	}
 
 	public IdChangePipe(final String idName) {
 		super();
 		setIdName(idName);
+		streamFlattener.setReceiver(dummyReceiver);
 	}
 
 	public void setIdName(final String idName) {
@@ -58,12 +62,16 @@ public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
 		this.keepIdless = keepIdless;
 	}
 
+	public void setKeepIdLiteral(final boolean keepIdLiteral) {
+		this.keepIdLiteral = keepIdLiteral;
+	}
+
 	@Override
 	public void startRecord(final String identifier) {
 		assert !isClosed();
 		currentIdentifier = null;
 		originalIdentifier = identifier;
-		depth = 0;
+		streamFlattener.startRecord(identifier);
 	}
 
 	@Override
@@ -79,28 +87,35 @@ public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
 			getReceiver().endRecord();
 		}
 		streamBuffer.clear();
+		streamFlattener.endRecord();
 	}
 
 	@Override
 	public void startEntity(final String name) {
 		streamBuffer.startEntity(name);
-		++depth;
+		streamFlattener.startEntity(name);
 	}
 
 	@Override
 	public void endEntity() {
 		streamBuffer.endEntity();
-		--depth;
-
+		streamFlattener.endEntity();
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
-		if (depth == 0 && idName.equals(name)) {
-			currentIdentifier = value;
-		} else {
-			streamBuffer.literal(name, value);
+		String path = streamFlattener.getCurrentPath();
+		if (!path.isEmpty()) {
+			path += ".";
 		}
+		path += name;
+		if (idName.equals(path)) {
+			currentIdentifier = value;
+			if (!keepIdLiteral) {
+				return;
+			}
+		}
+		streamBuffer.literal(name, value);
 	}
 
 	@Override
