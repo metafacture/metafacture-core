@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe.bib;
+package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.stream.pipe.OreAggregationAdder;
 import org.culturegraph.mf.test.TestSuite;
