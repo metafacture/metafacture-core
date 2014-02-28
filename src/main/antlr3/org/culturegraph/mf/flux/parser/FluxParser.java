@@ -1,4 +1,4 @@
-// $ANTLR 3.4 D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g 2013-07-03 10:40:33
+// $ANTLR 3.4 /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g 2014-02-28 19:33:55
 
 package org.culturegraph.mf.flux.parser;
 
@@ -74,7 +74,7 @@ public TreeAdaptor getTreeAdaptor() {
     return adaptor;
 }
     public String[] getTokenNames() { return FluxParser.tokenNames; }
-    public String getGrammarFileName() { return "D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g"; }
+    public String getGrammarFileName() { return "/home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g"; }
 
 
     public static class flux_return extends ParserRuleReturnScope {
@@ -84,7 +84,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "flux"
-    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:43:1: flux : ( varDef )* ( flow )* ;
+    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:43:1: flux : ( varDef )* ( flow )* ;
     public final FluxParser.flux_return flux() throws RecognitionException {
         FluxParser.flux_return retval = new FluxParser.flux_return();
         retval.start = input.LT(1);
@@ -99,13 +99,13 @@ public TreeAdaptor getTreeAdaptor() {
 
 
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:44:3: ( ( varDef )* ( flow )* )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:45:3: ( varDef )* ( flow )*
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:44:3: ( ( varDef )* ( flow )* )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:45:3: ( varDef )* ( flow )*
             {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:45:3: ( varDef )*
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:45:3: ( varDef )*
             loop1:
             do {
                 int alt1=2;
@@ -127,7 +127,7 @@ public TreeAdaptor getTreeAdaptor() {
 
                 switch (alt1) {
             	case 1 :
-            	    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:45:3: varDef
+            	    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:45:3: varDef
             	    {
             	    pushFollow(FOLLOW_varDef_in_flux113);
             	    varDef1=varDef();
@@ -145,7 +145,7 @@ public TreeAdaptor getTreeAdaptor() {
             } while (true);
 
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:45:11: ( flow )*
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:45:11: ( flow )*
             loop2:
             do {
                 int alt2=2;
@@ -158,7 +158,7 @@ public TreeAdaptor getTreeAdaptor() {
 
                 switch (alt2) {
             	case 1 :
-            	    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:45:11: flow
+            	    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:45:11: flow
             	    {
             	    pushFollow(FOLLOW_flow_in_flux116);
             	    flow2=flow();
@@ -207,7 +207,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "varDef"
-    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:48:1: varDef : ( 'default ' i= Identifier '=' exp ';' -> ^( DEFAULT Identifier exp ) |i= Identifier '=' exp ';' -> ^( ASSIGN Identifier exp ) );
+    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:48:1: varDef : ( 'default ' i= Identifier '=' exp ';' -> ^( DEFAULT Identifier exp ) |i= Identifier '=' exp ';' -> ^( ASSIGN Identifier exp ) );
     public final FluxParser.varDef_return varDef() throws RecognitionException {
         FluxParser.varDef_return retval = new FluxParser.varDef_return();
         retval.start = input.LT(1);
@@ -238,7 +238,7 @@ public TreeAdaptor getTreeAdaptor() {
         RewriteRuleTokenStream stream_29=new RewriteRuleTokenStream(adaptor,"token 29");
         RewriteRuleSubtreeStream stream_exp=new RewriteRuleSubtreeStream(adaptor,"rule exp");
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:49:3: ( 'default ' i= Identifier '=' exp ';' -> ^( DEFAULT Identifier exp ) |i= Identifier '=' exp ';' -> ^( ASSIGN Identifier exp ) )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:49:3: ( 'default ' i= Identifier '=' exp ';' -> ^( DEFAULT Identifier exp ) |i= Identifier '=' exp ';' -> ^( ASSIGN Identifier exp ) )
             int alt3=2;
             int LA3_0 = input.LA(1);
 
@@ -257,7 +257,7 @@ public TreeAdaptor getTreeAdaptor() {
             }
             switch (alt3) {
                 case 1 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:50:3: 'default ' i= Identifier '=' exp ';'
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:50:3: 'default ' i= Identifier '=' exp ';'
                     {
                     string_literal3=(Token)match(input,31,FOLLOW_31_in_varDef132);  
                     stream_31.add(string_literal3);
@@ -295,7 +295,7 @@ public TreeAdaptor getTreeAdaptor() {
                     root_0 = (CommonTree)adaptor.nil();
                     // 51:5: -> ^( DEFAULT Identifier exp )
                     {
-                        // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:52:7: ^( DEFAULT Identifier exp )
+                        // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:52:7: ^( DEFAULT Identifier exp )
                         {
                         CommonTree root_1 = (CommonTree)adaptor.nil();
                         root_1 = (CommonTree)adaptor.becomeRoot(
@@ -319,7 +319,7 @@ public TreeAdaptor getTreeAdaptor() {
                     }
                     break;
                 case 2 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:53:5: i= Identifier '=' exp ';'
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:53:5: i= Identifier '=' exp ';'
                     {
                     i=(Token)match(input,Identifier,FOLLOW_Identifier_in_varDef170);  
                     stream_Identifier.add(i);
@@ -353,7 +353,7 @@ public TreeAdaptor getTreeAdaptor() {
                     root_0 = (CommonTree)adaptor.nil();
                     // 54:5: -> ^( ASSIGN Identifier exp )
                     {
-                        // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:55:7: ^( ASSIGN Identifier exp )
+                        // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:55:7: ^( ASSIGN Identifier exp )
                         {
                         CommonTree root_1 = (CommonTree)adaptor.nil();
                         root_1 = (CommonTree)adaptor.becomeRoot(
@@ -407,7 +407,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "flow"
-    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:58:1: flow : ( StdIn | exp | Wormhole ) '|' ! flowtail ( '|' ! Wormhole )? ';' !;
+    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:58:1: flow : ( StdIn | exp | Wormhole ) '|' ! flowtail ( '|' ! Wormhole )? ';' !;
     public final FluxParser.flow_return flow() throws RecognitionException {
         FluxParser.flow_return retval = new FluxParser.flow_return();
         retval.start = input.LT(1);
@@ -434,13 +434,13 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree char_literal17_tree=null;
 
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:59:3: ( ( StdIn | exp | Wormhole ) '|' ! flowtail ( '|' ! Wormhole )? ';' !)
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:60:3: ( StdIn | exp | Wormhole ) '|' ! flowtail ( '|' ! Wormhole )? ';' !
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:59:3: ( ( StdIn | exp | Wormhole ) '|' ! flowtail ( '|' ! Wormhole )? ';' !)
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:60:3: ( StdIn | exp | Wormhole ) '|' ! flowtail ( '|' ! Wormhole )? ';' !
             {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:60:3: ( StdIn | exp | Wormhole )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:60:3: ( StdIn | exp | Wormhole )
             int alt4=3;
             switch ( input.LA(1) ) {
             case StdIn:
@@ -469,7 +469,7 @@ public TreeAdaptor getTreeAdaptor() {
 
             switch (alt4) {
                 case 1 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:61:5: StdIn
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:61:5: StdIn
                     {
                     StdIn10=(Token)match(input,StdIn,FOLLOW_StdIn_in_flow217); 
                     StdIn10_tree = 
@@ -481,7 +481,7 @@ public TreeAdaptor getTreeAdaptor() {
                     }
                     break;
                 case 2 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:62:7: exp
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:62:7: exp
                     {
                     pushFollow(FOLLOW_exp_in_flow225);
                     exp11=exp();
@@ -493,7 +493,7 @@ public TreeAdaptor getTreeAdaptor() {
                     }
                     break;
                 case 3 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:63:7: Wormhole
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:63:7: Wormhole
                     {
                     Wormhole12=(Token)match(input,Wormhole,FOLLOW_Wormhole_in_flow233); 
                     Wormhole12_tree = 
@@ -517,7 +517,7 @@ public TreeAdaptor getTreeAdaptor() {
 
             adaptor.addChild(root_0, flowtail14.getTree());
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:65:17: ( '|' ! Wormhole )?
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:65:17: ( '|' ! Wormhole )?
             int alt5=2;
             int LA5_0 = input.LA(1);
 
@@ -526,7 +526,7 @@ public TreeAdaptor getTreeAdaptor() {
             }
             switch (alt5) {
                 case 1 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:65:18: '|' ! Wormhole
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:65:18: '|' ! Wormhole
                     {
                     char_literal15=(Token)match(input,33,FOLLOW_33_in_flow247); 
 
@@ -576,7 +576,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "tee"
-    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:68:1: tee : ( '{' flowtail '}' )+ -> ^( TEE ( ^( SUBFLOW flowtail ) )+ ) ;
+    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:68:1: tee : ( '{' flowtail '}' )+ -> ^( TEE ( ^( SUBFLOW flowtail ) )+ ) ;
     public final FluxParser.tee_return tee() throws RecognitionException {
         FluxParser.tee_return retval = new FluxParser.tee_return();
         retval.start = input.LT(1);
@@ -595,10 +595,10 @@ public TreeAdaptor getTreeAdaptor() {
         RewriteRuleTokenStream stream_34=new RewriteRuleTokenStream(adaptor,"token 34");
         RewriteRuleSubtreeStream stream_flowtail=new RewriteRuleSubtreeStream(adaptor,"rule flowtail");
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:69:3: ( ( '{' flowtail '}' )+ -> ^( TEE ( ^( SUBFLOW flowtail ) )+ ) )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:70:3: ( '{' flowtail '}' )+
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:69:3: ( ( '{' flowtail '}' )+ -> ^( TEE ( ^( SUBFLOW flowtail ) )+ ) )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:70:3: ( '{' flowtail '}' )+
             {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:70:3: ( '{' flowtail '}' )+
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:70:3: ( '{' flowtail '}' )+
             int cnt6=0;
             loop6:
             do {
@@ -612,7 +612,7 @@ public TreeAdaptor getTreeAdaptor() {
 
                 switch (alt6) {
             	case 1 :
-            	    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:70:4: '{' flowtail '}'
+            	    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:70:4: '{' flowtail '}'
             	    {
             	    char_literal18=(Token)match(input,32,FOLLOW_32_in_tee271);  
             	    stream_32.add(char_literal18);
@@ -655,7 +655,7 @@ public TreeAdaptor getTreeAdaptor() {
             root_0 = (CommonTree)adaptor.nil();
             // 71:5: -> ^( TEE ( ^( SUBFLOW flowtail ) )+ )
             {
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:72:7: ^( TEE ( ^( SUBFLOW flowtail ) )+ )
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:72:7: ^( TEE ( ^( SUBFLOW flowtail ) )+ )
                 {
                 CommonTree root_1 = (CommonTree)adaptor.nil();
                 root_1 = (CommonTree)adaptor.becomeRoot(
@@ -666,7 +666,7 @@ public TreeAdaptor getTreeAdaptor() {
                     throw new RewriteEarlyExitException();
                 }
                 while ( stream_flowtail.hasNext() ) {
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:74:9: ^( SUBFLOW flowtail )
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:74:9: ^( SUBFLOW flowtail )
                     {
                     CommonTree root_2 = (CommonTree)adaptor.nil();
                     root_2 = (CommonTree)adaptor.becomeRoot(
@@ -720,7 +720,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "flowtail"
-    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:78:1: flowtail : ( pipe | tee ) ( '|' ! ( pipe | tee ) )* ;
+    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:78:1: flowtail : ( pipe | tee ) ( '|' ! ( pipe | tee ) )* ;
     public final FluxParser.flowtail_return flowtail() throws RecognitionException {
         FluxParser.flowtail_return retval = new FluxParser.flowtail_return();
         retval.start = input.LT(1);
@@ -741,13 +741,13 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree char_literal23_tree=null;
 
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:79:3: ( ( pipe | tee ) ( '|' ! ( pipe | tee ) )* )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:80:3: ( pipe | tee ) ( '|' ! ( pipe | tee ) )*
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:79:3: ( ( pipe | tee ) ( '|' ! ( pipe | tee ) )* )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:80:3: ( pipe | tee ) ( '|' ! ( pipe | tee ) )*
             {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:80:3: ( pipe | tee )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:80:3: ( pipe | tee )
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -766,7 +766,7 @@ public TreeAdaptor getTreeAdaptor() {
             }
             switch (alt7) {
                 case 1 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:81:5: pipe
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:81:5: pipe
                     {
                     pushFollow(FOLLOW_pipe_in_flowtail346);
                     pipe21=pipe();
@@ -778,7 +778,7 @@ public TreeAdaptor getTreeAdaptor() {
                     }
                     break;
                 case 2 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:82:7: tee
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:82:7: tee
                     {
                     pushFollow(FOLLOW_tee_in_flowtail354);
                     tee22=tee();
@@ -793,7 +793,7 @@ public TreeAdaptor getTreeAdaptor() {
             }
 
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:84:3: ( '|' ! ( pipe | tee ) )*
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:84:3: ( '|' ! ( pipe | tee ) )*
             loop9:
             do {
                 int alt9=2;
@@ -812,11 +812,11 @@ public TreeAdaptor getTreeAdaptor() {
 
                 switch (alt9) {
             	case 1 :
-            	    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:85:5: '|' ! ( pipe | tee )
+            	    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:85:5: '|' ! ( pipe | tee )
             	    {
             	    char_literal23=(Token)match(input,33,FOLLOW_33_in_flowtail368); 
 
-            	    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:86:5: ( pipe | tee )
+            	    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:86:5: ( pipe | tee )
             	    int alt8=2;
             	    int LA8_0 = input.LA(1);
 
@@ -835,7 +835,7 @@ public TreeAdaptor getTreeAdaptor() {
             	    }
             	    switch (alt8) {
             	        case 1 :
-            	            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:87:7: pipe
+            	            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:87:7: pipe
             	            {
             	            pushFollow(FOLLOW_pipe_in_flowtail383);
             	            pipe24=pipe();
@@ -847,7 +847,7 @@ public TreeAdaptor getTreeAdaptor() {
             	            }
             	            break;
             	        case 2 :
-            	            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:88:9: tee
+            	            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:88:9: tee
             	            {
             	            pushFollow(FOLLOW_tee_in_flowtail393);
             	            tee25=tee();
@@ -902,7 +902,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "pipe"
-    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:98:1: pipe : qualifiedName ( '(' pipeArgs ')' )? -> ^( QualifiedName[$qualifiedName.text] ( pipeArgs )* ) ;
+    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:98:1: pipe : qualifiedName ( '(' pipeArgs ')' )? -> ^( QualifiedName[$qualifiedName.text] ( pipeArgs )* ) ;
     public final FluxParser.pipe_return pipe() throws RecognitionException {
         FluxParser.pipe_return retval = new FluxParser.pipe_return();
         retval.start = input.LT(1);
@@ -924,8 +924,8 @@ public TreeAdaptor getTreeAdaptor() {
         RewriteRuleSubtreeStream stream_qualifiedName=new RewriteRuleSubtreeStream(adaptor,"rule qualifiedName");
         RewriteRuleSubtreeStream stream_pipeArgs=new RewriteRuleSubtreeStream(adaptor,"rule pipeArgs");
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:99:3: ( qualifiedName ( '(' pipeArgs ')' )? -> ^( QualifiedName[$qualifiedName.text] ( pipeArgs )* ) )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:100:3: qualifiedName ( '(' pipeArgs ')' )?
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:99:3: ( qualifiedName ( '(' pipeArgs ')' )? -> ^( QualifiedName[$qualifiedName.text] ( pipeArgs )* ) )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:100:3: qualifiedName ( '(' pipeArgs ')' )?
             {
             pushFollow(FOLLOW_qualifiedName_in_pipe434);
             qualifiedName26=qualifiedName();
@@ -934,7 +934,7 @@ public TreeAdaptor getTreeAdaptor() {
 
             stream_qualifiedName.add(qualifiedName26.getTree());
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:100:17: ( '(' pipeArgs ')' )?
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:100:17: ( '(' pipeArgs ')' )?
             int alt10=2;
             int LA10_0 = input.LA(1);
 
@@ -943,7 +943,7 @@ public TreeAdaptor getTreeAdaptor() {
             }
             switch (alt10) {
                 case 1 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:100:18: '(' pipeArgs ')'
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:100:18: '(' pipeArgs ')'
                     {
                     char_literal27=(Token)match(input,24,FOLLOW_24_in_pipe437);  
                     stream_24.add(char_literal27);
@@ -979,14 +979,14 @@ public TreeAdaptor getTreeAdaptor() {
             root_0 = (CommonTree)adaptor.nil();
             // 101:5: -> ^( QualifiedName[$qualifiedName.text] ( pipeArgs )* )
             {
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:102:7: ^( QualifiedName[$qualifiedName.text] ( pipeArgs )* )
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:102:7: ^( QualifiedName[$qualifiedName.text] ( pipeArgs )* )
                 {
                 CommonTree root_1 = (CommonTree)adaptor.nil();
                 root_1 = (CommonTree)adaptor.becomeRoot(
                 (CommonTree)adaptor.create(QualifiedName, (qualifiedName26!=null?input.toString(qualifiedName26.start,qualifiedName26.stop):null))
                 , root_1);
 
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:102:44: ( pipeArgs )*
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:102:44: ( pipeArgs )*
                 while ( stream_pipeArgs.hasNext() ) {
                     adaptor.addChild(root_1, stream_pipeArgs.nextTree());
 
@@ -1032,7 +1032,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "exp"
-    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:105:1: exp : atom ( '+' ^ atom )* ;
+    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:105:1: exp : atom ( '+' ^ atom )* ;
     public final FluxParser.exp_return exp() throws RecognitionException {
         FluxParser.exp_return retval = new FluxParser.exp_return();
         retval.start = input.LT(1);
@@ -1049,8 +1049,8 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree char_literal31_tree=null;
 
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:106:3: ( atom ( '+' ^ atom )* )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:107:3: atom ( '+' ^ atom )*
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:106:3: ( atom ( '+' ^ atom )* )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:107:3: atom ( '+' ^ atom )*
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -1062,7 +1062,7 @@ public TreeAdaptor getTreeAdaptor() {
 
             adaptor.addChild(root_0, atom30.getTree());
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:107:8: ( '+' ^ atom )*
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:107:8: ( '+' ^ atom )*
             loop11:
             do {
                 int alt11=2;
@@ -1075,7 +1075,7 @@ public TreeAdaptor getTreeAdaptor() {
 
                 switch (alt11) {
             	case 1 :
-            	    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:107:9: '+' ^ atom
+            	    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:107:9: '+' ^ atom
             	    {
             	    char_literal31=(Token)match(input,26,FOLLOW_26_in_exp481); 
             	    char_literal31_tree = 
@@ -1131,7 +1131,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "atom"
-    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:110:1: atom : ( StringLiteral | Identifier );
+    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:110:1: atom : ( StringLiteral | Identifier );
     public final FluxParser.atom_return atom() throws RecognitionException {
         FluxParser.atom_return retval = new FluxParser.atom_return();
         retval.start = input.LT(1);
@@ -1144,8 +1144,8 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree set33_tree=null;
 
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:111:3: ( StringLiteral | Identifier )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:111:3: ( StringLiteral | Identifier )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -1196,7 +1196,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "pipeArgs"
-    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:116:1: pipeArgs : ( exp | exp ',' ! VarRef | VarRef | namedArg ) ( ',' ! namedArg )* ;
+    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:116:1: pipeArgs : ( exp | exp ',' ! VarRef | VarRef | namedArg ) ( ',' ! namedArg )* ;
     public final FluxParser.pipeArgs_return pipeArgs() throws RecognitionException {
         FluxParser.pipeArgs_return retval = new FluxParser.pipeArgs_return();
         retval.start = input.LT(1);
@@ -1223,18 +1223,18 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree char_literal40_tree=null;
 
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:117:3: ( ( exp | exp ',' ! VarRef | VarRef | namedArg ) ( ',' ! namedArg )* )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:118:3: ( exp | exp ',' ! VarRef | VarRef | namedArg ) ( ',' ! namedArg )*
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:117:3: ( ( exp | exp ',' ! VarRef | VarRef | namedArg ) ( ',' ! namedArg )* )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:118:3: ( exp | exp ',' ! VarRef | VarRef | namedArg ) ( ',' ! namedArg )*
             {
             root_0 = (CommonTree)adaptor.nil();
 
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:118:3: ( exp | exp ',' ! VarRef | VarRef | namedArg )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:118:3: ( exp | exp ',' ! VarRef | VarRef | namedArg )
             int alt12=4;
             alt12 = dfa12.predict(input);
             switch (alt12) {
                 case 1 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:119:5: exp
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:119:5: exp
                     {
                     pushFollow(FOLLOW_exp_in_pipeArgs528);
                     exp34=exp();
@@ -1246,7 +1246,7 @@ public TreeAdaptor getTreeAdaptor() {
                     }
                     break;
                 case 2 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:120:7: exp ',' ! VarRef
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:120:7: exp ',' ! VarRef
                     {
                     pushFollow(FOLLOW_exp_in_pipeArgs536);
                     exp35=exp();
@@ -1267,7 +1267,7 @@ public TreeAdaptor getTreeAdaptor() {
                     }
                     break;
                 case 3 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:121:7: VarRef
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:121:7: VarRef
                     {
                     VarRef38=(Token)match(input,VarRef,FOLLOW_VarRef_in_pipeArgs549); 
                     VarRef38_tree = 
@@ -1279,7 +1279,7 @@ public TreeAdaptor getTreeAdaptor() {
                     }
                     break;
                 case 4 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:122:7: namedArg
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:122:7: namedArg
                     {
                     pushFollow(FOLLOW_namedArg_in_pipeArgs557);
                     namedArg39=namedArg();
@@ -1294,7 +1294,7 @@ public TreeAdaptor getTreeAdaptor() {
             }
 
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:124:3: ( ',' ! namedArg )*
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:124:3: ( ',' ! namedArg )*
             loop13:
             do {
                 int alt13=2;
@@ -1307,7 +1307,7 @@ public TreeAdaptor getTreeAdaptor() {
 
                 switch (alt13) {
             	case 1 :
-            	    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:124:4: ',' ! namedArg
+            	    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:124:4: ',' ! namedArg
             	    {
             	    char_literal40=(Token)match(input,27,FOLLOW_27_in_pipeArgs566); 
 
@@ -1358,7 +1358,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "namedArg"
-    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:127:1: namedArg : Identifier '=' exp -> ^( ARG Identifier exp ) ;
+    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:127:1: namedArg : Identifier '=' exp -> ^( ARG Identifier exp ) ;
     public final FluxParser.namedArg_return namedArg() throws RecognitionException {
         FluxParser.namedArg_return retval = new FluxParser.namedArg_return();
         retval.start = input.LT(1);
@@ -1377,8 +1377,8 @@ public TreeAdaptor getTreeAdaptor() {
         RewriteRuleTokenStream stream_Identifier=new RewriteRuleTokenStream(adaptor,"token Identifier");
         RewriteRuleSubtreeStream stream_exp=new RewriteRuleSubtreeStream(adaptor,"rule exp");
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:128:3: ( Identifier '=' exp -> ^( ARG Identifier exp ) )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:129:3: Identifier '=' exp
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:128:3: ( Identifier '=' exp -> ^( ARG Identifier exp ) )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:129:3: Identifier '=' exp
             {
             Identifier42=(Token)match(input,Identifier,FOLLOW_Identifier_in_namedArg586);  
             stream_Identifier.add(Identifier42);
@@ -1408,7 +1408,7 @@ public TreeAdaptor getTreeAdaptor() {
             root_0 = (CommonTree)adaptor.nil();
             // 130:5: -> ^( ARG Identifier exp )
             {
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:131:7: ^( ARG Identifier exp )
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:131:7: ^( ARG Identifier exp )
                 {
                 CommonTree root_1 = (CommonTree)adaptor.nil();
                 root_1 = (CommonTree)adaptor.becomeRoot(
@@ -1460,7 +1460,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "qualifiedName"
-    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:134:1: qualifiedName : Identifier ( '.' Identifier )* ;
+    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:134:1: qualifiedName : Identifier ( '.' Identifier )* ;
     public final FluxParser.qualifiedName_return qualifiedName() throws RecognitionException {
         FluxParser.qualifiedName_return retval = new FluxParser.qualifiedName_return();
         retval.start = input.LT(1);
@@ -1477,8 +1477,8 @@ public TreeAdaptor getTreeAdaptor() {
         CommonTree Identifier47_tree=null;
 
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:135:3: ( Identifier ( '.' Identifier )* )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:136:3: Identifier ( '.' Identifier )*
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:135:3: ( Identifier ( '.' Identifier )* )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:136:3: Identifier ( '.' Identifier )*
             {
             root_0 = (CommonTree)adaptor.nil();
 
@@ -1490,7 +1490,7 @@ public TreeAdaptor getTreeAdaptor() {
             adaptor.addChild(root_0, Identifier45_tree);
 
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:136:14: ( '.' Identifier )*
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:136:14: ( '.' Identifier )*
             loop14:
             do {
                 int alt14=2;
@@ -1503,7 +1503,7 @@ public TreeAdaptor getTreeAdaptor() {
 
                 switch (alt14) {
             	case 1 :
-            	    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:136:15: '.' Identifier
+            	    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:136:15: '.' Identifier
             	    {
             	    char_literal46=(Token)match(input,28,FOLLOW_28_in_qualifiedName628); 
             	    char_literal46_tree = 

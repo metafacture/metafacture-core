@@ -1,4 +1,4 @@
-// $ANTLR 3.4 D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g 2013-07-03 10:40:33
+// $ANTLR 3.4 /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g 2014-02-28 19:33:56
 
 package org.culturegraph.mf.flux.parser;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -57,15 +57,15 @@ public class FluxLexer extends Lexer {
     public FluxLexer(CharStream input, RecognizerSharedState state) {
         super(input,state);
     }
-    public String getGrammarFileName() { return "D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g"; }
+    public String getGrammarFileName() { return "/home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g"; }
 
     // $ANTLR start "T__24"
     public final void mT__24() throws RecognitionException {
         try {
             int _type = T__24;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:12:7: ( '(' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:12:9: '('
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:12:7: ( '(' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:12:9: '('
             {
             match('('); 
 
@@ -85,8 +85,8 @@ public class FluxLexer extends Lexer {
         try {
             int _type = T__25;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:13:7: ( ')' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:13:9: ')'
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:13:7: ( ')' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:13:9: ')'
             {
             match(')'); 
 
@@ -106,8 +106,8 @@ public class FluxLexer extends Lexer {
         try {
             int _type = T__26;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:14:7: ( '+' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:14:9: '+'
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:14:7: ( '+' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:14:9: '+'
             {
             match('+'); 
 
@@ -127,8 +127,8 @@ public class FluxLexer extends Lexer {
         try {
             int _type = T__27;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:15:7: ( ',' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:15:9: ','
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:15:7: ( ',' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:15:9: ','
             {
             match(','); 
 
@@ -148,8 +148,8 @@ public class FluxLexer extends Lexer {
         try {
             int _type = T__28;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:16:7: ( '.' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:16:9: '.'
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:16:7: ( '.' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:16:9: '.'
             {
             match('.'); 
 
@@ -169,8 +169,8 @@ public class FluxLexer extends Lexer {
         try {
             int _type = T__29;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:17:7: ( ';' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:17:9: ';'
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:17:7: ( ';' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:17:9: ';'
             {
             match(';'); 
 
@@ -190,8 +190,8 @@ public class FluxLexer extends Lexer {
         try {
             int _type = T__30;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:18:7: ( '=' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:18:9: '='
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:18:7: ( '=' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:18:9: '='
             {
             match('='); 
 
@@ -211,8 +211,8 @@ public class FluxLexer extends Lexer {
         try {
             int _type = T__31;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:19:7: ( 'default ' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:19:9: 'default '
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:19:7: ( 'default ' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:19:9: 'default '
             {
             match("default "); 
 
@@ -234,8 +234,8 @@ public class FluxLexer extends Lexer {
         try {
             int _type = T__32;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:20:7: ( '{' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:20:9: '{'
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:20:7: ( '{' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:20:9: '{'
             {
             match('{'); 
 
@@ -255,8 +255,8 @@ public class FluxLexer extends Lexer {
         try {
             int _type = T__33;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:21:7: ( '|' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:21:9: '|'
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:21:7: ( '|' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:21:9: '|'
             {
             match('|'); 
 
@@ -276,8 +276,8 @@ public class FluxLexer extends Lexer {
         try {
             int _type = T__34;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:22:7: ( '}' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:22:9: '}'
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:22:7: ( '}' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:22:9: '}'
             {
             match('}'); 
 
@@ -297,8 +297,8 @@ public class FluxLexer extends Lexer {
         try {
             int _type = StdIn;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:94:3: ( '>' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:95:3: '>'
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:94:3: ( '>' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:95:3: '>'
             {
             match('>'); 
 
@@ -318,8 +318,8 @@ public class FluxLexer extends Lexer {
         try {
             int _type = VarRef;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:140:3: ( '*' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:141:3: '*'
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:140:3: ( '*' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:141:3: '*'
             {
             match('*'); 
 
@@ -339,13 +339,13 @@ public class FluxLexer extends Lexer {
         try {
             int _type = Identifier;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:145:3: ( Letter ( Letter | Digit )* )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:146:3: Letter ( Letter | Digit )*
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:145:3: ( Letter ( Letter | Digit )* )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:146:3: Letter ( Letter | Digit )*
             {
             mLetter(); 
 
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:147:3: ( Letter | Digit )*
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:147:3: ( Letter | Digit )*
             loop1:
             do {
                 int alt1=2;
@@ -358,7 +358,7 @@ public class FluxLexer extends Lexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:
+            	    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:
             	    {
             	    if ( input.LA(1)=='$'||input.LA(1)=='-'||(input.LA(1) >= '0' && input.LA(1) <= '9')||(input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z')||(input.LA(1) >= '\u00C0' && input.LA(1) <= '\u00D6')||(input.LA(1) >= '\u00D8' && input.LA(1) <= '\u00F6')||(input.LA(1) >= '\u00F8' && input.LA(1) <= '\u1FFF')||(input.LA(1) >= '\u3040' && input.LA(1) <= '\u318F')||(input.LA(1) >= '\u3300' && input.LA(1) <= '\u337F')||(input.LA(1) >= '\u3400' && input.LA(1) <= '\u3D2D')||(input.LA(1) >= '\u4E00' && input.LA(1) <= '\u9FFF')||(input.LA(1) >= '\uF900' && input.LA(1) <= '\uFAFF') ) {
             	        input.consume();
@@ -397,8 +397,8 @@ public class FluxLexer extends Lexer {
             int _channel = DEFAULT_TOKEN_CHANNEL;
             CommonToken id=null;
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:154:3: ( '@' id= Identifier )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:155:3: '@' id= Identifier
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:154:3: ( '@' id= Identifier )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:155:3: '@' id= Identifier
             {
             match('@'); 
 
@@ -431,12 +431,12 @@ public class FluxLexer extends Lexer {
         try {
             int _type = StringLiteral;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:162:3: ( '\"' ( EscapeSequence |~ ( '\\\\' | '\"' ) )* '\"' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:163:3: '\"' ( EscapeSequence |~ ( '\\\\' | '\"' ) )* '\"'
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:162:3: ( '\"' ( EscapeSequence |~ ( '\\\\' | '\"' ) )* '\"' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:163:3: '\"' ( EscapeSequence |~ ( '\\\\' | '\"' ) )* '\"'
             {
             match('\"'); 
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:164:3: ( EscapeSequence |~ ( '\\\\' | '\"' ) )*
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:164:3: ( EscapeSequence |~ ( '\\\\' | '\"' ) )*
             loop2:
             do {
                 int alt2=3;
@@ -452,7 +452,7 @@ public class FluxLexer extends Lexer {
 
                 switch (alt2) {
             	case 1 :
-            	    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:165:5: EscapeSequence
+            	    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:165:5: EscapeSequence
             	    {
             	    mEscapeSequence(); 
 
@@ -460,7 +460,7 @@ public class FluxLexer extends Lexer {
             	    }
             	    break;
             	case 2 :
-            	    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:167:5: ~ ( '\\\\' | '\"' )
+            	    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:167:5: ~ ( '\\\\' | '\"' )
             	    {
             	    if ( (input.LA(1) >= '\u0000' && input.LA(1) <= '!')||(input.LA(1) >= '#' && input.LA(1) <= '[')||(input.LA(1) >= ']' && input.LA(1) <= '\uFFFF') ) {
             	        input.consume();
@@ -503,7 +503,7 @@ public class FluxLexer extends Lexer {
     // $ANTLR start "EscapeSequence"
     public final void mEscapeSequence() throws RecognitionException {
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:183:3: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | UnicodeEscape | OctalEscape )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:183:3: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' ) | UnicodeEscape | OctalEscape )
             int alt3=3;
             int LA3_0 = input.LA(1);
 
@@ -556,7 +556,7 @@ public class FluxLexer extends Lexer {
             }
             switch (alt3) {
                 case 1 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:184:3: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' )
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:184:3: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\\\"' | '\\'' | '\\\\' )
                     {
                     match('\\'); 
 
@@ -573,7 +573,7 @@ public class FluxLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:195:5: UnicodeEscape
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:195:5: UnicodeEscape
                     {
                     mUnicodeEscape(); 
 
@@ -581,7 +581,7 @@ public class FluxLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:196:5: OctalEscape
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:196:5: OctalEscape
                     {
                     mOctalEscape(); 
 
@@ -601,7 +601,7 @@ public class FluxLexer extends Lexer {
     // $ANTLR start "OctalEscape"
     public final void mOctalEscape() throws RecognitionException {
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:201:3: ( '\\\\' ( '0' .. '3' ) ( '0' .. '7' ) ( '0' .. '7' ) | '\\\\' ( '0' .. '7' ) ( '0' .. '7' ) | '\\\\' ( '0' .. '7' ) )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:201:3: ( '\\\\' ( '0' .. '3' ) ( '0' .. '7' ) ( '0' .. '7' ) | '\\\\' ( '0' .. '7' ) ( '0' .. '7' ) | '\\\\' ( '0' .. '7' ) )
             int alt4=3;
             int LA4_0 = input.LA(1);
 
@@ -652,7 +652,7 @@ public class FluxLexer extends Lexer {
             }
             switch (alt4) {
                 case 1 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:202:3: '\\\\' ( '0' .. '3' ) ( '0' .. '7' ) ( '0' .. '7' )
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:202:3: '\\\\' ( '0' .. '3' ) ( '0' .. '7' ) ( '0' .. '7' )
                     {
                     match('\\'); 
 
@@ -689,7 +689,7 @@ public class FluxLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:203:5: '\\\\' ( '0' .. '7' ) ( '0' .. '7' )
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:203:5: '\\\\' ( '0' .. '7' ) ( '0' .. '7' )
                     {
                     match('\\'); 
 
@@ -716,7 +716,7 @@ public class FluxLexer extends Lexer {
                     }
                     break;
                 case 3 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:204:5: '\\\\' ( '0' .. '7' )
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:204:5: '\\\\' ( '0' .. '7' )
                     {
                     match('\\'); 
 
@@ -745,8 +745,8 @@ public class FluxLexer extends Lexer {
     // $ANTLR start "UnicodeEscape"
     public final void mUnicodeEscape() throws RecognitionException {
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:209:3: ( '\\\\' 'u' HexDigit HexDigit HexDigit HexDigit )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:210:3: '\\\\' 'u' HexDigit HexDigit HexDigit HexDigit
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:209:3: ( '\\\\' 'u' HexDigit HexDigit HexDigit HexDigit )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:210:3: '\\\\' 'u' HexDigit HexDigit HexDigit HexDigit
             {
             match('\\'); 
 
@@ -777,8 +777,8 @@ public class FluxLexer extends Lexer {
     // $ANTLR start "HexDigit"
     public final void mHexDigit() throws RecognitionException {
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:215:3: ( ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:215:3: ( ( '0' .. '9' | 'a' .. 'f' | 'A' .. 'F' ) )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:
             {
             if ( (input.LA(1) >= '0' && input.LA(1) <= '9')||(input.LA(1) >= 'A' && input.LA(1) <= 'F')||(input.LA(1) >= 'a' && input.LA(1) <= 'f') ) {
                 input.consume();
@@ -803,8 +803,8 @@ public class FluxLexer extends Lexer {
     // $ANTLR start "Letter"
     public final void mLetter() throws RecognitionException {
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:225:3: ( '\\u0024' | '\\u0041' .. '\\u005a' | '\\u005f' | '\\u0061' .. '\\u007a' | '\\u00c0' .. '\\u00d6' | '\\u00d8' .. '\\u00f6' | '\\u00f8' .. '\\u00ff' | '\\u0100' .. '\\u1fff' | '\\u3040' .. '\\u318f' | '\\u3300' .. '\\u337f' | '\\u3400' .. '\\u3d2d' | '\\u4e00' .. '\\u9fff' | '\\uf900' .. '\\ufaff' | '-' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:225:3: ( '\\u0024' | '\\u0041' .. '\\u005a' | '\\u005f' | '\\u0061' .. '\\u007a' | '\\u00c0' .. '\\u00d6' | '\\u00d8' .. '\\u00f6' | '\\u00f8' .. '\\u00ff' | '\\u0100' .. '\\u1fff' | '\\u3040' .. '\\u318f' | '\\u3300' .. '\\u337f' | '\\u3400' .. '\\u3d2d' | '\\u4e00' .. '\\u9fff' | '\\uf900' .. '\\ufaff' | '-' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:
             {
             if ( input.LA(1)=='$'||input.LA(1)=='-'||(input.LA(1) >= 'A' && input.LA(1) <= 'Z')||input.LA(1)=='_'||(input.LA(1) >= 'a' && input.LA(1) <= 'z')||(input.LA(1) >= '\u00C0' && input.LA(1) <= '\u00D6')||(input.LA(1) >= '\u00D8' && input.LA(1) <= '\u00F6')||(input.LA(1) >= '\u00F8' && input.LA(1) <= '\u1FFF')||(input.LA(1) >= '\u3040' && input.LA(1) <= '\u318F')||(input.LA(1) >= '\u3300' && input.LA(1) <= '\u337F')||(input.LA(1) >= '\u3400' && input.LA(1) <= '\u3D2D')||(input.LA(1) >= '\u4E00' && input.LA(1) <= '\u9FFF')||(input.LA(1) >= '\uF900' && input.LA(1) <= '\uFAFF') ) {
                 input.consume();
@@ -829,8 +829,8 @@ public class FluxLexer extends Lexer {
     // $ANTLR start "Digit"
     public final void mDigit() throws RecognitionException {
         try {
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:244:3: ( '0' .. '9' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:244:3: ( '0' .. '9' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:
             {
             if ( (input.LA(1) >= '0' && input.LA(1) <= '9') ) {
                 input.consume();
@@ -857,14 +857,14 @@ public class FluxLexer extends Lexer {
         try {
             int _type = LINE_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:248:3: ( '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:249:3: '//' (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:248:3: ( '//' (~ ( '\\n' | '\\r' ) )* ( ( '\\r' )? '\\n' | EOF ) )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:249:3: '//' (~ ( '\\n' | '\\r' ) )* ( ( '\\r' )? '\\n' | EOF )
             {
             match("//"); 
 
 
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:250:3: (~ ( '\\n' | '\\r' ) )*
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:250:3: (~ ( '\\n' | '\\r' ) )*
             loop5:
             do {
                 int alt5=2;
@@ -877,7 +877,7 @@ public class FluxLexer extends Lexer {
 
                 switch (alt5) {
             	case 1 :
-            	    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:
+            	    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:
             	    {
             	    if ( (input.LA(1) >= '\u0000' && input.LA(1) <= '\t')||(input.LA(1) >= '\u000B' && input.LA(1) <= '\f')||(input.LA(1) >= '\u000E' && input.LA(1) <= '\uFFFF') ) {
             	        input.consume();
@@ -898,18 +898,48 @@ public class FluxLexer extends Lexer {
             } while (true);
 
 
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:254:3: ( '\\r' )?
-            int alt6=2;
-            int LA6_0 = input.LA(1);
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:254:3: ( ( '\\r' )? '\\n' | EOF )
+            int alt7=2;
+            int LA7_0 = input.LA(1);
 
-            if ( (LA6_0=='\r') ) {
-                alt6=1;
+            if ( (LA7_0=='\n'||LA7_0=='\r') ) {
+                alt7=1;
             }
-            switch (alt6) {
+            else {
+                alt7=2;
+            }
+            switch (alt7) {
                 case 1 :
-                    // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:254:3: '\\r'
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:255:5: ( '\\r' )? '\\n'
                     {
-                    match('\r'); 
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:255:5: ( '\\r' )?
+                    int alt6=2;
+                    int LA6_0 = input.LA(1);
+
+                    if ( (LA6_0=='\r') ) {
+                        alt6=1;
+                    }
+                    switch (alt6) {
+                        case 1 :
+                            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:255:5: '\\r'
+                            {
+                            match('\r'); 
+
+                            }
+                            break;
+
+                    }
+
+
+                    match('\n'); 
+
+                    }
+                    break;
+                case 2 :
+                    // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:256:7: EOF
+                    {
+                    match(EOF); 
+
 
                     }
                     break;
@@ -917,11 +947,9 @@ public class FluxLexer extends Lexer {
             }
 
 
-            match('\n'); 
 
-
-                         _channel = HIDDEN;
-                        
+                _channel = HIDDEN;
+              
 
             }
 
@@ -939,8 +967,8 @@ public class FluxLexer extends Lexer {
         try {
             int _type = WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:261:3: ( ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' ) )
-            // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:262:3: ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:265:3: ( ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' ) )
+            // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:266:3: ( ' ' | '\\r' | '\\t' | '\\u000C' | '\\n' )
             {
             if ( (input.LA(1) >= '\t' && input.LA(1) <= '\n')||(input.LA(1) >= '\f' && input.LA(1) <= '\r')||input.LA(1)==' ' ) {
                 input.consume();
@@ -968,123 +996,123 @@ public class FluxLexer extends Lexer {
     // $ANTLR end "WS"
 
     public void mTokens() throws RecognitionException {
-        // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:8: ( T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | StdIn | VarRef | Identifier | Wormhole | StringLiteral | LINE_COMMENT | WS )
-        int alt7=18;
-        int LA7_0 = input.LA(1);
+        // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:8: ( T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | StdIn | VarRef | Identifier | Wormhole | StringLiteral | LINE_COMMENT | WS )
+        int alt8=18;
+        int LA8_0 = input.LA(1);
 
-        if ( (LA7_0=='(') ) {
-            alt7=1;
+        if ( (LA8_0=='(') ) {
+            alt8=1;
         }
-        else if ( (LA7_0==')') ) {
-            alt7=2;
+        else if ( (LA8_0==')') ) {
+            alt8=2;
         }
-        else if ( (LA7_0=='+') ) {
-            alt7=3;
+        else if ( (LA8_0=='+') ) {
+            alt8=3;
         }
-        else if ( (LA7_0==',') ) {
-            alt7=4;
+        else if ( (LA8_0==',') ) {
+            alt8=4;
         }
-        else if ( (LA7_0=='.') ) {
-            alt7=5;
+        else if ( (LA8_0=='.') ) {
+            alt8=5;
         }
-        else if ( (LA7_0==';') ) {
-            alt7=6;
+        else if ( (LA8_0==';') ) {
+            alt8=6;
         }
-        else if ( (LA7_0=='=') ) {
-            alt7=7;
+        else if ( (LA8_0=='=') ) {
+            alt8=7;
         }
-        else if ( (LA7_0=='d') ) {
-            int LA7_8 = input.LA(2);
+        else if ( (LA8_0=='d') ) {
+            int LA8_8 = input.LA(2);
 
-            if ( (LA7_8=='e') ) {
-                int LA7_19 = input.LA(3);
+            if ( (LA8_8=='e') ) {
+                int LA8_19 = input.LA(3);
 
-                if ( (LA7_19=='f') ) {
-                    int LA7_20 = input.LA(4);
+                if ( (LA8_19=='f') ) {
+                    int LA8_20 = input.LA(4);
 
-                    if ( (LA7_20=='a') ) {
-                        int LA7_21 = input.LA(5);
+                    if ( (LA8_20=='a') ) {
+                        int LA8_21 = input.LA(5);
 
-                        if ( (LA7_21=='u') ) {
-                            int LA7_22 = input.LA(6);
+                        if ( (LA8_21=='u') ) {
+                            int LA8_22 = input.LA(6);
 
-                            if ( (LA7_22=='l') ) {
-                                int LA7_23 = input.LA(7);
+                            if ( (LA8_22=='l') ) {
+                                int LA8_23 = input.LA(7);
 
-                                if ( (LA7_23=='t') ) {
-                                    int LA7_24 = input.LA(8);
+                                if ( (LA8_23=='t') ) {
+                                    int LA8_24 = input.LA(8);
 
-                                    if ( (LA7_24==' ') ) {
-                                        alt7=8;
+                                    if ( (LA8_24==' ') ) {
+                                        alt8=8;
                                     }
                                     else {
-                                        alt7=14;
+                                        alt8=14;
                                     }
                                 }
                                 else {
-                                    alt7=14;
+                                    alt8=14;
                                 }
                             }
                             else {
-                                alt7=14;
+                                alt8=14;
                             }
                         }
                         else {
-                            alt7=14;
+                            alt8=14;
                         }
                     }
                     else {
-                        alt7=14;
+                        alt8=14;
                     }
                 }
                 else {
-                    alt7=14;
+                    alt8=14;
                 }
             }
             else {
-                alt7=14;
+                alt8=14;
             }
         }
-        else if ( (LA7_0=='{') ) {
-            alt7=9;
+        else if ( (LA8_0=='{') ) {
+            alt8=9;
         }
-        else if ( (LA7_0=='|') ) {
-            alt7=10;
+        else if ( (LA8_0=='|') ) {
+            alt8=10;
         }
-        else if ( (LA7_0=='}') ) {
-            alt7=11;
+        else if ( (LA8_0=='}') ) {
+            alt8=11;
         }
-        else if ( (LA7_0=='>') ) {
-            alt7=12;
+        else if ( (LA8_0=='>') ) {
+            alt8=12;
         }
-        else if ( (LA7_0=='*') ) {
-            alt7=13;
+        else if ( (LA8_0=='*') ) {
+            alt8=13;
         }
-        else if ( (LA7_0=='$'||LA7_0=='-'||(LA7_0 >= 'A' && LA7_0 <= 'Z')||LA7_0=='_'||(LA7_0 >= 'a' && LA7_0 <= 'c')||(LA7_0 >= 'e' && LA7_0 <= 'z')||(LA7_0 >= '\u00C0' && LA7_0 <= '\u00D6')||(LA7_0 >= '\u00D8' && LA7_0 <= '\u00F6')||(LA7_0 >= '\u00F8' && LA7_0 <= '\u1FFF')||(LA7_0 >= '\u3040' && LA7_0 <= '\u318F')||(LA7_0 >= '\u3300' && LA7_0 <= '\u337F')||(LA7_0 >= '\u3400' && LA7_0 <= '\u3D2D')||(LA7_0 >= '\u4E00' && LA7_0 <= '\u9FFF')||(LA7_0 >= '\uF900' && LA7_0 <= '\uFAFF')) ) {
-            alt7=14;
+        else if ( (LA8_0=='$'||LA8_0=='-'||(LA8_0 >= 'A' && LA8_0 <= 'Z')||LA8_0=='_'||(LA8_0 >= 'a' && LA8_0 <= 'c')||(LA8_0 >= 'e' && LA8_0 <= 'z')||(LA8_0 >= '\u00C0' && LA8_0 <= '\u00D6')||(LA8_0 >= '\u00D8' && LA8_0 <= '\u00F6')||(LA8_0 >= '\u00F8' && LA8_0 <= '\u1FFF')||(LA8_0 >= '\u3040' && LA8_0 <= '\u318F')||(LA8_0 >= '\u3300' && LA8_0 <= '\u337F')||(LA8_0 >= '\u3400' && LA8_0 <= '\u3D2D')||(LA8_0 >= '\u4E00' && LA8_0 <= '\u9FFF')||(LA8_0 >= '\uF900' && LA8_0 <= '\uFAFF')) ) {
+            alt8=14;
         }
-        else if ( (LA7_0=='@') ) {
-            alt7=15;
+        else if ( (LA8_0=='@') ) {
+            alt8=15;
         }
-        else if ( (LA7_0=='\"') ) {
-            alt7=16;
+        else if ( (LA8_0=='\"') ) {
+            alt8=16;
         }
-        else if ( (LA7_0=='/') ) {
-            alt7=17;
+        else if ( (LA8_0=='/') ) {
+            alt8=17;
         }
-        else if ( ((LA7_0 >= '\t' && LA7_0 <= '\n')||(LA7_0 >= '\f' && LA7_0 <= '\r')||LA7_0==' ') ) {
-            alt7=18;
+        else if ( ((LA8_0 >= '\t' && LA8_0 <= '\n')||(LA8_0 >= '\f' && LA8_0 <= '\r')||LA8_0==' ') ) {
+            alt8=18;
         }
         else {
             NoViableAltException nvae =
-                new NoViableAltException("", 7, 0, input);
+                new NoViableAltException("", 8, 0, input);
 
             throw nvae;
 
         }
-        switch (alt7) {
+        switch (alt8) {
             case 1 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:10: T__24
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:10: T__24
                 {
                 mT__24(); 
 
@@ -1092,7 +1120,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 2 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:16: T__25
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:16: T__25
                 {
                 mT__25(); 
 
@@ -1100,7 +1128,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 3 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:22: T__26
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:22: T__26
                 {
                 mT__26(); 
 
@@ -1108,7 +1136,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 4 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:28: T__27
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:28: T__27
                 {
                 mT__27(); 
 
@@ -1116,7 +1144,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 5 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:34: T__28
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:34: T__28
                 {
                 mT__28(); 
 
@@ -1124,7 +1152,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 6 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:40: T__29
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:40: T__29
                 {
                 mT__29(); 
 
@@ -1132,7 +1160,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 7 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:46: T__30
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:46: T__30
                 {
                 mT__30(); 
 
@@ -1140,7 +1168,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 8 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:52: T__31
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:52: T__31
                 {
                 mT__31(); 
 
@@ -1148,7 +1176,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 9 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:58: T__32
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:58: T__32
                 {
                 mT__32(); 
 
@@ -1156,7 +1184,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 10 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:64: T__33
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:64: T__33
                 {
                 mT__33(); 
 
@@ -1164,7 +1192,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 11 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:70: T__34
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:70: T__34
                 {
                 mT__34(); 
 
@@ -1172,7 +1200,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 12 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:76: StdIn
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:76: StdIn
                 {
                 mStdIn(); 
 
@@ -1180,7 +1208,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 13 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:82: VarRef
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:82: VarRef
                 {
                 mVarRef(); 
 
@@ -1188,7 +1216,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 14 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:89: Identifier
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:89: Identifier
                 {
                 mIdentifier(); 
 
@@ -1196,7 +1224,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 15 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:100: Wormhole
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:100: Wormhole
                 {
                 mWormhole(); 
 
@@ -1204,7 +1232,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 16 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:109: StringLiteral
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:109: StringLiteral
                 {
                 mStringLiteral(); 
 
@@ -1212,7 +1240,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 17 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:123: LINE_COMMENT
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:123: LINE_COMMENT
                 {
                 mLINE_COMMENT(); 
 
@@ -1220,7 +1248,7 @@ public class FluxLexer extends Lexer {
                 }
                 break;
             case 18 :
-                // D:\\git\\metafacture-core\\src\\main\\antlr3\\org\\culturegraph\\mf\\flux\\parser\\Flux.g:1:136: WS
+                // /home/christoph/git/metafacture-core/src/main/antlr3/org/culturegraph/mf/flux/parser/Flux.g:1:136: WS
                 {
                 mWS(); 
 
