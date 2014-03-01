@@ -61,6 +61,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<targetJdk>1.6</targetJdk>
+		<antlr.version>3.5.1</antlr.version>
 	</properties>
 
 	<scm>
@@ -142,8 +143,23 @@
 						<configuration>
 							<sources>
 								<source>src/main/antlr3</source>
+								<source>target/generated-sources/antlr3</source>
 							</sources>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr3-maven-plugin</artifactId>
+				<version>${antlr.version}</version>
+				<executions>
+					<execution>
+						<id>generate-parser</id>
+						<goals>
+							<goal>antlr</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
@@ -196,7 +212,7 @@
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr-runtime</artifactId>
-			<version>3.4</version>
+			<version>${antlr.version}</version>
 		</dependency>
 
 		<dependency>
