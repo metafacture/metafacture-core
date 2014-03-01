@@ -1,9 +1,9 @@
-*.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
-
+# Ignore Maven traget directory:
 /target
-/myflux
+
+# Ignore Eclipse project files:
+.checkstyle
+.pmd
+.classpath
+.project
+.settings/
