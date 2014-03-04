@@ -222,27 +222,34 @@
 			<version>2.0.0-SNAPSHOT</version>
 		</dependency>
 
-		<!-- The following dependencies are placed in the "provided"
-		     scope to prevent them from being included in the class
-		     path but still have them available for building the
-		     distribution assembly. 
-		     The reason for this is that appropriate implementations 
-		     for slf4j and jndi depend on the runtime environment and 
-		     should be chosen by the user of the package and not the 
-		     package implementer. However, since we are not also 
-		     building a distribution package which should include 
-		     everything that is required for metafacture-runner/Flux 
-		     to work out of the box. By including the dependencies 
-		     in the assembly without putting them on the class path, 
-		     the user can replace them easily with other 
-		     implementations if necessary. -->
+		<!-- In a perfect world the slf4j binding would be a
+		     provided dependency so that the user can replace
+		     it easily with a different binding. However, slf4j
+		     does not use the context class loader for loading
+		     its binding but the same class loader which was 
+		     used to load the classes of the slf4j-api. Until
+		     a solution is found for this problem, the binding
+		     need to be placed on the class path. -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.6</version>
-			<scope>provided</scope>
 		</dependency>
 
+		<!-- The following dependencies are placed in the "provided"
+		     scope to prevent them from being included in the class
+		     path but still have them available for building the
+		     distribution assembly. 
+		     The reason for this is that an appropriate implementation 
+		     for jndi depends on the runtime environment and 
+		     should be chosen by the user of the package and not the 
+		     package implementer. However, we also attempt to build
+		     a distribution package which should include everything 
+		     that is required for metafacture-runner/Flux to work out 
+		     of the box. By including the dependencies in the assembly
+		     without putting them on the class path, the user can 
+		     replace them easily with other implementations if 
+		     necessary. -->
 		<dependency>
 			<groupId>simple-jndi</groupId>
 			<artifactId>simple-jndi</artifactId>
