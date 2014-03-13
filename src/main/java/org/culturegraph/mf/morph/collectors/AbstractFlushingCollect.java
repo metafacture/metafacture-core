@@ -19,7 +19,7 @@ import org.culturegraph.mf.morph.Metamorph;
 
 /**
  * Common basis for {@link Entity}, {@link Combine} etc.
- * 
+ *
  * @author Markus Michael Geipel
  * @author Christoph Böhme
  *
@@ -32,12 +32,13 @@ public abstract class AbstractFlushingCollect extends AbstractCollect {
 	public AbstractFlushingCollect(final Metamorph metamorph) {
 		super(metamorph);
 	}
-	
+
 	@Override
 	public final void flush(final int recordCount, final int entityCount) {
 		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount) && isConditionMet()) {
 			emit();
 			if (getReset()) {
+				resetCondition();
 				clear();
 			}
 		}

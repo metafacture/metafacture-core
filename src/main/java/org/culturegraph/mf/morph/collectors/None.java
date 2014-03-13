@@ -21,7 +21,7 @@ import org.culturegraph.mf.util.StringUtil;
 
 /**
  * Corresponds to the <code>&lt;none&gt;</code> tag.
- * 
+ *
  * @author Christoph Böhme <c.boehme@dnb.de>
  *
  */
@@ -32,7 +32,7 @@ public final class None extends AbstractCollect {
 
 	private boolean receivedInput;
 	private boolean emittedResult;
-	
+
 	public None(final Metamorph metamorph) {
 		super(metamorph);
 		setNamedValueReceiver(metamorph);

@@ -21,7 +21,7 @@ import org.culturegraph.mf.morph.NamedValueSource;
 
 /**
  * Common basis for {@link Entity}, {@link Combine} etc.
- * 
+ *
  * @author Markus Michael Geipel
  * @author Christoph Böhme
  *
@@ -37,9 +37,9 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 	private final Metamorph metamorph;
 	private boolean waitForFlush;
 	private boolean conditionMet;
-	
+
 	private NamedValueSource conditionSource;
-	
+
 	public AbstractCollect(final Metamorph metamorph) {
 		super();
 		this.metamorph = metamorph;
@@ -60,11 +60,15 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 	protected final boolean isConditionMet() {
 		return conditionMet;
 	}
-	
+
 	protected final void setConditionMet(final boolean conditionMet) {
 		this.conditionMet = conditionMet;
 	}
-	
+
+	protected final void resetCondition() {
+		setConditionMet(conditionSource == null);
+	}
+
 	@Override
 	public final void setWaitForFlush(final boolean waitForFlush) {
 		this.waitForFlush = waitForFlush;
@@ -75,7 +79,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 	public final void setSameEntity(final boolean sameEntity) {
 		this.sameEntity = sameEntity;
 	}
-	
+
 	public final boolean getReset() {
 		return resetAfterEmit;
 	}
@@ -98,9 +102,9 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 	@Override
 	public final void setConditionSource(final NamedValueSource conditionSource) {
 		this.conditionSource = conditionSource;
-		this.conditionMet = conditionSource == null;
+		resetCondition();
 	}
-	
+
 	public final String getValue() {
 		return value;
 	}
@@ -115,7 +119,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 
 	protected final void updateCounts(final int currentRecord, final int currentEntity) {
 		if (!isSameRecord(currentRecord)) {
-			conditionMet = conditionSource == null;
+			resetCondition();
 			clear();
 			oldRecord = currentRecord;
 		}
@@ -138,16 +142,17 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 			final int recordCount, final int entityCount) {
 
 		updateCounts(recordCount, entityCount);
-		
+
 		if (source == conditionSource) {
 			conditionMet = true;
 		} else {
 			receive(name, value, source);
 		}
-		
+
 		if (!waitForFlush && isConditionMet() && isComplete()) {
 			emit();
 			if (resetAfterEmit) {
+				resetCondition();
 				clear();
 			}
 		}
