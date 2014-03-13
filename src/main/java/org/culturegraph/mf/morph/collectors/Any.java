@@ -21,7 +21,7 @@ import org.culturegraph.mf.util.StringUtil;
 
 /**
  * Corresponds to the <code>&lt;any&gt;</code> tag.
- * 
+ *
  * @author Christoph Böhme <c.boehme@dnb.de>
  *
  */
@@ -32,7 +32,7 @@ public final class Any extends AbstractCollect {
 
 	private boolean receivedInput;
 	private boolean emittedResult;
-	
+
 	public Any(final Metamorph metamorph) {
 		super(metamorph);
 		setNamedValueReceiver(metamorph);
@@ -67,8 +67,7 @@ public final class Any extends AbstractCollect {
 	@Override
 	public void flush(final int recordCount, final int entityCount) {
 		emit();
-		receivedInput = false;
-		emittedResult = false;
+		clear();
 	}
 
 }
