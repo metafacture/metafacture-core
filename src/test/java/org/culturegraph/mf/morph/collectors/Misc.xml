@@ -267,4 +267,46 @@
 		</result>
 	</test-case>
 
+	<test-case name="should reset condition with collector">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="entity">
+							<cgxml:literal name="data1" value="output" />
+							<cgxml:literal name="data2" value="X" />
+						</cgxml:entity>
+						<cgxml:entity name="entity">
+							<cgxml:literal name="data1" value="no-output" />
+							<cgxml:literal name="data3" value="X" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph version="1" xmlns="http://www.culturegraph.org/metamorph">
+				<rules>
+					<combine name="result" value="${VAL}" reset="true">
+						<if>
+							<data source="entity.data2" />
+						</if>
+						<data source="entity.data1" name="VAL" />
+					</combine>
+				</rules>
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="result" value="output" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
 </metamorph-test>
