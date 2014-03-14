@@ -124,6 +124,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 			oldRecord = currentRecord;
 		}
 		if (resetNeedFor(currentEntity)) {
+			resetCondition();
 			clear();
 		}
 		oldEntity = currentEntity;

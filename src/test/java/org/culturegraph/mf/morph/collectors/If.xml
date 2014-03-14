@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph-test version="1.0"
+	xmlns="http://www.culturegraph.org/metamorph-test" xmlns:cgxml="http://www.culturegraph.org/cgxml">
+
+	<test-case name="should only fire if condition is met">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data1" value="a" />
+						<cgxml:literal name="data2" value="b" />
+						<cgxml:literal name="data3" value="c" />
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="data1" value="a" />
+						<cgxml:literal name="data2" value="b" />
+						<cgxml:literal name="data4" value="c" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph version="1" xmlns="http://www.culturegraph.org/metamorph">
+				<rules>
+					<combine name="combined" value="${data1}-${data2}">
+						<if>
+							<data source="data3" />
+						</if>
+						<data source="data1" />
+						<data source="data2" />
+					</combine>
+				</rules>
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="combined" value="a-b" />
+					</cgxml:record>
+					<cgxml:record id="2">
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="should allow to use same source in body and condition">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data1" value="a" />
+						<cgxml:literal name="data2" value="b" />
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="data1" value="a" />
+						<cgxml:literal name="data2" value="c" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph version="1" xmlns="http://www.culturegraph.org/metamorph">
+				<rules>
+					<combine name="combined" value="${data1}-${data2}">
+						<if>
+							<data source="data2">
+								<equals string="b" />
+							</data>
+						</if>
+						<data source="data1" />
+						<data source="data2" />
+					</combine>
+				</rules>
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="combined" value="a-b" />
+					</cgxml:record>
+					<cgxml:record id="2">
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="should allow quantors in if statements">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data1" value="a" />
+						<cgxml:literal name="data2" value="b" />
+						<cgxml:literal name="data3" value="c" />
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="data1" value="a" />
+						<cgxml:literal name="data2" value="d" />
+						<cgxml:literal name="data4" value="c" />
+					</cgxml:record>
+					<cgxml:record id="3">
+						<cgxml:literal name="data1" value="a" />
+						<cgxml:literal name="data2" value="b" />
+						<cgxml:literal name="data5" value="c" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph version="1" xmlns="http://www.culturegraph.org/metamorph">
+				<rules>
+					<combine name="combined" value="${data1}-${data2}">
+						<if>
+							<any>
+								<data source="data3" />
+								<data source="data4" />
+							</any>
+						</if>
+						<data source="data1" />
+						<data source="data2" />
+					</combine>
+				</rules>
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="combined" value="a-b" />
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="combined" value="a-d" />
+					</cgxml:record>
+					<cgxml:record id="3">
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="should reset condition with collector">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="entity">
+							<cgxml:literal name="data1" value="output" />
+							<cgxml:literal name="data2" value="X" />
+						</cgxml:entity>
+						<cgxml:entity name="entity">
+							<cgxml:literal name="data1" value="no-output" />
+							<cgxml:literal name="data3" value="X" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph version="1" xmlns="http://www.culturegraph.org/metamorph">
+				<rules>
+					<combine name="result" value="${VAL}" reset="true">
+						<if>
+							<data source="entity.data2" />
+						</if>
+						<data source="entity.data1" name="VAL" />
+					</combine>
+				</rules>
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="result" value="output" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="should reset condition with collector on flushWith">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="entity">
+							<cgxml:literal name="data1" value="output" />
+							<cgxml:literal name="data2" value="X" />
+						</cgxml:entity>
+						<cgxml:entity name="entity">
+							<cgxml:literal name="data1" value="no-output" />
+							<cgxml:literal name="data3" value="X" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph version="1" xmlns="http://www.culturegraph.org/metamorph">
+				<rules>
+					<combine name="result" value="${VAL1}${VAL2}" reset="true" flushWith="entity">
+						<if>
+							<data source="entity.data2" />
+						</if>
+						<data source="entity.data1" name="VAL1" />
+						<data source="entity.data4" name="VAL2" />
+					</combine>
+				</rules>
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="result" value="output" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="should reset condition with collector on same entity">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="entity">
+							<cgxml:literal name="data1" value="output" />
+							<cgxml:literal name="data2" value="X" />
+						</cgxml:entity>
+						<cgxml:entity name="entity">
+							<cgxml:literal name="data1" value="no-output" />
+							<cgxml:literal name="data3" value="X" />
+							<cgxml:literal name="data4" value="extra-output" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph version="1" xmlns="http://www.culturegraph.org/metamorph">
+				<rules>
+					<combine name="result" value="${VAL1}+${VAL2}" sameEntity="true">
+						<if>
+							<data source="entity.data2" />
+						</if>
+						<data source="entity.data1" name="VAL1" />
+						<data source="entity.data4" name="VAL2" />
+					</combine>
+				</rules>
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+</metamorph-test>
