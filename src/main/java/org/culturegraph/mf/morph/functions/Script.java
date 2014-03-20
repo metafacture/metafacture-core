@@ -26,19 +26,17 @@ import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.exceptions.MorphException;
 import org.culturegraph.mf.util.ResourceUtil;
 
-
-
 /**
+ * A function which executes a javascript function.
+ *
  * @author Markus Michael Geipel
  */
 public final class Script extends AbstractSimpleStatelessFunction {
 
-	//private static final Logger LOG = LoggerFactory.getLogger(Script.class);
-	
 	private Invocable invocable;
 	private String invoke;
-	
-	public void setInvoke(final String invoke){
+
+	public void setInvoke(final String invoke) {
 		this.invoke = invoke;
 	}
 
@@ -47,28 +45,28 @@ public final class Script extends AbstractSimpleStatelessFunction {
 		final ScriptEngineManager manager = new ScriptEngineManager();
 		final ScriptEngine engine = manager.getEngineByName("JavaScript");
 		try {
-			//LOG.info("loading code from '" + file + "'");
 			engine.eval(ResourceUtil.getReader(file));
-		} catch (ScriptException e) {
+		} catch (final ScriptException e) {
 			throw new MorphDefException("Error in script", e);
-		} catch (FileNotFoundException e) {
-			throw new MorphDefException("Error loading script '" + file + "'", e);
+		} catch (final FileNotFoundException e) {
+			throw new MorphDefException("Error loading script '" + file + "'",
+					e);
 		}
 		invocable = (Invocable) engine;
 	}
-	
+
 	@Override
 	public String process(final String value) {
 		final Object obj;
 		try {
-			//LOG.info("processing: " + value);
 			obj = invocable.invokeFunction(invoke, value);
-			//LOG.info("returning: " + obj);
 			return obj.toString();
-		} catch (ScriptException e) {
-			throw new MorphException("Error in script while evaluating 'process' method", e);
-		} catch (NoSuchMethodException e) {
+		} catch (final ScriptException e) {
+			throw new MorphException(
+					"Error in script while evaluating 'process' method", e);
+		} catch (final NoSuchMethodException e) {
 			throw new MorphException("'process' method is missing in script", e);
 		}
 	}
+
 }

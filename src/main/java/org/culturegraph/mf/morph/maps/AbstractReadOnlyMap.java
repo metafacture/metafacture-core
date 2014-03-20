@@ -27,7 +27,7 @@ import org.apache.commons.lang.NotImplementedException;
  * @param <K>
  * @param <V>
  */
-public abstract class  AbstractReadOnlyMap<K,V> implements Map<K, V> {
+public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
 
 	@Override
 	public final int size() {
@@ -41,15 +41,13 @@ public abstract class  AbstractReadOnlyMap<K,V> implements Map<K, V> {
 
 	@Override
 	public final boolean containsKey(final Object key) {
-		return get(key)!=null;
+		return get(key) != null;
 	}
 
 	@Override
 	public final boolean containsValue(final Object value) {
 		throw new NotImplementedException();
 	}
-
-
 
 	@Override
 	public final V put(final K key, final V value) {
@@ -64,13 +62,13 @@ public abstract class  AbstractReadOnlyMap<K,V> implements Map<K, V> {
 	@Override
 	public final void putAll(final Map<? extends K, ? extends V> m) {
 		throw new NotImplementedException();
-		
+
 	}
 
 	@Override
 	public final void clear() {
 		throw new NotImplementedException();
-		
+
 	}
 
 	@Override

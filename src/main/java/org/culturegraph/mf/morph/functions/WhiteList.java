@@ -15,21 +15,21 @@
  */
 package org.culturegraph.mf.morph.functions;
 
-
-
 /**
+ * Only outputs the received value if it is whitelisted.
+ *
  * @author Markus Michael Geipel
  */
 public final class WhiteList extends AbstractLookup {
 
-
 	@Override
 	public String process(final String key) {
 		final String returnValue = lookup(key);
-		 
-		if(returnValue!=null){
+
+		if (returnValue != null) {
 			return key;
 		}
 		return null;
 	}
+
 }

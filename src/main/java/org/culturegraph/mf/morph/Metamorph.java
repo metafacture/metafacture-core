@@ -34,15 +34,14 @@ import org.culturegraph.mf.stream.pipe.StreamFlattener;
 import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.StreamConstants;
 
-
-
 /**
  * Transforms a data stream send via the {@link StreamReceiver} interface. Use
  * {@link MorphBuilder} to create an instance based on an xml description
  *
  * @author Markus Michael Geipel
  */
-@Description("applies a metamorph transformation to the event stream. Metamorph definition is given in brackets.")
+@Description("applies a metamorph transformation to the event stream. Metamorph "
+		+ "definition is given in brackets.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueReceiver, MultiMap {
@@ -242,12 +241,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 		return matchingData;
 	}
 
-	/**
-	 * @param key
-	 * @param value
-	 * @param dataList
-	 *            destination
-	 */
 	private void send(final String key, final String value, final List<NamedValueReceiver> dataList) {
 		for (final NamedValueReceiver data : dataList) {
 			try {
@@ -271,9 +264,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 		return streamReceiver;
 	}
 
-	/**
-	 * @return the outputStreamReceiver
-	 */
 	public StreamReceiver getStreamReceiver() {
 		return outputStreamReceiver;
 	}

@@ -18,6 +18,9 @@ package org.culturegraph.mf.morph.functions;
 
 
 /**
+ * A function which checks whether the received value
+ * is blacklisted.
+ *
  * @author Markus Michael Geipel
  */
 public final class BlackList extends AbstractLookup {
@@ -30,4 +33,5 @@ public final class BlackList extends AbstractLookup {
 		}
 		return null;
 	}
+
 }

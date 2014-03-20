@@ -22,20 +22,21 @@ import org.culturegraph.mf.morph.MorphBuilder;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 
-
-
 /**
  * Factory for all collectors used by {@link Metamorph} and {@link MorphBuilder}
- * 
+ *
  * @author Markus Michael Geipel
  *
  */
 @SuppressWarnings("rawtypes")
 public final class MapFactory extends ObjectFactory<Map> {
+
 	public static final String POPERTIES_LOCATION = "morph-maps.properties";
 
 	public MapFactory() {
 		super();
-		loadClassesFromMap(ResourceUtil.loadProperties(POPERTIES_LOCATION), Map.class);
+		loadClassesFromMap(ResourceUtil.loadProperties(POPERTIES_LOCATION),
+				Map.class);
 	}
+
 }

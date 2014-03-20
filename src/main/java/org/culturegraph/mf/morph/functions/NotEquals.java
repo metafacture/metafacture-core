@@ -16,6 +16,9 @@
 package org.culturegraph.mf.morph.functions;
 
 /**
+ * Checks whether the received value does not equal a
+ * given value.
+ *
  * @author Markus Michael Geipel
  */
 public final class NotEquals extends AbstractFilter{
@@ -24,4 +27,5 @@ public final class NotEquals extends AbstractFilter{
 	protected boolean accept(final String value) {
 		return !getString().equals(value);
 	}
+
 }

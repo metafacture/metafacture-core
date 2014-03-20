@@ -23,9 +23,9 @@ import org.culturegraph.mf.util.reflection.ObjectFactory;
 /**
  * Provides the functions for {@link Metamorph}. By the default it contains the
  * standard function set. New functions can be registered during runtime.
- * 
+ *
  * @author Markus Michael Geipel
- * 
+ *
  */
 public final class FunctionFactory extends ObjectFactory<Function> {
 
@@ -35,4 +35,5 @@ public final class FunctionFactory extends ObjectFactory<Function> {
 		super();
 		loadClassesFromMap(ResourceUtil.loadProperties(POPERTIES_LOCATION), Function.class);
 	}
+
 }

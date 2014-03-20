@@ -23,23 +23,21 @@ import java.util.regex.Pattern;
 
 import org.culturegraph.mf.exceptions.MetafactureException;
 
-
 /**
  * NOT WORKING YET
- * 
+ *
  * @author "Markus Michael Geipel"
  *
  */
-public final class RestMap extends AbstractReadOnlyMap<String, String>{
-	
-	private static final Pattern VAR_PATTERN = Pattern.compile("${key}", Pattern.LITERAL);
+public final class RestMap extends AbstractReadOnlyMap<String, String> {
+
+	private static final Pattern VAR_PATTERN = Pattern.compile("${key}",
+			Pattern.LITERAL);
 	private String url;
-	
+
 	public void setUrl(final String url) {
 		this.url = url;
 	}
-		
-	
 
 	@Override
 	public String get(final Object key) {
@@ -47,10 +45,10 @@ public final class RestMap extends AbstractReadOnlyMap<String, String>{
 		try {
 			final URL url = new URL(matcher.replaceAll(key.toString()));
 			final URLConnection con = url.openConnection();
-			//TODO correctly read from connection!
-			return (String)con.getContent();
-			
-		} catch (IOException e) {
+			// TODO correctly read from connection!
+			return (String) con.getContent();
+
+		} catch (final IOException e) {
 			throw new MetafactureException(e);
 		}
 	}

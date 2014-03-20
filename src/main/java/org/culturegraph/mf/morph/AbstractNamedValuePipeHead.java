@@ -20,10 +20,11 @@ package org.culturegraph.mf.morph;
  * @author Markus Michael Geipel
  *
  */
-public abstract class AbstractNamedValuePipeHead implements NamedValuePipeHead{
+public abstract class AbstractNamedValuePipeHead implements NamedValuePipeHead {
+
 	private NamedValueReceiver namedValueReceiver;
 	private NamedValuePipe last = this;
-	
+
 	protected final NamedValueReceiver getNamedValueReceiver() {
 		return namedValueReceiver;
 	}
@@ -33,7 +34,7 @@ public abstract class AbstractNamedValuePipeHead implements NamedValuePipeHead{
 		this.namedValueReceiver = receiver;
 		return receiver;
 	}
-	
+
 	@Override
 	public final void appendPipe(final NamedValuePipe namedValuePipe) {
 		if(last==null){
@@ -41,10 +42,11 @@ public abstract class AbstractNamedValuePipeHead implements NamedValuePipeHead{
 		}
 		last = last.setNamedValueReceiver(namedValuePipe);
 	}
-	
+
 	@Override
 	public final void endPipe(final NamedValueReceiver lastReceiver) {
 		last.setNamedValueReceiver(lastReceiver);
 		last = null;
 	}
+
 }
