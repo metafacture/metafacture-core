@@ -37,7 +37,7 @@ import org.xml.sax.InputSource;
 
 /**
  * Builds a {@link Metamorph} from an xml description
- * 
+ *
  * @author Markus Michael Geipel
  */
 public abstract class AbstractMetamorphDomWalker {
@@ -124,7 +124,7 @@ public abstract class AbstractMetamorphDomWalker {
 		}
 		walk(DomLoader.parse(SCHEMA_FILE, new InputSource(reader)));
 	}
-	
+
 	public final void walk(final Reader morphDefReader, final Map<String, String> vars) {
 		this.vars.putAll(vars);
 		walk(morphDefReader);
@@ -135,7 +135,7 @@ public abstract class AbstractMetamorphDomWalker {
 		this.vars.putAll(vars);
 		walk(morphDef);
 	}
-	
+
 	public final void walk(final InputStream inputStream, final Map<String, String> vars) {
 		this.vars.putAll(vars);
 		walk(inputStream);
@@ -163,24 +163,24 @@ public abstract class AbstractMetamorphDomWalker {
 		}
 		return attributes;
 	}
-	
+
 	protected  final String resolveVars(final String string){
 		return StringUtil.format(string, Metamorph.VAR_START, Metamorph.VAR_END, ignoreMissingVars, vars);
 	}
-	
+
 	protected final void setIgnoreMissingVars(final boolean ignoreMissingVars) {
 		this.ignoreMissingVars = ignoreMissingVars;
 	}
-	
+
 	protected final String resolvedAttribute(final Node node, final ATTRITBUTE attr){
 		final String value = attribute(node, attr);
 		if(null==value){
 			return null;
 		}
 		return resolveVars(value);
-		
+
 	}
-	
+
 	protected  final Map<String, String> resolvedAttributeMap(final Node node){
 		final Map<String, String> attributes = new HashMap<String, String>();
 		final NamedNodeMap attrNode = node.getAttributes();
@@ -190,15 +190,6 @@ public abstract class AbstractMetamorphDomWalker {
 			attributes.put(itemNode.getLocalName(), resolveVars(itemNode.getNodeValue()));
 		}
 		return attributes;
-	}
-	
-	private void handleVars(final Node varsNode) {
-		for (Node varNode = varsNode.getFirstChild(); varNode != null; varNode = varNode.getNextSibling()) {
-			final String varName = attribute(varNode, ATTRITBUTE.NAME);
-			final String varValue = attribute(varNode, ATTRITBUTE.VALUE);
-			vars.put(varName, varValue);
-		}
-		vars = new ScopedHashMap<String, String>(vars);
 	}
 
 	protected final void walk(final Document doc) {
@@ -242,44 +233,26 @@ public abstract class AbstractMetamorphDomWalker {
 		finish();
 	}
 
-	private void handleMacros(final Node node) {
-		for (Node macroNode = node.getFirstChild(); macroNode != null; macroNode = macroNode.getNextSibling()) {
-			final String name = attribute(macroNode, ATTRITBUTE.NAME);
-			macros.put(name, macroNode);
+	private void handleMeta(final Node node) {
+		for (Node metaEntryNode = node.getFirstChild(); metaEntryNode != null; metaEntryNode = metaEntryNode
+				.getNextSibling()) {
+
+			handleMetaEntry(metaEntryNode.getLocalName(), metaEntryNode.getTextContent());
 		}
 	}
 
-	protected abstract void init();
+	private void handleFunctionDefinitions(final Node node) {
+		for (Node functionDefNode = node.getFirstChild(); functionDefNode != null; functionDefNode = functionDefNode
+				.getNextSibling()) {
+			handleFunctionDefinition(functionDefNode);
+		}
+	}
 
-	protected abstract void finish();
-
-	protected abstract void setEntityMarker(final String entityMarker);
-
-	protected abstract void handleInternalMap(final Node mapNode);
-
-	protected abstract void handleMapClass(final Node mapNode);
-
-	protected abstract void handleMetaEntry(final String name, final String value);
-
-	protected abstract void handleFunctionDefinition(final Node functionDefNode);
-
-	protected abstract void enterData(Node node);
-
-	protected abstract void exitData(Node node);
-
-	protected abstract void enterCollect(Node node);
-
-	protected abstract void exitCollect(Node node);
-
-	protected abstract void enterName(Node node);
-	
-	protected abstract void exitName(Node node);
-
-	protected abstract void enterIf(Node node);
-	
-	protected abstract void exitIf(Node node);
-
-	protected abstract void handleFunction(Node functionNode);
+	private void handleRules(final Node node) {
+		for (Node ruleNode = node.getFirstChild(); ruleNode != null; ruleNode = ruleNode.getNextSibling()) {
+			handleRule(ruleNode);
+		}
+	}
 
 	private void handleRule(final Node node) {
 		final String nodeName = node.getLocalName();
@@ -320,10 +293,6 @@ public abstract class AbstractMetamorphDomWalker {
 		}
 	}
 
-	private void handleIf(final Node node) {
-		
-	}
-	
 	private void handlePostprocess(final Node node) {
 		for (Node functionNode = node.getFirstChild(); functionNode != null; functionNode = functionNode
 				.getNextSibling()) {
@@ -341,9 +310,19 @@ public abstract class AbstractMetamorphDomWalker {
 		}
 	}
 
-	private void handleRules(final Node node) {
-		for (Node ruleNode = node.getFirstChild(); ruleNode != null; ruleNode = ruleNode.getNextSibling()) {
-			handleRule(ruleNode);
+	private void handleVars(final Node varsNode) {
+		for (Node varNode = varsNode.getFirstChild(); varNode != null; varNode = varNode.getNextSibling()) {
+			final String varName = attribute(varNode, ATTRITBUTE.NAME);
+			final String varValue = attribute(varNode, ATTRITBUTE.VALUE);
+			vars.put(varName, varValue);
+		}
+		vars = new ScopedHashMap<String, String>(vars);
+	}
+
+	private void handleMacros(final Node node) {
+		for (Node macroNode = node.getFirstChild(); macroNode != null; macroNode = macroNode.getNextSibling()) {
+			final String name = attribute(macroNode, ATTRITBUTE.NAME);
+			macros.put(name, macroNode);
 		}
 	}
 
@@ -359,18 +338,36 @@ public abstract class AbstractMetamorphDomWalker {
 				+ child.getParentNode().getLocalName());
 	}
 
-	private void handleFunctionDefinitions(final Node node) {
-		for (Node functionDefNode = node.getFirstChild(); functionDefNode != null; functionDefNode = functionDefNode
-				.getNextSibling()) {
-			handleFunctionDefinition(functionDefNode);
-		}
-	}
+	protected abstract void init();
 
-	private void handleMeta(final Node node) {
-		for (Node metaEntryNode = node.getFirstChild(); metaEntryNode != null; metaEntryNode = metaEntryNode
-				.getNextSibling()) {
+	protected abstract void finish();
 
-			handleMetaEntry(metaEntryNode.getLocalName(), metaEntryNode.getTextContent());
-		}
-	}
+	protected abstract void setEntityMarker(final String entityMarker);
+
+	protected abstract void handleInternalMap(final Node mapNode);
+
+	protected abstract void handleMapClass(final Node mapNode);
+
+	protected abstract void handleMetaEntry(final String name, final String value);
+
+	protected abstract void handleFunctionDefinition(final Node functionDefNode);
+
+	protected abstract void enterData(Node node);
+
+	protected abstract void exitData(Node node);
+
+	protected abstract void enterCollect(Node node);
+
+	protected abstract void exitCollect(Node node);
+
+	protected abstract void enterName(Node node);
+
+	protected abstract void exitName(Node node);
+
+	protected abstract void enterIf(Node node);
+
+	protected abstract void exitIf(Node node);
+
+	protected abstract void handleFunction(Node functionNode);
+
 }

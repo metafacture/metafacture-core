@@ -19,17 +19,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Checks whether the received value was not received before.
+ *
  * @author Markus Michael Geipel
- * 
+ *
  */
-public final class Unique extends AbstractStatefulFunction{
+public final class Unique extends AbstractStatefulFunction {
 
-	
 	private static final String ENTITY = "entity";
 	private static final String NAME = "name";
 	private static final String VALUE = "value";
+
 	private final Set<String> set = new HashSet<String>();
+
 	private boolean uniqueInEntity;
+
 	private KeyGenerator keyGenerator = new KeyGenerator() {
 		@Override
 		public String createKey(final String name, final String value) {
@@ -80,9 +84,10 @@ public final class Unique extends AbstractStatefulFunction{
 	}
 
 	/**
-	 * to implement different uniqueness strategies
+	 * To implement different uniqueness strategies
 	 */
 	private interface KeyGenerator {
 		String createKey(String name, String value);
 	}
+
 }

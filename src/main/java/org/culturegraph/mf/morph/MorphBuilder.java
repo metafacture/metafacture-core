@@ -30,7 +30,7 @@ import org.w3c.dom.Node;
 
 /**
  * Builds a {@link Metamorph} from an xml description
- * 
+ *
  * @author Markus Michael Geipel
  */
 public final class MorphBuilder extends AbstractMetamorphDomWalker {
@@ -42,13 +42,12 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	private static final String OR_STRING = "|";
 	private static final Pattern OR_PATTERN = Pattern.compile(OR_STRING, Pattern.LITERAL);
 
-	// private final String morphDef;
 	private final Metamorph metamorph;
 	private final Deque<Collect> collectStack;
 	private Data data;
 	private boolean setEntityName;
 	private boolean setCondition;
-	
+
 	protected MorphBuilder(final Metamorph metamorph) {
 		super();
 		this.collectStack = new LinkedList<Collect>();
@@ -225,7 +224,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 			registerFlush(flushWith, collect);
 		}
 	}
-	
+
 	private void registerFlush(final String flushWith, final FlushListener flushListener) {
 		final String[] keysSplit = OR_PATTERN.split(flushWith);
 		for (final String key : keysSplit) {
@@ -258,7 +257,6 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		}
 
 		function.setMultiMap(metamorph);
-		// nction.setEntityEndIndicator(metamorph);
 
 		// add key value entries...
 		for (Node mapEntryNode = functionNode.getFirstChild(); mapEntryNode != null; mapEntryNode = mapEntryNode

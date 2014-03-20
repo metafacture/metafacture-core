@@ -36,42 +36,42 @@ import org.xml.sax.SAXParseException;
 
 /**
  * Helper to load dom {@link Document}s in {@link MorphBuilder}.
- * 
+ *
  * @author Markus Michael Geipel
  *
  */
 final class DomLoader {
-	
+
 	private static final ErrorHandler ERROR_HANDLER = new PrivateErrorHandler();
-	
+
 	private DomLoader() {
 		// no instances
 	}
-	
+
 	public static Document parse(final String schemaFile, final InputSource inputSource){
 		try {
 			final DocumentBuilder documentBuilder = getDocumentBuilder(schemaFile);
 			final Document document = documentBuilder.parse(inputSource);
-			
+
 			//xerces issue
 			removeEmptyTextNodes(document.getDocumentElement());
-			
+
 			return document;
-		} catch (SAXException e) {
+		} catch (final SAXException e) {
 			throw new MorphDefException(e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new MorphDefException(e);
 		}
 	}
-	
+
 	private static void removeEmptyTextNodes(final Node node) {
 		Node child = node.getFirstChild();
 		while (child != null) {
 			if (child.getNodeType() == Node.TEXT_NODE) {
 				final Node old = child;
 				child = child.getNextSibling();
-				
-				
+
+
 				if(old.getNodeValue().trim().isEmpty()){
 					node.removeChild(old);
 				}
@@ -85,16 +85,16 @@ final class DomLoader {
 	public static String getDocumentBuilderFactoryImplName(){
 		return DocumentBuilderFactory.newInstance().getClass().getName();
 	}
-	
+
 	private static DocumentBuilder getDocumentBuilder(final String schemaFile) {
 
 		try {
-			
+
 			final URL schemaUrl = Thread.currentThread().getContextClassLoader().getResource(schemaFile);
 			if (schemaUrl == null) {
 				throw new MorphDefException("'" + schemaFile + "' not found!");
 			}
-			
+
 			final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			final Schema schema = schemaFactory.newSchema(schemaUrl);
 			final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
@@ -107,24 +107,24 @@ final class DomLoader {
 			builderFactory.setXIncludeAware(true);
 
 			final DocumentBuilder builder = builderFactory.newDocumentBuilder();
-		
+
 			builder.setErrorHandler(ERROR_HANDLER);
 
 			return builder;
 
-		} catch (ParserConfigurationException e) {
+		} catch (final ParserConfigurationException e) {
 			throw new MorphDefException(e);
-		} catch (SAXException e) {
+		} catch (final SAXException e) {
 			throw new MorphDefException(e);
 		}
 	}
-	
+
 	/**
 	 * Error handler
 	 */
 	private static class PrivateErrorHandler implements ErrorHandler {
 		private static final String PARSE_ERROR = "Error parsing xml: ";
-		
+
 		PrivateErrorHandler() {
 			// to avoid synthetic accessor methods
 		}
@@ -143,9 +143,10 @@ final class DomLoader {
 		public void error(final SAXParseException exception) throws SAXException {
 			handle(exception);
 		}
-		
+
 		private void handle(final SAXParseException exception) {
 			throw new MorphDefException(PARSE_ERROR + exception.getMessage(), exception);
 		}
 	}
+
 }

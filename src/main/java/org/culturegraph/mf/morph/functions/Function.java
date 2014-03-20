@@ -23,11 +23,13 @@ import org.culturegraph.mf.types.MultiMap;
 
 /**
  * Interface for functions used in {@link Metamorph}
+ *
  * @author Markus Michael Geipel
+ *
  */
 public interface Function  extends NamedValuePipe, FlushListener{
 
 	void putValue(String key, String value);
 	void setMultiMap(MultiMap multiMapProvider);
-	//void setEntityEndIndicator(EntityEndIndicator indicator);
+
 }

@@ -18,8 +18,8 @@ package org.culturegraph.mf.morph;
 
 
 /**
- * flushes a {@link FlushListener}
- * 
+ * Flushes a {@link FlushListener}
+ *
  * @author markus geipel
  *
  */
@@ -30,7 +30,7 @@ public final class Flush implements NamedValueReceiver {
 	public Flush(final FlushListener listener) {
 		this.listener = listener;
 	}
-	
+
 	@Override
 	public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
 		listener.flush(recordCount, entityCount);

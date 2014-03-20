@@ -15,19 +15,16 @@
  */
 package org.culturegraph.mf.morph.functions;
 
-
 /**
+ * Adds a prefix and postfix to the received value.
+ *
  * @author Markus Michael Geipel
  */
-public final class Compose extends AbstractCompose{
-
-
+public final class Compose extends AbstractCompose {
 
 	@Override
 	public String process(final String value) {
 		return getPrefix() + value + getPostfix();
 	}
-
-
 
 }
