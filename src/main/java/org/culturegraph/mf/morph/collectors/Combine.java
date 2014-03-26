@@ -37,7 +37,6 @@ public final class Combine extends AbstractFlushingCollect {
 
 	public Combine(final Metamorph metamorph) {
 		super(metamorph);
-		setNamedValueReceiver(metamorph);
 	}
 
 	@Override

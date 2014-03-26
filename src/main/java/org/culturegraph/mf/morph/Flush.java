@@ -36,4 +36,9 @@ public final class Flush implements NamedValueReceiver {
 		listener.flush(recordCount, entityCount);
 	}
 
+	@Override
+	public void addNamedValueSource(final NamedValueSource namedValueSource) {
+		// Nothing to do
+	}
+
 }

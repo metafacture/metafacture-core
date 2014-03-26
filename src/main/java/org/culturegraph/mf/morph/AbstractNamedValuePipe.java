@@ -18,35 +18,35 @@ package org.culturegraph.mf.morph;
 /**
  * Base class for {@link NamedValuePipe}s
  * @author Markus Michael Geipel
+ * @author Chistohp Böhme
  *
  */
-public abstract class AbstractNamedValuePipeHead implements NamedValuePipeHead {
+public abstract class AbstractNamedValuePipe implements NamedValuePipe {
 
 	private NamedValueReceiver namedValueReceiver;
-	private NamedValuePipe last = this;
-
-	protected final NamedValueReceiver getNamedValueReceiver() {
-		return namedValueReceiver;
-	}
 
 	@Override
-	public final <R extends NamedValueReceiver> R setNamedValueReceiver(final R receiver) {
-		this.namedValueReceiver = receiver;
+	public final <R extends NamedValueReceiver> R setNamedValueReceiver(
+			final R receiver) {
+
+		namedValueReceiver = receiver;
+
 		return receiver;
 	}
 
 	@Override
-	public final void appendPipe(final NamedValuePipe namedValuePipe) {
-		if(last==null){
-			throw new IllegalStateException("NamedValuePipe already finalyzed.");
-		}
-		last = last.setNamedValueReceiver(namedValuePipe);
+	public final void addNamedValueSource(final NamedValueSource namedValueSource) {
+		namedValueSource.setNamedValueReceiver(this);
+
+		onNamedValueSourceAdded(namedValueSource);
 	}
 
-	@Override
-	public final void endPipe(final NamedValueReceiver lastReceiver) {
-		last.setNamedValueReceiver(lastReceiver);
-		last = null;
+	protected void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
+		// Default implementation does nothing
+	}
+
+	protected final NamedValueReceiver getNamedValueReceiver() {
+		return namedValueReceiver;
 	}
 
 }

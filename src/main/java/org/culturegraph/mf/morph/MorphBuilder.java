@@ -32,6 +32,8 @@ import org.w3c.dom.Node;
  * Builds a {@link Metamorph} from an xml description
  *
  * @author Markus Michael Geipel
+ * @author Christoph Böhme
+ *
  */
 public final class MorphBuilder extends AbstractMetamorphDomWalker {
 
@@ -43,15 +45,49 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	private static final Pattern OR_PATTERN = Pattern.compile(OR_STRING, Pattern.LITERAL);
 
 	private final Metamorph metamorph;
-	private final Deque<Collect> collectStack;
-	private Data data;
-	private boolean setEntityName;
-	private boolean setCondition;
+	private final Deque<StackFrame> stack = new LinkedList<StackFrame>();
+
+	private static final class StackFrame {
+
+		private NamedValuePipe pipe;
+		private boolean inEntityName;
+		private boolean inCondition;
+
+		public StackFrame(final NamedValuePipe pipe) {
+			this.pipe = pipe;
+		}
+
+		public void setPipe(final NamedValuePipe pipe) {
+			this.pipe = pipe;
+		}
+
+		public NamedValuePipe getPipe() {
+			return pipe;
+		}
+
+		public void setInEntityName(final boolean inEntityName) {
+			this.inEntityName = inEntityName;
+		}
+
+		public boolean isInEntityName() {
+			return inEntityName;
+		}
+
+		public void setInCondition(final boolean inCondition) {
+			this.inCondition = inCondition;
+		}
+
+		public boolean isInCondition() {
+			return inCondition;
+		}
+
+	}
 
 	protected MorphBuilder(final Metamorph metamorph) {
 		super();
-		this.collectStack = new LinkedList<Collect>();
+
 		this.metamorph = metamorph;
+		stack.push(new StackFrame(metamorph));
 	}
 
 	@Override
@@ -135,52 +171,55 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 
 	@Override
 	protected void enterData(final Node dataNode) {
-		final String source = resolvedAttribute(dataNode, ATTRITBUTE.SOURCE);
-		data = new Data();
+		final Data data = new Data();
 		data.setName(resolvedAttribute(dataNode, ATTRITBUTE.NAME));
+
+		final String source = resolvedAttribute(dataNode, ATTRITBUTE.SOURCE);
 		metamorph.registerNamedValueReceiver(source, data);
 
-		if (setEntityName) {
-			((Entity) collectStack.peek()).setNameSource(data);
-			setEntityName = false;
-		}
-	
-		if (setCondition) {
-			collectStack.peek().setConditionSource(data);
-			setCondition = false;
-		}
+		stack.push(new StackFrame(data));
 	}
 
 	@Override
 	protected void exitData(final Node node) {
-		if (collectStack.isEmpty()) {
-			data.endPipe(metamorph);
+		final NamedValuePipe dataPipe = stack.pop().getPipe();
+
+		final StackFrame parent = stack.peek();
+		if (parent.isInEntityName()) {
+			// Protected xsd schema and by assertion in enterName:
+			((Entity) parent.getPipe()).setNameSource(dataPipe);
+		} else if (parent.isInCondition()) {
+			// Protected xsd schema and by assertion in enterIf:
+			((ConditionAware) parent.getPipe()).setConditionSource(dataPipe);
 		} else {
-			final Collect parent = collectStack.peek();
-			data.endPipe(parent);
-			parent.addNamedValueSource(data);
+			parent.getPipe().addNamedValueSource(dataPipe);
 		}
-		data = null;
 	}
 
 	@Override
 	protected void enterName(final Node nameNode) {
-		setEntityName = true;
+		assert stack.peek().getPipe() instanceof Entity :
+				"statement `name` is only allowed in `entity` statements";
+
+		stack.peek().setInEntityName(true);
 	}
 
 	@Override
 	protected void exitName(final Node nameNode) {
-		setEntityName = false;
+		stack.peek().setInEntityName(false);
 	}
 
 	@Override
 	protected void enterIf(final Node nameNode) {
-		setCondition = true;
+		assert stack.peek().getPipe() instanceof ConditionAware :
+				"statement `if` is not allowed in the current element";
+
+		stack.peek().setInCondition(true);
 	}
 
 	@Override
 	protected void exitIf(final Node nameNode) {
-		setCondition = false;
+		stack.peek().setInCondition(false);
 	}
 
 	@Override
@@ -194,34 +233,33 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		}
 		final Collect collect = getCollectFactory().newInstance(node.getLocalName(), attributes, metamorph);
 
-		if (setEntityName) {
-			((Entity) collectStack.peek()).setNameSource(collect);
-			setEntityName = false;
-		}
-		
-		if (setCondition) {
-			collectStack.peek().setConditionSource(collect);
-			setCondition = false;
-		}
-
-		collectStack.push(collect);
+		stack.push(new StackFrame(collect));
 	}
 
 	@Override
 	protected void exitCollect(final Node node) {
-		final Collect collect = collectStack.pop();
-		if (collectStack.isEmpty()) {
-			collect.endPipe(metamorph);
+		final NamedValuePipe collectPipe = stack.pop().getPipe();
+
+		final StackFrame parent = stack.peek();
+
+		if (parent.isInEntityName()) {
+			// Protected xsd schema and by assertion in enterName:
+			((Entity) parent.getPipe()).setNameSource(collectPipe);
+		} else if (parent.isInCondition()) {
+			// Protected xsd schema and by assertion in enterIf:
+			((ConditionAware) parent.getPipe()).setConditionSource(collectPipe);
 		} else {
-			final Collect parent = collectStack.peek();
-			parent.addNamedValueSource(collect);
-			collect.endPipe(parent);
+			parent.getPipe().addNamedValueSource(collectPipe);
 		}
+
 		// must be set after recursive calls to flush descendants before parent
 		final String flushWith = resolvedAttribute(node, ATTRITBUTE.FLUSH_WITH);
 		if (null != flushWith) {
-			collect.setWaitForFlush(true);
-			registerFlush(flushWith, collect);
+			assert collectPipe instanceof Collect :
+					"Invokations of enterXXX and exitXXX are not properly balanced";
+
+			((Collect) collectPipe).setWaitForFlush(true);
+			registerFlush(flushWith, ((Collect) collectPipe));
 		}
 	}
 
@@ -265,11 +303,10 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 			final String entryValue = resolvedAttribute(mapEntryNode, ATTRITBUTE.VALUE);
 			function.putValue(entryName, entryValue);
 		}
-		if (data == null) {
-			collectStack.peek().appendPipe(function);
-		} else {
-			data.appendPipe(function);
-		}
+
+		final StackFrame head = stack.peek();
+		function.addNamedValueSource(head.getPipe());
+		head.setPipe(function);
 	}
 
 }

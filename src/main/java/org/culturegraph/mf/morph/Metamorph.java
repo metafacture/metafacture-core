@@ -44,7 +44,7 @@ import org.culturegraph.mf.util.StreamConstants;
 		+ "definition is given in brackets.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
-public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueReceiver, MultiMap {
+public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePipe, MultiMap {
 
 	public static final String ELSE_KEYWORD = "_else";
 	public static final char FEEDBACK_CHAR = '@';
@@ -320,6 +320,16 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 
 	public void registerRecordEndFlush(final FlushListener flushListener) {
 		recordEndListener.add(flushListener);
+	}
+
+	@Override
+	public void addNamedValueSource(final NamedValueSource namedValueSource) {
+		namedValueSource.setNamedValueReceiver(this);
+	}
+
+	@Override
+	public <R extends NamedValueReceiver> R setNamedValueReceiver(final R receiver) {
+		throw new UnsupportedOperationException("The Metamorph object cannot act as a NamedValueSender");
 	}
 
 }

@@ -66,7 +66,7 @@ public abstract class AbstractStatefulFunction extends AbstractFunction {
 			return;
 		}
 
-		getNamedValueReceiver().receive(name, processedValue, source,
+		getNamedValueReceiver().receive(name, processedValue, this,
 				recordCount, entityCount);
 	}
 

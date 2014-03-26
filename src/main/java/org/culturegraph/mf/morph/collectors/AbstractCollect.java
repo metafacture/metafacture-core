@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-import org.culturegraph.mf.morph.AbstractNamedValuePipeHead;
+import org.culturegraph.mf.morph.AbstractNamedValuePipe;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
 
@@ -26,7 +26,7 @@ import org.culturegraph.mf.morph.NamedValueSource;
  * @author Christoph Böhme
  *
  */
-public abstract class AbstractCollect extends AbstractNamedValuePipeHead
+public abstract class AbstractCollect extends AbstractNamedValuePipe
 		implements Collect {
 
 	private int oldRecord;
@@ -101,8 +101,9 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead
 	}
 
 	@Override
-	public final void setConditionSource(final NamedValueSource conditionSource) {
-		this.conditionSource = conditionSource;
+	public final void setConditionSource(final NamedValueSource source) {
+		conditionSource = source;
+		conditionSource.setNamedValueReceiver(this);
 		resetCondition();
 	}
 
@@ -160,19 +161,6 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead
 				clear();
 			}
 		}
-	}
-
-	@Override
-	public final void addNamedValueSource(
-			final NamedValueSource namedValueSource) {
-		if (namedValueSource != conditionSource) {
-			onNamedValueSourceAdded(namedValueSource);
-		}
-	}
-
-	protected void onNamedValueSourceAdded(
-			final NamedValueSource namedValueSource) {
-		// nothing to do
 	}
 
 	protected final boolean sameEntityConstraintSatisfied(final int entityCount) {

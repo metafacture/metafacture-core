@@ -35,7 +35,8 @@ public abstract class AbstractSimpleStatelessFunction extends AbstractFunction {
 		if (processedValue == null) {
 			return;
 		}
-		getNamedValueReceiver().receive(name, processedValue, source,
+
+		getNamedValueReceiver().receive(name, processedValue, this,
 				recordCount, entityCount);
 	}
 

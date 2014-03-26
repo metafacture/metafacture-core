@@ -50,7 +50,6 @@ public final class Range extends AbstractFlushingCollect {
 
 	public Range(final Metamorph metamorph) {
 		super(metamorph);
-		setNamedValueReceiver(metamorph);
 	}
 
 	public int getIncrement() {

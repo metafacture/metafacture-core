@@ -35,7 +35,6 @@ public final class Any extends AbstractCollect {
 
 	public Any(final Metamorph metamorph) {
 		super(metamorph);
-		setNamedValueReceiver(metamorph);
 	}
 
 	@Override

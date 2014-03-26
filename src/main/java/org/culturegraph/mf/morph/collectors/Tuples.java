@@ -37,7 +37,6 @@ public final class Tuples extends AbstractFlushingCollect {
 
 	public Tuples(final Metamorph metamorph) {
 		super(metamorph);
-		setNamedValueReceiver(metamorph);
 	}
 
 	public void setMinN(final int minN) {

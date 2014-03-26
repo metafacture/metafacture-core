@@ -39,7 +39,6 @@ public final class EqualsFilter extends AbstractFlushingCollect {
 
 	public EqualsFilter(final Metamorph metamorph) {
 		super(metamorph);
-		setNamedValueReceiver(metamorph);
 		this.isEqual = true;
 	}
 
