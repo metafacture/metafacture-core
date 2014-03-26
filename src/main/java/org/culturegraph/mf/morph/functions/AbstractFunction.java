@@ -18,7 +18,7 @@ package org.culturegraph.mf.morph.functions;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.culturegraph.mf.morph.AbstractNamedValuePipeHead;
+import org.culturegraph.mf.morph.AbstractNamedValuePipe;
 import org.culturegraph.mf.types.MultiMap;
 
 /**
@@ -26,7 +26,7 @@ import org.culturegraph.mf.types.MultiMap;
  *
  * @author Markus Michael Geipel
  */
-public abstract class AbstractFunction extends AbstractNamedValuePipeHead
+public abstract class AbstractFunction extends AbstractNamedValuePipe
 		implements Function {
 
 	private MultiMap multiMap;

@@ -22,7 +22,7 @@ import org.culturegraph.mf.util.StringUtil;
  *
  * @author Markus Michael Geipel
  */
-final class Data extends AbstractNamedValuePipeHead {
+final class Data extends AbstractNamedValuePipe {
 
 	private String name;
 

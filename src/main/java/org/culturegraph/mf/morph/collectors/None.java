@@ -35,7 +35,6 @@ public final class None extends AbstractCollect {
 
 	public None(final Metamorph metamorph) {
 		super(metamorph);
-		setNamedValueReceiver(metamorph);
 	}
 
 	@Override

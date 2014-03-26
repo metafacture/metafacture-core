@@ -43,7 +43,7 @@ public final class Buffer extends AbstractFunction {
 			currentRecord = recordCount;
 		}
 
-		receipts.add(new Receipt(name, value, source, recordCount, entityCount));
+		receipts.add(new Receipt(name, value, this, recordCount, entityCount));
 
 	}
 

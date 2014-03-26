@@ -45,8 +45,10 @@ public final class Entity extends AbstractFlushingCollect {
 		super(metamorph);
 	}
 
-	public void setNameSource(final NamedValueSource nameSource) {
-		this.nameSource = nameSource;
+	public void setNameSource(final NamedValueSource source) {
+		nameSource = source;
+		nameSource.setNamedValueReceiver(this);
+		onNamedValueSourceAdded(nameSource);
 	}
 
 	@Override

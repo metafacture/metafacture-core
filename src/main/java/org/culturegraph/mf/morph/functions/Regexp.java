@@ -43,7 +43,7 @@ public final class Regexp extends AbstractFunction {
 			while (matcher.find()) {
 				final String group = matcher.group();
 				if (!group.isEmpty()) {
-					getNamedValueReceiver().receive(name, group, source,
+					getNamedValueReceiver().receive(name, group, this,
 							recordCount, entityCount);
 				}
 			}
@@ -52,7 +52,7 @@ public final class Regexp extends AbstractFunction {
 				populateVars();
 				if (!tempVars.isEmpty()) {
 					getNamedValueReceiver().receive(name,
-							StringUtil.format(format, tempVars), source,
+							StringUtil.format(format, tempVars), this,
 							recordCount, entityCount);
 				}
 			}
