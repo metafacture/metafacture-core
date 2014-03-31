@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<test-schema xmlns="http://www.example.org/test-schema">
+
+	<string-element>    </string-element>
+	
+</test-schema>
