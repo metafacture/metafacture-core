@@ -33,7 +33,7 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 
 /**
  * @author Christoph Böhme <c.boehme@dnb.de>, Markus Michael Geipel
- * 
+ *
  */
 public final class ResourceUtil {
 
@@ -44,7 +44,7 @@ public final class ResourceUtil {
 	/**
 	 * first attempts to open resource with name 'name'. On fail attempts to
 	 * open file.
-	 * 
+	 *
 	 * @param name
 	 * @return
 	 * @throws FileNotFoundException
@@ -89,10 +89,14 @@ public final class ResourceUtil {
 		return new InputStreamReader(getStream(file), encoding);
 	}
 
+	public static URL getResourceUrl(final String name) {
+		return Thread.currentThread().getContextClassLoader().getResource(name);
+	}
+
 	public static Properties loadProperties(final String location) {
 		try {
 			return loadProperties(getStream(location));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new MetafactureException("'" + location + "' could not be loaded", e);
 		}
 	}
@@ -107,7 +111,7 @@ public final class ResourceUtil {
 	public static Properties loadProperties(final URL url) {
 		try {
 			return loadProperties(url.openStream());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new MetafactureException("'" + url.getPath() + "' could not be loaded", e);
 		}
 	}

@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.util;
+package org.culturegraph.mf.util.xml;
 
 import java.io.StringWriter;
 
@@ -33,13 +33,13 @@ import org.w3c.dom.NodeList;
  * @author Christoph Böhme <c.boehme@dnb.de>
  *
  */
-public final class XMLUtil {
+public final class XmlUtil {
 	
 	private static final String APPLICATION_XML_MIME_TYPE = "application/xml";
 	private static final String TEXT_XML_MIME_TYPE = "text/xml";
 	private static final String XML_BASE_MIME_TYPE = "+xml";
 	
-	private XMLUtil() {
+	private XmlUtil() {
 		// No instances allowed
 	}
 	
