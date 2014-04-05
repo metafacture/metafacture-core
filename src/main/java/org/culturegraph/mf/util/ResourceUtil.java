@@ -56,7 +56,7 @@ public final class ResourceUtil {
 		}
 		final File file = new File(name);
 		if (file.exists()) {
-			return getStream(new File(name));
+			return getStream(file);
 		}
 
 		final InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
