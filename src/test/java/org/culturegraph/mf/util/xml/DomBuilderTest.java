@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.culturegraph.mf.exceptions.MorphDefException;
@@ -42,7 +43,7 @@ public final class DomBuilderTest {
 	private static final String SCHEMA_FILE = BASE_PATH + "test-schema.xsd";
 
 	@Test
-	public void shouldCreateDOM() throws FileNotFoundException {
+	public void shouldCreateDOM() throws FileNotFoundException, MalformedURLException {
 		final String inputFile = "should-create-dom.xml";
 
 		final Document document = DomLoader.parse(SCHEMA_FILE, openStream(inputFile));
@@ -55,7 +56,9 @@ public final class DomBuilderTest {
 	}
 
 	@Test(expected=MorphDefException.class)
-	public void shouldValidateInputAgainstSchema() throws FileNotFoundException {
+	public void shouldValidateInputAgainstSchema()
+			throws FileNotFoundException, MalformedURLException {
+
 		final String inputFile = "should-validate-input-against-schema.xml";
 
 		DomLoader.parse(SCHEMA_FILE, openStream(inputFile));
@@ -67,7 +70,9 @@ public final class DomBuilderTest {
 	}
 
 	@Test
-	public void domShouldNotContainWhitespaceOnlyTextNodes() throws FileNotFoundException {
+	public void domShouldNotContainWhitespaceOnlyTextNodes()
+			throws FileNotFoundException, MalformedURLException {
+
 		final String inputFile = "dom-should-not-contain-whitespace-only-text-nodes.xml";
 
 		final Document document = DomLoader.parse(SCHEMA_FILE, openStream(inputFile));
@@ -86,7 +91,9 @@ public final class DomBuilderTest {
 	}
 
 	@Test
-	public void domShouldNotContainComments() throws FileNotFoundException {
+	public void domShouldNotContainComments()
+			throws FileNotFoundException, MalformedURLException {
+
 		final String inputFile = "dom-should-not-contain-comments.xml";
 
 		final Document document = DomLoader.parse(SCHEMA_FILE, openStream(inputFile));
@@ -99,7 +106,9 @@ public final class DomBuilderTest {
 	}
 
 	@Test
-	public void shouldConvertAndAttachCDataNodesToTextNodes() throws FileNotFoundException {
+	public void shouldConvertAndAttachCDataNodesToTextNodes()
+			throws FileNotFoundException, MalformedURLException {
+
 		final String inputFile = "should-convert-and-attach-cdata-nodes-to-text-nodes.xml";
 
 		final Document document = DomLoader.parse(SCHEMA_FILE, openStream(inputFile));
@@ -114,7 +123,9 @@ public final class DomBuilderTest {
 	}
 
 	@Test
-	public void shouldBeXIncludeAware() throws FileNotFoundException {
+	public void shouldBeXIncludeAware()
+			throws FileNotFoundException, MalformedURLException {
+
 		final String inputFile = "should-be-xinclude-aware1.xml";
 
 		final Document document = DomLoader.parse(SCHEMA_FILE, openStream(inputFile));
@@ -129,7 +140,9 @@ public final class DomBuilderTest {
 	}
 
 	@Test
-	public void shouldAnnotateDomWithLocationInformation() throws FileNotFoundException {
+	public void shouldAnnotateDomWithLocationInformation()
+			throws FileNotFoundException, MalformedURLException {
+
 		final String inputFile = "should-annotate-dom-with-location-information.xml";
 
 		final Document document = DomLoader.parse(SCHEMA_FILE, openStream(inputFile));
@@ -157,7 +170,9 @@ public final class DomBuilderTest {
 	// https://bugs.openjdk.java.net/browse/JDK-8038043
 	@Ignore
 	@Test
-	public void shouldAnnotateIncludedFilesCorrectly() throws FileNotFoundException {
+	public void shouldAnnotateIncludedFilesCorrectly()
+			throws FileNotFoundException, MalformedURLException {
+
 		final String baseName = "should-annotate-included-files-correctly";
 		final String inputFile = baseName + "1.xml";
 
@@ -180,8 +195,10 @@ public final class DomBuilderTest {
 		assertEquals(62, location2.getElementEnd().getColumnNumber());
 	}
 
-	private static InputSource openStream(final String resource) throws FileNotFoundException {
-		final URL resourceUrl = ResourceUtil.getResourceUrl(BASE_PATH + resource);
+	private static InputSource openStream(final String resource)
+			throws FileNotFoundException, MalformedURLException {
+
+		final URL resourceUrl = ResourceUtil.getUrl(BASE_PATH + resource);
 
 		return new InputSource(resourceUrl.toExternalForm());
 	}

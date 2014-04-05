@@ -15,6 +15,7 @@
  */
 package org.culturegraph.mf.util.xml;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.XMLConstants;
@@ -66,9 +67,11 @@ public class DomLoader {
 	}
 
 	public static Document parse(final String schemaFile, final InputSource inputSource) {
-		final URL schemaUrl = ResourceUtil.getResourceUrl(schemaFile);
-		if (schemaUrl == null) {
-			throw new MorphDefException("'" + schemaFile + "' not found!");
+		final URL schemaUrl;
+		try {
+			schemaUrl = ResourceUtil.getUrl(schemaFile);
+		} catch (final MalformedURLException e) {
+			throw new MorphDefException("'" + schemaFile + "' not found:", e);
 		}
 
 		try {

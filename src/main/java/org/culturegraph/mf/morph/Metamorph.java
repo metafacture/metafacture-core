@@ -19,11 +19,13 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 
+import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.framework.DefaultStreamReceiver;
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
@@ -32,7 +34,10 @@ import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.stream.pipe.StreamFlattener;
 import org.culturegraph.mf.types.MultiMap;
+import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.StreamConstants;
+import org.culturegraph.mf.util.xml.Location;
+import org.xml.sax.InputSource;
 
 /**
  * Transforms a data stream send via the {@link StreamReceiver} interface. Use
@@ -54,6 +59,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 	public static final String VAR_END = "]";
 
 	private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
+	private static final String COULD_NOT_LOAD_MORPH_FILE = "Could not load morph file";
 
 	private final Registry<NamedValueReceiver> dataRegistry = MorphCollectionFactory.createRegistry();
 	private final List<NamedValueReceiver> elseSources = MorphCollectionFactory.createList();
@@ -77,40 +83,49 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 		init();
 	}
 
-	public Metamorph(final Reader morphDefReader) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(morphDefReader);
-		init();
-	}
-
-	public Metamorph(final Reader morphDefReader, final Map<String, String> vars) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(morphDefReader, vars);
-		init();
-	}
-
-	public Metamorph(final InputStream inputStream, final Map<String, String> vars) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(inputStream, vars);
-		init();
-	}
-
-	public Metamorph(final InputStream inputStream) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(inputStream);
-		init();
-	}
-
 	public Metamorph(final String morphDef) {
 		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(morphDef);
+		builder.walk(getInputSource(morphDef));
 		init();
 	}
 
 	public Metamorph(final String morphDef, final Map<String, String> vars) {
 		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(morphDef, vars);
+		builder.walk(getInputSource(morphDef), vars);
 		init();
+	}
+
+	public Metamorph(final Reader morphDef) {
+		final MorphBuilder builder = new MorphBuilder(this);
+		builder.walk(new InputSource(morphDef));
+		init();
+	}
+
+	public Metamorph(final Reader morphDef, final Map<String, String> vars) {
+		final MorphBuilder builder = new MorphBuilder(this);
+		builder.walk(new InputSource(morphDef), vars);
+		init();
+	}
+
+	public Metamorph(final InputStream morphDef) {
+		final MorphBuilder builder = new MorphBuilder(this);
+		builder.walk(new InputSource(morphDef));
+		init();
+	}
+
+	public Metamorph(final InputStream morphDef, final Map<String, String> vars) {
+		final MorphBuilder builder = new MorphBuilder(this);
+		builder.walk(new InputSource(morphDef), vars);
+		init();
+	}
+
+	private InputSource getInputSource(final String morphDef) {
+		try {
+			return new InputSource(
+					ResourceUtil.getUrl(morphDef).toExternalForm());
+		} catch (final MalformedURLException e) {
+			throw new MorphDefException(COULD_NOT_LOAD_MORPH_FILE, e);
+		}
 	}
 
 	private void init() {
