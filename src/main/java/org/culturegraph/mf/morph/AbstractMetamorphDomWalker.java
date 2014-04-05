@@ -15,9 +15,6 @@
  */
 package org.culturegraph.mf.morph;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +23,6 @@ import org.culturegraph.mf.morph.collectors.CollectFactory;
 import org.culturegraph.mf.morph.functions.FunctionFactory;
 import org.culturegraph.mf.morph.maps.MapFactory;
 import org.culturegraph.mf.types.ScopedHashMap;
-import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.StringUtil;
 import org.culturegraph.mf.util.xml.DomLoader;
 import org.w3c.dom.Document;
@@ -104,42 +100,13 @@ public abstract class AbstractMetamorphDomWalker {
 		return mapFactory;
 	}
 
-	public final void walk(final String morphDef) {
-		try {
-			walk(ResourceUtil.getStream(morphDef));
-		} catch (final FileNotFoundException e) {
-			throw new MorphDefException(e);
-		}
-	}
-
-	public final void walk(final InputStream inputStream) {
-		if (inputStream == null) {
-			throw new IllegalArgumentException("'inputStream' must not be null");
-		}
-		walk(DomLoader.parse(SCHEMA_FILE, new InputSource(inputStream)));
-	}
-
-	public final void walk(final Reader reader) {
-		if (reader == null) {
-			throw new IllegalArgumentException("'reader' must not be null");
-		}
-		walk(DomLoader.parse(SCHEMA_FILE, new InputSource(reader)));
-	}
-
-	public final void walk(final Reader morphDefReader, final Map<String, String> vars) {
+	public final void walk(final InputSource morphScript, final Map<String, String> vars) {
 		this.vars.putAll(vars);
-		walk(morphDefReader);
+		walk(morphScript);
 	}
 
-
-	public final void walk(final String morphDef, final Map<String, String> vars) {
-		this.vars.putAll(vars);
-		walk(morphDef);
-	}
-
-	public final void walk(final InputStream inputStream, final Map<String, String> vars) {
-		this.vars.putAll(vars);
-		walk(inputStream);
+	public final void walk(final InputSource morphScript) {
+		walk(DomLoader.parse(SCHEMA_FILE, morphScript));
 	}
 
 	private static MMTAG tagOf(final Node child) {
