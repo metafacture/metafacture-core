@@ -22,6 +22,7 @@ import org.culturegraph.mf.framework.DefaultStreamReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.types.NamedValue;
+import org.culturegraph.mf.util.xml.Location;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -173,6 +174,17 @@ public final class MetamorphBasicTest implements NamedValueReceiver {
 	@Override
 	public void addNamedValueSource(final NamedValueSource namedValueSource) {
 		namedValueSource.setNamedValueReceiver(this);
+	}
+
+	@Override
+	public void setSourceLocation(final Location sourceLocation) {
+		// Nothing to do
+	}
+
+	@Override
+	public Location getSourceLocation() {
+		// Nothing to do
+		return null;
 	}
 
 }

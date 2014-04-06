@@ -347,4 +347,18 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 		throw new UnsupportedOperationException("The Metamorph object cannot act as a NamedValueSender");
 	}
 
+	@Override
+	public void setSourceLocation(final Location sourceLocation) {
+		// Nothing to do
+		// Metamorph does not have a source location (we could
+		// in theory use the location of the module in a flux
+		// script)
+	}
+
+	@Override
+	public Location getSourceLocation() {
+		// Metamorph does not have a source location
+		return null;
+	}
+
 }

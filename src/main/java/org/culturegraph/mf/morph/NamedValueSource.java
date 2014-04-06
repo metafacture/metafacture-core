@@ -23,7 +23,7 @@ package org.culturegraph.mf.morph;
  * @author Christoph Böhme
  *
  */
-public interface NamedValueSource {
+public interface NamedValueSource extends KnowsSourceLocation {
 
 	/**
 	 * Connects a source of named values to a receiver of named values.
