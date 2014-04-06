@@ -22,7 +22,7 @@ package org.culturegraph.mf.morph;
  * @author Christoph Böhme
  *
  */
-public interface NamedValueReceiver {
+public interface NamedValueReceiver extends KnowsSourceLocation {
 
 	void receive(String name, String value, NamedValueSource source, int recordCount, int entityCount);
 

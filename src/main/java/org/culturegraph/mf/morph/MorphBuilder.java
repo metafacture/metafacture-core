@@ -26,6 +26,7 @@ import org.culturegraph.mf.morph.collectors.Entity;
 import org.culturegraph.mf.morph.functions.Function;
 import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
+import org.culturegraph.mf.util.xml.Location;
 import org.w3c.dom.Node;
 
 /**
@@ -173,6 +174,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	protected void enterData(final Node dataNode) {
 		final Data data = new Data();
 		data.setName(resolvedAttribute(dataNode, ATTRITBUTE.NAME));
+		data.setSourceLocation((Location) dataNode.getUserData(Location.USER_DATA_ID));
 
 		final String source = resolvedAttribute(dataNode, ATTRITBUTE.SOURCE);
 		metamorph.registerNamedValueReceiver(source, data);
@@ -232,6 +234,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 			throw new IllegalArgumentException("Collector " + node.getLocalName() + NOT_FOUND);
 		}
 		final Collect collect = getCollectFactory().newInstance(node.getLocalName(), attributes, metamorph);
+		collect.setSourceLocation((Location) node.getUserData(Location.USER_DATA_ID));
 
 		stack.push(new StackFrame(collect));
 	}
@@ -293,6 +296,8 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		} else {
 			throw new IllegalArgumentException(functionNode.getLocalName() + NOT_FOUND);
 		}
+
+		function.setSourceLocation((Location) functionNode.getUserData(Location.USER_DATA_ID));
 
 		function.setMultiMap(metamorph);
 

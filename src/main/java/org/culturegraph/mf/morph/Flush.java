@@ -16,16 +16,21 @@
 
 package org.culturegraph.mf.morph;
 
+import org.culturegraph.mf.util.xml.Location;
+
 
 /**
  * Flushes a {@link FlushListener}
  *
- * @author markus geipel
+ * @author Markus Geipel
+ * @author Christoph Böhme
  *
  */
 public final class Flush implements NamedValueReceiver {
 
 	private final FlushListener listener;
+
+	private Location sourceLocation;
 
 	public Flush(final FlushListener listener) {
 		this.listener = listener;
@@ -39,6 +44,16 @@ public final class Flush implements NamedValueReceiver {
 	@Override
 	public void addNamedValueSource(final NamedValueSource namedValueSource) {
 		// Nothing to do
+	}
+
+	@Override
+	public void setSourceLocation(final Location sourceLocation) {
+		this.sourceLocation = sourceLocation;
+	}
+
+	@Override
+	public Location getSourceLocation() {
+		return sourceLocation;
 	}
 
 }

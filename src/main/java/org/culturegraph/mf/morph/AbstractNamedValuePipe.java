@@ -15,8 +15,11 @@
  */
 package org.culturegraph.mf.morph;
 
+import org.culturegraph.mf.util.xml.Location;
+
 /**
- * Base class for {@link NamedValuePipe}s
+ * Base class for {@link NamedValuePipe}s.
+ *
  * @author Markus Michael Geipel
  * @author Chistohp Böhme
  *
@@ -24,6 +27,8 @@ package org.culturegraph.mf.morph;
 public abstract class AbstractNamedValuePipe implements NamedValuePipe {
 
 	private NamedValueReceiver namedValueReceiver;
+
+	private Location sourceLocation;
 
 	@Override
 	public final <R extends NamedValueReceiver> R setNamedValueReceiver(
@@ -39,6 +44,16 @@ public abstract class AbstractNamedValuePipe implements NamedValuePipe {
 		namedValueSource.setNamedValueReceiver(this);
 
 		onNamedValueSourceAdded(namedValueSource);
+	}
+
+	@Override
+	public void setSourceLocation(final Location sourceLocation) {
+		this.sourceLocation = sourceLocation;
+	}
+
+	@Override
+	public Location getSourceLocation() {
+		return sourceLocation;
 	}
 
 	protected void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
