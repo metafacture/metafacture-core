@@ -19,14 +19,18 @@ import org.culturegraph.mf.exceptions.MorphException;
 
 
 /**
- * Default error handler used by {@link Metamorph}. Just repackages exceptions as {@link MorphException}s.
- * 
+ * Default error handler used by {@link Metamorph}. Just repackages
+ * exceptions as {@link MorphException}s.
+ *
  * @author Markus Michael Geipel
  *
  */
 public final class DefaultErrorHandler implements MorphErrorHandler {
-		@Override
-		public void error(final Exception exception) {
-			throw new MorphException("An unhandled exception occured", exception);
-		}
+
+	@Override
+	public void error(final Exception exception) {
+		throw new MorphException("An unhandled exception occured: "
+				+ exception.getMessage(), exception);
+	}
+
 }
