@@ -29,14 +29,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Wraps the call to the process method of the downstream module
- * in a try catch block with Exception as the catch-block's 
- * argument type. This module is supposed to stop any exception 
- * from downstream modules to travel further upstream. If an 
- * exception is caught, a log message with log level "error" is 
- * written. 
- * 
+ * in a try catch block with Exception as the catch-block's
+ * argument type. This module is supposed to stop any exception
+ * from downstream modules to travel further upstream. If an
+ * exception is caught, a log message with log level "error" is
+ * written.
+ *
  * @param <T> object type
- * 
+ *
  * @author Christoph Böhme
  */
 @Description("passes objects through and catches exceptions.")
@@ -47,17 +47,24 @@ public final class ObjectExceptionCatcher<T> extends
 
 	private static final Logger LOG = LoggerFactory.getLogger(ObjectExceptionCatcher.class);
 
-	private final String logPrefix;
-
+	private String logPrefix;
 	private boolean logStackTrace;
 
 	public ObjectExceptionCatcher() {
 		this("");
 	}
-	
+
 	public ObjectExceptionCatcher(final String logPrefix) {
 		super();
 		this.logPrefix = logPrefix;
+	}
+
+	public void setLogPrefix(final String logPrefix) {
+		this.logPrefix = logPrefix;
+	}
+
+	public String getLogPrefix() {
+		return logPrefix;
 	}
 
 	public void setLogStackTrace(final boolean logStackTrace) {
@@ -72,7 +79,7 @@ public final class ObjectExceptionCatcher<T> extends
 	public void process(final T obj) {
 		try {
 			getReceiver().process(obj);
-		} catch(final Exception e) {  
+		} catch(final Exception e) {
 			// NO CHECKSTYLE IllegalCatch FOR -1 LINES:
 			// This module is supposed to intercept _all_ exceptions
 			// thrown by downstream modules. Hence, we have to catch
