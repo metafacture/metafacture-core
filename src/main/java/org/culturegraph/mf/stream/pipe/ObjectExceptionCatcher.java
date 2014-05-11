@@ -15,6 +15,9 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
+import java.io.PrintWriter;
+
+import org.apache.commons.io.output.StringBuilderWriter;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
@@ -43,10 +46,11 @@ public final class ObjectExceptionCatcher<T> extends
 		DefaultObjectPipe<T, ObjectReceiver<T>> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ObjectExceptionCatcher.class);
-	private static final String MSG_PATTERN = "{}{}";
-	
+
 	private final String logPrefix;
-	
+
+	private boolean logStackTrace;
+
 	public ObjectExceptionCatcher() {
 		this("");
 	}
@@ -55,7 +59,15 @@ public final class ObjectExceptionCatcher<T> extends
 		super();
 		this.logPrefix = logPrefix;
 	}
-	
+
+	public void setLogStackTrace(final boolean logStackTrace) {
+		this.logStackTrace = logStackTrace;
+	}
+
+	public boolean isLogStackTrace() {
+		return logStackTrace;
+	}
+
 	@Override
 	public void process(final T obj) {
 		try {
@@ -65,8 +77,14 @@ public final class ObjectExceptionCatcher<T> extends
 			// This module is supposed to intercept _all_ exceptions
 			// thrown by downstream modules. Hence, we have to catch
 			// Exception.
-			LOG.error(MSG_PATTERN, logPrefix, obj);
-			LOG.error(MSG_PATTERN, logPrefix, e);
+
+			LOG.error("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
+
+			if (logStackTrace) {
+				final StringBuilderWriter stackTraceWriter = new StringBuilderWriter();
+				e.printStackTrace(new PrintWriter(stackTraceWriter));
+				LOG.error("{}Stack Trace:\n{}", logPrefix, stackTraceWriter.toString());
+			}
 		}
 	}
 

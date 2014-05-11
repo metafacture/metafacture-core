@@ -17,67 +17,104 @@ package org.culturegraph.mf.stream.pipe;
 
 
 
-import org.culturegraph.mf.framework.DefaultObjectReceiver;
-import org.junit.Assert;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+import org.apache.log4j.Appender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggingEvent;
+import org.culturegraph.mf.framework.ObjectReceiver;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 
 /**
  * Tests {@link ObjectExceptionCatcher}.
- * 
+ *
  * @author Christoph Böhme
  */
 public final class ObjectExceptionCatcherTest {
 
-	private static final String OBJECT = "Test Object";
-	
+	private static final String OBJECT_STRING = "TEST OBJECT REPRESENTATION";
+	private static final String EXCEPTION_MESSAGE = "TEST EXCEPTION MESSSAGE";
+
 	/**
 	 * A special exception to make sure the test
-	 * is not passed accidentally on a different 
+	 * is not passed accidentally on a different
 	 * exception.
 	 */
-	protected static final class ModuleException 
+	private static final class TestException
 		extends RuntimeException {
 
-		private static final long serialVersionUID = 1L;		
-	}
-	
-	/**
-	 * A module whose {@code process()} method always throws 
-	 * an exception.
-	 * 
-	 * @param <T> object type
-	 */
-	protected static final class FailingModule<T>
-		extends DefaultObjectReceiver<T> {
-		
-		@Override
-		public void process(final T obj) {
-			throw new ModuleException();
+		private static final long serialVersionUID = 1L;
+
+		public TestException(final String msg) {
+			super(msg);
 		}
+
 	}
-	
-	@Test(expected=ModuleException.class)
-	public void testSetup() {
-		final FailingModule<String> failingModule = new FailingModule<String>();
-		
-		failingModule.process(OBJECT);
-		failingModule.closeStream();
+
+	private ObjectExceptionCatcher<String> systemUnderTest;
+
+	@Mock
+	private ObjectReceiver<String> exceptionThrowingModule;
+
+	@Mock
+	private Appender logAppender;
+	@Captor
+	private ArgumentCaptor<LoggingEvent> loggingEventCaptor;
+
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		doThrow(new TestException(EXCEPTION_MESSAGE))
+				.when(exceptionThrowingModule).process(anyString());
+
+		final Logger logger = Logger.getLogger(ObjectExceptionCatcher.class);
+		logger.addAppender(logAppender);
+
+		systemUnderTest = new ObjectExceptionCatcher<String>();
+		systemUnderTest.setReceiver(exceptionThrowingModule);
 	}
-	
+
+	@After
+	public void cleanup() {
+		final Logger logger = Logger.getLogger(ObjectExceptionCatcher.class);
+		logger.removeAppender(logAppender);
+	}
+
 	@Test
-	public void testCatcher() {
-		final ObjectExceptionCatcher<String> catcher = new ObjectExceptionCatcher<String>();
-		final FailingModule<String> failingModule = new FailingModule<String>();
-		
-		catcher.setReceiver(failingModule);
-		
-		try {
-			catcher.process(OBJECT);
-			catcher.closeStream();
-		} catch (final ModuleException e) {
-			Assert.fail(e.toString());
-		}
+	public void shouldCatchAndLogException() {
+		systemUnderTest.process(OBJECT_STRING);
+
+		verify(logAppender).doAppend(loggingEventCaptor.capture());
+		final LoggingEvent loggingEvent = loggingEventCaptor.getValue();
+		assertThat(loggingEvent.getLevel(), is(Level.ERROR));
+		assertThat(loggingEvent.getRenderedMessage(), containsString(EXCEPTION_MESSAGE));
+		assertThat(loggingEvent.getRenderedMessage(), containsString(OBJECT_STRING));
+	}
+
+	@Test
+	public void shouldLogStackTraceIfConfigured() {
+		systemUnderTest.setLogStackTrace(true);
+
+		systemUnderTest.process(OBJECT_STRING);
+
+		verify(logAppender, times(2)).doAppend(loggingEventCaptor.capture());
+		final LoggingEvent loggingEvent = loggingEventCaptor.getValue();
+		assertThat(loggingEvent.getLevel(), is(Level.ERROR));
+		assertThat(loggingEvent.getRenderedMessage(), containsString("Stack Trace"));
 	}
 
 }
