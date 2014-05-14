@@ -46,6 +46,7 @@ Building metafacture-core from source is easy. All you need is git and [maven](h
         $ mvn clean install
 
     It is important to perform this step *before* importing the project into your IDE because it generates the lexer and parser sources for Flux from antlr grammar definitions. Otherwise your IDE will fail to compile the sources if it has integrated background compilation (like Eclipse has, for instance).
+    2014-05-13: The currently used antlr library (version 3.5.1) isn't compatible with the latest Java 8 version. Using mvn clean install throws an error trying to build the classes in the org/culturegraph/mf/flux/parser package. [antlr github](https://github.com/antlr/antlr3/issues/151) Use Java version <=  7 until metafacture-core has updated the dependencies. . 
 
 See [Code Quality and Style](https://github.com/culturegraph/metafacture-core/wiki/Code-Quality-and-Style) on the wiki for further information on the sources.
 
