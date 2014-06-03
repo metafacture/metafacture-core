@@ -15,50 +15,61 @@
  */
 package org.culturegraph.mf.formeta.parser;
 
+import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.formeta.Formeta;
 
 /**
- * Context of the text parser. It stores the parsed text, maps escape 
- * sequences to characters and handles the removal of trailing 
- * whitespace in unquoted text.
+ * Context of the text parser. It stores the parsed text, maps escape sequences
+ * to characters and handles the removal of trailing whitespace in unquoted
+ * text.
  */
 class TextParserContext {
-	
+
+	private static final String ESCAPABLE_CHARS = Formeta.WHITESPACE
+			+ Formeta.QUOT_CHAR
+			+ Formeta.ESCAPE_CHAR
+			+ Formeta.GROUP_START
+			+ Formeta.GROUP_END
+			+ Formeta.ITEM_SEPARATOR
+			+ Formeta.NAME_VALUE_SEPARATOR;
+
 	private final StringBuilder text = new StringBuilder();
-	
+
 	private int lengthWithoutTrailingWs;
 	private boolean quoted;
-	
+
 	public String getText() {
 		return text.substring(0, lengthWithoutTrailingWs);
 	}
-	
+
 	public void setQuoted(final boolean quoted) {
 		this.quoted = quoted;
 	}
-	
+
 	public void appendChar(final char ch) {
 		text.append(ch);
 		if (quoted || !Formeta.isWhitespace(ch)) {
 			lengthWithoutTrailingWs = text.length();
 		}
 	}
-	
+
 	public void appendEscapedChar(final char ch) {
 		if (Formeta.NEWLINE_ESC_SEQ == ch) {
 			text.append('\n');
 		} else if (Formeta.CARRIAGE_RETURN_ESC_SEQ == ch) {
 			text.append('\r');
-		} else {
+		} else if (ESCAPABLE_CHARS.indexOf(ch) > -1) {
 			text.append(ch);
+		} else {
+			throw new FormatException("invalid escape sequence: " + ch);
 		}
 		lengthWithoutTrailingWs = text.length();
 	}
-	
+
 	public void reset() {
 		text.delete(0, text.length());
 		lengthWithoutTrailingWs = 0;
 		quoted = false;
 	}
-	
+
 }
