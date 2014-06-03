@@ -66,7 +66,7 @@ public final class VerboseFormatter extends AbstractFormatter {
 	
 	@Override
 	protected boolean shouldQuoteText(final char[] buffer, final int len) {
-		final String triggerChars = Formeta.WHITESPACE + ESCAPED_CHARS;
+		final String triggerChars = Formeta.WHITESPACE + CHARS_TO_ESCAPE;
 		for (int i = 0; i < len; ++i) {
 			if (triggerChars.indexOf(buffer[i]) > -1) {
 				return true;

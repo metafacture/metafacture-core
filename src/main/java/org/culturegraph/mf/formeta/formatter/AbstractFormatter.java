@@ -26,11 +26,11 @@ import org.culturegraph.mf.util.StringUtil;
  */
 public abstract class AbstractFormatter implements Formatter {
 
-	public static final String ESCAPED_CHARS_QUOTED = "\n\r"
+	public static final String CHARS_TO_ESCAPE_QUOTED = "\n\r"
 			+ Formeta.QUOT_CHAR
 			+ Formeta.ESCAPE_CHAR;
 
-	public static final String ESCAPED_CHARS = ESCAPED_CHARS_QUOTED
+	public static final String CHARS_TO_ESCAPE = CHARS_TO_ESCAPE_QUOTED
 			+ Formeta.GROUP_START
 			+ Formeta.GROUP_END
 			+ Formeta.ITEM_SEPARATOR
@@ -67,24 +67,24 @@ public abstract class AbstractFormatter implements Formatter {
 		buffer = StringUtil.copyToBuffer(str, buffer);
 		final int bufferLen = str.length();
 
-		final boolean addQuotes = shouldQuoteText(buffer, bufferLen);
-		final String charsToEscape;
-		if (addQuotes) {
+		if (shouldQuoteText(buffer, bufferLen)) {
 			builder.append(Formeta.QUOT_CHAR);
-			charsToEscape = ESCAPED_CHARS_QUOTED;
-		} else {
-			charsToEscape = ESCAPED_CHARS;
-		}
-		for (int i = 0; i < bufferLen; ++i) {
-			final char ch = buffer[i];
-			if (charsToEscape.indexOf(ch) > -1) {
-				appendEscapedChar(ch);
-			} else {
-				builder.append(ch);
+			for (int i = 0; i < bufferLen; ++i) {
+				escapeAndAppendChar(buffer[i], CHARS_TO_ESCAPE_QUOTED);
 			}
-		}
-		if (addQuotes) {
 			builder.append(Formeta.QUOT_CHAR);
+		} else {
+			if (bufferLen > 0) {
+				escapeAndAppendChar(buffer[0],
+						CHARS_TO_ESCAPE + Formeta.WHITESPACE);
+			}
+			for (int i = 1; i < bufferLen-1; ++i) {
+				escapeAndAppendChar(buffer[i], CHARS_TO_ESCAPE);
+			}
+			if (bufferLen > 1) {
+				escapeAndAppendChar(buffer[bufferLen-1],
+						CHARS_TO_ESCAPE + Formeta.WHITESPACE);
+			}
 		}
 	}
 
@@ -93,6 +93,14 @@ public abstract class AbstractFormatter implements Formatter {
 	}
 
 	protected abstract boolean shouldQuoteText(final char[] buffer, final int len);
+
+	private void escapeAndAppendChar(final char ch, final String charsToEscape) {
+		if (charsToEscape.indexOf(ch) > -1) {
+			appendEscapedChar(ch);
+		} else {
+			builder.append(ch);
+		}
+	}
 
 	private void appendEscapedChar(final char ch) {
 		builder.append(Formeta.ESCAPE_CHAR);
