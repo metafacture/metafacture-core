@@ -24,6 +24,7 @@ import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.morph.collectors.Collect;
 import org.culturegraph.mf.morph.collectors.Entity;
 import org.culturegraph.mf.morph.functions.Function;
+import org.culturegraph.mf.morph.interceptors.InterceptorFactory;
 import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 import org.culturegraph.mf.util.xml.Location;
@@ -46,6 +47,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	private static final Pattern OR_PATTERN = Pattern.compile(OR_STRING, Pattern.LITERAL);
 
 	private final Metamorph metamorph;
+	private final InterceptorFactory interceptorFactory;
 	private final Deque<StackFrame> stack = new LinkedList<StackFrame>();
 
 	private static final class StackFrame {
@@ -84,10 +86,13 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 
 	}
 
-	protected MorphBuilder(final Metamorph metamorph) {
+	protected MorphBuilder(final Metamorph metamorph,
+			final InterceptorFactory interceptorFactory) {
+
 		super();
 
 		this.metamorph = metamorph;
+		this.interceptorFactory = interceptorFactory;
 		stack.push(new StackFrame(metamorph));
 	}
 
@@ -176,8 +181,17 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		data.setName(resolvedAttribute(dataNode, ATTRITBUTE.NAME));
 		data.setSourceLocation((Location) dataNode.getUserData(Location.USER_DATA_ID));
 
+		final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+		final NamedValuePipe delegate;
+		if (interceptor == null) {
+			delegate = data;
+		} else {
+			delegate = interceptor;
+			data.addNamedValueSource(delegate);
+		}
+
 		final String source = resolvedAttribute(dataNode, ATTRITBUTE.SOURCE);
-		metamorph.registerNamedValueReceiver(source, data);
+		metamorph.registerNamedValueReceiver(source, delegate);
 
 		stack.push(new StackFrame(data));
 	}
@@ -186,15 +200,24 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	protected void exitData(final Node node) {
 		final NamedValuePipe dataPipe = stack.pop().getPipe();
 
+		final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+		final NamedValuePipe delegate;
+		if (interceptor == null) {
+			delegate = dataPipe;
+		} else {
+			delegate = interceptor;
+			delegate.addNamedValueSource(dataPipe);
+		}
+
 		final StackFrame parent = stack.peek();
 		if (parent.isInEntityName()) {
 			// Protected xsd schema and by assertion in enterName:
-			((Entity) parent.getPipe()).setNameSource(dataPipe);
+			((Entity) parent.getPipe()).setNameSource(delegate);
 		} else if (parent.isInCondition()) {
 			// Protected xsd schema and by assertion in enterIf:
-			((ConditionAware) parent.getPipe()).setConditionSource(dataPipe);
+			((ConditionAware) parent.getPipe()).setConditionSource(delegate);
 		} else {
-			parent.getPipe().addNamedValueSource(dataPipe);
+			parent.getPipe().addNamedValueSource(delegate);
 		}
 	}
 
@@ -243,16 +266,31 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	protected void exitCollect(final Node node) {
 		final NamedValuePipe collectPipe = stack.pop().getPipe();
 
-		final StackFrame parent = stack.peek();
+		final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+		final NamedValuePipe delegate;
+		if (interceptor == null || collectPipe instanceof Entity) {
+			// The result of entity collectors cannot be intercepted
+			// because they only use the receive/emit interface for
+			// signalling while the actual data is transferred using
+			// a custom mechanism. In order for this to work the Entity
+			// class checks whether source and receiver are an
+			// instances of Entity. If an interceptor is inserted between
+			// entity elements this mechanism will break.
+			delegate = collectPipe;
+		} else {
+			delegate = interceptor;
+			delegate.addNamedValueSource(collectPipe);
+		}
 
+		final StackFrame parent = stack.peek();
 		if (parent.isInEntityName()) {
 			// Protected xsd schema and by assertion in enterName:
-			((Entity) parent.getPipe()).setNameSource(collectPipe);
+			((Entity) parent.getPipe()).setNameSource(delegate);
 		} else if (parent.isInCondition()) {
 			// Protected xsd schema and by assertion in enterIf:
-			((ConditionAware) parent.getPipe()).setConditionSource(collectPipe);
+			((ConditionAware) parent.getPipe()).setConditionSource(delegate);
 		} else {
-			parent.getPipe().addNamedValueSource(collectPipe);
+			parent.getPipe().addNamedValueSource(delegate);
 		}
 
 		// must be set after recursive calls to flush descendants before parent
@@ -269,10 +307,17 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	private void registerFlush(final String flushWith, final FlushListener flushListener) {
 		final String[] keysSplit = OR_PATTERN.split(flushWith);
 		for (final String key : keysSplit) {
-			if (key.equals(RECORD)) {
-				metamorph.registerRecordEndFlush(flushListener);
+			final FlushListener interceptor = interceptorFactory.createFlushInterceptor(flushListener);
+			final FlushListener delegate;
+			if (interceptor == null) {
+				delegate = flushListener;
 			} else {
-				metamorph.registerNamedValueReceiver(key, new Flush(flushListener));
+				delegate = interceptor;
+			}
+			if (key.equals(RECORD)) {
+				metamorph.registerRecordEndFlush(delegate);
+			} else {
+				metamorph.registerNamedValueReceiver(key, new Flush(delegate));
 			}
 		}
 	}
@@ -310,7 +355,17 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		}
 
 		final StackFrame head = stack.peek();
-		function.addNamedValueSource(head.getPipe());
+
+		final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+		final NamedValuePipe delegate;
+		if (interceptor == null) {
+			delegate = function;
+		} else {
+			delegate = interceptor;
+			function.addNamedValueSource(delegate);
+		}
+		delegate.addNamedValueSource(head.getPipe());
+
 		head.setPipe(function);
 	}
 

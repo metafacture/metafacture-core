@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,8 @@ import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.morph.interceptors.InterceptorFactory;
+import org.culturegraph.mf.morph.interceptors.NullInterceptorFactory;
 import org.culturegraph.mf.stream.pipe.StreamFlattener;
 import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.ResourceUtil;
@@ -44,6 +47,7 @@ import org.xml.sax.InputSource;
  * {@link MorphBuilder} to create an instance based on an xml description
  *
  * @author Markus Michael Geipel
+ * @author Christoph Böhme
  */
 @Description("applies a metamorph transformation to the event stream. Metamorph "
 		+ "definition is given in brackets.")
@@ -60,6 +64,9 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
 	private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
 	private static final String COULD_NOT_LOAD_MORPH_FILE = "Could not load morph file";
+
+	private static final InterceptorFactory NULL_INTERCEPTOR_FACTORY = new NullInterceptorFactory();
+	private static final Map<String, String> NO_VARS = Collections.<String, String>emptyMap();
 
 	private final Registry<NamedValueReceiver> dataRegistry = MorphCollectionFactory.createRegistry();
 	private final List<NamedValueReceiver> elseSources = MorphCollectionFactory.createList();
@@ -84,42 +91,80 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 	}
 
 	public Metamorph(final String morphDef) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(getInputSource(morphDef));
-		init();
+		this(morphDef, NO_VARS);
 	}
 
 	public Metamorph(final String morphDef, final Map<String, String> vars) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(getInputSource(morphDef), vars);
-		init();
+		this(morphDef, vars, NULL_INTERCEPTOR_FACTORY);
+	}
+
+	public Metamorph(final String morphDef, final InterceptorFactory interceptorFactory) {
+		this(morphDef, NO_VARS, interceptorFactory);
+	}
+
+	public Metamorph(final String morphDef, final Map<String, String> vars,
+			final InterceptorFactory interceptorFactory) {
+
+		this(getInputSource(morphDef), NO_VARS, interceptorFactory);
 	}
 
 	public Metamorph(final Reader morphDef) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(new InputSource(morphDef));
-		init();
+		this(morphDef, NO_VARS);
 	}
 
 	public Metamorph(final Reader morphDef, final Map<String, String> vars) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(new InputSource(morphDef), vars);
-		init();
+		this(morphDef, vars, NULL_INTERCEPTOR_FACTORY);
+	}
+
+	public Metamorph(final Reader morphDef, final InterceptorFactory interceptorFactory) {
+		this(morphDef, NO_VARS, interceptorFactory);
+	}
+
+	public Metamorph(final Reader morphDef, final Map<String, String> vars,
+			final InterceptorFactory interceptorFactory) {
+
+		this(new InputSource(morphDef), vars, interceptorFactory);
 	}
 
 	public Metamorph(final InputStream morphDef) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(new InputSource(morphDef));
-		init();
+		this(morphDef, NO_VARS);
 	}
 
 	public Metamorph(final InputStream morphDef, final Map<String, String> vars) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(new InputSource(morphDef), vars);
+		this(morphDef, vars, NULL_INTERCEPTOR_FACTORY);
+	}
+
+	public Metamorph(final InputStream morphDef, final InterceptorFactory interceptorFactory) {
+		this(morphDef, NO_VARS, interceptorFactory);
+	}
+
+	public Metamorph(final InputStream morphDef, final Map<String, String> vars,
+			final InterceptorFactory interceptorFactory) {
+
+		this(new InputSource(morphDef), vars, interceptorFactory);
+	}
+
+	public Metamorph(final InputSource inputSource) {
+		this(inputSource, NO_VARS);
+	}
+
+	public Metamorph(final InputSource inputSource, final Map<String, String> vars) {
+		this(inputSource, vars, NULL_INTERCEPTOR_FACTORY);
+	}
+
+	public Metamorph(final InputSource inputSource, final InterceptorFactory interceptorFactory) {
+		this(inputSource, NO_VARS, interceptorFactory);
+	}
+
+	public Metamorph(final InputSource inputSource, final Map<String, String> vars,
+			final InterceptorFactory interceptorFactory) {
+
+		final MorphBuilder builder = new MorphBuilder(this, interceptorFactory);
+		builder.walk(inputSource, vars);
 		init();
 	}
 
-	private InputSource getInputSource(final String morphDef) {
+	private static InputSource getInputSource(final String morphDef) {
 		try {
 			return new InputSource(
 					ResourceUtil.getUrl(morphDef).toExternalForm());
