@@ -21,7 +21,7 @@ import org.culturegraph.mf.util.xml.Location;
  * Base class for {@link NamedValuePipe}s.
  *
  * @author Markus Michael Geipel
- * @author Chistohp Böhme
+ * @author Chistoph Böhme
  *
  */
 public abstract class AbstractNamedValuePipe implements NamedValuePipe {
@@ -31,12 +31,8 @@ public abstract class AbstractNamedValuePipe implements NamedValuePipe {
 	private Location sourceLocation;
 
 	@Override
-	public final <R extends NamedValueReceiver> R setNamedValueReceiver(
-			final R receiver) {
-
+	public final void setNamedValueReceiver(final NamedValueReceiver receiver) {
 		namedValueReceiver = receiver;
-
-		return receiver;
 	}
 
 	@Override
