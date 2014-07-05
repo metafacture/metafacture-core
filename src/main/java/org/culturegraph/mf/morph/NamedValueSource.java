@@ -33,8 +33,7 @@ public interface NamedValueSource extends KnowsSourceLocation {
 	 * {@link NamedValueReceiver.addNamedValueSource}.
 	 *
 	 * @param receiver
-	 * @return reference to receiver
 	 */
-	<R extends NamedValueReceiver> R setNamedValueReceiver(R receiver);
+	void setNamedValueReceiver(NamedValueReceiver receiver);
 
 }

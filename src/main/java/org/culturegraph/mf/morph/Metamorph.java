@@ -343,7 +343,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 	}
 
 	@Override
-	public <R extends NamedValueReceiver> R setNamedValueReceiver(final R receiver) {
+	public void setNamedValueReceiver(final NamedValueReceiver receiver) {
 		throw new UnsupportedOperationException("The Metamorph object cannot act as a NamedValueSender");
 	}
 
