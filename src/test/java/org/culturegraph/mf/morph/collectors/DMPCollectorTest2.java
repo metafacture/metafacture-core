@@ -15,32 +15,14 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-import org.culturegraph.mf.morph.Metamorph;
+import org.culturegraph.mf.test.TestSuite;
+import org.culturegraph.mf.test.TestSuite.TestDefinitions;
+import org.junit.runner.RunWith;
 
 /**
- * Common basis for {@link Entity}, {@link Combine} etc.
- *
- * @author Markus Michael Geipel
- * @author Christoph Böhme
- *
+ * @author tgaengler
  */
-public abstract class AbstractFlushingCollect extends AbstractCollect {
-
-	public AbstractFlushingCollect(final Metamorph metamorph) {
-		super(metamorph);
-	}
-
-	@Override
-	public final void flush(final int recordCount, final int entityCount) {
-		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount) && isConditionMet()) {
-			emit();
-			if (getReset()) {
-				resetCondition();
-				clear();
-			}
-		}
-
-		updateHierarchicalEntity(entityCount);
-	}
-
+@RunWith(TestSuite.class)
+@TestDefinitions({ "DMPCombineTest2.xml" })
+public final class DMPCollectorTest2 {/* bind to xml test */
 }

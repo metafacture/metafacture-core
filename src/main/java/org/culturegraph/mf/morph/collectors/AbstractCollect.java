@@ -38,6 +38,9 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 	private final Metamorph metamorph;
 	private boolean waitForFlush;
 	private boolean conditionMet;
+	private boolean				includeSubEntities;
+	private int					currentHierarchicalEntity	= 0;
+	private int					oldHierarchicalEntity		= 0;
 
 	private NamedValueSource conditionSource;
 
@@ -48,6 +51,16 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
 	protected final Metamorph getMetamorph() {
 		return metamorph;
+	}
+
+	public final void setIncludeSubEntities(final boolean includeSubEntitiesArg) {
+
+		includeSubEntities = includeSubEntitiesArg;
+	}
+
+	protected final boolean getIncludeSubEntities() {
+
+		return includeSubEntities;
 	}
 
 	protected final int getRecordCount() {
@@ -133,7 +146,22 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 		oldEntity = currentEntity;
 	}
 
+	protected void updateHierarchicalEntity(final int entityCount) {
+
+		oldHierarchicalEntity = currentHierarchicalEntity;
+		currentHierarchicalEntity = entityCount;
+	}
+
 	private boolean resetNeedFor(final int currentEntity) {
+
+		if (getIncludeSubEntities()) {
+
+			if (sameEntity) {
+
+				return false;
+			}
+		}
+
 		return sameEntity && oldEntity != currentEntity;
 	}
 
@@ -164,6 +192,12 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 	}
 
 	protected final boolean sameEntityConstraintSatisfied(final int entityCount) {
+
+		if (getIncludeSubEntities()) {
+
+			return !sameEntity || oldHierarchicalEntity <= entityCount;
+		}
+
 		return !sameEntity || oldEntity == entityCount;
 	}
 
