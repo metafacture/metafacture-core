@@ -44,7 +44,7 @@
 				<mm:rules>
 					<mm:combine name="COMBINE" value="${one}" flushWith="e" reset="true" sameEntity="true" includeSubEntities="true">
 						<mm:if>
-								<mm:all name="CONDITIONALL" reset="true" flushWith="e">
+								<mm:all name="CONDITIONALL" reset="true" flushWith="e" includeSubEntities="true">
 								<mm:data
 										source="e.l">
 									<mm:equals string="2"/>

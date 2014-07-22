@@ -229,6 +229,8 @@
 			<attribute name="flushWith" type="string" use="optional" />
 			<attribute name="reset" type="boolean" use="optional"
 				default="false" />
+			<attribute name="includeSubEntities" type="boolean" use="optional"
+					   default="false" />
 		</complexType>
 	</element>
 

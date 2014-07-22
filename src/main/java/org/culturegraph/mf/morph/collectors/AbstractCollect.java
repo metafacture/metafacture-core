@@ -19,6 +19,10 @@ import org.culturegraph.mf.morph.AbstractNamedValuePipe;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Common basis for {@link Entity}, {@link Combine} etc.
  *
@@ -41,6 +45,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 	private boolean				includeSubEntities;
 	private int					currentHierarchicalEntity	= 0;
 	private int					oldHierarchicalEntity		= 0;
+	private Map<String, List<String>> hierarchicalEntityEmitBuffer;
 
 	private NamedValueSource conditionSource;
 
@@ -56,11 +61,21 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 	public final void setIncludeSubEntities(final boolean includeSubEntitiesArg) {
 
 		includeSubEntities = includeSubEntitiesArg;
+
+		if (includeSubEntities) {
+
+			hierarchicalEntityEmitBuffer = new LinkedHashMap<String, List<String>>();
+		}
 	}
 
 	protected final boolean getIncludeSubEntities() {
 
 		return includeSubEntities;
+	}
+
+	protected final Map<String, List<String>> getHierarchicalEntityEmitBuffer() {
+
+		return hierarchicalEntityEmitBuffer;
 	}
 
 	protected final int getRecordCount() {
@@ -180,6 +195,16 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 			conditionMet = true;
 		} else {
 			receive(name, value, source);
+		}
+
+		if(getIncludeSubEntities()) {
+
+			if(isConditionMet() && isComplete()) {
+
+				emit();
+			}
+
+			return;
 		}
 
 		if (!waitForFlush && isConditionMet() && isComplete()) {
