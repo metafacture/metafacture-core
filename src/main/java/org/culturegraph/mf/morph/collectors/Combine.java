@@ -17,6 +17,8 @@ package org.culturegraph.mf.morph.collectors;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,8 +45,38 @@ public final class Combine extends AbstractFlushingCollect {
 	protected void emit() {
 		final String name = StringUtil.format(getName(), variables);
 		final String value = StringUtil.format(getValue(), variables);
-		getNamedValueReceiver().receive(name, value, this, getRecordCount(),
-				getEntityCount());
+
+		if (getIncludeSubEntities()) {
+
+			if (!getHierarchicalEntityEmitBuffer().containsKey(name)) {
+
+				getHierarchicalEntityEmitBuffer().put(name, new LinkedList<String>());
+			}
+
+			getHierarchicalEntityEmitBuffer().get(name).add(value);
+
+			return;
+		}
+
+		emit(name, value);
+	}
+
+	private void emit(String name, String value) {
+
+		getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
+	}
+
+	protected void emitHierarchicalEntityBuffer() {
+
+		for (final Map.Entry<String, List<String>> entry : getHierarchicalEntityEmitBuffer().entrySet()) {
+
+			final String name = entry.getKey();
+
+			for (final String value : entry.getValue()) {
+
+				emit(name, value);
+			}
+		}
 	}
 
 	@Override
@@ -69,6 +101,11 @@ public final class Combine extends AbstractFlushingCollect {
 	protected void clear() {
 		sourcesLeft.addAll(sources);
 		variables.clear();
+
+		if (getIncludeSubEntities()) {
+
+			getHierarchicalEntityEmitBuffer().clear();
+		}
 	}
 
 }

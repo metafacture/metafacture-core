@@ -32,10 +32,19 @@ public abstract class AbstractFlushingCollect extends AbstractCollect {
 
 	@Override
 	public final void flush(final int recordCount, final int entityCount) {
-		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount)) {
-			if(isConditionMet()) {
+		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount) && isConditionMet()) {
+
+			if(!getIncludeSubEntities()) {
+
 				emit();
+			} else {
+
+				if(Combine.class.isInstance(this)) {
+
+					((Combine) this).emitHierarchicalEntityBuffer();
+				}
 			}
+
 			if (getReset()) {
 				resetCondition();
 				clear();
@@ -45,6 +54,8 @@ public abstract class AbstractFlushingCollect extends AbstractCollect {
 		if(getIncludeSubEntities()) {
 
 			updateHierarchicalEntity(entityCount);
+			setConditionMet(false);
+			clear();
 		}
 	}
 
