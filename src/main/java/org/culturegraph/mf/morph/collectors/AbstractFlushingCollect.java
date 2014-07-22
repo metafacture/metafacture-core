@@ -42,7 +42,10 @@ public abstract class AbstractFlushingCollect extends AbstractCollect {
 			}
 		}
 
-		updateHierarchicalEntity(entityCount);
+		if(getIncludeSubEntities()) {
+
+			updateHierarchicalEntity(entityCount);
+		}
 	}
 
 }
