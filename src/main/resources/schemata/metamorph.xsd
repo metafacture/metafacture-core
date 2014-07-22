@@ -286,6 +286,8 @@
 			<attribute name="sameEntity" type="boolean" use="optional"
 				default="false" />
 			<attribute name="flushWith" type="string" use="optional" />
+			<attribute name="includeSubEntities" type="boolean" use="optional"
+					   default="false" />
 		</complexType>
 	</element>
 	
@@ -304,6 +306,8 @@
 			<attribute name="sameEntity" type="boolean" use="optional"
 				default="false" />
 			<attribute name="flushWith" type="string" use="optional" />
+			<attribute name="includeSubEntities" type="boolean" use="optional"
+					   default="false" />
 		</complexType>
 	</element>
 
@@ -334,6 +338,8 @@
 				default="false" />
 			<attribute name="reset" type="boolean" use="optional"
 				default="true" />
+			<attribute name="includeSubEntities" type="boolean" use="optional"
+					   default="false" />
 		</complexType>
 	</element>
 
@@ -357,6 +363,8 @@
 				default="record" />
 			<attribute name="reset" type="boolean" use="optional"
 				default="true" />
+			<attribute name="includeSubEntities" type="boolean" use="optional"
+					   default="false" />
 		</complexType>
 	</element>
 
