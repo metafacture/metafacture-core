@@ -61,7 +61,21 @@ public final class All extends AbstractFlushingCollect {
 			final String name = StringUtil.fallback(getName(), DEFAULT_NAME);
 			final String value = StringUtil.fallback(getValue(), DEFAULT_VALUE);
 			getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
+		} else if (getIncludeSubEntities()) {
+
+			forcedNonMatchedEmit();
 		}
+	}
+
+	protected void forcedNonMatchedEmit() {
+
+		final String name = StringUtil.fallback(getName(), DEFAULT_NAME);
+		final String value = "false";
+
+		System.out.println(this.getName() + " in forced non-matched emit with name = '" + name + "' :: value = '" + value + "' :: recordCount = '"
+				+ getRecordCount() + "' :: entityCount = '" + getEntityCount() + "'");
+
+		getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
 	}
 
 	@Override

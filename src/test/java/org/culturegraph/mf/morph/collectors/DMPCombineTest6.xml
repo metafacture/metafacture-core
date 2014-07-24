@@ -3,7 +3,7 @@
 				xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph"
 				xmlns:cgxml="http://www.culturegraph.org/cgxml">
 
-	<test-case name="combine w/ filter + include sub entities + filter on different levels + multiple matches + selecting a specific occurence">
+	<test-case name="combine w/ filter + include sub entities + filter on different levels">
 		<input type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
@@ -20,14 +20,7 @@
 							<cgxml:entity name="subfield">
 								<cgxml:literal name="code" value="a"/>
 								<cgxml:literal name="value" value="sub2"/>
-							</cgxml:entity>
-						</cgxml:entity>
-						<cgxml:entity name="e">
-							<cgxml:literal name="l" value="2"/>
-							<cgxml:literal name="m" value="2"/>
-							<cgxml:entity name="subfield">
-								<cgxml:literal name="code" value="b"/>
-								<cgxml:literal name="value" value="sub22222"/>
+								<cgxml:literal name="value" value="sub3333333333333333333333333"/>
 							</cgxml:entity>
 						</cgxml:entity>
 						<cgxml:entity name="e">
@@ -35,15 +28,8 @@
 							<cgxml:literal name="m" value="2"/>
 							<cgxml:entity name="subfield">
 								<cgxml:literal name="code" value="a"/>
-								<cgxml:literal name="value" value="sub5"/>
-							</cgxml:entity>
-						</cgxml:entity>
-						<cgxml:entity name="e">
-							<cgxml:literal name="l" value="2"/>
-							<cgxml:literal name="m" value="2"/>
-							<cgxml:entity name="subfield">
-								<cgxml:literal name="code" value="a"/>
-								<cgxml:literal name="value" value="sub6"/>
+								<cgxml:literal name="value" value="sub3"/>
+								<cgxml:literal name="value" value="sub44444444444444444444444444"/>
 							</cgxml:entity>
 						</cgxml:entity>
 						<cgxml:entity name="e">
@@ -67,7 +53,7 @@
 		<transformation type="text/x-metamorph+xml">
 			<mm:metamorph version="1">
 				<mm:rules>
-					<mm:combine name="@COMBINE" value="${one}" flushWith="e" reset="true" sameEntity="true" includeSubEntities="true">
+					<mm:combine name="@ok" value="${one}" flushWith="e" sameEntity="true" reset="true" includeSubEntities="true">
 						<mm:if>
 							<mm:all name="CONDITIONALL" reset="true" flushWith="e.subfield.code" includeSubEntities="true">
 								<mm:data
@@ -84,11 +70,30 @@
 								</mm:data>
 							</mm:all>
 						</mm:if>
-						<mm:data source="e.subfield.value" name="one"/>
+						<mm:data source="e.subfield.value" name="one">
+							<mm:occurrence only="2" sameEntity="true"/>
+						</mm:data>
 					</mm:combine>
-					<mm:data name="COMBINE2" source="@COMBINE">
-						<mm:occurrence only="2" />
+					<mm:data name="COMBINE" source="@ok">
+						<mm:occurrence only="2"/>
 					</mm:data>
+					<!--<mm:combine name="@ok" value="${out}" sameEntity="true" reset="false">
+						<mm:data
+								source="e.l">
+							<mm:equals string="2"/>
+						</mm:data>
+						<mm:data
+								source="e.m">
+							<mm:equals string="2"/>
+						</mm:data>
+						<mm:data name="out"
+								 source="e.value">
+							<mm:occurrence only="2" sameEntity="true"/>
+						</mm:data>
+					</mm:combine>
+					<mm:data name="COMBINE" source="@ok">
+						<mm:occurrence only="2"/>
+					</mm:data>-->
 				</mm:rules>
 			</mm:metamorph>
 		</transformation>
@@ -97,7 +102,7 @@
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
 					<cgxml:record id="1">
-						<cgxml:literal name="COMBINE2" value="sub5"/>
+						<cgxml:literal name="COMBINE" value="sub44444444444444444444444444"/>
 					</cgxml:record>
 				</cgxml:records>
 			</cgxml:cgxml>

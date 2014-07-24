@@ -32,7 +32,9 @@ public abstract class AbstractFlushingCollect extends AbstractCollect {
 
 	@Override
 	public final void flush(final int recordCount, final int entityCount) {
-		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount) && isConditionMet()) {
+		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount)
+				&& (isConditionMet() || (getIncludeSubEntities() && isHierarchicalEntityEmitBufferFilled()))) {
+
 
 			if(!getIncludeSubEntities()) {
 
@@ -42,20 +44,53 @@ public abstract class AbstractFlushingCollect extends AbstractCollect {
 				if(Combine.class.isInstance(this)) {
 
 					((Combine) this).emitHierarchicalEntityBuffer();
+				} else {
+
+					emit();
 				}
 			}
 
 			if (getReset()) {
-				resetCondition();
-				clear();
+
+				// to avoid condition reset, if not all conditions where satisfied + hierarchical entity end was not met
+				if (!(getIncludeSubEntities() && All.class.isInstance(this) && !this.isComplete())) {
+
+					resetCondition();
+					clear();
+				}
 			}
 		}
 
 		if(getIncludeSubEntities()) {
 
 			updateHierarchicalEntity(entityCount);
-			setConditionMet(false);
-			clear();
+
+			// to avoid condition reset before hiearchical entity change
+			if (!(All.class.isInstance(this) && !this.isComplete())) {
+
+				setConditionMet(false);
+			}
+
+			if (getReset()) {
+
+				// to avoid condition reset before hiearchical entity change
+				if (!(All.class.isInstance(this) && !this.isComplete())) {
+
+					resetCondition();
+					clear();
+				}
+			}
+
+			if (Combine.class.isInstance(this) && this.getConditionSource() != null && All.class.isInstance(this.getConditionSource())) {
+
+				// force condition reset on hierarchical entity change
+
+				((All) this.getConditionSource()).resetCondition();
+				((All) this.getConditionSource()).clear();
+				((All) this.getConditionSource()).updateHierarchicalEntity(entityCount);
+				// ((All) this.getConditionSource()).setConditionMet(false);
+				((All) this.getConditionSource()).forcedNonMatchedEmit();
+			}
 		}
 	}
 
