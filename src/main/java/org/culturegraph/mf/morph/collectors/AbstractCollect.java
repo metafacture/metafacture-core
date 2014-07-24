@@ -46,6 +46,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 	private int					currentHierarchicalEntity	= 0;
 	private int					oldHierarchicalEntity		= 0;
 	private Map<String, List<String>> hierarchicalEntityEmitBuffer;
+	private Integer matchEntity;
 
 	private NamedValueSource conditionSource;
 
@@ -76,6 +77,21 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 	protected final Map<String, List<String>> getHierarchicalEntityEmitBuffer() {
 
 		return hierarchicalEntityEmitBuffer;
+	}
+
+	protected boolean isHierarchicalEntityEmitBufferFilled() {
+
+		return hierarchicalEntityEmitBuffer != null && !hierarchicalEntityEmitBuffer.isEmpty();
+	}
+
+	protected final Integer getMatchEntity() {
+
+		return matchEntity;
+	}
+
+	protected void setMatchEntity(final Integer matchEntityArg) {
+
+		matchEntity = matchEntityArg;
 	}
 
 	protected final int getRecordCount() {
@@ -133,6 +149,11 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 		conditionSource = source;
 		conditionSource.setNamedValueReceiver(this);
 		resetCondition();
+	}
+
+	protected final NamedValueSource getConditionSource() {
+
+		return conditionSource;
 	}
 
 	public final String getValue() {
@@ -193,13 +214,33 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
 		if (source == conditionSource) {
 			conditionMet = true;
+
+			if(getIncludeSubEntities() && Collect.class.isInstance(conditionSource)) {
+
+				if(((Collect) conditionSource).getName().equals(name)) {
+
+					final boolean condition = Boolean.valueOf(value);
+
+					if(condition) {
+
+						matchEntity = entityCount;
+					} else {
+
+						// do something with matchEntity, e.g., reset
+						matchEntity = null;
+						conditionMet = false;
+					}
+
+					return;
+				}
+			}
 		} else {
 			receive(name, value, source);
 		}
 
 		if(getIncludeSubEntities()) {
 
-			if(isConditionMet() && isComplete()) {
+			if(isConditionMet() && isComplete() && matchEntity != null && matchEntity <= entityCount) {
 
 				emit();
 			}
