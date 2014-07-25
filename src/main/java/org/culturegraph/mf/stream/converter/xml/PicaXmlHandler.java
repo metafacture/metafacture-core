@@ -28,7 +28,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * A pica xml reader.
+ * A pica xml handler.
  * 
  * @author Pascal Christoph (dr0i)
  * 
