@@ -19,6 +19,9 @@
 							<cgxml:literal name="m" value="2"/>
 							<cgxml:entity name="subfield">
 								<cgxml:literal name="code" value="a"/>
+								<cgxml:entity name="subsubfield">
+									<cgxml:literal name="subl" value="xxx2xxx"/>
+								</cgxml:entity>
 								<cgxml:literal name="value" value="sub2"/>
 							</cgxml:entity>
 						</cgxml:entity>
