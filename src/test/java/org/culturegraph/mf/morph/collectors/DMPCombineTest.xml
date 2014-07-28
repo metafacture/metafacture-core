@@ -50,11 +50,11 @@
 							<mm:all name="CONDITIONALL" reset="true" flushWith="e.m" includeSubEntities="true">
 								<mm:data
 										source="e.l">
-									<mm:equals string="2"/>
+									<mm:regexp match="2"/>
 								</mm:data>
 								<mm:data
 										source="e.m">
-									<mm:equals string="2"/>
+									<mm:regexp match="2"/>
 								</mm:data>
 							</mm:all>
 						</mm:if>
