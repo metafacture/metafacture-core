@@ -52,11 +52,11 @@
 							<mm:all name="CONDITIONALL" reset="true" flushWith="e.m" includeSubEntities="true">
 								<mm:data
 										source="e.l">
-									<mm:equals string="2"/>
+									<mm:regexp match="2"/>
 								</mm:data>
 								<mm:data
 										source="e.m">
-									<mm:equals string="2"/>
+									<mm:regexp match="2"/>
 								</mm:data>
 							</mm:all>
 						</mm:if>
@@ -67,23 +67,6 @@
 					<mm:data name="COMBINE" source="@ok">
 						<mm:occurrence only="2"/>
 					</mm:data>
-					<!--<mm:combine name="@ok" value="${out}" sameEntity="true" reset="false">
-						<mm:data
-								source="e.l">
-							<mm:equals string="2"/>
-						</mm:data>
-						<mm:data
-								source="e.m">
-							<mm:equals string="2"/>
-						</mm:data>
-						<mm:data name="out"
-								 source="e.value">
-							<mm:occurrence only="2" sameEntity="true"/>
-						</mm:data>
-					</mm:combine>
-					<mm:data name="COMBINE" source="@ok">
-						<mm:occurrence only="2"/>
-					</mm:data>-->
 				</mm:rules>
 			</mm:metamorph>
 		</transformation>
