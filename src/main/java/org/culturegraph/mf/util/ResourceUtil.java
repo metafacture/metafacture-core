@@ -43,8 +43,9 @@ public final class ResourceUtil {
 	}
 
 	/**
-	 * first attempts to open resource with name 'name'. On fail attempts to
-	 * open file.
+	 * First attempts to open open 'name' as a file. <br/>
+	 * On fail attempts to open resource with name 'name'. <br/>
+	 * On fail attempts to open 'name' as a URL.
 	 *
 	 * @param name
 	 * @return
@@ -60,12 +61,34 @@ public final class ResourceUtil {
 			return getStream(file);
 		}
 
-		final InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
-		if (stream == null) {
-			throw new FileNotFoundException("No file or resource found: " + name);
+		InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
+		if (stream != null) {
+			return stream;
 		}
+
+		try {
+			stream = new URL(name).openStream();
+		} catch (final MalformedURLException e) {
+			throwFileNotFoundException(name, e);
+		} catch (final IOException e) {
+			throwFileNotFoundException(name, e);
+		}
+		if (stream == null) {
+			throwFileNotFoundException(name, null);
+		}
+
 		return stream;
 
+	}
+
+	private static void throwFileNotFoundException(final String name,
+			final Throwable t) throws FileNotFoundException {
+		final FileNotFoundException e = new FileNotFoundException(
+				"No file, resource or URL found: " + name);
+		if (t != null) {
+			e.initCause(t);
+		}
+		throw e;
 	}
 
 	public static InputStream getStream(final File file) throws FileNotFoundException {
