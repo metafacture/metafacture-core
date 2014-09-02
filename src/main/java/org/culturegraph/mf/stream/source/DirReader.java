@@ -17,6 +17,7 @@ package org.culturegraph.mf.stream.source;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Arrays;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -66,6 +67,7 @@ public final class DirReader extends DefaultObjectPipe<String, ObjectReceiver<St
 						return name.matches(filenameFilterPattern);
 					}
 				});
+		Arrays.sort(files);
 		for (File file : files) {
 			if (file.isDirectory()) {
 				if (recursive) {
