@@ -9,7 +9,8 @@
 				<cgxml:records>
 					<cgxml:record id="1">
 						<cgxml:entity name="fullname">
-							<cgxml:literal name="givenname" value="Givenname1"/>
+							<cgxml:literal name="givenname" value="Givenname1_1"/>
+							<cgxml:literal name="givenname" value="Givenname1_2"/>
 							<cgxml:literal name="surname" value="Surname1"/>
 						</cgxml:entity>
 						<cgxml:literal name="number" value="3"/>
@@ -18,7 +19,8 @@
 					</cgxml:record>
 					<cgxml:record id="2">
 						<cgxml:entity name="fullname">
-							<cgxml:literal name="givenname" value="Givenname2"/>
+							<cgxml:literal name="givenname" value="Givenname2_1"/>
+							<cgxml:literal name="givenname" value="Givenname2_2"/>
 							<cgxml:literal name="surname" value="Surname2"/>
 						</cgxml:entity>
 						<cgxml:literal name="number" value="3"/>
@@ -27,7 +29,8 @@
 					</cgxml:record>
 					<cgxml:record id="3">
 						<cgxml:entity name="fullname">
-							<cgxml:literal name="givenname" value="Givenname3"/>
+							<cgxml:literal name="givenname" value="Givenname3_1"/>
+							<cgxml:literal name="givenname" value="Givenname3_2"/>
 							<cgxml:literal name="surname" value="Surname3"/>
 						</cgxml:entity>
 						<cgxml:literal name="number" value="2"/>
@@ -43,7 +46,8 @@
 				<mm:rules>
 					<mm:combine name="COMBINE" value="${one}" flushWith="record" reset="true" sameEntity="true" includeSubEntities="true">
 						<mm:if>
-							<mm:all name="CONDITIONALL" reset="true" flushWith="number" includeSubEntities="true">
+							<mm:all name="CONDITIONALL" reset="true" flushWith="number" includeSubEntities="true
+							">
 								<mm:data
 										source="fullname.surname">
 									<mm:regexp match="S\w.*"/>
@@ -65,10 +69,12 @@
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
 					<cgxml:record id="1">
-						<cgxml:literal name="COMBINE" value="Givenname1"/>
+						<cgxml:literal name="COMBINE" value="Givenname1_1"/>
+						<cgxml:literal name="COMBINE" value="Givenname1_2"/>
 					</cgxml:record>
 					<cgxml:record id="2">
-						<cgxml:literal name="COMBINE" value="Givenname2"/>
+						<cgxml:literal name="COMBINE" value="Givenname2_1"/>
+						<cgxml:literal name="COMBINE" value="Givenname2_2"/>
 					</cgxml:record>
 					<cgxml:record id="3" />
 				</cgxml:records>

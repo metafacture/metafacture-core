@@ -74,9 +74,25 @@ public final class Combine extends AbstractFlushingCollect {
 
 			for (final String value : entry.getValue()) {
 
-				emit(name, value);
+				if (!value.isEmpty())
+					emit(name, value);
 			}
 		}
+	}
+	
+	protected void emitBufferHierarchicalEntity() {
+		
+		final String name = StringUtil.format(getName(), variables);
+		final String value = StringUtil.format(getValue(), variables);
+		
+		if (!getBufferHierarchicalEntity().containsKey(name)) {
+
+			getBufferHierarchicalEntity().put(name, new LinkedList<String>());
+		}
+
+		getBufferHierarchicalEntity().get(name).add(value);
+
+		return;
 	}
 
 	@Override
@@ -105,6 +121,7 @@ public final class Combine extends AbstractFlushingCollect {
 		if (getIncludeSubEntities()) {
 
 			getHierarchicalEntityEmitBuffer().clear();
+			getBufferHierarchicalEntity().clear();
 		}
 	}
 
