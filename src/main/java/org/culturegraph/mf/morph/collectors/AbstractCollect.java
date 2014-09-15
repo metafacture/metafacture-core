@@ -20,8 +20,10 @@ import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Common basis for {@link Entity}, {@link Combine} etc.
@@ -46,6 +48,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 	private int					currentHierarchicalEntity	= 0;
 	private int					oldHierarchicalEntity		= 0;
 	private Map<String, List<String>> hierarchicalEntityEmitBuffer;
+	private Map<String, List<String>> bufferHierarchicalEntity;
 	private Integer matchEntity;
 
 	private NamedValueSource conditionSource;
@@ -66,6 +69,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 		if (includeSubEntities) {
 
 			hierarchicalEntityEmitBuffer = new LinkedHashMap<String, List<String>>();
+			bufferHierarchicalEntity = new LinkedHashMap<String, List<String>>();
 		}
 	}
 
@@ -77,6 +81,11 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 	protected final Map<String, List<String>> getHierarchicalEntityEmitBuffer() {
 
 		return hierarchicalEntityEmitBuffer;
+	}
+	
+	protected final Map<String, List<String>> getBufferHierarchicalEntity() {
+
+		return bufferHierarchicalEntity;
 	}
 
 	protected boolean isHierarchicalEntityEmitBufferFilled() {
@@ -212,6 +221,30 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
 		updateCounts(recordCount, entityCount);
 
+		if (getIncludeSubEntities()) {
+			
+			if (isComplete() && isConditionMet() && name.equals("one")) {
+
+				Entry<String, List<String>> buffer = bufferHierarchicalEntity
+						.entrySet().iterator().next();
+
+				for (Map.Entry<String, List<String>> entry : hierarchicalEntityEmitBuffer
+						.entrySet()) {
+
+					if (entry.getKey().equals(buffer.getKey())) {
+						entry.getValue().removeAll(buffer.getValue());
+					}
+				}
+
+				bufferHierarchicalEntity.clear();
+			}
+
+			if (Combine.class.isInstance(this)) {
+				((Combine) this).emitBufferHierarchicalEntity();
+
+			}
+		}
+		
 		if (source == conditionSource) {
 			conditionMet = true;
 
@@ -224,11 +257,23 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 					if(condition) {
 
 						matchEntity = entityCount;
+						
+						for (Map.Entry<String, List<String>> entry : bufferHierarchicalEntity.entrySet()) {
+							
+							if (!getHierarchicalEntityEmitBuffer().containsKey(entry.getKey())) {
+
+								getHierarchicalEntityEmitBuffer().put(entry.getKey(), new LinkedList<String>());
+							}
+
+							getHierarchicalEntityEmitBuffer().get(entry.getKey()).addAll(entry.getValue());
+						}
+
 					} else {
 
 						// do something with matchEntity, e.g., reset
 						matchEntity = null;
 						conditionMet = false;
+						bufferHierarchicalEntity.clear();
 					}
 
 					return;
