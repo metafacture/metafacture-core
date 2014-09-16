@@ -18,6 +18,7 @@ package org.culturegraph.mf.morph.collectors;
 import org.culturegraph.mf.morph.AbstractNamedValuePipe;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.morph.Data;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -48,7 +49,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 	private int					currentHierarchicalEntity	= 0;
 	private int					oldHierarchicalEntity		= 0;
 	private Map<String, List<String>> hierarchicalEntityEmitBuffer;
-	private Map<String, List<String>> bufferHierarchicalEntity;
+	private Map<String, List<String>> hierarchicalEntityValueBuffer;
 	private Integer matchEntity;
 
 	private NamedValueSource conditionSource;
@@ -69,7 +70,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 		if (includeSubEntities) {
 
 			hierarchicalEntityEmitBuffer = new LinkedHashMap<String, List<String>>();
-			bufferHierarchicalEntity = new LinkedHashMap<String, List<String>>();
+			hierarchicalEntityValueBuffer = new LinkedHashMap<String, List<String>>();
 		}
 	}
 
@@ -83,9 +84,9 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 		return hierarchicalEntityEmitBuffer;
 	}
 	
-	protected final Map<String, List<String>> getBufferHierarchicalEntity() {
+	protected final Map<String, List<String>> getHierarchicalEntityValueBuffer() {
 
-		return bufferHierarchicalEntity;
+		return hierarchicalEntityValueBuffer;
 	}
 
 	protected boolean isHierarchicalEntityEmitBufferFilled() {
@@ -183,6 +184,8 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 			resetCondition();
 			clear();
 			oldRecord = currentRecord;
+			currentHierarchicalEntity = 0;
+			oldHierarchicalEntity = 0;
 		}
 		if (resetNeedFor(currentEntity)) {
 			resetCondition();
@@ -223,9 +226,10 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
 		if (getIncludeSubEntities()) {
 			
-			if (isComplete() && isConditionMet() && name.equals("one")) {
+			if (isComplete() && isConditionMet() && Data.class.isInstance(source)
+					&& !hierarchicalEntityValueBuffer.isEmpty()) {
 
-				Entry<String, List<String>> buffer = bufferHierarchicalEntity
+				Entry<String, List<String>> buffer = hierarchicalEntityValueBuffer
 						.entrySet().iterator().next();
 
 				for (Map.Entry<String, List<String>> entry : hierarchicalEntityEmitBuffer
@@ -236,11 +240,11 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 					}
 				}
 
-				bufferHierarchicalEntity.clear();
+				hierarchicalEntityValueBuffer.clear();
 			}
 
 			if (Combine.class.isInstance(this)) {
-				((Combine) this).emitBufferHierarchicalEntity();
+				((Combine) this).emitHierarchicalEntityValueBuffer();
 
 			}
 		}
@@ -258,7 +262,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
 						matchEntity = entityCount;
 						
-						for (Map.Entry<String, List<String>> entry : bufferHierarchicalEntity.entrySet()) {
+						for (Map.Entry<String, List<String>> entry : hierarchicalEntityValueBuffer.entrySet()) {
 							
 							if (!getHierarchicalEntityEmitBuffer().containsKey(entry.getKey())) {
 
@@ -273,7 +277,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 						// do something with matchEntity, e.g., reset
 						matchEntity = null;
 						conditionMet = false;
-						bufferHierarchicalEntity.clear();
+						hierarchicalEntityValueBuffer.clear();
 					}
 
 					return;

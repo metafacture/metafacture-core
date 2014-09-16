@@ -3,7 +3,7 @@
 				xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph"
 				xmlns:cgxml="http://www.culturegraph.org/cgxml">
 
-	<test-case name="combine w/ filter + include sub entities">
+	<test-case name="combine w/ filter + more than one record + simple hierarchy + combine output (givenname) stands before condition (number, surname)">
 		<input type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
