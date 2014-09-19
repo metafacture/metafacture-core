@@ -320,6 +320,12 @@
 			<attribute name="delimiter" type="string" use="required" />
 			<attribute name="prefix" type="string" use="optional" />
 			<attribute name="postfix" type="string" use="optional" />
+			<attribute name="reverse" type="boolean" use="optional" default="false">
+				<annotation>
+					<documentation>If true values are not appended at the end
+					of the output string but prepended at its start.</documentation>
+				</annotation>
+			</attribute>
 
 			<attribute name="flushWith" type="string" use="optional"
 				default="record" />

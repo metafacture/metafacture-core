@@ -91,46 +91,103 @@
 		</result>
 	</test-case>
 
-<!-- <test-case name="concat data flush"> -->
-<!-- 		<input type="text/x-cg+xml"> -->
-<!-- 			<cgxml:cgxml version="1.0"> -->
-<!-- 				<cgxml:records> -->
-<!-- 					<cgxml:record id="1"> -->
+	<test-case name="Do not ignore empty values">
+		<input type="text/x-cg+xml">
+			<cgxml:records>
+				<cgxml:record id="1">
+					<cgxml:literal name="litA" value="" />
+					<cgxml:literal name="litB" value="a" />
+					<cgxml:literal name="litA" value="b" />
+				</cgxml:record>
+			</cgxml:records>
+		</input>
 
-<!-- 							<cgxml:literal name="d" value="1" /> -->
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:concat name="concat" delimiter=", ">
+						<mm:data source="litA" />
+						<mm:data source="litB" />
+					</mm:concat>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
 
-<!-- 							<cgxml:literal name="d" value="2" /> -->
-<!-- 							<cgxml:literal name="d" value="3" /> -->
-<!-- 							<cgxml:literal name="f" value="" /> -->
-<!-- 							<cgxml:literal name="d" value="4" /> -->
-<!-- 							<cgxml:literal name="f" value="" /> -->
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="concat" value=", a, b" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
 
-<!-- 					</cgxml:record> -->
-<!-- 				</cgxml:records> -->
-<!-- 			</cgxml:cgxml> -->
-<!-- 		</input> -->
+	<test-case name="Reverse concatenation if reverse is true">
+		<input type="text/x-cg+xml">
+			<cgxml:records>
+				<cgxml:record id="1">
+					<cgxml:literal name="litA" value="1" />
+					<cgxml:literal name="litB" value="2" />
+					<cgxml:literal name="litA" value="3" />
+				</cgxml:record>
+			</cgxml:records>
+		</input>
 
-<!-- 		<transformation type="text/x-metamorph+xml"> -->
-<!-- 			<mm:metamorph version="1"> -->
-<!-- 				<mm:rules> -->
-<!-- 					<mm:concat delimiter="" name="c"> -->
-<!-- 						<mm:data source="d"/> -->
-<!-- 						<mm:data source="f" name="_flush"/> -->
-<!-- 					</mm:concat> -->
-<!-- 				</mm:rules> -->
-<!-- 			</mm:metamorph> -->
-<!-- 		</transformation> -->
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:concat name="concat" delimiter=", " reverse="true">
+						<mm:data source="litA" />
+						<mm:data source="litB" />
+					</mm:concat>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
 
-<!-- 		<result type="text/x-cg+xml"> -->
-<!-- 			<cgxml:cgxml version="1.0"> -->
-<!-- 				<cgxml:records> -->
-<!-- 					<cgxml:record id="1"> -->
-<!-- 						<cgxml:literal name="c" value="123" /> -->
-<!-- 						<cgxml:literal name="c" value="4" /> -->
-<!-- 					</cgxml:record> -->
-<!-- 				</cgxml:records> -->
-<!-- 			</cgxml:cgxml> -->
-<!-- 		</result> -->
-<!-- 	</test-case> -->
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="concat" value="3, 2, 1" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="Prefix and postfix should work as normal if reverse is true">
+		<input type="text/x-cg+xml">
+			<cgxml:records>
+				<cgxml:record id="1">
+					<cgxml:literal name="litA" value="1" />
+					<cgxml:literal name="litB" value="2" />
+					<cgxml:literal name="litA" value="3" />
+				</cgxml:record>
+			</cgxml:records>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:concat name="concat" delimiter=", " prefix="(" postfix=")" reverse="true">
+						<mm:data source="litA" />
+						<mm:data source="litB" />
+					</mm:concat>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="concat" value="(3, 2, 1)" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
 
 </metamorph-test>
