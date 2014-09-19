@@ -20,11 +20,13 @@ import org.culturegraph.mf.morph.NamedValueSource;
 
 /**
  * Corresponds to the <code>&lt;collect-literal&gt;</code> tag.
- * 
+ *
  * @author Markus Michael Geipel
  */
-public final class Concat extends AbstractFlushingCollect{
+public final class Concat extends AbstractFlushingCollect {
+
 	private final StringBuilder builder = new StringBuilder();
+
 	private String prefix = "";
 	private String postfix = "";
 	private String delimiter = "";
@@ -33,8 +35,7 @@ public final class Concat extends AbstractFlushingCollect{
 		super(metamorph);
 		setNamedValueReceiver(metamorph);
 	}
-	
-	
+
 	public void setPrefix(final String prefix) {
 		this.prefix = prefix;
 	}
