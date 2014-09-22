@@ -107,6 +107,60 @@
 		</result>
 	</test-case>
 
+	<test-case name="Occurrences with sameEntity in nested entities should change with inner entities">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="o">
+							<cgxml:entity name="i">
+								<cgxml:literal name="data" value="1" />
+								<cgxml:literal name="data" value="2" />
+								<cgxml:literal name="data" value="3" />
+							</cgxml:entity>
+							<cgxml:entity name="i">
+								<cgxml:literal name="data" value="1" />
+								<cgxml:literal name="data" value="2" />
+								<cgxml:literal name="data" value="3" />
+							</cgxml:entity>
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:data source="o.i.data" name="l2">
+						<mm:occurrence only="lessThen 2" sameEntity="true" />
+					</mm:data>
+					<mm:data source="o.i.data" name="2">
+						<mm:occurrence only="2" sameEntity="true" />
+					</mm:data>
+					<mm:data source="o.i.data" name="g2">
+						<mm:occurrence only="moreThen 2" sameEntity="true" />
+					</mm:data>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="l2" value="1" />
+						<cgxml:literal name="2" value="2" />
+						<cgxml:literal name="g2" value="3" />
+						<cgxml:literal name="l2" value="1" />
+						<cgxml:literal name="2" value="2" />
+						<cgxml:literal name="g2" value="3" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
 	<test-case name="count">
 		<input type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">
