@@ -41,12 +41,16 @@ public class PicaMultiscriptRemodelerTest {
 	private static final String FIELD_021C = "021C";
 	private static final String SCRIPT_LATIN = "Latn";
 	private static final String SCRIPT_GREEK = "Grek";
+	private static final String SCRIPT_ARABIC = "Arab";
+	private static final String SCRIPT_HEBREW = "Hebr";
 
 	private static final String VALUE_1 = "Subfield 1";
 	private static final String VALUE_2 = "Subfield 2";
 	private static final String VALUE_3 = "Subfield 3";
 	private static final String VALUE_1_GREEK = "ĸµ 1";
 	private static final String VALUE_2_GREEK = "ĸµ 2";
+	private static final String VALUE_1_ARABIC = "Subfield/Arabic 1";
+	private static final String VALUE_1_HEBREW = "Subfield/Hebrew 1";
 
 	private PicaMultiscriptRemodeler remodeler;
 
@@ -216,6 +220,34 @@ public class PicaMultiscriptRemodelerTest {
 	}
 
 	@Test
+	public void shouldLabelArabicAsNonLatinRightToLeftScript() {
+		remodeler.startRecord(RECORD_ID);
+		emitMultscriptField(FIELD_021A, "01", SCRIPT_LATIN, VALUE_1);
+		emitMultscriptField(FIELD_021A, "01", SCRIPT_ARABIC, VALUE_1_ARABIC);
+		remodeler.endRecord();
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verifyMultiscriptField(ordered, FIELD_021A, "01", SCRIPT_LATIN,
+				VALUE_1, SCRIPT_ARABIC, VALUE_1_ARABIC);
+		ordered.verify(receiver).endRecord();
+	}
+
+	@Test
+	public void shouldLabelHebrewAsNonLatinRightToLeftScript() {
+		remodeler.startRecord(RECORD_ID);
+		emitMultscriptField(FIELD_021A, "01", SCRIPT_LATIN, VALUE_1);
+		emitMultscriptField(FIELD_021A, "01", SCRIPT_HEBREW, VALUE_1_HEBREW);
+		remodeler.endRecord();
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord(RECORD_ID);
+		verifyMultiscriptField(ordered, FIELD_021A, "01", SCRIPT_LATIN,
+				VALUE_1, SCRIPT_HEBREW, VALUE_1_HEBREW);
+		ordered.verify(receiver).endRecord();
+	}
+
+	@Test
 	public void shouldClearStateOnResetStream() {
 		remodeler.startRecord(RECORD_ID);
 		emitMultscriptField(FIELD_021A, "01", SCRIPT_LATIN, VALUE_1);
@@ -247,12 +279,12 @@ public class PicaMultiscriptRemodelerTest {
 			final String value1, final String script2, final String value2) {
 
 		ordered.verify(receiver).startEntity(field);
-		ordered.verify(receiver).startEntity(script1);
+		ordered.verify(receiver).startEntity(mapScriptToEntityName(script1));
 		ordered.verify(receiver).literal("T", groupNumber);
 		ordered.verify(receiver).literal("U", script1);
 		ordered.verify(receiver).literal("a", value1);
 		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).startEntity(script2);
+		ordered.verify(receiver).startEntity(mapScriptToEntityName(script2));
 		ordered.verify(receiver).literal("T", groupNumber);
 		ordered.verify(receiver).literal("U", script2);
 		ordered.verify(receiver).literal("a", value2);
@@ -268,6 +300,16 @@ public class PicaMultiscriptRemodelerTest {
 		ordered.verify(receiver).literal("U", script);
 		ordered.verify(receiver).literal("a", value);
 		ordered.verify(receiver).endEntity();
+	}
+
+	private String mapScriptToEntityName(final String script) {
+		if (SCRIPT_LATIN.equals(script)) {
+			return PicaMultiscriptRemodeler.ENTITY_NAME_FOR_LATIN;
+		} else if (SCRIPT_ARABIC.equals(script)
+				|| SCRIPT_HEBREW.equals(script)) {
+			return PicaMultiscriptRemodeler.ENTITY_NAME_FOR_NON_LATIN_RL;
+		}
+		return PicaMultiscriptRemodeler.ENTITY_NAME_FOR_NON_LATIN_LR;
 	}
 
 }

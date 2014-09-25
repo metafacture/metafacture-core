@@ -38,8 +38,13 @@ import org.culturegraph.mf.framework.annotations.Out;
  * This module scans the input stream for Pica multiscript fields and remodels
  * them by merging all fields belong to the same multiscript group into one
  * entity. This entity has the original field name. Within this entity a new
- * entity for each of the original fields is created. These entities carry the
- * name of the script used in the field.
+ * entity for each of the original fields is created. These entities are named
+ * depending on the type of script used. Three scripts are distinguished:
+ * <ul>
+ *   <li>Latin</<li>
+ *   <li>NonLatinLR</li>
+ *   <li>NonLatinRL</li>
+ * </ul>
  *
  * The following example shows how the input
  *
@@ -56,16 +61,16 @@ import org.culturegraph.mf.framework.annotations.Out;
  *
  * <pre>
  *    021A {
- *        Latn { T: 01, U: Latn, a: Title }
- *        Grek { T: 01, U: Grek, a: Greek title }
+ *        Latin { T: 01, U: Latn, a: Title }
+ *        NonLatinLR { T: 01, U: Grek, a: Greek title }
  *    }
  *    021C {
- *        Latn { T: 01, U: Latn, a: Subseries A }
- *        Grek { T: 01, U: Grek, a: Greek subseries A }
+ *        Latin { T: 01, U: Latn, a: Subseries A }
+ *        NonLatinLR { T: 01, U: Grek, a: Greek subseries A }
  *    }
  *    021C {
- *        Latn { T: 02, U: Latn, a: Subseries B }
- *        Grek { T: 02, U: Grek, a: Greek subseries B}
+ *        Latin { T: 02, U: Latn, a: Subseries B }
+ *        NonLatinLR { T: 02, U: Grek, a: Greek subseries B}
  *    }
  * </pre>
  *
@@ -97,10 +102,18 @@ import org.culturegraph.mf.framework.annotations.Out;
 public final class PicaMultiscriptRemodeler extends
 		DefaultStreamPipe<StreamReceiver> {
 
+	public static final String ENTITY_NAME_FOR_LATIN = "Latin";
+	public static final String ENTITY_NAME_FOR_NON_LATIN_LR = "NonLatinLR";
+	public static final String ENTITY_NAME_FOR_NON_LATIN_RL = "NonLatinRL";
+
 	private static final BufferedField BEFORE_FIRST_FIELD = new BufferedField("", null);
 
 	private static final String GROUP_SUBFIELD = "T";
 	private static final String SCRIPT_SUBFIELD = "U";
+
+	private static final String LATIN_SCRIPT = "Latn";
+	private static final String ARABIC_SCRIPT = "Arab";
+	private static final String HEBREW_SCRIPT = "Hebr";
 
 	private BufferedField currentField;
 	private BufferedField lastField;
@@ -178,11 +191,11 @@ public final class PicaMultiscriptRemodeler extends
 	private void emitRemodeledMultiscriptField(final BufferedField firstField, final BufferedField secondField) {
 		getReceiver().startEntity(firstField.name);
 
-		getReceiver().startEntity(firstField.script);
+		getReceiver().startEntity(mapScriptToEntityName(firstField.script));
 		firstField.stream.replay();
 		getReceiver().endEntity();
 
-		getReceiver().startEntity(secondField.script);
+		getReceiver().startEntity(mapScriptToEntityName(secondField.script));
 		secondField.stream.replay();
 		getReceiver().endEntity();
 
@@ -196,6 +209,16 @@ public final class PicaMultiscriptRemodeler extends
 			getReceiver().endEntity();
 		}
 		fields.clear();
+	}
+
+	private String mapScriptToEntityName(final String script) {
+		if (LATIN_SCRIPT.equals(script)) {
+			return ENTITY_NAME_FOR_LATIN;
+		} else if (ARABIC_SCRIPT.equals(script)
+				|| HEBREW_SCRIPT.equals(script)) {
+			return ENTITY_NAME_FOR_NON_LATIN_RL;
+		}
+		return ENTITY_NAME_FOR_NON_LATIN_LR;
 	}
 
 	private static class BufferedField {
