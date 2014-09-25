@@ -99,8 +99,8 @@ public final class PicaMultiscriptRemodeler extends
 
 	private static final BufferedField BEFORE_FIRST_FIELD = new BufferedField("", null);
 
-	private static final Object GROUP_SUBFIELD = "T";
-	private static final Object SCRIPT_SUBFIELD = "U";
+	private static final String GROUP_SUBFIELD = "T";
+	private static final String SCRIPT_SUBFIELD = "U";
 
 	private BufferedField currentField;
 	private BufferedField lastField;
