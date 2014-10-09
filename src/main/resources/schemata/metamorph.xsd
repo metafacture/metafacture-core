@@ -81,7 +81,7 @@
 		<complexType>
 			<choice minOccurs="0" maxOccurs="1">
 				<group ref="tns:literal-rule" />
-				<group ref="tns:entity-rule" />
+				<element ref="tns:entity" />
 			</choice>
 			<attribute ref="xml:base" />
 			<attribute name="name" use="required" type="string">
@@ -115,7 +115,7 @@
 		<complexType>
 			<choice minOccurs="0" maxOccurs="unbounded">
 				<group ref="tns:literal-rule" />
-				<group ref="tns:entity-rule" />
+				<element ref="tns:entity" />
 				<element ref="tns:call-macro" />
 				<element ref="xi:include" />
 			</choice>
@@ -407,6 +407,7 @@
 				<element ref="tns:entity-name" minOccurs="0" maxOccurs="1" />
 				<group ref="tns:literal-rule" minOccurs="0" maxOccurs="unbounded" />
 				<element ref="tns:entity" />
+				<element ref="tns:call-macro" />
 			</choice>
 			<attribute name="name" type="string" use="optional">
 				<annotation>
@@ -627,12 +628,6 @@
 			<enumeration value="clean" />
 		</restriction>
 	</simpleType>
-
-	<group name="entity-rule">
-		<choice>
-			<element ref="tns:entity" />
-		</choice>
-	</group>
 
 	<group name="literal-rule">
 		<choice>
