@@ -67,12 +67,12 @@
 	</element>
 
 	<element name="result">
-		<complexType>
+		<complexType mixed="true">
 			<sequence>
-				<element minOccurs="0" ref="cgxml:cgxml" />
+				<any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
 			</sequence>
 			<attribute name="src" type="string" use="optional"/>
-			<attribute name="type" type="string" use="required" fixed="text/x-cg+xml" />
+			<attribute name="type" type="string" use="required" />
 			<attribute name="strict-record-order" type="boolean" use="optional" default="true" />
 			<attribute name="strict-key-order" type="boolean" use="optional" default="true" />
 			<attribute name="strict-value-order" type="boolean" use="optional" default="true" />

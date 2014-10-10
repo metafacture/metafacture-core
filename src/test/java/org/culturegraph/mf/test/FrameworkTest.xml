@@ -76,5 +76,14 @@
 			</cgxml>
 		</result>
 	</test-case>
+	
+	<test-case name="Should allow Formeta as input and output format">
+		<input type="text/x-formeta">
+			{ l: v }
+		</input>
+		<result type="text/x-formeta">
+			{ l: v }
+		</result>
+	</test-case>
 
 </metamorph-test>
