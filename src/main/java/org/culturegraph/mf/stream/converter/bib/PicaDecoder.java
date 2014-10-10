@@ -51,7 +51,7 @@ import org.culturegraph.mf.util.StringUtil;
  * subfield values can be empty.</li>
  * </ul>
  *
- * <p>Please not that the record markers is treated as a field
+ * <p>Please note that the record markers is treated as a field
  * delimiter and not as a record delimiter. Records need to be
  * separated prior to parsing them.</p>
  *
@@ -149,7 +149,7 @@ public final class PicaDecoder
 		buffer = StringUtil.copyToBuffer(record, buffer);
 		recordLen = record.length();
 
-		if (recordIsEmpty()) {
+		if (isRecordEmpty()) {
 			return;
 		}
 
@@ -181,7 +181,7 @@ public final class PicaDecoder
 		parserContext.reset();
 	}
 
-	private boolean recordIsEmpty() {
+	private boolean isRecordEmpty() {
 		for (int i = 0; i < recordLen; ++i) {
 			if (buffer[i] != ' ' && buffer[i] != '\t') {
 				return false;
