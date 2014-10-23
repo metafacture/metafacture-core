@@ -312,7 +312,7 @@ public abstract class AbstractMetamorphDomWalker {
 				throw new MorphDefException("Macro '" + macroName + "' undefined!");
 			}
 			vars = new ScopedHashMap<String, String>(vars);
-			vars.putAll(attributeMap(node));
+			vars.putAll(resolvedAttributeMap(node));
 			handleRules(macroNode);
 			vars = vars.getOuterScope();
 		}else {
