@@ -13,7 +13,7 @@
  *  limitations under the License.
  */
 
-package org.culturegraph.mf.stream.reader;
+package org.culturegraph.mf.stream.source;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
