@@ -35,7 +35,7 @@ public final class CsvReader extends ReaderBase<CsvDecoder> {
 		super(new CsvDecoder());
 	}
 	
-	public CsvReader(final String separator) {
+	public CsvReader(final char separator) {
 		super(new CsvDecoder(separator));
 	}
 	
