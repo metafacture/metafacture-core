@@ -118,7 +118,7 @@ final class DirectoryBuilder {
 
 	@Override
 	public String toString() {
-		return directory.toString() + Iso2709Format.FIELD_SEPARATOR;
+		return directory.toString() + Iso646Characters.IS2;
 	}
 
 }

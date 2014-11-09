@@ -32,6 +32,8 @@ import org.culturegraph.mf.stream.converter.IllegalEncodingException;
  * {@link StreamReceiver}.
  *
  * @see StreamReceiver
+ * @deprecated This class will be removed in Metafacture 4.0.0 Please use
+ * {@link Marc21Decoder} instead.
  *
  * @author Markus Michael Geipel, Christoph Böhme
  */
@@ -39,6 +41,7 @@ import org.culturegraph.mf.stream.converter.IllegalEncodingException;
 @In(String.class)
 @Out(StreamReceiver.class)
 @FluxCommand("decode-marc21")
+@Deprecated
 public final class MarcDecoder
 		extends DefaultObjectPipe<String, StreamReceiver> {
 

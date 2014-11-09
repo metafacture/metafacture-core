@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Christoph Böhme
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ package org.culturegraph.mf.iso2709;
 public final class Iso2709Format {
 
 	public static final int RECORD_LABEL_LENGTH = 24;
+
+	public static final int MIN_RECORD_LENGTH = RECORD_LABEL_LENGTH + 2;
 
 	public static final int RECORD_LENGTH_START = 0;
 	public static final int RECORD_LENGTH_LENGTH = 5;
@@ -58,9 +60,9 @@ public final class Iso2709Format {
 
 	public static final int TAG_LENGTH = 3;
 
-	public static final char IDENTIFIER_MARKER = Iso646Characters.IS1;
-	public static final char FIELD_SEPARATOR = Iso646Characters.IS2;
-	public static final char RECORD_SEPARATOR = Iso646Characters.IS3;
+	public static final byte IDENTIFIER_MARKER = Iso646Characters.IS1;
+	public static final byte FIELD_SEPARATOR = Iso646Characters.IS2;
+	public static final byte RECORD_SEPARATOR = Iso646Characters.IS3;
 
 	private Iso2709Format() {
 		// No instance allowed

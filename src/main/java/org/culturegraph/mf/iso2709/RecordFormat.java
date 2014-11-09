@@ -15,6 +15,8 @@
  */
 package org.culturegraph.mf.iso2709;
 
+import java.util.Arrays;
+
 import org.culturegraph.mf.util.Require;
 
 /**
@@ -104,6 +106,38 @@ public final class RecordFormat {
 		Require.that(implDefinedPartLength <= MAX_LENGTH);
 
 		this.implDefinedPartLength = implDefinedPartLength;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj instanceof RecordFormat) {
+			final RecordFormat other = (RecordFormat) obj;
+			return indicatorLength == other.indicatorLength
+					&& identifierLength == other.identifierLength
+					&& fieldLengthLength == other.fieldLengthLength
+					&& fieldStartLength == other.fieldStartLength
+					&& implDefinedPartLength == other.implDefinedPartLength;
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		final int[] items = { indicatorLength, identifierLength, fieldLengthLength,
+				fieldStartLength, implDefinedPartLength };
+		return Arrays.hashCode(items);
+	}
+
+	@Override
+	public String toString() {
+		return "(indicatorLength=" + indicatorLength + ", " +
+				"identifierLength=" + identifierLength + ", " +
+				"fieldLengthLength=" + fieldLengthLength + ", " +
+				"fieldStartLength= " + fieldStartLength + ", " +
+				"implDefinedPartLength=" + implDefinedPartLength + ")";
 	}
 
 }

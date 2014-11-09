@@ -45,7 +45,7 @@ final class FieldsBuilder {
 	public int endField() {
 		requireInField();
 		inField = false;
-		fields.append(Iso2709Format.FIELD_SEPARATOR);
+		fields.append(Iso646Characters.IS2);
 		return fields.length();
 	}
 
@@ -63,7 +63,7 @@ final class FieldsBuilder {
 	public void appendSubfield(final String identifier, final String value) {
 		requireInField();
 		if (identifierLength > 0) {
-			fields.append(Iso2709Format.IDENTIFIER_MARKER);
+			fields.append(Iso646Characters.IS1);
 			fields.append(identifier);
 		}
 		fields.append(value);
@@ -82,7 +82,7 @@ final class FieldsBuilder {
 	@Override
 	public String toString() {
 		requireNotInField();
-		return fields.toString() + Iso2709Format.RECORD_SEPARATOR;
+		return fields.toString() + Iso646Characters.IS3;
 	}
 
 	private void requireInField() {
