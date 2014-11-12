@@ -24,6 +24,7 @@
 		<exclude name="AvoidLiteralsInIfCondition" />
 		<exclude name="UseObjectForClearerAPI" />
 		<exclude name="UseConcurrentHashMap" />
+		<exclude name="BooleanInversion" />
 	</rule>
 	<rule ref="rulesets/java/coupling.xml">
 		<exclude name="LooseCoupling" />
