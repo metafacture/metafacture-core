@@ -49,6 +49,16 @@ public final class RequireTest {
 		assertEquals(0, Require.notNegative(0));
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void thatShouldFailIfArgumentIsFalse() {
+		Require.that(false);
+	}
+
+	@Test
+	public void thatShouldDoNothingIfArgumentIsTrue() {
+		Require.that(true);
+	}
+
 	@Test(expected = IndexOutOfBoundsException.class)
 	public void validArrayIndexShouldThrowIndexOutOfBoundsExceptionIfIndexIsNegative() {
 		Require.validArrayIndex(-1, 2);

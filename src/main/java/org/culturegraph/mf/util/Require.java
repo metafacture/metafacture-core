@@ -76,6 +76,26 @@ public final class Require {
 	}
 
 	/**
+	 * Throws an {@link IllegalArgumentException} if {@code condition} is false.
+	 */
+	public static void that(final boolean condition) {
+		that(condition, "parameter is not valid");
+	}
+
+	/**
+	 * Throws an {@link IllegalArgumentException} if {@code condition} is false.
+	 *
+	 * @param message
+	 *            exception message
+	 * @return {@code value}
+	 */
+	private static void that(final boolean condition, final String message) {
+		if (!condition) {
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	/**
 	 * Throws an {@link IndexOutOfBoundsException} if {@code index} is negative
 	 * or equal to or greater than {@code arrayLength}.
 	 *
