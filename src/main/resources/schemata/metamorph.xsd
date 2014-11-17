@@ -909,8 +909,8 @@
 				</annotation>
 				<simpleType>
 					<restriction base="string">
-						<enumeration value="record"></enumeration>
-						<enumeration value="entity"></enumeration>
+						<enumeration value="record" />
+						<enumeration value="entity" />
 					</restriction>
 				</simpleType>
 			</attribute>
@@ -921,9 +921,9 @@
 				</annotation>
 				<simpleType>
 					<restriction base="string">
-						<enumeration value="name"></enumeration>
-						<enumeration value="value"></enumeration>
-						<enumeration value="name-value"></enumeration>
+						<enumeration value="name" />
+						<enumeration value="value" />
+						<enumeration value="name-value" />
 					</restriction>
 				</simpleType>
 			</attribute>
@@ -995,6 +995,16 @@
 					</restriction>
 				</simpleType>
 			</attribute>
+            <attribute name="era" use="optional" default="AUTO">
+                <simpleType>
+                    <restriction base="string">
+                        <enumeration value="AUTO" />
+                        <enumeration value="AD" />
+                        <enumeration value="BC" />
+                    </restriction>
+                </simpleType>
+            </attribute>
+            <attribute name="removeLeadingZeros" type="boolean" use="optional" default="false" />
 			<attribute name="language" type="string" use="optional" />
 		</complexType>
 	</element>
