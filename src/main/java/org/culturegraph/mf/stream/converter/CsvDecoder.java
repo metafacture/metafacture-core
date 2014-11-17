@@ -69,7 +69,10 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
 				}
 				getReceiver().endRecord();
 			}else{
-				throw new IllegalArgumentException("wrong number of columns in input line: " + string);
+				throw new IllegalArgumentException(
+						String.format(
+								"wrong number of columns (expected %s, was %s) in input line: %s",
+								header.length, parts.length, string));
 			}
 		}else{
 			getReceiver().startRecord(String.valueOf(++count));
