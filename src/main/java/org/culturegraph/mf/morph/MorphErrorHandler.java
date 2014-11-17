@@ -16,9 +16,16 @@
 package org.culturegraph.mf.morph;
 
 /**
+ * Error handler used by {@link Metamorph}. Implement
+ * this interface to provide custom error handling.
+ *
+ * @see DefaultErrorHandler for the default implementation
+ *
  * @author Markus Michael Geipel
  *
  */
 public interface MorphErrorHandler {
+
 	void error(Exception exception);
+
 }

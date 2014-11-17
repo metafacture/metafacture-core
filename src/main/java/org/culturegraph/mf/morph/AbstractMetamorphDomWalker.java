@@ -15,9 +15,6 @@
  */
 package org.culturegraph.mf.morph;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,8 +23,8 @@ import org.culturegraph.mf.morph.collectors.CollectFactory;
 import org.culturegraph.mf.morph.functions.FunctionFactory;
 import org.culturegraph.mf.morph.maps.MapFactory;
 import org.culturegraph.mf.types.ScopedHashMap;
-import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.StringUtil;
+import org.culturegraph.mf.util.xml.DomLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -103,42 +100,13 @@ public abstract class AbstractMetamorphDomWalker {
 		return mapFactory;
 	}
 
-	public final void walk(final String morphDef) {
-		try {
-			walk(ResourceUtil.getStream(morphDef));
-		} catch (final FileNotFoundException e) {
-			throw new MorphDefException(e);
-		}
-	}
-
-	public final void walk(final InputStream inputStream) {
-		if (inputStream == null) {
-			throw new IllegalArgumentException("'inputStream' must not be null");
-		}
-		walk(DomLoader.parse(SCHEMA_FILE, new InputSource(inputStream)));
-	}
-
-	public final void walk(final Reader reader) {
-		if (reader == null) {
-			throw new IllegalArgumentException("'reader' must not be null");
-		}
-		walk(DomLoader.parse(SCHEMA_FILE, new InputSource(reader)));
-	}
-
-	public final void walk(final Reader morphDefReader, final Map<String, String> vars) {
+	public final void walk(final InputSource morphScript, final Map<String, String> vars) {
 		this.vars.putAll(vars);
-		walk(morphDefReader);
+		walk(morphScript);
 	}
 
-
-	public final void walk(final String morphDef, final Map<String, String> vars) {
-		this.vars.putAll(vars);
-		walk(morphDef);
-	}
-
-	public final void walk(final InputStream inputStream, final Map<String, String> vars) {
-		this.vars.putAll(vars);
-		walk(inputStream);
+	public final void walk(final InputSource morphScript) {
+		walk(DomLoader.parse(SCHEMA_FILE, morphScript));
 	}
 
 	private static Tags tagOf(final Node child) {
@@ -172,7 +140,7 @@ public abstract class AbstractMetamorphDomWalker {
 		this.ignoreMissingVars = ignoreMissingVars;
 	}
 
-	protected final String resolvedAttribute(final Node node, final AttributeName attr){
+	protected final String resolvedAttribute(final Node node, final AttributeName attr) {
 		final String value = attribute(node, attr);
 		if(null==value){
 			return null;
@@ -181,7 +149,7 @@ public abstract class AbstractMetamorphDomWalker {
 
 	}
 
-	protected final Map<String, String> resolvedAttributeMap(final Node node){
+	protected final Map<String, String> resolvedAttributeMap(final Node node) {
 		final Map<String, String> attributes = new HashMap<String, String>();
 		final NamedNodeMap attrNode = node.getAttributes();
 
@@ -190,15 +158,6 @@ public abstract class AbstractMetamorphDomWalker {
 			attributes.put(itemNode.getLocalName(), resolveVars(itemNode.getNodeValue()));
 		}
 		return attributes;
-	}
-
-	private void handleVars(final Node varsNode) {
-		for (Node varNode = varsNode.getFirstChild(); varNode != null; varNode = varNode.getNextSibling()) {
-			final String varName = attribute(varNode, AttributeName.NAME);
-			final String varValue = attribute(varNode, AttributeName.VALUE);
-			vars.put(varName, varValue);
-		}
-		vars = new ScopedHashMap<String, String>(vars);
 	}
 
 	protected final void walk(final Document doc) {
@@ -242,44 +201,26 @@ public abstract class AbstractMetamorphDomWalker {
 		finish();
 	}
 
-	private void handleMacros(final Node node) {
-		for (Node macroNode = node.getFirstChild(); macroNode != null; macroNode = macroNode.getNextSibling()) {
-			final String name = attribute(macroNode, AttributeName.NAME);
-			macros.put(name, macroNode);
+	private void handleMeta(final Node node) {
+		for (Node metaEntryNode = node.getFirstChild(); metaEntryNode != null; metaEntryNode = metaEntryNode
+				.getNextSibling()) {
+
+			handleMetaEntry(metaEntryNode.getLocalName(), metaEntryNode.getTextContent());
 		}
 	}
 
-	protected abstract void init();
+	private void handleFunctionDefinitions(final Node node) {
+		for (Node functionDefNode = node.getFirstChild(); functionDefNode != null; functionDefNode = functionDefNode
+				.getNextSibling()) {
+			handleFunctionDefinition(functionDefNode);
+		}
+	}
 
-	protected abstract void finish();
-
-	protected abstract void setEntityMarker(final String entityMarker);
-
-	protected abstract void handleInternalMap(final Node mapNode);
-
-	protected abstract void handleMapClass(final Node mapNode);
-
-	protected abstract void handleMetaEntry(final String name, final String value);
-
-	protected abstract void handleFunctionDefinition(final Node functionDefNode);
-
-	protected abstract void enterData(Node node);
-
-	protected abstract void exitData(Node node);
-
-	protected abstract void enterCollect(Node node);
-
-	protected abstract void exitCollect(Node node);
-
-	protected abstract void enterName(Node node);
-
-	protected abstract void exitName(Node node);
-
-	protected abstract void enterIf(Node node);
-
-	protected abstract void exitIf(Node node);
-
-	protected abstract void handleFunction(Node functionNode);
+	private void handleRules(final Node node) {
+		for (Node ruleNode = node.getFirstChild(); ruleNode != null; ruleNode = ruleNode.getNextSibling()) {
+			handleRule(ruleNode);
+		}
+	}
 
 	private void handleRule(final Node node) {
 		final String nodeName = node.getLocalName();
@@ -337,9 +278,19 @@ public abstract class AbstractMetamorphDomWalker {
 		}
 	}
 
-	private void handleRules(final Node node) {
-		for (Node ruleNode = node.getFirstChild(); ruleNode != null; ruleNode = ruleNode.getNextSibling()) {
-			handleRule(ruleNode);
+	private void handleVars(final Node varsNode) {
+		for (Node varNode = varsNode.getFirstChild(); varNode != null; varNode = varNode.getNextSibling()) {
+			final String varName = attribute(varNode, AttributeName.NAME);
+			final String varValue = attribute(varNode, AttributeName.VALUE);
+			vars.put(varName, varValue);
+		}
+		vars = new ScopedHashMap<String, String>(vars);
+	}
+
+	private void handleMacros(final Node node) {
+		for (Node macroNode = node.getFirstChild(); macroNode != null; macroNode = macroNode.getNextSibling()) {
+			final String name = attribute(macroNode, AttributeName.NAME);
+			macros.put(name, macroNode);
 		}
 	}
 
@@ -355,18 +306,36 @@ public abstract class AbstractMetamorphDomWalker {
 				+ child.getParentNode().getLocalName());
 	}
 
-	private void handleFunctionDefinitions(final Node node) {
-		for (Node functionDefNode = node.getFirstChild(); functionDefNode != null; functionDefNode = functionDefNode
-				.getNextSibling()) {
-			handleFunctionDefinition(functionDefNode);
-		}
-	}
+	protected abstract void init();
 
-	private void handleMeta(final Node node) {
-		for (Node metaEntryNode = node.getFirstChild(); metaEntryNode != null; metaEntryNode = metaEntryNode
-				.getNextSibling()) {
+	protected abstract void finish();
 
-			handleMetaEntry(metaEntryNode.getLocalName(), metaEntryNode.getTextContent());
-		}
-	}
+	protected abstract void setEntityMarker(final String entityMarker);
+
+	protected abstract void handleInternalMap(final Node mapNode);
+
+	protected abstract void handleMapClass(final Node mapNode);
+
+	protected abstract void handleMetaEntry(final String name, final String value);
+
+	protected abstract void handleFunctionDefinition(final Node functionDefNode);
+
+	protected abstract void enterData(Node node);
+
+	protected abstract void exitData(Node node);
+
+	protected abstract void enterCollect(Node node);
+
+	protected abstract void exitCollect(Node node);
+
+	protected abstract void enterName(Node node);
+
+	protected abstract void exitName(Node node);
+
+	protected abstract void enterIf(Node node);
+
+	protected abstract void exitIf(Node node);
+
+	protected abstract void handleFunction(Node functionNode);
+
 }

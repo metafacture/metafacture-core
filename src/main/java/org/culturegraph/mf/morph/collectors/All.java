@@ -24,7 +24,7 @@ import org.culturegraph.mf.util.StringUtil;
 
 /**
  * Corresponds to the <code>&lt;all&gt;</code> tag.
- * 
+ *
  * @author Christoph Böhme <c.boehme@dnb.de>
  *
  */
@@ -32,13 +32,12 @@ public final class All extends AbstractFlushingCollect {
 
 	private static final String DEFAULT_NAME = "";
 	private static final String DEFAULT_VALUE = "true";
-	
+
 	private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
 	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
 
 	public All(final Metamorph metamorph) {
 		super(metamorph);
-		setNamedValueReceiver(metamorph);
 	}
 
 	@Override
@@ -64,7 +63,7 @@ public final class All extends AbstractFlushingCollect {
 			getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
 		}
 	}
-	
+
 	@Override
 	public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
 		sources.add(namedValueSource);

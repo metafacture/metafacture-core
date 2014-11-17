@@ -26,8 +26,8 @@ import org.culturegraph.mf.stream.reader.Reader;
 import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.culturegraph.mf.util.ResourceUtil;
-import org.culturegraph.mf.util.XMLUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
+import org.culturegraph.mf.util.xml.XmlUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -166,8 +166,8 @@ public final class TestCase {
 	private java.io.Reader getDataEmbedded(final Element input) {
 		final String inputType = input.getAttribute(TYPE_ATTR);
 		if (input.hasChildNodes()) {
-			if (XMLUtil.isXmlMimeType(inputType)) {
-				return new StringReader(XMLUtil.nodeListToString(input.getChildNodes()));
+			if (XmlUtil.isXmlMimeType(inputType)) {
+				return new StringReader(XmlUtil.nodeListToString(input.getChildNodes()));
 			}
 			return new StringReader(input.getTextContent());
 		}

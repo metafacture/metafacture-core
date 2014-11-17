@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ *  Copyright 2014 Christoph Böhme
  *
  *  Licensed under the Apache License, Version 2.0 the "License";
  *  you may not use this file except in compliance with the License.
@@ -13,15 +13,28 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.morph;
+package org.culturegraph.mf.util.xml;
+
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLFilterImpl;
 
 /**
- * just a combination of both {@link NamedValueReceiver} and {@link NamedValueSource}
- * 
- * @author Markus Michael Geipel
+ * Filters out SAX events marking ignorable whitespace.
+ *
+ * @author Christoph Böhme
  *
  */
-public interface NamedValuePipeHead extends NamedValuePipe{
-	void appendPipe(NamedValuePipe namedValuePipe);
-	void endPipe(NamedValueReceiver lastReceiver);
+public final class IgnorableWhitespaceFilter extends XMLFilterImpl {
+
+	IgnorableWhitespaceFilter(final XMLReader parent) {
+		super(parent);
+	}
+
+	@Override
+	public void ignorableWhitespace(final char[] ch, final int start, final int length)
+			throws SAXException {
+		// Do not forward ignorable whitespace events
+	}
+
 }

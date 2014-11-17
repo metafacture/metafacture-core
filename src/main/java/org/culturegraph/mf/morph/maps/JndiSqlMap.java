@@ -30,12 +30,15 @@ import org.culturegraph.mf.exceptions.MorphException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * @author Daniel
+ * A map which queries an sql database provided as jndi
+ * resource.
+ *
+ * @author Daniel Schäfer
  *
  */
-public final class JndiSqlMap extends AbstractReadOnlyMap<String, String> implements Closeable {
+public final class JndiSqlMap extends AbstractReadOnlyMap<String, String>
+		implements Closeable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(JndiSqlMap.class);
 	private DataSource datasource;
@@ -75,14 +78,14 @@ public final class JndiSqlMap extends AbstractReadOnlyMap<String, String> implem
 		} catch (final SQLException e) {
 			throw new MorphException(e);
 		} finally {
-			if(stmt != null){
+			if (stmt != null) {
 				try {
 					stmt.close();
 				} catch (final SQLException e) {
 					LOG.error("Can't close SQL-Statement.", e);
 				}
 			}
-			if(con != null){
+			if (con != null) {
 				try {
 					con.close();
 				} catch (final SQLException e) {

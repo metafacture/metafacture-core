@@ -20,9 +20,11 @@ import java.net.URLEncoder;
 
 import org.culturegraph.mf.exceptions.MorphException;
 
-
 /**
+ * URL encodes the received value.
+ *
  * @author Markus Michael Geipel
+ *
  */
 public final class URLEncode extends AbstractSimpleStatelessFunction {
 
@@ -30,8 +32,9 @@ public final class URLEncode extends AbstractSimpleStatelessFunction {
 	public String process(final String value) {
 		try {
 			return URLEncoder.encode(value, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			throw new MorphException(e);
 		}
 	}
+
 }

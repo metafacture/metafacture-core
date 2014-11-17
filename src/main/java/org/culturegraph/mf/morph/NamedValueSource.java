@@ -16,11 +16,24 @@
 package org.culturegraph.mf.morph;
 
 /**
- * Base interface for all classes in {@link Metamorph} which emit name-value-pairs
- * 
+ * Base interface for all classes in {@link Metamorph} which emit
+ * name-value-pairs.
+ *
  * @author Markus Michael Geipel
+ * @author Christoph Böhme
  *
  */
-public interface NamedValueSource {
-	<R extends NamedValueReceiver> R setNamedValueReceiver(R receiver);
+public interface NamedValueSource extends KnowsSourceLocation {
+
+	/**
+	 * Connects a source of named values to a receiver of named values.
+	 *
+	 * Users should not call this method to connect sources and
+	 * receivers but rather call
+	 * {@link NamedValueReceiver.addNamedValueSource}.
+	 *
+	 * @param receiver
+	 */
+	void setNamedValueReceiver(NamedValueReceiver receiver);
+
 }

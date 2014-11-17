@@ -18,15 +18,16 @@ package org.culturegraph.mf.morph.functions;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.culturegraph.mf.morph.AbstractNamedValuePipeHead;
+import org.culturegraph.mf.morph.AbstractNamedValuePipe;
 import org.culturegraph.mf.types.MultiMap;
 
-
-
 /**
+ * Base class for functions.
+ *
  * @author Markus Michael Geipel
  */
-public abstract class AbstractFunction extends AbstractNamedValuePipeHead implements Function {
+public abstract class AbstractFunction extends AbstractNamedValuePipe
+		implements Function {
 
 	private MultiMap multiMap;
 	private Map<String, String> localMap;
@@ -70,10 +71,10 @@ public abstract class AbstractFunction extends AbstractNamedValuePipeHead implem
 	public final void setMultiMap(final MultiMap multiMapProvider) {
 		this.multiMap = multiMapProvider;
 	}
-	
+
 	@Override
 	public void flush(final int recordCount, final int entityCount) {
-		// nothing by default
+		// Does nothing by default
 	}
 
 }

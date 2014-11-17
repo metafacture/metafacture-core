@@ -16,6 +16,8 @@
 package org.culturegraph.mf.morph.functions;
 
 /**
+ * Extracts a substring from the received value.
+ *
  * @author Markus Michael Geipel
  */
 public final class Substring extends AbstractSimpleStatelessFunction {
@@ -49,8 +51,9 @@ public final class Substring extends AbstractSimpleStatelessFunction {
 	}
 
 	/**
-	 * @param end end of substring, if end==0 the the complete remaining string is returned
-	 *           
+	 * @param end end of substring, if end==0 the the complete
+	 *            remaining string is returned
+	 *
 	 */
 	public void setEnd(final String end) {
 		this.end = Integer.parseInt(end);

@@ -16,6 +16,8 @@
 package org.culturegraph.mf.morph.functions;
 
 /**
+ * Base class for functions that act as filters.
+ *
  * @author Markus Michael Geipel
  */
 public abstract class AbstractFilter extends AbstractSimpleStatelessFunction {
@@ -29,17 +31,15 @@ public abstract class AbstractFilter extends AbstractSimpleStatelessFunction {
 		}
 		return null;
 	}
-	
+
 	protected abstract boolean accept(String value);
 
 	protected final  String getString() {
 		return string;
 	}
-	
-	/**
-	 * @param string
-	 */
+
 	public final void setString(final String string) {
 		this.string = string;
 	}
+
 }

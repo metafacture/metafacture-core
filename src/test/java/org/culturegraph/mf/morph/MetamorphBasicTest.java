@@ -22,17 +22,18 @@ import org.culturegraph.mf.framework.DefaultStreamReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.types.NamedValue;
+import org.culturegraph.mf.util.xml.Location;
 import org.junit.Assert;
 import org.junit.Test;
 
 
 /**
  * tests {@link Metamorph}
- * 
+ *
  * @author Markus Michael Geipel
  */
 public final class MetamorphBasicTest implements NamedValueReceiver {
-	
+
 	private static final String NAME = "name";
 	private static final String VALUE = "s234234ldkfj";
 	private static final String ENTITY_NAME = "dfsdf";
@@ -50,123 +51,140 @@ public final class MetamorphBasicTest implements NamedValueReceiver {
 	private static final String MAP_NAME = "sdfklsjef";
 
 	private NamedValue namedValue;
-	
+
 	private static Metamorph newMetamorphWithData(final NamedValueReceiver receiver){
 		final Metamorph metamorph = new Metamorph();
 		metamorph.setReceiver(EMPTY_RECEIVER);
 		final Data data = new Data();
 		data.setName(NAME);
-		data.setNamedValueReceiver(receiver);
+		receiver.addNamedValueSource(data);
 		metamorph.registerNamedValueReceiver(MATCHING_PATH, data);
 		return metamorph;
 	}
-	
+
 	@Test
 	public void testSimpleMapping() {
 		final Metamorph metamorph = newMetamorphWithData(this);
 		namedValue = null;
 		metamorph.startRecord(null);
-		
+
 		//simple mapping without entity
 		metamorph.literal(NON_MATCHING_PATH1, VALUE);
 		Assert.assertNull(namedValue);
-		
+
 		metamorph.literal(MATCHING_PATH, VALUE);
 		Assert.assertNotNull(namedValue);
 		Assert.assertEquals(VALUE, namedValue.getValue());
 		namedValue = null;
-		
+
 		// mapping with entity
 		metamorph.startEntity(ENTITY_NAME);
 		metamorph.literal(LITERAL_NAME, VALUE);
 		Assert.assertFalse(namedValue==null);
 		Assert.assertEquals(VALUE, namedValue.getValue());
 		namedValue = null;
-		
+
 		metamorph.literal(NON_MATCHING_PATH2, VALUE);
 		Assert.assertNull(namedValue);
-		
+
 		metamorph.endEntity();
 		metamorph.literal(LITERAL_NAME, VALUE);
 		Assert.assertNull(namedValue);
 	}
-	
+
 	@Test
 	public void testMultiMap(){
 		final Metamorph metamorph = new Metamorph();
 		final Map<String, String> map = new HashMap<String, String>();
 		map.put(NAME, VALUE);
-		
+
 		metamorph.putMap(MAP_NAME, map);
 		Assert.assertNotNull(metamorph.getMap(MAP_NAME));
 		Assert.assertNotNull(metamorph.getValue(MAP_NAME,NAME));
 		Assert.assertEquals(VALUE, metamorph.getValue(MAP_NAME,NAME));
-		
+
 		map.put(MultiMap.DEFAULT_MAP_KEY, VALUE);
 		Assert.assertNotNull(metamorph.getValue(MAP_NAME,"sdfadsfsdf"));
 		Assert.assertEquals(VALUE, metamorph.getValue(MAP_NAME,"sdfsdf"));
-		
+
 	}
-	
+
 	@Test
 	public void testFeedback() {
-	
+
 		final Metamorph metamorph = new Metamorph();
 		metamorph.setReceiver(EMPTY_RECEIVER);
 		Data data;
-		
+
 		data = new Data();
 		data.setName(FEEDBACK_VAR);
-		data.setNamedValueReceiver(metamorph);
-		metamorph.registerNamedValueReceiver(MATCHING_PATH,data);
-		
+		metamorph.addNamedValueSource(data);
+		metamorph.registerNamedValueReceiver(MATCHING_PATH, data);
+
 		data = new Data();
 		data.setName(NAME);
-		data.setNamedValueReceiver(this);
+		addNamedValueSource(data);
 		metamorph.registerNamedValueReceiver(FEEDBACK_VAR, data);
-		
+
 		namedValue = null;
-		
+
 		metamorph.startRecord(null);
 		metamorph.literal(MATCHING_PATH, VALUE);
 		Assert.assertFalse(namedValue==null);
 		Assert.assertEquals(VALUE, namedValue.getValue());
 		namedValue = null;
-		
-		
+
+
 	}
-	
+
 
 	@Test(expected=IllegalStateException.class)
 	public void testEntityBorderBalanceCheck1(){
 		final Metamorph metamorph = new Metamorph();
 		metamorph.setReceiver(EMPTY_RECEIVER);
-		
+
 		metamorph.startRecord(null);
 		metamorph.startEntity(ENTITY_NAME);
 		metamorph.startEntity(ENTITY_NAME);
 		metamorph.endEntity();
 		metamorph.endRecord();
 	}
-	
+
 	@Test(expected=IllegalStateException.class)
 	public void testEntityBorderBalanceCheck2(){
 		final Metamorph metamorph = new Metamorph();
 		metamorph.setReceiver(EMPTY_RECEIVER);
-		
+
 		metamorph.startRecord(null);
 		metamorph.startEntity(ENTITY_NAME);
 		metamorph.endEntity();
 		metamorph.endEntity();
 		metamorph.endRecord();
 	}
-	
+
 
 
 
 	@Override
 	public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
 		this.namedValue = new NamedValue(name, value);
-		
+
 	}
+
+	@Override
+	public void addNamedValueSource(final NamedValueSource namedValueSource) {
+		namedValueSource.setNamedValueReceiver(this);
+	}
+
+	@Override
+	public void setSourceLocation(final Location sourceLocation) {
+		// Nothing to do
+	}
+
+	@Override
+	public Location getSourceLocation() {
+		// Nothing to do
+		return null;
+	}
+
 }

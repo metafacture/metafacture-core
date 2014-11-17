@@ -16,11 +16,13 @@
 package org.culturegraph.mf.morph;
 
 /**
- * just a combination of both {@link NamedValueReceiver} and {@link NamedValueSource}
- * 
+ * A combination of both {@link NamedValueReceiver} and {@link NamedValueSource}
+ *
  * @author Markus Michael Geipel
  *
  */
 public interface NamedValuePipe extends NamedValueReceiver, NamedValueSource {
-	//just a combination of both
+
+	// Just a combination of NamedValueReceiver and NamedValueSource
+
 }
