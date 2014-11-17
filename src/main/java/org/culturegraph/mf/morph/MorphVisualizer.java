@@ -149,28 +149,28 @@ public final class MorphVisualizer extends AbstractMetamorphDomWalker {
 
 	@Override
 	protected void handleInternalMap(final Node mapNode) {
-		final String mapName = resolvedAttribute(mapNode, ATTRITBUTE.NAME);
+		final String mapName = resolvedAttribute(mapNode, AttributeName.NAME);
 		final Map<String, String> map = getMap(mapNode);
 		writer.println(buildMap(mapName, mapName, map));
 	}
 
 	@Override
 	protected void handleMapClass(final Node mapNode) {
-		final String mapName = resolvedAttribute(mapNode, ATTRITBUTE.NAME);
+		final String mapName = resolvedAttribute(mapNode, AttributeName.NAME);
 		final Map<String, String> emptyMap = Collections.emptyMap();
 		writer.println(buildMap(mapName, mapName, emptyMap));
 	}
 
 	private Map<String, String> getMap(final Node mapNode) {
 		final Map<String, String> map = new HashMap<String, String>();
-		final String mapDefault = resolvedAttribute(mapNode, ATTRITBUTE.DEFAULT);
+		final String mapDefault = resolvedAttribute(mapNode, AttributeName.DEFAULT);
 		if (mapDefault != null) {
 			map.put("_default", mapDefault);
 		}
 
 		for (Node entryNode = mapNode.getFirstChild(); entryNode != null; entryNode = entryNode.getNextSibling()) {
-			final String entryName = resolvedAttribute(entryNode, ATTRITBUTE.NAME);
-			final String entryValue = resolvedAttribute(entryNode, ATTRITBUTE.VALUE);
+			final String entryName = resolvedAttribute(entryNode, AttributeName.NAME);
+			final String entryValue = resolvedAttribute(entryNode, AttributeName.VALUE);
 			map.put(entryName, entryValue);
 		}
 		return map;
@@ -200,14 +200,14 @@ public final class MorphVisualizer extends AbstractMetamorphDomWalker {
 	@Override
 	protected void enterData(final Node node) {
 		incrementChildCount();
-		lastProcessorStack.push(resolvedAttribute(node, ATTRITBUTE.SOURCE));
+		lastProcessorStack.push(resolvedAttribute(node, AttributeName.SOURCE));
 	}
 
 
 
 	@Override
 	protected void exitData(final Node node) {
-		sources.add(resolvedAttribute(node, ATTRITBUTE.SOURCE));
+		sources.add(resolvedAttribute(node, AttributeName.SOURCE));
 		exit(node);
 	}
 
@@ -221,7 +221,7 @@ public final class MorphVisualizer extends AbstractMetamorphDomWalker {
 		idStack.push(identifier);
 
 		final Map<String, String> attributes = resolvedAttributeMap(node);
-		attributes.remove(ATTRITBUTE.NAME.getString());
+		attributes.remove(AttributeName.NAME.getString());
 		writer.println(buildRecord(identifier, node.getLocalName(), "lightgray", attributes));
 	}
 
@@ -235,7 +235,7 @@ public final class MorphVisualizer extends AbstractMetamorphDomWalker {
 
 	@Override
 	protected void enterName(final Node node) {
-		((Element)node.getFirstChild()).setAttribute(ATTRITBUTE.NAME.getString(), "<entity-name>");
+		((Element)node.getFirstChild()).setAttribute(AttributeName.NAME.getString(), "<entity-name>");
 	}
 
 	@Override
@@ -244,7 +244,7 @@ public final class MorphVisualizer extends AbstractMetamorphDomWalker {
 	}
 
 	private void exit(final Node node) {
-		String name = resolvedAttribute(node, ATTRITBUTE.NAME);
+		String name = resolvedAttribute(node, AttributeName.NAME);
 		if (name == null) {
 			name = "";
 		}
@@ -304,7 +304,7 @@ public final class MorphVisualizer extends AbstractMetamorphDomWalker {
 
 	@Override
 	protected void enterIf(final Node node) {
-		((Element)node.getFirstChild()).setAttribute(ATTRITBUTE.NAME.getString(), "<if>");
+		((Element)node.getFirstChild()).setAttribute(AttributeName.NAME.getString(), "<if>");
 	}
 
 	@Override
