@@ -51,20 +51,13 @@ public final class TestCase {
 	private static final String STRICT_KEY_ORDER_ATTR = "strict-key-order";
 	private static final String STRICT_VALUE_ORDER_ATTR = "strict-value-order";
 
-
 	private static final String MIME_METAMORPH = "text/x-metamorph+xml";
 	private static final String MIME_JAVACLASS = "application/java";
 
 	private final Element config;
 
-	private final Reader inputReader;
-	private final StreamPipe<StreamReceiver> transformation;
-
-	@SuppressWarnings("unchecked")
 	public TestCase(final Element config) {
 		this.config = config;
-		inputReader = getReader(INPUT_TAG);
-		transformation = getTransformation();
 	}
 
 	public String getName() {
@@ -76,8 +69,11 @@ public final class TestCase {
 	}
 
 	public void run() {
-
+		final Reader inputReader = getReader(INPUT_TAG);
+		@SuppressWarnings("unchecked")
+		final StreamPipe<StreamReceiver>transformation = getTransformation();
 		final EventList resultStream = new EventList();
+
 		if (transformation == null) {
 			inputReader.setReceiver(resultStream);
 		} else {
