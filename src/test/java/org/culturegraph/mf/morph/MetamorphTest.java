@@ -25,5 +25,5 @@ import org.junit.runner.RunWith;
  *
  */
 @RunWith(TestSuite.class)
-@TestDefinitions({"MetamorphTest.xml", "MacroTest.xml"})
+@TestDefinitions({"MetamorphTest.xml", "MacroTest.xml", "CollectorTest.xml"})
 public final class MetamorphTest {/*bind to xml test*/}

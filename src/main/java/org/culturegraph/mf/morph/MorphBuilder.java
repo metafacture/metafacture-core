@@ -52,12 +52,19 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 
 	private static final class StackFrame {
 
+		private final NamedValuePipe headPipe;
+
 		private NamedValuePipe pipe;
 		private boolean inEntityName;
 		private boolean inCondition;
 
-		public StackFrame(final NamedValuePipe pipe) {
-			this.pipe = pipe;
+		public StackFrame(final NamedValuePipe headPipe) {
+			this.headPipe = headPipe;
+			this.pipe = headPipe;
+		}
+
+		public NamedValuePipe getHeadPipe() {
+			return headPipe;
 		}
 
 		public void setPipe(final NamedValuePipe pipe) {
@@ -250,7 +257,8 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	@Override
 	protected void enterCollect(final Node node) {
 		final Map<String, String> attributes = resolvedAttributeMap(node);
-		// must be set after recursive calls to flush descendants before parent
+		// flushWith should not be passed to the headPipe object via a
+		// setter (see newInstance):
 		attributes.remove(AttributeName.FLUSH_WITH.getString());
 
 		if (!getCollectFactory().containsKey(node.getLocalName())) {
@@ -264,11 +272,13 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 
 	@Override
 	protected void exitCollect(final Node node) {
-		final NamedValuePipe collectPipe = stack.pop().getPipe();
+		final StackFrame currentCollect = stack.pop();
+		final Collect collector = (Collect) currentCollect.getHeadPipe();
+		final NamedValuePipe tailPipe = currentCollect.getPipe();
 
 		final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
 		final NamedValuePipe delegate;
-		if (interceptor == null || collectPipe instanceof Entity) {
+		if (interceptor == null || tailPipe instanceof Entity) {
 			// The result of entity collectors cannot be intercepted
 			// because they only use the receive/emit interface for
 			// signalling while the actual data is transferred using
@@ -276,10 +286,10 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 			// class checks whether source and receiver are an
 			// instances of Entity. If an interceptor is inserted between
 			// entity elements this mechanism will break.
-			delegate = collectPipe;
+			delegate = tailPipe;
 		} else {
 			delegate = interceptor;
-			delegate.addNamedValueSource(collectPipe);
+			delegate.addNamedValueSource(tailPipe);
 		}
 
 		final StackFrame parent = stack.peek();
@@ -296,11 +306,8 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		// must be set after recursive calls to flush descendants before parent
 		final String flushWith = resolvedAttribute(node, AttributeName.FLUSH_WITH);
 		if (null != flushWith) {
-			assert collectPipe instanceof Collect :
-					"Invokations of enterXXX and exitXXX are not properly balanced";
-
-			((Collect) collectPipe).setWaitForFlush(true);
-			registerFlush(flushWith, ((Collect) collectPipe));
+			collector.setWaitForFlush(true);
+			registerFlush(flushWith, collector);
 		}
 	}
 

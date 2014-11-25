@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph-test version="1.0"
+		xmlns="http://www.culturegraph.org/metamorph-test">
+
+	<test-case name="custom entity marker">
+		<input type="text/x-formeta">
+			1 { inLit: value }
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph version="1" entityMarker="." 
+					xmlns="http://www.culturegraph.org/metamorph">
+				<rules>
+					<combine name="outLit" value="${V}" flushWith="record">
+						<data name="V" source="inLit" />
+						<postprocess>
+							<case to="upper"/>
+						</postprocess>
+					</combine>
+				</rules>
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-formeta">
+			1 { outLit: VALUE }
+		</result>
+	</test-case>
+
+</metamorph-test>
