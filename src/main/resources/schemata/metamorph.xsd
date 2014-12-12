@@ -329,6 +329,8 @@
 
 			<attribute name="flushWith" type="string" use="optional"
 				default="record" />
+			<attribute name="sameEntity" type="boolean" use="optional"
+				default="false" />
 			<attribute name="reset" type="boolean" use="optional"
 				default="true" />
 		</complexType>
