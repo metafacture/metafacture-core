@@ -74,7 +74,6 @@ import org.junit.Test;
 		
 		// Wait a tiny bit since GC Thread is not immediately done in Java 8
 		Thread.sleep(10);
-
 		assertTrue(weakRef.isEnqueued());
 	}
 }
