@@ -58,9 +58,10 @@ import org.junit.Test;
 	 * This test case may throw fail unexpectedly as it relies on the
 	 * garbage collector to run when calling {@code System.gc()}. This
 	 * is not guaranteed by the JVM.
+	 * @throws InterruptedException 
 	 */
 	@Test
-	public void issue192ShouldUnregisterFromTheJVMToNotCauseMemoryLeak() {
+	public void issue192ShouldUnregisterFromTheJVMToNotCauseMemoryLeak() throws InterruptedException {
 
 		// Get weak reference for checking whether the object was actually freed later:
 		final ReferenceQueue<AbstractTripleSort> refQueue = new ReferenceQueue<AbstractTripleSort>();
@@ -70,8 +71,10 @@ import org.junit.Test;
 		tripleSort = null;
 
 		System.gc();
+		
+		// Wait a tiny bit since GC Thread is not immediately done in Java 8
+		Thread.sleep(1);
 
 		assertTrue(weakRef.isEnqueued());
 	}
-
 }
