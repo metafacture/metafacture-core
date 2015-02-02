@@ -23,11 +23,12 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import org.culturegraph.mf.morph.MorphVisualizer;
+import org.xml.sax.InputSource;
 
 
 /**
  * Generates a graphviz dot file based on a Metamorph definition.
- * 
+ *
  * @author Markus Michael Geipel
  */
 public final class MorphVis {
@@ -39,7 +40,7 @@ public final class MorphVis {
 
 	/**
 	 * @param args
-	 *            
+	 *
 	 * @throws IOException
 	 */
 	public static void main(final String[] args) throws IOException {
@@ -54,8 +55,8 @@ public final class MorphVis {
 			return;
 		}
 		final MorphVisualizer visualizer = new MorphVisualizer(out);
-		visualizer.walk(new FileReader(args[0]));
+		visualizer.walk(new InputSource(new FileReader(args[0])));
 	}
 
-	
+
 }
