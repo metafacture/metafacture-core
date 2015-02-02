@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.culturegraph</groupId>
 	<artifactId>metafacture-runner</artifactId>
-	<version>2.0.1-SNAPSHOT</version>
+	<version>3.0.0-SNAPSHOT</version>
 	<name>metafacture.runner</name>
 	<description>Standalone applications for working with Flux and Metamorph scripts</description>
 	<licenses>
@@ -219,7 +219,7 @@
 		<dependency>
 			<groupId>org.culturegraph</groupId>
 			<artifactId>metafacture-core</artifactId>
-			<version>2.0.0</version>
+			<version>3.0.0</version>
 		</dependency>
 
 		<!-- In a perfect world the slf4j binding would be a
