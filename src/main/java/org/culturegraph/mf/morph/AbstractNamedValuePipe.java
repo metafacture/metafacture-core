@@ -36,28 +36,29 @@ public abstract class AbstractNamedValuePipe implements NamedValuePipe {
 	}
 
 	@Override
-	public final void addNamedValueSource(final NamedValueSource namedValueSource) {
-		namedValueSource.setNamedValueReceiver(this);
+	public final void addNamedValueSource(final NamedValueSource source) {
 
-		onNamedValueSourceAdded(namedValueSource);
-	}
-
-	@Override
-	public void setSourceLocation(final Location sourceLocation) {
-		this.sourceLocation = sourceLocation;
-	}
-
-	@Override
-	public Location getSourceLocation() {
-		return sourceLocation;
-	}
-
-	protected void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
-		// Default implementation does nothing
+		source.setNamedValueReceiver(this);
+		onNamedValueSourceAdded(source);
 	}
 
 	protected final NamedValueReceiver getNamedValueReceiver() {
 		return namedValueReceiver;
+	}
+
+	@Override
+	public final void setSourceLocation(final Location sourceLocation) {
+		this.sourceLocation = sourceLocation;
+	}
+
+	@Override
+	public final Location getSourceLocation() {
+		return sourceLocation;
+	}
+
+	protected void onNamedValueSourceAdded(
+			final NamedValueSource namedValueSource) {
+		// Default implementation does nothing
 	}
 
 }
