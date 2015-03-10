@@ -3,6 +3,7 @@
 				xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph"
 				xmlns:cgxml="http://www.culturegraph.org/cgxml">
 
+	<!-- note: this test is not working yet -->
 	<test-case name="combine w/ filter + include sub entities + filter on different levels + mutliple matched entities">
 		<input type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">
