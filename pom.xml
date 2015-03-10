@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.culturegraph</groupId>
 	<artifactId>metafacture-core</artifactId>
@@ -62,10 +63,19 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<targetJdk>1.6</targetJdk>
 		<antlr.version>3.5.2</antlr.version>
+		<version.jackson>2.5.0</version.jackson>
+		<version.junit>4.12</version.junit>
 		<maven-source-plugin.version>2.3</maven-source-plugin.version>
 		<maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
-		<maven-deploy-plugin.version>2.8.1</maven-deploy-plugin.version>
+		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
 		<findbugs-maven-plugin.version>3.0.0</findbugs-maven-plugin.version>
+		<version.maven.plugin.pmd>3.3</version.maven.plugin.pmd>
+		<version.maven.plugin.checkstyle>2.12.1</version.maven.plugin.checkstyle>
+		<version.maven.plugin.cobertura>2.6</version.maven.plugin.cobertura>
+		<version.maven.plugin.compiler>3.2</version.maven.plugin.compiler>
+		<version.maven.plugin.jar>2.5</version.maven.plugin.jar>
+		<version.maven.plugin.release>2.5.1</version.maven.plugin.release>
+		<version.maven.plugin.surefire>2.18.1</version.maven.plugin.surefire>
 	</properties>
 
 	<scm>
@@ -142,7 +152,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>${version.maven.plugin.compiler}</version>
 				<configuration>
 					<source>${targetJdk}</source>
 					<target>${targetJdk}</target>
@@ -153,13 +163,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.1</version>
+				<version>${version.maven.plugin.jar}</version>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.10</version>
+				<version>${version.maven.plugin.surefire}</version>
 			</plugin>
 
 			<plugin>
@@ -214,7 +224,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.4</version>
+				<version>${version.maven.plugin.release}</version>
 				<!--$NO-MVN-MAN-VER$ -->
 				<!-- m2e complains about a different plugin version being specified in 
 					the parent pom. However, this is not actually problem for maven. So, we can 
@@ -229,7 +239,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>${version.junit}</version>
 		</dependency>
 
 		<dependency>
@@ -269,25 +279,25 @@
 			<version>0.11.4.1</version>
 			<scope>test</scope>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.jdom</groupId>
 			<artifactId>jdom</artifactId>
 			<version>1.1</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.3.2</version>
+			<version>${version.jackson}</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
@@ -302,7 +312,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-core</artifactId>
@@ -319,7 +329,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.8</version>
+						<version>${maven-javadoc-plugin.version}</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -377,7 +387,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-checkstyle-plugin</artifactId>
-						<version>2.6</version>
+						<version>${version.maven.plugin.checkstyle}</version>
 						<configuration>
 							<configLocation>${basedir}/quality_assurance/checkstyle_rules.xml</configLocation>
 							<propertyExpansion>basedir=${basedir}</propertyExpansion>
@@ -395,11 +405,20 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>cobertura-maven-plugin</artifactId>
-						<version>2.5.1</version>
+						<version>${version.maven.plugin.cobertura}</version>
 						<configuration>
 							<formats>
 								<format>xml</format>
 							</formats>
+							<check>
+								<branchRate>80</branchRate>
+								<lineRate>80</lineRate>
+								<haltOnFailure>false</haltOnFailure>
+								<totalBranchRate>80</totalBranchRate>
+								<totalLineRate>80</totalLineRate>
+								<packageLineRate>80</packageLineRate>
+								<packageBranchRate>80</packageBranchRate>
+							</check>
 						</configuration>
 						<executions>
 							<execution>
@@ -433,7 +452,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-pmd-plugin</artifactId>
-						<version>3.0</version>
+						<version>${version.maven.plugin.pmd}</version>
 						<configuration>
 							<linkXRef>true</linkXRef>
 							<rulesets>
