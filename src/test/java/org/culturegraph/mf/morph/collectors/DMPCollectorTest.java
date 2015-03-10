@@ -20,6 +20,8 @@ import org.culturegraph.mf.test.TestSuite.TestDefinitions;
 import org.junit.runner.RunWith;
 
 /**
+ * note: DMPCombineTest10 is not working yet
+ *
  * @author tgaengler
  */
 @RunWith(TestSuite.class)
