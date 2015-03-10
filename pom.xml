@@ -61,14 +61,17 @@
 	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- note: org.culturegraph.mf.stream.pipe.sort.AbstractTripleSortTest#issue192ShouldUnregisterFromTheJVMToNotCauseMemoryLeak fails when upgrading to Java 8 -->
 		<targetJdk>1.6</targetJdk>
 		<antlr.version>3.5.2</antlr.version>
 		<version.jackson>2.5.0</version.jackson>
+		<!-- note: org.culturegraph.mf.test.TestCaseRunnerTest#issue213ShouldNotInitAnnotationsArrayWithNull fails when upgrading to JUnit version 4.12 -->
 		<version.junit>4.12</version.junit>
 		<maven-source-plugin.version>2.3</maven-source-plugin.version>
 		<maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
 		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
 		<findbugs-maven-plugin.version>3.0.0</findbugs-maven-plugin.version>
+<!-- note: org.culturegraph.mf.stream.pipe.sort.AbstractTripleSortTest#issue192ShouldUnregisterFromTheJVMToNotCauseMemoryLeak fails when upgrading to Java 8 -->
 		<version.maven.plugin.pmd>3.3</version.maven.plugin.pmd>
 		<version.maven.plugin.checkstyle>2.12.1</version.maven.plugin.checkstyle>
 		<version.maven.plugin.cobertura>2.6</version.maven.plugin.cobertura>
