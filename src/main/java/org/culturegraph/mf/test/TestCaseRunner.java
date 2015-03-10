@@ -16,7 +16,6 @@
 package org.culturegraph.mf.test;
 
 import java.io.InputStream;
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import org.culturegraph.mf.exceptions.FormatException;
@@ -37,8 +36,8 @@ final class TestCaseRunner extends ParentRunner<TestCase> {
 	private final List<TestCase> testCases;
 	private final String testDefinition;
 
-	
-	public TestCaseRunner(final Class<?> clazz,  final String testDefinition) 
+
+	public TestCaseRunner(final Class<?> clazz,  final String testDefinition)
 			throws InitializationError {
 		super(clazz);
 		this.clazz = clazz;
@@ -49,7 +48,7 @@ final class TestCaseRunner extends ParentRunner<TestCase> {
 		this.testCases = TestCaseLoader.load(inputStream);
 		this.testDefinition = testDefinition;
 	}
-	
+
 	@Override
 	protected String getName() {
 		return testDefinition;
@@ -62,9 +61,9 @@ final class TestCaseRunner extends ParentRunner<TestCase> {
 
 	@Override
 	protected Description describeChild(final TestCase child) {
-		return Description.createTestDescription(clazz, child.getName(), (Annotation[]) null);
+		return Description.createTestDescription(clazz, child.getName());
 	}
-	
+
 
 	@Override
 	protected void runChild(final TestCase child, final RunNotifier notifier) {
@@ -74,10 +73,10 @@ final class TestCaseRunner extends ParentRunner<TestCase> {
 			notifier.fireTestStarted(describeChild(child));
 			try {
 				child.run();
-			} catch (FormatException e) {
-				notifier.fireTestFailure(new Failure(describeChild(child), 
+			} catch (final FormatException e) {
+				notifier.fireTestFailure(new Failure(describeChild(child),
 						new AssertionError(e)));
-			} catch (Throwable e) {
+			} catch (final Throwable e) {
 				notifier.fireTestFailure(new Failure(describeChild(child), e));
 			} finally {
 				notifier.fireTestFinished(describeChild(child));

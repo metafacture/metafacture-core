@@ -173,6 +173,7 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 				}
 			}
 		}
+		MemoryWarningSystem.removeListener(this);
 	}
 
 	protected void onFinished() {

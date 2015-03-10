@@ -15,6 +15,11 @@
  */
 package org.culturegraph.mf.stream.pipe.sort;
 
+import static org.junit.Assert.assertTrue;
+
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
+
 import org.culturegraph.mf.types.Triple;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +52,26 @@ import org.junit.Test;
 		tripleSort.memoryLow(0, 0);
 		tripleSort.process(T1);
 		tripleSort.closeStream();
+	}
+
+	/**
+	 * This test case may throw fail unexpectedly as it relies on the
+	 * garbage collector to run when calling {@code System.gc()}. This
+	 * is not guaranteed by the JVM.
+	 */
+	@Test
+	public void issue192ShouldUnregisterFromTheJVMToNotCauseMemoryLeak() {
+
+		// Get weak reference for checking whether the object was actually freed later:
+		final ReferenceQueue<AbstractTripleSort> refQueue = new ReferenceQueue<AbstractTripleSort>();
+		final WeakReference<AbstractTripleSort> weakRef = new WeakReference<AbstractTripleSort>(tripleSort, refQueue);
+
+		tripleSort.closeStream();
+		tripleSort = null;
+
+		System.gc();
+
+		assertTrue(weakRef.isEnqueued());
 	}
 
 }

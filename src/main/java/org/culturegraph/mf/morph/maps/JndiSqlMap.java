@@ -43,18 +43,6 @@ public final class JndiSqlMap extends AbstractReadOnlyMap<String, String>
 	private static final Logger LOG = LoggerFactory.getLogger(JndiSqlMap.class);
 	private DataSource datasource;
 	private String query;
-	private Connection connection;
-
-	@Override
-	public void close() throws IOException {
-		try {
-			if (connection != null) {
-				connection.close();
-			}
-		} catch (final SQLException e) {
-			throw new MorphException(e);
-		}
-	}
 
 	protected DataSource getDatasource() {
 		return datasource;
@@ -106,6 +94,11 @@ public final class JndiSqlMap extends AbstractReadOnlyMap<String, String>
 			}
 		}
 		return resultString;
+	}
+
+	@Override
+	public void close() throws IOException {
+		// Nothing to do
 	}
 
 }

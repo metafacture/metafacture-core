@@ -21,7 +21,7 @@ If you want use Metafacture in your own Java projects all you need to do is to i
     <dependency>
     	<groupId>org.culturegraph</groupId>
     	<artifactId>metafacture-core</artifactId>
-    	<version>2.0.0</version>
+    	<version>3.0.0</version>
     </dependency>
 
 Our integration server automatically publishes successful builds of the master branch as snapshot versions on [Sonatype OSS Repository](https://oss.sonatype.org/index.html#nexus-search;quick~culturegraph).

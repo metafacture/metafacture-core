@@ -13,27 +13,39 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.util.xml;
+package org.culturegraph.mf.iso2709;
 
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 
 /**
- * Filters out {@code comment} SAX events.
- *
  * @author Christoph Böhme
  *
  */
-public final class CommentsFilter extends LexicalHandlerXmlFilter {
+final class Util {
 
-	public CommentsFilter(final XMLReader parent) {
-		super(parent);
+	private static final int RADIX = 10;
+
+	private Util() {
+		// No instances allowed
 	}
 
-	@Override
-	public void comment(final char[] ch, final int start, final int length) throws SAXException {
-		// Do not forward comment events
+	public static char toDigit(final int value) {
+		assert 0 <= value && value < RADIX;
+		return Character.forDigit(value, RADIX);
+	}
+
+	public static String padWithZeros(final int value, final int length) {
+		assert length >= 0;
+
+		final String format = "%0" + length + "d";
+		return String.format(format, value);
+	}
+
+	public static int calculateMaxValue(final int digits) {
+		int maxValue = 1;
+		for (int i = 0; i < digits; ++i) {
+			maxValue *= RADIX;
+		}
+		return maxValue - 1;
 	}
 
 }
-

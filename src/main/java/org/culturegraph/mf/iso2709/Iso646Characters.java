@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ *  Copyright 2014 Christoph Böhme
  *
  *  Licensed under the Apache License, Version 2.0 the "License";
  *  you may not use this file except in compliance with the License.
@@ -13,18 +13,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.stream.reader;
-
-import org.culturegraph.mf.stream.converter.FormetaDecoder;
-import org.culturegraph.mf.stream.converter.FormetaRecordsReader;
+package org.culturegraph.mf.iso2709;
 
 /**
- * @author Markus Geipel
+ * Constant definitions for characters in the ISO646:1991 standard.
+ *
+ * @author Christoph Böhme
+ *
  */
-public class FormetaReader extends ReaderBase<FormetaDecoder> {
+public final class Iso646Characters {
 
-	public FormetaReader() {
-		super(new FormetaRecordsReader(), new FormetaDecoder());
+	public static final char IS4 = '\u001c';
+	public static final char IS3 = '\u001d';
+	public static final char IS2 = '\u001e';
+	public static final char IS1 = '\u001f';
+
+	private Iso646Characters() {
+		// No instances allowed
 	}
 
 }

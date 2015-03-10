@@ -81,7 +81,7 @@
 		<complexType>
 			<choice minOccurs="0" maxOccurs="1">
 				<group ref="tns:literal-rule" />
-				<group ref="tns:entity-rule" />
+				<element ref="tns:entity" />
 			</choice>
 			<attribute ref="xml:base" />
 			<attribute name="name" use="required" type="string">
@@ -115,7 +115,7 @@
 		<complexType>
 			<choice minOccurs="0" maxOccurs="unbounded">
 				<group ref="tns:literal-rule" />
-				<group ref="tns:entity-rule" />
+				<element ref="tns:entity" />
 				<element ref="tns:call-macro" />
 				<element ref="xi:include" />
 			</choice>
@@ -326,9 +326,17 @@
 			<attribute name="delimiter" type="string" use="required" />
 			<attribute name="prefix" type="string" use="optional" />
 			<attribute name="postfix" type="string" use="optional" />
+			<attribute name="reverse" type="boolean" use="optional" default="false">
+				<annotation>
+					<documentation>If true values are not appended at the end
+					of the output string but prepended at its start.</documentation>
+				</annotation>
+			</attribute>
 
 			<attribute name="flushWith" type="string" use="optional"
 				default="record" />
+			<attribute name="sameEntity" type="boolean" use="optional"
+				default="false" />
 			<attribute name="reset" type="boolean" use="optional"
 				default="true" />
 			<attribute name="includeSubEntities" type="boolean" use="optional"
@@ -411,6 +419,7 @@
 				<element ref="tns:entity-name" minOccurs="0" maxOccurs="1" />
 				<group ref="tns:literal-rule" minOccurs="0" maxOccurs="unbounded" />
 				<element ref="tns:entity" />
+				<element ref="tns:call-macro" />
 			</choice>
 			<attribute name="name" type="string" use="optional">
 				<annotation>
@@ -631,12 +640,6 @@
 			<enumeration value="clean" />
 		</restriction>
 	</simpleType>
-
-	<group name="entity-rule">
-		<choice>
-			<element ref="tns:entity" />
-		</choice>
-	</group>
 
 	<group name="literal-rule">
 		<choice>
@@ -918,8 +921,8 @@
 				</annotation>
 				<simpleType>
 					<restriction base="string">
-						<enumeration value="record"></enumeration>
-						<enumeration value="entity"></enumeration>
+						<enumeration value="record" />
+						<enumeration value="entity" />
 					</restriction>
 				</simpleType>
 			</attribute>
@@ -930,9 +933,9 @@
 				</annotation>
 				<simpleType>
 					<restriction base="string">
-						<enumeration value="name"></enumeration>
-						<enumeration value="value"></enumeration>
-						<enumeration value="name-value"></enumeration>
+						<enumeration value="name" />
+						<enumeration value="value" />
+						<enumeration value="name-value" />
 					</restriction>
 				</simpleType>
 			</attribute>
@@ -1004,6 +1007,16 @@
 					</restriction>
 				</simpleType>
 			</attribute>
+            <attribute name="era" use="optional" default="AUTO">
+                <simpleType>
+                    <restriction base="string">
+                        <enumeration value="AUTO" />
+                        <enumeration value="AD" />
+                        <enumeration value="BC" />
+                    </restriction>
+                </simpleType>
+            </attribute>
+            <attribute name="removeLeadingZeros" type="boolean" use="optional" default="false" />
 			<attribute name="language" type="string" use="optional" />
 		</complexType>
 	</element>

@@ -21,8 +21,6 @@ import java.io.StringReader;
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.stream.converter.xml.CGXmlHandler;
-import org.culturegraph.mf.stream.converter.xml.XmlDecoder;
 import org.culturegraph.mf.stream.reader.MultiFormatReader;
 import org.culturegraph.mf.stream.reader.Reader;
 import org.culturegraph.mf.stream.sink.EventList;
@@ -36,7 +34,7 @@ import org.w3c.dom.NodeList;
 
 /**
  * @author Christoph Böhme <c.boehme@dnb.de>
- * 
+ *
  */
 public final class TestCase {
 
@@ -53,20 +51,13 @@ public final class TestCase {
 	private static final String STRICT_KEY_ORDER_ATTR = "strict-key-order";
 	private static final String STRICT_VALUE_ORDER_ATTR = "strict-value-order";
 
-
 	private static final String MIME_METAMORPH = "text/x-metamorph+xml";
 	private static final String MIME_JAVACLASS = "application/java";
 
 	private final Element config;
 
-	private final Reader reader;
-	private final StreamPipe<StreamReceiver> transformation;
-
-	@SuppressWarnings("unchecked")
 	public TestCase(final Element config) {
 		this.config = config;
-		reader = getReader();
-		transformation = getTransformation();
 	}
 
 	public String getName() {
@@ -78,16 +69,19 @@ public final class TestCase {
 	}
 
 	public void run() {
-
+		final Reader inputReader = getReader(INPUT_TAG);
+		@SuppressWarnings("unchecked")
+		final StreamPipe<StreamReceiver>transformation = getTransformation();
 		final EventList resultStream = new EventList();
+
 		if (transformation == null) {
-			reader.setReceiver(resultStream);
+			inputReader.setReceiver(resultStream);
 		} else {
-			reader.setReceiver(transformation).setReceiver(resultStream);
+			inputReader.setReceiver(transformation).setReceiver(resultStream);
 		}
 
-		reader.process(getInputData());
-		reader.closeStream();
+		inputReader.process(getInputData());
+		inputReader.closeStream();
 
 		final StreamValidator validator = new StreamValidator(resultStream.getEvents());
 
@@ -96,16 +90,16 @@ public final class TestCase {
 		validator.setStrictKeyOrder(Boolean.parseBoolean(result.getAttribute(STRICT_KEY_ORDER_ATTR)));
 		validator.setStrictValueOrder(Boolean.parseBoolean(result.getAttribute(STRICT_VALUE_ORDER_ATTR)));
 
-		final XmlDecoder decoder = new XmlDecoder();
-		decoder.setReceiver(new CGXmlHandler()).setReceiver(validator);
+		final Reader resultReader = getReader(RESULT_TAG);
+		resultReader.setReceiver(validator);
 
-		decoder.process(getExpectedResult());
+		resultReader.process(getExpectedResult());
 		validator.closeStream();
 	}
 
-	private Reader getReader() {
-		final Element input = (Element) config.getElementsByTagName(INPUT_TAG).item(0);
-		final String mimeType = input.getAttribute(TYPE_ATTR);
+	private Reader getReader(final String tag) {
+		final Element element = (Element) config.getElementsByTagName(tag).item(0);
+		final String mimeType = element.getAttribute(TYPE_ATTR);
 		return new MultiFormatReader(mimeType);
 	}
 
@@ -160,7 +154,7 @@ public final class TestCase {
 	private java.io.Reader getDataFromSource(final String src) {
 		try {
 			return ResourceUtil.getReader(src);
-		} catch (FileNotFoundException e) {
+		} catch (final FileNotFoundException e) {
 			throw new TestConfigurationException("Could not find input file: " + src, e);
 		}
 	}

@@ -19,9 +19,9 @@ import java.nio.CharBuffer;
 import java.util.Map;
 
 /**
- * Basic utils
+ * Some handy string utility methods
  *
- * @author Markus Michael Geipel
+ * @author Markus Michael Geipel, Christoph Böhme
  *
  */
 public final class StringUtil {
@@ -30,7 +30,7 @@ public final class StringUtil {
 	private static final String DEFAULT_VAREND = "}";
 
 	private StringUtil() {
-		// no instances
+		// no instances allowed
 	}
 
 	public static <O> O fallback(final O value, final O fallbackValue) {
@@ -100,17 +100,46 @@ public final class StringUtil {
 	/**
 	 * Copies the contents of {@code str} into the {@code currentBuffer}. If the size of
 	 * the buffer is not sufficient to store the string then a new buffer is allocated.
+	 * {@code copyToBuffer} is intended to be used as shown in the example:
+	 * <pre>
+	 *   final int INITIAL_SIZE = 10;
+	 *   char[] myBuffer = new char[INITIAL_SIZE];
 	 *
-	 * @param str string to copy
+	 *   List<String> strings = getAListOfStringsFromSomewhere();
+	 *   for (String str : strings) {
+	 *     myBuffer = StringUtil.copyToBuffer(str, myBuffer);
+	 *     dataLen = str.length();
+	 *     // Process data in myBuffer in the range from 0 to dataLen
+	 *   }
+	 *   myBuffer = null;
+	 * </pre>
+	 *
+	 * This allows the buffer to be reused but at the same time frees the user from
+	 * having to manage the size of the buffer.
+	 *
+	 * @param str string to copy. Must not be null.
 	 * @param currentBuffer array to store the string in. If it is too small a new buffer
-	 *                      is allocated
-	 * @return either currentBuffer or a new buffer if one was allocated.
+	 *                      is allocated.  currentBuffer must not be null.
+	 *                      The length of the current buffer must not be 0.
+	 * @return either currentBuffer or a new buffer if one was allocated. The returned
+	 *                      buffer may be larger than the string. Users should call
+	 *                      {@code str.length()} to retrieve the actual length of the
+	 *                      data in the returned buffer.
 	 */
 	public static char[] copyToBuffer(final String str, final char[] currentBuffer) {
-		char[] buffer = currentBuffer;
+		assert str != null;
+		assert currentBuffer != null;
+		assert currentBuffer.length > 0;
+
 		final int strLen = str.length();
-		while(strLen > buffer.length) {
-			buffer = new char[buffer.length * 2];
+		char[] buffer = currentBuffer;
+		int bufferLen = buffer.length;
+
+		while(strLen > bufferLen) {
+			bufferLen *= 2;
+		}
+		if (bufferLen > buffer.length) {
+			buffer = new char[bufferLen];
 		}
 		str.getChars(0, strLen, buffer, 0);
 		return buffer;

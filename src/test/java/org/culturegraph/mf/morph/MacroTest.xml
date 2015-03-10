@@ -47,6 +47,193 @@
 		</result>
 	</test-case>
 
+	<test-case  name="macro in entity">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data" value="Aloha" />
+						<cgxml:literal name="data2" value="Hawaii" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
 
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1" entityMarker=".">
+				<mm:macros>
+					<mm:macro name="toUpper">
+						<mm:data source="$[literal]" >
+							<mm:case to="upper"/>
+						</mm:data>
+					</mm:macro>
+				</mm:macros>
+				<mm:rules>
+					<mm:entity name="entity">
+						<mm:call-macro name="toUpper" literal="data" />
+						<mm:call-macro name="toUpper" literal="data2" />
+					</mm:entity>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
 
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="entity">
+							<cgxml:literal name="data" value="ALOHA" />
+							<cgxml:literal name="data2" value="HAWAII"/>
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case  name="nested macros">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data" value="Aloha" />
+						<cgxml:literal name="data2" value="Hawaii" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1" entityMarker=".">
+				<mm:macros>
+					<mm:macro name="toUpper">
+						<mm:data source="$[literal]" >
+							<mm:case to="upper"/>
+						</mm:data>
+					</mm:macro>
+
+					<mm:macro name="macroEntity">
+						<mm:entity name="$[entity]">
+							<mm:call-macro name="toUpper" literal="data" />
+							<mm:call-macro name="toUpper" literal="data2" />
+						</mm:entity>
+					</mm:macro>
+				</mm:macros>
+				<mm:rules>
+					<mm:call-macro name="macroEntity" entity="macroEntity" />
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="macroEntity">
+							<cgxml:literal name="data" value="ALOHA" />
+							<cgxml:literal name="data2" value="HAWAII"/>
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case  name="nested macros with forward reference">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data" value="Aloha" />
+						<cgxml:literal name="data2" value="Hawaii" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1" entityMarker=".">
+				<mm:macros>
+					<mm:macro name="macroEntity">
+						<mm:entity name="$[entity]">
+							<mm:call-macro name="toUpper" literal="data" />
+							<mm:call-macro name="toUpper" literal="data2" />
+						</mm:entity>
+					</mm:macro>
+
+					<mm:macro name="toUpper">
+						<mm:data source="$[literal]" >
+							<mm:case to="upper"/>
+						</mm:data>
+					</mm:macro>
+				</mm:macros>
+				<mm:rules>
+					<mm:call-macro name="macroEntity" entity="macroEntity" />
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="macroEntity">
+							<cgxml:literal name="data" value="ALOHA" />
+							<cgxml:literal name="data2" value="HAWAII"/>
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case  name="nested macros with variables being passed through">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="country" value="Hawaii" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1" entityMarker=".">
+				<mm:macros>
+					<mm:macro name="prepend">
+						<mm:data source="country">
+							<mm:compose prefix="$[with]" />
+						</mm:data>
+					</mm:macro>
+
+					<mm:macro name="wrapInEntity">
+						<mm:entity name="entity">
+							<mm:call-macro name="prepend" with="$[prefix]" />
+						</mm:entity>
+					</mm:macro>
+				</mm:macros>
+				<mm:rules>
+					<mm:call-macro name="wrapInEntity" prefix="1: " />
+					<mm:call-macro name="wrapInEntity" prefix="2: " />
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="entity">
+							<cgxml:literal name="country" value="1: Hawaii"/>
+						</cgxml:entity>
+						<cgxml:entity name="entity">
+							<cgxml:literal name="country" value="2: Hawaii"/>
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+	
 </metamorph-test>
