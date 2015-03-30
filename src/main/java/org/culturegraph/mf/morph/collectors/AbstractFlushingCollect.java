@@ -32,8 +32,10 @@ public abstract class AbstractFlushingCollect extends AbstractCollect {
 
 	@Override
 	public final void flush(final int recordCount, final int entityCount) {
-		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount) && isConditionMet()) {
-			emit();
+		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount)) {
+			if(isConditionMet()) {
+				emit();
+			}
 			if (getReset()) {
 				resetCondition();
 				clear();
