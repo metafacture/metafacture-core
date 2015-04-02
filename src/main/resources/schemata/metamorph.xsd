@@ -323,7 +323,7 @@
 				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
 			</sequence>
 			<attribute name="name" type="string" use="required" />
-			<attribute name="delimiter" type="string" use="required" />
+			<attribute name="delimiter" type="string" use="optional" />
 			<attribute name="prefix" type="string" use="optional" />
 			<attribute name="postfix" type="string" use="optional" />
 
@@ -807,7 +807,7 @@
 		</annotation>
 		<complexType>
 			<attribute name="pattern" type="string" use="required" />
-			<attribute name="with" type="string" use="required">
+			<attribute name="with" type="string" use="optional">
 				<annotation>
 					<documentation>The replacement</documentation>
 				</annotation>
