@@ -105,7 +105,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 	public Metamorph(final String morphDef, final Map<String, String> vars,
 			final InterceptorFactory interceptorFactory) {
 
-		this(getInputSource(morphDef), NO_VARS, interceptorFactory);
+		this(getInputSource(morphDef), vars, interceptorFactory);
 	}
 
 	public Metamorph(final Reader morphDef) {
