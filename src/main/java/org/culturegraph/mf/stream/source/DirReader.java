@@ -16,6 +16,8 @@
 package org.culturegraph.mf.stream.source;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Arrays;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -27,6 +29,7 @@ import org.culturegraph.mf.framework.annotations.Out;
  * Reads a directory and emits all filenames found.
  * 
  * @author Markus Michael Geipel
+ * @author Fabian Steeg (fsteeg)
  */
 @In(String.class)
 @Out(String.class)
@@ -35,8 +38,14 @@ public final class DirReader extends DefaultObjectPipe<String, ObjectReceiver<St
 
 	private boolean recursive;
 
+	private String filenameFilterPattern = null;
+
 	public void setRecursive(final boolean recursive) {
 		this.recursive = recursive;
+	}
+
+	public void setFilenamePattern(final String filenameFilterPattern) {
+		this.filenameFilterPattern = filenameFilterPattern;
 	}
 
 	@Override
@@ -51,7 +60,14 @@ public final class DirReader extends DefaultObjectPipe<String, ObjectReceiver<St
 
 	private void dir(final File dir) {
 		final ObjectReceiver<String> receiver = getReceiver();
-		final File[] files = dir.listFiles();
+		final File[] files = filenameFilterPattern == null ? dir.listFiles()
+				: dir.listFiles(new FilenameFilter() {
+					@Override
+					public boolean accept(final File dir, final String name) {
+						return name.matches(filenameFilterPattern);
+					}
+				});
+		Arrays.sort(files);
 		for (File file : files) {
 			if (file.isDirectory()) {
 				if (recursive) {
