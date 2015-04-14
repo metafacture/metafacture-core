@@ -15,7 +15,6 @@
  */
 package org.culturegraph.mf.test;
 
-import org.culturegraph.mf.test.TestSuite;
 import org.junit.runner.RunWith;
 
 
@@ -25,8 +24,7 @@ import org.junit.runner.RunWith;
  */
 
 @RunWith(TestSuite.class)
-//@TestDefinitions("test/metamorph-test-1.xml")
-public final class FrameworkTest { 
+public final class FrameworkTest {
 	// This class serves only as a bonding
 	// point for metamorph tests
 }

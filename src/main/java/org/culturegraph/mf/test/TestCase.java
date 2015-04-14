@@ -131,7 +131,6 @@ public final class TestCase {
 			return ObjectFactory.newInstance(clazz);
 		}
 		throw new TestConfigurationException("transformation of type " + type + " is not supperted");
-
 	}
 
 	private java.io.Reader getInputData() {
