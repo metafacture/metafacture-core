@@ -85,5 +85,22 @@
 			{ l: v }
 		</result>
 	</test-case>
+	
+	<test-case name="Issue 219: Should resolve XIncludes in embedded Metamorph transformations">
+		<input type="text/x-formeta">
+			{ l: v }
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph xmlns="http://www.culturegraph.org/metamorph" version="1">
+				<include xmlns="http://www.w3.org/2001/XInclude" 
+					href="issue219-should-resolve-xincludes-in-embedded-metamorph-transformations.xml" />
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-formeta">
+			{ l: v }
+		</result>
+	</test-case>
 
 </metamorph-test>

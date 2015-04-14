@@ -193,42 +193,6 @@
 		</result>
 	</test-case>
 
-	<test-case name="xinclude">
-		<input type="text/x-cg+xml">
-			<cgxml:cgxml version="1.0">
-				<cgxml:records>
-					<cgxml:record id="1">
-						<cgxml:literal name="data" value="Aloha" />
-					</cgxml:record>
-				</cgxml:records>
-			</cgxml:cgxml>
-		</input>
-
-		<transformation type="text/x-metamorph+xml">
-			<metamorph version="1" xmlns="http://www.culturegraph.org/metamorph">
-				<rules>
-					<data source="data">
-						<lookup in="map" />
-					</data>
-				</rules>
-				<maps>
-					<include href="src/test/resources/include.xml" parse="xml"
-						xmlns="http://www.w3.org/2001/XInclude" />
-				</maps>
-			</metamorph>
-		</transformation>
-
-		<result type="text/x-cg+xml">
-			<cgxml:cgxml version="1.0">
-				<cgxml:records>
-					<cgxml:record id="1">
-						<cgxml:literal name="data" value="Hawaii" />
-					</cgxml:record>
-				</cgxml:records>
-			</cgxml:cgxml>
-		</result>
-	</test-case>
-
 	<test-case name="vars">
 		<input type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">

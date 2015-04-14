@@ -86,7 +86,28 @@ public final class TestCaseTest {
 		// an exception.
 	}
 
+	@Test
+	public void issue219ShouldResolveXIncludesInMetamorphResources() {
+		final Element inputElement = createFormetaRecord(INPUT_TAG);
+		final Element resultElement = createFormetaRecord(RESULT_TAG);
 
+		final Element transformationElement =
+				document.createElement(TRANSFORMATION_TAG);
+		transformationElement.setAttribute("type", "text/x-metamorph+xml");
+		transformationElement.setAttribute("src",
+				"test-case-test/issue219-should-resolve-xincludes-in-metamorph-resources1.xml");
+
+		final Element testCaseElement = document.createElement(TEST_CASE_TAG);
+		testCaseElement.appendChild(inputElement);
+		testCaseElement.appendChild(transformationElement);
+		testCaseElement.appendChild(resultElement);
+
+		final TestCase testCase = new TestCase(testCaseElement);
+		testCase.run();
+
+		// The test was successful if run does not throw
+		// an exception.
+	}
 
 	private Element createFormetaRecord(final String elementName) {
 		final Element element = document.createElement(elementName);
