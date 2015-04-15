@@ -701,7 +701,7 @@
 				<simpleType>
 					<restriction base="string">
 						<whiteSpace value="collapse" />
-						<pattern value="(lessThen |moreThen )?\d+" />
+						<pattern value="(lessThen |moreThen |lessThan |moreThan )?\d+" />
 					</restriction>
 				</simpleType>
 			</attribute>
