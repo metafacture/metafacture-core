@@ -71,6 +71,7 @@
 				<element ref="tns:macro" />
 				<element ref="xi:include" />
 			</choice>
+			<attribute ref="xml:base" />
 		</complexType>
 	</element>
 

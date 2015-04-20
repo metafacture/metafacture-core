@@ -236,4 +236,21 @@
 		</result>
 	</test-case>
 	
+	<test-case name="Issue 227: Should support xinclude for macros">
+		<input type="text/x-formeta">
+			1 { lit: in }
+		</input>
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<include xmlns="http://www.w3.org/2001/XInclude" href="issue227-should-support-xinclude-for-macros.xml" />
+				<mm:rules>
+					<mm:call-macro name="test-macro" />
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+		<result type="text/x-formeta">
+			1 { lit: out }
+		</result>
+	</test-case>
+
 </metamorph-test>
