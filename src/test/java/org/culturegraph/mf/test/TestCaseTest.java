@@ -87,6 +87,22 @@ public final class TestCaseTest {
 	}
 
 	@Test
+	public void issue229ShouldSupportMarcXmlAsInputAndResultFormat() {
+		final Element inputElement = createMarcXmlRecord(INPUT_TAG);
+		final Element resultElement = createMarcXmlRecord(RESULT_TAG);
+
+		final Element testCaseElement = document.createElement(TEST_CASE_TAG);
+		testCaseElement.appendChild(inputElement);
+		testCaseElement.appendChild(resultElement);
+
+		final TestCase testCase = new TestCase(testCaseElement);
+		testCase.run();
+
+		// The test was successful if run does not throw
+		// an exception.
+	}
+
+	@Test
 	public void issue219ShouldResolveXIncludesInMetamorphResources() {
 		final Element inputElement = createFormetaRecord(INPUT_TAG);
 		final Element resultElement = createFormetaRecord(RESULT_TAG);
@@ -122,6 +138,21 @@ public final class TestCaseTest {
 		final Element element = document.createElement(elementName);
 		element.setAttribute("type", "text/x-cg+xml");
 		element.appendChild(recordElement);
+		return element;
+	}
+
+	private Element createMarcXmlRecord(final String elementName) {
+		final Element fieldElement = document.createElement("controlfield");
+		fieldElement.setAttribute("tag", "001");
+		fieldElement.setTextContent("123");
+		final Element recordElement = document.createElement("record");
+		recordElement.appendChild(fieldElement);
+		final Element collectionElement = document.createElementNS(
+				"http://www.loc.gov/MARC21/slim", "collection");
+		collectionElement.appendChild(recordElement);
+		final Element element = document.createElement(elementName);
+		element.setAttribute("type", "application/marcxml+xml");
+		element.appendChild(collectionElement);
 		return element;
 	}
 
