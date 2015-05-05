@@ -27,22 +27,17 @@ import org.culturegraph.mf.morph.NamedValueSource;
 import org.culturegraph.mf.stream.pipe.StreamBuffer;
 import org.culturegraph.mf.util.StringUtil;
 
-
-
 /**
  * Corresponds to the <code>&lt;entity&gt;</code> tag.
- * 
+ *
  * @author Markus Michael Geipel
  */
 public final class Entity extends AbstractFlushingCollect {
-	// private static final Logger LOG = LoggerFactory.getLogger(Entity.class);
-
-	// public static final String ENTITY_NAME = "_entity_name";
 
 	private final List<NamedValueSource> sourceList = new ArrayList<NamedValueSource>();
 	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
 	private final StreamBuffer buffer = new StreamBuffer();
-	
+
 	private NamedValueSource nameSource;
 	private String currentName;
 
@@ -50,8 +45,10 @@ public final class Entity extends AbstractFlushingCollect {
 		super(metamorph);
 	}
 
-	public void setNameSource(final NamedValueSource nameSource) {
-		this.nameSource = nameSource;
+	public void setNameSource(final NamedValueSource source) {
+		nameSource = source;
+		nameSource.setNamedValueReceiver(this);
+		onNamedValueSourceAdded(nameSource);
 	}
 
 	@Override
@@ -67,25 +64,26 @@ public final class Entity extends AbstractFlushingCollect {
 
 	private void write(final StreamReceiver receiver) {
 		if (!buffer.isEmpty()) {
-			
+
 			receiver.startEntity(StringUtil.fallback(currentName, getName()));
 			buffer.setReceiver(receiver);
 			buffer.replay();
 			receiver.endEntity();
-			
+
 			buffer.clear();
 		}
-		
+
 	}
 
 	@Override
-	protected void receive(final String name, final String value, final NamedValueSource source) {
+	protected void receive(final String name, final String value,
+			final NamedValueSource source) {
 		if (source == nameSource) {
 			currentName = value;
 		} else if (source instanceof Entity) {
 			final Entity child = (Entity) source;
 			child.write(buffer);
-		}else{
+		} else {
 			buffer.literal(name, value);
 		}
 		sourcesLeft.remove(source);
@@ -108,5 +106,5 @@ public final class Entity extends AbstractFlushingCollect {
 		sourceList.add(namedValueSource);
 		sourcesLeft.add(namedValueSource);
 	}
-	
+
 }

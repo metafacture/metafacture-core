@@ -29,6 +29,7 @@ import org.culturegraph.mf.morph.NamedValueSource;
  * @author Christoph Böhme
  */
 public final class Range extends AbstractFlushingCollect {
+
 	private final SortedSet<Integer> values = new TreeSet<Integer>(new IncrementDependingComparator());
 
 	private int increment;
@@ -49,7 +50,6 @@ public final class Range extends AbstractFlushingCollect {
 
 	public Range(final Metamorph metamorph) {
 		super(metamorph);
-		setNamedValueReceiver(metamorph);
 	}
 
 	public int getIncrement() {

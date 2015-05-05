@@ -20,21 +20,24 @@ import org.culturegraph.mf.morph.NamedValueSource;
 
 /**
  * Corresponds to the <code>&lt;collect-literal&gt;</code> tag.
- * 
+ *
  * @author Markus Michael Geipel
  */
-public final class Concat extends AbstractFlushingCollect{
+public final class Concat extends AbstractFlushingCollect {
+
 	private final StringBuilder builder = new StringBuilder();
+
 	private String prefix = "";
 	private String postfix = "";
 	private String delimiter = "";
-	
+	private boolean reverse = false;
+
+	private String currentDelimiter = "";
+
 	public Concat(final Metamorph metamorph) {
 		super(metamorph);
-		setNamedValueReceiver(metamorph);
 	}
-	
-	
+
 	public void setPrefix(final String prefix) {
 		this.prefix = prefix;
 	}
@@ -47,15 +50,18 @@ public final class Concat extends AbstractFlushingCollect{
 		this.delimiter = delimiter;
 	}
 
-	@Override
-	protected void emit() {
-		if(builder.length()!=0){
-			final String concat = builder.substring(0, builder.length()-delimiter.length());
-			getNamedValueReceiver().receive(getName(), prefix + concat + postfix, this, getRecordCount(), getEntityCount());
-		}
+	public void setReverse(final boolean reverse) {
+		this.reverse = reverse;
 	}
 
-
+	@Override
+	protected void emit() {
+		if (builder.length() != 0) {
+			final String value = prefix + builder.toString() + postfix;
+			getNamedValueReceiver().receive(getName(), value, this,
+					getRecordCount(), getEntityCount());
+		}
+	}
 
 	@Override
 	protected boolean isComplete() {
@@ -63,15 +69,23 @@ public final class Concat extends AbstractFlushingCollect{
 	}
 
 	@Override
-	protected void receive(final String name, final String value, final NamedValueSource source) {
-		builder.append(value);
-		builder.append(delimiter);
-	}
+	protected void receive(final String name, final String value,
+			final NamedValueSource source) {
 
+		if (reverse) {
+			builder.insert(0, currentDelimiter);
+			builder.insert(0, value);
+		} else {
+			builder.append(currentDelimiter);
+			builder.append(value);
+		}
+		currentDelimiter = delimiter;
+	}
 
 	@Override
 	protected void clear() {
 		builder.delete(0, builder.length());
+		currentDelimiter = "";
 	}
 
 }

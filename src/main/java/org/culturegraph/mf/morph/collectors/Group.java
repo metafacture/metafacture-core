@@ -15,40 +15,44 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
 import org.culturegraph.mf.util.StringUtil;
 
 /**
  * Implementation of the <code>&lt;group&gt;</code> tag.
- * 
+ *
  * @author Markus Michael Geipel
  */
-public final class Group extends AbstractFlushingCollect{
-
+public final class Group extends AbstractFlushingCollect {
 
 	public Group(final Metamorph metamorph) {
 		super(metamorph);
 	}
-	
+
 	@Override
-	protected void receive(final String recName, final String recValue, final NamedValueSource source) {
-		getNamedValueReceiver().receive(StringUtil.fallback(getName(), recName), StringUtil.fallback(getValue(), recValue), this, getRecordCount(), getEntityCount());
+	protected void receive(final String recName, final String recValue,
+			final NamedValueSource source) {
+		getNamedValueReceiver().receive(
+				StringUtil.fallback(getName(), recName),
+				StringUtil.fallback(getValue(), recValue), this,
+				getRecordCount(), getEntityCount());
 	}
 
 	@Override
 	protected boolean isComplete() {
-		return false; //nothing
+		// Nothing to do
+		return false;
 	}
 
 	@Override
 	protected void clear() {
-		//nothing
+		// Nothing to do
 	}
 
 	@Override
 	protected void emit() {
-		//nothing
+		// Nothing to do
 	}
+
 }

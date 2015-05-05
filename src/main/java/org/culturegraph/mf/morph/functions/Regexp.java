@@ -24,34 +24,36 @@ import org.culturegraph.mf.morph.NamedValueSource;
 import org.culturegraph.mf.util.StringUtil;
 
 /**
- * Performs regexp matching
- * 
+ * Performs regexp matching.
+ *
  * @author Markus Michael Geipel
  */
 public final class Regexp extends AbstractFunction {
 
-	// private static final String TRUE = "true";
 	private Matcher matcher;
 	private String format;
 	private final Map<String, String> tempVars = new HashMap<String, String>();
 
 	@Override
-	public void receive(final String name, final String value, final NamedValueSource source, final int recordCount,
+	public void receive(final String name, final String value,
+			final NamedValueSource source, final int recordCount,
 			final int entityCount) {
 		matcher.reset(value);
 		if (null == format) {
 			while (matcher.find()) {
 				final String group = matcher.group();
 				if (!group.isEmpty()) {
-					getNamedValueReceiver().receive(name, group, source, recordCount, entityCount);
+					getNamedValueReceiver().receive(name, group, this,
+							recordCount, entityCount);
 				}
 			}
 		} else {
 			while (matcher.find()) {
 				populateVars();
 				if (!tempVars.isEmpty()) {
-					getNamedValueReceiver().receive(name, StringUtil.format(format, tempVars), source, recordCount,
-							entityCount);
+					getNamedValueReceiver().receive(name,
+							StringUtil.format(format, tempVars), this,
+							recordCount, entityCount);
 				}
 			}
 		}
@@ -67,18 +69,10 @@ public final class Regexp extends AbstractFunction {
 		}
 	}
 
-	/**
-	 * @param match
-	 *            the match to set
-	 */
 	public void setMatch(final String match) {
 		this.matcher = Pattern.compile(match).matcher("");
 	}
 
-	/**
-	 * @param format
-	 *            the output to set
-	 */
 	public void setFormat(final String format) {
 		this.format = format;
 	}

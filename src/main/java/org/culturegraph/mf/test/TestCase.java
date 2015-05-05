@@ -21,22 +21,21 @@ import java.io.StringReader;
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.stream.converter.xml.CGXmlHandler;
-import org.culturegraph.mf.stream.converter.xml.XmlDecoder;
 import org.culturegraph.mf.stream.reader.MultiFormatReader;
 import org.culturegraph.mf.stream.reader.Reader;
 import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.culturegraph.mf.util.ResourceUtil;
-import org.culturegraph.mf.util.XMLUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
+import org.culturegraph.mf.util.xml.XmlUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 
 /**
  * @author Christoph Böhme <c.boehme@dnb.de>
- * 
+ *
  */
 public final class TestCase {
 
@@ -53,20 +52,13 @@ public final class TestCase {
 	private static final String STRICT_KEY_ORDER_ATTR = "strict-key-order";
 	private static final String STRICT_VALUE_ORDER_ATTR = "strict-value-order";
 
-
 	private static final String MIME_METAMORPH = "text/x-metamorph+xml";
 	private static final String MIME_JAVACLASS = "application/java";
 
 	private final Element config;
 
-	private final Reader reader;
-	private final StreamPipe<StreamReceiver> transformation;
-
-	@SuppressWarnings("unchecked")
 	public TestCase(final Element config) {
 		this.config = config;
-		reader = getReader();
-		transformation = getTransformation();
 	}
 
 	public String getName() {
@@ -78,16 +70,19 @@ public final class TestCase {
 	}
 
 	public void run() {
-
+		final Reader inputReader = getReader(INPUT_TAG);
+		@SuppressWarnings("unchecked")
+		final StreamPipe<StreamReceiver>transformation = getTransformation();
 		final EventList resultStream = new EventList();
+
 		if (transformation == null) {
-			reader.setReceiver(resultStream);
+			inputReader.setReceiver(resultStream);
 		} else {
-			reader.setReceiver(transformation).setReceiver(resultStream);
+			inputReader.setReceiver(transformation).setReceiver(resultStream);
 		}
 
-		reader.process(getInputData());
-		reader.closeStream();
+		inputReader.process(getInputData());
+		inputReader.closeStream();
 
 		final StreamValidator validator = new StreamValidator(resultStream.getEvents());
 
@@ -96,16 +91,16 @@ public final class TestCase {
 		validator.setStrictKeyOrder(Boolean.parseBoolean(result.getAttribute(STRICT_KEY_ORDER_ATTR)));
 		validator.setStrictValueOrder(Boolean.parseBoolean(result.getAttribute(STRICT_VALUE_ORDER_ATTR)));
 
-		final XmlDecoder decoder = new XmlDecoder();
-		decoder.setReceiver(new CGXmlHandler()).setReceiver(validator);
+		final Reader resultReader = getReader(RESULT_TAG);
+		resultReader.setReceiver(validator);
 
-		decoder.process(getExpectedResult());
+		resultReader.process(getExpectedResult());
 		validator.closeStream();
 	}
 
-	private Reader getReader() {
-		final Element input = (Element) config.getElementsByTagName(INPUT_TAG).item(0);
-		final String mimeType = input.getAttribute(TYPE_ATTR);
+	private Reader getReader(final String tag) {
+		final Element element = (Element) config.getElementsByTagName(tag).item(0);
+		final String mimeType = element.getAttribute(TYPE_ATTR);
 		return new MultiFormatReader(mimeType);
 	}
 
@@ -116,18 +111,18 @@ public final class TestCase {
 			return null;
 		}
 		final Element transformationElement = (Element) nodes.item(0);
-		final java.io.Reader ioReader;
 
 		final String type = transformationElement.getAttribute(TYPE_ATTR);
 		final String src = transformationElement.getAttribute(SRC_ATTR);
 
 		if (MIME_METAMORPH.equals(type)) {
 			if (src.isEmpty()) {
-				ioReader = getDataEmbedded(transformationElement);
-			} else {
-				ioReader = getDataFromSource(src);
+				final InputSource transformationSource =
+						new InputSource(getDataEmbedded(transformationElement));
+				transformationSource.setSystemId(transformationElement.getBaseURI());
+				return new Metamorph(transformationSource);
 			}
-			return new Metamorph(ioReader);
+			return new Metamorph(src);
 
 		} else if (MIME_JAVACLASS.equals(type)) {
 			if (src.isEmpty()) {
@@ -137,7 +132,6 @@ public final class TestCase {
 			return ObjectFactory.newInstance(clazz);
 		}
 		throw new TestConfigurationException("transformation of type " + type + " is not supperted");
-
 	}
 
 	private java.io.Reader getInputData() {
@@ -160,7 +154,7 @@ public final class TestCase {
 	private java.io.Reader getDataFromSource(final String src) {
 		try {
 			return ResourceUtil.getReader(src);
-		} catch (FileNotFoundException e) {
+		} catch (final FileNotFoundException e) {
 			throw new TestConfigurationException("Could not find input file: " + src, e);
 		}
 	}
@@ -168,8 +162,8 @@ public final class TestCase {
 	private java.io.Reader getDataEmbedded(final Element input) {
 		final String inputType = input.getAttribute(TYPE_ATTR);
 		if (input.hasChildNodes()) {
-			if (XMLUtil.isXmlMimeType(inputType)) {
-				return new StringReader(XMLUtil.nodeListToString(input.getChildNodes()));
+			if (XmlUtil.isXmlMimeType(inputType)) {
+				return new StringReader(XmlUtil.nodeListToString(input.getChildNodes()));
 			}
 			return new StringReader(input.getTextContent());
 		}

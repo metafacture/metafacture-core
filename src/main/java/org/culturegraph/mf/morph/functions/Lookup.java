@@ -15,26 +15,25 @@
  */
 package org.culturegraph.mf.morph.functions;
 
-
-
 /**
+ * Uses the received value as a key for looking up
+ * the output value in a map.
+ *
  * @author Markus Michael Geipel
  */
 public final class Lookup extends AbstractLookup {
 
-
 	private String defaultValue;
-	
 
 	public void setDefault(final String defaultValue) {
 		this.defaultValue = defaultValue;
-	}	
+	}
 
 	@Override
 	public String process(final String key) {
 		final String returnValue = lookup(key);
-		 
-		if(returnValue==null){
+
+		if (returnValue == null) {
 			return defaultValue;
 		}
 		return returnValue;
@@ -43,4 +42,5 @@ public final class Lookup extends AbstractLookup {
 	public void setIn(final String mapName) {
 		setMap(mapName);
 	}
+
 }

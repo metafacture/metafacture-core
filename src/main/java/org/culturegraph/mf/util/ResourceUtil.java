@@ -34,7 +34,7 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 
 /**
  * @author Christoph Böhme <c.boehme@dnb.de>, Markus Michael Geipel
- * 
+ *
  */
 public final class ResourceUtil {
 
@@ -43,10 +43,10 @@ public final class ResourceUtil {
 	}
 
 	/**
-	 * first attempts to open open 'name' as a file. <br/>
+	 * First attempts to open open 'name' as a file. <br/>
 	 * On fail attempts to open resource with name 'name'. <br/>
 	 * On fail attempts to open 'name' as a URL.
-	 * 
+	 *
 	 * @param name
 	 * @return
 	 * @throws FileNotFoundException
@@ -68,9 +68,9 @@ public final class ResourceUtil {
 
 		try {
 			stream = new URL(name).openStream();
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			throwFileNotFoundException(name, e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throwFileNotFoundException(name, e);
 		}
 		if (stream == null) {
@@ -113,10 +113,40 @@ public final class ResourceUtil {
 		return new InputStreamReader(getStream(file), encoding);
 	}
 
+	/**
+	 * Attempts to return a URL for a file or resource. First, it is
+	 * checked whether {@code name} refers to an existing local file.
+	 * If not, the context class loader of the current thread is asked
+	 * if {@code name} refers to a resource. Finally, the method
+	 * attempts to interpret {@code name} as a URL.
+	 *
+	 * @param name reference to a file or resource maybe a URL
+	 * @return a URL referring to a file or resource
+	 * @throws MalformedURLException
+	 */
+	public static URL getUrl(final String name) throws MalformedURLException {
+		final File file = new File(name);
+		if (file.exists()) {
+			return getUrl(file);
+		}
+
+		final URL resourceUrl =
+				Thread.currentThread().getContextClassLoader().getResource(name);
+		if (resourceUrl != null) {
+			return resourceUrl;
+		}
+
+		return new URL(name);
+	}
+
+	public static URL getUrl(final File file) throws MalformedURLException {
+		return file.toURI().toURL();
+	}
+
 	public static Properties loadProperties(final String location) {
 		try {
 			return loadProperties(getStream(location));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new MetafactureException("'" + location + "' could not be loaded", e);
 		}
 	}
@@ -131,7 +161,7 @@ public final class ResourceUtil {
 	public static Properties loadProperties(final URL url) {
 		try {
 			return loadProperties(url.openStream());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new MetafactureException("'" + url.getPath() + "' could not be loaded", e);
 		}
 	}

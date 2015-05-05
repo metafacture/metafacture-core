@@ -18,42 +18,47 @@ package org.culturegraph.mf.morph.functions;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.util.StringUtil;
 
-
 /**
+ * Only outputs the received values in a certain range.
+ *
  * @author Markus Michael Geipel
+ * @author Christoph Böhme
  *
  */
 public final class Occurrence extends AbstractStatefulFunction {
 
-	private static final String MORE_THEN = "moreThen ";
 	private static final String LESS_THEN = "lessThen ";
+	private static final String LESS_THAN = "lessThan ";
+	private static final String MORE_THEN = "moreThen ";
+	private static final String MORE_THAN = "moreThan ";
+
 	private int count;
+	private String format;
+
 	private IntFilter filter = new IntFilter() {
 		@Override
 		public boolean accept(final int value) {
 			return true;
 		}
 	};
-	private String format;
-	
+
 	private final Map<String, String> variables = new HashMap<String, String>();
 	private boolean sameEntity;
-	
-
 
 	@Override
 	public String process(final String value) {
 		++count;
-		if(filter.accept(count)){
+		if (filter.accept(count)) {
 			return processMatch(value);
 		}
 		return null;
 	}
-	
+
 	private String processMatch(final String value) {
-		if(format==null){
+		if (format == null) {
 			return value;
 		}
 		variables.put("value", value);
@@ -67,7 +72,7 @@ public final class Occurrence extends AbstractStatefulFunction {
 
 	@Override
 	protected void reset() {
-		count=0;
+		count = 0;
 	}
 
 	@Override
@@ -76,48 +81,67 @@ public final class Occurrence extends AbstractStatefulFunction {
 	}
 
 	public void setOnly(final String only) {
-		filter = parse(only);		
+		filter = parse(only);
 	}
-	
+
 	public void setSameEntity(final boolean sameEntity) {
 		this.sameEntity = sameEntity;
 	}
-	
+
 	private static IntFilter parse(final String only) {
 		final IntFilter filter;
-		
-		if(only.startsWith(LESS_THEN)){
-			final int number = Integer.parseInt(only.substring(LESS_THEN.length()));
-			filter = new IntFilter() {
-				@Override
-				public boolean accept(final int value) {
-					return value < number;
-				}
-			};
-		}else if (only.startsWith(MORE_THEN)){
-			final int number = Integer.parseInt(only.substring(MORE_THEN.length()));
-			filter = new IntFilter() {
-				@Override
-				public boolean accept(final int value) {
-					return value > number;
-				}
-			};
-		}else{
+
+		if (only.startsWith(LESS_THEN) || only.startsWith(LESS_THAN)) {
+			filter = createLessThanFilter(extractNumberFrom(only));
+		} else if (only.startsWith(MORE_THEN) || only.startsWith(MORE_THAN)) {
+			filter = createGreaterThanFilter(extractNumberFrom(only));
+		} else {
 			final int number = Integer.parseInt(only);
-			filter = new IntFilter() {
-				@Override
-				public boolean accept(final int value) {
-					return value == number;
-				}
-			};
+			filter = createEqualsFilter(number);
 		}
 		return filter;
 	}
 
+	private static int extractNumberFrom(final String string) {
+		final String[] tokens = string.split(" ", 2);
+		if (tokens.length < 2) {
+			throw new MetafactureException("Invalid only string: " + string);
+		}
+		return Integer.parseInt(tokens[1]);
+	}
+
+	private static IntFilter createEqualsFilter(final int number) {
+		return new IntFilter() {
+			@Override
+			public boolean accept(final int value) {
+				return value == number;
+			}
+		};
+	}
+
+	private static IntFilter createLessThanFilter(final int number) {
+		return new IntFilter() {
+			@Override
+			public boolean accept(final int value) {
+				return value < number;
+			}
+		};
+	}
+
+	private static IntFilter createGreaterThanFilter(final int number) {
+		return new IntFilter() {
+			@Override
+			public boolean accept(final int value) {
+				return value > number;
+			}
+		};
+	}
+
 	/**
-	 *	Filter for integer values
+	 * Filter for integer values
 	 */
-	private interface IntFilter{
+	private interface IntFilter {
 		boolean accept(int value);
 	}
+
 }

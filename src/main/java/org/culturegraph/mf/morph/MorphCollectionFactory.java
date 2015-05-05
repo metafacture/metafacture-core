@@ -26,29 +26,32 @@ import org.culturegraph.mf.types.MultiMap;
 
 
 /**
- * Sets the implementation for different Collections used in {@link Metamorph}.
- * 
+ * Sets the implementation for different Collections used
+ * in {@link Metamorph}.
+ *
  * @author markus geipel
  *
  */
 final class MorphCollectionFactory {
+
 	private MorphCollectionFactory() {
 		//no instances
 	}
-	
+
 	public static MultiMap createMultiMap(){
 		return new MultiHashMap();
 	}
-	
+
 	public static  <T> List<T> createList(){
 		return new ArrayList<T>();
 	}
-	
+
 	public static <T> Deque<T> createDeque(){
 		return new LinkedList<T>();
 	}
-	
+
 	public static <T> Registry<T> createRegistry(){
 		return new WildcardRegistry<T>();
 	}
+
 }

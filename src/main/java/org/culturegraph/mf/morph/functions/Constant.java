@@ -16,6 +16,8 @@
 package org.culturegraph.mf.morph.functions;
 
 /**
+ * Outputs a constant value.
+ *
  * @author Markus Michael Geipel
  */
 public final class Constant extends AbstractSimpleStatelessFunction {
@@ -24,13 +26,11 @@ public final class Constant extends AbstractSimpleStatelessFunction {
 
 	@Override
 	public String process(final String value) {
-			return constValue;
+		return constValue;
 	}
 
-	/**
-	 * @param string
-	 */
 	public void setValue(final String string) {
 		this.constValue = string;
 	}
+
 }

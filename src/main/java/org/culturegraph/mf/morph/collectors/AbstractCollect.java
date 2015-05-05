@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-import org.culturegraph.mf.morph.AbstractNamedValuePipeHead;
+import org.culturegraph.mf.morph.AbstractNamedValuePipe;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
 
@@ -26,7 +26,8 @@ import org.culturegraph.mf.morph.NamedValueSource;
  * @author Christoph Böhme
  *
  */
-public abstract class AbstractCollect extends AbstractNamedValuePipeHead implements Collect {
+public abstract class AbstractCollect extends AbstractNamedValuePipe
+		implements Collect {
 
 	private int oldRecord;
 	private int oldEntity;
@@ -72,7 +73,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 	@Override
 	public final void setWaitForFlush(final boolean waitForFlush) {
 		this.waitForFlush = waitForFlush;
-		//metamorph.addEntityEndListener(this, flushEntity);
+		// metamorph.addEntityEndListener(this, flushEntity);
 	}
 
 	@Override
@@ -100,8 +101,9 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 	}
 
 	@Override
-	public final void setConditionSource(final NamedValueSource conditionSource) {
-		this.conditionSource = conditionSource;
+	public final void setConditionSource(final NamedValueSource source) {
+		conditionSource = source;
+		conditionSource.setNamedValueReceiver(this);
 		resetCondition();
 	}
 
@@ -117,7 +119,8 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 		this.value = value;
 	}
 
-	protected final void updateCounts(final int currentRecord, final int currentEntity) {
+	protected final void updateCounts(final int currentRecord,
+			final int currentEntity) {
 		if (!isSameRecord(currentRecord)) {
 			resetCondition();
 			clear();
@@ -139,8 +142,9 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 	}
 
 	@Override
-	public final void receive(final String name, final String value, final NamedValueSource source,
-			final int recordCount, final int entityCount) {
+	public final void receive(final String name, final String value,
+			final NamedValueSource source, final int recordCount,
+			final int entityCount) {
 
 		updateCounts(recordCount, entityCount);
 
@@ -159,22 +163,12 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 		}
 	}
 
-	@Override
-	public final void addNamedValueSource(final NamedValueSource namedValueSource) {
-		if (namedValueSource != conditionSource) {
-			onNamedValueSourceAdded(namedValueSource);
-		}
-	}
-
-	protected void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
-		//nothing to do
-	}
-
 	protected final boolean sameEntityConstraintSatisfied(final int entityCount) {
 		return !sameEntity || oldEntity == entityCount;
 	}
 
-	protected abstract void receive(final String name, final String value, final NamedValueSource source);
+	protected abstract void receive(final String name, final String value,
+			final NamedValueSource source);
 
 	protected abstract boolean isComplete();
 

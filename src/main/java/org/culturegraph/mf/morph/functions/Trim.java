@@ -16,6 +16,8 @@
 package org.culturegraph.mf.morph.functions;
 
 /**
+ * Removes leading and trailing whitespace from the received value.
+ *
  * @author Markus Michael Geipel
  */
 public final class Trim extends AbstractSimpleStatelessFunction {
@@ -24,4 +26,5 @@ public final class Trim extends AbstractSimpleStatelessFunction {
 	public String process(final String value) {
 		return value.trim();
 	}
+
 }

@@ -26,17 +26,16 @@ import org.culturegraph.mf.morph.Metamorph;
  */
 public abstract class AbstractFlushingCollect extends AbstractCollect {
 
-//private static final String FLUSH = "_flush";
-//	private static final Logger LOG = LoggerFactory.getLogger(AbstractCollect.class);
-
 	public AbstractFlushingCollect(final Metamorph metamorph) {
 		super(metamorph);
 	}
 
 	@Override
 	public final void flush(final int recordCount, final int entityCount) {
-		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount) && isConditionMet()) {
-			emit();
+		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount)) {
+			if(isConditionMet()) {
+				emit();
+			}
 			if (getReset()) {
 				resetCondition();
 				clear();

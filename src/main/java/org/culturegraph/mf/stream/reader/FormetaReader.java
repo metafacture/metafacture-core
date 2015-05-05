@@ -16,6 +16,7 @@
 package org.culturegraph.mf.stream.reader;
 
 import org.culturegraph.mf.stream.converter.FormetaDecoder;
+import org.culturegraph.mf.stream.converter.FormetaRecordsReader;
 
 /**
  * @author Markus Geipel
@@ -23,7 +24,7 @@ import org.culturegraph.mf.stream.converter.FormetaDecoder;
 public class FormetaReader extends ReaderBase<FormetaDecoder> {
 
 	public FormetaReader() {
-		super(new FormetaDecoder());
+		super(new FormetaRecordsReader(), new FormetaDecoder());
 	}
 
 }

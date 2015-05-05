@@ -18,23 +18,26 @@ package org.culturegraph.mf.morph.collectors;
 import org.culturegraph.mf.morph.ConditionAware;
 import org.culturegraph.mf.morph.FlushListener;
 import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.morph.NamedValuePipeHead;
-import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.morph.NamedValuePipe;
 
 /**
- * Base interface for all classes which act as collectors in {@link Metamorph}
- * 
+ * Base interface for all classes which act as collectors
+ * in {@link Metamorph}.
+ *
  * @author Markus Michael Geipel
  *
  */
-public interface Collect extends FlushListener, ConditionAware, NamedValuePipeHead{
+public interface Collect extends FlushListener, ConditionAware,
+		NamedValuePipe {
 
 	void setWaitForFlush(final boolean waitForFlush);
+
 	void setSameEntity(boolean sameEntity);
-	void addNamedValueSource(final NamedValueSource namedValueSource);
+
 	void setReset(boolean reset);
 
 	String getName();
+
 	void setName(String name);
 
 }
