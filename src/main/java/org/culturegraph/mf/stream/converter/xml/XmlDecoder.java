@@ -47,6 +47,8 @@ public final class XmlDecoder
 		extends DefaultObjectPipe<Reader, XmlReceiver> {
 	
 	private static final String SAX_PROPERTY_LEXICAL_HANDLER = "http://xml.org/sax/properties/lexical-handler";
+	private static final String SAX_FEATURE_EXTERNAL_GENERAL_ENTITIES = "http://xml.org/sax/features/external-general-entities";
+	private static final String XERCES_FEATURES_NOTIFY_BUILTIN_REFS = "http://apache.org/xml/features/scanner/notify-builtin-refs";
 
 	private final XMLFilter xmlPreFilter;
 	private final XMLFilter xmlFilter;
@@ -55,6 +57,8 @@ public final class XmlDecoder
 		super();
 		try {
 			final XMLReader saxReader = XMLReaderFactory.createXMLReader();
+			saxReader.setFeature(SAX_FEATURE_EXTERNAL_GENERAL_ENTITIES, false);
+			saxReader.setFeature(XERCES_FEATURES_NOTIFY_BUILTIN_REFS, false);
 			xmlPreFilter = new XmlFilterEntityImpl(saxReader);
 			xmlFilter = new XMLFilterImpl(xmlPreFilter);
 		} catch (SAXException e) {
