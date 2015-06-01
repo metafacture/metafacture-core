@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.culturegraph</groupId>
 	<artifactId>metafacture-runner</artifactId>
-	<version>3.1.1</version>
+	<version>3.1.2-SNAPSHOT</version>
 	<name>metafacture.runner</name>
 	<description>Standalone applications for working with Flux and Metamorph scripts</description>
 	<licenses>
@@ -67,7 +67,7 @@
 		<connection>scm:git:git://github.com/culturegraph/metafacture-runner.git</connection>
 		<developerConnection>scm:git:git@github.com:culturegraph/metafacture-runner.git</developerConnection>
 		<url>http://github.com/culturegraph/metafacture-runner</url>
-		<tag>metafacture-runner-3.1.1</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<build>
