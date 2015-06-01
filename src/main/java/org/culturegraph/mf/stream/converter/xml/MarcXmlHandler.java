@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
 /**
  * A marc xml reader.
  * @author Markus Michael Geipel
- * 
+ *
  */
 @Description("A marc xml reader")
 @In(XmlReceiver.class)
@@ -55,7 +55,7 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 				getReceiver().startEntity(attributes.getValue("tag") + attributes.getValue("ind1") + attributes.getValue("ind2"));
 			}else if(CONTROLFIELD.equals(localName)){
 				builder = new StringBuilder();
-				currentTag = attributes.getValue(0);
+				currentTag = attributes.getValue("tag");
 			}else if(RECORD.equals(localName) && NAMESPACE.equals(uri)){
 				getReceiver().startRecord("");
 				getReceiver().literal(TYPE, attributes.getValue(TYPE));
@@ -69,18 +69,18 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 	public void endElement(final String uri, final String localName, final String qName) throws SAXException {
 		if(SUBFIELD.equals(localName)){
 			getReceiver().literal(currentTag, builder.toString().trim());
-			
+
 		}else if(DATAFIELD.equals(localName)){
 			getReceiver().endEntity();
 		}else if(CONTROLFIELD.equals(localName)){
 			getReceiver().literal(currentTag, builder.toString().trim());
-			
+
 		}else if(RECORD.equals(localName)  && NAMESPACE.equals(uri)){
 			getReceiver().endRecord();
-			
+
 		}else if(LEADER.equals(localName)){
 			getReceiver().literal(currentTag, builder.toString().trim());
-			
+
 		}
 	}
 
