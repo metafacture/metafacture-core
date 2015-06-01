@@ -15,6 +15,7 @@
  */
 package org.culturegraph.mf.stream.converter.bib;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.matches;
 import static org.mockito.Mockito.verify;
 
@@ -105,6 +106,15 @@ public final class Marc21EncoderTest {
 	public void shouldThrowFormatExceptionIfEntityNameLengthIsNotFive() {
 		marc21Encoder.startRecord("");
 		marc21Encoder.startEntity("012abc");
+	}
+
+	@Test
+	public void issue231ShouldIgnoreTypeLiterals() {
+		marc21Encoder.startRecord("");
+		marc21Encoder.literal("type", "ignoreme");
+		marc21Encoder.endRecord();
+
+		verify(receiver).process(any(String.class));
 	}
 
 }
