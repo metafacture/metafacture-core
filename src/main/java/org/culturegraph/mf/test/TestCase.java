@@ -30,6 +30,7 @@ import org.culturegraph.mf.util.reflection.ObjectFactory;
 import org.culturegraph.mf.util.xml.XmlUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 
 /**
@@ -110,18 +111,18 @@ public final class TestCase {
 			return null;
 		}
 		final Element transformationElement = (Element) nodes.item(0);
-		final java.io.Reader ioReader;
 
 		final String type = transformationElement.getAttribute(TYPE_ATTR);
 		final String src = transformationElement.getAttribute(SRC_ATTR);
 
 		if (MIME_METAMORPH.equals(type)) {
 			if (src.isEmpty()) {
-				ioReader = getDataEmbedded(transformationElement);
-			} else {
-				ioReader = getDataFromSource(src);
+				final InputSource transformationSource =
+						new InputSource(getDataEmbedded(transformationElement));
+				transformationSource.setSystemId(transformationElement.getBaseURI());
+				return new Metamorph(transformationSource);
 			}
-			return new Metamorph(ioReader);
+			return new Metamorph(src);
 
 		} else if (MIME_JAVACLASS.equals(type)) {
 			if (src.isEmpty()) {
@@ -131,7 +132,6 @@ public final class TestCase {
 			return ObjectFactory.newInstance(clazz);
 		}
 		throw new TestConfigurationException("transformation of type " + type + " is not supperted");
-
 	}
 
 	private java.io.Reader getInputData() {

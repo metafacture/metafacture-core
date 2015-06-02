@@ -71,6 +71,7 @@
 				<element ref="tns:macro" />
 				<element ref="xi:include" />
 			</choice>
+			<attribute ref="xml:base" />
 		</complexType>
 	</element>
 
@@ -711,7 +712,7 @@
 				<simpleType>
 					<restriction base="string">
 						<whiteSpace value="collapse" />
-						<pattern value="(lessThen |moreThen )?\d+" />
+						<pattern value="(lessThen |moreThen |lessThan |moreThan )?\d+" />
 					</restriction>
 				</simpleType>
 			</attribute>

@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.test;
 
-import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 import org.culturegraph.mf.exceptions.FormatException;
@@ -41,11 +41,11 @@ final class TestCaseRunner extends ParentRunner<TestCase> {
 			throws InitializationError {
 		super(clazz);
 		this.clazz = clazz;
-		final InputStream inputStream = clazz.getResourceAsStream(testDefinition);
-		if(null==inputStream){
+		final URL testDefinitionUrl = clazz.getResource(testDefinition);
+		if (testDefinitionUrl == null) {
 			throw new IllegalArgumentException("'" + testDefinition + "' does not exist!");
 		}
-		this.testCases = TestCaseLoader.load(inputStream);
+		this.testCases = TestCaseLoader.load(testDefinitionUrl);
 		this.testDefinition = testDefinition;
 	}
 

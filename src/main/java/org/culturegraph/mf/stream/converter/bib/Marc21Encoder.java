@@ -25,6 +25,9 @@ import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.iso2709.Iso2709Format;
 import org.culturegraph.mf.iso2709.RecordBuilder;
 import org.culturegraph.mf.iso2709.RecordFormat;
+import org.culturegraph.mf.stream.converter.xml.MarcXmlHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Encodes a stream in MARC21 format.
@@ -54,10 +57,13 @@ import org.culturegraph.mf.iso2709.RecordFormat;
  *   2709:2008 record label and some of its contents (record status,
  *   implementation codes, user system characters) are copied into the generated
  *   record</li>
+ *
+ *   <li>literal named "type", which may be produced by {@link MarcXmlHandler}
+ *   are ignored.</li>
  * </ul>
  *
  * <p>The stream expected by the encoder is compatible to the streams emitted by
- * the {@link MarcDecoder} and the {MarcXmlHandler}.
+ * the {@link MarcDecoder} and the {@link MarcXmlHandler}.
  * </p>
  *
  * <p>The record identifier in {@code startRecord} is ignored. To add an identifier
@@ -76,9 +82,12 @@ import org.culturegraph.mf.iso2709.RecordFormat;
 public final class Marc21Encoder extends
 		DefaultStreamPipe<ObjectReceiver<String>> {
 
-	public static final String LEADER_LITERAL = "leader";
+	private static Logger LOG = LoggerFactory.getLogger(Marc21Encoder.class);
 
 	private static final RecordFormat MARC21 = new RecordFormat();
+
+	public static final String LEADER_LITERAL = "leader";
+	public static final String TYPE_LITERAL = "type";
 
 	private final RecordBuilder builder = new RecordBuilder(MARC21);
 	private final int nameLength;
@@ -131,12 +140,20 @@ public final class Marc21Encoder extends
 
 	@Override
 	public void literal(final String name, final String value) {
-		if (LEADER_LITERAL.equals(name)) {
-			setRecordLabel(value);
-		} else if (inField) {
+		if (inField) {
 			builder.appendSubfield(name, value);
 		} else {
-			builder.appendReferenceField(name, value);
+			if (LEADER_LITERAL.equals(name)) {
+				setRecordLabel(value);
+			} else if (TYPE_LITERAL.equals(name)) {
+				// MarcXmlHandler may output `type` literals. The
+				// information in these literals is not included in
+				// marc21 records. Therefore, we need to ignore
+				// these literals here.
+				return;
+			} else {
+				builder.appendReferenceField(name, value);
+			}
 		}
 	}
 

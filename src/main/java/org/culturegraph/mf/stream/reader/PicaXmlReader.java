@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ *  Copyright 2014 hbz, Fabian Steeg
  *
  *  Licensed under the Apache License, Version 2.0 the "License";
  *  you may not use this file except in compliance with the License.
@@ -13,18 +13,17 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.test;
+package org.culturegraph.mf.stream.reader;
 
-import org.junit.runner.RunWith;
-
+import org.culturegraph.mf.stream.converter.xml.PicaXmlHandler;
 
 /**
- * @author Christoph Böhme <c.boehme@dnb.de>
- *
+ * @author Fabian Steeg (fsteeg)
+ * 
  */
 
-@RunWith(TestSuite.class)
-public final class FrameworkTest {
-	// This class serves only as a bonding
-	// point for metamorph tests
+public class PicaXmlReader extends XmlReaderBase {
+	public PicaXmlReader() {
+		super(new PicaXmlHandler());
+	}
 }
