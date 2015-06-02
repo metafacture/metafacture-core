@@ -34,24 +34,26 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * Reads an XML file and passes the XML events to a receiver.
- * 
+ *
  * @author Christoph Böhme
- * 
+ *
  */
 @Description("Reads an XML file and passes the XML events to a receiver.")
 @In(Reader.class)
 @Out(XmlReceiver.class)
-public final class XmlDecoder 
+public final class XmlDecoder
 		extends DefaultObjectPipe<Reader, XmlReceiver> {
-	
+
 	private static final String SAX_PROPERTY_LEXICAL_HANDLER = "http://xml.org/sax/properties/lexical-handler";
-	
+	private static final String XERCES_FEATURES_NOTIFY_BUILTIN_REFS = "http://apache.org/xml/features/scanner/notify-builtin-refs";
+
 	private final XMLReader saxReader;
 
 	public XmlDecoder() {
 		super();
 		try {
 			saxReader = XMLReaderFactory.createXMLReader();
+			saxReader.setFeature(XERCES_FEATURES_NOTIFY_BUILTIN_REFS, false);
 		} catch (SAXException e) {
 			throw new MetafactureException(e);
 		}
