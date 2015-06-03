@@ -18,9 +18,13 @@ package org.culturegraph.mf.morph;
 import org.culturegraph.mf.morph.collectors.Collect;
 
 /**
- * Used by {@link Metamorph} to flush collected data in {@link Collect}.
+ * Used by {@link Metamorph} to flush collected data
+ * in {@link Collect}.
+ *
  * @author Markus Michael Geipel
  */
 public interface FlushListener {
+
 	void flush(final int recordCount, final int entityCount);
+
 }

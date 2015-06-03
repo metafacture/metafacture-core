@@ -71,6 +71,7 @@
 				<element ref="tns:macro" />
 				<element ref="xi:include" />
 			</choice>
+			<attribute ref="xml:base" />
 		</complexType>
 	</element>
 
@@ -229,6 +230,8 @@
 			<attribute name="flushWith" type="string" use="optional" />
 			<attribute name="reset" type="boolean" use="optional"
 				default="false" />
+			<attribute name="includeSubEntities" type="boolean" use="optional"
+					   default="false" />
 		</complexType>
 	</element>
 
@@ -285,6 +288,8 @@
 			<attribute name="sameEntity" type="boolean" use="optional"
 				default="false" />
 			<attribute name="flushWith" type="string" use="optional" />
+			<attribute name="includeSubEntities" type="boolean" use="optional"
+					   default="false" />
 		</complexType>
 	</element>
 	
@@ -303,6 +308,8 @@
 			<attribute name="sameEntity" type="boolean" use="optional"
 				default="false" />
 			<attribute name="flushWith" type="string" use="optional" />
+			<attribute name="includeSubEntities" type="boolean" use="optional"
+					   default="false" />
 		</complexType>
 	</element>
 
@@ -317,7 +324,7 @@
 				<element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
 			</sequence>
 			<attribute name="name" type="string" use="required" />
-			<attribute name="delimiter" type="string" use="required" />
+			<attribute name="delimiter" type="string" use="optional" />
 			<attribute name="prefix" type="string" use="optional" />
 			<attribute name="postfix" type="string" use="optional" />
 			<attribute name="reverse" type="boolean" use="optional" default="false">
@@ -329,8 +336,12 @@
 
 			<attribute name="flushWith" type="string" use="optional"
 				default="record" />
+			<attribute name="sameEntity" type="boolean" use="optional"
+				default="false" />
 			<attribute name="reset" type="boolean" use="optional"
 				default="true" />
+			<attribute name="includeSubEntities" type="boolean" use="optional"
+					   default="false" />
 		</complexType>
 	</element>
 
@@ -354,6 +365,8 @@
 				default="record" />
 			<attribute name="reset" type="boolean" use="optional"
 				default="true" />
+			<attribute name="includeSubEntities" type="boolean" use="optional"
+					   default="false" />
 		</complexType>
 	</element>
 
@@ -699,7 +712,7 @@
 				<simpleType>
 					<restriction base="string">
 						<whiteSpace value="collapse" />
-						<pattern value="(lessThen |moreThen )?\d+" />
+						<pattern value="(lessThen |moreThen |lessThan |moreThan )?\d+" />
 					</restriction>
 				</simpleType>
 			</attribute>
@@ -798,7 +811,7 @@
 		</annotation>
 		<complexType>
 			<attribute name="pattern" type="string" use="required" />
-			<attribute name="with" type="string" use="required">
+			<attribute name="with" type="string" use="optional">
 				<annotation>
 					<documentation>The replacement</documentation>
 				</annotation>
@@ -909,8 +922,8 @@
 				</annotation>
 				<simpleType>
 					<restriction base="string">
-						<enumeration value="record"></enumeration>
-						<enumeration value="entity"></enumeration>
+						<enumeration value="record" />
+						<enumeration value="entity" />
 					</restriction>
 				</simpleType>
 			</attribute>
@@ -921,9 +934,9 @@
 				</annotation>
 				<simpleType>
 					<restriction base="string">
-						<enumeration value="name"></enumeration>
-						<enumeration value="value"></enumeration>
-						<enumeration value="name-value"></enumeration>
+						<enumeration value="name" />
+						<enumeration value="value" />
+						<enumeration value="name-value" />
 					</restriction>
 				</simpleType>
 			</attribute>
@@ -995,6 +1008,16 @@
 					</restriction>
 				</simpleType>
 			</attribute>
+            <attribute name="era" use="optional" default="AUTO">
+                <simpleType>
+                    <restriction base="string">
+                        <enumeration value="AUTO" />
+                        <enumeration value="AD" />
+                        <enumeration value="BC" />
+                    </restriction>
+                </simpleType>
+            </attribute>
+            <attribute name="removeLeadingZeros" type="boolean" use="optional" default="false" />
 			<attribute name="language" type="string" use="optional" />
 		</complexType>
 	</element>

@@ -275,5 +275,42 @@
 			</cgxml:cgxml>
 		</result>
 	</test-case>
+	
+	<test-case name="should reset on flushWith if condition was not met">
+		<input type="text/x-formeta">
+			1 {
+				entity {
+					condition: false,
+					literal1: value1
+				}
+				entity {
+					condition: true,
+					literal2: value2
+				}
+			}
+		</input>
+		
+		<transformation type="text/x-metamorph+xml">
+			<metamorph version="1" xmlns="http://www.culturegraph.org/metamorph">
+				<rules>
+					<combine name="result" value="${V1}${V2}" flushWith="entity" reset="true">
+						<if>
+							<data source="entity.condition">
+								<equals string="true" />
+							</data>
+						</if>
+						<data source="entity.literal1" name="V1" />
+						<data source="entity.literal2" name="V2" />
+					</combine>
+				</rules>
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-formeta">
+			1 {
+				result: value2
+			}
+		</result>
+	</test-case>
 
 </metamorph-test>

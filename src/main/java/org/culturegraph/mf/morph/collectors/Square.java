@@ -22,21 +22,20 @@ import java.util.List;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
 
-
 /**
  * Corresponds to the <code>&lt;collect-literal&gt;</code> tag.
- * 
+ *
  * @author Markus Michael Geipel
  */
 public final class Square extends AbstractFlushingCollect {
-	private List<String> values = new ArrayList<String>();
+
+	private final List<String> values = new ArrayList<String>();
 	private String prefix = "";
 	private String postfix = "";
 	private String delimiter = "";
 
 	public Square(final Metamorph metamorph) {
 		super(metamorph);
-		setNamedValueReceiver(metamorph);
 	}
 
 	public void setPrefix(final String prefix) {
@@ -56,9 +55,11 @@ public final class Square extends AbstractFlushingCollect {
 		Collections.sort(values);
 		final int size = values.size();
 		for (int i = 0; i < size; i++) {
-			final String last = values.remove(values.size()-1);
-			for (String value : values) {
-				getNamedValueReceiver().receive(getName(), prefix + value + delimiter + last + postfix, this, getRecordCount(), getEntityCount());
+			final String last = values.remove(values.size() - 1);
+			for (final String value : values) {
+				getNamedValueReceiver().receive(getName(),
+						prefix + value + delimiter + last + postfix, this,
+						getRecordCount(), getEntityCount());
 			}
 		}
 	}
@@ -69,7 +70,8 @@ public final class Square extends AbstractFlushingCollect {
 	}
 
 	@Override
-	protected void receive(final String name, final String value, final NamedValueSource source) {
+	protected void receive(final String name, final String value,
+			final NamedValueSource source) {
 		values.add(value);
 	}
 

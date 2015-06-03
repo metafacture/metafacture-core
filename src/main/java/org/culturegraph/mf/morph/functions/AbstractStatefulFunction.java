@@ -17,8 +17,9 @@ package org.culturegraph.mf.morph.functions;
 
 import org.culturegraph.mf.morph.NamedValueSource;
 
-
 /**
+ * Base class for functions which maintain a state between invocations.
+ *
  * @author Markus Michael Geipel
  */
 public abstract class AbstractStatefulFunction extends AbstractFunction {
@@ -27,7 +28,7 @@ public abstract class AbstractStatefulFunction extends AbstractFunction {
 	private int entityCount;
 	private NamedValueSource source;
 	private String lastName;
-	
+
 	protected final int getRecordCount() {
 		return recordCount;
 	}
@@ -35,50 +36,52 @@ public abstract class AbstractStatefulFunction extends AbstractFunction {
 	protected final int getEntityCount() {
 		return entityCount;
 	}
-	
-	protected final NamedValueSource getNamedValueSource(){
+
+	protected final NamedValueSource getNamedValueSource() {
 		return source;
 	}
-	
+
 	protected final String getLastName() {
 		return lastName;
 	}
-	
+
 	@Override
-	public final void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
-		
-		if(!sameRecord(recordCount)){
+	public final void receive(final String name, final String value,
+			final NamedValueSource source, final int recordCount,
+			final int entityCount) {
+
+		if (!sameRecord(recordCount)) {
 			reset();
 			this.recordCount = recordCount;
 		}
-		if(entityClearNeeded(entityCount)){
+		if (entityClearNeeded(entityCount)) {
 			reset();
 		}
 		this.entityCount = entityCount;
 		this.source = source;
 		this.lastName = name;
-		
+
 		final String processedValue = process(value);
-		if(processedValue==null){
+		if (processedValue == null) {
 			return;
 		}
-	
-		getNamedValueReceiver().receive(name, processedValue , source, recordCount, entityCount);
-	}
-	
 
+		getNamedValueReceiver().receive(name, processedValue, this,
+				recordCount, entityCount);
+	}
 
 	private boolean entityClearNeeded(final int entityCount) {
-		return doResetOnEntityChange() && this.entityCount!=entityCount;
+		return doResetOnEntityChange() && this.entityCount != entityCount;
 	}
-
-	
 
 	private boolean sameRecord(final int recordCount) {
 		return this.recordCount == recordCount;
 	}
 
 	protected abstract String process(String value);
+
 	protected abstract void reset();
+
 	protected abstract boolean doResetOnEntityChange();
+
 }

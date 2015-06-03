@@ -15,9 +15,16 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-import org.culturegraph.mf.morph.AbstractNamedValuePipeHead;
+import org.culturegraph.mf.morph.AbstractNamedValuePipe;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.morph.Data;
+
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Common basis for {@link Entity}, {@link Combine} etc.
@@ -26,7 +33,8 @@ import org.culturegraph.mf.morph.NamedValueSource;
  * @author Christoph Böhme
  *
  */
-public abstract class AbstractCollect extends AbstractNamedValuePipeHead implements Collect {
+public abstract class AbstractCollect extends AbstractNamedValuePipe
+		implements Collect {
 
 	private int oldRecord;
 	private int oldEntity;
@@ -37,6 +45,12 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 	private final Metamorph metamorph;
 	private boolean waitForFlush;
 	private boolean conditionMet;
+	private boolean				includeSubEntities;
+	private int					currentHierarchicalEntity	= 0;
+	private int					oldHierarchicalEntity		= 0;
+	private Map<String, List<String>> hierarchicalEntityEmitBuffer;
+	private Map<String, List<String>> hierarchicalEntityValueBuffer;
+	private Integer matchEntity;
 
 	private NamedValueSource conditionSource;
 
@@ -47,6 +61,47 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 
 	protected final Metamorph getMetamorph() {
 		return metamorph;
+	}
+
+	public final void setIncludeSubEntities(final boolean includeSubEntitiesArg) {
+
+		includeSubEntities = includeSubEntitiesArg;
+
+		if (includeSubEntities) {
+
+			hierarchicalEntityEmitBuffer = new LinkedHashMap<String, List<String>>();
+			hierarchicalEntityValueBuffer = new LinkedHashMap<String, List<String>>();
+		}
+	}
+
+	protected final boolean getIncludeSubEntities() {
+
+		return includeSubEntities;
+	}
+
+	protected final Map<String, List<String>> getHierarchicalEntityEmitBuffer() {
+
+		return hierarchicalEntityEmitBuffer;
+	}
+	
+	protected final Map<String, List<String>> getHierarchicalEntityValueBuffer() {
+
+		return hierarchicalEntityValueBuffer;
+	}
+
+	protected boolean isHierarchicalEntityEmitBufferFilled() {
+
+		return hierarchicalEntityEmitBuffer != null && !hierarchicalEntityEmitBuffer.isEmpty();
+	}
+
+	protected final Integer getMatchEntity() {
+
+		return matchEntity;
+	}
+
+	protected void setMatchEntity(final Integer matchEntityArg) {
+
+		matchEntity = matchEntityArg;
 	}
 
 	protected final int getRecordCount() {
@@ -72,7 +127,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 	@Override
 	public final void setWaitForFlush(final boolean waitForFlush) {
 		this.waitForFlush = waitForFlush;
-		//metamorph.addEntityEndListener(this, flushEntity);
+		// metamorph.addEntityEndListener(this, flushEntity);
 	}
 
 	@Override
@@ -100,9 +155,15 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 	}
 
 	@Override
-	public final void setConditionSource(final NamedValueSource conditionSource) {
-		this.conditionSource = conditionSource;
+	public final void setConditionSource(final NamedValueSource source) {
+		conditionSource = source;
+		conditionSource.setNamedValueReceiver(this);
 		resetCondition();
+	}
+
+	protected final NamedValueSource getConditionSource() {
+
+		return conditionSource;
 	}
 
 	public final String getValue() {
@@ -117,11 +178,14 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 		this.value = value;
 	}
 
-	protected final void updateCounts(final int currentRecord, final int currentEntity) {
+	protected final void updateCounts(final int currentRecord,
+			final int currentEntity) {
 		if (!isSameRecord(currentRecord)) {
 			resetCondition();
 			clear();
 			oldRecord = currentRecord;
+			currentHierarchicalEntity = 0;
+			oldHierarchicalEntity = 0;
 		}
 		if (resetNeedFor(currentEntity)) {
 			resetCondition();
@@ -130,7 +194,22 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 		oldEntity = currentEntity;
 	}
 
+	protected void updateHierarchicalEntity(final int entityCount) {
+
+		oldHierarchicalEntity = currentHierarchicalEntity;
+		currentHierarchicalEntity = entityCount;
+	}
+
 	private boolean resetNeedFor(final int currentEntity) {
+
+		if (getIncludeSubEntities()) {
+
+			if (sameEntity) {
+
+				return false;
+			}
+		}
+
 		return sameEntity && oldEntity != currentEntity;
 	}
 
@@ -139,15 +218,83 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 	}
 
 	@Override
-	public final void receive(final String name, final String value, final NamedValueSource source,
-			final int recordCount, final int entityCount) {
+	public final void receive(final String name, final String value,
+			final NamedValueSource source, final int recordCount,
+			final int entityCount) {
 
 		updateCounts(recordCount, entityCount);
 
+		if (getIncludeSubEntities()) {
+			
+			if (isComplete() && isConditionMet() && Data.class.isInstance(source)
+					&& !hierarchicalEntityValueBuffer.isEmpty()) {
+
+				Entry<String, List<String>> buffer = hierarchicalEntityValueBuffer
+						.entrySet().iterator().next();
+
+				for (Map.Entry<String, List<String>> entry : hierarchicalEntityEmitBuffer
+						.entrySet()) {
+
+					if (entry.getKey().equals(buffer.getKey())) {
+						entry.getValue().removeAll(buffer.getValue());
+					}
+				}
+
+				hierarchicalEntityValueBuffer.clear();
+			}
+
+			if (Combine.class.isInstance(this)) {
+				((Combine) this).emitHierarchicalEntityValueBuffer();
+
+			}
+		}
+		
 		if (source == conditionSource) {
 			conditionMet = true;
+
+			if(getIncludeSubEntities() && Collect.class.isInstance(conditionSource)) {
+
+				if(((Collect) conditionSource).getName().equals(name)) {
+
+					final boolean condition = Boolean.valueOf(value);
+
+					if(condition) {
+
+						matchEntity = entityCount;
+						
+						for (Map.Entry<String, List<String>> entry : hierarchicalEntityValueBuffer.entrySet()) {
+							
+							if (!getHierarchicalEntityEmitBuffer().containsKey(entry.getKey())) {
+
+								getHierarchicalEntityEmitBuffer().put(entry.getKey(), new LinkedList<String>());
+							}
+
+							getHierarchicalEntityEmitBuffer().get(entry.getKey()).addAll(entry.getValue());
+						}
+
+					} else {
+
+						// do something with matchEntity, e.g., reset
+						matchEntity = null;
+						conditionMet = false;
+						hierarchicalEntityValueBuffer.clear();
+					}
+
+					return;
+				}
+			}
 		} else {
 			receive(name, value, source);
+		}
+
+		if(getIncludeSubEntities()) {
+
+			if(isConditionMet() && isComplete() && matchEntity != null && matchEntity <= entityCount) {
+
+				emit();
+			}
+
+			return;
 		}
 
 		if (!waitForFlush && isConditionMet() && isComplete()) {
@@ -159,22 +306,18 @@ public abstract class AbstractCollect extends AbstractNamedValuePipeHead impleme
 		}
 	}
 
-	@Override
-	public final void addNamedValueSource(final NamedValueSource namedValueSource) {
-		if (namedValueSource != conditionSource) {
-			onNamedValueSourceAdded(namedValueSource);
-		}
-	}
-
-	protected void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
-		//nothing to do
-	}
-
 	protected final boolean sameEntityConstraintSatisfied(final int entityCount) {
+
+		if (getIncludeSubEntities()) {
+
+			return !sameEntity || oldHierarchicalEntity <= entityCount;
+		}
+
 		return !sameEntity || oldEntity == entityCount;
 	}
 
-	protected abstract void receive(final String name, final String value, final NamedValueSource source);
+	protected abstract void receive(final String name, final String value,
+			final NamedValueSource source);
 
 	protected abstract boolean isComplete();
 

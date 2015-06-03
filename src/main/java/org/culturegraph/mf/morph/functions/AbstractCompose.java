@@ -15,10 +15,10 @@
  */
 package org.culturegraph.mf.morph.functions;
 
-
 /**
- * Baseclass for {@link Function}s which compose results based on prefix and postfix.
- * 
+ * Baseclass for {@link Function}s which compose results based on prefix and
+ * postfix.
+ *
  * @author Markus Michael Geipel
  */
 abstract class AbstractCompose extends AbstractSimpleStatelessFunction {
@@ -27,7 +27,8 @@ abstract class AbstractCompose extends AbstractSimpleStatelessFunction {
 	private String postfix = "";
 
 	/**
-	 * @param prefix the prefix to set
+	 * @param prefix
+	 *            the prefix to set
 	 */
 	public void setPrefix(final String prefix) {
 		this.prefix = prefix;
@@ -42,12 +43,11 @@ abstract class AbstractCompose extends AbstractSimpleStatelessFunction {
 	}
 
 	/**
-	 * @param postfix the postfix to set
+	 * @param postfix
+	 *            the postfix to set
 	 */
 	public void setPostfix(final String postfix) {
 		this.postfix = postfix;
 	}
-
-
 
 }

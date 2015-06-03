@@ -15,12 +15,13 @@
  */
 package org.culturegraph.mf.morph.functions;
 
-
 /**
+ * Counts the number of values received.
+ *
  * @author Markus Michael Geipel
- * 
+ *
  */
-public final class Count extends AbstractStatefulFunction{
+public final class Count extends AbstractStatefulFunction {
 
 	private int count;
 

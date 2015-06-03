@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+		targetNamespace="http://www.example.org/test-schema"
+		xmlns:tns="http://www.example.org/test-schema" 
+		xmlns:xi="http://www.w3.org/2001/XInclude">
+
+	<import namespace="http://www.w3.org/2001/XInclude"
+		schemaLocation="XInclude.xsd" />
+
+	<import namespace="http://www.w3.org/XML/1998/namespace"
+		schemaLocation="xml.xsd" />
+
+	<element name="test-schema">
+		<complexType>
+			<choice maxOccurs="1" minOccurs="0">
+				<element ref="tns:string-element" />
+				<element ref="xi:include" />
+			</choice>
+		</complexType>
+	</element>
+
+	<element name="string-element">
+		<complexType>
+			<simpleContent>
+				<extension base="string">
+					<attribute ref="xml:base" />
+				</extension>
+			</simpleContent>
+		</complexType>
+	</element>
+
+</schema>

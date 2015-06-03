@@ -16,9 +16,16 @@
 package org.culturegraph.mf.morph;
 
 /**
- * 
+ * A receiver of named values.
+ *
  * @author Markus Michael Geipel
+ * @author Christoph Böhme
+ *
  */
-public interface NamedValueReceiver {
+public interface NamedValueReceiver extends KnowsSourceLocation {
+
 	void receive(String name, String value, NamedValueSource source, int recordCount, int entityCount);
+
+	void addNamedValueSource(final NamedValueSource namedValueSource);
+
 }

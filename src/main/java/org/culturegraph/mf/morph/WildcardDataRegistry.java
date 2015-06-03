@@ -20,17 +20,16 @@ import java.util.List;
 import org.culturegraph.mf.util.tries.SimpleRegexTrie;
 import org.culturegraph.mf.util.tries.WildcardTrie;
 
-
 /**
  * Implements {@link Registry} with a {@link WildcardTrie}.
- * 
+ *
  * @author Markus Michael Geipel
  * @param <T>
  */
 final class WildcardRegistry<T> implements Registry<T> {
 
 	private final SimpleRegexTrie<T> trie = new SimpleRegexTrie<T>();
-	
+
 	@Override
 	public void register(final String path, final T value) {
 		trie.put(path, value);

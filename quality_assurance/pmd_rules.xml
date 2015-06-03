@@ -24,6 +24,7 @@
 		<exclude name="AvoidLiteralsInIfCondition" />
 		<exclude name="UseObjectForClearerAPI" />
 		<exclude name="UseConcurrentHashMap" />
+		<exclude name="BooleanInversion" />
 	</rule>
 	<rule ref="rulesets/java/coupling.xml">
 		<exclude name="LooseCoupling" />
@@ -50,7 +51,9 @@
 	</rule>
 	<rule ref="rulesets/java/junit.xml">
 		<exclude name="JUnitTestContainsTooManyAsserts" />
-		<exclude name="UseAssertTrueInsteadOfAssertEquals" />
+		<exclude name="JUnitSpelling" />
+		<exclude name="JUnitAssertionsShouldIncludeMessage" />
+		<exclude name="JUnitTestsShouldIncludeAssert" />
 	</rule>
 	<rule ref="rulesets/java/logging-java.xml" />
 	<rule ref="rulesets/java/migrating.xml" />

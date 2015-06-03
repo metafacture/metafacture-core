@@ -36,7 +36,6 @@ public final class Concat extends AbstractFlushingCollect {
 
 	public Concat(final Metamorph metamorph) {
 		super(metamorph);
-		setNamedValueReceiver(metamorph);
 	}
 
 	public void setPrefix(final String prefix) {

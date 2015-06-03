@@ -21,7 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -30,29 +30,19 @@ import org.culturegraph.mf.exceptions.MorphException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * @author Daniel
- * 
+ * A map which queries an sql database provided as jndi
+ * resource.
+ *
+ * @author Daniel Schäfer
+ *
  */
-public final class JndiSqlMap extends AbstractReadOnlyMap<String, String> implements Closeable {
+public final class JndiSqlMap extends AbstractReadOnlyMap<String, String>
+		implements Closeable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(JndiSqlMap.class);
 	private DataSource datasource;
 	private String query;
-	private Connection connection;
-	
-
-	@Override
-	public void close() throws IOException {
-		try {
-			if (connection != null) {
-				connection.close();
-			}
-		} catch (SQLException e) {
-			throw new MorphException(e);
-		}
-	}
 
 	protected DataSource getDatasource() {
 		return datasource;
@@ -61,7 +51,7 @@ public final class JndiSqlMap extends AbstractReadOnlyMap<String, String> implem
 	public void setDatasource(final String name) {
 		try {
 			this.datasource = (DataSource) new InitialContext().lookup(name);
-		} catch (NamingException e) {
+		} catch (final NamingException e) {
 			throw new MorphException(e);
 		}
 	}
@@ -85,25 +75,30 @@ public final class JndiSqlMap extends AbstractReadOnlyMap<String, String> implem
 				resultString = resultSet.getString(1);
 			}
 			resultSet.close();
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			throw new MorphException(e);
 		} finally {
-			if(stmt != null){
+			if (stmt != null) {
 				try {
 					stmt.close();
-				} catch (SQLException e) {
+				} catch (final SQLException e) {
 					LOG.error("Can't close SQL-Statement.", e);
 				}
 			}
-			if(con != null){
+			if (con != null) {
 				try {
 					con.close();
-				} catch (SQLException e) {
+				} catch (final SQLException e) {
 					LOG.error("Can't close Connection.", e);
 				}
 			}
 		}
 		return resultString;
+	}
+
+	@Override
+	public void close() throws IOException {
+		// Nothing to do
 	}
 
 }

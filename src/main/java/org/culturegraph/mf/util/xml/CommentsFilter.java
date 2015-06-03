@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ *  Copyright 2014 Christoph Böhme
  *
  *  Licensed under the Apache License, Version 2.0 the "License";
  *  you may not use this file except in compliance with the License.
@@ -13,12 +13,27 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.morph;
+package org.culturegraph.mf.util.xml;
+
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 /**
- * 
- * @author Markus Michael Geipel
+ * Filters out {@code comment} SAX events.
+ *
+ * @author Christoph Böhme
+ *
  */
-public interface NamedValueAggregator extends NamedValueReceiver{
-	void addNamedValueSource(NamedValueSource namedValueSource);
+public final class CommentsFilter extends LexicalHandlerXmlFilter {
+
+	public CommentsFilter(final XMLReader parent) {
+		super(parent);
+	}
+
+	@Override
+	public void comment(final char[] ch, final int start, final int length) throws SAXException {
+		// Do not forward comment events
+	}
+
 }
+

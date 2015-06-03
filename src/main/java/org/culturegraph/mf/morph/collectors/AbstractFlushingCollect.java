@@ -26,20 +26,72 @@ import org.culturegraph.mf.morph.Metamorph;
  */
 public abstract class AbstractFlushingCollect extends AbstractCollect {
 
-//private static final String FLUSH = "_flush";
-//	private static final Logger LOG = LoggerFactory.getLogger(AbstractCollect.class);
-
 	public AbstractFlushingCollect(final Metamorph metamorph) {
 		super(metamorph);
 	}
 
 	@Override
 	public final void flush(final int recordCount, final int entityCount) {
-		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount) && isConditionMet()) {
-			emit();
+		if ((isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount) || (getIncludeSubEntities()
+				&& isHierarchicalEntityEmitBufferFilled()))) {
+
+			if (!getIncludeSubEntities()) {
+
+				if (isConditionMet()) {
+
+					emit();
+				}
+			} else {
+
+				if (Combine.class.isInstance(this)) {
+
+					((Combine) this).emitHierarchicalEntityBuffer();
+				} else {
+
+					emit();
+				}
+			}
+
 			if (getReset()) {
-				resetCondition();
-				clear();
+
+				// to avoid condition reset, if not all conditions where satisfied + hierarchical entity end was not met
+				if (!(getIncludeSubEntities() && All.class.isInstance(this) && !this.isComplete())) {
+
+					resetCondition();
+					clear();
+				}
+			}
+		}
+
+		if (getIncludeSubEntities()) {
+
+			updateHierarchicalEntity(entityCount);
+
+			// to avoid condition reset before hiearchical entity change
+			if (!(All.class.isInstance(this) && !this.isComplete())) {
+
+				setConditionMet(false);
+			}
+
+			if (getReset()) {
+
+				// to avoid condition reset before hiearchical entity change
+				if (!(All.class.isInstance(this) && !this.isComplete())) {
+
+					resetCondition();
+					clear();
+				}
+			}
+
+			if (Combine.class.isInstance(this) && this.getConditionSource() != null && All.class.isInstance(this.getConditionSource())) {
+
+				// force condition reset on hierarchical entity change
+
+				((All) this.getConditionSource()).resetCondition();
+				((All) this.getConditionSource()).clear();
+				((All) this.getConditionSource()).updateHierarchicalEntity(entityCount);
+				// ((All) this.getConditionSource()).setConditionMet(false);
+				((All) this.getConditionSource()).forcedNonMatchedEmit();
 			}
 		}
 	}

@@ -17,6 +17,8 @@ package org.culturegraph.mf.morph.collectors;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,30 +26,76 @@ import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
 import org.culturegraph.mf.util.StringUtil;
 
-
-
 /**
  * Corresponds to the <code>&lt;collect&gt;</code> tag.
- * 
+ *
  * @author Markus Michael Geipel
  */
-public final class Combine extends AbstractFlushingCollect{
+public final class Combine extends AbstractFlushingCollect {
+
 	private final Map<String, String> variables = new HashMap<String, String>();
 	private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
 	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
-	
+
 	public Combine(final Metamorph metamorph) {
 		super(metamorph);
-		setNamedValueReceiver(metamorph);
 	}
 
 	@Override
 	protected void emit() {
 		final String name = StringUtil.format(getName(), variables);
 		final String value = StringUtil.format(getValue(), variables);
+
+		if (getIncludeSubEntities()) {
+
+			if (!getHierarchicalEntityEmitBuffer().containsKey(name)) {
+
+				getHierarchicalEntityEmitBuffer().put(name, new LinkedList<String>());
+			}
+
+			getHierarchicalEntityEmitBuffer().get(name).add(value);
+
+			return;
+		}
+
+		emit(name, value);
+	}
+
+	private void emit(String name, String value) {
+
 		getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
 	}
 
+	protected void emitHierarchicalEntityBuffer() {
+
+		for (final Map.Entry<String, List<String>> entry : getHierarchicalEntityEmitBuffer().entrySet()) {
+
+			final String name = entry.getKey();
+
+			for (final String value : entry.getValue()) {
+				
+				emit(name, value);
+			}
+		}
+	}
+	
+	protected void emitHierarchicalEntityValueBuffer() {
+		
+		if (!variables.isEmpty()) {
+			
+			final String name = StringUtil.format(getName(), variables);
+			final String value = StringUtil.format(getValue(), variables);
+
+			if (!getHierarchicalEntityValueBuffer().containsKey(name)) {
+
+				getHierarchicalEntityValueBuffer().put(name,
+						new LinkedList<String>());
+			}
+
+			getHierarchicalEntityValueBuffer().get(name).add(value);
+		}
+
+	}
 
 	@Override
 	protected boolean isComplete() {
@@ -55,11 +103,12 @@ public final class Combine extends AbstractFlushingCollect{
 	}
 
 	@Override
-	protected void receive(final String name, final String value, final NamedValueSource source) {
+	protected void receive(final String name, final String value,
+			final NamedValueSource source) {
 		variables.put(name, value);
 		sourcesLeft.remove(source);
 	}
-	
+
 	@Override
 	public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
 		sources.add(namedValueSource);
@@ -70,6 +119,12 @@ public final class Combine extends AbstractFlushingCollect{
 	protected void clear() {
 		sourcesLeft.addAll(sources);
 		variables.clear();
+
+		if (getIncludeSubEntities()) {
+
+			getHierarchicalEntityEmitBuffer().clear();
+			getHierarchicalEntityValueBuffer().clear();
+		}
 	}
 
 }
