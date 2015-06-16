@@ -5,17 +5,9 @@
     </meta>
     <rules>
    		<data name="newName" source="attributes">
-<!--    			<whitelist map="normalMap"/> -->
-<!--    			<lookup in="normalMap"/> -->
-<!--    		<replace  pattern="^J(.).*"  with="X$1"/> -->
-<!--    		<replace  pattern="[ony]"  with="X"/> -->
 	   		<regexlookup map="regexMap">
-<!--             	 <entry name="^J(.).*" value="1"/> -->
-<!--                 <entry name="^Ja(.).*" value="2"/> -->
-<!--                 <entry name="^J.{0,20}" value="3"/> -->
 			</regexlookup>
    		</data>
-
     </rules>
     <maps>
         <map name="regexMap">
