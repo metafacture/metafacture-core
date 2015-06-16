@@ -63,10 +63,6 @@ public final class RegexLookup extends AbstractLookup {
 	public String replaceIn(final String text) {
 		
 		String latestMatch = null;
-
-		if (null==regexMap) System.out.println("regexmap was null");
-		if (null!=regexMap && regexMap.isEmpty()) System.out.println("regexmap was empty");
-		if (null!=regexMap) System.out.println(regexMap);
 		
 		for (Map.Entry<String, String> entry : regexMap.entrySet())
 		{
