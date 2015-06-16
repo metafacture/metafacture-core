@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import org.junit.Ignore;
+
 import org.apache.commons.io.FileUtils;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.converter.xml.SimpleXmlEncoder;
@@ -30,6 +32,7 @@ import org.culturegraph.mf.stream.source.FileOpener;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.junit.Test;
 
+@Ignore
 public class RegexLookupTest {
 	
 	public final static String MORPH_DEFINITION = "morph/regexlookup.morph.xml";
