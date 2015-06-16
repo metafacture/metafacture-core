@@ -37,7 +37,7 @@ public class RegexLookupTest {
 	public final static String RESULT_XML = "test/regexlookup.result.xml";
 	
 	@Test
-	public void testRegexMap() throws IOException {
+	public void testRegexLookup() throws IOException {
 		
 		String inputFileName = ResourceUtil.getUrl(EXAMPLE_DATA_CSV).getPath();
 		final Metamorph metamorph = new Metamorph(MORPH_DEFINITION);
