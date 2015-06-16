@@ -73,7 +73,6 @@ public final class RegexLookup extends AbstractLookup {
 			final String regexKey = entry.getKey();
 			final String replaceValue = entry.getValue();
 			final Matcher matcher;
-			System.out.println("key: " + regexKey + " value: " + replaceValue);
 			
 			// TODO reuse compiled regexes
 			Pattern pattern = Pattern.compile(regexKey);
@@ -84,7 +83,6 @@ public final class RegexLookup extends AbstractLookup {
 				break;
 			}
 		}
-		System.out.println("chosen: " + latestMatch);
 		
 		return latestMatch;
 	}
@@ -94,11 +92,7 @@ public final class RegexLookup extends AbstractLookup {
 	}
 
 	public void addReplacements(final Map<String, String> replacements) {
-		
-		if (null==replacements) System.out.println("replacements was null");
-		if (null!=replacements && replacements.isEmpty()) System.out.println("replacements was empty");
-		if (null!=replacements) System.out.println(replacements);
-		
+
 		for (Entry<String, String> entry : replacements.entrySet()) {
 			addReplacement(entry.getKey(), entry.getValue());
 		}
