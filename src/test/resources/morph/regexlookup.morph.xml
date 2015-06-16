@@ -1,0 +1,61 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" entityMarker="&#30;" version="1" xsi:schemaLocation="http://www.culturegraph.org/metamorph metamorph.xsd">
+    <meta>
+        <name>Regex-Map-Test</name>
+    </meta>
+    <rules>
+   		<data name="newName" source="attributes">
+<!--    			<whitelist map="normalMap"/> -->
+<!--    			<lookup in="normalMap"/> -->
+<!--    		<replace  pattern="^J(.).*"  with="X$1"/> -->
+<!--    		<replace  pattern="[ony]"  with="X"/> -->
+	   		<regexlookup map="regexMap">
+<!--             	 <entry name="^J(.).*" value="1"/> -->
+<!--                 <entry name="^Ja(.).*" value="2"/> -->
+<!--                 <entry name="^J.{0,20}" value="3"/> -->
+			</regexlookup>
+   		</data>
+
+    </rules>
+    <maps>
+        <map name="regexMap">
+            <entry name="K[A-Z] [0-9]+.*" value="Slawistik"/>
+            <entry name="M[A-L] [0-9]+.*" value="Politologie"/>
+            <entry name="P[A-Z] [0-9]+.*" value="Rechtswissenschaft"/>
+            <entry name="T[E-Z] [0-9]+.*" value="Geologie und Paläontologie"/>
+            <entry name="D[A-Z] [0-9]+.*" value="Pädagogik"/>
+            <entry name="(F[BCEHNOPQTX] [0-9]+)|(FF [1-2][0-9]+).*" value="Klassische Philologie"/>
+            <entry name="(LD [3-7][0-9]+)|(L[H-O] [0-9]+).*" value="Kunst und Kunstgeschichte"/>
+            <entry name="W[A-Z] [0-9]+.*" value="Biologie"/>
+            <entry name="B[A-Z] [0-9]+.*" value="Theologie und Religionswissenschaft"/>
+            <entry name="(LD [1-2][0-9]+)|(L[E-G] [0-9]+).*" value="Klassische Archäologie"/>
+            <entry name="(FK [0-9]+)|(FF [5-6][0-9]+).*" value="Byzantinistik"/>
+            <entry name="(F[GL] [0-9]+)|(FD [1-2][0-9]+).*" value="Neugriechische Philologie"/>
+            <entry name="C[L-Z] [0-9]+.*" value="Psychologie"/>
+            <entry name="I[A-Z] [0-9]+.*" value="Romanistik"/>
+            <entry name="R[A-Z] [0-9]+.*" value="Geographie"/>
+            <entry name="Q[A-Z] [0-9]+.*" value="Wirtschaftswissenschaften"/>
+            <entry name="T[A-D] [0-9]+.*" value="Allgemeine Naturwissenschaft"/>
+            <entry name="Z[A-E] [0-9]+.*" value="Land- und Forstwirtschaft, Gartenbau, Fischereiwirtschaft, Hauswirtschaft"/>
+            <entry name="Z[G-S] [0-9]+.*" value="Technik"/>
+            <entry name="(LD [8-9][0-9]+)|(L[P-Y] [0-9]+).*" value="Musikwissenschaft"/>
+            <entry name="M[N-W] [0-9]+.*" value="Soziologie"/>
+            <entry name="(W[W-Z]|X[A-Z]|Y[A-V]) [0-9]+.*" value="Medizin"/>
+            <entry name="G[A-Z] [0-9]+.*" value="Germanistik, Niederlandistik, Skandinavistik"/>
+            <entry name="L[A-C] [0-9]+.*" value="Ethnologie (Volks- und Völkerkunde)"/>
+            <entry name="V[A-Z] [0-9]+.*" value="Chemie und Pharmazie"/>
+            <entry name="E[A-Z] [0-9]+.*" value="Allgemeine und vergleichende Sprach- und Literaturwissenschaft, Indogermanistik, Außereuropäische Sprachen und Literaturen"/>
+            <entry name="M[X-Z] [0-9]+.*" value="Militärwissenschaft"/>
+            <entry name="N[A-Z] [0-9]+.*" value="Geschichte"/>
+            <entry name="C[A-I] [0-9]+.*" value="Philosophie"/>
+            <entry name="S[A-P] [0-9]+.*" value="Mathematik"/>
+            <entry name="H[A-Z] [0-9]+.*" value="Anglistik, Amerikanistik"/>
+            <entry name="U[A-Z] [0-9]+.*" value="Physik"/>
+            <entry name="F[RUY] [0-9]+.*" value="Mittellateinische Philologie"/>
+            <entry name="Z[X-Y] [0-9]+.*" value="Sport"/>
+            <entry name="S[Q-U] [0-9]+.*" value="Informatik"/>
+            <entry name="A[A-Z] [0-9]+.*" value="Allgemeines"/>
+            <entry name="F[SVZ] [0-9]+.*" value="Neulateinische Philologie"/>
+        </map>
+    </maps>
+</metamorph>
