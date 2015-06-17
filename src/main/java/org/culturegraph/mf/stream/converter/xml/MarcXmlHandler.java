@@ -79,7 +79,7 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 			getReceiver().endRecord();
 
 		}else if(LEADER.equals(localName)){
-			getReceiver().literal(currentTag, builder.toString().trim());
+			getReceiver().literal(currentTag, builder.toString());
 
 		}
 	}
