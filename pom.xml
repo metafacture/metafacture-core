@@ -219,7 +219,7 @@
 		<dependency>
 			<groupId>org.culturegraph</groupId>
 			<artifactId>metafacture-core</artifactId>
-			<version>3.1.1</version>
+			<version>3.1.2</version>
 		</dependency>
 
 		<!-- In a perfect world the slf4j binding would be a
