@@ -1,0 +1,8 @@
+d,subtitle,sn,givenname,isbn,language,attributes,date
+test,test,test,test,test,test,BB 3,should match
+test,test,test,test,test,test,AA A,should not match
+test,test,test,test,test,test,CI 1,should match
+test,test,test,test,test,test,CL 1xx,should match
+test,test,test,test,test,test,CL 11,should match
+test,test,test,test,test,test,AA,should not match
+test,test,test,test,test,test,AA 1zz,should match

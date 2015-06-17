@@ -667,6 +667,7 @@
 			<element ref="tns:replace" />
 			<element ref="tns:substring" />
 			<element ref="tns:lookup" />
+			<element ref="tns:regexlookup" />
 			<element ref="tns:whitelist" />
 			<element ref="tns:blacklist" />
 			<element ref="tns:isbn" />
@@ -741,6 +742,28 @@
 				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded" />
 			</sequence>
 			<attribute name="in" type="string" use="optional">
+				<annotation>
+					<documentation>Unique name of the lookup table</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="default" type="string" use="optional">
+				<annotation>
+					<documentation>Value used if no corresponding key is found.
+					</documentation>
+				</annotation>
+			</attribute>
+		</complexType>
+	</element>
+	
+	<element name="regexlookup">
+		<annotation>
+			<documentation>Performs a table lookup where keys may be regexes</documentation>
+		</annotation>
+		<complexType>
+			<sequence>
+				<element ref="tns:entry" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="map" type="string" use="optional">
 				<annotation>
 					<documentation>Unique name of the lookup table</documentation>
 				</annotation>
