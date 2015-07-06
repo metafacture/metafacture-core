@@ -64,9 +64,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- note: org.culturegraph.mf.stream.pipe.sort.AbstractTripleSortTest#issue192ShouldUnregisterFromTheJVMToNotCauseMemoryLeak fails when upgrading to Java 8 -->
-		<targetJdk>1.7</targetJdk>
+		<targetJdk>1.6</targetJdk>
 		<antlr.version>3.5.2</antlr.version>
-		<version.jackson>2.5.2</version.jackson>
+		<version.jackson>2.5.0</version.jackson>
 		<!-- note: org.culturegraph.mf.test.TestCaseRunnerTest#issue213ShouldNotInitAnnotationsArrayWithNull fails when upgrading to JUnit version 4.12 -->
 		<version.junit>4.11</version.junit>
 		<!-- note: needs to be 1.7, otherwise, class-not-found exception-->
