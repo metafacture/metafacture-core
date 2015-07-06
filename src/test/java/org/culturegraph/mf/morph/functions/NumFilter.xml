@@ -352,13 +352,44 @@
 		</result>
 	</test-case>
 
-	<test-case name="numeric filter function: less then or equals 2 (greater then)">
+	<test-case name="numeric filter function: less then or equals negative (greater then)">
 		<input type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
 					<cgxml:record id="1">
 						<cgxml:entity name="001">
 							<cgxml:literal name="" value="184000" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:data source="001." name="subject">
+						<mm:numfilter expression="&lt;= 1" />
+					</mm:data>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="numeric filter function: negative (non-numeric value)">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="001">
+							<cgxml:literal name="" value="ABC" />
 						</cgxml:entity>
 					</cgxml:record>
 				</cgxml:records>
