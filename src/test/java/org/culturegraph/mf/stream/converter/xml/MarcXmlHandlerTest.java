@@ -32,6 +32,7 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public final class MarcXmlHandlerTest {
 
+	private static final String LEADER = "leader";
 	private static final String CONTROLFIELD = "controlfield";
 	private static final String NAMESPACE = "http://www.loc.gov/MARC21/slim";
 
@@ -66,6 +67,19 @@ public final class MarcXmlHandlerTest {
 		marcXmlHandler.endElement(NAMESPACE, CONTROLFIELD, "");
 
 		verify(receiver).literal("001", fieldValue);
+	}
+	
+	@Test
+	public void issue233ShouldNotRemoveWhitespaceFromLeader()
+			throws SAXException {
+		final AttributesImpl attributes = new AttributesImpl();
+		final String leaderValue = "  cdefghijklmnopqrstuv  ";
+		
+		marcXmlHandler.startElement(NAMESPACE, LEADER, "", attributes);
+		marcXmlHandler.characters(leaderValue.toCharArray(), 0, leaderValue.length());
+		marcXmlHandler.endElement(NAMESPACE, LEADER, "");
+		
+		verify(receiver).literal("leader", leaderValue);
 	}
 
 }
