@@ -1,6 +1,8 @@
 package org.culturegraph.mf.morph.functions;
 
 import org.culturegraph.mf.morph.NamedValueSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author tgaengler
@@ -8,6 +10,8 @@ import org.culturegraph.mf.morph.NamedValueSource;
 public class NumFilter extends AbstractFunction {
 
 	private NumMatcher matcher;
+
+	private static final Logger LOG = LoggerFactory.getLogger(NumFilter.class);
 
 	@Override
 	public void receive(final String name, final String value, final NamedValueSource source, final int recordCount,
@@ -59,7 +63,9 @@ public class NumFilter extends AbstractFunction {
 			}
 		} catch (final NumberFormatException e) {
 
-			throw new IllegalArgumentException(String.format("cannot execute numeric filter; value '%s' is not a valid number.", value));
+			final String message = String.format("cannot execute numeric filter; value '%s' is not a valid number.", value);
+
+			LOG.debug(message);
 		}
 
 	}
