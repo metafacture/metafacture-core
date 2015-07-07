@@ -24,6 +24,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.culturegraph.mf.exceptions.MorphException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A map implementation that queries an sql database.
@@ -35,21 +37,32 @@ import org.culturegraph.mf.exceptions.MorphException;
 public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
 		Closeable {
 
+	private static final Logger LOG = LoggerFactory.getLogger(SqlMap.class);
+
+	public static final String JDBC_PREFIX_IDENTIFIER = "jdbc";
+	public static final String COLON                  = ":";
+	public static final String SLASH                  = "/";
+
 	private boolean isUninitialized = true;
 
 	private Connection conn;
-	private String host;
-	private String login;
-	private String password;
-	private String database;
-	private String query;
-	private String driver;
+	private String     host;
+	private String     port;
+	private String     login;
+	private String     password;
+	private String     database;
+	private String     query;
+	private String     driver;
+	private String     databaseType;
 
 	private PreparedStatement preparedStatement;
 
 	public void init() {
 
 		try {
+
+			LOG.debug("generate a prepared statement with the following query string '{}'", query);
+
 			preparedStatement = getMySqlConnection().prepareStatement(query);
 		} catch (final SQLException e) {
 			throw new MorphException(e);
@@ -72,14 +85,25 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
 	private Connection getMySqlConnection() {
 
 		try {
-			Class.forName(driver);
+			Class.forName(driver).newInstance();
 
-			conn = DriverManager.getConnection("jdbc:mysql://" + host + "/"
-					+ database + "?" + "user=" + login + "&" + "password="
-					+ password);
+			final StringBuilder urlSB = new StringBuilder();
+			urlSB.append(JDBC_PREFIX_IDENTIFIER).append(COLON)
+					.append(databaseType).append(COLON).append(SLASH).append(SLASH)
+					.append(host).append(COLON).append(port).append(SLASH).append(database);
+
+			final String url = urlSB.toString();
+
+			LOG.debug("try to connection to database with connection string '{}'", url);
+
+			conn = DriverManager.getConnection(url, login, password);
 		} catch (final ClassNotFoundException e) {
 			throw new MorphException(e);
 		} catch (final SQLException e) {
+			throw new MorphException(e);
+		} catch (final InstantiationException e) {
+			throw new MorphException(e);
+		} catch (final IllegalAccessException e) {
 			throw new MorphException(e);
 		}
 		return conn;
@@ -93,10 +117,10 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
 		String resultString = null;
 		final ResultSet resultSet;
 		try {
-			preparedStatement.setString(1, key.toString());
+			preparedStatement.setObject(1, key.toString());
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.first()) {
-				resultString = resultSet.getString(1);
+				resultString = resultSet.getObject(1).toString();
 			}
 			resultSet.close();
 		} catch (final SQLException e) {
@@ -129,4 +153,11 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
 		this.query = query;
 	}
 
+	public void setPort(final String port) {
+		this.port = port;
+	}
+
+	public void setDatabaseType(final String databaseType) {
+		this.databaseType = databaseType;
+	}
 }

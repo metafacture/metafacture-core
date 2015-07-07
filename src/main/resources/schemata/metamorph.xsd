@@ -614,6 +614,10 @@
 	</element>
 
 	<element name="sqlmap">
+		<annotation>
+			<documentation>
+				<![CDATA[Does a lookup in a SQL table via a prepared SQL statement, i.e., the statement needs to include some variable parts. Furthermore, the connection string to the SQL database can be defined via the following attributes: "databaseType" = the type of the database, e.g., 'mysql'; "host" = the host of the database, e.g., 'localhost' (default = "localhost"); "port" = the port of the database, e.g., "3306" (default = "3306"); "database" = the name of the database; "login" = the username that should be utilised to connect to the database; "password" = the password that should be utilised to connect to the database; "query" = the prepared SQL statement that should be utilised to retrieve the value for a given key, e.g. "SELECT value FROM mytable WHERE key = ?"; "driver" = the JDBC driver that should be utilised to connect to the database (default = "com.mysql.jdbc.Driver"; note: the database driver needs to be part of the classpath of the execution environment).]]></documentation>
+		</annotation>
 		<complexType>
 			<attribute name="name" type="string" use="required"/>
 			<attribute name="host" type="string" use="optional"
@@ -624,6 +628,8 @@
 			<attribute name="query" type="string" use="required"/>
 			<attribute name="driver" type="string" use="optional"
 					   default="com.mysql.jdbc.Driver"/>
+			<attribute name="databaseType" type="string" use="optional" default="mysql"/>
+			<attribute name="port" type="string" use="optional" default="3306"/>
 			<attribute ref="xml:base"/>
 		</complexType>
 	</element>
