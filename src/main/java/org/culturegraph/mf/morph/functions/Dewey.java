@@ -1,6 +1,8 @@
 package org.culturegraph.mf.morph.functions;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -217,7 +219,7 @@ public class Dewey extends AbstractSimpleStatelessFunction {
 
 		final String formatStr = getFormatString(digitsB4, addLeadingZeros) + '.' + getFormatString(digitsAfter, addLeadingZeros);
 
-		final DecimalFormat normFormat = new DecimalFormat(formatStr);
+		final DecimalFormat normFormat = new DecimalFormat(formatStr, DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 
 		final String norm = normFormat.format(value);
 
