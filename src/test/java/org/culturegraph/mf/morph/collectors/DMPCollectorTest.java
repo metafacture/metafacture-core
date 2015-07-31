@@ -20,15 +20,14 @@ import org.culturegraph.mf.test.TestSuite.TestDefinitions;
 import org.junit.runner.RunWith;
 
 /**
- * note: DMPCombineTest10 is not working yet
  *
  * @author tgaengler
  */
 @RunWith(TestSuite.class)
-@TestDefinitions({ "DMPCombineTest.xml", "DMPCombineTest2.xml", "DMPCombineTest3.xml", "DMPCombineTest4.xml", 
-	"DMPCombineTest5.xml", "DMPCombineTest6.xml", "DMPCombineTest7.xml", "DMPCombineTest8.xml",
-	"DMPCombineTest9.xml", "DMPCombineTest10.xml", "DMPCombineMultipleRecordsTest.xml", 
-	"DMPCombineMultipleRecordsTest1.xml", "DMPCombineMultipleRecordsTest2.xml", "DMPCombineMultipleRecordsTest3.xml",
-	"DMPCombineMultipleRecordsTest4.xml", "DMPCombineMultipleRecordsTest5.xml" })
+@TestDefinitions({ "DMPCombineTest.xml", "DMPCombineTest2.xml", "DMPCombineTest3.xml", "DMPCombineTest4.xml",
+		"DMPCombineTest5.xml", "DMPCombineTest6.xml", "DMPCombineTest7.xml", "DMPCombineTest8.xml",
+		"DMPCombineTest9.xml", "DMPCombineTest10.xml", "DMPCombineTest11.xml", "DMPCombineMultipleRecordsTest.xml",
+		"DMPCombineMultipleRecordsTest1.xml", "DMPCombineMultipleRecordsTest2.xml", "DMPCombineMultipleRecordsTest3.xml",
+		"DMPCombineMultipleRecordsTest4.xml", "DMPCombineMultipleRecordsTest5.xml" })
 public final class DMPCollectorTest {/* bind to xml test */
 }
