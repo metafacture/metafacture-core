@@ -659,6 +659,16 @@
 		</restriction>
 	</simpleType>
 
+	<simpleType name="deweyPrecisionAttribute">
+		<restriction base="string">
+			<enumeration value="100"/>
+			<enumeration value="10"/>
+			<enumeration value="1"/>
+			<enumeration value="0.1"/>
+			<enumeration value="0.01"/>
+		</restriction>
+	</simpleType>
+
 	<group name="literal-rule">
 		<choice>
 
@@ -689,6 +699,7 @@
 			<element ref="tns:whitelist"/>
 			<element ref="tns:blacklist"/>
 			<element ref="tns:isbn"/>
+			<element ref="tns:dewey"/>
 			<element ref="tns:equals"/>
 			<element ref="tns:not-equals"/>
 			<element ref="tns:case"/>
@@ -918,6 +929,34 @@
 			<attribute name="verifyCheckDigit" type="boolean" use="optional"
 					   default="false"/>
 			<attribute name="errorString" use="optional"/>
+		</complexType>
+	</element>
+
+	<element name="dewey">
+		<annotation>
+			<documentation>Dewey conversion and verification.</documentation>
+		</annotation>
+		<complexType>
+			<attribute name="precision" type="tns:deweyPrecisionAttribute" use="optional">
+				<annotation>
+					<documentation>A decimal number (represented in string format) showing the desired precision of the returned number; i.e. 100 to
+						round to nearest hundred, 10 to round to nearest ten, 0.1 to round to nearest tenth, etc.
+					</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="addLeadingZeros" type="boolean" use="optional"
+					   default="false">
+				<annotation>
+					<documentation>Add leading zeros to a Dewey number (if not present)
+					</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="errorString" use="optional">
+				<annotation>
+					<documentation>Error string that should be written as value, if the input string is not a valid Dewey number
+					</documentation>
+				</annotation>
+			</attribute>
 		</complexType>
 	</element>
 
