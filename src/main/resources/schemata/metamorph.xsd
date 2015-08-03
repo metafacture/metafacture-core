@@ -960,6 +960,29 @@
 		</complexType>
 	</element>
 
+	<element name="http-api-request">
+		<annotation>
+			<documentation>HTTP API GET request with the input value as URI. Note: the URI should probably composed in a previous component, i.e., the
+				http-api-request function expects a valid URI. Note: the response needs to be processed in a further component, e.g.,parse-json.
+			</documentation>
+		</annotation>
+		<complexType>
+			<attribute name="acceptType" type="string" use="optional"
+					   default="application/json">
+				<annotation>
+					<documentation>The accept type of the HTTP API request
+					</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="errorString" use="optional">
+				<annotation>
+					<documentation>Error string that should be written as value, if the HTTP API request fails for some reason.
+					</documentation>
+				</annotation>
+			</attribute>
+		</complexType>
+	</element>
+
 	<element name="trim">
 		<annotation>
 			<documentation>Trimms the value</documentation>
