@@ -700,6 +700,7 @@
 			<element ref="tns:blacklist"/>
 			<element ref="tns:isbn"/>
 			<element ref="tns:dewey"/>
+			<element ref="tns:http-api-request"/>
 			<element ref="tns:equals"/>
 			<element ref="tns:not-equals"/>
 			<element ref="tns:case"/>
