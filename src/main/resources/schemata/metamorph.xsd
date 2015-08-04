@@ -701,6 +701,7 @@
 			<element ref="tns:isbn"/>
 			<element ref="tns:dewey"/>
 			<element ref="tns:http-api-request"/>
+			<element ref="tns:parse-json"/>
 			<element ref="tns:equals"/>
 			<element ref="tns:not-equals"/>
 			<element ref="tns:case"/>
@@ -984,9 +985,31 @@
 		</complexType>
 	</element>
 
+	<element name="parse-json">
+		<annotation>
+			<documentation>Parses the input value with help of the given JSONPath.
+			</documentation>
+		</annotation>
+		<complexType>
+			<attribute name="jsonPath" type="string" use="required">
+				<annotation>
+					<documentation>The JSONPath to extract values from the given input JSON value. Note: the JSONPath must conform
+						http://goessner.net/articles/JsonPath/.
+					</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="errorString" use="optional">
+				<annotation>
+					<documentation>Error string that should be written as value, if the JSON parsing fails for some reason.
+					</documentation>
+				</annotation>
+			</attribute>
+		</complexType>
+	</element>
+
 	<element name="trim">
 		<annotation>
-			<documentation>Trimms the value</documentation>
+			<documentation>Trims the value</documentation>
 		</annotation>
 		<complexType>
 		</complexType>

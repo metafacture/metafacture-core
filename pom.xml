@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.culturegraph</groupId>
 	<artifactId>metafacture-core</artifactId>
-	<version>3.1.6-dswarm-SNAPSHOT</version>
+	<version>3.1.7-dswarm-SNAPSHOT</version>
 	<name>metafacture.core</name>
 	<description>Core package of the metafacture tool suite</description>
 	<licenses>
@@ -66,7 +66,7 @@
 		<!-- note: org.culturegraph.mf.stream.pipe.sort.AbstractTripleSortTest#issue192ShouldUnregisterFromTheJVMToNotCauseMemoryLeak fails when upgrading to Java 8 -->
 		<targetJdk>1.7</targetJdk>
 		<antlr.version>3.5.2</antlr.version>
-		<version.jackson>2.5.2</version.jackson>
+		<version.jackson>2.6.0</version.jackson>
 		<!-- note: org.culturegraph.mf.test.TestCaseRunnerTest#issue213ShouldNotInitAnnotationsArrayWithNull fails when upgrading to JUnit version 4.12 -->
 		<version.junit>4.11</version.junit>
 		<!-- note: needs to be 1.7, otherwise, class-not-found exception-->
@@ -340,6 +340,24 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
 			<version>${version.jackson}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${version.jackson}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>2.0.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-databind</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
