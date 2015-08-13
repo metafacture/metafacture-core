@@ -63,12 +63,20 @@ if [ -z "$FLUX_JAVA_OPTIONS" ] ; then
 fi
 # This sed script turns the output of set into a sed script
 # which replaces the dollar prefixed name of each environment
-# variable with its value:
+# variable with its value. As the output of the set command
+# is a list of variables followed by a list of functions, the
+# script terminates at the first line which appears not to be
+# a variable definition:
 vars_to_script=$( cat <<'EOF'
-	s/\\/\\\\/g ;
-	s/!/\\!/g ; 
-	s/='(.*)'$/=\1/ ;
-	s/^([^=]+)=(.*)$/s!\\$\1!\2!g ; /g
+	s/^[^=]*$//g ;                        # is this not a variable definition?
+	t quit ;                              # then jump to quit
+	s/\\/\\\\/g ;                         # otherwise escape backslashes,
+	s/!/\\!/g ;                           # escape exclamation marks,
+	s/='(.*)'$/=\1/ ;                     # remove quotes,
+	s/^([^=]+)=(.*)$/s!\\$\1!\2!g ; /g ;  # convert to sed regexp command
+	b ;                                   # and continue with next line
+	: quit
+	q
 EOF
 )
 substitute_vars_script=$( set | sed -r "$vars_to_script" )
