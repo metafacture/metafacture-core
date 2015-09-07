@@ -64,10 +64,23 @@ public class Dewey extends AbstractSimpleStatelessFunction {
 		}
 
 		final String formattedDeweyNumber;
+		final Integer digitsAfter;
 
 		if (precision != null && !precision.trim().isEmpty()) {
 
 			final float precisionFloat = convertToFloat(precision);
+
+			if(precisionFloat >= 1) {
+
+				// no digits after decimal point
+
+				digitsAfter = null;
+			} else {
+
+				// leave digits after decimal point as is
+
+				digitsAfter = -1;
+			}
 
 			formattedDeweyNumber = formatDewey(value, precisionFloat);
 
@@ -78,9 +91,10 @@ public class Dewey extends AbstractSimpleStatelessFunction {
 		} else {
 
 			formattedDeweyNumber = value;
+			digitsAfter = -1;
 		}
 
-		return normalizeFloat(formattedDeweyNumber, 3, -1, addLeadingZeros);
+		return normalizeFloat(formattedDeweyNumber, 3, digitsAfter, addLeadingZeros);
 	}
 
 	private static String formatDewey(final String deweyNumberString, final float precision) {
@@ -213,11 +227,20 @@ public class Dewey extends AbstractSimpleStatelessFunction {
 	 *   this case will be removed)
 	 * @throws NumberFormatException if string can't be parsed as a number
 	 */
-	public static String normalizeFloat(final String floatStr, final int digitsB4, final int digitsAfter, final boolean addLeadingZeros) {
+	public static String normalizeFloat(final String floatStr, final int digitsB4, final Integer digitsAfter, final boolean addLeadingZeros) {
 
 		final double value = Double.valueOf(floatStr);
 
-		final String formatStr = getFormatString(digitsB4, addLeadingZeros) + '.' + getFormatString(digitsAfter, addLeadingZeros);
+		final StringBuilder formatStrSB = new StringBuilder();
+
+		formatStrSB.append(getFormatString(digitsB4, addLeadingZeros));
+
+		if(digitsAfter != null) {
+
+			formatStrSB.append('.').append(getFormatString(digitsAfter, addLeadingZeros));
+		}
+
+		final String formatStr =  formatStrSB.toString();
 
 		final DecimalFormat normFormat = new DecimalFormat(formatStr, DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 

@@ -39,11 +39,22 @@ public class DeweyTest {
 
 		processDewey(DEWEY1, PRECISION_100, true, "something went wrong", "100");
 	}
+	@Test
+	public void precision100DeweyWALZTest() {
+
+		processDewey(DEWEY1, PRECISION_100, false, "something went wrong", "100");
+	}
 
 	@Test
 	public void precision10DeweyTest() {
 
 		processDewey(DEWEY1, PRECISION_10, true, "something went wrong", "120");
+	}
+
+	@Test
+	public void precision10DeweyWALZTest() {
+
+		processDewey(DEWEY1, PRECISION_10, false, "something went wrong", "120");
 	}
 
 	@Test
@@ -53,15 +64,33 @@ public class DeweyTest {
 	}
 
 	@Test
+	public void precision1DeweyWALZTest() {
+
+		processDewey(DEWEY1, PRECISION_1, false, "something went wrong", "123");
+	}
+
+	@Test
 	public void precision10PartDeweyTest() {
 
 		processDewey(DEWEY1, PRECISION_10_PART, true, "something went wrong", "123.4");
 	}
 
 	@Test
+	public void precision10PartDeweyWALZTest() {
+
+		processDewey(DEWEY1, PRECISION_10_PART, false, "something went wrong", "123.4");
+	}
+
+	@Test
 	public void precision100PartDeweyTest() {
 
 		processDewey(DEWEY1, PRECISION_100_PART, true, "something went wrong", "123.45");
+	}
+
+	@Test
+	public void precision100PartDeweyWALZTest() {
+
+		processDewey(DEWEY1, PRECISION_100_PART, false, "something went wrong", "123.45");
 	}
 
 	/**
@@ -71,6 +100,12 @@ public class DeweyTest {
 	public void noPrecisionDeweyTest() {
 
 		processDewey(DEWEY1, null, true, "something went wrong", "123.456");
+	}
+
+	@Test
+	public void noPrecisionDeweyWALZTest() {
+
+		processDewey(DEWEY1, null, false, "something went wrong", "123.456");
 	}
 
 	@Test
@@ -89,6 +124,12 @@ public class DeweyTest {
 	public void nonValidDeweyTest() {
 
 		processDewey(NON_VALID_DEWEY, null, true, "something went wrong", "something went wrong");
+	}
+
+	@Test
+	public void nonValidDeweyWALZTest() {
+
+		processDewey(NON_VALID_DEWEY, null, false, "something went wrong", "something went wrong");
 	}
 
 	@Test
