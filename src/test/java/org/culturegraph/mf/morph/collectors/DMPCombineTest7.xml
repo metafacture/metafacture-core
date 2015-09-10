@@ -22,6 +22,10 @@
 								<cgxml:literal name="value" value="ZZZZZZZZZZZZZZZZZZZZZ"/>
 							</cgxml:entity>
 							<cgxml:entity name="subfield">
+								<cgxml:literal name="code" value="y"/>
+								<cgxml:literal name="value" value="YYYYYYYYYYYYYYYYYYYYY"/>
+							</cgxml:entity>
+							<cgxml:entity name="subfield">
 								<cgxml:literal name="code" value="a"/>
 								<cgxml:literal name="value" value="sub3333333333333333333333333"/>
 							</cgxml:entity>

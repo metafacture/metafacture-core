@@ -15,9 +15,9 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,9 +33,9 @@ import org.culturegraph.mf.util.StringUtil;
  */
 public final class Combine extends AbstractFlushingCollect {
 
-	private final Map<String, String> variables = new HashMap<String, String>();
-	private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
-	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
+	private final Map<String, String> variables = new HashMap<>();
+	private final Set<NamedValueSource> sources = new HashSet<>();
+	private final Set<NamedValueSource> sourcesLeft = new HashSet<>();
 
 	public Combine(final Metamorph metamorph) {
 		super(metamorph);
@@ -50,7 +50,7 @@ public final class Combine extends AbstractFlushingCollect {
 
 			if (!getHierarchicalEntityEmitBuffer().containsKey(name)) {
 
-				getHierarchicalEntityEmitBuffer().put(name, new LinkedList<String>());
+				getHierarchicalEntityEmitBuffer().put(name, new ArrayList<String>());
 			}
 
 			getHierarchicalEntityEmitBuffer().get(name).add(value);
@@ -73,23 +73,22 @@ public final class Combine extends AbstractFlushingCollect {
 			final String name = entry.getKey();
 
 			for (final String value : entry.getValue()) {
-				
+
 				emit(name, value);
 			}
 		}
 	}
-	
+
 	protected void emitHierarchicalEntityValueBuffer() {
-		
+
 		if (!variables.isEmpty()) {
-			
+
 			final String name = StringUtil.format(getName(), variables);
 			final String value = StringUtil.format(getValue(), variables);
 
 			if (!getHierarchicalEntityValueBuffer().containsKey(name)) {
 
-				getHierarchicalEntityValueBuffer().put(name,
-						new LinkedList<String>());
+				getHierarchicalEntityValueBuffer().put(name, new ArrayList<String>());
 			}
 
 			getHierarchicalEntityValueBuffer().get(name).add(value);
