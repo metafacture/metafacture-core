@@ -24,9 +24,9 @@ import org.junit.runner.RunWith;
  * @author tgaengler
  */
 @RunWith(TestSuite.class)
-@TestDefinitions({ "DMPCombineTest.xml", "DMPCombineTest2.xml", "DMPCombineTest3.xml", "DMPCombineTest4.xml",
-		"DMPCombineTest5.xml", "DMPCombineTest6.xml", "DMPCombineTest7.xml", "DMPCombineTest8.xml",
-		"DMPCombineTest9.xml", "DMPCombineTest10.xml", "DMPCombineTest11.xml", "DMPCombineTest12.xml", "DMPCombineTest13.xml", "DMPCombineMultipleRecordsTest.xml",
+@TestDefinitions({ "DMPCombineTest.xml", "DMPCombineTest2.xml", "DMPCombineTest3.xml", "DMPCombineTest4.xml", "DMPCombineTest5.xml",
+		"DMPCombineTest6.xml", "DMPCombineTest7.xml", "DMPCombineTest8.xml", "DMPCombineTest9.xml", "DMPCombineTest10.xml", "DMPCombineTest11.xml",
+		"DMPCombineTest12.xml", "DMPCombineTest13.xml", "DMPCombineTest14.xml", "DMPCombineTest15.xml", "DMPCombineMultipleRecordsTest.xml",
 		"DMPCombineMultipleRecordsTest1.xml", "DMPCombineMultipleRecordsTest2.xml", "DMPCombineMultipleRecordsTest3.xml",
 		"DMPCombineMultipleRecordsTest4.xml", "DMPCombineMultipleRecordsTest5.xml" })
 public final class DMPCollectorTest {/* bind to xml test */

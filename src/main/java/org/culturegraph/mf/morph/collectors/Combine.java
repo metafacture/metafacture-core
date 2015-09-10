@@ -18,6 +18,7 @@ package org.culturegraph.mf.morph.collectors;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,8 +34,8 @@ import org.culturegraph.mf.util.StringUtil;
  */
 public final class Combine extends AbstractFlushingCollect {
 
-	private final Map<String, String> variables = new HashMap<>();
-	private final Set<NamedValueSource> sources = new HashSet<>();
+	private final Map<String, String>   variables   = new HashMap<>();
+	private final Set<NamedValueSource> sources     = new HashSet<>();
 	private final Set<NamedValueSource> sourcesLeft = new HashSet<>();
 
 	public Combine(final Metamorph metamorph) {
@@ -48,12 +49,21 @@ public final class Combine extends AbstractFlushingCollect {
 
 		if (getIncludeSubEntities()) {
 
-			if (!getHierarchicalEntityEmitBuffer().containsKey(name)) {
+			final Map<Integer, Map<String, List<String>>> hierarchicalEntityEmitBuffer = getHierarchicalEntityEmitBuffer();
 
-				getHierarchicalEntityEmitBuffer().put(name, new ArrayList<String>());
+			if (!hierarchicalEntityEmitBuffer.containsKey(getEntityCount())) {
+
+				hierarchicalEntityEmitBuffer.put(getEntityCount(), new LinkedHashMap<String, List<String>>());
 			}
 
-			getHierarchicalEntityEmitBuffer().get(name).add(value);
+			final Map<String, List<String>> hierarchicalEntityEmitMap = hierarchicalEntityEmitBuffer.get(getEntityCount());
+
+			if (!hierarchicalEntityEmitMap.containsKey(name)) {
+
+				hierarchicalEntityEmitMap.put(name, new ArrayList<String>());
+			}
+
+			hierarchicalEntityEmitMap.get(name).add(value);
 
 			return;
 		}
@@ -68,13 +78,16 @@ public final class Combine extends AbstractFlushingCollect {
 
 	protected void emitHierarchicalEntityBuffer() {
 
-		for (final Map.Entry<String, List<String>> entry : getHierarchicalEntityEmitBuffer().entrySet()) {
+		for (final Map.Entry<Integer, Map<String, List<String>>> entry : getHierarchicalEntityEmitBuffer().entrySet()) {
 
-			final String name = entry.getKey();
+			for (final Map.Entry<String, List<String>> entry2 : entry.getValue().entrySet()) {
 
-			for (final String value : entry.getValue()) {
+				final String name = entry2.getKey();
 
-				emit(name, value);
+				for (final String value : entry2.getValue()) {
+
+					emit(name, value);
+				}
 			}
 		}
 	}
@@ -86,14 +99,22 @@ public final class Combine extends AbstractFlushingCollect {
 			final String name = StringUtil.format(getName(), variables);
 			final String value = StringUtil.format(getValue(), variables);
 
-			if (!getHierarchicalEntityValueBuffer().containsKey(name)) {
+			final Map<Integer, Map<String, List<String>>> hierarchicalEntityValueBuffer = getHierarchicalEntityValueBuffer();
 
-				getHierarchicalEntityValueBuffer().put(name, new ArrayList<String>());
+			if (!hierarchicalEntityValueBuffer.containsKey(getEntityCount())) {
+
+				hierarchicalEntityValueBuffer.put(getEntityCount(), new LinkedHashMap<String, List<String>>());
 			}
 
-			getHierarchicalEntityValueBuffer().get(name).add(value);
-		}
+			final Map<String, List<String>> hierarchicalEntityValueMap = hierarchicalEntityValueBuffer.get(getEntityCount());
 
+			if (!hierarchicalEntityValueMap.containsKey(name)) {
+
+				hierarchicalEntityValueMap.put(name, new ArrayList<String>());
+			}
+
+			hierarchicalEntityValueMap.get(name).add(value);
+		}
 	}
 
 	@Override

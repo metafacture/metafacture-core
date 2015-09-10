@@ -57,8 +57,14 @@ public abstract class AbstractFlushingCollect extends AbstractCollect {
 				// to avoid condition reset, if not all conditions where satisfied + hierarchical entity end was not met
 				if (!(getIncludeSubEntities() && All.class.isInstance(this) && !this.isComplete())) {
 
-					resetCondition();
-					clear();
+					if(All.class.isInstance(this)) {
+
+						((All) this).clearLastMatchedEntity();
+					} else {
+
+						resetCondition();
+						clear();
+					}
 				}
 			}
 		}
@@ -78,8 +84,14 @@ public abstract class AbstractFlushingCollect extends AbstractCollect {
 				// to avoid condition reset before hiearchical entity change
 				if (!(All.class.isInstance(this) && !this.isComplete())) {
 
-					resetCondition();
-					clear();
+					if(All.class.isInstance(this)) {
+
+						((All) this).clearLastMatchedEntity();
+					} else {
+
+						resetCondition();
+						clear();
+					}
 				}
 			}
 

@@ -48,9 +48,9 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 	private       boolean   includeSubEntities;
 	private int currentHierarchicalEntity = 0;
 	private int oldHierarchicalEntity     = 0;
-	private Map<String, List<String>> hierarchicalEntityEmitBuffer;
-	private Map<String, List<String>> hierarchicalEntityValueBuffer;
-	private Integer                   matchEntity;
+	private Map<Integer, Map<String, List<String>>> hierarchicalEntityEmitBuffer;
+	private Map<Integer, Map<String, List<String>>> hierarchicalEntityValueBuffer;
+	private Integer                                 matchEntity;
 
 	private NamedValueSource conditionSource;
 
@@ -79,12 +79,12 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 		return includeSubEntities;
 	}
 
-	protected final Map<String, List<String>> getHierarchicalEntityEmitBuffer() {
+	protected final Map<Integer, Map<String, List<String>>> getHierarchicalEntityEmitBuffer() {
 
 		return hierarchicalEntityEmitBuffer;
 	}
 
-	protected final Map<String, List<String>> getHierarchicalEntityValueBuffer() {
+	protected final Map<Integer, Map<String, List<String>>> getHierarchicalEntityValueBuffer() {
 
 		return hierarchicalEntityValueBuffer;
 	}
@@ -267,14 +267,30 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
 						matchEntity = entityCount;
 
-						for (final Entry<String, List<String>> entry : hierarchicalEntityValueBuffer.entrySet()) {
+						if (!hierarchicalEntityValueBuffer.containsKey(entityCount)) {
 
-							if (!getHierarchicalEntityEmitBuffer().containsKey(entry.getKey())) {
+							hierarchicalEntityValueBuffer.put(entityCount, new LinkedHashMap<String, List<String>>());
+						}
 
-								getHierarchicalEntityEmitBuffer().put(entry.getKey(), new ArrayList<String>());
+						final Map<String, List<String>> hierarchicalEntityValueMap = hierarchicalEntityValueBuffer.get(entityCount);
+
+						final Map<Integer, Map<String, List<String>>> hierarchicalEntityEmitBuffer = getHierarchicalEntityEmitBuffer();
+
+						if (!hierarchicalEntityEmitBuffer.containsKey(entityCount)) {
+
+							hierarchicalEntityEmitBuffer.put(entityCount, new LinkedHashMap<String, List<String>>());
+						}
+
+						final Map<String, List<String>> hierarchicalEntityEmitMap = hierarchicalEntityEmitBuffer.get(entityCount);
+
+						for (final Entry<String, List<String>> entry : hierarchicalEntityValueMap.entrySet()) {
+
+							if (!hierarchicalEntityEmitMap.containsKey(entry.getKey())) {
+
+								hierarchicalEntityEmitMap.put(entry.getKey(), new ArrayList<String>());
 							}
 
-							getHierarchicalEntityEmitBuffer().get(entry.getKey()).addAll(entry.getValue());
+							hierarchicalEntityEmitMap.get(entry.getKey()).addAll(entry.getValue());
 						}
 
 					} else {
@@ -300,16 +316,23 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
 		if (getIncludeSubEntities()) {
 
-			if (isComplete() && isConditionMet() && Data.class.isInstance(source) && !hierarchicalEntityValueBuffer.isEmpty() && oldEntity == matchEntity) {
+			if (isComplete() && isConditionMet() && Data.class.isInstance(source) && !hierarchicalEntityValueBuffer.isEmpty()
+					&& oldEntity == matchEntity) {
 
-				final Entry<String, List<String>> buffer = hierarchicalEntityValueBuffer.entrySet().iterator().next();
+				final Map<String, List<String>> buffer = hierarchicalEntityValueBuffer.get(getEntityCount());
 
-				for (final Entry<String, List<String>> entry : hierarchicalEntityEmitBuffer.entrySet()) {
+				final Map<String, List<String>> hierarchicalEntityEmitMap = hierarchicalEntityEmitBuffer.get(getEntityCount());
 
-					if (entry.getKey().equals(buffer.getKey())) {
+				for (final Entry<String, List<String>> entry2 : hierarchicalEntityEmitMap.entrySet()) {
 
-						entry.getValue().removeAll(buffer.getValue());
+					final List<String> hierarchicalEntityValueMap = buffer.get(entry2.getKey());
+
+					if (hierarchicalEntityValueMap == null) {
+
+						continue;
 					}
+
+					entry2.getValue().removeAll(hierarchicalEntityValueMap);
 				}
 
 				hierarchicalEntityValueBuffer.clear();
