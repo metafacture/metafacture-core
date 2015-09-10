@@ -300,7 +300,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
 		if (getIncludeSubEntities()) {
 
-			if (isComplete() && isConditionMet() && Data.class.isInstance(source) && !hierarchicalEntityValueBuffer.isEmpty()) {
+			if (isComplete() && isConditionMet() && Data.class.isInstance(source) && !hierarchicalEntityValueBuffer.isEmpty() && oldEntity == matchEntity) {
 
 				final Entry<String, List<String>> buffer = hierarchicalEntityValueBuffer.entrySet().iterator().next();
 
