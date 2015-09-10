@@ -267,7 +267,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
 						matchEntity = entityCount;
 
-						for (Entry<String, List<String>> entry : hierarchicalEntityValueBuffer.entrySet()) {
+						for (final Entry<String, List<String>> entry : hierarchicalEntityValueBuffer.entrySet()) {
 
 							if (!getHierarchicalEntityEmitBuffer().containsKey(entry.getKey())) {
 
@@ -302,9 +302,9 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
 			if (isComplete() && isConditionMet() && Data.class.isInstance(source) && !hierarchicalEntityValueBuffer.isEmpty()) {
 
-				Entry<String, List<String>> buffer = hierarchicalEntityValueBuffer.entrySet().iterator().next();
+				final Entry<String, List<String>> buffer = hierarchicalEntityValueBuffer.entrySet().iterator().next();
 
-				for (Entry<String, List<String>> entry : hierarchicalEntityEmitBuffer.entrySet()) {
+				for (final Entry<String, List<String>> entry : hierarchicalEntityEmitBuffer.entrySet()) {
 
 					if (entry.getKey().equals(buffer.getKey())) {
 
