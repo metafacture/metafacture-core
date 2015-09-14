@@ -37,19 +37,19 @@ public class HierarchicalMultiMap<Key1, Key2, V> implements Iterable<Map.Entry<K
     }
   }
 
-  public void removeValues(Key1 key) {
-    Map<Key2, List<V>> valueMap = valueBuffer.get(key);
+  public void removeValues(final Key1 key) {
+    final Map<Key2, List<V>> valueMap = valueBuffer.get(key);
     if (valueMap == null) {
       return;
     }
 
-    Map<Key2, List<V>> emitMap = emitBuffer.get(key);
+    final Map<Key2, List<V>> emitMap = emitBuffer.get(key);
     if (emitMap == null) {
       return;
     }
 
-    for (Map.Entry<Key2, List<V>> entry : emitMap.entrySet()) {
-      List<V> values = valueMap.get(entry.getKey());
+    for (final Map.Entry<Key2, List<V>> entry : emitMap.entrySet()) {
+      final List<V> values = valueMap.get(entry.getKey());
       if (values != null) {
         entry.getValue().removeAll(values);
       }
@@ -93,7 +93,7 @@ public class HierarchicalMultiMap<Key1, Key2, V> implements Iterable<Map.Entry<K
         }
 
         if (currentMap != null && currentMap.hasNext()) {
-          Map.Entry<Key2, List<V>> next = currentMap.next();
+          final Map.Entry<Key2, List<V>> next = currentMap.next();
           currentKey2 = next.getKey();
           currentList = next.getValue().iterator();
           return computeNext();

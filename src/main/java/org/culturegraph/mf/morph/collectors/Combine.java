@@ -47,7 +47,7 @@ public final class Combine extends AbstractFlushingCollect {
 
 		if (getIncludeSubEntities()) {
 
-			HierarchicalMultiMap<Integer, String, String> entityBuffer = getHierarchicalEntityBuffer();
+			final HierarchicalMultiMap<Integer, String, String> entityBuffer = getHierarchicalEntityBuffer();
 			entityBuffer.addToEmit(getEntityCount(), name, value);
 
 			return;
@@ -63,7 +63,7 @@ public final class Combine extends AbstractFlushingCollect {
 
 	protected void emitHierarchicalEntityBuffer() {
 
-		for (Map.Entry<String, String> emitEntry : getHierarchicalEntityBuffer()) {
+		for (final Map.Entry<String, String> emitEntry : getHierarchicalEntityBuffer()) {
 			emit(emitEntry.getKey(), emitEntry.getValue());
 		}
 	}
@@ -75,7 +75,7 @@ public final class Combine extends AbstractFlushingCollect {
 			final String name = StringUtil.format(getName(), variables);
 			final String value = StringUtil.format(getValue(), variables);
 
-			HierarchicalMultiMap<Integer, String, String> entityBuffer = getHierarchicalEntityBuffer();
+			final HierarchicalMultiMap<Integer, String, String> entityBuffer = getHierarchicalEntityBuffer();
 			entityBuffer.addToValue(getEntityCount(), name, value);
 		}
 	}
