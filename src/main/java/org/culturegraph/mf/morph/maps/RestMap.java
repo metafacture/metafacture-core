@@ -15,44 +15,94 @@
  */
 package org.culturegraph.mf.morph.maps;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.culturegraph.mf.exceptions.MetafactureException;
 
-
 /**
- * NOT WORKING YET
- * 
- * @author "Markus Michael Geipel"
+ * @author "Markus Michael Geipel", "Philipp v. Böselager"
  *
  */
-public final class RestMap extends AbstractReadOnlyMap<String, String>{
-	
+public final class RestMap extends AbstractReadOnlyMap<String, String> {
+
 	private static final Pattern VAR_PATTERN = Pattern.compile("${key}", Pattern.LITERAL);
+	private String charsetName = "UTF-8";
 	private String url;
-	
-	public void setUrl(final String url) {
+
+	public RestMap() {
+	}
+
+	public RestMap(String url) {
 		this.url = url;
 	}
-		
-	
 
 	@Override
 	public String get(final Object key) {
 		final Matcher matcher = VAR_PATTERN.matcher(url);
 		try {
-			final URL url = new URL(matcher.replaceAll(key.toString()));
-			final URLConnection con = url.openConnection();
-			//TODO correctly read from connection!
-			return (String)con.getContent();
-			
-		} catch (IOException e) {
+			String urlString = "";
+			if (key instanceof List<?>) {
+				// in case there are multiple keys that have to be taken into
+				// account
+				urlString = decodeKeyList((List<?>) key);
+			} else {
+				urlString = matcher.replaceAll(key.toString());
+			}
+			return readFromUrl(urlString);
+
+		} catch (IOException | URISyntaxException e) {
+			if (e instanceof FileNotFoundException) {
+				// There was no data result for the given URL
+				return null;
+			}
 			throw new MetafactureException(e);
 		}
+	}
+
+	private String decodeKeyList(final List<?> keyList) {
+		Matcher tempMatcher = VAR_PATTERN.matcher(url);
+		String result = new String(url);
+		for (Object k : keyList) {
+			result = tempMatcher.replaceFirst(k.toString());
+			tempMatcher = VAR_PATTERN.matcher(result);
+		}
+		return result;
+	}
+
+	private String readFromUrl(final String url) throws IOException, URISyntaxException {
+		InputStream inputStream = new URL(new URI(url.replace(" ", "%20")).toASCIIString()).openConnection()
+				.getInputStream();
+		try {
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(inputStream, Charset.forName(charsetName)));
+			StringBuilder stringBuffer = new StringBuilder();
+			int value;
+			while ((value = reader.read()) != -1) {
+				stringBuffer.append((char) value);
+			}
+			return stringBuffer.toString();
+		} finally {
+			inputStream.close();
+		}
+	}
+
+	public void setUrl(final String url) {
+		this.url = url;
+	}
+
+	public void setCharsetName(String name) {
+		charsetName = name;
 	}
 
 }
