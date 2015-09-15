@@ -20,15 +20,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.culturegraph.mf.exceptions.MetafactureException;
+
+import com.google.gdata.util.common.base.PercentEscaper;
 
 /**
  * @author "Markus Michael Geipel", "Philipp v. Böselager"
@@ -37,6 +37,8 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 public final class RestMap extends AbstractReadOnlyMap<String, String> {
 
 	private static final Pattern VAR_PATTERN = Pattern.compile("${key}", Pattern.LITERAL);
+	private static PercentEscaper percentEscaper = new PercentEscaper(PercentEscaper.SAFEPATHCHARS_URLENCODER, true);
+	private boolean urlQueryMode = false;
 	private String charsetName = "UTF-8";
 	private String url;
 
@@ -51,14 +53,7 @@ public final class RestMap extends AbstractReadOnlyMap<String, String> {
 	public String get(final Object key) {
 		final Matcher matcher = VAR_PATTERN.matcher(url);
 		try {
-			String urlString = "";
-			if (key instanceof List<?>) {
-				// in case there are multiple keys that have to be taken into
-				// account
-				urlString = decodeKeyList((List<?>) key);
-			} else {
-				urlString = matcher.replaceAll(key.toString());
-			}
+			String urlString = matcher.replaceAll(percentEscaper.escape(key.toString()));
 			return readFromUrl(urlString);
 
 		} catch (IOException | URISyntaxException e) {
@@ -70,19 +65,8 @@ public final class RestMap extends AbstractReadOnlyMap<String, String> {
 		}
 	}
 
-	private String decodeKeyList(final List<?> keyList) {
-		Matcher tempMatcher = VAR_PATTERN.matcher(url);
-		String result = new String(url);
-		for (Object k : keyList) {
-			result = tempMatcher.replaceFirst(k.toString());
-			tempMatcher = VAR_PATTERN.matcher(result);
-		}
-		return result;
-	}
-
 	private String readFromUrl(final String url) throws IOException, URISyntaxException {
-		InputStream inputStream = new URL(new URI(url.replace(" ", "%20")).toASCIIString()).openConnection()
-				.getInputStream();
+		InputStream inputStream = new URL(url).openConnection().getInputStream();
 		try {
 			BufferedReader reader = new BufferedReader(
 					new InputStreamReader(inputStream, Charset.forName(charsetName)));
@@ -103,6 +87,15 @@ public final class RestMap extends AbstractReadOnlyMap<String, String> {
 
 	public void setCharsetName(String name) {
 		charsetName = name;
+	}
+
+	public void setUrlMode(boolean isUrlQueryMode) {
+		if (isUrlQueryMode && !urlQueryMode) {
+			percentEscaper = new PercentEscaper(PercentEscaper.SAFEQUERYSTRINGCHARS_URLENCODER, true);
+		} else if (!isUrlQueryMode && urlQueryMode) {
+			percentEscaper = new PercentEscaper(PercentEscaper.SAFEPATHCHARS_URLENCODER, true);
+		}
+		urlQueryMode = isUrlQueryMode;
 	}
 
 }
