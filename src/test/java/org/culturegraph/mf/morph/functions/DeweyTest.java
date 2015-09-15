@@ -25,6 +25,7 @@ public class DeweyTest {
 
 	private static final String DEWEY1 = "123.456";
 	private static final String DEWEY2 = "3.456";
+	private static final String DEWEY3 = "023.456";
 	private static final String NON_VALID_DEWEY = "ABC";
 	private static final String NON_VALID_DEWEY2 = "123.456.789";
 
@@ -91,6 +92,18 @@ public class DeweyTest {
 	public void precision100PartDeweyWALZTest() {
 
 		processDewey(DEWEY1, PRECISION_100_PART, false, "something went wrong", "123.45");
+	}
+
+	@Test
+	public void precision100PartDeweyTest2() {
+
+		processDewey(DEWEY3, PRECISION_100_PART, true, "something went wrong", "023.45");
+	}
+
+	@Test
+	public void precision100PartDeweyWALZTest2() {
+
+		processDewey(DEWEY3, PRECISION_100_PART, false, "something went wrong", "23.45");
 	}
 
 	/**
