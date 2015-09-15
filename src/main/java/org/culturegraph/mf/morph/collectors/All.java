@@ -15,8 +15,10 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
@@ -32,9 +34,12 @@ public final class All extends AbstractFlushingCollect {
 
 	private static final String DEFAULT_NAME = "";
 	private static final String DEFAULT_VALUE = "true";
+	private static final String FALSE = "false";
 
-	private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
-	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
+	private final Set<NamedValueSource>       sources             = new HashSet<>();
+	private final Set<NamedValueSource>       sourcesLeft         = new HashSet<>();
+	private final Stack<NamedValueSource>     matchedSourcesStack = new Stack<>();
+	final         ArrayList<NamedValueSource> toBeMatchedSources  = new ArrayList<>();
 
 	public All(final Metamorph metamorph) {
 		super(metamorph);
@@ -42,17 +47,36 @@ public final class All extends AbstractFlushingCollect {
 
 	@Override
 	protected void receive(final String name, final String value, final NamedValueSource source) {
+
 		sourcesLeft.remove(source);
+		matchedSourcesStack.push(source);
 	}
 
 	@Override
 	protected boolean isComplete() {
+
 		return sourcesLeft.isEmpty();
 	}
 
 	@Override
 	protected void clear() {
+
 		sourcesLeft.addAll(sources);
+		toBeMatchedSources.clear();
+	}
+
+	protected void clearLastMatchedEntity() {
+
+		if (!matchedSourcesStack.isEmpty()) {
+
+			final NamedValueSource pop = matchedSourcesStack.pop();
+			toBeMatchedSources.add(pop);
+
+			sourcesLeft.addAll(toBeMatchedSources);
+		} else {
+
+			sourcesLeft.addAll(sources);
+		}
 	}
 
 	@Override
@@ -70,13 +94,14 @@ public final class All extends AbstractFlushingCollect {
 	protected void forcedNonMatchedEmit() {
 
 		final String name = StringUtil.fallback(getName(), DEFAULT_NAME);
-		final String value = "false";
+		final String value = FALSE;
 
 		getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
 	}
 
 	@Override
 	public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
+
 		sources.add(namedValueSource);
 		sourcesLeft.add(namedValueSource);
 	}

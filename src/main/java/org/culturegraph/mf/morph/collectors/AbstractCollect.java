@@ -15,16 +15,11 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.culturegraph.mf.morph.AbstractNamedValuePipe;
 import org.culturegraph.mf.morph.Data;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.types.HierarchicalMultiMap;
 
 /**
  * Common basis for {@link Entity}, {@link Combine} etc.
@@ -48,9 +43,8 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 	private       boolean   includeSubEntities;
 	private int currentHierarchicalEntity = 0;
 	private int oldHierarchicalEntity     = 0;
-	private Map<String, List<String>> hierarchicalEntityEmitBuffer;
-	private Map<String, List<String>> hierarchicalEntityValueBuffer;
-	private Integer                   matchEntity;
+	private HierarchicalMultiMap<Integer, String, String> hierarchicalEntityBuffer;
+	private Integer                                       matchEntity;
 
 	private NamedValueSource conditionSource;
 
@@ -69,8 +63,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
 		if (includeSubEntities) {
 
-			hierarchicalEntityEmitBuffer = new LinkedHashMap<>();
-			hierarchicalEntityValueBuffer = new LinkedHashMap<>();
+			hierarchicalEntityBuffer = new HierarchicalMultiMap<>();
 		}
 	}
 
@@ -79,19 +72,14 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 		return includeSubEntities;
 	}
 
-	protected final Map<String, List<String>> getHierarchicalEntityEmitBuffer() {
+	protected final HierarchicalMultiMap<Integer, String, String> getHierarchicalEntityBuffer() {
 
-		return hierarchicalEntityEmitBuffer;
-	}
-
-	protected final Map<String, List<String>> getHierarchicalEntityValueBuffer() {
-
-		return hierarchicalEntityValueBuffer;
+		return hierarchicalEntityBuffer;
 	}
 
 	protected boolean isHierarchicalEntityEmitBufferFilled() {
 
-		return hierarchicalEntityEmitBuffer != null && !hierarchicalEntityEmitBuffer.isEmpty();
+		return hierarchicalEntityBuffer != null && hierarchicalEntityBuffer.hasEmits();
 	}
 
 	protected final Integer getMatchEntity() {
@@ -267,22 +255,14 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
 						matchEntity = entityCount;
 
-						for (final Entry<String, List<String>> entry : hierarchicalEntityValueBuffer.entrySet()) {
-
-							if (!getHierarchicalEntityEmitBuffer().containsKey(entry.getKey())) {
-
-								getHierarchicalEntityEmitBuffer().put(entry.getKey(), new ArrayList<String>());
-							}
-
-							getHierarchicalEntityEmitBuffer().get(entry.getKey()).addAll(entry.getValue());
-						}
+						hierarchicalEntityBuffer.emitValues(entityCount);
 
 					} else {
 
 						// do something with matchEntity, e.g., reset
 						matchEntity = null;
 						conditionMet = false;
-						hierarchicalEntityValueBuffer.clear();
+						hierarchicalEntityBuffer.clearValues();
 					}
 
 					return true;
@@ -300,19 +280,11 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
 		if (getIncludeSubEntities()) {
 
-			if (isComplete() && isConditionMet() && Data.class.isInstance(source) && !hierarchicalEntityValueBuffer.isEmpty() && oldEntity == matchEntity) {
+			if (isComplete() && isConditionMet() && Data.class.isInstance(source) && hierarchicalEntityBuffer.hasValues()
+					&& oldEntity == matchEntity) {
 
-				final Entry<String, List<String>> buffer = hierarchicalEntityValueBuffer.entrySet().iterator().next();
-
-				for (final Entry<String, List<String>> entry : hierarchicalEntityEmitBuffer.entrySet()) {
-
-					if (entry.getKey().equals(buffer.getKey())) {
-
-						entry.getValue().removeAll(buffer.getValue());
-					}
-				}
-
-				hierarchicalEntityValueBuffer.clear();
+				hierarchicalEntityBuffer.removeValues(getEntityCount());
+				hierarchicalEntityBuffer.clearValues();
 			}
 
 			if (Combine.class.isInstance(this)) {
