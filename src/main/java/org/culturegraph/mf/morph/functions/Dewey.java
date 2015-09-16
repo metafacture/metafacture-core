@@ -33,6 +33,7 @@ public class Dewey extends AbstractSimpleStatelessFunction {
 	// For Dewey callnumber, there may be a slash instead of a cutter,
 	//  or there might be NO cutter
 	private static final String BEGIN_CUTTER_REGEX = "( +|(\\.[A-Z])| */)";
+	public static final  String ZERO               = "0";
 
 	private String  precision;
 	private boolean addLeadingZeros;
@@ -70,7 +71,7 @@ public class Dewey extends AbstractSimpleStatelessFunction {
 
 			final float precisionFloat = convertToFloat(precision);
 
-			if(precisionFloat >= 1) {
+			if (precisionFloat >= 1) {
 
 				// no digits after decimal point
 
@@ -107,12 +108,24 @@ public class Dewey extends AbstractSimpleStatelessFunction {
 			return null;
 		}
 
-		float currentVal = Float.parseFloat(deweyB4Cutter);
+		final String deweyWALZ = cutLeadingZeros(deweyB4Cutter);
+
+		final double currentVal = Double.parseDouble(deweyWALZ);
+
+		final DeweyPrecisionType precisionType = DeweyPrecisionType.getByPrecision(precision);
+
+		final DecimalFormat decimalFormat = precisionType.getPrecisionFormat();
 
 		// Round the call number value to the specified precision:
-		final Float finalVal = new Float(Math.floor(currentVal / precision) * precision);
+		if (precision >= 1) {
 
-		return finalVal.toString();
+			final Double roundVal = Math.floor(currentVal / precision) * precision;
+
+			return roundVal.toString();
+		} else {
+
+			return decimalFormat.format(currentVal);
+		}
 	}
 
 	private float convertToFloat(final String precisionString) {
@@ -235,12 +248,12 @@ public class Dewey extends AbstractSimpleStatelessFunction {
 
 		formatStrSB.append(getFormatString(digitsB4, addLeadingZeros));
 
-		if(digitsAfter != null) {
+		if (digitsAfter != null) {
 
 			formatStrSB.append('.').append(getFormatString(digitsAfter, addLeadingZeros));
 		}
 
-		final String formatStr =  formatStrSB.toString();
+		final String formatStr = formatStrSB.toString();
 
 		final DecimalFormat normFormat = new DecimalFormat(formatStr, DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 
@@ -276,5 +289,17 @@ public class Dewey extends AbstractSimpleStatelessFunction {
 		}
 
 		return b4.toString();
+	}
+
+	private static String cutLeadingZeros(final String deweyString) {
+
+		String dewey = deweyString;
+
+		while (dewey.startsWith(ZERO)) {
+
+			dewey = dewey.substring(1, dewey.length());
+		}
+
+		return dewey;
 	}
 }
