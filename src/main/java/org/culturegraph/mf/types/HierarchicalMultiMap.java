@@ -60,18 +60,21 @@ public final class HierarchicalMultiMap<Key1, Key2, V> implements Iterable<Map.E
   public Iterator<Map.Entry<Key2, V>> iterator() {
     return new Iterator<Map.Entry<Key2, V>>() {
 
-      private final Iterator<Map.Entry<Key1, Map<Key2, List<V>>>> emitIterator =
-          emitBuffer.entrySet().iterator();
+      private final Iterator<Map<Key2, List<V>>> emitIterator =
+          emitBuffer.values().iterator();
 
       private Key2 currentKey2;
       private Iterator<Map.Entry<Key2, List<V>>> currentMap;
       private Iterator<V> currentList;
 
+      private Map.Entry<Key2, V> prefetched;
+
       @Override
       public boolean hasNext() {
-        return (currentList != null && currentList.hasNext()) ||
-            (currentMap != null && currentMap.hasNext()) ||
-            emitIterator.hasNext();
+        if (prefetched == null) {
+          prefetched = computeNext();
+        }
+        return prefetched != null;
       }
 
       @Override
@@ -79,7 +82,9 @@ public final class HierarchicalMultiMap<Key1, Key2, V> implements Iterable<Map.E
         if (!hasNext()) {
           throw new NoSuchElementException();
         }
-        return computeNext();
+        final Map.Entry<Key2, V> entry = prefetched;
+        prefetched = null;
+        return entry;
       }
 
       @Override
@@ -88,19 +93,39 @@ public final class HierarchicalMultiMap<Key1, Key2, V> implements Iterable<Map.E
       }
 
       private Map.Entry<Key2, V> computeNext() {
-        if (currentList != null && currentList.hasNext()) {
-          return make(currentList.next());
+        // We're at a second level iteration, return next value
+        if (currentList != null) {
+          if (currentList.hasNext()) {
+            return make(currentList.next());
+          } else {
+            // avoid hasNext checks on subsequent iterations
+            currentList = null;
+          }
         }
 
-        if (currentMap != null && currentMap.hasNext()) {
-          final Map.Entry<Key2, List<V>> next = currentMap.next();
-          currentKey2 = next.getKey();
-          currentList = next.getValue().iterator();
+        // We're at a first level iteration, start iteration over the next 2nd level
+        if (currentMap != null) {
+          if (currentMap.hasNext()) {
+            final Map.Entry<Key2, List<V>> next = currentMap.next();
+            currentKey2 = next.getKey();
+            currentList = next.getValue().iterator();
+            return computeNext();
+          } else {
+            // avoid hasNext checks on subsequent iterations
+            currentMap = null;
+          }
+        }
+
+        // We're at a root level iteration, iterate over the next 1st level
+        if (emitIterator.hasNext()) {
+          currentMap = emitIterator.next().entrySet().iterator();
           return computeNext();
         }
 
-        currentMap = emitIterator.next().getValue().entrySet().iterator();
-        return computeNext();
+        // There is nothing left to iterator, null everything for good measure.
+        currentList = null;
+        currentMap = null;
+        return null;
       }
 
       public Map.Entry<Key2, V> make(final V value) {
