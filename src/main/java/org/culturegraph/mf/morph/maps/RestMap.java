@@ -16,7 +16,6 @@
 package org.culturegraph.mf.morph.maps;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,8 +25,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.culturegraph.mf.exceptions.MetafactureException;
 
 /**
  * @author "Markus Michael Geipel", "Philipp v. Böselager"
@@ -53,11 +50,8 @@ public final class RestMap extends AbstractReadOnlyMap<String, String> {
 			String urlString = matcher.replaceAll(key.toString());
 			return readFromUrl(urlString);
 		} catch (IOException | URISyntaxException e) {
-			if (e instanceof FileNotFoundException) {
-				// There was no data result for the given URL
-				return null;
-			}
-			throw new MetafactureException(e);
+			// There was no data result for the given URL
+			return null;
 		}
 	}
 
