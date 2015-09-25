@@ -669,6 +669,14 @@
 		</restriction>
 	</simpleType>
 
+	<simpleType name="valueType">
+		<restriction base="string">
+			<enumeration value="RESOURCE"/>
+			<enumeration value="LITERAL"/>
+			<enumeration value="BNODE"/>
+		</restriction>
+	</simpleType>
+
 	<group name="literal-rule">
 		<choice>
 
@@ -700,6 +708,7 @@
 			<element ref="tns:blacklist"/>
 			<element ref="tns:isbn"/>
 			<element ref="tns:dewey"/>
+			<element ref="tns:convert-value"/>
 			<element ref="tns:http-api-request"/>
 			<element ref="tns:parse-json"/>
 			<element ref="tns:equals"/>
@@ -956,6 +965,28 @@
 			<attribute name="errorString" use="optional">
 				<annotation>
 					<documentation>Error string that should be written as value, if the input string is not a valid Dewey number
+					</documentation>
+				</annotation>
+			</attribute>
+		</complexType>
+	</element>
+
+	<element name="convert-value">
+		<annotation>
+			<documentation>Convert a value to a certain value type, e.g., RESOURCE, LITERAL or BNODE.</documentation>
+		</annotation>
+		<complexType>
+			<attribute name="type" type="tns:valueType" use="optional" default="LITERAL">
+				<annotation>
+					<documentation>One of RESOURCE (value will be interpreted as resource URI), LITERAL (string literal) or BNODE (value will be
+						interpreted as bnode identifier),
+					</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="errorString" use="optional">
+				<annotation>
+					<documentation>Error string that should be written as value, if the input string is not a valid value for the value type (e.g. not
+						an URI if it's a RESOURCE)
 					</documentation>
 				</annotation>
 			</attribute>
