@@ -707,6 +707,7 @@
 			<element ref="tns:whitelist"/>
 			<element ref="tns:blacklist"/>
 			<element ref="tns:isbn"/>
+			<element ref="tns:issn"/>
 			<element ref="tns:dewey"/>
 			<element ref="tns:convert-value"/>
 			<element ref="tns:http-api-request"/>
@@ -940,6 +941,32 @@
 			<attribute name="verifyCheckDigit" type="boolean" use="optional"
 					   default="false"/>
 			<attribute name="errorString" use="optional"/>
+		</complexType>
+	</element>
+
+	<element name="issn">
+		<annotation>
+			<documentation>ISSN conversion and verification.</documentation>
+		</annotation>
+		<complexType>
+			<attribute name="format" type="boolean" use="optional">
+				<annotation>
+					<documentation>Formats/normalizes the given ISSN with a hyphen after the 4th digit (+ upper-cases the last character)
+					</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="check" type="boolean" use="optional" default="true">
+				<annotation>
+					<documentation>Check the given ISSN with help of the checksum character at the end of the ISSN (default = true)
+					</documentation>
+				</annotation>
+			</attribute>
+			<attribute name="errorString" use="optional">
+				<annotation>
+					<documentation>Error string that should be written as value, if the input string is not a valid ISSN
+					</documentation>
+				</annotation>
+			</attribute>
 		</complexType>
 	</element>
 
