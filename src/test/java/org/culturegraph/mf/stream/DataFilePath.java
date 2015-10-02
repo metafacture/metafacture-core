@@ -33,6 +33,7 @@ public final class DataFilePath {
 	public static final String CG_XML = DATA_PREFIX + "cgxml_test.xml";
 	
 	public static final String GENERIC_XML = DATA_PREFIX + "generic_xml_test.xml";
+	public static final String ALEPH_MAB_XML = DATA_PREFIX + "alephmabxml.xml";
 	
 	public static final String COMPRESSED_NONE = DATA_PREFIX + "compressed.txt";
 	public static final String COMPRESSED_BZ2 = DATA_PREFIX + "compressed.txt.bz2";
