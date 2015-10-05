@@ -15,8 +15,6 @@
  */
 package org.culturegraph.mf.stream.converter.xml;
 
-import static org.mockito.Mockito.inOrder;
-
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.stream.DataFilePath;
 import org.culturegraph.mf.stream.source.ResourceOpener;
@@ -25,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -39,45 +38,46 @@ public final class AlephMabXmlHandlerTest {
 	@Mock
 	private StreamReceiver receiver;
 
+	@After
+	public void cleanup() {
+		this.opener.closeStream();
+	}
+
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		opener = new ResourceOpener();
-		xmlDecoder = new XmlDecoder();
-		mabXmlHandler = new AlephMabXmlHandler();
-		opener.setReceiver(xmlDecoder).setReceiver(mabXmlHandler).setReceiver(receiver);
-	}
-
-	@After
-	public void cleanup() {
-		opener.closeStream();
+		this.opener = new ResourceOpener();
+		this.xmlDecoder = new XmlDecoder();
+		this.mabXmlHandler = new AlephMabXmlHandler();
+		this.opener.setReceiver(this.xmlDecoder).setReceiver(this.mabXmlHandler)
+				.setReceiver(this.receiver);
 	}
 
 	@Test
 	public void testShouldIgnoreCharDataNotInARecord() {
 
-		opener.process(DataFilePath.ALEPH_MAB_XML);
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("");
-		ordered.verify(receiver).startEntity("001-1");
-		ordered.verify(receiver).literal("a", "HT010726584");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).startEntity("331-1");
-		ordered.verify(receiver).literal("a", "Physics of plasmas");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).startEntity("902-1");
-		ordered.verify(receiver).literal("s", "Zeitschrift");
-		ordered.verify(receiver).literal("9", "(DE-588)4067488-5");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
-		ordered.verify(receiver).startRecord("");
-		ordered.verify(receiver).startEntity("001-1");
-		ordered.verify(receiver).literal("a", "HT018700720");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).startEntity("100b1");
-		ordered.verify(receiver).literal("p", "Amrhein, Ludwig");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
+		this.opener.process(DataFilePath.ALEPH_MAB_XML);
+		final InOrder ordered = Mockito.inOrder(this.receiver);
+		ordered.verify(this.receiver).startRecord("");
+		ordered.verify(this.receiver).startEntity("001-1");
+		ordered.verify(this.receiver).literal("a", "HT010726584");
+		ordered.verify(this.receiver).endEntity();
+		ordered.verify(this.receiver).startEntity("331-1");
+		ordered.verify(this.receiver).literal("a", "Physics of plasmas");
+		ordered.verify(this.receiver).endEntity();
+		ordered.verify(this.receiver).startEntity("902-1");
+		ordered.verify(this.receiver).literal("s", "Zeitschrift");
+		ordered.verify(this.receiver).literal("9", "(DE-588)4067488-5");
+		ordered.verify(this.receiver).endEntity();
+		ordered.verify(this.receiver).endRecord();
+		ordered.verify(this.receiver).startRecord("");
+		ordered.verify(this.receiver).startEntity("001-1");
+		ordered.verify(this.receiver).literal("a", "HT018700720");
+		ordered.verify(this.receiver).endEntity();
+		ordered.verify(this.receiver).startEntity("100b1");
+		ordered.verify(this.receiver).literal("p", "Amrhein, Ludwig");
+		ordered.verify(this.receiver).endEntity();
+		ordered.verify(this.receiver).endRecord();
 	}
 
 }
