@@ -69,6 +69,8 @@ public final class AlephMabXmlHandlerTest {
 		ordered.verify(receiver).literal("s", "Zeitschrift");
 		ordered.verify(receiver).literal("9", "(DE-588)4067488-5");
 		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).endRecord();
+		ordered.verify(receiver).startRecord("");
 		ordered.verify(receiver).startEntity("001-1");
 		ordered.verify(receiver).literal("a", "HT018700720");
 		ordered.verify(receiver).endEntity();
