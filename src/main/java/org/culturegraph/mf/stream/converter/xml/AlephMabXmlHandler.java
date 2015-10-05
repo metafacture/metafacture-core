@@ -26,9 +26,9 @@ import org.xml.sax.SAXException;
 
 /**
  * An Aleph-MAB-XML reader.
- * 
+ *
  * @author Pascal Christoph (dr0i)
- * 
+ *
  */
 @Description("A MAB XML reader")
 @In(XmlReceiver.class)
@@ -48,43 +48,46 @@ public final class AlephMabXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 	private StringBuilder builder = new StringBuilder();
 
 	@Override
-	public void startElement(final String uri, final String localName, final String qName, final Attributes attributes)
+	public void characters(final char[] chars, final int start, final int length)
 			throws SAXException {
-		if (CONTROLLFIELD.equals(localName)) {
-			builder = new StringBuilder();
-			currentTag = "";
-			getReceiver().startEntity(attributes.getValue(DATAFIELD_ATTRIBUTE));
-		} else if (SUBFIELD.equals(localName)) {
-			builder = new StringBuilder();
-			currentTag = attributes.getValue(SUBFIELD_ATTRIBUTE);
-		} else if (DATAFIELD.equals(localName)) {
-			getReceiver().startEntity(attributes.getValue(DATAFIELD_ATTRIBUTE) + attributes.getValue(INDICATOR1)
-					+ attributes.getValue(INDICATOR2));
-		} else if (RECORD.equals(localName)) {
-			getReceiver().startRecord("");
-		} else if (LEADER.equals(localName)) {
-			builder = new StringBuilder();
-			currentTag = LEADER;
-		}
+		this.builder.append(chars, start, length);
 	}
 
 	@Override
-	public void endElement(final String uri, final String localName, final String qName) throws SAXException {
-		if (CONTROLLFIELD.equals(localName)) {
-			getReceiver().literal(currentTag, builder.toString().trim());
+	public void endElement(final String uri, final String localName, final String qName)
+			throws SAXException {
+		if (AlephMabXmlHandler.CONTROLLFIELD.equals(localName)) {
+			getReceiver().literal(this.currentTag, this.builder.toString().trim());
 			getReceiver().endEntity();
-		} else if (SUBFIELD.equals(localName)) {
-			getReceiver().literal(currentTag, builder.toString().trim());
-		} else if (DATAFIELD.equals(localName)) {
+		} else if (AlephMabXmlHandler.SUBFIELD.equals(localName)) {
+			getReceiver().literal(this.currentTag, this.builder.toString().trim());
+		} else if (AlephMabXmlHandler.DATAFIELD.equals(localName)) {
 			getReceiver().endEntity();
-		} else if (RECORD.equals(localName)) {
+		} else if (AlephMabXmlHandler.RECORD.equals(localName)) {
 			getReceiver().endRecord();
 		}
 	}
 
 	@Override
-	public void characters(final char[] chars, final int start, final int length) throws SAXException {
-		builder.append(chars, start, length);
+	public void startElement(final String uri, final String localName, final String qName,
+			final Attributes attributes) throws SAXException {
+		if (AlephMabXmlHandler.CONTROLLFIELD.equals(localName)) {
+			this.builder = new StringBuilder();
+			this.currentTag = "";
+			getReceiver().startEntity(attributes.getValue(AlephMabXmlHandler.DATAFIELD_ATTRIBUTE));
+		} else if (AlephMabXmlHandler.SUBFIELD.equals(localName)) {
+			this.builder = new StringBuilder();
+			this.currentTag = attributes.getValue(AlephMabXmlHandler.SUBFIELD_ATTRIBUTE);
+		} else if (AlephMabXmlHandler.DATAFIELD.equals(localName)) {
+			getReceiver().startEntity(attributes.getValue(AlephMabXmlHandler.DATAFIELD_ATTRIBUTE)
+					+ attributes.getValue(AlephMabXmlHandler.INDICATOR1)
+					+ attributes.getValue(AlephMabXmlHandler.INDICATOR2));
+		} else if (AlephMabXmlHandler.RECORD.equals(localName)) {
+			getReceiver().startRecord("");
+		} else if (AlephMabXmlHandler.LEADER.equals(localName)) {
+			this.builder = new StringBuilder();
+			this.currentTag = AlephMabXmlHandler.LEADER;
+		}
 	}
 
 }
