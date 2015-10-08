@@ -26,6 +26,9 @@ public class DeweyTest {
 	private static final String DEWEY1 = "123.456";
 	private static final String DEWEY2 = "3.456";
 	private static final String DEWEY3 = "023.456";
+	private static final String DEWEY4 = "0";
+	private static final String DEWEY6 = "000";
+	private static final String DEWEY5 = "123";
 	private static final String NON_VALID_DEWEY = "ABC";
 	private static final String NON_VALID_DEWEY2 = "123.456.789";
 
@@ -92,6 +95,183 @@ public class DeweyTest {
 	public void precision100PartDeweyWALZTest() {
 
 		processDewey(DEWEY1, PRECISION_100_PART, false, "something went wrong", "123.45");
+	}
+
+	@Test
+	public void precision100DeweyTest2() {
+
+		processDewey(DEWEY4, PRECISION_100, true, "something went wrong", "000");
+	}
+	@Test
+	public void precision100DeweyWALZTest2() {
+
+		processDewey(DEWEY4, PRECISION_100, false, "something went wrong", "0");
+	}
+
+	@Test
+	public void precision10DeweyTest2() {
+
+		processDewey(DEWEY4, PRECISION_10, true, "something went wrong", "000");
+	}
+
+	@Test
+	public void precision10DeweyWALZTest2() {
+
+		processDewey(DEWEY4, PRECISION_10, false, "something went wrong", "0");
+	}
+
+	@Test
+	public void precision1DeweyTest2() {
+
+		processDewey(DEWEY4, PRECISION_1, true, "something went wrong", "000");
+	}
+
+	@Test
+	public void precision1DeweyWALZTest2() {
+
+		processDewey(DEWEY4, PRECISION_1, false, "something went wrong", "0");
+	}
+
+	@Test
+	public void precision10PartDeweyTest2() {
+
+		processDewey(DEWEY4, PRECISION_10_PART, true, "something went wrong", "000");
+	}
+
+	@Test
+	public void precision10PartDeweyWALZTest2() {
+
+		processDewey(DEWEY4, PRECISION_10_PART, false, "something went wrong", "0");
+	}
+
+	@Test
+	public void precision100PartDeweyTest22() {
+
+		processDewey(DEWEY4, PRECISION_100_PART, true, "something went wrong", "000");
+	}
+
+	@Test
+	public void precision100PartDeweyWALZTest22() {
+
+		processDewey(DEWEY4, PRECISION_100_PART, false, "something went wrong", "0");
+	}
+
+	@Test
+	public void precision100DeweyTest3() {
+
+		processDewey(DEWEY5, PRECISION_100, true, "something went wrong", "100");
+	}
+	@Test
+	public void precision100DeweyWALZTest3() {
+
+		processDewey(DEWEY5, PRECISION_100, false, "something went wrong", "100");
+	}
+
+	@Test
+	public void precision10DeweyTest3() {
+
+		processDewey(DEWEY5, PRECISION_10, true, "something went wrong", "120");
+	}
+
+	@Test
+	public void precision10DeweyWALZTest3() {
+
+		processDewey(DEWEY5, PRECISION_10, false, "something went wrong", "120");
+	}
+
+	@Test
+	public void precision1DeweyTest3() {
+
+		processDewey(DEWEY5, PRECISION_1, true, "something went wrong", "123");
+	}
+
+	@Test
+	public void precision1DeweyWALZTest3() {
+
+		processDewey(DEWEY5, PRECISION_1, false, "something went wrong", "123");
+	}
+
+	@Test
+	public void precision10PartDeweyTest3() {
+
+		processDewey(DEWEY5, PRECISION_10_PART, true, "something went wrong", "123");
+	}
+
+	@Test
+	public void precision10PartDeweyWALZTest3() {
+
+		processDewey(DEWEY5, PRECISION_10_PART, false, "something went wrong", "123");
+	}
+
+	@Test
+	public void precision100PartDeweyTest23() {
+
+		processDewey(DEWEY5, PRECISION_100_PART, true, "something went wrong", "123");
+	}
+
+	@Test
+	public void precision100PartDeweyWALZTest23() {
+
+		processDewey(DEWEY5, PRECISION_100_PART, false, "something went wrong", "123");
+	}
+
+	@Test
+	public void precision100DeweyTest4() {
+
+		processDewey(DEWEY6, PRECISION_100, true, "something went wrong", "000");
+	}
+	@Test
+	public void precision100DeweyWALZTest4() {
+
+		processDewey(DEWEY6, PRECISION_100, false, "something went wrong", "0");
+	}
+
+	@Test
+	public void precision10DeweyTest4() {
+
+		processDewey(DEWEY6, PRECISION_10, true, "something went wrong", "000");
+	}
+
+	@Test
+	public void precision10DeweyWALZTest4() {
+
+		processDewey(DEWEY6, PRECISION_10, false, "something went wrong", "0");
+	}
+
+	@Test
+	public void precision1DeweyTest4() {
+
+		processDewey(DEWEY6, PRECISION_1, true, "something went wrong", "000");
+	}
+
+	@Test
+	public void precision1DeweyWALZTest4() {
+
+		processDewey(DEWEY6, PRECISION_1, false, "something went wrong", "0");
+	}
+
+	@Test
+	public void precision10PartDeweyTest4() {
+
+		processDewey(DEWEY6, PRECISION_10_PART, true, "something went wrong", "000");
+	}
+
+	@Test
+	public void precision10PartDeweyWALZTest4() {
+
+		processDewey(DEWEY6, PRECISION_10_PART, false, "something went wrong", "0");
+	}
+
+	@Test
+	public void precision100PartDeweyTest24() {
+
+		processDewey(DEWEY6, PRECISION_100_PART, true, "something went wrong", "000");
+	}
+
+	@Test
+	public void precision100PartDeweyWALZTest24() {
+
+		processDewey(DEWEY6, PRECISION_100_PART, false, "something went wrong", "0");
 	}
 
 	@Test
