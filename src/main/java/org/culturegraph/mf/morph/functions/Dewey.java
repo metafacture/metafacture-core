@@ -223,7 +223,7 @@ public class Dewey extends AbstractSimpleStatelessFunction {
 
 	private static String cutLeadingZeros(final String deweyString) {
 
-		if (ZERO.equals(deweyString)) {
+		if (deweyString.endsWith(ZERO)) {
 
 			// only 0 can be a dewey number as well
 
