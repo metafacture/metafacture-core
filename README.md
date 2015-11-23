@@ -56,4 +56,4 @@ TODO: Include a link to a page which explains how to write plugins
 
 # Stay updated
 
-For support and discussion join the [mailing list](http://lists.dnb.de/mailman/listinfo/metafacture).
+For support and discussion join the [mailing list](http://lists.dnb.de/mailman/listinfo/metafacture). The mailing list archive can be found at [Nabble](http://metafacture.2350614.n4.nabble.com/).
