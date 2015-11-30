@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ListRecords>
+    <record>
+      <header>
+        <identifier>aleph-publish:005667364</identifier>
+      </header>
+      <metadata>
+        <record>
+          <leader>00000nM2.01200024------h</leader>
+          <controlfield tag="LDR">00000nM2.01200024------h</controlfield>
+          <controlfield tag="FMT">MH</controlfield>
+          <datafield tag="001" ind1="-" ind2="1">
+            <subfield code="a">HT010726584</subfield>
+          </datafield>
+          <datafield tag="002" ind1="a" ind2="1">
+            <subfield code="a">19991122</subfield>
+          </datafield>
+          <datafield tag="003" ind1="-" ind2="1">
+            <subfield code="a">20131031112801</subfield>
+          </datafield>
+          <datafield tag="016" ind1="-" ind2="1">
+            <subfield code="a">2070158-5</subfield>
+          </datafield>
+          <datafield tag="020" ind1="a" ind2="1">
+            <subfield code="a">1472746-8</subfield>
+            <subfield code="b">DNB</subfield>
+          </datafield>
+          <datafield tag="025" ind1="a" ind2="1">
+            <subfield code="a">019658389</subfield>
+          </datafield>
+          <datafield tag="025" ind1="z" ind2="1">
+            <subfield code="a">1472746-8</subfield>
+          </datafield>
+          <datafield tag="026" ind1="-" ind2="1">
+            <subfield code="a">ZDB1472746-8</subfield>
+          </datafield>
+          <controlfield tag="030">a||da||||||37</controlfield>
+          <datafield tag="036" ind1="a" ind2="1">
+            <subfield code="a">XD-US</subfield>
+          </datafield>
+          <datafield tag="037" ind1="b" ind2="1">
+            <subfield code="a">eng</subfield>
+          </datafield>
+          <controlfield tag="050">||||||||g|||||</controlfield>
+          <controlfield tag="052">p||||||a|||||||</controlfield>
+          <controlfield tag="058">cr||||||||||||</controlfield>
+          <datafield tag="070" ind1="-" ind2="1">
+            <subfield code="a">9001</subfield>
+          </datafield>
+          <datafield tag="070" ind1="a" ind2="1">
+            <subfield code="a">DNB</subfield>
+          </datafield>
+          <datafield tag="070" ind1="b" ind2="1">
+            <subfield code="a">8007</subfield>
+          </datafield>
+          <datafield tag="076" ind1="c" ind2="1">
+            <subfield code="a">ad</subfield>
+            <subfield code="a">nl</subfield>
+            <subfield code="a">ag</subfield>
+          </datafield>
+          <datafield tag="078" ind1="e" ind2="1">
+            <subfield code="a">ZDB-1-AIP</subfield>
+            <subfield code="a">ZDB-1-AIPK</subfield>
+          </datafield>
+          <datafield tag="078" ind1="i" ind2="1">
+            <subfield code="a">izdb</subfield>
+          </datafield>
+          <datafield tag="331" ind1="-" ind2="1">
+            <subfield code="a">Physics of plasmas</subfield>
+          </datafield>
+          <datafield tag="334" ind1="-" ind2="1">
+            <subfield code="a">Elektronische Ressource</subfield>
+          </datafield>
+          <datafield tag="335" ind1="-" ind2="1">
+            <subfield code="a">devoted to original contributions to and reviews of the physics of plasmas, including magnetofluid mechanics, kinetic theory and statistical mechanics of fully and partially ionized gases</subfield>
+          </datafield>
+          <datafield tag="359" ind1="-" ind2="1">
+            <subfield code="a">publ. by the American Institute of Physics</subfield>
+          </datafield>
+          <datafield tag="376" ind1="b" ind2="1">
+            <subfield code="a">PHPAEN</subfield>
+          </datafield>
+          <datafield tag="405" ind1="-" ind2="1">
+            <subfield code="a">1.1994 -</subfield>
+          </datafield>
+          <datafield tag="410" ind1="-" ind2="1">
+            <subfield code="a">[S.l.]</subfield>
+          </datafield>
+          <datafield tag="412" ind1="-" ind2="1">
+            <subfield code="a">American Institute of Physics</subfield>
+          </datafield>
+          <datafield tag="425" ind1="b" ind2="1">
+            <subfield code="a">1994</subfield>
+          </datafield>
+          <datafield tag="527" ind1="z" ind2="1">
+            <subfield code="p">CD-ROM-Ausg. ---&gt;</subfield>
+            <subfield code="a">Physics of plasmas</subfield>
+            <subfield code="9">HT013448878</subfield>
+          </datafield>
+          <datafield tag="527" ind1="z" ind2="1">
+            <subfield code="p">Druckausg. ---&gt;</subfield>
+            <subfield code="a">Physics of plasmas</subfield>
+            <subfield code="9">HT006157459</subfield>
+          </datafield>
+          <datafield tag="531" ind1="z" ind2="1">
+            <subfield code="p">Vorg.: ---&gt;</subfield>
+            <subfield code="a">Physics of fluids / B</subfield>
+            <subfield code="9">HT013889657</subfield>
+          </datafield>
+          <datafield tag="537" ind1="-" ind2="1">
+            <subfield code="a">355+C!URL-Ä.(11-10-13)</subfield>
+          </datafield>
+          <datafield tag="542" ind1="a" ind2="1">
+            <subfield code="a">1089-7674</subfield>
+          </datafield>
+          <datafield tag="545" ind1="a" ind2="1">
+            <subfield code="d">1070-664X</subfield>
+          </datafield>
+          <datafield tag="580" ind1="-" ind2="1">
+            <subfield code="a">eb559071</subfield>
+          </datafield>
+          <datafield tag="652" ind1="a" ind2="1">
+            <subfield code="a">Online-Ressource</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="1">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/?1472746</subfield>
+            <subfield code="x">EZB</subfield>
+            <subfield code="A">0</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="1">
+            <subfield code="u">http://scitation.aip.org/content/aip/journal/pop</subfield>
+            <subfield code="x">Verlag; 1.1994 -</subfield>
+            <subfield code="A">0</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="1">
+            <subfield code="u">http://scitation.aip.org/content/aip/journal/pop</subfield>
+            <subfield code="x">Verlag; 1.1994 - [-1 Jahr]</subfield>
+            <subfield code="z">Deutschlandweit zugänglich</subfield>
+            <subfield code="A">0</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="1">
+            <subfield code="u">http://search.ebscohost.com/</subfield>
+            <subfield code="x">Aggregator; 1994 -</subfield>
+            <subfield code="A">0</subfield>
+          </datafield>
+          <datafield tag="700" ind1="-" ind2="1">
+            <subfield code="a">530</subfield>
+            <subfield code="2">ZDB</subfield>
+          </datafield>
+          <datafield tag="902" ind1="-" ind2="1">
+            <subfield code="s">Plasmaphysik</subfield>
+            <subfield code="9">(DE-588)4046259-6</subfield>
+          </datafield>
+          <datafield tag="902" ind1="-" ind2="1">
+            <subfield code="s">Zeitschrift</subfield>
+            <subfield code="9">(DE-588)4067488-5</subfield>
+          </datafield>
+          <datafield tag="902" ind1="-" ind2="1">
+            <subfield code="s">Online-Publikation</subfield>
+            <subfield code="9">(DE-588)4511937-5</subfield>
+          </datafield>
+          <datafield tag="904" ind1="a" ind2="1">
+            <subfield code="a">ZDB</subfield>
+          </datafield>
+          <controlfield tag="SYS">005667364</controlfield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">L5001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">A5001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">R0001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">R0003</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">K5001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">C5001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">K0001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">U0001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">KM001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">J5001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">A0001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">B0001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">C0001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">Q0001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">M5001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">M0001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">N5001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">L0001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">G5001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">X5001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">F5001</subfield>
+          </datafield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">F5010</subfield>
+          </datafield>
+          <datafield tag="952" ind1="-" ind2="1">
+            <subfield code="s">Periodikum</subfield>
+          </datafield>
+          <datafield tag="952" ind1="-" ind2="1">
+            <subfield code="s">Zeitschriften</subfield>
+          </datafield>
+          <datafield tag="952" ind1="-" ind2="1">
+            <subfield code="s">Computerdatei im Fernzugriff</subfield>
+            <subfield code="h">Formschlagwort</subfield>
+          </datafield>
+          <datafield tag="952" ind1="-" ind2="1">
+            <subfield code="s">Online-Datenbank</subfield>
+            <subfield code="h">Formschlagwort</subfield>
+          </datafield>
+          <datafield tag="952" ind1="-" ind2="1">
+            <subfield code="s">Online-Dokument</subfield>
+          </datafield>
+          <datafield tag="952" ind1="-" ind2="1">
+            <subfield code="s">On-line-Datenbank</subfield>
+            <subfield code="h">Formschlagwort</subfield>
+          </datafield>
+          <datafield tag="952" ind1="-" ind2="1">
+            <subfield code="s">On-line-Dokument</subfield>
+          </datafield>
+          <datafield tag="952" ind1="-" ind2="1">
+            <subfield code="s">Online-Ressource</subfield>
+          </datafield>
+          <datafield tag="952" ind1="-" ind2="1">
+            <subfield code="s">On-line-Publikation</subfield>
+          </datafield>
+          <datafield tag="952" ind1="-" ind2="1">
+            <subfield code="s">Netzpublikation</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">294</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">386</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">465</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">6</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">385</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">467</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">38</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">38 M</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">5</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">468</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">Kob 7</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">Lan 1</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">929</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">836</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">361</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">51</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">466</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">290</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">61</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">82</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">464</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">1044</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">708</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">A 96</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">1010</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">Dü 62</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">832</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">743</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">Bi 10</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">107</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">829</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">1383</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">1393</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=RUBO</subfield>
+            <subfield code="2">B0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=UBKL</subfield>
+            <subfield code="2">R3001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=UGHE</subfield>
+            <subfield code="2">E0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=ULBMS</subfield>
+            <subfield code="2">M0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=UBTR</subfield>
+            <subfield code="2">T0011</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=UBSI</subfield>
+            <subfield code="2">S0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=USBK</subfield>
+            <subfield code="2">K0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=ZBMED</subfield>
+            <subfield code="2">KM001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=ULBB</subfield>
+            <subfield code="2">Q0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=UBWUP</subfield>
+            <subfield code="2">W0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=BIBKO</subfield>
+            <subfield code="2">RL001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=BIBKO</subfield>
+            <subfield code="2">RL002</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=LBZ</subfield>
+            <subfield code="2">R0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=FHBMS</subfield>
+            <subfield code="2">M5001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=UBBIE</subfield>
+            <subfield code="2">C0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=LLD</subfield>
+            <subfield code="2">L0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=UBPB</subfield>
+            <subfield code="2">P0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=UBDO</subfield>
+            <subfield code="2">U0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=ULBD</subfield>
+            <subfield code="2">X0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=BTHAC</subfield>
+            <subfield code="2">A0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=UBDU</subfield>
+            <subfield code="2">D0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=FHBRS</subfield>
+            <subfield code="2">J5001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=FUH</subfield>
+            <subfield code="2">F0001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=FHBAA</subfield>
+            <subfield code="2">A5001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=FHBGE</subfield>
+            <subfield code="2">G5001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=FHD</subfield>
+            <subfield code="2">X5001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=FHBK</subfield>
+            <subfield code="2">K5001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=FHLH</subfield>
+            <subfield code="2">L5001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=FHBI</subfield>
+            <subfield code="2">C5001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=LBZ</subfield>
+            <subfield code="2">R0003</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=HSNRH</subfield>
+            <subfield code="2">N5001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=HRW</subfield>
+            <subfield code="2">F5001</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2="9">
+            <subfield code="u">http://www.bibliothek.uni-regensburg.de/ezeit/frontdoor.phtml?id=1472746&amp;bibid=HRWMB</subfield>
+            <subfield code="2">F5010</subfield>
+          </datafield>
+        </record>
+      </metadata>
+    </record>
+  </ListRecords>
+  <ListRecords>
+    <record>
+      <header>
+        <identifier>aleph-publish:020859990</identifier>
+      </header>
+      <metadata>
+        <record xmlns="http://www.ddb.de/professionell/mabxml/mabxml-1.xsd">
+          <leader>00872nM2.01200024------h</leader>
+          <controlfield tag="LDR">00872nM2.01200024------h</controlfield>
+          <controlfield tag="FMT">MH</controlfield>
+          <datafield tag="001" ind1="-" ind2="1">
+            <subfield code="a">HT018700720</subfield>
+          </datafield>
+          <datafield tag="002" ind1="a" ind2="1">
+            <subfield code="a">20150716</subfield>
+          </datafield>
+          <datafield tag="003" ind1="-" ind2="1">
+            <subfield code="a">20150720</subfield>
+          </datafield>
+          <datafield tag="026" ind1="-" ind2="1">
+            <subfield code="a">HBZHT018700720</subfield>
+          </datafield>
+          <controlfield tag="030">a|1uc||||||37</controlfield>
+          <datafield tag="036" ind1="a" ind2="1">
+            <subfield code="a">XA-DE</subfield>
+          </datafield>
+          <datafield tag="037" ind1="b" ind2="1">
+            <subfield code="a">ger</subfield>
+          </datafield>
+          <controlfield tag="050">||||||||g|||||</controlfield>
+          <controlfield tag="051">sr||||||</controlfield>
+          <datafield tag="070" ind1="-" ind2="1">
+            <subfield code="a">38 M</subfield>
+          </datafield>
+          <datafield tag="078" ind1="i" ind2="1">
+            <subfield code="a">iall</subfield>
+          </datafield>
+          <datafield tag="078" ind1="r" ind2="1">
+            <subfield code="a">38 M: ellinet; GND: (DE-588)16269969-4</subfield>
+          </datafield>
+          <datafield tag="080" ind1="-" ind2="1">
+            <subfield code="a">60</subfield>
+          </datafield>
+          <datafield tag="100" ind1="b" ind2="1">
+            <subfield code="p">Amrhein, Ludwig</subfield>
+            <subfield code="9">(DE-588)136371671</subfield>
+          </datafield>
+          <datafield tag="104" ind1="b" ind2="1">
+            <subfield code="p">Heusinger, Josefine</subfield>
+            <subfield code="d">1965-</subfield>
+            <subfield code="9">(DE-588)129961604</subfield>
+          </datafield>
+          <datafield tag="108" ind1="b" ind2="1">
+            <subfield code="p">Ottovay, Kathrin</subfield>
+          </datafield>
+          <datafield tag="112" ind1="b" ind2="1">
+            <subfield code="p">Wolter, Birgit</subfield>
+            <subfield code="9">(DE-588)115325859</subfield>
+          </datafield>
+          <datafield tag="200" ind1="b" ind2="1">
+            <subfield code="k">Bundeszentrale fÃ¼r Gesundheitliche AufklÃ¤rung</subfield>
+            <subfield code="9">(DE-588)2006655-7</subfield>
+          </datafield>
+          <datafield tag="201" ind1="-" ind2="1">
+            <subfield code="k">BZgA, Bundeszentrale fÃ¼r Gesundheitliche AufklÃ¤rung</subfield>
+          </datafield>
+          <datafield tag="201" ind1="-" ind2="1">
+            <subfield code="k">Deutschland</subfield>
+            <subfield code="h">Bundesrepublik</subfield>
+            <subfield code="b">Bundeszentrale fÃ¼r Gesundheitliche AufklÃ¤rung</subfield>
+          </datafield>
+          <datafield tag="201" ind1="-" ind2="1">
+            <subfield code="k">Deutschland</subfield>
+            <subfield code="b">Bundeszentrale fÃ¼r Gesundheitliche AufklÃ¤rung</subfield>
+          </datafield>
+          <datafield tag="201" ind1="-" ind2="1">
+            <subfield code="k">BZgA</subfield>
+          </datafield>
+          <datafield tag="201" ind1="-" ind2="1">
+            <subfield code="k">Federal Centre for Health Education</subfield>
+          </datafield>
+          <datafield tag="201" ind1="-" ind2="1">
+            <subfield code="k">Deutschland</subfield>
+            <subfield code="h">Bundesrepublik</subfield>
+            <subfield code="b">Federal Centre for Health Education</subfield>
+          </datafield>
+          <datafield tag="201" ind1="-" ind2="1">
+            <subfield code="k">FCHE</subfield>
+          </datafield>
+          <datafield tag="331" ind1="-" ind2="1">
+            <subfield code="a">&lt;&lt;Die&gt;&gt; Hochaltrigen</subfield>
+          </datafield>
+          <datafield tag="334" ind1="-" ind2="1">
+            <subfield code="a">Elektronische Ressource</subfield>
+          </datafield>
+          <datafield tag="335" ind1="-" ind2="1">
+            <subfield code="a">Expertise zur Lebenslage von Menschen im Alter Ã¼ber 80 Jahren</subfield>
+          </datafield>
+          <datafield tag="359" ind1="-" ind2="1">
+            <subfield code="a">Ludwig Amrhein ; Josefine Heusinger ; Kathrin Ottovay ; Birgit Wolter</subfield>
+          </datafield>
+          <datafield tag="403" ind1="-" ind2="1">
+            <subfield code="a">Aufl.: 1.3.02.15</subfield>
+          </datafield>
+          <datafield tag="410" ind1="-" ind2="1">
+            <subfield code="a">KÃ¶ln</subfield>
+          </datafield>
+          <datafield tag="412" ind1="-" ind2="1">
+            <subfield code="a">BZgA</subfield>
+          </datafield>
+          <datafield tag="425" ind1="-" ind2="1">
+            <subfield code="a">2015</subfield>
+          </datafield>
+          <datafield tag="425" ind1="a" ind2="1">
+            <subfield code="a">2015</subfield>
+          </datafield>
+          <datafield tag="433" ind1="-" ind2="1">
+            <subfield code="a">239 S. : zahlr. graph. Darst., Kt.</subfield>
+          </datafield>
+          <datafield tag="451" ind1="-" ind2="1">
+            <subfield code="a">Forschung und Praxis der GesundheitsfÃ¶rderung ; 47</subfield>
+          </datafield>
+          <datafield tag="453" ind1="-" ind2="1">
+            <subfield code="a">HT015550020</subfield>
+          </datafield>
+          <datafield tag="455" ind1="-" ind2="1">
+            <subfield code="a">47</subfield>
+          </datafield>
+          <datafield tag="456" ind1="-" ind2="1">
+            <subfield code="a">47</subfield>
+          </datafield>
+          <datafield tag="501" ind1="-" ind2="1">
+            <subfield code="a">Literaturangaben</subfield>
+          </datafield>
+          <datafield tag="540" ind1="a" ind2="1">
+            <subfield code="a">978-3-942816-61-8</subfield>
+          </datafield>
+          <datafield tag="552" ind1="a" ind2="1">
+            <subfield code="a">10.4126/38m-006326817</subfield>
+          </datafield>
+          <datafield tag="652" ind1="-" ind2="1">
+            <subfield code="a">Archivierte Online-Ressource</subfield>
+          </datafield>
+          <datafield tag="700" ind1="b" ind2="1">
+            <subfield code="a">610</subfield>
+          </datafield>
+          <controlfield tag="SYS">020859990</controlfield>
+          <datafield tag="LOW" ind1="-" ind2="1">
+            <subfield code="a">KM001</subfield>
+          </datafield>
+          <datafield tag="HID" ind1="-" ind2="1">
+            <subfield code="s">DTL2ALEPH</subfield>
+            <subfield code="c">20150717</subfield>
+            <subfield code="l">HBZ01</subfield>
+            <subfield code="h">0600</subfield>
+          </datafield>
+          <datafield tag="088" ind1=" " ind2=" ">
+            <subfield code="a">38 M</subfield>
+            <subfield code="b">00000099</subfield>
+            <subfield code="c">Elektronische Publikation</subfield>
+            <subfield code="e">keine ILL</subfield>
+          </datafield>
+          <datafield tag="655" ind1="e" ind2=" ">
+            <subfield code="u">http://digitool.hbz-nrw.de:1801/webclient/DeliveryManager?pid=6326817&amp;custom_att_2=simple_viewer</subfield>
+            <subfield code="y">BZgA_Hochaltrigen.pdf</subfield>
+            <subfield code="x">Archivierte Online-Ressource</subfield>
+          </datafield>
+        </record>
+      </metadata>
+    </record>
+  </ListRecords>
+</OAI-PMH>
