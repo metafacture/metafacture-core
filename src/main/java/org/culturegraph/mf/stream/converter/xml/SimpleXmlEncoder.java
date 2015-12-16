@@ -164,7 +164,9 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 	@Override
 	protected void onCloseStream() {
 		if (!separateRoots) {
-			writeFooter();
+			if (!atStreamStart) {
+				writeFooter();
+			}
 			sendAndClearData();
 		}
 	}
