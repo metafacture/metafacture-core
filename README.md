@@ -6,6 +6,12 @@ Metafacture consists of a core library and a number of plugin packages and satel
 
 Originally, Metafacture was developed as part of the [Culturegraph](http://culturegraph.org) platform but its now used by others, too: [see who uses Metafacture](https://github.com/culturegraph/metafacture-core/wiki/Who-uses-Metafacture).
 
+# Build
+
+[<img src="https://secure.travis-ci.org/culturegraph/metafacture-core.png?branch=master">](https://travis-ci.org/culturegraph/metafacture-core/)
+
+See the [.travis.yml](./.travis.yml) file for details on the CI config used by Travis.
+
 # Getting started
 
 You can use Metafacture either as a stand-alone application or as a Java library in your own projects.
