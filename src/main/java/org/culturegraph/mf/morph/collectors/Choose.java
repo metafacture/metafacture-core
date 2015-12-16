@@ -35,7 +35,8 @@ public final class Choose extends AbstractFlushingCollect{
 	private String value;
 	private String name;
 	private int priority = Integer.MAX_VALUE;
-	private final Map<NamedValueSource, Integer> priorities = new HashMap<NamedValueSource, Integer>();
+	private final Map<NamedValueSource, Integer> priorities =
+			new HashMap<NamedValueSource, Integer>();
 	private int nextPriority;
 
 	public Choose(final Metamorph metamorph) {
@@ -45,13 +46,14 @@ public final class Choose extends AbstractFlushingCollect{
 	@Override
 	protected void emit() {
 		if(!isEmpty()){
-			getNamedValueReceiver().receive(StringUtil.fallback(getName(), name), StringUtil.fallback(getValue(), value), this, getRecordCount(), getEntityCount());
+			getNamedValueReceiver().receive(StringUtil.fallback(getName(), name),
+					StringUtil.fallback(getValue(), value), this, getRecordCount(),
+					getEntityCount());
 		}
-		clear();
 	}
 
 	private boolean isEmpty() {
-		return name==null;
+		return name == null;
 	}
 
 	@Override
@@ -67,9 +69,9 @@ public final class Choose extends AbstractFlushingCollect{
 	}
 
 	@Override
-	protected void receive(final String name, final String value, final NamedValueSource source) {
+	protected void receive(final String name, final String value,
+			final NamedValueSource source) {
 		final int sourcePriority = priorities.get(source).intValue();
-
 		if (sourcePriority <= priority) {
 			this.value = value;
 			this.name = name;

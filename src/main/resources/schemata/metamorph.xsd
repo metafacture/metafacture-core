@@ -374,6 +374,10 @@
 			<attribute name="name" type="string" use="optional" />
 			<attribute name="value" type="string" use="optional" />
 			<!-- <attribute name="defaultValue" type="string" use="optional" /> -->
+			<attribute name="reset" type="boolean" use="optional"
+				default="true" />
+			<attribute name="sameEntity" type="boolean" use="optional"
+				default="false" />
 			<attribute name="flushWith" type="string" use="optional"
 				default="record" />
 		</complexType>
