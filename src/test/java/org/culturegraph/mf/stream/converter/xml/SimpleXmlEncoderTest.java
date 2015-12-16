@@ -21,6 +21,9 @@ package org.culturegraph.mf.stream.converter.xml;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.culturegraph.mf.framework.DefaultObjectReceiver;
 import org.junit.Before;
 import org.junit.Test;
@@ -90,12 +93,42 @@ public final class SimpleXmlEncoderTest {
 				getResultXml());
 	}
 
+	@Test
+	public void shouldAddNamespaceToRootElement() {
+		final Map<String, String> namespaces = new HashMap<String, String>();
+		namespaces.put("ns", "http://example.org/ns");
+		simpleXmlEncoder.setNamespaces(namespaces);
+
+		emitEmptyRecord();
+
+		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns:ns=\"http://example.org/ns\"><record /></records>",
+				getResultXml());
+	}
+
+	@Test
+	public void shouldAddNamespaceWithEmptyKeyAsDefaultNamespace() {
+		final Map<String, String> namespaces = new HashMap<String, String>();
+		namespaces.put("", "http://example.org/ns");
+		simpleXmlEncoder.setNamespaces(namespaces);
+
+		emitEmptyRecord();
+
+		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns=\"http://example.org/ns\"><record /></records>",
+				getResultXml());
+	}
+
 	private void emitTwoRecords() {
 		simpleXmlEncoder.startRecord("X");
 		simpleXmlEncoder.literal(TAG, VALUE);
 		simpleXmlEncoder.endRecord();
 		simpleXmlEncoder.startRecord("Y");
 		simpleXmlEncoder.literal(TAG, VALUE);
+		simpleXmlEncoder.endRecord();
+		simpleXmlEncoder.closeStream();
+	}
+
+	private void emitEmptyRecord() {
+		simpleXmlEncoder.startRecord("");
 		simpleXmlEncoder.endRecord();
 		simpleXmlEncoder.closeStream();
 	}

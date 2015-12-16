@@ -64,7 +64,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 	private static final String END_CLOSE_ELEMENT = ">";
 
 	private static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-	private static final String XMLNS_MARKER = " xmlns:";
+	private static final String XMLNS_MARKER = " xmlns";
 
 	private final StringBuilder builder = new StringBuilder();
 
@@ -189,7 +189,10 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 		builder.append(rootTag);
 		for (final Entry<String, String> entry : namespaces.entrySet()) {
 			builder.append(XMLNS_MARKER);
-			builder.append(entry.getKey());
+			if (!entry.getKey().isEmpty()) {
+				builder.append(':');
+				builder.append(entry.getKey());
+			}
 			builder.append(BEGIN_ATTRIBUTE);
 			writeEscaped(builder, entry.getValue());
 			builder.append(END_ATTRIBUTE);
