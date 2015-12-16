@@ -108,7 +108,11 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 	}
 
 	public void setNamespaces(final MultiMap multimap) {
-		this.namespaces = multimap.getMap(NAMESPACES);
+		setNamespaces(multimap.getMap(NAMESPACES));
+	}
+
+	public void setNamespaces(final Map<String, String> namespaces) {
+		this.namespaces = namespaces;
 	}
 
 	@Override
