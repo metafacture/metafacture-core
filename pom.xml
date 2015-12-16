@@ -108,13 +108,13 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.3.1</version>
 			</plugin>
-		
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.10</version>
 			</plugin>
-        
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>buildnumber-maven-plugin</artifactId>
@@ -149,7 +149,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.antlr</groupId>
 				<artifactId>antlr3-maven-plugin</artifactId>
@@ -168,8 +168,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.4</version><!--$NO-MVN-MAN-VER$ -->
-				<!-- m2e complains about a different plugin version being specified in 
-					the parent pom. However, this is not actually problem for maven. So, we can 
+				<!-- m2e complains about a different plugin version being specified in
+					the parent pom. However, this is not actually problem for maven. So, we can
 					ignore the warning. -->
 			</plugin>
 
@@ -221,25 +221,25 @@
 			<version>0.11.4.1</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.jdom</groupId>
 			<artifactId>jdom</artifactId>
 			<version>1.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
 			<version>2.3.2</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
@@ -247,14 +247,14 @@
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
-					<!--  Conflicts with the newer hamcrest version 
+					<!--  Conflicts with the newer hamcrest version
 					      pulled in by junit -->
 					<artifactId>hamcrest-core</artifactId>
 					<groupId>org.hamcrest</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-core</artifactId>
@@ -282,6 +282,7 @@
 								<configuration>
 									<show>public</show>
 									<nohelp>true</nohelp>
+									<additionalparam>-Xdoclint:none</additionalparam>
 								</configuration>
 							</execution>
 						</executions>
