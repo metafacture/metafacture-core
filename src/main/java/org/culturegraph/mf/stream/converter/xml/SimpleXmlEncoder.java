@@ -176,7 +176,9 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
 	@Override
 	protected void onResetStream() {
-		writeFooter();
+		if (!atStreamStart) {
+			writeFooter();
+		}
 		sendAndClearData();
 		atStreamStart = true;
 	}

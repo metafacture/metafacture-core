@@ -15,9 +15,6 @@
  */
 package org.culturegraph.mf.stream.converter.xml;
 
-
-
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -55,11 +52,18 @@ public final class SimpleXmlEncoderTest {
 					}
 				});
 		resultCollector = new StringBuilder();
-}
+	}
 
 	@Test
 	public void issue249_shouldNotEmitClosingRootTagOnCloseStreamIfNoOutputWasGenerated() {
 		simpleXmlEncoder.closeStream();
+
+		assertTrue(getResultXml().isEmpty());
+	}
+
+	@Test
+	public void shouldNotEmitClosingRootTagOnResetStreamIfNoOutputWasGenerated() {
+		simpleXmlEncoder.resetStream();
 
 		assertTrue(getResultXml().isEmpty());
 	}
