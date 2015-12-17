@@ -117,6 +117,29 @@ public final class SimpleXmlEncoderTest {
 				getResultXml());
 	}
 
+	@Test
+	public void shouldNotEmitRootTagIfWriteRootTagIsFalse() {
+		simpleXmlEncoder.setWriteRootTag(false);
+
+		emitEmptyRecord();
+
+		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record />",
+				getResultXml());
+	}
+
+	@Test
+	public void shouldAddNamespacesToRecordTagIfWriteRootTagIsFalse() {
+		final Map<String, String> namespaces = new HashMap<String, String>();
+		namespaces.put("ns", "http://example.org/ns");
+		simpleXmlEncoder.setNamespaces(namespaces);
+		simpleXmlEncoder.setWriteRootTag(false);
+
+		emitEmptyRecord();
+
+		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns:ns=\"http://example.org/ns\" />",
+				getResultXml());
+	}
+
 	private void emitTwoRecords() {
 		simpleXmlEncoder.startRecord("X");
 		simpleXmlEncoder.literal(TAG, VALUE);

@@ -71,6 +71,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 	private String rootTag = DEFAULT_ROOT_TAG;
 	private String recordTag = DEFAULT_RECORD_TAG;
 	private Map<String, String> namespaces = new HashMap<String, String>();
+	private boolean writeRootTag = true;
 	private boolean writeXmlHeader = true;
 	private boolean separateRoots;
 
@@ -103,6 +104,10 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 		this.writeXmlHeader = writeXmlHeader;
 	}
 
+	public void setWriteRootTag(final boolean writeRootTag) {
+		this.writeRootTag  = writeRootTag;
+	}
+
 	public void setSeparateRoots(final boolean separateRoots) {
 		this.separateRoots = separateRoots;
 	}
@@ -126,6 +131,17 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 		atStreamStart = false;
 
 		element = new Element(recordTag);
+		if (!writeRootTag) {
+			addNamespacesToElement();
+		}
+	}
+
+	private void addNamespacesToElement() {
+		for (final Entry<String, String> namespace : namespaces.entrySet()) {
+			final String key = namespace.getKey();
+			final String name = XMLNS_MARKER + (key.isEmpty() ? "" : ":") + key;
+			element.addAttribute(name, namespace.getValue());
+		}
 	}
 
 	@Override
@@ -184,27 +200,30 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 		if (writeXmlHeader) {
 			builder.append(XML_HEADER);
 		}
-
-		builder.append(BEGIN_OPEN_ELEMENT);
-		builder.append(rootTag);
-		for (final Entry<String, String> entry : namespaces.entrySet()) {
-			builder.append(XMLNS_MARKER);
-			if (!entry.getKey().isEmpty()) {
-				builder.append(':');
-				builder.append(entry.getKey());
+		if (writeRootTag) {
+			builder.append(BEGIN_OPEN_ELEMENT);
+			builder.append(rootTag);
+			for (final Entry<String, String> entry : namespaces.entrySet()) {
+				builder.append(XMLNS_MARKER);
+				if (!entry.getKey().isEmpty()) {
+					builder.append(':');
+					builder.append(entry.getKey());
+				}
+				builder.append(BEGIN_ATTRIBUTE);
+				writeEscaped(builder, entry.getValue());
+				builder.append(END_ATTRIBUTE);
 			}
-			builder.append(BEGIN_ATTRIBUTE);
-			writeEscaped(builder, entry.getValue());
-			builder.append(END_ATTRIBUTE);
+			builder.append(END_OPEN_ELEMENT);
 		}
-		builder.append(END_OPEN_ELEMENT);
 	}
 
 	private void writeFooter() {
-		builder.append(NEW_LINE);
-		builder.append(BEGIN_CLOSE_ELEMENT);
-		builder.append(rootTag);
-		builder.append(END_CLOSE_ELEMENT);
+		if (writeRootTag) {
+			builder.append(NEW_LINE);
+			builder.append(BEGIN_CLOSE_ELEMENT);
+			builder.append(rootTag);
+			builder.append(END_CLOSE_ELEMENT);
+		}
 	}
 
 	protected static void writeEscaped(final StringBuilder builder, final String str) {
