@@ -50,7 +50,8 @@ public final class ObjectStdoutWriterTest extends
 
 	@Override
 	protected String getOutput() throws IOException {
-		return stdoutBuffer.toString();
+	        System.out.flush();
+	        return stdoutBuffer.toString();
 	}
 
 }
