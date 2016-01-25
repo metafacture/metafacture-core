@@ -15,10 +15,7 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
@@ -36,6 +33,7 @@ public final class All extends AbstractFlushingCollect {
 	private static final String DEFAULT_VALUE = "true";
 	private static final String FALSE = "false";
 
+	private final Map<String, String> variables   = new HashMap<>();
 	private final Set<NamedValueSource>       sources             = new HashSet<>();
 	private final Set<NamedValueSource>       sourcesLeft         = new HashSet<>();
 	private final Stack<NamedValueSource>     matchedSourcesStack = new Stack<>();
@@ -48,6 +46,7 @@ public final class All extends AbstractFlushingCollect {
 	@Override
 	protected void receive(final String name, final String value, final NamedValueSource source) {
 
+		variables.put(name, value);
 		sourcesLeft.remove(source);
 		matchedSourcesStack.push(source);
 	}
@@ -62,6 +61,7 @@ public final class All extends AbstractFlushingCollect {
 	protected void clear() {
 
 		sourcesLeft.addAll(sources);
+		variables.clear();
 		toBeMatchedSources.clear();
 	}
 
@@ -82,8 +82,30 @@ public final class All extends AbstractFlushingCollect {
 	@Override
 	protected void emit() {
 		if (sourcesLeft.isEmpty()) {
-			final String name = StringUtil.fallback(getName(), DEFAULT_NAME);
-			final String value = StringUtil.fallback(getValue(), DEFAULT_VALUE);
+
+			final String originalName = getName();
+
+			final String name;
+
+			if(originalName != null) {
+
+				name = StringUtil.format(originalName, variables);
+			} else {
+
+				name = StringUtil.fallback(originalName, DEFAULT_NAME);
+			}
+
+			final String originalValue = getValue();
+
+			final String value;
+
+			if(originalValue != null) {
+
+				value = StringUtil.format(originalValue, variables);
+			} else {
+
+				value = StringUtil.fallback(originalValue, DEFAULT_VALUE);
+			}
 			getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
 		} else if (getIncludeSubEntities()) {
 
