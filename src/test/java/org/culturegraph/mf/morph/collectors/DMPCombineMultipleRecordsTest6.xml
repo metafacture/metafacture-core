@@ -154,7 +154,7 @@
 					<mm:combine name="@INPUT1" value="${one}" flushWith="e" reset="true" sameEntity="true"
 					            includeSubEntities="true">
 						<mm:if>
-							<mm:all name="CONDITIONALL1" reset="true" flushWith="e.subfield.value" includeSubEntities="true">
+							<mm:all name="CONDITIONALL1" reset="true" flushWith="e.subfield.subl" includeSubEntities="true">
 								<mm:data
 										source="e.l">
 									<mm:regexp match="2"/>
