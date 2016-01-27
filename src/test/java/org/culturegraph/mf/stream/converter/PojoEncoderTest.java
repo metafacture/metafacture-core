@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import java.util.List;
+import java.util.Map;
 
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.junit.Test;
@@ -17,7 +18,7 @@ import org.mockito.ArgumentCaptor;
  *
  * @author Thomas Seidel
  * @author Christoph Böhme (refactored to Mockito)
- * 
+ *
  */
 public class PojoEncoderTest {
 
@@ -173,6 +174,70 @@ public class PojoEncoderTest {
 		assertEquals("value3", encodedPojo.simplePojoList.get(1).stringField1);
 	}
 
+	@Test
+	public void shouldEncodeEntityStreamToPojoWithStringMap() {
+		final ObjectReceiver<StringMapPojo> receiver =
+				createObjectReceiverMock();
+		final PojoEncoder<StringMapPojo> pojoEncoder =
+				new PojoEncoder<StringMapPojo>(StringMapPojo.class);
+		pojoEncoder.setReceiver(receiver);
+
+		pojoEncoder.startRecord("identifier");
+		pojoEncoder.startEntity("stringMap");
+		pojoEncoder.literal("mapKey1", "mapValue1");
+		pojoEncoder.literal("mapKey2", "mapValue2");
+		pojoEncoder.endEntity();
+		pojoEncoder.endRecord();
+
+		final ArgumentCaptor<StringMapPojo> objectCaptor =
+				ArgumentCaptor.forClass(StringMapPojo.class);
+		verify(receiver).process(objectCaptor.capture());
+		final StringMapPojo encodedPojo = objectCaptor.getValue();
+		assertNotNull(encodedPojo);
+		assertNotNull(encodedPojo.stringMap);
+		assertEquals(2, encodedPojo.stringMap.size());
+		assertEquals("mapValue1", encodedPojo.stringMap.get("mapKey1"));
+		assertEquals("mapValue2", encodedPojo.stringMap.get("mapKey2"));
+	}
+
+	@Test
+	public void shouldEncodeEntityStreamToPojoWithSimplePojoMap() {
+		final ObjectReceiver<SimplePojoMapPojo> receiver =
+				createObjectReceiverMock();
+		final PojoEncoder<SimplePojoMapPojo> pojoEncoder =
+				new PojoEncoder<>(SimplePojoMapPojo.class);
+		pojoEncoder.setReceiver(receiver);
+
+		pojoEncoder.startRecord("identifier");
+		pojoEncoder.startEntity("simplePojoMap");
+		pojoEncoder.startEntity("mapKeyA");
+		pojoEncoder.literal("stringField1", "stringValueA1");
+		pojoEncoder.literal("stringField2", "stringValueA2");
+		pojoEncoder.endEntity();
+		pojoEncoder.startEntity("mapKeyB");
+		pojoEncoder.literal("stringField1", "stringValueB1");
+		pojoEncoder.literal("stringField2", "stringValueB2");
+		pojoEncoder.endEntity();
+		pojoEncoder.endEntity();
+		pojoEncoder.endRecord();
+
+		final ArgumentCaptor<SimplePojoMapPojo> objectCaptor =
+				ArgumentCaptor.forClass(SimplePojoMapPojo.class);
+		verify(receiver).process(objectCaptor.capture());
+		final SimplePojoMapPojo encodedPojo = objectCaptor.getValue();
+		assertNotNull(encodedPojo);
+		assertNotNull(encodedPojo.simplePojoMap);
+		assertEquals(2, encodedPojo.simplePojoMap.size());
+		assertEquals("stringValueA1", encodedPojo.simplePojoMap.get("mapKeyA")
+				.stringField1);
+		assertEquals("stringValueA2", encodedPojo.simplePojoMap.get("mapKeyA")
+				.stringField2);
+		assertEquals("stringValueB1", encodedPojo.simplePojoMap.get("mapKeyB")
+				.stringField1);
+		assertEquals("stringValueB2", encodedPojo.simplePojoMap.get("mapKeyB")
+				.stringField2);
+	}
+
 	private <T> ObjectReceiver<T> createObjectReceiverMock() {
 		// There is no type safe to create a mock with Mockito#mock(Class).
 		// Hence, we have to use an unchecked cast here:
@@ -240,6 +305,18 @@ public class PojoEncoderTest {
 		public void setSimplePojoList(final List<SimplePojo> simplePojoList) {
 			this.simplePojoList = simplePojoList;
 		}
+
+	}
+
+	static class StringMapPojo {
+
+		public Map<String, String> stringMap;
+
+	}
+
+	static class SimplePojoMapPojo {
+
+		public Map<String, SimplePojo> simplePojoMap;
 
 	}
 
