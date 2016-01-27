@@ -1,6 +1,7 @@
 package org.culturegraph.mf.stream.converter;
 
 import java.util.List;
+import java.util.Map;
 
 import org.culturegraph.mf.stream.pipe.ObjectBuffer;
 import org.junit.Assert;
@@ -14,8 +15,7 @@ public class PojoEncoderTest {
 
 	@Test
 	public void shouldEncodeEmptyEntityStreamToEmptyPojo() {
-		final ObjectBuffer<EmptyPojo> objectBuffer = new ObjectBuffer<EmptyPojo>(
-				1);
+		final ObjectBuffer<EmptyPojo> objectBuffer = new ObjectBuffer<EmptyPojo>(1);
 		final PojoEncoder<EmptyPojo> pojoEncoder = new PojoEncoder<EmptyPojo>(
 				EmptyPojo.class);
 		pojoEncoder.setReceiver(objectBuffer);
@@ -193,6 +193,70 @@ public class PojoEncoderTest {
 				.getSecondStringAttribute());
 		Assert.assertEquals("thirdValue",
 				simplePojos.get(1).firstStringAttribute);
+	}
+
+	public static class StringMapPojo {
+		public Map<String, String> stringMap;
+	}
+
+	@Test
+	public void shouldEncodeEntityStreamToPojoWithStringMap() {
+		final ObjectBuffer<StringMapPojo> objectBuffer = new ObjectBuffer<StringMapPojo>();
+		final PojoEncoder<StringMapPojo> pojoEncoder = new PojoEncoder<StringMapPojo>(
+				StringMapPojo.class);
+		pojoEncoder.setReceiver(objectBuffer);
+		pojoEncoder.startRecord("identifier");
+		pojoEncoder.startEntity("stringMap");
+		pojoEncoder.literal("firstMapKey", "firstMapValue");
+		pojoEncoder.literal("secondMapKey", "secondMapValue");
+		pojoEncoder.endEntity();
+		pojoEncoder.endRecord();
+		final StringMapPojo stringMapPojo = objectBuffer.pop();
+		Assert.assertNotNull(stringMapPojo);
+		final Map<String, String> simpleMap = stringMapPojo.stringMap;
+		Assert.assertNotNull(simpleMap);
+		Assert.assertEquals(2, simpleMap.size());
+		Assert.assertEquals("firstMapValue",
+				simpleMap.get("firstMapKey"));
+		Assert.assertEquals("secondMapValue",
+				simpleMap.get("secondMapKey"));
+	}
+
+	public static class SimplePojoMapPojo {
+		public Map<String, SimplePojo> simplePojoMap;
+	}
+
+	@Test
+	public void shouldEncodeEntityStreamToPojoWithSimplePojoMap() {
+		final ObjectBuffer<SimplePojoMapPojo> objectBuffer = new ObjectBuffer<SimplePojoMapPojo>();
+		final PojoEncoder<SimplePojoMapPojo> pojoEncoder = new PojoEncoder<SimplePojoMapPojo>(
+				SimplePojoMapPojo.class);
+		pojoEncoder.setReceiver(objectBuffer);
+		pojoEncoder.startRecord("identifier");
+		pojoEncoder.startEntity("simplePojoMap");
+		pojoEncoder.startEntity("firstMapKey");
+		pojoEncoder.literal("firstStringAttribute", "firstStringValue1");
+		pojoEncoder.literal("secondStringAttribute", "secondStringValue1");
+		pojoEncoder.endEntity();
+		pojoEncoder.startEntity("secondMapKey");
+		pojoEncoder.literal("firstStringAttribute", "firstStringValue2");
+		pojoEncoder.literal("secondStringAttribute", "secondStringValue2");
+		pojoEncoder.endEntity();
+		pojoEncoder.endEntity();
+		pojoEncoder.endRecord();
+		final SimplePojoMapPojo simplePojoMapPojo = objectBuffer.pop();
+		Assert.assertNotNull(simplePojoMapPojo);
+		final Map<String, SimplePojo> simplePojoMap = simplePojoMapPojo.simplePojoMap;
+		Assert.assertNotNull(simplePojoMap);
+		Assert.assertEquals(2, simplePojoMap.size());
+		Assert.assertEquals("firstStringValue1",
+				simplePojoMap.get("firstMapKey").firstStringAttribute);
+		Assert.assertEquals("secondStringValue1",
+				simplePojoMap.get("firstMapKey").secondStringAttribute);
+		Assert.assertEquals("firstStringValue2",
+				simplePojoMap.get("secondMapKey").firstStringAttribute);
+		Assert.assertEquals("secondStringValue2",
+				simplePojoMap.get("secondMapKey").secondStringAttribute);
 	}
 
 }
