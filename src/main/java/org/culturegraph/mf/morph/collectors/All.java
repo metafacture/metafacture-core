@@ -19,6 +19,7 @@ import java.util.*;
 
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.types.HierarchicalMultiMap;
 import org.culturegraph.mf.util.StringUtil;
 
 /**
@@ -46,6 +47,12 @@ public final class All extends AbstractFlushingCollect {
 	@Override
 	protected void receive(final String name, final String value, final NamedValueSource source) {
 
+		if (getIncludeSubEntities() && !(this.getNamedValueReceiver() != null && Combine.class.isInstance(this.getNamedValueReceiver()) && ((Combine) this.getNamedValueReceiver()).getIncludeSubEntities())) {
+
+			final HierarchicalMultiMap<Integer, String, String> entityBuffer = getHierarchicalEntityBuffer();
+			entityBuffer.addToEmit(getEntityCount(), name, value);
+		}
+
 		variables.put(name, value);
 		sourcesLeft.remove(source);
 		matchedSourcesStack.push(source);
@@ -63,6 +70,10 @@ public final class All extends AbstractFlushingCollect {
 		sourcesLeft.addAll(sources);
 		variables.clear();
 		toBeMatchedSources.clear();
+
+		if (getIncludeSubEntities()) {
+			getHierarchicalEntityBuffer().clear();
+		}
 	}
 
 	protected void clearLastMatchedEntity() {
@@ -80,33 +91,46 @@ public final class All extends AbstractFlushingCollect {
 	}
 
 	@Override
+	protected void emit(String originalName, String orignalValue) {
+
+		final String name;
+
+		if(originalName != null) {
+
+			name = StringUtil.format(originalName, variables);
+		} else {
+
+			name = StringUtil.fallback(originalName, DEFAULT_NAME);
+		}
+
+		final String originalValue = getValue();
+
+		final String value;
+
+		if(originalValue != null) {
+
+			value = StringUtil.format(originalValue, variables);
+		} else {
+
+			value = StringUtil.fallback(originalValue, DEFAULT_VALUE);
+		}
+
+		getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
+	}
+
+	@Override
 	protected void emit() {
+
 		if (sourcesLeft.isEmpty()) {
 
-			final String originalName = getName();
+			if (getIncludeSubEntities() && !(this.getNamedValueReceiver() != null && Combine.class.isInstance(this.getNamedValueReceiver()) && ((Combine) this.getNamedValueReceiver()).getIncludeSubEntities())) {
 
-			final String name;
+				emitHierarchicalEntityBuffer();
 
-			if(originalName != null) {
-
-				name = StringUtil.format(originalName, variables);
-			} else {
-
-				name = StringUtil.fallback(originalName, DEFAULT_NAME);
+				return;
 			}
 
-			final String originalValue = getValue();
-
-			final String value;
-
-			if(originalValue != null) {
-
-				value = StringUtil.format(originalValue, variables);
-			} else {
-
-				value = StringUtil.fallback(originalValue, DEFAULT_VALUE);
-			}
-			getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
+			emit(getName(), getValue());
 		} else if (getIncludeSubEntities()) {
 
 			forcedNonMatchedEmit();
@@ -126,6 +150,89 @@ public final class All extends AbstractFlushingCollect {
 
 		sources.add(namedValueSource);
 		sourcesLeft.add(namedValueSource);
+	}
+
+	@Override
+	protected void emitHierarchicalEntityBuffer() {
+
+		HierarchicalMultiMap<Integer, String, String> hierarchicalEntityBuffer = getHierarchicalEntityBuffer();
+
+		final Map<String, List<String>> variablesMap = new LinkedHashMap<>();
+
+		for (final Map.Entry<String, String> emitEntry : hierarchicalEntityBuffer) {
+
+			final String variableName = emitEntry.getKey();
+			final String variableValue = emitEntry.getValue();
+
+			if(!variablesMap.containsKey(variableName)) {
+
+				variablesMap.put(variableName, new ArrayList<String>());
+			}
+
+			variablesMap.get(variableName).add(variableValue);
+		}
+
+		// determine longest variable value list
+
+		String variableNameOfLongestVariableValueList = null;
+		int longestVariableValueListSize = 0;
+
+		for (final Map.Entry<String, List<String>> variablesEntry : variablesMap.entrySet()) {
+
+			final String variableName = variablesEntry.getKey();
+			final List<String> variableValues = variablesEntry.getValue();
+			final int variableValuesSize = variableValues.size();
+
+			if(variableValuesSize > longestVariableValueListSize) {
+
+				longestVariableValueListSize = variableValuesSize;
+				variableNameOfLongestVariableValueList = variableName;
+			}
+		}
+
+		// emit all values for all variables as vector
+		boolean createdVector = false;
+
+		while(!createdVector) {
+
+			for (final Map.Entry<String, List<String>> variablesEntry : variablesMap.entrySet()) {
+
+				final String variableName = variablesEntry.getKey();
+				final List<String> variableValues = variablesEntry.getValue();
+
+				if (!variableValues.isEmpty()) {
+
+					String variableValue = variableValues.get(0);
+					variableValues.remove(0);
+
+					variables.put(variableName, variableValue);
+
+					createdVector = false;
+				} else if(variableName.equals(variableNameOfLongestVariableValueList)) {
+
+					// longest variable value list is empty
+
+					createdVector = true;
+				}
+			}
+
+			if(!createdVector) {
+
+				emit(getName(), getValue());
+			}
+		}
+	}
+
+	protected void emitHierarchicalEntityValueBuffer() {
+
+		if (!variables.isEmpty()) {
+
+			final String name = StringUtil.format(getName(), variables);
+			final String value = StringUtil.format(getValue(), variables);
+
+			final HierarchicalMultiMap<Integer, String, String> entityBuffer = getHierarchicalEntityBuffer();
+			entityBuffer.addToValue(getEntityCount(), name, value);
+		}
 	}
 
 }

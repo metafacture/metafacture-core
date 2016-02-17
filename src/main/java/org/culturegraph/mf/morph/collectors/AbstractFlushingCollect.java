@@ -17,6 +17,8 @@ package org.culturegraph.mf.morph.collectors;
 
 import org.culturegraph.mf.morph.Metamorph;
 
+import java.util.Map;
+
 /**
  * Common basis for {@link Entity}, {@link Combine} etc.
  *
@@ -108,4 +110,16 @@ public abstract class AbstractFlushingCollect extends AbstractCollect {
 		}
 	}
 
+	protected void emitHierarchicalEntityBuffer() {
+
+		for (final Map.Entry<String, String> emitEntry : getHierarchicalEntityBuffer()) {
+
+			emit(emitEntry.getKey(), emitEntry.getValue());
+		}
+	}
+
+	protected void emit(String name, String value) {
+
+		getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
+	}
 }
