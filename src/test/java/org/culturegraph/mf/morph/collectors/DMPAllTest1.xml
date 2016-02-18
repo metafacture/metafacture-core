@@ -3,7 +3,7 @@
                 xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph"
                 xmlns:cgxml="http://www.culturegraph.org/cgxml">
 
-	<test-case name="filter + all + include sub entities + more than one record + more negative cases">
+	<test-case name="filter + all + include sub entities + more than one record + more negative cases + filters are on same entity (that's why the reset at the collector)">
 		<input type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
