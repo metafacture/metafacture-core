@@ -255,6 +255,81 @@
 							</cgxml:entity>
 						</cgxml:entity>
 					</cgxml:record>
+					<!-- Record 4 -->
+					<cgxml:record id="4">
+						<cgxml:entity name="e">
+							<cgxml:literal name="l" value="1"/>
+							<cgxml:entity name="subfield">
+								<cgxml:literal name="value" value="1_sub1"/>
+							</cgxml:entity>
+						</cgxml:entity>
+						<cgxml:entity name="e">
+							<cgxml:literal name="l" value="2"/>
+							<cgxml:literal name="m" value="2"/>
+							<cgxml:entity name="subfield">
+								<cgxml:literal name="subl" value="1_xxx2xxx"/>
+								<cgxml:literal name="value" value="1_sub2"/>
+							</cgxml:entity>
+							<cgxml:entity name="subfield">
+								<cgxml:literal name="subl" value="1_xxx4xxx"/>
+								<cgxml:literal name="value" value="1_sub2zzz"/>
+							</cgxml:entity>
+						</cgxml:entity>
+						<cgxml:entity name="e">
+							<cgxml:literal name="l" value="2"/>
+							<cgxml:literal name="m" value="4"/>
+							<cgxml:entity name="subfield">
+								<cgxml:literal name="subl" value="1_xxx2xxx"/>
+								<cgxml:literal name="value" value="1_sub4"/>
+							</cgxml:entity>
+							<cgxml:entity name="subfield">
+								<cgxml:literal name="subl" value="1_xxx4xxxNOT"/>
+								<cgxml:literal name="value" value="1_sub4yyy2222"/>
+							</cgxml:entity>
+						</cgxml:entity>
+						<cgxml:entity name="e">
+							<cgxml:literal name="l" value="2"/>
+							<cgxml:literal name="m" value="4"/>
+							<cgxml:entity name="subfield">
+								<cgxml:literal name="subl" value="1_xxx2xxx"/>
+								<cgxml:literal name="value" value="1_sub4"/>
+							</cgxml:entity>
+							<cgxml:entity name="subfield">
+								<cgxml:literal name="subl" value="1_xxx4xxxNOT"/>
+								<cgxml:literal name="value" value="1_sub4yyy"/>
+							</cgxml:entity>
+						</cgxml:entity>
+						<cgxml:entity name="e">
+							<cgxml:literal name="l" value="2"/>
+							<cgxml:literal name="m" value="4NOT"/>
+							<cgxml:entity name="subfield">
+								<cgxml:literal name="subl" value="1_xxx2xxx"/>
+								<cgxml:literal name="value" value="1_sub4"/>
+							</cgxml:entity>
+							<cgxml:entity name="subfield">
+								<cgxml:literal name="subl" value="1_xxx4xxx"/>
+								<cgxml:literal name="value" value="1_sub4yyyNOT"/>
+							</cgxml:entity>
+						</cgxml:entity>
+						<cgxml:entity name="e">
+							<cgxml:literal name="l" value="2"/>
+							<cgxml:literal name="m" value="4"/>
+							<cgxml:entity name="subfield">
+								<cgxml:literal name="subl" value="1_xxx2xxx"/>
+								<cgxml:literal name="value" value="1_sub4"/>
+							</cgxml:entity>
+							<cgxml:entity name="subfield">
+								<cgxml:literal name="subl" value="1_xxx5xxxNOT"/>
+								<cgxml:literal name="value" value="1_sub4yyy222NEW"/>
+							</cgxml:entity>
+						</cgxml:entity>
+						<cgxml:entity name="e">
+							<cgxml:literal name="l" value="3"/>
+							<cgxml:entity name="subfield">
+								<cgxml:literal name="value" value="1_sub3"/>
+							</cgxml:entity>
+						</cgxml:entity>
+					</cgxml:record>
 				</cgxml:records>
 			</cgxml:cgxml>
 		</input>
@@ -277,9 +352,11 @@
 							</mm:all>
 						</mm:if>
 						<mm:data source="e.subfield.value" name="one">
-							<mm:regexp match="^1_sub2$"/>
 						</mm:data>
 					</mm:combine>
+					<mm:data source="@INPUT1" name="@ONE">
+						<mm:regexp match="^1_sub2$"/>
+					</mm:data>
 					<mm:combine name="@INPUT2" value="${two}" flushWith="e" reset="true" sameEntity="true"
 					            includeSubEntities="true">
 						<mm:if>
@@ -296,10 +373,11 @@
 						</mm:if>
 						<mm:data source="e.subfield.value" name="two"/>
 					</mm:combine>
-					<mm:all name="ALL" value="${ALLDATA2}" reset="true" flushWith="record" includeSubEntities="true">
-						<mm:data name="ALLDATA1" source="@INPUT1"/>
+					<mm:all name="@ALL" value="${ALLDATA2}" reset="true" flushWith="record" includeSubEntities="true">
+						<mm:data name="ALLDATA1" source="@ONE"/>
 						<mm:data name="ALLDATA2" source="@INPUT2"/>
 					</mm:all>
+					<mm:data source="@ALL" name="OUT"/>
 				</mm:rules>
 			</mm:metamorph>
 		</transformation>
@@ -308,16 +386,18 @@
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
 					<cgxml:record id="1">
-						<cgxml:literal name="ALL" value="1_sub4yyy"/>
-						<cgxml:literal name="ALL" value="1_sub4yyy222NEW"/>
+						<cgxml:literal name="OUT" value="1_sub4yyy"/>
+						<cgxml:literal name="OUT" value="1_sub4yyy222NEW"/>
 					</cgxml:record>
 					<cgxml:record id="2">
-						<cgxml:literal name="ALL" value="1_sub4yyyYES222"/>
-						<cgxml:literal name="ALL" value="1_sub4yyy222"/>
-						<cgxml:literal name="ALL" value="1_sub4yyyNOT"/>
-						<cgxml:literal name="ALL" value="1_sub4yyy222333444"/>
+						<cgxml:literal name="OUT" value="1_sub4yyyYES222"/>
+						<cgxml:literal name="OUT" value="1_sub4yyy222"/>
+						<cgxml:literal name="OUT" value="1_sub4yyyNOT"/>
+						<cgxml:literal name="OUT" value="1_sub4yyy222333444"/>
 					</cgxml:record>
 					<cgxml:record id="3">
+					</cgxml:record>
+					<cgxml:record id="4">
 					</cgxml:record>
 				</cgxml:records>
 			</cgxml:cgxml>

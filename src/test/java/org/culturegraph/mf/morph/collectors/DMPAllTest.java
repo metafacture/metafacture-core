@@ -24,6 +24,6 @@ import org.junit.runner.RunWith;
  * @author tgaengler
  */
 @RunWith(TestSuite.class)
-@TestDefinitions({ "DMPAllTest.xml", "DMPAllTest1.xml", "DMPAllTest2.xml", "DMPAllTest3.xml" })
+@TestDefinitions({ "DMPAllTest.xml", "DMPAllTest1.xml", "DMPAllTest2.xml", "DMPAllTest3.xml", "DMPAllTest4.xml", "DMPAllTest5.xml" })
 public final class DMPAllTest {/* bind to xml test */
 }
