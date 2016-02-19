@@ -103,17 +103,7 @@ public final class All extends AbstractFlushingCollect {
 			name = StringUtil.fallback(originalName, DEFAULT_NAME);
 		}
 
-		final String originalValue = getValue();
-
-		final String value;
-
-		if(originalValue != null) {
-
-			value = StringUtil.format(originalValue, variables);
-		} else {
-
-			value = StringUtil.fallback(originalValue, DEFAULT_VALUE);
-		}
+		final String value = determineValue(DEFAULT_VALUE);
 
 		getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
 	}
@@ -140,7 +130,15 @@ public final class All extends AbstractFlushingCollect {
 	protected void forcedNonMatchedEmit() {
 
 		final String name = StringUtil.fallback(getName(), DEFAULT_NAME);
-		final String value = FALSE;
+		final String value = determineValue(FALSE);
+
+		// if replaced value is empty and the original value is not one of the default values for 'all' collector
+		if(value.isEmpty() && (!getValue().equals(DEFAULT_VALUE) || !getValue().equals(FALSE))) {
+
+			// force non-matched-emit for "default" all collector (i.e. that one that is not utilised in the d:swarm filter)
+
+			return;
+		}
 
 		getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
 	}
@@ -235,4 +233,19 @@ public final class All extends AbstractFlushingCollect {
 		}
 	}
 
+	private String determineValue(final String defaultValue) {
+
+		final String originalValue = getValue();
+
+		final String value;
+
+		if(originalValue != null) {
+
+			value = StringUtil.format(originalValue, variables);
+		} else {
+
+			value = StringUtil.fallback(originalValue, defaultValue);
+		}
+		return value;
+	}
 }
