@@ -153,7 +153,7 @@ public final class All extends AbstractFlushingCollect {
 	@Override
 	protected void emitHierarchicalEntityBuffer() {
 
-		HierarchicalMultiMap<Integer, String, String> hierarchicalEntityBuffer = getHierarchicalEntityBuffer();
+		final HierarchicalMultiMap<Integer, String, String> hierarchicalEntityBuffer = getHierarchicalEntityBuffer();
 
 		final Map<String, List<String>> variablesMap = new LinkedHashMap<>();
 
@@ -219,6 +219,8 @@ public final class All extends AbstractFlushingCollect {
 				emit(getName(), getValue());
 			}
 		}
+
+		clear();
 	}
 
 	protected void emitHierarchicalEntityValueBuffer() {
