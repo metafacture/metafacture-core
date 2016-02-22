@@ -56,18 +56,6 @@ public final class Combine extends AbstractFlushingCollect {
 		emit(name, value);
 	}
 
-	private void emit(String name, String value) {
-
-		getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
-	}
-
-	protected void emitHierarchicalEntityBuffer() {
-
-		for (final Map.Entry<String, String> emitEntry : getHierarchicalEntityBuffer()) {
-			emit(emitEntry.getKey(), emitEntry.getValue());
-		}
-	}
-
 	protected void emitHierarchicalEntityValueBuffer() {
 
 		if (!variables.isEmpty()) {
