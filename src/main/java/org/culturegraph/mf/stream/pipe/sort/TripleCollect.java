@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ *  Copyright 2013, 2014, 2016 Deutsche Nationalbibliothek
  *
  *  Licensed under the Apache License, Version 2.0 the "License";
  *  you may not use this file except in compliance with the License.
@@ -27,17 +27,18 @@ import org.culturegraph.mf.types.Triple.ObjectType;
 
 /**
  * Collects named values to form records.
- * 
+ *
  * @author markus geipel
- * 
+ *
  */
 @Description("Collects named values to form records. The name becomes the id, the value is split by 'separator' into name and value")
 @In(Triple.class)
 @Out(StreamReceiver.class)
 public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceiver> {
+
 	private final FormetaParser parser = new FormetaParser();
 	private final PartialRecordEmitter emitter = new PartialRecordEmitter();
-	
+
 	private String currentSubject;
 
 	public TripleCollect() {
@@ -50,7 +51,7 @@ public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceive
 			currentSubject = triple.getSubject();
 			getReceiver().startRecord(currentSubject);
 		}
-		
+
 		if (currentSubject.equals(triple.getSubject())) {
 			decodeTriple(triple);
 		} else {
@@ -74,16 +75,20 @@ public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceive
 
 	@Override
 	protected void onResetStream() {
-		currentSubject = null;
-		getReceiver().endRecord();
+		if (currentSubject != null) {
+			currentSubject = null;
+			getReceiver().endRecord();
+		}
 	}
 
 	@Override
 	protected void onCloseStream() {
-		currentSubject = null;
-		getReceiver().endRecord();
+		if (currentSubject != null) {
+			currentSubject = null;
+			getReceiver().endRecord();
+		}
 	}
-	
+
 	@Override
 	protected void onSetReceiver() {
 		emitter.setReceiver(getReceiver());
