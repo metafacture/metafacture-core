@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.culturegraph</groupId>
 	<artifactId>metafacture-core</artifactId>
-	<version>3.3.1-SNAPSHOT</version>
+	<version>3.3.1</version>
 	<name>metafacture.core</name>
 	<description>Core package of the metafacture tool suite</description>
 	<licenses>
@@ -68,7 +68,7 @@
 		<connection>scm:git:git://github.com/culturegraph/metafacture-core.git</connection>
 		<developerConnection>scm:git:git@github.com:culturegraph/metafacture-core.git</developerConnection>
 		<url>http://github.com/culturegraph/metafacture-core</url>
-		<tag>HEAD</tag>
+		<tag>metafacture-core-3.3.1</tag>
 	</scm>
 
 	<build>
