@@ -27,11 +27,13 @@ import org.culturegraph.mf.util.StreamConstants;
  * Removes record boundaries
  *
  * @author Markus Michael Geipel
- *
+ * @deprecated Use {@link StreamEventDiscarder} instead. This module will be
+ * removed in release 4.0.0
  */
 @Description("Removes record boundaries")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
+@Deprecated
 public final class RecordBounderyRemover
 		extends DefaultStreamPipe<StreamReceiver> {
 
@@ -51,7 +53,7 @@ public final class RecordBounderyRemover
 		this.entityName = entityName;
 	}
 
-	public RecordBounderyRemover(){
+	public RecordBounderyRemover() {
 		super();
 		this.entityName = null;
 
