@@ -21,29 +21,32 @@ import java.util.regex.Pattern;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 
 /**
- * Only forwards records which match (or do not match) a regular expression.
- * 
+ * Only forwards records which match (or do not match) a regular expression
+ * given in the constructor.
+ *
  * @author Christoph Böhme
  *
  */
 @Description("Only forwards records which match (or do not match) a regular expression given in the constructor")
 @In(String.class)
 @Out(String.class)
+@FluxCommand("filter-strings")
 public final class StringFilter extends
 		DefaultObjectPipe<String, ObjectReceiver<String>> {
 
 	private final Matcher matcher;
 	private boolean passMatches=true;
-	
+
 	public StringFilter(final String pattern) {
 		this.matcher = Pattern.compile(pattern).matcher("");
 	}
-	
+
 	public String getPattern() {
 		return matcher.pattern().pattern();
 	}
@@ -55,7 +58,7 @@ public final class StringFilter extends
 	public void setPassMatches(final boolean passMatches) {
 		this.passMatches = passMatches;
 	}
-	
+
 	@Override
 	public void process(final String obj) {
 		assert !isClosed();
@@ -65,5 +68,5 @@ public final class StringFilter extends
 			getReceiver().process(obj);
 		}
 	}
-	
+
 }

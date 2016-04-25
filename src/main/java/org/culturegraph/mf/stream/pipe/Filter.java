@@ -19,30 +19,35 @@ package org.culturegraph.mf.stream.pipe;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.stream.sink.SingleValue;
 
 /**
+ * Filters a stream based on a morph definition. A record is accepted if the
+ * morph returns at least one non empty value.
+ *
  * @author Markus Michael Geipel
  *
  */
 @Description("Filters a stream based on a morph definition. A record is accepted if the morph returns at least one non empty value.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
+@FluxCommand("filter")
 public final class Filter extends DefaultStreamPipe<StreamReceiver> {
 
 	private final StreamBuffer buffer = new StreamBuffer();
 	private final SingleValue singleValue = new SingleValue();
 	private final Metamorph metamorph;
-	
+
 	public Filter(final String morphDef) {
 		super();
 		metamorph = new Metamorph(morphDef);
 		metamorph.setReceiver(singleValue);
 	}
-	
+
 	public Filter(final Metamorph metamorph) {
 		super();
 		this.metamorph = metamorph;
@@ -54,7 +59,7 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
 		buffer.setReceiver(getReceiver());
 	}
 
-	
+
 	private void dispatch(){
 		final String key = singleValue.getValue();
 		if(!key.isEmpty()){
@@ -62,11 +67,11 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
 		}
 		buffer.clear();
 	}
-	
+
 	@Override
 	public void startRecord(final String identifier) {
 		buffer.startRecord(identifier);
-		metamorph.startRecord(identifier);	
+		metamorph.startRecord(identifier);
 	}
 
 	@Override

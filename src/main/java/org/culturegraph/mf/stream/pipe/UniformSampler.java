@@ -22,50 +22,54 @@ import java.util.Random;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 
 /**
  * Draws a uniform sample of records from the input stream.
- * 
+ *
  * @param <T> object type
- * 
- * @author Christoph Böhme, Markus Geipel
+ *
+ * @author Christoph Böhme
+ * @author Markus Geipel
+ *
  */
 @Description("Draws a uniform sample of records from the input stream.")
 @In(Object.class)
 @Out(Object.class)
+@FluxCommand("draw-uniform-sample")
 public final class UniformSampler<T> extends
 		DefaultObjectPipe<T, ObjectReceiver<T>> {
 
 	private final int sampleSize;
 	private final List<T> sample;
 	private final Random random = new Random();
-	
+
 	private long count;
-	
+
 	public UniformSampler(final int sampleSize) {
 		super();
 		this.sampleSize = sampleSize;
 		sample = new ArrayList<T>(sampleSize);
 	}
-	
+
 
 	public UniformSampler(final String sampleSize) {
 		this(Integer.parseInt(sampleSize));
 	}
-	
-	
+
+
 	public int getSampleSize() {
 		return sampleSize;
 	}
-	
+
 
 	public void setSeed(final long seed) {
 		random.setSeed(seed);
 	}
-	
+
 	@Override
 	public void process(final T obj) {
 		assert !isClosed();
@@ -80,7 +84,7 @@ public final class UniformSampler<T> extends
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onCloseStream() {
 		for(T obj : sample) {
@@ -89,11 +93,11 @@ public final class UniformSampler<T> extends
 		sample.clear();
 		count = 0;
 	}
-	
+
 	@Override
 	protected void onResetStream() {
 		sample.clear();
 		count = 0;
 	}
-	
+
 }

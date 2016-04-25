@@ -21,6 +21,7 @@ import org.apache.commons.io.output.StringBuilderWriter;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ import org.slf4j.LoggerFactory;
 @Description("passes objects through and catches exceptions.")
 @In(Object.class)
 @Out(Object.class)
+@FluxCommand("catch-object-exception")
 public final class ObjectExceptionCatcher<T> extends
 		DefaultObjectPipe<T, ObjectReceiver<T>> {
 

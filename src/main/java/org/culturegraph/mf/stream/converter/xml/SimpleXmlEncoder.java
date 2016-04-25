@@ -28,6 +28,7 @@ import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.MultiMap;
@@ -44,6 +45,7 @@ import org.culturegraph.mf.util.ResourceUtil;
 @Description("Encodes a stream as xml")
 @In(StreamReceiver.class)
 @Out(String.class)
+@FluxCommand("stream-to-xml")
 public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
 	public static final String ATTRIBUTE_MARKER = "~";

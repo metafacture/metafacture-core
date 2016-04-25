@@ -23,6 +23,7 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.util.ResourceUtil;
@@ -31,21 +32,22 @@ import org.culturegraph.mf.util.ResourceUtil;
 
 /**
  * Opens a resource or file and passes a reader for it to the receiver.
- * 
+ *
  * @author Christoph Böhme
- * 
+ *
  */
 @Description("Opens a resource.")
 @In(String.class)
 @Out(java.io.Reader.class)
+@FluxCommand("open-resource")
 public final class ResourceOpener
 		extends DefaultObjectPipe<String, ObjectReceiver<Reader>> implements Opener{
 
 	private String encoding = "UTF-8";
-	
+
 	/**
 	 * Returns the encoding used to open the resource.
-	 * 
+	 *
 	 * @return current default setting
 	 */
 	public String getEncoding() {
@@ -54,7 +56,7 @@ public final class ResourceOpener
 
 	/**
 	 * Sets the encoding used to open the resource.
-	 * 
+	 *
 	 * @param encoding new encoding
 	 */
 	public void setEncoding(final String encoding) {

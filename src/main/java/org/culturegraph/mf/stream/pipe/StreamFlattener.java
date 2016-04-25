@@ -19,6 +19,7 @@ package org.culturegraph.mf.stream.pipe;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.stream.sink.EntityPathTracker;
@@ -50,10 +51,12 @@ import org.culturegraph.mf.stream.sink.EntityPathTracker;
  * @author Christoph Böhme (rewrite)
  * @author Markus Michael Geipel
  * @see EntityPathTracker
+ *
  */
 @Description("flattens out entities in a stream by introducing dots in literal names")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
+@FluxCommand("flatten")
 public final class StreamFlattener extends DefaultStreamPipe<StreamReceiver> {
 
 	public static final String DEFAULT_ENTITY_MARKER = ".";

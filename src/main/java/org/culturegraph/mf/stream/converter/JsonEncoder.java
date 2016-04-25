@@ -24,6 +24,7 @@ import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
@@ -47,6 +48,7 @@ import com.fasterxml.jackson.core.io.SerializedString;
 @Description("Serialises an object as JSON")
 @In(StreamReceiver.class)
 @Out(String.class)
+@FluxCommand("encode-json")
 public final class JsonEncoder extends
 		DefaultStreamPipe<ObjectReceiver<String>> {
 

@@ -17,20 +17,21 @@ package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
- * resets Stream every <code>batchSize</code> records.
- * 
+ * Resets Stream every {@code batchSize} records.
+ *
  * @author "Markus Michael Geipel"
- * 
- * 
+ *
+ *
  */
-
 @Description("Resets flow for every BATCHSIZE records.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
+@FluxCommand("batch-reset")
 public final class BatchResetter extends AbstractBatcher {
 
 	@Override

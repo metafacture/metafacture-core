@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
@@ -28,12 +29,13 @@ import org.culturegraph.mf.framework.annotations.Out;
 /**
  * Matches the incoming strings against a regular expression and replaces
  * the matching parts.
- * 
+ *
  * @author Christoph Böhme
  */
 @Description("Matches the incoming strings against a regular expression and replaces the matching parts.")
 @In(String.class)
 @Out(String.class)
+@FluxCommand("match")
 public final class StringMatcher extends
 		DefaultObjectPipe<String, ObjectReceiver<String>> {
 
@@ -55,7 +57,7 @@ public final class StringMatcher extends
 	public void setReplacement(final String replacement) {
 		this.replacement = replacement;
 	}
-	
+
 	@Override
 	public void process(final String obj) {
 		assert !isClosed();
@@ -63,5 +65,5 @@ public final class StringMatcher extends
 		matcher.reset(obj);
 		getReceiver().process(matcher.replaceAll(replacement));
 	}
-	
+
 }

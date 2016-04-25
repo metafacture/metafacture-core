@@ -22,18 +22,20 @@ import java.util.Arrays;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Reads a directory and emits all filenames found.
- * 
+ *
  * @author Markus Michael Geipel
  * @author Fabian Steeg (fsteeg)
  */
 @In(String.class)
 @Out(String.class)
 @Description("Reads a directory and emits all filenames found.")
+@FluxCommand("read-dir")
 public final class DirReader extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
 	private boolean recursive;

@@ -18,32 +18,35 @@ package org.culturegraph.mf.stream.pipe.sort;
 import java.util.Comparator;
 
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.types.NamedValue;
 import org.culturegraph.mf.types.Triple;
 
 /**
+ * Counts triples.
+ *
  * @author markus geipel
  *
  */
 @Description("Counts triples")
 @In(Triple.class)
 @Out(Triple.class)
+@FluxCommand("count-triples")
 public final class TripleCount extends AbstractTripleSort {
-	
+
 	public static final String DEFAULT_COUNTP_REDICATE = "count";
 
 	private static final Triple INIT = new Triple("", "", "");
-		
+
 	private Triple current = INIT;
 	private int count;
 	private String countPredicate = DEFAULT_COUNTP_REDICATE;
 	private Comparator<Triple> comparator;
-	
+
 	@Override
 	protected void sortedTriple(final Triple triple) {
-		
+
 		if(current==INIT){
 			current = triple;
 			comparator = createComparator();
@@ -57,16 +60,16 @@ public final class TripleCount extends AbstractTripleSort {
 			count = 1;
 		}
 	}
-	
+
 	public void setCountPredicate(final String countPredicate) {
 		this.countPredicate = countPredicate;
 	}
-	
+
 	@Override
 	protected void onFinished() {
 		writeResult();
 	}
-	
+
 	private void writeResult() {
 		final Compare compareBy = getCompare();
 		switch (compareBy) {

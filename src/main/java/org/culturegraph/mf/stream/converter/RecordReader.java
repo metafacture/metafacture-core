@@ -22,6 +22,7 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
@@ -38,6 +39,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Description("Reads data from a Reader and splits it into individual records")
 @In(Reader.class)
 @Out(String.class)
+@FluxCommand("as-records")
 public final class RecordReader extends
 		DefaultObjectPipe<Reader, ObjectReceiver<String>> {
 

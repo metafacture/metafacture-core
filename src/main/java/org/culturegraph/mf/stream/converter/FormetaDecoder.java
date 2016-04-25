@@ -21,36 +21,38 @@ import org.culturegraph.mf.formeta.parser.FullRecordEmitter;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Decodes a record in formeta format.
- * 
+ *
  * @author Christoph Böhme
  *
  */
 @Description("Decodes a record in formeta format.")
 @In(String.class)
 @Out(StreamReceiver.class)
+@FluxCommand("decode-formeta")
 public final class FormetaDecoder extends
 		DefaultObjectPipe<String, StreamReceiver> {
-		
+
 	private final FormetaParser parser = new FormetaParser();
 	private final Emitter emitter = new FullRecordEmitter();
-	
+
 	public FormetaDecoder() {
 		parser.setEmitter(emitter);
 	}
-	
+
 	@Override
 	public void process(final String record) {
 		parser.parse(record);
 	}
-	
+
 	@Override
 	protected void onSetReceiver() {
 		emitter.setReceiver(getReceiver());
 	}
-	
+
 }

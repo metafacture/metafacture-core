@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
@@ -27,21 +28,22 @@ import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Decodes lines of CSV files. First line is interpreted as header.
- * 
+ *
  * @author Markus Michael Geipel
  *
  */
 @Description("Decodes lines of CSV files. First line is interpreted as header.")
 @In(String.class)
 @Out(StreamReceiver.class)
+@FluxCommand("decode-csv")
 public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver>  {
-	
+
 	private static final String DEFAULT_SEP = "[\t,;]";
 	private final Pattern separator;
 	private String[] header = new String[0];
 	private int count;
 	private boolean hasHeader;
-	
+
 	/**
 	 * @param separator regexp to split lines
 	 */
@@ -49,14 +51,14 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
 		super();
 		this.separator = Pattern.compile(separator);
 	}
-	
+
 	public CsvDecoder() {
 		super();
 		this.separator = Pattern.compile(DEFAULT_SEP);
-	}	
-	
+	}
+
 	@Override
-	public void process(final String string) { 
+	public void process(final String string) {
 		assert !isClosed();
 		final String[] parts = separator.split(string);
 		if(hasHeader){
@@ -82,7 +84,7 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
 			getReceiver().endRecord();
 		}
 	}
-	
+
 	public void setHasHeader(final boolean hasHeader) {
 		this.hasHeader = hasHeader;
 	}

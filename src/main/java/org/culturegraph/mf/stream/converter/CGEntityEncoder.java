@@ -19,15 +19,16 @@ import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.CGEntity;
 
 /**
  * Encodes an event stream in CGEntity format.
- * 
+ *
  * @see CGEntityDecoder
- * 
+ *
  * @author Markus Michael Geipel, Christoph Böhme
  *
  * @deprecated Use FormetaEncoder instead
@@ -35,12 +36,13 @@ import org.culturegraph.mf.types.CGEntity;
 @Description("Encodes a stream in CGE Format")
 @In(StreamReceiver.class)
 @Out(String.class)
+@FluxCommand("decode-cgentity")
 @Deprecated
-public final class CGEntityEncoder 
+public final class CGEntityEncoder
  extends DefaultStreamPipe<ObjectReceiver<String>>  {
 
 	private StringBuilder builder = new StringBuilder();
-	
+
 	@Override
 	public void startRecord(final String identifier) {
 		builder = new StringBuilder();
@@ -79,9 +81,9 @@ public final class CGEntityEncoder
 	protected void onResetStream() {
 		builder = new StringBuilder();
 	}
-	
+
 	public String getCurrentSerialization(){
 		return builder.toString();
 	}
-	
+
 }

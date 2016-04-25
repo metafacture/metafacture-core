@@ -20,19 +20,21 @@ import java.io.Reader;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 
 /**
  * Creates a reader for the supplied string and sends it to the receiver.
- * 
+ *
  * @author Christoph Böhme
- * 
+ *
  */
 @Description("Creates a reader for the supplied string and sends it to the receiver")
 @In(String.class)
 @Out(java.io.Reader.class)
+@FluxCommand("read-string")
 public final class StringReader
 		extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 

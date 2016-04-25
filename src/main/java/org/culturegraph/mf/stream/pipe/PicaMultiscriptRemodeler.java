@@ -22,6 +22,7 @@ import java.util.TreeMap;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
@@ -41,9 +42,9 @@ import org.culturegraph.mf.framework.annotations.Out;
  * entity for each of the original fields is created. These entities are named
  * depending on the type of script used. Three scripts are distinguished:
  * <ul>
- *   <li>Latin</<li>
- *   <li>NonLatinLR</li>
- *   <li>NonLatinRL</li>
+ *   <li>Latin
+ *   <li>NonLatinLR
+ *   <li>NonLatinRL
  * </ul>
  *
  * The following example shows how the input
@@ -99,6 +100,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @Description("Groups multiscript fields in entities")
+@FluxCommand("remodel-pica-multiscript")
 public final class PicaMultiscriptRemodeler extends
 		DefaultStreamPipe<StreamReceiver> {
 

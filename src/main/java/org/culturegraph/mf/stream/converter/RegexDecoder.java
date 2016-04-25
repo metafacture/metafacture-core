@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.slf4j.Logger;
@@ -40,52 +41,53 @@ import org.slf4j.LoggerFactory;
  * <li>The lowercase letters 'a' through 'z' ('\u0061' through '\u007a'),</li>
  * <li>The digits '0' through '9' ('\u0030' through '\u0039').</li>
  * </dl>
- * 
+ *
  * The first character of a group name must be a letter.
  * </p>
  * <p>
  * The regular expression must not contain any non-named capture groups.
  * </p>
- * 
+ *
  * <p>
  * Example: The regex
- * 
+ *
  * <blockquote>
- * 
+ *
  * <pre>
  * abc(?&lt;foo&gt;[0-9]+)def(?&lt;bar&gt;[x-z]+)ghi
  * </pre>
- * 
+ *
  * </blockquote>
- * 
+ *
  * matched against the input <blockquote>
- * 
+ *
  * <pre>
  * abc42defxyzzyghi
  * </pre>
- * 
+ *
  * </blockquote> will produce the sequence <blockquote>
- * 
+ *
  * <pre>
  * startRecord(null);
  * literal(&quot;foo&quot;, &quot;42&quot;);
  * literal(&quot;bar&quot;, &quot;xyzzy&quot;);
  * endRecord();
  * </pre>
- * 
+ *
  * </blockquote>
  * </p>
- * 
+ *
  * @author Thomas Seidel, Christoph Böhme
- * 
+ *
  */
 @Description("Decodes an incoming string based on a regular expression using named-capturing groups")
 @In(String.class)
 @Out(StreamReceiver.class)
+@FluxCommand("regex-decode")
 public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver> {
 
 	public static final String ID_CAPTURE_GROUP = "id";
-	
+
 	private static final Logger LOG = LoggerFactory
 			.getLogger(RegexDecoder.class);
 
@@ -99,7 +101,7 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 
 	public RegexDecoder(final String regex) {
 		super();
-		
+
 		final Matcher namedCaptureGroupMatcher = NAMED_CAPTURE_GROUP_PATTERN
 				.matcher(regex);
 		while (namedCaptureGroupMatcher.find()) {
@@ -109,14 +111,14 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 		}
 		final String java6regex = namedCaptureGroupMatcher.replaceAll("(");
 		LOG.debug("Cleaned java6regex is: {}", java6regex);
-		
+
 		matcher = Pattern.compile(java6regex).matcher("");
 	}
 
 	public String getDefaultLiteralName() {
 		return this.defaultLiteralName;
 	}
-	
+
 	public void setDefaultLiteralName(final String defaultLiteralName) {
 		this.defaultLiteralName = defaultLiteralName;
 	}
@@ -124,7 +126,7 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 	@Override
 	public void process(final String str) {
 		assert !isClosed();
-		
+
 		matcher.reset(str);
 		if (!matcher.find()) {
 			LOG.info("Ignoring non-matching input: {}", str);
@@ -140,12 +142,12 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 			id = "";
 		}
 		getReceiver().startRecord(id);
-		
+
 		// Add a literal containing the unmodified input string:
 		if (defaultLiteralName != null) {
 			getReceiver().literal(defaultLiteralName, str);
 		}
-		
+
 		// Emit literals:
 		do {
 			final int groupCount = matcher.groupCount();
@@ -153,12 +155,12 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 			for (int group = 1; group <= groupCount; ++group) {
 				final String literalName = captureGroupNames.get(group - 1);
 				final String literalValue = matcher.group(group);
-				LOG.debug("group# is: {}, literalName is: {}, literalValue is: {}", 
+				LOG.debug("group# is: {}, literalName is: {}, literalValue is: {}",
 						Integer.valueOf(group), literalName, literalValue);
 				getReceiver().literal(literalName, literalValue);
 			}
 		} while (matcher.find());
-		
+
 		getReceiver().endRecord();
 	}
 

@@ -18,35 +18,37 @@ package org.culturegraph.mf.stream.pipe;
 import org.culturegraph.mf.framework.DefaultStreamReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Merges a sequence of {@code batchSize} records. On a close-stream event,
- * a record containing less than {@code batchSize} source records may be 
+ * a record containing less than {@code batchSize} source records may be
  * created.
- * 
+ *
  * @author Christoph Böhme
  *
  */
 @Description("Merges a sequence of batchSize records")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
+@FluxCommand("merge-batch-stream")
 public final class StreamBatchMerger extends AbstractBatcher {
 
 	private boolean inRecord;
-	
+
 	public StreamBatchMerger() {
 		super();
 		setInternalReceiver(new Merger());
 	}
-	
+
 	@Override
 	protected void onBatchComplete() {
 		getReceiver().endRecord();
 		inRecord = false;
 	}
-	
+
 	@Override
 	protected void onReset() {
 		inRecord = false;
@@ -58,12 +60,12 @@ public final class StreamBatchMerger extends AbstractBatcher {
 			onBatchComplete();
 		}
 	}
-	
+
 	/**
 	 * Helper class for merging.
 	 */
 	private final class Merger extends DefaultStreamReceiver {
-		
+
 		@Override
 		public void startRecord(final String identifier) {
 			if (!inRecord) {
@@ -71,22 +73,22 @@ public final class StreamBatchMerger extends AbstractBatcher {
 				inRecord = true;
 			}
 		}
-		
+
 		@Override
 		public void startEntity(final String name) {
 			getReceiver().startEntity(name);
 		}
-		
-		@Override 
+
+		@Override
 		public void endEntity() {
 			getReceiver().endEntity();
 		}
-		
+
 		@Override
 		public void literal(final String name, final String value) {
 			getReceiver().literal(name, value);
 		}
-		
+
 	}
-	
+
 }

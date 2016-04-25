@@ -26,28 +26,30 @@ import org.apache.commons.io.IOUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.Triple;
 
 /**
- * Writes the object value of the triple into a file. The filename 
+ * Writes the object value of the triple into a file. The filename
  * is constructed from subject and predicate.
- * 
+ *
  * Please note: This module does not check if the filename constructed
  * from subject and predicate stays within {@code baseDir}. THIS MODULE
  * SHOULD NOT BE USED IN ENVIRONMENTS IN WHICH THE VALUES OF SUBJECT AND
  * PREDICATE A PROVIDED BY AN UNTRUSTED SOURCE!
- * 
+ *
  * @author Christoph Böhme
  */
-@Description("Writes the object value of the triple into a file. The filename is " 
+@Description("Writes the object value of the triple into a file. The filename is "
 		+ "constructed from subject and predicate. Please note: This module does "
 		+ "not check if the filename constructed from subject and predicate stays "
 		+ "within `baseDir`. THIS MODULE SHOULD NOT BE USED IN ENVIRONMENTS IN WHICH "
 		+ "THE VALUES OF SUBJECT AND PREDICATE A PROVIDED BY AN UNTRUSTED SOURCE!")
 @In(Triple.class)
 @Out(Void.class)
+@FluxCommand("write-triple-objects")
 public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
 
 	private final String baseDir;
@@ -60,7 +62,7 @@ public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
 
 	/**
 	 * Returns the encoding used to open the resource.
-	 * 
+	 *
 	 * @return current default setting
 	 */
 	public String getEncoding() {
@@ -69,7 +71,7 @@ public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
 
 	/**
 	 * Sets the encoding used to open the resource.
-	 * 
+	 *
 	 * @param encoding
 	 *            new encoding
 	 */
@@ -81,9 +83,9 @@ public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
 	public void process(final Triple triple) {
 		final String file = FilenameUtils.concat(
 				FilenameUtils.concat(baseDir, triple.getSubject()), triple.getPredicate());
-		
+
 		ensurePathExists(file);
-		
+
 		try {
 			final Writer writer = new OutputStreamWriter(new FileOutputStream(file), encoding);
 			IOUtils.write(triple.getObject(), writer);
@@ -92,10 +94,10 @@ public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
 			throw new MetafactureException(e);
 		}
 	}
-	
+
 	private void ensurePathExists(final String path) {
 		final File parent = new File(path).getAbsoluteFile().getParentFile();
 		parent.mkdirs();
 	}
-	
+
 }

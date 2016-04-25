@@ -21,24 +21,26 @@ import java.util.regex.Pattern;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Splits a {@link String} into several {@link String}s, either by extracting
  * parts that match a regexp or by splitting by a regexp.
- * 
+ *
  * @author Markus M Geipel
  */
 @Description("Splits a String into several Strings, either by extracting parts that match a regexp or by splitting by a regexp.")
 @In(String.class)
 @Out(String.class)
+@FluxCommand("decode-string")
 public final class StringDecoder extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
 	/**
 	 * determines whether string is split by the regexp or parts matching the
 	 * regexp are extracted
-	 * 
+	 *
 	 */
 	public enum Mode {
 		SPLIT, EXTRACT
@@ -51,11 +53,11 @@ public final class StringDecoder extends DefaultObjectPipe<String, ObjectReceive
 	public StringDecoder(final String pattern) {
 		this.pattern = Pattern.compile(pattern);
 	}
-	
+
 	public void setMode(final Mode mode) {
 		this.mode = mode;
 	}
-	
+
 	@Override
 	public void process(final String obj) {
 		assert !isClosed();

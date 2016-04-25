@@ -20,24 +20,22 @@ import java.util.Queue;
 
 import org.culturegraph.mf.framework.ObjectReceiver;
 
-
-
 /**
  * Buffers a specified number of objects in a queue.
- * 
+ *
  * @param <T> object type
- * 
+ *
  * @author Christoph Böhme
- * 
+ *
  */
-public final class ObjectBuffer<T> 
+public final class ObjectBuffer<T>
 		implements ObjectReceiver<T> {
 
 	private final Queue<T> buffer = new LinkedList<T>();
 	private final int maxCapacity;
-	
+
 	private boolean closed;
-	
+
 	public ObjectBuffer() {
 		this(-1);
 	}
@@ -46,11 +44,11 @@ public final class ObjectBuffer<T>
 		super();
 		this.maxCapacity = maxCapacity;
 	}
-	
+
 	public boolean isClosed() {
 		return closed;
 	}
-	
+
 	@Override
 	public void process(final T obj) {
 		assert !closed;
@@ -69,7 +67,7 @@ public final class ObjectBuffer<T>
 		buffer.clear();
 		closed = false;
 	}
-	
+
 	@Override
 	public void closeStream() {
 		closed = true;
@@ -81,10 +79,10 @@ public final class ObjectBuffer<T>
 	public void clear() {
 		buffer.clear();
 	}
-	
+
 	/**
 	 * Returns and removes the next item from the buffer.
-	 * 
+	 *
 	 * @return next item from the buffer.
 	 */
 	public T pop() {

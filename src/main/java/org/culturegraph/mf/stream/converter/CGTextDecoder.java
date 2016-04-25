@@ -22,44 +22,47 @@ import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 
 /**
  * Decodes a record stored in CG-Text format.
- * 
- * @see CGTextEncoder
- * 
+ *
+ * @deprecated Use {@link FormetaDecoder} instead.
+ *
  * @author Christoph Böhme
- * 
+ *
  */
 @Description("Decodes a record stored in CG-Text format.")
 @In(String.class)
 @Out(StreamReceiver.class)
-public final class CGTextDecoder 
+@FluxCommand("decode-cgtext")
+@Deprecated
+public final class CGTextDecoder
 		extends DefaultObjectPipe<String, StreamReceiver> {
 
 	private static final String UNQUOTED_NAME = "(?:[A-Za-z0-9-_.:]+)";
-	private static final String QUOTED_NAME = "(?:'(?:\\\\'|[^'])*')"; 
+	private static final String QUOTED_NAME = "(?:'(?:\\\\'|[^'])*')";
 	private static final String NAME = "(" + UNQUOTED_NAME + "|" + QUOTED_NAME + ")";
 	private static final String GROUP_START = "(?:\\{)";
-	private static final String GROUP_END = "(?:\\})";	
+	private static final String GROUP_END = "(?:\\})";
 	private static final String CONTENT = "(?:(.*))";
 	private static final String LEADING_WS = "(?:(?:\\A|\\G)\\s*)";
 	private static final String TRAILING_WS = "(?:\\s*$)";
 	private static final String ASSIGNMENT = "(?:\\s*=\\s*)";
 	private static final String LIST_SEP = "(?:(?:\\s*,\\s*)|(?=\\s*\\})|" + TRAILING_WS + ")";
-	
-	private static final Pattern RECORD = Pattern.compile( 
+
+	private static final Pattern RECORD = Pattern.compile(
 			LEADING_WS + NAME + ASSIGNMENT + GROUP_START + CONTENT + GROUP_END + TRAILING_WS);
 	private static final Pattern ENTITY_START = Pattern.compile(
 			LEADING_WS + NAME + ASSIGNMENT + GROUP_START);
 	private static final Pattern ENTITY_END = Pattern.compile(
 			LEADING_WS + GROUP_END + LIST_SEP);
-	private static final Pattern LITERAL = Pattern.compile( 
+	private static final Pattern LITERAL = Pattern.compile(
 			LEADING_WS + NAME + ASSIGNMENT + NAME + LIST_SEP);
-		
+
 	@Override
 	public void process(final String str) {
 		assert !isClosed();
@@ -68,7 +71,7 @@ public final class CGTextDecoder
 			throw new FormatException("expecting only a single record");
 		}
 		final String id = unescape(record.group(1));
-		final String contents = record.group(2); 
+		final String contents = record.group(2);
 		getReceiver().startRecord(id);
 		processList(contents);
 		getReceiver().endRecord();
@@ -97,9 +100,9 @@ public final class CGTextDecoder
 			}
 		}
 	}
-	
+
 	private String unescape(final String str) {
 		return str.replaceAll("(^')|('$)", "").replace("\\'", "'").replace("\\\\", "\\");
 	}
-	
+
 }

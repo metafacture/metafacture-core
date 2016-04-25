@@ -20,44 +20,46 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 
-
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.stream.util.DigestAlgorithm;
 import org.culturegraph.mf.types.Triple;
 
 /**
- * Uses the input string as a file name and computes a cryptographic hash the file.
- * 
+ * Interprets the input string as a file name and computes a cryptographic hash
+ * for the file.
+ *
  * @author Christoph Böhme
  *
  */
 @Description("Uses the input string as a file name and computes a cryptographic hash the file")
 @In(String.class)
 @Out(Triple.class)
+@FluxCommand("file-digest")
 public final class FileDigestCalculator extends
 		DefaultObjectPipe<String, ObjectReceiver<Triple>> {
 
 	private static final int BUFFER_SIZE = 1024;
-	
+
 	private static final int HIGH_NIBBLE = 0xf0;
-	private static final int LOW_NIBBLE = 0x0f;	
-	private static final char[] NIBBLE_TO_HEX = 
+	private static final int LOW_NIBBLE = 0x0f;
+	private static final char[] NIBBLE_TO_HEX =
 			{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-	
+
 	private final DigestAlgorithm algorithm;
 	private final MessageDigest messageDigest;
 
-	
+
 	public FileDigestCalculator(final DigestAlgorithm algorithm) {
 		this.algorithm = algorithm;
 		this.messageDigest = this.algorithm.getInstance();
 	}
-	
+
 	public FileDigestCalculator(final String algorithm) {
 		this.algorithm = DigestAlgorithm.valueOf(algorithm.toUpperCase());
 		this.messageDigest = this.algorithm.getInstance();
@@ -80,10 +82,10 @@ public final class FileDigestCalculator extends
 		}
 		getReceiver().process(new Triple(file, algorithm.name(), digest));
 	}
-	
+
 	private static byte[] getDigest(final InputStream stream, final MessageDigest messageDigest) throws IOException {
 		final byte[] buffer = new byte[BUFFER_SIZE];
-		
+
 	    int read = stream.read(buffer, 0, BUFFER_SIZE);
 	    while (read > -1) {
 	    	messageDigest.update(buffer, 0, read);
@@ -101,5 +103,5 @@ public final class FileDigestCalculator extends
 		}
 		return new String(hex);
 	}
-	
+
 }

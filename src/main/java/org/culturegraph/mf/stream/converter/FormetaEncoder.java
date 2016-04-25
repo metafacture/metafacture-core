@@ -21,6 +21,7 @@ import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
@@ -33,12 +34,13 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Description("Encodes streams in formeta format.")
 @In(StreamReceiver.class)
 @Out(String.class)
+@FluxCommand("encode-formeta")
 public final class FormetaEncoder extends
 		DefaultStreamPipe<ObjectReceiver<String>> {
-	
+
 	private FormatterStyle style = FormatterStyle.CONCISE;
 	private Formatter formatter = style.createFormatter();
-	
+
 	public FormatterStyle getStyle() {
 		return style;
 	}
@@ -47,7 +49,7 @@ public final class FormetaEncoder extends
 		this.style = formatterStyle;
 		formatter = formatterStyle.createFormatter();
 	}
-	
+
 
 	@Override
 	public void startRecord(final String identifier) {

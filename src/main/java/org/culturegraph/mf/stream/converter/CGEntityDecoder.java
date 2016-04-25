@@ -21,6 +21,7 @@ import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.CGEntity;
@@ -30,19 +31,20 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Reads Strings CGEntity format.
- * 
+ *
  * @see CGEntityEncoder
- * 
+ *
  * @author Markus Michael Geipel, Christoph Böhme
- * 
+ *
  * @deprecated Use FormetaDecoder instead
- * 
+ *
  */
 @Description("Reads Strings CGEntity format.")
 @In(String.class)
 @Out(StreamReceiver.class)
+@FluxCommand("encode-cgentity")
 @Deprecated
-public final class CGEntityDecoder 
+public final class CGEntityDecoder
 		extends DefaultObjectPipe<String, StreamReceiver> {
 
 	private static final Pattern FIELD_PATTERN = Pattern.compile(
@@ -84,7 +86,7 @@ public final class CGEntityDecoder
 			receiver.endRecord();
 		} catch (IndexOutOfBoundsException exception) {
 			throw new FormatException(record, exception);
-		}		
+		}
 	}
-	
+
 }

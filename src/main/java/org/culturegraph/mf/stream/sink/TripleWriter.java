@@ -23,6 +23,7 @@ import java.io.ObjectOutputStream;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.Triple;
@@ -34,19 +35,20 @@ import org.culturegraph.mf.types.Triple;
 @Description("Writes triples into a file.")
 @In(Triple.class)
 @Out(Void.class)
+@FluxCommand("write-triples")
 public final class TripleWriter extends DefaultObjectReceiver<Triple> {
 
 	public static final int BUFFERSIZE = 2048;
 
 	private final String filename;
-	
+
 	private ObjectOutputStream outputStream;
-	
+
 	public TripleWriter(final String filename) {
 		this.filename = filename;
 		resetStream();
 	}
-	
+
 	@Override
 	public void process(final Triple obj) {
 		try {
@@ -55,7 +57,7 @@ public final class TripleWriter extends DefaultObjectReceiver<Triple> {
 			throw new MetafactureException(e);
 		}
 	}
-	
+
 	@Override
 	public void resetStream() {
 		try {
@@ -65,9 +67,9 @@ public final class TripleWriter extends DefaultObjectReceiver<Triple> {
 			outputStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename), BUFFERSIZE));
 		} catch (IOException e) {
 			throw new MetafactureException(e);
-		} 
+		}
 	}
-	
+
 	@Override
 	public void closeStream() {
 		try {
@@ -76,7 +78,7 @@ public final class TripleWriter extends DefaultObjectReceiver<Triple> {
 			}
 		} catch (IOException e) {
 			throw new MetafactureException(e);
-		} 
+		}
 	}
-	
+
 }

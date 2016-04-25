@@ -21,6 +21,7 @@ import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
@@ -28,18 +29,19 @@ import org.culturegraph.mf.framework.annotations.Out;
 /**
  * Parses a raw Mab2 stream (utf-8 encoding assumed). Events are handled by a
  * {@link StreamReceiver}.
- * 
+ *
  * @see StreamReceiver
- * 
+ *
  * @author Markus Michael Geipel, Christoph Böhme
  *
  */
 @Description("Parses a raw Mab2 stream (UTF-8 encoding expected).")
 @In(String.class)
 @Out(StreamReceiver.class)
-public final class MabDecoder 
+@FluxCommand("decode-mab")
+public final class MabDecoder
 		extends DefaultObjectPipe<String, StreamReceiver> {
-	
+
 	private static final String FIELD_END = "\u001e";
 	private static final Pattern FIELD_PATTERN = Pattern.compile(FIELD_END, Pattern.LITERAL);
 	private static final Pattern SUBFIELD_PATTERN = Pattern.compile("\u001f", Pattern.LITERAL);
@@ -52,7 +54,7 @@ public final class MabDecoder
 	private static final String INVALID_FORMAT = "Invalid MAB format";
 	private static final String ID_TAG = "001 ";
 	private static final int TAG_LENGTH = 4;
-	
+
 	@Override
 	public void process(final String record) {
 		assert !isClosed();
@@ -70,7 +72,7 @@ public final class MabDecoder
 			throw new FormatException(INVALID_FORMAT + record, e);
 		}
 	}
-	
+
 	public static void process(final String record, final StreamReceiver receiver) {
 
 		if (record.trim().isEmpty()) {
@@ -106,8 +108,8 @@ public final class MabDecoder
 		} catch (IndexOutOfBoundsException e) {
 			throw new FormatException("[" + record + "]", e);
 		}
-		
-		receiver.endRecord();		
+
+		receiver.endRecord();
 	}
-	
+
 }

@@ -26,6 +26,7 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.util.FileCompression;
@@ -33,13 +34,14 @@ import org.culturegraph.mf.util.FileCompression;
 
 /**
  * Opens a file and passes a reader for it to the receiver.
- * 
+ *
  * @author Christoph Böhme
- * 
+ *
  */
 @Description("Opens a file.")
 @In(String.class)
 @Out(java.io.Reader.class)
+@FluxCommand("open-file")
 public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> implements Opener {
 
 	private String encoding = "UTF-8";
@@ -47,7 +49,7 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 
 	/**
 	 * Returns the encoding used to open the resource.
-	 * 
+	 *
 	 * @return current default setting
 	 */
 	public String getEncoding() {
@@ -56,22 +58,22 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 
 	/**
 	 * Sets the encoding used to open the resource.
-	 * 
+	 *
 	 * @param encoding
 	 *            new encoding
 	 */
 	public void setEncoding(final String encoding) {
 		this.encoding = encoding;
 	}
-	
+
 	public FileCompression getCompression() {
 		return compression;
 	}
-	
+
 	public void setCompression(final FileCompression compression) {
 		this.compression = compression;
 	}
-	
+
 	public void setCompression(final String compression) {
 		setCompression(FileCompression.valueOf(compression.toUpperCase()));
 	}
@@ -83,7 +85,7 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 			try {
 				final InputStream decompressor = compression.createDecompressor(fileStream);
 				try {
-			
+
 					final Reader reader = new InputStreamReader(new BOMInputStream(decompressor), encoding);
 					getReceiver().process(reader);
 				} catch (IOException e) {

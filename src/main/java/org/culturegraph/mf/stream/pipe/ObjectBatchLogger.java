@@ -21,6 +21,7 @@ import java.util.Map;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.util.StringUtil;
@@ -29,16 +30,17 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Writes log info for every BATCHSIZE records.
- * 
+ *
  * @param <T>
  *            object type
- * 
+ *
  * @author Markus Geipel
- * 
+ *
  */
 @Description("Writes log info for every BATCHSIZE records.")
 @In(Object.class)
 @Out(Object.class)
+@FluxCommand("object-batch-log")
 public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 
 	public static final String RECORD_COUNT_VAR = "records";

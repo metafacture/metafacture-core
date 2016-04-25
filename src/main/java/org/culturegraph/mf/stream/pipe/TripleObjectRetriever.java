@@ -24,6 +24,7 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.Triple;
@@ -33,7 +34,7 @@ import org.culturegraph.mf.types.Triple.ObjectType;
  * Uses the object value of the triple as a URL and emits a new triple
  * in which the object value is replaced with the contents of the resource
  * identified by the URL.
- * 
+ *
  * @author Christoph Böhme
  */
 @Description("Uses the object value of the triple as a URL and emits a new triple "
@@ -41,15 +42,16 @@ import org.culturegraph.mf.types.Triple.ObjectType;
 		+ "identified by the URL.")
 @In(Triple.class)
 @Out(Triple.class)
-public final class TripleObjectRetriever 
+@FluxCommand("retrieve-triple-objects")
+public final class TripleObjectRetriever
 		extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
 
 	private String defaultEncoding = "UTF-8";
-	
+
 	/**
 	 * Returns the default encoding used when no encoding is
 	 * provided by the server. The default setting is UTF-8.
-	 * 
+	 *
 	 * @return current default setting
 	 */
 	public String getDefaultEncoding() {
@@ -57,9 +59,9 @@ public final class TripleObjectRetriever
 	}
 
 	/**
-	 * Sets the default encoding to use when no encoding is 
+	 * Sets the default encoding to use when no encoding is
 	 * provided by the server. The default setting is UTF-8.
-	 * 
+	 *
 	 * @param defaultEncoding new default encoding
 	 */
 	public void setDefaultEncoding(final String defaultEncoding) {
@@ -69,7 +71,7 @@ public final class TripleObjectRetriever
 	@Override
 	public void process(final Triple triple) {
 		assert !isClosed();
-		
+
 		if (triple.getObjectType() != ObjectType.STRING) {
 			return;
 		}
@@ -89,5 +91,5 @@ public final class TripleObjectRetriever
 
 		getReceiver().process(new Triple(triple.getSubject(), triple.getPredicate(), objectValue));
 	}
-	
+
 }

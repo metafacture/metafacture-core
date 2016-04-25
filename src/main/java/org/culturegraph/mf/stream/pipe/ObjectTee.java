@@ -19,20 +19,22 @@ import org.culturegraph.mf.framework.DefaultTee;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Sends an object to more than one receiver.
- * 
+ *
  * @param <T> Object type
- * 
+ *
  * @author Christoph Böhme
  *
  */
 @Description("Sends an object to more than one receiver.")
 @In(Object.class)
 @Out(Object.class)
+@FluxCommand("object-tee")
 public final class ObjectTee<T> extends DefaultTee<ObjectReceiver<T>>
 		implements ObjectPipe<T, ObjectReceiver<T>> {
 

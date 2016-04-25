@@ -27,21 +27,23 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 
 /**
  * Opens a gz file and passes a reader for it to the receiver.
- * 
+ *
  * @deprecated Use FileOpener instead and set compression to AUTO or bzip2
 
  * @author Markus Geipel
- * 
+ *
  */
 @Description("Opens a gz file.")
 @In(String.class)
 @Out(java.io.Reader.class)
+@FluxCommand("open-gzip")
 @Deprecated
 public final class GzipOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> implements Opener {
 
@@ -51,7 +53,7 @@ public final class GzipOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 
 	/**
 	 * Returns the encoding used to open the resource.
-	 * 
+	 *
 	 * @return current default setting
 	 */
 	public String getEncoding() {
@@ -60,7 +62,7 @@ public final class GzipOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 
 	/**
 	 * Sets the encoding used to open the resource.
-	 * 
+	 *
 	 * @param encoding
 	 *            new encoding
 	 */

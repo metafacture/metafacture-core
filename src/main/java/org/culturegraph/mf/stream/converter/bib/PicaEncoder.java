@@ -25,6 +25,7 @@ import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
@@ -49,6 +50,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Description("Encodes a stream in pica+ format")
 @In(StreamReceiver.class)
 @Out(String.class)
+@FluxCommand("encode-pica")
 public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
 	private static final String FIELD_DELIMITER = "\u001e";

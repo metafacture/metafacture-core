@@ -18,6 +18,7 @@ package org.culturegraph.mf.stream.pipe;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.slf4j.Logger;
@@ -25,23 +26,24 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Leaves the event stream untouched but logs it to the info log. 
- * The {@link StreamReceiver} may be {@code null}. 
- * In this case {@link StreamLogger} behaves as a sink, just logging. 
- * 
+ * Leaves the event stream untouched but logs it to the info log.
+ * The {@link StreamReceiver} may be {@code null}.
+ * In this case {@link StreamLogger} behaves as a sink, just logging.
+ *
  * @author Markus Michael Geipel
  *
  */
 @Description("logs events")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
-public final class StreamLogger 
+@FluxCommand("log-stream")
+public final class StreamLogger
 		extends DefaultStreamPipe<StreamReceiver> {
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger(StreamLogger.class);
 
 	private final String logPrefix;
-	
+
 	public StreamLogger() {
 		this("");
 	}
@@ -50,7 +52,7 @@ public final class StreamLogger
 		super();
 		this.logPrefix = logPrefix;
 	}
-	
+
 	@Override
 	public void startRecord(final String identifier) {
 		assert !isClosed();
@@ -99,12 +101,12 @@ public final class StreamLogger
 
 	@Override
 	protected void onResetStream() {
-		LOG.debug("{}resetStream", logPrefix);	
+		LOG.debug("{}resetStream", logPrefix);
 	}
-	
+
 	@Override
 	protected void onCloseStream() {
-		LOG.debug("{}closeStream", logPrefix);	
+		LOG.debug("{}closeStream", logPrefix);
 	}
 
 }

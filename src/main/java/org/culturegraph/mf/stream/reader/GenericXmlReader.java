@@ -17,18 +17,22 @@ package org.culturegraph.mf.stream.reader;
 
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.stream.converter.xml.GenericXmlHandler;
 
 
 /**
+ * Generic reader for xml files.
+ *
  * @author Markus Michael Geipel
- * 
+ *
  */
 @Description("Generic reader for xml files")
 @In(java.io.Reader.class)
 @Out(StreamReceiver.class)
+@FluxCommand("generic-xml")
 public class GenericXmlReader extends XmlReaderBase {
 	public GenericXmlReader(final String recordTag) {
 		super(new GenericXmlHandler(recordTag));

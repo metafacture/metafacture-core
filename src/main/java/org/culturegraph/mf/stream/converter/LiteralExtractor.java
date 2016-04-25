@@ -22,31 +22,38 @@ import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
-
 /**
+ * Extracts the values of literals matching {@code pattern}
+ * and sends them to an {@link ObjectReceiver}.
+ * <p>
+ * The matcher does only match the literal name and does not
+ * take the enclosing entities into account.
+ *
  * @author Christoph Böhme
  *
  */
 @Description("Extracts literal values from a stream.")
 @In(StreamReceiver.class)
 @Out(String.class)
-public final class LiteralExtractor extends DefaultStreamPipe<ObjectReceiver<String>>  {
+@FluxCommand("extract-literals")
+public final class LiteralExtractor extends DefaultStreamPipe<ObjectReceiver<String>> {
 
-	private Matcher matcher; 
-	
+	private Matcher matcher;
+
 	public LiteralExtractor() {
 		this(".*");
 	}
-	
+
 	public LiteralExtractor(final String pattern) {
 		super();
-		
+
 		matcher = Pattern.compile(pattern).matcher("");
 	}
-	
+
 	public String getPattern() {
 		return matcher.pattern().pattern();
 	}
@@ -54,7 +61,7 @@ public final class LiteralExtractor extends DefaultStreamPipe<ObjectReceiver<Str
 	public void setPattern(final String pattern) {
 		this.matcher = Pattern.compile(pattern).matcher("");
 	}
-	
+
 	@Override
 	public void literal(final String name, final String value) {
 		assert !isClosed();
@@ -63,5 +70,5 @@ public final class LiteralExtractor extends DefaultStreamPipe<ObjectReceiver<Str
 			getReceiver().process(value);
 		}
 	}
-	
+
 }

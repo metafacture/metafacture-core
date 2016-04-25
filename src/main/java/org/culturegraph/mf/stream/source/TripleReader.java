@@ -24,22 +24,24 @@ import java.io.ObjectInputStream;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.types.Triple;
 
 /**
  * @author Christoph Böhme
  *
  */
+@FluxCommand("read-triples")
 public final class TripleReader extends
 		DefaultObjectPipe<String, ObjectReceiver<Triple>> {
-	
+
 	public static final int BUFFERSIZE = 2048;
 
 	@Override
 	public void process(final String filename) {
 		try {
 			final ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename), BUFFERSIZE));
-			
+
 			try {
 				while (true) {
 					getReceiver().process(Triple.read(in));

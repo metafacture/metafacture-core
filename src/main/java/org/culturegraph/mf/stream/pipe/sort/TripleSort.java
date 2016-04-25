@@ -16,31 +16,34 @@
 package org.culturegraph.mf.stream.pipe.sort;
 
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.Triple;
 
 /**
+ * Sorts triples
  * @author markus geipel
  *
  */
 @Description("Sorts triples")
 @In(Triple.class)
 @Out(Triple.class)
+@FluxCommand("sort-triples")
 public final class TripleSort extends AbstractTripleSort {
 
 	@Override
 	protected void sortedTriple(final Triple triple) {
 		getReceiver().process(triple);
 	}
-	
+
 	public void setBy(final Compare compare){
 		setCompare(compare);
 	}
-	
+
 	public void setOrder(final Order order){
 		setSortOrder(order);
 	}
-	
-	
+
+
 }

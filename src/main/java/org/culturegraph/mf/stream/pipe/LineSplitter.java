@@ -20,22 +20,23 @@ import java.util.regex.Pattern;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
-
 /**
  * Splits a string at new lines and sends each line to the receiver.
- * 
+ *
  * @author Christoph Böhme
  *
  */
 @Description("Splits a string at new lines and sends each line to the receiver.")
 @In(String.class)
 @Out(String.class)
+@FluxCommand("split-lines")
 public final class LineSplitter
 		extends DefaultObjectPipe<String, ObjectReceiver<String>> {
-	
+
 	private static final char NEWLINE = '\n';
 	private static final Pattern LINE_PATTERN = Pattern.compile(
 			String.valueOf(NEWLINE), Pattern.LITERAL);

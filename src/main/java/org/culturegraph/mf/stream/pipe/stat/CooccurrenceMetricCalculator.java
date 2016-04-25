@@ -19,20 +19,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.Triple;
 
 /**
- * 
- * 
+ * Calculates values for various co-occurrence metrics. The expected inputs are
+ * triples containing as subject the var name and as object the count. Marginal
+ * counts must appear first, joint counts second. Marginal counts must be
+ * written as 1:A, Joint counts as 2:A&B
+ *
  * @author Markus Geipel
- * 
+ *
  */
 @Description("Calculates values for various cooccurrence metrics. The expected inputs are triples containing as subject the var name and as object the count. "
 		+ "Marginal counts must appear first, joint counts second. Marinal counts must be written as 1:A, Joint counts as 2:A&B")
 @In(Triple.class)
 @Out(Triple.class)
+@FluxCommand("calculate-metrics")
 public final class CooccurrenceMetricCalculator extends AbstractCountProcessor {
 
 	/**

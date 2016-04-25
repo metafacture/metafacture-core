@@ -21,6 +21,7 @@ import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.stream.converter.IllegalEncodingException;
@@ -29,15 +30,16 @@ import org.culturegraph.mf.stream.converter.IllegalEncodingException;
 /**
  * Parses a raw Marc stream. UTF-8 encoding expected. Events are handled by a
  * {@link StreamReceiver}.
- * 
+ *
  * @see StreamReceiver
- * 
+ *
  * @author Markus Michael Geipel, Christoph Böhme
  */
 @Description("Parses a raw Marc string (UTF-8 encoding expected).")
 @In(String.class)
 @Out(StreamReceiver.class)
-public final class MarcDecoder 
+@FluxCommand("decode-marc21")
+public final class MarcDecoder
 		extends DefaultObjectPipe<String, StreamReceiver> {
 
 	private static final String FIELD_DELIMITER = "\u001e";
@@ -50,11 +52,11 @@ public final class MarcDecoder
 	private static final int TAG_LENGTH = 3;
 	private static final int DATA_START_BEGIN = 12;
 	private static final int DATA_START_END = 17;
-	
+
 	private static final Object ID_TAG = "001";
 	private static final String LEADER = "leader";
 	private static final int LEADER_END = 24;
-	
+
 	private boolean checkUtf8Encoding;
 
 	@Override
@@ -66,7 +68,7 @@ public final class MarcDecoder
 	public void setCheckUtf8Encoding(final boolean checkUtf8Encoding) {
 		this.checkUtf8Encoding = checkUtf8Encoding;
 	}
-	
+
 	public static String extractIdFromRecord(final String record) {
 		try {
 			if (record.substring(POS_DIRECTORY, POS_DIRECTORY + TAG_LENGTH).equals(ID_TAG)) {
@@ -80,16 +82,16 @@ public final class MarcDecoder
 			throw new FormatException(record, exception);
 		}
 	}
-	
+
 	public static void process(final String record, final StreamReceiver receiver) {
 		process(record, receiver, false);
 	}
-	
+
 	public static void process(final String record, final StreamReceiver receiver, final boolean checkUtf8encoding) {
 		if (record.trim().isEmpty()) {
 			return;
 		}
-		
+
 		try {
 			if (checkUtf8encoding && record.charAt(POS_ENCODING) != 'a') {
 				throw new IllegalEncodingException("UTF-8 encoding expected");

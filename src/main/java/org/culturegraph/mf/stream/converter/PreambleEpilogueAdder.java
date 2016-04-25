@@ -18,29 +18,31 @@ package org.culturegraph.mf.stream.converter;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 
 /**
  * Adds a String preamle and/or epilogue to the stream
- * 
+ *
  * @author Markus Geipel
- * 
+ *
  */
 @Description("Adds a String preamle and/or epilogue to the stream")
 @In(String.class)
 @Out(String.class)
+@FluxCommand("add-preamble-epilogue")
 public final class PreambleEpilogueAdder extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
 	private String preamble = "";
 	private String epilogue = "";
 	private boolean init = true;
-	
+
 	public void setEpilogue(final String epilogue) {
 		this.epilogue = epilogue;
 	}
-	
+
 	public void setPreamble(final String preamble) {
 		this.preamble = preamble;
 	}
@@ -53,7 +55,7 @@ public final class PreambleEpilogueAdder extends DefaultObjectPipe<String, Objec
 		}
 		getReceiver().process(obj);
 	}
-	
+
 	@Override
 	protected void onCloseStream() {
 		if(!epilogue.isEmpty()){

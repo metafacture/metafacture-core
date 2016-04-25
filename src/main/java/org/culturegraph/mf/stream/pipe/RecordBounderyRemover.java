@@ -24,7 +24,7 @@ import org.culturegraph.mf.util.StreamConstants;
 
 
 /**
- * Removes record boundaries
+ * Removes record boundaries.
  *
  * @author Markus Michael Geipel
  * @deprecated Use {@link StreamEventDiscarder} instead. This module will be

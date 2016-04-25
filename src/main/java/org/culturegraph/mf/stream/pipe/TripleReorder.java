@@ -19,29 +19,31 @@ package org.culturegraph.mf.stream.pipe;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.Triple;
 
 /**
  * Shifts subjectTo predicateTo and object around.
- * 
+ *
  * @author Christoph Böhme
  *
  */
 @Description("Shifts subjectTo predicateTo and object around")
 @In(Triple.class)
 @Out(Triple.class)
+@FluxCommand("reorder-triple")
 public final class TripleReorder extends
 		DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
 
 	/**
 	 * Names of the elements in the triple
 	 */
-	public enum TripleElement { SUBJECT, PREDICATE, OBJECT }; 
-	// Do not change the item order because the process method 
+	public enum TripleElement { SUBJECT, PREDICATE, OBJECT };
+	// Do not change the item order because the process method
 	// uses ordinal().
-	
+
 	private TripleElement subjectFrom = TripleElement.SUBJECT;
 	private TripleElement predicateFrom = TripleElement.PREDICATE;
 	private TripleElement objectFrom =  TripleElement.OBJECT;
@@ -61,15 +63,15 @@ public final class TripleReorder extends
 	public void setSubjectFrom(final TripleElement subjectFrom) {
 		this.subjectFrom = subjectFrom;
 	}
-	
+
 	public void setPredicateFrom(final TripleElement predicateFrom) {
 		this.predicateFrom = predicateFrom;
 	}
-	
+
 	public void setObjectFrom(final TripleElement objectFrom) {
 		this.objectFrom = objectFrom;
 	}
-	
+
 	@Override
 	public void process(final Triple triple) {
 		final String[] elements = {
@@ -77,12 +79,12 @@ public final class TripleReorder extends
 				triple.getPredicate(),
 				triple.getObject(),
 		};
-	
+
 		getReceiver().process(new Triple(
-				elements[subjectFrom.ordinal()], 
-				elements[predicateFrom.ordinal()], 
+				elements[subjectFrom.ordinal()],
+				elements[predicateFrom.ordinal()],
 				elements[objectFrom.ordinal()]
 		));
 	}
-	
+
 }

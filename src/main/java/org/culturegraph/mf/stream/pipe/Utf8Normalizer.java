@@ -21,18 +21,20 @@ import java.text.Normalizer.Form;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Normalises diacritics in UTF-8 encoded strings.
- * 
+ *
  * @author Christoph Böhme
  *
  */
 @Description("Normalizes diacritics UTF-8 encoded strings.")
 @In(String.class)
 @Out(String.class)
+@FluxCommand("normalize-utf8")
 public final class Utf8Normalizer extends
 		DefaultObjectPipe<String, ObjectReceiver<String>> {
 
@@ -42,5 +44,5 @@ public final class Utf8Normalizer extends
 		assert !isClosed();
 		getReceiver().process(Normalizer.normalize(str, Form.NFC));
 	}
-	
+
 }

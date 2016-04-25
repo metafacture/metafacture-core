@@ -27,18 +27,20 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Reads BEACON format
- * 
+ *
  * @author markus m geipel
- * 
+ *
  */
 @Description("Reads BEACON format")
 @In(java.io.Reader.class)
 @Out(StreamReceiver.class)
+@FluxCommand("read-beacon")
 public final class BeaconReader extends DefaultObjectPipe<java.io.Reader, StreamReceiver> {
 
 	private static final int MB = 1024 * 1024;

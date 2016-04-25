@@ -20,26 +20,43 @@ import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
-
 /**
+ * Outputs the name and value of each literal which is received
+ * as a string. Name and value are separated by a separator string.
+ * The default separator string is a tab. If a literal name is
+ * empty, only the value will be output without a separator.
+ * <p>
+ * The module ignores record and entity events. In particular,
+ * this means that literal names are not prefixed by the name
+ * of the entity which contains them.
  *
  * @author Markus Michael Geipel
  *
  */
-@Description("Formats litereals in a stream")
+@Description("Outputs the name and value of each literal which is received " +
+		"as a string. Name and value are separated by a separator " +
+		"string. The default separator string is a tab. If a literal " +
+		"name is empty, only the value will be output without a separator. " +
+		"The module ignores record and entity events. In particular, " +
+		"this means that literal names are not prefixed by the name " +
+		"of the entity which contains them.")
 @In(StreamReceiver.class)
 @Out(String.class)
-public final class StreamLiteralFormater extends DefaultStreamPipe<ObjectReceiver<String>>{
+@FluxCommand("encode-literals")
+public final class StreamLiteralFormater
+		extends DefaultStreamPipe<ObjectReceiver<String>> {
+
 	private static final String DEFAULT_SEPARATOR = "\t";
+
 	private String separator = DEFAULT_SEPARATOR;
 
 	public void setSeparator(final String separator) {
 		this.separator = separator;
 	}
-
 
 	@Override
 	public void literal(final String name, final String value) {
@@ -51,4 +68,3 @@ public final class StreamLiteralFormater extends DefaultStreamPipe<ObjectReceive
 	}
 
 }
-

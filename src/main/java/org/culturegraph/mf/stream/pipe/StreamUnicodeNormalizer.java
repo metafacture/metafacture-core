@@ -21,6 +21,7 @@ import java.text.Normalizer;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
@@ -30,16 +31,17 @@ import org.culturegraph.mf.framework.annotations.Out;
  * characters and composed characters. There are four different forms of
  * conversion which can be selected using {@code setNormalizationForm}. By
  * default {@code StreamUnicodeNormalizer} converts from composed characters to
- * precomposed characters using the {@link Normalizer.Form.NFC} conversion form.
- * In the default configuration only literal values are converted. The various
- * {@code setNormalize*} methods can be used to change this behaviour.
+ * precomposed characters using the {@link java.text.Normalizer.Form#NFC}
+ * conversion form. In the default configuration only literal values are
+ * converted. The various {@code setNormalize*} methods can be used to change
+ * this behaviour.
  *
  * @author Christoph Böhme
- *
  */
 @Description("Normalises composed and decomposed Unicode characters.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
+@FluxCommand("normalize-unicode-stream")
 public final class StreamUnicodeNormalizer
 		extends DefaultStreamPipe<StreamReceiver> {
 

@@ -20,13 +20,15 @@ import org.culturegraph.mf.formeta.parser.PartialRecordEmitter;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.Triple;
 import org.culturegraph.mf.types.Triple.ObjectType;
 
 /**
- * Collects named values to form records.
+ * Collects named values to form records. The name becomes the id, the value is
+ * split by 'separator' into name and value
  *
  * @author markus geipel
  *
@@ -34,6 +36,7 @@ import org.culturegraph.mf.types.Triple.ObjectType;
 @Description("Collects named values to form records. The name becomes the id, the value is split by 'separator' into name and value")
 @In(Triple.class)
 @Out(StreamReceiver.class)
+@FluxCommand("collect-triples")
 public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceiver> {
 
 	private final FormetaParser parser = new FormetaParser();

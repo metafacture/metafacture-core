@@ -15,19 +15,16 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.types.Triple;
 
 /**
- * Filters consecutive duplicated data objects. 
- * 
+ * Filters consecutive duplicated data objects.
+ *
  * @param <T> object type
  *
  * @author Alexander Haffner
@@ -36,19 +33,20 @@ import org.culturegraph.mf.types.Triple;
 @Description("Filters consecutive duplicated data objects.")
 @In(Object.class)
 @Out(Object.class)
+@FluxCommand("filter-duplicate-objects")
 public final class DuplicateObjectFilter<T> extends
 		DefaultObjectPipe<T, ObjectReceiver<T>> {
 
 	private T lastObj;
-	
+
 	@Override
 	public void process(final T obj) {
 		if (!obj.equals(lastObj)) {
 			lastObj = obj;
 			getReceiver().process(obj);
-		}		
+		}
 	}
-	
+
 	@Override
 	protected void onResetStream() {
 		lastObj = null;

@@ -26,31 +26,31 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.util.ResourceUtil;
 
-
-
 /**
  * Executes the function process(obj) in a given jscript.
- * 
+ *
  * @author Markus Geipel
- * 
+ *
  */
 @Description("executes the function process(obj) in a given jscript")
 @In(Object.class)
 @Out(Object.class)
+@FluxCommand("jscript")
 public final class JScriptObjectPipe extends DefaultObjectPipe<Object, ObjectReceiver<Object>> {
 
 	private static final String PROCESS = "process";
 	private String invoke = PROCESS;
 	private Invocable invocable;
-	
+
 	public JScriptObjectPipe(final String script) {
 		setScript(script);
 	}
-	
+
 	public void setInvoke(final String invoke) {
 		this.invoke = invoke;
 	}

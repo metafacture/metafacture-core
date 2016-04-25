@@ -19,6 +19,7 @@ import org.culturegraph.mf.framework.DefaultXmlPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.XmlReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.xml.sax.Attributes;
@@ -33,6 +34,7 @@ import org.xml.sax.SAXException;
 @Description("A marc xml reader")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
+@FluxCommand("handle-marcxml")
 public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
 	private static final String SUBFIELD = "subfield";
@@ -80,7 +82,6 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
 		}else if(LEADER.equals(localName)){
 			getReceiver().literal(currentTag, builder.toString());
-
 		}
 	}
 

@@ -18,6 +18,7 @@ package org.culturegraph.mf.stream.converter;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
@@ -28,6 +29,7 @@ import org.culturegraph.mf.framework.annotations.Out;
  */
 @Description("Outputs a record containing the input object as literal")
 @Out(StreamReceiver.class)
+@FluxCommand("object-to-literal")
 public final class ObjectToLiteral<T> extends
 		DefaultObjectPipe<T, StreamReceiver> {
 

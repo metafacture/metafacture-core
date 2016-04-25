@@ -19,18 +19,20 @@ import org.apache.commons.lang.StringUtils;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
- * Expands same macros for RDF/XML
- * 
+ * Expands some macros for RDF/XML
+ *
  * @author Markus Michael Geipel
- * 
+ *
  */
-@Description("Expands same macros for RDF/XML")
+@Description("Expands some macros for RDF/XML")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
+@FluxCommand("rdf-macros")
 public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
 
 
@@ -45,7 +47,7 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
 		this.autoAddedSubject = autoAddedSubject;
 	}
 
-	
+
 	@Override
 	public void startRecord(final String identifier) {
 		getReceiver().startRecord(identifier);

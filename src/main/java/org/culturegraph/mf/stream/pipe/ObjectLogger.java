@@ -18,6 +18,7 @@ package org.culturegraph.mf.stream.pipe;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.slf4j.Logger;
@@ -26,18 +27,19 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Logs the string representation of every object.
- * 
+ *
  * @param <T> object type
- * 
+ *
  * @author Christoph Böhme
- * 
+ *
  */
 @Description("logs objects with the toString method")
 @In(Object.class)
 @Out(Object.class)
-public final class ObjectLogger<T> 
+@FluxCommand("log-object")
+public final class ObjectLogger<T>
 		extends DefaultObjectPipe<T, ObjectReceiver<T>> {
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger(ObjectLogger.class);
 
 	private final String logPrefix;
@@ -45,7 +47,7 @@ public final class ObjectLogger<T>
 	public ObjectLogger() {
 		this("");
 	}
-	
+
 	public ObjectLogger(final String logPrefix) {
 		super();
 		this.logPrefix = logPrefix;
@@ -63,7 +65,7 @@ public final class ObjectLogger<T>
 	protected void onResetStream() {
 		LOG.debug("{}resetStream", logPrefix);
 	}
-	
+
 	@Override
 	protected void onCloseStream() {
 		LOG.debug("{}closeStream", logPrefix);

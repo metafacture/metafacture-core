@@ -19,18 +19,20 @@ import org.culturegraph.mf.framework.DefaultTee;
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
- * Replicates an event stream to an arbitrary number of {@link StreamReceiver}s. 
- * 
+ * Replicates an event stream to an arbitrary number of {@link StreamReceiver}s.
+ *
  * @author Christoph Böhme, Markus Michael Geipel
  *
  */
 @Description("Replicates an event stream to an arbitrary number of stream receivers.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
+@FluxCommand("stream-tee")
 public final class StreamTee extends DefaultTee<StreamReceiver>
 		implements StreamPipe<StreamReceiver> {
 

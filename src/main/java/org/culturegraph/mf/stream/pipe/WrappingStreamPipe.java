@@ -20,10 +20,9 @@ import org.culturegraph.mf.framework.Receiver;
 
 /**
  * Base class for modules which may rely on internal sub-flows.
- * 
- * 
+ *
  * @param <T> receiver type
- * 
+ *
  * @author Christoph Böhme
  */
 public class WrappingStreamPipe<T extends Receiver> extends
@@ -31,33 +30,33 @@ public class WrappingStreamPipe<T extends Receiver> extends
 
 	private T internalReceiver;
 	private boolean autoConnect = true;
-	
+
 	protected final void setAutoConnect(final boolean autoConnect) {
 		this.autoConnect = autoConnect;
 		onSetReceiver();
 	}
-	
+
 	protected final boolean isAutoConnect() {
 		return autoConnect;
 	}
-	
+
 	protected final <R extends T> R setInternalReceiver(final R internalReceiver) {
 		this.internalReceiver = internalReceiver;
 		autoConnect = false;
 		return internalReceiver;
 	}
-	
+
 	protected final T getInternalReceiver() {
 		return internalReceiver;
 	}
-	
+
 	@Override
 	protected final void onSetReceiver() {
 		if (autoConnect) {
 			internalReceiver = getReceiver();
 		}
 	}
-	
+
 	// FIXME: resetStream and closeStream events are not propagated to the internal flow.
-	
+
 }

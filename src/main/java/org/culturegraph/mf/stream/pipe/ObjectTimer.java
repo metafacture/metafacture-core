@@ -18,20 +18,22 @@ package org.culturegraph.mf.stream.pipe;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Benchmarks the execution time of the downstream modules.
- * 
+ *
  * @param <T>
  *            object type.
- * 
+ *
  * @author Christoph Böhme
  */
 @In(Object.class)
 @Out(Object.class)
 @Description("Benchmarks the execution time of the downstream modules.")
+@FluxCommand("log-time")
 public final class ObjectTimer<T> extends TimerBase<ObjectReceiver<T>>
 		implements ObjectPipe<T, ObjectReceiver<T>> {
 

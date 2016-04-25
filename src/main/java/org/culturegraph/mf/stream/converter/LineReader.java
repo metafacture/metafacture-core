@@ -23,20 +23,21 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
-
 /**
  * Processes input from a reader line by line.
- * 
+ *
  * @author Christoph Böhme
  *
  */
-@Description("Emits each line read as a string.")
+@Description("Processes input from a reader line by line.")
 @In(Reader.class)
 @Out(String.class)
-public final class LineReader 
+@FluxCommand("as-lines")
+public final class LineReader
 		extends DefaultObjectPipe<Reader, ObjectReceiver<String>> {
 	private static final int BUFFER_SIZE = 1024 * 1024 * 16;
 
@@ -57,7 +58,7 @@ public final class LineReader
 			}
 		} catch (IOException e) {
 			throw new MetafactureException(e);
-		}		
+		}
 	}
-	
+
 }

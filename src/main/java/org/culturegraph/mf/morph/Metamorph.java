@@ -31,6 +31,7 @@ import org.culturegraph.mf.framework.DefaultStreamReceiver;
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.morph.interceptors.InterceptorFactory;
@@ -53,6 +54,7 @@ import org.xml.sax.InputSource;
 		+ "definition is given in brackets.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
+@FluxCommand("morph")
 public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePipe, MultiMap {
 
 	public static final String ELSE_KEYWORD = "_else";

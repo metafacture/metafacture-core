@@ -19,13 +19,14 @@ import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.DefaultStreamReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.util.StreamConstants;
 
 /**
- * Changes the record id to the value of the _id literal if present in the
- * record.
+ * By default changes the record id to the value of the '_id' literal (if
+ * present). Use the constructor to choose another literal as id source.
  *
  * @author Markus Michael Geipel
  *
@@ -33,6 +34,7 @@ import org.culturegraph.mf.util.StreamConstants;
 @Description("By default changes the record id to the value of the '_id' literal (if present). Use the contructor to choose another literal as id source.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
+@FluxCommand("change-id")
 public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
 
 	private String idName = StreamConstants.ID;
