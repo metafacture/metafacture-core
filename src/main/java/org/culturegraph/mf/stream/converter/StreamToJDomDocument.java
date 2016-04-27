@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.converter;
 
@@ -35,7 +35,7 @@ import org.jdom.Namespace;
 
 /**
  * converts a stream into a {@link Document}
- * 
+ *
  * @author markus geipel
  *
  */
@@ -53,13 +53,13 @@ public final class StreamToJDomDocument extends DefaultSender<ObjectReceiver<Doc
 
 	public StreamToJDomDocument(final String rootTagName, final String namespaceProperties) {
 		this.rootTagName = rootTagName;
-		namespaces.put(XML, Namespace.getNamespace(XML, "http://www.w3.org/XML/1998/namespace")); // 
+		namespaces.put(XML, Namespace.getNamespace(XML, "http://www.w3.org/XML/1998/namespace")); //
 		final Properties properties = ResourceUtil.loadProperties(namespaceProperties);
 		for (Entry<Object, Object> entry : properties.entrySet()) {
 			namespaces.put(entry.getKey().toString(), Namespace.getNamespace(entry.getKey().toString(), entry.getValue().toString()));
 		}
 	}
- 
+
 
 	@Override
 	public void startRecord(final String identifier) {
@@ -84,10 +84,10 @@ public final class StreamToJDomDocument extends DefaultSender<ObjectReceiver<Doc
 		final String[] parts = NAMESPACE_DELIMITER.split(name);
 		if (parts.length == 2) {
 			return new Element(parts[1], getNamespace(parts[0]));
-		} 
+		}
 		return new Element(name);
 	}
-	
+
 	private Namespace getNamespace(final String name){
 		final Namespace namespace = namespaces.get(name);
 		if(namespace==null){
@@ -116,7 +116,7 @@ public final class StreamToJDomDocument extends DefaultSender<ObjectReceiver<Doc
 			} else{
 				currentElement.setAttribute(name.substring(1), value);
 			}
-			
+
 		} else {
 			final Element temp = createElement(name);
 			currentElement.addContent(temp);

@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.util;
 
@@ -25,24 +25,24 @@ import org.junit.Test;
 
 /**
  * tests {@link StringUtil}
- * 
+ *
  * @author Markus Michael Geipel
- * 
+ *
  */
 public final class UtilTest {
 
 	private static final String ALOHA_HAWAII = "Aloha Hawaii";
 	private static final String ALOHAHAWAII = "AlohaHawaii";
 	private static final String XHULAXHULAX = "XHulaXHulaX";
-	
+
 	private final Map<String, String> vars = new HashMap<String, String>();
-	
+
 	public UtilTest() {
 		vars.put("a", "Aloha");
 		vars.put("b", "Hawaii");
 		vars.put("bb", "Hula");
 	}
-	
+
 	@Test
 	public void testFormat() {
 
@@ -72,10 +72,10 @@ public final class UtilTest {
 				StringUtil.format("XVAR_STARTbbVAR_ENDXVAR_STARTbbVAR_ENDX", varStart, varEnd, vars));
 		assertEquals("{aVAR_ENDHawaii", StringUtil.format("{aVAR_ENDVAR_STARTbVAR_END", varStart, varEnd, vars));
 	}
-	
+
 	@Test(expected=IllegalArgumentException.class)
 	public void testMissingVars() {
 		StringUtil.format("${a}${x}", false, vars);
 	}
-	
+
 }

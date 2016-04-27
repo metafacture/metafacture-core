@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.pipe;
 
@@ -26,7 +26,7 @@ import org.junit.Test;
 
 /**
  * Tests if {@link StreamLogger} is correctly piping all events.
- * 
+ *
  * @author Markus Michael Geipel, Christoph Böhme
  */
 
@@ -36,11 +36,11 @@ public final class StreamLoggerTest {
 	public void testCorrectPipeFunction() {
 		final EventList list = new EventList();
 		execTestEvents(list);
-		
+
 		final StreamValidator validator = new StreamValidator(list.getEvents());
 		final StreamLogger logger = new StreamLogger("test-logger");
 		logger.setReceiver(validator);
-		
+
 		try {
 			execTestEvents(logger);
 			logger.closeStream();
@@ -49,7 +49,7 @@ public final class StreamLoggerTest {
 		}
 
 	}
-	
+
 	private void execTestEvents(final StreamReceiver receiver) {
 		receiver.startRecord("1");
 		receiver.literal("l1", "value1");

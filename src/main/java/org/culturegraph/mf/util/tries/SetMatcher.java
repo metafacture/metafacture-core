@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.util.tries;
 
@@ -24,9 +24,9 @@ import java.util.Queue;
 
 /**
  * Implementation of the Aho-Corasick algorithm
- * 
+ *
  * @author Markus Michael Geipel
- * 
+ *
  * @param <T>
  *            type of value stored
  */
@@ -71,7 +71,7 @@ public final class SetMatcher<T> {
 		int index = 0;
 
 		while (index < length) {
-			final ACNode<T> next = node.getNext(text.charAt(index)); 
+			final ACNode<T> next = node.getNext(text.charAt(index));
 			if (next != null) {
 				node = next;
 			} else if (node != root) {
@@ -130,7 +130,7 @@ public final class SetMatcher<T> {
 
 	/**
 	 * prints dot description of the automaton to out for visualization in GraphViz. Used for debugging and education.
-	 * 
+	 *
 	 * @param out
 	 */
 	public void printAutomaton(final PrintStream out) {
@@ -156,7 +156,7 @@ public final class SetMatcher<T> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param <T>
 	 */
 	public static final class Match<T> {
@@ -182,7 +182,7 @@ public final class SetMatcher<T> {
 		public int getLength() {
 			return length;
 		}
-		
+
 		@Override
 		public String toString() {
 			return value + " " + start + "+" + length;

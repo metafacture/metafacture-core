@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.sink;
 
@@ -34,39 +34,39 @@ import org.junit.runners.Parameterized.Parameters;
 
 
 /**
- * 
+ *
  * Tests for file compression in {@link ObjectFileWriter}.
- * 
+ *
  * @author Christoph Böhme
  *
  */
 @RunWith(Parameterized.class)
 public final class ObjectFileWriterCompressionTest {
-	
+
 	private static final String DATA = "This could have been a remarkable sentence.";
-	
+
 	private static final String FILENAME_NONE = "compressed.txt";
 	private static final String FILENAME_BZ2 = "compressed.txt.bz2";
 	private static final String FILENAME_BZIP2 = "compressed.txt.bzip2";
 	private static final String FILENAME_GZ = "compressed.txt.gz";
 	private static final String FILENAME_GZIP = "compressed.txt.gzip";
 	private static final String FILENAME_XZ = "compressed.txt.xz";
-	
+
 	private static final byte[] MAGIC_BYTES_NONE = { 'T', 'h', 'i', 's' };
 	private static final byte[] MAGIC_BYTES_BZIP2 = { 'B', 'Z', 'h' };
 	private static final byte[] MAGIC_BYTES_GZIP = { (byte)0x1f, (byte)0x8b };
 	private static final byte[] MAGIC_BYTES_XZ = { (byte)0xfd, '7', 'z', 'X', 'Z', (byte)0x00 };
-	
+
 	// NO CHECKSTYLE VisibilityModifier FOR 3 LINES:
 	// JUnit requires rules to be public
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
-	
+
 	private final String fileName;
-	private final FileCompression compression; 
+	private final FileCompression compression;
 	private final byte[] magicBytes;
-	
-	public ObjectFileWriterCompressionTest(final String fileName, final FileCompression compression, 
+
+	public ObjectFileWriterCompressionTest(final String fileName, final FileCompression compression,
 			final byte[] magicBytes) {
 		this.fileName = fileName;
 		this.compression = compression;
@@ -75,7 +75,7 @@ public final class ObjectFileWriterCompressionTest {
 
 	@Parameters
 	public static Iterable<Object[]> data() {
-		return Arrays.asList(new Object[][] { 
+		return Arrays.asList(new Object[][] {
 				{ FILENAME_NONE, FileCompression.AUTO, MAGIC_BYTES_NONE },
 				{ FILENAME_BZ2, FileCompression.AUTO, MAGIC_BYTES_BZIP2 },
 				{ FILENAME_BZIP2, FileCompression.AUTO, MAGIC_BYTES_BZIP2 },
@@ -88,16 +88,16 @@ public final class ObjectFileWriterCompressionTest {
 				{ FILENAME_XZ, FileCompression.XZ, MAGIC_BYTES_XZ },
 			});
 	}
-	
+
 	@Test
 	public void testWriteCompressedFiles() throws IOException {
 		// This test only looks at the magic byte sequences in the
 		// files to decide whether a compressed file was written.
-		
+
 		final File file = tempFolder.newFile(fileName);
-		
+
 		final ObjectFileWriter<String> writer = new ObjectFileWriter<String>(file.getAbsolutePath());
-		writer.setCompression(compression);		
+		writer.setCompression(compression);
 		writer.process(DATA);
 		writer.closeStream();
 
@@ -105,7 +105,7 @@ public final class ObjectFileWriterCompressionTest {
 		final byte[] fileHeader;
 		try { fileHeader = IOUtils.toByteArray(stream, magicBytes.length); }
 		finally { stream.close(); }
-		
+
 		assertArrayEquals(magicBytes, fileHeader);
 	}
 
