@@ -38,7 +38,7 @@ import org.junit.Test;
  * @author Markus Michael Geipel, Christoph Böhme
  * @see MabDecoder
  */
-public final class SimpleMarcReaderTest {
+public final class MarcDecoderTest {
 
 	private static final int NUM_RECORDS = 10;
 	private static final int NUM_LITERALS = 745;

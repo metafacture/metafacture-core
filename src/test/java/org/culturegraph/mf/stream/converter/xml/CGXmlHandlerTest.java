@@ -25,7 +25,7 @@ import org.junit.Test;
 /**
  * @author Christoph Böhme <c.boehme@dnb.de>
  */
-public final class CGXmlReaderTest {
+public final class CGXmlHandlerTest {
 
 	private static final String NAME = "Name";
 	private static final String ADDRESS = "Address";
