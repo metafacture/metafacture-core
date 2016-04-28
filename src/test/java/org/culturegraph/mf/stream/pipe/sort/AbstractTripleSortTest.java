@@ -34,9 +34,6 @@ import org.junit.Test;
 
 	private static final Triple T1 = new Triple("s", "p", "o");
 
-	// NO CHECKSTYLE IllegalType FOR 3 LINES:
-	// AbstractFormatter is the system under test. To keep the test
-	// case concise no named mock implementation is created.
 	private AbstractTripleSort tripleSort;
 
 	@Before

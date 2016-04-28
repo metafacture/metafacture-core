@@ -27,13 +27,6 @@ package org.culturegraph.mf.framework;
 public class DefaultStreamPipe<R extends Receiver>
 		extends DefaultSender<R> implements StreamPipe<R> {
 
-	// CHECKSTYLE OFF: StrictDuplicateCode
-	// Code duplication in DefaultStreamPipe and DefaultStreamReceiver
-	// cannot be avoided. DefaultStreamPipe combines the logic
-	// from DefaultSender and DefaultStreamReceiver but can only
-	// have one of these classes as its base class. Hence, the
-	// logic from the second one must be duplicated here.
-
 	@Override
 	public void startRecord(final String identifier) {
 		// Default implementation does nothing
@@ -58,7 +51,5 @@ public class DefaultStreamPipe<R extends Receiver>
 	public void literal(final String name, final String value) {
 		// Default implementation does nothing
 	}
-
-	// CHECKSTYLE ON: StrictDuplicateCode
 
 }

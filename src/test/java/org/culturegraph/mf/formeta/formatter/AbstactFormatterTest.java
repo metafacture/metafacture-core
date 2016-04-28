@@ -29,9 +29,6 @@ import org.junit.Test;
  */
 public final class AbstactFormatterTest {
 
-	// NO CHECKSTYLE IllegalType FOR 3 LINES:
-	// AbstractFormatter is the system under test. To keep the test
-	// case concise no named mock implementation is created.
 	private AbstractFormatter abstractFormatter;
 
 	@Before

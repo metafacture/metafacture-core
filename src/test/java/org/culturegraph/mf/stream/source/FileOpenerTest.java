@@ -47,8 +47,6 @@ public final class FileOpenerTest {
 			"Default encoding is UTF-8: It is not possible to test " +
 			"whether FileOpener sets the encoding to UTF-8 correctly.";
 
-	// NO CHECKSTYLE VisibilityModifier FOR 3 LINES:
-	// JUnit requires rules to be public
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
 

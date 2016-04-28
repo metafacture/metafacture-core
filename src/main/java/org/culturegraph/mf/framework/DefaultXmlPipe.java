@@ -35,13 +35,6 @@ import org.xml.sax.SAXParseException;
 public class DefaultXmlPipe <R extends Receiver>
 		extends DefaultSender<R> implements XmlPipe<R> {
 
-	// CHECKSTYLE OFF: StrictDuplicateCode
-	// Code duplication in DefaultXmlPipe and DefaultXmlReceiver
-	// cannot be avoided. DefaultXmlPipe combines the logic
-	// from DefaultSender and DefaultXmlReceiver but can only
-	// have one of these classes as its base class. Hence, the
-	// logic from the second one must be duplicated here.
-
 	@Override
 	public void setDocumentLocator(final Locator locator) {
 		// Default implementation does nothing
@@ -172,7 +165,5 @@ public class DefaultXmlPipe <R extends Receiver>
 			throws SAXException {
 		// Default implementation does nothing
 	}
-
-	// CHECKSTYLE ON: StrictDuplicateCode
 
 }

@@ -27,12 +27,6 @@ import org.junit.Test;
  */
 public final class TimeUtilTest {
 
-	//CHECKSTYLE OFF: MagicNumber|MultipleStringLiterals
-	//
-	// It does not aid the comprehensibility of the test cases
-	// if constants were used for the (semi-randomly chosen)
-	// numbers and their string representations.
-
 	@Test
 	public void testShouldFormatNanoseconds() {
 		final long duration = 29 * TimeUtil.NANOSECONDS;

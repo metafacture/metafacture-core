@@ -39,8 +39,6 @@ public final class TripleReaderWriterTest {
 	private static final Triple TRIPLE1 = new Triple("S", "P", "O1");
 	private static final Triple TRIPLE2 = new Triple("S", "P", "O2", ObjectType.ENTITY);
 
-	// NO CHECKSTYLE VisibilityModifier FOR 3 LINES:
-	// JUnit requires rules to be public
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
 

@@ -93,7 +93,6 @@ public final class Marc21Encoder extends
 
 	private boolean inField;
 
-	// CHECKSTYLE OFF: MagicNumber
 	static {
 		MARC21.setIndicatorLength(2);
 		MARC21.setIdentifierLength(2);
@@ -101,7 +100,6 @@ public final class Marc21Encoder extends
 		MARC21.setFieldStartLength(5);
 		MARC21.setImplDefinedPartLength(0);
 	}
-	// CHECKSTYLE ON: MagicNumber
 
 	public Marc21Encoder() {
 		super();

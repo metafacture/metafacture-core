@@ -52,8 +52,6 @@ public final class TripleObjectRetrieverTest {
 	@Mock
 	private ObjectReceiver<Triple> receiver;
 
-	// NO CHECKSTYLE VisibilityModifier|DeclarationOrder FOR 3 LINES:
-	// JUnit requires rules to be public
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
 

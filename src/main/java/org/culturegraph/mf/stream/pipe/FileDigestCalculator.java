@@ -97,7 +97,6 @@ public final class FileDigestCalculator extends
 	private static String bytesToHex(final byte[] bytes) {
 		final char[] hex = new char[bytes.length * 2];
 		for (int i=0; i < bytes.length; ++i) {
-			// NO CHECKSTYLE MagicNumber FOR 1 LINE:
 			hex[i * 2] = NIBBLE_TO_HEX[(bytes[i] & HIGH_NIBBLE) >>> 4];
 			hex[i * 2 + 1] = NIBBLE_TO_HEX[bytes[i] & LOW_NIBBLE];
 		}

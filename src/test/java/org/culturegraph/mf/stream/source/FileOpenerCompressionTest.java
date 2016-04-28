@@ -47,8 +47,6 @@ public final class FileOpenerCompressionTest {
 
 	private static final String DATA = "This could have been a remarkable sentence.";
 
-	// NO CHECKSTYLE VisibilityModifier FOR 3 LINES:
-	// JUnit requires rules to be public
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
 

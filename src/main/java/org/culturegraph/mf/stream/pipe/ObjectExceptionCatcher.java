@@ -82,11 +82,6 @@ public final class ObjectExceptionCatcher<T> extends
 		try {
 			getReceiver().process(obj);
 		} catch(final Exception e) {
-			// NO CHECKSTYLE IllegalCatch FOR -1 LINES:
-			// This module is supposed to intercept _all_ exceptions
-			// thrown by downstream modules. Hence, we have to catch
-			// Exception.
-
 			LOG.error("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
 
 			if (logStackTrace) {

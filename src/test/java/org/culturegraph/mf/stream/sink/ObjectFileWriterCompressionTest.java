@@ -57,8 +57,6 @@ public final class ObjectFileWriterCompressionTest {
 	private static final byte[] MAGIC_BYTES_GZIP = { (byte)0x1f, (byte)0x8b };
 	private static final byte[] MAGIC_BYTES_XZ = { (byte)0xfd, '7', 'z', 'X', 'Z', (byte)0x00 };
 
-	// NO CHECKSTYLE VisibilityModifier FOR 3 LINES:
-	// JUnit requires rules to be public
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
 

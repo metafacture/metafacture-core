@@ -1,5 +1,0 @@
-<FindBugsFilter>
-	<Match>
-		<Package name="org.culturegraph.mf.flux.parser" />
-	</Match>
-</FindBugsFilter>

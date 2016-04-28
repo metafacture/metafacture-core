@@ -28,18 +28,9 @@ package org.culturegraph.mf.framework;
 public class DefaultObjectPipe<T, R extends Receiver>
 		extends DefaultSender<R> implements ObjectPipe<T, R> {
 
-	// CHECKSTYLE OFF: StrictDuplicateCode
-	// Code duplication in DefaultObjectPipe and DefaultObjectReceiver
-	// cannot be avoided. DefaultObjectPipe combines the logic
-	// from DefaultSender and DefaultObjectReceiver but can only
-	// have one of these classes as its base class. Hence, the
-	// logic from the second one must be duplicated here.
-
 	@Override
 	public void process(final T obj) {
 		// Default implementation does nothing
 	}
-
-	// CHECKSTYLE ON: StrictDuplicateCode
 
 }

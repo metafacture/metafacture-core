@@ -58,10 +58,6 @@ public final class ObjectExceptionLogger<T>
 		try{
 			getReceiver().process(obj);
 		}catch(Exception e){
-			// NO CHECKSTYLE IllegalCatch FOR -1 LINES:
-			// This module is supposed to intercept _all_ exceptions
-			// thrown by downstream modules. Hence, we have to catch
-			// Exception.
 			LOG.error(logPrefix, e);
 		}
 
