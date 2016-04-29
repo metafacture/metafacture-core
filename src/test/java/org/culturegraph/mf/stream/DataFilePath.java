@@ -23,7 +23,6 @@ public final class DataFilePath {
 	public static final String DATA_PREFIX = "data/";
 //	public static final String MORPH_PREFIX = "morph/";
 
-	public static final String TITLE_MAB = DATA_PREFIX + "TITLE_10entries.mab2";
 	public static final String PND_PICA = DATA_PREFIX + "PND_10entries.pica";
 	public static final String TITLE_MARC = DATA_PREFIX + "TITLE_10entries.marc21";
 

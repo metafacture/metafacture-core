@@ -15,82 +15,66 @@
  */
 package org.culturegraph.mf.stream.converter.bib;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Collections;
-import java.util.List;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import org.culturegraph.mf.exceptions.FormatException;
-import org.culturegraph.mf.stream.DataFilePath;
-import org.culturegraph.mf.stream.converter.LineReader;
-import org.culturegraph.mf.stream.pipe.Counter;
-import org.culturegraph.mf.stream.sink.StreamValidator;
-import org.culturegraph.mf.stream.source.ResourceOpener;
-import org.culturegraph.mf.types.Event;
-import org.junit.Assert;
+import org.culturegraph.mf.framework.StreamReceiver;
+import org.junit.Before;
 import org.junit.Test;
-
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
- * Tests {@link MabDecoder}. So far only verifies that the correct number of records and fields is read.
- * @author Markus Michael Geipel, Christoph Böhme
- * @see MabDecoder
+ * Tests for class {@link MabDecoder}.
+ *
+ * @author Christoph Böhme (rewrite)
+ * @author Markus Michael Geipel
  */
 public final class MabDecoderTest {
 
-	private static final int NUM_RECORDS = 10;
-	private static final int NUM_LITERALS = 520;
+	@Mock
+	private StreamReceiver receiver;
 
+	private MabDecoder mabDecoder;
 
-	@Test
-	public void testRead(){
-		final ResourceOpener opener = new ResourceOpener();
-		final Counter countStreamReceiver = opener.setReceiver(new LineReader())
-				.setReceiver(new MabDecoder())
-				.setReceiver(new Counter());
-
-		opener.process(DataFilePath.TITLE_MAB);
-		opener.closeStream();
-
-		Assert.assertEquals("Number of read records is incorrect", NUM_RECORDS, countStreamReceiver.getNumRecords());
-		Assert.assertEquals("Number of read literals is incorrect", NUM_LITERALS, countStreamReceiver.getNumLiterals());
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		mabDecoder = new MabDecoder();
+		mabDecoder.setReceiver(receiver);
 	}
 
 	@Test
-	public void testGetId() throws IOException {
-		final InputStream inputStream = Thread.currentThread()
-				.getContextClassLoader().getResourceAsStream(DataFilePath.TITLE_MAB);
+	public void shouldParseMabRecord() {
+		mabDecoder.process("00068nM2.01200024      h" +
+				"001 1234\u001E" +
+				"705a\u001FaSubfield 1\u001FbSubfield 2\u001E" +
+				"705b\u001FcSubfield 3\u001FdSubfield 4\u001E" +
+				"\u001D");
 
-		final BufferedReader breader = new BufferedReader(new InputStreamReader(inputStream));
-
-		String line = breader.readLine();
-		while (line != null) {
-			if(!line.isEmpty()){
-				Assert.assertNotNull(MabDecoder.extractIdFromRecord(line));
-			}
-			line = breader.readLine();
-		}
-
-		breader.close();
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("1234");
+		ordered.verify(receiver).literal("001", "1234");
+		ordered.verify(receiver).startEntity("705a");
+		ordered.verify(receiver).literal("a", "Subfield 1");
+		ordered.verify(receiver).literal("b", "Subfield 2");
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).startEntity("705b");
+		ordered.verify(receiver).literal("c", "Subfield 3");
+		ordered.verify(receiver).literal("d", "Subfield 4");
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).endRecord();
 	}
 
 	@Test
-	public void testSkipEmptyStrings() {
-		final MabDecoder decoder = new MabDecoder();
+	public void shouldSkipWhitespaceOnlyInput() {
+		mabDecoder.process("   ");
+		mabDecoder.closeStream();
 
-		final List<Event> expected = Collections.emptyList();
-		final StreamValidator validator = new StreamValidator(expected);
-
-		decoder.setReceiver(validator);
-
-		try {
-			decoder.process(" ");
-			decoder.closeStream();
-		} catch (final FormatException e) {
-			Assert.fail(e.toString());
-		}
+		verify(receiver).closeStream();
+		verifyNoMoreInteractions(receiver);
 	}
 
 }
