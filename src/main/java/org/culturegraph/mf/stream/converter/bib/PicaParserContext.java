@@ -15,37 +15,38 @@
  */
 package org.culturegraph.mf.stream.converter.bib;
 
+import org.culturegraph.mf.framework.StreamReceiver;
+
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
-
-import org.culturegraph.mf.framework.StreamReceiver;
 
 /**
  * Parser context for the PICA+ parser.The context implements
  * support for normalising the UTF8 encoding of values into NFC
  * on the fly and for skipping fields without any subfields.
- * 
+ *
  * @author Christoph Böhme
- * 
+ *
  */
 final class PicaParserContext {
-	
+
 	private final StringBuilder builder = new StringBuilder();
-	
+
 	private boolean normalizeUTF8;
 	private boolean skipEmptyFields = true;
-	
+	private boolean trimFieldNames = true;
+
 	private StreamReceiver receiver;
 
 	private String entityName;
 	private boolean literalsEmitted;
 
 	private String subfieldName;
-	
+
 	public void setNormalizeUTF8(final boolean normalizeUTF8) {
 		this.normalizeUTF8 = normalizeUTF8;
 	}
-	
+
 	public boolean getNormalizeUTF8() {
 		return normalizeUTF8;
 	}
@@ -53,35 +54,46 @@ final class PicaParserContext {
 	public void setSkipEmptyFields(final boolean skipEmptyFields) {
 		this.skipEmptyFields = skipEmptyFields;
 	}
-	
+
 	public boolean getSkipEmptyFields() {
 		return skipEmptyFields;
 	}
-	
+
+	public void setTrimFieldNames(final boolean trimFieldNames) {
+		this.trimFieldNames = trimFieldNames;
+	}
+
+	public boolean getTrimFieldNames() {
+		return trimFieldNames;
+	}
+
 	public void setReceiver(final StreamReceiver receiver) {
 		this.receiver = receiver;
 	}
-	
+
 	public void reset() {
 		getTextAndReset();
 		entityName = null;
 		literalsEmitted = false;
 		subfieldName = null;
 	}
-	
+
 	protected void appendText(final char ch) {
 		builder.append(ch);
 	}
-	
+
 	protected void emitStartEntity() {
 		// Output of the startEntity event is postponed
 		// until a literal is emitted in order to able
 		// to skip empty entities
-		
+
 		entityName = getTextAndReset();
+		if (trimFieldNames) {
+			entityName = entityName.trim();
+		}
 		literalsEmitted = false;
 	}
-	
+
 	protected void emitEndEntity() {
 		if (!literalsEmitted) {
 			if (skipEmptyFields || entityName.isEmpty()) {
@@ -96,7 +108,7 @@ final class PicaParserContext {
 	protected void setSubfieldName(final char name) {
 		subfieldName = String.valueOf(name);
 	}
-	
+
 	protected void emitLiteral() {
 		assert subfieldName != null;
 		assert entityName != null || literalsEmitted;
@@ -106,7 +118,7 @@ final class PicaParserContext {
 			entityName = null;
 			literalsEmitted = true;
 		}
-		
+
 		String value = getTextAndReset();
 		if (normalizeUTF8) {
 			value = Normalizer.normalize(value, Form.NFC);
@@ -114,11 +126,11 @@ final class PicaParserContext {
 		receiver.literal(subfieldName, value);
 		subfieldName = null;
 	}
-	
+
 	private String getTextAndReset() {
 		final String text = builder.toString();
 		builder.setLength(0);
 		return text;
 	}
-	
+
 }

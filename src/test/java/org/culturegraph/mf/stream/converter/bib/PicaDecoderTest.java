@@ -15,9 +15,6 @@
  */
 package org.culturegraph.mf.stream.converter.bib;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.junit.After;
 import org.junit.Before;
@@ -26,14 +23,16 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.mockito.Mockito.*;
+
 /**
  * Test for {@link PicaDecoder}.
- * 
+ *
  * @author Christoph Böhme
  *
  */
 public final class PicaDecoderTest {
-	
+
 	private static final String RECORD_ID = "2809";
 	private static final String ENTITY_028A = "028A";
 	private static final String NAME_A = "a";
@@ -47,17 +46,17 @@ public final class PicaDecoderTest {
 	private static final String FIELD_MARKER = "\u001e";
 	private static final String SUBFIELD_MARKER = "\u001f";
 	private static final String FIELD_END_MARKER = "\n";
-	
+
 	private static final String FIELD_001AT_0_TEST = "001@ " + SUBFIELD_MARKER + "0test";
 	private static final String FIELD_003AT_0_ID = "003@ " + SUBFIELD_MARKER + "0" + RECORD_ID;
 	private static final String FIELD_021A_A_UEBER = "021A " + SUBFIELD_MARKER + "a" + COMPOSED_UTF8;
 	private static final String FIELD_028A = ENTITY_028A + " ";
-	
+
 	private PicaDecoder picaDecoder;
-	
+
 	@Mock
 	private StreamReceiver receiver;
-	
+
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
@@ -69,41 +68,41 @@ public final class PicaDecoderTest {
 	public void cleanup() {
 		picaDecoder.closeStream();
 	}
-	
+
 	@Test
 	public void testShouldParseRecordStartingWithRecordMarker() {
 		picaDecoder.process(
 				RECORD_MARKER + FIELD_001AT_0_TEST +
 				FIELD_MARKER + FIELD_003AT_0_ID);
 
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify001At0Test(ordered);
 		verify003At0ID(ordered);
 		ordered.verify(receiver).endRecord();
 	}
-	
+
 	@Test
 	public void testShouldParseRecordStartingWithFieldMarker() {
 		picaDecoder.process(
 				FIELD_MARKER + FIELD_001AT_0_TEST +
 				FIELD_MARKER + FIELD_003AT_0_ID);
 
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify001At0Test(ordered);
 		verify003At0ID(ordered);
 		ordered.verify(receiver).endRecord();
 	}
-	
+
 	@Test
 	public void testShouldParseRecordStartingWithSubfieldMarker() {
 		picaDecoder.process(
 				SUBFIELD_MARKER + NAME_A + VALUE_A +
 				FIELD_MARKER + FIELD_003AT_0_ID);
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		ordered.verify(receiver).startEntity("");
@@ -112,7 +111,7 @@ public final class PicaDecoderTest {
 		verify003At0ID(ordered);
 		ordered.verify(receiver).endRecord();
 	}
-	
+
 	@Test
 	public void testShouldParseRecordStartingWithEmptySubfield() {
 		picaDecoder.process(
@@ -124,28 +123,28 @@ public final class PicaDecoderTest {
 		verify003At0ID(ordered);
 		ordered.verify(receiver).endRecord();
 	}
-	
+
 	@Test
 	public void testShouldParseRecordStartingWithFieldEndMarker() {
 		picaDecoder.process(
 				FIELD_END_MARKER + FIELD_001AT_0_TEST +
 				FIELD_MARKER + FIELD_003AT_0_ID);
 
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify001At0Test(ordered);
 		verify003At0ID(ordered);
 		ordered.verify(receiver).endRecord();
 	}
-	
+
 	@Test
 	public void testShouldParseRecordStartingWithFieldName() {
 		picaDecoder.process(
 				FIELD_001AT_0_TEST +
 				FIELD_MARKER + FIELD_003AT_0_ID);
 
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify001At0Test(ordered);
@@ -158,7 +157,7 @@ public final class PicaDecoderTest {
 		picaDecoder.process(
 				FIELD_003AT_0_ID + FIELD_MARKER +
 				FIELD_001AT_0_TEST + RECORD_MARKER);
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify003At0ID(ordered);
@@ -171,14 +170,14 @@ public final class PicaDecoderTest {
 		picaDecoder.process(
 				FIELD_003AT_0_ID + FIELD_MARKER +
 				FIELD_001AT_0_TEST + FIELD_MARKER);
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify003At0ID(ordered);
 		verify001At0Test(ordered);
 		ordered.verify(receiver).endRecord();
 	}
-	
+
 	@Test
 	public void testShouldParseRecordEndingWithSubfieldMarker() {
 		picaDecoder.process(
@@ -187,7 +186,7 @@ public final class PicaDecoderTest {
 				SUBFIELD_MARKER + NAME_A + VALUE_A +
 				SUBFIELD_MARKER + NAME_D + VALUE_D +
 				SUBFIELD_MARKER);
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify003At0ID(ordered);
@@ -197,7 +196,7 @@ public final class PicaDecoderTest {
 		ordered.verify(receiver).endEntity();
 		ordered.verify(receiver).endRecord();
 	}
-	
+
 	@Test
 	public void testShouldParseRecordEndingWithSubfieldName() {
 		picaDecoder.process(
@@ -205,7 +204,7 @@ public final class PicaDecoderTest {
 				FIELD_028A +
 				SUBFIELD_MARKER + NAME_A + VALUE_A +
 				SUBFIELD_MARKER + NAME_D);
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify003At0ID(ordered);
@@ -215,13 +214,13 @@ public final class PicaDecoderTest {
 		ordered.verify(receiver).endEntity();
 		ordered.verify(receiver).endRecord();
 	}
-	
+
 	@Test
 	public void testShouldParseRecordEndingWithFieldName() {
 		// Do not skip the last field because it has no
 		// sub fields:
 		picaDecoder.setSkipEmptyFields(false);
-		
+
 		picaDecoder.process(
 				FIELD_003AT_0_ID + FIELD_MARKER +
 				FIELD_028A);
@@ -233,7 +232,7 @@ public final class PicaDecoderTest {
 		ordered.verify(receiver).endEntity();
 		ordered.verify(receiver).endRecord();
 	}
-	
+
 	@Test
 	public void testShouldParseMultiLineRecordFormat() {
 		picaDecoder.process(
@@ -269,7 +268,7 @@ public final class PicaDecoderTest {
 		verify003At0ID(ordered);
 		ordered.verify(receiver).endRecord();
 	}
-	
+
 	@Test
 	public void testShouldParseRecordIdAfterFieldEndMarker() {
 		picaDecoder.process(
@@ -342,7 +341,7 @@ public final class PicaDecoderTest {
 		// it is empty and not because it has no sub
 		// fields:
 		picaDecoder.setSkipEmptyFields(false);
-		
+
 		picaDecoder.process(
 				FIELD_003AT_0_ID + FIELD_MARKER +
 				FIELD_MARKER);
@@ -353,7 +352,7 @@ public final class PicaDecoderTest {
 		ordered.verify(receiver).endRecord();
 		verifyNoMoreInteractions(receiver);
 	}
-	
+
 	@Test
 	public void testShouldSkipUnnamedFieldsWithOnlyUnnamedSubFields() {
 		// Make sure that the field is skipped because
@@ -371,7 +370,7 @@ public final class PicaDecoderTest {
 		ordered.verify(receiver).endRecord();
 		verifyNoMoreInteractions(receiver);
 	}
-	
+
 	@Test
 	public void testShouldNotSkipUnnamedFieldsWithSubFields() {
 		picaDecoder.process(
@@ -396,7 +395,7 @@ public final class PicaDecoderTest {
 				SUBFIELD_MARKER +
 				SUBFIELD_MARKER + NAME_A + VALUE_A +
 				FIELD_MARKER);
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify003At0ID(ordered);
@@ -406,20 +405,20 @@ public final class PicaDecoderTest {
 		ordered.verify(receiver).endRecord();
 		verifyNoMoreInteractions(receiver);
 	}
-	
+
 	@Test
 	public void testShouldSkipEmptyFieldsByDefault() {
 		picaDecoder.process(
 				FIELD_003AT_0_ID + FIELD_MARKER +
 				FIELD_028A + FIELD_MARKER);
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify003At0ID(ordered);
 		ordered.verify(receiver).endRecord();
 		verifyNoMoreInteractions(receiver);
 	}
-	
+
 	@Test
 	public void testShouldSkipFieldsWithOnlyUnnamedSubfieldsByDefault() {
 		picaDecoder.process(
@@ -427,22 +426,22 @@ public final class PicaDecoderTest {
 				FIELD_028A +
 				SUBFIELD_MARKER +
 				FIELD_MARKER);
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify003At0ID(ordered);
 		ordered.verify(receiver).endRecord();
 		verifyNoMoreInteractions(receiver);
 	}
-	
+
 	@Test
 	public void testShouldNotSkipEmptyFieldsIfConfigured() {
 		picaDecoder.setSkipEmptyFields(false);
-		
+
 		picaDecoder.process(
 				FIELD_003AT_0_ID + FIELD_MARKER +
 				FIELD_028A + FIELD_MARKER);
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify003At0ID(ordered);
@@ -450,17 +449,17 @@ public final class PicaDecoderTest {
 		ordered.verify(receiver).endEntity();
 		ordered.verify(receiver).endRecord();
 	}
-	
+
 	@Test
 	public void testShouldNotSkipFieldsWithOnlyUnnamedSubfieldsIfConfigured() {
 		picaDecoder.setSkipEmptyFields(false);
-		
+
 		picaDecoder.process(
 				FIELD_003AT_0_ID + FIELD_MARKER +
 				FIELD_028A +
 				SUBFIELD_MARKER +
 				FIELD_MARKER);
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify003At0ID(ordered);
@@ -474,64 +473,84 @@ public final class PicaDecoderTest {
 		picaDecoder.process(
 				FIELD_001AT_0_TEST + FIELD_MARKER);
 	}
-	
+
 	@Test
 	public void testShouldIgnoreMissingIdIfConfigured() {
 		picaDecoder.setIgnoreMissingIdn(true);
 
 		picaDecoder.process(
 				FIELD_001AT_0_TEST + FIELD_MARKER);
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord("");
 		verify001At0Test(ordered);
 		ordered.verify(receiver).endRecord();
 	}
-		
+
 	@Test
 	public void testShouldNotNormalizeUTF8ByDefault() {
 		picaDecoder.process(
 				FIELD_003AT_0_ID + FIELD_MARKER +
 				FIELD_021A_A_UEBER + FIELD_MARKER);
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify003At0ID(ordered);
 		verify021AAUeber(ordered, COMPOSED_UTF8);
 		ordered.verify(receiver).endRecord();
 	}
-	
+
 	@Test
 	public void testShouldNormalizeUTF8IfConfigured() {
 		picaDecoder.setNormalizeUTF8(true);
-		
+
 		picaDecoder.process(
 				FIELD_003AT_0_ID + FIELD_MARKER +
 				FIELD_021A_A_UEBER + FIELD_MARKER);
-		
+
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
 		verify003At0ID(ordered);
 		verify021AAUeber(ordered, STANDARD_UTF8);
 		ordered.verify(receiver).endRecord();
 	}
-	
+
+	@Test
+	public void shouldTrimWhitespaceInFieldNamesByDefault() {
+		picaDecoder.process(
+				"  fieldname  " + SUBFIELD_MARKER + "0subfield" +
+						FIELD_MARKER + FIELD_003AT_0_ID);
+
+		verify(receiver).startEntity("fieldname");
+	}
+
+	@Test
+	public void shouldNotTrimWhitespaceInFieldNamesIfConfigured() {
+		picaDecoder.setTrimFieldNames(false);
+
+		picaDecoder.process(
+				"  fieldname  " + SUBFIELD_MARKER + "0subfield" +
+				FIELD_MARKER + FIELD_003AT_0_ID);
+
+		verify(receiver).startEntity("  fieldname  ");
+	}
+
 	private void verify003At0ID(final InOrder ordered) {
 		ordered.verify(receiver).startEntity("003@");
 		ordered.verify(receiver).literal("0", RECORD_ID);
 		ordered.verify(receiver).endEntity();
 	}
-	
+
 	private void verify001At0Test(final InOrder ordered) {
 		ordered.verify(receiver).startEntity("001@");
 		ordered.verify(receiver).literal("0", "test");
 		ordered.verify(receiver).endEntity();
 	}
-	
+
 	private void verify021AAUeber(final InOrder ordered, final String value) {
 		ordered.verify(receiver).startEntity("021A");
 		ordered.verify(receiver).literal("a", value);
 		ordered.verify(receiver).endEntity();
 	}
-	
+
 }

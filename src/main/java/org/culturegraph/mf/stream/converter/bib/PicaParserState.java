@@ -21,19 +21,19 @@ package org.culturegraph.mf.stream.converter.bib;
  * ignores end of record markers. The initial parser state is FIELD_NAME. All
  * states are valid end states. The parser processes any input, there is no
  * error state.
- * 
+ *
  * The parser ignores spaces in field names. They are not included in the
  * field name.
- * 
+ *
  * Empty subfields are skipped. For instance, parsing the following input
  * would NOT produce an empty literal: 003@ \u001f\u001e. The parser also
  * skips unnamed fields without any subfields.
- * 
+ *
  * @author Christoph Böhme
- * 
+ *
  */
 enum PicaParserState {
-	
+
 	FIELD_NAME {
 		@Override
 		protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
@@ -51,14 +51,12 @@ enum PicaParserState {
 				next = SUBFIELD_NAME;
 				break;
 			default:
-				if (ch != ' ') {
-					ctx.appendText(ch);
-				}
+				ctx.appendText(ch);
 				next = this;
 			}
 			return next;
 		}
-		
+
 		@Override
 		protected void endOfInput(final PicaParserContext ctx) {
 			ctx.emitStartEntity();
@@ -85,7 +83,7 @@ enum PicaParserState {
 			}
 			return next;
 		}
-		
+
 		@Override
 		protected void endOfInput(final PicaParserContext ctx) {
 			ctx.emitEndEntity();
@@ -113,7 +111,7 @@ enum PicaParserState {
 			}
 			return next;
 		}
-		
+
 		@Override
 		protected void endOfInput(final PicaParserContext ctx) {
 			ctx.emitLiteral();
@@ -122,7 +120,7 @@ enum PicaParserState {
 	};
 
 	protected abstract PicaParserState parseChar(final char ch, final PicaParserContext ctx);
-	
+
 	protected abstract void endOfInput(final PicaParserContext ctx);
-	
+
 }
