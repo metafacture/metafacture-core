@@ -43,8 +43,10 @@ public final class MabDecoder
 		extends DefaultObjectPipe<String, StreamReceiver> {
 
 	private static final String FIELD_END = "\u001e";
-	private static final Pattern FIELD_PATTERN = Pattern.compile(FIELD_END, Pattern.LITERAL);
-	private static final Pattern SUBFIELD_PATTERN = Pattern.compile("\u001f", Pattern.LITERAL);
+	private static final Pattern FIELD_PATTERN =
+			Pattern.compile(FIELD_END, Pattern.LITERAL);
+	private static final Pattern SUBFIELD_PATTERN =
+			Pattern.compile("\u001f", Pattern.LITERAL);
 	private static final String RECORD_END = "\u001d";
 
 	private static final int FIELD_NAME_SIZE = 4;
@@ -58,10 +60,45 @@ public final class MabDecoder
 	@Override
 	public void process(final String record) {
 		assert !isClosed();
-		process(record, getReceiver());
+
+		if (record.trim().isEmpty()) {
+			return;
+		}
+
+		getReceiver().startRecord(extractIdFromRecord(record));
+
+		try {
+			getReceiver().literal(LEADER, record.substring(0, HEADER_SIZE));
+			getReceiver().literal(TYPE, String.valueOf(record.charAt(HEADER_SIZE-1)));
+			final String content = record.substring(HEADER_SIZE);
+			for (final String part : FIELD_PATTERN.split(content)) {
+				if (!part.startsWith(RECORD_END)) {
+					final String fieldName = part.substring(0, FIELD_NAME_SIZE).trim();
+					final String fieldContent = part.substring(FIELD_NAME_SIZE);
+					final String[] subFields = SUBFIELD_PATTERN.split(fieldContent);
+
+					if (subFields.length == 1) {
+						getReceiver().literal(fieldName, subFields[0]);
+					} else {
+						getReceiver().startEntity(fieldName);
+
+						for (int i = 1; i < subFields.length; ++i) {
+							final String name = subFields[i].substring(0, 1);
+							final String value = subFields[i].substring(1);
+							getReceiver().literal(name, value);
+						}
+						getReceiver().endEntity();
+					}
+				}
+			}
+		} catch (final IndexOutOfBoundsException e) {
+			throw new FormatException("[" + record + "]", e);
+		}
+
+		getReceiver().endRecord();
 	}
 
-	public static String extractIdFromRecord(final String record) {
+	private String extractIdFromRecord(final String record) {
 		try{
 			final int fieldEnd = record.indexOf(FIELD_END, HEADER_SIZE);
 			if(record.substring(HEADER_SIZE, HEADER_SIZE + TAG_LENGTH).equals(ID_TAG)){
@@ -71,45 +108,6 @@ public final class MabDecoder
 		} catch (IndexOutOfBoundsException e) {
 			throw new FormatException(INVALID_FORMAT + record, e);
 		}
-	}
-
-	public static void process(final String record, final StreamReceiver receiver) {
-
-		if (record.trim().isEmpty()) {
-			return;
-		}
-
-		receiver.startRecord(extractIdFromRecord(record));
-
-		try {
-			receiver.literal(LEADER, record.substring(0, HEADER_SIZE));
-			receiver.literal(TYPE, String.valueOf(record.charAt(HEADER_SIZE-1)));
-			final String content = record.substring(HEADER_SIZE);
-			for (String part : FIELD_PATTERN.split(content)) {
-				if (!part.startsWith(RECORD_END)) {
-					final String fieldName = part.substring(0, FIELD_NAME_SIZE).trim();
-					final String fieldContent = part.substring(FIELD_NAME_SIZE);
-					final String[] subFields = SUBFIELD_PATTERN.split(fieldContent);
-
-					if (subFields.length == 1) {
-						receiver.literal(fieldName, subFields[0]);
-					} else {
-						receiver.startEntity(fieldName);
-
-						for (int i = 1; i < subFields.length; ++i) {
-							final String name = subFields[i].substring(0, 1);
-							final String value = subFields[i].substring(1);
-							receiver.literal(name, value);
-						}
-						receiver.endEntity();
-					}
-				}
-			}
-		} catch (IndexOutOfBoundsException e) {
-			throw new FormatException("[" + record + "]", e);
-		}
-
-		receiver.endRecord();
 	}
 
 }
