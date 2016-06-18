@@ -29,8 +29,6 @@ public final class DataFilePath {
 //	public static final String SYTAX_ERROR_MM = MORPH_PREFIX + "error.xml";
 //	public static final String TITLE_MAB_MM =  MORPH_PREFIX + "title_mab.xml";
 
-	public static final String CG_XML = DATA_PREFIX + "cgxml_test.xml";
-
 	public static final String GENERIC_XML = DATA_PREFIX + "generic_xml_test.xml";
 
 	public static final String COMPRESSED_NONE = DATA_PREFIX + "compressed.txt";

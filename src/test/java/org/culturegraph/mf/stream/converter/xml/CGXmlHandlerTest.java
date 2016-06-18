@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -15,68 +16,127 @@
  */
 package org.culturegraph.mf.stream.converter.xml;
 
-import org.culturegraph.mf.stream.DataFilePath;
-import org.culturegraph.mf.stream.sink.EventList;
-import org.culturegraph.mf.stream.sink.StreamValidator;
-import org.culturegraph.mf.stream.source.ResourceOpener;
-import org.junit.Test;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
+import org.culturegraph.mf.exceptions.FormatException;
+import org.culturegraph.mf.framework.StreamReceiver;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * @author Christoph Böhme <c.boehme@dnb.de>
+ * Tests for class {@link CGXmlHandler}.
+ *
+ * @author Christoph Böhme
+ *
  */
 public final class CGXmlHandlerTest {
 
-	private static final String NAME = "Name";
-	private static final String ADDRESS = "Address";
-	private static final String STREET = "Street";
-	private static final String NUMBER = "Number";
-	private static final String POSTCODE = "Postcode";
-	private static final String CITY = "City";
+	private static final String CGXML_NS = "http://www.culturegraph.org/cgxml";
+
+	@Mock
+	private StreamReceiver receiver;
+
+	private AttributesImpl attributes;
+
+	private CGXmlHandler cgXmlHandler;
+
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		cgXmlHandler = new CGXmlHandler();
+		cgXmlHandler.setReceiver(receiver);
+	}
+
+	@Before
+	public void createHelperObjects() {
+		attributes = new AttributesImpl();
+	}
 
 	@Test
-	public void testReadStringStreamReceiver() {
-		final ResourceOpener opener = new ResourceOpener();
-		final XmlDecoder saxReader = new XmlDecoder();
-		final CGXmlHandler cgHandler = new CGXmlHandler();
-		final EventList writer = new EventList();
+	public void shouldAcceptCgXmlVersion1() {
+		attributes.addAttribute("", "version", "cgxml:version", "CDATA",
+				"1.0");
+		cgXmlHandler.startElement(CGXML_NS, "cgxml", "cgxml:cgxml", attributes);
+		cgXmlHandler.endElement(CGXML_NS, "cgxml", "cgxml:cgxml");
 
+		verifyZeroInteractions(receiver);
+	}
 
-		opener.setReceiver(saxReader)
-				.setReceiver(cgHandler)
-				.setReceiver(writer);
+	@Test(expected = FormatException.class)
+	public void shouldThrowFormatExceptionIfVersionIsNot1() {
+		attributes.addAttribute("", "version", "cgxml:version", "CDATA",
+				"2.0");
+		cgXmlHandler.startElement(CGXML_NS, "cgxml", "cgxml:cgxml", attributes);
 
-		opener.process(DataFilePath.CG_XML);
-		opener.closeStream();
+		// Exception expected
+	}
 
-		final StreamValidator validator = new StreamValidator(writer.getEvents());
-		validator.setStrictRecordOrder(true);
-		validator.setStrictKeyOrder(true);
-		validator.setStrictValueOrder(true);
+	@Test
+	public void shouldIgnoreRecordsElement() {
+		cgXmlHandler.startElement(CGXML_NS, "records", "cgxml:records", attributes);
+		cgXmlHandler.endElement(CGXML_NS, "records", "cgxml:records");
 
-		validator.startRecord("1");
-			validator.literal(NAME, "Thomas Mann");
-			validator.startEntity(ADDRESS);
-				validator.startEntity(STREET);
-					validator.literal(STREET, "Alte Landstrasse");
-					validator.literal(NUMBER, "39");
-				validator.endEntity();
-				validator.literal(CITY, "Kilchberg");
-				validator.literal(POSTCODE, null);
-			validator.endEntity();
-		validator.endRecord();
-		validator.startRecord("");
-			validator.literal(NAME, "Günter Grass");
-			validator.startEntity(ADDRESS);
-				validator.startEntity(STREET);
-					validator.literal(STREET, "Glockengießerstraße");
-					validator.literal(NUMBER, "21");
-				validator.endEntity();
-				validator.literal(CITY, "Lübeck");
-				validator.literal(POSTCODE, "23552");
-			validator.endEntity();
-		validator.endRecord();
-		validator.closeStream();
+		verifyZeroInteractions(receiver);
+	}
+
+	@Test
+	public void shouldEmitStartAndEndRecordEventsForRecordElements() {
+		attributes.addAttribute("", "id", "cgxml:id", "CDATA", "1");
+		cgXmlHandler.startElement(CGXML_NS, "record", "cgxml:record", attributes);
+		cgXmlHandler.endElement(CGXML_NS, "record", "cgxml:record");
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("1");
+		ordered.verify(receiver).endRecord();
+	}
+
+	@Test
+	public void shouldEmitStartRecordWithEmptyIdIfIdAttributeIsMissing() {
+		cgXmlHandler.startElement(CGXML_NS, "record", "cgxml:record", attributes);
+
+		verify(receiver).startRecord("");
+	}
+
+	@Test
+	public void shouldEmitStartAndEndEntityEventsForEntityElements() {
+		attributes.addAttribute("", "name", "cgxml:name", "CDATA", "e-name");
+		cgXmlHandler.startElement(CGXML_NS, "entity", "cgxml:entity", attributes);
+		cgXmlHandler.endElement(CGXML_NS, "entity", "cgxml:entity");
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startEntity("e-name");
+		ordered.verify(receiver).endEntity();
+	}
+
+	@Test(expected = FormatException.class)
+	public void shouldThrowFormatExceptionEmptyNameAttributeIsMissing() {
+		cgXmlHandler.startElement(CGXML_NS, "entity", "cgxml:entity", attributes);
+
+		// Exception expected
+	}
+
+	@Test
+	public void shouldEmitLiteralEventForLiteralElements() {
+		attributes.addAttribute("", "name", "cgxml:name", "CDATA", "l-name");
+		attributes.addAttribute("", "value", "cgxml:value", "CDATA", "l-val");
+		cgXmlHandler.startElement(CGXML_NS, "literal", "cgxml:literal", attributes);
+		cgXmlHandler.endElement(CGXML_NS, "literal", "cgxml:literal");
+
+		verify(receiver).literal("l-name", "l-val");
+	}
+
+	@Test(expected = FormatException.class)
+	public void shouldThrowFormatExceptionIfLiteralNameAttributeIsMissing() {
+		attributes.addAttribute("", "value", "cgxml:value", "CDATA", "l-val");
+		cgXmlHandler.startElement(CGXML_NS, "literal", "cgxml:literal", attributes);
+
+		// Exception expected
 	}
 
 }
