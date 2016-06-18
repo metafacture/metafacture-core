@@ -61,7 +61,7 @@ import org.slf4j.LoggerFactory;
  * </ul>
  *
  * <p>The stream expected by the encoder is compatible to the streams emitted by
- * the {@link MarcDecoder} and the {@link MarcXmlHandler}.
+ * the {@link Marc21Decoder} and the {@link MarcXmlHandler}.
  * </p>
  *
  * <p>The record identifier in {@code startRecord} is ignored. To add an

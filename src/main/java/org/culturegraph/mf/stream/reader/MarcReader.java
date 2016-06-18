@@ -15,15 +15,15 @@
  */
 package org.culturegraph.mf.stream.reader;
 
-import org.culturegraph.mf.stream.converter.bib.MarcDecoder;
+import org.culturegraph.mf.stream.converter.bib.Marc21Decoder;
 
 /**
  * @author Christoph Böhme
  */
-public class MarcReader extends ReaderBase<MarcDecoder> {
+public class MarcReader extends ReaderBase<Marc21Decoder> {
 
 	public MarcReader() {
-		super(new MarcDecoder());
+		super(new Marc21Decoder());
 	}
 
 }
