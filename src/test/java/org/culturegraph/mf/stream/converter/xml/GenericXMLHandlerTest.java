@@ -16,80 +16,55 @@
 package org.culturegraph.mf.stream.converter.xml;
 
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.stream.DataFilePath;
-import org.culturegraph.mf.stream.source.ResourceOpener;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * @author Christoph Böhme <c.boehme@dnb.de>
+ * Tests for class {@link GenericXmlHandler}.
+ *
+ * @author Christoph Böhme
+ *
  */
 public final class GenericXMLHandlerTest {
-
-	private ResourceOpener opener;
-	private XmlDecoder xmlDecoder;
-	private GenericXmlHandler genericXmlHandler;
 
 	@Mock
 	private StreamReceiver receiver;
 
+	private GenericXmlHandler genericXmlHandler;
+
+	private AttributesImpl attributes;
+
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		opener = new ResourceOpener();
-		xmlDecoder = new XmlDecoder();
 		genericXmlHandler = new GenericXmlHandler("record");
-		opener.setReceiver(xmlDecoder)
-				.setReceiver(genericXmlHandler)
-				.setReceiver(receiver);
+		genericXmlHandler.setReceiver(receiver);
 	}
 
-	@After
-	public void cleanup() {
-		opener.closeStream();
-	}
-
-	@Test
-	public void testShouldIgnoreCharDataNotInARecord() {
-
-		opener.process(DataFilePath.GENERIC_XML);
-
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("1");
-		ordered.verify(receiver).literal("id", "1");
-		ordered.verify(receiver).literal("del", "no");
-		ordered.verify(receiver).startEntity("name");
-		ordered.verify(receiver).literal("value", "Record 1");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).startEntity("description");
-		ordered.verify(receiver).literal("lang", "de");
-		ordered.verify(receiver).literal("value", "Erster Datensatz");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
-		ordered.verify(receiver).startRecord("2");
-		ordered.verify(receiver).literal("id", "2");
-		ordered.verify(receiver).literal("del", "yes");
-		ordered.verify(receiver).startEntity("name");
-		ordered.verify(receiver).literal("value", "Record 2");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).startEntity("description");
-		ordered.verify(receiver).literal("lang", "de");
-		ordered.verify(receiver).literal("value", "Zweiter Datensatz");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
+	@Before
+	public void createHelperObjects() {
+		attributes = new AttributesImpl();
 	}
 
 	@Test
-	public void testShouldEmitEmptyStringIfRecordTagHasNoIdAttribute() {
+	public void shouldIgnoreElementsOutsideRecordElement() {
+		genericXmlHandler.startElement("", "ignore-me", "ignore-me", attributes);
 
-		opener.process(DataFilePath.DATA_PREFIX + "shouldEmitEmptyStringIfRecordTagHasNoIdAttribute.xml");
+		verifyZeroInteractions(receiver);
+	}
+
+	@Test
+	public void shouldEmitRecordElementAsStartAndEndRecordEvent() {
+		genericXmlHandler.startElement("", "record", "record", attributes);
+		genericXmlHandler.endElement("", "record", "record");
 
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord("");
@@ -97,13 +72,63 @@ public final class GenericXMLHandlerTest {
 	}
 
 	@Test
-	public void testShouldEmitValueOfIdAttribute() {
+	public void shouldEmitEmptyStringIfRecordTagHasNoIdAttribute() {
+		genericXmlHandler.startElement("", "record", "record", attributes);
 
-		opener.process(DataFilePath.DATA_PREFIX + "shouldEmitValueOfIdAttribute.xml");
+		verify(receiver).startRecord("");
+	}
+
+	@Test
+	public void shouldEmitValueOfIdAttribute() {
+		attributes.addAttribute("", "id", "id", "CDATA", "theRecordID");
+		genericXmlHandler.startElement("", "record", "record", attributes);
+
+		verify(receiver).startRecord("theRecordID");
+	}
+
+	@Test
+	public void shouldEmitAttributesOnRecordElementAsLiterals() {
+		attributes.addAttribute("", "attr", "attr", "CDATA", "attr-value");
+		genericXmlHandler.startElement("", "record", "record", attributes);
 
 		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("theRecordID");
-		ordered.verify(receiver).endRecord();
+		ordered.verify(receiver).startRecord("");
+		ordered.verify(receiver).literal("attr", "attr-value");
+	}
+
+	@Test
+	public void shouldEmitElementsAsStartAndEndEntityEvents() {
+		genericXmlHandler.startElement("", "record", "record", attributes);
+		genericXmlHandler.startElement("", "entity", "entity", attributes);
+		genericXmlHandler.endElement("", "entity", "entity");
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startEntity("entity");
+		ordered.verify(receiver).endEntity();
+	}
+
+	@Test
+	public void shouldEmitAttributesOnEntityElementAsLiterals() {
+		genericXmlHandler.startElement("", "record", "record", attributes);
+		attributes.addAttribute("", "attr", "attr", "CDATA", "attr-value");
+		genericXmlHandler.startElement("", "entity", "entity", attributes);
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startEntity("entity");
+		ordered.verify(receiver).literal("attr", "attr-value");
+	}
+
+	@Test
+	public void shouldEmitPCDataAsALiteralNamedValue() {
+		final char[] charData = "char-data".toCharArray();
+		genericXmlHandler.startElement("", "record", "record", attributes);
+		genericXmlHandler.startElement("", "entity", "entity", attributes);
+		genericXmlHandler.characters(charData, 0, charData.length);
+		genericXmlHandler.endElement("", "entity", "entity");
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startEntity("entity");
+		ordered.verify(receiver).literal("value", "char-data");
 	}
 
 }
