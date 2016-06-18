@@ -27,6 +27,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
+ * Tests for class {@link MarcXmlHandler}.
+ *
  * @author Christoph Böhme
  *
  */
