@@ -15,16 +15,18 @@
  */
 package org.culturegraph.mf.stream.converter;
 
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.culturegraph.mf.exceptions.FormatException;
-import org.culturegraph.mf.stream.sink.EventList;
-import org.culturegraph.mf.stream.sink.StreamValidator;
-import org.culturegraph.mf.util.StreamConstants;
-import org.junit.Assert;
+import org.culturegraph.mf.framework.StreamReceiver;
+import org.junit.Before;
 import org.junit.Test;
-
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
  * Test {@link MapToStream}
@@ -34,86 +36,92 @@ import org.junit.Test;
  */
 public final class MapToStreamTest {
 
-	private static final String RECORD_ID = "123";
-	private static final int INT_RECORD_ID = 123;
-	private static final int INT_ID_KEY = -1;
-	private static final String[] KEYS = { "1", "2" };
-	private static final String[] VALUES = { "10", "20" };
-	private static final int[] INT_KEYS = { 1, 2 };
-	private static final int[] INT_VALUES = { 10, 20 };
+	@Mock
+	private StreamReceiver receiver;
 
-	@Test
-	public void testStringStringMap() {
-		final EventList expected = new EventList();
-		expected.startRecord(RECORD_ID);
-		expected.literal(KEYS[0], VALUES[0]);
-		expected.literal(KEYS[1], VALUES[1]);
-		expected.literal(StreamConstants.ID, RECORD_ID);
-		expected.endRecord();
+	private MapToStream mapToStream;
 
-		final Map<String, String> map = new HashMap<String, String>();
-		map.put(KEYS[0], VALUES[0]);
-		map.put(KEYS[1], VALUES[1]);
-		map.put(StreamConstants.ID, RECORD_ID);
-
-		final MapToStream mapToStream = new MapToStream();
-
-		Assert.assertEquals(StreamConstants.ID, mapToStream.getIdKey());
-
-		checkResults(expected, mapToStream, map);
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		mapToStream = new MapToStream();
+		mapToStream.setReceiver(receiver);
 	}
 
+	@Test
+	public void shouldEmitEmptyRecordIfMapIsEmpty() {
+		mapToStream.process(new HashMap<>());
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("");
+		ordered.verify(receiver).endRecord();
+	}
 
 	@Test
-	public void testIntIntMap() {
-		final EventList expected = new EventList();
-		expected.startRecord(RECORD_ID);
-		expected.literal(KEYS[0], VALUES[0]);
-		expected.literal(KEYS[1], VALUES[1]);
-		expected.literal(Integer.toString(INT_ID_KEY), RECORD_ID);
-		expected.endRecord();
+	public void shouldEmitMapEntryAsLiteral() {
+		final Map<String, String> map = new HashMap<>();
+		map.put("key", "value");
+		mapToStream.process(map);
 
-		final Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-		map.put(INT_KEYS[0], INT_VALUES[0]);
-		map.put(INT_KEYS[1], INT_VALUES[1]);
-		map.put(INT_ID_KEY, INT_RECORD_ID);
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("");
+		ordered.verify(receiver).literal("key", "value");
+		ordered.verify(receiver).endRecord();
+	}
 
-		final MapToStream mapToStream = new MapToStream();
+	@Test
+	public void shouldEmitAllMapEntriesAsLiterals() {
+		final Map<String, String> map = new HashMap<>();
+		map.put("key-1", "value-1");
+		map.put("key-2", "value-2");
+		mapToStream.process(map);
+
+		verify(receiver).literal("key-1", "value-1");
+		verify(receiver).literal("key-2", "value-2");
+	}
+
+	@Test
+	public void shouldUseMapEntryWithIdKeyAsRecordId() {
+		mapToStream.setIdKey("id");
+
+		final Map<String, String> map = new HashMap<>();
+		map.put("id", "id-1");
+		mapToStream.process(map);
+
+		verify(receiver).startRecord("id-1");
+	}
+
+	@Test
+	public void shouldUseMapEntryWithDefaultIdNameAsRecordId() {
+		final Map<String, String> map = new HashMap<>();
+		map.put("_id", "id-1");
+		mapToStream.process(map);
+
+		verify(receiver).startRecord("id-1");
+	}
+
+	@Test
+	public void shouldEmitEmptyRecordIdIfNoEntryWithIdKeyIsFoundInMap() {
+		final Map<String, String> map = new HashMap<>();
+		map.put("noid", "noid");
+		mapToStream.process(map);
+
+		verify(receiver).startRecord("");
+	}
+
+	@Test
+	public void shouldConvertObjectsInMapToStrings() {
 		mapToStream.setIdKey(-1);
 
-		Assert.assertEquals(-1, mapToStream.getIdKey());
+		final Map<Integer, Integer> map = new HashMap<>();
+		map.put(1, 11);
+		map.put(2, 12);
+		map.put(-1, 100);
+		mapToStream.process(map);
 
-		checkResults(expected, mapToStream, map);
+		verify(receiver).startRecord("100");
+		verify(receiver).literal("1", "11");
+		verify(receiver).literal("2", "12");
 	}
 
-	@Test
-	public void testStringIntMap() {
-		final EventList expected = new EventList();
-		expected.startRecord("");
-		expected.literal(KEYS[0], VALUES[0]);
-		expected.literal(KEYS[1], VALUES[1]);
-		expected.endRecord();
-
-		final Map<String, Integer> map = new HashMap<String, Integer>();
-		map.put(KEYS[0], INT_VALUES[0]);
-		map.put(KEYS[1], INT_VALUES[1]);
-
-		final MapToStream mapToStream = new MapToStream();
-
-		checkResults(expected, mapToStream, map);
-	}
-
-	private void checkResults(final EventList expected, final MapToStream mapToStream, final Map<?, ?> map) {
-
-		final StreamValidator validator = new StreamValidator(expected.getEvents());
-
-		mapToStream.setReceiver(validator);
-
-		try {
-			mapToStream.process(map);
-			mapToStream.closeStream();
-		} catch (final FormatException e){
-			Assert.fail(e.toString());
-		}
-	}
 }
