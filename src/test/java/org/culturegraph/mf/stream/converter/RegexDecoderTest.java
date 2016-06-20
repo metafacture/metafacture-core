@@ -101,10 +101,10 @@ public final class RegexDecoderTest {
 	}
 
 	@Test
-	public void shouldEmitLiteralContainingUnmodifiedInputIfDefaultLiteralNameIsSet() {
+	public void shouldEmitLiteralContainingUnmodifiedInputIfRawInputLiteralIsSet() {
 		final RegexDecoder regexDecoder = new RegexDecoder(".*");
 		regexDecoder.setReceiver(receiver);
-		regexDecoder.setDefaultLiteralName("input");
+		regexDecoder.setRawInputLiteral("input");
 
 		regexDecoder.process("foo=1234,bar=abcd");
 

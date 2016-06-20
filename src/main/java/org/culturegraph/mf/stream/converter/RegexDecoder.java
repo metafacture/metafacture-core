@@ -92,7 +92,7 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 	private final List<String> captureGroupNames;
 	private final boolean hasRecordIdCaptureGroup;
 
-	private String defaultLiteralName;
+	private String rawInputLiteral;
 
 	public RegexDecoder(final String regex) {
 		matcher = Pattern.compile(regex).matcher("");
@@ -109,12 +109,26 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 		return groupNames;
 	}
 
-	public void setDefaultLiteralName(final String defaultLiteralName) {
-		this.defaultLiteralName = defaultLiteralName;
+	/**
+	 * Sets the name of a literal containing the unmodified input received by
+	 * {@link RegexDecoder}. If not set, no raw input literals are emitted.
+	 * <p>
+	 * The raw input <i>literal</i> event is always the first event emitted
+	 * after the <i>start-record</i> event.
+	 * <p>
+	 * This parameter can be changed at any time during processing. It becomes
+	 * effective with the next record being processed.
+	 *
+	 * @param rawInputLiteral name of the literal which contains the umodified
+	 *                        input string. If null, raw input literals will be
+	 *                        disabled.
+	 */
+	public void setRawInputLiteral(final String rawInputLiteral) {
+		this.rawInputLiteral = rawInputLiteral;
 	}
 
-	public String getDefaultLiteralName() {
-		return this.defaultLiteralName;
+	public String getRawInputLiteral() {
+		return this.rawInputLiteral;
 	}
 
 	@Override
@@ -124,7 +138,7 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 			return;
 		}
 		getReceiver().startRecord(getRecordId());
-		emitRawInputString(input);
+		emitRawInputLiteral(input);
 		emitCaptureGroupsAsLiterals();
 		getReceiver().endRecord();
 	}
@@ -144,9 +158,9 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 		} while (matcher.find());
 	}
 
-	private void emitRawInputString(final String input) {
-		if (defaultLiteralName != null) {
-			getReceiver().literal(defaultLiteralName, input);
+	private void emitRawInputLiteral(final String input) {
+		if (rawInputLiteral != null) {
+			getReceiver().literal(rawInputLiteral, input);
 		}
 	}
 
