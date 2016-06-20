@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -16,6 +17,7 @@
 package org.culturegraph.mf.stream.converter;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -65,6 +67,37 @@ public final class RegexDecoderTest {
 		regexDecoder.process("non-matching input");
 
 		verifyZeroInteractions(receiver);
+	}
+
+	@Test
+	public void shouldUseCaptureGroupNamedIdAsRecordId() {
+		final RegexDecoder regexDecoder = new RegexDecoder("ID:(?<id>.*)");
+		regexDecoder.setReceiver(receiver);
+
+		regexDecoder.process("ID:id-123");
+
+		verify(receiver).startRecord("id-123");
+	}
+
+	@Test
+	public void shouldUseEmptyStringAsRecordIdIfNoRecordIdCaptureGroupExists() {
+		final RegexDecoder regexDecoder = new RegexDecoder("ID:(?<identifier>.*)");
+		regexDecoder.setReceiver(receiver);
+
+		regexDecoder.process("ID:id-123");
+
+		verify(receiver).startRecord("");
+	}
+
+
+	@Test
+	public void shouldUseEmptyStringAsRecordIdIfRecordIdCaptureGroupDoesNotMatch() {
+		final RegexDecoder regexDecoder = new RegexDecoder("ID:(?<id>[0-9]*).*");
+		regexDecoder.setReceiver(receiver);
+
+		regexDecoder.process("ID:id-123");
+
+		verify(receiver).startRecord("");
 	}
 
 	@Test
@@ -123,13 +156,15 @@ public final class RegexDecoderTest {
 	}
 
 	@Test
-	public void shouldUseCaptureGroupNamedIdAsRecordId() {
-		final RegexDecoder regexDecoder = new RegexDecoder("RECORD-ID:(?<id>.*)");
+	public void shouldIgnoreUnnamedCaptureGroups() {
+		final RegexDecoder regexDecoder = new RegexDecoder(
+				"foo=([0-9]+),bar=(?<bar>[a-z]+)");
 		regexDecoder.setReceiver(receiver);
 
-		regexDecoder.process("RECORD-ID:id-123");
+		regexDecoder.process("foo=1234,bar=abcd,foo=5678,bar=efgh");
 
-		verify(receiver).startRecord("id-123");
+		verify(receiver, never()).literal(any(), eq("1234"));
+		verify(receiver, never()).literal(any(), eq("5678"));
 	}
 
 }

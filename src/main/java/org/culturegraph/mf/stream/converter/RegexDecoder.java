@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -26,61 +27,57 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
+ * Decodes a string based on a regular expression using named capture groups.
  * <p>
- * Decodes an incoming string based on a regular expression using
- * named-capturing groups denoted by (?&lt;name&gt;X). The name of a matched
- * group ("name") is used as the literal name, the captured content ("X") as
- * the literal value. Group names are composed of the following characters:
- * <dl>
- * <li>The uppercase letters 'A' through 'Z' ('\u0041' through '\u005a'),</li>
- * <li>The lowercase letters 'a' through 'z' ('\u0061' through '\u007a'),</li>
- * <li>The digits '0' through '9' ('\u0030' through '\u0039').</li>
- * </dl>
- *
+ * Named capture groups are denoted by {@literal (?<name>X)}. The name of a
+ * matched group (&quot; name&quot;) is used as the literal name, the
+ * captured content (&quot; X&quot;) as the literal value. Group names are
+ * composed of the following characters:
+ * <ul>
+ *   <li>The uppercase letters 'A' through 'Z',
+ *   <li>The lowercase letters 'a' through 'z',
+ *   <li>The digits '0' through '9'.
+ * </ul>
  * The first character of a group name must be a letter.
- * </p>
  * <p>
- * The regular expression must not contain any non-named capture groups.
- * </p>
- *
+ * The pattern is matched repeatedly to the input string. On each match the
+ * captured content of all named capture groups in the pattern is emitted as
+ * literals. Non-matching parts of the input are ignored.
+ * <p>
+ * The regular expression may contain unnamed capture groups. These are
+ * ignored.
+ * <p>
+ * If the pattern contains a capture group named &quot;{@value
+ * #ID_CAPTURE_GROUP}&quot;, the first match of this group will be used as
+ * record identifier. If there is no such capture group or if it does not
+ * match, the empty string is used as record identifier.
  * <p>
  * Example: The regex
+ * <pre>{@literal
+ * a=(?<foo>[0-9]+),b=(?<bar>[x-z]+)
+ * }</pre>
+ * matched against the input
+ * <pre>{@literal
+ * a=42,b=xyzzy,c=ignored,a=23,b=xyz,d=ignored
+ * }</pre>
+ * will produce the sequence of events:
+ * <pre>{@literal
+ * start-record ""
+ * literal "foo": 42
+ * literal "bar": xyzzy
+ * literal "foo": 23
+ * literal "bar": xyz
+ * end-record
+ * }</pre>
  *
- * <blockquote>
- *
- * <pre>
- * abc(?&lt;foo&gt;[0-9]+)def(?&lt;bar&gt;[x-z]+)ghi
- * </pre>
- *
- * </blockquote>
- *
- * matched against the input <blockquote>
- *
- * <pre>
- * abc42defxyzzyghi
- * </pre>
- *
- * </blockquote> will produce the sequence <blockquote>
- *
- * <pre>
- * startRecord(null);
- * literal(&quot;foo&quot;, &quot;42&quot;);
- * literal(&quot;bar&quot;, &quot;xyzzy&quot;);
- * endRecord();
- * </pre>
- *
- * </blockquote>
- * </p>
- *
- * @author Thomas Seidel, Christoph Böhme
+ * @author Thomas Seidel
+ * @author Christoph Böhme
  *
  */
-@Description("Decodes an incoming string based on a regular expression using named-capturing groups")
+@Description("Decodes a string based on a regular expression using named capture groups")
 @In(String.class)
 @Out(StreamReceiver.class)
 @FluxCommand("regex-decode")
@@ -88,80 +85,69 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 
 	public static final String ID_CAPTURE_GROUP = "id";
 
-	private static final Logger LOG = LoggerFactory
-			.getLogger(RegexDecoder.class);
-
-	private static final Pattern NAMED_CAPTURE_GROUP_PATTERN = Pattern
-			.compile("\\(\\?<([A-Za-z0-9]+)>");
+	private static final Pattern NAMED_CAPTURE_GROUP_PATTERN =
+			Pattern.compile("\\(\\?<([A-Za-z0-9]+)>");
 
 	private final Matcher matcher;
-	private final List<String> captureGroupNames = new ArrayList<String>();
+	private final List<String> captureGroupNames;
+	private final boolean hasRecordIdCaptureGroup;
 
 	private String defaultLiteralName;
 
 	public RegexDecoder(final String regex) {
-		super();
-
-		final Matcher namedCaptureGroupMatcher = NAMED_CAPTURE_GROUP_PATTERN
-				.matcher(regex);
-		while (namedCaptureGroupMatcher.find()) {
-			final String captureGroupName = namedCaptureGroupMatcher.group(1);
-			LOG.debug("captureGroupName is: {}", captureGroupName);
-			captureGroupNames.add(captureGroupName);
-		}
-		final String java6regex = namedCaptureGroupMatcher.replaceAll("(");
-		LOG.debug("Cleaned java6regex is: {}", java6regex);
-
-		matcher = Pattern.compile(java6regex).matcher("");
+		matcher = Pattern.compile(regex).matcher("");
+		captureGroupNames = collectCaptureGroupNames(regex);
+		hasRecordIdCaptureGroup = captureGroupNames.contains(ID_CAPTURE_GROUP);
 	}
 
-	public String getDefaultLiteralName() {
-		return this.defaultLiteralName;
+	private List<String> collectCaptureGroupNames(final String regex) {
+		final List<String> groupNames = new ArrayList<>();
+		final Matcher groupNameMatcher = NAMED_CAPTURE_GROUP_PATTERN.matcher(regex);
+		while (groupNameMatcher.find()) {
+			groupNames.add(groupNameMatcher.group(1));
+		}
+		return groupNames;
 	}
 
 	public void setDefaultLiteralName(final String defaultLiteralName) {
 		this.defaultLiteralName = defaultLiteralName;
 	}
 
-	@Override
-	public void process(final String str) {
-		assert !isClosed();
+	public String getDefaultLiteralName() {
+		return this.defaultLiteralName;
+	}
 
-		matcher.reset(str);
+	@Override
+	public void process(final String input) {
+		matcher.reset(input);
 		if (!matcher.find()) {
-			LOG.info("Ignoring non-matching input: {}", str);
 			return;
 		}
+		getReceiver().startRecord(getRecordId());
+		emitRawInputString(input);
+		emitCaptureGroupsAsLiterals();
+		getReceiver().endRecord();
+	}
 
-		// Extract the record id:
-		final String id;
-		final int groupIndex = captureGroupNames.indexOf(ID_CAPTURE_GROUP) + 1;
-		if (groupIndex > 0) {
-			id = matcher.group(groupIndex);
-		} else {
-			id = "";
+	private String getRecordId() {
+		if (!hasRecordIdCaptureGroup) {
+			return "";
 		}
-		getReceiver().startRecord(id);
+		return matcher.group(ID_CAPTURE_GROUP);
+	}
 
-		// Add a literal containing the unmodified input string:
-		if (defaultLiteralName != null) {
-			getReceiver().literal(defaultLiteralName, str);
-		}
-
-		// Emit literals:
+	private void emitCaptureGroupsAsLiterals() {
 		do {
-			final int groupCount = matcher.groupCount();
-			LOG.debug("groupCount() is: {}", Integer.valueOf(groupCount));
-			for (int group = 1; group <= groupCount; ++group) {
-				final String literalName = captureGroupNames.get(group - 1);
-				final String literalValue = matcher.group(group);
-				LOG.debug("group# is: {}, literalName is: {}, literalValue is: {}",
-						Integer.valueOf(group), literalName, literalValue);
-				getReceiver().literal(literalName, literalValue);
+			for (final String groupName : captureGroupNames) {
+				getReceiver().literal(groupName, matcher.group(groupName));
 			}
 		} while (matcher.find());
+	}
 
-		getReceiver().endRecord();
+	private void emitRawInputString(final String input) {
+		if (defaultLiteralName != null) {
+			getReceiver().literal(defaultLiteralName, input);
+		}
 	}
 
 }
