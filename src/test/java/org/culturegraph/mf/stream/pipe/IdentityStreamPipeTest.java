@@ -27,7 +27,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Tests for {@link IdentityStreamPipe}.
+ * Tests for class {@link IdentityStreamPipe}.
  *
  * @author Christoph Böhme
  *

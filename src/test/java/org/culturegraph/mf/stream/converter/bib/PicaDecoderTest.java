@@ -15,6 +15,10 @@
  */
 package org.culturegraph.mf.stream.converter.bib;
 
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.junit.After;
 import org.junit.Before;
@@ -23,10 +27,8 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.mockito.Mockito.*;
-
 /**
- * Test for {@link PicaDecoder}.
+ * Tests for class {@link PicaDecoder}.
  *
  * @author Christoph Böhme
  *

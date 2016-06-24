@@ -27,6 +27,7 @@ import org.junit.Test;
  * Tests for class {@link EntityPathTracker}.
  *
  * @author Christoph Böhme
+ *
  */
 public class EntityPathTrackerTest {
 

@@ -20,17 +20,16 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Tests for {@link CloseSupressor}.
+ * Tests for class {@link CloseSupressor}.
  *
  * @author Markus Geipel
+ *
  */
 public final class CloseSuppressorTest {
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testSuppression() {
-
-		final CloseSupressor<Object> supressor = new CloseSupressor<Object>(3);
+		final CloseSupressor<Object> supressor = new CloseSupressor<>(3);
 		final ObjectReceiver<Object> receiver = Mockito.mock(ObjectReceiver.class);
 		supressor.setReceiver(receiver);
 		supressor.closeStream();

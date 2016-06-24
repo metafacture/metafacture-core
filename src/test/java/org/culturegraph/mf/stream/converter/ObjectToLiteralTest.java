@@ -27,6 +27,8 @@ import org.mockito.MockitoAnnotations;
 
 
 /**
+ * Tests for class {@link ObjectToLiteral}.
+ *
  * @author Christoph Böhme
  *
  */

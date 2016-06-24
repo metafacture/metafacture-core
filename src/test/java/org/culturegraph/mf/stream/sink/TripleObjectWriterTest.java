@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * Tests for {@link TripleObjectWriter}.
+ * Tests for class {@link TripleObjectWriter}.
  *
  * @author Christoph Böhme
  */

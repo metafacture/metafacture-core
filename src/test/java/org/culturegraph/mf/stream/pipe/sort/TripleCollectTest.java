@@ -30,7 +30,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Tests {@link TripleCollect}
+ * Tests for class {@link TripleCollect}.
  *
  * @author Markus Geipel
  *

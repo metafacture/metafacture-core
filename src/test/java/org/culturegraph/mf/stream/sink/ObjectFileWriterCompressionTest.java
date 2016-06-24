@@ -35,7 +35,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 /**
  *
- * Tests for file compression in {@link ObjectFileWriter}.
+ * Tests for file compression in class {@link ObjectFileWriter}.
  *
  * @author Christoph Böhme
  *

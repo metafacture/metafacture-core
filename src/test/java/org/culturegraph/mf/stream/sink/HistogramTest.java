@@ -23,12 +23,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.culturegraph.mf.stream.sink.Histogram;
 import org.junit.Test;
 
 
 /**
- * Tests {@link Histogram}.
+ * Tests for class {@link Histogram}.
  *
  * @author Christoph Böhme
  *

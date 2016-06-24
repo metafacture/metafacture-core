@@ -37,7 +37,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- * Tests for file compression in {@link FileOpener}.
+ * Tests for file compression in  class {@link FileOpener}.
  *
  * @author Christoph Böhme
  *

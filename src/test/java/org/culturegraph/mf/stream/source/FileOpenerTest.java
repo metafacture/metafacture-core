@@ -34,9 +34,9 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * Tests {@link FileOpener}
+ * Tests for class {@link FileOpener}.
  *
- * @author ChristophBöhme
+ * @author Christoph Böhme
  *
  */
 public final class FileOpenerTest {

@@ -26,7 +26,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Tests for {@link PicaEncoder}.
+ * Tests for class {@link PicaEncoder}.
  *
  * @author Yining Li
  *

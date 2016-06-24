@@ -28,7 +28,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
+ * Tests for class {@link StreamFlattener}.
+ *
  * @author Christoph Böhme
+ *
  */
 public class StreamFlattenerTest {
 

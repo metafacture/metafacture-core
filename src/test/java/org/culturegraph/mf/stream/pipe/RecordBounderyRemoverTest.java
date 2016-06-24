@@ -29,6 +29,7 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link RecordBounderyRemover}.
  *
  * @author Christoph Böhme
+ *
  */
 public class RecordBounderyRemoverTest {
 

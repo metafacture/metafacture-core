@@ -27,7 +27,7 @@ import org.junit.Test;
 
 
 /**
- * Tests {@link Splitter}.
+ * Tests for class {@link Splitter}.
  *
  * @author Markus Michael Geipel
  *

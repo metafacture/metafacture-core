@@ -30,6 +30,7 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link RecordToEntity}.
  *
  * @author Christoph Böhme
+ *
  */
 public class RecordToEntityTest {
 

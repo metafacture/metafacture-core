@@ -29,7 +29,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Test {@link MapToStream}
+ * Tests for class {@link MapToStream}.
  *
  * @author Christoph Böhme
  *

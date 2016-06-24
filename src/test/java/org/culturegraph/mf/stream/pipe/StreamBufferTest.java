@@ -25,10 +25,11 @@ import org.junit.Test;
 
 
 /**
- * Tests {@link StreamBuffer}.
+ * Tests for class {@link StreamBuffer}.
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme
+ *
  */
 public final class StreamBufferTest {
 

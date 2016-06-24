@@ -15,13 +15,13 @@
  */
 package org.culturegraph.mf.stream.reader;
 
-import org.culturegraph.mf.stream.reader.MultiFormatReader;
 import org.junit.Assert;
 import org.junit.Test;
 
 
 /**
- * Tests {@link MultiFormatReader}
+ * Tests for class {@link MultiFormatReader}.
+ *
  * @author Markus Michael Geipel
  *
  */
@@ -29,7 +29,6 @@ public final class MultiFormatReaderTest {
 
 	private static final String PICA = "pica";
 	private static final String MAB2 = "mab2";
-
 
 	@Test(expected=IllegalStateException.class)
 	public void testMissingFormat(){
@@ -53,6 +52,5 @@ public final class MultiFormatReaderTest {
 		formatReader.setFormat(PICA);
 		formatReader.read("hula");
 	}
-
 
 }

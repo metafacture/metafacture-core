@@ -25,7 +25,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Tests {@link Utf8Normalizer}.
+ * Tests class {@link Utf8Normalizer}.
  *
  * @author Christoph Böhme
  *

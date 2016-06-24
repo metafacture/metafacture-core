@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Tests {@link CooccurrenceMetricCalculator}.
+ * Tests for class {@link CooccurrenceMetricCalculator}.
  *
  * @author Markus Michael Geipel
  *

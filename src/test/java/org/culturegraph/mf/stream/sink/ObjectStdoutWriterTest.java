@@ -27,8 +27,8 @@ import org.junit.Before;
  * @author Christoph Böhme
  *
  */
-public final class ObjectStdoutWriterTest extends
-		AbstractConfigurableObjectWriterTest {
+public final class ObjectStdoutWriterTest
+		extends AbstractConfigurableObjectWriterTest {
 
 	private ObjectStdoutWriter<String> writer;
 

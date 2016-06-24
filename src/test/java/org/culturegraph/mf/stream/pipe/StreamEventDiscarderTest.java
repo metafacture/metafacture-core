@@ -1,5 +1,11 @@
 package org.culturegraph.mf.stream.pipe;
 
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+
+import java.util.EnumSet;
+
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.stream.pipe.StreamEventDiscarder.EventType;
 import org.junit.Before;
@@ -8,14 +14,11 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.EnumSet;
-
-import static org.mockito.Mockito.*;
-
 /**
  * Tests for class {@link StreamEventDiscarder}.
  *
  * @author Christoph Böhme
+ *
  */
 public class StreamEventDiscarderTest {
 

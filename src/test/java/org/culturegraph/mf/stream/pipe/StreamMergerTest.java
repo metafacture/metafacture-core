@@ -27,7 +27,7 @@ import org.mockito.MockitoAnnotations;
 
 
 /**
- * Tests for {@link StreamMerger}.
+ * Tests for class {@link StreamMerger}.
  *
  * @author Christoph Böhme
  *

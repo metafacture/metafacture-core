@@ -21,7 +21,7 @@ import org.junit.Test;
 
 
 /**
- * tests {@link NamedValue}
+ * Tests for class {@link NamedValue}.
  *
  * @author Markus Michael Geipel
  */

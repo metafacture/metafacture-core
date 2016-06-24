@@ -21,9 +21,10 @@ import org.junit.Test;
 
 
 /**
- * Tests {@link ObjectTimer}.
+ * Tests for class {@link ObjectTimer}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class ObjectTimerTest {
 

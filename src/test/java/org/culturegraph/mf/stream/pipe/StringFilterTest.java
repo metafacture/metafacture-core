@@ -28,7 +28,7 @@ import org.mockito.MockitoAnnotations;
 
 
 /**
- * Tests for {@link StringFilter}.
+ * Tests for class {@link StringFilter}.
  *
  * @author Christoph Böhme
  *

@@ -26,7 +26,7 @@ import org.mockito.MockitoAnnotations;
 
 
 /**
- * Tests for {@link StringMatcher}.
+ * Tests for class {@link StringMatcher}.
  *
  * @author Christoph Böhme
  *

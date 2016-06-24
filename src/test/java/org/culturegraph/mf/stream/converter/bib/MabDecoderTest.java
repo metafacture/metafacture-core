@@ -29,8 +29,9 @@ import org.mockito.MockitoAnnotations;
 /**
  * Tests for class {@link MabDecoder}.
  *
- * @author Christoph Böhme (rewrite)
  * @author Markus Michael Geipel
+ * @author Christoph Böhme (rewrite)
+ *
  */
 public final class MabDecoderTest {
 

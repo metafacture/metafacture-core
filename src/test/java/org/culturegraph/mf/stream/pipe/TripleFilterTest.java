@@ -27,7 +27,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Tests for {@link TripleFilter},
+ * Tests for class {@link TripleFilter},
  *
  * @author Christoph Böhme
  *

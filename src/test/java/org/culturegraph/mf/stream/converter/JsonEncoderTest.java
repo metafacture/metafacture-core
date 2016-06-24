@@ -27,7 +27,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Test for {@link JsonEncoder}.
+ * Tests for class {@link JsonEncoder}.
  *
  * @author Christoph Böhme
  *

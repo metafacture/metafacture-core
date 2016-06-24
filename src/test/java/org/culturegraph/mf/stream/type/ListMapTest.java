@@ -25,7 +25,7 @@ import org.junit.Test;
 
 
 /**
- * tests {@link ListMap}
+ * Tests for class {@link ListMap}.
  *
  * @author Markus Michael Geipel
  *

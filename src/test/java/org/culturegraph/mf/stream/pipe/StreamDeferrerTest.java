@@ -16,6 +16,10 @@
 
 package org.culturegraph.mf.stream.pipe;
 
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verifyZeroInteractions;
+
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,12 +27,11 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.mockito.Mockito.*;
-
 /**
  * Tests for class {@link StreamDeferrer}.
  *
  * @author Christoph Böhme
+ *
  */
 public class StreamDeferrerTest {
 

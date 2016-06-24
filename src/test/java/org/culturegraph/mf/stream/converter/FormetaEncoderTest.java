@@ -28,7 +28,7 @@ import org.mockito.MockitoAnnotations;
 
 
 /**
- * Tests for {@link FormetaEncoder}.
+ * Tests for class {@link FormetaEncoder}.
  *
  * @author Christoph Böhme
  *

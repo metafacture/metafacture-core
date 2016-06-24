@@ -12,6 +12,13 @@ import org.culturegraph.mf.framework.ObjectReceiver;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
+/**
+ * Tests for class {@link PojoEncoder}.
+ *
+ * @author Thomas Seidel
+ * @author Christoph Böhme (refactored to Mockito)
+ * 
+ */
 public class PojoEncoderTest {
 
 	@Test

@@ -22,8 +22,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 /**
- * Tests shared by all back end implementations
- * of {@link ObjectWriter}.
+ * Tests shared by all back end implementations of {@link ObjectWriter}.
  *
  * @author Christoph Böhme
  *

@@ -20,7 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests for {@link WellformednessChecker}.
+ * Tests for class {@link WellformednessChecker}.
  *
  * @author Christoph Böhme
  *

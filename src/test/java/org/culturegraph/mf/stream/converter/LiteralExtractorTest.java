@@ -27,6 +27,8 @@ import org.mockito.MockitoAnnotations;
 
 
 /**
+ * Tests for class {@link LiteralExtractor}.
+ *
  * @author Christoph Böhme
  *
  */

@@ -27,7 +27,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Tests for {@link PicaMultiscriptRemodeler}.
+ * Tests for class {@link PicaMultiscriptRemodeler}.
  *
  * @author Christoph Böhme
  *

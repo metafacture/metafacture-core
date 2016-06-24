@@ -25,7 +25,7 @@ import org.junit.Test;
 
 
 /**
- * Tests if {@link StreamTee} is correctly piping all events.
+ * Tests for class {@link StreamTee}.
  *
  * @author Markus Michael Geipel
  *

@@ -37,8 +37,10 @@ import org.junit.rules.TemporaryFolder;
  * Tests for class {@link ObjectFileWriter}.
  *
  * @author Christoph Böhme
+ *
  */
-public final class ObjectFileWriterTest extends AbstractConfigurableObjectWriterTest {
+public final class ObjectFileWriterTest
+		extends AbstractConfigurableObjectWriterTest {
 
 	private static final String DATA = "Überfacture";
 

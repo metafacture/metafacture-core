@@ -36,9 +36,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Tests for {@link TripleObjectRetriever}.
+ * Tests for class {@link TripleObjectRetriever}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class TripleObjectRetrieverTest {
 

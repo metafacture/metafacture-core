@@ -16,12 +16,10 @@
 package org.culturegraph.mf.stream.sink;
 
 import org.culturegraph.mf.exceptions.WellformednessException;
-import org.culturegraph.mf.stream.sink.EventList;
-import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.junit.Test;
 
 /**
- * Tests for {@link StreamValidator}.
+ * Tests for class {@link StreamValidator}.
  *
  * @author Christoph Böhme
  *

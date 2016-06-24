@@ -29,7 +29,7 @@ import org.mockito.MockitoAnnotations;
 
 
 /**
- * Tests for {@link IdChangePipe}.
+ * Tests for class {@link IdChangePipe}.
  *
  * @author Christoph Böhme
  *

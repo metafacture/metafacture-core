@@ -25,11 +25,12 @@ import org.junit.Test;
 
 
 /**
- * Tests if {@link StreamLogger} is correctly piping all events.
+ * Tests for class {@link StreamLogger}.
  *
- * @author Markus Michael Geipel, Christoph Böhme
+ * @author Markus Michael Geipel
+ * @author Christoph Böhme
+ *
  */
-
 public final class StreamLoggerTest {
 
 	@Test

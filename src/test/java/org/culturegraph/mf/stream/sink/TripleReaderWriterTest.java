@@ -31,6 +31,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
+ * Tests for classes {@link TripleReader} and {@link TripleWriter}.
+ * TODO: This test class should be split into two separated test classes.
+ *
  * @author Christoph Böhme
  *
  */

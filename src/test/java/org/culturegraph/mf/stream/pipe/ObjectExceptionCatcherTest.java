@@ -40,9 +40,10 @@ import org.mockito.MockitoAnnotations;
 
 
 /**
- * Tests {@link ObjectExceptionCatcher}.
+ * Tests for class {@link ObjectExceptionCatcher}.
  *
  * @author Christoph Böhme
+ *
  */
 public final class ObjectExceptionCatcherTest {
 
