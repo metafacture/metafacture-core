@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -15,57 +16,41 @@
  */
 package org.culturegraph.mf.framework;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
-
-import org.junit.Assert;
 import org.junit.Test;
 
-
 /**
- * Tests Contract of {@link DefaultSender}.
+ * Tests for class {@link DefaultSender}.
+ *
  * @author Markus M Geipel
+ * @author Christoph Böhme (refactored to Mockito)
  *
  */
 public final class DefaultSenderTest {
 
-	/**
-	 *  onCloseStream() must be called only once even if closeSteam is called several times
-	 */
 	@Test
-	public void testMultipleCloseStreamInvocations() {
-		final CloseCounter closeCounter = new CloseCounter();
+	public void shouldCallOnCloseStreamOnlyOnce() {
+		final DefaultSender<StreamReceiver> defaultSender =
+				spy(new DefaultSender<>());
 
-		Assert.assertEquals(0, closeCounter.getCount());
-		Assert.assertFalse(closeCounter.isClosed());
+		verify(defaultSender, never()).onCloseStream();
+		assertFalse(defaultSender.isClosed());
 
-		closeCounter.closeStream();
-		Assert.assertEquals(1, closeCounter.getCount());
-		Assert.assertTrue(closeCounter.isClosed());
+		defaultSender.closeStream();
 
-		closeCounter.closeStream();
-		Assert.assertEquals(1, closeCounter.getCount());
-		Assert.assertTrue(closeCounter.isClosed());
+		verify(defaultSender, times(1)).onCloseStream();
+		assertTrue(defaultSender.isClosed());
 
-		closeCounter.closeStream();
-		Assert.assertEquals(1, closeCounter.getCount());
-		Assert.assertTrue(closeCounter.isClosed());
+		defaultSender.closeStream();
 
-	}
-
-	/**
-	 *	counts invocation of onCloseStream()
-	 */
-	protected static final class CloseCounter extends DefaultSender<ObjectReceiver<Object>>{
-		private int count;
-
-		@Override
-		protected void onCloseStream() {
-			++count;
-		}
-
-		public int getCount() {
-			return count;
-		}
+		verify(defaultSender, times(1)).onCloseStream();
+		assertTrue(defaultSender.isClosed());
 	}
 
 }
