@@ -33,7 +33,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Description("Formats a stream as strings")
 @In(StreamReceiver.class)
 @Out(String.class)
-public final class StreamFormater extends DefaultStreamPipe<ObjectReceiver<String>>{
+public final class StreamFormatter extends DefaultStreamPipe<ObjectReceiver<String>>{
 
 	private static final String PREFIX = " ";
 	private static final char INDENT_CHAR = '\t';

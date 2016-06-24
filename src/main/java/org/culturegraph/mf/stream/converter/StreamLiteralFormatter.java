@@ -47,7 +47,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("encode-literals")
-public final class StreamLiteralFormater
+public final class StreamLiteralFormatter
 		extends DefaultStreamPipe<ObjectReceiver<String>> {
 
 	private static final String DEFAULT_SEPARATOR = "\t";
