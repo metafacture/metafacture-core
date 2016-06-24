@@ -16,6 +16,7 @@
 package org.culturegraph.mf.stream.source;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,15 +27,18 @@ import java.io.Reader;
 import java.util.Arrays;
 
 import org.apache.commons.io.IOUtils;
-import org.culturegraph.mf.stream.DataFilePath;
-import org.culturegraph.mf.stream.pipe.ObjectBuffer;
+import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.util.FileCompression;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
  * Tests for file compression in  class {@link FileOpener}.
@@ -45,15 +49,22 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public final class FileOpenerCompressionTest {
 
-	private static final String DATA = "This could have been a remarkable sentence.";
+	private static final String DATA =
+			"This could have been a remarkable sentence.";
 
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
 
+	@Mock
+	private ObjectReceiver<Reader> receiver;
+
+	private FileOpener fileOpener;
+
 	private final String resourcePath;
 	private final FileCompression compression;
 
-	public FileOpenerCompressionTest(final String resourcePath, final FileCompression compression) {
+	public FileOpenerCompressionTest(final String resourcePath,
+			final FileCompression compression) {
 		this.resourcePath = resourcePath;
 		this.compression = compression;
 	}
@@ -61,45 +72,53 @@ public final class FileOpenerCompressionTest {
 	@Parameters
 	public static Iterable<Object[]> data() {
 		return Arrays.asList(new Object[][] {
-				{ DataFilePath.COMPRESSED_NONE, FileCompression.AUTO },
-				{ DataFilePath.COMPRESSED_BZ2, FileCompression.AUTO },
-				{ DataFilePath.COMPRESSED_BZIP2, FileCompression.AUTO },
-				{ DataFilePath.COMPRESSED_GZ, FileCompression.AUTO },
-				{ DataFilePath.COMPRESSED_GZIP, FileCompression.AUTO },
-				{ DataFilePath.COMPRESSED_XZ, FileCompression.AUTO },
-				{ DataFilePath.COMPRESSED_NONE, FileCompression.NONE },
-				{ DataFilePath.COMPRESSED_BZ2, FileCompression.BZIP2 },
-				{ DataFilePath.COMPRESSED_BZIP2, FileCompression.BZIP2 },
-				{ DataFilePath.COMPRESSED_GZ, FileCompression.GZIP },
-				{ DataFilePath.COMPRESSED_GZIP, FileCompression.GZIP },
-				{ DataFilePath.COMPRESSED_XZ, FileCompression.XZ },
+				{ "compressed.txt", FileCompression.AUTO },
+				{ "compressed.txt.bz2", FileCompression.AUTO },
+				{ "compressed.txt.bzip2", FileCompression.AUTO },
+				{ "compressed.txt.gz", FileCompression.AUTO },
+				{ "compressed.txt.gzip", FileCompression.AUTO },
+				{ "compressed.txt.xz", FileCompression.AUTO },
+				{ "compressed.txt", FileCompression.NONE },
+				{ "compressed.txt.bz2", FileCompression.BZIP2 },
+				{ "compressed.txt.bzip2", FileCompression.BZIP2 },
+				{ "compressed.txt.gz", FileCompression.GZIP },
+				{ "compressed.txt.gzip", FileCompression.GZIP },
+				{ "compressed.txt.xz", FileCompression.XZ },
 			});
+	}
+
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		fileOpener = new FileOpener();
+		fileOpener.setReceiver(receiver);
 	}
 
 	@Test
 	public void testOpenCompressedFiles() throws IOException {
-		final File file = tempFolder.newFile();
+		final File file = copyResourceToTempFile();
 
-		final InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
-		try {
-			final OutputStream out = new FileOutputStream(file);
-			try { IOUtils.copy(in, out); }
-			finally { out.close(); }
-		} finally { in.close(); }
+		fileOpener.setCompression(compression);
+		fileOpener.process(file.getAbsolutePath());
 
-		final FileOpener opener = new FileOpener();
-		opener.setCompression(compression);
-		final ObjectBuffer<Reader> buffer = new ObjectBuffer<Reader>();
-		opener.setReceiver(buffer);
-		opener.process(file.getAbsolutePath());
-		opener.closeStream();
-
-		final Reader reader = buffer.pop();
+		final ArgumentCaptor<Reader> readerCaptor =
+				ArgumentCaptor.forClass(Reader.class);
+		verify(receiver).process(readerCaptor.capture());
 		final String charsFromFile;
-		try { charsFromFile = IOUtils.toString(reader); }
-		finally { reader.close(); }
-
+		try (Reader reader = readerCaptor.getValue()) {
+			charsFromFile = IOUtils.toString(reader);
+		}
 		assertEquals(DATA, charsFromFile);
+	}
+
+	private File copyResourceToTempFile() throws IOException {
+		final File file = tempFolder.newFile();
+		try (InputStream in = getClass().getResourceAsStream(resourcePath)) {
+			try (OutputStream out = new FileOutputStream(file)) {
+				IOUtils.copy(in, out);
+			}
+		}
+		return file;
 	}
 
 }
