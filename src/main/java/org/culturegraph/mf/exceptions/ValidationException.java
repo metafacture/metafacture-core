@@ -24,7 +24,6 @@ import org.culturegraph.mf.stream.sink.StreamValidator;
  * can raise a validation error.
  *
  * @see StreamValidator
- * @see WellformednessException
  *
  * @author Christoph Böhme
  *

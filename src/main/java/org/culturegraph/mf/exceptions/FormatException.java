@@ -15,11 +15,8 @@
  */
 package org.culturegraph.mf.exceptions;
 
-
 /**
- * Thrown if data processing fails due to a format error in the
- * data. Use {@link WellformednessException} or {@link ValidationException}
- * to provide a more detailed explanation of the type of format error.
+ * Thrown if data processing fails due to a format error in the data.
  *
  * @author Markus Michael Geipel
  *

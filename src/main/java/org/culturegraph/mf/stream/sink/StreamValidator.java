@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Stack;
 
 import org.culturegraph.mf.exceptions.ValidationException;
-import org.culturegraph.mf.exceptions.WellformednessException;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.types.Event;
 import org.slf4j.Logger;
@@ -30,14 +29,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Validates an stream of events using a list of expected stream events.
- * If the stream is invalid a {@link ValidationException} is thrown. If
- * the stream is not well-formed a {@link WellformednessException} is
- * thrown.
+ * If the stream is invalid a {@link ValidationException} is thrown.
  *
  * @see WellformednessChecker
  * @see EventList
  * @see ValidationException
- * @see WellformednessException
  *
  * @author Christoph Böhme
  *
@@ -161,6 +157,9 @@ public final class StreamValidator implements StreamReceiver {
 	public StreamValidator(final List<Event> expectedStream) {
 		this.eventStream = new EventNode(null, null);
 		foldEventStream(this.eventStream, expectedStream.iterator());
+
+		wellformednessChecker.setErrorHandler(
+				msg -> { throw new ValidationException(msg); });
 
 		resetStream();
 	}

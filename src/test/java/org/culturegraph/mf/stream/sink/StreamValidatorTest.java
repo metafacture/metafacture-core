@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.stream.sink;
 
-import org.culturegraph.mf.exceptions.WellformednessException;
+import org.culturegraph.mf.exceptions.ValidationException;
 import org.junit.Test;
 
 /**
@@ -26,19 +26,17 @@ import org.junit.Test;
  */
 public final class StreamValidatorTest {
 
-	private static final String ID = "1";
-
-	@Test(expected=WellformednessException.class)
+	@Test(expected= ValidationException.class)
 	public void testEndRecord() {
 		final EventList stream = new EventList();
 
-		stream.startRecord(ID);
+		stream.startRecord("1");
 		stream.endRecord();
 		stream.closeStream();
 
 		final StreamValidator validator = new StreamValidator(stream.getEvents());
 
-		validator.startRecord(ID);
+		validator.startRecord("1");
 		validator.closeStream();
 	}
 
