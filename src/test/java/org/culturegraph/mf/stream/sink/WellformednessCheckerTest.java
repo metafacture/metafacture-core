@@ -76,14 +76,14 @@ public final class WellformednessCheckerTest {
 	}
 
 	@Test
-	public void shouldFailOnNullRecordId() {
+	public void shouldReportNullRecordId() {
 		wellformednessChecker.startRecord(null);
 
 		verify(errorHandler).accept(any());
 	}
 
 	@Test
-	public void shouldFailOnNullEntityName() {
+	public void shouldReportNullEntityName() {
 		wellformednessChecker.startRecord("id1");
 		wellformednessChecker.startEntity(null);
 
@@ -91,7 +91,7 @@ public final class WellformednessCheckerTest {
 	}
 
 	@Test
-	public void shouldFailOnNullLiteralName() {
+	public void shouldReportNullLiteralName() {
 		wellformednessChecker.startRecord("id1");
 		wellformednessChecker.literal(null, "value1");
 
@@ -99,7 +99,31 @@ public final class WellformednessCheckerTest {
 	}
 
 	@Test
-	public void shouldFailOnStartRecordInsideRecord() {
+	public void shouldNotIgnoreStartRecordEventWithNullId() {
+		wellformednessChecker.startRecord(null);
+		verify(errorHandler).accept(any());
+
+		wellformednessChecker.literal("literal", "value");
+		wellformednessChecker.endRecord();
+
+		verifyZeroInteractions(errorHandler);
+	}
+
+	@Test
+	public void shouldNotIgnoreStartEntityEventWithNullName() {
+		wellformednessChecker.startRecord("id");
+		wellformednessChecker.startEntity(null);
+		verify(errorHandler).accept(any());
+
+		wellformednessChecker.literal("literal", "value");
+		wellformednessChecker.endEntity();
+		wellformednessChecker.endRecord();
+
+		verifyZeroInteractions(errorHandler);
+	}
+
+	@Test
+	public void shouldReportStartRecordInsideRecord() {
 		wellformednessChecker.startRecord("id1");
 		wellformednessChecker.startRecord("id2");
 
@@ -107,28 +131,28 @@ public final class WellformednessCheckerTest {
 	}
 
 	@Test
-	public void shouldFailOnEndRecordOutsideRecord() {
+	public void shouldReportEndRecordOutsideRecord() {
 		wellformednessChecker.endRecord();
 
 		verify(errorHandler).accept(any());
 	}
 
 	@Test
-	public void shouldFailOnStartEntityOutsideRecord() {
+	public void shouldReportStartEntityOutsideRecord() {
 		wellformednessChecker.startEntity("entity1");
 
 		verify(errorHandler).accept(any());
 	}
 
 	@Test
-	public void shouldFailOnEndEntityOutsideRecord() {
+	public void shouldReportEndEntityOutsideRecord() {
 		wellformednessChecker.endEntity();
 
 		verify(errorHandler).accept(any());
 	}
 
 	@Test
-	public void shouldFailOnUnmatchedEndEntity() {
+	public void shouldReportUnmatchedEndEntity() {
 		wellformednessChecker.startRecord("id1");
 		wellformednessChecker.endEntity();
 
@@ -136,14 +160,14 @@ public final class WellformednessCheckerTest {
 	}
 
 	@Test
-	public void shouldFailOnLiteralOutsideRecord() {
+	public void shouldReportLiteralOutsideRecord() {
 		wellformednessChecker.literal("literal1", "value1");
 
 		verify(errorHandler).accept(any());
 	}
 
 	@Test
-	public void shouldFailOnUnclosedRecord() {
+	public void shouldReportUnclosedRecord() {
 		wellformednessChecker.startRecord("id1");
 		wellformednessChecker.closeStream();
 
@@ -151,7 +175,7 @@ public final class WellformednessCheckerTest {
 	}
 
 	@Test
-	public void shouldFailOnUnclosedEntityAtEndRecord() {
+	public void shouldReportUnclosedEntityAtEndRecord() {
 		wellformednessChecker.startRecord("id1");
 		wellformednessChecker.startEntity("entity1");
 		wellformednessChecker.endRecord();
@@ -160,7 +184,7 @@ public final class WellformednessCheckerTest {
 	}
 
 	@Test
-	public void shouldFailOnUnclosedEntityAtCloseStream() {
+	public void shouldReportUnclosedEntityAtCloseStream() {
 		wellformednessChecker.startRecord("id1");
 		wellformednessChecker.startEntity("entity1");
 		wellformednessChecker.closeStream();

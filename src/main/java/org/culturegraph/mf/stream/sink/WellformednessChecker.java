@@ -23,11 +23,17 @@ import org.culturegraph.mf.framework.StreamReceiver;
 /**
  * Checks that the received stream events are in the correct order and contain
  * valid data. If not, a user-supplied error handler method is invoked. The
- * error handler can be set via {@link #setErrorHandler(Consumer)}. The default
- * error handler does nothing.
+ * error handler can be set via {@link #setErrorHandler(Consumer)}. The
+ * {@link #DEFAULT_ERROR_HANDLER} does nothing.
  * <p>
- * After an error occurred and was handled, the module behaves as if the
+ * Errors caused by an invalid order of the event stream have no effect on the
+ * state of {@code WellformednessChecker}. The module behaves as if the
  * invalid event was never received.
+ * <p>
+ * Errors caused by invalid data are reported but otherwise handled as valid
+ * events. This means that <i>start-record</i> or <i>start-entity</i> events
+ * still start a record or entity even if their identifier or name was reported
+ * as invalid.
  *
  * @author Christoph Böhme
  *
@@ -71,12 +77,13 @@ public final class WellformednessChecker implements StreamReceiver {
 
 	@Override
 	public void startRecord(final String identifier) {
-		if (identifier == null) {
-			errorHandler.accept(ID_MUST_NOT_BE_NULL);
-		} else if (nestingLevel > 0) {
+		if (nestingLevel > 0) {
 			errorHandler.accept(IN_RECORD);
 		} else {
 			nestingLevel += 1;
+		}
+		if (identifier == null) {
+			errorHandler.accept(ID_MUST_NOT_BE_NULL);
 		}
 	}
 
@@ -93,12 +100,13 @@ public final class WellformednessChecker implements StreamReceiver {
 
 	@Override
 	public void startEntity(final String name) {
-		if (name == null) {
-			errorHandler.accept(NAME_MUST_NOT_BE_NULL);
-		} else if (nestingLevel < 1) {
+		if (nestingLevel < 1) {
 			errorHandler.accept(NOT_IN_RECORD);
 		} else {
 			nestingLevel += 1;
+		}
+		if (name == null) {
+			errorHandler.accept(NAME_MUST_NOT_BE_NULL);
 		}
 	}
 
@@ -113,10 +121,11 @@ public final class WellformednessChecker implements StreamReceiver {
 
 	@Override
 	public void literal(final String name, final String value) {
+		if (nestingLevel < 1) {
+			errorHandler.accept(NOT_IN_RECORD);
+		}
 		if (name == null) {
 			errorHandler.accept(NAME_MUST_NOT_BE_NULL);
-		} else if (nestingLevel < 1) {
-			errorHandler.accept(NOT_IN_RECORD);
 		}
 	}
 
