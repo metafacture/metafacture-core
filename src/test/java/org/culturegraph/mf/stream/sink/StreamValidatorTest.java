@@ -27,7 +27,7 @@ import org.junit.Test;
 public final class StreamValidatorTest {
 
 	@Test(expected= ValidationException.class)
-	public void testEndRecord() {
+	public void shouldFailIfEndRecordEventIsMissing() {
 		final EventList stream = new EventList();
 
 		stream.startRecord("1");

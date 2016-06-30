@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -15,10 +16,11 @@
  */
 package org.culturegraph.mf.stream.sink;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
 
 import org.culturegraph.mf.exceptions.ValidationException;
 import org.culturegraph.mf.framework.StreamReceiver;
@@ -28,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Validates an stream of events using a list of expected stream events.
+ * Validates a stream of events using a list of expected stream events.
  * If the stream is invalid a {@link ValidationException} is thrown.
  *
  * @see WellformednessChecker
@@ -40,111 +42,23 @@ import org.slf4j.LoggerFactory;
  */
 public final class StreamValidator implements StreamReceiver {
 
-	private static final String CANNOT_CHANGE_OPTIONS = "Cannot change options during validation";
-	private static final String VALIDATION_FAILED = "Validation failed. Please reset the validator";
+	private static final Logger LOG =
+			LoggerFactory.getLogger(StreamValidator.class);
+
+	private static final String CANNOT_CHANGE_OPTIONS =
+			"Cannot change options during validation";
+	private static final String VALIDATION_FAILED =
+			"Validation failed. Please reset the validator";
 
 	private static final String NO_RECORD_FOUND = "No record found: ";
 	private static final String NO_ENTITY_FOUND = "No entity found: ";
 	private static final String NO_LITERAL_FOUND = "No literal found: ";
-	private static final String UNCONSUMED_RECORDS_FOUND = "Unconsumed records found";
 
-	private static final Logger LOG = LoggerFactory.getLogger(StreamValidator.class);
-
-	/**
-	 * Internal representation of stream events
-	 */
-	private static final class EventNode {
-		private static final String SEPARATOR = ", ";
-		private static final String CONSUMED_INDICATOR = "<OK>";
-		private final Event event;
-		private final EventNode parent;
-		private final List<EventNode> children;
-
-		private boolean consumed;
-
-		public EventNode(final Event event, final EventNode parent) {
-			this.event = event;
-			this.parent = parent;
-			// The null-event is used to indicate the stream-start:
-			if (this.event == null || this.event.getType() == Event.Type.START_RECORD
-					|| this.event.getType() == Event.Type.START_ENTITY) {
-				children = new LinkedList<EventNode>();
-			} else {
-				children = null;
-			}
-
-			consumed = false;
-		}
-
-		public Event getEvent() {
-			return event;
-		}
-
-		public EventNode getParent() {
-			return parent;
-		}
-
-		public List<EventNode> getChildren() {
-			return children;
-		}
-
-		public boolean isConsumed() {
-			return consumed;
-		}
-
-		public void setConsumed(final boolean consumed) {
-			this.consumed = consumed;
-		}
-
-		@Override
-		public String toString() {
-			final StringBuilder builder = new StringBuilder();
-			final String consumedIndicator;
-			if (consumed) {
-				consumedIndicator = CONSUMED_INDICATOR;
-			} else {
-				consumedIndicator = "";
-			}
-
-			if (event == null) {
-				appendChildren(builder);
-			} else {
-				switch (event.getType()) {
-				case START_RECORD:
-					builder.append(event.getName() + consumedIndicator + "{");
-					appendChildren(builder);
-					builder.append("}");
-					break;
-
-				case START_ENTITY:
-					builder.append(event.getName() + consumedIndicator + "[");
-					appendChildren(builder);
-					builder.append("]");
-					break;
-
-				case LITERAL:
-					builder.append(event.getName() + "=" + event.getValue() + consumedIndicator);
-					break;
-
-				default:
-					break;
-				}
-			}
-			return builder.toString();
-		}
-
-		private void appendChildren(final StringBuilder builder) {
-			String sep = "";
-			for (EventNode e : children) {
-				builder.append(sep);
-				builder.append(e.toString());
-				sep = SEPARATOR;
-			}
-		}
-	}
+	private static final String UNCONSUMED_RECORDS_FOUND =
+			"Unconsumed records found";
 
 	private final EventNode eventStream;
-	private final Stack<List<EventNode>> stack = new Stack<List<EventNode>>();
+	private final Deque<List<EventNode>> stack = new ArrayDeque<>();
 	private boolean validating;
 	private boolean validationFailed;
 
@@ -152,7 +66,8 @@ public final class StreamValidator implements StreamReceiver {
 	private boolean strictKeyOrder;
 	private boolean strictValueOrder;
 
-	private final WellformednessChecker wellformednessChecker = new WellformednessChecker();
+	private final WellformednessChecker wellformednessChecker =
+			new WellformednessChecker();
 
 	public StreamValidator(final List<Event> expectedStream) {
 		this.eventStream = new EventNode(null, null);
@@ -228,7 +143,8 @@ public final class StreamValidator implements StreamReceiver {
 		if (!closeGroups()) {
 			validationFailed = true;
 			logEventStream();
-			throw new ValidationException(NO_RECORD_FOUND + "No record matched the sequence of stream events");
+			throw new ValidationException(
+					NO_RECORD_FOUND + "No record matched the sequence of stream events");
 		}
 
 	}
@@ -259,7 +175,8 @@ public final class StreamValidator implements StreamReceiver {
 		if (!closeGroups()) {
 			validationFailed = true;
 			logEventStream();
-			throw new ValidationException(NO_ENTITY_FOUND + "No entity matched the sequence of stream events");
+			throw new ValidationException(
+					NO_ENTITY_FOUND + "No entity matched the sequence of stream events");
 		}
 	}
 
@@ -297,7 +214,7 @@ public final class StreamValidator implements StreamReceiver {
 		validationFailed = false;
 
 		stack.clear();
-		stack.push(new LinkedList<EventNode>());
+		stack.push(new LinkedList<>());
 		stack.peek().add(eventStream);
 	}
 
@@ -322,25 +239,28 @@ public final class StreamValidator implements StreamReceiver {
 		}
 	}
 
-	private void foldEventStream(final EventNode parent, final Iterator<Event> eventStream) {
+	private void foldEventStream(final EventNode parent,
+			final Iterator<Event> eventStream) {
 		while (eventStream.hasNext()) {
 			final Event event = eventStream.next();
 			if (event.getType() == Event.Type.LITERAL) {
 				parent.getChildren().add(new EventNode(event, parent));
-			} else if (event.getType() == Event.Type.START_RECORD || event.getType() == Event.Type.START_ENTITY) {
+			} else if (event.getType() == Event.Type.START_RECORD
+					|| event.getType() == Event.Type.START_ENTITY) {
 				final EventNode newNode = new EventNode(event, parent);
 				parent.getChildren().add(newNode);
 				foldEventStream(newNode, eventStream);
-			} else if (event.getType() == Event.Type.END_RECORD || event.getType() == Event.Type.END_ENTITY) {
+			} else if (event.getType() == Event.Type.END_RECORD
+					|| event.getType() == Event.Type.END_ENTITY) {
 				return;
 			}
 		}
 	}
 
-	private boolean openGroups(final Event.Type type, final String name, final boolean strictKeyOrder,
-			final boolean strictValueOrder) {
+	private boolean openGroups(final Event.Type type, final String name,
+			final boolean strictKeyOrder, final boolean strictValueOrder) {
 		final List<EventNode> stackFrame = stack.peek();
-		stack.push(new LinkedList<EventNode>());
+		stack.push(new LinkedList<>());
 
 		final Iterator<EventNode> iter = stackFrame.iterator();
 		while (iter.hasNext()) {
@@ -356,10 +276,9 @@ public final class StreamValidator implements StreamReceiver {
 
 	private boolean closeGroups() {
 		EventNode lastMatchParent = null;
-		final Iterator<EventNode> iter = stack.pop().iterator();
-		while (iter.hasNext()) {
-			final EventNode eventNode = iter.next();
-			if (eventNode.getParent() != lastMatchParent && isGroupConsumed(eventNode)) {
+		for (final EventNode eventNode : stack.pop()) {
+			if (eventNode.getParent() != lastMatchParent
+					&& isGroupConsumed(eventNode)) {
 				eventNode.setConsumed(true);
 				lastMatchParent = eventNode.getParent();
 			} else {
@@ -370,10 +289,11 @@ public final class StreamValidator implements StreamReceiver {
 		return lastMatchParent != null;
 	}
 
-	private boolean consumeGroups(final EventNode group, final Event.Type type, final String name,
-			final boolean strictKeyOrder, final boolean strictValueOrder) {
+	private boolean consumeGroups(final EventNode group, final Event.Type type,
+			final String name, final boolean strictKeyOrder,
+			final boolean strictValueOrder) {
 		boolean foundMatch = false;
-		for (EventNode c : group.getChildren()) {
+		for (final EventNode c : group.getChildren()) {
 			if (!c.isConsumed()) {
 				final Event event = c.getEvent();
 				if (compare(name, event.getName())) {
@@ -392,13 +312,15 @@ public final class StreamValidator implements StreamReceiver {
 		return foundMatch;
 	}
 
-	private boolean consumeLiteral(final EventNode group, final String name, final String value) {
+	private boolean consumeLiteral(final EventNode group, final String name,
+			final String value) {
 		boolean foundMatch = false;
-		for (EventNode eventNode : group.getChildren()) {
+		for (final EventNode eventNode : group.getChildren()) {
 			if (!eventNode.isConsumed()) {
 				final Event event = eventNode.getEvent();
 				if (compare(name, event.getName())) {
-					if (event.getType() == Event.Type.LITERAL && compare(value, event.getValue())) {
+					if (event.getType() == Event.Type.LITERAL
+							&& compare(value, event.getValue())) {
 						eventNode.setConsumed(true);
 						foundMatch = true;
 						break;
@@ -415,7 +337,7 @@ public final class StreamValidator implements StreamReceiver {
 
 	private boolean isGroupConsumed(final EventNode group) {
 		boolean consumed = true;
-		for (EventNode c : group.getChildren()) {
+		for (final EventNode c : group.getChildren()) {
 			consumed = consumed && c.isConsumed();
 		}
 		return consumed;
@@ -423,7 +345,7 @@ public final class StreamValidator implements StreamReceiver {
 
 	private void resetGroup(final EventNode group) {
 		if (group.getChildren() != null) {
-			for (EventNode c : group.getChildren()) {
+			for (final EventNode c : group.getChildren()) {
 				resetGroup(c);
 				c.setConsumed(false);
 			}
@@ -440,6 +362,100 @@ public final class StreamValidator implements StreamReceiver {
 	private void logEventStream() {
 		if (LOG.isInfoEnabled()) {
 			LOG.info("Event Stream: " + eventStream.toString());
+		}
+	}
+
+	/**
+	 * Internal representation of stream events
+	 */
+	private static final class EventNode {
+		private static final String SEPARATOR = ", ";
+		private static final String CONSUMED_INDICATOR = "<OK>";
+		private final Event event;
+		private final EventNode parent;
+		private final List<EventNode> children;
+
+		private boolean consumed;
+
+		EventNode(final Event event, final EventNode parent) {
+			this.event = event;
+			this.parent = parent;
+			// The null-event is used to indicate the stream-start:
+			if (this.event == null || this.event.getType() == Event.Type.START_RECORD
+					|| this.event.getType() == Event.Type.START_ENTITY) {
+				children = new LinkedList<>();
+			} else {
+				children = null;
+			}
+
+			consumed = false;
+		}
+
+		Event getEvent() {
+			return event;
+		}
+
+		EventNode getParent() {
+			return parent;
+		}
+
+		List<EventNode> getChildren() {
+			return children;
+		}
+
+		boolean isConsumed() {
+			return consumed;
+		}
+
+		void setConsumed(final boolean consumed) {
+			this.consumed = consumed;
+		}
+
+		@Override
+		public String toString() {
+			final StringBuilder builder = new StringBuilder();
+			final String consumedIndicator;
+			if (consumed) {
+				consumedIndicator = CONSUMED_INDICATOR;
+			} else {
+				consumedIndicator = "";
+			}
+
+			if (event == null) {
+				appendChildren(builder);
+			} else {
+				switch (event.getType()) {
+					case START_RECORD:
+						builder.append(event.getName()).append(consumedIndicator).append("{");
+						appendChildren(builder);
+						builder.append("}");
+						break;
+
+					case START_ENTITY:
+						builder.append(event.getName()).append(consumedIndicator).append("[");
+						appendChildren(builder);
+						builder.append("]");
+						break;
+
+					case LITERAL:
+						builder.append(event.getName()).append("=").append(event.getValue())
+								.append(consumedIndicator);
+						break;
+
+					default:
+						break;
+				}
+			}
+			return builder.toString();
+		}
+
+		private void appendChildren(final StringBuilder builder) {
+			String sep = "";
+			for (final EventNode e : children) {
+				builder.append(sep);
+				builder.append(e.toString());
+				sep = SEPARATOR;
+			}
 		}
 	}
 
