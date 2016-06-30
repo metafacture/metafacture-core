@@ -85,6 +85,7 @@ public final class TestCase {
 		inputReader.closeStream();
 
 		final StreamValidator validator = new StreamValidator(resultStream.getEvents());
+		validator.setErrorHandler(msg -> { throw new AssertionError(msg); });
 
 		final Element result = (Element) config.getElementsByTagName(RESULT_TAG).item(0);
 		validator.setStrictRecordOrder(Boolean.parseBoolean(result.getAttribute(STRICT_RECORD_ORDER_ATTR)));

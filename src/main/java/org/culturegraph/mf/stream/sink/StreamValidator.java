@@ -21,8 +21,8 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
-import org.culturegraph.mf.exceptions.ValidationException;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.types.Event;
 import org.slf4j.Logger;
@@ -31,16 +31,20 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Validates a stream of events using a list of expected stream events.
- * If the stream is invalid a {@link ValidationException} is thrown.
+ * If the stream is invalid, the error handler set via
+ * {@link #setErrorHandler(Consumer)} is called.
+ * <p>
+ * This module also ensures that the received event stream is well-formed.
  *
- * @see WellformednessChecker
  * @see EventList
- * @see ValidationException
  *
  * @author Christoph Böhme
  *
  */
 public final class StreamValidator implements StreamReceiver {
+
+	public static final Consumer<String> DEFAULT_ERROR_HANDLER =
+			msg -> { /* do nothing */ };
 
 	private static final Logger LOG =
 			LoggerFactory.getLogger(StreamValidator.class);
@@ -57,10 +61,12 @@ public final class StreamValidator implements StreamReceiver {
 	private static final String UNCONSUMED_RECORDS_FOUND =
 			"Unconsumed records found";
 
-	private final EventNode eventStream;
 	private final Deque<List<EventNode>> stack = new ArrayDeque<>();
+	private final EventNode eventStream;
 	private boolean validating;
 	private boolean validationFailed;
+
+	private Consumer<String> errorHandler = DEFAULT_ERROR_HANDLER;
 
 	private boolean strictRecordOrder;
 	private boolean strictKeyOrder;
@@ -73,10 +79,26 @@ public final class StreamValidator implements StreamReceiver {
 		this.eventStream = new EventNode(null, null);
 		foldEventStream(this.eventStream, expectedStream.iterator());
 
-		wellformednessChecker.setErrorHandler(
-				msg -> { throw new ValidationException(msg); });
+		wellformednessChecker.setErrorHandler(errorHandler);
 
 		resetStream();
+	}
+
+	/**
+	 * Sets the error handler which is called when a invalid event stream is
+	 * received.
+	 * <p>
+	 * The handler is called with a message describing the error.
+	 *
+	 * @param errorHandler a method which receives an error message
+	 */
+	public void setErrorHandler(final Consumer<String> errorHandler) {
+		this.errorHandler = errorHandler;
+		wellformednessChecker.setErrorHandler(errorHandler);
+	}
+
+	public Consumer<String> getErrorHandler() {
+		return errorHandler;
 	}
 
 	public boolean isStrictRecordOrder() {
@@ -118,7 +140,8 @@ public final class StreamValidator implements StreamReceiver {
 	@Override
 	public void startRecord(final String identifier) {
 		if (validationFailed) {
-			throw new ValidationException(VALIDATION_FAILED);
+			errorHandler.accept(VALIDATION_FAILED);
+			return;
 		}
 
 		wellformednessChecker.startRecord(identifier);
@@ -128,14 +151,15 @@ public final class StreamValidator implements StreamReceiver {
 		if (!openGroups(Event.Type.START_RECORD, identifier, strictRecordOrder, false)) {
 			validationFailed = true;
 			logEventStream();
-			throw new ValidationException(NO_RECORD_FOUND + identifier);
+			errorHandler.accept(NO_RECORD_FOUND + identifier);
 		}
 	}
 
 	@Override
 	public void endRecord() {
 		if (validationFailed) {
-			throw new ValidationException(VALIDATION_FAILED);
+			errorHandler.accept(VALIDATION_FAILED);
+			return;
 		}
 
 		wellformednessChecker.endRecord();
@@ -143,16 +167,16 @@ public final class StreamValidator implements StreamReceiver {
 		if (!closeGroups()) {
 			validationFailed = true;
 			logEventStream();
-			throw new ValidationException(
-					NO_RECORD_FOUND + "No record matched the sequence of stream events");
+			errorHandler.accept(NO_RECORD_FOUND +
+					"No record matched the sequence of stream events");
 		}
-
 	}
 
 	@Override
 	public void startEntity(final String name) {
 		if (validationFailed) {
-			throw new ValidationException(VALIDATION_FAILED);
+			errorHandler.accept(VALIDATION_FAILED);
+			return;
 		}
 
 		wellformednessChecker.startEntity(name);
@@ -160,14 +184,14 @@ public final class StreamValidator implements StreamReceiver {
 		if (!openGroups(Event.Type.START_ENTITY, name, strictKeyOrder, strictValueOrder)) {
 			validationFailed = true;
 			logEventStream();
-			throw new ValidationException(NO_ENTITY_FOUND + name);
+			errorHandler.accept(NO_ENTITY_FOUND + name);
 		}
 	}
 
 	@Override
 	public void endEntity() {
 		if (validationFailed) {
-			throw new ValidationException(VALIDATION_FAILED);
+			errorHandler.accept(VALIDATION_FAILED);
 		}
 
 		wellformednessChecker.endEntity();
@@ -175,15 +199,16 @@ public final class StreamValidator implements StreamReceiver {
 		if (!closeGroups()) {
 			validationFailed = true;
 			logEventStream();
-			throw new ValidationException(
-					NO_ENTITY_FOUND + "No entity matched the sequence of stream events");
+			errorHandler.accept(NO_ENTITY_FOUND +
+					"No entity matched the sequence of stream events");
 		}
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
 		if (validationFailed) {
-			throw new ValidationException(VALIDATION_FAILED);
+			errorHandler.accept(VALIDATION_FAILED);
+			return;
 		}
 
 		wellformednessChecker.literal(name, value);
@@ -202,7 +227,7 @@ public final class StreamValidator implements StreamReceiver {
 		if (stackFrame.isEmpty()) {
 			validationFailed = true;
 			logEventStream();
-			throw new ValidationException(NO_LITERAL_FOUND + name + "=" + value);
+			errorHandler.accept(NO_LITERAL_FOUND + name + "=" + value);
 		}
 	}
 
@@ -221,7 +246,8 @@ public final class StreamValidator implements StreamReceiver {
 	@Override
 	public void closeStream() {
 		if (validationFailed) {
-			throw new ValidationException(VALIDATION_FAILED);
+			errorHandler.accept(VALIDATION_FAILED);
+			return;
 		}
 
 		wellformednessChecker.closeStream();
@@ -235,7 +261,7 @@ public final class StreamValidator implements StreamReceiver {
 		} else {
 			validationFailed = true;
 			logEventStream();
-			throw new ValidationException(UNCONSUMED_RECORDS_FOUND);
+			errorHandler.accept(UNCONSUMED_RECORDS_FOUND);
 		}
 	}
 

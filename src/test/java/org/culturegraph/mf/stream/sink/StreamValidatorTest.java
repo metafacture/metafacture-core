@@ -15,8 +15,16 @@
  */
 package org.culturegraph.mf.stream.sink;
 
-import org.culturegraph.mf.exceptions.ValidationException;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
+
+import java.util.function.Consumer;
+
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
  * Tests for class {@link StreamValidator}.
@@ -26,18 +34,28 @@ import org.junit.Test;
  */
 public final class StreamValidatorTest {
 
-	@Test(expected= ValidationException.class)
+	@Mock
+	private Consumer<String> errorHandler;
+
+	@Before
+	public void initMocks() {
+		MockitoAnnotations.initMocks(this);
+	}
+
+	@Test
 	public void shouldFailIfEndRecordEventIsMissing() {
 		final EventList stream = new EventList();
-
 		stream.startRecord("1");
 		stream.endRecord();
 		stream.closeStream();
 
 		final StreamValidator validator = new StreamValidator(stream.getEvents());
+		validator.setErrorHandler(errorHandler);
 
 		validator.startRecord("1");
 		validator.closeStream();
+
+		verify(errorHandler, atLeastOnce()).accept(any());
 	}
 
 }

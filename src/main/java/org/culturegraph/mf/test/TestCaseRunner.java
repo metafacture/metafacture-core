@@ -73,9 +73,6 @@ final class TestCaseRunner extends ParentRunner<TestCase> {
 			notifier.fireTestStarted(describeChild(child));
 			try {
 				child.run();
-			} catch (final FormatException e) {
-				notifier.fireTestFailure(new Failure(describeChild(child),
-						new AssertionError(e)));
 			} catch (final Throwable e) {
 				notifier.fireTestFailure(new Failure(describeChild(child), e));
 			} finally {
