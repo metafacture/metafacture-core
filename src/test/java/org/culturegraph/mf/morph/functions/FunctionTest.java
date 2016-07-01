@@ -15,14 +15,14 @@
  */
 package org.culturegraph.mf.morph.functions;
 
-import org.culturegraph.mf.test.TestSuite;
-import org.culturegraph.mf.test.TestSuite.TestDefinitions;
+import org.culturegraph.mf.test.MetamorphTestSuite;
+import org.culturegraph.mf.test.MetamorphTestSuite.TestDefinitions;
 import org.junit.runner.RunWith;
 
 
 /**
  * @author Markus Michael Geipel
  */
-@RunWith(TestSuite.class)
+@RunWith(MetamorphTestSuite.class)
 @TestDefinitions({"Basic.xml","Lookup.xml","Stateful.xml", "Unique.xml", "Misc.xml", "Script.xml", "Regexp.xml", "DateFormat.xml"})
 public final class FunctionTest {/*bind to xml test*/}

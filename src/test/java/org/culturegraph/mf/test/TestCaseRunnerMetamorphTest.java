@@ -22,21 +22,22 @@ import org.junit.runner.Description;
 import org.junit.runners.model.InitializationError;
 
 /**
- * Tests for class (@link TestCaseRunner}.
+ * Tests for class (@link MetamorphTestRunner}.
  *
  * @author Christoph Böhme
  */
-public final class TestCaseRunnerTest {
+public final class TestCaseRunnerMetamorphTest {
 
 	@Test
 	public void issue213ShouldNotInitAnnotationsArrayWithNull() throws InitializationError {
 
-		final TestCaseRunner runner = new TestCaseRunner(Dummy.class, "/test/TestCaseRunnerTest-Dummy.xml");
-		final TestCase testCase = runner.getChildren().get(0);
-		final Description description = runner.describeChild(testCase);
+		final MetamorphTestRunner runner = new MetamorphTestRunner(Dummy.class, "/test/TestCaseRunnerTest-Dummy.xml");
+		final MetamorphTestCase metamorphTestCase = runner.getChildren().get(0);
+		final Description description = runner.describeChild(metamorphTestCase);
 
 		assertNotNull(description.getAnnotations());
 	}
 
 	private static final class Dummy {};
+
 }

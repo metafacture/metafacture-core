@@ -15,8 +15,8 @@
  */
 package org.culturegraph.mf.morph;
 
-import org.culturegraph.mf.test.TestSuite;
-import org.culturegraph.mf.test.TestSuite.TestDefinitions;
+import org.culturegraph.mf.test.MetamorphTestSuite;
+import org.culturegraph.mf.test.MetamorphTestSuite.TestDefinitions;
 import org.junit.runner.RunWith;
 
 
@@ -24,6 +24,6 @@ import org.junit.runner.RunWith;
  * @author Markus Michael Geipel
  *
  */
-@RunWith(TestSuite.class)
+@RunWith(MetamorphTestSuite.class)
 @TestDefinitions({"MetamorphTest.xml", "MacroTest.xml", "CollectorTest.xml"})
 public final class MetamorphTest {/*bind to xml test*/}

@@ -28,18 +28,22 @@ import org.culturegraph.mf.stream.sink.StreamValidator;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 import org.culturegraph.mf.util.xml.XmlUtil;
+import org.junit.runners.model.InitializationError;
+import org.junit.runners.model.Statement;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-
 /**
- * @author Christoph Böhme <c.boehme@dnb.de>
+ * Runs a test defined in a Metamorph-Test definition.
+ *
+ * @author Christoph Böhme
  *
  */
-public final class TestCase {
+final class MetamorphTestCase extends Statement {
 
-	private static final String NO_DATA_FOUND = "Please specify either element content or a src attribute";
+	private static final String NO_DATA_FOUND =
+			"Please specify either element content or a src attribute";
 
 	private static final String NAME_ATTR = "name";
 	private static final String IGNORE_ATTR = "ignore";
@@ -57,7 +61,7 @@ public final class TestCase {
 
 	private final Element config;
 
-	public TestCase(final Element config) {
+	MetamorphTestCase(final Element config) {
 		this.config = config;
 	}
 
@@ -69,7 +73,8 @@ public final class TestCase {
 		return Boolean.parseBoolean(config.getAttribute(IGNORE_ATTR));
 	}
 
-	public void run() {
+	@Override
+	public void evaluate() throws InitializationError {
 		final Reader inputReader = getReader(INPUT_TAG);
 		@SuppressWarnings("unchecked")
 		final StreamPipe<StreamReceiver>transformation = getTransformation();
@@ -88,9 +93,12 @@ public final class TestCase {
 		validator.setErrorHandler(msg -> { throw new AssertionError(msg); });
 
 		final Element result = (Element) config.getElementsByTagName(RESULT_TAG).item(0);
-		validator.setStrictRecordOrder(Boolean.parseBoolean(result.getAttribute(STRICT_RECORD_ORDER_ATTR)));
-		validator.setStrictKeyOrder(Boolean.parseBoolean(result.getAttribute(STRICT_KEY_ORDER_ATTR)));
-		validator.setStrictValueOrder(Boolean.parseBoolean(result.getAttribute(STRICT_VALUE_ORDER_ATTR)));
+		validator.setStrictRecordOrder(Boolean.parseBoolean(
+				result.getAttribute(STRICT_RECORD_ORDER_ATTR)));
+		validator.setStrictKeyOrder(Boolean.parseBoolean(
+				result.getAttribute(STRICT_KEY_ORDER_ATTR)));
+		validator.setStrictValueOrder(Boolean.parseBoolean(
+				result.getAttribute(STRICT_VALUE_ORDER_ATTR)));
 
 		final Reader resultReader = getReader(RESULT_TAG);
 		resultReader.setReceiver(validator);
@@ -106,7 +114,7 @@ public final class TestCase {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private StreamPipe getTransformation() {
+	private StreamPipe getTransformation() throws InitializationError {
 		final NodeList nodes = config.getElementsByTagName(TRANSFORMATION_TAG);
 		if (nodes.getLength() == 0) {
 			return null;
@@ -127,15 +135,16 @@ public final class TestCase {
 
 		} else if (MIME_JAVACLASS.equals(type)) {
 			if (src.isEmpty()) {
-				throw new TestConfigurationException("class defining transformation not specified");
+				throw new InitializationError("class defining transformation not specified");
 			}
 			final Class<? extends StreamPipe> clazz = ObjectFactory.loadClass(src, StreamPipe.class);
 			return ObjectFactory.newInstance(clazz);
 		}
-		throw new TestConfigurationException("transformation of type " + type + " is not supperted");
+		throw new InitializationError("transformation of type " + type +
+				" is not supperted");
 	}
 
-	private java.io.Reader getInputData() {
+	private java.io.Reader getInputData() throws InitializationError {
 		final Element input = (Element) config.getElementsByTagName(INPUT_TAG).item(0);
 
 		if (input.hasAttribute(SRC_ATTR)) {
@@ -144,7 +153,7 @@ public final class TestCase {
 		return getDataEmbedded(input);
 	}
 
-	private java.io.Reader getExpectedResult() {
+	private java.io.Reader getExpectedResult() throws InitializationError {
 		final Element result = (Element) config.getElementsByTagName(RESULT_TAG).item(0);
 		if (result.hasAttribute(SRC_ATTR)) {
 			return getDataFromSource(result.getAttribute(SRC_ATTR));
@@ -152,15 +161,18 @@ public final class TestCase {
 		return getDataEmbedded(result);
 	}
 
-	private java.io.Reader getDataFromSource(final String src) {
+	private java.io.Reader getDataFromSource(final String src)
+			throws InitializationError {
 		try {
 			return ResourceUtil.getReader(src);
 		} catch (final FileNotFoundException e) {
-			throw new TestConfigurationException("Could not find input file: " + src, e);
+			throw new InitializationError("Could not find input file '" + src +
+					"': " + e.getMessage());
 		}
 	}
 
-	private java.io.Reader getDataEmbedded(final Element input) {
+	private java.io.Reader getDataEmbedded(final Element input)
+			throws InitializationError {
 		final String inputType = input.getAttribute(TYPE_ATTR);
 		if (input.hasChildNodes()) {
 			if (XmlUtil.isXmlMimeType(inputType)) {
@@ -168,8 +180,7 @@ public final class TestCase {
 			}
 			return new StringReader(input.getTextContent());
 		}
-
-		throw new TestConfigurationException(NO_DATA_FOUND);
+		throw new InitializationError(NO_DATA_FOUND);
 	}
 
 }

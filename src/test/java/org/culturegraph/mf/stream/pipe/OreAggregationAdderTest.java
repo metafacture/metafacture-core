@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import org.culturegraph.mf.test.TestSuite;
+import org.culturegraph.mf.test.MetamorphTestSuite;
 import org.junit.runner.RunWith;
 
 
@@ -25,5 +25,5 @@ import org.junit.runner.RunWith;
  * @author Markus Michael Geipel
  *
  */
-@RunWith(TestSuite.class)
+@RunWith(MetamorphTestSuite.class)
 public final class OreAggregationAdderTest {/*bind to xml test*/}

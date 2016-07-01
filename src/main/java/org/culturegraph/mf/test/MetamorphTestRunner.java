@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -18,34 +19,33 @@ package org.culturegraph.mf.test;
 import java.net.URL;
 import java.util.List;
 
-import org.culturegraph.mf.exceptions.FormatException;
 import org.junit.runner.Description;
-import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 
-
 /**
- * @author Christoph Böhme <c.boehme@dnb.de>, Markus Michael Geipel
+ * Executes test cases defined in a metamorph-test file.
+ *
+ * @author Christoph Böhme
+ * @author Markus Michael Geipel
  *
  */
-final class TestCaseRunner extends ParentRunner<TestCase> {
+final class MetamorphTestRunner extends ParentRunner<MetamorphTestCase> {
 
-	private final Class<?> clazz;
-	private final List<TestCase> testCases;
+	private final Class<?> testClass;
+	private final List<MetamorphTestCase> metamorphTestCases;
 	private final String testDefinition;
 
-
-	public TestCaseRunner(final Class<?> clazz,  final String testDefinition)
+	MetamorphTestRunner(final Class<?> testClass, final String testDefinition)
 			throws InitializationError {
-		super(clazz);
-		this.clazz = clazz;
-		final URL testDefinitionUrl = clazz.getResource(testDefinition);
+		super(testClass);
+		this.testClass = testClass;
+		final URL testDefinitionUrl = testClass.getResource(testDefinition);
 		if (testDefinitionUrl == null) {
-			throw new IllegalArgumentException("'" + testDefinition + "' does not exist!");
+			throw new InitializationError("'" + testDefinition + "' does not exist!");
 		}
-		this.testCases = TestCaseLoader.load(testDefinitionUrl);
+		this.metamorphTestCases = MetamorphTestLoader.load(testDefinitionUrl);
 		this.testDefinition = testDefinition;
 	}
 
@@ -55,29 +55,24 @@ final class TestCaseRunner extends ParentRunner<TestCase> {
 	}
 
 	@Override
-	protected List<TestCase> getChildren() {
-		return testCases;
+	protected List<MetamorphTestCase> getChildren() {
+		return metamorphTestCases;
 	}
 
 	@Override
-	protected Description describeChild(final TestCase child) {
-		return Description.createTestDescription(clazz, child.getName());
+	protected Description describeChild(final MetamorphTestCase child) {
+		return Description.createTestDescription(testClass, child.getName());
 	}
 
-
 	@Override
-	protected void runChild(final TestCase child, final RunNotifier notifier) {
+	protected void runChild(final MetamorphTestCase child,
+			final RunNotifier notifier) {
+		final Description description = describeChild(child);
 		if (child.isIgnore()) {
-			notifier.fireTestIgnored(describeChild(child));
+			notifier.fireTestIgnored(description);
 		} else {
-			notifier.fireTestStarted(describeChild(child));
-			try {
-				child.run();
-			} catch (final Throwable e) {
-				notifier.fireTestFailure(new Failure(describeChild(child), e));
-			} finally {
-				notifier.fireTestFinished(describeChild(child));
-			}
+			runLeaf(child, description, notifier);
 		}
 	}
+
 }

@@ -1,4 +1,4 @@
-/*
+	/*
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -15,10 +15,7 @@
  */
 package org.culturegraph.mf.test;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +27,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.junit.runners.model.InitializationError;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -38,56 +36,37 @@ import org.xml.sax.SAXException;
 
 
 /**
- * @author Christoph Böhme <c.boehme@dnb.de>
+ * Utility methods for loading Metamorph-Test resources.
+ *
+ * @author Christoph Böhme
  *
  */
-public final class TestCaseLoader {
-
-	/**
-	 *
-	 */
-	private static final String FILE_NOT_FOUND = "Could not find test case file: ";
+final class MetamorphTestLoader {
 
 	private static final String SCHEMA_FILE = "schemata/metamorph-test.xsd";
-
 	private static final String TEST_CASE_TAG = "test-case";
 
-	private TestCaseLoader() {
+	private MetamorphTestLoader() {
 		// No instances allowed
 	}
 
-	public static List<TestCase> load(final URL testDef) {
+	static List<MetamorphTestCase> load(final URL testDef)
+			throws InitializationError {
 		final InputSource inputSource = new InputSource(testDef.toExternalForm());
 		return load(inputSource);
 	}
 
-	//TODO: seems to be unused
-	public static List<TestCase> load(final String testDef) {
-		final InputSource inputSource = new InputSource(testDef);
-		return load(inputSource);
-	}
-
-	//TODO seems to be unused
-	public static List<TestCase> load(final File testDefFile) {
-		try {
-			final InputSource inputSource =
-					new InputSource(testDefFile.toURI().toURL().toExternalForm());
-			return load(inputSource);
-		} catch (final MalformedURLException e) {
-			throw new TestConfigurationException(FILE_NOT_FOUND, e);
-		}
-	}
-
-	//TODO seems to be unused
-	public static List<TestCase> load(final InputStream inputStream) {
-		return load(new InputSource(inputStream));
-	}
-
-	public static List<TestCase> load(final InputSource inputSource) {
+	private static List<MetamorphTestCase> load(final InputSource inputSource)
+			throws InitializationError {
 
 		try {
-			final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			final URL schemaUrl = Thread.currentThread().getContextClassLoader().getResource(SCHEMA_FILE);
+			final SchemaFactory schemaFactory = SchemaFactory.newInstance(
+					XMLConstants.W3C_XML_SCHEMA_NS_URI);
+			final URL schemaUrl = Thread.currentThread().getContextClassLoader()
+					.getResource(SCHEMA_FILE);
+			if (schemaUrl == null) {
+				throw new InitializationError("XML Schema not found: " + SCHEMA_FILE);
+			}
 			final Schema schema = schemaFactory.newSchema(schemaUrl);
 
 			final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
@@ -100,22 +79,19 @@ public final class TestCaseLoader {
 			final DocumentBuilder builder = builderFactory.newDocumentBuilder();
 			final Document doc = builder.parse(inputSource);
 
-			final List<TestCase> testCases = new ArrayList<TestCase>();
+			final List<MetamorphTestCase> metamorphTestCases = new ArrayList<>();
 			final NodeList testCaseNodes = doc.getElementsByTagName(TEST_CASE_TAG);
 			for(int i=0; i < testCaseNodes.getLength(); ++i) {
 				final Element testCaseElement = (Element) testCaseNodes.item(i);
-				testCases.add(new TestCase(testCaseElement));
+				metamorphTestCases.add(new MetamorphTestCase(testCaseElement));
 			}
 
-			return testCases;
+			return metamorphTestCases;
 
-		} catch (final ParserConfigurationException e) {
-			throw new TestConfigurationException("Parser configuration failed", e);
-		} catch (final SAXException e) {
-			throw new TestConfigurationException("Parser error", e);
-		} catch (final IOException e) {
-			throw new TestConfigurationException("Error while reading file", e);
+		} catch (final ParserConfigurationException|SAXException|IOException e) {
+			throw new InitializationError(e);
 		}
 	}
+
 }
 

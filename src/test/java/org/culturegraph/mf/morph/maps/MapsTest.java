@@ -15,14 +15,14 @@
  */
 package org.culturegraph.mf.morph.maps;
 
-import org.culturegraph.mf.test.TestSuite;
-import org.culturegraph.mf.test.TestSuite.TestDefinitions;
+import org.culturegraph.mf.test.MetamorphTestSuite;
+import org.culturegraph.mf.test.MetamorphTestSuite.TestDefinitions;
 import org.junit.runner.RunWith;
 
 
 /**
  * @author Markus Michael Geipel
  */
-@RunWith(TestSuite.class)
+@RunWith(MetamorphTestSuite.class)
 @TestDefinitions({"FileMap.xml", "JavaMap.xml"})
 public final class MapsTest {/*bind to xml test*/}

@@ -15,15 +15,15 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-import org.culturegraph.mf.test.TestSuite;
-import org.culturegraph.mf.test.TestSuite.TestDefinitions;
+import org.culturegraph.mf.test.MetamorphTestSuite;
+import org.culturegraph.mf.test.MetamorphTestSuite.TestDefinitions;
 import org.junit.runner.RunWith;
 
 
 /**
  * @author Markus Michael Geipel
  */
-@RunWith(TestSuite.class)
+@RunWith(MetamorphTestSuite.class)
 @TestDefinitions({ "AllTest.xml", "AnyTest.xml", "NoneTest.xml", "CombineTest.xml", "GroupTest.xml", "ChooseTest.xml", "EntityTest.xml", "ConcatTest.xml",
 		"Nested.xml", "NestedEntity.xml", "TuplesTest.xml", "Misc.xml", "SquareTest.xml", "RangeTest.xml", "EqualsFilterTest.xml", "If.xml" })
 public final class CollectorTest {/* bind to xml test */

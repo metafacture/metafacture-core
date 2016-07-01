@@ -23,7 +23,7 @@ import org.junit.runner.RunWith;
  *
  */
 
-@RunWith(TestSuite.class)
+@RunWith(MetamorphTestSuite.class)
 public final class FrameworkTest {
 	// This class serves only as a bonding
 	// point for metamorph tests

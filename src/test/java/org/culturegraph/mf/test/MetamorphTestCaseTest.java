@@ -22,16 +22,17 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.culturegraph.mf.exceptions.ShouldNeverHappenException;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runners.model.InitializationError;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Test cases for class {@link TestCase}.
+ * Test cases for class {@link MetamorphTestCase}.
  *
  * @author Christoph Böhme
  *
  */
-public final class TestCaseTest {
+public final class MetamorphTestCaseTest {
 
 	private static final String TEST_CASE_TAG = "test-case";
 	private static final String INPUT_TAG = "input";
@@ -55,7 +56,8 @@ public final class TestCaseTest {
 	}
 
 	@Test
-	public void shouldSupportFormetaAsInputAndResultFormat() {
+	public void shouldSupportFormetaAsInputAndResultFormat()
+			throws InitializationError {
 		final Element inputElement = createFormetaRecord(INPUT_TAG);
 		final Element resultElement = createFormetaRecord(RESULT_TAG);
 
@@ -63,15 +65,17 @@ public final class TestCaseTest {
 		testCaseElement.appendChild(inputElement);
 		testCaseElement.appendChild(resultElement);
 
-		final TestCase testCase = new TestCase(testCaseElement);
-		testCase.run();
+		final MetamorphTestCase metamorphTestCase =
+				new MetamorphTestCase(testCaseElement);
+		metamorphTestCase.evaluate();
 
 		// The test was successful if run does not throw
 		// an exception.
 	}
 
 	@Test
-	public void shouldSupportCGXmlAsInputAndResultFormat() {
+	public void shouldSupportCGXmlAsInputAndResultFormat()
+			throws InitializationError {
 		final Element inputElement = createCGXmlRecord(INPUT_TAG);
 		final Element resultElement = createCGXmlRecord(RESULT_TAG);
 
@@ -79,15 +83,17 @@ public final class TestCaseTest {
 		testCaseElement.appendChild(inputElement);
 		testCaseElement.appendChild(resultElement);
 
-		final TestCase testCase = new TestCase(testCaseElement);
-		testCase.run();
+		final MetamorphTestCase metamorphTestCase =
+				new MetamorphTestCase(testCaseElement);
+		metamorphTestCase.evaluate();
 
 		// The test was successful if run does not throw
 		// an exception.
 	}
 
 	@Test
-	public void issue229ShouldSupportMarcXmlAsInputAndResultFormat() {
+	public void issue229ShouldSupportMarcXmlAsInputAndResultFormat()
+			throws InitializationError {
 		final Element inputElement = createMarcXmlRecord(INPUT_TAG);
 		final Element resultElement = createMarcXmlRecord(RESULT_TAG);
 
@@ -95,15 +101,17 @@ public final class TestCaseTest {
 		testCaseElement.appendChild(inputElement);
 		testCaseElement.appendChild(resultElement);
 
-		final TestCase testCase = new TestCase(testCaseElement);
-		testCase.run();
+		final MetamorphTestCase metamorphTestCase =
+				new MetamorphTestCase(testCaseElement);
+		metamorphTestCase.evaluate();
 
 		// The test was successful if run does not throw
 		// an exception.
 	}
 
 	@Test
-	public void issue219ShouldResolveXIncludesInMetamorphResources() {
+	public void issue219ShouldResolveXIncludesInMetamorphResources()
+			throws InitializationError {
 		final Element inputElement = createFormetaRecord(INPUT_TAG);
 		final Element resultElement = createFormetaRecord(RESULT_TAG);
 
@@ -118,8 +126,9 @@ public final class TestCaseTest {
 		testCaseElement.appendChild(transformationElement);
 		testCaseElement.appendChild(resultElement);
 
-		final TestCase testCase = new TestCase(testCaseElement);
-		testCase.run();
+		final MetamorphTestCase metamorphTestCase =
+				new MetamorphTestCase(testCaseElement);
+		metamorphTestCase.evaluate();
 
 		// The test was successful if run does not throw
 		// an exception.
