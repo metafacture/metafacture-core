@@ -33,14 +33,12 @@ import org.junit.runners.model.InitializationError;
  */
 final class MetamorphTestRunner extends ParentRunner<MetamorphTestCase> {
 
-	private final Class<?> testClass;
 	private final List<MetamorphTestCase> metamorphTestCases;
 	private final String testDefinition;
 
 	MetamorphTestRunner(final Class<?> testClass, final String testDefinition)
 			throws InitializationError {
 		super(testClass);
-		this.testClass = testClass;
 		final URL testDefinitionUrl = testClass.getResource(testDefinition);
 		if (testDefinitionUrl == null) {
 			throw new InitializationError("'" + testDefinition + "' does not exist!");
@@ -51,7 +49,11 @@ final class MetamorphTestRunner extends ParentRunner<MetamorphTestCase> {
 
 	@Override
 	protected String getName() {
-		return testDefinition;
+		final int nameLength = testDefinition.indexOf('.');
+		if (nameLength < 0) {
+			return "xml: " + testDefinition;
+		}
+		return "xml: " + testDefinition.substring(0, nameLength);
 	}
 
 	@Override
@@ -61,7 +63,7 @@ final class MetamorphTestRunner extends ParentRunner<MetamorphTestCase> {
 
 	@Override
 	protected Description describeChild(final MetamorphTestCase child) {
-		return Description.createTestDescription(testClass, child.getName());
+		return Description.createTestDescription(getName(), child.getName());
 	}
 
 	@Override
