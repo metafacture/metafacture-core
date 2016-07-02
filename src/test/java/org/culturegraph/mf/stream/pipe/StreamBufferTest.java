@@ -15,53 +15,96 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import static org.junit.Assert.fail;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
-import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.stream.sink.EventList;
-import org.culturegraph.mf.stream.sink.StreamValidator;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 
 /**
  * Tests for class {@link StreamBuffer}.
  *
  * @author Markus Michael Geipel
- * @author Christoph Böhme
+ * @author Christoph Böhme (refactored to Mockito)
  *
  */
 public final class StreamBufferTest {
 
-	@Test
-	public void testCorrectBuffering(){
-		final EventList list = new EventList();
-		execTestEvents(list);
-		final StreamValidator validator = new StreamValidator(list.getEvents());
+	@Mock
+	private StreamReceiver receiver;
 
-		final StreamBuffer buffer = new StreamBuffer();
-		buffer.setReceiver(validator);
-		execTestEvents(buffer);
+	private StreamBuffer streamBuffer;
 
-		try {
-			buffer.replay();
-			buffer.closeStream();
-		} catch (FormatException e) {
-			fail("Error during replay: " + e);
-		}
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		streamBuffer = new StreamBuffer();
+		streamBuffer.setReceiver(receiver);
 	}
 
-	private void execTestEvents(final StreamReceiver receiver) {
-		receiver.startRecord("1");
-		receiver.literal("l1", "value1");
-		receiver.literal("l1", "value2");
-		receiver.startEntity("e1");
-		receiver.literal("l2", "value3");
-		receiver.endEntity();
-		receiver.endRecord();
-		receiver.startRecord("2");
-		receiver.literal("l3", "value4");
-		receiver.endRecord();
+	@Test
+	public void shouldReplayRecordEvents() {
+		streamBuffer.startRecord("1");
+		streamBuffer.literal("l", "v");
+		streamBuffer.startEntity("e");
+		streamBuffer.endEntity();
+		streamBuffer.endRecord();
+
+		verifyZeroInteractions(receiver);
+
+		streamBuffer.replay();
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("1");
+		ordered.verify(receiver).literal("l", "v");
+		ordered.verify(receiver).startEntity("e");
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).endRecord();
+	}
+
+	@Test
+	public void shouldReplayBufferMultipleTimes() {
+		streamBuffer.startRecord("1");
+		streamBuffer.endRecord();
+
+		streamBuffer.replay();
+		streamBuffer.replay();
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("1");
+		ordered.verify(receiver).endRecord();
+		ordered.verify(receiver).startRecord("1");
+		ordered.verify(receiver).endRecord();
+	}
+
+	@Test
+	public void shouldClearBufferIfClearIsCalled() {
+		streamBuffer.startRecord("1");
+		streamBuffer.endRecord();
+
+		streamBuffer.clear();
+		streamBuffer.replay();
+
+		verifyZeroInteractions(receiver);
+	}
+
+	@Test
+	public void shouldClearBufferIfStreamIsReset() {
+		streamBuffer.startRecord("1");
+		streamBuffer.endRecord();
+
+		streamBuffer.resetStream();
+		streamBuffer.replay();
+
+		verify(receiver).resetStream();
+		verifyNoMoreInteractions(receiver);
 	}
 
 }
