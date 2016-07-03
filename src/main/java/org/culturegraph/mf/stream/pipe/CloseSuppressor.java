@@ -23,8 +23,8 @@ import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
- * Blocks {@code closeStream} events until {@code n} {@code closeStream} events
- * have been received.
+ * Blocks {@link #closeStream()} events until {@code n} <i>close-stream</i>
+ * events have been received.
  *
  * @param <T>
  *            object type
@@ -36,18 +36,19 @@ import org.culturegraph.mf.framework.annotations.Out;
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("wait-for-inputs")
-public final class CloseSupressor<T> implements ObjectPipe<T, ObjectReceiver<T>> {
+public final class CloseSuppressor<T>
+		implements ObjectPipe<T, ObjectReceiver<T>> {
 
 	private ObjectReceiver<T> receiver;
 	private final int numCloses;
 	private int count;
 
-	public CloseSupressor(final int numCloses) {
-		this.numCloses = numCloses;
+	public CloseSuppressor(final String numCloses) {
+		this(Integer.parseInt(numCloses));
 	}
 
-	public CloseSupressor(final String numCloses) {
-		this.numCloses = Integer.parseInt(numCloses);
+	public CloseSuppressor(final int numCloses) {
+		this.numCloses = numCloses;
 	}
 
 	@Override
@@ -73,10 +74,10 @@ public final class CloseSupressor<T> implements ObjectPipe<T, ObjectReceiver<T>>
 
 	@Override
 	public void closeStream() {
-
 		++count;
 		if (count == numCloses && receiver != null) {
 			receiver.closeStream();
 		}
 	}
+
 }

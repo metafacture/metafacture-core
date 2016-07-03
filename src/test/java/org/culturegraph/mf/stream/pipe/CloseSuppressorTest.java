@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Tests for class {@link CloseSupressor}.
+ * Tests for class {@link CloseSuppressor}.
  *
  * @author Markus Geipel
  *
@@ -29,7 +29,7 @@ public final class CloseSuppressorTest {
 
 	@Test
 	public void testSuppression() {
-		final CloseSupressor<Object> supressor = new CloseSupressor<>(3);
+		final CloseSuppressor<Object> supressor = new CloseSuppressor<>(3);
 		final ObjectReceiver<Object> receiver = Mockito.mock(ObjectReceiver.class);
 		supressor.setReceiver(receiver);
 		supressor.closeStream();
