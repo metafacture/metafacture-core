@@ -3,9 +3,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
 
 	<rules>
-		<data source="002@.0">
-			<substring end="2"/>
-		</data>
+		<data source="data.forward-to" />
+		<data source="forward-to" />
 	</rules>
 
 </metamorph>

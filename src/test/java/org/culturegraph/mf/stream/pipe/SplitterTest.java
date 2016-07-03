@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -15,45 +16,88 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
-import java.io.FileReader;
-import java.io.IOException;
-
-import org.culturegraph.mf.morph.DataFilePath;
-import org.culturegraph.mf.stream.reader.PicaReader;
-import org.culturegraph.mf.stream.reader.Reader;
+import org.culturegraph.mf.framework.StreamReceiver;
+import org.junit.Before;
 import org.junit.Test;
-
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 /**
  * Tests for class {@link Splitter}.
  *
  * @author Markus Michael Geipel
+ * @author Christoph Böhme (refactored to Mockito)
  *
  */
 public final class SplitterTest {
 
-	private static final int NUM_TP_RECORDS = 3;
-	private static final int NUM_TN_RECORDS = 7;
+	@Mock
+	private StreamReceiver receiver1;
+
+	@Mock
+	private StreamReceiver receiver2;
+
+	private Splitter splitter;
+
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		splitter = new Splitter("morph/splitter-test.xml");
+		splitter.setReceiver("receiver-1", receiver1);
+		splitter.setReceiver("receiver-2", receiver2);
+	}
 
 	@Test
-	public void testCorrectTeeFunction() throws IOException {
-		final Reader picaReader = new PicaReader();
+	public void shouldPassRecordToReceiverWithMatchingKey() {
+		splitter.startRecord("1");
+		splitter.startEntity("data");
+		splitter.literal("forward-to", "receiver-1");
+		splitter.endEntity();
+		splitter.endRecord();
+		splitter.startRecord("2");
+		splitter.literal("forward-to", "receiver-2");
+		splitter.endRecord();
 
-		final Splitter splitter = new Splitter("morph/typeSplitter.xml");
+		final InOrder ordered = inOrder(receiver1, receiver2);
+		ordered.verify(receiver1).startRecord("1");
+		ordered.verify(receiver1).startEntity("data");
+		ordered.verify(receiver1).literal("forward-to", "receiver-1");
+		ordered.verify(receiver1).endEntity();
+		ordered.verify(receiver1).endRecord();
+		ordered.verify(receiver2).startRecord("2");
+		ordered.verify(receiver2).literal("forward-to", "receiver-2");
+		ordered.verify(receiver2).endRecord();
+		ordered.verifyNoMoreInteractions();
+	}
 
-		final Counter countingWriterTp = new Counter();
-		final Counter countingWriterTn = new Counter();
+	@Test
+	public void shouldDiscardNonMatchingRecords() {
+		splitter.startRecord("1");
+		splitter.literal("forward-to", "none");
+		splitter.endRecord();
 
-		picaReader.setReceiver(splitter).setReceiver("Tn", countingWriterTn);
+		verifyZeroInteractions(receiver1, receiver2);
+	}
 
-		splitter.setReceiver("Tp", countingWriterTp);
+	@Test
+	public void shouldPassResetStreamToAllReceivers() {
+		splitter.resetStream();
 
-		picaReader.process(new FileReader(DataFilePath.PND_PICA));
+		verify(receiver1).resetStream();
+		verify(receiver2).resetStream();
+	}
 
-		assertEquals(NUM_TN_RECORDS, countingWriterTn.getNumRecords());
-		assertEquals(NUM_TP_RECORDS, countingWriterTp.getNumRecords());
+	@Test
+	public void shouldPassCloseStreamToAllReceivers() {
+		splitter.closeStream();
+
+		verify(receiver1).closeStream();
+		verify(receiver2).closeStream();
 	}
 
 }
