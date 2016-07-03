@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -15,53 +16,70 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import static org.junit.Assert.fail;
+import static org.mockito.Mockito.inOrder;
 
-import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.stream.sink.EventList;
-import org.culturegraph.mf.stream.sink.StreamValidator;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 
 /**
  * Tests for class {@link StreamLogger}.
  *
  * @author Markus Michael Geipel
- * @author Christoph Böhme
+ * @author Christoph Böhme (refactored to Mockito)
  *
  */
 public final class StreamLoggerTest {
 
-	@Test
-	public void testCorrectPipeFunction() {
-		final EventList list = new EventList();
-		execTestEvents(list);
+	@Mock
+	private StreamReceiver receiver;
 
-		final StreamValidator validator = new StreamValidator(list.getEvents());
-		final StreamLogger logger = new StreamLogger("test-logger");
-		logger.setReceiver(validator);
+	private StreamLogger logger;
 
-		try {
-			execTestEvents(logger);
-			logger.closeStream();
-		} catch (FormatException e) {
-			fail("Logger did not forward data as expected: " + e);
-		}
-
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		logger = new StreamLogger();
+		logger.setReceiver(receiver);
 	}
 
-	private void execTestEvents(final StreamReceiver receiver) {
-		receiver.startRecord("1");
-		receiver.literal("l1", "value1");
-		receiver.literal("l1", "value2");
-		receiver.startEntity("e1");
-		receiver.literal("l2", "value3");
-		receiver.endEntity();
-		receiver.endRecord();
-		receiver.startRecord("2");
-		receiver.literal("l3", "value4");
-		receiver.endRecord();
+	@Test
+	public void shouldForwardAllReceivedEvents() {
+		logger.startRecord("1");
+		logger.startEntity("entity");
+		logger.literal("literal", "value");
+		logger.endEntity();
+		logger.endRecord();
+		logger.resetStream();
+		logger.closeStream();
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("1");
+		ordered.verify(receiver).startEntity("entity");
+		ordered.verify(receiver).literal("literal", "value");
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).endRecord();
+		ordered.verify(receiver).resetStream();
+		ordered.verify(receiver).closeStream();
+	}
+
+	@Test
+	public void shouldActAsSinkIfNoReceiverIsSet() {
+		logger.setReceiver(null);
+
+		logger.startRecord("1");
+		logger.startEntity("entity");
+		logger.literal("literal", "value");
+		logger.endEntity();
+		logger.endRecord();
+		logger.resetStream();
+		logger.closeStream();
+
+		// No exceptions expected
 	}
 
 }
