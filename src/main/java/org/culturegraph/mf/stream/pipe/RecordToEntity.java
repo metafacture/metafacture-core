@@ -31,7 +31,7 @@ import org.culturegraph.mf.framework.StreamReceiver;
  * This is configured with {@link #setIdLiteralName(String)}.
  *
  * @author Christoph Böhme
- * @see RecordBounderyRemover
+ * @see StreamEventDiscarder
  */
 public class RecordToEntity extends DefaultStreamPipe<StreamReceiver> {
 
