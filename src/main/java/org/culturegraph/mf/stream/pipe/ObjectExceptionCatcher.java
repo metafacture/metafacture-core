@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -16,8 +17,8 @@
 package org.culturegraph.mf.stream.pipe;
 
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
-import org.apache.commons.io.output.StringBuilderWriter;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
@@ -85,7 +86,7 @@ public final class ObjectExceptionCatcher<T> extends
 			LOG.error("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
 
 			if (logStackTrace) {
-				final StringBuilderWriter stackTraceWriter = new StringBuilderWriter();
+				final StringWriter stackTraceWriter = new StringWriter();
 				e.printStackTrace(new PrintWriter(stackTraceWriter));
 				LOG.error("{}Stack Trace:\n{}", logPrefix, stackTraceWriter.toString());
 			}
