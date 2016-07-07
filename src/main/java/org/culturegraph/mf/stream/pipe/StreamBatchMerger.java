@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -15,7 +16,7 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import org.culturegraph.mf.framework.DefaultStreamReceiver;
+import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.FluxCommand;
@@ -23,8 +24,8 @@ import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
- * Merges a sequence of {@code batchSize} records. On a close-stream event,
- * a record containing less than {@code batchSize} source records may be
+ * Merges a sequence of {@link #setBatchSize(long)} records. On a
+ * <i>close-stream</i> event, a record containing fewer source records may be
  * created.
  *
  * @author Christoph Böhme
@@ -34,61 +35,75 @@ import org.culturegraph.mf.framework.annotations.Out;
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("merge-batch-stream")
-public final class StreamBatchMerger extends AbstractBatcher {
+public final class StreamBatchMerger extends DefaultStreamPipe<StreamReceiver> {
 
-	private boolean inRecord;
+	/**
+	 * The default value for {@link #setBatchSize(long)}.
+	 */
+	public static final long DEFAULT_BATCH_SIZE = 1;
 
-	public StreamBatchMerger() {
-		super();
-		setInternalReceiver(new Merger());
+	private long batchSize = DEFAULT_BATCH_SIZE;
+	private long recordCount;
+
+	/**
+	 * Sets the number of records that should be merged into a batch.
+	 * <p>
+	 * The default batch size is 1, wich means that no records are merged.
+	 * <p>
+	 * This parameter must not be changed during processing.
+	 *
+	 * @param batchSize the number of records that should be merged.
+	 */
+	public void setBatchSize(final long batchSize) {
+		this.batchSize = batchSize;
+	}
+
+	public long getBatchSize() {
+		return batchSize;
 	}
 
 	@Override
-	protected void onBatchComplete() {
-		getReceiver().endRecord();
-		inRecord = false;
+	public void startRecord(final String identifier) {
+		if (recordCount == 0) {
+			getReceiver().startRecord(identifier);
+		}
+		recordCount += 1;
 	}
 
 	@Override
-	protected void onReset() {
-		inRecord = false;
+	public void endRecord() {
+		if (recordCount >= batchSize) {
+			getReceiver().endRecord();
+			recordCount = 0;
+		}
+	}
+
+	@Override
+	public void startEntity(final String name) {
+		getReceiver().startEntity(name);
+	}
+
+	@Override
+	public void endEntity() {
+		getReceiver().endEntity();
+	}
+
+	@Override
+	public void literal(final String name, final String value) {
+		getReceiver().literal(name, value);
+	}
+
+	@Override
+	protected void onResetStream() {
+		recordCount = 0;
 	}
 
 	@Override
 	protected void onCloseStream() {
-		if (inRecord) {
-			onBatchComplete();
+		if (recordCount > 0) {
+			getReceiver().endRecord();
+			recordCount = 0;
 		}
-	}
-
-	/**
-	 * Helper class for merging.
-	 */
-	private final class Merger extends DefaultStreamReceiver {
-
-		@Override
-		public void startRecord(final String identifier) {
-			if (!inRecord) {
-				getReceiver().startRecord(identifier);
-				inRecord = true;
-			}
-		}
-
-		@Override
-		public void startEntity(final String name) {
-			getReceiver().startEntity(name);
-		}
-
-		@Override
-		public void endEntity() {
-			getReceiver().endEntity();
-		}
-
-		@Override
-		public void literal(final String name, final String value) {
-			getReceiver().literal(name, value);
-		}
-
 	}
 
 }

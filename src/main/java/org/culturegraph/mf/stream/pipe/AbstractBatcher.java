@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -15,6 +16,7 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
+import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 
 /**
@@ -24,7 +26,7 @@ import org.culturegraph.mf.framework.StreamReceiver;
  *
  */
 public abstract class AbstractBatcher
-		extends WrappingStreamPipe<StreamReceiver> {
+		extends DefaultStreamPipe<StreamReceiver> {
 
 	public static final long DEFAULT_BATCH_SIZE = 1000;
 
@@ -50,12 +52,12 @@ public abstract class AbstractBatcher
 
 	@Override
 	public final void startRecord(final String identifier) {
-		getInternalReceiver().startRecord(identifier);
+		getReceiver().startRecord(identifier);
 	}
 
 	@Override
 	public final void endRecord() {
-		getInternalReceiver().endRecord();
+		getReceiver().endRecord();
 
 		++recordCount;
 		recordCount %= batchSize;
@@ -67,17 +69,17 @@ public abstract class AbstractBatcher
 
 	@Override
 	public final void startEntity(final String name) {
-		getInternalReceiver().startEntity(name);
+		getReceiver().startEntity(name);
 	}
 
 	@Override
 	public final void endEntity() {
-		getInternalReceiver().endEntity();
+		getReceiver().endEntity();
 	}
 
 	@Override
 	public final void literal(final String name, final String value) {
-		getInternalReceiver().literal(name, value);
+		getReceiver().literal(name, value);
 	}
 
 	@Override
