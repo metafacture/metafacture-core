@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -29,41 +30,41 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Writes log info for every {@code batchSize} records.
+ * Writes log info every {@code batchSize} records.
  *
- * @author "Markus Michael Geipel"
+ * @author Markus Michael Geipel
  *
  */
 
-@Description("Writes log info for every BATCHSIZE records. ")
+@Description("Writes log info every BATCHSIZE records. ")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("batch-log")
-public final class BatchLogger extends AbstractBatcher {
+public final class StreamBatchLogger extends AbstractBatcher {
 
 	public static final String RECORD_COUNT_VAR = "records";
 	public static final String TOTAL_RECORD_COUNT_VAR = "totalRecords";
 	private static final String BATCH_COUNT_VAR = "batches";
 	private static final String BATCH_SIZE_VAR = "batchSize";
 
-	private static final Logger LOG = LoggerFactory.getLogger(BatchLogger.class);
+	private static final Logger LOG = LoggerFactory.getLogger(StreamBatchLogger.class);
 	private static final String DEFAULT_FORMAT = "records processed: ${totalRecords}";
 
 	private final Map<String, String> vars = new HashMap<String, String>();
 	private final String format;
 
-	public BatchLogger() {
+	public StreamBatchLogger() {
 		super();
 		this.format = DEFAULT_FORMAT;
 
 	}
 
-	public BatchLogger(final String format) {
+	public StreamBatchLogger(final String format) {
 		super();
 		this.format = format;
 	}
 
-	public BatchLogger(final String format, final Map<String, String> vars) {
+	public StreamBatchLogger(final String format, final Map<String, String> vars) {
 		super();
 		this.format = format;
 		this.vars.putAll(vars);
@@ -78,7 +79,8 @@ public final class BatchLogger extends AbstractBatcher {
 		vars.put(RECORD_COUNT_VAR, Long.toString(getRecordCount()));
 		vars.put(BATCH_COUNT_VAR, Long.toString(getBatchCount()));
 		vars.put(BATCH_SIZE_VAR, Long.toString(getBatchSize()));
-		vars.put(TOTAL_RECORD_COUNT_VAR, Long.toString((getBatchSize() * getBatchCount())+getRecordCount()));
+		vars.put(TOTAL_RECORD_COUNT_VAR,
+				Long.toString((getBatchSize() * getBatchCount())+getRecordCount()));
 		LOG.info(StringUtil.format(format, vars));
 	}
 
@@ -86,4 +88,5 @@ public final class BatchLogger extends AbstractBatcher {
 	protected void onCloseStream() {
 		writeLog();
 	}
+
 }
