@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -49,7 +50,7 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
 	public static final String BATCH_COUNT_VAR = "batches";
 	public static final String BATCH_SIZE_VAR = "batchSize";
 
-	private static final Logger LOG = LoggerFactory.getLogger(BatchLogger.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ObjectBatchLogger.class);
 	private static final String DEFAULT_FORMAT = "records processed: ${totalRecords}";
 
 	private final Map<String, String> vars = new HashMap<String, String>();
