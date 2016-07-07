@@ -20,8 +20,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
-
 /**
  * A {@link Map} with char as key. Used for set matching, tries etc. <br>
  * <strong>Important:</strong> It is optimized for size in memory. No extra information for fast entry/keySet/values iteration etc. is held.
@@ -55,12 +53,12 @@ final class CharMap<V> implements Map<Character, V> {
 
 	@Override
 	public boolean containsKey(final Object key) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean containsValue(final Object value) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -139,17 +137,17 @@ final class CharMap<V> implements Map<Character, V> {
 
 	@Override
 	public V remove(final Object key) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void putAll(final Map<? extends Character, ? extends V> map) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void clear() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

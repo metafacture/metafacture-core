@@ -19,10 +19,11 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
-
 /**
- * @author "Markus Michael Geipel"
+ * Base class for maps which are read only and do not allow access to their
+ * full contents.
+ *
+ * @author Markus Michael Geipel
  *
  * @param <K>
  * @param <V>
@@ -31,12 +32,12 @@ public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
 
 	@Override
 	public final int size() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public final boolean isEmpty() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -46,44 +47,43 @@ public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
 
 	@Override
 	public final boolean containsValue(final Object value) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public final V put(final K key, final V value) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public final V remove(final Object key) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public final void putAll(final Map<? extends K, ? extends V> m) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 
 	}
 
 	@Override
 	public final void clear() {
-		throw new NotImplementedException();
-
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public final Set<K> keySet() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public final Collection<V> values() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public final Set<java.util.Map.Entry<K, V>> entrySet() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 }
