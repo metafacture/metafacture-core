@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -16,19 +17,51 @@
 package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.framework.DefaultStreamPipe;
-import org.culturegraph.mf.framework.DefaultStreamReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.stream.sink.EntityPathTracker;
 import org.culturegraph.mf.util.StreamConstants;
 
 /**
- * By default changes the record id to the value of the '_id' literal (if
- * present). Use the constructor to choose another literal as id source.
+ * Replaces the record id with the value of a literal from the record. The name
+ * of the literal can be configured using {@link #setIdLiteral(String)}.
+ * <p>
+ * If a record contains multiple matching literals, the value of the last
+ * literal is used as id.
+ * <p>
+ * This module can optionally remove records which do not have an id literal
+ * from the stream. This is configured through the
+ * {@link #setKeepRecordsWithoutIdLiteral(boolean)} parameter.
+ * <p>
+ * The example shows how this module operates in its default configuration:
+ * Given the following sequence of events:
+ * <pre>{@literal
+ * start-record "old-id"
+ * start-entity "author"
+ * literal "name": Kurt
+ * end-entity
+ * literal "_id": new-id-1
+ * literal "_id": new-id-2
+ * end-record
+ * }</pre>
+ *
+ * the {@code IdChangePipe} emits the following event stream:
+ * <pre>{@literal
+ * start-record "new-id-2"
+ * start-entity "author"
+ * literal "name": Kurt
+ * end-entity
+ * end-record
+ * }</pre>
+ *
+ * By default, the id literals are removed from the record. This can be changed
+ * through {@link #setKeepIdLiteral(boolean)}.
  *
  * @author Markus Michael Geipel
+ * @author Christoph Böhme
  *
  */
 @Description("By default changes the record id to the value of the '_id' literal (if present). Use the contructor to choose another literal as id source.")
@@ -37,35 +70,79 @@ import org.culturegraph.mf.util.StreamConstants;
 @FluxCommand("change-id")
 public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
 
-	private String idName = StreamConstants.ID;
 	private final StreamBuffer streamBuffer = new StreamBuffer();
-	private final StreamFlattener streamFlattener = new StreamFlattener();
-	private final DefaultStreamReceiver dummyReceiver = new DefaultStreamReceiver();
+	private final EntityPathTracker entityPathTracker = new EntityPathTracker();
+
+	private String idLiteral = StreamConstants.ID;
 	private String currentIdentifier;
 	private String originalIdentifier;
-	private boolean keepIdless = true;
+	private boolean keepRecordsWithoutIdLiteral = true;
 	private boolean keepIdLiteral;
 
-	public IdChangePipe() {
-		this(StreamConstants.ID);
+	/**
+	 * Sets the name of the literal that contains the new record id. This must be
+	 * a qualified literal name including the entities in which the literal is
+	 * contained.
+	 * <p>
+	 * For instance, the id literal &ldquo;metadata.id&rdquo; matches only
+	 * literals named &ldquo;id&rdquo; which are part of an entity named
+	 * &ldquo;metadata&rdquo;.
+	 * <p>
+	 * The default value is &ldquo;{@value StreamConstants#ID}&rdquo;.
+	 * <p>
+	 * This parameter must only be changed between records otherwise the
+	 * behaviour of the module is undefined.
+	 *
+	 * @param idLiteral a qualified literal name
+	 */
+	public void setIdLiteral(final String idLiteral) {
+		this.idLiteral = idLiteral;
 	}
 
-	public IdChangePipe(final String idName) {
-		super();
-		setIdName(idName);
-		streamFlattener.setReceiver(dummyReceiver);
+	public String getIdLiteral() {
+		return idLiteral;
 	}
 
-	public void setIdName(final String idName) {
-		this.idName = idName;
+	/**
+	 * Controls whether records without an id literal are kept in the stream or
+	 * removed from the stream.
+	 * <p>
+	 * By default records without an id literal are kept in the stream.
+	 * <p>
+	 * This parameter may be changed at any time it becomes effective with the
+	 * next <i>end-record</i> event.
+	 *
+	 * @param keepRecordsWithoutIdLiteral true to keep records without id
+	 * literal, false to remove them
+	 */
+	public void setKeepRecordsWithoutIdLiteral(
+			final boolean keepRecordsWithoutIdLiteral) {
+		this.keepRecordsWithoutIdLiteral = keepRecordsWithoutIdLiteral;
 	}
 
-	public void setKeepIdless(final boolean keepIdless) {
-		this.keepIdless = keepIdless;
+	public boolean getKeepRecordsWithoutIdLiteral() {
+		return keepRecordsWithoutIdLiteral;
 	}
 
+	/**
+	 * Controls whether the id literal is kept in the record after changing the
+	 * record id. If a record contains multiple id literals, all of them are
+	 * removed.
+	 * <p>
+	 * By default the id literal is removed from the stream.
+	 * <p>
+	 * This parameter must only be changed between records otherwise the
+	 * behaviour of the module is undefined.
+	 *
+	 * @param keepIdLiteral true to keep id literals in records, false to
+	 * remove them
+	 */
 	public void setKeepIdLiteral(final boolean keepIdLiteral) {
 		this.keepIdLiteral = keepIdLiteral;
+	}
+
+	public boolean getKeepIdLiteral() {
+		return keepIdLiteral;
 	}
 
 	@Override
@@ -73,13 +150,13 @@ public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
 		assert !isClosed();
 		currentIdentifier = null;
 		originalIdentifier = identifier;
-		streamFlattener.startRecord(identifier);
+		entityPathTracker.startRecord(identifier);
 	}
 
 	@Override
 	public void endRecord() {
 		assert !isClosed();
-		if (currentIdentifier != null || keepIdless) {
+		if (currentIdentifier != null || keepRecordsWithoutIdLiteral) {
 			if (currentIdentifier == null) {
 				getReceiver().startRecord(originalIdentifier);
 			} else {
@@ -89,29 +166,25 @@ public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
 			getReceiver().endRecord();
 		}
 		streamBuffer.clear();
-		streamFlattener.endRecord();
+		entityPathTracker.endRecord();
 	}
 
 	@Override
 	public void startEntity(final String name) {
 		streamBuffer.startEntity(name);
-		streamFlattener.startEntity(name);
+		entityPathTracker.startEntity(name);
 	}
 
 	@Override
 	public void endEntity() {
 		streamBuffer.endEntity();
-		streamFlattener.endEntity();
+		entityPathTracker.endEntity();
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
-		String path = streamFlattener.getCurrentPath();
-		if (!path.isEmpty()) {
-			path += ".";
-		}
-		path += name;
-		if (idName.equals(path)) {
+		final String qualifiedName = entityPathTracker.getCurrentPathWith(name);
+		if (idLiteral.equals(qualifiedName)) {
 			currentIdentifier = value;
 			if (!keepIdLiteral) {
 				return;
@@ -128,11 +201,13 @@ public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
 	@Override
 	public void onResetStream() {
 		streamBuffer.clear();
+		entityPathTracker.resetStream();
 	}
 
 	@Override
 	public void onCloseStream() {
 		streamBuffer.clear();
+		entityPathTracker.closeStream();
 	}
 
 }
