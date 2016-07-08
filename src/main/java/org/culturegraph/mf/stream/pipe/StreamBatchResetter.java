@@ -32,10 +32,11 @@ import org.culturegraph.mf.framework.annotations.Out;
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("batch-reset")
-public final class BatchResetter extends AbstractBatcher {
+public final class StreamBatchResetter extends AbstractStreamBatcher {
 
 	@Override
 	protected void onBatchComplete() {
 		getReceiver().resetStream();
 	}
+
 }

@@ -25,7 +25,7 @@ import org.culturegraph.mf.framework.StreamReceiver;
  * @author Markus Geipel
  *
  */
-public abstract class AbstractBatcher
+public abstract class AbstractStreamBatcher
 		extends DefaultStreamPipe<StreamReceiver> {
 
 	public static final long DEFAULT_BATCH_SIZE = 1000;

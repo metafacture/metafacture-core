@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("batch-log")
-public final class StreamBatchLogger extends AbstractBatcher {
+public final class StreamBatchLogger extends AbstractStreamBatcher {
 
 	public static final String RECORD_COUNT_VAR = "records";
 	public static final String TOTAL_RECORD_COUNT_VAR = "totalRecords";
