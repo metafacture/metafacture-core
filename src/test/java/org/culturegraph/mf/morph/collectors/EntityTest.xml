@@ -370,7 +370,7 @@
 			</cgxml:cgxml>
 		</result>
 	</test-case>
-	
+
 		<test-case name="shouldResetNameToNameAttribute">
 		<input type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">
@@ -417,5 +417,39 @@
 			</cgxml:cgxml>
 		</result>
 	</test-case>
-	
+
+	<test-case name="should emit empty string if entity name is not set">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="in" value="a" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:entity>
+						<mm:data source="in" name="out" />
+					</mm:entity>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="">
+							<cgxml:literal name="out" value="a" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
 </metamorph-test>
