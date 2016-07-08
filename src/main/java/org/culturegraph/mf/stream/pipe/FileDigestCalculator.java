@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Christoph Böhme
+ * Copyright 2013, 2014, 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
@@ -27,7 +28,6 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.stream.util.DigestAlgorithm;
 import org.culturegraph.mf.types.Triple;
 
 /**
@@ -101,6 +101,36 @@ public final class FileDigestCalculator extends
 			hex[i * 2 + 1] = NIBBLE_TO_HEX[bytes[i] & LOW_NIBBLE];
 		}
 		return new String(hex);
+	}
+
+	/**
+	 * Message digests which can be used by modules.
+	 *
+	 * @author Christoph Böhme
+	 */
+	public enum DigestAlgorithm {
+
+		MD2("MD2"),
+		MD5("MD5"),
+		SHA1("SHA-1"),
+		SHA256("SHA-256"),
+		SHA384("SHA-384"),
+		SHA512 ("SHA-512");
+
+		private final String identifier;
+
+		private DigestAlgorithm(final String identifier) {
+			this.identifier = identifier;
+		}
+
+		public MessageDigest getInstance() {
+			try {
+				return MessageDigest.getInstance(identifier);
+			} catch (NoSuchAlgorithmException e) {
+				throw new MetafactureException (e);
+			}
+		}
+
 	}
 
 }
