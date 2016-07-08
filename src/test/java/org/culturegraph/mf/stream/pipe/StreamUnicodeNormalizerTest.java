@@ -149,7 +149,7 @@ public final class StreamUnicodeNormalizerTest {
 
 	@Test
 	public void shouldNormalizeToNFDIfConfigured() {
-		streamUnicodeNormalizer.setNormalizationType(Normalizer.Form.NFD);
+		streamUnicodeNormalizer.setNormalizationForm(Normalizer.Form.NFD);
 		streamUnicodeNormalizer.startRecord(RECORD_ID);
 		streamUnicodeNormalizer.literal(LITERAL_NAME,
 				KEY_WITH_PRECOMPOSED_CHARS);
