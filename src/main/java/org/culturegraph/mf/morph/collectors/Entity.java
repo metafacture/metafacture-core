@@ -64,15 +64,11 @@ public final class Entity extends AbstractFlushingCollect {
 
 	private void write(final StreamReceiver receiver) {
 		if (!buffer.isEmpty()) {
-
 			receiver.startEntity(StringUtil.fallback(currentName, getName()));
 			buffer.setReceiver(receiver);
 			buffer.replay();
 			receiver.endEntity();
-
-			buffer.clear();
 		}
-
 	}
 
 	@Override
