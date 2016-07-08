@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -27,8 +28,8 @@ import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 /**
- * Extracts the values of literals matching {@code pattern}
- * and sends them to an {@link ObjectReceiver}.
+ * Emits the values of literals matching {@literal #setPattern(String)}
+ * as objects.
  * <p>
  * The matcher does only match the literal name and does not
  * take the enclosing entities into account.
@@ -36,30 +37,36 @@ import org.culturegraph.mf.framework.annotations.Out;
  * @author Christoph Böhme
  *
  */
-@Description("Extracts literal values from a stream.")
+@Description("Emits literal values as objects.")
 @In(StreamReceiver.class)
 @Out(String.class)
-@FluxCommand("extract-literals")
-public final class LiteralExtractor extends DefaultStreamPipe<ObjectReceiver<String>> {
+@FluxCommand("literal-to-object")
+public final class LiteralToObject extends DefaultStreamPipe<ObjectReceiver<String>> {
 
-	private Matcher matcher;
+	/**
+	 * Default value for {@link #setPattern(String)}.
+	 */
+	public static final java.lang.String DEFAULT_PATTERN = ".*";
 
-	public LiteralExtractor() {
-		this(".*");
-	}
+	private Matcher matcher = Pattern.compile(DEFAULT_PATTERN).matcher("");
 
-	public LiteralExtractor(final String pattern) {
-		super();
-
-		matcher = Pattern.compile(pattern).matcher("");
+	/**
+	 * Sets the pattern against which literal names are matched. Only the
+	 * values of matching literals are converted into objects.
+	 * <p>
+	 * The parameter can be changed at any time during processing. It becomes
+	 * effective with the next literal being processed.
+	 * <p>
+	 * The default pattern matches all literal names including empty ones.
+	 *
+	 * @param pattern a Java regular expression
+	 */
+	public void setPattern(final String pattern) {
+		this.matcher = Pattern.compile(pattern).matcher("");
 	}
 
 	public String getPattern() {
 		return matcher.pattern().pattern();
-	}
-
-	public void setPattern(final String pattern) {
-		this.matcher = Pattern.compile(pattern).matcher("");
 	}
 
 	@Override

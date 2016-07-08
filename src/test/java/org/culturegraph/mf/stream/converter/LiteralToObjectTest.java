@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -27,74 +28,77 @@ import org.mockito.MockitoAnnotations;
 
 
 /**
- * Tests for class {@link LiteralExtractor}.
+ * Tests for class {@link LiteralToObject}.
  *
  * @author Christoph Böhme
  *
  */
-public final class LiteralExtractorTest {
+public final class LiteralToObjectTest {
 
 	private static final String LITERAL_NAME = "extract_this";
-	private static final String LITERAL_VALUE1 = "I've been extracted from a record";
-	private static final String LITERAL_VALUE2 = "I've been extracted from a record, too";
-
-	private LiteralExtractor extractor;
+	private static final String LITERAL_VALUE1 =
+			"I've been extracted from a record";
+	private static final String LITERAL_VALUE2 =
+			"I've been extracted from a record, too";
 
 	@Mock
 	private ObjectReceiver<String> receiver;
 
+	private LiteralToObject literalToObject;
+
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		extractor = new LiteralExtractor();
-		extractor.setReceiver(receiver);
+		literalToObject = new LiteralToObject();
+		literalToObject.setReceiver(receiver);
 	}
 
 	@After
 	public void cleanup() {
-		extractor.closeStream();
+		literalToObject.closeStream();
 	}
 
 	@Test
-	public void testShouldEmitLiteralValueAsObject() {
-		extractor.setPattern(LITERAL_NAME);
+	public void shouldEmitLiteralValueAsObject() {
+		literalToObject.setPattern(LITERAL_NAME);
 
-		extractor.startRecord("");
-		extractor.literal("L1", "V1");
-		extractor.literal(LITERAL_NAME, LITERAL_VALUE1);
-		extractor.literal("L2", "V2");
-		extractor.endRecord();
+		literalToObject.startRecord("");
+		literalToObject.literal("L1", "V1");
+		literalToObject.literal(LITERAL_NAME, LITERAL_VALUE1);
+		literalToObject.literal("L2", "V2");
+		literalToObject.endRecord();
 
 		verify(receiver).process(LITERAL_VALUE1);
 		verifyNoMoreInteractions(receiver);
 	}
 
 	@Test
-	public void testShouldEmitValueOfNestedLiteralsAsObject() {
-		extractor.setPattern(LITERAL_NAME);
+	public void shouldEmitValueOfNestedLiteralsAsObject() {
+		literalToObject.setPattern(LITERAL_NAME);
 
-		extractor.startRecord("");
-		extractor.startEntity("En1");
-		extractor.literal(LITERAL_NAME, LITERAL_VALUE1);
-		extractor.endEntity();
-		extractor.endRecord();
+		literalToObject.startRecord("");
+		literalToObject.startEntity("En1");
+		literalToObject.literal(LITERAL_NAME, LITERAL_VALUE1);
+		literalToObject.endEntity();
+		literalToObject.endRecord();
 
 		verify(receiver).process(LITERAL_VALUE1);
 		verifyNoMoreInteractions(receiver);
 	}
 
 	@Test
-	public void testShouldUseRegExForMatchingLiteralNames() {
-		extractor.setPattern("^ex_\\d$");
+	public void shouldUseRegExForMatchingLiteralNames() {
+		literalToObject.setPattern("^ex_\\d$");
 
-		extractor.startRecord("");
-		extractor.literal("ex_1", LITERAL_VALUE1);
-		extractor.literal("L1", "V1");
-		extractor.literal("ex_2", LITERAL_VALUE2);
-		extractor.endRecord();
+		literalToObject.startRecord("");
+		literalToObject.literal("ex_1", LITERAL_VALUE1);
+		literalToObject.literal("L1", "V1");
+		literalToObject.literal("ex_2", LITERAL_VALUE2);
+		literalToObject.endRecord();
 
 		verify(receiver).process(LITERAL_VALUE1);
 		verify(receiver).process(LITERAL_VALUE2);
 		verifyNoMoreInteractions(receiver);
 	}
+
 }
