@@ -416,10 +416,10 @@
 				<element ref="tns:entity" />
 				<element ref="tns:call-macro" />
 			</choice>
-			<attribute name="name" type="string" use="optional">
+			<attribute name="name" type="string" use="optional" default="">
 				<annotation>
 					<documentation>Name of the entity. If not given the entity must
-						have an entity-name element.</documentation>
+						have an entity-name element otherwise an empty name is emitted</documentation>
 				</annotation>
 			</attribute>
 			<attribute name="reset" type="boolean" use="optional"
