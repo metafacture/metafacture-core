@@ -25,12 +25,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Tests class {@link Utf8Normalizer}.
+ * Tests class {@link UnicodeNormalizer}.
  *
  * @author Christoph Böhme
  *
  */
-public final class Utf8NormalizerTest {
+public final class UnicodeNormalizerTest {
 
 	private static final String STRING_WITH_DIACRITICS =
 			"Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
@@ -38,7 +38,7 @@ public final class Utf8NormalizerTest {
 	private static final String STRING_WITH_PRECOMPOSED_CHARS =
 			"Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 
-	private Utf8Normalizer normalizer;
+	private UnicodeNormalizer normalizer;
 
 	@Mock
 	private ObjectReceiver<String> receiver;
@@ -46,7 +46,7 @@ public final class Utf8NormalizerTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		normalizer = new Utf8Normalizer();
+		normalizer = new UnicodeNormalizer();
 		normalizer.setReceiver(receiver);
 	}
 
