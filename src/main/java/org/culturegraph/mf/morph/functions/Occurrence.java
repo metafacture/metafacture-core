@@ -30,9 +30,7 @@ import org.culturegraph.mf.util.StringUtil;
  */
 public final class Occurrence extends AbstractStatefulFunction {
 
-	private static final String LESS_THEN = "lessThen ";
 	private static final String LESS_THAN = "lessThan ";
-	private static final String MORE_THEN = "moreThen ";
 	private static final String MORE_THAN = "moreThan ";
 
 	private int count;
@@ -91,9 +89,9 @@ public final class Occurrence extends AbstractStatefulFunction {
 	private static IntFilter parse(final String only) {
 		final IntFilter filter;
 
-		if (only.startsWith(LESS_THEN) || only.startsWith(LESS_THAN)) {
+		if (only.startsWith(LESS_THAN)) {
 			filter = createLessThanFilter(extractNumberFrom(only));
-		} else if (only.startsWith(MORE_THEN) || only.startsWith(MORE_THAN)) {
+		} else if (only.startsWith(MORE_THAN)) {
 			filter = createGreaterThanFilter(extractNumberFrom(only));
 		} else {
 			final int number = Integer.parseInt(only);
