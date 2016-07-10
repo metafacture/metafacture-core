@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.culturegraph.mf.exceptions.MorphDefException;
+import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -55,7 +55,7 @@ public final class DomLoaderTest {
 		assertEquals("test-schema", rootNode.getNodeName());
 	}
 
-	@Test(expected=MorphDefException.class)
+	@Test(expected=MetafactureException.class)
 	public void shouldValidateInputAgainstSchema()
 			throws FileNotFoundException, MalformedURLException {
 

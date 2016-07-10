@@ -28,7 +28,6 @@ import javax.xml.transform.ErrorListener;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
@@ -36,7 +35,7 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.culturegraph.mf.exceptions.MorphDefException;
+import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -66,12 +65,13 @@ public class DomLoader {
 		// No instances allowed
 	}
 
-	public static Document parse(final String schemaFile, final InputSource inputSource) {
+	public static Document parse(final String schemaFile,
+			final InputSource inputSource) {
 		final URL schemaUrl;
 		try {
 			schemaUrl = ResourceUtil.getUrl(schemaFile);
 		} catch (final MalformedURLException e) {
-			throw new MorphDefException("'" + schemaFile + "' not found:", e);
+			throw new MetafactureException("'" + schemaFile + "' not found:", e);
 		}
 
 		try {
@@ -123,14 +123,9 @@ public class DomLoader {
 
 			return document;
 
-		} catch (final ParserConfigurationException e) {
-			throw new MorphDefException(e);
-		} catch (final SAXException e) {
-			throw new MorphDefException(e);
-		} catch (final TransformerConfigurationException e) {
-			throw new MorphDefException(e);
-		} catch (final TransformerException e) {
-			throw new MorphDefException(e);
+		} catch (final ParserConfigurationException | TransformerException |
+				SAXException e) {
+			throw new MetafactureException(e);
 		}
 	}
 
@@ -177,7 +172,7 @@ public class DomLoader {
 		}
 
 		private void handle(final SAXParseException exception) {
-			throw new MorphDefException("Error parsing xml: " +
+			throw new MetafactureException("Error parsing xml: " +
 					exception.getMessage(), exception);
 		}
 
@@ -212,7 +207,7 @@ public class DomLoader {
 		}
 
 		private void handle(final TransformerException exception) {
-			throw new MorphDefException("Error during DOM creation: " +
+			throw new MetafactureException("Error during DOM creation: " +
 					exception.getMessage(), exception);
 		}
 
