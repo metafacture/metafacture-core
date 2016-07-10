@@ -21,8 +21,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Objects;
 
-import org.culturegraph.mf.exceptions.ShouldNeverHappenException;
-
 /**
  * Stores an immutable subject-predicate-object triple.
  *
@@ -76,7 +74,7 @@ public final class Triple implements Comparable<Triple> {
 			return new Triple(in.readUTF(), in.readUTF(), in.readUTF(),
 					(ObjectType) in.readObject());
 		} catch (final ClassNotFoundException e) {
-			throw new ShouldNeverHappenException(e);
+			throw new IOException("Cannot read triple", e);
 		}
 	}
 

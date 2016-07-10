@@ -24,7 +24,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.culturegraph.mf.exceptions.ShouldNeverHappenException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -47,13 +46,15 @@ public final class XmlUtil {
 		return nodeToString(node, false);
 	}
 
-	public static String nodeToString(final Node node, final boolean omitXMLDecl) {
+	public static String nodeToString(final Node node,
+			final boolean omitXMLDecl) {
 		final StringWriter writer = new StringWriter();
-		Transformer transformer;
+		final Transformer transformer;
 		try {
 			transformer = TransformerFactory.newInstance().newTransformer();
-		} catch (TransformerException e) {
-			throw new ShouldNeverHappenException(e);
+		} catch (final TransformerException e) {
+			throw new AssertionError(
+					"No errors expected when creating an identity transformer", e);
 		}
 
 		if (omitXMLDecl) {
@@ -64,8 +65,9 @@ public final class XmlUtil {
 
 		try {
 			transformer.transform(new DOMSource(node), new StreamResult(writer));
-		} catch (TransformerException e) {
-			throw new ShouldNeverHappenException(e);
+		} catch (final TransformerException e) {
+			throw new AssertionError(
+					"No errors expected during identity transformation", e);
 		}
 
 		return writer.toString();

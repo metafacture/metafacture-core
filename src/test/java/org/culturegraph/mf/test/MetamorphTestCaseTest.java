@@ -19,7 +19,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.culturegraph.mf.exceptions.ShouldNeverHappenException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runners.model.InitializationError;
@@ -49,7 +48,8 @@ public final class MetamorphTestCaseTest {
 		try {
 			docBuilder = docBuilderFactory.newDocumentBuilder();
 		} catch(final ParserConfigurationException e) {
-			throw new ShouldNeverHappenException(e);
+			throw new AssertionError(
+					"No error expected when creating a standard document builder", e);
 		}
 
 		document = docBuilder.newDocument();
