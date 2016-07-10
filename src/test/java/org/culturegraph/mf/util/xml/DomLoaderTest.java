@@ -37,9 +37,9 @@ import org.xml.sax.InputSource;
  * @author Christoph Böhme
  *
  */
-public final class DomBuilderTest {
+public final class DomLoaderTest {
 
-	private static final String BASE_PATH = "dom-builder/";
+	private static final String BASE_PATH = "dom-loader/";
 	private static final String SCHEMA_FILE = BASE_PATH + "test-schema.xsd";
 
 	@Test
