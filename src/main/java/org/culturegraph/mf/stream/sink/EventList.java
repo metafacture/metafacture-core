@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -20,10 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.types.Event;
 
-
-//TODO: Implement List interface
 /**
  * Stores the received stream events in a list.
  *
@@ -83,6 +81,68 @@ public final class EventList implements StreamReceiver {
 	@Override
 	public void closeStream() {
 		closed = true;
+	}
+
+	/**
+	 * Data type for stream events.
+	 *
+	 * @author Christoph Böhme
+	 */
+	public static final class Event {
+
+		/**
+		 * Event types
+		 */
+		public enum Type {
+			START_RECORD, END_RECORD, START_ENTITY, END_ENTITY, LITERAL
+		}
+
+		private final Type type;
+		private final String name;
+		private final String value;
+
+		Event(final Type type) {
+			this(type, null);
+		}
+
+		Event(final Type type, final String name) {
+			this(type, name, null);
+		}
+
+		Event(final Type type, final String name, final String value) {
+			this.type = type;
+			this.name = name;
+			this.value = value;
+		}
+
+		public Type getType() {
+			return type;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		@Override
+		public String toString() {
+			final StringBuilder builder = new StringBuilder();
+			builder.append(type);
+			if (name != null) {
+				builder.append("(" );
+				builder.append(name);
+				if (value != null) {
+					builder.append("=");
+					builder.append(value);
+				}
+				builder.append(")");
+			}
+			return builder.toString();
+		}
+
 	}
 
 }
