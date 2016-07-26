@@ -15,7 +15,7 @@ import org.junit.Test;
 public final class RestMapTest {
 
 	private static final String BASE_URL_01 = "http://beta.lobid.org/${key}";
-	private static final String TEST_CASE_01 = "organisations/DE-6#!";
+	private static final String TEST_CASE_01 = "organisations/DE-6?format=json";
 
 	@Test
 	public void testGetDatasource() throws IOException {
