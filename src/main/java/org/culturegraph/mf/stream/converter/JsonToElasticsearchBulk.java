@@ -1,5 +1,5 @@
 /*
- *  Copyright 2014 hbz, Fabian Steeg
+ *  Copyright 2014-2016 hbz, Fabian Steeg
  *
  *  Licensed under the Apache License, Version 2.0 the "License";
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,10 @@ package org.culturegraph.mf.stream.converter;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
@@ -40,6 +43,33 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JsonToElasticsearchBulk extends 
 		DefaultObjectPipe<String, ObjectReceiver<String>> {
 
+	/**
+	 * {@link JsonEncoder} outputs multiple fields with identical names, so use
+	 * a MultiMap with Jackson to collect values under a single key.
+	 */
+	static class MultiMap extends HashMap<String, Object> {
+		private static final long serialVersionUID = 490682490432334605L;
+
+		MultiMap() {
+			// default constructor for Jackson
+		}
+
+		@Override
+		public Object put(String key, Object value) {
+			if (containsKey(key)) {
+				Object oldValue = get(key);
+				if (oldValue instanceof List) {
+					@SuppressWarnings("unchecked")
+					List<Object> vals = ((List<Object>) oldValue);
+					vals.add(value);
+					return super.put(key, vals);
+				}
+				return super.put(key, new ArrayList<>(Arrays.asList(oldValue, value)));
+			}
+			return super.put(key, value);
+		}
+	}
+
 	private ObjectMapper mapper = new ObjectMapper();
 	private String idKey;
 	private String type;
@@ -60,8 +90,7 @@ public class JsonToElasticsearchBulk extends
 	public void process(String obj) {
 		StringWriter stringWriter = new StringWriter();
 		try {
-			@SuppressWarnings("unchecked")
-			Map<String, Object> json = mapper.readValue(obj, Map.class);
+			Map<String, Object> json = mapper.readValue(obj, MultiMap.class);
 			Map<String, Object> detailsMap = new HashMap<String, Object>();
 			Map<String, Object> indexMap = new HashMap<String, Object>();
 			indexMap.put("index", detailsMap);
