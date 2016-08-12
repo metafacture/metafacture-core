@@ -20,8 +20,10 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -58,13 +60,14 @@ public class JsonToElasticsearchBulk extends
 		public Object put(String key, Object value) {
 			if (containsKey(key)) {
 				Object oldValue = get(key);
-				if (oldValue instanceof List) {
+				if (oldValue instanceof Set) {
 					@SuppressWarnings("unchecked")
-					List<Object> vals = ((List<Object>) oldValue);
+					Set<Object> vals = ((Set<Object>) oldValue);
 					vals.add(value);
 					return super.put(key, vals);
 				}
-				return super.put(key, new ArrayList<>(Arrays.asList(oldValue, value)));
+				HashSet<Object> set = new HashSet<>(Arrays.asList(oldValue, value));
+				return super.put(key, set.size() == 1 ? value : set);
 			}
 			return super.put(key, value);
 		}
