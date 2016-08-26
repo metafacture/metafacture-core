@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.converter;
 
@@ -31,6 +31,7 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.slf4j.Logger;
@@ -40,56 +41,55 @@ import org.slf4j.LoggerFactory;
  * Outputs a record by decoding the members of a given pojo (Plain Old Java
  * Object). Each public getter or public field defines a member. The member name
  * is either the getter name without the get prefix or the field name.
- * 
  * <p>
  * The generated stream events depend on the member type:
  * <ul>
- * <li>Simple types like Strings or the primitive types produces a literal event
- * with the member name as literal name and the member value as literal value</li>
- * <li>Instances of {@link MetafactureSource} can insert user defined events
- * into the stream by implementing the {@link MetafactureSource#sendToStream}
- * method.
- * <li>Complex types like other pojos produces an entity with the member name as
- * entity name and the decoded pojo members as the entity's elements</li>
- * <li>Lists, Arrays and Sets produce events for each entry according to the
- * rules above. Each of these events is named by the member name.</li>
- * <li>Maps produces an entity with the member name as entity name. Each map
- * entry produces a sub entity with the string representation of the entry key
- * as entity name and the entry value decoded to the rules above.</li>
+ *   <li>Simple types like Strings or the primitive types produces a literal
+ *   event with the member name as literal name and the member value as literal
+ *   value
+ *
+ *   <li>Instances of {@link MetafactureSource} can insert user defined events
+ *   into the stream by implementing the {@link MetafactureSource#sendToStream}
+ *   method.
+ *
+ *   <li>Complex types like other pojos produces an entity with the member name
+ *   as entity name and the decoded pojo members as the entity's elements
+ *
+ *   <li>Lists, Arrays and Sets produce events for each entry according to the
+ *   rules above. Each of these events is named by the member name.
+ *
+ *   <li>Maps produces an entity with the member name as entity name. Each map
+ *   entry produces a sub entity with the string representation of the entry key
+ *   as entity name and the entry value decoded to the rules above.
  * </ul>
- * </p>
- * 
  * <p>
  * Here are some examples:
  * <ul>
- * <li>{@code String str = "abc" -> literal("str", "abc")}</li>
- * <li>{@code boolean bo = true -> literal("bo", "true")}</li>
- * <li>
- * {@code List<String> li = ... ("a", "b") -> literal("li", "a"), literal("li", "b")}
- * <li>
- * {@code String[] ar = ... ("a", "b") -> literal("ar", "a"), literal("ar", "b")}
- * </li>
- * <li>
- * {@code Set<String> se = ... ("a", "b") -> literal("se", "a"), literal("se", "b")}
- * </li>
- * <li>
- * {@code Map<String,String> ma = ... ("a" : "b", "c" : "d") -> startEntity("ma"), literal("a", "b"), literal("c", "d"), endEntity()}
- * </li>
+ *   <li>{@code String str = "abc" &rarr; literal("str", "abc")}
+ *
+ *   <li>{@code boolean bo = true &rarr; literal("bo", "true")}
+ *
+ *   <li>{@code List&lt;String&gt; li = &hellip; ("a", "b") &rarr; literal("li", "a"), literal("li", "b")}
+ *
+ *   <li>{@code String[] ar = &hellip; ("a", "b") &rarr; literal("ar", "a"), literal("ar", "b")}
+ *
+ *   <li>{@code Set&lt;String&gt; se = &hellip; ("a", "b") &rarr; literal("se", "a"), literal("se", "b")}
+ *
+ *   <li>{@code Map&lt;String, String&gt; ma = &hellip; ("a" : "b", "c" : "d") &rarr; startEntity("ma"), literal("a", "b"), literal("c", "d"), endEntity()}
  * </ul>
- * </p>
- * 
  * <p>
- * See {@link PojoDecoderTest} for more examples.
- * </p>
- * 
+ * See in the test cases in {@code PojoDecoderTest} for more examples.
+ *
  * @param <T>
  *            input object type
+ *
  * @author Thomas Seidel
- * 
+ *
  */
 @Description("Outputs a record containing the member values of the input pojo (Plain Old Java Object)")
 @In(Object.class)
 @Out(StreamReceiver.class)
+@FluxCommand("decode-pojo")
 public class PojoDecoder<T> extends DefaultObjectPipe<T, StreamReceiver> {
 
 	private static final Logger LOG = LoggerFactory
@@ -99,9 +99,9 @@ public class PojoDecoder<T> extends DefaultObjectPipe<T, StreamReceiver> {
 	 * Use this interfaces to include a metafacture event stream to the pojo
 	 * decoder. If the {@link PojoDecoder} detects a type implementing this
 	 * interface, it will call the {@link #sendToStream} method.
-	 * 
+	 *
 	 * @author Thomas Seidel
-	 * 
+	 *
 	 */
 	public interface MetafactureSource {
 		void sendToStream(final StreamReceiver streamReceiver);
@@ -110,9 +110,9 @@ public class PojoDecoder<T> extends DefaultObjectPipe<T, StreamReceiver> {
 	/**
 	 * A ValueGetter retrieves a pojos's member, via getter method or field
 	 * access. Used by {@link ComplexTypeDecoder} only.
-	 * 
+	 *
 	 * @author Thomas Seidel
-	 * 
+	 *
 	 */
 	private interface ValueGetter {
 
@@ -216,9 +216,9 @@ public class PojoDecoder<T> extends DefaultObjectPipe<T, StreamReceiver> {
 	/**
 	 * A TypeDecoder decodes an object to a metafacture stream using a given
 	 * name.
-	 * 
+	 *
 	 * @author Thomas Seidel
-	 * 
+	 *
 	 */
 	private interface TypeDecoder {
 

@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.formeta.formatter;
 
@@ -19,9 +19,9 @@ import org.culturegraph.mf.formeta.Formeta;
 
 /**
  * A formatter for verbose output.
- * 
+ *
  * @author Christoph Böhme
- * 
+ *
  */
 public final class VerboseFormatter extends AbstractFormatter {
 
@@ -29,7 +29,7 @@ public final class VerboseFormatter extends AbstractFormatter {
 	private static final String GROUP_END = " " + Formeta.GROUP_END;
 	private static final String ITEM_SEPARATOR = Formeta.ITEM_SEPARATOR + " ";
 	private static final String NAME_VALUE_SEPARATOR = Formeta.NAME_VALUE_SEPARATOR + " ";
-	
+
 	private boolean appendItemSeparator;
 
 	@Override
@@ -58,12 +58,12 @@ public final class VerboseFormatter extends AbstractFormatter {
 		escapeAndAppend(value);
 		appendItemSeparator = true;
 	}
-	
+
 	@Override
 	protected void onReset() {
 		appendItemSeparator = false;
 	}
-	
+
 	@Override
 	protected boolean shouldQuoteText(final char[] buffer, final int len) {
 		final String triggerChars = Formeta.WHITESPACE + CHARS_TO_ESCAPE;

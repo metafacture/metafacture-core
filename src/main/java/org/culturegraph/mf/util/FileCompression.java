@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.util;
 
@@ -28,11 +28,11 @@ import org.apache.commons.io.output.ProxyOutputStream;
 import org.culturegraph.mf.exceptions.MetafactureException;
 
 /**
- * Provides a convenient interface for using stream compressors 
+ * Provides a convenient interface for using stream compressors
  * and decompressors.
- * 
+ *
  * @author Christoph Böhme
- * 
+ *
  */
 public enum FileCompression {
 
@@ -41,7 +41,7 @@ public enum FileCompression {
 		public OutputStream createCompressor(final OutputStream writeTo, final String fileName) {
 			return new ProxyOutputStream(writeTo);
 		}
-		
+
 		@Override
 		public InputStream createDecompressor(final InputStream readFrom) {
 			return new ProxyInputStream(readFrom) {
@@ -49,33 +49,33 @@ public enum FileCompression {
 			};
 		}
 	},
-	
+
 	AUTO {
 		@Override
 		public OutputStream createCompressor(final OutputStream writeTo, final String fileName) {
 			if (fileName == null) {
 				throw new IllegalArgumentException("fileName is required for auto-selecting compressor");
 			}
-			
-			final String extension = FilenameUtils.getExtension(fileName); 
+
+			final String extension = FilenameUtils.getExtension(fileName);
 			final FileCompression compressor;
 			if ("gz".equalsIgnoreCase(extension)) {
 				compressor = GZIP;
 			} else if ("gzip".equalsIgnoreCase(extension)) {
-				compressor = GZIP;				
+				compressor = GZIP;
 			} else if ("bz2".equalsIgnoreCase(extension)) {
-				compressor = BZIP2;				
+				compressor = BZIP2;
 			} else if ("bzip2".equalsIgnoreCase(extension)) {
-				compressor = BZIP2;						
+				compressor = BZIP2;
 			} else if ("xz".equalsIgnoreCase(extension)) {
 				compressor = XZ;
 			} else {
 				compressor = NONE;
 			}
-			
+
 			return compressor.createCompressor(writeTo, fileName);
 		}
-		
+
 		@Override
 		public InputStream createDecompressor(final InputStream readFrom) {
 			final InputStream bufferedStream = bufferStream(readFrom);
@@ -84,7 +84,7 @@ public enum FileCompression {
 			} catch (CompressorException e) {
 				return NONE.createDecompressor(bufferedStream);
 			}
-		}	
+		}
 	},
 
 	BZIP2 {
@@ -97,7 +97,7 @@ public enum FileCompression {
 				throw new MetafactureException(e);
 			}
 		}
-		
+
 		@Override
 		public InputStream createDecompressor(final InputStream readFrom) {
 			try {
@@ -108,7 +108,7 @@ public enum FileCompression {
 			}
 		}
 	},
-	
+
 	GZIP {
 		@Override
 		public OutputStream createCompressor(final OutputStream writeTo, final String fileName) {
@@ -119,7 +119,7 @@ public enum FileCompression {
 				throw new MetafactureException(e);
 			}
 		}
-		
+
 		@Override
 		public InputStream createDecompressor(final InputStream readFrom) {
 			try {
@@ -130,7 +130,7 @@ public enum FileCompression {
 			}
 		}
 	},
-	
+
 	PACK200 {
 		@Override
 		public OutputStream createCompressor(final OutputStream writeTo, final String fileName) {
@@ -141,7 +141,7 @@ public enum FileCompression {
 				throw new MetafactureException(e);
 			}
 		}
-		
+
 		@Override
 		public InputStream createDecompressor(final InputStream readFrom) {
 			try {
@@ -152,7 +152,7 @@ public enum FileCompression {
 			}
 		}
 	},
-	
+
 	XZ {
 		@Override
 		public OutputStream createCompressor(final OutputStream writeTo, final String fileName) {
@@ -163,7 +163,7 @@ public enum FileCompression {
 				throw new MetafactureException(e);
 			}
 		}
-		
+
 		@Override
 		public InputStream createDecompressor(final InputStream readFrom) {
 			try {
@@ -174,14 +174,14 @@ public enum FileCompression {
 			}
 		}
 	};
-	
+
 	private static final CompressorStreamFactory APACHE_COMPRESSOR_FACTORY = new CompressorStreamFactory();
 	private static final int BUFFER_SIZE = 8 * 1024 * 1024;
-	
+
 	public abstract OutputStream createCompressor(final OutputStream writeTo, final String fileName);
-	
+
 	public abstract InputStream createDecompressor(final InputStream readFrom);
-	
+
 	private static OutputStream bufferStream(final OutputStream stream) {
 		if (stream instanceof BufferedOutputStream) {
 			return stream;
@@ -195,5 +195,5 @@ public enum FileCompression {
 		}
 		return new BufferedInputStream(stream, BUFFER_SIZE);
 	}
-	
+
 }

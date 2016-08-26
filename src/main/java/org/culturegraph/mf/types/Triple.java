@@ -1,44 +1,33 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.types;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
-import org.culturegraph.mf.exceptions.ShouldNeverHappenException;
+import java.util.Objects;
 
 /**
- * Stores an immutable name-value-pair. The hash code is precomputed during
- * instantiation.
- * 
+ * Stores an immutable subject-predicate-object triple.
+ *
  * @author Markus Michael Geipel
  */
 public final class Triple implements Comparable<Triple> {
 
-	/**
-	 * Content type of triple object
-	 */
-	public enum ObjectType {
-		STRING, ENTITY
-	}
-
-	private static final int MAGIC1 = 23;
-	private static final int MAGIC2 = 31;
-	private static final int MAGIC3 = 17;
 	private final String subject;
 	private final String predicate;
 	private final String object;
@@ -46,70 +35,46 @@ public final class Triple implements Comparable<Triple> {
 
 	private final int preCompHashCode;
 
-	public Triple(final String subject, final String predicate, final String object) {
-		this.subject = subject;
-		this.predicate = predicate;
-		this.object = object;
-		objectType = ObjectType.STRING;
-		int result = MAGIC1;
-		result = MAGIC2 * result + predicate.hashCode();
-		result = MAGIC2 * result + object.hashCode();
-		result = MAGIC3 * result + subject.hashCode();
-		result = MAGIC3 * result + objectType.hashCode();
-		preCompHashCode = result;
-		
-
+	public Triple(final String subject, final String predicate,
+			final String object) {
+		this(subject, predicate, object, ObjectType.STRING);
 	}
-	
-	public Triple(final String subject, final String predicate, final String object, final ObjectType objectType) {
+
+	public Triple(final String subject, final String predicate,
+			final String object, final ObjectType objectType) {
 		this.subject = subject;
 		this.predicate = predicate;
 		this.object = object;
 		this.objectType = objectType;
-		int result = MAGIC1;
-		result = MAGIC2 * result + predicate.hashCode();
-		result = MAGIC2 * result + object.hashCode();
-		result = MAGIC3 * result + subject.hashCode();
-		result = MAGIC3 * result + objectType.hashCode();
-		preCompHashCode = result;
-		
-
+		preCompHashCode = computeHashCode();
 	}
 
-
-	/**
-	 * @return object
-	 */
-	public String getObject() {
-		return object;
+	private int computeHashCode() {
+		return Objects.hash(subject, predicate, object, objectType);
 	}
 
-	/**
-	 * @return predicate
-	 */
-	public String getPredicate() {
-		return predicate;
-	}
-	
-	/**
-	 * @return object type
-	 */
-	public ObjectType getObjectType() {
-		return objectType;
-	}
-
-	/**
-	 * @return subject
-	 */
 	public String getSubject() {
 		return subject;
 	}
 
+	public String getPredicate() {
+		return predicate;
+	}
+
+	public String getObject() {
+		return object;
+	}
+
+	public ObjectType getObjectType() {
+		return objectType;
+	}
+
 	public static Triple read(final ObjectInputStream in) throws IOException {
 		try {
-			return new Triple(in.readUTF(), in.readUTF(), in.readUTF(), (ObjectType) in.readObject());
-		} catch (ClassNotFoundException e) {
-			throw new ShouldNeverHappenException(e);
+			return new Triple(in.readUTF(), in.readUTF(), in.readUTF(),
+					(ObjectType) in.readObject());
+		} catch (final ClassNotFoundException e) {
+			throw new IOException("Cannot read triple", e);
 		}
 	}
 
@@ -127,12 +92,18 @@ public final class Triple implements Comparable<Triple> {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj instanceof Triple) {
-			final Triple triple = (Triple) obj;
-			return triple.preCompHashCode == preCompHashCode && triple.predicate.equals(predicate)
-					&& triple.object.equals(object) && triple.subject.equals(subject) && triple.objectType == objectType;
+		if (obj == this) {
+			return true;
 		}
-		return false;
+		if (!(obj instanceof Triple)) {
+			return false;
+		}
+		final Triple other = (Triple) obj;
+		return other.preCompHashCode == preCompHashCode
+				&& other.predicate.equals(predicate)
+				&& other.object.equals(object)
+				&& other.subject.equals(subject)
+				&& other.objectType == objectType;
 	}
 
 	@Override
@@ -142,7 +113,7 @@ public final class Triple implements Comparable<Triple> {
 			result = predicate.compareTo(triple.predicate);
 			if (result == 0) {
 				result = object.compareTo(triple.object);
-				if(result == 0){
+				if(result == 0) {
 					return objectType.compareTo(triple.objectType);
 				}
 			}
@@ -154,4 +125,12 @@ public final class Triple implements Comparable<Triple> {
 	public String toString() {
 		return subject + ":" + predicate + "=" + object + " (" + objectType + ")";
 	}
+
+	/**
+	 * Content type of triple object.
+	 */
+	public enum ObjectType {
+		STRING, ENTITY
+	}
+
 }

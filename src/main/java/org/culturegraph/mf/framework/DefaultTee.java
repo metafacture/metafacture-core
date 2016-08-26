@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.framework;
 
@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * Default implementation for tee modules.
- * 
+ *
  * @param <T> receiver type
  *
  * @author Christoph Böhme
@@ -84,7 +84,7 @@ public class DefaultTee<T extends Receiver> implements Tee<T> {
 			receiver.closeStream();
 		}
 	}
-	
+
 	/**
 	 * Invoked when the list of receivers connected to this tee is changed.
 	 * This method is called after the receiver has been updated. Hence,
@@ -98,36 +98,36 @@ public class DefaultTee<T extends Receiver> implements Tee<T> {
 	/**
 	 * Invoked when the {@code resetStream()} method is called.
 	 * Override this method to perform a reset of the module.
-	 * 
+	 *
 	 * Do not call the {@code resetStream()} method of the next modules downstream.
 	 * This is handled by the implementation of {@code resetStream()} in
 	 * {@code DefaultTee}.
-	 * 
+	 *
 	 * {@code onResetStream()} is called before {@code DefaultTee} calls the
 	 * {@code resetStream()} method of the downstream modules.
 	 */
 	protected void onResetStream() {
 		// Default implementation does nothing
 	}
-	
+
 	/**
 	 * Invoked when the {@code closeStream()} method is called. Override
 	 * this method to close any resources used by the module.
-	 * 
+	 *
 	 * Do not call the {@code closeStream()} method of the next modules
 	 * downstream. This is handled by the implementation of
 	 * {@code closeStream()} in {@code DefaultTee}.
-	 * 
+	 *
 	 * {@code onCloseStream()} is called before {@code DefaultTee} calls
 	 * the {@code closeStream()} method of the downstream modules.
 	 */
 	protected void onCloseStream() {
 		// Default implementation does nothing
 	}
-	
+
 	/**
 	 * Returns a reference to the downstream module.
-	 * 
+	 *
 	 * @return reference to the downstream module
 	 */
 	protected final List<T> getReceivers() {

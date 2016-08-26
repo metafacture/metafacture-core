@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.culturegraph</groupId>
 	<artifactId>metafacture-core</artifactId>
-	<version>3.1.13-dswarm-SNAPSHOT</version>
+	<version>4.0.0-dswarm-SNAPSHOT</version>
 	<name>metafacture.core</name>
 	<description>Core package of the metafacture tool suite</description>
 	<licenses>
@@ -63,8 +62,7 @@
 	</prerequisites>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- note: org.culturegraph.mf.stream.pipe.sort.AbstractTripleSortTest#issue192ShouldUnregisterFromTheJVMToNotCauseMemoryLeak fails when upgrading to Java 8 -->
-		<targetJdk>1.7</targetJdk>
+		<targetJdk>1.8</targetJdk>
 		<antlr.version>3.5.2</antlr.version>
 		<version.jackson>2.7.1</version.jackson>
 		<version.json-path>2.1.0</version.json-path>
@@ -294,15 +292,15 @@
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
+			<artifactId>slf4j-api</artifactId>
 			<version>${version.slf4j}</version>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
+			<artifactId>slf4j-simple</artifactId>
 			<version>${version.slf4j}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -374,7 +372,7 @@
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
-					<!--  Conflicts with the newer hamcrest version 
+					<!--  Conflicts with the newer hamcrest version
 					      pulled in by junit -->
 					<artifactId>hamcrest-core</artifactId>
 					<groupId>org.hamcrest</groupId>
@@ -409,6 +407,7 @@
 								<configuration>
 									<show>public</show>
 									<nohelp>true</nohelp>
+									<additionalparam>-Xdoclint:none</additionalparam>
 								</configuration>
 							</execution>
 						</executions>

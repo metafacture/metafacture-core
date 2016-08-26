@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.flux;
 
@@ -35,9 +35,9 @@ import org.culturegraph.mf.util.reflection.ObjectFactory;
 
 /**
  * prints Flux help for a given {@link ObjectFactory}
- * 
+ *
  * @author Markus Michael Geipel
- * 
+ *
  */
 public final class HelpPrinter {
 	private HelpPrinter() {
@@ -45,11 +45,11 @@ public final class HelpPrinter {
 	}
 
 	public static void print(final ObjectFactory<?> factory, final PrintStream out) {
-		
-	
+
+
 		out.println("WELCOME TO METAFACTURE");
 		out.println(ResourceUtil.loadProperties("build.properties").toString());
-		
+
 		out.println("\nUsage:\tflux FLOW_FILE [VARNAME=VALUE ...]\n");
 		out.println("Available pipe elements:\n");
 
@@ -75,9 +75,9 @@ public final class HelpPrinter {
 		if (!arguments.isEmpty()) {
 			out.println("argument in\t" + arguments);
 		}
-		
+
 		final Map<String, Class<?>> attributes = factory.getAttributes(name);
-				
+
 		if (!attributes.isEmpty()) {
 			out.print("options:\t");
 			final StringBuilder builder = new StringBuilder();
@@ -87,7 +87,7 @@ public final class HelpPrinter {
 				}else{
 					builder.append(entry.getKey() + " (" + entry.getValue().getName()+"), ");
 				}
-				
+
 			}
 			out.println(builder.substring(0, builder.length()-2));
 		}

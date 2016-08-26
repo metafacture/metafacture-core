@@ -1,26 +1,25 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.converter;
 
-import org.culturegraph.mf.formeta.Formeta;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.types.Triple;
 import org.culturegraph.mf.types.Triple.ObjectType;
 import org.culturegraph.mf.util.StreamConstants;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -28,129 +27,107 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Tests {@link StreamToTriples}
- * 
+ * Tests for class {@link StreamToTriples}.
+ *
  * @author Markus Geipel
- * 
+ * @author Christoph Böhme
+ *
  */
 public final class StreamToTriplesTest {
 
-	private static final String VALUE = "value";
-	private static final String NAME = "name";
-	private static final String ENTITY_NAME = "ename";
-	private static final String REC_ID = "id";
-	private static final String REC_ALT_ID = "altid";
-	private static final String RECORD_PREDICATE = "rec_pred";
-
-	private StreamToTriples toTriples;
-	
 	@Mock
 	private ObjectReceiver<Triple> receiver;
-	
+
+	private StreamToTriples streamToTriples;
+
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		toTriples = new StreamToTriples();
-		toTriples.setReceiver(receiver);
-	}
-	
-	@After
-	public void cleanup() {
-		toTriples.closeStream();
-	}
-	
-	@Test
-	public void testShouldBuildTripleFromLiteral() {
-		toTriples.startRecord(REC_ID);
-		toTriples.literal(NAME, VALUE);
-		toTriples.endRecord();
-
-		Mockito.verify(receiver).process(new Triple(REC_ID, NAME, VALUE));
+		streamToTriples = new StreamToTriples();
+		streamToTriples.setReceiver(receiver);
 	}
 
 	@Test
-	public void testShouldEncodeEntities() {
-		toTriples.startRecord(REC_ID);
-		toTriples.startEntity(ENTITY_NAME);
-		toTriples.literal(NAME, VALUE);
-		toTriples.startEntity(ENTITY_NAME);
-		toTriples.literal(NAME, VALUE);
-		toTriples.endEntity();
-		toTriples.endEntity();
-		toTriples.endRecord();
+	public void shouldBuildTripleFromLiteral() {
+		streamToTriples.startRecord("id");
+		streamToTriples.literal("literal", "value");
+		streamToTriples.endRecord();
 
-		final String objectValue = 
-				Formeta.GROUP_START +
-					NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE + Formeta.ITEM_SEPARATOR + 
-					ENTITY_NAME + Formeta.GROUP_START + 
-						NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE + 
-					Formeta.GROUP_END + 
-				Formeta.GROUP_END;
-		Mockito.verify(receiver).process(new Triple(REC_ID,  ENTITY_NAME, objectValue, ObjectType.ENTITY));
+		Mockito.verify(receiver).process(new Triple("id", "literal", "value"));
 	}
 
 	@Test
-	public void testShouldRedirectOnMoveToInName() {
-		toTriples.setRedirect(true);
+	public void shouldEncodeEntities() {
+		streamToTriples.startRecord("id");
+		streamToTriples.startEntity("entity1");
+		streamToTriples.literal("literal1", "value1");
+		streamToTriples.startEntity("entity2");
+		streamToTriples.literal("literal2", "value2");
+		streamToTriples.endEntity();
+		streamToTriples.endEntity();
+		streamToTriples.endRecord();
 
-		toTriples.startRecord(REC_ID);
-		toTriples.literal("{to:" + REC_ALT_ID + "}" + NAME, VALUE);
-		toTriples.endRecord();
-
-		Mockito.verify(receiver).process(new Triple(REC_ALT_ID, NAME, VALUE));
+		final String encodedEntity =
+				"{literal1:value1,entity2{literal2:value2}}";
+		Mockito.verify(receiver).process(
+				new Triple("id",  "entity1", encodedEntity, ObjectType.ENTITY));
 	}
 
 	@Test
-	public void testShouldRedirectIfAltIdGiven() {
-		toTriples.setRedirect(true);
+	public void shouldRedirectOnMoveToInName() {
+		streamToTriples.setRedirect(true);
 
-		toTriples.startRecord(REC_ID);
-		toTriples.literal(StreamConstants.ID, REC_ALT_ID);
-		toTriples.literal(NAME, VALUE);
-		toTriples.endRecord();
+		streamToTriples.startRecord("id");
+		streamToTriples.literal("{to:altId}literal", "value");
+		streamToTriples.endRecord();
 
-		Mockito.verify(receiver).process(new Triple(REC_ALT_ID, NAME, VALUE));
+		Mockito.verify(receiver).process(new Triple("altId", "literal", "value"));
 	}
 
 	@Test
-	public void testShouldEncodeWholeRecordsIfRecordPredicateIsGiven() {
-		toTriples.setRecordPredicate(RECORD_PREDICATE);
-		
-		toTriples.startRecord(REC_ID);
-		toTriples.startEntity(ENTITY_NAME);
-		toTriples.literal(NAME, VALUE);
-		toTriples.endEntity();
-		toTriples.startEntity(ENTITY_NAME);
-		toTriples.literal(NAME, VALUE);
-		toTriples.endEntity();
-		toTriples.endRecord();
-		
-		final String objectValue = 
-				Formeta.GROUP_START + 
-					ENTITY_NAME + Formeta.GROUP_START + 
-						NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE + 
-					Formeta.GROUP_END +
-					ENTITY_NAME + Formeta.GROUP_START + 
-						NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE + 
-					Formeta.GROUP_END + 
-				Formeta.GROUP_END;
-		Mockito.verify(receiver).process(new Triple(REC_ID, RECORD_PREDICATE, objectValue, ObjectType.ENTITY));
+	public void shouldRedirectIfAltIdGiven() {
+		streamToTriples.setRedirect(true);
+
+		streamToTriples.startRecord("id");
+		streamToTriples.literal(StreamConstants.ID, "altId");
+		streamToTriples.literal("literal", "value");
+		streamToTriples.endRecord();
+
+		Mockito.verify(receiver).process(new Triple("altId", "literal", "value"));
 	}
-	
+
 	@Test
-	public void testShouldRedirectEvenIfRecordPredicateIsGiven() {
-		toTriples.setRecordPredicate(RECORD_PREDICATE);
-		toTriples.setRedirect(true);		
+	public void shouldEncodeWholeRecordsIfRecordPredicateIsGiven() {
+		streamToTriples.setRecordPredicate("record");
 
-		toTriples.startRecord(REC_ID);
-		toTriples.literal(StreamConstants.ID, REC_ALT_ID);
-		toTriples.literal(NAME, VALUE);
-		toTriples.endRecord();
+		streamToTriples.startRecord("id");
+		streamToTriples.startEntity("entity1");
+		streamToTriples.literal("literal1", "value1");
+		streamToTriples.endEntity();
+		streamToTriples.startEntity("entity2");
+		streamToTriples.literal("literal2", "value2");
+		streamToTriples.endEntity();
+		streamToTriples.endRecord();
 
-		final String objectValue = 
-				Formeta.GROUP_START + 
-					NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE + 
-				Formeta.GROUP_END;
-		Mockito.verify(receiver).process(new Triple(REC_ALT_ID, RECORD_PREDICATE, objectValue, ObjectType.ENTITY));
+		final String encodedRecord =
+				"{entity1{literal1:value1}entity2{literal2:value2}}";
+		Mockito.verify(receiver).process(
+				new Triple("id", "record", encodedRecord, ObjectType.ENTITY));
 	}
+
+	@Test
+	public void shouldRedirectEvenIfRecordPredicateIsGiven() {
+		streamToTriples.setRecordPredicate("record");
+		streamToTriples.setRedirect(true);
+
+		streamToTriples.startRecord("id");
+		streamToTriples.literal(StreamConstants.ID, "altId");
+		streamToTriples.literal("literal", "value");
+		streamToTriples.endRecord();
+
+		final String encodedRecord = "{literal:value}";
+		Mockito.verify(receiver).process(
+				new Triple("altId", "record", encodedRecord, ObjectType.ENTITY));
+	}
+
 }

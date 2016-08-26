@@ -23,6 +23,7 @@ import org.culturegraph.mf.formeta.Formeta;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
@@ -35,6 +36,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 @In(Reader.class)
 @Out(String.class)
 @Description("Reads a stream of formeta data and splits between each top-level element")
+@FluxCommand("as-formeta-records")
 public final class FormetaRecordsReader extends
 		DefaultObjectPipe<Reader, ObjectReceiver<String>> {
 

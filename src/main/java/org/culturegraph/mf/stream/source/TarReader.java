@@ -27,6 +27,7 @@ import org.apache.commons.io.input.ReaderInputStream;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
@@ -38,6 +39,7 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Description("Opens a tar archive and passes every entry.")
 @In(Reader.class)
 @Out(Reader.class)
+@FluxCommand("open-tar")
 public class TarReader extends DefaultObjectPipe<Reader, ObjectReceiver<Reader>> {
 	@Override
 	public void process(final Reader reader) {

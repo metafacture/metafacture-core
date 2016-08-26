@@ -1,144 +1,93 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.pipe;
 
-import org.culturegraph.mf.exceptions.FormatException;
+import static org.mockito.Mockito.inOrder;
+
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.stream.sink.EventList;
-import org.culturegraph.mf.stream.sink.StreamValidator;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 
 /**
- * Tests for {@link StreamMerger}.
- * 
+ * Tests for class {@link StreamMerger}.
+ *
  * @author Christoph Böhme
  *
  */
 public final class StreamMergerTest {
 
-	private static final String ID1 = "1";
-	private static final String ID2 = "2";
-	private static final String ENTITY1 = "E1";
-	private static final String ENTITY2 = "E2";
-	private static final String LITERAL1 = "L1";
-	private static final String LITERAL2 = "L2";
-	private static final String LITERAL3 = "L3";
-	private static final String VALUE1 = "v1";
-	private static final String VALUE2 = "v2";
-	private static final String VALUE3 = "v3";
-	private static final String VALUE4 = "v4";
-	
-	private StreamMerger streamMerger;
-	
 	@Mock
 	private StreamReceiver receiver;
-	
+
+	private StreamMerger streamMerger;
+
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		streamMerger = new StreamMerger();
 		streamMerger.setReceiver(receiver);
 	}
-	
+
 	@Test
-	public  void testShouldMergeSequencesOfRecordsWithTheSameId() {
-		final EventList buffer = new EventList();
+	public  void shouldMergeSequencesOfRecordsWithTheSameId() {
+		streamMerger.startRecord("1");
+		streamMerger.startEntity("entity-1");
+		streamMerger.endEntity();
+		streamMerger.literal("literal-1", "value-1");
+		streamMerger.endRecord();
+		streamMerger.startRecord("1");
+		streamMerger.startEntity("entity-2");
+		streamMerger.endEntity();
+		streamMerger.literal("literal-2", "value-2");
+		streamMerger.endRecord();
+		streamMerger.closeStream();
 
-		buffer.startRecord(ID1);
-			buffer.startEntity(ENTITY1);
-				buffer.literal(LITERAL1, VALUE1);
-			buffer.endEntity();
-			buffer.literal(LITERAL2, VALUE2);
-			buffer.literal(LITERAL2, VALUE3);
-			buffer.startEntity(ENTITY2);
-				buffer.literal(LITERAL3, VALUE4);
-			buffer.endEntity();
-		buffer.endRecord();
-		buffer.closeStream();
-		
-		final StreamMerger merger = new StreamMerger();
-		final StreamValidator validator = new StreamValidator(buffer.getEvents());
-
-		merger.setReceiver(validator);
-
-		try {
-			merger.startRecord(ID1);
-				merger.startEntity(ENTITY1);
-					merger.literal(LITERAL1, VALUE1);
-				merger.endEntity();
-				merger.literal(LITERAL2, VALUE2);
-			merger.endRecord();
-			merger.startRecord(ID1);
-				merger.literal(LITERAL2, VALUE3);
-				merger.startEntity(ENTITY2);
-					merger.literal(LITERAL3, VALUE4);
-				merger.endEntity();
-			merger.endRecord();
-			merger.closeStream();
-		} catch(FormatException e) {
-			Assert.fail(e.toString());
-		}
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("1");
+		ordered.verify(receiver).startEntity("entity-1");
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).literal("literal-1", "value-1");
+		ordered.verify(receiver).startEntity("entity-2");
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).literal("literal-2", "value-2");
+		ordered.verify(receiver).endRecord();
 	}
-	
+
 	@Test
-	public  void testNoMerge() {
-		final EventList buffer = new EventList();
-		
-		
-		buffer.startRecord(ID1);
-			buffer.startEntity(ENTITY1);
-				buffer.literal(LITERAL1, VALUE1);
-			buffer.endEntity();
-			buffer.literal(LITERAL2, VALUE2);
-		buffer.endRecord();
-		buffer.startRecord(ID2);
-			buffer.literal(LITERAL2, VALUE3);
-			buffer.startEntity(ENTITY2);
-				buffer.literal(LITERAL3, VALUE4);
-			buffer.endEntity();
-		buffer.endRecord();		
-		buffer.closeStream();
-		
-		final StreamMerger merger = new StreamMerger();
-		final StreamValidator validator = new StreamValidator(buffer.getEvents());
-		
-		merger.setReceiver(validator);
-		
-		try {
-			merger.startRecord(ID1);
-				merger.startEntity(ENTITY1);
-					merger.literal(LITERAL1, VALUE1);
-				merger.endEntity();
-				merger.literal(LITERAL2, VALUE2);
-			merger.endRecord();
-			merger.startRecord(ID2);
-				merger.literal(LITERAL2, VALUE3);
-				merger.startEntity(ENTITY2);
-					merger.literal(LITERAL3, VALUE4);
-				merger.endEntity();
-			merger.endRecord();
-			merger.closeStream();
-		} catch(FormatException e) {
-			Assert.fail(e.toString());
-		}
+	public  void shouldNoMergeRecordsWithDifferentIds() {
+		streamMerger.startRecord("1");
+		streamMerger.literal("literal-1", "value-1");
+		streamMerger.endRecord();
+		streamMerger.startRecord("2");
+		streamMerger.literal("literal-2", "value-2");
+		streamMerger.endRecord();
+		streamMerger.closeStream();
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("1");
+		ordered.verify(receiver).literal("literal-1", "value-1");
+		ordered.verify(receiver).endRecord();
+		ordered.verify(receiver).startRecord("2");
+		ordered.verify(receiver).literal("literal-2", "value-2");
+		ordered.verify(receiver).endRecord();
 	}
 
 }

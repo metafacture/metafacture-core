@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.converter.xml;
 
@@ -28,6 +28,7 @@ import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.MultiMap;
@@ -44,6 +45,7 @@ import org.culturegraph.mf.util.ResourceUtil;
 @Description("Encodes a stream as xml")
 @In(StreamReceiver.class)
 @Out(String.class)
+@FluxCommand("stream-to-xml")
 public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
 	public static final String ATTRIBUTE_MARKER = "~";
@@ -64,13 +66,14 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 	private static final String END_CLOSE_ELEMENT = ">";
 
 	private static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-	private static final String XMLNS_MARKER = " xmlns:";
+	private static final String XMLNS_MARKER = " xmlns";
 
 	private final StringBuilder builder = new StringBuilder();
 
 	private String rootTag = DEFAULT_ROOT_TAG;
 	private String recordTag = DEFAULT_RECORD_TAG;
 	private Map<String, String> namespaces = new HashMap<String, String>();
+	private boolean writeRootTag = true;
 	private boolean writeXmlHeader = true;
 	private boolean separateRoots;
 
@@ -103,12 +106,20 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 		this.writeXmlHeader = writeXmlHeader;
 	}
 
+	public void setWriteRootTag(final boolean writeRootTag) {
+		this.writeRootTag  = writeRootTag;
+	}
+
 	public void setSeparateRoots(final boolean separateRoots) {
 		this.separateRoots = separateRoots;
 	}
 
 	public void setNamespaces(final MultiMap multimap) {
-		this.namespaces = multimap.getMap(NAMESPACES);
+		setNamespaces(multimap.getMap(NAMESPACES));
+	}
+
+	public void setNamespaces(final Map<String, String> namespaces) {
+		this.namespaces = namespaces;
 	}
 
 	@Override
@@ -122,6 +133,17 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 		atStreamStart = false;
 
 		element = new Element(recordTag);
+		if (!writeRootTag) {
+			addNamespacesToElement();
+		}
+	}
+
+	private void addNamespacesToElement() {
+		for (final Entry<String, String> namespace : namespaces.entrySet()) {
+			final String key = namespace.getKey();
+			final String name = XMLNS_MARKER + (key.isEmpty() ? "" : ":") + key;
+			element.addAttribute(name, namespace.getValue());
+		}
 	}
 
 	@Override
@@ -156,7 +178,9 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
 	@Override
 	protected void onResetStream() {
-		writeFooter();
+		if (!atStreamStart) {
+			writeFooter();
+		}
 		sendAndClearData();
 		atStreamStart = true;
 	}
@@ -164,7 +188,9 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 	@Override
 	protected void onCloseStream() {
 		if (!separateRoots) {
-			writeFooter();
+			if (!atStreamStart) {
+				writeFooter();
+			}
 			sendAndClearData();
 		}
 	}
@@ -178,24 +204,30 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 		if (writeXmlHeader) {
 			builder.append(XML_HEADER);
 		}
-
-		builder.append(BEGIN_OPEN_ELEMENT);
-		builder.append(rootTag);
-		for (final Entry<String, String> entry : namespaces.entrySet()) {
-			builder.append(XMLNS_MARKER);
-			builder.append(entry.getKey());
-			builder.append(BEGIN_ATTRIBUTE);
-			writeEscaped(builder, entry.getValue());
-			builder.append(END_ATTRIBUTE);
+		if (writeRootTag) {
+			builder.append(BEGIN_OPEN_ELEMENT);
+			builder.append(rootTag);
+			for (final Entry<String, String> entry : namespaces.entrySet()) {
+				builder.append(XMLNS_MARKER);
+				if (!entry.getKey().isEmpty()) {
+					builder.append(':');
+					builder.append(entry.getKey());
+				}
+				builder.append(BEGIN_ATTRIBUTE);
+				writeEscaped(builder, entry.getValue());
+				builder.append(END_ATTRIBUTE);
+			}
+			builder.append(END_OPEN_ELEMENT);
 		}
-		builder.append(END_OPEN_ELEMENT);
 	}
 
 	private void writeFooter() {
-		builder.append(NEW_LINE);
-		builder.append(BEGIN_CLOSE_ELEMENT);
-		builder.append(rootTag);
-		builder.append(END_CLOSE_ELEMENT);
+		if (writeRootTag) {
+			builder.append(NEW_LINE);
+			builder.append(BEGIN_CLOSE_ELEMENT);
+			builder.append(rootTag);
+			builder.append(END_CLOSE_ELEMENT);
+		}
 	}
 
 	protected static void writeEscaped(final StringBuilder builder, final String str) {

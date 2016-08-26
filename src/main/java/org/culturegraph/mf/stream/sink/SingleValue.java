@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.sink;
 
@@ -25,7 +25,7 @@ import org.culturegraph.mf.framework.DefaultStreamReceiver;
  * @author Markus Michael Geipel
  *
  */
-public final class SingleValue extends DefaultStreamReceiver 
+public final class SingleValue extends DefaultStreamReceiver
 		implements Collector<String> {
 
 	private boolean closed;
@@ -36,16 +36,16 @@ public final class SingleValue extends DefaultStreamReceiver
 		super();
 		collection = null;
 	}
-	
+
 	public SingleValue(final Collection<String> collection) {
 		super();
 		this.collection = collection;
 	}
-	
+
 	public boolean isClosed() {
 		return closed;
 	}
-	
+
 	/**
 	 * @return collected value, if nothing collected return ""
 	 */
@@ -56,7 +56,7 @@ public final class SingleValue extends DefaultStreamReceiver
 	private void setValue(final String value) {
 		this.value = value;
 	}
-	
+
 	@Override
 	public void startRecord(final String identifier) {
 		this.setValue("");
@@ -76,13 +76,13 @@ public final class SingleValue extends DefaultStreamReceiver
 		assert !closed;
 		this.setValue(value);
 	}
-	
+
 	@Override
 	public void resetStream() {
 		value = "";
 		closed = false;
 	}
-	
+
 	@Override
 	public void closeStream() {
 		closed = true;
@@ -95,7 +95,7 @@ public final class SingleValue extends DefaultStreamReceiver
 
 	@Override
 	public void setCollection(final Collection<String> collection) {
-		this.collection = collection;		
+		this.collection = collection;
 	}
 
 }

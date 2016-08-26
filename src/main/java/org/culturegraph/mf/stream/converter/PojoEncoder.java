@@ -21,6 +21,7 @@ import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.slf4j.Logger;
@@ -29,16 +30,17 @@ import org.slf4j.LoggerFactory;
 /**
  * This class creates and fills a new object instance with stream data and sends
  * the result to the given object receiver.
- * 
+ *
  * @author Thomas Seidel
- * 
+ *
  * @param <T>
  *            The type of the object to create.
- * 
+ *
  */
 @Description("Creates a pojo (Plain Old Java Object) based on a record containing the member values")
 @In(StreamReceiver.class)
 @Out(Object.class)
+@FluxCommand("encode-pojo")
 public class PojoEncoder<T> extends DefaultStreamPipe<ObjectReceiver<T>> {
 
 	private static final Logger LOG = LoggerFactory
@@ -73,9 +75,9 @@ public class PojoEncoder<T> extends DefaultStreamPipe<ObjectReceiver<T>> {
 	/**
 	 * A ValueSetter sets a pojos's member, via setter method or field access.
 	 * Used by {@link ComplexTypeEncoder} only
-	 * 
+	 *
 	 * @author Thomas Seidel
-	 * 
+	 *
 	 */
 	private interface ValueSetter {
 
@@ -180,9 +182,9 @@ public class PojoEncoder<T> extends DefaultStreamPipe<ObjectReceiver<T>> {
 
 	/**
 	 * A TypeEncoder encodes a metafacture stream to a new object
-	 * 
+	 *
 	 * @author Thomas Seidel
-	 * 
+	 *
 	 */
 	private interface TypeEncoder {
 

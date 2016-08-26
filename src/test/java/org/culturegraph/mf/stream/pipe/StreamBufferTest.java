@@ -1,66 +1,110 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.pipe;
 
-import static org.junit.Assert.fail;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
-import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.stream.sink.EventList;
-import org.culturegraph.mf.stream.sink.StreamValidator;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 
 /**
- * Tests {@link StreamBuffer}.
- * 
+ * Tests for class {@link StreamBuffer}.
+ *
  * @author Markus Michael Geipel
- * @author Christoph Böhme
+ * @author Christoph Böhme (refactored to Mockito)
+ *
  */
 public final class StreamBufferTest {
 
+	@Mock
+	private StreamReceiver receiver;
+
+	private StreamBuffer streamBuffer;
+
+	@Before
+	public void setup() {
+		MockitoAnnotations.initMocks(this);
+		streamBuffer = new StreamBuffer();
+		streamBuffer.setReceiver(receiver);
+	}
+
 	@Test
-	public void testCorrectBuffering(){
-		final EventList list = new EventList();
-		execTestEvents(list);
-		final StreamValidator validator = new StreamValidator(list.getEvents());
+	public void shouldReplayRecordEvents() {
+		streamBuffer.startRecord("1");
+		streamBuffer.literal("l", "v");
+		streamBuffer.startEntity("e");
+		streamBuffer.endEntity();
+		streamBuffer.endRecord();
 
-		final StreamBuffer buffer = new StreamBuffer();
-		buffer.setReceiver(validator);	
-		execTestEvents(buffer);
+		verifyZeroInteractions(receiver);
 
-		try {
-			buffer.replay();
-			buffer.closeStream();
-		} catch (FormatException e) {
-			fail("Error during replay: " + e);
-		}
+		streamBuffer.replay();
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("1");
+		ordered.verify(receiver).literal("l", "v");
+		ordered.verify(receiver).startEntity("e");
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).endRecord();
 	}
-	
-	private void execTestEvents(final StreamReceiver receiver) {
-		receiver.startRecord("1");
-		receiver.literal("l1", "value1");
-		receiver.literal("l1", "value2");
-		receiver.startEntity("e1");
-		receiver.literal("l2", "value3");
-		receiver.endEntity();
-		receiver.endRecord();
-		receiver.startRecord("2");
-		receiver.literal("l3", "value4");
-		receiver.endRecord();
+
+	@Test
+	public void shouldReplayBufferMultipleTimes() {
+		streamBuffer.startRecord("1");
+		streamBuffer.endRecord();
+
+		streamBuffer.replay();
+		streamBuffer.replay();
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("1");
+		ordered.verify(receiver).endRecord();
+		ordered.verify(receiver).startRecord("1");
+		ordered.verify(receiver).endRecord();
 	}
-	
+
+	@Test
+	public void shouldClearBufferIfClearIsCalled() {
+		streamBuffer.startRecord("1");
+		streamBuffer.endRecord();
+
+		streamBuffer.clear();
+		streamBuffer.replay();
+
+		verifyZeroInteractions(receiver);
+	}
+
+	@Test
+	public void shouldClearBufferIfStreamIsReset() {
+		streamBuffer.startRecord("1");
+		streamBuffer.endRecord();
+
+		streamBuffer.resetStream();
+		streamBuffer.replay();
+
+		verify(receiver).resetStream();
+		verifyNoMoreInteractions(receiver);
+	}
+
 }
