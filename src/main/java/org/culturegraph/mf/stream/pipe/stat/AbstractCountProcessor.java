@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.pipe.stat;
 
@@ -28,9 +28,9 @@ import org.culturegraph.mf.types.Triple;
  * containing as subject the variable name and as object the count. Marginal
  * counts must appear first, joint counts second. Marinal counts must be written
  * as 1:VARNAME, Joint counts as 2:FIRSTVARNAME&SECONDVARNAME.
- * 
+ *
  * @author Markus Geipel
- * 
+ *
  */
 
 public abstract class AbstractCountProcessor extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
@@ -48,7 +48,7 @@ public abstract class AbstractCountProcessor extends DefaultObjectPipe<Triple, O
 	protected final int getTotal() {
 		return getMarginal("");
 	}
-	
+
 	protected final void setMinCount(final int min) {
 		minCount = min;
 	}
@@ -65,7 +65,7 @@ public abstract class AbstractCountProcessor extends DefaultObjectPipe<Triple, O
 			}
 			final int marginal = Integer.parseInt(triple.getObject());
 			if (marginal >= minCount) {
-			
+
 				marginals.put(triple.getSubject().substring(2), Integer.valueOf(marginal));
 			}
 

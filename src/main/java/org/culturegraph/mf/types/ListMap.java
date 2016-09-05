@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.types;
 
@@ -25,7 +25,7 @@ import java.util.Set;
 
 /**
  * A map containing a list of values for each key.
- * 
+ *
  * @author Markus Michael Geipel
  *
  * @param <K>
@@ -36,7 +36,7 @@ import java.util.Set;
 public class ListMap<K, V> implements Map<K, List<V>> {
 
 	private String identifier;
-	private final Map<K, List<V>> map; 
+	private final Map<K, List<V>> map;
 
 	public ListMap() {
 		super();
@@ -57,12 +57,12 @@ public class ListMap<K, V> implements Map<K, List<V>> {
 		map.clear();
 		identifier = null;
 	}
-	
+
 	public final List<V> removeKey(final K key) {
 		return map.remove(key);
 	}
-	
-	
+
+
 	public final void clearKey(final K key) {
 		final List<V> values = map.get(key);
 		if (values != null) {
@@ -86,7 +86,7 @@ public class ListMap<K, V> implements Map<K, List<V>> {
 		return map.keySet();
 	}
 
-	
+
 	public final void add(final K name, final V value) {
 
 		List<V> values = map.get(name);
@@ -118,11 +118,11 @@ public class ListMap<K, V> implements Map<K, List<V>> {
 		}
 		return values;
 	}
-	
+
 	public final boolean existsKey(final K name) {
 		return getFirst(name) != null;
 	}
-	
+
 	public final V getFirst(final K name) {
 		final List<V> values = map.get(name);
 		if (values == null || values.isEmpty()) {

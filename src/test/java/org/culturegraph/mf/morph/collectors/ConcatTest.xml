@@ -190,4 +190,25 @@
 		</result>
 	</test-case>
 
+	<test-case name="issue187_shouldUseEmptyDelimiterAsDefault">
+		<input type="text/x-formeta">
+			{
+				lit: data1,
+				lit: data2
+			}
+		</input>
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:concat name="concat">
+						<mm:data source="lit" />
+					</mm:concat>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+		<result type="text/x-formeta">
+			{ concat: data1data2 }
+		</result>
+	</test-case>
+
 </metamorph-test>

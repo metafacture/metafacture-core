@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.morph.functions;
 
@@ -30,9 +30,7 @@ import org.culturegraph.mf.util.StringUtil;
  */
 public final class Occurrence extends AbstractStatefulFunction {
 
-	private static final String LESS_THEN = "lessThen ";
 	private static final String LESS_THAN = "lessThan ";
-	private static final String MORE_THEN = "moreThen ";
 	private static final String MORE_THAN = "moreThan ";
 
 	private int count;
@@ -91,9 +89,9 @@ public final class Occurrence extends AbstractStatefulFunction {
 	private static IntFilter parse(final String only) {
 		final IntFilter filter;
 
-		if (only.startsWith(LESS_THEN) || only.startsWith(LESS_THAN)) {
+		if (only.startsWith(LESS_THAN)) {
 			filter = createLessThanFilter(extractNumberFrom(only));
-		} else if (only.startsWith(MORE_THEN) || only.startsWith(MORE_THAN)) {
+		} else if (only.startsWith(MORE_THAN)) {
 			filter = createGreaterThanFilter(extractNumberFrom(only));
 		} else {
 			final int number = Integer.parseInt(only);

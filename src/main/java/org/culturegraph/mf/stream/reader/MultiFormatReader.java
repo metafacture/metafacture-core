@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.reader;
 
@@ -29,7 +29,7 @@ import org.culturegraph.mf.framework.annotations.ReturnsAvailableArguments;
 /**
  * {@link MultiFormatReader} uses the {@link AbstractReaderFactory} to handle
  * all registered input formats.
- * 
+ *
  * @author Markus Michael Geipel
  */
 
@@ -38,19 +38,19 @@ import org.culturegraph.mf.framework.annotations.ReturnsAvailableArguments;
 @Out(StreamReceiver.class)
 public final class MultiFormatReader implements Reader{
 	private static final ReaderFactory READER_FACTORY = new ReaderFactory();
-	
+
 	private static final String ERROR_NO_FORMAT = "no format set";
 	private static final String ERROR_RECEIVER_NULL = "'streamReceiver' must not be null";
 	private Reader currentReader;
 	private final Map<String, Reader> openReaders = new HashMap<String, Reader>();
-	
+
 	private StreamReceiver streamReceiver;
 	private String currentFormat;
 
 	public MultiFormatReader() {
 		//nothing
 	}
-	
+
 	public MultiFormatReader(final String format) {
 		setFormat(format);
 	}
@@ -77,7 +77,7 @@ public final class MultiFormatReader implements Reader{
 				throw new IllegalArgumentException("Format '" + format + "' not regognized.");
 			}
 			currentReader = READER_FACTORY.newInstance(format);
-			
+
 			openReaders.put(format, currentReader);
 
 			if (streamReceiver != null) {

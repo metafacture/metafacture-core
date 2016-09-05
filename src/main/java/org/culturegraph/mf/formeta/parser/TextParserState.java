@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.formeta.parser;
 
@@ -19,12 +19,12 @@ import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.formeta.Formeta;
 
 /**
- * FSA for parsing identifiers, names and values. The initial parser 
+ * FSA for parsing identifiers, names and values. The initial parser
  * state is {@code LEADING_WHITESPACE}, the final (accepting) state
  * is {@code DELIMITER_REACHED}.
  */
 enum TextParserState {
-	
+
 	LEADING_WHITESPACE {
 		public TextParserState processChar(final char ch, final TextParserContext ctx) {
 			final TextParserState newState;
@@ -81,7 +81,7 @@ enum TextParserState {
 			ctx.appendEscapedChar(ch);
 			return TEXT;
 		}
-		
+
 		public void endOfInput(final TextParserContext ctx) {
 			throw new FormatException("incomplete escape sequence");
 		}
@@ -102,21 +102,21 @@ enum TextParserState {
 			}
 			return newState;
 		}
-		
+
 		public void endOfInput(final TextParserContext ctx) {
 			throw new FormatException("quoted string is not terminated");
 		}
-	}, 
+	},
 	QUOTED_ESCAPE_SEQ {
 		public TextParserState processChar(final char ch, final TextParserContext ctx) {
 			ctx.appendEscapedChar(ch);
 			return QUOTED_TEXT;
 		}
-		
+
 		public void endOfInput(final TextParserContext ctx) {
 			throw new FormatException("incomplete escape sequence and quoted string is not terminated");
 		}
-	}, 
+	},
 	TRAILING_WHITESPACE {
 		public TextParserState processChar(final char ch, final TextParserContext ctx) {
 			final TextParserState newState;
@@ -129,7 +129,7 @@ enum TextParserState {
 				break;
 			default:
 				if (Formeta.isWhitespace(ch)) {
-					newState = TRAILING_WHITESPACE;					
+					newState = TRAILING_WHITESPACE;
 				} else {
 					final String sep = "', '";
 					final String expected = "whitespace or one of '"
@@ -148,15 +148,15 @@ enum TextParserState {
 			throw new UnsupportedOperationException("Cannot process characters in state DELIMITER_REACHED");
 		}
 	};
-	
+
 	public abstract TextParserState processChar(final char ch, final TextParserContext ctx);
-	
+
 	public void endOfInput(final TextParserContext ctx) {
 		// Default implementation does nothing
 	}
-	
+
 	private static String getUnexpectedCharMsg(final String expected, final char actual) {
 		return expected + " expected but got '" + actual + "'";
 	}
-	
+
 }

@@ -1,17 +1,17 @@
 /*
- *  Copyright 2014 Christoph Böhme
+ * Copyright 2016 Christoph Böhme
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.iso2709;
 
@@ -25,6 +25,8 @@ package org.culturegraph.mf.iso2709;
 public final class Iso2709Format {
 
 	public static final int RECORD_LABEL_LENGTH = 24;
+
+	public static final int MIN_RECORD_LENGTH = RECORD_LABEL_LENGTH + 2;
 
 	public static final int RECORD_LENGTH_START = 0;
 	public static final int RECORD_LENGTH_LENGTH = 5;
@@ -58,9 +60,9 @@ public final class Iso2709Format {
 
 	public static final int TAG_LENGTH = 3;
 
-	public static final char IDENTIFIER_MARKER = Iso646Characters.IS1;
-	public static final char FIELD_SEPARATOR = Iso646Characters.IS2;
-	public static final char RECORD_SEPARATOR = Iso646Characters.IS3;
+	public static final byte IDENTIFIER_MARKER = Iso646Characters.IS1;
+	public static final byte FIELD_SEPARATOR = Iso646Characters.IS2;
+	public static final byte RECORD_SEPARATOR = Iso646Characters.IS3;
 
 	private Iso2709Format() {
 		// No instance allowed

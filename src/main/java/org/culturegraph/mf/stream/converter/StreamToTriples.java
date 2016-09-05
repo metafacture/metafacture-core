@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.converter;
 
@@ -26,6 +26,7 @@ import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.Triple;
@@ -33,17 +34,37 @@ import org.culturegraph.mf.types.Triple.ObjectType;
 import org.culturegraph.mf.util.StreamConstants;
 
 /**
- * 
+ * Emits the literals which are received as triples such
+ * that the name and value become the predicate and the object
+ * of the triple. The record id containing the literal becomes
+ * the subject.
+ * <p>
+ * If 'redirect' is true, the value of the subject is determined
+ * by using either the value of a literal named '_id', or for
+ * individual literals by prefixing their name with '{to:ID}'.
+ * <p>
+ * Set 'recordPredicate' to encode a complete record in one triple.
+ * The value of 'recordPredicate' is used as the predicate of the
+ * triple. If 'recordPredicate' is set, no {to:ID}NAME-style
+ * redirects are possible.
+ *
  * @author Markus Michael Geipel
- * 
+ *
  */
-@Description("Takes literals from a stream and emits them as triples such "
-		+ "that the name and value become predicate and object and the record id the subject. "
-		+ "If 'redirect' is true, use '_id' to change the id, or '{to:ID}NAME' to change the id of a single literal. "
-		+ "Set 'recordPredicate' to encode a complete record in one triple. The value of 'recordPredicate' is used "
-		+ "as the predicate of the triple. If 'recordPredicate' is set, no {to:ID}NAME-style redirects are possible.")
+@Description("Emits the literals which are received as triples such " +
+		 "that the name and value become the predicate and the object " +
+		 "of the triple. The record id containing the literal becomes " +
+		 "the subject. " +
+		 "If 'redirect' is true, the value of the subject is determined " +
+		 "by using either the value of a literal named '_id', or for " +
+		 "individual literals by prefixing their name with '{to:ID}'. " +
+		 "Set 'recordPredicate' to encode a complete record in one triple. " +
+		 "The value of 'recordPredicate' is used as the predicate of the " +
+		 "triple. If 'recordPredicate' is set, no {to:ID}NAME-style " +
+		 "redirects are possible.")
 @In(StreamReceiver.class)
 @Out(Triple.class)
+@FluxCommand("stream-to-triples")
 public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Triple>> {
 
 	private static final Pattern REDIRECT_PATTERN = Pattern.compile("^\\{to:(.+)}(.+)$");
@@ -55,7 +76,7 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 
 	private boolean redirect;
 	private String recordPredicate;
-	
+
 	private int nestingLevel;
 	private int encodeLevel;
 	private String predicateName;
@@ -64,15 +85,15 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 	public boolean isRedirect() {
 		return redirect;
 	}
-	
+
 	public void setRedirect(final boolean redirect) {
 		this.redirect = redirect;
 	}
-	
+
 	public String getRecordPredicate() {
 		return recordPredicate;
 	}
-	
+
 	public void setRecordPredicate(final String recordPredicate) {
 		this.recordPredicate = recordPredicate;
 	}
@@ -80,29 +101,29 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 	@Override
 	public void startRecord(final String identifier) {
 		assert !isClosed();
-		
+
 		currentId = identifier;
-		
+
 		if (recordPredicate != null) {
 			encodeLevel = 0;
 			startEncode(recordPredicate);
 		} else {
 			encodeLevel = 1;
 		}
-		
+
 		nestingLevel = 1;
 	}
 
 	@Override
 	public void endRecord() {
 		assert !isClosed();
-		
+
 		nestingLevel = 0;
-		
+
 		if (nestingLevel == encodeLevel) {
 			endEncode();
 		}
-		
+
 		if (redirect) {
 			for (int i = 0; i < nameBuffer.size(); ++i) {
 				getReceiver().process(new Triple(currentId, nameBuffer.get(i), valueBuffer.get(i), typeBuffer.get(i)));
@@ -116,7 +137,7 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 	@Override
 	public void startEntity(final String name) {
 		assert !isClosed();
-		
+
 		if (nestingLevel > encodeLevel) {
 			formatter.startGroup(name);
 		} else {
@@ -128,7 +149,7 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 	@Override
 	public void endEntity() {
 		assert !isClosed();
-		
+
 		--nestingLevel;
 		if (nestingLevel == encodeLevel) {
 			endEncode();
@@ -140,7 +161,7 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 	@Override
 	public void literal(final String name, final String value) {
 		assert !isClosed();
-		
+
 		if (nestingLevel > encodeLevel) {
 			if (nestingLevel == 1 && redirect && StreamConstants.ID.equals(name)) {
 				currentId = value;
@@ -151,13 +172,13 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 			dispatch(name, value, ObjectType.STRING);
 		}
 	}
-	
+
 	private void startEncode(final String predicate) {
 		predicateName = predicate;
 		formatter.reset();
-		formatter.startGroup("");		
+		formatter.startGroup("");
 	}
-	
+
 	private void endEncode() {
 		formatter.endGroup();
 		dispatch(predicateName, formatter.toString(), ObjectType.ENTITY);

@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.pipe.stat;
 
@@ -24,10 +24,10 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Tests {@link CooccurrenceMetricCalculator}.
- * 
+ * Tests for class {@link CooccurrenceMetricCalculator}.
+ *
  * @author Markus Michael Geipel
- * 
+ *
  */
 public final class CooccurrenceMetricCalculatorTest {
 
@@ -82,11 +82,11 @@ public final class CooccurrenceMetricCalculatorTest {
 		calculator.process(new Triple("1:A", "", Integer.toString(COUNT_A)));
 		calculator.process(new Triple("1:B", "", Integer.toString(COUNT_B)));
 		calculator.process(new Triple("2:A&B", "", Integer.toString(COUNT_A_AND_B)));
-		
+
 		Mockito.verify(receiver).process(new Triple("A&B", CooccurrenceMetricCalculator.Metric.X2.toString(), Double.toString(CooccurrenceMetricCalculator.Metric.X2.calculate(COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL))));
 	}
-	
-	
+
+
 	@Test(expected=IllegalArgumentException.class)
 	public void testIllegalArgument() {
 		final CooccurrenceMetricCalculator calculator = new CooccurrenceMetricCalculator("X2");
@@ -94,6 +94,6 @@ public final class CooccurrenceMetricCalculatorTest {
 		calculator.process(new Triple("2:x&x", "", Integer.toString(COUNT_A_AND_B)));
 		calculator.process(new Triple("1:x", "", Integer.toString(COUNT_B)));
 
-	
+
 	}
 }

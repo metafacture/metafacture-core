@@ -1,20 +1,20 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 /*
- *  Code based on http://www.javaspecialists.eu/archive/Issue092.html 
+ *  Code based on http://www.javaspecialists.eu/archive/Issue092.html
  */
 
 package org.culturegraph.mf.util;
@@ -44,13 +44,13 @@ public final class MemoryWarningSystem {
 	private MemoryWarningSystem() {
 		// no instances
 	}
-	
+
 	static {
 		setUsageThreshold(DEFAULT_THRESHOLD);
 		final MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
 		final NotificationEmitter emitter = (NotificationEmitter) mbean;
 		emitter.addNotificationListener(new NotificationListener() {
-			
+
 			@Override
 			public void handleNotification(final Notification notification, final Object handback) {
 				if (notification.getType().equals(MemoryNotificationInfo.MEMORY_THRESHOLD_EXCEEDED)) {
@@ -65,7 +65,7 @@ public final class MemoryWarningSystem {
 	protected static Collection<Listener> getListeners(){
 		return LISTENERS;
 	}
-	
+
 	public static long getMaxMemory() {
 		return TENURED_GEN_POOL.getUsage().getMax();
 	}
@@ -103,7 +103,7 @@ public final class MemoryWarningSystem {
 		}
 		throw new AssertionError("Could not find tenured space");
 	}
-	
+
 	/**
 	 * Interface for low memory listeners
 	 */

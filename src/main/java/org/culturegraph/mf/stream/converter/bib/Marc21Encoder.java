@@ -1,17 +1,17 @@
 /*
- *  Copyright 2014 Christoph Böhme
+ * Copyright 2014 Christoph Böhme
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.converter.bib;
 
@@ -20,6 +20,7 @@ import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.iso2709.Iso2709Format;
@@ -31,44 +32,41 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Encodes a stream in MARC21 format.
- *
- * <p>MARC21 supports two types of fields: reference fields and data fields.
+ * <p>
+ * MARC21 supports two types of fields: reference fields and data fields.
  * Reference fields consist of a name tag and a single value. Data fields have a
  * name tag, two indicators and consist of subfields which have an identifier
  * each.
- * </p>
- *
- * <p>The {@code Marc21Encoder} encodes a stream as follows:
- * </p>
- *
+ * <p>
+ * The {@code Marc21Encoder} encodes a stream as follows:
  * <ul>
  *   <li>top-level literals are encoded as reference fields. Their name must match
- *   the requirements for reference field tags in ISO 2709:2008 records.</li>
+ *   the requirements for reference field tags in ISO 2709:2008 records.
  *
  *   <li>entities are encoded as data fields. Only one level of entities is
  *   supported. The entity name must consist of a three letter tag name followed
  *   by two indicator characters. The tag name must follow the requirements for
- *   data field tags in ISO 2709:2008 records.</li>
+ *   data field tags in ISO 2709:2008 records.
  *
  *   <li>Literals in entities are encoded as subfields. The literal name is used
- *   as subfield indicator and must therefore be a single character.</li>
+ *   as subfield indicator and must therefore be a single character.
  *
  *   <li>If a literal named "leader" is encountered it is treated as a ISO
  *   2709:2008 record label and some of its contents (record status,
  *   implementation codes, user system characters) are copied into the generated
- *   record</li>
+ *   record
  *
  *   <li>literal named "type", which may be produced by {@link MarcXmlHandler}
- *   are ignored.</li>
+ *   are ignored.
  * </ul>
  *
  * <p>The stream expected by the encoder is compatible to the streams emitted by
- * the {@link MarcDecoder} and the {@link MarcXmlHandler}.
+ * the {@link Marc21Decoder} and the {@link MarcXmlHandler}.
  * </p>
  *
- * <p>The record identifier in {@code startRecord} is ignored. To add an identifier
- * to the MARC21 record a reference field with tag name 001 need to be added.
- * </p>
+ * <p>The record identifier in {@code startRecord} is ignored. To add an
+ * identifier to the MARC21 record a reference field with tag name 001 need to
+ * be added.
  *
  * @throws FormatException
  *             if the stream cannot be converted into a MARC21 record.
@@ -79,6 +77,7 @@ import org.slf4j.LoggerFactory;
 @In(StreamReceiver.class)
 @Out(String.class)
 @Description("Encodes MARC21 records")
+@FluxCommand("encode-marc21")
 public final class Marc21Encoder extends
 		DefaultStreamPipe<ObjectReceiver<String>> {
 
@@ -94,7 +93,6 @@ public final class Marc21Encoder extends
 
 	private boolean inField;
 
-	// CHECKSTYLE OFF: MagicNumber
 	static {
 		MARC21.setIndicatorLength(2);
 		MARC21.setIdentifierLength(2);
@@ -102,7 +100,6 @@ public final class Marc21Encoder extends
 		MARC21.setFieldStartLength(5);
 		MARC21.setImplDefinedPartLength(0);
 	}
-	// CHECKSTYLE ON: MagicNumber
 
 	public Marc21Encoder() {
 		super();

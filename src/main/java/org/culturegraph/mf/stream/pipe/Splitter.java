@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.pipe;
 
@@ -30,6 +30,8 @@ import org.culturegraph.mf.stream.sink.SingleValue;
 
 
 /**
+ * Splits a stream based on a morph definition.
+ *
  * @author Markus Michael Geipel
  *
  */
@@ -42,17 +44,17 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
 	private final SingleValue singleValue = new SingleValue();
 	private final Map<String, StreamReceiver> receiverMap = new HashMap<String, StreamReceiver>();
 	private final Metamorph metamorph;
-	
+
 	public Splitter(final String morphDef) {
 		metamorph = new Metamorph(morphDef);
 		metamorph.setReceiver(singleValue);
 	}
-	
+
 	public Splitter(final Reader morphDef) {
 		metamorph = new Metamorph(morphDef);
 		metamorph.setReceiver(singleValue);
 	}
-	
+
 	public Splitter(final Metamorph metamorph) {
 		this.metamorph = metamorph;
 		metamorph.setReceiver(singleValue);
@@ -68,22 +70,22 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
 		receiverMap.put(key, receiver);
 		return receiver;
 	}
-	
+
 	private void dispatch(){
 		final String key = singleValue.getValue();
 		final StreamReceiver receiver = receiverMap.get(key);
-		
+
 		if(null != receiver){
 			buffer.setReceiver(receiver);
 			buffer.replay();
 		}
 		buffer.clear();
 	}
-	
+
 	@Override
 	public void startRecord(final String identifier) {
 		buffer.startRecord(identifier);
-		metamorph.startRecord(identifier);	
+		metamorph.startRecord(identifier);
 	}
 
 	@Override
@@ -115,16 +117,16 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
 	public void resetStream() {
 		buffer.clear();
 		metamorph.resetStream();
-		for (StreamReceiver receiver: receiverMap.values()) {
+		for (final StreamReceiver receiver: receiverMap.values()) {
 			receiver.resetStream();
 		}
 	}
-	
+
 	@Override
 	public void closeStream() {
 		buffer.clear();
 		metamorph.closeStream();
-		for (StreamReceiver receiver: receiverMap.values()) {
+		for (final StreamReceiver receiver: receiverMap.values()) {
 			receiver.closeStream();
 		}
 	}

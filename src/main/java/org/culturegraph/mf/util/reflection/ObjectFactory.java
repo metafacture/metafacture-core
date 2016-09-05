@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.util.reflection;
 
@@ -31,11 +31,11 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 /**
  * Provides instances of preregistered classes. New classes can be registered
  * during runtime.
- * 
+ *
  * @author Markus Michael Geipel
  * @param <O>
  *            the type of objects created
- * 
+ *
  */
 
 // TODO make Threadsafe
@@ -100,7 +100,7 @@ public class ObjectFactory<O> {
 		}
 		return Collections.emptyMap();
 	}
-	
+
 
 	public final Set<String> keySet() {
 		return availableClasses;
@@ -126,7 +126,7 @@ public class ObjectFactory<O> {
 		return instance;
 
 	}
-	
+
 	private static Constructor<?> findConstructor(final Class<?> clazz, final Object... contructorArgs) throws NoSuchMethodException{
 		for (Constructor<?> constructor : clazz.getConstructors()) {
 			final Class<?>[] argTypes = constructor.getParameterTypes();
@@ -138,7 +138,7 @@ public class ObjectFactory<O> {
 					if(!argType.isAssignableFrom(inputArgType)){
 						correct = false;
 						break;
-					}						
+					}
 				}
 				if(correct){
 					return constructor;
@@ -157,8 +157,8 @@ public class ObjectFactory<O> {
 				contructorArgTypes[i] = contructorArgs[i].getClass();
 			}
 
-			final Constructor<?> constructor = findConstructor(clazz, contructorArgs); 
-		
+			final Constructor<?> constructor = findConstructor(clazz, contructorArgs);
+
 			return (O)constructor.newInstance(contructorArgs);
 
 		} catch (InstantiationException e) {

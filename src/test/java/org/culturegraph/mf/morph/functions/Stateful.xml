@@ -25,13 +25,13 @@
 			<mm:metamorph version="1">
 				<mm:rules>
 					<mm:data source="data" name="l2">
-						<mm:occurrence only="lessThen 2" />
+						<mm:occurrence only="lessThan 2" />
 					</mm:data>
 					<mm:data source="data" name="2">
 						<mm:occurrence only="2" />
 					</mm:data>
 					<mm:data source="data" name="g2">
-						<mm:occurrence only="moreThen 2" />
+						<mm:occurrence only="moreThan 2" />
 					</mm:data>
 				</mm:rules>
 			</mm:metamorph>
@@ -79,13 +79,13 @@
 			<mm:metamorph version="1">
 				<mm:rules>
 					<mm:data source="e.data" name="l2">
-						<mm:occurrence only="lessThen 2" sameEntity="true" />
+						<mm:occurrence only="lessThan 2" sameEntity="true" />
 					</mm:data>
 					<mm:data source="e.data" name="2">
 						<mm:occurrence only="2" sameEntity="true" />
 					</mm:data>
 					<mm:data source="e.data" name="g2">
-						<mm:occurrence only="moreThen 2" sameEntity="true" />
+						<mm:occurrence only="moreThan 2" sameEntity="true" />
 					</mm:data>
 				</mm:rules>
 			</mm:metamorph>
@@ -133,13 +133,13 @@
 			<mm:metamorph version="1">
 				<mm:rules>
 					<mm:data source="o.i.data" name="l2">
-						<mm:occurrence only="lessThen 2" sameEntity="true" />
+						<mm:occurrence only="lessThan 2" sameEntity="true" />
 					</mm:data>
 					<mm:data source="o.i.data" name="2">
 						<mm:occurrence only="2" sameEntity="true" />
 					</mm:data>
 					<mm:data source="o.i.data" name="g2">
-						<mm:occurrence only="moreThen 2" sameEntity="true" />
+						<mm:occurrence only="moreThan 2" sameEntity="true" />
 					</mm:data>
 				</mm:rules>
 			</mm:metamorph>
@@ -265,38 +265,6 @@
 					</cgxml:record>
 				</cgxml:records>
 			</cgxml:cgxml>
-		</result>
-	</test-case>
-
-	<test-case name="Issue 223: Should allow moreThen, moreThan, lessThen and lessThan in occurrence">
-		<input type="text/x-formeta">
-			{ l: 1, l: 2, l: 3 }
-		</input>
-		<transformation type="text/x-metamorph+xml">
-			<mm:metamorph version="1">
-				<mm:rules>
-					<mm:data name="lessThen2" source="l">
-						<mm:occurrence only="lessThen 2" />
-					</mm:data>
-					<mm:data name="lessThan2" source="l">
-						<mm:occurrence only="lessThan 2" />
-					</mm:data>
-					<mm:data name="moreThen2" source="l">
-						<mm:occurrence only="moreThen 2" />
-					</mm:data>
-					<mm:data name="moreThan2" source="l">
-						<mm:occurrence only="moreThan 2" />
-					</mm:data>
-				</mm:rules>
-			</mm:metamorph>
-		</transformation>
-		<result type="text/x-formeta">
-			{
-				lessThen2: 1,
-				lessThan2: 1,
-				moreThen2: 3,
-				moreThan2: 3
-			}
 		</result>
 	</test-case>
 </metamorph-test>

@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.converter.xml;
 
@@ -22,20 +22,22 @@ import org.culturegraph.mf.framework.DefaultXmlPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.XmlReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 
 
 /**
  * A generic xml reader.
+ *
  * @author Markus Michael Geipel
  *
  */
 @Description("A generic xml reader")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
+@FluxCommand("handle-generic-xml")
 public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
 	private static final Pattern TABS = Pattern.compile("\t+");
@@ -45,7 +47,8 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
 	public GenericXmlHandler() {
 		super();
-		this.recordTagName = System.getProperty("org.culturegraph.metamorph.xml.recordtag");
+		this.recordTagName = System.getProperty(
+				"org.culturegraph.metamorph.xml.recordtag");
 		if (recordTagName == null) {
 			throw new MetafactureException("Missing name for the tag marking a record.");
 		}
@@ -57,8 +60,8 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 	}
 
 	@Override
-	public void startElement(final String uri, final String localName, final String qName, final Attributes attributes)
-			throws SAXException {
+	public void startElement(final String uri, final String localName,
+			final String qName, final Attributes attributes) {
 
 		if (inRecord) {
 			writeValue();
@@ -77,7 +80,8 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 	}
 
 	@Override
-	public void endElement(final String uri, final String localName, final String qName) throws SAXException {
+	public void endElement(final String uri, final String localName,
+			final String qName) {
 		if (inRecord) {
 			writeValue();
 			if (localName.equals(recordTagName)) {
@@ -90,9 +94,10 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 	}
 
 	@Override
-	public void characters(final char[] chars, final int start, final int length) throws SAXException {
+	public void characters(final char[] chars, final int start, final int length) {
 		if (inRecord) {
-			valueBuffer.append(TABS.matcher(new String(chars, start, length)).replaceAll(""));
+			valueBuffer.append(TABS.matcher(new String(chars, start, length))
+					.replaceAll(""));
 		}
 	}
 

@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.morph.collectors;
 
@@ -35,7 +35,8 @@ public final class Choose extends AbstractFlushingCollect{
 	private String value;
 	private String name;
 	private int priority = Integer.MAX_VALUE;
-	private final Map<NamedValueSource, Integer> priorities = new HashMap<NamedValueSource, Integer>();
+	private final Map<NamedValueSource, Integer> priorities =
+			new HashMap<NamedValueSource, Integer>();
 	private int nextPriority;
 
 	public Choose(final Metamorph metamorph) {
@@ -45,13 +46,14 @@ public final class Choose extends AbstractFlushingCollect{
 	@Override
 	protected void emit() {
 		if(!isEmpty()){
-			getNamedValueReceiver().receive(StringUtil.fallback(getName(), name), StringUtil.fallback(getValue(), value), this, getRecordCount(), getEntityCount());
+			getNamedValueReceiver().receive(StringUtil.fallback(getName(), name),
+					StringUtil.fallback(getValue(), value), this, getRecordCount(),
+					getEntityCount());
 		}
-		clear();
 	}
 
 	private boolean isEmpty() {
-		return name==null;
+		return name == null;
 	}
 
 	@Override
@@ -67,9 +69,9 @@ public final class Choose extends AbstractFlushingCollect{
 	}
 
 	@Override
-	protected void receive(final String name, final String value, final NamedValueSource source) {
+	protected void receive(final String name, final String value,
+			final NamedValueSource source) {
 		final int sourcePriority = priorities.get(source).intValue();
-
 		if (sourcePriority <= priority) {
 			this.value = value;
 			this.name = name;

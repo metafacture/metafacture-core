@@ -15,15 +15,15 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-import org.culturegraph.mf.test.TestSuite;
-import org.culturegraph.mf.test.TestSuite.TestDefinitions;
+import org.culturegraph.mf.test.MetamorphTestSuite;
+import org.culturegraph.mf.test.MetamorphTestSuite.TestDefinitions;
 import org.junit.runner.RunWith;
 
 /**
  *
  * @author tgaengler
  */
-@RunWith(TestSuite.class)
+@RunWith(MetamorphTestSuite.class)
 @TestDefinitions({ "DMPCombineTest.xml", "DMPCombineTest2.xml", "DMPCombineTest3.xml", "DMPCombineTest4.xml", "DMPCombineTest5.xml",
 		"DMPCombineTest6.xml", "DMPCombineTest7.xml", "DMPCombineTest8.xml", "DMPCombineTest9.xml", "DMPCombineTest10.xml", "DMPCombineTest11.xml",
 		"DMPCombineTest12.xml", "DMPCombineTest13.xml", "DMPCombineTest14.xml", "DMPCombineTest15.xml", "DMPCombineMultipleRecordsTest.xml",

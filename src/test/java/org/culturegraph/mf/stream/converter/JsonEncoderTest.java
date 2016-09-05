@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.converter;
 
@@ -27,8 +27,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Test for {@link JsonEncoder}.
- * 
+ * Tests for class {@link JsonEncoder}.
+ *
  * @author Christoph Böhme
  *
  */
@@ -38,36 +38,36 @@ public final class JsonEncoderTest {
 	private static final String LITERAL2 = "L2";
 	private static final String LITERAL3 = "L3";
 	private static final String LITERAL4 = "L4";
-	
+
 	private static final String VALUE1 = "V1";
 	private static final String VALUE2 = "V2";
 	private static final String VALUE3 = "V3";
 	private static final String VALUE4 = "V4";
-	
+
 	private static final String ENTITY1 = "En1";
 	private static final String ENTITY2 = "En2";
-	
+
 	private static final String LIST1 = "Li1[]";
 	private static final String LIST2 = "Li2[]";
 	private static final String LIST3 = "Li3[]";
-	
+
 	private JsonEncoder encoder;
-	
+
 	@Mock
 	private ObjectReceiver<String> receiver;
-	
+
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		encoder = new JsonEncoder();
 		encoder.setReceiver(receiver);
 	}
-	
+
 	@After
 	public void cleanup() {
 		encoder.closeStream();
 	}
-	
+
 	@Test
 	public void testShouldEncodeLiterals() {
 		encoder.startRecord("");
@@ -75,10 +75,10 @@ public final class JsonEncoderTest {
 		encoder.literal(LITERAL2, VALUE2);
 		encoder.literal(LITERAL3, VALUE3);
 		encoder.endRecord();
-		
+
 		verify(receiver).process(fixQuotes("{'L1':'V1','L2':'V2','L3':'V3'}"));
 	}
-	
+
 	@Test
 	public void testShouldEncodeEntities() {
 		encoder.startRecord("");
@@ -91,10 +91,10 @@ public final class JsonEncoderTest {
 		encoder.literal(LITERAL2, VALUE2);
 		encoder.endEntity();
 		encoder.endRecord();
-		
+
 		verify(receiver).process(fixQuotes("{'En1':{'L1':'V1','L2':'V2'},'En2':{'L1':'V1','L2':'V2'}}"));
 	}
-	
+
 	@Test
 	public void testShouldEncodeNestedEntities() {
 		encoder.startRecord("");
@@ -104,10 +104,10 @@ public final class JsonEncoderTest {
 		encoder.endEntity();
 		encoder.endEntity();
 		encoder.endRecord();
-		
+
 		verify(receiver).process(fixQuotes("{'En1':{'En2':{'L1':'V1'}}}"));
 	}
-	
+
 	@Test
 	public void testShouldEncodeMarkedEntitiesAsList() {
 		encoder.startRecord("");
@@ -117,10 +117,10 @@ public final class JsonEncoderTest {
 		encoder.literal(LITERAL3, VALUE3);
 		encoder.endEntity();
 		encoder.endRecord();
-		
+
 		verify(receiver).process(fixQuotes("{'Li1':['V1','V2','V3']}"));
 	}
-	
+
 	@Test
 	public void testShouldEncodeEntitiesInLists() {
 		encoder.startRecord("");
@@ -135,7 +135,7 @@ public final class JsonEncoderTest {
 		encoder.endEntity();
 		encoder.endEntity();
 		encoder.endRecord();
-		
+
 		verify(receiver).process(fixQuotes("{'Li1':[{'L1':'V1','L2':'V2'},{'L3':'V3','L4':'V4'}]}"));
 	}
 
@@ -153,20 +153,20 @@ public final class JsonEncoderTest {
 		encoder.endEntity();
 		encoder.endEntity();
 		encoder.endRecord();
-		
+
 		verify(receiver).process(fixQuotes("{'Li1':[['V1','V2'],['V3','V4']]}"));
 	}
-	
+
 	@Test
 	public void testShouldOutputDuplicateNames() {
 		encoder.startRecord("");
 		encoder.literal(LITERAL1, VALUE1);
 		encoder.literal(LITERAL1, VALUE2);
 		encoder.endRecord();
-		
+
 		verify(receiver).process(fixQuotes("{'L1':'V1','L1':'V2'}"));
 	}
-	
+
 	@Test
 	public void testIssue152ShouldNotPrefixOutputWithSpaces() {
 		encoder.startRecord("");
@@ -189,5 +189,5 @@ public final class JsonEncoderTest {
 	private String fixQuotes(final String str) {
 		return str.replace('\'', '"');
 	}
-	
+
 }

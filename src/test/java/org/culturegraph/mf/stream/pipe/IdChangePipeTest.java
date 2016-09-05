@@ -1,17 +1,18 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.pipe;
 
@@ -29,7 +30,7 @@ import org.mockito.MockitoAnnotations;
 
 
 /**
- * Tests for {@link IdChangePipe}.
+ * Tests for class {@link IdChangePipe}.
  *
  * @author Christoph Böhme
  *
@@ -98,7 +99,7 @@ public final class IdChangePipeTest {
 
 	@Test
 	public void testShouldRemoveRecordsWithoutIdLiteral() {
-		idChangePipe.setKeepIdless(false);
+		idChangePipe.setKeepRecordsWithoutIdLiteral(false);
 
 		idChangePipe.startRecord(OLD_RECORD_ID1);
 		idChangePipe.literal(LITERAL_NAME, LITERAL_VALUE);
@@ -131,7 +132,7 @@ public final class IdChangePipeTest {
 
 	@Test
 	public void testShouldAcceptFullPathAsNewId() {
-		idChangePipe.setIdName(ENTITY + "." + StreamConstants.ID);
+		idChangePipe.setIdLiteral(ENTITY + "." + StreamConstants.ID);
 
 		idChangePipe.startRecord(OLD_RECORD_ID1);
 		idChangePipe.startEntity(ENTITY);
@@ -148,7 +149,7 @@ public final class IdChangePipeTest {
 
 	@Test
 	public void testShouldNotKeepIdLiteralByDefault() {
-		idChangePipe.setIdName(StreamConstants.ID);
+		idChangePipe.setIdLiteral(StreamConstants.ID);
 
 		idChangePipe.startRecord(OLD_RECORD_ID1);
 		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID1);
@@ -162,7 +163,7 @@ public final class IdChangePipeTest {
 
 	@Test
 	public void testShouldKeepIdLiteralIfConfigured() {
-		idChangePipe.setIdName(StreamConstants.ID);
+		idChangePipe.setIdLiteral(StreamConstants.ID);
 		idChangePipe.setKeepIdLiteral(true);
 
 		idChangePipe.startRecord(OLD_RECORD_ID1);

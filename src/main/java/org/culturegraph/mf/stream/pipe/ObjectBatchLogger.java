@@ -1,17 +1,18 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.pipe;
 
@@ -21,6 +22,7 @@ import java.util.Map;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.util.StringUtil;
@@ -29,16 +31,17 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Writes log info for every BATCHSIZE records.
- * 
+ *
  * @param <T>
  *            object type
- * 
+ *
  * @author Markus Geipel
- * 
+ *
  */
 @Description("Writes log info for every BATCHSIZE records.")
 @In(Object.class)
 @Out(Object.class)
+@FluxCommand("object-batch-log")
 public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 
 	public static final String RECORD_COUNT_VAR = "records";
@@ -47,7 +50,7 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
 	public static final String BATCH_COUNT_VAR = "batches";
 	public static final String BATCH_SIZE_VAR = "batchSize";
 
-	private static final Logger LOG = LoggerFactory.getLogger(BatchLogger.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ObjectBatchLogger.class);
 	private static final String DEFAULT_FORMAT = "records processed: ${totalRecords}";
 
 	private final Map<String, String> vars = new HashMap<String, String>();

@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.culturegraph</groupId>
 	<artifactId>metafacture-core</artifactId>
-	<version>3.1.13-dswarm-SNAPSHOT</version>
+	<version>4.0.0-dswarm-SNAPSHOT</version>
 	<name>metafacture.core</name>
 	<description>Core package of the metafacture tool suite</description>
 	<licenses>
@@ -63,38 +62,37 @@
 	</prerequisites>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- note: org.culturegraph.mf.stream.pipe.sort.AbstractTripleSortTest#issue192ShouldUnregisterFromTheJVMToNotCauseMemoryLeak fails when upgrading to Java 8 -->
-		<targetJdk>1.7</targetJdk>
+		<targetJdk>1.8</targetJdk>
 		<antlr.version>3.5.2</antlr.version>
 		<version.jackson>2.7.1</version.jackson>
-		<version.json-path>2.1.0</version.json-path>
+		<version.json-path>2.2.0</version.json-path>
 		<!-- note: org.culturegraph.mf.test.TestCaseRunnerTest#issue213ShouldNotInitAnnotationsArrayWithNull fails when upgrading to JUnit version 4.12 -->
 		<version.junit>4.11</version.junit>
 		<!-- note: needs to be 1.7, otherwise, class-not-found exception-->
 		<version.commons-compress>1.7</version.commons-compress>
 		<version.commons-lang>2.6</version.commons-lang>
-		<version.slf4j>1.7.16</version.slf4j>
+		<version.slf4j>1.7.21</version.slf4j>
 		<version.simple-jndi>0.11.4.1</version.simple-jndi>
-		<version.commons-io>2.4</version.commons-io>
+		<version.commons-io>2.5</version.commons-io>
 		<version.jdom>1.1</version.jdom>
-		<version.jersey-client>2.22.2</version.jersey-client>
+		<version.jersey-client>2.23.2</version.jersey-client>
 		<version.mockito>1.9.5</version.mockito>
 		<version.hamcrest>1.3</version.hamcrest>
 		<version.guava>19.0</version.guava>
-		<maven-source-plugin.version>3.0.0</maven-source-plugin.version>
-		<maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
+		<maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+		<maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
 		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-		<findbugs-maven-plugin.version>3.0.3</findbugs-maven-plugin.version>
+		<findbugs-maven-plugin.version>3.0.4</findbugs-maven-plugin.version>
 		<version.maven.plugin.pmd>3.6</version.maven.plugin.pmd>
 		<version.maven.plugin.checkstyle>2.17</version.maven.plugin.checkstyle>
 		<version.maven.plugin.cobertura>2.7</version.maven.plugin.cobertura>
 		<version.maven.plugin.compiler>3.5.1</version.maven.plugin.compiler>
-		<version.maven.plugin.jar>2.6</version.maven.plugin.jar>
+		<version.maven.plugin.jar>3.0.2</version.maven.plugin.jar>
 		<version.maven.plugin.release>2.5.3</version.maven.plugin.release>
 		<version.maven.plugin.surefire>2.19.1</version.maven.plugin.surefire>
-		<version.maven.plugin.version>2.2</version.maven.plugin.version>
+		<version.maven.plugin.version>2.3</version.maven.plugin.version>
 		<version.buildnumber-maven-plugin>1.4</version.buildnumber-maven-plugin>
-		<version.build-helper-maven-plugin>1.10</version.build-helper-maven-plugin>
+		<version.build-helper-maven-plugin>1.12</version.build-helper-maven-plugin>
 		<version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
 	</properties>
 
@@ -294,15 +292,15 @@
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
+			<artifactId>slf4j-api</artifactId>
 			<version>${version.slf4j}</version>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
+			<artifactId>slf4j-simple</artifactId>
 			<version>${version.slf4j}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -374,7 +372,7 @@
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
-					<!--  Conflicts with the newer hamcrest version 
+					<!--  Conflicts with the newer hamcrest version
 					      pulled in by junit -->
 					<artifactId>hamcrest-core</artifactId>
 					<groupId>org.hamcrest</groupId>
@@ -409,6 +407,7 @@
 								<configuration>
 									<show>public</show>
 									<nohelp>true</nohelp>
+									<additionalparam>-Xdoclint:none</additionalparam>
 								</configuration>
 							</execution>
 						</executions>
