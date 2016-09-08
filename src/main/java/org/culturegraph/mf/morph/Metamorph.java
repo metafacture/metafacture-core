@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.morph;
 
@@ -19,33 +19,43 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 
+import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.framework.DefaultStreamReceiver;
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.morph.interceptors.InterceptorFactory;
+import org.culturegraph.mf.morph.interceptors.NullInterceptorFactory;
 import org.culturegraph.mf.stream.pipe.StreamFlattener;
 import org.culturegraph.mf.types.MultiMap;
+import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.StreamConstants;
-
-
+import org.culturegraph.mf.util.xml.Location;
+import org.xml.sax.InputSource;
 
 /**
  * Transforms a data stream send via the {@link StreamReceiver} interface. Use
  * {@link MorphBuilder} to create an instance based on an xml description
  *
  * @author Markus Michael Geipel
+ * @author Christoph Böhme
  */
-@Description("applies a metamorph transformation to the event stream. Metamorph definition is given in brackets.")
+@Description("applies a metamorph transformation to the event stream. Metamorph "
+		+ "definition is given in brackets.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
-public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueReceiver, MultiMap {
+@FluxCommand("morph")
+public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePipe, MultiMap {
 
 	public static final String ELSE_KEYWORD = "_else";
 	public static final char FEEDBACK_CHAR = '@';
@@ -55,6 +65,10 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 	public static final String VAR_END = "]";
 
 	private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
+	private static final String COULD_NOT_LOAD_MORPH_FILE = "Could not load morph file";
+
+	private static final InterceptorFactory NULL_INTERCEPTOR_FACTORY = new NullInterceptorFactory();
+	private static final Map<String, String> NO_VARS = Collections.<String, String>emptyMap();
 
 	private final Registry<NamedValueReceiver> dataRegistry = MorphCollectionFactory.createRegistry();
 	private final List<NamedValueReceiver> elseSources = MorphCollectionFactory.createList();
@@ -78,40 +92,87 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 		init();
 	}
 
-	public Metamorph(final Reader morphDefReader) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(morphDefReader);
-		init();
-	}
-
-	public Metamorph(final Reader morphDefReader, final Map<String, String> vars) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(morphDefReader, vars);
-		init();
-	}
-
-	public Metamorph(final InputStream inputStream, final Map<String, String> vars) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(inputStream, vars);
-		init();
-	}
-
-	public Metamorph(final InputStream inputStream) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(inputStream);
-		init();
-	}
-
 	public Metamorph(final String morphDef) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(morphDef);
-		init();
+		this(morphDef, NO_VARS);
 	}
 
 	public Metamorph(final String morphDef, final Map<String, String> vars) {
-		final MorphBuilder builder = new MorphBuilder(this);
-		builder.walk(morphDef, vars);
+		this(morphDef, vars, NULL_INTERCEPTOR_FACTORY);
+	}
+
+	public Metamorph(final String morphDef, final InterceptorFactory interceptorFactory) {
+		this(morphDef, NO_VARS, interceptorFactory);
+	}
+
+	public Metamorph(final String morphDef, final Map<String, String> vars,
+			final InterceptorFactory interceptorFactory) {
+
+		this(getInputSource(morphDef), vars, interceptorFactory);
+	}
+
+	public Metamorph(final Reader morphDef) {
+		this(morphDef, NO_VARS);
+	}
+
+	public Metamorph(final Reader morphDef, final Map<String, String> vars) {
+		this(morphDef, vars, NULL_INTERCEPTOR_FACTORY);
+	}
+
+	public Metamorph(final Reader morphDef, final InterceptorFactory interceptorFactory) {
+		this(morphDef, NO_VARS, interceptorFactory);
+	}
+
+	public Metamorph(final Reader morphDef, final Map<String, String> vars,
+			final InterceptorFactory interceptorFactory) {
+
+		this(new InputSource(morphDef), vars, interceptorFactory);
+	}
+
+	public Metamorph(final InputStream morphDef) {
+		this(morphDef, NO_VARS);
+	}
+
+	public Metamorph(final InputStream morphDef, final Map<String, String> vars) {
+		this(morphDef, vars, NULL_INTERCEPTOR_FACTORY);
+	}
+
+	public Metamorph(final InputStream morphDef, final InterceptorFactory interceptorFactory) {
+		this(morphDef, NO_VARS, interceptorFactory);
+	}
+
+	public Metamorph(final InputStream morphDef, final Map<String, String> vars,
+			final InterceptorFactory interceptorFactory) {
+
+		this(new InputSource(morphDef), vars, interceptorFactory);
+	}
+
+	public Metamorph(final InputSource inputSource) {
+		this(inputSource, NO_VARS);
+	}
+
+	public Metamorph(final InputSource inputSource, final Map<String, String> vars) {
+		this(inputSource, vars, NULL_INTERCEPTOR_FACTORY);
+	}
+
+	public Metamorph(final InputSource inputSource, final InterceptorFactory interceptorFactory) {
+		this(inputSource, NO_VARS, interceptorFactory);
+	}
+
+	public Metamorph(final InputSource inputSource, final Map<String, String> vars,
+			final InterceptorFactory interceptorFactory) {
+
+		final MorphBuilder builder = new MorphBuilder(this, interceptorFactory);
+		builder.walk(inputSource, vars);
 		init();
+	}
+
+	private static InputSource getInputSource(final String morphDef) {
+		try {
+			return new InputSource(
+					ResourceUtil.getUrl(morphDef).toExternalForm());
+		} catch (final MalformedURLException e) {
+			throw new MorphDefException(COULD_NOT_LOAD_MORPH_FILE, e);
+		}
 	}
 
 	private void init() {
@@ -242,12 +303,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 		return matchingData;
 	}
 
-	/**
-	 * @param key
-	 * @param value
-	 * @param dataList
-	 *            destination
-	 */
 	private void send(final String key, final String value, final List<NamedValueReceiver> dataList) {
 		for (final NamedValueReceiver data : dataList) {
 			try {
@@ -271,9 +326,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 		return streamReceiver;
 	}
 
-	/**
-	 * @return the outputStreamReceiver
-	 */
 	public StreamReceiver getStreamReceiver() {
 		return outputStreamReceiver;
 	}
@@ -330,6 +382,30 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValueRe
 
 	public void registerRecordEndFlush(final FlushListener flushListener) {
 		recordEndListener.add(flushListener);
+	}
+
+	@Override
+	public void addNamedValueSource(final NamedValueSource namedValueSource) {
+		namedValueSource.setNamedValueReceiver(this);
+	}
+
+	@Override
+	public void setNamedValueReceiver(final NamedValueReceiver receiver) {
+		throw new UnsupportedOperationException("The Metamorph object cannot act as a NamedValueSender");
+	}
+
+	@Override
+	public void setSourceLocation(final Location sourceLocation) {
+		// Nothing to do
+		// Metamorph does not have a source location (we could
+		// in theory use the location of the module in a flux
+		// script)
+	}
+
+	@Override
+	public Location getSourceLocation() {
+		// Metamorph does not have a source location
+		return null;
 	}
 
 }

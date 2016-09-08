@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.morph;
 
@@ -24,14 +24,18 @@ import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.morph.collectors.Collect;
 import org.culturegraph.mf.morph.collectors.Entity;
 import org.culturegraph.mf.morph.functions.Function;
+import org.culturegraph.mf.morph.interceptors.InterceptorFactory;
 import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
+import org.culturegraph.mf.util.xml.Location;
 import org.w3c.dom.Node;
 
 /**
  * Builds a {@link Metamorph} from an xml description
- * 
+ *
  * @author Markus Michael Geipel
+ * @author Christoph Böhme
+ *
  */
 public final class MorphBuilder extends AbstractMetamorphDomWalker {
 
@@ -42,17 +46,61 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	private static final String OR_STRING = "|";
 	private static final Pattern OR_PATTERN = Pattern.compile(OR_STRING, Pattern.LITERAL);
 
-	// private final String morphDef;
 	private final Metamorph metamorph;
-	private final Deque<Collect> collectStack;
-	private Data data;
-	private boolean setEntityName;
-	private boolean setCondition;
-	
-	protected MorphBuilder(final Metamorph metamorph) {
+	private final InterceptorFactory interceptorFactory;
+	private final Deque<StackFrame> stack = new LinkedList<StackFrame>();
+
+	private static final class StackFrame {
+
+		private final NamedValuePipe headPipe;
+
+		private NamedValuePipe pipe;
+		private boolean inEntityName;
+		private boolean inCondition;
+
+		public StackFrame(final NamedValuePipe headPipe) {
+			this.headPipe = headPipe;
+			this.pipe = headPipe;
+		}
+
+		public NamedValuePipe getHeadPipe() {
+			return headPipe;
+		}
+
+		public void setPipe(final NamedValuePipe pipe) {
+			this.pipe = pipe;
+		}
+
+		public NamedValuePipe getPipe() {
+			return pipe;
+		}
+
+		public void setInEntityName(final boolean inEntityName) {
+			this.inEntityName = inEntityName;
+		}
+
+		public boolean isInEntityName() {
+			return inEntityName;
+		}
+
+		public void setInCondition(final boolean inCondition) {
+			this.inCondition = inCondition;
+		}
+
+		public boolean isInCondition() {
+			return inCondition;
+		}
+
+	}
+
+	protected MorphBuilder(final Metamorph metamorph,
+			final InterceptorFactory interceptorFactory) {
+
 		super();
-		this.collectStack = new LinkedList<Collect>();
+
 		this.metamorph = metamorph;
+		this.interceptorFactory = interceptorFactory;
+		stack.push(new StackFrame(metamorph));
 	}
 
 	@Override
@@ -64,13 +112,13 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 
 	@Override
 	protected void handleInternalMap(final Node mapNode) {
-		final String mapName = resolvedAttribute(mapNode, ATTRITBUTE.NAME);
+		final String mapName = resolvedAttribute(mapNode, AttributeName.NAME);
 
-		final String mapDefault = resolvedAttribute(mapNode, ATTRITBUTE.DEFAULT);
+		final String mapDefault = resolvedAttribute(mapNode, AttributeName.DEFAULT);
 
 		for (Node entryNode = mapNode.getFirstChild(); entryNode != null; entryNode = entryNode.getNextSibling()) {
-			final String entryName = resolvedAttribute(entryNode, ATTRITBUTE.NAME);
-			final String entryValue = resolvedAttribute(entryNode, ATTRITBUTE.VALUE);
+			final String entryName = resolvedAttribute(entryNode, AttributeName.NAME);
+			final String entryValue = resolvedAttribute(entryNode, AttributeName.VALUE);
 			metamorph.putValue(mapName, entryName, entryValue);
 		}
 
@@ -83,13 +131,13 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	@Override
 	protected void handleMapClass(final Node mapNode) {
 		final Map<String, String> attributes = resolvedAttributeMap(mapNode);
-		final String mapName = resolveVars(attributes.remove(ATTRITBUTE.NAME.getString()));
+		final String mapName = resolveVars(attributes.remove(AttributeName.NAME.getString()));
 		final Map<String, String> map;
 
 		if (mapNode.getLocalName().equals(JAVAMAP)) {
-			final String className = resolvedAttribute(mapNode, ATTRITBUTE.CLASS);
+			final String className = resolvedAttribute(mapNode, AttributeName.CLASS);
 			map = ObjectFactory.newInstance(ObjectFactory.loadClass(className, Map.class));
-			attributes.remove(ATTRITBUTE.CLASS.getString());
+			attributes.remove(AttributeName.CLASS.getString());
 			ObjectFactory.applySetters(map, attributes);
 		} else if (getMapFactory().containsKey(mapNode.getLocalName())) {
 			map = getMapFactory().newInstance(mapNode.getLocalName(), attributes);
@@ -105,14 +153,14 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	// protected by 'if (Function.class.isAssignableFrom(clazz))'
 	protected void handleFunctionDefinition(final Node functionDefNode) {
 		final Class<?> clazz;
-		final String className = resolvedAttribute(functionDefNode, ATTRITBUTE.CLASS);
+		final String className = resolvedAttribute(functionDefNode, AttributeName.CLASS);
 		try {
 			clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
 		} catch (final ClassNotFoundException e) {
 			throw new MorphDefException("Function " + className + NOT_FOUND, e);
 		}
 		if (Function.class.isAssignableFrom(clazz)) {
-			getFunctionFactory().registerClass(resolvedAttribute(functionDefNode, ATTRITBUTE.NAME),
+			getFunctionFactory().registerClass(resolvedAttribute(functionDefNode, AttributeName.NAME),
 					(Class<Function>) clazz);
 		} else {
 			throw new MorphDefException(className + " does not implement interface 'Function'");
@@ -136,103 +184,147 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 
 	@Override
 	protected void enterData(final Node dataNode) {
-		final String source = resolvedAttribute(dataNode, ATTRITBUTE.SOURCE);
-		data = new Data();
-		data.setName(resolvedAttribute(dataNode, ATTRITBUTE.NAME));
-		metamorph.registerNamedValueReceiver(source, data);
+		final Data data = new Data();
+		data.setName(resolvedAttribute(dataNode, AttributeName.NAME));
+		data.setSourceLocation((Location) dataNode.getUserData(Location.USER_DATA_ID));
 
-		if (setEntityName) {
-			((Entity) collectStack.peek()).setNameSource(data);
-			setEntityName = false;
+		final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+		final NamedValuePipe delegate;
+		if (interceptor == null) {
+			delegate = data;
+		} else {
+			delegate = interceptor;
+			data.addNamedValueSource(delegate);
 		}
-	
-		if (setCondition) {
-			collectStack.peek().setConditionSource(data);
-			setCondition = false;
-		}
+
+		final String source = resolvedAttribute(dataNode, AttributeName.SOURCE);
+		metamorph.registerNamedValueReceiver(source, delegate);
+
+		stack.push(new StackFrame(data));
 	}
 
 	@Override
 	protected void exitData(final Node node) {
-		if (collectStack.isEmpty()) {
-			data.endPipe(metamorph);
+		final NamedValuePipe dataPipe = stack.pop().getPipe();
+
+		final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+		final NamedValuePipe delegate;
+		if (interceptor == null) {
+			delegate = dataPipe;
 		} else {
-			final Collect parent = collectStack.peek();
-			data.endPipe(parent);
-			parent.addNamedValueSource(data);
+			delegate = interceptor;
+			delegate.addNamedValueSource(dataPipe);
 		}
-		data = null;
+
+		final StackFrame parent = stack.peek();
+		if (parent.isInEntityName()) {
+			// Protected xsd schema and by assertion in enterName:
+			((Entity) parent.getPipe()).setNameSource(delegate);
+		} else if (parent.isInCondition()) {
+			// Protected xsd schema and by assertion in enterIf:
+			((ConditionAware) parent.getPipe()).setConditionSource(delegate);
+		} else {
+			parent.getPipe().addNamedValueSource(delegate);
+		}
 	}
 
 	@Override
 	protected void enterName(final Node nameNode) {
-		setEntityName = true;
+		assert stack.peek().getPipe() instanceof Entity :
+				"statement `name` is only allowed in `entity` statements";
+
+		stack.peek().setInEntityName(true);
 	}
 
 	@Override
 	protected void exitName(final Node nameNode) {
-		setEntityName = false;
+		stack.peek().setInEntityName(false);
 	}
 
 	@Override
 	protected void enterIf(final Node nameNode) {
-		setCondition = true;
+		assert stack.peek().getPipe() instanceof ConditionAware :
+				"statement `if` is not allowed in the current element";
+
+		stack.peek().setInCondition(true);
 	}
 
 	@Override
 	protected void exitIf(final Node nameNode) {
-		setCondition = false;
+		stack.peek().setInCondition(false);
 	}
 
 	@Override
 	protected void enterCollect(final Node node) {
 		final Map<String, String> attributes = resolvedAttributeMap(node);
-		// must be set after recursive calls to flush descendants before parent
-		attributes.remove(ATTRITBUTE.FLUSH_WITH.getString());
+		// flushWith should not be passed to the headPipe object via a
+		// setter (see newInstance):
+		attributes.remove(AttributeName.FLUSH_WITH.getString());
 
 		if (!getCollectFactory().containsKey(node.getLocalName())) {
 			throw new IllegalArgumentException("Collector " + node.getLocalName() + NOT_FOUND);
 		}
 		final Collect collect = getCollectFactory().newInstance(node.getLocalName(), attributes, metamorph);
+		collect.setSourceLocation((Location) node.getUserData(Location.USER_DATA_ID));
 
-		if (setEntityName) {
-			((Entity) collectStack.peek()).setNameSource(collect);
-			setEntityName = false;
-		}
-		
-		if (setCondition) {
-			collectStack.peek().setConditionSource(collect);
-			setCondition = false;
-		}
-
-		collectStack.push(collect);
+		stack.push(new StackFrame(collect));
 	}
 
 	@Override
 	protected void exitCollect(final Node node) {
-		final Collect collect = collectStack.pop();
-		if (collectStack.isEmpty()) {
-			collect.endPipe(metamorph);
+		final StackFrame currentCollect = stack.pop();
+		final Collect collector = (Collect) currentCollect.getHeadPipe();
+		final NamedValuePipe tailPipe = currentCollect.getPipe();
+
+		final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+		final NamedValuePipe delegate;
+		if (interceptor == null || tailPipe instanceof Entity) {
+			// The result of entity collectors cannot be intercepted
+			// because they only use the receive/emit interface for
+			// signalling while the actual data is transferred using
+			// a custom mechanism. In order for this to work the Entity
+			// class checks whether source and receiver are an
+			// instances of Entity. If an interceptor is inserted between
+			// entity elements this mechanism will break.
+			delegate = tailPipe;
 		} else {
-			final Collect parent = collectStack.peek();
-			parent.addNamedValueSource(collect);
-			collect.endPipe(parent);
+			delegate = interceptor;
+			delegate.addNamedValueSource(tailPipe);
 		}
+
+		final StackFrame parent = stack.peek();
+		if (parent.isInEntityName()) {
+			// Protected xsd schema and by assertion in enterName:
+			((Entity) parent.getPipe()).setNameSource(delegate);
+		} else if (parent.isInCondition()) {
+			// Protected xsd schema and by assertion in enterIf:
+			((ConditionAware) parent.getPipe()).setConditionSource(delegate);
+		} else {
+			parent.getPipe().addNamedValueSource(delegate);
+		}
+
 		// must be set after recursive calls to flush descendants before parent
-		final String flushWith = resolvedAttribute(node, ATTRITBUTE.FLUSH_WITH);
+		final String flushWith = resolvedAttribute(node, AttributeName.FLUSH_WITH);
 		if (null != flushWith) {
-			collect.setWaitForFlush(true);
-			registerFlush(flushWith, collect);
+			collector.setWaitForFlush(true);
+			registerFlush(flushWith, collector);
 		}
 	}
-	
+
 	private void registerFlush(final String flushWith, final FlushListener flushListener) {
 		final String[] keysSplit = OR_PATTERN.split(flushWith);
 		for (final String key : keysSplit) {
-			if (key.equals(RECORD)) {
-				metamorph.registerRecordEndFlush(flushListener);
+			final FlushListener interceptor = interceptorFactory.createFlushInterceptor(flushListener);
+			final FlushListener delegate;
+			if (interceptor == null) {
+				delegate = flushListener;
 			} else {
-				metamorph.registerNamedValueReceiver(key, new Flush(flushListener));
+				delegate = interceptor;
+			}
+			if (key.equals(RECORD)) {
+				metamorph.registerRecordEndFlush(delegate);
+			} else {
+				metamorph.registerNamedValueReceiver(key, new Flush(delegate));
 			}
 		}
 	}
@@ -242,13 +334,13 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		final Function function;
 		final Map<String, String> attributes = resolvedAttributeMap(functionNode);
 		if (functionNode.getLocalName().equals(JAVA)) {
-			final String className = resolvedAttribute(functionNode, ATTRITBUTE.CLASS);
+			final String className = resolvedAttribute(functionNode, AttributeName.CLASS);
 			function = ObjectFactory.newInstance(ObjectFactory.loadClass(className, Function.class));
 
-			attributes.remove(ATTRITBUTE.CLASS.getString());
+			attributes.remove(AttributeName.CLASS.getString());
 			ObjectFactory.applySetters(function, attributes);
 		} else if (getFunctionFactory().containsKey(functionNode.getLocalName())) {
-			final String flushWith = attributes.remove(ATTRITBUTE.FLUSH_WITH.getString());
+			final String flushWith = attributes.remove(AttributeName.FLUSH_WITH.getString());
 			function = getFunctionFactory().newInstance(functionNode.getLocalName(), attributes);
 			if (null != flushWith) {
 				registerFlush(flushWith, function);
@@ -257,21 +349,31 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 			throw new IllegalArgumentException(functionNode.getLocalName() + NOT_FOUND);
 		}
 
+		function.setSourceLocation((Location) functionNode.getUserData(Location.USER_DATA_ID));
+
 		function.setMultiMap(metamorph);
-		// nction.setEntityEndIndicator(metamorph);
 
 		// add key value entries...
 		for (Node mapEntryNode = functionNode.getFirstChild(); mapEntryNode != null; mapEntryNode = mapEntryNode
 				.getNextSibling()) {
-			final String entryName = resolvedAttribute(mapEntryNode, ATTRITBUTE.NAME);
-			final String entryValue = resolvedAttribute(mapEntryNode, ATTRITBUTE.VALUE);
+			final String entryName = resolvedAttribute(mapEntryNode, AttributeName.NAME);
+			final String entryValue = resolvedAttribute(mapEntryNode, AttributeName.VALUE);
 			function.putValue(entryName, entryValue);
 		}
-		if (data == null) {
-			collectStack.peek().appendPipe(function);
+
+		final StackFrame head = stack.peek();
+
+		final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+		final NamedValuePipe delegate;
+		if (interceptor == null) {
+			delegate = function;
 		} else {
-			data.appendPipe(function);
+			delegate = interceptor;
+			function.addNamedValueSource(delegate);
 		}
+		delegate.addNamedValueSource(head.getPipe());
+
+		head.setPipe(function);
 	}
 
 }

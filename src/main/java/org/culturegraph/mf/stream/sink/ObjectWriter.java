@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.sink;
 
@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.annotations.ReturnsAvailableArguments;
@@ -30,7 +31,7 @@ import org.culturegraph.mf.util.FileCompression;
 /**
  * Writes objects to stdout or a file
  * @param <T> object type
- * 
+ *
  * @author Christoph Böhme
  *
  */
@@ -38,13 +39,14 @@ import org.culturegraph.mf.util.FileCompression;
 @Description("Writes objects to stdout or a file")
 @In(Object.class)
 @Out(Void.class)
+@FluxCommand("write")
 public final class ObjectWriter<T> implements ConfigurableObjectWriter<T> {
 
 	private static final String STDOUT = "stdout";
 	private static final List<String> ARGUMENTS = Collections.unmodifiableList(Arrays.asList(STDOUT, "PATH"));
-	
+
 	private final ConfigurableObjectWriter<T> objectWriter;
-	
+
 	public ObjectWriter(final String destination) {
 		if (STDOUT.equals(destination)) {
 			objectWriter = new ObjectStdoutWriter<T>();
@@ -52,7 +54,7 @@ public final class ObjectWriter<T> implements ConfigurableObjectWriter<T> {
 			objectWriter = new ObjectFileWriter<T>(destination);
 		}
 	}
-	
+
 	@ReturnsAvailableArguments
 	public static Collection<String> getArguments() {
 		return ARGUMENTS;
@@ -122,7 +124,7 @@ public final class ObjectWriter<T> implements ConfigurableObjectWriter<T> {
 	public void resetStream() {
 		objectWriter.resetStream();
 	}
-	
+
 	@Override
 	public void closeStream() {
 		objectWriter.closeStream();

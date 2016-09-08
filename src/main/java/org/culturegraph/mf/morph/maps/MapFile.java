@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.morph.maps;
 
@@ -27,23 +27,23 @@ import java.util.regex.Pattern;
 import org.culturegraph.mf.exceptions.MorphException;
 import org.culturegraph.mf.util.ResourceUtil;
 
-
-
 /**
  * Provides a {@link Map} based on a file. The file is supposed to be UTF-8
- * encoded. The separator is by default \t. <strong>Important:</strong> Lines that are not split in two
- * parts by the separator are ignored!
- * 
+ * encoded. The separator is by default \t. <strong>Important:</strong> Lines
+ * that are not split in two parts by the separator are ignored!
+ *
  * @author "Markus Michael Geipel"
- * 
+ *
  */
 public final class MapFile extends AbstractReadOnlyMap<String, String> {
+
 	private final Map<String, String> map = new HashMap<String, String>();
+
 	private Pattern split = Pattern.compile("\t", Pattern.LITERAL);
 
 	public void setFiles(final String files) {
 		final String[] parts = files.split("\\s*,\\s*");
-		for (String part : parts) {
+		for (final String part : parts) {
 			setFile(part);
 		}
 	}
@@ -51,7 +51,8 @@ public final class MapFile extends AbstractReadOnlyMap<String, String> {
 	public void setFile(final String file) {
 		final BufferedReader reader;
 		try {
-			reader = new BufferedReader(new InputStreamReader(ResourceUtil.getStream(file), "UTF-8"));
+			reader = new BufferedReader(new InputStreamReader(
+					ResourceUtil.getStream(file), "UTF-8"));
 
 			try {
 				String line = null;
@@ -69,11 +70,11 @@ public final class MapFile extends AbstractReadOnlyMap<String, String> {
 				reader.close();
 			}
 
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			throw new MorphException(e);
-		} catch (FileNotFoundException e) {
+		} catch (final FileNotFoundException e) {
 			throw new MorphException("resource '" + file + "' not found", e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new MorphException(e);
 		}
 
@@ -83,11 +84,9 @@ public final class MapFile extends AbstractReadOnlyMap<String, String> {
 		split = Pattern.compile(delimiter, Pattern.LITERAL);
 	}
 
-	
 	@Override
 	public String get(final Object key) {
 		return map.get(key);
 	}
-
 
 }

@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.converter.xml;
 
@@ -19,6 +19,7 @@ import org.culturegraph.mf.framework.DefaultXmlPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.XmlReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.xml.sax.Attributes;
@@ -28,11 +29,12 @@ import org.xml.sax.SAXException;
 /**
  * A marc xml reader.
  * @author Markus Michael Geipel
- * 
+ *
  */
 @Description("A marc xml reader")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
+@FluxCommand("handle-marcxml")
 public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
 	private static final String SUBFIELD = "subfield";
@@ -55,7 +57,7 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 				getReceiver().startEntity(attributes.getValue("tag") + attributes.getValue("ind1") + attributes.getValue("ind2"));
 			}else if(CONTROLFIELD.equals(localName)){
 				builder = new StringBuilder();
-				currentTag = attributes.getValue(0);
+				currentTag = attributes.getValue("tag");
 			}else if(RECORD.equals(localName) && NAMESPACE.equals(uri)){
 				getReceiver().startRecord("");
 				getReceiver().literal(TYPE, attributes.getValue(TYPE));
@@ -69,18 +71,17 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 	public void endElement(final String uri, final String localName, final String qName) throws SAXException {
 		if(SUBFIELD.equals(localName)){
 			getReceiver().literal(currentTag, builder.toString().trim());
-			
+
 		}else if(DATAFIELD.equals(localName)){
 			getReceiver().endEntity();
 		}else if(CONTROLFIELD.equals(localName)){
 			getReceiver().literal(currentTag, builder.toString().trim());
-			
+
 		}else if(RECORD.equals(localName)  && NAMESPACE.equals(uri)){
 			getReceiver().endRecord();
-			
+
 		}else if(LEADER.equals(localName)){
-			getReceiver().literal(currentTag, builder.toString().trim());
-			
+			getReceiver().literal(currentTag, builder.toString());
 		}
 	}
 

@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.util.tries;
 
@@ -20,14 +20,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
-
 /**
  * A {@link Map} with char as key. Used for set matching, tries etc. <br>
  * <strong>Important:</strong> It is optimized for size in memory. No extra information for fast entry/keySet/values iteration etc. is held.
- * 
+ *
  * @author Markus Michael Geipel
- * 
+ *
  * @param <V>
  */
 final class CharMap<V> implements Map<Character, V> {
@@ -55,12 +53,12 @@ final class CharMap<V> implements Map<Character, V> {
 
 	@Override
 	public boolean containsKey(final Object key) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean containsValue(final Object value) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -71,9 +69,9 @@ final class CharMap<V> implements Map<Character, V> {
 		}
 		return null;
 	}
-	
+
 	public V get(final char key) {
-		
+
 		Entry<V> entry = table[key % table.length];
 		while (entry != null) {
 			if (entry.getKeyChar() == key) {
@@ -139,17 +137,17 @@ final class CharMap<V> implements Map<Character, V> {
 
 	@Override
 	public V remove(final Object key) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void putAll(final Map<? extends Character, ? extends V> map) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void clear() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -192,7 +190,7 @@ final class CharMap<V> implements Map<Character, V> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param <V>
 	 */
 	private static final class Entry<V> implements Map.Entry<Character, V> {

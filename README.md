@@ -6,6 +6,12 @@ Metafacture consists of a core library and a number of plugin packages and satel
 
 Originally, Metafacture was developed as part of the [Culturegraph](http://culturegraph.org) platform but its now used by others, too: [see who uses Metafacture](https://github.com/culturegraph/metafacture-core/wiki/Who-uses-Metafacture).
 
+# Build
+
+[<img src="https://secure.travis-ci.org/culturegraph/metafacture-core.png?branch=master">](https://travis-ci.org/culturegraph/metafacture-core/)
+
+See the [.travis.yml](./.travis.yml) file for details on the CI config used by Travis.
+
 # Getting started
 
 You can use Metafacture either as a stand-alone application or as a Java library in your own projects.
@@ -21,7 +27,7 @@ If you want use Metafacture in your own Java projects all you need to do is to i
     <dependency>
     	<groupId>org.culturegraph</groupId>
     	<artifactId>metafacture-core</artifactId>
-    	<version>2.0.0</version>
+    	<version>3.3.1</version>
     </dependency>
 
 Our integration server automatically publishes successful builds of the master branch as snapshot versions on [Sonatype OSS Repository](https://oss.sonatype.org/index.html#nexus-search;quick~culturegraph).
@@ -46,6 +52,7 @@ Building metafacture-core from source is easy. All you need is git and [maven](h
         $ mvn clean install
 
     It is important to perform this step *before* importing the project into your IDE because it generates the lexer and parser sources for Flux from antlr grammar definitions. Otherwise your IDE will fail to compile the sources if it has integrated background compilation (like Eclipse has, for instance).
+
     2014-02-17: metafcature-core has now switched to Java 8. The easiest way was to make use of antlr3.5.2 (previously 3.5.1).
 
 See [Code Quality and Style](https://github.com/culturegraph/metafacture-core/wiki/Code-Quality-and-Style) on the wiki for further information on the sources.
@@ -56,4 +63,4 @@ TODO: Include a link to a page which explains how to write plugins
 
 # Stay updated
 
-For support and discussion join the [mailing list](http://lists.dnb.de/mailman/listinfo/metafacture).
+For support and discussion join the [mailing list](http://lists.dnb.de/mailman/listinfo/metafacture). The mailing list archive can be found at [Nabble](http://metafacture.2350614.n4.nabble.com/).

@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.source;
 
@@ -25,35 +25,41 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
 
 /**
  * Opens a {@link URLConnection} and passes a reader to the receiver.
- * 
+ *
  * @author Christoph Böhme
  * @author Jan Schnasse
- * 
+ *
  */
 @Description("Opens a http resource. Supports the setting of Accept and Accept-Charset as http header fields.")
 @In(String.class)
 @Out(java.io.Reader.class)
-public final class HttpOpener 
+@FluxCommand("open-http")
+public final class HttpOpener
 		extends DefaultObjectPipe<String, ObjectReceiver<Reader>> implements Opener {
 	private String encoding = "UTF-8";
 	private String accept = "*/*";
 
-	/**  
-	 * @param accept The accept header in the form type/subtype, e.g. text/plain.
+	/**
+	 * Sets the HTTP accept header value. This is a mime-type such as text/plain
+	 * or text/html. The default value of the accept is *&#47;* which means
+	 * any mime-type.
 	 */
 	public void setAccept(final String accept) {
 		this.accept = accept;
 	}
 
 	/**
-	 * @param encoding The encoding is used to encode the output and is passed 
-	 * as Accept-Charset to the http connection.
+	 * Sets the preferred encoding of the HTTP response. This value is in the
+	 * accept-charset header. Additonally, the encoding is used for reading the
+	 * HTTP resonse if it does not  specify an encoding. The default value for
+	 * the encoding is UTF-8.
 	 */
 	public void setEncoding(final String encoding) {
 		this.encoding = encoding;

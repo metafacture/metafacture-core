@@ -3,7 +3,9 @@
 	xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph">
 
 	<test-case name="All inline test: Namespaced Metamorph">
-		<input type="application/x-cgentity">id-1&#x001e;-data&#x001f;Hallo Welt!&#x001e;</input>
+		<input type="text/x-formeta">
+			id-1 { data: 'Hallo Welt!' }
+		</input>
 
 		<transformation type="text/x-metamorph+xml">
 			<mm:metamorph version="1">
@@ -12,7 +14,7 @@
 				</mm:rules>
 			</mm:metamorph>
 		</transformation>
-		
+
 		<result type="text/x-cg+xml">
 			<cgxml xmlns="http://www.culturegraph.org/cgxml" version="1.0">
 				<records>
@@ -25,7 +27,9 @@
 	</test-case>
 
 	<test-case name="All inline test: Inline Metamorph">
-		<input type="application/x-cgentity">id-1&#x001e;-data&#x001f;Hallo Welt!&#x001e;</input>
+		<input type="text/x-formeta">
+			id-1 { data: 'Hallo Welt!' }
+		</input>
 
 		<transformation type="text/x-metamorph+xml">
 			<metamorph xmlns="http://www.culturegraph.org/metamorph"
@@ -48,7 +52,9 @@
 	</test-case>
 
 	<test-case name="Referenced Metamorph">
-		<input type="application/x-cgentity">id-1&#x001e;-data&#x001f;Hallo Welt!&#x001e;</input>
+		<input type="text/x-formeta">
+			id-1 { data: 'Hallo Welt!' }
+		</input>
 
 		<transformation type="text/x-metamorph+xml" src="test/FrameworkTest-transformation.xml" />
 
@@ -64,7 +70,7 @@
 	</test-case>
 
 	<test-case name="Ignored test" ignore="true">
-		<input type="application/x-cgentity">Glibberish</input>
+		<input type="text/x-formeta">Glibberish</input>
 
 		<result type="text/x-cg+xml">
 			<cgxml xmlns="http://www.culturegraph.org/cgxml" version="1.0">
@@ -74,6 +80,32 @@
 					</record>
 				</records>
 			</cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="Should allow Formeta as input and output format">
+		<input type="text/x-formeta">
+			{ l: v }
+		</input>
+		<result type="text/x-formeta">
+			{ l: v }
+		</result>
+	</test-case>
+
+	<test-case name="Issue 219: Should resolve XIncludes in embedded Metamorph transformations">
+		<input type="text/x-formeta">
+			{ l: v }
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph xmlns="http://www.culturegraph.org/metamorph" version="1">
+				<include xmlns="http://www.w3.org/2001/XInclude"
+					href="issue219-should-resolve-xincludes-in-embedded-metamorph-transformations.xml" />
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-formeta">
+			{ l: v }
 		</result>
 	</test-case>
 

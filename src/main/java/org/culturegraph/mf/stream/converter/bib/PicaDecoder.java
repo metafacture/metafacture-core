@@ -1,99 +1,112 @@
 /*
- *  Copyright 2013, 2014 Christoph Böhme
+ * Copyright 2013, 2014 Christoph Böhme
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.stream.converter.bib;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.util.StringUtil;
 
-
 /**
- * <p>Parses pica+ records. The parser only parses single records.
- * A string containing multiple records must be split into
- * individual records before passing it to {@code PicaDecoder}.</p>
- *
- * <p>The parser is designed to accept any string as valid input and
- * to parse pica plain format as well as normalised pica. To
- * achieve this, the parser behaves as following:</p>
- *
+ * Parses pica+ records. The parser only parses single records. A string
+ * containing multiple records must be split into individual records before
+ * passing it to {@code PicaDecoder}.
+ * <p>
+ * The parser is designed to accept any string as valid input and to parse pica
+ * plain format as well as normalised pica. To achieve this, the parser behaves
+ * as following:
  * <ul>
- * <li>Fields are separated by record markers (0x1d), field
- * markers (0x1e) or field end markers (0x0a).</li>
- * <li>The field name and the first subfield are separated by
- * a subfield marker (0x01f).</li>
- * <li>The parser assumes that the input starts with a field
- * name.</li>
- * <li>The parser assumes that the end of the input marks
- * the end of the current field and the end of the record.
- * </li>
- * <li>Subfields are separated by subfield markers (0x1f).</li>
- * <li>The first character of a subfield is the name of the
- * subfield</li>
- * <li>To handle input with multiple field and subfield separators
- * following each  other directly (for instance 0x0a and 0x1e), it
- * is assumed that field names, subfields, subfield names or
- * subfield values can be empty.</li>
+ *   <li>The parser assumes that the input starts with a field name.
+ *
+ *   <li>The field name and the first subfield are separated by a subfield
+ *   marker (&#92;u001f).
+ *
+ *   <li>Fields are separated by record markers (&#92;u001d), field
+ *   markers (&#92;u001e) or field end markers (&#92;u000a).
+ *
+ *   <li>Subfields are separated by subfield markers (&#92;u001f).
+ *
+ *   <li>The first character of a subfield is the name of the subfield
+ *
+ *   <li>The parser assumes that the end of the input marks the end of the
+ *   current field and the end of the record.
+ *
+ *   <li>To handle input with multiple field and subfield separators following
+ *   each other directly (for instance &#92;u000a and &#92;u001e), it is assumed
+ *   that field names, subfields, subfield names or subfield values can be
+ *   empty.
  * </ul>
- *
- * <p>Please not that the record markers is treated as a field
- * delimiter and not as a record delimiter. Records need to be
- * separated prior to parsing them.</p>
- *
- * <p>As the behaviour of the parser may result in unnamed fields or
- * subfields or fields with no subfields the {@code PicaDecoder}
- * automatically filters empty fields and subfields:</p>
- *
+ * Please note that the record marker is treated as a field delimiter and not
+ * as a record delimiter. Records need to be separated prior to parsing them.
+ * <p>
+ * As the behaviour of the parser may result in unnamed fields or subfields or
+ * fields with no subfields the {@code PicaDecoder} automatically filters empty
+ * fields and subfields:
  * <ul>
- * <li>Subfields without a name are ignored (such fields cannot
- * have any value because then the first character of the value
- * would be the field name).</li>
- * <li>Subfields which only have a name but no value are always
- * parsed.</li>
- * <li>Unnamed Fields are only parsed if the contain not-ignored
- * subfields.</li>
- * <li>Named fields containing none or only ignored subfields are
- * only parsed if {@code skipEmptyFields} is set to {@code false}
- * otherwise they are ignored.</li>
- * <li>Input containing only whitespace (spaces and tabs) is
- * completely ignored</li>
+ *   <li>Subfields without a name are ignored (such subfields cannot have any
+ *   value because then the first character of the value would be the name of
+ *   the subfield).
+ *
+ *   <li>Subfields which only have a name but no value are always parsed.
+ *
+ *   <li>Unnamed fields are only parsed if the contain not-ignored subfields.
+ *
+ *   <li>Named fields containing none or only ignored subfields are only parsed
+ *   if {@link #setSkipEmptyFields(boolean)} is set to false otherwise they are
+ *   ignored.
+ *
+ *   <li>Input containing only whitespace (spaces and tabs) is completely
+ *   ignored.
  * </ul>
+ * The {@code PicaDecoder} emits <i>start-entity</i> and <i>end-entity</i>
+ * events for each parsed field and <i>literal</i> events for each parsed
+ * subfield. Field names are trimmed by default (leading and trailing whitespace
+ * is removed). This can be changed by setting
+ * {@link #setTrimFieldNames(boolean)} to false.
+ * <p>
+ * The content of subfield <i>003&#64; $0</i> is used as record id. If
+ * {@link #setIgnoreMissingIdn(boolean)} is false and field
+ * <i>003&#64; $0</i> is not found in the record a
+ * {@link MissingIdException} is thrown otherwise the record identifier is an
+ * empty string.
+ * <p>
+ * For example, when run on the input
+ * <pre>
+ * 003&#64; &#92;u001f01234&#92;u001e
+ * 028A &#92;u001faAndy&#92;u001fdWarhol&#92;u001e
+ * </pre>
  *
- * <p>The {@code PicaDecoder} calls {@code receiver.startEntity} and
- * {@code receiver.endEntity} for each parsed field and
- * {@code receiver.literal} for each parsed subfield. Spaces in the
- * field name are not included in the entity name. The input
- * "028A \x1faAndy\x1fdWarhol\x1e" would produce the following
- * sequence of calls:</p>
+ * the {@code PicaDecoder} will produce the following sequence of events:
+ * <pre>{@literal
+ * start-record "1234"
+ * start-entity "003@"
+ * literal "0": 1234
+ * end-entity
+ * start-entity "028A"
+ * literal "a": Andy
+ * literal "d": Warhol
+ * end-entity
+ * end-record
+ * }</pre>
  *
- * <ol>
- * <li>receiver.startEntity("028A")</li>
- * <li>receiver.literal("a", "Andy")</li>
- * <li>receiver.literal("d", "Warhol")</li>
- * <li>receiver.endEntity()</li>
- * </ol>
- *
- * <p>The content of subfield 003@$0 is used for the record id. If
- * {@code ignoreMissingIdn} is false and field 003@$0 is not found
- * in the record a {@link MissingIdException} is thrown.</p>
- *
- * <p>The parser assumes that the input is utf-8 encoded. The parser
- * does not support other pica encodings.</p>
+ * The parser assumes that the input is utf-8 encoded. The parser does not
+ * support other pica encodings.
  *
  * @author Christoph Böhme
  *
@@ -103,6 +116,7 @@ import org.culturegraph.mf.util.StringUtil;
 		"individual records before passing it to PicaDecoder.")
 @In(String.class)
 @Out(StreamReceiver.class)
+@FluxCommand("decode-pica")
 public final class PicaDecoder
 		extends DefaultObjectPipe<String, StreamReceiver> {
 
@@ -118,6 +132,21 @@ public final class PicaDecoder
 
 	private boolean ignoreMissingIdn;
 
+	/**
+	 * Controls whether records having no pica subfield <i>003&#64; $0</i>
+	 * (which contains the record identifier <i>IDN</i>) are reported as faulty.
+	 * By default such records are reported by the {@code PicaDecoder} by throwing
+	 * a {@link MissingIdException}.
+	 * <p>
+	 * The setting can be changed at any time. It becomes effective with the next
+	 * record that is being processed.
+	 * <p>
+	 * <strong>Default value: {@code false}</strong>
+	 *
+	 * @param ignoreMissingIdn if true, missing IDNs do not trigger a
+	 *                         {@link MissingIdException} but an empty string is
+	 *                         used as record identifier instead.
+	 */
 	public void setIgnoreMissingIdn(final boolean ignoreMissingIdn) {
 		this.ignoreMissingIdn = ignoreMissingIdn;
 	}
@@ -126,6 +155,20 @@ public final class PicaDecoder
 		return ignoreMissingIdn;
 	}
 
+	/**
+	 * Controls whether decomposed unicode characters in field values are
+	 * normalised to their precomposed version. By default no normalisation is
+	 * applied. The normalisation is only applied to values not to field or
+	 * subfield names.
+	 * <p>
+	 * The setting can be changed at any time. It becomes effective with the next
+	 * record that is being processed.
+	 * <p>
+	 * <strong>Default value: {@code false}</strong>
+	 *
+	 * @param normalizeUTF8 if true, decomposed unicode characters in values are
+	 *                      normalised to their precomposed version.
+	 */
 	public void setNormalizeUTF8(final boolean normalizeUTF8) {
 		parserContext.setNormalizeUTF8(normalizeUTF8);
 	}
@@ -134,6 +177,17 @@ public final class PicaDecoder
 		return parserContext.getNormalizeUTF8();
 	}
 
+	/**
+	 * Controls whether fields without subfields are skipped and no events are
+	 * emitted for them. By default empty fields are skipped.
+	 * <p>
+	 * The setting can be changed at any time. It becomes effective with the next
+	 * record that is being processed.
+	 * <p>
+	 * <strong>Default value: {@code true}</strong>
+	 *
+	 * @param skipEmptyFields if true, then empty fields are skipped.
+	 */
 	public void setSkipEmptyFields(final boolean skipEmptyFields) {
 		parserContext.setSkipEmptyFields(skipEmptyFields);
 	}
@@ -142,6 +196,24 @@ public final class PicaDecoder
 		return parserContext.getSkipEmptyFields();
 	}
 
+	/**
+	 * Sets whether field names are trimmed (removal of leading and trailing
+	 * whitespace). By default field names are trimmed.
+	 * <p>
+	 * The setting can be changed at any time. It becomes effective with the next
+	 * record that is being processed.
+	 * <p>
+	 * <strong>Default value: {@code true}</strong>
+	 *
+	 * @param trimFieldNames if true, then field names are trimmed.
+	 */
+	public void setTrimFieldNames(final boolean trimFieldNames) {
+		parserContext.setTrimFieldNames(trimFieldNames);
+	}
+
+	public boolean getTrimFieldNames() {
+		return parserContext.getTrimFieldNames();
+	}
 	@Override
 	public void process(final String record) {
 		assert !isClosed();
@@ -149,7 +221,7 @@ public final class PicaDecoder
 		buffer = StringUtil.copyToBuffer(record, buffer);
 		recordLen = record.length();
 
-		if (recordIsEmpty()) {
+		if (isRecordEmpty()) {
 			return;
 		}
 
@@ -181,7 +253,7 @@ public final class PicaDecoder
 		parserContext.reset();
 	}
 
-	private boolean recordIsEmpty() {
+	private boolean isRecordEmpty() {
 		for (int i = 0; i < recordLen; ++i) {
 			if (buffer[i] != ' ' && buffer[i] != '\t') {
 				return false;

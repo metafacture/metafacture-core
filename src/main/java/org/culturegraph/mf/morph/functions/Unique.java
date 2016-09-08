@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.morph.functions;
 
@@ -19,17 +19,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Checks whether the received value was not received before.
+ *
  * @author Markus Michael Geipel
- * 
+ *
  */
-public final class Unique extends AbstractStatefulFunction{
+public final class Unique extends AbstractStatefulFunction {
 
-	
 	private static final String ENTITY = "entity";
 	private static final String NAME = "name";
 	private static final String VALUE = "value";
+
 	private final Set<String> set = new HashSet<String>();
+
 	private boolean uniqueInEntity;
+
 	private KeyGenerator keyGenerator = new KeyGenerator() {
 		@Override
 		public String createKey(final String name, final String value) {
@@ -80,9 +84,10 @@ public final class Unique extends AbstractStatefulFunction{
 	}
 
 	/**
-	 * to implement different uniqueness strategies
+	 * To implement different uniqueness strategies
 	 */
 	private interface KeyGenerator {
 		String createKey(String name, String value);
 	}
+
 }

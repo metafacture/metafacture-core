@@ -98,7 +98,7 @@
 		</result>
 	</test-case>
 
-	<test-case name="issue110">
+	<test-case name="issue110_shouldOutputFallBackIfFlushedWithEntity">
 		<input type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">
 				<cgxml:records>
@@ -130,4 +130,140 @@
 			</cgxml:cgxml>
 		</result>
 	</test-case>
+
+	<test-case name="issue210_issue49_shouldRepeatedlyEmitNamedValueIfResetIsFalse">
+		<input type="text/x-formeta">
+			{
+				lit1: data1,
+				flush: first,
+				flush: second
+			}
+		</input>
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:choose flushWith="flush" reset="false">
+						<mm:data source="lit1" />
+					</mm:choose>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+		<result type="text/x-formeta">
+			{
+				lit1: data1,
+				lit1: data1
+			}
+		</result>
+	</test-case>
+
+	<test-case name="issue210_shouldResetAfterEmittingNamedValueIfResetIsTrue">
+		<input type="text/x-formeta">
+			{
+				lit1: data1,
+				flush: first,
+				flush: second
+			}
+		</input>
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:choose flushWith="flush" reset="true">
+						<mm:data source="lit1" />
+					</mm:choose>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+		<result type="text/x-formeta">
+			{ lit1: data1 }
+		</result>
+	</test-case>
+
+	<test-case name="issue210_shouldResetAfterEmittingNamedValueByDefault">
+		<input type="text/x-formeta">
+			{
+				lit1: data1,
+				flush: first,
+				flush: second
+			}
+		</input>
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:choose flushWith="flush">
+						<mm:data source="lit1" />
+					</mm:choose>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+		<result type="text/x-formeta">
+			{ lit1: data1 }
+		</result>
+	</test-case>
+
+	<test-case name="issue250_shouldResetOnEntityChangeIfSameEntityIsTrue">
+		<input type="text/x-formeta">
+			{
+				entity { lit1: data1 }
+				entity { lit2: data2 }
+			}
+		</input>
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:choose sameEntity="true">
+						<mm:data source="entity.lit1" />
+						<mm:data source="entity.lit2" />
+					</mm:choose>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+		<result type="text/x-formeta">
+			{ entity.lit2: data2 }
+		</result>
+	</test-case>
+
+	<test-case name="issue250_shouldNotResetOnEntityChangeIfSameEntityIsFalse">
+		<input type="text/x-formeta">
+			{
+				entity { lit1: data1 }
+				entity { lit2: data2 }
+			}
+		</input>
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:choose sameEntity="false">
+						<mm:data source="entity.lit1" />
+						<mm:data source="entity.lit2" />
+					</mm:choose>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+		<result type="text/x-formeta">
+			{ entity.lit1: data1 }
+		</result>
+	</test-case>
+
+	<test-case name="issue250_shouldNotResetOnEntityChangeByDefault">
+		<input type="text/x-formeta">
+			{
+				entity { lit1: data1 }
+				entity { lit2: data2 }
+			}
+		</input>
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:choose>
+						<mm:data source="entity.lit1" />
+						<mm:data source="entity.lit2" />
+					</mm:choose>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+		<result type="text/x-formeta">
+			{ entity.lit1: data1 }
+		</result>
+	</test-case>
+
 </metamorph-test>

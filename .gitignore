@@ -1,10 +1,21 @@
 # Ignore Maven traget directory:
-/target
+/target/
 
 # Ignore Eclipse project files:
 .checkstyle
 .pmd
+.eclipse-pmd
 .classpath
 .project
 .settings/
 /bin/
+
+# Ignore IntelliJ project files:
+*.ipr
+*.iws
+*.iml
+.idea
+/out/
+
+# Ignore IntelliJ JIRA plugin
+atlassian-ide-plugin.xml

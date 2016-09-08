@@ -1,17 +1,17 @@
 /*
- *  Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.morph.functions;
 
@@ -19,13 +19,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Offers ISBN conversions
- * 
+ * Offers ISBN conversions.
+ *
  * @author Markus Michael Geipel
  */
 public final class ISBN extends AbstractSimpleStatelessFunction {
 
-	
 	private static final String CHECK = "0123456789X0";
 
 	private static final String ISBN10 = "isbn10";
@@ -39,18 +38,15 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
 	private static final int ISBN10_MOD = 11;
 	private static final int ISBN13_MOD = 10;
 
-	
-
 	private boolean to10;
 	private boolean to13;
 	private boolean verifyCheckDigit;
 	private String errorString;
 
-	
 	public void setErrorString(final String errorString) {
 		this.errorString = errorString;
 	}
-	
+
 	@Override
 	public String process(final String value) {
 		String result = cleanse(value);
@@ -123,7 +119,8 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
 
 	public static String isbn13to10(final String isbn) {
 		if (isbn.length() != ISBN13_SIZE) {
-			throw new IllegalArgumentException("isbn must be 13 characters long");
+			throw new IllegalArgumentException(
+					"isbn must be 13 characters long");
 		}
 		final String isbn10Data = isbn.substring(3, 12);
 
@@ -132,7 +129,8 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
 
 	public static String isbn10to13(final String isbn) {
 		if (isbn.length() != ISBN10_SIZE) {
-			throw new IllegalArgumentException("isbn must be 10 characters long");
+			throw new IllegalArgumentException(
+					"isbn must be 10 characters long");
 		}
 
 		final String isbn13Data = "978" + isbn.substring(0, ISBN10_SIZE - 1);
@@ -140,17 +138,15 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
 		return isbn13Data + check13(isbn13Data);
 	}
 
-	/**
-	 * @param isbnIncorrect
-	 * @return
-	 */
 	public static boolean isValid(final String isbn) {
 		boolean result = false;
 
 		if (isbn.length() == ISBN10_SIZE) {
-			result = check10(isbn.substring(0, ISBN10_SIZE - 1)) == isbn.charAt(ISBN10_SIZE - 1);
+			result = check10(isbn.substring(0, ISBN10_SIZE - 1)) == isbn
+					.charAt(ISBN10_SIZE - 1);
 		} else if (isbn.length() == ISBN13_SIZE) {
-			result = check13(isbn.substring(0, ISBN13_SIZE - 1)) == isbn.charAt(ISBN13_SIZE - 1);
+			result = check13(isbn.substring(0, ISBN13_SIZE - 1)) == isbn
+					.charAt(ISBN13_SIZE - 1);
 		}
 		return result;
 	}
