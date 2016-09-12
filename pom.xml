@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.culturegraph</groupId>
 	<artifactId>metafacture-core</artifactId>
-	<version>4.0.0-dswarm-SNAPSHOT</version>
+	<version>4.0.1-dswarm-SNAPSHOT</version>
 	<name>metafacture.core</name>
 	<description>Core package of the metafacture tool suite</description>
 	<licenses>
@@ -146,7 +146,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+			<!--<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>${maven-javadoc-plugin.version}</version>
@@ -159,7 +159,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>-->
 			<plugin>
 				<!-- explicitly define maven-deploy-plugin after other to force exec order -->
 				<groupId>org.apache.maven.plugins</groupId>
@@ -393,7 +393,7 @@
 			<id>sonatype-oss-release</id>
 			<build>
 				<plugins>
-					<plugin>
+					<!--<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<version>${maven-javadoc-plugin.version}</version>
@@ -411,7 +411,7 @@
 								</configuration>
 							</execution>
 						</executions>
-					</plugin>
+					</plugin>-->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
