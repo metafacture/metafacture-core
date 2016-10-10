@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Christoph Böhme
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -27,20 +27,37 @@ import org.culturegraph.mf.util.Require;
  */
 public final class RecordFormat {
 
-	public static final int MAX_LENGTH = 9;
+	/**
+	 * The number of characters in the field tags.
+	 */
+	public final int TAG_LENGTH = Iso2709Constants.TAG_LENGTH;
 
-	private int indicatorLength;
-	private int identifierLength;
-	private int fieldLengthLength;
-	private int fieldStartLength;
-	private int implDefinedPartLength;
+	/**
+	 * The number of characters in the implementation codes element of the
+	 * record leader.
+	 */
+	public final int IMPL_CODES_LENGTH = Iso2709Constants.IMPL_CODES_LENGTH;
 
-	public RecordFormat() {
-		indicatorLength = 0;
-		identifierLength = 0;
-		fieldLengthLength = 0;
-		fieldStartLength = 0;
-		implDefinedPartLength = 0;
+	/**
+	 * The number of characters in the system characters element of the
+	 * record leader.
+	 */
+	public final int SYSTEM_CHARS_LENGTH = Iso2709Constants.SYSTEM_CHARS_LENGTH;
+
+	private final int indicatorLength;
+	private final int identifierLength;
+	private final int fieldLengthLength;
+	private final int fieldStartLength;
+	private final int implDefinedPartLength;
+
+	public RecordFormat(final int indicatorLength, final int identifierLength,
+			final int fieldLengthLength, final int fieldStartLength,
+			final int implDefinedPartLength) {
+		this.indicatorLength = indicatorLength;
+		this.identifierLength = identifierLength;
+		this.fieldLengthLength = fieldLengthLength;
+		this.fieldStartLength = fieldStartLength;
+		this.implDefinedPartLength = implDefinedPartLength;
 	}
 
 	public RecordFormat(final RecordFormat source) {
@@ -53,59 +70,37 @@ public final class RecordFormat {
 		implDefinedPartLength = source.implDefinedPartLength;
 	}
 
-	public int getIndicatorLength() {
-		return indicatorLength;
+	public static Builder create() {
+		return new Builder();
 	}
 
-	public void setIndicatorLength(final int indicatorLength) {
-		Require.notNegative(indicatorLength);
-		Require.that(indicatorLength <= MAX_LENGTH);
+	public static Builder createFrom(final RecordFormat source) {
+		return create()
+				.withIndicatorLength(source.indicatorLength)
+				.withIdentifierLength(source.identifierLength)
+				.withFieldLengthLength(source.fieldLengthLength)
+				.withFieldStartLength(source.fieldStartLength)
+				.withImplDefinedPartLength(source.implDefinedPartLength);
+	}
 
-		this.indicatorLength = indicatorLength;
+	public int getIndicatorLength() {
+		return indicatorLength;
 	}
 
 	public int getIdentifierLength() {
 		return identifierLength;
 	}
 
-	public void setIdentifierLength(final int identifierLength) {
-		Require.notNegative(identifierLength);
-		Require.that(identifierLength <= MAX_LENGTH);
-
-		this.identifierLength = identifierLength;
-	}
-
 	public int getFieldLengthLength() {
 		return fieldLengthLength;
-	}
-
-	public void setFieldLengthLength(final int fieldLengthLength) {
-		Require.that(fieldLengthLength > 0);
-		Require.that(fieldLengthLength <= MAX_LENGTH);
-
-		this.fieldLengthLength = fieldLengthLength;
 	}
 
 	public int getFieldStartLength() {
 		return fieldStartLength;
 	}
 
-	public void setFieldStartLength(final int fieldStartLength) {
-		Require.that(fieldStartLength > 0);
-		Require.that(fieldStartLength <= MAX_LENGTH);
-
-		this.fieldStartLength = fieldStartLength;
-	}
-
 	public int getImplDefinedPartLength() {
 		return implDefinedPartLength;
-	}
-
-	public void setImplDefinedPartLength(final int implDefinedPartLength) {
-		Require.notNegative(implDefinedPartLength);
-		Require.that(implDefinedPartLength <= MAX_LENGTH);
-
-		this.implDefinedPartLength = implDefinedPartLength;
 	}
 
 	@Override
@@ -138,6 +133,56 @@ public final class RecordFormat {
 				"fieldLengthLength=" + fieldLengthLength + ", " +
 				"fieldStartLength= " + fieldStartLength + ", " +
 				"implDefinedPartLength=" + implDefinedPartLength + ")";
+	}
+
+	public static class Builder {
+
+		private int indicatorLength;
+		private int identifierLength;
+		private int fieldLengthLength;
+		private int fieldStartLength;
+		private int implDefinedPartLength;
+
+		public Builder withIndicatorLength(final int indicatorLength) {
+			Require.notNegative(indicatorLength);
+			Require.that(indicatorLength <= 9);
+			this.indicatorLength = indicatorLength;
+			return this;
+		}
+
+		public Builder withIdentifierLength(final int identifierLength) {
+			Require.notNegative(identifierLength);
+			Require.that(identifierLength <= 9);
+			this.identifierLength = identifierLength;
+			return this;
+		}
+
+		public Builder withFieldLengthLength(final int fieldLengthLength) {
+			Require.that(fieldLengthLength > 0);
+			Require.that(fieldLengthLength <= 9);
+			this.fieldLengthLength = fieldLengthLength;
+			return this;
+		}
+
+		public Builder withFieldStartLength(final int fieldStartLength) {
+			Require.that(fieldStartLength > 0);
+			Require.that(fieldStartLength <= 9);
+			this.fieldStartLength = fieldStartLength;
+			return this;
+		}
+
+		public Builder withImplDefinedPartLength(final int implDefinedPartLength) {
+			Require.notNegative(implDefinedPartLength);
+			Require.that(implDefinedPartLength <= 9);
+			this.implDefinedPartLength = implDefinedPartLength;
+			return this;
+		}
+
+		public RecordFormat build() {
+			return new RecordFormat(indicatorLength, identifierLength,
+					fieldLengthLength, fieldStartLength, implDefinedPartLength);
+		}
+
 	}
 
 }

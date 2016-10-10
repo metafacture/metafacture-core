@@ -20,7 +20,6 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
 import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.iso2709.Iso646Characters;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,9 +35,9 @@ import org.mockito.MockitoAnnotations;
  */
 public final class Marc21DecoderTest {
 
-	private static final char SUBFIELD_MARKER = Iso646Characters.IS1;
-	private static final char FIELD_SEPARATOR = Iso646Characters.IS2;
-	private static final char RECORD_SEPARATOR = Iso646Characters.IS3;
+	private static final char SUBFIELD_MARKER = '\u001f';
+	private static final char FIELD_SEPARATOR = '\u001e';
+	private static final char RECORD_SEPARATOR = '\u001d';
 
 	private static final String RECORD_ID = "identifier";
 	private static final String CONTROLFIELD_VALUE = "controlfield";
@@ -80,27 +79,6 @@ public final class Marc21DecoderTest {
 
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(RECORD_ID);
-		ordered.verify(receiver).literal("leader", RECORD_LABEL);
-		ordered.verify(receiver).literal("001", RECORD_ID);
-		ordered.verify(receiver).literal("002", CONTROLFIELD_VALUE);
-		ordered.verify(receiver).startEntity("100AB");
-		ordered.verify(receiver).literal("1", "value1");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).startEntity("200CD");
-		ordered.verify(receiver).literal("2", "value2");
-		ordered.verify(receiver).literal("3", "value3");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
-	}
-
-	@Test
-	public void shouldProcessMarc21RecordAndSplitLabel() {
-		marc21Decoder.setSplitLeader(true);
-
-		marc21Decoder.process(RECORD);
-
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID);
 		ordered.verify(receiver).startEntity("leader");
 		ordered.verify(receiver).literal("status", "n");
 		ordered.verify(receiver).literal("type", "o");
@@ -110,6 +88,15 @@ public final class Marc21DecoderTest {
 		ordered.verify(receiver).literal("encodingLevel", "z");
 		ordered.verify(receiver).literal("catalogingForm", "u");
 		ordered.verify(receiver).literal("multipartLevel", " ");
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).literal("001", RECORD_ID);
+		ordered.verify(receiver).literal("002", CONTROLFIELD_VALUE);
+		ordered.verify(receiver).startEntity("100AB");
+		ordered.verify(receiver).literal("1", "value1");
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).startEntity("200CD");
+		ordered.verify(receiver).literal("2", "value2");
+		ordered.verify(receiver).literal("3", "value3");
 		ordered.verify(receiver).endEntity();
 		ordered.verify(receiver).endRecord();
 	}

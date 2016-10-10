@@ -18,7 +18,7 @@ package org.culturegraph.mf.iso2709;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.culturegraph.mf.exceptions.FormatException;
 import org.junit.Test;
@@ -34,15 +34,48 @@ public final class Iso646ByteBufferTest {
 
 	private Iso646ByteBuffer byteBuffer;
 
-	@Test(expected = IllegalArgumentException.class)
-	public void constructor_shouldThrowIllegalArgumentExceptionIfBufferIsNull() {
-		byteBuffer = new Iso646ByteBuffer(null);  // Exception expected
-	}
-
 	@Test
 	public void getLength_shouldReturnRecordLength() {
 		byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
 		assertEquals(3, byteBuffer.getLength());
+	}
+
+	@Test
+	public void getFreeSpace_shouldReturnBufferLengthIfNothingWasWritten() {
+		byteBuffer = new Iso646ByteBuffer(5);
+		assertEquals(5, byteBuffer.getFreeSpace());
+	}
+
+	@Test
+	public void getFreeSpace_shouldReturnSpaceBetweenWritePositionAndBufferEnd() {
+		byteBuffer = new Iso646ByteBuffer(5);
+		byteBuffer.setWritePosition(2);
+		assertEquals(3, byteBuffer.getFreeSpace());
+	}
+
+	@Test
+	public void getFreeSpace_shouldReturnZeroIfBufferIsFull() {
+		byteBuffer = new Iso646ByteBuffer(5);
+		byteBuffer.setWritePosition(5);
+		assertEquals(0, byteBuffer.getFreeSpace());
+	}
+
+	@Test
+	public void distanceTo_byte_shouldReturnDistanceToFirstMatchingByte() {
+		byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
+		assertEquals(2, byteBuffer.distanceTo((byte) 'x', 0));
+	}
+
+	@Test
+	public void distanceTo_byte_shouldReturnDistanceToEndOfBufferIfNoMatchFound() {
+		byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
+		assertEquals(3, byteBuffer.distanceTo((byte) 'X', 0));
+	}
+
+	@Test
+	public void distanceTo_byte_shouldReturnZeroIfSearchStartsAtMatchingByte() {
+		byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
+		assertEquals(0, byteBuffer.distanceTo((byte) 'T', 0));
 	}
 
 	@Test
@@ -69,40 +102,17 @@ public final class Iso646ByteBufferTest {
 		assertEquals(1, byteBuffer.distanceTo(asBytes("xu"), 0));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void distanceTo_byteArray_shouldThrowIllegalArgumentExceptionIfBytesIsNull() {
-		byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-		byteBuffer.distanceTo(null, 0);  // Exception expected
-	}
-
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void distanceTo_byteArray_shouldThrowIndexOutOfBoundsExceptionIfFromIndexIsInvalid() {
-		byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-		byteBuffer.distanceTo(asBytes("T"), -1);  // Exception expected
+	@Test
+	public void stringAt_shouldReturnStringDecodedAsUtf8() {
+		byteBuffer = new Iso646ByteBuffer(asBytes("Tüx Tox"));
+		assertEquals("Tüx Tox", byteBuffer.stringAt(0, byteBuffer.getLength(),
+				StandardCharsets.UTF_8));
 	}
 
 	@Test
-	public void distanceTo_byte_shouldReturnDistanceToFirstMatchingByte() {
+	public void stringAt_shouldReturnEmptyStringIfLengthIsZero() {
 		byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-		assertEquals(2, byteBuffer.distanceTo((byte) 'x', 0));
-	}
-
-	@Test
-	public void distanceTo_byte_shouldReturnDistanceToEndOfBufferIfNoMatchFound() {
-		byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-		assertEquals(3, byteBuffer.distanceTo((byte) 'X', 0));
-	}
-
-	@Test
-	public void distanceTo_byte_shouldReturnZeroIfSearchStartsAtMatchingByte() {
-		byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-		assertEquals(0, byteBuffer.distanceTo((byte) 'T', 0));
-	}
-
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void distanceTo_byte_shouldThrowIndexOutOfBoundsExceptionIfFromIndexIsInvalid() {
-		byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-		byteBuffer.distanceTo((byte) 'T', -1);  // Exception expected
+		assertEquals("", byteBuffer.stringAt(0, 0, StandardCharsets.UTF_8));
 	}
 
 	@Test
@@ -115,12 +125,6 @@ public final class Iso646ByteBufferTest {
 	public void charAt_shouldThrowFormatExceptionIfByteValueIsNotInIso646() {
 		byteBuffer = new Iso646ByteBuffer(asBytes("ü"));
 		byteBuffer.charAt(0);  // Exception expected
-	}
-
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void charAt_shouldThrowIndexOutOfBoundsExceptionIfIndexIsInvalid() {
-		byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-		byteBuffer.charAt(-1);  // Exception expected
 	}
 
 	@Test
@@ -141,29 +145,10 @@ public final class Iso646ByteBufferTest {
 		assertArrayEquals(new char[0], byteBuffer.charsAt(0, 0));
 	}
 
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void charsAt_shouldThrowIndexOutOfBoundsExceptionIfRangeIsInvalid() {
-		byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-		byteBuffer.charsAt(0, -1);  // Exception expected
-	}
-
 	@Test
-	public void stringAt_shouldReturnStringDecodedAsUtf8() {
-		byteBuffer = new Iso646ByteBuffer(asBytes("Tüx Tox"));
-		assertEquals("Tüx Tox", byteBuffer.stringAt(0, byteBuffer.getLength(),
-				Charset.forName("UTF-8")));
-	}
-
-	@Test
-	public void stringAt_shouldReturnEmptyStringIfLengthIsZero() {
-		byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-		assertEquals("", byteBuffer.stringAt(0, 0, Charset.forName("UTF-8")));
-	}
-
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void stringAt_shouldThrowIndexOutOfBoundsExceptionIfRangeIsInvalid() {
-		byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-		byteBuffer.stringAt(0, -1, Charset.forName("UTF-8"));  // Exception expected
+	public void byteAt_shouldReturnByteAtIndex() {
+		byteBuffer = new Iso646ByteBuffer(new byte[] { 0x01, 0x02 });
+		assertEquals(0x02, byteBuffer.byteAt(1));
 	}
 
 	@Test
@@ -176,12 +161,6 @@ public final class Iso646ByteBufferTest {
 	public void parseIntAt_shouldThrowFormatExceptionIfNotADigit() {
 		byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
 		byteBuffer.parseIntAt(0);  // Exception expected
-	}
-
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void parseIntAt_shouldThrowIndexOutOfBoundsExceptionIfIndexIsInvalid() {
-		byteBuffer = new Iso646ByteBuffer(asBytes("299"));
-		byteBuffer.parseIntAt(-1);  // Exception expected
 	}
 
 	@Test
@@ -202,10 +181,87 @@ public final class Iso646ByteBufferTest {
 		byteBuffer.parseIntAt(0, 3);  // Exception expected
 	}
 
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void parseIntAt_shouldThrowIndexOutOfBoundsExceptionIfRangeIsInvalid() {
-		byteBuffer = new Iso646ByteBuffer(asBytes("123"));
-		byteBuffer.parseIntAt(0, -1);  // Exception expected
+	@Test(expected = NumberFormatException.class)
+	public void parseIntAt_shouldThrowFormatExceptionIfNumberIsTooLarge() {
+		byteBuffer = new Iso646ByteBuffer(asBytes("123456789123456789"));
+		byteBuffer.parseIntAt(0, 18);  // Exception expected
+	}
+
+	@Test
+	public void writeChar_shouldWriteCharAtWritePosition() {
+		byteBuffer = new Iso646ByteBuffer(3);
+		byteBuffer.setWritePosition(1);
+		byteBuffer.writeChar('c');
+
+		assertArrayEquals(new byte[]{ 0x00, 0x63, 0x00 },
+				byteBuffer.getByteArray());
+		assertEquals(2, byteBuffer.getWritePosition());
+	}
+
+	@Test
+	public void writeChars_shouldWriteCharArrayAtWritePosition() {
+		byteBuffer = new Iso646ByteBuffer(4);
+		byteBuffer.setWritePosition(1);
+		byteBuffer.writeChars(new char[]{ 'c', 'b' });
+
+		assertArrayEquals(new byte[]{ 0x00, 0x63, 0x62, 0x00 },
+				byteBuffer.getByteArray());
+		assertEquals(3, byteBuffer.getWritePosition());
+	}
+
+	@Test
+	public void writeByte_shouldWriteByteAtWritePosition() {
+		byteBuffer = new Iso646ByteBuffer(3);
+		byteBuffer.setWritePosition(1);
+		byteBuffer.writeByte((byte) 0x61);
+
+		assertArrayEquals(new byte[]{ 0x00, 0x61, 0x00 },
+				byteBuffer.getByteArray());
+		assertEquals(2, byteBuffer.getWritePosition());
+	}
+
+	@Test
+	public void writeBytes_shouldWriteByteArrayAtWritePosition() {
+		byteBuffer = new Iso646ByteBuffer(4);
+		byteBuffer.setWritePosition(1);
+		byteBuffer.writeBytes(asBytes("cb"));
+
+		assertArrayEquals(new byte[]{ 0x00, 0x63, 0x62, 0x00 },
+				byteBuffer.getByteArray());
+		assertEquals(3, byteBuffer.getWritePosition());
+	}
+
+	@Test
+	public void writeInt_shouldWriteAsciiCodeOfSingleDigitAtWritePosition() {
+		byteBuffer = new Iso646ByteBuffer(3);
+		byteBuffer.setWritePosition(1);
+		byteBuffer.writeInt(3);
+
+		assertArrayEquals(new byte[]{ 0x00, 0x33, 0x00 },
+				byteBuffer.getByteArray());
+		assertEquals(2, byteBuffer.getWritePosition());
+	}
+
+	@Test
+	public void writeInt_shouldWriteAsciiCodesOfDigitsAtWritePosition() {
+		byteBuffer = new Iso646ByteBuffer(5);
+		byteBuffer.setWritePosition(1);
+		byteBuffer.writeInt(123, 3);
+
+		assertArrayEquals(new byte[]{ 0x00, 0x31, 0x32, 0x33, 0x00 },
+				byteBuffer.getByteArray());
+		assertEquals(4, byteBuffer.getWritePosition());
+	}
+
+	@Test
+	public void writeInt_shouldAddLeadingZerosIfNumberIsShorterThanDigits() {
+		byteBuffer = new Iso646ByteBuffer(5);
+		byteBuffer.setWritePosition(1);
+		byteBuffer.writeInt(3, 3);
+
+		assertArrayEquals(new byte[]{ 0x00, 0x30, 0x30, 0x33, 0x00 },
+				byteBuffer.getByteArray());
+		assertEquals(4, byteBuffer.getWritePosition());
 	}
 
 	@Test
@@ -216,7 +272,7 @@ public final class Iso646ByteBufferTest {
 	}
 
 	private byte[] asBytes(final String str) {
-		return str.getBytes(Charset.forName("UTF-8"));
+		return str.getBytes(StandardCharsets.UTF_8);
 	}
 
 }

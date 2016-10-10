@@ -15,6 +15,37 @@
  */
 package org.culturegraph.mf.stream.converter.bib;
 
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.BIBLIOGRAPHIC_LEVEL_CODES;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.BIBLIOGRAPHIC_LEVEL_INDEX;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.CATALOGING_FORM_CODES;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.CATALOGING_FORM_INDEX;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.CATALOGING_FORM_LITERAL;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.CHARACTER_CODING_CODES;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.CHARACTER_CODING_INDEX;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.CHARACTER_CODING_LITERAL;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.ENCODING_LEVEL_CODES;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.ENCODING_LEVEL_INDEX;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.ENCODING_LEVEL_LITERAL;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.LEADER_ENTITY;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.MARC21_CHARSET;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.MARC21_FORMAT;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.MARCXML_TYPE_LITERAL;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.MULTIPART_LEVEL_CODES;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.MULTIPART_LEVEL_INDEX;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.MULTIPART_LEVEL_LITERAL;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.RECORD_STATUS_CODES;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.RECORD_STATUS_LITERAL;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.RECORD_TYPE_CODES;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.RECORD_TYPE_INDEX;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.RECORD_TYPE_LITERAL;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.RESERVED_CHAR;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.TYPE_OF_CONTROL_CODES;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.TYPE_OF_CONTROL_INDEX;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.TYPE_OF_CONTROL_LITERAL;
+
+import java.util.Arrays;
+
 import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -23,12 +54,8 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.iso2709.Iso2709Format;
 import org.culturegraph.mf.iso2709.RecordBuilder;
-import org.culturegraph.mf.iso2709.RecordFormat;
 import org.culturegraph.mf.stream.converter.xml.MarcXmlHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Encodes a stream in MARC21 format.
@@ -40,10 +67,10 @@ import org.slf4j.LoggerFactory;
  * <p>
  * The {@code Marc21Encoder} encodes a stream as follows:
  * <ul>
- *   <li>top-level literals are encoded as reference fields. Their name must match
- *   the requirements for reference field tags in ISO 2709:2008 records.
+ *   <li>Top-level literals are encoded as reference fields. Their name must
+ *   match the requirements for reference field tags in ISO 2709:2008 records.
  *
- *   <li>entities are encoded as data fields. Only one level of entities is
+ *   <li>Entities are encoded as data fields. Only one level of entities is
  *   supported. The entity name must consist of a three letter tag name followed
  *   by two indicator characters. The tag name must follow the requirements for
  *   data field tags in ISO 2709:2008 records.
@@ -51,25 +78,17 @@ import org.slf4j.LoggerFactory;
  *   <li>Literals in entities are encoded as subfields. The literal name is used
  *   as subfield indicator and must therefore be a single character.
  *
- *   <li>If a literal named "leader" is encountered it is treated as a ISO
- *   2709:2008 record label and some of its contents (record status,
- *   implementation codes, user system characters) are copied into the generated
- *   record
- *
- *   <li>literal named "type", which may be produced by {@link MarcXmlHandler}
- *   are ignored.
+ *   <li>Top level literals named &quot;type&quot;, which may be produced by
+ *   {@link MarcXmlHandler} are ignored.
  * </ul>
- *
- * <p>The stream expected by the encoder is compatible to the streams emitted by
+ * The stream expected by the encoder is compatible to the streams emitted by
  * the {@link Marc21Decoder} and the {@link MarcXmlHandler}.
- * </p>
- *
- * <p>The record identifier in {@code startRecord} is ignored. To add an
- * identifier to the MARC21 record a reference field with tag name 001 need to
- * be added.
- *
- * @throws FormatException
- *             if the stream cannot be converted into a MARC21 record.
+ * <p>
+ * The record identifier in {@code startRecord} is ignored by default. The
+ * event stream is expected to contain  a <i>literal</i> event named
+ * &quot;001&quot; with the record id. Alternatively, setting
+ * {@link #setGenerateIdField(boolean)} to true enables generation of a record
+ * identifier field from the record id.
  *
  * @author Christoph Böhme
  *
@@ -81,89 +100,186 @@ import org.slf4j.LoggerFactory;
 public final class Marc21Encoder extends
 		DefaultStreamPipe<ObjectReceiver<String>> {
 
-	private static Logger LOG = LoggerFactory.getLogger(Marc21Encoder.class);
+	private static final int NAME_LENGTH = MARC21_FORMAT.TAG_LENGTH +
+			MARC21_FORMAT.getIndicatorLength();
 
-	private static final RecordFormat MARC21 = new RecordFormat();
+	private final RecordBuilder builder;
 
-	public static final String LEADER_LITERAL = "leader";
-	public static final String TYPE_LITERAL = "type";
+	private State state = State.IN_STREAM;
 
-	private final RecordBuilder builder = new RecordBuilder(MARC21);
-	private final int nameLength;
-
-	private boolean inField;
-
-	static {
-		MARC21.setIndicatorLength(2);
-		MARC21.setIdentifierLength(2);
-		MARC21.setFieldLengthLength(4);
-		MARC21.setFieldStartLength(5);
-		MARC21.setImplDefinedPartLength(0);
-	}
+	private boolean generateIdField;
 
 	public Marc21Encoder() {
-		super();
-		nameLength = Iso2709Format.TAG_LENGTH + MARC21.getIndicatorLength();
+		builder = new RecordBuilder(MARC21_FORMAT);
+		builder.setCharset(MARC21_CHARSET);
+	}
+	/**
+	 * Controls whether the record identifier field (&quot;001&quot;) is
+	 * generated from the record id in the <i>start-record</i> event. If id field
+	 * generation is enabled the event stream should not contain a <i>literal
+	 * &quot;001&quot;</i> event as this would result in two record identifier
+	 * fields being written into the MARC 21 record.
+	 * <p>
+	 * The default value of {@code generatedFieldId} is false.
+	 * <p>
+	 * The parameter can be changed at anytime. It becomes effective with the
+	 * next record being processed.
+	 *
+	 * @param generateIdField if true a record identifier field is generated.
+	 */
+	public void setGenerateIdField(final boolean generateIdField) {
+		this.generateIdField = generateIdField;
+	}
+
+	public boolean getGenerateIdField() {
+		return generateIdField;
 	}
 
 	@Override
 	public void startRecord(final String identifier) {
-		inField = false;
 		builder.reset();
+		initLeader();
+		if (generateIdField) {
+			builder.appendIdentifierField(identifier);
+		}
+		state = State.IN_RECORD;
+	}
+
+	private void initLeader() {
+		builder.setRecordStatus(' ');
+		builder.setImplCodes(new char[]{ ' ', ' ', ' ', ' ' });
+		builder.setSystemChars(new char[]{ ' ', ' ', ' ' });
+		builder.setReservedChar(RESERVED_CHAR);
 	}
 
 	@Override
 	public void endRecord() {
-		getReceiver().process(builder.toString());
+		final byte[] record = builder.build();
+		getReceiver().process(new String(record, MARC21_CHARSET));
+		state = State.IN_STREAM;
 	}
 
 	@Override
 	public void startEntity(final String name) {
-		if (name.length() != nameLength) {
+		if (state != State.IN_RECORD) {
+			throw new IllegalStateException("only top level entities are allowed");
+		}
+		if (LEADER_ENTITY.equals(name)) {
+			state = State.IN_LEADER_ENTITY;
+		} else {
+			startField(name);
+			state = State.IN_FIELD_ENTITY;
+		}
+	}
+
+	private void startField(final String name) {
+		if (name.length() != NAME_LENGTH) {
 			throw new FormatException("invalid entity name: " + name);
 		}
-
-		final String tag = name.substring(0, Iso2709Format.TAG_LENGTH);
-		final String indicators = name.substring(Iso2709Format.TAG_LENGTH);
-		builder.startField(tag, indicators);
-		inField = true;
+		final char[] tag = new char[MARC21_FORMAT.TAG_LENGTH];
+		final char[] indicators = new char[MARC21_FORMAT.getIndicatorLength()];
+		name.getChars(0, tag.length, tag, 0);
+		name.getChars(tag.length, name.length(), indicators, 0);
+		builder.startDataField(tag, indicators);
 	}
+
 
 	@Override
 	public void endEntity() {
-		inField = false;
-		builder.endField();
+		builder.endDataField();
+		state = State.IN_RECORD;
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
-		if (inField) {
-			builder.appendSubfield(name, value);
-		} else {
-			if (LEADER_LITERAL.equals(name)) {
-				setRecordLabel(value);
-			} else if (TYPE_LITERAL.equals(name)) {
-				// MarcXmlHandler may output `type` literals. The
-				// information in these literals is not included in
-				// marc21 records. Therefore, we need to ignore
-				// these literals here.
-				return;
-			} else {
-				builder.appendReferenceField(name, value);
-			}
+		switch (state) {
+			case IN_FIELD_ENTITY:
+				builder.appendSubfield(name.toCharArray(), value);
+				break;
+			case IN_LEADER_ENTITY:
+				processLiteralInLeader(name, value);
+				break;
+			case IN_RECORD:
+				processTopLevelLiteral(name, value);
+				break;
+			default:
+				throw new AssertionError("unknown or unexpected state: " + state);
 		}
 	}
 
-	private void setRecordLabel(final String value) {
-		if (value.length() != Iso2709Format.RECORD_LABEL_LENGTH) {
-			throw new FormatException("leader must be 24 characters long");
+	private void processLiteralInLeader(final String name, final String value) {
+		if (value.length() != 1) {
+			throw new FormatException(
+					"literal must only contain a single character:" + name);
 		}
-		builder.setRecordStatus(value.charAt(Iso2709Format.RECORD_STATUS_POS));
-		builder.setImplCodes(value.substring(Iso2709Format.IMPL_CODES_START,
-				Iso2709Format.IMPL_CODES_END));
-		builder.setSystemChars(value.substring(
-				Iso2709Format.SYSTEM_CHARS_START,
-				Iso2709Format.SYSTEM_CHARS_END));
+		final char code = value.charAt(0);
+		switch (name) {
+			case RECORD_STATUS_LITERAL:
+				requireValidCode(code, RECORD_STATUS_CODES);
+				builder.setRecordStatus(code);
+				break;
+			case RECORD_TYPE_LITERAL:
+				requireValidCode(code, RECORD_TYPE_CODES);
+				builder.setImplCode(RECORD_TYPE_INDEX, code);
+				break;
+			case BIBLIOGRAPHIC_LEVEL_LITERAL:
+				requireValidCode(code, BIBLIOGRAPHIC_LEVEL_CODES);
+				builder.setImplCode(BIBLIOGRAPHIC_LEVEL_INDEX, code);
+				break;
+			case TYPE_OF_CONTROL_LITERAL:
+				requireValidCode(code, TYPE_OF_CONTROL_CODES);
+				builder.setImplCode(TYPE_OF_CONTROL_INDEX, code);
+				break;
+			case CHARACTER_CODING_LITERAL:
+				requireValidCode(code, CHARACTER_CODING_CODES);
+				builder.setImplCode(CHARACTER_CODING_INDEX, code);
+				break;
+			case ENCODING_LEVEL_LITERAL:
+				requireValidCode(code, ENCODING_LEVEL_CODES);
+				builder.setSystemChar(ENCODING_LEVEL_INDEX, code);
+				break;
+			case CATALOGING_FORM_LITERAL:
+				requireValidCode(code, CATALOGING_FORM_CODES);
+				builder.setSystemChar(CATALOGING_FORM_INDEX, code);
+				break;
+			case MULTIPART_LEVEL_LITERAL:
+				requireValidCode(code, MULTIPART_LEVEL_CODES);
+				builder.setSystemChar(MULTIPART_LEVEL_INDEX, code);
+				break;
+			default:
+				throw new FormatException("unknown literal in leader entity: " + name);
+		}
+	}
+
+	private void requireValidCode(final char code, final char[] validCodes) {
+		for (final char validCode: validCodes) {
+			if (validCode == code) {
+				return;
+			}
+		}
+		throw new FormatException("invalid code '" + code + "'; allowed codes are: "
+				+ Arrays.toString(validCodes));
+	}
+
+	private void processTopLevelLiteral(final String name, final String value) {
+    if (MARCXML_TYPE_LITERAL.equals(name)) {
+      // MarcXmlHandler may output `type` literals. The
+      // information in these literals is not included in
+      // marc21 records. Therefore, we need to ignore
+      // these literals here.
+			return;
+    }
+		builder.appendReferenceField(name.toCharArray(), value);
+	}
+
+	@Override
+	protected void onResetStream() {
+		builder.reset();
+		state = State.IN_STREAM;
+	}
+
+	private enum State {
+		IN_STREAM, IN_RECORD, IN_FIELD_ENTITY, IN_LEADER_ENTITY
 	}
 
 }

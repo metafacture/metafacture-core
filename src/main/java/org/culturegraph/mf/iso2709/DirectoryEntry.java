@@ -15,97 +15,106 @@
  */
 package org.culturegraph.mf.iso2709;
 
-import org.culturegraph.mf.exceptions.FormatException;
+import static org.culturegraph.mf.iso2709.Iso2709Constants.MAX_BASE_ADDRESS;
+import static org.culturegraph.mf.iso2709.Iso2709Constants.MIN_BASE_ADDRESS;
+import static org.culturegraph.mf.iso2709.Iso2709Constants.RECORD_LABEL_LENGTH;
+import static org.culturegraph.mf.iso2709.Iso2709Constants.TAG_LENGTH;
 
 /**
+ * Provides access to a directory entry. A {@code DirectoryEntry} works like
+ * an iterator or cursor. Use {@link #gotoNext()} to advance to the next
+ * directory entry. Use {@link #rewind()} to go back to the first directory
+ * entry.
+ *
  * @author Christoph Böhme
  */
 class DirectoryEntry {
 
 	private final Iso646ByteBuffer buffer;
 
+	private final int directoryEnd;
 	private final int fieldLengthLength;
 	private final int fieldStartLength;
 	private final int implDefinedPartLength;
-	private final int baseAddress;
 	private final int entryLength;
 
 	private int currentPosition;
 
-	DirectoryEntry(final Iso646ByteBuffer buffer, final Label label) {
+	DirectoryEntry(final Iso646ByteBuffer buffer, final RecordFormat recordFormat,
+			final int baseAddress) {
+		assert buffer != null;
+		assert baseAddress >= MIN_BASE_ADDRESS;
+		assert baseAddress <= MAX_BASE_ADDRESS;
+
 		this.buffer = buffer;
-		this.fieldLengthLength = label.getFieldLengthLength();
-		this.fieldStartLength = label.getFieldStartLength();
-		this.implDefinedPartLength = label.getImplDefinedPartLength();
-		this.baseAddress = label.getBaseAddress();
-		this.entryLength = Iso2709Format.TAG_LENGTH + fieldLengthLength +
-				fieldStartLength + implDefinedPartLength;
-		verifyDirectoryLength();
-		reset();
+		directoryEnd = baseAddress - Byte.BYTES;
+		fieldLengthLength = recordFormat.getFieldLengthLength();
+		fieldStartLength = recordFormat.getFieldStartLength();
+		implDefinedPartLength = recordFormat.getImplDefinedPartLength();
+		entryLength = TAG_LENGTH + fieldLengthLength + fieldStartLength +
+				implDefinedPartLength;
+		rewind();
 	}
 
-	private void verifyDirectoryLength() {
-		if (buffer.getLength() < Iso2709Format.MIN_RECORD_LENGTH) {
-			throw new FormatException("Record is too short");
-		}
-		if (buffer.charAt(baseAddress - 1) != Iso2709Format.FIELD_SEPARATOR) {
-			throw new FormatException("Expecting field separator at index " +
-					(baseAddress - 1));
-		}
-		final int dirLength = baseAddress - Iso2709Format.RECORD_LABEL_LENGTH - 1;
-		if (dirLength % entryLength != 0) {
-			throw new FormatException("Directory length must be a multiple of the " +
-					"directory entry length");
-		}
-	}
-
-	void reset() {
-		currentPosition = Iso2709Format.RECORD_LABEL_LENGTH;
+	void rewind() {
+		currentPosition = RECORD_LABEL_LENGTH;
 	}
 
 	void gotoNext() {
-		assert !endOfDirectoryReached();
+		assert currentPosition < directoryEnd;
 		currentPosition += entryLength;
 	}
 
 	boolean endOfDirectoryReached() {
-		return currentPosition >= baseAddress - 1;
+		return currentPosition >= directoryEnd;
 	}
 
 	char[] getTag() {
-		assert !endOfDirectoryReached();
-		return buffer.charsAt(currentPosition, Iso2709Format.TAG_LENGTH);
+		assert currentPosition < directoryEnd;
+		return buffer.charsAt(currentPosition, TAG_LENGTH);
 	}
 
 	int getFieldLength() {
-		assert !endOfDirectoryReached();
-		final int fieldLengthStart = currentPosition + Iso2709Format.TAG_LENGTH;
+		assert currentPosition < directoryEnd;
+		final int fieldLengthStart = currentPosition + TAG_LENGTH;
 		return buffer.parseIntAt(fieldLengthStart, fieldLengthLength);
 	}
 
 	int getFieldStart() {
-		assert !endOfDirectoryReached();
-		final int fieldStartStart = currentPosition + Iso2709Format.TAG_LENGTH +
+		assert currentPosition < directoryEnd;
+		final int fieldStartStart = currentPosition + TAG_LENGTH +
 				fieldLengthLength;
 		return buffer.parseIntAt(fieldStartStart, fieldStartLength);
 	}
 
 	char[] getImplDefinedPart() {
-		assert !endOfDirectoryReached();
-		final int implDefinedPartStart = currentPosition +
-				Iso2709Format.TAG_LENGTH + fieldLengthLength + fieldStartLength;
+		assert currentPosition < directoryEnd;
+		final int implDefinedPartStart = currentPosition + TAG_LENGTH +
+				fieldLengthLength + fieldStartLength;
 		return buffer.charsAt(implDefinedPartStart, implDefinedPartLength);
+	}
+
+	boolean isRecordIdField() {
+		final char[] tag = getTag();
+		return tag[0] == '0' && tag[1] == '0' && tag[2] == '1';
+	}
+
+	boolean isReferenceField() {
+		final char[] tag = getTag();
+		return tag[0] == '0' && tag[1] == '0';
+	}
+
+	boolean isContinuedField() {
+		return getFieldLength() == 0;
 	}
 
 	@Override
 	public String toString() {
 		if (endOfDirectoryReached()) {
-			return "END-OF_DIRECTORY";
+			return "@END-OF-DIRECTORY";
 		}
-		return String.valueOf(getTag()) +
-				String.valueOf(getFieldLength()) +
-				String.valueOf(getFieldStart()) +
-				String.valueOf(getImplDefinedPart());
+		return String.valueOf(getTag()) + String.valueOf(getFieldLength()) +
+				String.valueOf(getFieldStart()) + String.valueOf(getImplDefinedPart());
 	}
 
 }

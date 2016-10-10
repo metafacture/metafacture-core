@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Christoph Böhme
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,9 @@
  */
 package org.culturegraph.mf.iso2709;
 
-import static org.culturegraph.mf.iso2709.Util.calculateMaxValue;
-import static org.culturegraph.mf.iso2709.Util.padWithZeros;
+import static org.culturegraph.mf.iso2709.Iso2709Constants.FIELD_SEPARATOR;
+import static org.culturegraph.mf.iso2709.Iso2709Constants.MAX_PAYLOAD_LENGTH;
+import static org.culturegraph.mf.iso2709.Iso2709Constants.TAG_LENGTH;
 
 import org.culturegraph.mf.exceptions.FormatException;
 
@@ -30,95 +31,106 @@ import org.culturegraph.mf.exceptions.FormatException;
  */
 final class DirectoryBuilder {
 
-	private final StringBuilder directory = new StringBuilder();
+	private final Iso646ByteBuffer buffer;
 
 	private final int fieldStartLength;
 	private final int fieldLengthLength;
-
+	private final int implDefinedPartLength;
+	private final int entryLength;
 	private final int maxFieldStart;
 	private final int maxFieldLength;
 
-	private String tag;
-	private String implDefinedPart;
-	private int fieldStart;
-	private int fieldEnd;
-
-	public DirectoryBuilder(final RecordFormat format) {
+	DirectoryBuilder(final RecordFormat format) {
+		buffer = new Iso646ByteBuffer(MAX_PAYLOAD_LENGTH);
 		fieldStartLength = format.getFieldStartLength();
 		fieldLengthLength = format.getFieldLengthLength();
-
+		implDefinedPartLength = format.getImplDefinedPartLength();
+		entryLength = TAG_LENGTH + fieldStartLength + fieldLengthLength +
+				implDefinedPartLength;
 		maxFieldStart = calculateMaxValue(fieldStartLength);
 		maxFieldLength = calculateMaxValue(fieldLengthLength);
-
-		reset();
 	}
 
-	public void setTag(final String tag) {
-		this.tag = tag;
-	}
-
-	public void setImplDefinedPart(final String implDefinedPart) {
-		this.implDefinedPart = implDefinedPart;
-	}
-
-	public void setFieldStart(final int fieldStart) {
-		assert fieldStart >= 0;
-		this.fieldStart = fieldStart;
-	}
-
-	public void setFieldEnd(final int fieldEnd) {
-		assert fieldEnd >= 0;
-		this.fieldEnd = fieldEnd;
-	}
-
-	public void write() {
-		assert tag != null;
-		assert implDefinedPart != null;
-		assert fieldEnd >= fieldStart;
-
-		checkAllPartsStartInAddressRange();
-
-		int remainingLength = fieldEnd - fieldStart;
-		int partStart = fieldStart;
-		while (remainingLength > maxFieldLength) {
-			writeDirectoryEntry(partStart, 0);
-			remainingLength -= maxFieldLength;
-			partStart += maxFieldLength;
+	private int calculateMaxValue(final int digits) {
+		assert digits >= 0;
+		int maxValue = 1;
+		for (int i = 0; i < digits; i++) {
+			maxValue *= 10;
 		}
-		writeDirectoryEntry(partStart, remainingLength);
+		return maxValue - 1;
 	}
 
-	private void checkAllPartsStartInAddressRange() {
+	void addEntries(final char[] tag, final char[] implDefinedPart,
+			final int fieldStart, final int fieldEnd) {
+		assert tag.length == TAG_LENGTH;
+		assert implDefinedPart.length == implDefinedPartLength;
+		assert fieldStart >= 0;
+		assert fieldEnd >= fieldStart;
+		checkDirectoryCapacity(fieldStart, fieldEnd);
+		checkFieldFitsInAddressSpace(fieldStart, fieldEnd);
+		writeEntries(tag, implDefinedPart, fieldStart, fieldEnd);
+	}
+
+	private void checkDirectoryCapacity(final int fieldStart,
+			final int fieldEnd) {
+		final int fieldLength = fieldEnd - fieldStart;
+		final int numberOfEntries = fieldLength / maxFieldLength +
+				(fieldLength % maxFieldLength == 0 ? 0 : 1);
+		if (numberOfEntries * entryLength > buffer.getFreeSpace()) {
+			throw new FormatException(
+					"directory does not have enough free space for directory entry");
+		}
+	}
+
+	private void checkFieldFitsInAddressSpace(final int fieldStart,
+			final int fieldEnd) {
 		final int fieldLength = fieldEnd - fieldStart;
 		final int lastPartLength = fieldLength % maxFieldLength;
 		final int lastPartStart = fieldEnd - lastPartLength;
 		if (lastPartStart > maxFieldStart) {
-			throw new FormatException("the field is too long");
+			throw new FormatException("field is too long");
 		}
 	}
 
-	private void writeDirectoryEntry(final int partStart, final int partLength) {
-		directory.append(tag);
-		directory.append(padWithZeros(partLength, fieldLengthLength));
-		directory.append(padWithZeros(partStart, fieldStartLength));
-		directory.append(implDefinedPart);
+	private void writeEntries(final char[] tag, final char[] implDefinedPart,
+			final int fieldStart, final int fieldEnd) {
+		int remainingLength = fieldEnd - fieldStart;
+		int partStart = fieldStart;
+		while (remainingLength > maxFieldLength) {
+			writeEntry(tag, implDefinedPart, partStart, 0);
+			remainingLength -= maxFieldLength;
+			partStart += maxFieldLength;
+		}
+		writeEntry(tag, implDefinedPart, partStart, remainingLength);
 	}
 
-	public void reset() {
-		directory.setLength(0);
-		tag = null;
-		implDefinedPart = null;
-		fieldStart = 0;
-		fieldEnd = 0;
+	private void writeEntry(final char[] tag, final char[] implDefinedPart,
+			final int partStart, final int partLength) {
+		buffer.writeChars(tag);
+		buffer.writeInt(partLength, fieldLengthLength);
+		buffer.writeInt(partStart, fieldStartLength);
+		buffer.writeChars(implDefinedPart);
 	}
 
-	public int length() {
-		return directory.length() + 1;
+	void reset() {
+		buffer.setWritePosition(0);
+	}
+
+	int length() {
+		return buffer.getWritePosition() + Byte.BYTES;
+	}
+
+	void copyToBuffer(final byte[] destBuffer, final int fromIndex) {
+		final int directoryLength = buffer.getWritePosition();
+		System.arraycopy(buffer.getByteArray(), 0, destBuffer, fromIndex,
+				directoryLength);
+		final int directoryEnd = fromIndex + directoryLength;
+		destBuffer[directoryEnd] = FIELD_SEPARATOR;
 	}
 
 	@Override
 	public String toString() {
-		return directory.toString() + Iso646Characters.IS2;
+		return buffer.stringAt(0, buffer.getWritePosition(), Iso646Constants.CHARSET);
 	}
 
 }

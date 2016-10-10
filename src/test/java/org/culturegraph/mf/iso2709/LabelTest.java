@@ -1,17 +1,17 @@
 /*
- *  Copyright 2016 Christoph Böhme
+ * Copyright 2016 Christoph Böhme
  *
- *  Licensed under the Apache License, Version 2.0 the "License";
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.culturegraph.mf.iso2709;
 
@@ -19,9 +19,6 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.nio.charset.Charset;
-
-import org.culturegraph.mf.exceptions.FormatException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,10 +32,10 @@ public final class LabelTest {
 
 	private static final int RECORD_LENGTH = 26;
 	private static final char RECORD_STATUS = 'S';
-	private static final char[] IMPL_CODES = new char[] { 'I', 'M', 'P', 'L' };
+	private static final char[] IMPL_CODES = { 'I', 'M', 'P', 'L' };
 	private static final int INDICATOR_LENGTH = 1;
 	private static final int IDENTIFIER_LENGTH = 2;
-	private static final char[] SYSTEM_CHARS = new char[] { 'S', 'Y', 'S' };
+	private static final char[] SYSTEM_CHARS = { 'S', 'Y', 'S' };
 	private static final int FIELD_LENGTH_LENGTH = 3;
 	private static final int FIELD_START_LENGTH = 4;
 	private static final int IMPL_DEFINED_PART_LENGTH = 5;
@@ -54,28 +51,16 @@ public final class LabelTest {
 			String.format("%05d", BASE_ADDRESS) +
 			String.valueOf(SYSTEM_CHARS) +
 			FIELD_LENGTH_LENGTH +
-					FIELD_START_LENGTH +
+			FIELD_START_LENGTH +
 			IMPL_DEFINED_PART_LENGTH + RESERVED_CHAR;
 
-	private static final byte[] RECORD = (RECORD_LABEL +
-			Iso2709Format.FIELD_SEPARATOR +
-			Iso2709Format.RECORD_SEPARATOR).getBytes(Charset.forName("ASCII"));
-
-	private static final byte[] RECORD_FRAGMENT =
-			"00005".getBytes(Charset.forName("ASCII"));
-
-	private Iso646ByteBuffer buffer;
 	private Label label;
 
 	@Before
 	public void createSystemUnderTest() {
-		buffer = new Iso646ByteBuffer(RECORD);
-		label = new Label(buffer);
-	}
-
-	@Test(expected = FormatException.class)
-	public void constructor_shouldThrowFormatExceptionIfRecordIsTooShort() {
-		buffer = new Iso646ByteBuffer(RECORD_FRAGMENT);
+		final byte[] recordLabelBytes = RECORD_LABEL.getBytes(
+				Iso646Constants.CHARSET);
+		final Iso646ByteBuffer buffer = new Iso646ByteBuffer(recordLabelBytes);
 		label = new Label(buffer);
 	}
 
@@ -84,12 +69,13 @@ public final class LabelTest {
 		final RecordFormat recordFormat = label.getRecordFormat();
 
 		assertNotNull(recordFormat);
-		final RecordFormat expectedFormat = new RecordFormat();
-		expectedFormat.setIndicatorLength(INDICATOR_LENGTH);
-		expectedFormat.setIdentifierLength(IDENTIFIER_LENGTH);
-		expectedFormat.setFieldStartLength(FIELD_START_LENGTH);
-		expectedFormat.setFieldLengthLength(FIELD_LENGTH_LENGTH);
-		expectedFormat.setImplDefinedPartLength(IMPL_DEFINED_PART_LENGTH);
+		final RecordFormat expectedFormat = RecordFormat.create()
+				.withIndicatorLength(INDICATOR_LENGTH)
+				.withIdentifierLength(IDENTIFIER_LENGTH)
+				.withFieldStartLength(FIELD_START_LENGTH)
+				.withFieldLengthLength(FIELD_LENGTH_LENGTH)
+				.withImplDefinedPartLength(IMPL_DEFINED_PART_LENGTH)
+				.build();
 		assertEquals(expectedFormat, recordFormat);
 	}
 

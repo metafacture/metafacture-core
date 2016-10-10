@@ -58,24 +58,8 @@ public class RecordTest {
 	}
 
 	@Test(expected = FormatException.class)
-	public void constructor_shouldThrowFormatExceptionIfRecordLengthDoesNotMatchBufferLength() {
-		final byte[] data = asBytes("00024SIMPL1200025SYS345R\u001e\u001d");
-
-		record = new Record(data);  // Exception expected
-	}
-
-	@Test(expected = FormatException.class)
-	public void constructor_shouldThrowFormatExceptionIfRecordIdentifierIsNotFirstFieldInRecord() {
-		final byte[] data = asBytes("00042SIMPL0000035SYS110R" + "00123" +
-				"00220\u001e" + "XY\u001e" + "ID\u001e\u001d");
-
-		record = new Record(data);  // Exception expected
-	}
-
-	@Test(expected = FormatException.class)
-	public void constructor_shouldThrowFormatExceptionIfRecordDoesNotEndWithRecordSeparator() {
-		final byte[] data = asBytes("00033SIMPL0000030SYS110R" + "00120\u001e" +
-				"ID\u001e");
+	public void constructor_shouldThrowFormatExceptionIfSizeOfRecordDataIsLessThanMinRecordLength() {
+		final byte[] data = asBytes("00005");
 
 		record = new Record(data);  // Exception expected
 	}
@@ -87,7 +71,7 @@ public class RecordTest {
 
 		record = new Record(data);
 
-		assertEquals("ID", record.getIdentifier());
+		assertEquals("ID", record.getRecordId());
 	}
 
 	@Test
@@ -97,7 +81,7 @@ public class RecordTest {
 
 		record = new Record(data);
 
-		assertNull(record.getIdentifier());
+		assertNull(record.getRecordId());
 	}
 
 	@Test

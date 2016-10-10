@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Christoph Böhme
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,15 @@
  */
 package org.culturegraph.mf.iso2709;
 
+import static org.culturegraph.mf.iso2709.Iso2709Constants.FIELD_SEPARATOR;
+import static org.culturegraph.mf.iso2709.Iso2709Constants.IDENTIFIER_MARKER;
+import static org.culturegraph.mf.iso2709.Iso2709Constants.RECORD_SEPARATOR;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
+import org.culturegraph.mf.exceptions.FormatException;
+
 /**
  * Builds a list of fields in ISO 2709:2008 format.
  *
@@ -23,78 +32,106 @@ package org.culturegraph.mf.iso2709;
  */
 final class FieldsBuilder {
 
-	private final StringBuilder fields = new StringBuilder();
+	private static final int NO_MARKER_SET = -1;
+	private static final char[] NO_INDICATORS = new char[0];
 
+	private final Iso646ByteBuffer buffer;
 	private final int identifierLength;
 
-	private boolean inField;
-	private int undoMarker = -1;
+	private Charset charset = StandardCharsets.UTF_8;
 
-	public FieldsBuilder(final RecordFormat format) {
+	private int undoMarker = NO_MARKER_SET;
+	private boolean inField;
+
+
+	FieldsBuilder(final RecordFormat format, final int maxSize) {
+		buffer = new Iso646ByteBuffer(maxSize);
 		identifierLength = format.getIdentifierLength();
 	}
 
-	public int startField(final String indicators) {
-		requireNotInField();
+	void setCharset(final Charset charset) {
+		assert charset != null;
+		this.charset = charset;
+	}
+
+	Charset getCharset() {
+		return charset;
+	}
+
+	int startField() {
+		return startField(NO_INDICATORS);
+	}
+
+	int startField(final char[] indicators) {
+		assert !inField;
+		checkCapacity(indicators.length + Byte.BYTES);
 		inField = true;
-		undoMarker = fields.length();
-		fields.append(indicators);
+		undoMarker = buffer.getWritePosition();
+		buffer.writeChars(indicators);
 		return undoMarker;
 	}
 
-	public int endField() {
-		requireInField();
+	int endField() {
+		assert inField;
+		checkCapacity(Byte.BYTES);
 		inField = false;
-		fields.append(Iso646Characters.IS2);
-		return fields.length();
+		buffer.writeByte(FIELD_SEPARATOR);
+		return buffer.getWritePosition();
 	}
 
-	public void undoLastField() {
-		assert undoMarker > -1;
-		fields.setLength(undoMarker);
-		undoMarker = -1;
+	void appendValue(final String value) {
+		assert inField;
+		final byte[] bytes = value.getBytes(charset);
+		checkCapacity(bytes.length + Byte.BYTES);
+		buffer.writeBytes(bytes);
 	}
 
-	public void appendValue(final String value) {
-		requireInField();
-		fields.append(value);
-	}
-
-	public void appendSubfield(final String identifier, final String value) {
-		requireInField();
+	void appendSubfield(final char[] identifier, final String value) {
+		assert inField;
+		final byte[] bytes = value.getBytes(charset);
+		checkCapacity(bytes.length + identifierLength + Byte.BYTES);
 		if (identifierLength > 0) {
-			fields.append(Iso646Characters.IS1);
-			fields.append(identifier);
+			buffer.writeByte(IDENTIFIER_MARKER);
+			buffer.writeChars(identifier);
 		}
-		fields.append(value);
+		buffer.writeBytes(bytes);
 	}
 
-	public void reset() {
-		fields.setLength(0);
-		undoMarker = -1;
+	private void checkCapacity(final int dataLength) {
+		if (dataLength > buffer.getFreeSpace()) {
+			throw new FormatException("not enough space for field");
+		}
+	}
+
+	void undoLastField() {
+		assert undoMarker != NO_MARKER_SET;
+		buffer.setWritePosition(undoMarker);
+		undoMarker = NO_MARKER_SET;
+	}
+
+	void reset() {
+		buffer.setWritePosition(0);
+		undoMarker = NO_MARKER_SET;
 		inField = false;
 	}
 
-	public int length() {
-		return fields.length() + 1;
+	int length() {
+		assert !inField;
+		return buffer.getWritePosition() + Byte.BYTES;
+	}
+
+	void copyToBuffer(final byte[] destBuffer, final int fromIndex) {
+		assert !inField;
+		final int fieldLength = buffer.getWritePosition();
+		System.arraycopy(buffer.getByteArray(), 0, destBuffer, fromIndex,
+				fieldLength);
+		final int fieldsEnd = fromIndex + fieldLength;
+		destBuffer[fieldsEnd] = RECORD_SEPARATOR;
 	}
 
 	@Override
 	public String toString() {
-		requireNotInField();
-		return fields.toString() + Iso646Characters.IS3;
-	}
-
-	private void requireInField() {
-		if (!inField) {
-			throw new IllegalStateException("need to be in field");
-		}
-	}
-
-	private void requireNotInField() {
-		if (inField) {
-			throw new IllegalStateException("must not be in field");
-		}
+		return buffer.stringAt(0, buffer.getWritePosition(), charset);
 	}
 
 }

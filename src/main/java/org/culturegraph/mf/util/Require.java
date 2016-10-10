@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Christoph Böhme
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -87,9 +87,8 @@ public final class Require {
 	 *
 	 * @param message
 	 *            exception message
-	 * @return {@code value}
 	 */
-	private static void that(final boolean condition, final String message) {
+	public static void that(final boolean condition, final String message) {
 		if (!condition) {
 			throw new IllegalArgumentException(message);
 		}

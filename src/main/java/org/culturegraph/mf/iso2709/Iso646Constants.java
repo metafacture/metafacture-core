@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Christoph Böhme
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,30 @@
  */
 package org.culturegraph.mf.iso2709;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 /**
- * Constant definitions for characters in the ISO646:1991 standard.
+ * Constant definitions for the ISO646:1991 standard.
  *
  * @author Christoph Böhme
  *
  */
-public final class Iso646Characters {
+final class Iso646Constants {
 
-	public static final char IS4 = '\u001c';
-	public static final char IS3 = '\u001d';
-	public static final char IS2 = '\u001e';
-	public static final char IS1 = '\u001f';
+	static final Charset CHARSET = StandardCharsets.US_ASCII;
 
-	private Iso646Characters() {
-		// No instances allowed
+	static final char INFORMATION_SEPARATOR_3 = 0x1d;
+	static final char INFORMATION_SEPARATOR_2 = 0x1e;
+	static final char INFORMATION_SEPARATOR_1 = 0x1f;
+
+	static final char ZERO = 0x30;
+	static final char NINE = 0x39;
+
+	static final char MAX_CHAR_CODE = 0x7f;
+
+	private Iso646Constants() {
+		throw new AssertionError("class should not be instantiated");
 	}
 
 }

@@ -16,6 +16,9 @@
 package org.culturegraph.mf.iso2709;
 
 /**
+ * Callback interface defining the events emitted by
+ * {@link Record#processFields(FieldHandler)}.
+ *
  * @author Christoph Böhme
  */
 public interface FieldHandler {

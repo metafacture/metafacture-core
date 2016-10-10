@@ -15,7 +15,24 @@
  */
 package org.culturegraph.mf.stream.converter.bib;
 
-import java.nio.charset.Charset;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.BIBLIOGRAPHIC_LEVEL_INDEX;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.CATALOGING_FORM_INDEX;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.CATALOGING_FORM_LITERAL;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.CHARACTER_CODING_INDEX;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.CHARACTER_CODING_LITERAL;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.ENCODING_LEVEL_INDEX;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.ENCODING_LEVEL_LITERAL;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.LEADER_ENTITY;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.MARC21_CHARSET;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.MARC21_FORMAT;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.MULTIPART_LEVEL_INDEX;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.MULTIPART_LEVEL_LITERAL;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.RECORD_STATUS_LITERAL;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.RECORD_TYPE_INDEX;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.RECORD_TYPE_LITERAL;
+import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.TYPE_OF_CONTROL_INDEX;
+import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.TYPE_OF_CONTROL_LITERAL;
 
 import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
@@ -24,18 +41,18 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.iso2709.FieldHandler;
-import org.culturegraph.mf.iso2709.Label;
 import org.culturegraph.mf.iso2709.Record;
 import org.culturegraph.mf.iso2709.RecordFormat;
 
 /**
  * Decodes MARC 21 records into an event stream. This decoder only processes
  * single records. Input data containing multiple records must be split into
- * individual records before passing it to this decoder.
+ * individual records before passing it to this decoder (see
+ * {@link org.culturegraph.mf.stream.converter.RecordReader}).
  * <p>
  * This decoder extracts the following parts from MARC 21 records:
  * <ul>
- *   <li>record leader,
+ *   <li>bibliographic information in the record leader,
  *   <li>record identifier,
  *   <li>control fields,
  *   <li>data fields.
@@ -44,18 +61,64 @@ import org.culturegraph.mf.iso2709.RecordFormat;
  * character coding schemes are not supported. A {@link FormatException} is
  * thrown if a record with an unsupported coding scheme is encountered.
  * <p>
- * Depending on the {@link #setSplitLeader(boolean)} parameter, the MARC 21
- * record leader is either emitted as a single literal or split into its
- * components and emitted as an entity. The name of the literal or entity is
- * &quot;{@value #LEADER_NAME}&quot; in both cases. The events describing the
- * record leader are emitted as the first events after the
- * <i>start-record</i> event. See {@link #setSplitLeader(boolean)} for an
- * in-depth description of the event stream emitted for the leader.
+ * The bibliographic information in the record leader is
+ * <ul>
+ *   <li>record status,
+ *   <li>record type,
+ *   <li>bibliographic level,
+ *   <li>type of control,
+ *   <li>character coding scheme,
+ *   <li>encoding level,
+ *   <li>descriptive cataloging form,
+ *   <li>multipart resource record level.
+ * </ul>
+ * This information is emitted as an entity named
+ * &quot;{@value Marc21EventNames#LEADER_ENTITY}&quot. It is emitted directly
+ * after the <i>start-record</i> event. The entity contains the following
+ * literals:
+ * <ol>
+ *   <li>{@value Marc21EventNames#RECORD_STATUS_LITERAL}
+ *   <li>{@value Marc21EventNames#RECORD_TYPE_LITERAL}
+ *   <li>{@value Marc21EventNames#BIBLIOGRAPHIC_LEVEL_LITERAL}
+ *   <li>{@value Marc21EventNames#TYPE_OF_CONTROL_LITERAL}
+ *   <li>{@value Marc21EventNames#CHARACTER_CODING_LITERAL}
+ *   <li>{@value Marc21EventNames#ENCODING_LEVEL_LITERAL}
+ *   <li>{@value Marc21EventNames#CATALOGING_FORM_LITERAL}
+ *   <li>{@value Marc21EventNames#MULTIPART_LEVEL_LITERAL}
+ * </ol>
+ * The literals are emitted in the order in which they are listed here. The
+ * values of these literals are the characters at the corresponding
+ * positions in the record leader (see
+ * <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
+ * Standard: Record Leader</a> for a description of the allowed values). The
+ * literal values are always only single characters. As this decoder only
+ * supports MARC 21 records with UTF-8 encoding, the value of the <i>literal
+ * &quot;{@value Marc21EventNames#CHARACTER_CODING_LITERAL}&quot;</i> will
+ * always be &quot;a&quot;.
  * <p>
+ * For example, given a record with the leader
+ * <pre>
+ * 00128noa a2200073zu 4500
+ * </pre>
+ * the following event stream will be emitted:
+ * <pre>
+ * start-record &quot;1&quot;
+ * start-entity &quot;{@value Marc21EventNames#LEADER_ENTITY}&quot;
+ * literal &quot;{@value Marc21EventNames#RECORD_STATUS_LITERAL}&quot;: n
+ * literal &quot;{@value Marc21EventNames#RECORD_TYPE_LITERAL}&quot;: o
+ * literal &quot;{@value Marc21EventNames#BIBLIOGRAPHIC_LEVEL_LITERAL}&quot;: a
+ * literal &quot;{@value Marc21EventNames#TYPE_OF_CONTROL_LITERAL}&quot;: " "
+ * literal &quot;{@value Marc21EventNames#CHARACTER_CODING_LITERAL}&quot;: a
+ * literal &quot;{@value Marc21EventNames#ENCODING_LEVEL_LITERAL}&quot;: z
+ * literal &quot;{@value Marc21EventNames#CATALOGING_FORM_LITERAL}&quot;: u
+ * literal &quot;{@value Marc21EventNames#MULTIPART_LEVEL_LITERAL}&quot;: " "
+ * end-entity
+ * &hellip;
+ * </pre>
  * The record identifier is taken from field &quot;001&quot;. It is used as
- * identifier in the <i>start-record</i> event. Additionally, it is emitted
- * as a control field (since that is what it is technically). The behaviour
- * of the decoder if a record has no identifier can be configured through the
+ * identifier in the <i>start-record</i> event. Additionally, it is emitted as
+ * a control field (since that is what it is technically). The behaviour of
+ * the decoder if a record has no identifier can be configured through the
  * {@link #setIgnoreMissingId(boolean)} parameter.
  * <p>
  * Control fields are emitted as literals with their tag as literal name and
@@ -64,8 +127,8 @@ import org.culturegraph.mf.iso2709.RecordFormat;
  * Data fields are emitted as entities. The entity name consists of the tag
  * followed by the two indicator characters of the field. For each sub field
  * in the data field a <i>literal</i> event is emitted. The literal name is
- * the identifier character of the sub field and the literal value is the
- * data value of the sub field.
+ * the identifier character of the sub field and the literal value is the data
+ * value of the sub field.
  * <p>
  * All fields are emitted in the order in which they appear in the directory
  * of the MARC 21 record. For overlong fields which have multiple directory
@@ -74,7 +137,9 @@ import org.culturegraph.mf.iso2709.RecordFormat;
  * <p>
  * Empty control fields and sub fields are emitted as literals with an empty
  * value. Data fields without sub fields produce only a <i>start-entity</i>
- * and <i>end-entity</i> event without any <i>literal</i> events in-between.
+ * and an <i>end-entity</i> event without any <i>literal</i> events in-between.
+ * If the decoder receives an empty input string it is ignored and no stream
+ * events are emitted.
  * <p>
  * If an error occurs during decoding, a {@link FormatException} is thrown.
  *
@@ -82,7 +147,6 @@ import org.culturegraph.mf.iso2709.RecordFormat;
  * @see "ISO 2709:2008 Standard"
  * @see <a href="http://www.loc.gov/marc/specifications/spechome.html">MARC-21
  * Standards</a>
- *
  */
 @In(String.class)
 @Out(StreamReceiver.class)
@@ -90,244 +154,14 @@ import org.culturegraph.mf.iso2709.RecordFormat;
 public final class Marc21Decoder
 		extends DefaultObjectPipe<String, StreamReceiver> {
 
-	/**
-	 * Name of the <i>literal</i> or <i>entity</i> event which contains the
-	 * record leader.
-	 *
-	 * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-	 * Standard: Record Leader</a>
-	 */
-	public static final String LEADER_NAME = "leader";
-
-	/**
-	 * Name of the <i>literal</i> event emitted for the record status field in
-	 * split mode (see {@link #setSplitLeader(boolean)}.
-	 * <p>
-	 * The name of the literal is &quot;{@value #RECORD_STATUS_LITERAL}&quot;.
-	 * <p>
-	 * The record status is specified at position 5 in the record leader.
-	 *
-	 * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-	 * Standard: Record Leader</a>
-	 */
-	public static final String RECORD_STATUS_LITERAL = "status";
-
-	/**
-	 * Name of the <i>literal</i> event emitted for the type of record field in
-	 * split mode (see {@link #setSplitLeader(boolean)}.
-	 * <p>
-	 * The name of the literal is &quot;{@value #RECORD_TYPE_LITERAL}&quot;.
-	 * <p>
-	 * The type of record is specified at position 6 in the record leader.
-	 *
-	 * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-	 * Standard: Record Leader</a>
-	 */
-	public static final String RECORD_TYPE_LITERAL = "type";
-
-	/**
-	 * Name of the <i>literal</i> event emitted for the bibliographic level
-	 * field in split mode (see {@link #setSplitLeader(boolean)}.
-	 * <p>
-	 * The name of the literal is &quot;{@value
-	 * #BIBLIOGRAPHIC_LEVEL_LITERAL}&quot;.
-	 * <p>
-	 * The bibliographic level is specified at position 7 in the record leader.
-	 *
-	 * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-	 * Standard: Record Leader</a>
-	 */
-	public static final String BIBLIOGRAPHIC_LEVEL_LITERAL = "bibliographicLevel";
-
-	/**
-	 * Name of the <i>literal</i> event emitted for the type of control field in
-	 * split mode (see {@link #setSplitLeader(boolean)}.
-	 * <p>
-	 * The name of the literal is &quot;{@value #TYPE_OF_CONTROL_LITERAL}&quot;.
-	 * <p>
-	 * The type of control is specified at position 8 in the record leader.
-	 *
-	 * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-	 * Standard: Record Leader</a>
-	 */
-	public static final String TYPE_OF_CONTROL_LITERAL = "typeOfControl";
-
-	/**
-	 * Name of the <i>literal</i> event emitted for the character coding scheme
-	 * field in split mode (see {@link #setSplitLeader(boolean)}.
-	 * <p>
-	 * The name of the literal is &quot;{@value #CHARACTER_CODING_LITERAL}&quot;.
-	 * <p>
-	 * The character coding scheme is specified at position 9 in the record
-	 * leader.
-	 *
-	 * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-	 * Standard: Record Leader</a>
-	 */
-	public static final String CHARACTER_CODING_LITERAL = "characterCodingScheme";
-
-	/**
-	 * Name of the <i>literal</i> event emitted for the encoding level field in
-	 * split mode (see {@link #setSplitLeader(boolean)}.
-	 * <p>
-	 * The name of the literal is &quot;{@value #ENCODING_LEVEL_LITERAL}&quot;.
-	 * <p>
-	 * The encoding level is specified at position 17 in the record leader.
-	 *
-	 * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-	 * Standard: Record Leader</a>
-	 */
-	public static final String ENCODING_LEVEL_LITERAL = "encodingLevel";
-
-	/**
-	 * Name of the <i>literal</i> event emitted for the descriptive cataloging
-	 * form field in split mode (see {@link #setSplitLeader(boolean)}.
-	 * <p>
-	 * The name of the literal is &quot;{@value #CATALOGING_FORM_LITERAL}&quot;.
-	 * <p>
-	 * The descriptive cataloging form is specified at position 18 in the record
-	 * leader.
-	 *
-	 * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-	 * Standard: Record Leader</a>
-	 */
-	public static final String CATALOGING_FORM_LITERAL = "catalogingForm";
-
-	/**
-	 * Name of the <i>literal</i> event emitted for the multipart resource
-	 * record level field in split mode (see {@link #setSplitLeader(boolean)}.
-	 * <p>
-	 * The name of the literal is &quot;{@value #MULTIPART_LEVEL_LITERAL}&quot;.
-	 * <p>
-	 * The multipart resource record level is specified at position 19 in the
-	 * record leader.
-	 *
-	 * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-	 * Standard: Record Leader</a>
-	 */
-	public static final String MULTIPART_LEVEL_LITERAL = "multipartLevel";
-
-	private static final Charset MARC21_CHARSET = Charset.forName("UTF-8");
-
-	private static final RecordFormat MARC_FORMAT = new RecordFormat();
-	static {
-		MARC_FORMAT.setIndicatorLength(2);
-		MARC_FORMAT.setIdentifierLength(2);
-		MARC_FORMAT.setFieldLengthLength(4);
-		MARC_FORMAT.setFieldStartLength(5);
-		MARC_FORMAT.setImplDefinedPartLength(0);
-	}
-
-	private static final int RECORD_TYPE_INDEX = 0;
-	private static final int BIBLIOGRAPHIC_LEVEL_INDEX = 1;
-	private static final int TYPE_OF_CONTROL_INDEX = 2;
-	private static final int CHARACTER_CODING_INDEX = 3;
-	private static final int ENCODING_LEVEL_INDEX = 0;
-	private static final int CATALOGING_FORM_INDEX = 1;
-	private static final int MULTIPART_LEVEL_INDEX = 2;
-
 	private final FieldHandler fieldHandler = new Marc21Handler();
 
-	private boolean splitLeader;
 	private boolean ignoreMissingId;
 
 	/**
-	 * Controls whether the full record leader is emitted as a single literal or
-	 * split into its parts and emitted as an entity. If the leader is split,
-	 * only the parts of the leader carrying bibliographic information are
-	 * emitted. These are
-	 * <ul>
-	 *   <li>record status,
-	 *   <li>record type,
-	 *   <li>bibliographic level,
-	 *   <li>type of control,
-	 *   <li>character coding scheme,
-	 *   <li>encoding level,
-	 *   <li>descriptive cataloging form,
-	 *   <li>multipart resource record level.
-	 * </ul>
-	 * The parts of the leader describing the lengths of the different elements
-	 * in the record are not emitted in splitting mode.
-	 * <p>
-	 * If splitting of the leader is not enabled, all 24 characters of the leader
-	 * are emitted as the value of a single literal named {@value #LEADER_NAME}.
-	 * This will always be the first <i>literal</i> event after the
-	 * <i>start-record</i> event.
-	 * <p>
-	 * For example, given a record with the leader
-	 * <pre>
-	 * 00128noa a2200073zu 4500
-	 * </pre>
-	 * the following sequence of events is produced if not splitting is disabled:
-	 * <pre>
-	 * start-record &quot;1&quot;
-	 * literal &quot;{@value #LEADER_NAME}&quot;: 00128noa a2200073zu 4500
-	 * &hellip;
-	 * </pre>
-	 *
-	 * If splitting of the leader is enabled, an entity named {@value
-	 * #LEADER_NAME} is emitted directly after the <i>start-record</i> event.
-	 * Within this entity a literal is emitted for each of the items in the list
-	 * above. The names of the literals are
-	 * <ol>
-	 *   <li>{@value #RECORD_STATUS_LITERAL}
-	 *   <li>{@value #RECORD_TYPE_LITERAL}
-	 *   <li>{@value #BIBLIOGRAPHIC_LEVEL_LITERAL}
-	 *   <li>{@value #TYPE_OF_CONTROL_LITERAL}
-	 *   <li>{@value #CHARACTER_CODING_LITERAL}
-	 *   <li>{@value #ENCODING_LEVEL_LITERAL}
-	 *   <li>{@value #CATALOGING_FORM_LITERAL}
-	 *   <li>{@value #MULTIPART_LEVEL_LITERAL}
-	 * </ol>
-	 * The literals are emitted in the order in which they are listed here. The
-	 * values of these literals are the characters at the corresponding
-	 * positions in the record leader (see
-	 * <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-	 * Standard: Record Leader</a> for a description of the positions and the
-	 * allowed values). The literal values are always only single characters.
-	 * <p>
-	 * When decoding the example from above, the decoder will emit the following
-	 * event stream in splitting mode:
-	 * <pre>
-	 * start-record &quot;1&quot;
-	 * start-entity &quot;{@value #LEADER_NAME}&quot;
-	 * literal &quot;{@value #RECORD_STATUS_LITERAL}&quot;: n
-	 * literal &quot;{@value #RECORD_TYPE_LITERAL}&quot;: o
-	 * literal &quot;{@value #BIBLIOGRAPHIC_LEVEL_LITERAL}&quot;: a
-	 * literal &quot;{@value #TYPE_OF_CONTROL_LITERAL}&quot;: " "
-	 * literal &quot;{@value #CHARACTER_CODING_LITERAL}&quot;: a
-	 * literal &quot;{@value #ENCODING_LEVEL_LITERAL}&quot;: z
-	 * literal &quot;{@value #CATALOGING_FORM_LITERAL}&quot;: u
-	 * literal &quot;{@value #MULTIPART_LEVEL_LITERAL}&quot;: " "
-	 * end-entity
-	 * &hellip;
-	 * </pre>
-	 * As this decoder only supports MARC 21 records with UTF-8 encoding, the
-	 * value of the <i>literal &quot;{@value #CHARACTER_CODING_LITERAL}&quot;
-	 * </i> will always be &quot;a&quot;.
-	 * <p>
-	 * The default value of {@code splitLeader} is false.
-	 * <p>
-	 * This parameter can be changed anytime during processing. The new value
-	 * becomes effective with the next record being processed.
-	 *
-	 * @param splitLeader
-	 *            true if the leader should be split and wrapped in an entity.
-	 *
-	 * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC
-	 * 21 Standards: Record Leader</a>
-	 */
-	public void setSplitLeader(final boolean splitLeader) {
-		this.splitLeader = splitLeader;
-	}
-
-	public boolean getSplitLeader() {
-		return splitLeader;
-	}
-
-	/**
 	 * Controls whether the decoder aborts processing if a record has no
-	 * identifier. If set to true then the identifier emitted with the
+	 * identifier. A {@link MissingIdException} is thrown in these cases.
+	 * If this parameter is set to true then the identifier emitted with the
 	 * <i>start-record</i> event of records without field &quot;001&quot; will
 	 * be an empty string.
 	 * <p>
@@ -355,8 +189,8 @@ public final class Marc21Decoder
 		final Record record = new Record(obj.getBytes(MARC21_CHARSET));
 		record.setCharset(MARC21_CHARSET);
 
-		requireMarc21RecordFormat(record.getLabel().getRecordFormat());
-		requireUTF8Encoding(record.getLabel());
+		requireMarc21RecordFormat(record.getRecordFormat());
+		requireUTF8Encoding(record);
 
 		getReceiver().startRecord(tryGetRecordId(record));
 		emitLeader(record);
@@ -365,24 +199,24 @@ public final class Marc21Decoder
 	}
 
 	private void requireMarc21RecordFormat(final RecordFormat format) {
-		if (!MARC_FORMAT.equals(format)) {
-			throw new FormatException("Invalid record format. Expected " +
-					MARC_FORMAT + " but got " + format);
+		if (!MARC21_FORMAT.equals(format)) {
+			throw new FormatException("invalid record format. Expected " +
+					MARC21_FORMAT + " but got " + format);
 		}
 	}
 
-	private void requireUTF8Encoding(final Label label) {
-		if (label.getImplCodes()[CHARACTER_CODING_INDEX] != 'a') {
+	private void requireUTF8Encoding(final Record record) {
+		if (record.getImplCodes()[CHARACTER_CODING_INDEX] != 'a') {
 			throw new FormatException(
-					"Invalid record encoding. Only UTF-8 is supported");
+					"invalid record encoding. Only UTF-8 is supported");
 		}
 	}
 
 	private String tryGetRecordId(final Record record) {
-		final String id = record.getIdentifier();
+		final String id = record.getRecordId();
 		if (id == null) {
 			if (!ignoreMissingId) {
-				throw new MissingIdException("Record has no id");
+				throw new MissingIdException("record has no id");
 			}
 			return "";
 		}
@@ -390,33 +224,25 @@ public final class Marc21Decoder
 	}
 
 	private void emitLeader(final Record record) {
-		if (splitLeader) {
-			emitLeaderAsEntity(record);
-		} else {
-			getReceiver().literal(LEADER_NAME, record.getLabel().toString());
-		}
-	}
-
-	private void emitLeaderAsEntity(final Record record) {
-		final char[] implCodes = record.getLabel().getImplCodes();
-		final char[] systemChars = record.getLabel().getSystemChars();
-		getReceiver().startEntity(LEADER_NAME);
-		getReceiver().literal(RECORD_STATUS_LITERAL,
-				String.valueOf(record.getLabel().getRecordStatus()));
-		getReceiver().literal(RECORD_TYPE_LITERAL,
-				String.valueOf(implCodes[RECORD_TYPE_INDEX]));
-		getReceiver().literal(BIBLIOGRAPHIC_LEVEL_LITERAL,
-				String.valueOf(implCodes[BIBLIOGRAPHIC_LEVEL_INDEX]));
-		getReceiver().literal(TYPE_OF_CONTROL_LITERAL,
-				String.valueOf(implCodes[TYPE_OF_CONTROL_INDEX]));
-		getReceiver().literal(CHARACTER_CODING_LITERAL,
-				String.valueOf(implCodes[CHARACTER_CODING_INDEX]));
-		getReceiver().literal(ENCODING_LEVEL_LITERAL,
-				String.valueOf(systemChars[ENCODING_LEVEL_INDEX]));
-		getReceiver().literal(CATALOGING_FORM_LITERAL,
-				String.valueOf(systemChars[CATALOGING_FORM_INDEX]));
-		getReceiver().literal(MULTIPART_LEVEL_LITERAL,
-				String.valueOf(systemChars[MULTIPART_LEVEL_INDEX]));
+		final char[] implCodes = record.getImplCodes();
+		final char[] systemChars = record.getSystemChars();
+		getReceiver().startEntity(LEADER_ENTITY);
+		getReceiver().literal(RECORD_STATUS_LITERAL, String.valueOf(
+				record.getRecordStatus()));
+		getReceiver().literal(RECORD_TYPE_LITERAL, String.valueOf(
+				implCodes[RECORD_TYPE_INDEX]));
+		getReceiver().literal(BIBLIOGRAPHIC_LEVEL_LITERAL, String.valueOf(
+				implCodes[BIBLIOGRAPHIC_LEVEL_INDEX]));
+		getReceiver().literal(TYPE_OF_CONTROL_LITERAL, String.valueOf(
+				implCodes[TYPE_OF_CONTROL_INDEX]));
+		getReceiver().literal(CHARACTER_CODING_LITERAL, String.valueOf(
+				implCodes[CHARACTER_CODING_INDEX]));
+		getReceiver().literal(ENCODING_LEVEL_LITERAL, String.valueOf(
+				systemChars[ENCODING_LEVEL_INDEX]));
+		getReceiver().literal(CATALOGING_FORM_LITERAL, String.valueOf(
+				systemChars[CATALOGING_FORM_INDEX]));
+		getReceiver().literal(MULTIPART_LEVEL_LITERAL, String.valueOf(
+				systemChars[MULTIPART_LEVEL_INDEX]));
 		getReceiver().endEntity();
 	}
 
@@ -438,12 +264,10 @@ public final class Marc21Decoder
 		}
 
 		private String buildName(final char[] tag, final char[] indicators) {
-			final char[] name = new char[5];
-			name[0] = tag[0];
-			name[1] = tag[1];
-			name[2] = tag[2];
-			name[3] = indicators[0];
-			name[4] = indicators[1];
+			final int nameLength = tag.length + indicators.length;
+			final char[] name = new char[nameLength];
+			System.arraycopy(tag, 0, name, 0, tag.length);
+			System.arraycopy(indicators, 0, name, tag.length, indicators.length);
 			return String.valueOf(name);
 		}
 

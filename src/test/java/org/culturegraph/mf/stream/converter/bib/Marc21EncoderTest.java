@@ -55,21 +55,6 @@ public final class Marc21EncoderTest {
 	}
 
 	@Test
-	public void shouldWriteInformationFromLeaderToRecordLabel() {
-		marc21Encoder.startRecord("");
-		marc21Encoder.literal(LEADER_LITERAL, "00000SIMPL2200000SYS450R");
-		marc21Encoder.endRecord();
-
-		verify(receiver).process(matches("^.{5}SIMPL.{7}SYS.*"));
-	}
-
-	@Test(expected = FormatException.class)
-	public void shouldThrowFormatExceptionIfLeaderDoesNotMatchRecordLabelLength() {
-		marc21Encoder.startRecord("");
-		marc21Encoder.literal(LEADER_LITERAL, "too short");
-	}
-
-	@Test
 	public void shouldOutputTopLevelLiteralsAsReferenceFields() {
 		marc21Encoder.startRecord("");
 		marc21Encoder.literal("001", "identifier");

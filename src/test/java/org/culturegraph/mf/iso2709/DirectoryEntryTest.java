@@ -19,17 +19,12 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
 
 import java.nio.charset.Charset;
 
-import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.util.StringUtil;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 /**
  * Tests for class {@link DirectoryEntry}.
@@ -41,62 +36,21 @@ public class DirectoryEntryTest {
 	private static final String DUMMY_LABEL = StringUtil.repeatChars(' ', 24);
 
 	private static final byte[] RECORD = asBytes(DUMMY_LABEL + "001234IMP" +
-			"002567LEM" + Iso646Characters.IS2 + Iso646Characters.IS3);
+			"002567LEM" + "012090AKB" +  "012890AKB" +
+			Iso646Constants.INFORMATION_SEPARATOR_2 +
+			Iso646Constants.INFORMATION_SEPARATOR_3);
 
-	@Mock
-	private Label label;
-
-	private Iso646ByteBuffer buffer;
 	private DirectoryEntry directoryEntry;
 
 	@Before
-	public void initMocksAndCreateSystemUnderTest() {
-		MockitoAnnotations.initMocks(this);
-		when(label.getFieldLengthLength()).thenReturn(1);
-		when(label.getFieldStartLength()).thenReturn(2);
-		when(label.getImplDefinedPartLength()).thenReturn(3);
-		when(label.getBaseAddress()).thenReturn(RECORD.length - 1);
-
-		buffer = new Iso646ByteBuffer(RECORD);
-		directoryEntry = new DirectoryEntry(buffer, label);
-	}
-
-	@Test
-	public void constructor_shouldCreateDirectoryEntryInstance() {
-		final byte[] record = asBytes(DUMMY_LABEL + "001234IMP" +
-				Iso646Characters.IS2 + Iso646Characters.IS3);
-		when(label.getBaseAddress()).thenReturn(record.length - 1);
-
-		buffer = new Iso646ByteBuffer(record);
-		directoryEntry = new DirectoryEntry(buffer, label);
-
-		assertNotNull(directoryEntry);
-	}
-
-	@Test(expected = FormatException.class)
-	public void constructor_shouldThrowFormatExceptionIfBufferIsTooShort() {
-		buffer = new Iso646ByteBuffer(asBytes("00005"));
-		directoryEntry = new DirectoryEntry(buffer, label);  // Exception expected
-	}
-
-	@Test(expected = FormatException.class)
-	public void constructor_shouldThrowFormatExceptionIfDirectoryDoesNotEndWithFieldSeparator() {
-		final byte[] record = asBytes(DUMMY_LABEL + 'F' +
-				Iso646Characters.IS3);
-		when(label.getBaseAddress()).thenReturn(record.length - 1);
-
-		buffer = new Iso646ByteBuffer(record);
-		directoryEntry = new DirectoryEntry(buffer, label);  // Exception expected
-	}
-
-	@Test(expected = FormatException.class)
-	public void constructor_shouldThrowFormatExceptionIfDirectoryIsNotMultipleOfEntryLength() {
-		final byte[] record = asBytes(DUMMY_LABEL + "001234IM" +
-				Iso646Characters.IS2 + Iso646Characters.IS3);
-		when(label.getBaseAddress()).thenReturn(record.length - 1);
-
-		buffer = new Iso646ByteBuffer(record);
-		directoryEntry = new DirectoryEntry(buffer, label);  // Exception expected
+	public void createSystemUnderTest() {
+		final RecordFormat recordFormat = RecordFormat.create()
+				.withFieldLengthLength(1)
+				.withFieldStartLength(2)
+				.withImplDefinedPartLength(3)
+				.build();
+		final Iso646ByteBuffer buffer = new Iso646ByteBuffer(RECORD);
+		directoryEntry = new DirectoryEntry(buffer, recordFormat, RECORD.length - 1);
 	}
 
 	@Test
@@ -113,7 +67,7 @@ public class DirectoryEntryTest {
 	@Test
 	public void reset_shouldSetFirstEntryAsCurrentEntry() {
 		directoryEntry.gotoNext();
-		directoryEntry.reset();
+		directoryEntry.rewind();
 		assertArrayEquals("001".toCharArray(), directoryEntry.getTag());
 	}
 
@@ -124,6 +78,8 @@ public class DirectoryEntryTest {
 
 	@Test
 	public void endOfDirectoryReached_shouldReturnTrueIfAtEndOFDirectory() {
+		directoryEntry.gotoNext();
+		directoryEntry.gotoNext();
 		directoryEntry.gotoNext();
 		directoryEntry.gotoNext();
 		assertTrue(directoryEntry.endOfDirectoryReached());
@@ -157,6 +113,34 @@ public class DirectoryEntryTest {
 		assertArrayEquals("LEM".toCharArray(), directoryEntry.getImplDefinedPart());
 	}
 
+	@Test
+	public void isRecordIdField_shouldReturnOnlyTrueIfTagIs001() {
+		assertTrue(directoryEntry.isRecordIdField());
+		directoryEntry.gotoNext();
+		assertFalse(directoryEntry.isRecordIdField());
+		directoryEntry.gotoNext();
+		assertFalse(directoryEntry.isRecordIdField());
+	}
+
+	@Test
+	public void isReferenceField_shouldReturnOnlyTrueIfTagStartsWith00() {
+		assertTrue(directoryEntry.isReferenceField());
+		directoryEntry.gotoNext();
+		assertTrue(directoryEntry.isReferenceField());
+		directoryEntry.gotoNext();
+		assertFalse(directoryEntry.isReferenceField());
+	}
+
+	@Test
+	public void isContinuedField_shouldReturnTrueIfFieldHasZeroLength() {
+		assertFalse(directoryEntry.isContinuedField());
+		directoryEntry.gotoNext();
+		assertFalse(directoryEntry.isContinuedField());
+		directoryEntry.gotoNext();
+		assertTrue(directoryEntry.isContinuedField());
+		directoryEntry.gotoNext();
+		assertFalse(directoryEntry.isContinuedField());
+	}
 
 	private static byte[] asBytes(final String str) {
 		return str.getBytes(Charset.forName("UTF-8"));
