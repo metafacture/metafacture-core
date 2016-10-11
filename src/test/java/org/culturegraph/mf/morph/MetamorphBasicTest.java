@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -15,176 +16,213 @@
  */
 package org.culturegraph.mf.morph;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.culturegraph.mf.framework.DefaultStreamReceiver;
-import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.types.MultiMap;
-import org.culturegraph.mf.types.NamedValue;
 import org.culturegraph.mf.util.xml.Location;
-import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 
 /**
- * tests {@link Metamorph}
+ * Tests for class {@link Metamorph}
  *
  * @author Markus Michael Geipel
+ * @author Christoph Böhme (rewrite)
  */
-public final class MetamorphBasicTest implements NamedValueReceiver {
+public final class MetamorphBasicTest {
 
-	private static final String NAME = "name";
-	private static final String VALUE = "s234234ldkfj";
-	private static final String ENTITY_NAME = "dfsdf";
-	private static final String LITERAL_NAME = "fghgh";
-	private static final String MATCHING_PATH = ENTITY_NAME + '.' + LITERAL_NAME;
-	private static final String NON_MATCHING_PATH1 = "s234234";
-	private static final String NON_MATCHING_PATH2 = ENTITY_NAME + ".lskdj";
-	private static final StreamReceiver EMPTY_RECEIVER = new DefaultStreamReceiver() {
-		@Override
-		public void literal(final String name, final String value) {
-			// nothing
-		}
-	};
-	private static final String FEEDBACK_VAR = "@var";
-	private static final String MAP_NAME = "sdfklsjef";
+	private static final String VALUE = "testValue";
+	private static final String ENTITY_NAME = "testEntity";
+	private static final String LITERAL_NAME = "testLiteral";
+	private static final String NON_MATCHING_NAME = "nonMatching";
+	private static final String OUTPUT_NAME = "outName";
+	private static final String MAP_NAME = "testMap";
 
-	private NamedValue namedValue;
+	private Metamorph metamorph;
 
-	private static Metamorph newMetamorphWithData(final NamedValueReceiver receiver){
-		final Metamorph metamorph = new Metamorph();
-		metamorph.setReceiver(EMPTY_RECEIVER);
-		final Data data = new Data();
-		data.setName(NAME);
-		receiver.addNamedValueSource(data);
-		metamorph.registerNamedValueReceiver(MATCHING_PATH, data);
-		return metamorph;
+	private TestNameValueReceiver testReceiver;
+
+	@Before
+	public void createSystemUnderTest() {
+		metamorph = new Metamorph();
+		metamorph.setReceiver(new DefaultStreamReceiver());
+		testReceiver = new TestNameValueReceiver();
 	}
 
 	@Test
-	public void testSimpleMapping() {
-		final Metamorph metamorph = newMetamorphWithData(this);
-		namedValue = null;
-		metamorph.startRecord(null);
+	public void shouldMapMatchingPath() {
+		setupSimpleMappingMorph();
 
-		//simple mapping without entity
-		metamorph.literal(NON_MATCHING_PATH1, VALUE);
-		Assert.assertNull(namedValue);
+		metamorph.startRecord("");
+		metamorph.literal(ENTITY_NAME + "." + LITERAL_NAME, VALUE);
 
-		metamorph.literal(MATCHING_PATH, VALUE);
-		Assert.assertNotNull(namedValue);
-		Assert.assertEquals(VALUE, namedValue.getValue());
-		namedValue = null;
+		assertEquals(OUTPUT_NAME, testReceiver.name);
+		assertEquals(VALUE, testReceiver.value);
+	}
 
-		// mapping with entity
+	@Test
+	public void shouldNotMapNonMatchingPath() {
+		setupSimpleMappingMorph();
+
+		metamorph.startRecord("");
+		metamorph.literal("nonMatching.path", VALUE);
+
+		assertNull(testReceiver.name);
+		assertNull(testReceiver.value);
+	}
+
+	@Test
+	public void shouldMapMatchingLiteralInMatchingEntity() {
+		setupSimpleMappingMorph();
+
+		metamorph.startRecord("");
 		metamorph.startEntity(ENTITY_NAME);
 		metamorph.literal(LITERAL_NAME, VALUE);
-		Assert.assertFalse(namedValue==null);
-		Assert.assertEquals(VALUE, namedValue.getValue());
-		namedValue = null;
 
-		metamorph.literal(NON_MATCHING_PATH2, VALUE);
-		Assert.assertNull(namedValue);
-
-		metamorph.endEntity();
-		metamorph.literal(LITERAL_NAME, VALUE);
-		Assert.assertNull(namedValue);
+		assertEquals(OUTPUT_NAME, testReceiver.name);
+		assertEquals(VALUE, testReceiver.value);
 	}
 
 	@Test
-	public void testMultiMap(){
-		final Metamorph metamorph = new Metamorph();
-		final Map<String, String> map = new HashMap<String, String>();
-		map.put(NAME, VALUE);
+	public void shouldNotMapNonMatchingLiteralInMatchingEntity() {
+		setupSimpleMappingMorph();
+
+		metamorph.startRecord("");
+		metamorph.startEntity(ENTITY_NAME);
+		metamorph.literal(NON_MATCHING_NAME, VALUE);
+
+		assertNull(testReceiver.name);
+		assertNull(testReceiver.value);
+	}
+
+	@Test
+	public void shouldNotMapMatchingLiteralInNonMatchingEntity() {
+		setupSimpleMappingMorph();
+
+		metamorph.startRecord("");
+		metamorph.startEntity(NON_MATCHING_NAME);
+		metamorph.literal(LITERAL_NAME, VALUE);
+
+		assertNull(testReceiver.name);
+		assertNull(testReceiver.value);
+	}
+	@Test
+	public void shouldNotMapLiteralWithoutMatchingEntity() {
+		setupSimpleMappingMorph();
+
+		metamorph.startRecord("");
+		metamorph.literal(LITERAL_NAME, VALUE);
+
+		assertNull(testReceiver.name);
+		assertNull(testReceiver.value);
+	}
+
+	/*
+	 * Creates the Metamorph structure that corresponds with the Metamorph XML
+	 * statement:
+	 *     <data source="testEntity.testLiteral" name="outName" />
+	 */
+	private void setupSimpleMappingMorph() {
+		final Data data = new Data();
+		data.setName(OUTPUT_NAME);
+		testReceiver.addNamedValueSource(data);
+		metamorph.registerNamedValueReceiver(ENTITY_NAME + '.' + LITERAL_NAME, data);
+	}
+
+	@Test
+	public void shouldReturnValueFromNestedMap() {
+		final Map<String, String> map = new HashMap<>();
+		map.put(OUTPUT_NAME, VALUE);
 
 		metamorph.putMap(MAP_NAME, map);
-		Assert.assertNotNull(metamorph.getMap(MAP_NAME));
-		Assert.assertNotNull(metamorph.getValue(MAP_NAME,NAME));
-		Assert.assertEquals(VALUE, metamorph.getValue(MAP_NAME,NAME));
 
-		map.put(MultiMap.DEFAULT_MAP_KEY, VALUE);
-		Assert.assertNotNull(metamorph.getValue(MAP_NAME,"sdfadsfsdf"));
-		Assert.assertEquals(VALUE, metamorph.getValue(MAP_NAME,"sdfsdf"));
+		assertNotNull(metamorph.getMap(MAP_NAME));
+		assertEquals(VALUE, metamorph.getValue(MAP_NAME, OUTPUT_NAME));
+	}
 
+	@Test
+	public void shouldReturnDefaultValueIfMapIsKnownButNameIsUnknown() {
+		final Map<String, String> map = new HashMap<>();
+		map.put(MultiMap.DEFAULT_MAP_KEY, "defaultValue");
+
+		metamorph.putMap(MAP_NAME, map);
+
+		assertEquals("defaultValue", metamorph.getValue(MAP_NAME, "nameNotInMap"));
 	}
 
 	@Test
 	public void testFeedback() {
+		final Data data1;
+		data1 = new Data();
+		data1.setName("@feedback");
+		metamorph.addNamedValueSource(data1);
+		metamorph.registerNamedValueReceiver(LITERAL_NAME, data1);
 
-		final Metamorph metamorph = new Metamorph();
-		metamorph.setReceiver(EMPTY_RECEIVER);
-		Data data;
+		final Data data2 = new Data();
+		data2.setName(OUTPUT_NAME);
+		testReceiver.addNamedValueSource(data2);
+		metamorph.registerNamedValueReceiver("@feedback", data2);
 
-		data = new Data();
-		data.setName(FEEDBACK_VAR);
-		metamorph.addNamedValueSource(data);
-		metamorph.registerNamedValueReceiver(MATCHING_PATH, data);
-
-		data = new Data();
-		data.setName(NAME);
-		addNamedValueSource(data);
-		metamorph.registerNamedValueReceiver(FEEDBACK_VAR, data);
-
-		namedValue = null;
-
-		metamorph.startRecord(null);
-		metamorph.literal(MATCHING_PATH, VALUE);
-		Assert.assertFalse(namedValue==null);
-		Assert.assertEquals(VALUE, namedValue.getValue());
-		namedValue = null;
-
-
-	}
-
-
-	@Test(expected=IllegalStateException.class)
-	public void testEntityBorderBalanceCheck1(){
-		final Metamorph metamorph = new Metamorph();
-		metamorph.setReceiver(EMPTY_RECEIVER);
-
-		metamorph.startRecord(null);
-		metamorph.startEntity(ENTITY_NAME);
-		metamorph.startEntity(ENTITY_NAME);
-		metamorph.endEntity();
-		metamorph.endRecord();
+		metamorph.startRecord("");
+		metamorph.literal(LITERAL_NAME, VALUE);
+		assertEquals(OUTPUT_NAME, testReceiver.name);
+		assertEquals(VALUE, testReceiver.value);
 	}
 
 	@Test(expected=IllegalStateException.class)
-	public void testEntityBorderBalanceCheck2(){
-		final Metamorph metamorph = new Metamorph();
-		metamorph.setReceiver(EMPTY_RECEIVER);
-
-		metamorph.startRecord(null);
+	public void shouldThrowIllegalStateExceptionIfEntityIsNotClosed() {
+		metamorph.startRecord("");
+		metamorph.startEntity(ENTITY_NAME);
 		metamorph.startEntity(ENTITY_NAME);
 		metamorph.endEntity();
+		metamorph.endRecord();  // Exception expected
+	}
+
+	@Test(expected=IllegalStateException.class)
+	public void shouldThrowIllegalStateExceptionIfEndEntityIsReceivedWhileNotInEntity() {
+		metamorph.startRecord("");
+		metamorph.startEntity(ENTITY_NAME);
 		metamorph.endEntity();
-		metamorph.endRecord();
+		metamorph.endEntity();  // Exception expected
 	}
 
+	private static final class TestNameValueReceiver
+			implements NamedValueReceiver {
 
+		String name;
+		String value;
 
+		@Override
+		public void receive(final String name, final String value,
+				final NamedValueSource source, final int recordCount,
+				final int entityCount) {
+			this.name = name;
+			this.value = value;
+		}
 
-	@Override
-	public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
-		this.namedValue = new NamedValue(name, value);
+		@Override
+		public void addNamedValueSource(final NamedValueSource namedValueSource) {
+			namedValueSource.setNamedValueReceiver(this);
+		}
 
-	}
+		@Override
+		public Location getSourceLocation() {
+			// Nothing to do
+			return null;
+		}
 
-	@Override
-	public void addNamedValueSource(final NamedValueSource namedValueSource) {
-		namedValueSource.setNamedValueReceiver(this);
-	}
+		@Override
+		public void setSourceLocation(final Location sourceLocation) {
+			// Nothing to do
+		}
 
-	@Override
-	public void setSourceLocation(final Location sourceLocation) {
-		// Nothing to do
-	}
-
-	@Override
-	public Location getSourceLocation() {
-		// Nothing to do
-		return null;
 	}
 
 }
