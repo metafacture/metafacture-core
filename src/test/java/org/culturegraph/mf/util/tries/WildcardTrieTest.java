@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -18,22 +19,17 @@ package org.culturegraph.mf.util.tries;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
+import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * tests {@link WildcardTrie}
+ * Tests for class {@link WildcardTrie}
  *
  * @author Markus Michael Geipel
  *
  */
 public final class WildcardTrieTest {
-	private static final Logger LOG = LoggerFactory.getLogger(WildcardTrieTest.class);
+
 	private static final String ABC = "abc";
 	private static final String CCB = "ccb";
 	private static final String AAQBB = "aa?bb";
@@ -47,44 +43,16 @@ public final class WildcardTrieTest {
 	private static final String AB = "ab";
 	private static final String NOT_FOUND_BY = " not found by ";
 	private static final String FOUND_BY = " found by ";
-	private static final int NUM_WORDS = 100000;
 
-	private final Set<String> wordsIn;
-	private final Set<String> wordsOut;
+	private WildcardTrie<String> trie;
 
-
-	public WildcardTrieTest() {
-		final Set<String> wordsIn = new HashSet<String>();
-		final Set<String> wordsOut = new HashSet<String>();
-		for (int i = 0; i < NUM_WORDS * 2; i += 2) {
-			wordsIn.add(Integer.toString(i));
-			wordsOut.add(Integer.toString(i + 1));
-		}
-		this.wordsIn = Collections.unmodifiableSet(wordsIn);
-		this.wordsOut = Collections.unmodifiableSet(wordsOut);
+	@Before
+	public void createSystemUnderTest() {
+		trie = new WildcardTrie<>();
 	}
-// commented out due to issue #120
-//	@Test(timeout = 1500)
-//	public void testPerformance() {
-//		final WildcardTrie<String> trie = new WildcardTrie<String>();
-//		final long start = System.currentTimeMillis();
-//		for (String word : wordsIn) {
-//			trie.put(word, word);
-//		}
-//
-//		for (String word : wordsIn) {
-//			Assert.assertFalse(trie.get(word).isEmpty());
-//		}
-//
-//		for (String word : wordsOut) {
-//			Assert.assertTrue(trie.get(word).isEmpty());
-//		}
-//		LOG.info("time: " + (System.currentTimeMillis() - start));
-//	}
 
 	@Test
 	public void testWithQWildcard() {
-		final WildcardTrie<String> trie = new WildcardTrie<String>();
 		assertTrue(trie.get("").isEmpty());
 		assertTrue(trie.get("x").isEmpty());
 
@@ -106,8 +74,6 @@ public final class WildcardTrieTest {
 
 	@Test
 	public void testWithStarWildcard() {
-		final WildcardTrie<String> trie = new WildcardTrie<String>();
-
 		trie.put(A_STAR_B, A_STAR_B);
 		assertTrue(AACBB + NOT_FOUND_BY + A_STAR_B, trie.get(AACBB).contains(A_STAR_B));
 		assertTrue(AABB + NOT_FOUND_BY + A_STAR_B, trie.get(AABB).contains(A_STAR_B));
@@ -126,8 +92,6 @@ public final class WildcardTrieTest {
 
 	@Test
 	public void testWithTrailingStarWildcard() {
-		final WildcardTrie<String> trie = new WildcardTrie<String>();
-
 		trie.put(A_STAR, A_STAR);
 		assertTrue(AACBB + NOT_FOUND_BY + A_STAR, trie.get(AACBB).contains(A_STAR));
 		assertTrue(AABB + NOT_FOUND_BY + A_STAR, trie.get(AABB).contains(A_STAR));
@@ -146,8 +110,6 @@ public final class WildcardTrieTest {
 
 	@Test
 	public void testWithInitialStarWildcard() {
-		final WildcardTrie<String> trie = new WildcardTrie<String>();
-
 		trie.put(STAR_B, STAR_B);
 		assertTrue(AACBB + NOT_FOUND_BY + STAR_B, trie.get(AACBB).contains(STAR_B));
 		assertTrue(AABB + NOT_FOUND_BY + STAR_B, trie.get(AABB).contains(STAR_B));
@@ -166,8 +128,6 @@ public final class WildcardTrieTest {
 
 	@Test
 	public void testWithMultipleStarWildcards() {
-		final WildcardTrie<String> trie = new WildcardTrie<String>();
-
 		trie.put(STAR_B, STAR_B);
 		trie.put(A_STAR, A_STAR);
 		trie.put(A_STAR_B, A_STAR_B);
@@ -185,8 +145,6 @@ public final class WildcardTrieTest {
 
 	@Test
 	public void testOverlapWithWildcard() {
-		final WildcardTrie<String> trie = new WildcardTrie<String>();
-
 		trie.put(ABC, ABC);
 		trie.put(A_STAR_BC, A_STAR_BC);
 
@@ -196,16 +154,12 @@ public final class WildcardTrieTest {
 
 	@Test
 	public void testEmptyKey() {
-		final WildcardTrie<String> trie = new WildcardTrie<String>();
-
 		trie.put("", ABC);
 		assertEquals(1, trie.get("").size());
 	}
 
 	@Test
 	public void testWithOrAndWildcard() {
-		final WildcardTrie<String> trie = new WildcardTrie<String>();
-
 		final String key = ABC + WildcardTrie.OR_STRING + CCB;
 		trie.put(key, "");
 		assertTrue(ABC + NOT_FOUND_BY + key, trie.get(ABC).contains(""));
