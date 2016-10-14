@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -33,26 +34,29 @@ import org.culturegraph.mf.exceptions.MetafactureException;
 
 
 /**
- * @author Christoph Böhme <c.boehme@dnb.de>, Markus Michael Geipel
+ * Various utility methods for working with files, resources and streams.
+ *
+ * @author Christoph Böhme
+ * @author Markus Michael Geipel
  *
  */
 public final class ResourceUtil {
 
 	private ResourceUtil() {
-		// No instances allowed
+		throw new AssertionError("No instances allowed");
 	}
 
 	/**
-	 * First attempts to open open 'name' as a file. <br/>
-	 * On fail attempts to open resource with name 'name'. <br/>
-	 * On fail attempts to open 'name' as a URL.
+	 * First attempts to open open {@code name} as a file. On fail attempts to
+	 * open resource with name {@code name}. On fail attempts to open {@code name}
+	 * as a URL.
 	 *
-	 * @param name
-	 * @return
-	 * @throws FileNotFoundException
-	 *             if all attempts fail
+	 * @param name name of the file or resource to open
+	 * @return an input stream for reading the opened file or resource
+	 * @throws FileNotFoundException if all attempts fail
 	 */
-	public static InputStream getStream(final String name) throws FileNotFoundException {
+	public static InputStream getStream(final String name)
+			throws FileNotFoundException {
 		if (name == null) {
 			throw new IllegalArgumentException("'name' must not be null");
 		}
@@ -61,15 +65,14 @@ public final class ResourceUtil {
 			return getStream(file);
 		}
 
-		InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
+		InputStream stream = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream(name);
 		if (stream != null) {
 			return stream;
 		}
 
 		try {
 			stream = new URL(name).openStream();
-		} catch (final MalformedURLException e) {
-			throwFileNotFoundException(name, e);
 		} catch (final IOException e) {
 			throwFileNotFoundException(name, e);
 		}
@@ -91,11 +94,13 @@ public final class ResourceUtil {
 		throw e;
 	}
 
-	public static InputStream getStream(final File file) throws FileNotFoundException {
+	public static InputStream getStream(final File file)
+			throws FileNotFoundException {
 		return new FileInputStream(file);
 	}
 
-	public static Reader getReader(final String name) throws FileNotFoundException {
+	public static Reader getReader(final String name)
+			throws FileNotFoundException {
 		return new InputStreamReader(getStream(name));
 	}
 
@@ -103,12 +108,13 @@ public final class ResourceUtil {
 		return new InputStreamReader(getStream(file));
 	}
 
-	public static Reader getReader(final String name, final String encoding) throws FileNotFoundException,
-			UnsupportedEncodingException {
+	public static Reader getReader(final String name, final String encoding)
+			throws FileNotFoundException, UnsupportedEncodingException {
 		return new InputStreamReader(getStream(name), encoding);
 	}
 
-	public static Reader getReader(final File file, final String encoding) throws FileNotFoundException,
+	public static Reader getReader(final File file, final String encoding)
+			throws FileNotFoundException,
 			UnsupportedEncodingException {
 		return new InputStreamReader(getStream(file), encoding);
 	}
@@ -122,7 +128,7 @@ public final class ResourceUtil {
 	 *
 	 * @param name reference to a file or resource maybe a URL
 	 * @return a URL referring to a file or resource
-	 * @throws MalformedURLException
+	 * @throws MalformedURLException if the name is a failed URL
 	 */
 	public static URL getUrl(final String name) throws MalformedURLException {
 		final File file = new File(name);
@@ -151,7 +157,8 @@ public final class ResourceUtil {
 		}
 	}
 
-	public static Properties loadProperties(final InputStream stream) throws IOException {
+	public static Properties loadProperties(final InputStream stream)
+			throws IOException {
 		final Properties properties;
 		properties = new Properties();
 		properties.load(stream);
@@ -162,7 +169,8 @@ public final class ResourceUtil {
 		try {
 			return loadProperties(url.openStream());
 		} catch (final IOException e) {
-			throw new MetafactureException("'" + url.getPath() + "' could not be loaded", e);
+			throw new MetafactureException("'" + url.getPath() +
+					"' could not be loaded", e);
 		}
 	}
 
@@ -179,7 +187,8 @@ public final class ResourceUtil {
 		return builder.toString();
 	}
 
-	public static List<String> loadTextFile(final String location, final List<String> list) throws IOException {
+	public static List<String> loadTextFile(final String location,
+			final List<String> list) throws IOException {
 		final BufferedReader reader = new BufferedReader(getReader(location));
 
 		String line = reader.readLine();
