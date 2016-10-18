@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.types.HierarchicalMultiMap;
 import org.culturegraph.mf.util.StringUtil;
 
 /**
@@ -31,9 +32,9 @@ import org.culturegraph.mf.util.StringUtil;
  */
 public final class Combine extends AbstractFlushingCollect {
 
-	private final Map<String, String> variables = new HashMap<String, String>();
-	private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
-	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
+	private final Map<String, String>   variables   = new HashMap<>();
+	private final Set<NamedValueSource> sources     = new HashSet<>();
+	private final Set<NamedValueSource> sourcesLeft = new HashSet<>();
 
 	public Combine(final Metamorph metamorph) {
 		super(metamorph);
@@ -43,8 +44,28 @@ public final class Combine extends AbstractFlushingCollect {
 	protected void emit() {
 		final String name = StringUtil.format(getName(), variables);
 		final String value = StringUtil.format(getValue(), variables);
-		getNamedValueReceiver().receive(name, value, this, getRecordCount(),
-				getEntityCount());
+
+		if (getIncludeSubEntities()) {
+
+			final HierarchicalMultiMap<Integer, String, String> entityBuffer = getHierarchicalEntityBuffer();
+			entityBuffer.addToEmit(getEntityCount(), name, value);
+
+			return;
+		}
+
+		emit(name, value);
+	}
+
+	protected void emitHierarchicalEntityValueBuffer() {
+
+		if (!variables.isEmpty()) {
+
+			final String name = StringUtil.format(getName(), variables);
+			final String value = StringUtil.format(getValue(), variables);
+
+			final HierarchicalMultiMap<Integer, String, String> entityBuffer = getHierarchicalEntityBuffer();
+			entityBuffer.addToValue(getEntityCount(), name, value);
+		}
 	}
 
 	@Override
@@ -69,6 +90,10 @@ public final class Combine extends AbstractFlushingCollect {
 	protected void clear() {
 		sourcesLeft.addAll(sources);
 		variables.clear();
+
+		if (getIncludeSubEntities()) {
+			getHierarchicalEntityBuffer().clear();
+		}
 	}
 
 }

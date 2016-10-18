@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph-test version="1.0"
+				xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph"
+				xmlns:cgxml="http://www.culturegraph.org/cgxml">
+
+	<test-case name="combine w/ filter + more than one record + simple hierarchy + combine output (givenname) stands before condition (number, surname) + empty output value">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="fullname">
+							<cgxml:literal name="givenname" value=""/>
+							<cgxml:literal name="surname" value="Surname1"/>
+						</cgxml:entity>
+						<cgxml:literal name="number" value="3"/>
+						<cgxml:literal name="color" value="blau"/>
+						<cgxml:literal name="date" value="20.12.2013"/>
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:entity name="fullname">
+							<cgxml:literal name="givenname" value="Givenname2"/>
+							<cgxml:literal name="surname" value="Surname2"/>
+						</cgxml:entity>
+						<cgxml:literal name="number" value="3"/>
+						<cgxml:literal name="color" value="grün"/>
+						<cgxml:literal name="date" value="10.12.2013"/>
+					</cgxml:record>
+					<cgxml:record id="3">
+						<cgxml:entity name="fullname">
+							<cgxml:literal name="givenname" value="Givenname3"/>
+							<cgxml:literal name="surname" value="Surname3"/>
+						</cgxml:entity>
+						<cgxml:literal name="number" value="2"/>
+						<cgxml:literal name="color" value="grün"/>
+						<cgxml:literal name="date" value="10.10.2013"/>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:combine name="COMBINE" value="${one}" flushWith="record" reset="true" sameEntity="true" includeSubEntities="true">
+						<mm:if>
+							<mm:all name="CONDITIONALL" reset="true" flushWith="number" includeSubEntities="true">
+								<mm:data
+										source="fullname.surname">
+									<mm:regexp match="S\w.*"/>
+								</mm:data>
+								<mm:data
+										source="number">
+									<mm:regexp match="3"/>
+								</mm:data>
+							</mm:all>
+						</mm:if>
+						<!-- <mm:data source="color" name="one"/> -->
+						<mm:data source="fullname.givenname" name="one"/>
+					</mm:combine>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="COMBINE" value=""/>
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="COMBINE" value="Givenname2"/>
+					</cgxml:record>
+					<cgxml:record id="3" />
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+</metamorph-test>

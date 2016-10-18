@@ -16,8 +16,10 @@
 package org.culturegraph.mf.morph.collectors;
 
 import org.culturegraph.mf.morph.AbstractNamedValuePipe;
+import org.culturegraph.mf.morph.Data;
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.types.HierarchicalMultiMap;
 
 /**
  * Common basis for {@link Entity}, {@link Combine} etc.
@@ -29,15 +31,20 @@ import org.culturegraph.mf.morph.NamedValueSource;
 public abstract class AbstractCollect extends AbstractNamedValuePipe
 		implements Collect {
 
-	private int oldRecord;
-	private int oldEntity;
-	private boolean resetAfterEmit;
-	private boolean sameEntity;
-	private String name;
-	private String value;
+	private       int       oldRecord;
+	private       int       oldEntity;
+	private       boolean   resetAfterEmit;
+	private       boolean   sameEntity;
+	private       String    name;
+	private       String    value;
 	private final Metamorph metamorph;
-	private boolean waitForFlush;
-	private boolean conditionMet;
+	private       boolean   waitForFlush;
+	private       boolean   conditionMet;
+	private       boolean   includeSubEntities;
+	private int currentHierarchicalEntity = 0;
+	private int oldHierarchicalEntity     = 0;
+	private HierarchicalMultiMap<Integer, String, String> hierarchicalEntityBuffer;
+	private Integer                                       matchEntity;
 
 	private NamedValueSource conditionSource;
 
@@ -48,6 +55,41 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
 	protected final Metamorph getMetamorph() {
 		return metamorph;
+	}
+
+	public final void setIncludeSubEntities(final boolean includeSubEntitiesArg) {
+
+		includeSubEntities = includeSubEntitiesArg;
+
+		if (includeSubEntities) {
+
+			hierarchicalEntityBuffer = new HierarchicalMultiMap<>();
+		}
+	}
+
+	protected final boolean getIncludeSubEntities() {
+
+		return includeSubEntities;
+	}
+
+	protected final HierarchicalMultiMap<Integer, String, String> getHierarchicalEntityBuffer() {
+
+		return hierarchicalEntityBuffer;
+	}
+
+	protected boolean isHierarchicalEntityEmitBufferFilled() {
+
+		return hierarchicalEntityBuffer != null && hierarchicalEntityBuffer.hasEmits();
+	}
+
+	protected final Integer getMatchEntity() {
+
+		return matchEntity;
+	}
+
+	protected void setMatchEntity(final Integer matchEntityArg) {
+
+		matchEntity = matchEntityArg;
 	}
 
 	protected final int getRecordCount() {
@@ -107,6 +149,11 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 		resetCondition();
 	}
 
+	protected final NamedValueSource getConditionSource() {
+
+		return conditionSource;
+	}
+
 	public final String getValue() {
 		return value;
 	}
@@ -125,6 +172,8 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 			resetCondition();
 			clear();
 			oldRecord = currentRecord;
+			currentHierarchicalEntity = 0;
+			oldHierarchicalEntity = 0;
 		}
 		if (resetNeedFor(currentEntity)) {
 			resetCondition();
@@ -133,7 +182,22 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 		oldEntity = currentEntity;
 	}
 
+	protected void updateHierarchicalEntity(final int entityCount) {
+
+		oldHierarchicalEntity = currentHierarchicalEntity;
+		currentHierarchicalEntity = entityCount;
+	}
+
 	private boolean resetNeedFor(final int currentEntity) {
+
+		if (getIncludeSubEntities()) {
+
+			if (sameEntity) {
+
+				return false;
+			}
+		}
+
 		return sameEntity && oldEntity != currentEntity;
 	}
 
@@ -142,28 +206,101 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 	}
 
 	@Override
-	public final void receive(final String name, final String value,
-			final NamedValueSource source, final int recordCount,
-			final int entityCount) {
+	public final void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
 
 		updateCounts(recordCount, entityCount);
 
-		if (source == conditionSource) {
-			conditionMet = true;
-		} else {
-			receive(name, value, source);
+		optionallyHandleHierarchicalEntityValueBuffer(source);
+
+		if (checkAndHandleConditionMet(name, value, source, entityCount)) {
+
+			return;
+		}
+
+		if (getIncludeSubEntities()) {
+
+			if (isConditionMet() && isComplete() && matchEntity != null && matchEntity <= entityCount) {
+
+				emit();
+			}
+
+			return;
 		}
 
 		if (!waitForFlush && isConditionMet() && isComplete()) {
+
 			emit();
+
 			if (resetAfterEmit) {
+
 				resetCondition();
 				clear();
 			}
 		}
 	}
 
+	private boolean checkAndHandleConditionMet(final String name, final String value, final NamedValueSource source, final int entityCount) {
+
+		if (source == conditionSource) {
+
+			conditionMet = true;
+
+			if (getIncludeSubEntities() && Collect.class.isInstance(conditionSource)) {
+
+				if (((Collect) conditionSource).getName().equals(name)) {
+
+					final boolean condition = Boolean.valueOf(value);
+
+					if (condition) {
+
+						matchEntity = entityCount;
+
+						hierarchicalEntityBuffer.emitValues(entityCount);
+
+					} else {
+
+						// do something with matchEntity, e.g., reset
+						matchEntity = null;
+						conditionMet = false;
+						hierarchicalEntityBuffer.clearValues();
+					}
+
+					return true;
+				}
+			}
+		} else {
+
+			receive(name, value, source);
+		}
+
+		return false;
+	}
+
+	private void optionallyHandleHierarchicalEntityValueBuffer(final NamedValueSource source) {
+
+		if (getIncludeSubEntities()) {
+
+			if (isComplete() && isConditionMet() && Data.class.isInstance(source) && hierarchicalEntityBuffer.hasValues()
+					&& oldEntity == matchEntity) {
+
+				hierarchicalEntityBuffer.removeValues(getEntityCount());
+				hierarchicalEntityBuffer.clearValues();
+			}
+
+			if (Combine.class.isInstance(this)) {
+
+				((Combine) this).emitHierarchicalEntityValueBuffer();
+			}
+		}
+	}
+
 	protected final boolean sameEntityConstraintSatisfied(final int entityCount) {
+
+		if (getIncludeSubEntities()) {
+
+			return !sameEntity || oldHierarchicalEntity <= entityCount;
+		}
+
 		return !sameEntity || oldEntity == entityCount;
 	}
 

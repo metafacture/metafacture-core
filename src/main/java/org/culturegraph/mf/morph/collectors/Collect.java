@@ -32,6 +32,8 @@ public interface Collect extends FlushListener, ConditionAware,
 
 	void setWaitForFlush(final boolean waitForFlush);
 
+	void setIncludeSubEntities(final boolean includeSubEntities);
+
 	void setSameEntity(boolean sameEntity);
 
 	void setReset(boolean reset);

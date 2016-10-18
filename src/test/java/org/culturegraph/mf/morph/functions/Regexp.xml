@@ -77,4 +77,121 @@
 		</result>
 	</test-case>
 
+	<test-case name="empty string (with equals function)">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="001">
+							<cgxml:literal name="" value="" />
+						</cgxml:entity>
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:entity name="001">
+							<cgxml:literal name="" value="ABC" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:data source="001." name="subject">
+						<mm:equals string="" />
+					</mm:data>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="subject" value="" />
+					</cgxml:record>
+					<cgxml:record id="2">
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="non-empty string (with not-equals function)">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="001">
+							<cgxml:literal name="" value="" />
+						</cgxml:entity>
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:entity name="001">
+							<cgxml:literal name="" value="ABC" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:data source="001." name="subject">
+						<mm:not-equals string="" />
+					</mm:data>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="subject" value="ABC" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="non-empty string (with regexp)">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:entity name="001">
+							<cgxml:literal name="" value="" />
+						</cgxml:entity>
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:entity name="001">
+							<cgxml:literal name="" value="ABC" />
+						</cgxml:entity>
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:data source="001." name="subject">
+						<mm:regexp match="^.+$" />
+					</mm:data>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="subject" value="ABC" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
 </metamorph-test>

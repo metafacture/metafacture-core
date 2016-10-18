@@ -47,6 +47,7 @@ public final class XmlDecoder
 		extends DefaultObjectPipe<Reader, XmlReceiver> {
 
 	private static final String SAX_PROPERTY_LEXICAL_HANDLER = "http://xml.org/sax/properties/lexical-handler";
+	private static final String XERCES_FEATURES_NOTIFY_BUILTIN_REFS = "http://apache.org/xml/features/scanner/notify-builtin-refs";
 
 	private final XMLReader saxReader;
 
@@ -54,6 +55,7 @@ public final class XmlDecoder
 		super();
 		try {
 			saxReader = XMLReaderFactory.createXMLReader();
+			saxReader.setFeature(XERCES_FEATURES_NOTIFY_BUILTIN_REFS, false);
 		} catch (SAXException e) {
 			throw new MetafactureException(e);
 		}

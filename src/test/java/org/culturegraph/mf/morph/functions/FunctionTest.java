@@ -24,5 +24,5 @@ import org.junit.runner.RunWith;
  * @author Markus Michael Geipel
  */
 @RunWith(MetamorphTestSuite.class)
-@TestDefinitions({"Basic.xml","Lookup.xml","Stateful.xml", "Unique.xml", "Misc.xml", "Script.xml", "Regexp.xml", "DateFormat.xml"})
+@TestDefinitions({"Basic.xml","Lookup.xml","Stateful.xml", "Unique.xml", "Misc.xml", "Script.xml", "Regexp.xml", "DateFormat.xml", "NumFilter.xml"})
 public final class FunctionTest {/*bind to xml test*/}

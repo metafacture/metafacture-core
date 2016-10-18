@@ -189,6 +189,84 @@
 		</result>
 	</test-case>
 
+	<test-case name="should fire only if all elements fire + should return value from data1">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data1" value="A" />
+						<cgxml:literal name="data2" value="B" />
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="data2" value="C" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:all value="${data1var}">
+						<mm:data name="data1var" source="data1" />
+						<mm:data name="data2var" source="data2" />
+					</mm:all>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="" value="A" />
+					</cgxml:record>
+					<cgxml:record id="2">
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="should fire only if all elements fire + should return value from data2">
+		<input type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="data1" value="A" />
+						<cgxml:literal name="data2" value="B" />
+					</cgxml:record>
+					<cgxml:record id="2">
+						<cgxml:literal name="data2" value="C" />
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:all value="${data2var}">
+						<mm:data name="data1var" source="data1" />
+						<mm:data name="data2var" source="data2" />
+					</mm:all>
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml:cgxml version="1.0">
+				<cgxml:records>
+					<cgxml:record id="1">
+						<cgxml:literal name="" value="B" />
+					</cgxml:record>
+					<cgxml:record id="2">
+					</cgxml:record>
+				</cgxml:records>
+			</cgxml:cgxml>
+		</result>
+	</test-case>
+
 	<test-case name="should reset when entity changes if sameEntity">
 		<input type="text/x-cg+xml">
 			<cgxml:cgxml version="1.0">
