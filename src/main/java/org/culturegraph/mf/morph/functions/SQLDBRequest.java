@@ -2,7 +2,6 @@ package org.culturegraph.mf.morph.functions;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,19 +9,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.culturegraph.mf.exceptions.MorphException;
+import org.culturegraph.mf.morph.functions.utils.SQLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Created by tgaengler on 05.09.16.
  */
-public class SQLDBRequest extends AbstractCollectionStatelessFunction {
+public class SQLDBRequest extends AbstractCollectionStatelessFunction implements Cloneable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SQLDBRequest.class);
-
-	public static final String JDBC_PREFIX_IDENTIFIER = "jdbc";
-	public static final String COLON                  = ":";
-	public static final String SLASH                  = "/";
 
 	private boolean isUninitialized = true;
 
@@ -69,33 +65,8 @@ public class SQLDBRequest extends AbstractCollectionStatelessFunction {
 
 	private Connection getMySqlConnection() {
 
-		try {
+		conn = SQLUtils.createSQLConnection(driver, databaseType, host, port, database, login, password);
 
-			Class.forName(driver).newInstance();
-
-			final StringBuilder urlSB = new StringBuilder();
-			urlSB.append(JDBC_PREFIX_IDENTIFIER).append(COLON)
-					.append(databaseType).append(COLON).append(SLASH).append(SLASH)
-					.append(host).append(COLON).append(port).append(SLASH).append(database);
-
-			final String url = urlSB.toString();
-
-			LOG.debug("try to connection to database with connection string '{}'", url);
-
-			conn = DriverManager.getConnection(url, login, password);
-		} catch (final ClassNotFoundException e) {
-
-			throw new MorphException(e);
-		} catch (final SQLException e) {
-
-			throw new MorphException(e);
-		} catch (final InstantiationException e) {
-
-			throw new MorphException(e);
-		} catch (final IllegalAccessException e) {
-
-			throw new MorphException(e);
-		}
 		return conn;
 	}
 

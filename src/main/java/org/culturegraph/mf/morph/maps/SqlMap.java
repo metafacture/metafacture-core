@@ -24,6 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.culturegraph.mf.exceptions.MorphException;
+import org.culturegraph.mf.morph.functions.utils.SQLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,28 +85,8 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
 
 	private Connection getMySqlConnection() {
 
-		try {
-			Class.forName(driver).newInstance();
+		conn = SQLUtils.createSQLConnection(driver, databaseType, host, port, database, login, password);
 
-			final StringBuilder urlSB = new StringBuilder();
-			urlSB.append(JDBC_PREFIX_IDENTIFIER).append(COLON)
-					.append(databaseType).append(COLON).append(SLASH).append(SLASH)
-					.append(host).append(COLON).append(port).append(SLASH).append(database);
-
-			final String url = urlSB.toString();
-
-			LOG.debug("try to connection to database with connection string '{}'", url);
-
-			conn = DriverManager.getConnection(url, login, password);
-		} catch (final ClassNotFoundException e) {
-			throw new MorphException(e);
-		} catch (final SQLException e) {
-			throw new MorphException(e);
-		} catch (final InstantiationException e) {
-			throw new MorphException(e);
-		} catch (final IllegalAccessException e) {
-			throw new MorphException(e);
-		}
 		return conn;
 	}
 
