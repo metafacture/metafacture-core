@@ -39,7 +39,7 @@ import org.culturegraph.mf.morph.interceptors.NullInterceptorFactory;
 import org.culturegraph.mf.stream.pipe.StreamFlattener;
 import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.ResourceUtil;
-import org.culturegraph.mf.util.StreamConstants;
+import org.culturegraph.mf.framework.StandardEventNames;
 import org.culturegraph.mf.util.xml.Location;
 import org.xml.sax.InputSource;
 
@@ -220,7 +220,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 		final String identifierFinal = identifier;
 
 		outputStreamReceiver.startRecord(identifierFinal);
-		dispatch(StreamConstants.ID, identifierFinal, null);
+		dispatch(StandardEventNames.ID, identifierFinal, null);
 	}
 
 	@Override

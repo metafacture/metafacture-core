@@ -20,7 +20,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.util.StreamConstants;
+import org.culturegraph.mf.framework.StandardEventNames;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,11 +65,11 @@ public final class IdChangePipeTest {
 	@Test
 	public void testShouldChangeIdsOfRecords() {
 		idChangePipe.startRecord(OLD_RECORD_ID1);
-		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID1);
+		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID1);
 		idChangePipe.endRecord();
 
 		idChangePipe.startRecord(OLD_RECORD_ID2);
-		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID2);
+		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID2);
 		idChangePipe.endRecord();
 
 		final InOrder ordered = inOrder(receiver);
@@ -86,7 +86,7 @@ public final class IdChangePipeTest {
 		idChangePipe.literal(LITERAL_NAME, LITERAL_VALUE);
 		idChangePipe.endRecord();
 		idChangePipe.startRecord(OLD_RECORD_ID2);
-		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID2);
+		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID2);
 		idChangePipe.endRecord();
 
 		final InOrder ordered = inOrder(receiver);
@@ -105,7 +105,7 @@ public final class IdChangePipeTest {
 		idChangePipe.literal(LITERAL_NAME, LITERAL_VALUE);
 		idChangePipe.endRecord();
 		idChangePipe.startRecord(OLD_RECORD_ID2);
-		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID2);
+		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID2);
 		idChangePipe.endRecord();
 
 		final InOrder ordered = inOrder(receiver);
@@ -118,25 +118,25 @@ public final class IdChangePipeTest {
 	public void testShouldNotUseNestedIdLiteralAsNewId() {
 		idChangePipe.startRecord(OLD_RECORD_ID1);
 		idChangePipe.startEntity(ENTITY);
-		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID1);
+		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID1);
 		idChangePipe.endEntity();
 		idChangePipe.endRecord();
 
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(OLD_RECORD_ID1);
 		ordered.verify(receiver).startEntity(ENTITY);
-		ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID1);
+		ordered.verify(receiver).literal(StandardEventNames.ID, NEW_RECORD_ID1);
 		ordered.verify(receiver).endEntity();
 		ordered.verify(receiver).endRecord();
 	}
 
 	@Test
 	public void testShouldAcceptFullPathAsNewId() {
-		idChangePipe.setIdLiteral(ENTITY + "." + StreamConstants.ID);
+		idChangePipe.setIdLiteral(ENTITY + "." + StandardEventNames.ID);
 
 		idChangePipe.startRecord(OLD_RECORD_ID1);
 		idChangePipe.startEntity(ENTITY);
-		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID1);
+		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID1);
 		idChangePipe.endEntity();
 		idChangePipe.endRecord();
 
@@ -149,10 +149,10 @@ public final class IdChangePipeTest {
 
 	@Test
 	public void testShouldNotKeepIdLiteralByDefault() {
-		idChangePipe.setIdLiteral(StreamConstants.ID);
+		idChangePipe.setIdLiteral(StandardEventNames.ID);
 
 		idChangePipe.startRecord(OLD_RECORD_ID1);
-		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID1);
+		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID1);
 		idChangePipe.endRecord();
 
 		final InOrder ordered = inOrder(receiver);
@@ -163,24 +163,24 @@ public final class IdChangePipeTest {
 
 	@Test
 	public void testShouldKeepIdLiteralIfConfigured() {
-		idChangePipe.setIdLiteral(StreamConstants.ID);
+		idChangePipe.setIdLiteral(StandardEventNames.ID);
 		idChangePipe.setKeepIdLiteral(true);
 
 		idChangePipe.startRecord(OLD_RECORD_ID1);
-		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID1);
+		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID1);
 		idChangePipe.endRecord();
 
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
-		ordered.verify(receiver).literal(StreamConstants.ID, NEW_RECORD_ID1);
+		ordered.verify(receiver).literal(StandardEventNames.ID, NEW_RECORD_ID1);
 		ordered.verify(receiver).endRecord();
 	}
 
 	@Test
 	public void testShouldUseLastIdLiteralAsNewId() {
 		idChangePipe.startRecord(OLD_RECORD_ID1);
-		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID1);
-		idChangePipe.literal(StreamConstants.ID, NEW_RECORD_ID2);
+		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID1);
+		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID2);
 		idChangePipe.endRecord();
 
 		final InOrder ordered = inOrder(receiver);

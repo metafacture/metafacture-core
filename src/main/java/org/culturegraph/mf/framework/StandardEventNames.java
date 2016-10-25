@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.util;
+package org.culturegraph.mf.framework;
 
 /**
  * Constants for commonly used literal and entity names.
  *
  * @author Christoph Böhme
  */
-public final class StreamConstants {
+public final class StandardEventNames {
 
-	public static final String SERIALIZED = "_serialized";
+	/**
+	 * Name of the literal holding the record id. The literal's value should
+	 * either be the same as the record id in the <i>start-record</i> event or be
+	 * intended to replace the current record id in a subsequent processing step.
+	 */
 	public static final String ID = "_id";
-	private StreamConstants() {
-		// No instances allowed
+
+	private StandardEventNames() {
+		throw new AssertionError("no instances allowed");
 	}
 
 }

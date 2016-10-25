@@ -31,7 +31,7 @@ import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.Triple;
 import org.culturegraph.mf.types.Triple.ObjectType;
-import org.culturegraph.mf.util.StreamConstants;
+import org.culturegraph.mf.framework.StandardEventNames;
 
 /**
  * Emits the literals which are received as triples such
@@ -163,7 +163,7 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 		assert !isClosed();
 
 		if (nestingLevel > encodeLevel) {
-			if (nestingLevel == 1 && redirect && StreamConstants.ID.equals(name)) {
+			if (nestingLevel == 1 && redirect && StandardEventNames.ID.equals(name)) {
 				currentId = value;
 			} else {
 				formatter.literal(name, value);
@@ -186,7 +186,7 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
 
 	private void dispatch(final String name, final String value, final ObjectType type) {
 		if (redirect) {
-			if (StreamConstants.ID.equals(name)) {
+			if (StandardEventNames.ID.equals(name)) {
 				currentId = value;
 			} else {
 				final Matcher matcher = REDIRECT_PATTERN.matcher(name);

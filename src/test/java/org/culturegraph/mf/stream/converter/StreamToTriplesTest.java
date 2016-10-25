@@ -19,7 +19,7 @@ package org.culturegraph.mf.stream.converter;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.types.Triple;
 import org.culturegraph.mf.types.Triple.ObjectType;
-import org.culturegraph.mf.util.StreamConstants;
+import org.culturegraph.mf.framework.StandardEventNames;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -89,7 +89,7 @@ public final class StreamToTriplesTest {
 		streamToTriples.setRedirect(true);
 
 		streamToTriples.startRecord("id");
-		streamToTriples.literal(StreamConstants.ID, "altId");
+		streamToTriples.literal(StandardEventNames.ID, "altId");
 		streamToTriples.literal("literal", "value");
 		streamToTriples.endRecord();
 
@@ -121,7 +121,7 @@ public final class StreamToTriplesTest {
 		streamToTriples.setRedirect(true);
 
 		streamToTriples.startRecord("id");
-		streamToTriples.literal(StreamConstants.ID, "altId");
+		streamToTriples.literal(StandardEventNames.ID, "altId");
 		streamToTriples.literal("literal", "value");
 		streamToTriples.endRecord();
 

@@ -19,7 +19,7 @@ import java.util.Map;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.util.StreamConstants;
+import org.culturegraph.mf.framework.StandardEventNames;
 
 /**
  * Emits a {@link Map} as a record with a literal for each entry in the map.
@@ -57,12 +57,12 @@ import org.culturegraph.mf.util.StreamConstants;
 public final class MapToStream extends
 		DefaultObjectPipe<Map<?, ?>, StreamReceiver> {
 
-	private Object idKey = StreamConstants.ID;
+	private Object idKey = StandardEventNames.ID;
 
 	/**
 	 * Sets the key of the map entry that is used for the record id.
 	 * <p>
-	 * The default id key is &quot;{@value StreamConstants#ID}&quot;.
+	 * The default id key is &quot;{@value StandardEventNames#ID}&quot;.
 	 * <p>
 	 * This parameter can be changed anytime during processing. The new value
 	 * becomes effective with the next record being processed.

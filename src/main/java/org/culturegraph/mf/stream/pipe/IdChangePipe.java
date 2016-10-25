@@ -23,7 +23,7 @@ import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.stream.sink.EntityPathTracker;
-import org.culturegraph.mf.util.StreamConstants;
+import org.culturegraph.mf.framework.StandardEventNames;
 
 /**
  * Replaces the record id with the value of a literal from the record. The name
@@ -73,7 +73,7 @@ public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
 	private final StreamBuffer streamBuffer = new StreamBuffer();
 	private final EntityPathTracker entityPathTracker = new EntityPathTracker();
 
-	private String idLiteral = StreamConstants.ID;
+	private String idLiteral = StandardEventNames.ID;
 	private String currentIdentifier;
 	private String originalIdentifier;
 	private boolean keepRecordsWithoutIdLiteral = true;
@@ -88,7 +88,7 @@ public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
 	 * literals named &ldquo;id&rdquo; which are part of an entity named
 	 * &ldquo;metadata&rdquo;.
 	 * <p>
-	 * The default value is &ldquo;{@value StreamConstants#ID}&rdquo;.
+	 * The default value is &ldquo;{@value StandardEventNames#ID}&rdquo;.
 	 * <p>
 	 * This parameter must only be changed between records otherwise the
 	 * behaviour of the module is undefined.
