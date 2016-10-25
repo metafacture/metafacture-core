@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -17,12 +18,11 @@ package org.culturegraph.mf.stream.sink;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import org.apache.commons.io.IOUtils;
 import org.culturegraph.mf.types.Triple;
 import org.junit.After;
 import org.junit.Before;
@@ -41,7 +41,8 @@ public final class TripleObjectWriterTest {
 	private static final String SUBJECT2 = "subject2";
 	private static final String STRUCTURED_SUBJECT_A = "a";
 	private static final String STRUCTURED_SUBJECT_B = "b";
-	private static final String STRUCTURED_SUBJECT = STRUCTURED_SUBJECT_A + "/" + STRUCTURED_SUBJECT_B;
+	private static final String STRUCTURED_SUBJECT = STRUCTURED_SUBJECT_A + "/" +
+			STRUCTURED_SUBJECT_B;
 	private static final String PREDICATE = "predicate";
 	private static final String OBJECT1 = "object-data 1";
 	private static final String OBJECT2 = "object-data 2";
@@ -51,12 +52,13 @@ public final class TripleObjectWriterTest {
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
 
-	private String baseDir;
+	private Path baseDir;
 
 	@Before
-	public void setup() throws IOException {
-		baseDir = tempFolder.newFolder().getAbsolutePath();
-		tripleObjectWriter = new TripleObjectWriter(baseDir);
+	public void createSystemUnderTest() throws IOException {
+		baseDir = tempFolder.newFolder().toPath();
+		tripleObjectWriter = new TripleObjectWriter(
+		    baseDir.toAbsolutePath().toString());
 	}
 
 	@After
@@ -65,29 +67,28 @@ public final class TripleObjectWriterTest {
 	}
 
 	@Test
-	public void testShouldWriteObjectOfTripleIntoFile() throws IOException {
+	public void shouldWriteObjectOfTripleIntoFile() throws IOException {
 		tripleObjectWriter.process(new Triple(SUBJECT1, PREDICATE, OBJECT1));
 		tripleObjectWriter.process(new Triple(SUBJECT2, PREDICATE, OBJECT2));
 
-		final String filename1 = baseDir + File.separator + SUBJECT1 + File.separator + PREDICATE;
-		final String filename2 = baseDir + File.separator + SUBJECT2 + File.separator + PREDICATE;
-		assertEquals(get(filename1), OBJECT1);
-		assertEquals(get(filename2), OBJECT2);
+		final Path file1 = baseDir.resolve(Paths.get(SUBJECT1, PREDICATE));
+		final Path file2 = baseDir.resolve(Paths.get(SUBJECT2, PREDICATE));
+		assertEquals(OBJECT1, readFileContents(file1));
+		assertEquals(OBJECT2, readFileContents(file2));
 	}
 
 	@Test
-	public void testShouldMapStructuredSubjectsToDirectories() throws IOException {
+	public void shouldMapStructuredSubjectsToDirectories() throws IOException {
 		tripleObjectWriter.process(new Triple(STRUCTURED_SUBJECT, PREDICATE, OBJECT1));
 
-		final String filename = baseDir
-				+ File.separator + STRUCTURED_SUBJECT_A + File.separator + STRUCTURED_SUBJECT_B
-				+ File.separator + PREDICATE;
-		assertEquals(get(filename), OBJECT1);
+    final Path file = baseDir.resolve(Paths.get(STRUCTURED_SUBJECT_A,
+        STRUCTURED_SUBJECT_B, PREDICATE));
+		assertEquals(readFileContents(file), OBJECT1);
 	}
 
-	private String get(final String filename) throws IOException {
-		final InputStream stream = new FileInputStream(filename);
-		return IOUtils.toString(stream, tripleObjectWriter.getEncoding());
+	private String readFileContents(final Path file) throws IOException {
+    final byte[] data = Files.readAllBytes(file);
+    return new String(data, tripleObjectWriter.getEncoding());
 	}
 
 }

@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -44,10 +46,6 @@ public final class ObjectFileWriterTest
 
 	private static final String DATA = "Überfacture";
 
-	private static final String UTF8_MESSAGE =
-			"Default encoding is UTF-8: It is not possible to test whether " +
-			"ObjectFileWriter sets the encoding to UTF-8 correctly.";
-
 	@Rule
 	public final TemporaryFolder tempFolder = new TemporaryFolder();
 
@@ -61,21 +59,18 @@ public final class ObjectFileWriterTest
 	}
 
 	@Test
-	public void testOutputIsUTF8Encoded() throws IOException {
-		final Charset charsetUTF8 = Charset.forName("UTF-8");
-
-		assumeThat(UTF8_MESSAGE, Charset.defaultCharset(), not(equalTo(charsetUTF8)));
+	public void shouldWriteUTF8EncodedOutput() throws IOException {
+		assumeThat(
+				"Default encoding is UTF-8: It is not possible to test whether ObjectFileWriter sets the encoding to UTF-8 correctly.",
+				Charset.defaultCharset(),
+				not(equalTo(StandardCharsets.UTF_8)));
 
 		writer.process(DATA);
 		writer.closeStream();
 
-		final byte[] bytesWritten;
-		final InputStream stream = new FileInputStream(file);
-		try { bytesWritten = IOUtils.toByteArray(stream); }
-		finally { stream.close(); }
-
-		assertArrayEquals(bytesWritten, (DATA + "\n").getBytes(charsetUTF8));
-		                                // FileObjectWriter appends new lines
+		final byte[] bytesWritten = Files.readAllBytes(file.toPath());
+		assertArrayEquals((DATA + "\n").getBytes(StandardCharsets.UTF_8),
+				bytesWritten); // FileObjectWriter appends new lines
 	}
 
 	@Override

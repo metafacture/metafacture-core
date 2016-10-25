@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
 import org.culturegraph.mf.stream.pipe.ObjectBuffer;
@@ -43,37 +44,32 @@ public final class FileOpenerTest {
 
 	private static final String DATA = "Überfacture";
 
-	private static final String UTF8_MESSAGE =
-			"Default encoding is UTF-8: It is not possible to test " +
-			"whether FileOpener sets the encoding to UTF-8 correctly.";
-
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
 
 	@Test
 	public void testUtf8IsDefaultEncoding() throws IOException {
-		final Charset charsetUTF8 = Charset.forName("UTF-8");
+		assumeThat(
+				"Default encoding is UTF-8: It is not possible to test whether FileOpener sets the encoding to UTF-8 correctly.",
+				Charset.defaultCharset(), not(equalTo(StandardCharsets.UTF_8)));
 
-		assumeThat(UTF8_MESSAGE, Charset.defaultCharset(), not(equalTo(charsetUTF8)));
-
-		final File file = tempFolder.newFile();
-
-		final OutputStream stream = new FileOutputStream(file);
-		try { stream.write(DATA.getBytes(charsetUTF8)); }
-		finally { stream.close(); }
+		final File testFile = createTestFile();
 
 		final FileOpener opener = new FileOpener();
-		final ObjectBuffer<Reader> buffer = new ObjectBuffer<Reader>();
+		final ObjectBuffer<Reader> buffer = new ObjectBuffer<>();
 		opener.setReceiver(buffer);
-		opener.process(file.getAbsolutePath());
+		opener.process(testFile.getAbsolutePath());
 		opener.closeStream();
 
-		final Reader reader = buffer.pop();
-		final String charsFromFile;
-		try { charsFromFile = IOUtils.toString(reader); }
-		finally { reader.close(); }
+		assertEquals(DATA, IOUtils.toString(buffer.pop()));
+	}
 
-		assertEquals(DATA, charsFromFile);
+	private File createTestFile() throws IOException {
+		final File file = tempFolder.newFile();
+		try (OutputStream stream = new FileOutputStream(file)) {
+			stream.write(DATA.getBytes(StandardCharsets.UTF_8));
+		}
+		return file;
 	}
 
 }

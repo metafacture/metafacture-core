@@ -19,11 +19,11 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 
 import org.apache.commons.io.IOUtils;
@@ -114,9 +114,7 @@ public final class FileOpenerCompressionTest {
 	private File copyResourceToTempFile() throws IOException {
 		final File file = tempFolder.newFile();
 		try (InputStream in = getClass().getResourceAsStream(resourcePath)) {
-			try (OutputStream out = new FileOutputStream(file)) {
-				IOUtils.copy(in, out);
-			}
+			Files.copy(in, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		}
 		return file;
 	}

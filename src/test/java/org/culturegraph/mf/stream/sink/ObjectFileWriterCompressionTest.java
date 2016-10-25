@@ -18,12 +18,10 @@ package org.culturegraph.mf.stream.sink;
 import static org.junit.Assert.assertArrayEquals;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Arrays;
 
-import org.apache.commons.io.IOUtils;
 import org.culturegraph.mf.util.FileCompression;
 import org.junit.Rule;
 import org.junit.Test;
@@ -88,7 +86,7 @@ public final class ObjectFileWriterCompressionTest {
 	}
 
 	@Test
-	public void testWriteCompressedFiles() throws IOException {
+	public void shouldWriteCompressedFiles() throws IOException {
 		// This test only looks at the magic byte sequences in the
 		// files to decide whether a compressed file was written.
 
@@ -99,12 +97,13 @@ public final class ObjectFileWriterCompressionTest {
 		writer.process(DATA);
 		writer.closeStream();
 
-		final InputStream stream = new FileInputStream(file);
-		final byte[] fileHeader;
-		try { fileHeader = IOUtils.toByteArray(stream, magicBytes.length); }
-		finally { stream.close(); }
+		assertArrayEquals(magicBytes, readMagicBytes(file, magicBytes.length));
+	}
 
-		assertArrayEquals(magicBytes, fileHeader);
+	private byte[] readMagicBytes(final File file, final int magicBytesLength)
+			throws IOException {
+		final byte[] fileContents = Files.readAllBytes(file.toPath());
+		return Arrays.copyOf(fileContents, magicBytesLength);
 	}
 
 }

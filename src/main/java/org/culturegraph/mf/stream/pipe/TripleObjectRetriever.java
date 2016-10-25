@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -18,6 +19,8 @@ package org.culturegraph.mf.stream.pipe;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
@@ -46,17 +49,7 @@ import org.culturegraph.mf.types.Triple.ObjectType;
 public final class TripleObjectRetriever
 		extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
 
-	private String defaultEncoding = "UTF-8";
-
-	/**
-	 * Returns the default encoding used when no encoding is
-	 * provided by the server. The default setting is UTF-8.
-	 *
-	 * @return current default setting
-	 */
-	public String getDefaultEncoding() {
-		return defaultEncoding;
-	}
+	private Charset defaultEncoding = StandardCharsets.UTF_8;
 
 	/**
 	 * Sets the default encoding to use when no encoding is
@@ -65,31 +58,52 @@ public final class TripleObjectRetriever
 	 * @param defaultEncoding new default encoding
 	 */
 	public void setDefaultEncoding(final String defaultEncoding) {
+		this.defaultEncoding = Charset.forName(defaultEncoding);
+	}
+
+	/**
+	 * Sets the default encoding to use when no encoding is
+	 * provided by the server. The default setting is UTF-8.
+	 *
+	 * @param defaultEncoding new default encoding
+	 */
+	public void setDefaultEncoding(final Charset defaultEncoding) {
 		this.defaultEncoding = defaultEncoding;
+	}
+
+	/**
+	 * Returns the default encoding used when no encoding is
+	 * provided by the server. The default setting is UTF-8.
+	 *
+	 * @return current default setting
+	 */
+	public String getDefaultEncoding() {
+		return defaultEncoding.name();
 	}
 
 	@Override
 	public void process(final Triple triple) {
 		assert !isClosed();
-
 		if (triple.getObjectType() != ObjectType.STRING) {
 			return;
 		}
+		final String objectValue = retrieveObjectValue(triple.getObject());
+		getReceiver().process(new Triple(triple.getSubject(), triple.getPredicate(),
+				objectValue));
+	}
 
-		final String objectValue;
+	private String retrieveObjectValue(final String urlString) {
 		try {
-			final URL url = new URL(triple.getObject());
-			final URLConnection con = url.openConnection();
-			String enc = con.getContentEncoding();
-			if (enc == null) {
-				enc = defaultEncoding;
-			}
-			objectValue = IOUtils.toString(con.getInputStream(), enc);
-		} catch (IOException e) {
+			final URL url = new URL(urlString);
+			final URLConnection connection = url.openConnection();
+			final String encodingName = connection.getContentEncoding();
+			final Charset encoding = encodingName != null ?
+					Charset.forName(encodingName) :
+					defaultEncoding;
+			return IOUtils.toString(connection.getInputStream(), encoding);
+		} catch (final IOException e) {
 			throw new MetafactureException(e);
 		}
-
-		getReceiver().process(new Triple(triple.getSubject(), triple.getPredicate(), objectValue));
 	}
 
 }

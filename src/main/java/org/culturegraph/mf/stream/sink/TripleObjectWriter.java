@@ -15,14 +15,14 @@
  */
 package org.culturegraph.mf.stream.sink;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.culturegraph.mf.exceptions.MetafactureException;
 import org.culturegraph.mf.framework.DefaultObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
@@ -52,21 +52,12 @@ import org.culturegraph.mf.types.Triple;
 @FluxCommand("write-triple-objects")
 public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
 
-	private final String baseDir;
+	private final Path baseDir;
 
-	private String encoding = "UTF-8";
+	private Charset encoding = StandardCharsets.UTF_8;
 
 	public TripleObjectWriter(final String baseDir) {
-		this.baseDir = baseDir;
-	}
-
-	/**
-	 * Returns the encoding used to open the resource.
-	 *
-	 * @return current default setting
-	 */
-	public String getEncoding() {
-		return encoding;
+		this.baseDir = Paths.get(baseDir);
 	}
 
 	/**
@@ -76,28 +67,53 @@ public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
 	 *            new encoding
 	 */
 	public void setEncoding(final String encoding) {
+		this.encoding = Charset.forName(encoding);
+	}
+
+	/**
+	 * Sets the encoding used to open the resource.
+	 *
+	 * @param encoding
+	 *            new encoding
+	 */
+	public void setEncoding(final Charset encoding) {
 		this.encoding = encoding;
+	}
+
+	/**
+	 * Returns the encoding used to open the resource.
+	 *
+	 * @return current default setting
+	 */
+	public String getEncoding() {
+		return encoding.name();
 	}
 
 	@Override
 	public void process(final Triple triple) {
-		final String file = FilenameUtils.concat(
-				FilenameUtils.concat(baseDir, triple.getSubject()), triple.getPredicate());
-
-		ensurePathExists(file);
-
-		try {
-			final Writer writer = new OutputStreamWriter(new FileOutputStream(file), encoding);
-			IOUtils.write(triple.getObject(), writer);
-			writer.close();
-		} catch (IOException e) {
+		final Path filePath = buildFilePath(triple);
+		ensureParentPathExists(filePath);
+		try(final Writer writer = Files.newBufferedWriter(filePath, encoding)) {
+			writer.write(triple.getObject());
+		} catch (final IOException e) {
 			throw new MetafactureException(e);
 		}
 	}
 
-	private void ensurePathExists(final String path) {
-		final File parent = new File(path).getAbsoluteFile().getParentFile();
-		parent.mkdirs();
+	private Path buildFilePath(final Triple triple) {
+		final Path file = Paths.get(triple.getSubject(), triple.getPredicate());
+		return baseDir.resolve(file).toAbsolutePath().normalize();
+	}
+
+	private void ensureParentPathExists(final Path path) {
+		final Path parentDir = path.getParent();
+		if (parentDir != null) {
+			try {
+				Files.createDirectories(parentDir);
+			} catch (final IOException e) {
+				throw new MetafactureException(e);
+			}
+		}
 	}
 
 }

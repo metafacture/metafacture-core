@@ -86,23 +86,18 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 				final InputStream decompressor = compression.createDecompressor(fileStream);
 				try {
 
-					final Reader reader = new InputStreamReader(new BOMInputStream(decompressor), encoding);
+					final Reader reader = new InputStreamReader(new BOMInputStream(
+							decompressor), encoding);
 					getReceiver().process(reader);
-				} catch (IOException e) {
-					decompressor.close();
-					throw e;
-				} catch (MetafactureException e) {
+				} catch (final IOException | MetafactureException e) {
 					decompressor.close();
 					throw e;
 				}
-			} catch (IOException e) {
-				fileStream.close();
-				throw e;
-			} catch (MetafactureException e) {
+			} catch (final IOException | MetafactureException e) {
 				fileStream.close();
 				throw e;
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new MetafactureException(e);
 		}
 	}

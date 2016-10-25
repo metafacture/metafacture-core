@@ -23,7 +23,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.apache.commons.io.IOUtils;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.types.Triple;
 import org.culturegraph.mf.types.Triple.ObjectType;
@@ -68,33 +67,32 @@ public final class TripleObjectRetrieverTest {
 		objectUrl = createObjectResource(OBJECT_VALUE);
 	}
 
+	private String createObjectResource(final String contents) throws IOException {
+		final File file = tempFolder.newFile();
+		final Writer writer = new FileWriter(file);
+		writer.write(contents);
+		writer.close();
+		return file.toURI().toURL().toString();
+	}
+
 	@After
 	public void cleanup() {
 		tripleObjectRetriever.closeStream();
 	}
 
 	@Test
-	public void testShouldReplaceObjectValueWithResourceContentRetrievedFromUrl() {
+	public void shouldReplaceObjectValueWithResourceContentRetrievedFromUrl() {
 		tripleObjectRetriever.process(new Triple(SUBJECT, PREDICATE, objectUrl));
 
 		verify(receiver).process(new Triple(SUBJECT, PREDICATE, OBJECT_VALUE));
 	}
 
 	@Test
-	public void testShouldSkipTriplesWithObjectTypeEntity() {
-		tripleObjectRetriever.process(new Triple(SUBJECT, PREDICATE, ENTITY, ObjectType.ENTITY));
+	public void shouldSkipTriplesWithObjectTypeEntity() {
+		tripleObjectRetriever.process(
+				new Triple(SUBJECT, PREDICATE, ENTITY, ObjectType.ENTITY));
 
 		verifyZeroInteractions(receiver);
-	}
-
-	private String createObjectResource(final String contents) throws IOException {
-		final File file = tempFolder.newFile();
-
-		final Writer writer = new FileWriter(file);
-		IOUtils.write(contents, writer);
-		writer.close();
-
-		return file.toURI().toURL().toString();
 	}
 
 }
