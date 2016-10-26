@@ -25,56 +25,57 @@ import java.util.Set;
  *
  * @param <P>
  */
-public final class ACNode<P> {
+final class ACNode<P> {
+
 	private P value;
 	private final CharMap<ACNode<P>> links = new CharMap<ACNode<P>>();
 	private ACNode<P> failure;
 	private final int depth;
 
-	public ACNode(final P value, final int depth) {
+	ACNode(final P value, final int depth) {
 		this.value = value;
 		this.depth = depth;
 	}
 
-	public ACNode<P> addNext(final char key){
+	ACNode<P> addNext(final char key){
 		return addNext(key, null);
 	}
 
-	public ACNode<P> addNext(final char key, final P value){
+	ACNode<P> addNext(final char key, final P value){
 		final ACNode<P> next = new ACNode<P>(value, depth+1);
 		links.put(key, next);
 		return next;
 	}
 
-	public void setValue(final P value) {
+	void setValue(final P value) {
 		this.value = value;
 	}
 
-	public P getValue(){
+	P getValue(){
 		return value;
 	}
 
-	public ACNode<P> getNext(final char key){
+	ACNode<P> getNext(final char key){
 		return links.get(key);
 	}
 
-	public ACNode<P> getFailure() {
+	ACNode<P> getFailure() {
 		return failure;
 	}
 
-	public void setFailure(final ACNode<P> failure) {
+	void setFailure(final ACNode<P> failure) {
 		this.failure = failure;
 	}
 
-	public int getDepth() {
+	int getDepth() {
 		return depth;
 	}
 
-	public Collection<ACNode<P>> getNext(){
+	Collection<ACNode<P>> getNext(){
 		return links.values();
 	}
 
-	public Set<Entry<Character, ACNode<P>>> getLinks() {
+	Set<Entry<Character, ACNode<P>>> getLinks() {
 		return links.entrySet();
 	}
 
