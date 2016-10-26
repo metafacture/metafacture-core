@@ -32,14 +32,14 @@ import org.xml.sax.helpers.XMLFilterImpl;
  * @author Christoph Böhme
  *
  */
-public class LexicalHandlerXmlFilter extends XMLFilterImpl implements LexicalHandler {
+class LexicalHandlerXmlFilter extends XMLFilterImpl implements LexicalHandler {
 
 	private static final String LEXICAL_HANDLER_PROPERTY =
 			"http://xml.org/sax/properties/lexical-handler";
 
 	private LexicalHandler lexicalHandler;
 
-	public LexicalHandlerXmlFilter(final XMLReader parent) {
+	LexicalHandlerXmlFilter(final XMLReader parent) {
 		super(parent);
 	}
 

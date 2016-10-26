@@ -24,9 +24,9 @@ import org.xml.sax.XMLReader;
  * @author Christoph Böhme
  *
  */
-public final class CommentsFilter extends LexicalHandlerXmlFilter {
+final class CommentsFilter extends LexicalHandlerXmlFilter {
 
-	public CommentsFilter(final XMLReader parent) {
+	CommentsFilter(final XMLReader parent) {
 		super(parent);
 	}
 

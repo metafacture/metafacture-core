@@ -25,7 +25,7 @@ import org.xml.sax.helpers.XMLFilterImpl;
  * @author Christoph Böhme
  *
  */
-public final class IgnorableWhitespaceFilter extends XMLFilterImpl {
+final class IgnorableWhitespaceFilter extends XMLFilterImpl {
 
 	IgnorableWhitespaceFilter(final XMLReader parent) {
 		super(parent);

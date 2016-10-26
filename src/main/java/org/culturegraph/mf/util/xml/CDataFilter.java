@@ -31,9 +31,9 @@ import org.xml.sax.XMLReader;
  * @author Christoph Böhme
  *
  */
-public final class CDataFilter extends LexicalHandlerXmlFilter {
+final class CDataFilter extends LexicalHandlerXmlFilter {
 
-	public CDataFilter(final XMLReader parent) {
+	CDataFilter(final XMLReader parent) {
 		super(parent);
 	}
 
