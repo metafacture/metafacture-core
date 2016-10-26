@@ -17,32 +17,29 @@ package org.culturegraph.mf.stream.converter;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.stream.converter.JsonEncoder;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Add Elasticsearch bulk indexing metadata to JSON input.<br/>
  * Use after {@link JsonEncoder}, before writing.
- * 
+ *
  * @author Fabian Steeg (fsteeg)
  *
  */
 @In(String.class)
 @Out(String.class)
-public class JsonToElasticsearchBulk extends 
+public class JsonToElasticsearchBulk extends
 		DefaultObjectPipe<String, ObjectReceiver<String>> {
 
 	/**
