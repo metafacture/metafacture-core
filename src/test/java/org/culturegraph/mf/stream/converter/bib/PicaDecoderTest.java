@@ -51,6 +51,9 @@ public final class PicaDecoderTest {
 
 	private static final String FIELD_001AT_0_TEST = "001@ " + SUBFIELD_MARKER + "0test";
 	private static final String FIELD_003AT_0_ID = "003@ " + SUBFIELD_MARKER + "0" + RECORD_ID;
+	private static final String FIELD_107F_0_ID = "107F " + SUBFIELD_MARKER + "0" + RECORD_ID;
+	private static final String FIELD_203AT_0_ID = "203@ " + SUBFIELD_MARKER + "0" + RECORD_ID;
+	private static final String FIELD_203AT_01_0_ID = "203@/01 " + SUBFIELD_MARKER + "0" + RECORD_ID;;
 	private static final String FIELD_021A_A_UEBER = "021A " + SUBFIELD_MARKER + "a" + COMPOSED_UTF8;
 	private static final String FIELD_028A = ENTITY_028A + " ";
 
@@ -303,6 +306,51 @@ public final class PicaDecoderTest {
 		picaDecoder.process(FIELD_003AT_0_ID);
 
 		verify(receiver).startRecord(RECORD_ID);
+	}
+
+	@Test
+	public void shouldExtractLocalProductionNumberAsRecordId() {
+		picaDecoder.process(FIELD_107F_0_ID);
+
+		verify(receiver).startRecord(RECORD_ID);
+	}
+
+	@Test
+	public void shouldExtractCopyControlNumberAsRecordId() {
+		picaDecoder.process(FIELD_203AT_0_ID);
+
+		verify(receiver).startRecord(RECORD_ID);
+	}
+
+	@Test
+	public void shouldExtractCopyControlNumberWithOccurrenceAsRecordId() {
+		picaDecoder.process(FIELD_203AT_01_0_ID);
+
+		verify(receiver).startRecord(RECORD_ID);
+	}
+
+	@Test(expected=MissingIdException.class)
+	public void shouldThrowMissingIdExceptionIfNoRecordIdIsFound() {
+		picaDecoder.process(FIELD_001AT_0_TEST);
+		// Exception expected
+	}
+
+	@Test
+	public void shouldIgnoreMatchWithinFieldData() {
+		picaDecoder.setIgnoreMissingIdn(true);
+
+		picaDecoder.process(FIELD_001AT_0_TEST + FIELD_003AT_0_ID);
+
+		verify(receiver).startRecord("");
+	}
+
+	@Test
+	public void shouldIgnoreIncompleteMatch() {
+		picaDecoder.setIgnoreMissingIdn(true);
+
+		picaDecoder.process("003@ " + FIELD_MARKER + FIELD_001AT_0_TEST);
+
+		verify(receiver).startRecord("");
 	}
 
 	@Test

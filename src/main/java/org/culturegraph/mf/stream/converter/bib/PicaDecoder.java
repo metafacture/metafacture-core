@@ -15,6 +15,14 @@
  */
 package org.culturegraph.mf.stream.converter.bib;
 
+import static org.culturegraph.mf.stream.converter.bib.PicaConstants.FIELD_END_MARKER;
+import static org.culturegraph.mf.stream.converter.bib.PicaConstants.FIELD_MARKER;
+import static org.culturegraph.mf.stream.converter.bib.PicaConstants.RECORD_MARKER;
+import static org.culturegraph.mf.stream.converter.bib.PicaConstants.SUBFIELD_MARKER;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
@@ -80,11 +88,18 @@ import org.culturegraph.mf.util.StringUtil;
  * is removed). This can be changed by setting
  * {@link #setTrimFieldNames(boolean)} to false.
  * <p>
- * The content of subfield <i>003&#64; $0</i> is used as record id. If
- * {@link #setIgnoreMissingIdn(boolean)} is false and field
- * <i>003&#64; $0</i> is not found in the record a
- * {@link MissingIdException} is thrown otherwise the record identifier is an
- * empty string.
+ * The record id emitted with the <i>start-record</i> event is extracted from
+ * one of the following pica fields:
+ * <ul>
+ *   <li><i>003&#64; $0</i>
+ *   <li><i>107F $0</i>
+ *   <li><i>203&#64; $0</i> (this field may have an optional occurrence marker)
+ * </ul>
+ * The value of the first matching field is used as the record id. The <i>$0</i>
+ * subfield must be the first subfield in the field. If
+ * {@link #setIgnoreMissingIdn(boolean)} is false and no matching field is not
+ * found in the record a {@link MissingIdException} is thrown otherwise the
+ * record identifier is an empty string.
  * <p>
  * For example, when run on the input
  * <pre>
@@ -120,10 +135,14 @@ import org.culturegraph.mf.util.StringUtil;
 public final class PicaDecoder
 		extends DefaultObjectPipe<String, StreamReceiver> {
 
-	private static final char[] ID_FIELD = {'0', '0', '3', '@', ' ', PicaConstants.SUBFIELD_MARKER, '0'};
+	private static final String START_MARKERS ="(?:^|" + FIELD_MARKER +
+			"|" + FIELD_END_MARKER + "|" + RECORD_MARKER + ")";
+	private static final Pattern ID_FIELDS_PATTERN = Pattern.compile(
+			START_MARKERS + "(?:003@|203@(?:/..)?|107F) " + SUBFIELD_MARKER + "0");
 
 	private static final int BUFFER_SIZE = 1024 * 1024;
 
+	private final Matcher idFieldMatcher = ID_FIELDS_PATTERN.matcher("");
 	private final StringBuilder idBuilder = new StringBuilder();
 	private final PicaParserContext parserContext = new PicaParserContext();
 
@@ -133,9 +152,8 @@ public final class PicaDecoder
 	private boolean ignoreMissingIdn;
 
 	/**
-	 * Controls whether records having no pica subfield <i>003&#64; $0</i>
-	 * (which contains the record identifier <i>IDN</i>) are reported as faulty.
-	 * By default such records are reported by the {@code PicaDecoder} by throwing
+	 * Controls whether records having no record id are reported as faulty. By
+	 * default such records are reported by the {@code PicaDecoder} by throwing
 	 * a {@link MissingIdException}.
 	 * <p>
 	 * The setting can be changed at any time. It becomes effective with the next
@@ -143,7 +161,7 @@ public final class PicaDecoder
 	 * <p>
 	 * <strong>Default value: {@code false}</strong>
 	 *
-	 * @param ignoreMissingIdn if true, missing IDNs do not trigger a
+	 * @param ignoreMissingIdn if true, missing record ids do not trigger a
 	 *                         {@link MissingIdException} but an empty string is
 	 *                         used as record identifier instead.
 	 */
@@ -262,59 +280,35 @@ public final class PicaDecoder
 		return true;
 	}
 
-	/**
-	 * Searches the record for the sequence specified in {@code ID_FIELD}
-	 * and returns all characters following this sequence until the next
-	 * control character (see {@link PicaConstants}) is found or the end of
-	 * the record is reached. Only the first occurrence of the sequence is
-	 * processed, later occurrences are ignored.
-	 *
-	 * If the sequence is not found in the string or if it is not followed
-	 * by any characters then {@code null} is returned.
-	 *
-	 * @return value of subfield 003@$0 or null if the
-	 *         field is not found or is empty.
-	 */
 	private String extractRecordId() {
+		final int idFromIndex = findRecordId();
+		if (idFromIndex == -1) {
+			return null;
+		}
 		idBuilder.setLength(0);
-
-		int fieldPos = 0;
-		boolean skip = false;
-		for (int i = 0; i < recordLen; ++i) {
-			if (isFieldDelimiter(buffer[i])) {
-				if (idBuilder.length() > 0) {
-					break;
-				}
-				fieldPos = 0;
-				skip = false;
-			} else {
-				if (!skip) {
-					if (fieldPos < ID_FIELD.length) {
-						if (buffer[i] == ID_FIELD[fieldPos]) {
-							fieldPos += 1;
-						} else {
-							skip = true;
-						}
-					} else {
-						if (buffer[i] == PicaConstants.SUBFIELD_MARKER) {
-							break;
-						}
-						idBuilder.append(buffer[i]);
-					}
-				}
+		for (int i = idFromIndex; i < recordLen; ++i) {
+			final char ch = buffer[i];
+			if (isSubfieldDelimiter(ch)) {
+				break;
 			}
+			idBuilder.append(ch);
 		}
-
-		if (idBuilder.length() > 0) {
-			return idBuilder.toString();
-		}
-		return null;
+		return idBuilder.toString();
 	}
 
-	private static boolean isFieldDelimiter(final char ch) {
-		return ch == PicaConstants.RECORD_MARKER
-				|| ch == PicaConstants.FIELD_MARKER
-				|| ch == PicaConstants.FIELD_END_MARKER;
+	private int findRecordId() {
+		idFieldMatcher.reset(new String(buffer, 0, recordLen));
+		if (!idFieldMatcher.find()) {
+			return -1;
+		}
+		return idFieldMatcher.end();
+	}
+
+	private static boolean isSubfieldDelimiter(final char ch) {
+		return ch == RECORD_MARKER
+				|| ch == FIELD_MARKER
+				|| ch == FIELD_END_MARKER
+				|| ch == SUBFIELD_MARKER;
 	}
 
 }
