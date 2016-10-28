@@ -15,7 +15,9 @@
  */
 package org.culturegraph.mf.stream.converter;
 
-import java.util.regex.Pattern;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.List;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
@@ -24,12 +26,13 @@ import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
-
+import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * Decodes lines of CSV files. First line is interpreted as header.
  *
  * @author Markus Michael Geipel
+ * @author Fabian Steeg (fsteeg)
  *
  */
 @Description("Decodes lines of CSV files. First line is interpreted as header.")
@@ -38,29 +41,30 @@ import org.culturegraph.mf.framework.annotations.Out;
 @FluxCommand("decode-csv")
 public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver>  {
 
-	private static final String DEFAULT_SEP = "[\t,;]";
-	private final Pattern separator;
+	private static final char DEFAULT_SEP = ',';
+	private final char separator;
+
 	private String[] header = new String[0];
 	private int count;
 	private boolean hasHeader;
 
 	/**
-	 * @param separator regexp to split lines
+	 * @param separator to split lines
 	 */
-	public CsvDecoder(final String separator) {
+	public CsvDecoder(final char separator) {
 		super();
-		this.separator = Pattern.compile(separator);
+		this.separator = separator;
 	}
 
 	public CsvDecoder() {
 		super();
-		this.separator = Pattern.compile(DEFAULT_SEP);
+		this.separator = DEFAULT_SEP;
 	}
 
 	@Override
 	public void process(final String string) {
 		assert !isClosed();
-		final String[] parts = separator.split(string);
+		final String[] parts = parseCsv(string);
 		if(hasHeader){
 			if(header.length==0){
 				header = parts;
@@ -85,7 +89,24 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
 		}
 	}
 
+	private String[] parseCsv(final String string) {
+		String[] parts = new String[0];
+		try {
+			final CSVReader reader = new CSVReader(new StringReader(string),
+					separator);
+			final List<String[]> lines = reader.readAll();
+			if (lines.size() > 0) {
+				parts = lines.get(0);
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return parts;
+	}
+
 	public void setHasHeader(final boolean hasHeader) {
 		this.hasHeader = hasHeader;
 	}
+
 }
