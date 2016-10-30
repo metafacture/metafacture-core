@@ -20,9 +20,9 @@ import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.Sender;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.XmlPipe;
-import org.jdom.Document;
-import org.jdom.JDOMException;
-import org.jdom.output.SAXOutputter;
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.output.SAXOutputter;
 
 /**
  * Converts a {@link Document} to a stream

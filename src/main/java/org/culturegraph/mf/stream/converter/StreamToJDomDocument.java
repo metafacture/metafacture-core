@@ -29,9 +29,9 @@ import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.stream.converter.xml.SimpleXmlEncoder;
 import org.culturegraph.mf.util.ResourceUtil;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.Namespace;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
 
 /**
  * converts a stream into a {@link Document}

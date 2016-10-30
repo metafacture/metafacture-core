@@ -19,14 +19,14 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
 
+import com.opencsv.CSVReader;
+
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-
-import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * Decodes lines of CSV files. First line is interpreted as header.

@@ -38,6 +38,6 @@ public final class TestCaseRunnerMetamorphTest {
 		assertNotNull(description.getAnnotations());
 	}
 
-	private static final class Dummy {};
+	public static final class Dummy {};
 
 }
