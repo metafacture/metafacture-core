@@ -53,7 +53,8 @@ public final class PicaDecoderTest {
 	private static final String FIELD_003AT_0_ID = "003@ " + SUBFIELD_MARKER + "0" + RECORD_ID;
 	private static final String FIELD_107F_0_ID = "107F " + SUBFIELD_MARKER + "0" + RECORD_ID;
 	private static final String FIELD_203AT_0_ID = "203@ " + SUBFIELD_MARKER + "0" + RECORD_ID;
-	private static final String FIELD_203AT_01_0_ID = "203@/01 " + SUBFIELD_MARKER + "0" + RECORD_ID;;
+	private static final String FIELD_203AT_01_0_ID = "203@/01 " + SUBFIELD_MARKER + "0" + RECORD_ID;
+	private static final String FIELD_203AT_100_0_ID = "203@/100 " + SUBFIELD_MARKER + "0" + RECORD_ID;
 	private static final String FIELD_021A_A_UEBER = "021A " + SUBFIELD_MARKER + "a" + COMPOSED_UTF8;
 	private static final String FIELD_028A = ENTITY_028A + " ";
 
@@ -325,6 +326,13 @@ public final class PicaDecoderTest {
 	@Test
 	public void shouldExtractCopyControlNumberWithOccurrenceAsRecordId() {
 		picaDecoder.process(FIELD_203AT_01_0_ID);
+
+		verify(receiver).startRecord(RECORD_ID);
+	}
+
+	@Test
+	public void shouldExtractCopyControlNumberWithThreeDigitOccurrenceAsRecordId() {
+		picaDecoder.process(FIELD_203AT_100_0_ID);
 
 		verify(receiver).startRecord(RECORD_ID);
 	}

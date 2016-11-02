@@ -138,7 +138,7 @@ public final class PicaDecoder
 	private static final String START_MARKERS ="(?:^|" + FIELD_MARKER +
 			"|" + FIELD_END_MARKER + "|" + RECORD_MARKER + ")";
 	private static final Pattern ID_FIELDS_PATTERN = Pattern.compile(
-			START_MARKERS + "(?:003@|203@(?:/..)?|107F) " + SUBFIELD_MARKER + "0");
+			START_MARKERS + "(?:003@|203@(?:/..+)?|107F) " + SUBFIELD_MARKER + "0");
 
 	private static final int BUFFER_SIZE = 1024 * 1024;
 
