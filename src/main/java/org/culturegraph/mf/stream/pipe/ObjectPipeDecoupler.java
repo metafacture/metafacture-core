@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 @Description("creates a new thread in which subsequent flow elements run.")
 public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceiver<T>> {
 
-	public static final int DEFUALT_CAPACITY = 10000;
+	public static final int DEFAULT_CAPACITY = 10000;
 	private static final Logger LOG = LoggerFactory.getLogger(ObjectPipeDecoupler.class);
 
 	private final BlockingQueue<Object> queue;
@@ -48,7 +48,7 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
 	private boolean debug;
 
 	public ObjectPipeDecoupler() {
-		queue = new LinkedBlockingQueue<Object>(DEFUALT_CAPACITY);
+		queue = new LinkedBlockingQueue<Object>(DEFAULT_CAPACITY);
 	}
 
 	public ObjectPipeDecoupler(final int capacity) {
