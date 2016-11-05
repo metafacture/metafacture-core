@@ -18,6 +18,7 @@ package org.culturegraph.mf.stream.sink;
 import java.nio.charset.Charset;
 
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.util.FileCompression;
 
@@ -30,6 +31,7 @@ import org.culturegraph.mf.util.FileCompression;
 
 @Description("Writes objects to stdout")
 @In(Object.class)
+@FluxCommand("print")
 public final class ObjectStdoutWriter<T> extends AbstractObjectWriter<T>  {
 
 	private static final String SET_COMPRESSION_ERROR = "Cannot compress standard out";

@@ -25,6 +25,7 @@ import org.culturegraph.mf.framework.DefaultSender;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.stream.converter.xml.SimpleXmlEncoder;
@@ -43,6 +44,7 @@ import org.jdom2.Namespace;
 @Description("Converts a stream into a JDom document.")
 @In(StreamReceiver.class)
 @Out(Document.class)
+@FluxCommand("to-jdom-document")
 public final class StreamToJDomDocument extends DefaultSender<ObjectReceiver<Document>> implements StreamReceiver{
 	private static final Pattern NAMESPACE_DELIMITER = Pattern.compile(":", Pattern.LITERAL);
 	private static final String XML = "xml";

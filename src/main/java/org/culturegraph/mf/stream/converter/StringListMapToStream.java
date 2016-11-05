@@ -20,6 +20,9 @@ import java.util.Map.Entry;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
+import org.culturegraph.mf.framework.annotations.In;
+import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.ListMap;
 
 
@@ -29,6 +32,9 @@ import org.culturegraph.mf.types.ListMap;
  * @author Markus Michael Geipel, Christoph Böhme
  *
  */
+@In(ListMap.class)
+@Out(StreamReceiver.class)
+@FluxCommand("string-list-map-to-stream")
 public final class StringListMapToStream
 		extends DefaultObjectPipe<ListMap<String, String>, StreamReceiver> {
 

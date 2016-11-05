@@ -24,6 +24,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.culturegraph.mf.exceptions.MetafactureException;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
+import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.util.FileCompression;
 
 /**
@@ -34,6 +36,8 @@ import org.culturegraph.mf.util.FileCompression;
  * @author Christoph Böhme
  *
  */
+@In(Object.class)
+@FluxCommand("write-files")
 public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
 
 	private static final String VAR = "${i}";

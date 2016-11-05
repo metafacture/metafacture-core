@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 
@@ -39,6 +40,7 @@ import org.culturegraph.mf.framework.annotations.Out;
  */
 @In(String.class)
 @Out(String.class)
+@FluxCommand("json-to-elasticsearch-bulk")
 public class JsonToElasticsearchBulk extends
 		DefaultObjectPipe<String, ObjectReceiver<String>> {
 

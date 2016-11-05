@@ -18,6 +18,9 @@ package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
+import org.culturegraph.mf.framework.annotations.In;
+import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Turns a record into an entity that can be embedded into another record.
@@ -33,6 +36,9 @@ import org.culturegraph.mf.framework.StreamReceiver;
  * @author Christoph Böhme
  * @see StreamEventDiscarder
  */
+@In(StreamReceiver.class)
+@Out(StreamReceiver.class)
+@FluxCommand("record-to-entity")
 public class RecordToEntity extends DefaultStreamPipe<StreamReceiver> {
 
 	/**

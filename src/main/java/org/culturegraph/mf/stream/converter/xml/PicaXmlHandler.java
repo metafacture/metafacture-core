@@ -22,6 +22,7 @@ import org.culturegraph.mf.framework.DefaultXmlPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.XmlReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.xml.sax.Attributes;
@@ -36,6 +37,7 @@ import org.xml.sax.SAXException;
 @Description("A pica xml reader")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
+@FluxCommand("handle-picaxml")
 public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
 	private static final String SUBFIELD = "subf";

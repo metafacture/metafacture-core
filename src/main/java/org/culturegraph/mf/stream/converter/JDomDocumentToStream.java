@@ -20,6 +20,9 @@ import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.Sender;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.XmlPipe;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
+import org.culturegraph.mf.framework.annotations.In;
+import org.culturegraph.mf.framework.annotations.Out;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.output.SAXOutputter;
@@ -30,6 +33,9 @@ import org.jdom2.output.SAXOutputter;
  * @author markus geipel
  *
  */
+@In(Document.class)
+@Out(StreamReceiver.class)
+@FluxCommand("from-jdom-document")
 public final class JDomDocumentToStream  implements ObjectReceiver<Document>, Sender<StreamReceiver> {
 
 	private final SAXOutputter saxOutputer;

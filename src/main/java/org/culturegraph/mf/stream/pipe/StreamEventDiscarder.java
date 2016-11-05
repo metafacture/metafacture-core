@@ -1,9 +1,12 @@
 package org.culturegraph.mf.stream.pipe;
 
+import java.util.EnumSet;
+
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
-
-import java.util.EnumSet;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
+import org.culturegraph.mf.framework.annotations.In;
+import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Discards stream events by type. The type of a stream event is either
@@ -21,6 +24,9 @@ import java.util.EnumSet;
  *
  * @author Christoph Böhme
  */
+@In(StreamReceiver.class)
+@Out(StreamReceiver.class)
+@FluxCommand("discard-events")
 public class StreamEventDiscarder implements StreamPipe<StreamReceiver> {
 
 	private StreamReceiver receiver;

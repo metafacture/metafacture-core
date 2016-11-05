@@ -20,6 +20,7 @@ import org.culturegraph.mf.framework.DefaultTee;
 import org.culturegraph.mf.framework.XmlPipe;
 import org.culturegraph.mf.framework.XmlReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.xml.sax.Attributes;
@@ -37,6 +38,7 @@ import org.xml.sax.SAXParseException;
 @Description("Sends an object to more than one receiver.")
 @In(XmlReceiver.class)
 @Out(XmlReceiver.class)
+@FluxCommand("xml-tee")
 public final class XmlTee extends DefaultTee<XmlReceiver>implements XmlPipe<XmlReceiver> {
 
 	@Override

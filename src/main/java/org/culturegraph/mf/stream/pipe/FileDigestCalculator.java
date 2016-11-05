@@ -40,7 +40,7 @@ import org.culturegraph.mf.types.Triple;
 @Description("Uses the input string as a file name and computes a cryptographic hash the file")
 @In(String.class)
 @Out(Triple.class)
-@FluxCommand("file-digest")
+@FluxCommand("digest-file")
 public final class FileDigestCalculator extends
 		DefaultObjectPipe<String, ObjectReceiver<Triple>> {
 

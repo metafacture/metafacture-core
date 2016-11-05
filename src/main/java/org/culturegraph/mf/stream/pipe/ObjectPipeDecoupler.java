@@ -21,6 +21,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.slf4j.Logger;
@@ -37,6 +38,7 @@ import org.slf4j.LoggerFactory;
 @In(Object.class)
 @Out(Object.class)
 @Description("creates a new thread in which subsequent flow elements run.")
+@FluxCommand("decouple")
 public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceiver<T>> {
 
 	public static final int DEFAULT_CAPACITY = 10000;

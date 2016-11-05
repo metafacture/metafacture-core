@@ -22,10 +22,6 @@ import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.Writer;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.commons.io.FilenameUtils;
@@ -35,12 +31,17 @@ import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.util.xml.FilenameExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
+
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 /**
  * A sink, writing an xml file. The filename is constructed from the xpath given
@@ -55,6 +56,7 @@ import org.xml.sax.InputSource;
 		+ "- 'stopIndex' ( a subfolder will be extracted out of the filename. This marks the index' end )\n")
 @In(StreamReceiver.class)
 @Out(Void.class)
+@FluxCommand("write-xml-files")
 public final class XmlFilenameWriter extends DefaultStreamPipe<ObjectReceiver<String>>
 		implements FilenameExtractor {
 	private static final Logger LOG = LoggerFactory.getLogger(XmlFilenameWriter.class);

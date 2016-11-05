@@ -21,6 +21,7 @@ import org.culturegraph.mf.framework.DefaultXmlPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.XmlReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.xml.sax.Attributes;
@@ -35,6 +36,7 @@ import org.xml.sax.SAXException;
 @Description("Splits elements (e.g. defining single records) residing in one XML document into multiple single XML documents.")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
+@FluxCommand("split-xml-elements")
 public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
 
 	private String Element;

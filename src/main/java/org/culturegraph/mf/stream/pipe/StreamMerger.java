@@ -17,6 +17,9 @@ package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.framework.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
+import org.culturegraph.mf.framework.annotations.In;
+import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Merges records based on their id. The module compares the id
@@ -31,6 +34,9 @@ import org.culturegraph.mf.framework.StreamReceiver;
  * @author Christoph Böhme
  *
  */
+@In(StreamReceiver.class)
+@Out(StreamReceiver.class)
+@FluxCommand("merge-same-ids")
 public final class StreamMerger
 		extends DefaultStreamPipe<StreamReceiver> {
 

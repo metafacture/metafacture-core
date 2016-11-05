@@ -18,8 +18,11 @@ package org.culturegraph.mf.stream.converter;
 import java.util.Map;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
-import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.StandardEventNames;
+import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
+import org.culturegraph.mf.framework.annotations.In;
+import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Emits a {@link Map} as a record with a literal for each entry in the map.
@@ -53,7 +56,9 @@ import org.culturegraph.mf.framework.StandardEventNames;
  *
  * @author Christoph Böhme
  */
-
+@In(Map.class)
+@Out(StreamReceiver.class)
+@FluxCommand("map-to-stream")
 public final class MapToStream extends
 		DefaultObjectPipe<Map<?, ?>, StreamReceiver> {
 

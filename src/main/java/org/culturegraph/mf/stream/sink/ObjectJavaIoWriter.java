@@ -28,7 +28,6 @@ import org.culturegraph.mf.framework.ObjectReceiver;
  * @author Christoph Böhme, Markus Geipel
  *
  */
-
 public final class ObjectJavaIoWriter<T> implements ObjectReceiver<T> {
 
 	private Writer writer;

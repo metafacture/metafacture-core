@@ -38,6 +38,7 @@ import org.culturegraph.mf.exceptions.FormatException;
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
+import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.iso2709.FieldHandler;
@@ -151,6 +152,7 @@ import org.culturegraph.mf.iso2709.RecordFormat;
 @In(String.class)
 @Out(StreamReceiver.class)
 @Description("Decodes MARC 21 records")
+@FluxCommand("decode-marc21")
 public final class Marc21Decoder
 		extends DefaultObjectPipe<String, StreamReceiver> {
 
