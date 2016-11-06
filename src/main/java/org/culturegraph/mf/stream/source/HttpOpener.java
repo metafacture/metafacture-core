@@ -42,7 +42,8 @@ import org.culturegraph.mf.framework.annotations.Out;
 @Out(java.io.Reader.class)
 @FluxCommand("open-http")
 public final class HttpOpener
-		extends DefaultObjectPipe<String, ObjectReceiver<Reader>> implements Opener {
+		extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
+
 	private String encoding = "UTF-8";
 	private String accept = "*/*";
 

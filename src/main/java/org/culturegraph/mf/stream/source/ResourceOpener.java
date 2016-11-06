@@ -41,7 +41,7 @@ import org.culturegraph.mf.util.ResourceUtil;
 @Out(java.io.Reader.class)
 @FluxCommand("open-resource")
 public final class ResourceOpener
-		extends DefaultObjectPipe<String, ObjectReceiver<Reader>> implements Opener{
+		extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
 	private String encoding = "UTF-8";
 

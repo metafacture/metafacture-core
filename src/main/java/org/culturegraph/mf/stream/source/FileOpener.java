@@ -42,7 +42,8 @@ import org.culturegraph.mf.util.FileCompression;
 @In(String.class)
 @Out(java.io.Reader.class)
 @FluxCommand("open-file")
-public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> implements Opener {
+public final class FileOpener
+		extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
 	private String encoding = "UTF-8";
 	private FileCompression compression = FileCompression.AUTO;
