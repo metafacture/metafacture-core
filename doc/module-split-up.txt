@@ -47,7 +47,7 @@ metafacture-test-tools
 
 --------------------------------------------------------------------------------
 
-metafacture-core-modules
+metafacture-core
 	
 	Stability: medium
 
@@ -130,7 +130,7 @@ metafacture-core-modules
 
 --------------------------------------------------------------------------------
 	
-metafacture-extra-modules
+metafacture-extra
 	Stability: low
 
 	Depends on: metafacture-commons
@@ -143,7 +143,7 @@ metafacture-extra-modules
 
 --------------------------------------------------------------------------------
 
-metafacture-morph-modules
+metafacture-morph
 	Contains Metamorph and modules directly building on it.
 
 	Stability: medium
@@ -158,7 +158,7 @@ metafacture-morph-modules
 
 --------------------------------------------------------------------------------
 
-metafacture-stats-modules
+metafacture-stats
 	Stability: low
 
 	Modules:
@@ -170,7 +170,7 @@ metafacture-stats-modules
 
 --------------------------------------------------------------------------------
 
-metafacture-file-modules
+metafacture-file
 	Modules for reading and writing files. 
 
 	Stability: low
@@ -195,7 +195,7 @@ metafacture-file-modules
 
 --------------------------------------------------------------------------------
 
-metafacture-biblio-modules 
+metafacture-biblio
 	Modules for working with library related data formats.	
 
 	Stability: low
@@ -218,7 +218,7 @@ metafacture-biblio-modules
 
 --------------------------------------------------------------------------------
 
-metafacture-rdf-modules
+metafacture-rdf
 	Stability: low
 
 	Depends on: org.apache.commons.lang
@@ -228,7 +228,7 @@ metafacture-rdf-modules
 
 --------------------------------------------------------------------------------
 
-metafacture-csv-modules
+metafacture-csv
 	Stability: low
 
 	Depends on: net.sf.opencsv
@@ -238,7 +238,7 @@ metafacture-csv-modules
 
 --------------------------------------------------------------------------------
 
-metafacture-jdom-modules
+metafacture-jdom
 	Stability: low
 
 	Depends on: org.jdom
@@ -250,7 +250,7 @@ metafacture-jdom-modules
 
 --------------------------------------------------------------------------------
 
-metafacture-json-modules
+metafacture-json
 	Stability: low
 
 	Depends on: org,apache.commons.lang
