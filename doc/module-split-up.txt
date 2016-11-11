@@ -40,6 +40,7 @@ metafacture-test-tools
 
 	Packages:
 		test
+		readers (expect for the BeaconReader)
 
 	Modules:
 		WellformednessChecker
@@ -225,6 +226,7 @@ metafacture-rdf
 
 	Modules:
 		RdfMacroPipe
+		BeaconReader
 
 --------------------------------------------------------------------------------
 
