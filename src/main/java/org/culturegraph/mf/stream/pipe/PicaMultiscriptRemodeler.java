@@ -28,14 +28,15 @@ import org.culturegraph.mf.framework.annotations.Out;
 
 /**
  * Groups multiscript fields in entities.
- *
- * In Pica records some fields can be repeated if the contain contents with a
+ * <p>
+ * In Pica records some fields can be repeated if they contain contents with a
  * non-latin script. These fields can be recognised by the existence of the
- * subfields $U and $T. $U contains the name of the script used for the values
- * of the fields. $T contains a number which is used to group fields together
- * which contain the same contents in different scripts. All fields having the
- * same field name and the same number in $T are considered to belong together.
- *
+ * subfields {@code $U} and {@code $T}. {@code $U} contains the name of the
+ * script used for the values of the fields. {@code $T} contains a number which
+ * is used to group fields together which contain the same contents in different
+ * scripts. All fields having the same field name and the same number in
+ * {@code $T} are considered to belong together.
+ * <p>
  * This module scans the input stream for Pica multiscript fields and remodels
  * them by merging all fields belong to the same multiscript group into one
  * entity. This entity has the original field name. Within this entity a new
@@ -81,15 +82,15 @@ import org.culturegraph.mf.framework.annotations.Out;
  * assumes that no more than two script-variants of a field exist. If a field
  * with more than two variants is encountered then the behaviour of
  * {@code PicaMultiscriptRemodeler} is undefined.
- *
+ * <p>
  * The order of the output is determined by the order of the second occurrences
  * of the multiscript fields. Multiscript fields without a second occurrences are
  * output when the second occurrence of a field with a greater group number is
  * encountered.
- *
+ * <p>
  * If a field contains only $U or $T but not both, the field is simply passed
  * through.
- *
+ * <p>
  * If the sequence of input events does not follow the Pica record definitions
  * (order of fields, nesting of entities) the behaviour of this module is
  * undefined.
