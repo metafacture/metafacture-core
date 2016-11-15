@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014, 2016 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,38 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.reader;
+package org.culturegraph.mf.test.reader;
 
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.stream.converter.LineReader;
 
 
 /**
- * @author Christoph Böhme, Markus Michael Geipel
+ * Base class for {@link Reader}s that are constructed from a record reader and
+ * a record decoder.
  *
- * @param <D> type of the decoder used
+ * @author Markus Michael Geipel
+ * @author Christoph Böhme
+ *
  */
-public class ReaderBase<D extends ObjectPipe<String, StreamReceiver>> implements Reader {
+class ReaderBase implements Reader {
+
 	private final ObjectPipe<java.io.Reader, ObjectReceiver<String>> recordReader;
-	private final D decoder;
+	private final ObjectPipe<String, StreamReceiver> decoder;
 
-	public ReaderBase(final ObjectPipe<java.io.Reader, ObjectReceiver<String>> recordReader,
-			final D decoder) {
-		super();
-
+	ReaderBase(
+			final ObjectPipe<java.io.Reader, ObjectReceiver<String>> recordReader,
+			final ObjectPipe<String, StreamReceiver> decoder) {
 		this.recordReader = recordReader;
 		this.decoder = decoder;
 		this.recordReader.setReceiver(this.decoder);
-	}
-
-	public ReaderBase(final D decoder) {
-		this(new LineReader(), decoder);
-	}
-
-	public final D getDecoder() {
-		return decoder;
 	}
 
 	@Override
@@ -56,11 +50,6 @@ public class ReaderBase<D extends ObjectPipe<String, StreamReceiver>> implements
 	@Override
 	public final void process(final java.io.Reader reader) {
 		recordReader.process(reader);
-	}
-
-	@Override
-	public final void read(final String entry) {
-		decoder.process(entry);
 	}
 
 	@Override

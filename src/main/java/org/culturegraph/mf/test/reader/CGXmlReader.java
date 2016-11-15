@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014, 2016 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.reader;
+package org.culturegraph.mf.test.reader;
 
-import org.culturegraph.mf.stream.converter.bib.MabDecoder;
+import org.culturegraph.mf.stream.converter.xml.CGXmlHandler;
 
 /**
+ * Reads and decodes a <i>Culturegraph XML</i> document.
+ *
  * @author Christoph Böhme
+ *
  */
-public class MabReader extends ReaderBase<MabDecoder> {
+public final class CGXmlReader extends XmlReaderBase {
 
-	public MabReader() {
-		super(new MabDecoder());
+	public CGXmlReader() {
+		super(new CGXmlHandler());
 	}
 
 }

@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.reader;
+package org.culturegraph.mf.test.reader;
 
-import org.culturegraph.mf.stream.converter.xml.GenericXmlHandler;
-
+import org.culturegraph.mf.stream.converter.xml.MarcXmlHandler;
 
 /**
+ * Reads and decodes a <i>MARC-XML</i> document.
+ *
  * @author Markus Michael Geipel
  *
  */
-public class MetsModsReader extends XmlReaderBase {
-	public MetsModsReader() {
-		super(new GenericXmlHandler("mets"));
+public class MarcXmlReader extends XmlReaderBase {
+
+	public MarcXmlReader() {
+		super(new MarcXmlHandler());
 	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014, 2016 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.reader;
-
-import java.io.StringReader;
+package org.culturegraph.mf.test.reader;
 
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.XmlPipe;
@@ -23,33 +21,30 @@ import org.culturegraph.mf.stream.converter.xml.XmlDecoder;
 
 
 /**
+ * Base class for {@link Reader}s for xml formats.
+ *
  * @author Christoph Böhme
  *
  */
-public class XmlReaderBase implements Reader {
+class XmlReaderBase implements Reader {
 
 	private final XmlDecoder xmlDecoder = new XmlDecoder();
-	private final XmlPipe<StreamReceiver> xmlReceiver;
+	private final XmlPipe<StreamReceiver> xmlHandler;
 
-	protected XmlReaderBase(final XmlPipe<StreamReceiver> xmlReceiver) {
-		this.xmlReceiver = xmlReceiver;
-		xmlDecoder.setReceiver(this.xmlReceiver);
+	XmlReaderBase(final XmlPipe<StreamReceiver> xmlHandler) {
+		this.xmlHandler = xmlHandler;
+		xmlDecoder.setReceiver(this.xmlHandler);
 	}
 
 	@Override
 	public final <R extends StreamReceiver> R setReceiver(final R receiver) {
-		xmlReceiver.setReceiver(receiver);
+		xmlHandler.setReceiver(receiver);
 		return receiver;
 	}
 
 	@Override
 	public final void process(final java.io.Reader reader) {
 		xmlDecoder.process(reader);
-	}
-
-	@Override
-	public final void read(final String entry) {
-		xmlDecoder.process(new StringReader(entry));
 	}
 
 	@Override
@@ -61,4 +56,5 @@ public class XmlReaderBase implements Reader {
 	public final void closeStream() {
 		xmlDecoder.closeStream();
 	}
+
 }

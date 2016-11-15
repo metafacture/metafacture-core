@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014, 2016 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.reader;
+package org.culturegraph.mf.test.reader;
 
-import org.culturegraph.mf.util.ResourceUtil;
-import org.culturegraph.mf.util.reflection.ObjectFactory;
+import org.culturegraph.mf.stream.converter.FormetaDecoder;
+import org.culturegraph.mf.stream.converter.FormetaRecordsReader;
 
 /**
- * Builds readers.
+ * Reads and decodes a <i>Formeta</i> data stream.
  *
- * @author Christoph Böhme
+ * @author Markus Geipel
  *
  */
-public final class ReaderFactory extends ObjectFactory<Reader> {
-	public static final String POPERTIES_LOCATION = "metastream-readers.properties";
+public class FormetaReader extends ReaderBase {
 
-	public ReaderFactory() {
-		super();
-		loadClassesFromMap(ResourceUtil.loadProperties(POPERTIES_LOCATION), Reader.class);
+	public FormetaReader() {
+		super(new FormetaRecordsReader(), new FormetaDecoder());
 	}
+
 }

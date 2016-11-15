@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014, 2016 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.reader;
+package org.culturegraph.mf.test.reader;
 
-import org.culturegraph.mf.stream.converter.xml.CGXmlHandler;
+import org.culturegraph.mf.util.ResourceUtil;
+import org.culturegraph.mf.util.reflection.ObjectFactory;
 
 /**
+ * Instantiates instances of the {@link Reader} interface.
+ *
  * @author Christoph Böhme
  *
  */
-public final class CGXmlReader extends XmlReaderBase {
+final class ReaderFactory extends ObjectFactory<Reader> {
 
-	public CGXmlReader() {
-		super(new CGXmlHandler());
+	ReaderFactory() {
+		super();
+		loadClassesFromMap(ResourceUtil.loadProperties("test-readers.properties"),
+				Reader.class);
 	}
 
 }

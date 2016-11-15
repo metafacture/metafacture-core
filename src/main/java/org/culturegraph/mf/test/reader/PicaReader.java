@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.reader;
+package org.culturegraph.mf.test.reader;
 
-import org.culturegraph.mf.stream.converter.FormetaDecoder;
-import org.culturegraph.mf.stream.converter.FormetaRecordsReader;
+import org.culturegraph.mf.stream.converter.LineReader;
+import org.culturegraph.mf.stream.converter.bib.PicaDecoder;
 
 /**
- * @author Markus Geipel
+ * Reads and decodes a <i>Pica+</i> data stream.
+ *
+ * @author Christoph Böhme
  */
-public class FormetaReader extends ReaderBase<FormetaDecoder> {
+public class PicaReader extends ReaderBase {
 
-	public FormetaReader() {
-		super(new FormetaRecordsReader(), new FormetaDecoder());
+	public PicaReader() {
+		super(new LineReader(), new PicaDecoder());
 	}
 
 }

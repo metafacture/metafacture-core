@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014, 2016 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.reader;
+package org.culturegraph.mf.test.reader;
 
 import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 
 /**
- * Adds methods 'read' and 'getId' to {@link StreamSender}
+ * Interface for module implementations that can be instanciated by the
+ * {@link MultiFormatReader}.
+ *
  * @author Markus Michael Geipel
  */
 public interface Reader extends ObjectPipe<java.io.Reader, StreamReceiver>  {
 
-	/**
-	 * Reads a single record
-	 * @param entry one record
-	 */
-	void read(final String entry);
+	// Marker interface
 
 }
