@@ -40,11 +40,15 @@ metafacture-test-tools
 
 	Packages:
 		test
-		readers (expect for the BeaconReader)
 
 	Modules:
 		WellformednessChecker
-		StreamValidator [DEPENDS ON: metafacture-core-modules (EventList.Event)]
+		StreamValidator [DEPENDS ON: metafacture-core (EventList.Event)]
+		CGXmlReader [DEPENDS ON: metafacture-core (XmlDecoder, CGXmlHandler)]
+		FormetaReader [DEPENDS ON: metafacture-core (FormetaRecordsReader, FormetaDecoder)]
+		MarcXmlReader [DEPENDS ON: metafacture-core (XmlDecoder, MarcXmlHandler)]
+		PicaReader [DEPENDS ON: metafacture-core (LineReader, PicaDecoder)]
+		MultiFormatReader [DEPENS ON: metafacture-commons (ObjectFactory, ResourceUtil.loadProperties)]
 
 --------------------------------------------------------------------------------
 
