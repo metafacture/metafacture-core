@@ -185,14 +185,6 @@ public final class MetamorphBasicTest {
 		metamorph.endRecord();  // Exception expected
 	}
 
-	@Test(expected=IllegalStateException.class)
-	public void shouldThrowIllegalStateExceptionIfEndEntityIsReceivedWhileNotInEntity() {
-		metamorph.startRecord("");
-		metamorph.startEntity(ENTITY_NAME);
-		metamorph.endEntity();
-		metamorph.endEntity();  // Exception expected
-	}
-
 	private static final class TestNameValueReceiver
 			implements NamedValueReceiver {
 

@@ -125,21 +125,4 @@ public class StreamFlattenerTest {
 		assertEquals("granny-mommy", flattener.getCurrentPath());
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void endEntity_shouldThrowExceptionIfEventsAreNotBalanced() {
-		flattener.startRecord("1");
-		flattener.startEntity("entity");
-		flattener.endEntity();
-		flattener.endEntity();  // should throw exception
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public void endRecord_shouldThrowExceptionIfEventsAreNotBalanced() {
-		flattener.startRecord("1");
-		flattener.startEntity("entity1");
-		flattener.startEntity("entity2");
-		flattener.endEntity();
-		flattener.endRecord();  // should throw exception
-	}
-
 }
