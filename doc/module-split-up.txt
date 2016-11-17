@@ -7,6 +7,9 @@ metafacture-framework
 	Packages:
 		framework
 
+	Classes:
+		Triple
+
 --------------------------------------------------------------------------------
 
 metafacture-morph-api
@@ -16,20 +19,50 @@ metafacture-morph-api
 	Stability: high
 
 	Contents:
-		[TODO] (Collector and Funtion interfaces, AbstractFlushingCollector ...)
+		[TODO] (Collector and Funtion interfaces)
+
+--------------------------------------------------------------------------------
+
+metafacture-morph-commons
+	Contains convenience classes for implementing functions and collectors.
+
+	Depends on: metafacture-morph-api
  
 --------------------------------------------------------------------------------
 
 metafacture-commons
-	Contains utility classes and commonly used data structures.
+	Contains utility classes, often used data structures and metafacture modules
+	which are often used internally by other modules.
 
 	Stability: medium
 
+	Depends on: metafacture-framework
+
 	Packages:
 		exceptions
-		types
 		util
 		formeta
+
+	Classes:
+		MultiMap
+		Collector
+		NamedValue
+		ListMap
+		MultiHashMap
+		ScopedHashMap
+
+	Modules:
+		EventList
+		EntityPathTracker
+		StreamBuffer
+		StreamFlattener [DEPENDS ON: EntityPathTracker]
+
+		NamedValueList [DEPENDS ON: Collector, types.NamedValue]
+		NamedValueSet [DEPENDS ON: Collector, types.NamedValue]
+		SingleValue [DEPENDS ON: Collector]
+		StringListMap [DEPENDS ON: Collector, types.ListMap]
+		StringMap [DEPENDS ON: Collector]
+		ValueSet [DEPENDS ON: Collector]
 
 --------------------------------------------------------------------------------
 
@@ -43,11 +76,11 @@ metafacture-test-tools
 
 	Modules:
 		WellformednessChecker
-		StreamValidator [DEPENDS ON: metafacture-core (EventList.Event)]
+		StreamValidator [DEPENDS ON: metafacture-commons (EventList.Event)]
 		CGXmlReader [DEPENDS ON: metafacture-core (XmlDecoder, CGXmlHandler)]
 		FormetaReader [DEPENDS ON: metafacture-core (FormetaRecordsReader, FormetaDecoder)]
-		MarcXmlReader [DEPENDS ON: metafacture-core (XmlDecoder, MarcXmlHandler)]
-		PicaReader [DEPENDS ON: metafacture-core (LineReader, PicaDecoder)]
+		MarcXmlReader [DEPENDS ON: metafacture-biblio (XmlDecoder, MarcXmlHandler)]
+		PicaReader [DEPENDS ON: metafacture-biblio (LineReader, PicaDecoder)]
 		MultiFormatReader [DEPENS ON: metafacture-commons (ObjectFactory, ResourceUtil.loadProperties)]
 
 --------------------------------------------------------------------------------
@@ -97,11 +130,9 @@ metafacture-core
 		ObjectTimer [DEPENDS ON: metafacture-commons (TimeUtil.formatDuration)]
 		RecordToEntity
 		StreamBatchMerger
-		StreamBuffer
 		StreamDeferrer
 		StreamEventDiscarder
 		StreamExceptionCatcher
-		StreamFlattener
 		StreamLogger
 		StreamMerger
 		StreamTee
@@ -111,15 +142,7 @@ metafacture-core
 		StringMatcher
 		TripleFilter
 		TripleReorder
-		EntityPathTracker
-		EventList
 		StringConcatenator
-		NamedValueList [DEPENDS ON: metafacture-commons (Collector, NamedValue)]
-		NamedValueSet [DEPENDS ON: metafacture-commons (Collector, NamedValue)]
-		SingleValue [DEPENDS ON: metafacture-commons (Collector)]
-		StringListMap [DEPENDS ON: metafacture-commons (Collector, ListMap)]
-		StringMap [DEPENDS ON: metafacture-commons (Collector)]
-		ValueSet [DEPENDS ON: metafacture-commons (Collector)]
 		HttpOpener
 		ResourceOpener [DEPENDS ON: metafacture-commons (ResourceUtil.getReader)]
 		DirReader
@@ -132,15 +155,6 @@ metafacture-core
 		SimpleXmlEncoder [DEPENDS ON: metafacture-commons (MultiMap, ResourceUtil.loadProperties)]
 		XmlTee
 		XmlElementSplitter [DEPENDS ON: org.apache.commons.lang]
-
---------------------------------------------------------------------------------
-	
-metafacture-extra
-	Stability: low
-
-	Depends on: metafacture-commons
-
-	Modules:
 		ObjectPipeDecoupler
 		StreamUnicodeNormalizer
 		UnicodeNormalizer
@@ -154,12 +168,12 @@ metafacture-morph
 	Stability: medium
 
 	Depends on: metafacture-comons
-	            metafacture-core-modules
+	            metafacture-morph-commons
 
 	Modules:
-		Metamorph [ÐEPENDS ON: metafacture-core-modules (StreamBuffer, StreamFlattener)]
-		Filter [DEPENDS ON: metafacture-core-modules (StreamBuffer, SingleValue)]
-		Splitter [DEPENDS ON: metafacture-core-modules (StreamBuffer, SingleValue)]
+		Metamorph [ÐEPENDS ON: metafacture-commons (StreamBuffer, StreamFlattener)]
+		Filter [DEPENDS ON: metafacture-commons (StreamBuffer, SingleValue)]
+		Splitter [DEPENDS ON: metafacture-commons (StreamBuffer, SingleValue)]
 
 --------------------------------------------------------------------------------
 
@@ -219,7 +233,7 @@ metafacture-biblio
 		PicaXmlHandler
 		AlephMabXmlHandler
 		OreAggregationAdder [DEPENDS ON: metafacture-commons (ListMap, ResourceUtil.loadProperties)]
-		PicaMultiscriptRemodeler [DEPENDS ON: metafacture-core-modules (StreamBuffer)]
+		PicaMultiscriptRemodeler [DEPENDS ON: metafacture-commons (StreamBuffer)]
 
 --------------------------------------------------------------------------------
 
