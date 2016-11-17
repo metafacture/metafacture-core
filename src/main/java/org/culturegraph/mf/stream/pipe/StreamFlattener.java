@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.framework.DefaultStreamPipe;
@@ -28,11 +27,11 @@ import org.culturegraph.mf.stream.sink.EntityPathTracker;
  * Flattens all entities in a stream by prefixing the literals with the entity
  * paths. The stream emitted by this module is guaranteed to not contain any
  * <i>start-entity</i> and <i>end-entity</i> events.
- *
- * <p>For example, take the following sequence of events:
+ * <p>
+ * For example, take the following sequence of events:
  * <pre>{@literal
  * start-record "1"
- * literal "toplevel": literal-value
+ * literal "top-level": literal-value
  * start-entity "entity"
  * literal "nested": literal-value
  * end-entity
@@ -43,7 +42,7 @@ import org.culturegraph.mf.stream.sink.EntityPathTracker;
  * following sequence of events:
  * <pre>{@literal
  * start-record "1"
- * literal "toplevel": literal-value
+ * literal "top-level": literal-value
  * literal "entity.nested": literal-value
  * end-record
  * }</pre>
@@ -60,9 +59,6 @@ import org.culturegraph.mf.stream.sink.EntityPathTracker;
 public final class StreamFlattener extends DefaultStreamPipe<StreamReceiver> {
 
 	public static final String DEFAULT_ENTITY_MARKER = ".";
-
-	private static final String ENTITIES_NOT_BALANCED =
-			"Entity starts and ends are not balanced";
 
 	private final EntityPathTracker pathTracker = new EntityPathTracker();
 
@@ -88,10 +84,6 @@ public final class StreamFlattener extends DefaultStreamPipe<StreamReceiver> {
 	@Override
 	public void endRecord() {
 		assert !isClosed();
-		if (pathTracker.getCurrentEntityName() != null) {
-			// TODO: Remove this check in 4.0.0. We assume well-formedness
-			throw new IllegalStateException(ENTITIES_NOT_BALANCED);
-		}
 		pathTracker.endRecord();
 		getReceiver().endRecord();
 	}
@@ -105,10 +97,6 @@ public final class StreamFlattener extends DefaultStreamPipe<StreamReceiver> {
 	@Override
 	public void endEntity() {
 		assert !isClosed();
-		if (pathTracker.getCurrentEntityName() == null) {
-			// TODO: Remove this check in 4.0.0. We assume well-formedness
-			throw new IllegalStateException(ENTITIES_NOT_BALANCED);
-		}
 		pathTracker.endEntity();
 	}
 
