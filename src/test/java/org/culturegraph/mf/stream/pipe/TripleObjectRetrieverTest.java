@@ -24,8 +24,8 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.culturegraph.mf.framework.ObjectReceiver;
-import org.culturegraph.mf.types.Triple;
-import org.culturegraph.mf.types.Triple.ObjectType;
+import org.culturegraph.mf.framework.objects.Triple;
+import org.culturegraph.mf.framework.objects.Triple.ObjectType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

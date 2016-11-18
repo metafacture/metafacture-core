@@ -23,8 +23,8 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.types.Triple;
-import org.culturegraph.mf.types.Triple.ObjectType;
+import org.culturegraph.mf.framework.objects.Triple;
+import org.culturegraph.mf.framework.objects.Triple.ObjectType;
 
 /**
  * Collects named values to form records. The name becomes the id, the value is

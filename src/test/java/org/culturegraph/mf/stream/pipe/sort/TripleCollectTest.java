@@ -20,8 +20,8 @@ import static org.mockito.Mockito.verify;
 
 import org.culturegraph.mf.formeta.Formeta;
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.types.Triple;
-import org.culturegraph.mf.types.Triple.ObjectType;
+import org.culturegraph.mf.framework.objects.Triple;
+import org.culturegraph.mf.framework.objects.Triple.ObjectType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;

@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 import org.culturegraph.mf.framework.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
-import org.culturegraph.mf.types.Triple;
+import org.culturegraph.mf.framework.objects.Triple;
 
 /**
  * Base class for operating on count data. The expected inputs are triples

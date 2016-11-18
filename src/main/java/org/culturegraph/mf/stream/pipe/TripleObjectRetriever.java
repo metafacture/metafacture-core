@@ -30,8 +30,8 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.types.Triple;
-import org.culturegraph.mf.types.Triple.ObjectType;
+import org.culturegraph.mf.framework.objects.Triple;
+import org.culturegraph.mf.framework.objects.Triple.ObjectType;
 
 /**
  * Uses the object value of the triple as a URL and emits a new triple

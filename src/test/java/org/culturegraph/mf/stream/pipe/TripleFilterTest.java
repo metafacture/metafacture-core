@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.culturegraph.mf.framework.ObjectReceiver;
-import org.culturegraph.mf.types.Triple;
+import org.culturegraph.mf.framework.objects.Triple;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

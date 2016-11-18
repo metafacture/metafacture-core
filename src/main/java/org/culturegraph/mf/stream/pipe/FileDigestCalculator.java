@@ -28,7 +28,7 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.types.Triple;
+import org.culturegraph.mf.framework.objects.Triple;
 
 /**
  * Interprets the input string as a file name and computes a cryptographic hash

@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
-import org.culturegraph.mf.types.Triple;
+import org.culturegraph.mf.framework.objects.Triple;
 import org.junit.Before;
 import org.junit.Test;
 

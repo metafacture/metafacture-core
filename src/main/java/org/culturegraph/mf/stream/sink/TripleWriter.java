@@ -26,7 +26,7 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.types.Triple;
+import org.culturegraph.mf.framework.objects.Triple;
 
 /**
  * @author Christoph Böhme
