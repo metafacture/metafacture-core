@@ -1,6 +1,5 @@
 /*
  * Copyright 2016 Christoph Böhme
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -14,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.sink;
+package org.culturegraph.mf.test.validators;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
@@ -22,6 +21,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.util.function.Consumer;
 
+import org.culturegraph.mf.test.validators.WellformednessChecker;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

@@ -1,6 +1,5 @@
 /*
  * Copyright 2016 Christoph Böhme
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -14,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.sink;
+package org.culturegraph.mf.test.validators;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -24,6 +23,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.stream.sink.EventList.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

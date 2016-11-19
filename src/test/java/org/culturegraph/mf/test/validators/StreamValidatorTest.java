@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.sink;
+package org.culturegraph.mf.test.validators;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.atLeastOnce;
@@ -21,6 +21,8 @@ import static org.mockito.Mockito.verify;
 
 import java.util.function.Consumer;
 
+import org.culturegraph.mf.stream.sink.EventList;
+import org.culturegraph.mf.test.validators.StreamValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

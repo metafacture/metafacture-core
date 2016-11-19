@@ -24,7 +24,7 @@ import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.test.reader.MultiFormatReader;
 import org.culturegraph.mf.test.reader.Reader;
 import org.culturegraph.mf.stream.sink.EventList;
-import org.culturegraph.mf.stream.sink.StreamValidator;
+import org.culturegraph.mf.test.validators.StreamValidator;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 import org.culturegraph.mf.util.xml.XmlUtil;
