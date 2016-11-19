@@ -17,7 +17,7 @@ package org.culturegraph.mf.stream.pipe;
 
 import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.framework.annotations.FluxCommand;
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 

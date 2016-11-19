@@ -20,7 +20,7 @@ import org.culturegraph.mf.framework.helpers.DefaultTee;
 import org.culturegraph.mf.framework.XmlPipe;
 import org.culturegraph.mf.framework.XmlReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.annotations.FluxCommand;
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.xml.sax.Attributes;

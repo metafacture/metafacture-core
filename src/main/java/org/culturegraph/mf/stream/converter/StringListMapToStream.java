@@ -20,7 +20,7 @@ import java.util.Map.Entry;
 
 import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.framework.annotations.FluxCommand;
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.types.ListMap;
