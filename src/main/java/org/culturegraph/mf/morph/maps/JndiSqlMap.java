@@ -26,7 +26,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import org.culturegraph.mf.exceptions.MorphException;
+import org.culturegraph.mf.morph.MorphException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

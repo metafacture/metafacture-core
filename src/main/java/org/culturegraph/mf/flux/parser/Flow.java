@@ -20,7 +20,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.culturegraph.mf.exceptions.FluxParseException;
+import org.culturegraph.mf.flux.FluxParseException;
 import org.culturegraph.mf.framework.LifeCycle;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.Receiver;

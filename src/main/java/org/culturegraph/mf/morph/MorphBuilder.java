@@ -20,7 +20,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.culturegraph.mf.exceptions.MorphDefException;
 import org.culturegraph.mf.morph.collectors.Collect;
 import org.culturegraph.mf.morph.collectors.Entity;
 import org.culturegraph.mf.morph.functions.Function;

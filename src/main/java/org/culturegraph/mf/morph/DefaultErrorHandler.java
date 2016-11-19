@@ -15,8 +15,6 @@
  */
 package org.culturegraph.mf.morph;
 
-import org.culturegraph.mf.exceptions.MorphException;
-
 
 /**
  * Default error handler used by {@link Metamorph}. Just

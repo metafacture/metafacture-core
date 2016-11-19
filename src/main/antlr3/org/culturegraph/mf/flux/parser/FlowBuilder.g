@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 import org.culturegraph.mf.flux.parser.FluxProgramm;
-import org.culturegraph.mf.exceptions.FluxParseException;
+import org.culturegraph.mf.flux.FluxParseException;
 }
 
 @members {
@@ -46,12 +46,12 @@ flux returns [FluxProgramm retValue = flux]
   :
   varDefs
   (
-    flow 
+    flow
         {
          flux.nextFlow();
         }
   )*
-  
+
   {
    flux.compile();
   }
@@ -60,22 +60,22 @@ flux returns [FluxProgramm retValue = flux]
 flow
   :
   (
-    StdIn 
+    StdIn
          {
           flux.setStdInStart();
          }
-    | e=exp 
+    | e=exp
            {
             flux.setStringStart($e.value);
            }
-    | ws=Wormhole 
+    | ws=Wormhole
                  {
                   flux.setWormholeStart($ws.text);
                  }
   )
   flowtail
   (
-    we=Wormhole 
+    we=Wormhole
                {
                 flux.setWormholeEnd($we.text);
                }
@@ -90,13 +90,13 @@ varDefs
 varDef
   :
   ^(ASSIGN name=Identifier e=exp?)
-  
+
   {
    vars.put($name.text, $e.value);
   }
   |
   ^(DEFAULT name=Identifier e=exp?)
-  
+
   {
    if (!vars.containsKey($name.text)) {
    	vars.put($name.text, $e.value);
@@ -107,21 +107,21 @@ varDef
 tee
   :
   ^(
-    TEE 
+    TEE
        {
         flux.startTee();
         //System.out.println("start tee");
        }
     (
       ^(SUBFLOW flowtail)
-      
+
       {
        flux.endSubFlow();
        // System.out.println("end subflow");
       }
     )+
    )
-  
+
   {
    flux.endTee();
    //System.out.println("end tee");
@@ -138,11 +138,11 @@ flowtail
 
 exp returns [String value]
   :
-  s=StringLiteral 
+  s=StringLiteral
                  {
                   $value = $s.text;
                  }
-  | id=Identifier 
+  | id=Identifier
                  {
                   $value = vars.get($id.text);
                   if ($value == null) {
@@ -151,7 +151,7 @@ exp returns [String value]
                  }
   |
   ^('+' e1=exp e2=exp)
-  
+
   {
    $value = $e1.value + $e2.value;
   }
@@ -166,25 +166,25 @@ final List<Object> cArgs = new ArrayList<Object>();
   ^(
     name=QualifiedName
     (
-      e=exp 
+      e=exp
            {
             cArgs.add($e.value);
            }
     )?
     (
-      VarRef 
+      VarRef
             {
              cArgs.add(Collections.unmodifiableMap(vars));
             }
     )?
     (
-      a=arg 
+      a=arg
            {
             namedArgs.put($a.key, $a.value);
            }
     )*
    )
-  
+
   {
    flux.addElement($name.text, namedArgs, cArgs);
   }
@@ -193,7 +193,7 @@ final List<Object> cArgs = new ArrayList<Object>();
 arg returns [String key, String value]
   :
   ^(ARG k=Identifier e=exp)
-  
+
   {
    $key = $k.text;
    $value = $e.value;

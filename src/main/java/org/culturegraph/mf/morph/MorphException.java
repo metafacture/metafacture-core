@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.exceptions;
+package org.culturegraph.mf.morph;
 
 import org.culturegraph.mf.framework.MetafactureException;
-import org.culturegraph.mf.morph.MorphBuilder;
+import org.culturegraph.mf.morph.Metamorph;
 
 
 /**
- * Thrown by {@link MorphBuilder} if the definition is syntactically incorrect or components for dynamic loading are not found.
+ * Thrown if an error occurs during the processing in {@link Metamorph}
  *
  * @author Markus Michael Geipel
- *
  */
-public final class MorphDefException extends MetafactureException {
+public class MorphException extends MetafactureException {
 
 	private static final long serialVersionUID = -3130648074493084946L;
 
 	/**
 	 * @param message
 	 */
-	public MorphDefException(final String message) {
+	public MorphException(final String message) {
 		super(message);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public MorphDefException(final Throwable cause) {
+	public MorphException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -47,7 +46,7 @@ public final class MorphDefException extends MetafactureException {
 	 * @param message
 	 * @param cause
 	 */
-	public MorphDefException(final String message, final Throwable cause) {
+	public MorphException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 

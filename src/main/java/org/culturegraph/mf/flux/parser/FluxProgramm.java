@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.culturegraph.mf.exceptions.FluxParseException;
+import org.culturegraph.mf.flux.FluxParseException;
 import org.culturegraph.mf.flux.HelpPrinter;
 import org.culturegraph.mf.framework.Receiver;
 import org.culturegraph.mf.util.ResourceUtil;

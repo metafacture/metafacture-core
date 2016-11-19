@@ -22,8 +22,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import org.culturegraph.mf.exceptions.MorphDefException;
-import org.culturegraph.mf.exceptions.MorphException;
+import org.culturegraph.mf.morph.MorphDefException;
+import org.culturegraph.mf.morph.MorphException;
 import org.culturegraph.mf.util.ResourceUtil;
 
 /**

@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import org.culturegraph.mf.exceptions.MorphDefException;
+import org.culturegraph.mf.morph.MorphDefException;
 
 /**
  * Changes the the received value from upper to lower case
