@@ -16,67 +16,100 @@
 package org.culturegraph.mf.stream.converter.xml;
 
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.stream.source.ResourceOpener;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
+ * Tests for class {@link AlephMabXmlHandler}.
+ *
+ * @author Christoph Böhme (rewrite)
  * @author Pascal Christoph (dr0i)
  */
 public final class AlephMabXmlHandlerTest {
 
-	private ResourceOpener opener;
-	private XmlDecoder xmlDecoder;
-	private AlephMabXmlHandler mabXmlHandler;
+	@Rule
+	public MockitoRule mockito = MockitoJUnit.rule();
 
 	@Mock
 	private StreamReceiver receiver;
 
-	@After
-	public void cleanup() {
-		this.opener.closeStream();
-	}
+	private AlephMabXmlHandler mabXmlHandler;
 
 	@Before
 	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		this.opener = new ResourceOpener();
-		this.xmlDecoder = new XmlDecoder();
-		this.mabXmlHandler = new AlephMabXmlHandler();
-		this.opener.setReceiver(this.xmlDecoder).setReceiver(this.mabXmlHandler)
-				.setReceiver(this.receiver);
+		mabXmlHandler = new AlephMabXmlHandler();
+		mabXmlHandler.setReceiver(receiver);
 	}
 
 	@Test
-	public void testShouldIgnoreCharDataNotInARecord() {
+	public void shouldIgnoreLeader() throws SAXException {
+		final String leader = "00000nM2.01200024------h";
+		mabXmlHandler.startElement(null, "ListRecords", "", new AttributesImpl());
+		mabXmlHandler.startElement(null, "leader", "", new AttributesImpl());
+		mabXmlHandler.characters(leader.toCharArray(), 0, leader.length());
+		mabXmlHandler.endElement(null, "leader", "");
+		mabXmlHandler.endElement(null, "ListRecords", "");
 
-		this.opener.process("data/alephmabxml.xml");
-		final InOrder ordered = Mockito.inOrder(this.receiver);
-		ordered.verify(this.receiver).startRecord("");
-		ordered.verify(this.receiver).startEntity("001-1");
-		ordered.verify(this.receiver).literal("a", "HT010726584");
-		ordered.verify(this.receiver).endEntity();
-		ordered.verify(this.receiver).startEntity("331-1");
-		ordered.verify(this.receiver).literal("a", "Physics of plasmas");
-		ordered.verify(this.receiver).endEntity();
-		ordered.verify(this.receiver).startEntity("902-1");
-		ordered.verify(this.receiver).literal("s", "Zeitschrift");
-		ordered.verify(this.receiver).literal("9", "(DE-588)4067488-5");
-		ordered.verify(this.receiver).endEntity();
-		ordered.verify(this.receiver).endRecord();
-		ordered.verify(this.receiver).startRecord("");
-		ordered.verify(this.receiver).startEntity("001-1");
-		ordered.verify(this.receiver).literal("a", "HT018700720");
-		ordered.verify(this.receiver).endEntity();
-		ordered.verify(this.receiver).startEntity("100b1");
-		ordered.verify(this.receiver).literal("p", "Amrhein, Ludwig");
-		ordered.verify(this.receiver).endEntity();
-		ordered.verify(this.receiver).endRecord();
+		final InOrder ordered	= Mockito.inOrder(receiver);
+		ordered.verify(receiver).startRecord("");
+		ordered.verify(receiver).endRecord();
+		ordered.verifyNoMoreInteractions();
+	}
+
+	@Test
+	public void shouldParseControlField() throws SAXException {
+		final AttributesImpl attributes = new AttributesImpl();
+		final String data = "MH";
+
+		mabXmlHandler.startElement(null, "ListRecords", "", new AttributesImpl());
+		attributes.addAttribute(null, "tag", "tag", "CDATA", "FMT");
+		mabXmlHandler.startElement(null, "controlfield", "", attributes);
+		mabXmlHandler.characters(data.toCharArray(), 0, data.length());
+		mabXmlHandler.endElement(null, "controlfield", "");
+		mabXmlHandler.endElement(null, "ListRecords", "");
+
+		final InOrder ordered	= Mockito.inOrder(receiver);
+		ordered.verify(receiver).startRecord("");
+		ordered.verify(receiver).startEntity("FMT");
+		ordered.verify(receiver).literal("", data);
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).endRecord();
+		ordered.verifyNoMoreInteractions();
+	}
+
+	@Test
+	public void shouldParseDataField() throws SAXException {
+		final AttributesImpl attributes = new AttributesImpl();
+		final String data = "1234";
+
+		mabXmlHandler.startElement(null, "ListRecords", "", new AttributesImpl());
+		attributes.addAttribute(null, "tag", "tag", "CDATA", "001");
+		attributes.addAttribute(null, "ind1", "ind1", "CDATA", "a");
+		attributes.addAttribute(null, "ind2", "ind2", "CDATA", "b");
+		mabXmlHandler.startElement(null, "datafield", "", attributes);
+		attributes.clear();
+		attributes.addAttribute(null, "code", "code", "CDATA", "a");
+		mabXmlHandler.startElement(null, "subfield", "", attributes);
+		mabXmlHandler.characters(data.toCharArray(), 0, data.length());
+		mabXmlHandler.endElement(null, "subfield", "");
+		mabXmlHandler.endElement(null, "datafield", "");
+		mabXmlHandler.endElement(null, "ListRecords", "");
+
+		final InOrder ordered	= Mockito.inOrder(receiver);
+		ordered.verify(receiver).startRecord("");
+		ordered.verify(receiver).startEntity("001ab");
+		ordered.verify(receiver).literal("a", data);
+		ordered.verify(receiver).endEntity();
+		ordered.verify(receiver).endRecord();
+		ordered.verifyNoMoreInteractions();
 	}
 
 }
