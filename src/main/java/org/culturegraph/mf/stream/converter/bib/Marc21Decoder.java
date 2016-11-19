@@ -35,7 +35,7 @@ import static org.culturegraph.mf.stream.converter.bib.Marc21Constants.TYPE_OF_C
 import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.TYPE_OF_CONTROL_LITERAL;
 
 import org.culturegraph.mf.exceptions.FormatException;
-import org.culturegraph.mf.framework.DefaultObjectPipe;
+import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.FluxCommand;

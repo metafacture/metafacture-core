@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 import org.culturegraph.mf.exceptions.MetafactureException;
-import org.culturegraph.mf.framework.DefaultObjectPipe;
+import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.objects.Triple;

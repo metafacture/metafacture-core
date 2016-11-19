@@ -17,7 +17,7 @@ package org.culturegraph.mf.stream.sink;
 
 import java.util.Collection;
 
-import org.culturegraph.mf.framework.DefaultStreamReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
 
 
 /**

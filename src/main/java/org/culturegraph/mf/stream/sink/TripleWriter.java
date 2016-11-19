@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 
 import org.culturegraph.mf.exceptions.MetafactureException;
-import org.culturegraph.mf.framework.DefaultObjectReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;

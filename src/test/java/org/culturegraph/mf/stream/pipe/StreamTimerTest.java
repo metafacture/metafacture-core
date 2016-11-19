@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import org.culturegraph.mf.framework.DefaultStreamReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
 import org.junit.Before;
 import org.junit.Test;
 

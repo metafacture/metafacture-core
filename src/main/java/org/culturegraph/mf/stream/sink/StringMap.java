@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.culturegraph.mf.framework.DefaultStreamReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
 
 
 /**

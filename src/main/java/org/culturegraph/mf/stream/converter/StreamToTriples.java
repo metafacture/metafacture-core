@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 import org.culturegraph.mf.formeta.formatter.ConciseFormatter;
 import org.culturegraph.mf.formeta.formatter.Formatter;
-import org.culturegraph.mf.framework.DefaultStreamPipe;
+import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;

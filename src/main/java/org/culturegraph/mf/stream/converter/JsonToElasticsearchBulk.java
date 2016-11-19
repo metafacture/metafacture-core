@@ -25,7 +25,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.culturegraph.mf.framework.DefaultObjectPipe;
+import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;

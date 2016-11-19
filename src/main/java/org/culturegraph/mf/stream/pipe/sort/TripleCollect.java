@@ -17,7 +17,7 @@ package org.culturegraph.mf.stream.pipe.sort;
 
 import org.culturegraph.mf.formeta.parser.FormetaParser;
 import org.culturegraph.mf.formeta.parser.PartialRecordEmitter;
-import org.culturegraph.mf.framework.DefaultObjectPipe;
+import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.FluxCommand;

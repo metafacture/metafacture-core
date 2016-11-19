@@ -17,7 +17,7 @@ package org.culturegraph.mf.stream.converter;
 
 import org.culturegraph.mf.formeta.formatter.Formatter;
 import org.culturegraph.mf.formeta.formatter.FormatterStyle;
-import org.culturegraph.mf.framework.DefaultStreamPipe;
+import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;

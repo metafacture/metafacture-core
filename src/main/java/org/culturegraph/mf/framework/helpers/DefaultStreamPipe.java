@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.framework;
+package org.culturegraph.mf.framework.helpers;
+
+import org.culturegraph.mf.framework.Receiver;
+import org.culturegraph.mf.framework.StreamPipe;
 
 /**
- * Default implementation of {@link StreamReceiver} which
- * simply does nothing. Do not use this class as a base class
- * for modules which are implement {@link StreamPipe}; use
- * {@link DefaultStreamPipe} for that.
+ * Default implementation for {@link StreamPipe}s which simply
+ * does nothing.
  *
- * @see DefaultStreamPipe
+ * @param <R> receiver type of the downstream receiver
  *
  * @author Markus Michael Geipel, Christoph Böhme
  *
  */
-public class DefaultStreamReceiver extends DefaultLifeCycle implements StreamReceiver {
+public class DefaultStreamPipe<R extends Receiver>
+		extends DefaultSender<R> implements StreamPipe<R> {
 
 	@Override
 	public void startRecord(final String identifier) {
@@ -34,7 +36,7 @@ public class DefaultStreamReceiver extends DefaultLifeCycle implements StreamRec
 	}
 
 	@Override
-	public void endRecord(){
+	public void endRecord() {
 		// Default implementation does nothing
 	}
 

@@ -15,6 +15,7 @@
  */
 package org.culturegraph.mf.framework;
 
+import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
 import org.culturegraph.mf.stream.sink.WellformednessChecker;
 
 /**

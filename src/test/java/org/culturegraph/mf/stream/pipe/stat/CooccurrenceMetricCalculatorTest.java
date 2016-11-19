@@ -17,7 +17,7 @@ package org.culturegraph.mf.stream.pipe.stat;
 
 import static org.junit.Assert.assertEquals;
 
-import org.culturegraph.mf.framework.DefaultObjectReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultObjectReceiver;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.objects.Triple;
 import org.junit.Test;

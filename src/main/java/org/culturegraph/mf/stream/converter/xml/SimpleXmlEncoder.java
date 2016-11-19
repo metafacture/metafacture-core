@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.culturegraph.mf.framework.DefaultStreamPipe;
+import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;

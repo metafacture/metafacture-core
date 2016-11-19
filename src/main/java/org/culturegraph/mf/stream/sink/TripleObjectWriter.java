@@ -24,7 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.culturegraph.mf.exceptions.MetafactureException;
-import org.culturegraph.mf.framework.DefaultObjectReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;

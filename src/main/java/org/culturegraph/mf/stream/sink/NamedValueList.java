@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.culturegraph.mf.framework.DefaultStreamReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
 import org.culturegraph.mf.types.NamedValue;
 
 

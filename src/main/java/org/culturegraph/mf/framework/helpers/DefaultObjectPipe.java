@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.framework;
+package org.culturegraph.mf.framework.helpers;
+
+import org.culturegraph.mf.framework.ObjectPipe;
+import org.culturegraph.mf.framework.Receiver;
 
 /**
- * Default implementation for {@link LifeCycle} which simply
+ * Default implementation for {@link ObjectPipe}s which simply
  * does nothing.
  *
+ * @param <T> object type that this module processes
+ * @param <R> receiver type of the downstream module
+
  * @author Christoph Böhme
  *
  */
-public class DefaultLifeCycle implements LifeCycle {
+public class DefaultObjectPipe<T, R extends Receiver>
+		extends DefaultSender<R> implements ObjectPipe<T, R> {
 
 	@Override
-	public void resetStream() {
-		// Default implementation does nothing
-	}
-
-	@Override
-	public void closeStream() {
+	public void process(final T obj) {
 		// Default implementation does nothing
 	}
 

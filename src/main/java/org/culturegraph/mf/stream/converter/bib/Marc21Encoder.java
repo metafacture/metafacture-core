@@ -47,7 +47,7 @@ import static org.culturegraph.mf.stream.converter.bib.Marc21EventNames.TYPE_OF_
 import java.util.Arrays;
 
 import org.culturegraph.mf.exceptions.FormatException;
-import org.culturegraph.mf.framework.DefaultStreamPipe;
+import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;

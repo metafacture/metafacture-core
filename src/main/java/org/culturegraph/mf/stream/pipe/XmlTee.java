@@ -16,7 +16,7 @@ package org.culturegraph.mf.stream.pipe;
 
 import java.io.IOException;
 
-import org.culturegraph.mf.framework.DefaultTee;
+import org.culturegraph.mf.framework.helpers.DefaultTee;
 import org.culturegraph.mf.framework.XmlPipe;
 import org.culturegraph.mf.framework.XmlReceiver;
 import org.culturegraph.mf.framework.annotations.Description;

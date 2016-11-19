@@ -17,7 +17,7 @@ package org.culturegraph.mf.stream.pipe;
 import java.util.HashSet;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.culturegraph.mf.framework.DefaultXmlPipe;
+import org.culturegraph.mf.framework.helpers.DefaultXmlPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.XmlReceiver;
 import org.culturegraph.mf.framework.annotations.Description;

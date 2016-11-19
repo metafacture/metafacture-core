@@ -16,7 +16,7 @@
 package org.culturegraph.mf.framework;
 
 
-
+import org.culturegraph.mf.framework.helpers.DefaultTee;
 
 /**
  * Interface for {@code Sender}s which are connected to more

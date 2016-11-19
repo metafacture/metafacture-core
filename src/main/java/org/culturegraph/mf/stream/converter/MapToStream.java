@@ -17,7 +17,7 @@ package org.culturegraph.mf.stream.converter;
 
 import java.util.Map;
 
-import org.culturegraph.mf.framework.DefaultObjectPipe;
+import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.StandardEventNames;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.FluxCommand;

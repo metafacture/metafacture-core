@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.culturegraph.mf.exceptions.MorphDefException;
-import org.culturegraph.mf.framework.DefaultStreamReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;

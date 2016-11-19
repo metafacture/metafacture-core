@@ -19,7 +19,7 @@ package org.culturegraph.mf.stream.pipe;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 
-import org.culturegraph.mf.framework.DefaultStreamPipe;
+import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.FluxCommand;

@@ -19,7 +19,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.culturegraph.mf.framework.DefaultObjectPipe;
+import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.objects.Triple;
 

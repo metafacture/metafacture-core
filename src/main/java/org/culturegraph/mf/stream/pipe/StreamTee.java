@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import org.culturegraph.mf.framework.DefaultTee;
+import org.culturegraph.mf.framework.helpers.DefaultTee;
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;

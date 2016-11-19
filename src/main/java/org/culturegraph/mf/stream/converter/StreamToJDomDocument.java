@@ -21,7 +21,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-import org.culturegraph.mf.framework.DefaultSender;
+import org.culturegraph.mf.framework.helpers.DefaultSender;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;

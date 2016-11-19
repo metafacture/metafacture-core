@@ -19,7 +19,7 @@ package org.culturegraph.mf.stream.sink;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import org.culturegraph.mf.framework.DefaultStreamReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
 
 /**
  * Tracks the <i>path</i> of the current entity. The entity path consists of the

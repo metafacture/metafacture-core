@@ -15,6 +15,8 @@
  */
 package org.culturegraph.mf.framework;
 
+import org.culturegraph.mf.framework.helpers.DefaultSender;
+
 /**
  * Interface for objects that can be connected to a downstream module (receiver).
  *

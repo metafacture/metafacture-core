@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNull;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.culturegraph.mf.framework.DefaultStreamReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
 import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.xml.Location;
 import org.junit.Before;

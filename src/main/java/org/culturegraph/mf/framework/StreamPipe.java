@@ -15,6 +15,8 @@
  */
 package org.culturegraph.mf.framework;
 
+import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
+
 /**
  * A {@link StreamReceiver} that also implements the {@link Sender} interface.
  * This interface should be implemented by all modules which receive streams

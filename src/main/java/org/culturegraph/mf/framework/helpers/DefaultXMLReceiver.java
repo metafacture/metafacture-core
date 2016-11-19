@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.framework;
+package org.culturegraph.mf.framework.helpers;
 
 import java.io.IOException;
 
+import org.culturegraph.mf.framework.XmlPipe;
+import org.culturegraph.mf.framework.XmlReceiver;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -24,16 +26,17 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * Default implementation for {@link XmlPipe}s which simply
- * does nothing.
+ * Default implementation of {@link XmlReceiver} which
+ * simply does nothing. Do not use this class as a base class
+ * for modules which are implement {@link XmlPipe}; use
+ * {@link DefaultXmlPipe} for that.
  *
- * @param <R> receiver type of the downstream module
- *
- * @author Christoph Böhme
+ * @see DefaultStreamPipe
+
+ * @author Christoph Böhme <c.boehme@dnb.de>
  *
  */
-public class DefaultXmlPipe <R extends Receiver>
-		extends DefaultSender<R> implements XmlPipe<R> {
+public class DefaultXMLReceiver extends DefaultLifeCycle implements XmlReceiver {
 
 	@Override
 	public void setDocumentLocator(final Locator locator) {
@@ -62,26 +65,26 @@ public class DefaultXmlPipe <R extends Receiver>
 	}
 
 	@Override
-	public void startElement(final String uri, final String localName, final String qName,
-			final Attributes atts) throws SAXException {
+	public void startElement(final String uri, final String localName,
+			final String qName, final Attributes atts) throws SAXException {
 		// Default implementation does nothing
 	}
 
 	@Override
-	public void endElement(final String uri, final String localName, final String qName)
+	public void endElement(final String uri, final String localName,
+			final String qName) throws SAXException {
+		// Default implementation does nothing
+	}
+
+	@Override
+	public void characters(final char[] chars, final int start, final int length)
 			throws SAXException {
 		// Default implementation does nothing
 	}
 
 	@Override
-	public void characters(final char[] ch, final int start, final int length)
-			throws SAXException {
-		// Default implementation does nothing
-	}
-
-	@Override
-	public void ignorableWhitespace(final char[] ch, final int start, final int length)
-			throws SAXException {
+	public void ignorableWhitespace(final char[] chars, final int start,
+			final int length) throws SAXException {
 		// Default implementation does nothing
 	}
 

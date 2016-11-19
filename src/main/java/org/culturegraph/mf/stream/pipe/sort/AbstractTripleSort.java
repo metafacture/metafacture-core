@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 import org.culturegraph.mf.exceptions.MetafactureException;
-import org.culturegraph.mf.framework.DefaultObjectPipe;
+import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.objects.Triple;
 import org.culturegraph.mf.util.MemoryWarningSystem;

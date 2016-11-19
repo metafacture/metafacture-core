@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.culturegraph.mf.framework.DefaultObjectReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultObjectReceiver;
 import org.junit.Before;
 import org.junit.Test;
 

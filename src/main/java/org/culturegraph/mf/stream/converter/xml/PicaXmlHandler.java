@@ -18,7 +18,7 @@ package org.culturegraph.mf.stream.converter.xml;
 
 import java.text.Normalizer;
 
-import org.culturegraph.mf.framework.DefaultXmlPipe;
+import org.culturegraph.mf.framework.helpers.DefaultXmlPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.XmlReceiver;
 import org.culturegraph.mf.framework.annotations.Description;

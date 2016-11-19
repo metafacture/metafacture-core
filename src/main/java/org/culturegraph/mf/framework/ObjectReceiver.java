@@ -15,6 +15,8 @@
  */
 package org.culturegraph.mf.framework;
 
+import org.culturegraph.mf.framework.helpers.DefaultObjectReceiver;
+
 /**
  * Interface for objects which receive and process objects of type T.
  *
