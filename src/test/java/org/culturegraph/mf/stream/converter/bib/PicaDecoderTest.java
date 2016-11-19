@@ -19,6 +19,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import org.culturegraph.mf.framework.MissingIdException;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.junit.After;
 import org.junit.Before;

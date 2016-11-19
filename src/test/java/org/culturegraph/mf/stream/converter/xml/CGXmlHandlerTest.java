@@ -20,7 +20,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
-import org.culturegraph.mf.exceptions.FormatException;
+import org.culturegraph.mf.framework.FormatException;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.junit.Before;
 import org.junit.Test;

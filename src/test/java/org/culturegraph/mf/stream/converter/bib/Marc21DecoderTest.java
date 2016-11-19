@@ -18,7 +18,7 @@ package org.culturegraph.mf.stream.converter.bib;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
-import org.culturegraph.mf.exceptions.FormatException;
+import org.culturegraph.mf.framework.FormatException;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.junit.After;
 import org.junit.Before;

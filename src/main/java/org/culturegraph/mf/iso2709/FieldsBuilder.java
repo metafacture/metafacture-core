@@ -22,7 +22,7 @@ import static org.culturegraph.mf.iso2709.Iso2709Constants.RECORD_SEPARATOR;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import org.culturegraph.mf.exceptions.FormatException;
+import org.culturegraph.mf.framework.FormatException;
 
 /**
  * Builds a list of fields in ISO 2709:2008 format.

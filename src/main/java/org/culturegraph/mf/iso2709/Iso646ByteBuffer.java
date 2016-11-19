@@ -17,7 +17,7 @@ package org.culturegraph.mf.iso2709;
 
 import java.nio.charset.Charset;
 
-import org.culturegraph.mf.exceptions.FormatException;
+import org.culturegraph.mf.framework.FormatException;
 
 /**
  * Provides methods for reading and writing strings and integers in a byte

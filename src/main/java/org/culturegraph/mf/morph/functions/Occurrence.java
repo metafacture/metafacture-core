@@ -18,7 +18,7 @@ package org.culturegraph.mf.morph.functions;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.culturegraph.mf.exceptions.MetafactureException;
+import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.util.StringUtil;
 
 /**

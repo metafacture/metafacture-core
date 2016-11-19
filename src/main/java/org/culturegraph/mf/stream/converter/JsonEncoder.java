@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.culturegraph.mf.exceptions.MetafactureException;
+import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;

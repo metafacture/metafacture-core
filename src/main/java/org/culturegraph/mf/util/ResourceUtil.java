@@ -30,7 +30,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
-import org.culturegraph.mf.exceptions.MetafactureException;
+import org.culturegraph.mf.framework.MetafactureException;
 
 
 /**

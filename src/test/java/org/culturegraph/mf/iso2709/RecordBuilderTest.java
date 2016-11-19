@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.nio.charset.StandardCharsets;
 
-import org.culturegraph.mf.exceptions.FormatException;
+import org.culturegraph.mf.framework.FormatException;
 import org.culturegraph.mf.util.StringUtil;
 import org.junit.Before;
 import org.junit.Test;

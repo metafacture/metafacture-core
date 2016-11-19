@@ -19,7 +19,7 @@ import static org.culturegraph.mf.iso2709.Iso2709Constants.FIELD_SEPARATOR;
 import static org.culturegraph.mf.iso2709.Iso2709Constants.MAX_PAYLOAD_LENGTH;
 import static org.culturegraph.mf.iso2709.Iso2709Constants.TAG_LENGTH;
 
-import org.culturegraph.mf.exceptions.FormatException;
+import org.culturegraph.mf.framework.FormatException;
 
 /**
  * Builds a directory in ISO2709:2008 format. For fields whose length is greater

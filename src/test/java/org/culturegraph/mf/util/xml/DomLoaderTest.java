@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.culturegraph.mf.exceptions.MetafactureException;
+import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.junit.Ignore;
 import org.junit.Test;

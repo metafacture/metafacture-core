@@ -24,7 +24,7 @@ import static org.mockito.Mockito.never;
 
 import java.nio.charset.Charset;
 
-import org.culturegraph.mf.exceptions.FormatException;
+import org.culturegraph.mf.framework.FormatException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;

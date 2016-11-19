@@ -15,6 +15,8 @@
  */
 package org.culturegraph.mf.exceptions;
 
+import org.culturegraph.mf.framework.MetafactureException;
+
 /**
  * @author Markus Michael Geipel
  *

@@ -18,7 +18,7 @@ package org.culturegraph.mf.stream.converter.xml;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.culturegraph.mf.exceptions.MetafactureException;
+import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.XmlReceiver;
 import org.culturegraph.mf.framework.annotations.Description;

@@ -17,7 +17,8 @@ package org.culturegraph.mf.stream.converter.bib;
 
 import static org.mockito.Mockito.verify;
 
-import org.culturegraph.mf.exceptions.FormatException;
+import org.culturegraph.mf.framework.FormatException;
+import org.culturegraph.mf.framework.MissingIdException;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.junit.After;
 import org.junit.Before;

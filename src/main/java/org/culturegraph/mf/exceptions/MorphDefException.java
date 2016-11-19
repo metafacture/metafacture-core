@@ -15,6 +15,7 @@
  */
 package org.culturegraph.mf.exceptions;
 
+import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.morph.MorphBuilder;
 
 

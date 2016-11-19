@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.exceptions;
+package org.culturegraph.mf.framework;
 
 /**
- * Base class for exceptions thrown by Metastream.
+ * Thrown if a record has no id.
  *
- * @author Christoph Böhme <c.boehme@dnb.de>
+ * @author Markus Michael Geipel
+ *
  */
-public class MetafactureException extends RuntimeException {
+public final class MissingIdException extends MetafactureException {
 
-	private static final long serialVersionUID = -2953264524472071347L;
+	private static final long serialVersionUID = 2048460214057525724L;
 
-	public MetafactureException(final String message) {
+	public MissingIdException(final String message) {
 		super(message);
 	}
 
-	public MetafactureException(final Throwable cause) {
+	public MissingIdException(final Throwable cause) {
 		super(cause);
 	}
 
-	public MetafactureException(final String message, final Throwable cause) {
+	public MissingIdException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 

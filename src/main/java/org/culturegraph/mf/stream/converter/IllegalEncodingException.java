@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.stream.converter;
 
-import org.culturegraph.mf.exceptions.MetafactureException;
+import org.culturegraph.mf.framework.MetafactureException;
 
 /**
  * Thrown by {@link Reader}s if a record indicates unsupported encoding.

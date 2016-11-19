@@ -18,7 +18,7 @@ package org.culturegraph.mf.stream.sink;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.culturegraph.mf.exceptions.MetafactureException;
+import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.framework.ObjectReceiver;
 
 /**

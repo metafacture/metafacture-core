@@ -35,7 +35,7 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.culturegraph.mf.exceptions.MetafactureException;
+import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
