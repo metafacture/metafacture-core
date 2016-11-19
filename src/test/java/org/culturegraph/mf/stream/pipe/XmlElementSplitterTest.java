@@ -12,46 +12,89 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package org.culturegraph.mf.stream.pipe;
 
-import java.io.File;
-import java.net.URISyntaxException;
+import static org.mockito.Mockito.inOrder;
 
-import org.culturegraph.mf.stream.converter.xml.XmlDecoder;
-import org.culturegraph.mf.stream.sink.EventList;
-import org.culturegraph.mf.stream.sink.StreamValidator;
-import org.culturegraph.mf.stream.source.FileOpener;
+import org.culturegraph.mf.framework.StreamReceiver;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
+ * Tests for class {@link XmlElementSplitter}.
+ *
+ * @author Christoph Böhme (rewrite)
  * @author Pascal Christoph (dr0i)
  *
  */
-@SuppressWarnings("javadoc")
 public class XmlElementSplitterTest {
 
-	@Test
-	public void testFlow() throws URISyntaxException {
-		final FileOpener opener = new FileOpener();
-		final XmlDecoder xmldecoder = new XmlDecoder();
-		final XmlElementSplitter xmlsplitter = new XmlElementSplitter();
-		xmlsplitter.setElementName("Description");
-		xmlsplitter.setTopLevelElement("rdf:RDF");
-		final EventList expected = new EventList();
-		expected.startRecord("0");
-		expected.literal("Element", xmlsplitter.getXmlDeclaration()
-				+ "<rdf:RDF xmlns:rdf=\"ns#\"><rdf:Description rdf:about=\"1\"> <a rdf:resource=\"r1\">1</a></rdf:Description></rdf:RDF>");
-		expected.endRecord();
-		expected.startRecord("1");
-		expected.literal("Element", xmlsplitter.getXmlDeclaration()
-				+ "<rdf:RDF xmlns:rdf=\"ns#\"><rdf:Description rdf:about=\"2\"> <a rdf:resource=\"r2\">2</a></rdf:Description></rdf:RDF>");
-		expected.endRecord();
-		final StreamValidator validator = new StreamValidator(expected.getEvents());
-		opener.setReceiver(xmldecoder).setReceiver(xmlsplitter).setReceiver(validator);
-		File infile = new File(
-				Thread.currentThread().getContextClassLoader().getResource("data/xmlToBeSplitted.xml").toURI());
-		opener.process(infile.getAbsolutePath());
-		opener.closeStream();
+	private static final String NAMESPACE =
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+
+	@Rule
+	public MockitoRule mockito = MockitoJUnit.rule();
+
+	@Mock
+	private StreamReceiver receiver;
+
+	private XmlElementSplitter xmlElementSplitter;
+
+	@Before
+	public void setup() {
+		xmlElementSplitter = new XmlElementSplitter();
+		xmlElementSplitter.setReceiver(receiver);
 	}
+
+	@Test
+	public void shouldSplitXmlAtDefinedElementName() throws SAXException {
+		xmlElementSplitter.setElementName("Description");
+		xmlElementSplitter.setTopLevelElement("rdf:RDF");
+
+		xmlElementSplitter.startPrefixMapping("rdf", NAMESPACE);
+		xmlElementSplitter.startElement(NAMESPACE, "RDF", "rdf:RDF",
+				new AttributesImpl());
+		startDescription("1");
+		emitResourceContent("r1", "1");
+		xmlElementSplitter.endElement(NAMESPACE, "Description", "rdf:Description");
+		startDescription("2");
+		emitResourceContent("r2", "2");
+		xmlElementSplitter.endElement(NAMESPACE, "Description", "rdf:Description");
+		xmlElementSplitter.endElement(NAMESPACE, "RDF", "rdf:RDF");
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("0");
+		ordered.verify(receiver).literal("Element",
+				"<?xml version = \"1.0\" encoding = \"UTF-8\"?><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><rdf:Description rdf:about=\"1\"><a rdf:resource=\"r1\">1</a></rdf:Description></rdf:RDF>");
+		ordered.verify(receiver).endRecord();
+		ordered.verify(receiver).startRecord("1");
+		ordered.verify(receiver).literal("Element",
+				"<?xml version = \"1.0\" encoding = \"UTF-8\"?><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><rdf:Description rdf:about=\"2\"><a rdf:resource=\"r2\">2</a></rdf:Description></rdf:RDF>");
+		ordered.verify(receiver).endRecord();
+	}
+
+	private void startDescription(final String id) throws SAXException {
+		final AttributesImpl attributes = new AttributesImpl();
+		attributes.addAttribute(NAMESPACE, "about", "rdf:about", "CDATA", id);
+		xmlElementSplitter.startElement(NAMESPACE, "Description", "rdf:Description",
+				attributes);
+	}
+
+	private void emitResourceContent(final String resource, final String data)
+			throws SAXException {
+		final AttributesImpl attributes = new AttributesImpl();
+		attributes.addAttribute(NAMESPACE, "resource", "rdf:resource", "CDATA",
+				resource);
+		xmlElementSplitter.startElement(null, "a", "a", attributes);
+		xmlElementSplitter.characters(data.toCharArray(), 0, data.length());
+		xmlElementSplitter.endElement(null, "a", "a");
+	}
+
 }
