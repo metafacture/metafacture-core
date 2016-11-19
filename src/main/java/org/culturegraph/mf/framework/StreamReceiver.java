@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -16,7 +17,6 @@
 package org.culturegraph.mf.framework;
 
 import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
-import org.culturegraph.mf.stream.sink.WellformednessChecker;
 
 /**
  * Interface implemented by objects which can receive streams.
@@ -28,56 +28,59 @@ import org.culturegraph.mf.stream.sink.WellformednessChecker;
  * ENTITY_OR_LITERAL = ENTITY | literal
  * ENTITY = startEntity, ENTITY_OR_LITERAL*, endEntity)
  *
- * The {@link WellformednessChecker} can be used to check if a stream conforms
- * to these rules.
- *
  * @see DefaultStreamReceiver
  * @see StreamPipe
  *
- * @author Markus Michael Geipel, Christoph Böhme
+ * @author Markus Michael Geipel
+ * @author Christoph Böhme
  *
  */
 public interface StreamReceiver extends Receiver {
 
 	/**
-	 * Sent to mark the start of a record.
-	 * Each call of {@code startRecord()} is matched by a call of {@code endRecord()}.
+	 * Send to mark the start of a record. During normal operation each call of
+	 * {@code startRecord(String)} is matched by a call of {@link #endRecord()}.
+	 * Implementors should, however, expected invocations of
+	 * {@code startRecord(String} at any time during processing. In such cases
+	 * processing of the current record must be aborted and processing of the new
+	 * record started. This behaviour ensures that a receiver can recover from
+	 * errors in upstream modules.
 	 *
-	 * @param identifier identifier of the record. The identifier can be null
+	 * @param identifier identifier of the record. The identifier can be null.
 	 */
 	void startRecord(String identifier);
 
 	/**
-	 * Sent to mark the end of a record.
-	 * Calls to {@code endRecord()} are always preceded by a call to {@code startRecord()}.
+	 * Send to mark the end of a record. Each call of {@code endRecord()} is
+	 * matched by a preceding call of {@link #startRecord(String)}.
 	 */
 	void endRecord();
 
 	/**
-	 * Sent to mark the start of an entity.
-	 * This method is only called after {@code startRecord()} has been called and
-	 * before {@code endRecord()} is called. Each call of {@code startEntity()} is
-	 * matched by a call of {@code endEntity()}.
+	 * Send to mark the start of an entity. This method is only called after
+	 * {@link #startRecord(String)} has been called and before
+	 * {@link #endRecord()} is called. Each call of {@code startEntity(String)} is
+	 * matched by a call of {@link #endEntity()}.
 	 *
-	 * @param name name of the entity. The name of the entity should never be null
+	 * @param name name of the entity. The name of the entity must never be null.
 	 */
 	void startEntity(String name);
 
 	/**
-	 * Sent to mark the end of an entity.
-	 * Calls to {@code endEntity()} are always preceded by a call to {@code startEntity()}.
-	 * This method is only called after {@code startRecord()} has been called and
-	 * before {@code endRecord()} is called.
+	 * Send to mark the end of an entity. Calls to {@code endEntity()} are
+	 * always preceded by a call to {@link #startEntity(String)}. This method is
+	 * only called after {@link #startRecord(String)} has been called and
+	 * before {@link #endRecord()} is called.
 	 */
 	void endEntity();
 
 	/**
-	 * Sent to mark a key-value pair in the record.
-	 * This method is only called after {@code startRecord()} has been called and
-	 * before {@code endRecord()} is called.
+	 * Send to mark a key-value pair in the record. This method is only called
+	 * after {@link #startRecord(String)} has been called and before
+	 * {@link #endRecord()} is called.
 	 *
-	 * @param name the key-part of the literal. Should never be null
-	 * @param value the value-part of the literal. Can be null
+	 * @param name the key-part of the literal. Must never be null.
+	 * @param value the value-part of the literal. Can be null.
 	 */
 	void literal(String name, String value);
 
