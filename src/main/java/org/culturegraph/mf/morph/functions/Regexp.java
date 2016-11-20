@@ -20,7 +20,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.morph.api.NamedValueSource;
+import org.culturegraph.mf.morph.api.helpers.AbstractFunction;
 import org.culturegraph.mf.util.StringUtil;
 
 /**

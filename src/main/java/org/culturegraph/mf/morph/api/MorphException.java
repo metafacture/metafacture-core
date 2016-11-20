@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.morph.functions;
+package org.culturegraph.mf.morph.api;
+
+import org.culturegraph.mf.framework.MetafactureException;
+
 
 /**
- * Base class for functions that act as filters.
+ * Thrown if an error occurs during the processing in Metamorph.
  *
  * @author Markus Michael Geipel
  */
-public abstract class AbstractFilter extends AbstractSimpleStatelessFunction {
+public class MorphException extends MetafactureException {
 
-	private String string;
+	private static final long serialVersionUID = -3130648074493084946L;
 
-	@Override
-	public final String process(final String value) {
-		if(accept(value)){
-			return value;
-		}
-		return null;
+	public MorphException(final String message) {
+		super(message);
 	}
 
-	protected abstract boolean accept(String value);
-
-	protected final  String getString() {
-		return string;
+	public MorphException(final Throwable cause) {
+		super(cause);
 	}
 
-	public final void setString(final String string) {
-		this.string = string;
+	public MorphException(final String message, final Throwable cause) {
+		super(message, cause);
 	}
 
 }

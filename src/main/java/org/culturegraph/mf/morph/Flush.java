@@ -16,6 +16,9 @@
 
 package org.culturegraph.mf.morph;
 
+import org.culturegraph.mf.morph.api.FlushListener;
+import org.culturegraph.mf.morph.api.NamedValueReceiver;
+import org.culturegraph.mf.morph.api.NamedValueSource;
 import org.culturegraph.mf.util.xml.Location;
 
 

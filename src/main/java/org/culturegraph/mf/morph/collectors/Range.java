@@ -20,7 +20,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.morph.api.NamedValueSource;
+import org.culturegraph.mf.morph.api.helpers.AbstractFlushingCollect;
 
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.morph.functions;
+package org.culturegraph.mf.morph.api;
 
 
-import org.culturegraph.mf.morph.FlushListener;
-import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.morph.NamedValuePipe;
 import org.culturegraph.mf.types.MultiMap;
 
 /**
- * Interface for functions used in {@link Metamorph}
+ * Interface for functions used in Metamorph.
  *
  * @author Markus Michael Geipel
  *
  */
-public interface Function  extends NamedValuePipe, FlushListener{
+public interface Function  extends NamedValuePipe, FlushListener {
 
 	void putValue(String key, String value);
 	void setMultiMap(MultiMap multiMapProvider);

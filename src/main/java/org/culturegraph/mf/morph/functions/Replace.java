@@ -17,6 +17,8 @@ package org.culturegraph.mf.morph.functions;
 
 import java.util.regex.Pattern;
 
+import org.culturegraph.mf.morph.api.helpers.AbstractSimpleStatelessFunction;
+
 /**
  * Replaces the matches of pattern with a set value.
  *

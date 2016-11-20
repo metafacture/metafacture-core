@@ -15,6 +15,8 @@
  */
 package org.culturegraph.mf.morph.functions;
 
+import org.culturegraph.mf.morph.api.helpers.AbstractFilter;
+
 /**
  * Checks if the received value matches a given value.
  *

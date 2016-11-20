@@ -26,6 +26,8 @@ import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.culturegraph.mf.morph.api.helpers.AbstractReadOnlyMap;
+
 /**
  * @author "Markus Michael Geipel", "Philipp v. Böselager"
  *

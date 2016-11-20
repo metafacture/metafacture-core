@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.morph.collectors;
-
-import org.culturegraph.mf.morph.ConditionAware;
-import org.culturegraph.mf.morph.FlushListener;
-import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.morph.NamedValuePipe;
+package org.culturegraph.mf.morph.api;
 
 /**
- * Base interface for all classes which act as collectors
- * in {@link Metamorph}.
+ * Base interface for all classes which act as collectors in Metamorph.
  *
  * @author Markus Michael Geipel
  *

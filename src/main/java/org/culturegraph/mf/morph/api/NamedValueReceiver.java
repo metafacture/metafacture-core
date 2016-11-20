@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.morph;
+package org.culturegraph.mf.morph.api;
 
 /**
- * A combination of both {@link NamedValueReceiver} and {@link NamedValueSource}
+ * A receiver of named values.
  *
  * @author Markus Michael Geipel
+ * @author Christoph Böhme
  *
  */
-public interface NamedValuePipe extends NamedValueReceiver, NamedValueSource {
+public interface NamedValueReceiver extends KnowsSourceLocation {
 
-	// Just a combination of NamedValueReceiver and NamedValueSource
+	void receive(String name, String value, NamedValueSource source,
+			int recordCount, int entityCount);
+
+	void addNamedValueSource(final NamedValueSource namedValueSource);
 
 }

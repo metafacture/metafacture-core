@@ -18,6 +18,8 @@ package org.culturegraph.mf.morph.functions;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.culturegraph.mf.morph.api.helpers.AbstractStatefulFunction;
+
 /**
  * Checks whether the received value was not received before.
  *

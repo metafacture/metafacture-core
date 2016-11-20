@@ -19,7 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.morph.api.NamedValueSource;
+import org.culturegraph.mf.morph.api.helpers.AbstractFlushingCollect;
 import org.culturegraph.mf.util.StringUtil;
 
 
@@ -30,7 +31,7 @@ import org.culturegraph.mf.util.StringUtil;
  * @author Christoph Böhme <c.boehme@dnb.de>,  Markus Michael Geipel
  *
  */
-public final class Choose extends AbstractFlushingCollect{
+public final class Choose extends AbstractFlushingCollect {
 
 	private String value;
 	private String name;

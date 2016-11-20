@@ -15,13 +15,15 @@
  */
 package org.culturegraph.mf.morph.functions;
 
+import org.culturegraph.mf.morph.api.helpers.AbstractFilter;
+
 /**
  * Checks whether the received value does not equal a
  * given value.
  *
  * @author Markus Michael Geipel
  */
-public final class NotEquals extends AbstractFilter{
+public final class NotEquals extends AbstractFilter {
 
 	@Override
 	protected boolean accept(final String value) {

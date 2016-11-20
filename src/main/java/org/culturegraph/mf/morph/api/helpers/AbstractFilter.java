@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.morph;
+package org.culturegraph.mf.morph.api.helpers;
 
 /**
- * Base interface for all classes in {@link Metamorph} which emit
- * name-value-pairs.
+ * Base class for functions that act as filters.
  *
  * @author Markus Michael Geipel
- * @author Christoph Böhme
- *
  */
-public interface NamedValueSource extends KnowsSourceLocation {
+public abstract class AbstractFilter extends AbstractSimpleStatelessFunction {
 
-	/**
-	 * Connects a source of named values to a receiver of named values.
-	 *
-	 * Users should not call this method to connect sources and
-	 * receivers but rather call
-	 * {@link NamedValueReceiver.addNamedValueSource}.
-	 *
-	 * @param receiver
-	 */
-	void setNamedValueReceiver(NamedValueReceiver receiver);
+	private String string;
+
+	@Override
+	public final String process(final String value) {
+		if(accept(value)){
+			return value;
+		}
+		return null;
+	}
+
+	protected abstract boolean accept(String value);
+
+	protected final  String getString() {
+		return string;
+	}
+
+	public final void setString(final String string) {
+		this.string = string;
+	}
 
 }

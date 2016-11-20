@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.morph;
+package org.culturegraph.mf.morph.api;
 
 import org.culturegraph.mf.framework.MetafactureException;
-import org.culturegraph.mf.morph.MorphBuilder;
 
 
 /**
- * Thrown by {@link MorphBuilder} if the definition is syntactically incorrect or components for dynamic loading are not found.
+ * Thrown by Metamorph if the definition is syntactically incorrect or
+ * components for dynamic loading are not found.
  *
  * @author Markus Michael Geipel
  *
@@ -29,24 +29,14 @@ public final class MorphDefException extends MetafactureException {
 
 	private static final long serialVersionUID = -3130648074493084946L;
 
-	/**
-	 * @param message
-	 */
 	public MorphDefException(final String message) {
 		super(message);
 	}
 
-	/**
-	 * @param cause
-	 */
 	public MorphDefException(final Throwable cause) {
 		super(cause);
 	}
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
 	public MorphDefException(final String message, final Throwable cause) {
 		super(message, cause);
 	}

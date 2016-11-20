@@ -15,7 +15,8 @@
  */
 package org.culturegraph.mf.morph.functions;
 
-import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.morph.api.NamedValueSource;
+import org.culturegraph.mf.morph.api.helpers.AbstractFunction;
 
 /**
  * Swap name and value of received data.

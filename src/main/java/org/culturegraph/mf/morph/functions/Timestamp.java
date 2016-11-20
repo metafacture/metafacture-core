@@ -24,7 +24,8 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
-import org.culturegraph.mf.morph.MorphDefException;
+import org.culturegraph.mf.morph.api.MorphDefException;
+import org.culturegraph.mf.morph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
  * This function creates a timestamp. By default it returns a unix

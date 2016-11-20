@@ -20,7 +20,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.morph.api.NamedValueSource;
+import org.culturegraph.mf.morph.api.helpers.AbstractFlushingCollect;
 
 /**
  * Corresponds to the <code>&lt;collect-literal&gt;</code> tag.

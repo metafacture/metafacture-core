@@ -15,6 +15,8 @@
  */
 package org.culturegraph.mf.morph.functions;
 
+import org.culturegraph.mf.morph.api.helpers.AbstractSimpleStatelessFunction;
+
 /**
  * Extracts a substring from the received value.
  *

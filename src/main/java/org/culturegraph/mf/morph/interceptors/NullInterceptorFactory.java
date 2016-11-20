@@ -15,8 +15,9 @@
  */
 package org.culturegraph.mf.morph.interceptors;
 
-import org.culturegraph.mf.morph.FlushListener;
-import org.culturegraph.mf.morph.NamedValuePipe;
+import org.culturegraph.mf.morph.api.FlushListener;
+import org.culturegraph.mf.morph.api.NamedValuePipe;
+import org.culturegraph.mf.morph.api.InterceptorFactory;
 
 /**
  * An implementation of {@link InterceptorFactory} which returns no

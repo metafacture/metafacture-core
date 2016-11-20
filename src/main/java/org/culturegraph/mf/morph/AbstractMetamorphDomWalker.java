@@ -18,6 +18,7 @@ package org.culturegraph.mf.morph;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.culturegraph.mf.morph.api.MorphDefException;
 import org.culturegraph.mf.morph.collectors.CollectFactory;
 import org.culturegraph.mf.morph.functions.FunctionFactory;
 import org.culturegraph.mf.morph.maps.MapFactory;

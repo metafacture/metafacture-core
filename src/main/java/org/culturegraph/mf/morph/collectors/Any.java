@@ -16,7 +16,8 @@
 package org.culturegraph.mf.morph.collectors;
 
 import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.morph.api.NamedValueSource;
+import org.culturegraph.mf.morph.api.helpers.AbstractCollect;
 import org.culturegraph.mf.util.StringUtil;
 
 /**

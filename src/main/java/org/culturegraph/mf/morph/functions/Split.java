@@ -17,7 +17,8 @@ package org.culturegraph.mf.morph.functions;
 
 import java.util.regex.Pattern;
 
-import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.morph.api.NamedValueSource;
+import org.culturegraph.mf.morph.api.helpers.AbstractFunction;
 
 /**
  * Splits the received value and output each part separately.

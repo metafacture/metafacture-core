@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Christoph Böhme
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.morph;
+package org.culturegraph.mf.morph.api;
 
 /**
- * Interface for statements that can be made conditional.
+ * Error handler used by Metamorph. Implement this interface to provide custom
+ * error handling.
  *
- * @author Christoph Böhme
+ * @author Markus Michael Geipel
  *
  */
-public interface ConditionAware {
+public interface MorphErrorHandler {
 
-	void setConditionSource(NamedValueSource receiver);
+	void error(Exception exception);
 
 }

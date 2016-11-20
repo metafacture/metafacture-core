@@ -20,10 +20,14 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.culturegraph.mf.morph.collectors.Collect;
+import org.culturegraph.mf.morph.api.Collect;
+import org.culturegraph.mf.morph.api.ConditionAware;
+import org.culturegraph.mf.morph.api.FlushListener;
+import org.culturegraph.mf.morph.api.MorphDefException;
+import org.culturegraph.mf.morph.api.NamedValuePipe;
 import org.culturegraph.mf.morph.collectors.Entity;
-import org.culturegraph.mf.morph.functions.Function;
-import org.culturegraph.mf.morph.interceptors.InterceptorFactory;
+import org.culturegraph.mf.morph.api.Function;
+import org.culturegraph.mf.morph.api.InterceptorFactory;
 import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 import org.culturegraph.mf.util.xml.Location;

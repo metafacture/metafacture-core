@@ -18,8 +18,9 @@ package org.culturegraph.mf.morph.functions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.culturegraph.mf.morph.NamedValueReceiver;
-import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.morph.api.NamedValueReceiver;
+import org.culturegraph.mf.morph.api.NamedValueSource;
+import org.culturegraph.mf.morph.api.helpers.AbstractFunction;
 
 
 /**

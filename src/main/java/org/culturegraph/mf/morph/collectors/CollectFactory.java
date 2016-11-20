@@ -18,6 +18,7 @@ package org.culturegraph.mf.morph.collectors;
 
 import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.MorphBuilder;
+import org.culturegraph.mf.morph.api.Collect;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 

@@ -15,6 +15,8 @@
  */
 package org.culturegraph.mf.morph.functions;
 
+import org.culturegraph.mf.morph.api.helpers.AbstractStatefulFunction;
+
 /**
  * Counts the number of values received.
  *

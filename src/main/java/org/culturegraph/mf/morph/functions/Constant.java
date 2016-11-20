@@ -15,6 +15,8 @@
  */
 package org.culturegraph.mf.morph.functions;
 
+import org.culturegraph.mf.morph.api.helpers.AbstractSimpleStatelessFunction;
+
 /**
  * Outputs a constant value.
  *

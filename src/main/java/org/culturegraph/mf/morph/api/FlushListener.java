@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.morph;
+package org.culturegraph.mf.morph.api;
 
 /**
- * Error handler used by {@link Metamorph}. Implement
- * this interface to provide custom error handling.
- *
- * @see DefaultErrorHandler for the default implementation
+ * Used by Metamorph to flush collected data.
  *
  * @author Markus Michael Geipel
- *
  */
-public interface MorphErrorHandler {
+public interface FlushListener {
 
-	void error(Exception exception);
+	void flush(final int recordCount, final int entityCount);
 
 }

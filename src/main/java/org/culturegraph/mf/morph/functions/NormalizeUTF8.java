@@ -18,6 +18,8 @@ package org.culturegraph.mf.morph.functions;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 
+import org.culturegraph.mf.morph.api.helpers.AbstractSimpleStatelessFunction;
+
 /**
  * Performs normalization of diacritics in utf-8 encoded strings.
  *

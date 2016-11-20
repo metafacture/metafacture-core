@@ -18,6 +18,8 @@ package org.culturegraph.mf.morph.functions;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.culturegraph.mf.morph.api.helpers.AbstractSimpleStatelessFunction;
+
 /**
  * Offers ISBN conversions.
  *

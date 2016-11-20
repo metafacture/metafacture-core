@@ -23,7 +23,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.culturegraph.mf.morph.MorphException;
+import org.culturegraph.mf.morph.api.MorphException;
+import org.culturegraph.mf.morph.api.helpers.AbstractReadOnlyMap;
 
 /**
  * A map implementation that queries an sql database.

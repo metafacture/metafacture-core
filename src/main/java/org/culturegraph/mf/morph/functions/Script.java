@@ -22,8 +22,9 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import org.culturegraph.mf.morph.MorphDefException;
-import org.culturegraph.mf.morph.MorphException;
+import org.culturegraph.mf.morph.api.MorphDefException;
+import org.culturegraph.mf.morph.api.MorphException;
+import org.culturegraph.mf.morph.api.helpers.AbstractSimpleStatelessFunction;
 import org.culturegraph.mf.util.ResourceUtil;
 
 /**

@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.culturegraph.mf.framework.MetafactureException;
+import org.culturegraph.mf.morph.api.helpers.AbstractStatefulFunction;
 import org.culturegraph.mf.util.StringUtil;
 
 /**

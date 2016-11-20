@@ -22,8 +22,9 @@ import java.util.Set;
 
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.morph.NamedValueReceiver;
-import org.culturegraph.mf.morph.NamedValueSource;
+import org.culturegraph.mf.morph.api.NamedValueReceiver;
+import org.culturegraph.mf.morph.api.NamedValueSource;
+import org.culturegraph.mf.morph.api.helpers.AbstractFlushingCollect;
 import org.culturegraph.mf.stream.pipe.StreamBuffer;
 import org.culturegraph.mf.util.StringUtil;
 

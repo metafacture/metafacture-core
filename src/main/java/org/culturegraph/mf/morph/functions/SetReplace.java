@@ -15,6 +15,7 @@
  */
 package org.culturegraph.mf.morph.functions;
 
+import org.culturegraph.mf.morph.api.helpers.AbstractSimpleStatelessFunction;
 import org.culturegraph.mf.util.tries.SetReplacer;
 
 /**

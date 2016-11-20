@@ -18,7 +18,8 @@ package org.culturegraph.mf.morph.functions;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import org.culturegraph.mf.morph.MorphException;
+import org.culturegraph.mf.morph.api.MorphException;
+import org.culturegraph.mf.morph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
  * URL encodes the received value.

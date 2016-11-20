@@ -24,7 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.culturegraph.mf.morph.MorphException;
+import org.culturegraph.mf.morph.api.MorphException;
+import org.culturegraph.mf.morph.api.helpers.AbstractReadOnlyMap;
 import org.culturegraph.mf.util.ResourceUtil;
 
 /**

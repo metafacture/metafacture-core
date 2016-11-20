@@ -15,6 +15,8 @@
  */
 package org.culturegraph.mf.morph;
 
+import org.culturegraph.mf.morph.api.NamedValueSource;
+import org.culturegraph.mf.morph.api.helpers.AbstractNamedValuePipe;
 import org.culturegraph.mf.util.StringUtil;
 
 /**

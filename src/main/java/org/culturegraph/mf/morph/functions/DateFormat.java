@@ -23,7 +23,8 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import org.culturegraph.mf.morph.MorphDefException;
+import org.culturegraph.mf.morph.api.MorphDefException;
+import org.culturegraph.mf.morph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
  * Format date/time strings in Metamorph. By default the input format is

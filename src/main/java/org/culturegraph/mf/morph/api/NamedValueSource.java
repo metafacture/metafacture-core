@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.morph;
-
-
-import org.culturegraph.mf.morph.api.MorphErrorHandler;
-import org.culturegraph.mf.morph.api.MorphException;
+package org.culturegraph.mf.morph.api;
 
 /**
- * Default error handler used by {@link Metamorph}. Just
- * repackages exceptions as {@link MorphException}s.
+ * Base interface for all classes in Metamorph which emit name-value-pairs.
  *
  * @author Markus Michael Geipel
+ * @author Christoph Böhme
  *
  */
-public final class DefaultErrorHandler implements MorphErrorHandler {
+public interface NamedValueSource extends KnowsSourceLocation {
 
-	@Override
-	public void error(final Exception exception) {
-		throw new MorphException("An unhandled exception occured: "
-				+ exception.getMessage(), exception);
-	}
+	/**
+	 * Connects a source of named values to a receiver of named values.
+	 *
+	 * Users should not call this method to connect sources and
+	 * receivers but rather call
+	 * {@link NamedValueReceiver#addNamedValueSource}.
+	 *
+	 * @param receiver receiver of the named-values from this source.
+	 */
+	void setNamedValueReceiver(NamedValueReceiver receiver);
 
 }
