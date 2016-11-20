@@ -3,12 +3,9 @@ metafacture-framework
 	Contains the interface definitions and base classes for Metafacture modules.
 
 	Stability: high
-	
-	Packages:
-		framework
 
-	Classes:
-		Triple
+	Contents:
+		framework
 
 --------------------------------------------------------------------------------
 
@@ -19,15 +16,8 @@ metafacture-morph-api
 	Stability: high
 
 	Contents:
-		[TODO] (Collector and Funtion interfaces)
+		TODO
 
---------------------------------------------------------------------------------
-
-metafacture-morph-commons
-	Contains convenience classes for implementing functions and collectors.
-
-	Depends on: metafacture-morph-api
- 
 --------------------------------------------------------------------------------
 
 metafacture-commons
