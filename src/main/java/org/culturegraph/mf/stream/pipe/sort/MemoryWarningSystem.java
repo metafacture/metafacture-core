@@ -1,4 +1,5 @@
 /*
+ * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -16,8 +17,7 @@
 /*
  *  Code based on http://www.javaspecialists.eu/archive/Issue092.html
  */
-
-package org.culturegraph.mf.util;
+package org.culturegraph.mf.stream.pipe.sort;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
@@ -33,10 +33,10 @@ import javax.management.NotificationListener;
 
 /**
  * This memory warning system will call the listener when we exceed the
- * percentage of available memory specified. The class is static, since the usage threshold can only be set to one
- * number.
+ * percentage of available memory specified. The class is static, since the
+ * usage threshold can only be set to one number.
  */
-public final class MemoryWarningSystem {
+final class MemoryWarningSystem {
 	private static final MemoryPoolMXBean TENURED_GEN_POOL = findTenuredGenPool();
 	private static final double DEFAULT_THRESHOLD = 0.8;
 	private static final Collection<Listener> LISTENERS = new CopyOnWriteArrayList<Listener>();
@@ -54,7 +54,7 @@ public final class MemoryWarningSystem {
 			@Override
 			public void handleNotification(final Notification notification, final Object handback) {
 				if (notification.getType().equals(MemoryNotificationInfo.MEMORY_THRESHOLD_EXCEEDED)) {
-					for (Listener listener : getListeners()) {
+					for (final Listener listener : getListeners()) {
 						listener.memoryLow(getUsedMemory(), getMaxMemory());
 					}
 				}
@@ -62,27 +62,27 @@ public final class MemoryWarningSystem {
 		}, null, null);
 	}
 
-	protected static Collection<Listener> getListeners(){
+	private static Collection<Listener> getListeners(){
 		return LISTENERS;
 	}
 
-	public static long getMaxMemory() {
+	private static long getMaxMemory() {
 		return TENURED_GEN_POOL.getUsage().getMax();
 	}
 
-	public static long getUsedMemory() {
+	private static long getUsedMemory() {
 		return TENURED_GEN_POOL.getUsage().getUsed();
 	}
 
-	public static boolean addListener(final Listener listener) {
+	static boolean addListener(final Listener listener) {
 		return LISTENERS.add(listener);
 	}
 
-	public static boolean removeListener(final Listener listener) {
+	static boolean removeListener(final Listener listener) {
 		return LISTENERS.remove(listener);
 	}
 
-	public static void setUsageThreshold(final double threshold) {
+	private static void setUsageThreshold(final double threshold) {
 		if (threshold <= 0.0 || threshold > 1.0) {
 			throw new IllegalArgumentException("'threshold' must be in [0.0, 1.0]");
 		}
@@ -94,20 +94,20 @@ public final class MemoryWarningSystem {
 	 * being possible to set the usage threshold.
 	 */
 	private static MemoryPoolMXBean findTenuredGenPool() {
-		for (MemoryPoolMXBean pool : ManagementFactory.getMemoryPoolMXBeans()) {
-			// I don't know whether this approach is better, or whether
-			// we should rather check for the pool name "Tenured Gen"?
+		// I don't know whether this approach is better, or whether
+		// we should rather check for the pool name "Tenured Gen"?
+		for (final MemoryPoolMXBean pool : ManagementFactory.getMemoryPoolMXBeans())
 			if (pool.getType() == MemoryType.HEAP && pool.isUsageThresholdSupported()) {
 				return pool;
 			}
-		}
 		throw new AssertionError("Could not find tenured space");
 	}
 
 	/**
 	 * Interface for low memory listeners
 	 */
-	public interface Listener {
+	interface Listener {
 		void memoryLow(long usedMemory, long maxMemory);
 	}
+
 }

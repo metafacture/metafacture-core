@@ -29,8 +29,7 @@ import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.objects.Triple;
-import org.culturegraph.mf.util.MemoryWarningSystem;
-import org.culturegraph.mf.util.MemoryWarningSystem.Listener;
+import org.culturegraph.mf.stream.pipe.sort.MemoryWarningSystem.Listener;
 
 /**
  * @author markus geipel
