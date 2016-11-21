@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.api.NamedValueSource;
 import org.culturegraph.mf.morph.api.helpers.AbstractFlushingCollect;
 
@@ -34,10 +33,6 @@ public final class Square extends AbstractFlushingCollect {
 	private String prefix = "";
 	private String postfix = "";
 	private String delimiter = "";
-
-	public Square(final Metamorph metamorph) {
-		super(metamorph);
-	}
 
 	public void setPrefix(final String prefix) {
 		this.prefix = prefix;

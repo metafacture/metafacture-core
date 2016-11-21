@@ -39,11 +39,13 @@ public final class Entity extends AbstractFlushingCollect {
 	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
 	private final StreamBuffer buffer = new StreamBuffer();
 
+	private final Metamorph metamorph;
+
 	private NamedValueSource nameSource;
 	private String currentName;
 
 	public Entity(final Metamorph metamorph) {
-		super(metamorph);
+		this.metamorph = metamorph;
 	}
 
 	public void setNameSource(final NamedValueSource source) {
@@ -59,7 +61,7 @@ public final class Entity extends AbstractFlushingCollect {
 			final Entity parent = (Entity) namedValueReceiver;
 			parent.receive(null, null, this, getRecordCount(), getEntityCount());
 		} else {
-			write(getMetamorph().getStreamReceiver());
+			write(metamorph.getStreamReceiver());
 		}
 	}
 

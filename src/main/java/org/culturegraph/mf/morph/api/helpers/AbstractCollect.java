@@ -15,7 +15,6 @@
  */
 package org.culturegraph.mf.morph.api.helpers;
 
-import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.api.Collect;
 import org.culturegraph.mf.morph.api.NamedValueSource;
 import org.culturegraph.mf.morph.collectors.Combine;
@@ -37,20 +36,10 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 	private boolean sameEntity;
 	private String name;
 	private String value;
-	private final Metamorph metamorph;
 	private boolean waitForFlush;
 	private boolean conditionMet;
 
 	private NamedValueSource conditionSource;
-
-	public AbstractCollect(final Metamorph metamorph) {
-		super();
-		this.metamorph = metamorph;
-	}
-
-	protected final Metamorph getMetamorph() {
-		return metamorph;
-	}
 
 	protected final int getRecordCount() {
 		return oldRecord;

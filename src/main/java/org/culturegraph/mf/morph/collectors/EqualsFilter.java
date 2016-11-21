@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.api.NamedValueSource;
 import org.culturegraph.mf.morph.api.helpers.AbstractFlushingCollect;
 import org.culturegraph.mf.util.StringUtil;
@@ -37,11 +36,6 @@ public final class EqualsFilter extends AbstractFlushingCollect {
 	private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
 	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
 	private boolean isEqual = true;
-
-	public EqualsFilter(final Metamorph metamorph) {
-		super(metamorph);
-		this.isEqual = true;
-	}
 
 	@Override
 	protected void emit() {

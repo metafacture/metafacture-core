@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.api.NamedValueSource;
 import org.culturegraph.mf.morph.api.helpers.AbstractFlushingCollect;
 import org.culturegraph.mf.types.ListMap;
@@ -35,10 +34,6 @@ public final class Tuples extends AbstractFlushingCollect {
 	private final ListMap<String, String> listMap = new ListMap<String, String>();
 	private int minN = 1;
 	private String separator = "";
-
-	public Tuples(final Metamorph metamorph) {
-		super(metamorph);
-	}
 
 	public void setMinN(final int minN) {
 		this.minN = minN;

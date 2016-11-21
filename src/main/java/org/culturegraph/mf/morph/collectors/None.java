@@ -15,7 +15,6 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.api.NamedValueSource;
 import org.culturegraph.mf.morph.api.helpers.AbstractCollect;
 import org.culturegraph.mf.util.StringUtil;
@@ -33,10 +32,6 @@ public final class None extends AbstractCollect {
 
 	private boolean receivedInput;
 	private boolean emittedResult;
-
-	public None(final Metamorph metamorph) {
-		super(metamorph);
-	}
 
 	@Override
 	protected void receive(final String name, final String value, final NamedValueSource source) {

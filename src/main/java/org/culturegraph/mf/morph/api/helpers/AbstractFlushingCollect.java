@@ -15,7 +15,6 @@
  */
 package org.culturegraph.mf.morph.api.helpers;
 
-import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.collectors.Combine;
 import org.culturegraph.mf.morph.collectors.Entity;
 
@@ -27,10 +26,6 @@ import org.culturegraph.mf.morph.collectors.Entity;
  *
  */
 public abstract class AbstractFlushingCollect extends AbstractCollect {
-
-	public AbstractFlushingCollect(final Metamorph metamorph) {
-		super(metamorph);
-	}
 
 	@Override
 	public final void flush(final int recordCount, final int entityCount) {

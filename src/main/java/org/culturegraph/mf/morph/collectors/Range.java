@@ -19,7 +19,6 @@ import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.api.NamedValueSource;
 import org.culturegraph.mf.morph.api.helpers.AbstractFlushingCollect;
 
@@ -47,10 +46,6 @@ public final class Range extends AbstractFlushingCollect {
 			return Integer.signum(increment) * (o1 - o2);
 		}
 
-	}
-
-	public Range(final Metamorph metamorph) {
-		super(metamorph);
 	}
 
 	public int getIncrement() {

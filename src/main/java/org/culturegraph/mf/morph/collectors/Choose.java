@@ -18,7 +18,6 @@ package org.culturegraph.mf.morph.collectors;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.api.NamedValueSource;
 import org.culturegraph.mf.morph.api.helpers.AbstractFlushingCollect;
 import org.culturegraph.mf.util.StringUtil;
@@ -39,10 +38,6 @@ public final class Choose extends AbstractFlushingCollect {
 	private final Map<NamedValueSource, Integer> priorities =
 			new HashMap<NamedValueSource, Integer>();
 	private int nextPriority;
-
-	public Choose(final Metamorph metamorph) {
-		super(metamorph);
-	}
 
 	@Override
 	protected void emit() {

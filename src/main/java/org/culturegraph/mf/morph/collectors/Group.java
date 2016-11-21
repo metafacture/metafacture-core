@@ -15,7 +15,6 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.api.NamedValueSource;
 import org.culturegraph.mf.morph.api.helpers.AbstractFlushingCollect;
 import org.culturegraph.mf.util.StringUtil;
@@ -26,10 +25,6 @@ import org.culturegraph.mf.util.StringUtil;
  * @author Markus Michael Geipel
  */
 public final class Group extends AbstractFlushingCollect {
-
-	public Group(final Metamorph metamorph) {
-		super(metamorph);
-	}
 
 	@Override
 	protected void receive(final String recName, final String recValue,

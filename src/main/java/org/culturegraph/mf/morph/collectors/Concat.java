@@ -15,7 +15,6 @@
  */
 package org.culturegraph.mf.morph.collectors;
 
-import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.api.NamedValueSource;
 import org.culturegraph.mf.morph.api.helpers.AbstractFlushingCollect;
 
@@ -34,10 +33,6 @@ public final class Concat extends AbstractFlushingCollect {
 	private boolean reverse = false;
 
 	private String currentDelimiter = "";
-
-	public Concat(final Metamorph metamorph) {
-		super(metamorph);
-	}
 
 	public void setPrefix(final String prefix) {
 		this.prefix = prefix;

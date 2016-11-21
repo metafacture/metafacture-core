@@ -46,6 +46,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	private static final String JAVA = "java";
 	private static final String JAVAMAP = "javamap";
 	private static final String RECORD = "record";
+	private static final String ENTITY_ELEMENT = "entity";
 	private static final String OR_STRING = "|";
 	private static final Pattern OR_PATTERN = Pattern.compile(OR_STRING, Pattern.LITERAL);
 
@@ -267,7 +268,13 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		if (!getCollectFactory().containsKey(node.getLocalName())) {
 			throw new IllegalArgumentException("Collector " + node.getLocalName() + NOT_FOUND);
 		}
-		final Collect collect = getCollectFactory().newInstance(node.getLocalName(), attributes, metamorph);
+		final Collect collect;
+		if (ENTITY_ELEMENT.equals(node.getLocalName())) {
+			collect = getCollectFactory().newInstance(node.getLocalName(), attributes,
+					metamorph);
+		} else {
+			collect = getCollectFactory().newInstance(node.getLocalName(), attributes);
+		}
 		collect.setSourceLocation((Location) node.getUserData(Location.USER_DATA_ID));
 
 		stack.push(new StackFrame(collect));
