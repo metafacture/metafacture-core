@@ -24,14 +24,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.types.MultiMap;
+import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 import org.culturegraph.mf.util.ResourceUtil;
 
 /**
@@ -49,7 +48,6 @@ import org.culturegraph.mf.util.ResourceUtil;
 public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
 	public static final String ATTRIBUTE_MARKER = "~";
-	public static final String NAMESPACES = "namespaces";
 
 	public static final String DEFAULT_ROOT_TAG = "records";
 	public static final String DEFAULT_RECORD_TAG = "record";
@@ -112,10 +110,6 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
 	public void setSeparateRoots(final boolean separateRoots) {
 		this.separateRoots = separateRoots;
-	}
-
-	public void setNamespaces(final MultiMap multimap) {
-		setNamespaces(multimap.getMap(NAMESPACES));
 	}
 
 	public void setNamespaces(final Map<String, String> namespaces) {
