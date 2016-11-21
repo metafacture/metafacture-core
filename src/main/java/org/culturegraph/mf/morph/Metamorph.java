@@ -20,10 +20,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -74,24 +76,25 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 	private static final String COULD_NOT_LOAD_MORPH_FILE = "Could not load morph file";
 
 	private static final InterceptorFactory NULL_INTERCEPTOR_FACTORY = new NullInterceptorFactory();
-	private static final Map<String, String> NO_VARS = Collections.<String, String>emptyMap();
+	private static final Map<String, String> NO_VARS = Collections.emptyMap();
 
-	private final Registry<NamedValueReceiver> dataRegistry = MorphCollectionFactory.createRegistry();
-	private final List<NamedValueReceiver> elseSources = MorphCollectionFactory.createList();
+	private final Registry<NamedValueReceiver> dataRegistry =
+			new WildcardRegistry<>();
+	private final List<NamedValueReceiver> elseSources = new ArrayList<>();
 
 	private final Map<String, Map<String, String>> maps = new HashMap<>();
-	private final List<Closeable> resources = MorphCollectionFactory.createList();
+	private final List<Closeable> resources = new ArrayList<>();
 
 	private final StreamFlattener flattener = new StreamFlattener();
 
-	private final Deque<Integer> entityCountStack = MorphCollectionFactory.createDeque();
+	private final Deque<Integer> entityCountStack = new LinkedList<>();
 	private int entityCount;
 	private int currentEntityCount;
 
 	private StreamReceiver outputStreamReceiver;
 	private MorphErrorHandler errorHandler = new DefaultErrorHandler();
 	private int recordCount;
-	private final List<FlushListener> recordEndListener = MorphCollectionFactory.createList();
+	private final List<FlushListener> recordEndListener = new ArrayList<>();
 
 	protected Metamorph() {
 		// package private
