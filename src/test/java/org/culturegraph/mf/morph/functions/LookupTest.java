@@ -17,13 +17,15 @@ package org.culturegraph.mf.morph.functions;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.when;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.culturegraph.mf.types.MultiHashMap;
-import org.culturegraph.mf.types.MultiMap;
+import org.culturegraph.mf.morph.api.Maps;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 
 /**
@@ -40,26 +42,41 @@ public final class LookupTest {
 	private static final String KEY_WRONG = "Josef";
 	private static final String VALUE = "Kafka";
 
+	@Rule
+	public MockitoRule mockito = MockitoJUnit.rule();
+
+	private Lookup lookup = new Lookup();
+	@Mock
+	private Maps maps;
+
+	@Before
+	public void initMocksAndSystemUnderTest() {
+		when(maps.getValue(MAP_NAME, KEY)).thenReturn(VALUE);
+		when(maps.getValue(MAP_NAME, KEY_WRONG)).thenReturn(null);
+		when(maps.getValue(MAP_NAME_WRONG, KEY)).thenReturn(null);
+		when(maps.getValue(MAP_NAME_WRONG, KEY_WRONG)).thenReturn(null);
+		lookup.setMaps(maps);
+	}
+
 	@Test
-	public void testLookup() {
-		final Lookup lookup = new Lookup();
-		final MultiMap multiMapProvider = new MultiHashMap();
-		final Map<String, String> map = new HashMap<String, String>();
-		map.put(KEY, VALUE);
-
-		multiMapProvider.putMap(MAP_NAME, map);
-
-		lookup.setMultiMap(multiMapProvider);
+	public void shouldReturnNullIfMapNameIsDoesNotExist() {
 		lookup.setIn(MAP_NAME_WRONG);
+
 		assertNull(lookup.process(KEY));
-		assertNull(lookup.process(KEY_WRONG));
+	}
 
+	@Test
+	public void shouldReturnValueIfMapAndKeyExist() {
 		lookup.setIn(MAP_NAME);
-		assertEquals(VALUE, lookup.process(KEY));
-		assertNull(lookup.process(KEY_WRONG));
 
-		map.put(MultiMap.DEFAULT_MAP_KEY, VALUE);
-		assertEquals(VALUE, lookup.process(KEY_WRONG));
+		assertEquals(VALUE, lookup.process(KEY));
+	}
+
+	@Test
+	public void shouldReturnNullIfKeyDoesNotExist() {
+		lookup.setIn(MAP_NAME);
+
+		assertNull(lookup.process(KEY_WRONG));
 	}
 
 }

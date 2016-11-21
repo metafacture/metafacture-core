@@ -21,8 +21,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.culturegraph.mf.types.MultiHashMap;
-import org.culturegraph.mf.types.MultiMap;
+import org.culturegraph.mf.morph.api.Maps;
 
 
 /**
@@ -38,8 +37,8 @@ final class MorphCollectionFactory {
 		//no instances
 	}
 
-	public static MultiMap createMultiMap(){
-		return new MultiHashMap();
+	public static Maps createMultiMap(){
+		return new HashMaps();
 	}
 
 	public static  <T> List<T> createList(){

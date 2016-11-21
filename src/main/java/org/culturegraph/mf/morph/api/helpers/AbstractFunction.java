@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.culturegraph.mf.morph.api.Function;
-import org.culturegraph.mf.types.MultiMap;
+import org.culturegraph.mf.morph.api.Maps;
 
 /**
  * Base class for functions.
@@ -29,12 +29,12 @@ import org.culturegraph.mf.types.MultiMap;
 public abstract class AbstractFunction extends AbstractNamedValuePipe
 		implements Function {
 
-	private MultiMap multiMap;
+	private Maps maps;
 	private Map<String, String> localMap;
 	private String mapName;
 
 	protected final String getValue(final String mapName, final String key) {
-		return multiMap.getValue(mapName, key);
+		return maps.getValue(mapName, key);
 	}
 
 	protected final String getLocalValue(final String key) {
@@ -50,7 +50,7 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
 
 	public final Map<String, String> getMap() {
 		if (localMap == null) {
-			return multiMap.getMap(mapName);
+			return maps.getMap(mapName);
 		}
 		return localMap;
 	}
@@ -67,9 +67,8 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
 		localMap.put(key, value);
 	}
 
-	@Override
-	public final void setMultiMap(final MultiMap multiMapProvider) {
-		this.multiMap = multiMapProvider;
+	public final void setMaps(final Maps maps) {
+		this.maps = maps;
 	}
 
 	@Override

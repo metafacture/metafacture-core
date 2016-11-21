@@ -24,9 +24,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
+import org.culturegraph.mf.morph.api.Maps;
 import org.culturegraph.mf.morph.api.NamedValueReceiver;
 import org.culturegraph.mf.morph.api.NamedValueSource;
-import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.xml.Location;
 import org.junit.Before;
 import org.junit.Test;
@@ -152,7 +152,7 @@ public final class MetamorphBasicTest {
 	@Test
 	public void shouldReturnDefaultValueIfMapIsKnownButNameIsUnknown() {
 		final Map<String, String> map = new HashMap<>();
-		map.put(MultiMap.DEFAULT_MAP_KEY, "defaultValue");
+		map.put(Maps.DEFAULT_MAP_KEY, "defaultValue");
 
 		metamorph.putMap(MAP_NAME, map);
 

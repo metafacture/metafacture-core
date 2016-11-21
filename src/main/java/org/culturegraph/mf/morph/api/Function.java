@@ -16,17 +16,15 @@
 package org.culturegraph.mf.morph.api;
 
 
-import org.culturegraph.mf.types.MultiMap;
-
 /**
  * Interface for functions used in Metamorph.
  *
  * @author Markus Michael Geipel
  *
  */
-public interface Function  extends NamedValuePipe, FlushListener {
+public interface Function extends NamedValuePipe, FlushListener {
 
 	void putValue(String key, String value);
-	void setMultiMap(MultiMap multiMapProvider);
+	void setMaps(Maps maps);
 
 }

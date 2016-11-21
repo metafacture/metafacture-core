@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.types;
+package org.culturegraph.mf.morph.api;
 
 import java.util.Collection;
 import java.util.Map;
 
 /**
- * Simple value store with following a  Map&lt;String, Map&lt;String, String&gt;&gt; model. Just keeping the interface simpler.
+ * Provides access to the maps defined in a Metamorph script.
  *
  * @author Markus Michael Geipel
  *
  */
-public interface MultiMap {
-
+public interface Maps {
 
 	String DEFAULT_MAP_KEY = "__default";
 
-	/**
-	 *
-	 * @param mapName
-	 * @return map corresponding to mapName. Never return <code>null</code>. If there is no corresponding {@link Map}, return empty one.
-	 */
 	Collection<String> getMapNames();
+
 	Map<String, String> getMap(String mapName);
+
 	String getValue(String mapName, String key);
 
 	Map<String, String> putMap(String mapName, Map<String, String> map);
+
 	String putValue(String mapName, String key, String value);
 
 }

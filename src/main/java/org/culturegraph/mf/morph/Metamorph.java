@@ -23,18 +23,21 @@ import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
+import org.culturegraph.mf.framework.FluxCommand;
+import org.culturegraph.mf.framework.StandardEventNames;
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
 import org.culturegraph.mf.morph.api.FlushListener;
 import org.culturegraph.mf.morph.api.InterceptorFactory;
+import org.culturegraph.mf.morph.api.Maps;
 import org.culturegraph.mf.morph.api.MorphDefException;
 import org.culturegraph.mf.morph.api.MorphErrorHandler;
 import org.culturegraph.mf.morph.api.NamedValuePipe;
@@ -42,9 +45,7 @@ import org.culturegraph.mf.morph.api.NamedValueReceiver;
 import org.culturegraph.mf.morph.api.NamedValueSource;
 import org.culturegraph.mf.morph.interceptors.NullInterceptorFactory;
 import org.culturegraph.mf.stream.pipe.StreamFlattener;
-import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.ResourceUtil;
-import org.culturegraph.mf.framework.StandardEventNames;
 import org.culturegraph.mf.util.xml.Location;
 import org.xml.sax.InputSource;
 
@@ -60,7 +61,7 @@ import org.xml.sax.InputSource;
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("morph")
-public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePipe, MultiMap {
+public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps {
 
 	public static final String ELSE_KEYWORD = "_else";
 	public static final char FEEDBACK_CHAR = '@';
@@ -78,7 +79,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 	private final Registry<NamedValueReceiver> dataRegistry = MorphCollectionFactory.createRegistry();
 	private final List<NamedValueReceiver> elseSources = MorphCollectionFactory.createList();
 
-	private final MultiMap multiMap = MorphCollectionFactory.createMultiMap();
+	private final Map<String, Map<String, String>> maps = new HashMap<>();
 	private final List<Closeable> resources = MorphCollectionFactory.createList();
 
 	private final StreamFlattener flattener = new StreamFlattener();
@@ -358,12 +359,16 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
 	@Override
 	public Map<String, String> getMap(final String mapName) {
-		return multiMap.getMap(mapName);
+		return maps.getOrDefault(mapName, Collections.emptyMap());
 	}
 
 	@Override
 	public String getValue(final String mapName, final String key) {
-		return multiMap.getValue(mapName, key);
+		final Map<String, String> map = getMap(mapName);
+		if (map.containsKey(key)) {
+			return map.get(key);
+		}
+		return map.get(Maps.DEFAULT_MAP_KEY);
 	}
 
 	@Override
@@ -372,17 +377,17 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 			final Closeable closable = (Closeable) map;
 			resources.add(closable);
 		}
-		return multiMap.putMap(mapName, map);
+		return maps.put(mapName, map);
 	}
 
 	@Override
 	public String putValue(final String mapName, final String key, final String value) {
-		return multiMap.putValue(mapName, key, value);
+		return maps.computeIfAbsent(mapName, k -> new HashMap<>()).put(key, value);
 	}
 
 	@Override
 	public Collection<String> getMapNames() {
-		return multiMap.getMapNames();
+		return Collections.unmodifiableSet(maps.keySet());
 	}
 
 	public void registerRecordEndFlush(final FlushListener flushListener) {

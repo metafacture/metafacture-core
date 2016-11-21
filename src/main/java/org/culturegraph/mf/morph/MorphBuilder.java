@@ -23,12 +23,12 @@ import java.util.regex.Pattern;
 import org.culturegraph.mf.morph.api.Collect;
 import org.culturegraph.mf.morph.api.ConditionAware;
 import org.culturegraph.mf.morph.api.FlushListener;
+import org.culturegraph.mf.morph.api.Maps;
 import org.culturegraph.mf.morph.api.MorphDefException;
 import org.culturegraph.mf.morph.api.NamedValuePipe;
 import org.culturegraph.mf.morph.collectors.Entity;
 import org.culturegraph.mf.morph.api.Function;
 import org.culturegraph.mf.morph.api.InterceptorFactory;
-import org.culturegraph.mf.types.MultiMap;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 import org.culturegraph.mf.util.xml.Location;
 import org.w3c.dom.Node;
@@ -127,7 +127,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		}
 
 		if (mapDefault != null) {
-			metamorph.putValue(mapName, MultiMap.DEFAULT_MAP_KEY, mapDefault);
+			metamorph.putValue(mapName, Maps.DEFAULT_MAP_KEY, mapDefault);
 		}
 	}
 
@@ -361,7 +361,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 
 		function.setSourceLocation((Location) functionNode.getUserData(Location.USER_DATA_ID));
 
-		function.setMultiMap(metamorph);
+		function.setMaps(metamorph);
 
 		// add key value entries...
 		for (Node mapEntryNode = functionNode.getFirstChild(); mapEntryNode != null; mapEntryNode = mapEntryNode
