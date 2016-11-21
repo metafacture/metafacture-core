@@ -17,11 +17,9 @@ package org.culturegraph.mf.morph.api.helpers;
 
 import org.culturegraph.mf.morph.api.Collect;
 import org.culturegraph.mf.morph.api.NamedValueSource;
-import org.culturegraph.mf.morph.collectors.Combine;
-import org.culturegraph.mf.morph.collectors.Entity;
 
 /**
- * Common basis for {@link Entity}, {@link Combine} etc.
+ * Common base for collectors.
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme
