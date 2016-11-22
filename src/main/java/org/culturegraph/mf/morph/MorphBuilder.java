@@ -190,7 +190,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	protected void enterData(final Node dataNode) {
 		final Data data = new Data();
 		data.setName(resolvedAttribute(dataNode, AttributeName.NAME));
-		data.setSourceLocation((Location) dataNode.getUserData(Location.USER_DATA_ID));
+		data.setSourceLocation(getSourceLocation(dataNode));
 
 		final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
 		final NamedValuePipe delegate;
@@ -275,7 +275,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		} else {
 			collect = getCollectFactory().newInstance(node.getLocalName(), attributes);
 		}
-		collect.setSourceLocation((Location) node.getUserData(Location.USER_DATA_ID));
+		collect.setSourceLocation(getSourceLocation(node));
 
 		stack.push(new StackFrame(collect));
 	}
@@ -359,7 +359,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 			throw new IllegalArgumentException(functionNode.getLocalName() + NOT_FOUND);
 		}
 
-		function.setSourceLocation((Location) functionNode.getUserData(Location.USER_DATA_ID));
+		function.setSourceLocation(getSourceLocation(functionNode));
 
 		function.setMaps(metamorph);
 
@@ -384,6 +384,11 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		delegate.addNamedValueSource(head.getPipe());
 
 		head.setPipe(function);
+	}
+
+	private XmlSourceLocation getSourceLocation(final Node node) {
+		return new XmlSourceLocation((Location) node.getUserData(
+				Location.USER_DATA_ID));
 	}
 
 }

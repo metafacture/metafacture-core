@@ -19,7 +19,7 @@ package org.culturegraph.mf.morph;
 import org.culturegraph.mf.morph.api.FlushListener;
 import org.culturegraph.mf.morph.api.NamedValueReceiver;
 import org.culturegraph.mf.morph.api.NamedValueSource;
-import org.culturegraph.mf.util.xml.Location;
+import org.culturegraph.mf.morph.api.SourceLocation;
 
 
 /**
@@ -33,7 +33,7 @@ public final class Flush implements NamedValueReceiver {
 
 	private final FlushListener listener;
 
-	private Location sourceLocation;
+	private SourceLocation sourceLocation;
 
 	public Flush(final FlushListener listener) {
 		this.listener = listener;
@@ -50,12 +50,12 @@ public final class Flush implements NamedValueReceiver {
 	}
 
 	@Override
-	public void setSourceLocation(final Location sourceLocation) {
+	public void setSourceLocation(final SourceLocation sourceLocation) {
 		this.sourceLocation = sourceLocation;
 	}
 
 	@Override
-	public Location getSourceLocation() {
+	public SourceLocation getSourceLocation() {
 		return sourceLocation;
 	}
 

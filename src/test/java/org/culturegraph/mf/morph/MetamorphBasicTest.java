@@ -27,7 +27,7 @@ import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
 import org.culturegraph.mf.morph.api.Maps;
 import org.culturegraph.mf.morph.api.NamedValueReceiver;
 import org.culturegraph.mf.morph.api.NamedValueSource;
-import org.culturegraph.mf.util.xml.Location;
+import org.culturegraph.mf.morph.api.SourceLocation;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -207,13 +207,13 @@ public final class MetamorphBasicTest {
 		}
 
 		@Override
-		public Location getSourceLocation() {
+		public SourceLocation getSourceLocation() {
 			// Nothing to do
 			return null;
 		}
 
 		@Override
-		public void setSourceLocation(final Location sourceLocation) {
+		public void setSourceLocation(final SourceLocation sourceLocation) {
 			// Nothing to do
 		}
 

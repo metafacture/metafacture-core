@@ -16,29 +16,30 @@
 package org.culturegraph.mf.morph.api;
 
 /**
- * Metamorph elements which know about their location in the morph definition
- * file should implement this interface to make the information about their
- * location available in a standardised way.
+ * Describes a location in a Metamorph script. Instances of this interface are
+ * returned by {@link KnowsSourceLocation}.
  *
  * @author Christoph Böhme
- *
  */
-public interface KnowsSourceLocation {
+public interface SourceLocation {
+
+	String getFileName();
+
+	Position getStartPosition();
+
+	Position getEndPosition();
 
 	/**
-	 * Sets the {@link SourceLocation} object which describes where in the morph
-	 * definition file the implementing object is defined.
+	 * Describes a position in a file by line and column number.
 	 *
-	 * @param sourceLocation a source location
+	 * @author Christoph Böhme
 	 */
-	void setSourceLocation(final SourceLocation sourceLocation);
+	interface Position {
 
-	/**
-	 * Gets the location object for the location in the morph definition file
-	 * where the implementing object instance is defined.
-	 *
-	 * @return a source location
-	 */
-	SourceLocation getSourceLocation();
+		int getLineNumber();
+
+		int getColumnNumber();
+
+	}
 
 }

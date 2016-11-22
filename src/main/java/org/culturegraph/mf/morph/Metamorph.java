@@ -45,10 +45,10 @@ import org.culturegraph.mf.morph.api.MorphErrorHandler;
 import org.culturegraph.mf.morph.api.NamedValuePipe;
 import org.culturegraph.mf.morph.api.NamedValueReceiver;
 import org.culturegraph.mf.morph.api.NamedValueSource;
+import org.culturegraph.mf.morph.api.SourceLocation;
 import org.culturegraph.mf.morph.interceptors.NullInterceptorFactory;
 import org.culturegraph.mf.stream.pipe.StreamFlattener;
 import org.culturegraph.mf.util.ResourceUtil;
-import org.culturegraph.mf.util.xml.Location;
 import org.xml.sax.InputSource;
 
 /**
@@ -408,7 +408,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 	}
 
 	@Override
-	public void setSourceLocation(final Location sourceLocation) {
+	public void setSourceLocation(final SourceLocation sourceLocation) {
 		// Nothing to do
 		// Metamorph does not have a source location (we could
 		// in theory use the location of the module in a flux
@@ -416,7 +416,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 	}
 
 	@Override
-	public Location getSourceLocation() {
+	public SourceLocation getSourceLocation() {
 		// Metamorph does not have a source location
 		return null;
 	}
