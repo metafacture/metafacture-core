@@ -39,6 +39,8 @@ public final class JsonToElasticsearchBulkTest {
 	private static final String VALUE1 = "V1";
 
 	private static final String ENTITY1 = "En1";
+	private static final String ENTITY2 = "En2";
+	private static final String ENTITY3 = "En3";
 
 	private static final String TYPE1  = "T1";
 	private static final String INDEX1 = "I1";
@@ -46,6 +48,7 @@ public final class JsonToElasticsearchBulkTest {
 	private static final String METADATA = "{'index':{'_index':'I1','_type':'T1','_id':%s}}";
 
 	private static final String ENTITY_SEPARATOR1 = ".";
+	private static final String ENTITY_SEPARATOR2 = ":";
 
 	private JsonToElasticsearchBulk bulk;
 
@@ -117,9 +120,81 @@ public final class JsonToElasticsearchBulkTest {
 	}
 
 	@Test
+	public void testShouldNotExtractEmptyIdPath() {
+		setBulk(new String[0]);
+		shouldNotExtractId("{'L1':'V1','L2':'V2','L3':'V3'}");
+	}
+
+	@Test
 	public void testShouldExtractEntityAsId() {
 		setBulk(ENTITY1);
 		shouldExtractId("{'En1':{'L1':'V1'}}", "{'L1':'V1'}");
+	}
+
+	@Test
+	public void testShouldExtractIdPath() {
+		setBulk(new String[]{ENTITY1, LITERAL1});
+		shouldExtractId("{'En2':{'L1':'V1','L2':'V2'},'En1':{'L1':'V1','L2':'V2'}}");
+	}
+
+	@Test
+	public void testShouldExtractJoinedIdPath() {
+		setBulk(new String[]{ENTITY1, LITERAL1}, ENTITY_SEPARATOR1);
+		shouldExtractId("{'En2':{'L1':'V1','L2':'V2'},'En1':{'L1':'V1','L2':'V2'}}");
+	}
+
+	@Test
+	public void testShouldNotExtractJoinedIdPathWithDifferentSeparator() {
+		setBulk(new String[]{ENTITY1, LITERAL1}, ENTITY_SEPARATOR2);
+		shouldNotExtractId("{'En2':{'L1':'V1','L2':'V2'},'En1':{'L1':'V1','L2':'V2'}}");
+	}
+
+	@Test
+	public void testShouldNotExtractMissingIdPath() {
+		setBulk(new String[]{ENTITY1, LITERAL4});
+		shouldNotExtractId("{'En2':{'L1':'V1','L2':'V2'},'En1':{'L1':'V1','L2':'V2'}}");
+	}
+
+	@Test
+	public void testShouldNotExtractMissingEntityIdPath() {
+		setBulk(new String[]{ENTITY3, LITERAL1});
+		shouldNotExtractId("{'En2':{'L1':'V1','L2':'V2'},'En1':{'L1':'V1','L2':'V2'}}");
+	}
+
+	@Test
+	public void testShouldExtractNestedIdPath() {
+		setBulk(new String[]{ENTITY1, ENTITY2, LITERAL1});
+		shouldExtractId("{'En1':{'En2':{'L1':'V1'}}}");
+	}
+
+	@Test
+	public void testShouldExtractJoinedNestedIdPath() {
+		setBulk(new String[]{ENTITY1, ENTITY2, LITERAL1}, ENTITY_SEPARATOR1);
+		shouldExtractId("{'En1':{'En2':{'L1':'V1'}}}");
+	}
+
+	@Test
+	public void testShouldNotExtractJoinedNestedIdPathWithDifferentSeparator() {
+		setBulk(new String[]{ENTITY1, ENTITY2, LITERAL1}, ENTITY_SEPARATOR2);
+		shouldNotExtractId("{'En1':{'En2':{'L1':'V1'}}}");
+	}
+
+	@Test
+	public void testShouldNotExtractMissingNestedIdPath() {
+		setBulk(new String[]{ENTITY1, ENTITY2, LITERAL4});
+		shouldNotExtractId("{'En1':{'En2':{'L1':'V1'}}}");
+	}
+
+	@Test
+	public void testShouldNotExtractMissingNestedEntityIdPath() {
+		setBulk(new String[]{ENTITY1, ENTITY3, LITERAL1});
+		shouldNotExtractId("{'En1':{'En2':{'L1':'V1'}}}");
+	}
+
+	@Test
+	public void testShouldNotExtractIntermediateEntityIdPath() {
+		setBulk(new String[]{ENTITY1, ENTITY1, LITERAL4});
+		shouldNotExtractId("{'En1':{'L1':'V1'}}");
 	}
 
 	/*
@@ -129,12 +204,20 @@ public final class JsonToElasticsearchBulkTest {
 		bulk = new JsonToElasticsearchBulk(idKey, TYPE1, INDEX1);
 	}
 
+	private void setBulk(final String[] idPath) {
+		bulk = new JsonToElasticsearchBulk(idPath, TYPE1, INDEX1);
+	}
+
+	private void setBulk(final String[] idPath, final String entitySeparator) {
+		final String idKey = String.join(ENTITY_SEPARATOR1, idPath);
+		bulk = new JsonToElasticsearchBulk(idKey, TYPE1, INDEX1, entitySeparator);
+	}
+
 	/*
 	 * Utility methods to test bulk indexer ID extraction.
 	 */
 	private void shouldExtractId(final String obj, final String idValue, final String resultObj) {
 		bulk.setReceiver(receiver);
-
 		bulk.process(fixQuotes(obj));
 
 		verify(receiver).process(fixQuotes(String.format(METADATA, idValue) + "\n" + resultObj));

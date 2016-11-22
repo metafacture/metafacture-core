@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,6 +37,7 @@ import org.culturegraph.mf.framework.annotations.Out;
  * Use after {@link JsonEncoder}, before writing.
  *
  * @author Fabian Steeg (fsteeg)
+ * @author Jens Wille
  *
  */
 @In(String.class)
@@ -73,9 +75,20 @@ public class JsonToElasticsearchBulk extends
 	}
 
 	private ObjectMapper mapper = new ObjectMapper();
-	private String idKey;
+	private String[] idPath;
 	private String type;
 	private String index;
+
+	/**
+	 * @param idPath The key path of the JSON value to be used as the ID for the record
+	 * @param type The Elasticsearch index type
+	 * @param index The Elasticsearch index name
+	 */
+	public JsonToElasticsearchBulk(String[] idPath, String type, String index) {
+		this.idPath = idPath;
+		this.type = type;
+		this.index = index;
+	}
 
 	/**
 	 * @param idKey The key of the JSON value to be used as the ID for the record
@@ -83,9 +96,17 @@ public class JsonToElasticsearchBulk extends
 	 * @param index The Elasticsearch index name
 	 */
 	public JsonToElasticsearchBulk(String idKey, String type, String index) {
-		this.idKey = idKey;
-		this.type = type;
-		this.index = index;
+		this(new String[]{idKey}, type, index);
+	}
+
+	/**
+	 * @param idKey The key of the JSON value to be used as the ID for the record
+	 * @param type The Elasticsearch index type
+	 * @param index The Elasticsearch index name
+	 * @param entitySeparator The separator between entity names in idKey
+	 */
+	public JsonToElasticsearchBulk(String idKey, String type, String index, String entitySeparator) {
+		this(idKey.split(Pattern.quote(entitySeparator)), type, index);
 	}
 
 	@Override
@@ -96,7 +117,7 @@ public class JsonToElasticsearchBulk extends
 			Map<String, Object> detailsMap = new HashMap<String, Object>();
 			Map<String, Object> indexMap = new HashMap<String, Object>();
 			indexMap.put("index", detailsMap);
-			detailsMap.put("_id", json.get(idKey));
+			detailsMap.put("_id", findId(json));
 			detailsMap.put("_type", type);
 			detailsMap.put("_index", index);
 			mapper.writeValue(stringWriter, indexMap);
@@ -106,5 +127,24 @@ public class JsonToElasticsearchBulk extends
 			e.printStackTrace();
 		}
 		getReceiver().process(stringWriter.toString());
+	}
+
+	private Object findId(Object value) {
+		if (idPath.length < 1) {
+			return null;
+		}
+
+		for (final String key : idPath) {
+			if (value instanceof Map) {
+				@SuppressWarnings("unchecked")
+				final Map<String, Object> nestedMap = (Map<String, Object>) value;
+				value = nestedMap.get(key);
+			}
+			else {
+				return null;
+			}
+		}
+
+		return value;
 	}
 }
