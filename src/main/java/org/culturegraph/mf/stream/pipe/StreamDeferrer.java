@@ -36,8 +36,6 @@ import org.culturegraph.mf.framework.annotations.Out;
  * from another stream.
  *
  * @author Christoph Böhme
- * @see org.culturegraph.mf.stream.pipe.StreamTee StreamTee, duplicates event
- * streams
  */
 @Description("Defers all stream events until an end-record event is received")
 @FluxCommand("defer-stream")
