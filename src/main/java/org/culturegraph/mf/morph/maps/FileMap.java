@@ -36,7 +36,7 @@ import org.culturegraph.mf.util.ResourceUtil;
  * @author "Markus Michael Geipel"
  *
  */
-public final class MapFile extends AbstractReadOnlyMap<String, String> {
+public final class FileMap extends AbstractReadOnlyMap<String, String> {
 
 	private final Map<String, String> map = new HashMap<String, String>();
 
