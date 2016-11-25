@@ -15,21 +15,18 @@
  */
 package org.culturegraph.mf.morph.maps;
 
+import org.culturegraph.mf.morph.api.MorphException;
+import org.culturegraph.mf.morph.api.helpers.AbstractReadOnlyMap;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.io.Closeable;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-
-import org.culturegraph.mf.morph.api.MorphException;
-import org.culturegraph.mf.morph.api.helpers.AbstractReadOnlyMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A map which queries an sql database provided as jndi
@@ -41,13 +38,8 @@ import org.slf4j.LoggerFactory;
 public final class JndiSqlMap extends AbstractReadOnlyMap<String, String>
 		implements Closeable {
 
-	private static final Logger LOG = LoggerFactory.getLogger(JndiSqlMap.class);
 	private DataSource datasource;
 	private String query;
-
-	protected DataSource getDatasource() {
-		return datasource;
-	}
 
 	public void setDatasource(final String name) {
 		try {
@@ -64,35 +56,19 @@ public final class JndiSqlMap extends AbstractReadOnlyMap<String, String>
 	@Override
 	public String get(final Object key) {
 		String resultString = null;
-		final ResultSet resultSet;
-		PreparedStatement stmt = null;
-		Connection con = null;
-		try {
-			con = datasource.getConnection();
-			stmt = con.prepareStatement(query);
-			stmt.setString(1, key.toString());
-			resultSet = stmt.executeQuery();
-			if (resultSet.first()) {
-				resultString = resultSet.getString(1);
+		try(
+				final Connection connection = datasource.getConnection();
+				final PreparedStatement statement =
+						connection.prepareStatement(query);
+		) {
+			statement.setString(1, key.toString());
+			try(final ResultSet resultSet = statement.executeQuery()) {
+				if (resultSet.first()) {
+					resultString = resultSet.getString(1);
+				}
 			}
-			resultSet.close();
 		} catch (final SQLException e) {
 			throw new MorphException(e);
-		} finally {
-			if (stmt != null) {
-				try {
-					stmt.close();
-				} catch (final SQLException e) {
-					LOG.error("Can't close SQL-Statement.", e);
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (final SQLException e) {
-					LOG.error("Can't close Connection.", e);
-				}
-			}
 		}
 		return resultString;
 	}
