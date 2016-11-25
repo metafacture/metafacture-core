@@ -13,28 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.morph.functions;
+package org.culturegraph.mf.morph;
 
-
-import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.morph.api.Function;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 
+import java.util.Map;
+
 /**
- * Provides the functions for {@link Metamorph}. By the default it contains the
- * standard function set. New functions can be registered during runtime.
+ * Creates the maps available in Metamorph.
  *
  * @author Markus Michael Geipel
  *
  */
-public final class FunctionFactory extends ObjectFactory<Function> {
+final class MapFactory extends ObjectFactory<Map> {
 
-	public static final String POPERTIES_LOCATION = "morph-functions.properties";
-
-	public FunctionFactory() {
+	  MapFactory() {
 		super();
-		loadClassesFromMap(ResourceUtil.loadProperties(POPERTIES_LOCATION), Function.class);
+		loadClassesFromMap(ResourceUtil.loadProperties(
+				"morph-maps.properties"), Map.class);
 	}
 
 }

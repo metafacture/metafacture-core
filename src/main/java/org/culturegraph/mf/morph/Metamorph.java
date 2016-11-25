@@ -46,7 +46,6 @@ import org.culturegraph.mf.morph.api.NamedValuePipe;
 import org.culturegraph.mf.morph.api.NamedValueReceiver;
 import org.culturegraph.mf.morph.api.NamedValueSource;
 import org.culturegraph.mf.morph.api.SourceLocation;
-import org.culturegraph.mf.morph.interceptors.NullInterceptorFactory;
 import org.culturegraph.mf.stream.pipe.StreamFlattener;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.xml.sax.InputSource;

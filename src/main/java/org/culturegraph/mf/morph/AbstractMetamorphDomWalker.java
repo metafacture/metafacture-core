@@ -15,13 +15,7 @@
  */
 package org.culturegraph.mf.morph;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.culturegraph.mf.morph.api.MorphDefException;
-import org.culturegraph.mf.morph.collectors.CollectFactory;
-import org.culturegraph.mf.morph.functions.FunctionFactory;
-import org.culturegraph.mf.morph.maps.MapFactory;
 import org.culturegraph.mf.types.ScopedHashMap;
 import org.culturegraph.mf.util.StringUtil;
 import org.culturegraph.mf.util.xml.DomLoader;
@@ -30,6 +24,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**

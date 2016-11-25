@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Christoph Böhme
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.morph.interceptors;
+package org.culturegraph.mf.morph;
 
 import org.culturegraph.mf.morph.api.FlushListener;
 import org.culturegraph.mf.morph.api.NamedValuePipe;
@@ -27,7 +27,7 @@ import org.culturegraph.mf.morph.api.InterceptorFactory;
  * @author Christoph Böhme
  *
  */
-public final class NullInterceptorFactory implements InterceptorFactory {
+final class NullInterceptorFactory implements InterceptorFactory {
 
 	@Override
 	public NamedValuePipe createNamedValueInterceptor() {

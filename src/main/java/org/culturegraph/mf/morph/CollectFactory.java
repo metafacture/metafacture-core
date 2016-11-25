@@ -13,30 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.morph.maps;
+package org.culturegraph.mf.morph;
 
-import java.util.Map;
 
-import org.culturegraph.mf.morph.Metamorph;
-import org.culturegraph.mf.morph.MorphBuilder;
+import org.culturegraph.mf.morph.api.Collect;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 
 /**
- * Factory for all collectors used by {@link Metamorph} and {@link MorphBuilder}
+ * Creates the collectors available in Metamorph.
  *
  * @author Markus Michael Geipel
  *
  */
-@SuppressWarnings("rawtypes")
-public final class MapFactory extends ObjectFactory<Map> {
+final class CollectFactory extends ObjectFactory<Collect> {
 
-	public static final String POPERTIES_LOCATION = "morph-maps.properties";
-
-	public MapFactory() {
+	CollectFactory() {
 		super();
-		loadClassesFromMap(ResourceUtil.loadProperties(POPERTIES_LOCATION),
-				Map.class);
+		loadClassesFromMap(ResourceUtil.loadProperties(
+				"morph-collectors.properties"), Collect.class);
 	}
 
 }
