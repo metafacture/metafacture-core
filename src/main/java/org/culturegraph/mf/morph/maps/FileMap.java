@@ -18,8 +18,9 @@ package org.culturegraph.mf.morph.maps;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -50,35 +51,24 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
 	}
 
 	public void setFile(final String file) {
-		final BufferedReader reader;
-		try {
-			reader = new BufferedReader(new InputStreamReader(
-					ResourceUtil.getStream(file), "UTF-8"));
-
-			try {
-				String line = null;
-				while ((line = reader.readLine()) != null) {
-					if (line.isEmpty()) {
-						continue;
-					}
-					final String[] parts = split.split(line);
-					if (parts.length == 2) {
-						map.put(parts[0], parts[1]);
-					}
+		try (InputStream stream = ResourceUtil.getStream(file);
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(stream, StandardCharsets.UTF_8))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				if (line.isEmpty()) {
+					continue;
 				}
-
-			} finally {
-				reader.close();
+				final String[] parts = split.split(line);
+				if (parts.length == 2) {
+					map.put(parts[0], parts[1]);
+				}
 			}
-
-		} catch (final UnsupportedEncodingException e) {
-			throw new MorphException(e);
 		} catch (final FileNotFoundException e) {
 			throw new MorphException("resource '" + file + "' not found", e);
 		} catch (final IOException e) {
 			throw new MorphException(e);
 		}
-
 	}
 
 	public void setSeparator(final String delimiter) {
