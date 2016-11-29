@@ -4,10 +4,8 @@ jdk:
 
 env:
   global:
-    - SONATYPE_USERNAME=culturegraph
-    - secure: "MHD7Pu9itlb4SHcf1PUkJIG3kdUEA7ZWMIFyotFNnI+FfatTsZahTN4/HBXx+99d+YLijzm9psSItLh35RPSau8GfW0fQQYSNrv9jGiDug/3boi2FB1XASNONs+wW6RGwZtv+ayvqMxXZ7y/LIXuHcPN1hcm504aAe3MwSmMUV8="
-
-
+    - secure: "V5OtkOZRRjjep5ig8A/z9hVOCPYJZRyuPjQ1bmGgtjtzPuLS4x5FSBHLZ+OERdR8VS3nJh05UoNVvxS6tdQ3pbIoJUojbNEFCABGVI+krvsbbar7nDZiF9yKI4mxP60sPvlD7gQ0n0Bdq1BpZGqHmwESsocAMd24oZi+8Nj80sk="
+    - secure: "T9FcW2f0orue6i+Pvc1hE64mSoyOSwJFL9OrCBmhom5QW51Q8gP71DpEIz8fc6MvvU3wpSbTg5+lvbnTRdQCxmQzBeZb4yfdwUElldxaBqQaqVJWYBfoz0T1iznNA9WV3kHoHiDcb0iy3w/yzDxieQWjwj/69lKCvn8o425se7E="
 
 after_success:
   - "[[ $TRAVIS_BRANCH == \"master\" ]] && { python travis-ci/configure-mvn.py ; mvn clean deploy --settings ~/.m2/mySettings.xml -Dgpg.skip=true -Psonatype-oss-release ; }"
