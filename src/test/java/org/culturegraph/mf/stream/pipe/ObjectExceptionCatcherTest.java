@@ -16,7 +16,7 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 
 import org.culturegraph.mf.framework.ObjectReceiver;

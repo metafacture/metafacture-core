@@ -15,13 +15,12 @@
  */
 package org.culturegraph.mf.test.validators;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.util.function.Consumer;
 
-import org.culturegraph.mf.test.validators.WellformednessChecker;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
