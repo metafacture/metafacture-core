@@ -171,7 +171,7 @@ public final class StreamUnicodeNormalizer
 	}
 
 	private String normalize(final String string) {
-		return Normalizer.normalize(string, normalizationForm);
+		return string == null ? null : Normalizer.normalize(string, normalizationForm);
 	}
 
 }
