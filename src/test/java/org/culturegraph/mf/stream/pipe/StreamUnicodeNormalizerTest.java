@@ -106,6 +106,15 @@ public final class StreamUnicodeNormalizerTest {
 	}
 
 	@Test
+	public void shouldIgnoreNullValues() {
+		streamUnicodeNormalizer.startRecord(RECORD_ID);
+		streamUnicodeNormalizer.literal(LITERAL_NAME, null);
+		streamUnicodeNormalizer.endRecord();
+
+		verify(receiver).literal(LITERAL_NAME, null);
+	}
+
+	@Test
 	public void shouldNotNormalizeIdByDefault() {
 		streamUnicodeNormalizer.startRecord(ID_WITH_DIACRITICS);
 		streamUnicodeNormalizer.endRecord();
