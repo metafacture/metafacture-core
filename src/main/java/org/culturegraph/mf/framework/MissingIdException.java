@@ -23,14 +23,10 @@ package org.culturegraph.mf.framework;
  */
 public final class MissingIdException extends MetafactureException {
 
-	private static final long serialVersionUID = 2048460214057525724L;
+	private static final long serialVersionUID = 0L;
 
 	public MissingIdException(final String message) {
 		super(message);
-	}
-
-	public MissingIdException(final Throwable cause) {
-		super(cause);
 	}
 
 	public MissingIdException(final String message, final Throwable cause) {

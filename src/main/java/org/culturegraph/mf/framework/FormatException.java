@@ -23,14 +23,10 @@ package org.culturegraph.mf.framework;
  */
 public class FormatException extends MetafactureException {
 
-	private static final long serialVersionUID = -5767420416327213311L;
+	private static final long serialVersionUID = 0L;
 
 	public FormatException(final String message) {
 		super(message);
-	}
-
-	public FormatException(final Throwable cause) {
-		super(cause);
 	}
 
 	public FormatException(final String message, final Throwable cause) {

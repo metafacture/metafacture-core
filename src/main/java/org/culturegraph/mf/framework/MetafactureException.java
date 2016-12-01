@@ -22,7 +22,7 @@ package org.culturegraph.mf.framework;
  */
 public class MetafactureException extends RuntimeException {
 
-	private static final long serialVersionUID = -2953264524472071347L;
+	private static final long serialVersionUID = 0L;
 
 	public MetafactureException(final String message) {
 		super(message);
