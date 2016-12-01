@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.morph.collectors;
+package org.culturegraph.mf.morph;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.morph.Metamorph;
 import org.culturegraph.mf.morph.api.NamedValueReceiver;
 import org.culturegraph.mf.morph.api.NamedValueSource;
 import org.culturegraph.mf.morph.api.helpers.AbstractFlushingCollect;

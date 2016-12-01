@@ -15,6 +15,9 @@
  */
 package org.culturegraph.mf.morph;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.culturegraph.mf.morph.api.MorphBuildException;
 import org.culturegraph.mf.types.ScopedHashMap;
 import org.culturegraph.mf.util.StringUtil;
@@ -24,9 +27,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -39,14 +39,14 @@ public abstract class AbstractMetamorphDomWalker {
 	/**
 	 * XML tags
 	 */
-	public static enum Tags {
+	public enum Tags {
 		META, FUNCTIONS, RULES, MACROS, MACRO, MAPS, ENTITY, MAP, ENTRY, TEXT, VARS
 	}
 
 	/**
 	 * XML attributes
 	 */
-	public static enum AttributeName {
+	public enum AttributeName {
 		VERSION("version"),
 		SOURCE("source"),
 		VALUE("value"),
@@ -58,7 +58,7 @@ public abstract class AbstractMetamorphDomWalker {
 
 		private final String string;
 
-		private AttributeName(final String string) {
+		AttributeName(final String string) {
 			this.string = string;
 		}
 
@@ -66,6 +66,8 @@ public abstract class AbstractMetamorphDomWalker {
 			return string;
 		}
 	}
+
+	protected static final String ENTITY = "entity";
 
 	private static final String DATA = "data";
 	private static final String MAP = "map";
@@ -160,6 +162,7 @@ public abstract class AbstractMetamorphDomWalker {
 	protected final void walk(final Document doc) {
 		functionFactory = new FunctionFactory();
 		collectFactory = new CollectFactory();
+		collectFactory.registerClass(ENTITY, Entity.class);
 		mapFactory = new MapFactory();
 
 		init();

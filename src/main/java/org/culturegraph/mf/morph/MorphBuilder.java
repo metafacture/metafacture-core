@@ -26,7 +26,6 @@ import org.culturegraph.mf.morph.api.FlushListener;
 import org.culturegraph.mf.morph.api.Maps;
 import org.culturegraph.mf.morph.api.MorphBuildException;
 import org.culturegraph.mf.morph.api.NamedValuePipe;
-import org.culturegraph.mf.morph.collectors.Entity;
 import org.culturegraph.mf.morph.api.Function;
 import org.culturegraph.mf.morph.api.InterceptorFactory;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
@@ -46,7 +45,6 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 	private static final String JAVA = "java";
 	private static final String JAVAMAP = "javamap";
 	private static final String RECORD = "record";
-	private static final String ENTITY_ELEMENT = "entity";
 	private static final String OR_STRING = "|";
 	private static final Pattern OR_PATTERN = Pattern.compile(OR_STRING, Pattern.LITERAL);
 
@@ -270,7 +268,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 					NOT_FOUND);
 		}
 		final Collect collect;
-		if (ENTITY_ELEMENT.equals(node.getLocalName())) {
+		if (ENTITY.equals(node.getLocalName())) {
 			collect = getCollectFactory().newInstance(node.getLocalName(), attributes,
 					metamorph);
 		} else {
