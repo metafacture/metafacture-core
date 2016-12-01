@@ -18,7 +18,7 @@ package org.culturegraph.mf.morph.functions;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.culturegraph.mf.framework.MetafactureException;
+import org.culturegraph.mf.morph.api.MorphBuildException;
 import org.culturegraph.mf.morph.api.helpers.AbstractStatefulFunction;
 import org.culturegraph.mf.util.StringUtil;
 
@@ -104,7 +104,7 @@ public final class Occurrence extends AbstractStatefulFunction {
 	private static int extractNumberFrom(final String string) {
 		final String[] tokens = string.split(" ", 2);
 		if (tokens.length < 2) {
-			throw new MetafactureException("Invalid only string: " + string);
+			throw new MorphBuildException("Invalid only string: " + string);
 		}
 		return Integer.parseInt(tokens[1]);
 	}
