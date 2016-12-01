@@ -146,7 +146,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		} else if (getMapFactory().containsKey(mapNode.getLocalName())) {
 			map = getMapFactory().newInstance(mapNode.getLocalName(), attributes);
 		} else {
-			throw new IllegalArgumentException("Map " + mapNode.getLocalName() + NOT_FOUND);
+			throw new MorphBuildException("Map " + mapNode.getLocalName() + NOT_FOUND);
 		}
 
 		metamorph.putMap(mapName, map);
@@ -266,7 +266,8 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		attributes.remove(AttributeName.FLUSH_WITH.getString());
 
 		if (!getCollectFactory().containsKey(node.getLocalName())) {
-			throw new IllegalArgumentException("Collector " + node.getLocalName() + NOT_FOUND);
+			throw new MorphBuildException("Collector " + node.getLocalName() +
+					NOT_FOUND);
 		}
 		final Collect collect;
 		if (ENTITY_ELEMENT.equals(node.getLocalName())) {
@@ -356,7 +357,7 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 				registerFlush(flushWith, function);
 			}
 		} else {
-			throw new IllegalArgumentException(functionNode.getLocalName() + NOT_FOUND);
+			throw new MorphBuildException(functionNode.getLocalName() + NOT_FOUND);
 		}
 
 		function.setSourceLocation(getSourceLocation(functionNode));
