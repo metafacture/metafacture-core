@@ -24,7 +24,7 @@ import org.culturegraph.mf.morph.api.Collect;
 import org.culturegraph.mf.morph.api.ConditionAware;
 import org.culturegraph.mf.morph.api.FlushListener;
 import org.culturegraph.mf.morph.api.Maps;
-import org.culturegraph.mf.morph.api.MorphDefException;
+import org.culturegraph.mf.morph.api.MorphBuildException;
 import org.culturegraph.mf.morph.api.NamedValuePipe;
 import org.culturegraph.mf.morph.collectors.Entity;
 import org.culturegraph.mf.morph.api.Function;
@@ -161,13 +161,13 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		try {
 			clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
 		} catch (final ClassNotFoundException e) {
-			throw new MorphDefException("Function " + className + NOT_FOUND, e);
+			throw new MorphBuildException("Function " + className + NOT_FOUND, e);
 		}
 		if (Function.class.isAssignableFrom(clazz)) {
 			getFunctionFactory().registerClass(resolvedAttribute(functionDefNode, AttributeName.NAME),
 					(Class<Function>) clazz);
 		} else {
-			throw new MorphDefException(className + " does not implement interface 'Function'");
+			throw new MorphBuildException(className + " does not implement interface 'Function'");
 		}
 	}
 

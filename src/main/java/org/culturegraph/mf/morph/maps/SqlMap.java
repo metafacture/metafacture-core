@@ -23,7 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.culturegraph.mf.morph.api.MorphException;
+import org.culturegraph.mf.morph.api.MorphExecutionException;
 import org.culturegraph.mf.morph.api.helpers.AbstractReadOnlyMap;
 
 /**
@@ -53,7 +53,8 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
 		try {
 			preparedStatement = getMySqlConnection().prepareStatement(query);
 		} catch (final SQLException e) {
-			throw new MorphException(e);
+			throw new MorphExecutionException(
+					"sqlmap: could not create prepared statement for query", e);
 		}
 		isUninitialized = false;
 	}
@@ -66,22 +67,21 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
 				conn.close();
 			}
 		} catch (final SQLException e) {
-			throw new MorphException(e);
+			throw new MorphExecutionException("sqlmap: could not close db connection",
+					e);
 		}
 	}
 
 	private Connection getMySqlConnection() {
-
 		try {
 			Class.forName(driver);
 
 			conn = DriverManager.getConnection("jdbc:mysql://" + host + "/"
 					+ database + "?" + "user=" + login + "&" + "password="
 					+ password);
-		} catch (final ClassNotFoundException e) {
-			throw new MorphException(e);
-		} catch (final SQLException e) {
-			throw new MorphException(e);
+		} catch (final ClassNotFoundException | SQLException e) {
+			throw new MorphExecutionException("sqlmap: cannot create db connection",
+					e);
 		}
 		return conn;
 	}
@@ -101,7 +101,8 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
 			}
 			resultSet.close();
 		} catch (final SQLException e) {
-			throw new MorphException(e);
+			throw new MorphExecutionException(
+					"sqlmap: execution of prepared statement failed", e);
 		}
 		return resultString;
 	}

@@ -24,7 +24,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
-import org.culturegraph.mf.morph.api.MorphDefException;
+import org.culturegraph.mf.morph.api.MorphBuildException;
 import org.culturegraph.mf.morph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
@@ -70,7 +70,7 @@ public final class Timestamp extends AbstractSimpleStatelessFunction {
 		try {
 			dateFormat = new SimpleDateFormat(format, locale);
 		} catch (final IllegalArgumentException e) {
-			throw new MorphDefException("The date/time format '" + format + "' is not supported. ", e);
+			throw new MorphBuildException("The date/time format '" + format + "' is not supported. ", e);
 		}
 		dateFormat.setTimeZone(TimeZone.getTimeZone(timezone));
 		return dateFormat.format(new Date());
@@ -86,7 +86,7 @@ public final class Timestamp extends AbstractSimpleStatelessFunction {
 
 	public void setLanguage(final String language) {
 		if (!SUPPORTED_LANGUAGES.contains(language)) {
-			throw new MorphDefException("Language '" + language + "' not supported.");
+			throw new MorphBuildException("Language '" + language + "' not supported.");
 		}
 		this.locale = new Locale(language);
 	}

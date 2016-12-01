@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import org.culturegraph.mf.morph.api.MorphDefException;
+import org.culturegraph.mf.morph.api.MorphBuildException;
 import org.culturegraph.mf.morph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
@@ -146,7 +146,7 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
 			}
 
 		} catch (final IllegalArgumentException e) {
-			throw new MorphDefException("The date/time format is not supported.", e);
+			throw new MorphBuildException("The date/time format is not supported.", e);
 		} catch (final Exception e) {
 			result = value;
 		}
@@ -171,7 +171,7 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
 
 	public final void setLanguage(final String language) {
 		if (!SUPPORTED_LANGUAGES.contains(language)) {
-			throw new MorphDefException("Language '" + language + "' not supported.");
+			throw new MorphBuildException("Language '" + language + "' not supported.");
 		}
 		this.outputLocale = new Locale(language);
 	}

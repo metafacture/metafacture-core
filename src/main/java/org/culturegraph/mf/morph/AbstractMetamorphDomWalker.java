@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.morph;
 
-import org.culturegraph.mf.morph.api.MorphDefException;
+import org.culturegraph.mf.morph.api.MorphBuildException;
 import org.culturegraph.mf.types.ScopedHashMap;
 import org.culturegraph.mf.util.StringUtil;
 import org.culturegraph.mf.util.xml.DomLoader;
@@ -247,7 +247,7 @@ public abstract class AbstractMetamorphDomWalker {
 			final String macroName = attribute(node, AttributeName.NAME);
 			final Node macroNode = macros.get(macroName);
 			if (macroNode==null){
-				throw new MorphDefException("Macro '" + macroName + "' undefined!");
+				throw new MorphBuildException("Macro '" + macroName + "' undefined!");
 			}
 			vars = new ScopedHashMap<String, String>(vars);
 			vars.putAll(resolvedAttributeMap(node));
@@ -293,13 +293,13 @@ public abstract class AbstractMetamorphDomWalker {
 
 	private void checkVersionCompatibility(final int version) {
 		if (version < LOWEST_COMPATIBLE_VERSION || version > CURRENT_VERSION) {
-			throw new MorphDefException("Version " + version
+			throw new MorphBuildException("Version " + version
 					+ " of definition file not supported by metamorph version " + CURRENT_VERSION);
 		}
 	}
 
 	protected final void illegalChild(final Node child) {
-		throw new MorphDefException("Schema mismatch: illegal tag " + child.getLocalName() + " in node "
+		throw new MorphBuildException("Schema mismatch: illegal tag " + child.getLocalName() + " in node "
 				+ child.getParentNode().getLocalName());
 	}
 

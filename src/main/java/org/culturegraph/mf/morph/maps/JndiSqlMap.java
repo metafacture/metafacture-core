@@ -15,18 +15,19 @@
  */
 package org.culturegraph.mf.morph.maps;
 
-import org.culturegraph.mf.morph.api.MorphException;
-import org.culturegraph.mf.morph.api.helpers.AbstractReadOnlyMap;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 import java.io.Closeable;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
+import org.culturegraph.mf.morph.api.MorphExecutionException;
+import org.culturegraph.mf.morph.api.helpers.AbstractReadOnlyMap;
 
 /**
  * A map which queries an sql database provided as jndi
@@ -45,7 +46,8 @@ public final class JndiSqlMap extends AbstractReadOnlyMap<String, String>
 		try {
 			this.datasource = (DataSource) new InitialContext().lookup(name);
 		} catch (final NamingException e) {
-			throw new MorphException(e);
+			throw new MorphExecutionException(
+					"jndisqlmap: lookup of data source failed", e);
 		}
 	}
 
@@ -68,7 +70,8 @@ public final class JndiSqlMap extends AbstractReadOnlyMap<String, String>
 				}
 			}
 		} catch (final SQLException e) {
-			throw new MorphException(e);
+			throw new MorphExecutionException(
+					"jndisqlmap: execution of sql query failed", e);
 		}
 		return resultString;
 	}

@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import org.culturegraph.mf.morph.api.MorphException;
+import org.culturegraph.mf.morph.api.MorphExecutionException;
 import org.culturegraph.mf.morph.api.helpers.AbstractReadOnlyMap;
 
 /**
@@ -71,7 +71,7 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
 				}
 			}
 		} catch (final IOException | UncheckedIOException e) {
-			throw new MorphException(e);
+			throw new MorphExecutionException("filemap: cannot read map file", e);
 		}
 	}
 
@@ -79,7 +79,7 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
 		return openAsFile(file)
 				.orElseGet(() -> openAsResource(file)
 						.orElseGet(() -> openAsUrl(file)
-								.orElseThrow(() -> new MorphException(
+								.orElseThrow(() -> new MorphExecutionException(
 										"File not found: " + file))));
 	}
 

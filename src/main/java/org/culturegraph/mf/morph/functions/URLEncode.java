@@ -18,7 +18,7 @@ package org.culturegraph.mf.morph.functions;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import org.culturegraph.mf.morph.api.MorphException;
+import org.culturegraph.mf.morph.api.MorphExecutionException;
 import org.culturegraph.mf.morph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
@@ -34,7 +34,8 @@ public final class URLEncode extends AbstractSimpleStatelessFunction {
 		try {
 			return URLEncoder.encode(value, "UTF-8");
 		} catch (final UnsupportedEncodingException e) {
-			throw new MorphException(e);
+			throw new MorphExecutionException("urlencode: unsupported encoding UTF-8",
+					e);
 		}
 	}
 

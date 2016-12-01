@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.morph;
-
-
-import org.culturegraph.mf.morph.api.MorphErrorHandler;
+package org.culturegraph.mf.morph.api;
 
 /**
- * Default error handler used by {@link Metamorph}. It simply throw a
- * {@link MetamorphException}.
+ * Thrown by Metamorph if an error occurs while parsing and building the
+ * Metamorph transformation pipeline.
  *
  * @author Markus Michael Geipel
  */
-public final class DefaultErrorHandler implements MorphErrorHandler {
+public final class MorphBuildException extends RuntimeException {
 
-	@Override
-	public void error(final Exception exception) {
-		throw new MetamorphException(
-				"Error while exectuing the Metamorph transformation pipeline: " +
-						exception.getMessage(), exception);
+	private static final long serialVersionUID = 0L;
+
+	public MorphBuildException(final String message) {
+		super(message);
+	}
+
+	public MorphBuildException(final String message, final Throwable cause) {
+		super(message, cause);
 	}
 
 }

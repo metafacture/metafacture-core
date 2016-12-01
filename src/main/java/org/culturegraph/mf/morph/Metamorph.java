@@ -40,7 +40,7 @@ import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
 import org.culturegraph.mf.morph.api.FlushListener;
 import org.culturegraph.mf.morph.api.InterceptorFactory;
 import org.culturegraph.mf.morph.api.Maps;
-import org.culturegraph.mf.morph.api.MorphDefException;
+import org.culturegraph.mf.morph.api.MorphBuildException;
 import org.culturegraph.mf.morph.api.MorphErrorHandler;
 import org.culturegraph.mf.morph.api.NamedValuePipe;
 import org.culturegraph.mf.morph.api.NamedValueReceiver;
@@ -168,10 +168,20 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
 	public Metamorph(final InputSource inputSource, final Map<String, String> vars,
 			final InterceptorFactory interceptorFactory) {
-
-		final MorphBuilder builder = new MorphBuilder(this, interceptorFactory);
-		builder.walk(inputSource, vars);
+		buildPipeline(inputSource, vars, interceptorFactory);
 		init();
+	}
+
+	private void buildPipeline(InputSource inputSource, Map<String, String> vars,
+			InterceptorFactory interceptorFactory) {
+		try {
+			final MorphBuilder builder = new MorphBuilder(this, interceptorFactory);
+			builder.walk(inputSource, vars);
+		} catch (RuntimeException e) {
+			throw new MetamorphException(
+					"Error while building the Metamorph transformation pipeline: " +
+							e.getMessage(), e);
+		}
 	}
 
 	private static InputSource getInputSource(final String morphDef) {
@@ -179,7 +189,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 			return new InputSource(
 					ResourceUtil.getUrl(morphDef).toExternalForm());
 		} catch (final MalformedURLException e) {
-			throw new MorphDefException(COULD_NOT_LOAD_MORPH_FILE, e);
+			throw new MorphBuildException(COULD_NOT_LOAD_MORPH_FILE, e);
 		}
 	}
 

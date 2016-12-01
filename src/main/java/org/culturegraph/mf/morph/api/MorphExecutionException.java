@@ -15,27 +15,21 @@
  */
 package org.culturegraph.mf.morph.api;
 
-import org.culturegraph.mf.framework.MetafactureException;
-
-
 /**
- * Thrown if an error occurs during the processing in Metamorph.
+ * Thrown if an error occurs while executing the Metamorph transformation
+ * pipeline.
  *
  * @author Markus Michael Geipel
  */
-public class MorphException extends MetafactureException {
+public class MorphExecutionException extends RuntimeException {
 
-	private static final long serialVersionUID = -3130648074493084946L;
+	private static final long serialVersionUID = 0L;
 
-	public MorphException(final String message) {
+	public MorphExecutionException(final String message) {
 		super(message);
 	}
 
-	public MorphException(final Throwable cause) {
-		super(cause);
-	}
-
-	public MorphException(final String message, final Throwable cause) {
+	public MorphExecutionException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 

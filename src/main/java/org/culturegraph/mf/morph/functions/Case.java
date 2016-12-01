@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import org.culturegraph.mf.morph.api.MorphDefException;
+import org.culturegraph.mf.morph.api.MorphBuildException;
 import org.culturegraph.mf.morph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
@@ -56,7 +56,7 @@ public final class Case extends AbstractSimpleStatelessFunction {
 
 	public void setLanguage(final String language) {
 		if (!LANGUAGES.contains(language)) {
-			throw new MorphDefException("Language " + language
+			throw new MorphBuildException("Language " + language
 					+ " not supported.");
 		}
 		this.locale = new Locale(language);

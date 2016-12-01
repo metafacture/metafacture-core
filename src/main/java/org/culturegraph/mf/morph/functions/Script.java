@@ -22,8 +22,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import org.culturegraph.mf.morph.api.MorphDefException;
-import org.culturegraph.mf.morph.api.MorphException;
+import org.culturegraph.mf.morph.api.MorphBuildException;
+import org.culturegraph.mf.morph.api.MorphExecutionException;
 import org.culturegraph.mf.morph.api.helpers.AbstractSimpleStatelessFunction;
 import org.culturegraph.mf.util.ResourceUtil;
 
@@ -48,9 +48,9 @@ public final class Script extends AbstractSimpleStatelessFunction {
 		try {
 			engine.eval(ResourceUtil.getReader(file));
 		} catch (final ScriptException e) {
-			throw new MorphDefException("Error in script", e);
+			throw new MorphBuildException("Error in script", e);
 		} catch (final FileNotFoundException e) {
-			throw new MorphDefException("Error loading script '" + file + "'",
+			throw new MorphBuildException("Error loading script '" + file + "'",
 					e);
 		}
 		invocable = (Invocable) engine;
@@ -63,10 +63,10 @@ public final class Script extends AbstractSimpleStatelessFunction {
 			obj = invocable.invokeFunction(invoke, value);
 			return obj.toString();
 		} catch (final ScriptException e) {
-			throw new MorphException(
+			throw new MorphExecutionException(
 					"Error in script while evaluating 'process' method", e);
 		} catch (final NoSuchMethodException e) {
-			throw new MorphException("'process' method is missing in script", e);
+			throw new MorphExecutionException("'process' method is missing in script", e);
 		}
 	}
 
