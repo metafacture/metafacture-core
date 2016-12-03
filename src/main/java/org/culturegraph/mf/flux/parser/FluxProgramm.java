@@ -30,7 +30,9 @@ import java.util.Set;
 import org.culturegraph.mf.flux.FluxParseException;
 import org.culturegraph.mf.flux.HelpPrinter;
 import org.culturegraph.mf.framework.Receiver;
+import org.culturegraph.mf.util.reflection.ReflectionUtil;
 import org.culturegraph.mf.util.ResourceUtil;
+import org.culturegraph.mf.util.reflection.ConfigurableClass;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 
 /**
@@ -68,8 +70,9 @@ public final class FluxProgramm {
 			newElement = COMMAND_FACTORY.newInstance(name, namedArgs, cArgs.toArray());
 
 		} else {
-			newElement = ObjectFactory.newInstance(ObjectFactory.loadClass(name, Receiver.class), cArgs.toArray());
-			ObjectFactory.applySetters(newElement, namedArgs);
+			final ConfigurableClass<? extends Receiver> elementClass =
+					ReflectionUtil.loadClass(name, Receiver.class);
+			newElement = elementClass.newInstance(namedArgs, cArgs.toArray());
 		}
 		return newElement;
 	}

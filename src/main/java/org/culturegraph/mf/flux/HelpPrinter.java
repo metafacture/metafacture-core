@@ -39,14 +39,14 @@ import org.culturegraph.mf.util.reflection.ObjectFactory;
  * prints Flux help for a given {@link ObjectFactory}
  *
  * @author Markus Michael Geipel
- *
  */
 public final class HelpPrinter {
 	private HelpPrinter() {
 		// no instances
 	}
 
-	public static void print(final ObjectFactory<?> factory, final PrintStream out) {
+	public static void print(final ObjectFactory<?> factory,
+			final PrintStream out) {
 		out.println("WELCOME TO METAFACTURE");
 		out.println(getVersionInfo());
 
@@ -69,44 +69,51 @@ public final class HelpPrinter {
 		}
 	}
 
-	private static <T> void  describe(final String name, final ObjectFactory<T> factory, final PrintStream out) {
-		final Class<? extends T> clazz = factory.getClass(name);
-		final Description desc = clazz.getAnnotation(Description.class);
+	private static <T> void describe(String name, ObjectFactory<T> factory,
+			PrintStream out) {
+		final Class<? extends T> moduleClass = factory.get(name).getPlainClass();
+		final Description desc = moduleClass.getAnnotation(Description.class);
 
 		out.println(name);
 
 		if (desc != null) {
 			out.println("description:\t" + desc.value());
 		}
-		final Collection<String> arguments = getAvailableArguments(clazz);
+		final Collection<String> arguments = getAvailableArguments(moduleClass);
 		if (!arguments.isEmpty()) {
 			out.println("argument in\t" + arguments);
 		}
 
-		final Map<String, Class<?>> attributes = factory.getAttributes(name);
+		final Map<String, Class<?>> attributes = factory.get(name).getSetterTypes();
 
 		if (!attributes.isEmpty()) {
 			out.print("options:\t");
 			final StringBuilder builder = new StringBuilder();
-			for (Entry<String, Class<?>> entry: attributes.entrySet()) {
+			for (Entry<String, Class<?>> entry : attributes.entrySet()) {
 				if (entry.getValue().isEnum()) {
-					builder.append(entry.getKey() + " " + Arrays.toString(entry.getValue().getEnumConstants())	+", ");
-				}else{
-					builder.append(entry.getKey() + " (" + entry.getValue().getName()+"), ");
+					builder.append(entry.getKey())
+							.append(" ")
+							.append(Arrays.toString(entry.getValue().getEnumConstants()))
+							.append(", ");
+				} else {
+					builder.append(entry.getKey())
+							.append(" (")
+							.append(entry.getValue().getName())
+							.append("), ");
 				}
 
 			}
-			out.println(builder.substring(0, builder.length()-2));
+			out.println(builder.substring(0, builder.length() - 2));
 		}
 
-		out.println("implementation:\t" + clazz.getCanonicalName());
+		out.println("implementation:\t" + moduleClass.getCanonicalName());
 		String inString = "<unknown>";
 		String outString = "";
-		final In inClass = clazz.getAnnotation(In.class);
+		final In inClass = moduleClass.getAnnotation(In.class);
 		if (inClass != null) {
 			inString = inClass.value().getCanonicalName();
 		}
-		final Out outClass = clazz.getAnnotation(Out.class);
+		final Out outClass = moduleClass.getAnnotation(Out.class);
 		if (outClass != null) {
 			outString = outClass.value().getCanonicalName();
 		}
@@ -115,20 +122,19 @@ public final class HelpPrinter {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static Collection<String> getAvailableArguments(final Class<?> clazz) {
-		for (Method method : clazz.getMethods()) {
+	private static Collection<String> getAvailableArguments(
+			Class<?> moduleClass) {
+		for (Method method : moduleClass.getMethods()) {
 			if (method.getAnnotation(ReturnsAvailableArguments.class) != null) {
 				try {
-					return (Collection<String>) method.invoke(clazz, new Object[0]);
-				} catch (IllegalAccessException e) {
-					// silently ignore
-				} catch (IllegalArgumentException e) {
-					// silently ignore
-				} catch (InvocationTargetException e) {
+					return (Collection<String>) method.invoke(moduleClass);
+				} catch (IllegalAccessException | InvocationTargetException |
+						IllegalArgumentException e) {
 					// silently ignore
 				}
 			}
 		}
 		return Collections.emptyList();
 	}
+
 }

@@ -21,12 +21,12 @@ import java.io.StringReader;
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.morph.Metamorph;
+import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.test.reader.MultiFormatReader;
 import org.culturegraph.mf.test.reader.Reader;
-import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.test.validators.StreamValidator;
+import org.culturegraph.mf.util.reflection.ReflectionUtil;
 import org.culturegraph.mf.util.ResourceUtil;
-import org.culturegraph.mf.util.reflection.ObjectFactory;
 import org.culturegraph.mf.util.XmlUtil;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
@@ -135,10 +135,10 @@ final class MetamorphTestCase extends Statement {
 
 		} else if (MIME_JAVACLASS.equals(type)) {
 			if (src.isEmpty()) {
-				throw new InitializationError("class defining transformation not specified");
+				throw new InitializationError(
+						"class defining transformation not specified");
 			}
-			final Class<? extends StreamPipe> clazz = ObjectFactory.loadClass(src, StreamPipe.class);
-			return ObjectFactory.newInstance(clazz);
+			return ReflectionUtil.loadClass(src, StreamPipe.class).newInstance();
 		}
 		throw new InitializationError("transformation of type " + type +
 				" is not supperted");

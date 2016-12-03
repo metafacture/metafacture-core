@@ -28,8 +28,9 @@ import org.culturegraph.mf.morph.api.MorphBuildException;
 import org.culturegraph.mf.morph.api.NamedValuePipe;
 import org.culturegraph.mf.morph.api.Function;
 import org.culturegraph.mf.morph.api.InterceptorFactory;
-import org.culturegraph.mf.util.reflection.ObjectFactory;
+import org.culturegraph.mf.util.reflection.ReflectionUtil;
 import org.culturegraph.mf.morph.xml.Location;
+import org.culturegraph.mf.util.reflection.ConfigurableClass;
 import org.w3c.dom.Node;
 
 /**
@@ -135,12 +136,12 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		final Map<String, String> attributes = resolvedAttributeMap(mapNode);
 		final String mapName = resolveVars(attributes.remove(AttributeName.NAME.getString()));
 		final Map<String, String> map;
-
 		if (mapNode.getLocalName().equals(JAVAMAP)) {
 			final String className = resolvedAttribute(mapNode, AttributeName.CLASS);
-			map = ObjectFactory.newInstance(ObjectFactory.loadClass(className, Map.class));
 			attributes.remove(AttributeName.CLASS.getString());
-			ObjectFactory.applySetters(map, attributes);
+			final ConfigurableClass<? extends Map> mapClass =
+					ReflectionUtil.loadClass(className, Map.class);
+			map = mapClass.newInstance(attributes);
 		} else if (getMapFactory().containsKey(mapNode.getLocalName())) {
 			map = getMapFactory().newInstance(mapNode.getLocalName(), attributes);
 		} else {
@@ -343,11 +344,12 @@ public final class MorphBuilder extends AbstractMetamorphDomWalker {
 		final Function function;
 		final Map<String, String> attributes = resolvedAttributeMap(functionNode);
 		if (functionNode.getLocalName().equals(JAVA)) {
-			final String className = resolvedAttribute(functionNode, AttributeName.CLASS);
-			function = ObjectFactory.newInstance(ObjectFactory.loadClass(className, Function.class));
-
+			final String className = resolvedAttribute(functionNode,
+					AttributeName.CLASS);
 			attributes.remove(AttributeName.CLASS.getString());
-			ObjectFactory.applySetters(function, attributes);
+			final ConfigurableClass<? extends Function> functionClass =
+					ReflectionUtil.loadClass(className, Function.class);
+			function = functionClass.newInstance(attributes);
 		} else if (getFunctionFactory().containsKey(functionNode.getLocalName())) {
 			final String flushWith = attributes.remove(AttributeName.FLUSH_WITH.getString());
 			function = getFunctionFactory().newInstance(functionNode.getLocalName(), attributes);
