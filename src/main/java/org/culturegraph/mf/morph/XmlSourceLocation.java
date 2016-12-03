@@ -16,7 +16,7 @@
 package org.culturegraph.mf.morph;
 
 import org.culturegraph.mf.morph.api.SourceLocation;
-import org.culturegraph.mf.util.xml.Location;
+import org.culturegraph.mf.morph.xml.Location;
 
 /**
  * Implementation of {@link SourceLocation} which is backed by {@link Location}

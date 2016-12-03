@@ -21,7 +21,7 @@ import java.util.Map;
 import org.culturegraph.mf.morph.api.MorphBuildException;
 import org.culturegraph.mf.types.ScopedHashMap;
 import org.culturegraph.mf.util.StringUtil;
-import org.culturegraph.mf.util.xml.DomLoader;
+import org.culturegraph.mf.morph.xml.DomLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;

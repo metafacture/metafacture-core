@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.util.xml;
+package org.culturegraph.mf.morph.xml;
 
 import java.net.MalformedURLException;
 import java.net.URL;

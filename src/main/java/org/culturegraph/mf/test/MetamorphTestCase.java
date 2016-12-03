@@ -27,7 +27,7 @@ import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.test.validators.StreamValidator;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
-import org.culturegraph.mf.util.xml.XmlUtil;
+import org.culturegraph.mf.util.XmlUtil;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 import org.w3c.dom.Element;

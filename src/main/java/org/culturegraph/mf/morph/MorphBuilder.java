@@ -29,7 +29,7 @@ import org.culturegraph.mf.morph.api.NamedValuePipe;
 import org.culturegraph.mf.morph.api.Function;
 import org.culturegraph.mf.morph.api.InterceptorFactory;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
-import org.culturegraph.mf.util.xml.Location;
+import org.culturegraph.mf.morph.xml.Location;
 import org.w3c.dom.Node;
 
 /**
