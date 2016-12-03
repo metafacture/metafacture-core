@@ -19,15 +19,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
@@ -53,7 +52,7 @@ import org.xml.sax.XMLReader;
  * @author Christoph Böhme
  *
  */
-public class DomLoader {
+public final class DomLoader {
 
 	private static final ErrorHandler SAX_ERROR_HANDLER =
 			new SaxErrorHandler();
@@ -62,69 +61,89 @@ public class DomLoader {
 			new TransformerErrorHandler();
 
 	private DomLoader() {
-		// No instances allowed
+		throw new AssertionError("No instances allowed");
 	}
 
-	public static Document parse(final String schemaFile,
-			final InputSource inputSource) {
-		final URL schemaUrl;
+	public static Document parse(String schemaFile, InputSource input) {
+		final Document document = createEmptyDocument();
+		final XMLReader pipeline = createXmlFilterPipeline(schemaFile, document);
+		process(new SAXSource(pipeline, input), new DOMResult(document));
+		// Xerces does not use the XSD schema for deciding whether
+		// whitespace is ignorable (it requires a DTD for this).
+		// Since we do not use a DTD we have to use a different
+		// method to remove ignorable whitespace.
+		//
+		// Note that this method does not only remove ignorable
+		// whitespace but all text nodes containing only whitespace.
+		removeEmptyTextNodes(document);
+		return document;
+	}
+
+	private static Document createEmptyDocument() {
 		try {
-			schemaUrl = ResourceUtil.getUrl(schemaFile);
+			return DocumentBuilderFactory.newInstance().newDocumentBuilder()
+					.newDocument();
+		} catch (ParserConfigurationException e) {
+			throw new MetafactureException(e);
+		}
+	}
+
+	private static XMLReader createXmlFilterPipeline(String schemaFile,
+			Document document) {
+		XMLReader pipelineHead = createSaxReader(loadSchema(schemaFile));
+		pipelineHead = new LocationAnnotator(pipelineHead, document);
+		pipelineHead = new IgnorableWhitespaceFilter(pipelineHead);
+		pipelineHead = new CommentsFilter(pipelineHead);
+		pipelineHead = new CDataFilter(pipelineHead);
+		pipelineHead.setErrorHandler(SAX_ERROR_HANDLER);
+		return pipelineHead;
+	}
+
+	private static Schema loadSchema(String schemaFile) {
+		try {
+			return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+					.newSchema(getSchemaUrl(schemaFile));
+		} catch (SAXException e) {
+			throw new MetafactureException(e);
+		}
+	}
+
+	private static URL getSchemaUrl(String schemaFile) {
+		try {
+			return ResourceUtil.getUrl(schemaFile);
 		} catch (final MalformedURLException e) {
 			throw new MetafactureException("'" + schemaFile + "' not found:", e);
 		}
+	}
 
+	private static XMLReader createSaxReader(Schema schema) {
+		final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+		parserFactory.setSchema(schema);
+		parserFactory.setNamespaceAware(true);
+		parserFactory.setXIncludeAware(true);
 		try {
-			// Create result document:
+			return parserFactory.newSAXParser().getXMLReader();
+		} catch (ParserConfigurationException | SAXException e) {
+			throw new MetafactureException(e);
+		}
+	}
 
-			final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-			final DocumentBuilder builder = builderFactory.newDocumentBuilder();
-			final Document document = builder.newDocument();
-
-			// Create input parser and filter pipeline:
-
-			final SchemaFactory schemaFactory =
-					SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			final Schema schema = schemaFactory.newSchema(schemaUrl);
-
-			final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-			parserFactory.setSchema(schema);
-			parserFactory.setNamespaceAware(true);
-			parserFactory.setXIncludeAware(true);
-			final SAXParser parser = parserFactory.newSAXParser();
-
-			XMLReader xmlReader = parser.getXMLReader();
-			xmlReader = new LocationAnnotator(xmlReader, document);
-			xmlReader = new IgnorableWhitespaceFilter(xmlReader);
-			xmlReader = new CommentsFilter(xmlReader);
-			xmlReader = new CDataFilter(xmlReader);
-
-			xmlReader.setErrorHandler(SAX_ERROR_HANDLER);
-
-			// Create and run transformer:
-
-			final TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			final Transformer transformer = transformerFactory.newTransformer();
-			transformer.setErrorListener(TRANSFORMER_ERROR_HANDLER);
-
-			final Source source = new SAXSource(xmlReader, inputSource);
-			final Result result = new DOMResult(document);
-
+	private static void process(Source source, Result result) {
+		final Transformer transformer = createTransformer();
+		try {
 			transformer.transform(source, result);
+		} catch (TransformerException e) {
+			throw new MetafactureException(e);
+		}
+	}
 
-			// Xerces does not use the XSD schema for deciding whether
-			// whitespace is ignorable (it requires a DTD for this).
-			// Since we do not use a DTD we have to use a different
-			// method to remove ignorable whitespace.
-			//
-			// Note that this method does not only remove ignorable
-			// whitespace but all text nodes containing only whitespace.
-			removeEmptyTextNodes(document);
-
-			return document;
-
-		} catch (final ParserConfigurationException | TransformerException |
-				SAXException e) {
+	private static Transformer createTransformer() {
+		try {
+			final Transformer transformer = TransformerFactory.newInstance()
+					.newTransformer();
+			transformer.setErrorListener(TRANSFORMER_ERROR_HANDLER);
+			return transformer;
+		} catch (TransformerConfigurationException e) {
 			throw new MetafactureException(e);
 		}
 	}
@@ -136,10 +155,10 @@ public class DomLoader {
 				final Node old = child;
 				child = child.getNextSibling();
 
-				if(old.getNodeValue().trim().isEmpty()){
+				if(old.getNodeValue().trim().isEmpty()) {
 					node.removeChild(old);
 				}
-			}else{
+			} else {
 				removeEmptyTextNodes(child);
 				child = child.getNextSibling();
 			}
