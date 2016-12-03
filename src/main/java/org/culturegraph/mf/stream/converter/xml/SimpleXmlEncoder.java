@@ -15,6 +15,7 @@
  */
 package org.culturegraph.mf.stream.converter.xml;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +26,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.culturegraph.mf.framework.FluxCommand;
+import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
@@ -87,14 +89,24 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 	}
 
 	public void setNamespaceFile(final String file) {
-		final Properties properties = ResourceUtil.loadProperties(file);
+		final Properties properties;
+		try {
+			properties = ResourceUtil.loadProperties(file);
+		} catch (IOException e) {
+			throw new MetafactureException("Failed to load namespaces list", e);
+		}
 		for (final Entry<Object, Object> entry : properties.entrySet()) {
 			namespaces.put(entry.getKey().toString(), entry.getValue().toString());
 		}
 	}
 
 	public void setNamespaceFile(final URL url) {
-		final Properties properties = ResourceUtil.loadProperties(url);
+		final Properties properties;
+		try {
+			properties = ResourceUtil.loadProperties(url);
+		} catch (IOException e) {
+			throw new MetafactureException("Failed to load namespaces list", e);
+		}
 		for (final Entry<Object, Object> entry : properties.entrySet()) {
 			namespaces.put(entry.getKey().toString(), entry.getValue().toString());
 		}

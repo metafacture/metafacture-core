@@ -15,6 +15,7 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
+import java.io.IOException;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
@@ -58,7 +60,12 @@ public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver>
 	private String aggregationId;
 
 	static {
-		final Properties properties = ResourceUtil.loadProperties(ORE_AGGREGATION_PROPERTIES);
+		final Properties properties;
+		try {
+			properties = ResourceUtil.loadProperties(ORE_AGGREGATION_PROPERTIES);
+		} catch (IOException e) {
+			throw new MetafactureException("Failed to load properties", e);
+		}
 		for (Entry<Object, Object> entry : properties.entrySet()) {
 			final String[] parts = SPLIT_PATTERN.split(entry.getValue().toString());
 			final String name = entry.getKey().toString();

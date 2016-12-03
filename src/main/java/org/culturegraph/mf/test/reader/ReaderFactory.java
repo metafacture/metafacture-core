@@ -15,6 +15,9 @@
  */
 package org.culturegraph.mf.test.reader;
 
+import java.io.IOException;
+
+import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
 
@@ -27,9 +30,12 @@ import org.culturegraph.mf.util.reflection.ObjectFactory;
 final class ReaderFactory extends ObjectFactory<Reader> {
 
 	ReaderFactory() {
-		super();
-		loadClassesFromMap(ResourceUtil.loadProperties("test-readers.properties"),
-				Reader.class);
+		try {
+			loadClassesFromMap(ResourceUtil.loadProperties(
+					"test-readers.properties"), Reader.class);
+		} catch (IOException e) {
+			throw new MetafactureException("Failed to load readers list", e);
+		}
 	}
 
 }

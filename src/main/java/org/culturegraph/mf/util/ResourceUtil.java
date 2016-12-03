@@ -24,13 +24,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
-
-import org.culturegraph.mf.framework.MetafactureException;
 
 
 /**
@@ -109,13 +106,12 @@ public final class ResourceUtil {
 	}
 
 	public static Reader getReader(final String name, final String encoding)
-			throws FileNotFoundException, UnsupportedEncodingException {
+			throws IOException {
 		return new InputStreamReader(getStream(name), encoding);
 	}
 
 	public static Reader getReader(final File file, final String encoding)
-			throws FileNotFoundException,
-			UnsupportedEncodingException {
+			throws IOException {
 		return new InputStreamReader(getStream(file), encoding);
 	}
 
@@ -149,12 +145,9 @@ public final class ResourceUtil {
 		return file.toURI().toURL();
 	}
 
-	public static Properties loadProperties(final String location) {
-		try {
-			return loadProperties(getStream(location));
-		} catch (final IOException e) {
-			throw new MetafactureException("'" + location + "' could not be loaded", e);
-		}
+	public static Properties loadProperties(final String location)
+			throws IOException {
+		return loadProperties(getStream(location));
 	}
 
 	public static Properties loadProperties(final InputStream stream)
@@ -165,13 +158,8 @@ public final class ResourceUtil {
 		return properties;
 	}
 
-	public static Properties loadProperties(final URL url) {
-		try {
-			return loadProperties(url.openStream());
-		} catch (final IOException e) {
-			throw new MetafactureException("'" + url.getPath() +
-					"' could not be loaded", e);
-		}
+	public static Properties loadProperties(final URL url) throws IOException {
+		return loadProperties(url.openStream());
 	}
 
 	public static String loadTextFile(final String location) throws IOException {

@@ -15,6 +15,7 @@
  */
 package org.culturegraph.mf.flux;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
@@ -45,10 +47,8 @@ public final class HelpPrinter {
 	}
 
 	public static void print(final ObjectFactory<?> factory, final PrintStream out) {
-
-
 		out.println("WELCOME TO METAFACTURE");
-		out.println(ResourceUtil.loadProperties("build.properties").toString());
+		out.println(getVersionInfo());
 
 		out.println("\nUsage:\tflux FLOW_FILE [VARNAME=VALUE ...]\n");
 		out.println("Available pipe elements:\n");
@@ -59,7 +59,14 @@ public final class HelpPrinter {
 		for (String name : keyWords) {
 			describe(name, factory, out);
 		}
+	}
 
+	private static String getVersionInfo() {
+		try {
+			return ResourceUtil.loadProperties("build.properties").toString();
+		} catch (IOException e) {
+			throw new MetafactureException("Failed to load build infos", e);
+		}
 	}
 
 	private static <T> void  describe(final String name, final ObjectFactory<T> factory, final PrintStream out) {

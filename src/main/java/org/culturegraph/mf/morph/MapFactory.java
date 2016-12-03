@@ -15,10 +15,12 @@
  */
 package org.culturegraph.mf.morph;
 
+import java.io.IOException;
+import java.util.Map;
+
+import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
-
-import java.util.Map;
 
 /**
  * Creates the maps available in Metamorph.
@@ -29,9 +31,12 @@ import java.util.Map;
 final class MapFactory extends ObjectFactory<Map> {
 
 	  MapFactory() {
-		super();
-		loadClassesFromMap(ResourceUtil.loadProperties(
-				"morph-maps.properties"), Map.class);
-	}
+		  try {
+			  loadClassesFromMap(ResourceUtil.loadProperties(
+					  "morph-maps.properties"), Map.class);
+		  } catch (IOException e) {
+			  throw new MetafactureException("Failed to load maps list", e);
+		  }
+	  }
 
 }

@@ -15,17 +15,15 @@
  */
 package org.culturegraph.mf.stream.source;
 
-import java.io.FileNotFoundException;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.MetafactureException;
-import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.util.ResourceUtil;
 
 
@@ -67,9 +65,7 @@ public final class ResourceOpener
 	public void process(final String file) {
 		try {
 			getReceiver().process(ResourceUtil.getReader(file, encoding));
-		} catch (FileNotFoundException e) {
-			throw new MetafactureException(e);
-		} catch (UnsupportedEncodingException e) {
+		} catch (java.io.IOException e) {
 			throw new MetafactureException(e);
 		}
 	}

@@ -16,6 +16,9 @@
 package org.culturegraph.mf.morph;
 
 
+import java.io.IOException;
+
+import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.morph.api.Function;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.culturegraph.mf.util.reflection.ObjectFactory;
@@ -29,9 +32,12 @@ import org.culturegraph.mf.util.reflection.ObjectFactory;
 final class FunctionFactory extends ObjectFactory<Function> {
 
 	FunctionFactory() {
-		super();
-		loadClassesFromMap(ResourceUtil.loadProperties(
-				"morph-functions.properties"), Function.class);
+		try {
+			loadClassesFromMap(ResourceUtil.loadProperties(
+					"morph-functions.properties"), Function.class);
+		} catch (IOException e) {
+			throw new MetafactureException("Failed to load functions list", e);
+		}
 	}
 
 }

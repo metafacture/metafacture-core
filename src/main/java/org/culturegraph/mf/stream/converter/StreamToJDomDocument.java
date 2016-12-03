@@ -15,12 +15,14 @@
  */
 package org.culturegraph.mf.stream.converter;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.framework.helpers.DefaultSender;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
@@ -55,8 +57,13 @@ public final class StreamToJDomDocument extends DefaultSender<ObjectReceiver<Doc
 
 	public StreamToJDomDocument(final String rootTagName, final String namespaceProperties) {
 		this.rootTagName = rootTagName;
-		namespaces.put(XML, Namespace.getNamespace(XML, "http://www.w3.org/XML/1998/namespace")); //
-		final Properties properties = ResourceUtil.loadProperties(namespaceProperties);
+		namespaces.put(XML, Namespace.getNamespace(XML, "http://www.w3.org/XML/1998/namespace"));
+		final Properties properties;
+		try {
+			properties = ResourceUtil.loadProperties(namespaceProperties);
+		} catch (IOException e) {
+			throw new MetafactureException("Cannot load namespaces list", e);
+		}
 		for (Entry<Object, Object> entry : properties.entrySet()) {
 			namespaces.put(entry.getKey().toString(), Namespace.getNamespace(entry.getKey().toString(), entry.getValue().toString()));
 		}
