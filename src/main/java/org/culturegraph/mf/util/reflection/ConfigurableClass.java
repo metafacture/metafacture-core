@@ -25,8 +25,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.culturegraph.mf.framework.MetafactureException;
-
 /**
  * Provides method for creating and initialising classes. The
  * {@link #newInstance(Map, Object...)} method creates an instance of the class
@@ -104,8 +102,8 @@ public final class ConfigurableClass<T> {
 			applySetters(instance, setterValues);
 			return instance;
 		} catch (ReflectiveOperationException e) {
-			throw new MetafactureException(plainClass + " could not be instantiated",
-					e);
+			throw new ReflectionException("class could not be instantiated: " +
+					plainClass, e);
 		}
 	}
 
@@ -142,16 +140,16 @@ public final class ConfigurableClass<T> {
 			final String setterName = setterValue.getKey().toLowerCase();
 			final Method setter = getSetters().get(setterName);
 			if (setter == null) {
-				throw new MetafactureException("Method '" + setterName +
-						"' does not exist in '" + target.getClass().getSimpleName() + "'");
+				throw new ReflectionException("Method " + target.getClass()
+						.getSimpleName() + "." + setterName + " does not exist");
 			}
 			final Class<?> valueType = setter.getParameterTypes()[0];
 			final Object value = convertValue(setterValue.getValue(), valueType);
 			try {
 				setter.invoke(target, value);
 			} catch (ReflectiveOperationException e) {
-				throw new MetafactureException("Cannot set '" + setterName +
-						"' for class '" + target.getClass().getSimpleName() + "'", e);
+				throw new ReflectionException("Cannot set " + setterName +
+						" on class " + target.getClass().getSimpleName(), e);
 			}
 		}
 	}

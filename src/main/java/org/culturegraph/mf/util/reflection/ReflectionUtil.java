@@ -15,8 +15,6 @@
  */
 package org.culturegraph.mf.util.reflection;
 
-import org.culturegraph.mf.framework.MetafactureException;
-
 /**
  * Utility functions for dynamically loading classes and calling setters on
  * them.
@@ -32,7 +30,7 @@ public final class ReflectionUtil {
 	public static ClassLoader getContextClassLoader() {
 		final ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		if (loader == null) {
-			throw new MetafactureException("Class loader could not be found.");
+			throw new ReflectionException("Class loader could not be found.");
 		}
 		return loader;
 	}
@@ -48,10 +46,10 @@ public final class ReflectionUtil {
 		try {
 			clazz = loader.loadClass(className);
 		} catch (ClassNotFoundException e) {
-			throw new MetafactureException(className + " not found.", e);
+			throw new ReflectionException("Class not found: " + className, e);
 		}
 		if (!baseType.isAssignableFrom(clazz)) {
-			throw new MetafactureException(className + " must extend or implement " +
+			throw new ReflectionException(className + " must extend or implement " +
 					baseType.getName());
 		}
 		@SuppressWarnings("unchecked")  // protected by isAssignableFrom check
