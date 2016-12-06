@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<macros xmlns="http://www.culturegraph.org/metamorph">
-	<macro name="test-macro">
-		<data source="lit">
-			<constant value="out" />
-		</data>
-	</macro>
-</macros>
