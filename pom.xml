@@ -72,18 +72,6 @@
 	</scm>
 
 	<build>
-		<testResources>
-			<testResource>
-				<directory>${basedir}/src/test/java</directory>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</testResource>
-			<testResource>
-				<directory>${basedir}/src/test/resources</directory>
-			</testResource>
-		</testResources>
-
 		<resources>
 			<resource>
 				<directory>${basedir}/src/main/resources</directory>
