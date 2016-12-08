@@ -47,7 +47,7 @@ public final class SplitterTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		splitter = new Splitter("morph/splitter-test.xml");
+		splitter = new Splitter("org/culturegraph/mf/morph/splitter-test.xml");
 		splitter.setReceiver("receiver-1", receiver1);
 		splitter.setReceiver("receiver-2", receiver2);
 	}
