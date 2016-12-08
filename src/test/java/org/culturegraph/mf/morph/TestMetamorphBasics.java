@@ -143,4 +143,31 @@ public final class TestMetamorphBasics {
 		verify(receiver).literal("Hawaii", "Aloha");
 	}
 
+	@Test
+	public void shouldAllowTreatingEntityEndEventsAsLiterals() {
+		metamorph = InlineMorph.in(this)
+				.with("<rules>")
+				.with("  <data source='e1' />")
+				.with("  <data source='e1.e2' />")
+				.with("  <data source='e1.e2.d' />")
+				.with("</rules>")
+				.createConnectedTo(receiver);
+
+		metamorph.startRecord("entity end info");
+		metamorph.startEntity("e1");
+		metamorph.startEntity("e2");
+		metamorph.literal("d", "a");
+		metamorph.endEntity();
+		metamorph.endEntity();
+		metamorph.endRecord();
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).startRecord("entity end info");
+		ordered.verify(receiver).literal("e1.e2.d", "a");
+		ordered.verify(receiver).literal("e1.e2", "");
+		ordered.verify(receiver).literal("e1", "");
+		ordered.verify(receiver).endRecord();
+		ordered.verifyNoMoreInteractions();
+	}
+
 }

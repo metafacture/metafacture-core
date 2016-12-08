@@ -46,6 +46,7 @@ public final class Script extends AbstractSimpleStatelessFunction {
 		final ScriptEngineManager manager = new ScriptEngineManager();
 		final ScriptEngine engine = manager.getEngineByName("JavaScript");
 		try {
+			// TODO: The script file should be loaded relatively to the base URI
 			engine.eval(ResourceUtil.getReader(file));
 		} catch (final ScriptException e) {
 			throw new MorphBuildException("Error in script", e);
