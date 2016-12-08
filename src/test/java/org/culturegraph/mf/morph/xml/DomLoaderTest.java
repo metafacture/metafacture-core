@@ -39,7 +39,9 @@ import org.xml.sax.InputSource;
  */
 public final class DomLoaderTest {
 
-	private static final String BASE_PATH = "dom-loader/";
+	private static final String BASE_PATH =
+			"org/culturegraph/mf/morph/xml/dom-loader/";
+
 	private static final String SCHEMA_FILE = BASE_PATH + "test-schema.xsd";
 
 	@Test
