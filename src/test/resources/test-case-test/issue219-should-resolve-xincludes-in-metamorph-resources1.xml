@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<metamorph xmlns="http://www.culturegraph.org/metamorph"
-	xmlns:xi="http://www.w3.org/2001/XInclude"
-	version="1" >
-
-	<xi:include href="issue219-should-resolve-xincludes-in-metamorph-resources2.xml" />
-
-</metamorph>

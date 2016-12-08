@@ -56,7 +56,7 @@
 			id-1 { data: 'Hallo Welt!' }
 		</input>
 
-		<transformation type="text/x-metamorph+xml" src="test/FrameworkTest-transformation.xml" />
+		<transformation type="text/x-metamorph+xml" src="org/culturegraph/mf/test/framework-test-transformation.xml" />
 
 		<result type="text/x-cg+xml">
 			<cgxml xmlns="http://www.culturegraph.org/cgxml" version="1.0">

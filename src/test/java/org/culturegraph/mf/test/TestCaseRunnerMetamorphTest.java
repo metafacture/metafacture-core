@@ -31,7 +31,7 @@ public final class TestCaseRunnerMetamorphTest {
 	@Test
 	public void issue213ShouldNotInitAnnotationsArrayWithNull() throws InitializationError {
 
-		final MetamorphTestRunner runner = new MetamorphTestRunner(Dummy.class, "/test/TestCaseRunnerTest-Dummy.xml");
+		final MetamorphTestRunner runner = new MetamorphTestRunner(Dummy.class, "/org/culturegraph/mf/test/test-case-runner-test-dummy.xml");
 		final MetamorphTestCase metamorphTestCase = runner.getChildren().get(0);
 		final Description description = runner.describeChild(metamorphTestCase);
 

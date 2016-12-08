@@ -119,7 +119,7 @@ public final class MetamorphTestCaseTest {
 				document.createElement(TRANSFORMATION_TAG);
 		transformationElement.setAttribute("type", "text/x-metamorph+xml");
 		transformationElement.setAttribute("src",
-				"test-case-test/issue219-should-resolve-xincludes-in-metamorph-resources1.xml");
+				"org/culturegraph/mf/test/issue219-should-resolve-xincludes-in-metamorph-resources1.xml");
 
 		final Element testCaseElement = document.createElement(TEST_CASE_TAG);
 		testCaseElement.appendChild(inputElement);
