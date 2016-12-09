@@ -16,9 +16,10 @@
 
 package org.culturegraph.mf.flux;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 
-import org.apache.commons.io.output.NullOutputStream;
 import org.culturegraph.mf.flux.parser.FluxProgramm;
 import org.junit.Test;
 
@@ -30,10 +31,21 @@ import org.junit.Test;
  */
 
 public final class FluxProgrammTest {
+
 	@Test
 	public void testCommandRegistration() {
 		// all commands must properly load to print the help
-		FluxProgramm.printHelp(new PrintStream(new NullOutputStream()));
+		FluxProgramm.printHelp(discardOutput());
 
 	}
+
+	private PrintStream discardOutput() {
+		return new PrintStream(new OutputStream() {
+			@Override
+			public void write(int b) throws IOException {
+				// Do not write any output.
+			}
+		});
+	}
+
 }
