@@ -1,5 +1,5 @@
-# Ignore Maven traget directory:
-/target/
+# Ignore temporary maven files:
+target/
 
 # Ignore Eclipse project files:
 .checkstyle

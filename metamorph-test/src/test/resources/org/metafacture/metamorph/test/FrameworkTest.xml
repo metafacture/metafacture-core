@@ -1,0 +1,127 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<!--
+  Copyright 2016 Christoph Böhme
+
+  Licensed under the Apache License, Version 2.0 the "License";
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<metamorph-test version="1.0"
+	xmlns="http://www.culturegraph.org/metamorph-test" xmlns:mm="http://www.culturegraph.org/metamorph">
+
+	<test-case name="All inline test: Namespaced Metamorph">
+		<input type="text/x-formeta">
+			id-1 { data: 'Hallo Welt!' }
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<mm:metamorph version="1">
+				<mm:rules>
+					<mm:data name="output" source="data" />
+				</mm:rules>
+			</mm:metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml xmlns="http://www.culturegraph.org/cgxml" version="1.0">
+				<records>
+					<record id="id-1">
+						<literal name="output" value="Hallo Welt!" />
+					</record>
+				</records>
+			</cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="All inline test: Inline Metamorph">
+		<input type="text/x-formeta">
+			id-1 { data: 'Hallo Welt!' }
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph xmlns="http://www.culturegraph.org/metamorph"
+				version="1">
+				<rules>
+					<data name="output" source="data" />
+				</rules>
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-cg+xml">
+			<cgxml version="1.0" xmlns="http://www.culturegraph.org/cgxml">
+				<records>
+					<record id="id-1">
+						<literal name="output" value="Hallo Welt!" />
+					</record>
+				</records>
+			</cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="Referenced Metamorph">
+		<input type="text/x-formeta">
+			id-1 { data: 'Hallo Welt!' }
+		</input>
+
+		<transformation type="text/x-metamorph+xml" src="org/metafacture/metamorph/test/framework-test-transformation.xml" />
+
+		<result type="text/x-cg+xml">
+			<cgxml xmlns="http://www.culturegraph.org/cgxml" version="1.0">
+				<records>
+					<record id="id-1">
+						<literal name="output" value="Hallo Welt!" />
+					</record>
+				</records>
+			</cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="Ignored test" ignore="true">
+		<input type="text/x-formeta">Glibberish</input>
+
+		<result type="text/x-cg+xml">
+			<cgxml xmlns="http://www.culturegraph.org/cgxml" version="1.0">
+				<records>
+					<record>
+						<literal name="output" value="Glibberish" />
+					</record>
+				</records>
+			</cgxml>
+		</result>
+	</test-case>
+
+	<test-case name="Should allow Formeta as input and output format">
+		<input type="text/x-formeta">
+			{ l: v }
+		</input>
+		<result type="text/x-formeta">
+			{ l: v }
+		</result>
+	</test-case>
+
+	<test-case name="Issue 219: Should resolve XIncludes in embedded Metamorph transformations">
+		<input type="text/x-formeta">
+			{ l: v }
+		</input>
+
+		<transformation type="text/x-metamorph+xml">
+			<metamorph xmlns="http://www.culturegraph.org/metamorph" version="1">
+				<include xmlns="http://www.w3.org/2001/XInclude"
+					href="issue219-should-resolve-xincludes-in-embedded-metamorph-transformations.xml" />
+			</metamorph>
+		</transformation>
+
+		<result type="text/x-formeta">
+			{ l: v }
+		</result>
+	</test-case>
+
+</metamorph-test>

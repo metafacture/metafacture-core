@@ -28,7 +28,7 @@ sonatypeServerId = m2.createElement("id")
 sonatypeServerUser = m2.createElement("username")
 sonatypeServerPass = m2.createElement("password")
 
-idNode = m2.createTextNode("sonatype-nexus-snapshots")
+idNode = m2.createTextNode("sonatype-oss-snapshots")
 userNode = m2.createTextNode(os.environ["SONATYPE_USERNAME"])
 passNode = m2.createTextNode(os.environ["SONATYPE_PASSWORD"])
 
@@ -46,3 +46,4 @@ m2Str = m2.toxml()
 f = open(homedir + '/.m2/mySettings.xml', 'w')
 f.write(m2Str)
 f.close()
+

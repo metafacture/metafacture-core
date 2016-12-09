@@ -9,4 +9,4 @@ env:
     - secure: "T9FcW2f0orue6i+Pvc1hE64mSoyOSwJFL9OrCBmhom5QW51Q8gP71DpEIz8fc6MvvU3wpSbTg5+lvbnTRdQCxmQzBeZb4yfdwUElldxaBqQaqVJWYBfoz0T1iznNA9WV3kHoHiDcb0iy3w/yzDxieQWjwj/69lKCvn8o425se7E="
 
 after_success:
-  - "[[ $TRAVIS_BRANCH == \"master\" ]] && { python travis-ci/configure-mvn.py ; mvn clean deploy --settings ~/.m2/mySettings.xml -Dgpg.skip=true -Psonatype-oss-release ; }"
+  - "[[ $TRAVIS_BRANCH == \"master\" ]] && { python travis-ci/configure-mvn.py ; mvn clean deploy --settings ~/.m2/mySettings.xml -Dgpg.skip=true -P deploy ; }"
