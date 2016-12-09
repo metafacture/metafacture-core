@@ -34,7 +34,6 @@ import org.culturegraph.mf.framework.annotations.Out;
  * This is configured with {@link #setIdLiteralName(String)}.
  *
  * @author Christoph Böhme
- * @see StreamEventDiscarder
  */
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
