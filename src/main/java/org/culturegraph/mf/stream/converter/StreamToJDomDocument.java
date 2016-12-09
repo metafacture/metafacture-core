@@ -29,7 +29,6 @@ import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.stream.converter.xml.SimpleXmlEncoder;
 import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.jdom2.Document;
@@ -48,6 +47,7 @@ import org.jdom2.Namespace;
 public final class StreamToJDomDocument
 		extends DefaultStreamPipe<ObjectReceiver<Document>> {
 
+	private static final String ATTRIBUTE_MARKER = "~";
 	private static final Pattern NAMESPACE_DELIMITER = Pattern.compile(":", Pattern.LITERAL);
 	private static final String XML = "xml";
 
@@ -119,7 +119,7 @@ public final class StreamToJDomDocument
 		assert !isClosed();
 		if (name.isEmpty()) {
 			currentElement.addContent(value);
-		} else if (name.startsWith(SimpleXmlEncoder.ATTRIBUTE_MARKER)) {
+		} else if (name.startsWith(ATTRIBUTE_MARKER)) {
 			final String[] parts = NAMESPACE_DELIMITER.split(name);
 			if (parts.length == 2) {
 				currentElement.setAttribute(parts[1], value, getNamespace(parts[0].substring(1)));
