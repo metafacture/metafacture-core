@@ -16,11 +16,10 @@
 
 package org.culturegraph.mf.stream.converter;
 
-import org.culturegraph.mf.framework.ObjectReceiver;
-import org.culturegraph.mf.framework.Sender;
+import org.culturegraph.mf.framework.FluxCommand;
+import org.culturegraph.mf.framework.ObjectPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.XmlPipe;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.jdom2.Document;
@@ -28,15 +27,15 @@ import org.jdom2.JDOMException;
 import org.jdom2.output.SAXOutputter;
 
 /**
- * Converts a {@link Document} to a stream
+ * Converts a {@link Document} to a stream.
  *
- * @author markus geipel
- *
+ * @author Markus Geipel
  */
 @In(Document.class)
 @Out(StreamReceiver.class)
 @FluxCommand("from-jdom-document")
-public final class JDomDocumentToStream  implements ObjectReceiver<Document>, Sender<StreamReceiver> {
+public final class JDomDocumentToStream
+		implements ObjectPipe<Document, StreamReceiver> {
 
 	private final SAXOutputter saxOutputer;
 	private final XmlPipe<StreamReceiver> xmlPipe;
@@ -71,7 +70,5 @@ public final class JDomDocumentToStream  implements ObjectReceiver<Document>, Se
 	public <R extends StreamReceiver> R setReceiver(final R receiver) {
 		return xmlPipe.setReceiver(receiver);
 	}
-
-
 
 }

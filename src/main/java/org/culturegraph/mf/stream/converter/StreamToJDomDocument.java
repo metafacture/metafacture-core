@@ -22,34 +22,35 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.MetafactureException;
-import org.culturegraph.mf.framework.helpers.DefaultSender;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.stream.converter.xml.SimpleXmlEncoder;
+import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
 /**
- * converts a stream into a {@link Document}
+ * Converts a stream into a {@link Document}.
  *
- * @author markus geipel
- *
+ * @author Markus Geipel
  */
-
 @Description("Converts a stream into a JDom document.")
 @In(StreamReceiver.class)
 @Out(Document.class)
 @FluxCommand("to-jdom-document")
-public final class StreamToJDomDocument extends DefaultSender<ObjectReceiver<Document>> implements StreamReceiver{
+public final class StreamToJDomDocument
+		extends DefaultStreamPipe<ObjectReceiver<Document>> {
+
 	private static final Pattern NAMESPACE_DELIMITER = Pattern.compile(":", Pattern.LITERAL);
 	private static final String XML = "xml";
+
 	private Document document;
 	private Element currentElement;
 	private final String rootTagName;
@@ -138,4 +139,5 @@ public final class StreamToJDomDocument extends DefaultSender<ObjectReceiver<Doc
 		assert !isClosed();
 		getReceiver().process(document);
 	}
+
 }
