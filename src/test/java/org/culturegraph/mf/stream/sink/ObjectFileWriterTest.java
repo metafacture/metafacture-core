@@ -24,12 +24,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-import org.apache.commons.io.IOUtils;
+import org.culturegraph.mf.util.ResourceUtil;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -80,19 +79,10 @@ public final class ObjectFileWriterTest
 
 	@Override
 	protected String getOutput() throws IOException {
-		final InputStream stream = new FileInputStream(file);
-		final InputStreamReader reader;
-		try { reader = new InputStreamReader(stream, writer.getEncoding()); }
-		catch (final IOException e) {
-			stream.close();
-			throw e;
+		final Charset encoding = Charset.forName(writer.getEncoding());
+		try (InputStream inputStream = new FileInputStream(file)) {
+			return ResourceUtil.readAll(inputStream, encoding);
 		}
-
-		final String fileContents;
-		try { fileContents = IOUtils.toString(reader); }
-		finally { reader.close(); }
-
-		return fileContents;
 	}
 
 }

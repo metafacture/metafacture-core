@@ -17,21 +17,22 @@
 package org.culturegraph.mf.stream.pipe;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.IOUtils;
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.MetafactureException;
-import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.objects.Triple;
 import org.culturegraph.mf.framework.objects.Triple.ObjectType;
+import org.culturegraph.mf.util.ResourceUtil;
 
 /**
  * Uses the object value of the triple as a URL and emits a new triple
@@ -96,11 +97,14 @@ public final class TripleObjectRetriever
 		try {
 			final URL url = new URL(urlString);
 			final URLConnection connection = url.openConnection();
+			connection.connect();
 			final String encodingName = connection.getContentEncoding();
 			final Charset encoding = encodingName != null ?
 					Charset.forName(encodingName) :
 					defaultEncoding;
-			return IOUtils.toString(connection.getInputStream(), encoding);
+			try (InputStream inputStream = connection.getInputStream()) {
+				return ResourceUtil.readAll(inputStream, encoding);
+			}
 		} catch (final IOException e) {
 			throw new MetafactureException(e);
 		}

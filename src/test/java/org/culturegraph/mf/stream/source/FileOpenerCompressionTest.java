@@ -26,9 +26,9 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 
-import org.apache.commons.io.IOUtils;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.util.FileCompression;
+import org.culturegraph.mf.util.ResourceUtil;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,7 +38,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 /**
  * Tests for file compression in  class {@link FileOpener}.
@@ -54,6 +55,9 @@ public final class FileOpenerCompressionTest {
 
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
+
+	@Rule
+	public MockitoRule mockitoRule = MockitoJUnit.rule();
 
 	@Mock
 	private ObjectReceiver<Reader> receiver;
@@ -89,7 +93,6 @@ public final class FileOpenerCompressionTest {
 
 	@Before
 	public void setup() {
-		MockitoAnnotations.initMocks(this);
 		fileOpener = new FileOpener();
 		fileOpener.setReceiver(receiver);
 	}
@@ -106,7 +109,7 @@ public final class FileOpenerCompressionTest {
 		verify(receiver).process(readerCaptor.capture());
 		final String charsFromFile;
 		try (Reader reader = readerCaptor.getValue()) {
-			charsFromFile = IOUtils.toString(reader);
+			charsFromFile = ResourceUtil.readAll(reader);
 		}
 		assertEquals(DATA, charsFromFile);
 	}

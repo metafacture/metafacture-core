@@ -26,6 +26,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Properties;
 
@@ -38,6 +40,8 @@ import java.util.Properties;
  *
  */
 public final class ResourceUtil {
+
+	static final int BUFFER_SIZE = 4096;
 
 	private ResourceUtil() {
 		throw new AssertionError("No instances allowed");
@@ -186,6 +190,26 @@ public final class ResourceUtil {
 		}
 
 		return list;
+	}
+
+	public static String readAll(InputStream inputStream, Charset encoding)
+			throws IOException {
+		try (Reader reader = new InputStreamReader(inputStream, encoding)) {
+			return readAll(reader);
+		}
+	}
+
+	public static String readAll(Reader reader) throws IOException {
+		final StringBuilder loadedText = new StringBuilder();
+		try (Reader bufferedReader = new BufferedReader(reader)) {
+			final CharBuffer buffer = CharBuffer.allocate(BUFFER_SIZE);
+			while (bufferedReader.read(buffer) > -1) {
+				buffer.flip();
+				loadedText.append(buffer);
+				buffer.clear();
+			}
+			return loadedText.toString();
+		}
 	}
 
 }

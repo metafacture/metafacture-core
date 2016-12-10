@@ -28,8 +28,8 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.IOUtils;
 import org.culturegraph.mf.stream.pipe.ObjectBuffer;
+import org.culturegraph.mf.util.ResourceUtil;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -61,7 +61,7 @@ public final class FileOpenerTest {
 		opener.process(testFile.getAbsolutePath());
 		opener.closeStream();
 
-		assertEquals(DATA, IOUtils.toString(buffer.pop()));
+		assertEquals(DATA, ResourceUtil.readAll(buffer.pop()));
 	}
 
 	private File createTestFile() throws IOException {
