@@ -32,7 +32,7 @@ public interface FilenameExtractor extends RecordIdentifier {
 	 * @author Pascal Christoph (dr0i)
 	 *
 	 */
-	public class FilenameUtil {
+	class FilenameUtil {
 		public String target = "tmp";
 		public String encoding = "UTF-8";
 		public String property = null;
@@ -47,8 +47,8 @@ public interface FilenameExtractor extends RecordIdentifier {
 		 * @param path
 		 *            the path of the to be stored file.
 		 */
-		public void ensurePathExists(final String path) {
-			final File parent = new File(path).getAbsoluteFile().getParentFile();
+		public void ensurePathExists(final File path) {
+			final File parent = path.getAbsoluteFile().getParentFile();
 			parent.mkdirs();
 		}
 	}
@@ -58,7 +58,7 @@ public interface FilenameExtractor extends RecordIdentifier {
 	 *
 	 * @return current default setting
 	 */
-	public String getEncoding();
+	String getEncoding();
 
 	/**
 	 * Sets the encoding used to open the resource.
@@ -66,7 +66,7 @@ public interface FilenameExtractor extends RecordIdentifier {
 	 * @param encoding
 	 *            new encoding
 	 */
-	public void setEncoding(final String encoding);
+	void setEncoding(final String encoding);
 
 	/**
 	 * Sets the end of the index in the filename to extract the name of the
@@ -75,7 +75,7 @@ public interface FilenameExtractor extends RecordIdentifier {
 	 * @param endIndex
 	 *            This marks the index' end.
 	 */
-	public void setEndIndex(final int endIndex);
+	void setEndIndex(final int endIndex);
 
 	/**
 	 * Sets the file's suffix.
@@ -83,7 +83,7 @@ public interface FilenameExtractor extends RecordIdentifier {
 	 * @param fileSuffix
 	 *            the suffix used for the to be generated files
 	 */
-	public void setFileSuffix(final String fileSuffix);
+	void setFileSuffix(final String fileSuffix);
 
 	/**
 	 * Sets the beginning of the index in the filename to extract the name of
@@ -92,7 +92,7 @@ public interface FilenameExtractor extends RecordIdentifier {
 	 * @param startIndex
 	 *            This marks the index' beginning.
 	 */
-	public void setStartIndex(final int startIndex);
+	void setStartIndex(final int startIndex);
 
 	/**
 	 * Sets the target path.
@@ -100,5 +100,6 @@ public interface FilenameExtractor extends RecordIdentifier {
 	 * @param target
 	 *            the basis directory in which the files are stored
 	 */
-	public void setTarget(final String target);
+	void setTarget(final String target);
+
 }
