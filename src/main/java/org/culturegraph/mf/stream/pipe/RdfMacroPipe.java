@@ -15,13 +15,12 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import org.apache.commons.lang.StringUtils;
-import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 
 /**
  * Expands some macros for RDF/XML
@@ -79,16 +78,16 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
 	@Override
 	public void literal(final String name, final String value) {
 		final int index = name.indexOf(LANGUAGE_MARKER);
-		if (StringUtils.isNotEmpty(name) && name.charAt(0)==REFERENCE_MARKER) {
+		if (!name.isEmpty() && name.charAt(0) == REFERENCE_MARKER) {
 			getReceiver().startEntity(name.substring(1));
 			getReceiver().literal(RDF_REFERENCE, value);
 			getReceiver().endEntity();
-		}else if(index>0){
-			getReceiver().startEntity(name.substring(0,index));
-			getReceiver().literal(XML_LANG, name.substring(index+1));
+		} else if (index > 0) {
+			getReceiver().startEntity(name.substring(0, index));
+			getReceiver().literal(XML_LANG, name.substring(index + 1));
 			getReceiver().literal("", value);
 			getReceiver().endEntity();
-		}else{
+		} else {
 			getReceiver().literal(name, value);
 		}
 	}
