@@ -15,6 +15,8 @@
  */
 package org.culturegraph.mf.util;
 
+import static java.util.stream.Collectors.joining;
+
 import java.io.StringWriter;
 
 import javax.xml.transform.OutputKeys;
@@ -91,4 +93,34 @@ public final class XmlUtil {
 				TEXT_XML_MIME_TYPE.equals(mimeType) ||
 				mimeType.endsWith(XML_BASE_MIME_TYPE);
 	}
+
+	public static String escape(String unescaped) {
+		return unescaped.chars()
+				.mapToObj(XmlUtil::escapeChar)
+				.collect(joining());
+	}
+
+	private static String escapeChar(int ch) {
+		final String entity = entityFor(ch);
+		if (entity != null) {
+			return entity;
+		}
+		if (ch > 0x7f) {
+			return "&#" + Integer.toString(ch) + ";";
+		}
+		return Character.toString((char) ch);
+	}
+
+	private static String entityFor(int ch) {
+		switch (ch) {
+			case '<': return "&lt;";
+			case '>': return "&gt;";
+			case '&': return "&amp;";
+			case '"': return "&quot;";
+			case '\'': return "&apos;";
+			default:
+				return null;
+		}
+	}
+
 }

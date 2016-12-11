@@ -16,14 +16,14 @@ package org.culturegraph.mf.stream.pipe;
 
 import java.util.HashSet;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.culturegraph.mf.framework.helpers.DefaultXmlPipe;
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.XmlReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.framework.helpers.DefaultXmlPipe;
+import org.culturegraph.mf.util.XmlUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -137,7 +137,7 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
 		if (attributes.getLength() > 0) {
 			for (int i = 0; i < attributes.getLength(); i++) {
 				builder.append(" " + attributes.getQName(i) + "=\""
-						+ StringEscapeUtils.escapeXml(attributes.getValue(i)) + "\"");
+						+ XmlUtil.escape(attributes.getValue(i)) + "\"");
 			}
 		}
 
@@ -171,7 +171,7 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
 	@Override
 	public void characters(final char[] chars, final int start, final int length) throws SAXException {
 		try {
-			builder.append(StringEscapeUtils.escapeXml(new String(chars, start, length)));
+			builder.append(XmlUtil.escape(new String(chars, start, length)));
 		} catch (Exception e) {
 			reset();
 		}
