@@ -18,15 +18,14 @@ package org.culturegraph.mf.stream.converter;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.MetafactureException;
-import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -81,8 +80,7 @@ public final class JsonEncoder extends
 	/**
 	 * By default JSON output does only have escaping where it is strictly
 	 * necessary. This is recommended in the most cases. Nevertheless it can
-	 * be sometimes useful to have some more escaping. With this method it is
-	 * possible to use {@link StringEscapeUtils#escapeJavaScript(String)}.
+	 * be sometimes useful to have some more escaping.
 	 *
 	 * @param escapeCharacters an array which defines which characters should be
 	 *                         escaped and how it will be done. See
@@ -97,6 +95,7 @@ public final class JsonEncoder extends
 	public void setJavaScriptEscapeChars(final int[] escapeCharacters) {
 
 		final CharacterEscapes ce = new CharacterEscapes() {
+
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -104,14 +103,12 @@ public final class JsonEncoder extends
 				if (escapeCharacters == null) {
 					return CharacterEscapes.standardAsciiEscapesForJSON();
 				}
-
 				return escapeCharacters;
 			}
 
 			@Override
 			public SerializableString getEscapeSequence(final int ch) {
-				final String chString = Character.toString((char) ch);
-				final String jsEscaped = StringEscapeUtils.escapeJavaScript(chString);
+				final String jsEscaped = escapeChar((char) ch);
 				return new SerializedString(jsEscaped);
 			}
 
@@ -204,6 +201,37 @@ public final class JsonEncoder extends
 		catch (final IOException e) {
 			throw new MetafactureException(e);
 		}
+	}
+
+	private String escapeChar(char ch) {
+		final String namedEscape = namedEscape(ch);
+		if (namedEscape != null) {
+			return namedEscape;
+		}
+		if (ch < 0x20 || 0x7f < ch ) {
+			return unicodeEscape(ch);
+		}
+		return Character.toString(ch);
+	}
+
+	private String namedEscape(char ch) {
+		switch(ch) {
+			case '\b': return "\\b";
+			case '\n': return "\\n";
+			case '\t': return "\\t";
+			case '\f': return "\\f";
+			case '\r': return "\\r";
+			case '\'': return "\\'";
+			case '\\': return "\\\\";
+			case '"': return "\\\"";
+			case '/': return "\\/";
+			default:
+				return null;
+		}
+	}
+
+	private String unicodeEscape(char ch) {
+		return String.format("\\u%4H", ch).replace(' ', '0');
 	}
 
 }
