@@ -37,7 +37,6 @@ package org.culturegraph.mf.flux.parser;
 
 @lexer::header {
 package org.culturegraph.mf.flux.parser;
-import org.apache.commons.lang.StringEscapeUtils;
 }
 
 flux
@@ -152,71 +151,87 @@ Identifier
 
 Wormhole
   :
-  '@' id=Identifier 
+  '@' id=Identifier
                    {
                     setText(id.getText());
                    }
   ;
 
 StringLiteral
+  @init { final StringBuilder stringBuilder = new StringBuilder(); }
   :
   '"'
   (
-    EscapeSequence
-    |
-    ~(
-      '\\'
-      | '"'
-     )
+    EscapeSequence[stringBuilder]
+    | normal = ~('\\'|'"') { stringBuilder.appendCodePoint(normal); }
   )*
-  '"' 
-     {
-      // strip the quotes from the resulting token and unescape
-      setText(StringEscapeUtils.unescapeJava(getText().substring(1,
-      		getText().length() - 1)));
-     }
+  '"'
+  { setText(stringBuilder.toString()); }
   ;
 
 fragment
-EscapeSequence
+EscapeSequence[StringBuilder stringBuilder]
   :
   '\\'
   (
-    'b'
-    | 't'
-    | 'n'
-    | 'f'
-    | 'r'
-    | '\"'
-    | '\''
-    | '\\'
+  NamedEscape[stringBuilder]
+  | UnicodeEscape[stringBuilder]
+  | OctalEscape[stringBuilder]
   )
-  | UnicodeEscape
-  | OctalEscape
   ;
 
 fragment
-OctalEscape
-  :
-  '\\' ('0'..'3') ('0'..'7') ('0'..'7')
-  | '\\' ('0'..'7') ('0'..'7')
-  | '\\' ('0'..'7')
+NamedEscape[StringBuilder stringBuilder]
+  : 'b' { stringBuilder.append('\b'); }
+  | 't' { stringBuilder.append('\t'); }
+  | 'n' { stringBuilder.append('\n'); }
+  | 'f' { stringBuilder.append('\f'); }
+  | 'r' { stringBuilder.append('\r'); }
+  | '"' { stringBuilder.append('"'); }
+  | '\'' { stringBuilder.append('\''); }
+  | '\\' { stringBuilder.append('\\'); }
   ;
 
 fragment
-UnicodeEscape
-  :
-  '\\' 'u' HexDigit HexDigit HexDigit HexDigit
+OctalEscape[StringBuilder stringBuilder]
+  @init {}
+  : ( digit1=LeadingOctalDigit digit2=OctalDigit digit3=OctalDigit
+  | digit2=OctalDigit digit3=OctalDigit
+  | digit3=OctalDigit
+  ) {
+    String octalString =
+     ( digit1 != null ? digit1.getText() : "") +
+     ( digit2 != null ? digit2.getText() : "") +
+     digit3.getText();
+    stringBuilder.appendCodePoint(Integer.valueOf(octalString, 8));
+  }
+  ;
+
+fragment
+LeadingOctalDigit
+  : '0'..'3'
+  ;
+
+fragment
+OctalDigit
+  : '0'..'7'
+  ;
+
+fragment
+UnicodeEscape[StringBuilder stringBuilder]
+  : 'u' digit1=HexDigit digit2=HexDigit digit3=HexDigit digit4=HexDigit
+  {
+    final String hexString = digit1.getText() + digit2.getText() +
+        digit3.getText() + digit4.getText();
+    stringBuilder.appendCodePoint(Integer.valueOf(hexString, 16));
+  }
   ;
 
 fragment
 HexDigit
-  :
-  (
-    '0'..'9'
-    | 'a'..'f'
-    | 'A'..'F'
-  )
+  : '0'..'9'
+  | 'a'..'f'
+  | 'A'..'F'
   ;
 
 fragment
@@ -255,7 +270,7 @@ LINE_COMMENT
     '\r'? '\n'
     | EOF
   )
-  
+
   {
     $channel = HIDDEN;
   }
@@ -270,7 +285,7 @@ WS
     | '\u000C'
     | '\n'
   )
-  
+
   {
    $channel = HIDDEN;
   }
