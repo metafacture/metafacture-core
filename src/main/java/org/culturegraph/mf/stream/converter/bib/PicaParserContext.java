@@ -15,10 +15,10 @@
  */
 package org.culturegraph.mf.stream.converter.bib;
 
-import org.culturegraph.mf.framework.StreamReceiver;
-
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+
+import org.culturegraph.mf.framework.StreamReceiver;
 
 /**
  * Parser context for the PICA+ parser.The context implements

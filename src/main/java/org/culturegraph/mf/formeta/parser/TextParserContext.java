@@ -15,8 +15,8 @@
  */
 package org.culturegraph.mf.formeta.parser;
 
-import org.culturegraph.mf.framework.FormatException;
 import org.culturegraph.mf.formeta.Formeta;
+import org.culturegraph.mf.framework.FormatException;
 
 /**
  * Context of the text parser. It stores the parsed text, maps escape sequences

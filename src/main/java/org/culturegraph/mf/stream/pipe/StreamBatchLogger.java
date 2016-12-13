@@ -19,9 +19,9 @@ package org.culturegraph.mf.stream.pipe;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.util.StringUtil;

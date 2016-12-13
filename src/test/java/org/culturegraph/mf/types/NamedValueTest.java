@@ -15,7 +15,6 @@
  */
 package org.culturegraph.mf.types;
 
-import org.culturegraph.mf.types.NamedValue;
 import org.junit.Assert;
 import org.junit.Test;
 

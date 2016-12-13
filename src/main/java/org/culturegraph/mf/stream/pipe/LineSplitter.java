@@ -17,12 +17,12 @@ package org.culturegraph.mf.stream.pipe;
 
 import java.util.regex.Pattern;
 
-import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 
 /**
  * Splits a string at new lines and sends each line to the receiver.

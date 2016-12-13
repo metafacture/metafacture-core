@@ -23,8 +23,8 @@ import java.io.Writer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.framework.FluxCommand;
+import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.util.FileCompression;
 

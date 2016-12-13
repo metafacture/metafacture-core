@@ -16,8 +16,8 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
-import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 
 /**
  * Base class for pipes that perform an action every N records.

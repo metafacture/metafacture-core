@@ -15,13 +15,13 @@
  */
 package org.culturegraph.mf.stream.converter.xml;
 
-import org.culturegraph.mf.framework.helpers.DefaultXmlPipe;
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.XmlReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.framework.helpers.DefaultXmlPipe;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 

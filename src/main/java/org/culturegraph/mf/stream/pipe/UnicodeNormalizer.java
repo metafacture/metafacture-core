@@ -19,12 +19,12 @@ package org.culturegraph.mf.stream.pipe;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 
-import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 
 /**
  * Normalises Unicode characters in strings. Unicode normalisation converts

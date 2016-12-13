@@ -19,13 +19,13 @@ package org.culturegraph.mf.stream.converter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 
 /**
  * Emits the values of literals matching {@literal #setPattern(String)}

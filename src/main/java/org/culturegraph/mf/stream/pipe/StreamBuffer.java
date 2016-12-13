@@ -18,9 +18,9 @@ package org.culturegraph.mf.stream.pipe;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 
 
 /**

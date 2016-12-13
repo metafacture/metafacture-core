@@ -19,8 +19,8 @@ package org.culturegraph.mf.stream.pipe;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.StandardEventNames;
+import org.culturegraph.mf.framework.StreamReceiver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

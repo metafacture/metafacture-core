@@ -5,12 +5,12 @@ package org.culturegraph.mf.stream.converter;
 
 import org.culturegraph.mf.formeta.parser.FormetaParser;
 import org.culturegraph.mf.formeta.parser.PartialRecordEmitter;
-import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.objects.Triple;
 import org.culturegraph.mf.framework.objects.Triple.ObjectType;
 

@@ -15,8 +15,8 @@
  */
 package org.culturegraph.mf.stream.source;
 
-import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.ObjectReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 
 
 /**

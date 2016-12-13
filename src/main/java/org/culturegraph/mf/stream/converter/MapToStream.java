@@ -17,12 +17,12 @@ package org.culturegraph.mf.stream.converter;
 
 import java.util.Map;
 
-import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.StandardEventNames;
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 
 /**
  * Emits a {@link Map} as a record with a literal for each entry in the map.

@@ -24,13 +24,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
-import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.FluxCommand;
+import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Add Elasticsearch bulk indexing metadata to JSON input.<br/>

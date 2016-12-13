@@ -17,13 +17,13 @@ package org.culturegraph.mf.stream.converter;
 
 import org.culturegraph.mf.formeta.formatter.Formatter;
 import org.culturegraph.mf.formeta.formatter.FormatterStyle;
-import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
+import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
-import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 
 /**
  * Encodes streams in formeta format.

@@ -23,14 +23,14 @@ import java.util.regex.Pattern;
 import org.culturegraph.mf.morph.api.Collect;
 import org.culturegraph.mf.morph.api.ConditionAware;
 import org.culturegraph.mf.morph.api.FlushListener;
+import org.culturegraph.mf.morph.api.Function;
+import org.culturegraph.mf.morph.api.InterceptorFactory;
 import org.culturegraph.mf.morph.api.Maps;
 import org.culturegraph.mf.morph.api.MorphBuildException;
 import org.culturegraph.mf.morph.api.NamedValuePipe;
-import org.culturegraph.mf.morph.api.Function;
-import org.culturegraph.mf.morph.api.InterceptorFactory;
-import org.culturegraph.mf.util.reflection.ReflectionUtil;
 import org.culturegraph.mf.morph.xml.Location;
 import org.culturegraph.mf.util.reflection.ConfigurableClass;
+import org.culturegraph.mf.util.reflection.ReflectionUtil;
 import org.w3c.dom.Node;
 
 /**

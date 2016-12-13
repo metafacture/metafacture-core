@@ -17,7 +17,6 @@ package org.culturegraph.mf.morph.functions;
 
 import static org.junit.Assert.assertEquals;
 
-import org.culturegraph.mf.morph.functions.NormalizeUTF8;
 import org.junit.Test;
 
 
