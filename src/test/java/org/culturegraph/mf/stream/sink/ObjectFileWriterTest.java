@@ -15,10 +15,8 @@
  */
 package org.culturegraph.mf.stream.sink;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assume.assumeThat;
+import static org.junit.Assume.assumeFalse;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,10 +57,9 @@ public final class ObjectFileWriterTest
 
 	@Test
 	public void shouldWriteUTF8EncodedOutput() throws IOException {
-		assumeThat(
-				"Default encoding is UTF-8: It is not possible to test whether ObjectFileWriter sets the encoding to UTF-8 correctly.",
-				Charset.defaultCharset(),
-				not(equalTo(StandardCharsets.UTF_8)));
+		assumeFalse("Default encoding is UTF-8: It is not possible to test whether " +
+						"ObjectFileWriter sets the encoding to UTF-8 correctly.",
+				StandardCharsets.UTF_8.equals(Charset.defaultCharset()));
 
 		writer.process(DATA);
 		writer.closeStream();

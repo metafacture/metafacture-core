@@ -15,10 +15,8 @@
  */
 package org.culturegraph.mf.stream.source;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assume.assumeThat;
+import static org.junit.Assume.assumeFalse;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -49,9 +47,9 @@ public final class FileOpenerTest {
 
 	@Test
 	public void testUtf8IsDefaultEncoding() throws IOException {
-		assumeThat(
-				"Default encoding is UTF-8: It is not possible to test whether FileOpener sets the encoding to UTF-8 correctly.",
-				Charset.defaultCharset(), not(equalTo(StandardCharsets.UTF_8)));
+		assumeFalse("Default encoding is UTF-8: It is not possible to test whether " +
+						"FileOpener sets the encoding to UTF-8 correctly.",
+				StandardCharsets.UTF_8.equals(Charset.defaultCharset()));
 
 		final File testFile = createTestFile();
 
