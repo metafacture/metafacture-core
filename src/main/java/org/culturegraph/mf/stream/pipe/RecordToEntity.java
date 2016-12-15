@@ -19,7 +19,7 @@ import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
+import org.culturegraph.mf.framework.helpers.ForwardingStreamPipe;
 
 /**
  * Turns a record into an entity that can be embedded into another record.
@@ -37,7 +37,7 @@ import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("record-to-entity")
-public class RecordToEntity extends DefaultStreamPipe<StreamReceiver> {
+public class RecordToEntity extends ForwardingStreamPipe {
 
 	/**
 	 * Default value for the name of the entity that replaces the record.
@@ -103,21 +103,6 @@ public class RecordToEntity extends DefaultStreamPipe<StreamReceiver> {
 	@Override
 	public void endRecord() {
 		getReceiver().endEntity();
-	}
-
-	@Override
-	public void startEntity(final String name) {
-		getReceiver().startEntity(name);
-	}
-
-	@Override
-	public void endEntity() {
-		getReceiver().endEntity();
-	}
-
-	@Override
-	public void literal(final String name, final String value) {
-		getReceiver().literal(name, value);
 	}
 
 }

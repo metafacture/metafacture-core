@@ -15,44 +15,42 @@
  */
 package org.culturegraph.mf.framework.helpers;
 
-import org.culturegraph.mf.framework.Receiver;
 import org.culturegraph.mf.framework.StreamPipe;
+import org.culturegraph.mf.framework.StreamReceiver;
 
 /**
- * Default implementation for {@link StreamPipe}s which simply
- * does nothing.
+ * Default implementation of {@link StreamPipe} that forwards all received
+ * events. It can be used as a base class for modules that only need to handle
+ * some event types.
  *
- * @param <R> receiver type of the downstream receiver
- * @author Markus Michael Geipel
  * @author Christoph Böhme
- * @see ForwardingStreamPipe
+ * @see DefaultStreamPipe
  */
-public class DefaultStreamPipe<R extends Receiver>
-		extends DefaultSender<R> implements StreamPipe<R> {
+public class ForwardingStreamPipe extends DefaultStreamPipe<StreamReceiver> {
 
 	@Override
 	public void startRecord(final String identifier) {
-		// Default implementation does nothing
+		getReceiver().startRecord(identifier);
 	}
 
 	@Override
 	public void endRecord() {
-		// Default implementation does nothing
+		getReceiver().endRecord();
 	}
 
 	@Override
 	public void startEntity(final String name) {
-		// Default implementation does nothing
+		getReceiver().startEntity(name);
 	}
 
 	@Override
 	public void endEntity() {
-		// Default implementation does nothing
+		getReceiver().endEntity();
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
-		// Default implementation does nothing
+		getReceiver().literal(name, value);
 	}
 
 }
