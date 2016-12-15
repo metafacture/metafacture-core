@@ -24,69 +24,101 @@ import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
+import org.culturegraph.mf.framework.helpers.ForwardingStreamPipe;
 import org.culturegraph.mf.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Writes log info every {@code batchSize} records.
  *
  * @author Markus Michael Geipel
- *
+ * @author Christoph Böhme
  */
-
 @Description("Writes log info every BATCHSIZE records. ")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("batch-log")
-public final class StreamBatchLogger extends AbstractStreamBatcher {
+public final class StreamBatchLogger extends ForwardingStreamPipe {
 
 	public static final String RECORD_COUNT_VAR = "records";
+	public static final String BATCH_COUNT_VAR = "batches";
+	public static final String BATCH_SIZE_VAR = "batchSize";
 	public static final String TOTAL_RECORD_COUNT_VAR = "totalRecords";
-	private static final String BATCH_COUNT_VAR = "batches";
-	private static final String BATCH_SIZE_VAR = "batchSize";
 
-	private static final Logger LOG = LoggerFactory.getLogger(StreamBatchLogger.class);
-	private static final String DEFAULT_FORMAT = "records processed: ${totalRecords}";
+	public static final long DEFAULT_BATCH_SIZE = 1000;
 
-	private final Map<String, String> vars = new HashMap<String, String>();
+	private static final Logger LOG =
+			LoggerFactory.getLogger(StreamBatchLogger.class);
+
+	private static final String DEFAULT_FORMAT =
+			"records processed: ${totalRecords}";
+
+	private final Map<String, String> vars = new HashMap<>();
 	private final String format;
 
-	public StreamBatchLogger() {
-		super();
-		this.format = DEFAULT_FORMAT;
+	private long batchSize = DEFAULT_BATCH_SIZE;
+	private long recordCount;
+	private long batchCount;
 
+	public StreamBatchLogger() {
+		this.format = DEFAULT_FORMAT;
 	}
 
 	public StreamBatchLogger(final String format) {
-		super();
 		this.format = format;
 	}
 
 	public StreamBatchLogger(final String format, final Map<String, String> vars) {
-		super();
 		this.format = format;
 		this.vars.putAll(vars);
 	}
 
-	@Override
-	protected void onBatchComplete() {
-		writeLog();
+	public final void setBatchSize(final int batchSize) {
+		this.batchSize = batchSize;
 	}
 
-	private void writeLog() {
-		vars.put(RECORD_COUNT_VAR, Long.toString(getRecordCount()));
-		vars.put(BATCH_COUNT_VAR, Long.toString(getBatchCount()));
-		vars.put(BATCH_SIZE_VAR, Long.toString(getBatchSize()));
-		vars.put(TOTAL_RECORD_COUNT_VAR,
-				Long.toString((getBatchSize() * getBatchCount())+getRecordCount()));
-		LOG.info(StringUtil.format(format, vars));
+	public final long getBatchSize() {
+		return batchSize;
+	}
+
+	public long getBatchCount() {
+		return batchCount;
+	}
+
+	public long getRecordCount() {
+		return recordCount;
+	}
+
+	@Override
+	public final void endRecord() {
+		getReceiver().endRecord();
+		recordCount++;
+		recordCount %= batchSize;
+		if (recordCount == 0) {
+			batchCount++;
+			writeLog();
+		}
 	}
 
 	@Override
 	protected void onCloseStream() {
 		writeLog();
+	}
+
+	@Override
+	protected final void onResetStream() {
+		recordCount = 0;
+		batchCount = 0;
+	}
+
+	private void writeLog() {
+		vars.put(RECORD_COUNT_VAR, Long.toString(recordCount));
+		vars.put(BATCH_COUNT_VAR, Long.toString(batchCount));
+		vars.put(BATCH_SIZE_VAR, Long.toString(batchSize));
+		vars.put(TOTAL_RECORD_COUNT_VAR,
+				Long.toString(batchSize * batchCount + recordCount));
+		LOG.info(StringUtil.format(format, vars));
 	}
 
 }
