@@ -1,6 +1,5 @@
 /*
  * Copyright 2016 Christoph Böhme
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -14,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.converter;
+package org.culturegraph.mf.stream.converter.pojo;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.inOrder;
@@ -29,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.stream.converter.PojoDecoder.MetafactureSource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
