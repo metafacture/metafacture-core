@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.converter.bib;
+package org.culturegraph.mf.stream.converter.bib.pica;
 
 import java.text.Normalizer;
 import java.text.Normalizer.Form;

@@ -16,7 +16,7 @@
 package org.culturegraph.mf.test.reader;
 
 import org.culturegraph.mf.stream.converter.LineReader;
-import org.culturegraph.mf.stream.converter.bib.PicaDecoder;
+import org.culturegraph.mf.stream.converter.bib.pica.PicaDecoder;
 
 /**
  * Reads and decodes a <i>Pica+</i> data stream.

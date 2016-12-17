@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.culturegraph.mf.framework.ObjectReceiver;
-import org.culturegraph.mf.stream.converter.pojo.PojoEncoder;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 

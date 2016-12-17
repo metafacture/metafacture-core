@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Christoph Böhme
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.converter.bib;
-
-import static org.culturegraph.mf.stream.converter.bib.PicaConstants.FIELD_END_MARKER;
-import static org.culturegraph.mf.stream.converter.bib.PicaConstants.FIELD_MARKER;
-import static org.culturegraph.mf.stream.converter.bib.PicaConstants.RECORD_MARKER;
-import static org.culturegraph.mf.stream.converter.bib.PicaConstants.SUBFIELD_MARKER;
+package org.culturegraph.mf.stream.converter.bib.pica;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -136,10 +131,10 @@ import org.culturegraph.mf.util.StringUtil;
 public final class PicaDecoder
 		extends DefaultObjectPipe<String, StreamReceiver> {
 
-	private static final String START_MARKERS ="(?:^|" + FIELD_MARKER +
-			"|" + FIELD_END_MARKER + "|" + RECORD_MARKER + ")";
+	private static final String START_MARKERS ="(?:^|" + PicaConstants.FIELD_MARKER +
+			"|" + PicaConstants.FIELD_END_MARKER + "|" + PicaConstants.RECORD_MARKER + ")";
 	private static final Pattern ID_FIELDS_PATTERN = Pattern.compile(
-			START_MARKERS + "(?:003@|203@(?:/..+)?|107F) " + SUBFIELD_MARKER + "0");
+			START_MARKERS + "(?:003@|203@(?:/..+)?|107F) " + PicaConstants.SUBFIELD_MARKER + "0");
 
 	private static final int BUFFER_SIZE = 1024 * 1024;
 
@@ -306,10 +301,10 @@ public final class PicaDecoder
 	}
 
 	private static boolean isSubfieldDelimiter(final char ch) {
-		return ch == RECORD_MARKER
-				|| ch == FIELD_MARKER
-				|| ch == FIELD_END_MARKER
-				|| ch == SUBFIELD_MARKER;
+		return ch == PicaConstants.RECORD_MARKER
+				|| ch == PicaConstants.FIELD_MARKER
+				|| ch == PicaConstants.FIELD_END_MARKER
+				|| ch == PicaConstants.SUBFIELD_MARKER;
 	}
 
 }
