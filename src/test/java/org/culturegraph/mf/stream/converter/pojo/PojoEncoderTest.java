@@ -1,4 +1,19 @@
-package org.culturegraph.mf.stream.converter;
+/*
+ * Copyright 2016 Christoph Böhme
+ *
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.culturegraph.mf.stream.converter.pojo;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -10,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.culturegraph.mf.framework.ObjectReceiver;
+import org.culturegraph.mf.stream.converter.pojo.PojoEncoder;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -244,11 +260,11 @@ public class PojoEncoderTest {
 		return (ObjectReceiver<T>) mock(ObjectReceiver.class);
 	}
 
-	static class EmptyPojo {
+	public static class EmptyPojo {
 
 	}
 
-	static class SimplePojo {
+	public static class SimplePojo {
 
 		public String stringField1;
 		private String stringField2;
@@ -272,33 +288,33 @@ public class PojoEncoderTest {
 
 	}
 
-	static class NestedPojo {
+	public static class NestedPojo {
 
 		public String attribute;
 		public SimplePojo simplePojo;
 
 	}
 
-	static class DoubleNestedPojo {
+	public static class DoubleNestedPojo {
 
 		public NestedPojo nestedPojo;
 
 	}
 
-	static class StringListPojo {
+	public static class StringListPojo {
 
 		public List<String> stringList;
 		public String attribute;
 
 	}
 
-	static class IntegerListPojo {
+	public static class IntegerListPojo {
 
 		public List<Integer> integerList;
 
 	}
 
-	static class SimplePojoListPojo {
+	public static class SimplePojoListPojo {
 
 		private List<SimplePojo> simplePojoList;
 
@@ -308,13 +324,13 @@ public class PojoEncoderTest {
 
 	}
 
-	static class StringMapPojo {
+	public static class StringMapPojo {
 
 		public Map<String, String> stringMap;
 
 	}
 
-	static class SimplePojoMapPojo {
+	public static class SimplePojoMapPojo {
 
 		public Map<String, SimplePojo> simplePojoMap;
 
