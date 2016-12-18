@@ -49,8 +49,7 @@ import org.culturegraph.mf.iso2709.RecordFormat;
 /**
  * Decodes MARC 21 records into an event stream. This decoder only processes
  * single records. Input data containing multiple records must be split into
- * individual records before passing it to this decoder (see
- * {@link org.culturegraph.mf.stream.converter.RecordReader}).
+ * individual records before passing it to this decoder.
  * <p>
  * This decoder extracts the following parts from MARC 21 records:
  * <ul>
