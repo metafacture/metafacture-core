@@ -15,8 +15,8 @@
  */
 package org.culturegraph.mf.metamorph.functions;
 
+import org.culturegraph.mf.commons.tries.SetReplacer;
 import org.culturegraph.mf.metamorph.api.helpers.AbstractSimpleStatelessFunction;
-import org.culturegraph.mf.util.tries.SetReplacer;
 
 /**
  * @author Markus Michael Geipel

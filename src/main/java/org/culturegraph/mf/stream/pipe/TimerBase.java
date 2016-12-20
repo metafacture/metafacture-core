@@ -15,9 +15,9 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
+import org.culturegraph.mf.commons.TimeUtil;
 import org.culturegraph.mf.framework.Receiver;
 import org.culturegraph.mf.framework.Sender;
-import org.culturegraph.mf.util.TimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

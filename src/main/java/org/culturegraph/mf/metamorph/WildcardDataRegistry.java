@@ -17,8 +17,8 @@ package org.culturegraph.mf.metamorph;
 
 import java.util.List;
 
-import org.culturegraph.mf.util.tries.SimpleRegexTrie;
-import org.culturegraph.mf.util.tries.WildcardTrie;
+import org.culturegraph.mf.commons.tries.SimpleRegexTrie;
+import org.culturegraph.mf.commons.tries.WildcardTrie;
 
 /**
  * Implements {@link Registry} with a {@link WildcardTrie}.

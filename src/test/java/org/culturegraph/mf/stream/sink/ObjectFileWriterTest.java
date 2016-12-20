@@ -26,7 +26,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-import org.culturegraph.mf.util.ResourceUtil;
+import org.culturegraph.mf.commons.ResourceUtil;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

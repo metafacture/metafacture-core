@@ -17,7 +17,7 @@ package org.culturegraph.mf.iso2709;
 
 import java.util.Arrays;
 
-import org.culturegraph.mf.util.Require;
+import org.culturegraph.mf.commons.Require;
 
 /**
  * Holds the configuration of an instance of the ISO2709:2008 format.

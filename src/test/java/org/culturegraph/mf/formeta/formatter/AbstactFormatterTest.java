@@ -17,7 +17,7 @@ package org.culturegraph.mf.formeta.formatter;
 
 import static org.junit.Assert.assertEquals;
 
-import org.culturegraph.mf.util.StringUtil;
+import org.culturegraph.mf.commons.StringUtil;
 import org.junit.Before;
 import org.junit.Test;
 

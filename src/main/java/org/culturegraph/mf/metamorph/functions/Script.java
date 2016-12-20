@@ -22,10 +22,10 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.culturegraph.mf.commons.ResourceUtil;
 import org.culturegraph.mf.metamorph.api.MorphBuildException;
 import org.culturegraph.mf.metamorph.api.MorphExecutionException;
 import org.culturegraph.mf.metamorph.api.helpers.AbstractSimpleStatelessFunction;
-import org.culturegraph.mf.util.ResourceUtil;
 
 /**
  * A function which executes a javascript function.

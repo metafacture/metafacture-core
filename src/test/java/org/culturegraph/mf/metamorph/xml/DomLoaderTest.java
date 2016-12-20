@@ -22,8 +22,8 @@ import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.culturegraph.mf.commons.ResourceUtil;
 import org.culturegraph.mf.framework.MetafactureException;
-import org.culturegraph.mf.util.ResourceUtil;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;

@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.culturegraph.mf.commons.types.ListMap;
 import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
-import org.culturegraph.mf.types.ListMap;
 
 
 /**

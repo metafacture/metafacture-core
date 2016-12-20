@@ -27,13 +27,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.culturegraph.mf.commons.ResourceUtil;
+import org.culturegraph.mf.commons.reflection.ObjectFactory;
 import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.annotations.ReturnsAvailableArguments;
-import org.culturegraph.mf.util.ResourceUtil;
-import org.culturegraph.mf.util.reflection.ObjectFactory;
 
 /**
  * prints Flux help for a given {@link ObjectFactory}

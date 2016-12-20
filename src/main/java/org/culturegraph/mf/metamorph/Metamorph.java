@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.culturegraph.mf.commons.ResourceUtil;
 import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.StandardEventNames;
 import org.culturegraph.mf.framework.StreamPipe;
@@ -47,7 +48,6 @@ import org.culturegraph.mf.metamorph.api.NamedValueReceiver;
 import org.culturegraph.mf.metamorph.api.NamedValueSource;
 import org.culturegraph.mf.metamorph.api.SourceLocation;
 import org.culturegraph.mf.stream.pipe.StreamFlattener;
-import org.culturegraph.mf.util.ResourceUtil;
 import org.xml.sax.InputSource;
 
 /**

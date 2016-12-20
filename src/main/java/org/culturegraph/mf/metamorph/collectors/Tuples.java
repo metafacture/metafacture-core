@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.culturegraph.mf.commons.types.ListMap;
 import org.culturegraph.mf.metamorph.api.NamedValueSource;
 import org.culturegraph.mf.metamorph.api.helpers.AbstractFlushingCollect;
-import org.culturegraph.mf.types.ListMap;
 
 /**
  * Builds the cross product of the data sources.

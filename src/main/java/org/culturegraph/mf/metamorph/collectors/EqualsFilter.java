@@ -20,9 +20,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.culturegraph.mf.commons.StringUtil;
 import org.culturegraph.mf.metamorph.api.NamedValueSource;
 import org.culturegraph.mf.metamorph.api.helpers.AbstractFlushingCollect;
-import org.culturegraph.mf.util.StringUtil;
 
 /**
  * Corresponds to the <code>&lt;equalsFilter-literal&gt;</code> tag. Emits data

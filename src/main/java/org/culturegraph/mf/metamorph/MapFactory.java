@@ -18,9 +18,9 @@ package org.culturegraph.mf.metamorph;
 import java.io.IOException;
 import java.util.Map;
 
+import org.culturegraph.mf.commons.ResourceUtil;
+import org.culturegraph.mf.commons.reflection.ObjectFactory;
 import org.culturegraph.mf.framework.MetafactureException;
-import org.culturegraph.mf.util.ResourceUtil;
-import org.culturegraph.mf.util.reflection.ObjectFactory;
 
 /**
  * Creates the maps available in Metamorph.

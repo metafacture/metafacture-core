@@ -23,8 +23,8 @@ import static org.culturegraph.mf.iso2709.Iso2709Constants.MIN_RECORD_LENGTH;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import org.culturegraph.mf.commons.Require;
 import org.culturegraph.mf.framework.FormatException;
-import org.culturegraph.mf.util.Require;
 
 /**
  * Reads a record in ISO 2709:2008 format from a byte array.

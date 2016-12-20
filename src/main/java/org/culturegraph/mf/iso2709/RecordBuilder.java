@@ -25,8 +25,8 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
+import org.culturegraph.mf.commons.Require;
 import org.culturegraph.mf.framework.FormatException;
-import org.culturegraph.mf.util.Require;
 
 /**
  * Builds records in ISO2709:2008 format.

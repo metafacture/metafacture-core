@@ -23,6 +23,7 @@ import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import org.culturegraph.mf.commons.ResourceUtil;
 import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -32,7 +33,6 @@ import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.objects.Triple;
 import org.culturegraph.mf.framework.objects.Triple.ObjectType;
-import org.culturegraph.mf.util.ResourceUtil;
 
 /**
  * Uses the object value of the triple as a URL and emits a new triple

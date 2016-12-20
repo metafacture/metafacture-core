@@ -20,6 +20,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.culturegraph.mf.commons.reflection.ConfigurableClass;
+import org.culturegraph.mf.commons.reflection.ReflectionUtil;
 import org.culturegraph.mf.metamorph.api.Collect;
 import org.culturegraph.mf.metamorph.api.ConditionAware;
 import org.culturegraph.mf.metamorph.api.FlushListener;
@@ -29,8 +31,6 @@ import org.culturegraph.mf.metamorph.api.Maps;
 import org.culturegraph.mf.metamorph.api.MorphBuildException;
 import org.culturegraph.mf.metamorph.api.NamedValuePipe;
 import org.culturegraph.mf.metamorph.xml.Location;
-import org.culturegraph.mf.util.reflection.ConfigurableClass;
-import org.culturegraph.mf.util.reflection.ReflectionUtil;
 import org.w3c.dom.Node;
 
 /**

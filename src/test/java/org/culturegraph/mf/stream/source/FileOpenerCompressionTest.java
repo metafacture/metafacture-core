@@ -26,9 +26,9 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 
+import org.culturegraph.mf.commons.ResourceUtil;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.util.FileCompression;
-import org.culturegraph.mf.util.ResourceUtil;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

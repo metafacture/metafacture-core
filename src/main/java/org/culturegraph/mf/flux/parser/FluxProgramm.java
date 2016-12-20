@@ -27,13 +27,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.culturegraph.mf.commons.ResourceUtil;
+import org.culturegraph.mf.commons.reflection.ConfigurableClass;
+import org.culturegraph.mf.commons.reflection.ObjectFactory;
+import org.culturegraph.mf.commons.reflection.ReflectionUtil;
 import org.culturegraph.mf.flux.FluxParseException;
 import org.culturegraph.mf.flux.HelpPrinter;
 import org.culturegraph.mf.framework.Receiver;
-import org.culturegraph.mf.util.ResourceUtil;
-import org.culturegraph.mf.util.reflection.ConfigurableClass;
-import org.culturegraph.mf.util.reflection.ObjectFactory;
-import org.culturegraph.mf.util.reflection.ReflectionUtil;
 
 /**
  * @author Markus Michael Geipel

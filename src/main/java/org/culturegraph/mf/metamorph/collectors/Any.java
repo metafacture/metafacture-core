@@ -15,9 +15,9 @@
  */
 package org.culturegraph.mf.metamorph.collectors;
 
+import org.culturegraph.mf.commons.StringUtil;
 import org.culturegraph.mf.metamorph.api.NamedValueSource;
 import org.culturegraph.mf.metamorph.api.helpers.AbstractCollect;
-import org.culturegraph.mf.util.StringUtil;
 
 /**
  * Corresponds to the <code>&lt;any&gt;</code> tag.

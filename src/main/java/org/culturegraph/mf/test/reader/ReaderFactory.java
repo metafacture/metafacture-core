@@ -17,9 +17,9 @@ package org.culturegraph.mf.test.reader;
 
 import java.io.IOException;
 
+import org.culturegraph.mf.commons.ResourceUtil;
+import org.culturegraph.mf.commons.reflection.ObjectFactory;
 import org.culturegraph.mf.framework.MetafactureException;
-import org.culturegraph.mf.util.ResourceUtil;
-import org.culturegraph.mf.util.reflection.ObjectFactory;
 
 /**
  * Instantiates instances of the {@link Reader} interface.

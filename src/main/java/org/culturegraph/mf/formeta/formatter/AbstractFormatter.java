@@ -15,8 +15,8 @@
  */
 package org.culturegraph.mf.formeta.formatter;
 
+import org.culturegraph.mf.commons.StringUtil;
 import org.culturegraph.mf.formeta.Formeta;
-import org.culturegraph.mf.util.StringUtil;
 
 /**
  * Base class for formatters.

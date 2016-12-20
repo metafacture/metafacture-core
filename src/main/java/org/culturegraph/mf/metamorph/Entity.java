@@ -20,12 +20,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.culturegraph.mf.commons.StringUtil;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.metamorph.api.NamedValueReceiver;
 import org.culturegraph.mf.metamorph.api.NamedValueSource;
 import org.culturegraph.mf.metamorph.api.helpers.AbstractFlushingCollect;
 import org.culturegraph.mf.stream.pipe.StreamBuffer;
-import org.culturegraph.mf.util.StringUtil;
 
 /**
  * Corresponds to the <code>&lt;entity&gt;</code> tag.

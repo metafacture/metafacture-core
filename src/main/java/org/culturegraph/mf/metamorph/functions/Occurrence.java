@@ -18,9 +18,9 @@ package org.culturegraph.mf.metamorph.functions;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.culturegraph.mf.commons.StringUtil;
 import org.culturegraph.mf.metamorph.api.MorphBuildException;
 import org.culturegraph.mf.metamorph.api.helpers.AbstractStatefulFunction;
-import org.culturegraph.mf.util.StringUtil;
 
 /**
  * Only outputs the received values in a certain range.

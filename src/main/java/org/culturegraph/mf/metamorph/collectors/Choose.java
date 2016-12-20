@@ -18,9 +18,9 @@ package org.culturegraph.mf.metamorph.collectors;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.culturegraph.mf.commons.StringUtil;
 import org.culturegraph.mf.metamorph.api.NamedValueSource;
 import org.culturegraph.mf.metamorph.api.helpers.AbstractFlushingCollect;
-import org.culturegraph.mf.util.StringUtil;
 
 
 

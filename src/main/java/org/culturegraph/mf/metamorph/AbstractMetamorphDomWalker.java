@@ -18,10 +18,10 @@ package org.culturegraph.mf.metamorph;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.culturegraph.mf.commons.StringUtil;
+import org.culturegraph.mf.commons.types.ScopedHashMap;
 import org.culturegraph.mf.metamorph.api.MorphBuildException;
 import org.culturegraph.mf.metamorph.xml.DomLoader;
-import org.culturegraph.mf.types.ScopedHashMap;
-import org.culturegraph.mf.util.StringUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;

@@ -15,8 +15,8 @@
  */
 package org.culturegraph.mf.formeta.parser;
 
+import org.culturegraph.mf.commons.StringUtil;
 import org.culturegraph.mf.framework.FormatException;
-import org.culturegraph.mf.util.StringUtil;
 
 /**
  * A parser for the formeta metadata serialisation format.

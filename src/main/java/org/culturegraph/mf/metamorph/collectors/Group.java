@@ -15,9 +15,9 @@
  */
 package org.culturegraph.mf.metamorph.collectors;
 
+import org.culturegraph.mf.commons.StringUtil;
 import org.culturegraph.mf.metamorph.api.NamedValueSource;
 import org.culturegraph.mf.metamorph.api.helpers.AbstractFlushingCollect;
-import org.culturegraph.mf.util.StringUtil;
 
 /**
  * Implementation of the <code>&lt;group&gt;</code> tag.
