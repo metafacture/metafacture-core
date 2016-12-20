@@ -13,56 +13,70 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe;
+package org.culturegraph.mf.metamorph;
 
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.culturegraph.mf.framework.FluxCommand;
+import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
-import org.culturegraph.mf.metamorph.Metamorph;
+import org.culturegraph.mf.stream.pipe.StreamBuffer;
 import org.culturegraph.mf.stream.sink.SingleValue;
 
+
+
 /**
- * Filters a stream based on a morph definition. A record is accepted if the
- * morph returns at least one non empty value.
+ * Splits a stream based on a morph definition.
  *
  * @author Markus Michael Geipel
  *
  */
-@Description("Filters a stream based on a morph definition. A record is accepted if the morph returns at least one non empty value.")
+@Description("Splits a stream based on a morph definition")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
-@FluxCommand("filter")
-public final class Filter extends DefaultStreamPipe<StreamReceiver> {
+public final class Splitter implements StreamPipe<StreamReceiver> {
 
 	private final StreamBuffer buffer = new StreamBuffer();
 	private final SingleValue singleValue = new SingleValue();
+	private final Map<String, StreamReceiver> receiverMap = new HashMap<String, StreamReceiver>();
 	private final Metamorph metamorph;
 
-	public Filter(final String morphDef) {
-		super();
+	public Splitter(final String morphDef) {
 		metamorph = new Metamorph(morphDef);
 		metamorph.setReceiver(singleValue);
 	}
 
-	public Filter(final Metamorph metamorph) {
-		super();
+	public Splitter(final Reader morphDef) {
+		metamorph = new Metamorph(morphDef);
+		metamorph.setReceiver(singleValue);
+	}
+
+	public Splitter(final Metamorph metamorph) {
 		this.metamorph = metamorph;
 		metamorph.setReceiver(singleValue);
 	}
 
 	@Override
-	protected void onSetReceiver() {
-		buffer.setReceiver(getReceiver());
+	public <R extends StreamReceiver> R setReceiver(final R receiver) {
+		receiverMap.put("", receiver);
+		return receiver;
 	}
 
+	public <R extends StreamReceiver> R setReceiver(final String key, final R receiver) {
+		receiverMap.put(key, receiver);
+		return receiver;
+	}
 
 	private void dispatch(){
 		final String key = singleValue.getValue();
-		if(!key.isEmpty()){
+		final StreamReceiver receiver = receiverMap.get(key);
+
+		if(null != receiver){
+			buffer.setReceiver(receiver);
 			buffer.replay();
 		}
 		buffer.clear();
@@ -100,14 +114,20 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
 	}
 
 	@Override
-	protected void onResetStream() {
+	public void resetStream() {
 		buffer.clear();
 		metamorph.resetStream();
+		for (final StreamReceiver receiver: receiverMap.values()) {
+			receiver.resetStream();
+		}
 	}
 
 	@Override
-	protected void onCloseStream() {
+	public void closeStream() {
 		buffer.clear();
 		metamorph.closeStream();
+		for (final StreamReceiver receiver: receiverMap.values()) {
+			receiver.closeStream();
+		}
 	}
 }
