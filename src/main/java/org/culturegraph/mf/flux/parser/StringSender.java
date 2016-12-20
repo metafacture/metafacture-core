@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.source;
+package org.culturegraph.mf.flux.parser;
 
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;

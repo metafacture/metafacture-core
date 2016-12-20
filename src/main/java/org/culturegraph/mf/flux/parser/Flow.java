@@ -27,8 +27,6 @@ import org.culturegraph.mf.framework.Receiver;
 import org.culturegraph.mf.framework.Sender;
 import org.culturegraph.mf.framework.Tee;
 import org.culturegraph.mf.stream.source.StdInOpener;
-import org.culturegraph.mf.stream.source.StringSender;
-
 
 
 /**
