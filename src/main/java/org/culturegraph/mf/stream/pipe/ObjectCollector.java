@@ -21,26 +21,25 @@ import java.util.Queue;
 import org.culturegraph.mf.framework.ObjectReceiver;
 
 /**
- * Buffers a specified number of objects in a queue.
+ * Collects the objects emitted by an upstream module.
  *
  * @param <T> object type
  *
  * @author Christoph Böhme
  *
  */
-public final class ObjectBuffer<T>
-		implements ObjectReceiver<T> {
+public final class ObjectCollector<T> implements ObjectReceiver<T> {
 
-	private final Queue<T> buffer = new LinkedList<T>();
+	private final Queue<T> buffer = new LinkedList<>();
 	private final int maxCapacity;
 
 	private boolean closed;
 
-	public ObjectBuffer() {
+	public ObjectCollector() {
 		this(-1);
 	}
 
-	public ObjectBuffer(final int maxCapacity) {
+	public ObjectCollector(final int maxCapacity) {
 		super();
 		this.maxCapacity = maxCapacity;
 	}
@@ -51,7 +50,6 @@ public final class ObjectBuffer<T>
 
 	@Override
 	public void process(final T obj) {
-		assert !closed;
 		if (closed) {
 			throw new IllegalStateException("Module has been closed.");
 		}
