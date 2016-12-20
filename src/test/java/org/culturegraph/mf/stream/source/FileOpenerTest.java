@@ -17,6 +17,7 @@ package org.culturegraph.mf.stream.source;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assume.assumeFalse;
+import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,11 +27,16 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import org.culturegraph.mf.stream.pipe.ObjectBuffer;
+import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.util.ResourceUtil;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 /**
  * Tests for class {@link FileOpener}.
@@ -43,7 +49,16 @@ public final class FileOpenerTest {
 	private static final String DATA = "Überfacture";
 
 	@Rule
+	public MockitoRule mockitoRule = MockitoJUnit.rule();
+
+	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
+
+	@Mock
+	private ObjectReceiver<Reader> receiver;
+
+	@Captor
+	private ArgumentCaptor<Reader> processedObject;
 
 	@Test
 	public void testUtf8IsDefaultEncoding() throws IOException {
@@ -54,12 +69,12 @@ public final class FileOpenerTest {
 		final File testFile = createTestFile();
 
 		final FileOpener opener = new FileOpener();
-		final ObjectBuffer<Reader> buffer = new ObjectBuffer<>();
-		opener.setReceiver(buffer);
+		opener.setReceiver(receiver);
 		opener.process(testFile.getAbsolutePath());
 		opener.closeStream();
 
-		assertEquals(DATA, ResourceUtil.readAll(buffer.pop()));
+		verify(receiver).process(processedObject.capture());
+		assertEquals(DATA, ResourceUtil.readAll(processedObject.getValue()));
 	}
 
 	private File createTestFile() throws IOException {
