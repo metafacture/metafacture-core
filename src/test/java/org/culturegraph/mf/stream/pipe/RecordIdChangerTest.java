@@ -30,12 +30,12 @@ import org.mockito.MockitoAnnotations;
 
 
 /**
- * Tests for class {@link IdChangePipe}.
+ * Tests for class {@link RecordIdChanger}.
  *
  * @author Christoph Böhme
  *
  */
-public final class IdChangePipeTest {
+public final class RecordIdChangerTest {
 
 	private static final String OLD_RECORD_ID1 = "OLD ID 1";
 	private static final String OLD_RECORD_ID2 = "OLD ID 2";
@@ -45,7 +45,7 @@ public final class IdChangePipeTest {
 	private static final String LITERAL_NAME = "Li";
 	private static final String LITERAL_VALUE = "Va";
 
-	private IdChangePipe idChangePipe;
+	private RecordIdChanger recordIdChanger;
 
 	@Mock
 	private StreamReceiver receiver;
@@ -53,24 +53,24 @@ public final class IdChangePipeTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		idChangePipe = new IdChangePipe();
-		idChangePipe.setReceiver(receiver);
+		recordIdChanger = new RecordIdChanger();
+		recordIdChanger.setReceiver(receiver);
 	}
 
 	@After
 	public void cleanup() {
-		idChangePipe.closeStream();
+		recordIdChanger.closeStream();
 	}
 
 	@Test
 	public void testShouldChangeIdsOfRecords() {
-		idChangePipe.startRecord(OLD_RECORD_ID1);
-		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID1);
-		idChangePipe.endRecord();
+		recordIdChanger.startRecord(OLD_RECORD_ID1);
+		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
+		recordIdChanger.endRecord();
 
-		idChangePipe.startRecord(OLD_RECORD_ID2);
-		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID2);
-		idChangePipe.endRecord();
+		recordIdChanger.startRecord(OLD_RECORD_ID2);
+		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
+		recordIdChanger.endRecord();
 
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
@@ -82,12 +82,12 @@ public final class IdChangePipeTest {
 
 	@Test
 	public void testShouldKeepRecordsWithoutIdLiteral() {
-		idChangePipe.startRecord(OLD_RECORD_ID1);
-		idChangePipe.literal(LITERAL_NAME, LITERAL_VALUE);
-		idChangePipe.endRecord();
-		idChangePipe.startRecord(OLD_RECORD_ID2);
-		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID2);
-		idChangePipe.endRecord();
+		recordIdChanger.startRecord(OLD_RECORD_ID1);
+		recordIdChanger.literal(LITERAL_NAME, LITERAL_VALUE);
+		recordIdChanger.endRecord();
+		recordIdChanger.startRecord(OLD_RECORD_ID2);
+		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
+		recordIdChanger.endRecord();
 
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(OLD_RECORD_ID1);
@@ -99,14 +99,14 @@ public final class IdChangePipeTest {
 
 	@Test
 	public void testShouldRemoveRecordsWithoutIdLiteral() {
-		idChangePipe.setKeepRecordsWithoutIdLiteral(false);
+		recordIdChanger.setKeepRecordsWithoutIdLiteral(false);
 
-		idChangePipe.startRecord(OLD_RECORD_ID1);
-		idChangePipe.literal(LITERAL_NAME, LITERAL_VALUE);
-		idChangePipe.endRecord();
-		idChangePipe.startRecord(OLD_RECORD_ID2);
-		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID2);
-		idChangePipe.endRecord();
+		recordIdChanger.startRecord(OLD_RECORD_ID1);
+		recordIdChanger.literal(LITERAL_NAME, LITERAL_VALUE);
+		recordIdChanger.endRecord();
+		recordIdChanger.startRecord(OLD_RECORD_ID2);
+		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
+		recordIdChanger.endRecord();
 
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
@@ -116,11 +116,11 @@ public final class IdChangePipeTest {
 
 	@Test
 	public void testShouldNotUseNestedIdLiteralAsNewId() {
-		idChangePipe.startRecord(OLD_RECORD_ID1);
-		idChangePipe.startEntity(ENTITY);
-		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID1);
-		idChangePipe.endEntity();
-		idChangePipe.endRecord();
+		recordIdChanger.startRecord(OLD_RECORD_ID1);
+		recordIdChanger.startEntity(ENTITY);
+		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
+		recordIdChanger.endEntity();
+		recordIdChanger.endRecord();
 
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(OLD_RECORD_ID1);
@@ -132,13 +132,13 @@ public final class IdChangePipeTest {
 
 	@Test
 	public void testShouldAcceptFullPathAsNewId() {
-		idChangePipe.setIdLiteral(ENTITY + "." + StandardEventNames.ID);
+		recordIdChanger.setIdLiteral(ENTITY + "." + StandardEventNames.ID);
 
-		idChangePipe.startRecord(OLD_RECORD_ID1);
-		idChangePipe.startEntity(ENTITY);
-		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID1);
-		idChangePipe.endEntity();
-		idChangePipe.endRecord();
+		recordIdChanger.startRecord(OLD_RECORD_ID1);
+		recordIdChanger.startEntity(ENTITY);
+		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
+		recordIdChanger.endEntity();
+		recordIdChanger.endRecord();
 
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
@@ -149,11 +149,11 @@ public final class IdChangePipeTest {
 
 	@Test
 	public void testShouldNotKeepIdLiteralByDefault() {
-		idChangePipe.setIdLiteral(StandardEventNames.ID);
+		recordIdChanger.setIdLiteral(StandardEventNames.ID);
 
-		idChangePipe.startRecord(OLD_RECORD_ID1);
-		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID1);
-		idChangePipe.endRecord();
+		recordIdChanger.startRecord(OLD_RECORD_ID1);
+		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
+		recordIdChanger.endRecord();
 
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
@@ -163,12 +163,12 @@ public final class IdChangePipeTest {
 
 	@Test
 	public void testShouldKeepIdLiteralIfConfigured() {
-		idChangePipe.setIdLiteral(StandardEventNames.ID);
-		idChangePipe.setKeepIdLiteral(true);
+		recordIdChanger.setIdLiteral(StandardEventNames.ID);
+		recordIdChanger.setKeepIdLiteral(true);
 
-		idChangePipe.startRecord(OLD_RECORD_ID1);
-		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID1);
-		idChangePipe.endRecord();
+		recordIdChanger.startRecord(OLD_RECORD_ID1);
+		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
+		recordIdChanger.endRecord();
 
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
@@ -178,10 +178,10 @@ public final class IdChangePipeTest {
 
 	@Test
 	public void testShouldUseLastIdLiteralAsNewId() {
-		idChangePipe.startRecord(OLD_RECORD_ID1);
-		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID1);
-		idChangePipe.literal(StandardEventNames.ID, NEW_RECORD_ID2);
-		idChangePipe.endRecord();
+		recordIdChanger.startRecord(OLD_RECORD_ID1);
+		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
+		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
+		recordIdChanger.endRecord();
 
 		final InOrder ordered = inOrder(receiver);
 		ordered.verify(receiver).startRecord(NEW_RECORD_ID2);

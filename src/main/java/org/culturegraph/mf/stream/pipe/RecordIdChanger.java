@@ -48,7 +48,7 @@ import org.culturegraph.mf.stream.sink.EntityPathTracker;
  * end-record
  * }</pre>
  *
- * the {@code IdChangePipe} emits the following event stream:
+ * the {@code RecordIdChanger} emits the following event stream:
  * <pre>{@literal
  * start-record "new-id-2"
  * start-entity "author"
@@ -68,7 +68,7 @@ import org.culturegraph.mf.stream.sink.EntityPathTracker;
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("change-id")
-public final class IdChangePipe extends DefaultStreamPipe<StreamReceiver> {
+public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
 
 	private final StreamBuffer streamBuffer = new StreamBuffer();
 	private final EntityPathTracker entityPathTracker = new EntityPathTracker();
