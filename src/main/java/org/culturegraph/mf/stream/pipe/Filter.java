@@ -22,7 +22,7 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
-import org.culturegraph.mf.morph.Metamorph;
+import org.culturegraph.mf.metamorph.Metamorph;
 import org.culturegraph.mf.stream.sink.SingleValue;
 
 /**

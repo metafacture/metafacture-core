@@ -20,7 +20,7 @@ import java.io.StringReader;
 
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.morph.Metamorph;
+import org.culturegraph.mf.metamorph.Metamorph;
 import org.culturegraph.mf.stream.sink.EventList;
 import org.culturegraph.mf.test.reader.MultiFormatReader;
 import org.culturegraph.mf.test.reader.Reader;
