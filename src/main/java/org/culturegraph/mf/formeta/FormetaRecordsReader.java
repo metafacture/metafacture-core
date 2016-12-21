@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Christoph Böhme
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.converter;
+package org.culturegraph.mf.formeta;
 
 import java.io.IOException;
 import java.io.Reader;
 
-import org.culturegraph.mf.formeta.Formeta;
 import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.framework.ObjectReceiver;

@@ -17,8 +17,8 @@ package org.culturegraph.mf.formeta.parser;
 
 import static org.mockito.Mockito.inOrder;
 
+import org.culturegraph.mf.formeta.FormetaDecoder;
 import org.culturegraph.mf.framework.FormatException;
-import org.culturegraph.mf.stream.converter.FormetaDecoder;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;

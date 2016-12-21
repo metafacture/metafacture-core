@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.converter;
+package org.culturegraph.mf.formeta;
 
 import org.culturegraph.mf.formeta.parser.Emitter;
 import org.culturegraph.mf.formeta.parser.FormetaParser;

@@ -15,8 +15,8 @@
  */
 package org.culturegraph.mf.test.reader;
 
-import org.culturegraph.mf.stream.converter.FormetaDecoder;
-import org.culturegraph.mf.stream.converter.FormetaRecordsReader;
+import org.culturegraph.mf.formeta.FormetaDecoder;
+import org.culturegraph.mf.formeta.FormetaRecordsReader;
 
 /**
  * Reads and decodes a <i>Formeta</i> data stream.
