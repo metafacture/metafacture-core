@@ -19,12 +19,12 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.culturegraph.mf.flowcontrol.StreamBuffer;
 import org.culturegraph.mf.framework.StreamPipe;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.stream.pipe.StreamBuffer;
 import org.culturegraph.mf.stream.sink.SingleValue;
 
 

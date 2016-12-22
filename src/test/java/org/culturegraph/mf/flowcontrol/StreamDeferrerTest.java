@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe;
+package org.culturegraph.mf.flowcontrol;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;

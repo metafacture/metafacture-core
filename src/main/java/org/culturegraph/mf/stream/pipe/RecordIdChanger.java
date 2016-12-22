@@ -16,6 +16,7 @@
  */
 package org.culturegraph.mf.stream.pipe;
 
+import org.culturegraph.mf.flowcontrol.StreamBuffer;
 import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.StandardEventNames;
 import org.culturegraph.mf.framework.StreamReceiver;
