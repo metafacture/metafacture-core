@@ -21,7 +21,6 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
 import org.culturegraph.mf.framework.objects.Triple;
-import org.culturegraph.mf.triples.AbstractTripleSort;
 import org.junit.Before;
 import org.junit.Test;
 

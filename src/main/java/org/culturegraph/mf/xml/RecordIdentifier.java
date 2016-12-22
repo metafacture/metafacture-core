@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.sink;
+package org.culturegraph.mf.xml;
 
 /**
  * This interface declares methods for setting variables used by all record

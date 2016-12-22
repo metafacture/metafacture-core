@@ -23,7 +23,6 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import java.io.StringReader;
 
 import org.culturegraph.mf.framework.ObjectReceiver;
-import org.culturegraph.mf.io.RecordReader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

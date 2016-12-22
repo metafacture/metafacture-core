@@ -23,7 +23,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.culturegraph.mf.framework.objects.Triple;
-import org.culturegraph.mf.triples.TripleObjectWriter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

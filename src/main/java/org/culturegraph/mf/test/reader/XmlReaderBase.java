@@ -17,7 +17,7 @@ package org.culturegraph.mf.test.reader;
 
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.XmlPipe;
-import org.culturegraph.mf.stream.converter.xml.XmlDecoder;
+import org.culturegraph.mf.xml.XmlDecoder;
 
 
 /**

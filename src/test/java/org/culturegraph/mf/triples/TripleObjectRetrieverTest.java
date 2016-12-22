@@ -26,7 +26,6 @@ import java.io.Writer;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.objects.Triple;
 import org.culturegraph.mf.framework.objects.Triple.ObjectType;
-import org.culturegraph.mf.triples.TripleObjectRetriever;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

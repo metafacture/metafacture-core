@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.test.reader;
 
-import org.culturegraph.mf.stream.converter.xml.CGXmlHandler;
+import org.culturegraph.mf.xml.CGXmlHandler;
 
 /**
  * Reads and decodes a <i>Culturegraph XML</i> document.

@@ -23,8 +23,6 @@ import java.io.IOException;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.objects.Triple;
 import org.culturegraph.mf.framework.objects.Triple.ObjectType;
-import org.culturegraph.mf.triples.TripleReader;
-import org.culturegraph.mf.triples.TripleWriter;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
