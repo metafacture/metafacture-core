@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.source;
+package org.culturegraph.mf.io;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -28,7 +28,6 @@ import java.util.Arrays;
 
 import org.culturegraph.mf.commons.ResourceUtil;
 import org.culturegraph.mf.framework.ObjectReceiver;
-import org.culturegraph.mf.util.FileCompression;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

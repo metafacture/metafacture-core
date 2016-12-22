@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.source;
+package org.culturegraph.mf.io;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assume.assumeFalse;

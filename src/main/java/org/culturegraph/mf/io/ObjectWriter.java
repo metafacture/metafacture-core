@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.sink;
+package org.culturegraph.mf.io;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -25,7 +25,6 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.annotations.ReturnsAvailableArguments;
-import org.culturegraph.mf.util.FileCompression;
 
 
 /**

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.source;
+package org.culturegraph.mf.io;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,7 +29,6 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
-import org.culturegraph.mf.util.FileCompression;
 
 
 /**

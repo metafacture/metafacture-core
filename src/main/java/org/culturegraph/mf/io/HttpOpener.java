@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.source;
+package org.culturegraph.mf.io;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URL;
+import java.net.URLConnection;
 
-import org.culturegraph.mf.commons.ResourceUtil;
 import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -27,47 +30,56 @@ import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 
 
-
 /**
- * Opens a resource or file and passes a reader for it to the receiver.
+ * Opens a {@link URLConnection} and passes a reader to the receiver.
  *
  * @author Christoph Böhme
+ * @author Jan Schnasse
  *
  */
-@Description("Opens a resource.")
+@Description("Opens a http resource. Supports the setting of Accept and Accept-Charset as http header fields.")
 @In(String.class)
 @Out(java.io.Reader.class)
-@FluxCommand("open-resource")
-public final class ResourceOpener
+@FluxCommand("open-http")
+public final class HttpOpener
 		extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
 	private String encoding = "UTF-8";
+	private String accept = "*/*";
 
 	/**
-	 * Returns the encoding used to open the resource.
-	 *
-	 * @return current default setting
+	 * Sets the HTTP accept header value. This is a mime-type such as text/plain
+	 * or text/html. The default value of the accept is *&#47;* which means
+	 * any mime-type.
 	 */
-	public String getEncoding() {
-		return encoding;
+	public void setAccept(final String accept) {
+		this.accept = accept;
 	}
 
 	/**
-	 * Sets the encoding used to open the resource.
-	 *
-	 * @param encoding new encoding
+	 * Sets the preferred encoding of the HTTP response. This value is in the
+	 * accept-charset header. Additonally, the encoding is used for reading the
+	 * HTTP resonse if it does not  specify an encoding. The default value for
+	 * the encoding is UTF-8.
 	 */
 	public void setEncoding(final String encoding) {
 		this.encoding = encoding;
 	}
 
 	@Override
-	public void process(final String file) {
+	public void process(final String urlStr) {
 		try {
-			getReceiver().process(ResourceUtil.getReader(file, encoding));
-		} catch (java.io.IOException e) {
+			final URL url = new URL(urlStr);
+			final URLConnection con = url.openConnection();
+			con.addRequestProperty("Accept", accept);
+			con.addRequestProperty("Accept-Charset", encoding);
+			String enc = con.getContentEncoding();
+			if (enc == null) {
+				enc = encoding;
+			}
+			getReceiver().process(new InputStreamReader(con.getInputStream(), enc));
+		} catch (IOException e) {
 			throw new MetafactureException(e);
 		}
 	}
-
 }

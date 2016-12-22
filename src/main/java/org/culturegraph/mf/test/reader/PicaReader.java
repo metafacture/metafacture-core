@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.test.reader;
 
-import org.culturegraph.mf.stream.converter.LineReader;
+import org.culturegraph.mf.io.LineReader;
 import org.culturegraph.mf.stream.converter.bib.pica.PicaDecoder;
 
 /**
