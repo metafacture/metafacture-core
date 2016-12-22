@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 
 import java.util.function.Consumer;
 
-import org.culturegraph.mf.stream.sink.EventList;
+import org.culturegraph.mf.javaintegration.EventList;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.stream.sink.EventList;
-import org.culturegraph.mf.stream.sink.EventList.Event;
+import org.culturegraph.mf.javaintegration.EventList;
+import org.culturegraph.mf.javaintegration.EventList.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
