@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe;
+package org.culturegraph.mf.mangling;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import java.util.EnumSet;
 
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.stream.pipe.StreamEventDiscarder.EventType;
+import org.culturegraph.mf.mangling.StreamEventDiscarder.EventType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;

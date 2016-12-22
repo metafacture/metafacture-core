@@ -38,6 +38,7 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
+import org.culturegraph.mf.mangling.StreamFlattener;
 import org.culturegraph.mf.metamorph.api.FlushListener;
 import org.culturegraph.mf.metamorph.api.InterceptorFactory;
 import org.culturegraph.mf.metamorph.api.Maps;
@@ -47,7 +48,6 @@ import org.culturegraph.mf.metamorph.api.NamedValuePipe;
 import org.culturegraph.mf.metamorph.api.NamedValueReceiver;
 import org.culturegraph.mf.metamorph.api.NamedValueSource;
 import org.culturegraph.mf.metamorph.api.SourceLocation;
-import org.culturegraph.mf.stream.pipe.StreamFlattener;
 import org.xml.sax.InputSource;
 
 /**

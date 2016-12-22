@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.sink;
+package org.culturegraph.mf.mangling;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -35,7 +35,7 @@ import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
  * <p>The current path is returned from {@link #getCurrentPath()}.
  *
  * @author Christoph Böhme
- * @see org.culturegraph.mf.stream.pipe.StreamFlattener
+ * @see StreamFlattener
  */
 public class EntityPathTracker extends DefaultStreamReceiver {
 

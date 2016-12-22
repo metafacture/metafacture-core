@@ -1,6 +1,5 @@
 /*
  * Copyright 2016 Christoph Böhme
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -14,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe;
+package org.culturegraph.mf.mangling;
 
 import org.culturegraph.mf.flowcontrol.StreamBuffer;
 import org.culturegraph.mf.framework.FluxCommand;
@@ -24,7 +23,6 @@ import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
-import org.culturegraph.mf.stream.sink.EntityPathTracker;
 
 /**
  * Replaces the record id with the value of a literal from the record. The name
