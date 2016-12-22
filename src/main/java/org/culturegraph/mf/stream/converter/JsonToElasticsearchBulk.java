@@ -33,8 +33,7 @@ import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Add Elasticsearch bulk indexing metadata to JSON input.<br/>
- * Use after {@link JsonEncoder}, before writing.
+ * Add Elasticsearch bulk indexing metadata to JSON input.
  *
  * @author Fabian Steeg (fsteeg)
  * @author Jens Wille
@@ -47,8 +46,8 @@ public class JsonToElasticsearchBulk extends
 		DefaultObjectPipe<String, ObjectReceiver<String>> {
 
 	/**
-	 * {@link JsonEncoder} outputs multiple fields with identical names, so use
-	 * a MultiMap with Jackson to collect values under a single key.
+	 * Use a MultiMap with Jackson to collect values from multiple fields with
+	 * identical names under a single key.
 	 */
 	static class MultiMap extends HashMap<String, Object> {
 		private static final long serialVersionUID = 490682490432334605L;
