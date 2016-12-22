@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe;
+package org.culturegraph.mf.strings;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,35 +27,36 @@ import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 
 
 /**
- * Matches the incoming strings against a regular expression and replaces
- * the matching parts.
+ * Only forwards records which match (or do not match) a regular expression
+ * given in the constructor.
  *
  * @author Christoph Böhme
+ *
  */
-@Description("Matches the incoming strings against a regular expression and replaces the matching parts.")
+@Description("Only forwards records which match (or do not match) a regular expression given in the constructor")
 @In(String.class)
 @Out(String.class)
-@FluxCommand("match")
-public final class StringMatcher extends
+@FluxCommand("filter-strings")
+public final class StringFilter extends
 		DefaultObjectPipe<String, ObjectReceiver<String>> {
 
-	private Matcher matcher;
-	private String replacement;
+	private final Matcher matcher;
+	private boolean passMatches=true;
+
+	public StringFilter(final String pattern) {
+		this.matcher = Pattern.compile(pattern).matcher("");
+	}
 
 	public String getPattern() {
 		return matcher.pattern().pattern();
 	}
 
-	public void setPattern(final String pattern) {
-		this.matcher = Pattern.compile(pattern).matcher("");
+	public boolean isPassMatches() {
+		return passMatches;
 	}
 
-	public String getReplacement() {
-		return replacement;
-	}
-
-	public void setReplacement(final String replacement) {
-		this.replacement = replacement;
+	public void setPassMatches(final boolean passMatches) {
+		this.passMatches = passMatches;
 	}
 
 	@Override
@@ -63,7 +64,9 @@ public final class StringMatcher extends
 		assert !isClosed();
 		assert null!=obj;
 		matcher.reset(obj);
-		getReceiver().process(matcher.replaceAll(replacement));
+		if (matcher.find() == passMatches) {
+			getReceiver().process(obj);
+		}
 	}
 
 }

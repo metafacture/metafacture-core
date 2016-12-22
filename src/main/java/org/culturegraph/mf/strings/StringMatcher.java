@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe;
+package org.culturegraph.mf.strings;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.culturegraph.mf.framework.FluxCommand;
@@ -24,29 +25,45 @@ import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 
+
 /**
- * Splits a string at new lines and sends each line to the receiver.
+ * Matches the incoming strings against a regular expression and replaces
+ * the matching parts.
  *
  * @author Christoph Böhme
- *
  */
-@Description("Splits a string at new lines and sends each line to the receiver.")
+@Description("Matches the incoming strings against a regular expression and replaces the matching parts.")
 @In(String.class)
 @Out(String.class)
-@FluxCommand("split-lines")
-public final class LineSplitter
-		extends DefaultObjectPipe<String, ObjectReceiver<String>> {
+@FluxCommand("match")
+public final class StringMatcher extends
+		DefaultObjectPipe<String, ObjectReceiver<String>> {
 
-	private static final char NEWLINE = '\n';
-	private static final Pattern LINE_PATTERN = Pattern.compile(
-			String.valueOf(NEWLINE), Pattern.LITERAL);
+	private Matcher matcher;
+	private String replacement;
+
+	public String getPattern() {
+		return matcher.pattern().pattern();
+	}
+
+	public void setPattern(final String pattern) {
+		this.matcher = Pattern.compile(pattern).matcher("");
+	}
+
+	public String getReplacement() {
+		return replacement;
+	}
+
+	public void setReplacement(final String replacement) {
+		this.replacement = replacement;
+	}
 
 	@Override
-	public void process(final String lines) {
+	public void process(final String obj) {
 		assert !isClosed();
-		for (final String record : LINE_PATTERN.split(lines)) {
-			getReceiver().process(record);
-		}
+		assert null!=obj;
+		matcher.reset(obj);
+		getReceiver().process(matcher.replaceAll(replacement));
 	}
 
 }

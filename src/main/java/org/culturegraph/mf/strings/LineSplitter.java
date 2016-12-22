@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe;
+package org.culturegraph.mf.strings;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.culturegraph.mf.framework.FluxCommand;
@@ -25,47 +24,28 @@ import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 
-
 /**
- * Only forwards records which match (or do not match) a regular expression
- * given in the constructor.
+ * Splits a string at new lines and sends each line to the receiver.
  *
  * @author Christoph Böhme
  *
  */
-@Description("Only forwards records which match (or do not match) a regular expression given in the constructor")
+@Description("Splits a string at new lines and sends each line to the receiver.")
 @In(String.class)
 @Out(String.class)
-@FluxCommand("filter-strings")
-public final class StringFilter extends
-		DefaultObjectPipe<String, ObjectReceiver<String>> {
+@FluxCommand("split-lines")
+public final class LineSplitter
+		extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
-	private final Matcher matcher;
-	private boolean passMatches=true;
-
-	public StringFilter(final String pattern) {
-		this.matcher = Pattern.compile(pattern).matcher("");
-	}
-
-	public String getPattern() {
-		return matcher.pattern().pattern();
-	}
-
-	public boolean isPassMatches() {
-		return passMatches;
-	}
-
-	public void setPassMatches(final boolean passMatches) {
-		this.passMatches = passMatches;
-	}
+	private static final char NEWLINE = '\n';
+	private static final Pattern LINE_PATTERN = Pattern.compile(
+			String.valueOf(NEWLINE), Pattern.LITERAL);
 
 	@Override
-	public void process(final String obj) {
+	public void process(final String lines) {
 		assert !isClosed();
-		assert null!=obj;
-		matcher.reset(obj);
-		if (matcher.find() == passMatches) {
-			getReceiver().process(obj);
+		for (final String record : LINE_PATTERN.split(lines)) {
+			getReceiver().process(record);
 		}
 	}
 
