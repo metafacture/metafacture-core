@@ -13,24 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe;
+package org.culturegraph.mf.plumbing;
 
 import org.culturegraph.mf.framework.FluxCommand;
-import org.culturegraph.mf.framework.StreamReceiver;
+import org.culturegraph.mf.framework.ObjectPipe;
+import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
-import org.culturegraph.mf.framework.helpers.ForwardingStreamPipe;
+import org.culturegraph.mf.framework.helpers.DefaultTee;
 
 /**
- * A simple pass-through module.
+ * Sends an object to more than one receiver.
+ *
+ * @param <T> Object type
  *
  * @author Christoph Böhme
+ *
  */
-@Description("A simple pass-through module")
-@In(StreamReceiver.class)
-@Out(StreamReceiver.class)
-@FluxCommand("pass-through")
-public final class IdentityStreamPipe extends ForwardingStreamPipe {
+@Description("Sends an object to more than one receiver.")
+@In(Object.class)
+@Out(Object.class)
+@FluxCommand("object-tee")
+public final class ObjectTee<T> extends DefaultTee<ObjectReceiver<T>>
+		implements ObjectPipe<T, ObjectReceiver<T>> {
+
+	@Override
+	public void process(final T obj) {
+		for (ObjectReceiver<T> receiver : getReceivers()) {
+			receiver.process(obj);
+		}
+	}
 
 }

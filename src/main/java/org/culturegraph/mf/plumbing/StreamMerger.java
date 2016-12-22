@@ -1,5 +1,4 @@
 /*
- * Copyright 2016 Christoph Böhme
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -14,96 +13,80 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe;
+package org.culturegraph.mf.plumbing;
 
 import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.StreamReceiver;
-import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
 
 /**
- * Merges a sequence of {@link #setBatchSize(long)} records. On a
- * <i>close-stream</i> event, a record containing fewer source records may be
- * created.
+ * Merges records based on their id. The module compares the id
+ * of each record it receives with the one of previous record; if
+ * both records have got the same id, then the end-record and
+ * start-record events that would normally separate the records
+ * are suppressed in the output stream of {@code StreamMerger}.
+ * This effectively merges the two records. Of course, this only
+ * works if the records which are to be merged follow each other
+ * directly.
  *
  * @author Christoph Böhme
  *
  */
-@Description("Merges a sequence of batchSize records")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
-@FluxCommand("merge-batch-stream")
-public final class StreamBatchMerger extends DefaultStreamPipe<StreamReceiver> {
+@FluxCommand("merge-same-ids")
+public final class StreamMerger
+		extends DefaultStreamPipe<StreamReceiver> {
 
-	/**
-	 * The default value for {@link #setBatchSize(long)}.
-	 */
-	public static final long DEFAULT_BATCH_SIZE = 1;
-
-	private long batchSize = DEFAULT_BATCH_SIZE;
-	private long recordCount;
-
-	/**
-	 * Sets the number of records that should be merged into a batch.
-	 * <p>
-	 * The default batch size is 1, wich means that no records are merged.
-	 * <p>
-	 * This parameter must not be changed during processing.
-	 *
-	 * @param batchSize the number of records that should be merged.
-	 */
-	public void setBatchSize(final long batchSize) {
-		this.batchSize = batchSize;
-	}
-
-	public long getBatchSize() {
-		return batchSize;
-	}
+	private boolean hasRecordsReceived;
+	private String currentId = "";
 
 	@Override
 	public void startRecord(final String identifier) {
-		if (recordCount == 0) {
+		assert !isClosed();
+		if (!currentId.equals(identifier)) {
+			if (hasRecordsReceived) {
+				getReceiver().endRecord();
+			}
 			getReceiver().startRecord(identifier);
+			currentId = identifier;
 		}
-		recordCount += 1;
-	}
 
-	@Override
-	public void endRecord() {
-		if (recordCount >= batchSize) {
-			getReceiver().endRecord();
-			recordCount = 0;
-		}
+		hasRecordsReceived = true;
 	}
 
 	@Override
 	public void startEntity(final String name) {
+		assert !isClosed();
 		getReceiver().startEntity(name);
 	}
 
 	@Override
 	public void endEntity() {
+		assert !isClosed();
 		getReceiver().endEntity();
 	}
 
 	@Override
 	public void literal(final String name, final String value) {
+		assert !isClosed();
 		getReceiver().literal(name, value);
 	}
 
 	@Override
 	protected void onResetStream() {
-		recordCount = 0;
+		hasRecordsReceived = false;
+		currentId = "";
 	}
 
 	@Override
 	protected void onCloseStream() {
-		if (recordCount > 0) {
+		if (hasRecordsReceived) {
 			getReceiver().endRecord();
-			recordCount = 0;
 		}
+		onResetStream();
 	}
 
 }
