@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.test.reader;
-
-import org.culturegraph.mf.biblio.pica.PicaDecoder;
-import org.culturegraph.mf.io.LineReader;
+package org.culturegraph.mf.biblio.pica;
 
 /**
- * Reads and decodes a <i>Pica+</i> data stream.
+ * Useful constants for PICA+
  *
  * @author Christoph Böhme
+ *
  */
-public class PicaReader extends ReaderBase {
+final class PicaConstants {
 
-	public PicaReader() {
-		super(new LineReader(), new PicaDecoder());
+	public static final char RECORD_MARKER = '\u001d';
+	public static final char FIELD_MARKER = '\u001e';
+	public static final char SUBFIELD_MARKER = '\u001f';
+	public static final char FIELD_END_MARKER = '\n';
+
+	private PicaConstants() {
+		// No instances allowed
 	}
 
 }

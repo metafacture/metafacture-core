@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.test.reader;
 
-import org.culturegraph.mf.stream.converter.xml.MarcXmlHandler;
+import org.culturegraph.mf.biblio.marc21.MarcXmlHandler;
 
 /**
  * Reads and decodes a <i>MARC-XML</i> document.

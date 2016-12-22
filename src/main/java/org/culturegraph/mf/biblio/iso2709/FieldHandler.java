@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2016 Christoph Böhme
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.test.reader;
-
-import org.culturegraph.mf.biblio.pica.PicaDecoder;
-import org.culturegraph.mf.io.LineReader;
+package org.culturegraph.mf.biblio.iso2709;
 
 /**
- * Reads and decodes a <i>Pica+</i> data stream.
+ * Callback interface defining the events emitted by
+ * {@link Record#processFields(FieldHandler)}.
  *
  * @author Christoph Böhme
  */
-public class PicaReader extends ReaderBase {
+public interface FieldHandler {
 
-	public PicaReader() {
-		super(new LineReader(), new PicaDecoder());
-	}
+	void referenceField(char[] tag, char[] implDefinedPart, String value);
+
+	void startDataField(char[] tag, char[] implDefinedPart, char[] indicators);
+
+	void endDataField();
+
+	void additionalImplDefinedPart(char[] implDefinedPart);
+
+	void data(char[] identifier, String value);
 
 }
