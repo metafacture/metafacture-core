@@ -29,7 +29,7 @@ import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
-import org.culturegraph.mf.stream.converter.JsonEncoder;
+import org.culturegraph.mf.json.JsonEncoder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
