@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe;
+package org.culturegraph.mf.monitoring;
 
 import org.culturegraph.mf.framework.FluxCommand;
-import org.culturegraph.mf.framework.ObjectPipe;
-import org.culturegraph.mf.framework.ObjectReceiver;
+import org.culturegraph.mf.framework.StreamPipe;
+import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.annotations.Description;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
@@ -25,31 +25,48 @@ import org.culturegraph.mf.framework.annotations.Out;
 /**
  * Benchmarks the execution time of the downstream modules.
  *
- * @param <T>
- *            object type.
- *
  * @author Christoph Böhme
  */
-@In(Object.class)
-@Out(Object.class)
+@In(StreamReceiver.class)
+@Out(StreamReceiver.class)
 @Description("Benchmarks the execution time of the downstream modules.")
-@FluxCommand("log-time")
-public final class ObjectTimer<T> extends TimerBase<ObjectReceiver<T>>
-		implements ObjectPipe<T, ObjectReceiver<T>> {
+@FluxCommand("log-stream-time")
+public final class StreamTimer extends TimerBase<StreamReceiver> implements
+		StreamPipe<StreamReceiver> {
 
-	public ObjectTimer() {
+	public StreamTimer() {
 		this("");
 	}
 
-	public ObjectTimer(final String logPrefix) {
+	public StreamTimer(final String logPrefix) {
 		super(logPrefix);
 	}
 
 	@Override
-	public void process(final T obj) {
+	public void startRecord(final String identifier) {
 		startMeasurement();
-		getReceiver().process(obj);
+		getReceiver().startRecord(identifier);
+	}
+
+	@Override
+	public void endRecord() {
+		getReceiver().endRecord();
 		stopMeasurement();
+	}
+
+	@Override
+	public void startEntity(final String name) {
+		getReceiver().startEntity(name);
+	}
+
+	@Override
+	public void endEntity() {
+		getReceiver().endEntity();
+	}
+
+	@Override
+	public void literal(final String name, final String value) {
+		getReceiver().literal(name, value);
 	}
 
 }

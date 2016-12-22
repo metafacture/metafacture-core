@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe;
+package org.culturegraph.mf.monitoring;
 
-import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultObjectReceiver;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,19 +26,19 @@ import org.junit.Test;
  * @author Christoph Böhme
  *
  */
-public final class StreamTimerTest {
+public final class ObjectTimerTest {
 
 	/**
 	 * A module with a slow process method.
 	 */
-	private static final class BenchmarkedModule extends DefaultStreamReceiver {
+	private static final class BenchmarkedModule extends DefaultObjectReceiver<String> {
 
 		private static final long[] DURATIONS = { 150L, 20L, 30L, 202L };
 
 		private int i;
 
 		@Override
-		public void startRecord(final String id) {
+		public void process(final String obj) {
 			try {
 				Thread.sleep(getDuration());
 			} catch (final InterruptedException e) {
@@ -57,35 +57,30 @@ public final class StreamTimerTest {
 
 	}
 
-	private StreamTimer streamTimer;
+	private ObjectTimer<String> objectTimer;
 	private BenchmarkedModule benchmarkedModule;
 
 	@Before
 	public void setup() {
-		streamTimer = new StreamTimer();
+		objectTimer = new ObjectTimer<String>();
 		benchmarkedModule = new BenchmarkedModule();
-		streamTimer.setReceiver(benchmarkedModule);
+		objectTimer.setReceiver(benchmarkedModule);
 	}
 
 	@Test
 	public void testShouldMeasureExecutionTime() {
 
-		streamTimer.startRecord("");
-		streamTimer.endRecord();
-		streamTimer.startRecord("");
-		streamTimer.endRecord();
-		streamTimer.startRecord("");
-		streamTimer.endRecord();
-		streamTimer.startRecord("");
-		streamTimer.endRecord();
-
-		streamTimer.closeStream();
+		objectTimer.process("");
+		objectTimer.process("");
+		objectTimer.process("");
+		objectTimer.process("");
+		objectTimer.closeStream();
 	}
 
 	@Test
 	public void testShouldHandleImmediateCloseStreamWithNoProcessing() {
 
-		streamTimer.closeStream();
+		objectTimer.closeStream();
 	}
 
 }
