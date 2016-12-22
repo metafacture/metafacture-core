@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe.sort;
+package org.culturegraph.mf.triples;
 
 import static org.junit.Assert.assertTrue;
 
@@ -21,6 +21,7 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 
 import org.culturegraph.mf.framework.objects.Triple;
+import org.culturegraph.mf.triples.AbstractTripleSort;
 import org.junit.Before;
 import org.junit.Test;
 

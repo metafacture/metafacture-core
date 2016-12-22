@@ -1,6 +1,5 @@
 /*
  * Copyright 2016 Christoph Böhme
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -14,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.sink;
+package org.culturegraph.mf.triples;
 
 import static org.junit.Assert.assertEquals;
 
@@ -24,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.culturegraph.mf.framework.objects.Triple;
+import org.culturegraph.mf.triples.TripleObjectWriter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe.sort;
+package org.culturegraph.mf.triples;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,13 +29,12 @@ import org.culturegraph.mf.framework.MetafactureException;
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
 import org.culturegraph.mf.framework.objects.Triple;
-import org.culturegraph.mf.stream.pipe.sort.MemoryWarningSystem.Listener;
 
 /**
  * @author markus geipel
  *
  */
-public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> implements Listener {
+public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> implements MemoryWarningSystem.Listener {
 	/**
 	 * specifies the comparator
 	 */

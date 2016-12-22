@@ -1,6 +1,5 @@
 /*
  * Copyright 2016 Christoph Böhme
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -14,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.converter;
+package org.culturegraph.mf.triples;
 
 import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.StandardEventNames;
 import org.culturegraph.mf.framework.objects.Triple;
 import org.culturegraph.mf.framework.objects.Triple.ObjectType;
+import org.culturegraph.mf.triples.StreamToTriples;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.stream.pipe.sort;
+package org.culturegraph.mf.triples;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -22,6 +22,7 @@ import org.culturegraph.mf.formeta.Formeta;
 import org.culturegraph.mf.framework.StreamReceiver;
 import org.culturegraph.mf.framework.objects.Triple;
 import org.culturegraph.mf.framework.objects.Triple.ObjectType;
+import org.culturegraph.mf.triples.TripleCollect;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;

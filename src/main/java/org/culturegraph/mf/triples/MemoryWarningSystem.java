@@ -1,6 +1,5 @@
 /*
  * Copyright 2016 Christoph Böhme
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -17,7 +16,7 @@
 /*
  *  Code based on http://www.javaspecialists.eu/archive/Issue092.html
  */
-package org.culturegraph.mf.stream.pipe.sort;
+package org.culturegraph.mf.triples;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
