@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.stream.converter;
+package org.culturegraph.mf.elasticsearch;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -29,6 +29,7 @@ import org.culturegraph.mf.framework.ObjectReceiver;
 import org.culturegraph.mf.framework.annotations.In;
 import org.culturegraph.mf.framework.annotations.Out;
 import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
+import org.culturegraph.mf.stream.converter.JsonEncoder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
