@@ -35,7 +35,7 @@ public final class Split extends AbstractFunction {
 			final int entityCount) {
 		final String[] parts = delimiterPattern.split(value);
 		for (final String part : parts) {
-			getNamedValueReceiver().receive(name, part, source, recordCount,
+			getNamedValueReceiver().receive(name, part, this, recordCount,
 					entityCount);
 		}
 	}

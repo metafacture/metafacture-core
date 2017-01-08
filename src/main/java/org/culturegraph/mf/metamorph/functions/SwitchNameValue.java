@@ -30,7 +30,7 @@ public final class SwitchNameValue extends AbstractFunction {
 			final NamedValueSource source, final int recordCount,
 			final int entityCount) {
 
-		getNamedValueReceiver().receive(value, name, source, recordCount,
+		getNamedValueReceiver().receive(value, name, this, recordCount,
 				entityCount);
 
 	}
