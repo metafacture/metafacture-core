@@ -15,7 +15,7 @@
  */
 package org.culturegraph.mf.framework;
 
-import org.culturegraph.mf.framework.helpers.DefaultXMLReceiver;
+import org.culturegraph.mf.framework.helpers.DefaultXmlReceiver;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
 import org.xml.sax.EntityResolver;
@@ -27,7 +27,7 @@ import org.xml.sax.ext.LexicalHandler;
  * This is just a combination of the SAX handler interfaces
  * and the metastream {@link LifeCycle} interface.
  *
- * @see DefaultXMLReceiver
+ * @see DefaultXmlReceiver
  * @see XmlPipe
 
  * @author Christoph Böhme

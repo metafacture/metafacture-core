@@ -36,7 +36,7 @@ import org.xml.sax.SAXParseException;
  * @author Christoph Böhme
  *
  */
-public class DefaultXMLReceiver extends DefaultLifeCycle implements XmlReceiver {
+public class DefaultXmlReceiver extends DefaultLifeCycle implements XmlReceiver {
 
 	@Override
 	public void setDocumentLocator(final Locator locator) {
