@@ -20,10 +20,9 @@ import org.culturegraph.mf.metamorph.api.NamedValueSource;
 import org.culturegraph.mf.metamorph.api.helpers.AbstractCollect;
 
 /**
- * Corresponds to the <code>&lt;any&gt;</code> tag.
+ * Corresponds to the {@code <any>} tag.
  *
- * @author Christoph Böhme <c.boehme@dnb.de>
- *
+ * @author Christoph Böhme
  */
 public final class Any extends AbstractCollect {
 

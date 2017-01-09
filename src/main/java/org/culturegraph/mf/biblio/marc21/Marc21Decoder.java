@@ -55,7 +55,7 @@ import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
  *   <li>multipart resource record level.
  * </ul>
  * This information is emitted as an entity named
- * &quot;{@value Marc21EventNames#LEADER_ENTITY}&quot. It is emitted directly
+ * &quot;{@value Marc21EventNames#LEADER_ENTITY}&quot;. It is emitted directly
  * after the <i>start-record</i> event. The entity contains the following
  * literals:
  * <ol>

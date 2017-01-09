@@ -29,8 +29,11 @@ import java.util.regex.Pattern;
 import org.culturegraph.mf.metamorph.api.helpers.AbstractReadOnlyMap;
 
 /**
- * @author "Markus Michael Geipel", "Philipp v. Böselager"
+ * A map which resolves its keys by doing a REST request and returning the
+ * response as value.
  *
+ * @author Markus Michael Geipel
+ * @author Philipp v. Böselager
  */
 public final class RestMap extends AbstractReadOnlyMap<String, String> {
 

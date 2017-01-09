@@ -19,10 +19,10 @@ import org.junit.runner.RunWith;
 
 
 /**
- * @author Christoph Böhme <c.boehme@dnb.de>
+ * Tests binding Metamorph-Test to JUnit.
  *
+ * @author Christoph Böhme
  */
-
 @RunWith(MetamorphTestSuite.class)
 public final class FrameworkTest {
 	// This class serves only as a bonding

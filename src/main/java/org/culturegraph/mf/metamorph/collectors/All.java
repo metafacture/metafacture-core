@@ -23,10 +23,9 @@ import org.culturegraph.mf.metamorph.api.NamedValueSource;
 import org.culturegraph.mf.metamorph.api.helpers.AbstractFlushingCollect;
 
 /**
- * Corresponds to the <code>&lt;all&gt;</code> tag.
+ * Corresponds to the {@code <all>} tag.
  *
- * @author Christoph Böhme <c.boehme@dnb.de>
- *
+ * @author Christoph Böhme
  */
 public final class All extends AbstractFlushingCollect {
 

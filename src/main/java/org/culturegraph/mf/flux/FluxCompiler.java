@@ -29,10 +29,9 @@ import org.culturegraph.mf.flux.parser.FluxParser;
 import org.culturegraph.mf.flux.parser.FluxProgramm;
 
 /**
- * Creates a {@link Flow} based on a flux script
+ * Creates a flow based on a flux script.
  *
- * @author markus geipel
- *
+ * @author Markus Michael Geipel
  */
 public final class FluxCompiler {
 	private FluxCompiler() {

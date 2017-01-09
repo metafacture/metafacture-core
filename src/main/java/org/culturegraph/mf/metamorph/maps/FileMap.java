@@ -38,8 +38,7 @@ import org.culturegraph.mf.metamorph.api.helpers.AbstractReadOnlyMap;
  * encoded. The separator is by default \t. <strong>Important:</strong> Lines
  * that are not split in two parts by the separator are ignored!
  *
- * @author "Markus Michael Geipel"
- *
+ * @author Markus Michael Geipel
  */
 public final class FileMap extends AbstractReadOnlyMap<String, String> {
 

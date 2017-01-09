@@ -23,8 +23,7 @@ import org.culturegraph.mf.metamorph.api.helpers.AbstractSimpleStatelessFunction
 /**
  * Performs normalization of diacritics in utf-8 encoded strings.
  *
- * @author Christoph Böhme <c.boehme@dnb.de>
- *
+ * @author Christoph Böhme
  */
 public final class NormalizeUTF8 extends AbstractSimpleStatelessFunction {
 

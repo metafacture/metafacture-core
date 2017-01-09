@@ -29,7 +29,6 @@ import org.culturegraph.mf.framework.helpers.DefaultStreamReceiver;
  * duplicates.
  *
  * @author Markus Michael Geipel
- *
  */
 public final class NamedValueSet extends DefaultStreamReceiver
 		implements Set<NamedValue>, Collector<Set<NamedValue>> {
@@ -39,18 +38,20 @@ public final class NamedValueSet extends DefaultStreamReceiver
 
 	public NamedValueSet() {
 		super();
-		set = new HashSet<NamedValue>();
+		set = new HashSet<>();
 		this.collection = null;
 
 	}
 
 	/**
-	 * @param set
-	 *            is filled with the received results.
+	 * Creates a {@code NamedValueSet} receiver which stores the received values
+	 * in the passed set.
+	 *
+	 * @param collection is filled with the received results.
 	 */
 	public NamedValueSet(final Collection<Set<NamedValue>> collection) {
 		super();
-		set = new HashSet<NamedValue>();
+		set = new HashSet<>();
 		this.collection = collection;
 	}
 

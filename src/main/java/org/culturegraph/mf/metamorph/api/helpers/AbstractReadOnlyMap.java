@@ -23,10 +23,9 @@ import java.util.Set;
  * Base class for maps which are read only and do not allow access to their
  * full contents.
  *
+ * @param <K> type of keys
+ * @param <V> type of values
  * @author Markus Michael Geipel
- *
- * @param <K>
- * @param <V>
  */
 public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
 

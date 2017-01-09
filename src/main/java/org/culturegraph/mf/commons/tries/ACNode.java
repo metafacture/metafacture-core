@@ -21,9 +21,10 @@ import java.util.Set;
 
 
 /**
- * @author Markus Michael Geipel
+ * Node representing a character in a trie.
  *
- * @param <P>
+ * @param <P> type of the value associated with this node in the trie.
+ * @author Markus Michael Geipel
  */
 final class ACNode<P> {
 

@@ -26,11 +26,9 @@ import java.util.regex.Pattern;
 /**
  * A simple Trie, which accepts a trailing wildcard
  *
+ * @param <P> type of value stored
  * @author Markus Michael Geipel
  * @author Pascal Christoph
- *
- * @param <P>
- *            type of value stored
  */
 public final class WildcardTrie<P> {
 	public static final char STAR_WILDCARD = '*';
@@ -44,11 +42,11 @@ public final class WildcardTrie<P> {
 	private Set<Node<P>> nextNodes = new HashSet<Node<P>>();
 
 	/**
-	 * inserts keys into the try. Use '|' to concatenate. Use '*' (0,inf) and
+	 * Inserts keys into the try. Use '|' to concatenate. Use '*' (0,inf) and
 	 * '?' (1,1) to express wildcards.
 	 *
-	 * @param keys
-	 * @param value
+	 * @param keys pattern of keys to register
+	 * @param value value to associate with the key pattern.
 	 */
 	public void put(final String keys, final P value) {
 		if (keys.contains(OR_STRING)) {
@@ -126,8 +124,9 @@ public final class WildcardTrie<P> {
 	}
 
 	/**
+	 * Node in the trie.
 	 *
-	 * @param <T>
+	 * @param <T> type of the value associated with this node.
 	 */
 	private final class Node<T> {
 

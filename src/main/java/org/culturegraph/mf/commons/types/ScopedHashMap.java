@@ -16,12 +16,15 @@
 package org.culturegraph.mf.commons.types;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
- * @author "Markus Michael Geipel"
+ * Implementation of {@link Map} that delegates to another map if it does not
+ * contain a value for key.
  *
- * @param <K>
- * @param <V>
+ * @param <K> type of the keys
+ * @param <V> type of the values
+ * @author Markus Michael Geipel
  */
 public final class ScopedHashMap<K, V> extends HashMap<K, V> {
 

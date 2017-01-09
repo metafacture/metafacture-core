@@ -20,10 +20,9 @@ import org.culturegraph.mf.metamorph.api.NamedValueSource;
 import org.culturegraph.mf.metamorph.api.helpers.AbstractCollect;
 
 /**
- * Corresponds to the <code>&lt;none&gt;</code> tag.
+ * Corresponds to the {@code <none>} tag.
  *
- * @author Christoph Böhme <c.boehme@dnb.de>
- *
+ * @author Christoph Böhme
  */
 public final class None extends AbstractCollect {
 

@@ -23,8 +23,8 @@ import org.culturegraph.mf.commons.tries.WildcardTrie;
 /**
  * Implements {@link Registry} with a {@link WildcardTrie}.
  *
+ * @param <T> type of the values this registry stores
  * @author Markus Michael Geipel
- * @param <T>
  */
 final class WildcardRegistry<T> implements Registry<T> {
 

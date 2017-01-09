@@ -24,9 +24,8 @@ import java.util.Map;
 /**
  * Implements {@link Registry} with a {@link HashMap}.
  *
+ * @param <T> type of the values this registry stores
  * @author Markus Michael Geipel
- *
- * @param <T>
  */
 final class SimpleDataRegistry<T> implements Registry<T> {
 

@@ -16,7 +16,6 @@
 package org.culturegraph.mf.strings;
 
 import java.text.Normalizer;
-import java.text.Normalizer.Form;
 
 import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.StreamReceiver;
@@ -29,7 +28,8 @@ import org.culturegraph.mf.framework.helpers.DefaultStreamPipe;
  * Normalises Unicode characters in record identifiers, entity and literal
  * names and literal values. Unicode normalisation converts between precomposed
  * characters and composed characters. There are four different forms of
- * conversion which can be selected using {@link #setNormalizationForm(Form)}.
+ * conversion which can be selected using
+ * {@link #setNormalizationForm(Normalizer.Form)}.
    <p>
  * In the default configuration only literal values are
  * converted. The {@link #setNormalizeIds(boolean)},
@@ -46,7 +46,7 @@ public final class StreamUnicodeNormalizer
 		extends DefaultStreamPipe<StreamReceiver> {
 
 	/**
-	 * The default value for {@link #setNormalizationForm(Form)}.
+	 * The default value for {@link #setNormalizationForm(Normalizer.Form)}.
 	 */
 	public static final Normalizer.Form DEFAULT_NORMALIZATION_FORM =
 			Normalizer.Form.NFC;
@@ -116,7 +116,7 @@ public final class StreamUnicodeNormalizer
 	 * Sets the normalisation form used for normalising identifiers, names and
 	 * values.
 	 * <p>
-	 * The default value is {@value #DEFAULT_NORMALIZATION_FORM}.
+	 * The default value is NFC.
 	 * <p>
 	 * This parameter may be set at any time during processing. It becomes
 	 * immediately effective and affects all subsequently received events.

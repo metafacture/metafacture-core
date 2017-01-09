@@ -37,18 +37,20 @@ public final class ValueSet extends DefaultStreamReceiver
 
 	public ValueSet() {
 		super();
-		set = new HashSet<String>();
+		set = new HashSet<>();
 		this.collection = null;
 
 	}
 
 	/**
-	 * @param set
-	 *            is filled with the received results.
+	 * Creates a {@code ValueSet} receiver which stores the received values in the
+	 * passed set.
+	 *
+	 * @param collection is filled with the received results.
 	 */
 	public ValueSet(final Collection<Set<String>> collection) {
 		super();
-		set = new HashSet<String>();
+		set = new HashSet<>();
 		this.collection = collection;
 	}
 

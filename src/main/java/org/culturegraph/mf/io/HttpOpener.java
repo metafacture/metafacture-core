@@ -35,7 +35,6 @@ import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
  *
  * @author Christoph Böhme
  * @author Jan Schnasse
- *
  */
 @Description("Opens a http resource. Supports the setting of Accept and Accept-Charset as http header fields.")
 @In(String.class)
@@ -51,6 +50,8 @@ public final class HttpOpener
 	 * Sets the HTTP accept header value. This is a mime-type such as text/plain
 	 * or text/html. The default value of the accept is *&#47;* which means
 	 * any mime-type.
+	 *
+	 * @param accept mime-type to use for the HTTP accept header
 	 */
 	public void setAccept(final String accept) {
 		this.accept = accept;
@@ -61,6 +62,9 @@ public final class HttpOpener
 	 * accept-charset header. Additonally, the encoding is used for reading the
 	 * HTTP resonse if it does not  specify an encoding. The default value for
 	 * the encoding is UTF-8.
+	 *
+	 * @param encoding name of the encoding used for the accept-charset HTTP
+	 *                 header
 	 */
 	public void setEncoding(final String encoding) {
 		this.encoding = encoding;

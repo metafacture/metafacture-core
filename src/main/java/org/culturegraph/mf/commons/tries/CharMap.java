@@ -21,12 +21,13 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A {@link Map} with char as key. Used for set matching, tries etc. <br>
- * <strong>Important:</strong> It is optimized for size in memory. No extra information for fast entry/keySet/values iteration etc. is held.
+ * A {@link Map} with char as key. Used for set matching, tries etc.
  *
+ * <strong>Important:</strong> It is optimized for size in memory. No extra
+ * information for fast entry/keySet/values iteration etc. is held.
+ *
+ * @param <V> type of the values in the map
  * @author Markus Michael Geipel
- *
- * @param <V>
  */
 final class CharMap<V> implements Map<Character, V> {
 
@@ -88,11 +89,6 @@ final class CharMap<V> implements Map<Character, V> {
 		return null;
 	}
 
-	/**
-	 * @param key
-	 * @param value
-	 * @return the parameter value
-	 */
 	public void put(final char key, final V value) {
 		if (size > LOAD_FACTOR * table.length) {
 			expand();
@@ -190,8 +186,9 @@ final class CharMap<V> implements Map<Character, V> {
 	}
 
 	/**
+	 * Entry in the map.
 	 *
-	 * @param <V>
+	 * @param <V> type of the value of the entry.
 	 */
 	private static final class Entry<V> implements Map.Entry<Character, V> {
 		private final char key;
@@ -236,5 +233,7 @@ final class CharMap<V> implements Map<Character, V> {
 		public String toString() {
 			return key + "=" + value;
 		}
+
 	}
+
 }

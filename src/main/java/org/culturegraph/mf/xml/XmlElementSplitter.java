@@ -32,7 +32,6 @@ import org.xml.sax.SAXException;
  * An XML Element splitter.
  *
  * @author Pascal Christoph (dr0i)
- *
  */
 @Description("Splits elements (e.g. defining single records) residing in one XML document into multiple single XML documents.")
 @In(XmlReceiver.class)
@@ -52,18 +51,16 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
 	private int ElementDepth = 0;
 
 	/**
-	 * default constructor
+	 * Default constructor
 	 */
 	public XmlElementSplitter() {
 	}
 
 	/**
-	 * enriched constructor setting the top level element and the Element name
+	 * Enriched constructor setting the top level element and the Element name
 	 *
-	 * @param aTopLevelElement
-	 *            the name of the top level XML tag
-	 * @param aElementName
-	 *            the name of the tag defining a new Element to be split
+	 * @param aTopLevelElement the name of the top level XML tag
+	 * @param aElementName the name of the tag defining a new Element to be split
 	 */
 	public XmlElementSplitter(String aTopLevelElement, String aElementName) {
 		setTopLevelElement(aTopLevelElement);
@@ -74,8 +71,7 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
 	 * Sets the name of the Element. All these elements in the XML stream will
 	 * be XML documents on their own.
 	 *
-	 * @param name
-	 *            Identifies the elements
+	 * @param name Identifies the elements
 	 */
 	public void setElementName(final String name) {
 		this.Element = name;
@@ -84,9 +80,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
 	/**
 	 * Sets the top-level XML document element.
 	 *
-	 * @param root
-	 *            the top level element. Don't set it to omit setting top level
-	 *            element.
+	 * @param root the top level element. Don't set it to omit setting top level
+	 *             element.
 	 */
 	public void setTopLevelElement(final String root) {
 		this.root = root;
@@ -97,10 +92,10 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
 	/**
 	 * Sets the XML declaration.
 	 *
-	 * @param xmlDeclaration
-	 *            the xml declaration. Default is '<?xml version = "1.0"
-	 *            encoding = "UTF-8"?>'. If empty value is given, the xml
-	 *            declaration is skipped.
+	 * @param xmlDeclaration the xml declaration. Default is
+	 *                       '{@code<?xml version = "1.0" encoding = "UTF-8"?>}'.
+	 *                       If empty value is given, the xml declaration is
+	 *                       skipped.
 	 */
 	public void setXmlDeclaration(final String xmlDeclaration) {
 		this.xmlDeclaration = xmlDeclaration;
@@ -197,4 +192,5 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
 	public void onResetStream() {
 		reset();
 	}
+
 }

@@ -31,8 +31,9 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * @author Christoph Böhme <c.boehme@dnb.de>
+ * Utility functions for working with XML data as strings.
  *
+ * @author Christoph Böhme
  */
 public final class XmlUtil {
 

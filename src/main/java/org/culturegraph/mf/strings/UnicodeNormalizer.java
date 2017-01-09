@@ -16,7 +16,6 @@
 package org.culturegraph.mf.strings;
 
 import java.text.Normalizer;
-import java.text.Normalizer.Form;
 
 import org.culturegraph.mf.framework.FluxCommand;
 import org.culturegraph.mf.framework.ObjectReceiver;
@@ -29,7 +28,7 @@ import org.culturegraph.mf.framework.helpers.DefaultObjectPipe;
  * Normalises Unicode characters in strings. Unicode normalisation converts
  * between precomposed characters and composed characters. There are four
  * different forms of conversion which can be selected using
- * {@link #setNormalizationForm(Form)}.
+ * {@link #setNormalizationForm(Normalizer.Form)}.
  *
  * @author Christoph Böhme
  *
@@ -42,7 +41,7 @@ public final class UnicodeNormalizer extends
 		DefaultObjectPipe<String, ObjectReceiver<String>> {
 
 	/**
-	 * The default value for {@link #setNormalizationForm(Form)}.
+	 * The default value for {@link #setNormalizationForm(Normalizer.Form)}.
 	 */
 	public static final Normalizer.Form DEFAULT_NORMALIZATION_FORM =
 			Normalizer.Form.NFC;
@@ -52,7 +51,7 @@ public final class UnicodeNormalizer extends
 	/**
 	 * Sets the normalisation form used for normalising strings.
 	 * <p>
-	 * The default value is {@value #DEFAULT_NORMALIZATION_FORM}.
+	 * The default value is NFC.
 	 * <p>
 	 * This parameter may be set at any time during processing. It becomes
 	 * effective with the next string that is received.

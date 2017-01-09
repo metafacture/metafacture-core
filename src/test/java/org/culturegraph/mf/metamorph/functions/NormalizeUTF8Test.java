@@ -21,8 +21,9 @@ import org.junit.Test;
 
 
 /**
- * @author Christoph Böhme <c.boehme@dnb.de>
+ * Tests for class {@link NormalizeUTF8}.
  *
+ * @author Christoph Böhme
  */
 public final class NormalizeUTF8Test {
 

@@ -31,7 +31,9 @@ public final class Require {
 	 * Throws an {@link IllegalArgumentException} if {@code object} is
 	 * {@literal null}.
 	 *
-	 * @return {@code object}
+	 * @param <T> type of the object passed as parameter
+	 * @param object reference to be checked
+	 * @return the {@code object}
 	 */
 	public static <T> T notNull(final T object) {
 		return notNull(object, "parameter must not be null");
@@ -41,9 +43,10 @@ public final class Require {
 	 * Throws an {@link IllegalArgumentException} if {@code object} is
 	 * {@literal null}.
 	 *
-	 * @param message
-	 *            exception message
-	 * @return {@code object}
+	 * @param <T> type of the object passed as parameter
+	 * @param object reference to be checked
+	 * @param message exception message
+	 * @return the {@code object}
 	 */
 	public static <T> T notNull(final T object, final String message) {
 		if (object == null) {
@@ -55,7 +58,8 @@ public final class Require {
 	/**
 	 * Throws an {@link IllegalArgumentException} if {@code value} is negative.
 	 *
-	 * @return {@code value}
+	 * @param value the value to be checked
+	 * @return the {@code value}
 	 */
 	public static int notNegative(final int value) {
 		return notNegative(value, "parameter must not be negative");
@@ -64,9 +68,9 @@ public final class Require {
 	/**
 	 * Throws an {@link IllegalArgumentException} if {@code value} is negative.
 	 *
-	 * @param message
-	 *            exception message
-	 * @return {@code value}
+	 * @param value the value to be checked
+	 * @param message exception message
+	 * @return the {@code value}
 	 */
 	public static int notNegative(final int value, final String message) {
 		if (value < 0) {
@@ -77,6 +81,8 @@ public final class Require {
 
 	/**
 	 * Throws an {@link IllegalArgumentException} if {@code condition} is false.
+	 *
+	 * @param condition the condition to be checked
 	 */
 	public static void that(final boolean condition) {
 		that(condition, "parameter is not valid");
@@ -85,8 +91,8 @@ public final class Require {
 	/**
 	 * Throws an {@link IllegalArgumentException} if {@code condition} is false.
 	 *
-	 * @param message
-	 *            exception message
+	 * @param condition the condition to be checked
+	 * @param message exception message
 	 */
 	public static void that(final boolean condition, final String message) {
 		if (!condition) {
@@ -98,7 +104,9 @@ public final class Require {
 	 * Throws an {@link IndexOutOfBoundsException} if {@code index} is negative
 	 * or equal to or greater than {@code arrayLength}.
 	 *
-	 * @return {@code index}
+	 * @param index the index value to be checked
+	 * @param arrayLength the upper bound against which {@code index} is checked
+	 * @return the {@code index}
 	 */
 	public static int validArrayIndex(final int index, final int arrayLength) {
 		return validArrayIndex(index, arrayLength, "array index out of range");
@@ -108,9 +116,10 @@ public final class Require {
 	 * Throws an {@link IndexOutOfBoundsException} if {@code index} is negative
 	 * or equal to or greater than {@code arrayLength}.
 	 *
-	 * @param message
-	 *            exception message
-	 * @return {@code index}
+	 * @param index the index value to be checked
+	 * @param arrayLength the upper bound against which {@code index} is checked
+	 * @param message exception message
+	 * @return the {@code index}
 	 */
 	public static int validArrayIndex(final int index, final int arrayLength,
 			final String message) {
@@ -125,6 +134,10 @@ public final class Require {
 	 * {@code sliceLength} is negative or the sum of both is greater than
 	 * {@code arrayLength}. Note that this means that a slice of length zero
 	 * starting at array length is a valid slice.
+	 *
+	 * @param sliceFrom the start index of the slice to be checked
+	 * @param sliceLength the length of the slice to be checked
+	 * @param arrayLength the upper bound against which the slice is checked
 	 */
 	public static void validArraySlice(final int sliceFrom,
 			final int sliceLength, final int arrayLength) {
@@ -139,8 +152,10 @@ public final class Require {
 	 * starting at array length is a valid slice.
 	 *
 	 *
-	 * @param message
-	 *            exception message
+	 * @param sliceFrom the start index of the slice to be checked
+	 * @param sliceLength the length of the slice to be checked
+	 * @param arrayLength the upper bound against which the slice is checked
+	 * @param message exception message
 	 */
 	public static void validArraySlice(final int sliceFrom,
 			final int sliceLength, final int arrayLength, final String message) {

@@ -28,7 +28,6 @@ import org.junit.Test;
  * Tests for class {@link AbstractTripleSort}.
  *
  * @author Christoph Böhme
- *
  */
  public final class AbstractTripleSortTest {
 
@@ -56,7 +55,8 @@ import org.junit.Test;
 	 * garbage collector to run when calling {@code System.gc()}. This
 	 * is not guaranteed by the JVM.
 	 *
-	 * @throws InterruptedException
+	 * @throws InterruptedException thrown the the waiting period for the garbage
+	 * collector is interrupted.
 	 */
 	@Test
 	public void issue192ShouldUnregisterFromTheJVMToNotCauseMemoryLeak() throws InterruptedException {

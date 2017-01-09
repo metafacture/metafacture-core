@@ -36,7 +36,9 @@ import java.lang.annotation.Target;
 public @interface FluxCommand {
 
 	/**
-	 * Returns the flux command name.
+	 * Returns the Flux command name.
+	 *
+	 * @return Flux command name
 	 */
 	String value();
 

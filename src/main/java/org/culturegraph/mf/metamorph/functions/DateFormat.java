@@ -29,24 +29,26 @@ import org.culturegraph.mf.metamorph.api.helpers.AbstractSimpleStatelessFunction
 /**
  * Format date/time strings in Metamorph. By default the input format is
  * dd.MM.yyyy and the output format is {@link java.text.DateFormat.Field#LONG}.
- * <br/>
+ * <p>
  * The Attribute removeLeadingZeros will remove all leading zeros from all
  * numbers in the output date.
- * <br/>
+ * <p>
  * The attribute era is used to specify if the date is BC or AD. Default
  * value is AUTO. To understand that, three short examples:
- * <ul><li>Input: 20.07.356 (era=BC)</li>
- * <li>Output (German location): 20. Juli 0356 v. Chr.</li>
- * <ul><li>Input: 20.07.356 (era=AD,removeLeadingZeros=true)</li>
- * <li>Output (German location): 20. Juli 356</li>
- * <li>Input: 20.07.-356 (era=AUTO)</li>
- * <li>Output (German location): 20. Juli 0357 v. Chr. (there is NO year 0;
- * see ISO 8601, Proleptic Gregorian Calendar)</li></ul>
- * <p/>
+ * <ul>
+ *   <li>Input: 20.07.356 (era=BC)
+ *   <li>Output (German location): 20. Juli 0356 v. Chr.
+ *   <li>Input: 20.07.356 (era=AD,removeLeadingZeros=true)
+ *   <li>Output (German location): 20. Juli 356
+ *   <li>Input: 20.07.-356 (era=AUTO)
+ *   <li>Output (German location): 20. Juli 0357 v. Chr. (there is NO year 0;
+ *       see ISO 8601, Proleptic Gregorian Calendar)
+ * </ul>
  * Examples of using this function in Metamorph:
- * <ul><li>Default date format: <code>&lt;dateformat /&gt;</code></li>
- * <li>Read ISO-dates and generate German style dates:
- * <code>&lt;dateformat inputformat="yyyy-MM-dd" outputformat="dd.MM.yyyy" /&gt;</code></li>
+ * <ul>
+ *   <li>Default date format: {@code <dateformat />}
+ *   <li>Read ISO-dates and generate German style dates:
+ *   {@code <dateformat inputformat="yyyy-MM-dd" outputformat="dd.MM.yyyy" />}
  * </ul>
  *
  * @author Michael Büchner

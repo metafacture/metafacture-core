@@ -91,6 +91,8 @@ final class MemoryWarningSystem {
 	/**
 	 * Tenured Space Pool can be determined by it being of type HEAP and by it
 	 * being possible to set the usage threshold.
+	 *
+	 * @return MXBean for the Tenured Space Pool
 	 */
 	private static MemoryPoolMXBean findTenuredGenPool() {
 		// I don't know whether this approach is better, or whether

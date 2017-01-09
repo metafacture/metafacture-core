@@ -28,10 +28,9 @@ import org.culturegraph.mf.framework.objects.Triple;
  * Calculates values for various co-occurrence metrics. The expected inputs are
  * triples containing as subject the var name and as object the count. Marginal
  * counts must appear first, joint counts second. Marginal counts must be
- * written as 1:A, Joint counts as 2:A&B
+ * written as 1:A, Joint counts as 2:A&amp;B
  *
- * @author Markus Geipel
- *
+ * @author Markus Michael Geipel
  */
 @Description("Calculates values for various cooccurrence metrics. The expected inputs are triples containing as subject the var name and as object the count. "
 		+ "Marginal counts must appear first, joint counts second. Marinal counts must be written as 1:A, Joint counts as 2:A&B")

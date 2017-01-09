@@ -27,12 +27,10 @@ import org.culturegraph.mf.framework.objects.Triple;
  * Base class for operating on count data. The expected inputs are triples
  * containing as subject the variable name and as object the count. Marginal
  * counts must appear first, joint counts second. Marinal counts must be written
- * as 1:VARNAME, Joint counts as 2:FIRSTVARNAME&SECONDVARNAME.
+ * as 1:VARNAME, Joint counts as 2:FIRSTVARNAME&amp;SECONDVARNAME.
  *
- * @author Markus Geipel
- *
+ * @author Markus Michael Geipel
  */
-
 public abstract class AbstractCountProcessor extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
 
 

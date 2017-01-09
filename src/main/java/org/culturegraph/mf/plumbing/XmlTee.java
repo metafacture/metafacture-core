@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * Sends one {@XmlReceiver} to two {@XmlReceiver}.
+ * Sends one {@link XmlReceiver} to two {@link XmlReceiver}s.
  *
  * @author Pascal Christoph (dr0i)
  *

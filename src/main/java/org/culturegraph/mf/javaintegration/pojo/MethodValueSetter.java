@@ -24,7 +24,7 @@ import org.culturegraph.mf.framework.MetafactureException;
 
 /**
  * Invokes a setter method on an object. The method must be public, have exactly
- * one argument and its name must begin with &quot;set&quto;.
+ * one argument and its name must begin with &quot;set&quot;.
  *
  * @author Thomas Seidel
  */

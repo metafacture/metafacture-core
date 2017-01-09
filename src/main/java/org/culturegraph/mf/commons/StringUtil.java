@@ -101,7 +101,7 @@ public final class StringUtil {
 	 * Copies the contents of {@code str} into the {@code currentBuffer}. If the size of
 	 * the buffer is not sufficient to store the string then a new buffer is allocated.
 	 * {@code copyToBuffer} is intended to be used as shown in the example:
-	 * <pre>
+	 * <pre>{@code
 	 *   final int INITIAL_SIZE = 10;
 	 *   char[] myBuffer = new char[INITIAL_SIZE];
 	 *
@@ -112,7 +112,7 @@ public final class StringUtil {
 	 *     // Process data in myBuffer in the range from 0 to dataLen
 	 *   }
 	 *   myBuffer = null;
-	 * </pre>
+	 * }</pre>
 	 *
 	 * This allows the buffer to be reused but at the same time frees the user from
 	 * having to manage the size of the buffer.

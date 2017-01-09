@@ -33,7 +33,7 @@ import org.xml.sax.SAXParseException;
  *
  * @see DefaultStreamPipe
 
- * @author Christoph Böhme <c.boehme@dnb.de>
+ * @author Christoph Böhme
  *
  */
 public class DefaultXMLReceiver extends DefaultLifeCycle implements XmlReceiver {

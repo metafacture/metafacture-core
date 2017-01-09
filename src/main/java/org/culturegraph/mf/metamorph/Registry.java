@@ -18,28 +18,28 @@ package org.culturegraph.mf.metamorph;
 import java.util.List;
 
 /**
- * used to access zero to n {@link Data} instances based on
+ * Used to access zero to n {@link Data} instances based on
  * a {@link String} path. Used in {@link Metamorph}
  *
+ * @param <T> type of the values this registry holds.
  * @author Markus Michael Geipel
- *
- * @param <T>
  */
 interface Registry<T> {
 
 	/**
-	 * add an instance of {@link Data} to a path.
+	 * Binds a value to a path.
 	 *
-	 * @param path
-	 * @param data
+	 * @param path the path to which the {@code value} is bound
+	 * @param value the value which is bound to {@code path}
 	 */
 	void register(String path, T value);
 
 	/**
-	 * @param path
-	 * @return matching {@link Data} instances. Should
-	 *         NEVER be <code>null</code>. If no matches
-	 *         found, an empty {@link List} is to be returned.
+	 * Returns values registered on a path.
+	 *
+	 * @param path for which the registered values will be returned
+	 * @return matching values. Should <strong>never</strong> be null. If no
+	 * matches found, an empty {@link List} is to be returned.
 	 */
 	List<T> get(String path);
 

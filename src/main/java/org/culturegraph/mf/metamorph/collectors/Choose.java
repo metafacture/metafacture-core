@@ -25,10 +25,10 @@ import org.culturegraph.mf.metamorph.api.helpers.AbstractFlushingCollect;
 
 
 /**
- * Corresponds to the <code>&lt;choose&gt;</code> tag.
+ * Corresponds to the {@code <choose>} tag.
  *
- * @author Christoph Böhme <c.boehme@dnb.de>,  Markus Michael Geipel
- *
+ * @author Christoph Böhme
+ * @author Markus Michael Geipel
  */
 public final class Choose extends AbstractFlushingCollect {
 

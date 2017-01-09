@@ -28,10 +28,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * creates a new thread in which subsequent flow elements run.
+ * Creates a new thread in which subsequent flow elements run.
  *
- * @param <T>
- *            Object type
+ * @param <T> Object type
  *
  * @author Markus Micheal Geipel
  */
@@ -114,7 +113,8 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
 
 	/**
 	 * Pushes the content in the {@link BlockingQueue} to the receiver.
-	 * @param <T>
+	 *
+	 * @param <T> the type of objects the {@link ObjectPipeDecoupler} works on
 	 */
 	static final class Feeder<T> implements Runnable {
 		public static final Object RED_PILL = new Object();

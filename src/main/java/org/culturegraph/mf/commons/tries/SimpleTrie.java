@@ -16,14 +16,13 @@
 package org.culturegraph.mf.commons.tries;
 
 /**
- * A simple Trie, nothing fancy at all
+ * A simple Trie, nothing fancy at all.
  *
- * @author Markus Michael Geipel
-
  * @param <P> type of value stored
+ * @author Markus Michael Geipel
  */
 public final class SimpleTrie<P> {
-	private final Node<P> root = new Node<P>(null);
+	private final Node<P> root = new Node<>(null);
 
 	public void put(final String key, final P value){
 
@@ -58,8 +57,9 @@ public final class SimpleTrie<P> {
 	}
 
 	/**
+	 * Node in the trie.
 	 *
-	 * @param <P>
+	 * @param <P> type of the value associated with this node.
 	 */
 	private static final class Node<P> {
 		private final P value;

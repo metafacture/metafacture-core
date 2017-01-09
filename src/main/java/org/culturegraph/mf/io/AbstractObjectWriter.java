@@ -18,10 +18,8 @@ package org.culturegraph.mf.io;
 /**
  * Common functions for object writers.
  *
+ * @param <T> object type
  * @author Christoph Böhme
- *
- * @param <T>
- * 		object type
  */
 public abstract class AbstractObjectWriter<T> implements ConfigurableObjectWriter<T> {
 

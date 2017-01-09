@@ -23,15 +23,13 @@ import java.util.Map.Entry;
 import java.util.Queue;
 
 /**
- * Implementation of the Aho-Corasick algorithm
+ * Implementation of the Aho-Corasick algorithm.
  *
+ * @param <T> type of stored value
  * @author Markus Michael Geipel
- *
- * @param <T>
- *            type of value stored
  */
 public final class SetMatcher<T> {
-	private final ACNode<T> root = new ACNode<T>(null, 0);
+	private final ACNode<T> root = new ACNode<>(null, 0);
 	private boolean isPrepared;
 
 	public void put(final String key, final T value) {
@@ -129,9 +127,10 @@ public final class SetMatcher<T> {
 	}
 
 	/**
-	 * prints dot description of the automaton to out for visualization in GraphViz. Used for debugging and education.
+	 * Prints dot description of the automaton to out for visualization in
+	 * GraphViz. Used for debugging and education.
 	 *
-	 * @param out
+	 * @param out the stream t which the description is written
 	 */
 	public void printAutomaton(final PrintStream out) {
 		out.println("digraph ahocorasick {");
@@ -156,8 +155,9 @@ public final class SetMatcher<T> {
 	}
 
 	/**
+	 * Describes a match.
 	 *
-	 * @param <T>
+	 * @param <T> type of the stored value
 	 */
 	public static final class Match<T> {
 		private final T value;
@@ -187,5 +187,7 @@ public final class SetMatcher<T> {
 		public String toString() {
 			return value + " " + start + "+" + length;
 		}
+
 	}
+
 }

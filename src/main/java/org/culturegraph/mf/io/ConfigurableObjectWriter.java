@@ -22,9 +22,8 @@ import org.culturegraph.mf.framework.ObjectReceiver;
  * a default set of configuration options. These are defined by
  * this interface.
  *
- * @author Christoph Böhme
- *
  * @param <T> object type
+ * @author Christoph Böhme
  */
 public interface ConfigurableObjectWriter<T> extends ObjectReceiver<T> {
 
@@ -57,14 +56,14 @@ public interface ConfigurableObjectWriter<T> extends ObjectReceiver<T> {
 	/**
 	 * Sets the compression mode.
 	 *
-	 * @param compression
+	 * @param compression type of compression
 	 */
 	void setCompression(final FileCompression compression);
 
 	/**
 	 * Sets the compression mode.
 	 *
-	 * @param compression
+	 * @param compression type of compression
 	 */
 	void setCompression(final String compression);
 

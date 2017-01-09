@@ -34,8 +34,9 @@ public interface Tee<T extends Receiver> extends Sender<T> {
 	/**
 	 * Replaces all receivers attached to the module with {@code receiver}.
 	 *
-	 * @param receiver
-	 * @return the parameter 'receiver'
+	 * @param <R> type of the receiver of the downstream module
+	 * @param receiver the downstream module to which the tee should connect
+	 * @return reference to the downstream receiver for method chaining
 	 */
 	@Override
 	<R extends T> R setReceiver(R receiver);
@@ -44,32 +45,35 @@ public interface Tee<T extends Receiver> extends Sender<T> {
 	 * Sets two receivers and returns the first. All other
 	 * receivers attached to the module are removed.
 	 *
-	 * @param receiver
-	 * @param lateralReceiver
-	 * @return the parameter 'receiver'
+	 * @param <R> type of the receiver of the downstream module
+	 * @param receiver the main downstream module to which the tee should connect
+	 * @param lateralReceiver the second downstream module to which the tee should
+	 *                        connect
+	 * @return reference to the main downstream receiver for method chaining
 	 */
 	<R extends T> R setReceivers(R receiver, T lateralReceiver);
 
 	/**
 	 * Adds receiver even if receiver is already added.
 	 *
-	 * @param receiver
-	 * @return this
+	 * @param receiver a downstream module to which the tee should connect
+	 * @return reference to the tee for method chaining
 	 */
 	Tee<T> addReceiver(T receiver);
 
 	/**
 	 * Removes a receiver from the list of receivers.
 	 *
-	 * @param receiver
-	 * @return this
+	 * @param receiver the downstream receiver to remove from the list of
+	 *                 connected receivers.
+	 * @return reference to the tee for method chaining
 	 */
 	Tee<T> removeReceiver(T receiver);
 
 	/**
 	 * Clears the list of receivers.
 	 *
-	 * @return this
+	 * @return reference to the tee for method chaining
 	 */
 	 Tee<T> clearReceivers();
 
