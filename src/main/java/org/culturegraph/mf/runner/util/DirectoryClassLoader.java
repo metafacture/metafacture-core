@@ -21,7 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import org.culturegraph.mf.exceptions.MetafactureException;
+import org.culturegraph.mf.framework.MetafactureException;
 
 /**
  * A class loader which allows adding directories to the class

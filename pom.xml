@@ -101,7 +101,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<!-- Configures the classpath prefix. This configuration option is 
+							<!-- Configures the classpath prefix. This configuration option is
 								used to specify that all needed libraries are found under lib/ directory. -->
 							<classpathPrefix>lib/</classpathPrefix>
 							<!-- Specifies the main class of the application -->
@@ -113,13 +113,13 @@
 					</archive>
 				</configuration>
 			</plugin>
-		
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.10</version>
 			</plugin>
-        
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>buildnumber-maven-plugin</artifactId>
@@ -161,9 +161,9 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.4</version>
 				<dependencies>
-					<!-- Pin the versions of plexus-archiver and plexus-io as 
-					     there are apparently two bugs in the versions on which 
-					     maven-assembly-plugin depends on by default. See 
+					<!-- Pin the versions of plexus-archiver and plexus-io as
+					     there are apparently two bugs in the versions on which
+					     maven-assembly-plugin depends on by default. See
 					     http://www.misanthropicgeek.net/?p=1303 for details. -->
 					<dependency>
 						<groupId>org.codehaus.plexus</groupId>
@@ -206,8 +206,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.4</version><!--$NO-MVN-MAN-VER$ -->
-				<!-- m2e complains about a different plugin version being specified in 
-					the parent pom. However, this is not actually problem for maven. So, we can 
+				<!-- m2e complains about a different plugin version being specified in
+					the parent pom. However, this is not actually problem for maven. So, we can
 					ignore the warning. -->
 			</plugin>
 
@@ -215,18 +215,18 @@
 	</build>
 
 	<dependencies>
-	
+
 		<dependency>
 			<groupId>org.culturegraph</groupId>
 			<artifactId>metafacture-core</artifactId>
-			<version>3.1.2</version>
+			<version>4.0.0</version>
 		</dependency>
 
 		<!-- In a perfect world the slf4j binding would be a
 		     provided dependency so that the user can replace
 		     it easily with a different binding. However, slf4j
 		     does not use the context class loader for loading
-		     its binding but the same class loader which was 
+		     its binding but the same class loader which was
 		     used to load the classes of the slf4j-api. Until
 		     a solution is found for this problem, the binding
 		     need to be placed on the class path. -->
@@ -239,16 +239,16 @@
 		<!-- The following dependencies are placed in the "provided"
 		     scope to prevent them from being included in the class
 		     path but still have them available for building the
-		     distribution assembly. 
-		     The reason for this is that an appropriate implementation 
-		     for jndi depends on the runtime environment and 
-		     should be chosen by the user of the package and not the 
+		     distribution assembly.
+		     The reason for this is that an appropriate implementation
+		     for jndi depends on the runtime environment and
+		     should be chosen by the user of the package and not the
 		     package implementer. However, we also attempt to build
-		     a distribution package which should include everything 
-		     that is required for metafacture-runner/Flux to work out 
+		     a distribution package which should include everything
+		     that is required for metafacture-runner/Flux to work out
 		     of the box. By including the dependencies in the assembly
-		     without putting them on the class path, the user can 
-		     replace them easily with other implementations if 
+		     without putting them on the class path, the user can
+		     replace them easily with other implementations if
 		     necessary. -->
 		<dependency>
 			<groupId>simple-jndi</groupId>
@@ -256,7 +256,7 @@
 			<version>0.11.4.1</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<!-- Required for connection pooling with simple-jndi -->
 			<groupId>commons-dbcp</groupId>
