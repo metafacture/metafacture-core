@@ -5,3 +5,7 @@ target/
 .classpath
 .project
 .settings/
+
+#Ignore Intellij project files:
+.idea
+*.iml
