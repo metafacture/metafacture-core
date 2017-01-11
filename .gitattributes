@@ -12,14 +12,14 @@
 *.js text
 *.fom text
 
-# Platform-specific scripts should always use  
+# Platform-specific scripts should always use
 # their native end-of-line markers:
-*.bat eol=crlf
-*.sh eol=lf
+*.bat text eol=crlf
+*.sh text eol=lf
 
 # The batch script can only handle the config
 # properly if it uses crlf as end-of-line marker:
-src/main/config/java-options.conf eol=crlf
+src/main/config/java-options.conf text eol=crlf
 
 # Denote all files that are truly binary and should not be modified:
 *.bz2 binary
