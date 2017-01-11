@@ -111,4 +111,5 @@ while read line ; do
 done < <( echo "$java_opts" | grep -Eo "$option_pattern" )
 
 # Start flux:
-"$FLUX_JAVA_BIN" "${java_opts_array[@]}" -jar "$jar_file" "$@"
+command=$(echo "$FLUX_JAVA_BIN" "${java_opts_array[@]}" -jar "$jar_file" "$@")
+$command
