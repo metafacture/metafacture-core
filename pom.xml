@@ -1,30 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
 	<groupId>org.culturegraph</groupId>
 	<artifactId>metafacture-runner</artifactId>
-	<version>3.1.3-SNAPSHOT</version>
+	<version>4.0.0-SNAPSHOT</version>
+
 	<name>metafacture.runner</name>
 	<description>Standalone applications for working with Flux and Metamorph scripts</description>
+	<url>http://github.com/culturegraph/metafacture-runner</url>
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
 			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
 		</license>
 	</licenses>
-	<url>http://github.com/culturegraph/metafacture-runner</url>
-	<distributionManagement>
-		<repository>
-			<id>sonatype-nexus-staging</id>
-			<name>Sonatype OSS Maven Repository : Releases</name>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-		<snapshotRepository>
-			<id>sonatype-nexus-snapshots</id>
-			<name>Sonatype OSS Maven Repository : Snapshots</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-			<!-- <uniqueVersion>true</uniqueVersion> -->
-		</snapshotRepository>
-	</distributionManagement>
+
 	<developers>
 		<developer>
 			<id>mgeipel</id>
@@ -53,15 +50,6 @@
 			<timezone>+1</timezone>
 		</developer>
 	</developers>
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<targetJdk>1.6</targetJdk>
-	</properties>
 
 	<scm>
 		<connection>scm:git:git://github.com/culturegraph/metafacture-runner.git</connection>
@@ -69,6 +57,84 @@
 		<url>http://github.com/culturegraph/metafacture-runner</url>
 		<tag>HEAD</tag>
 	</scm>
+	<distributionManagement>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Sonatype OSS Maven Repository : Releases</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+		<snapshotRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype OSS Maven Repository : Snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+			<!-- <uniqueVersion>true</uniqueVersion> -->
+		</snapshotRepository>
+	</distributionManagement>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<targetJdk>1.6</targetJdk>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.culturegraph</groupId>
+			<artifactId>metafacture-core</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+
+		<!-- In a perfect world the slf4j binding would be a
+		     provided dependency so that the user can replace
+		     it easily with a different binding. However, slf4j
+		     does not use the context class loader for loading
+		     its binding but the same class loader which was
+		     used to load the classes of the slf4j-api. Until
+		     a solution is found for this problem, the binding
+		     need to be placed on the class path. -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.21</version>
+		</dependency>
+
+		<!-- The following dependencies are placed in the "provided"
+		     scope to prevent them from being included in the class
+		     path but still have them available for building the
+		     distribution assembly.
+		     The reason for this is that an appropriate implementation
+		     for jndi depends on the runtime environment and
+		     should be chosen by the user of the package and not the
+		     package implementer. However, we also attempt to build
+		     a distribution package which should include everything
+		     that is required for metafacture-runner/Flux to work out
+		     of the box. By including the dependencies in the assembly
+		     without putting them on the class path, the user can
+		     replace them easily with other implementations if
+		     necessary. -->
+		<dependency>
+			<groupId>simple-jndi</groupId>
+			<artifactId>simple-jndi</artifactId>
+			<version>0.11.4.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<!-- Required for connection pooling with simple-jndi -->
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
 
 	<build>
 		<resources>
@@ -80,7 +146,6 @@
 				</excludes>
 			</resource>
 		</resources>
-
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -196,66 +261,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<dependencies>
-
-		<dependency>
-			<groupId>org.culturegraph</groupId>
-			<artifactId>metafacture-core</artifactId>
-			<version>4.0.0</version>
-		</dependency>
-
-		<!-- In a perfect world the slf4j binding would be a
-		     provided dependency so that the user can replace
-		     it easily with a different binding. However, slf4j
-		     does not use the context class loader for loading
-		     its binding but the same class loader which was
-		     used to load the classes of the slf4j-api. Until
-		     a solution is found for this problem, the binding
-		     need to be placed on the class path. -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.21</version>
-		</dependency>
-
-		<!-- The following dependencies are placed in the "provided"
-		     scope to prevent them from being included in the class
-		     path but still have them available for building the
-		     distribution assembly.
-		     The reason for this is that an appropriate implementation
-		     for jndi depends on the runtime environment and
-		     should be chosen by the user of the package and not the
-		     package implementer. However, we also attempt to build
-		     a distribution package which should include everything
-		     that is required for metafacture-runner/Flux to work out
-		     of the box. By including the dependencies in the assembly
-		     without putting them on the class path, the user can
-		     replace them easily with other implementations if
-		     necessary. -->
-		<dependency>
-			<groupId>simple-jndi</groupId>
-			<artifactId>simple-jndi</artifactId>
-			<version>0.11.4.1</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<!-- Required for connection pooling with simple-jndi -->
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-			<version>1.4</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-
-	</dependencies>
 
 	<profiles>
 		<profile>
