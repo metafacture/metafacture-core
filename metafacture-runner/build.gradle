@@ -1,0 +1,159 @@
+/*
+ * Copyright 2017 Christoph Böhme
+ *
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import org.apache.tools.ant.filters.ReplaceTokens
+
+ext.mavenName = 'Metafacture Runner'
+description = 'CLI application for data processing with Flux and Metamorph'
+
+apply plugin: 'distribution'
+
+configurations {
+  plugins {
+    description = 'Metafacture plugins'
+  }
+  provided {
+    description = 'provided libraries'
+  }
+}
+
+dependencies {
+  compile project(':metafacture-framework')
+  compile project(':metafacture-commons')
+  compile project(':metafacture-flux')
+
+  plugins project(':metafacture-biblio')
+  plugins project(':metafacture-csv')
+  plugins project(':metafacture-elasticsearch')
+  plugins project(':metafacture-flowcontrol')
+  plugins project(':metafacture-formatting')
+  plugins project(':metafacture-formeta')
+  plugins project(':metafacture-io')
+  plugins project(':metafacture-javaintegration')
+  plugins project(':metafacture-jdom')
+  plugins project(':metafacture-json')
+  plugins project(':metafacture-linkeddata')
+  plugins project(':metafacture-mangling')
+  plugins project(':metafacture-monitoring')
+  plugins project(':metafacture-plumbing')
+  plugins project(':metafacture-scripting')
+  plugins project(':metafacture-statistics')
+  plugins project(':metafacture-strings')
+  plugins project(':metafacture-triples')
+  plugins project(':metafacture-xml')
+  plugins project(':metamorph')
+
+  // The configurations need to be on the runtime classpath:
+  runtime configurations.plugins
+
+  // In a perfect world the slf4j binding would be a provided dependency so that
+  // the user can replace it easily with a different binding. However, slf4j
+  // does not use the context class loader for loading its binding but the same
+  // class loader which was used to load the classes of the slf4j-api. Until
+  // a solution is found for this problem, the binding need to be placed on the
+  // class path:
+  runtime 'org.slf4j:slf4j-log4j12:1.7.21'
+
+  // The following dependencies are placed in the "provided" scope to prevent
+  // them from being included in the class path but still have them available
+  // for building the distribution assembly. The reason for this is that an
+  // appropriate implementation for jndi depends on the runtime environment and
+  // should be chosen by the user of the package and not the package
+  // implementer. However, we also attempt to build a distribution package which
+  // should include everything that is required for metafacture-runner/Flux to
+  // work out of the box. By including the dependencies in the assembly without
+  // putting them on the class path, the user can replace them easily with other
+  // implementations if necessary:
+  provided 'simple-jndi:simple-jndi:0.11.4.1'
+  // Required for connection pooling with simple-jndi:
+  provided 'commons-dbcp:commons-dbcp:1.4'
+}
+
+jar {
+  manifest {
+    attributes(
+        'Implementation-Title': project.name,
+        'Implementation-Version': version,
+        'Main-Class': 'org.metafacture.runner.Flux',
+        'Class-Path':
+            configurations.runtimeClasspath.files.collect { it.name }.join(' '),
+        'git-commit': grgit.head().id)
+  }
+  filesMatching('build.properties', {
+    filter(ReplaceTokens, tokens: [
+      buildNumber: grgit.head().id,
+      version: project.version,
+      timestamp: new Date().getTime().toString(),
+      userName: System.properties['user.name']
+    ])
+  })
+}
+
+distributions {
+  main {
+   baseName = parent.project.name
+    contents {
+      dirMode = 0755
+      fileMode = 0644
+
+      into('lib/') {
+        from jar
+        from configurations.runtimeClasspath
+      }
+      into('provided-libs') {
+        from configurations.provided
+      }
+      from('src/main/scripts') {
+        filter(ReplaceTokens, tokens: [jarfile: 'lib/' + jar.archiveName ])
+        filteringCharset = 'UTF-8'
+        fileMode = 0755
+      }
+      from('../') {
+        include 'LICENSE'
+        include '*.md'
+      }
+      from({ zipTree(metamorph()) }) {
+        include 'schemata/**'
+      }
+    }
+  }
+}
+
+def metamorph() {
+  configurations.runtimeClasspath.find {
+    it.name.startsWith("metamorph-$project.version")
+  }
+}
+
+distTar {
+  compression = Compression.GZIP
+  classifier = 'dist'
+  extension = 'tar.gz'
+}
+
+distZip {
+  classifier = 'dist'
+}
+
+// Fix for incomplete extensions on the signature file for the tar.gz archive.
+// The signature file contains only the last file extension (gz). The tar-part
+// is missing. This doLast action fixes this:
+tasks.signArchives {
+  doLast {
+    signatures.matching({ it.type == 'gz.asc' }).all {
+      it.type = 'tar.gz.asc'
+    }
+  }
+}

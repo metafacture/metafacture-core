@@ -61,17 +61,21 @@ TODO: Add
 
 # Building metafacture-core from source
 
-Building metafacture-core from source is easy. All you need is git and [maven](http://maven.apache.org/):
+Building metafacture-core from source is easy. All you need is git and JDK 8:
 
-1. Clone the metafacture-core repository:
+1. Clone the metafacture-core repository and change into the directory:
 
-        $ git clone https://github.com/culturegraph/metafacture-core.git
+    ```bash
+    $ git clone https://github.com/culturegraph/metafacture-core.git
+    $ cd metafacture-core
+    ```
 
-2. Build and install in your local repository:
+2. Invoke the gradle-wrapper to download Gradle and build metafacture-core:
 
-        $ mvn clean install
-
-    It is important to perform this step *before* importing the project into your IDE because it generates the lexer and parser sources for Flux from antlr grammar definitions. Otherwise your IDE will fail to compile the sources if it has integrated background compilation (like Eclipse has, for instance).
+   ```bash
+   $ ./gradlew install
+   ```
+   on Windows call `gradlew.bat install` instead.
 
 See [Code Quality and Style](https://github.com/culturegraph/metafacture-core/wiki/Code-Quality-and-Style) on the wiki for further information on the sources.
 

@@ -1,0 +1,222 @@
+/*
+ * Copyright 2017 Christoph Böhme
+ *
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.util.regex.Matcher
+
+plugins {
+  id 'org.ajoberstar.grgit' version '2.0.0-rc.1'
+}
+
+ext.gitTag = getGitTag()
+
+allprojects {
+  group = 'org.culturegraph'
+  version = getVersionFrom(rootProject.ext.gitTag) ?: '5.0.0-SNAPSHOT'
+  ext.mavenName = null
+}
+
+configure(subprojects.findAll { it.name != 'metafacture-runner' }) {
+  apply plugin: 'java-library'
+}
+
+project(':metafacture-runner') {
+  apply plugin: 'java'
+}
+
+subprojects {
+  apply plugin: 'signing'
+  apply plugin: 'maven'
+
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+
+  tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+  }
+
+  task sourceJar(type: Jar) {
+    dependsOn tasks.classes
+    from sourceSets.main.allJava
+    classifier 'sources'
+    description 'Creates a jar containing the source files of this project.'
+    group 'build'
+  }
+
+  task javadocJar(type: Jar) {
+    dependsOn tasks.javadoc
+    from tasks.javadoc
+    classifier 'javadoc'
+    description 'Creates a jar containing the javadoc of this project.'
+    group 'build'
+  }
+
+  task publish {
+    dependsOn tasks.uploadArchives
+  }
+
+  configurations {
+    mavenDeploySupport
+  }
+
+  dependencies {
+    mavenDeploySupport "org.apache.maven.wagon:wagon-http:2.2"
+  }
+
+  artifacts {
+    archives sourceJar
+    archives javadocJar
+  }
+
+  signing {
+    required {
+      rootProject.ext.gitTag != null &&
+          gradle.taskGraph.hasTask(tasks.uploadArchives)
+    }
+    sign configurations.archives
+  }
+
+  def mavenProjectDescription = {
+    name project.ext.mavenName ?: project.name
+    if (project.description) {
+      description project.description
+    }
+    url 'https://github.com/culturegraph/metafacture-core'
+    inceptionYear '2011'
+    organization {
+      name 'Deutsche Nationalbibliothek'
+      url 'http://dnb.de/'
+    }
+    licenses {
+      license {
+        name 'The Apache License, Version 2.0'
+        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+      }
+    }
+    mailingLists {
+      mailingList {
+        name 'Metafacture Mailing List'
+        post 'metafacture@lists.dnb.de'
+        subscribe 'metafacture-subscribe@lists.dnb.de'
+        unsubscribe 'metafacture-unsubscribe@lists.dnb.de'
+        archive 'http://lists.dnb.de/pipermail/metafacture/'
+      }
+    }
+    scm {
+      connection 'scm:git:https://github.com/culturegraph/metafacture-core.git'
+      developerConnection 'scm:git:https://github.com/culturegraph/metafacture-core.git'
+      url 'https://github.com/culturegraph/metafacture-core'
+      tag rootProject.ext.gitTag ?: 'HEAD'
+    }
+    issueManagement {
+      system 'Github'
+      url 'https://github.com/culturegraph/metafacture-core/issues'
+    }
+    ciManagement {
+      system 'Travis CI'
+      url 'https://travis-ci.org/culturegraph/metafacture-core'
+    }
+  }
+
+  install {
+    repositories {
+      mavenInstaller {
+        pom.project mavenProjectDescription
+        beforeDeployment {
+          MavenDeployment deployment -> signing.signPom(deployment)
+        }
+      }
+    }
+  }
+
+  uploadArchives {
+    repositories {
+      mavenDeployer {
+        configuration = configurations.mavenDeploySupport
+        if (project.hasProperty('releaseRepositoryUrl')) {
+          repository(url: releaseRepositoryUrl) {
+            if (project.hasProperty('releaseRepositoryUser')) {
+              authentication(userName: releaseRepositoryUser,
+                             password: releaseRepositoryPassword)
+            }
+          }
+        }
+        if (project.hasProperty('snapshotRepositoryUrl')) {
+          snapshotRepository(url: snapshotRepositoryUrl) {
+            if (project.hasProperty('snapshotRepositoryUser')) {
+              authentication(userName: snapshotRepositoryUser,
+                             password: snapshotRepositoryPassword)
+            }
+          }
+        }
+        pom.project mavenProjectDescription
+        beforeDeployment {
+          MavenDeployment deployment -> signing.signPom(deployment)
+        }
+      }
+    }
+  }
+
+  repositories {
+    mavenLocal()
+    mavenCentral()
+  }
+}
+
+def getGitTag() {
+  def tags = getGitTags(grgit)
+  if (tags.isEmpty()) {
+    logger.lifecycle("HEAD is not tagged. Making a snapshot build")
+    return null
+  }
+  if (tags.size() > 1) {
+    logger.warn("HEAD has ${tags.size()} tags. Making a snapshot build")
+    return null
+  }
+  def tagName = tags[0].name
+  logger.lifecycle("Found tag $tagName. Making a release build")
+  return tagName
+}
+
+def static getGitTags(grgit) {
+  def tags = []
+  for (tag in grgit.tag.list()) {
+    if (tag.commit == grgit.head()) {
+      tags.add tag
+    }
+  }
+  return tags
+}
+
+def static extractVersion(tag) {
+  Matcher matcher =
+      tag =~ /metafacture-core-(\d+\.\d+\.\d+(-[-A-Za-z0-9]+)?)/
+  if (!matcher.matches()) {
+    throw new GradleException("""\
+        Unsupported tag format: $tag
+        Could not extract version from tag. Supported tag formats are
+            metafacture-core-X.Y.Z and
+            metafacture-core-X.Y.Z-QUALIFIER
+        """.stripIndent())
+  }
+  return matcher.group(1)
+}
+
+def static getVersionFrom(tag) {
+  if (tag != null) {
+    return extractVersion(tag)
+  }
+  return null
+}
