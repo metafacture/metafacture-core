@@ -96,20 +96,20 @@ public final class XmlUtil {
 	}
 
 	public static String escape(String unescaped) {
-		return unescaped.chars()
-				.mapToObj(XmlUtil::escapeChar)
+		return unescaped.codePoints()
+				.mapToObj(XmlUtil::escapeCodePoint)
 				.collect(joining());
 	}
 
-	private static String escapeChar(int ch) {
-		final String entity = entityFor(ch);
+	private static String escapeCodePoint(int codePoint) {
+		final String entity = entityFor(codePoint);
 		if (entity != null) {
 			return entity;
 		}
-		if (ch > 0x7f) {
-			return "&#" + Integer.toString(ch) + ";";
+		if (codePoint > 0x7f) {
+			return "&#" + Integer.toString(codePoint) + ";";
 		}
-		return Character.toString((char) ch);
+		return Character.toString((char) codePoint);
 	}
 
 	private static String entityFor(int ch) {
