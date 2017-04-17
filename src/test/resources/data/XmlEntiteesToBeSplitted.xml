@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="ns#">
+  <rdf:Description rdf:about="1"> <a rdf:resource="r1">1</a></rdf:Description>
+  <rdf:Description rdf:about="2"> <a rdf:resource="r2">2</a></rdf:Description>
+</rdf:RDF>
