@@ -1,0 +1,272 @@
+
+metafacture-framework
+	Contains the interface definitions and base classes for Metafacture modules.
+
+	Stability: high
+
+	Contents:
+		framework
+
+--------------------------------------------------------------------------------
+
+metafacture-morph-api
+	Contains the interface definitions and base classes for implementing 
+	Metamorph functions and collectors.
+
+	Stability: high
+
+	Contents:
+		TODO
+
+--------------------------------------------------------------------------------
+
+metafacture-commons
+	Contains utility classes, often used data structures and metafacture modules
+	which are often used internally by other modules.
+
+	Stability: medium
+
+	Depends on: metafacture-framework
+
+	Packages:
+		exceptions
+		util
+		formeta
+
+	Classes:
+		MultiMap
+		Collector
+		NamedValue
+		ListMap
+		MultiHashMap
+		ScopedHashMap
+
+	Modules:
+		EventList
+		EntityPathTracker
+		StreamBuffer
+		StreamFlattener [DEPENDS ON: EntityPathTracker]
+
+		NamedValueList [DEPENDS ON: Collector, types.NamedValue]
+		NamedValueSet [DEPENDS ON: Collector, types.NamedValue]
+		SingleValue [DEPENDS ON: Collector]
+		StringListMap [DEPENDS ON: Collector, types.ListMap]
+		StringMap [DEPENDS ON: Collector]
+		ValueSet [DEPENDS ON: Collector]
+
+--------------------------------------------------------------------------------
+
+metafacture-test-tools
+	An extension for JUnit that allows to test Metamorph scripts using JUnit.
+
+	Stability: medium
+
+	Packages:
+		test
+
+	Modules:
+		WellformednessChecker
+		StreamValidator [DEPENDS ON: metafacture-commons (EventList.Event)]
+		CGXmlReader [DEPENDS ON: metafacture-core (XmlDecoder, CGXmlHandler)]
+		FormetaReader [DEPENDS ON: metafacture-core (FormetaRecordsReader, FormetaDecoder)]
+		MarcXmlReader [DEPENDS ON: metafacture-biblio (XmlDecoder, MarcXmlHandler)]
+		PicaReader [DEPENDS ON: metafacture-biblio (LineReader, PicaDecoder)]
+		MultiFormatReader [DEPENS ON: metafacture-commons (ObjectFactory, ResourceUtil.loadProperties)]
+
+--------------------------------------------------------------------------------
+
+metafacture-core
+	
+	Stability: medium
+
+	Depends on: metafacture-commons	
+
+	Modules:
+		FormetaEncoder [DEPENDS ON: metafacture-commons (formeta)]
+		FormetaDecoder [DEPENDS ON: metafacture-commons (formeta)]
+		FormetaRecordsReader [DEPENDS ON: metafacture-commons (formeta)]
+		ObjectToLiteral
+		LiteralToObject
+		StreamToTriples [DEPENDS ON: metafacture-commons (formeta)]
+		TriplesToStream [DEPENDS ON: metafacture-commons (formeta)]
+		StringListMapToStream [DEPENDS ON: metafacture-commons (ListMap)]
+		MapToStream
+		CloseSuppressor
+		IdChangePipe
+		IdentityStreamPipe
+		LineReader
+		RecordReader
+		RegexDecoder
+		ObjectTemplate [DEPENDS ON: metafacture-commons (StringUtil.format)]
+		PojoEncoder
+		PojoDecoder
+		PreambleEpilogueAdder
+		StreamLiteralFormatter
+		SortedTripleFileFacade
+		AbstractTripleSort
+		TripleSort
+		TripleCount
+		TripleCollect [DEPENDS ON: metafacture-commons (formeta)]
+		AbstractStreamBatcher
+		StreamBatchLogger [DEPENDS ON: metafacture-commons (StringUtil.format)]
+		StreamBatchResetter
+		DuplicateObjectFilter
+		LineSplitter
+		ObjectBatchLogger [DEPENDS ON: metafacture-commons (StringUtil.format)]
+		ObjectBuffer
+		ObjectExceptionCatcher
+		ObjectLogger
+		ObjectTee
+		ObjectTimer [DEPENDS ON: metafacture-commons (TimeUtil.formatDuration)]
+		RecordToEntity
+		StreamBatchMerger
+		StreamDeferrer
+		StreamEventDiscarder
+		StreamExceptionCatcher
+		StreamLogger
+		StreamMerger
+		StreamTee
+		StreamTimer [DEPENDS ON: metafacture-commons (TimeUtil.formatDuration)]
+		StringDecoder
+		StringFilter
+		StringMatcher
+		TripleFilter
+		TripleReorder
+		StringConcatenator
+		HttpOpener
+		ResourceOpener [DEPENDS ON: metafacture-commons (ResourceUtil.getReader)]
+		DirReader
+		StdInOpener
+		StringReader
+		StringSender
+		XmlDecoder
+		GenericXmlHandler
+		CGXmlHandler
+		SimpleXmlEncoder [DEPENDS ON: metafacture-commons (MultiMap, ResourceUtil.loadProperties)]
+		XmlTee
+		XmlElementSplitter [DEPENDS ON: org.apache.commons.lang]
+		ObjectPipeDecoupler
+		StreamUnicodeNormalizer
+		UnicodeNormalizer
+		JScriptObjectPipe [DEPENDS ON: metafacture-commons (ResourceUtil.getReader)]
+
+--------------------------------------------------------------------------------
+
+metafacture-morph
+	Contains Metamorph and modules directly building on it.
+
+	Stability: medium
+
+	Depends on: metafacture-comons
+	            metafacture-morph-commons
+
+	Modules:
+		Metamorph [ÐEPENDS ON: metafacture-commons (StreamBuffer, StreamFlattener)]
+		Filter [DEPENDS ON: metafacture-commons (StreamBuffer, SingleValue)]
+		Splitter [DEPENDS ON: metafacture-commons (StreamBuffer, SingleValue)]
+
+--------------------------------------------------------------------------------
+
+metafacture-stats
+	Stability: low
+
+	Modules:
+		AbstractCountProcessor
+		CooccurrenceMetricCalculator
+		Counter
+		UniformSampler
+		Histogram
+
+--------------------------------------------------------------------------------
+
+metafacture-file
+	Modules for reading and writing files. 
+
+	Stability: low
+	
+	Depends on: org.apache.commons.io
+	            org.apache.commons.compress
+
+	Modules:
+		FileOpener
+		TarReader
+		TripleObjectRetriever
+		TripleObjectWriter
+		TripleReader
+		TripleWriter
+		FileDigestCalculator
+		ConfigurableObjectWriter
+		AbstractObjectWriter
+		ObjectStdoutWriter
+		ObjectFileWriter
+		ObjectWriter
+		XmlFilenameWriter
+
+--------------------------------------------------------------------------------
+
+metafacture-biblio
+	Modules for working with library related data formats.	
+
+	Stability: low
+
+	Packages:
+		iso2709 [DEPENDS: metafacture-commons (Require, StringUtil.repeatChars)]
+
+	Modules:
+		AseqDecoder
+		MabDecoder
+		Marc21Encoder [DEPENDS ON: iso2709]
+		Marc21Decoder [DEPENDS ON: iso2709]
+		PicaEncoder
+		PicaDecoder [DEPENDS ON: metafacture-commons (StringUtil.copyToBuffer)]
+		MarcXmlHandler
+		PicaXmlHandler
+		AlephMabXmlHandler
+		OreAggregationAdder [DEPENDS ON: metafacture-commons (ListMap, ResourceUtil.loadProperties)]
+		PicaMultiscriptRemodeler [DEPENDS ON: metafacture-commons (StreamBuffer)]
+
+--------------------------------------------------------------------------------
+
+metafacture-rdf
+	Stability: low
+
+	Depends on: org.apache.commons.lang
+
+	Modules:
+		RdfMacroPipe
+		BeaconReader
+
+--------------------------------------------------------------------------------
+
+metafacture-csv
+	Stability: low
+
+	Depends on: net.sf.opencsv
+
+	Modules:
+		CsvDecoder
+
+--------------------------------------------------------------------------------
+
+metafacture-jdom
+	Stability: low
+
+	Depends on: org.jdom
+	            metafacture-commons
+
+	Modules:
+		StreamToJDomDocument [DEPENDS ON metafacture-commons (ResourceUtil.loadProperties)]
+		JDomDocumentToStream
+
+--------------------------------------------------------------------------------
+
+metafacture-json
+	Stability: low
+
+	Depends on: org,apache.commons.lang
+	            com.fasterxml.jackson
+
+	Modules
+		JsonEncoder
+		JsonToElasticsearchBulk
+
