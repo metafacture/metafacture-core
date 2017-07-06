@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2017 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -40,24 +40,26 @@ import org.xml.sax.SAXException;
  * not call receiver.startRecord until it has read the complete field 000 so
  * that it can initialise the record with the ID found in 000 $x.
  *
- * @author svensson
- * @version $Author: $ $Revision: $ $Date: $
+ * @author Lars Svensson
  */
 @Description("A comarc xml reader")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("handle-comarcxml")
 public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
+
 	private static final String SUBFIELD = "subfield";
 	private static final String DATAFIELD = "datafield";
 	private static final String RECORD = "record";
 	private static final String NAMESPACE = "http://www.loc.gov/MARC21/slim";
 	private static final int RECORD_NOT_INITIALISED = 0;
 	private static final int RECORD_INITIALISED = 1;
+
+	private final List<Entry> subfieldValues = new ArrayList<Entry>();
+
 	private int state = RECORD_NOT_INITIALISED;
 	private String currentTag = "";
 	private StringBuilder builder = new StringBuilder();
-	private List<Entry> subfieldValues = new ArrayList<Entry>();
 
 	private class Entry {
 		String key;
@@ -132,4 +134,5 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 		}
 		return ret;
 	}
+
 }

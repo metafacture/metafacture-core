@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Deutsche Nationalbibliothek
+ * Copyright 2017 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * Tests for class {@link ComarcXmlHandler}.
  *
- * @author Christoph Böhme
+ * @author Lars Svensson
  *
  */
 public final class ComarcXmlHandlerTest {
