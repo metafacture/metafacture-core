@@ -15,24 +15,20 @@
  */
 package org.culturegraph.mf.json;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.io.JsonEOFException;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyZeroInteractions;
+
 import org.culturegraph.mf.framework.MetafactureException;
-import org.culturegraph.mf.framework.ObjectReceiver;
-import org.culturegraph.mf.javaintegration.EventList.Event;
-import org.culturegraph.mf.javaintegration.EventList;
-import org.hamcrest.core.IsInstanceOf;
-import org.junit.After;
-import org.junit.Assert;
+import org.culturegraph.mf.framework.StreamReceiver;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-
-import java.util.Iterator;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 /**
  * Tests for class {@link JsonDecoder}.
@@ -42,196 +38,162 @@ import java.util.Iterator;
  */
 public final class JsonDecoderTest {
 
-    private static final String RECORD =
-        "{\"lit1\":\"value 1\",\" ent1\":{\"lit2\":\"value {x}\",\"lit\\\\3\":\"value 2 \"},\"lit4\":\"value '3'\",\"lit5\":null}";
-
-    private static final String ARRAY_RECORD =
-        "{\"arr1\":[\"val1\",\"val2\"],\"arr2\":[{\"lit1\":\"val1\",\"lit2\":\"val2\"},{\"lit3\":\"val3\"}],\"arr3\":[[{\"lit4\":\"val4\"}],[{\"lit5\":\"val5\"}]]}";
-
-    private JsonDecoder decoder;
-
-    private EventList eventReceiver;
-
-    @Mock
-    private ObjectReceiver<String> objectReceiver;
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public ExpectedException exception = ExpectedException.none();
+
+    @Mock
+    private StreamReceiver receiver;
+
+    private JsonDecoder jsonDecoder;
 
     @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-
-        decoder = new JsonDecoder();
-        eventReceiver = new EventList();
-        decoder.setReceiver(eventReceiver);
-    }
-
-    @After
-    public void cleanup() {
-        decoder.closeStream();
+    public void init() {
+        jsonDecoder = new JsonDecoder();
+        jsonDecoder.setReceiver(receiver);
     }
 
     @Test
     public void testShouldProcessEmptyStrings() {
-        assertEvents("", new EventList());
+        jsonDecoder.process("");
+
+        verifyZeroInteractions(receiver);
     }
 
     @Test
     public void testShouldProcessRecords() {
-        final EventList eventList = new EventList();
+        jsonDecoder.process(
+            "{" +
+                "\"lit1\":\"value 1\"," +
+                "\" ent1\":{" +
+                    "\"lit2\":\"value {x}\"," +
+                    "\"lit\\\\3\":\"value 2 \"" +
+                "}," +
+                "\"lit4\":\"value '3'\"," +
+                "\"lit5\":null" +
+            "}");
 
-        expectRecord(eventList);
-        assertEvents(RECORD, eventList);
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("lit1", "value 1");
+        ordered.verify(receiver).startEntity(" ent1");
+        ordered.verify(receiver).literal("lit2", "value {x}");
+        ordered.verify(receiver).literal("lit\\3", "value 2 ");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).literal("lit4", "value '3'");
+        ordered.verify(receiver).literal("lit5", null);
+        ordered.verify(receiver).endRecord();
     }
 
     @Test
     public void testShouldProcessArrays() {
-        final EventList eventList = new EventList();
+        jsonDecoder.process(
+            "{" +
+                "\"arr1\":[\"val1\",\"val2\"]," +
+                "\"arr2\":[" +
+                    "{" +
+                        "\"lit1\":\"val1\"," +
+                        "\"lit2\":\"val2\"" +
+                    "},{" +
+                        "\"lit3\":\"val3\"" +
+                    "}" +
+                "]," +
+                "\"arr3\":[" +
+                    "[" +
+                        "{\"lit4\":\"val4\"}" +
+                    "],[" +
+                        "{\"lit5\":\"val5\"}" +
+                    "]" +
+                "]" +
+            "}");
 
-        expectArray(eventList, "1");
-        assertEvents(ARRAY_RECORD, eventList);
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).startEntity("arr1[]");
+        ordered.verify(receiver).literal("1", "val1");
+        ordered.verify(receiver).literal("2", "val2");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).startEntity("arr2[]");
+        ordered.verify(receiver).startEntity("1");
+        ordered.verify(receiver).literal("lit1", "val1");
+        ordered.verify(receiver).literal("lit2", "val2");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).startEntity("2");
+        ordered.verify(receiver).literal("lit3", "val3");
+        ordered.verify(receiver, times(2)).endEntity();
+        ordered.verify(receiver).startEntity("arr3[]");
+        ordered.verify(receiver).startEntity("1[]");
+        ordered.verify(receiver).startEntity("1");
+        ordered.verify(receiver).literal("lit4", "val4");
+        ordered.verify(receiver, times(2)).endEntity();
+        ordered.verify(receiver).startEntity("2[]");
+        ordered.verify(receiver).startEntity("1");
+        ordered.verify(receiver).literal("lit5", "val5");
+        ordered.verify(receiver, times(3)).endEntity();
+        ordered.verify(receiver).endRecord();
     }
 
     @Test
     public void testShouldProcessConcatenatedRecords() {
-        final EventList eventList = new EventList();
+        jsonDecoder.process(
+            "{\"lit\": \"record 1\"}\n" +
+                "{\"lit\": \"record 2\"}");
 
-        expectRecord(eventList);
-        expectArray(eventList, "2");
-
-        assertEvents(RECORD + "\n" + ARRAY_RECORD, eventList);
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("lit", "record 1");
+        ordered.verify(receiver).endRecord();
+        ordered.verify(receiver).startRecord("2");
+        ordered.verify(receiver).literal("lit", "record 2");
+        ordered.verify(receiver).endRecord();
     }
 
     @Test
     public void testShouldProcessMultipleRecords() {
-        final EventList eventList = new EventList();
+        jsonDecoder.process("{\"lit\": \"record 1\"}");
+        jsonDecoder.process("{\"lit\": \"record 2\"}");
 
-        expectRecord(eventList);
-        assertEvents(RECORD, eventList);
-
-        eventList.resetStream();
-        eventReceiver.resetStream();
-
-        expectArray(eventList, "2");
-        assertEvents(ARRAY_RECORD, eventList);
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("lit", "record 1");
+        ordered.verify(receiver).endRecord();
+        ordered.verify(receiver).startRecord("2");
+        ordered.verify(receiver).literal("lit", "record 2");
+        ordered.verify(receiver).endRecord();
     }
 
     @Test
     public void testShouldOnlyParseObjects() {
-        expectParseError("null", "Unexpected token 'VALUE_NULL'");
+        exception.expect(MetafactureException.class);
+        exception.expectMessage("Unexpected token 'VALUE_NULL'");
+
+        jsonDecoder.process("null");
     }
 
     @Test
     public void testShouldNotParseIncompleteObjects() {
-        expectParseError("{", "Unexpected end-of-input", JsonEOFException.class);
+        exception.expect(MetafactureException.class);
+        exception.expectMessage("Unexpected end-of-input");
+
+        jsonDecoder.process("{");
     }
 
     @Test
     public void testShouldNotParseTrailingContent() {
-        expectParseError(RECORD + "null", "Unexpected token 'VALUE_NULL'");
+        exception.expect(MetafactureException.class);
+        exception.expectMessage("Unexpected token 'VALUE_NULL'");
+
+        jsonDecoder.process("{\"lit\":\"value\"}null");
     }
 
     @Test
     public void testShouldNotParseTrailingGarbage() {
-        expectParseError(RECORD + "XXX", "Unrecognized token 'XXX'", JsonParseException.class);
-    }
+        exception.expect(MetafactureException.class);
+        exception.expectMessage("Unrecognized token 'XXX'");
 
-    @Test
-    public void testShouldRoundtripRecords() {
-        verifyRoundtrip(RECORD);
-    }
-
-    @Test
-    public void testShouldRoundtripArrays() {
-        verifyRoundtrip(ARRAY_RECORD);
-    }
-
-    @Test
-    public void testShouldRoundtripMultipleRecords() {
-        verifyRoundtrip(RECORD, ARRAY_RECORD);
-    }
-
-    private void assertEvents(final String string, final EventList eventList) {
-        decoder.process(string);
-
-        final Iterator<Event> expected = eventList.getEvents().iterator();
-        final Iterator<Event> actual = eventReceiver.getEvents().iterator();
-
-        while (expected.hasNext() && actual.hasNext()) {
-            Assert.assertEquals(expected.next().toString(), actual.next().toString());
-        }
-
-        Assert.assertFalse("Missing events", expected.hasNext());
-        Assert.assertFalse("Unexpected events", actual.hasNext());
-    }
-
-    private void expectParseError(final String string, final String msg, final Class cause) {
-        thrown.expectCause(IsInstanceOf.instanceOf(cause));
-        expectParseError(string, msg);
-    }
-
-    private void expectParseError(final String string, final String msg) {
-        thrown.expect(MetafactureException.class);
-        thrown.expectMessage(msg);
-
-        decoder.process(string);
-    }
-
-    private void verifyRoundtrip(final String... strings) {
-        decoder
-            .setReceiver(new JsonEncoder())
-            .setReceiver(objectReceiver);
-
-        decoder.process(String.join("\n", strings));
-
-        for (final String string : strings) {
-            Mockito.verify(objectReceiver).process(string);
-        }
-
-        Mockito.verifyNoMoreInteractions(objectReceiver);
-    }
-
-    private void expectRecord(final EventList eventList) {
-        eventList.startRecord("1");
-            eventList.literal("lit1", "value 1");
-            eventList.startEntity(" ent1");
-                eventList.literal("lit2", "value {x}");
-                eventList.literal("lit\\3", "value 2 ");
-            eventList.endEntity();
-            eventList.literal("lit4", "value '3'");
-            eventList.literal("lit5", null);
-        eventList.endRecord();
-    }
-
-    private void expectArray(final EventList eventList, final String id) {
-        eventList.startRecord(id);
-            eventList.startEntity("arr1[]");
-                eventList.literal("1", "val1");
-                eventList.literal("2", "val2");
-            eventList.endEntity();
-            eventList.startEntity("arr2[]");
-                eventList.startEntity("1");
-                    eventList.literal("lit1", "val1");
-                    eventList.literal("lit2", "val2");
-                eventList.endEntity();
-                eventList.startEntity("2");
-                    eventList.literal("lit3", "val3");
-                eventList.endEntity();
-            eventList.endEntity();
-            eventList.startEntity("arr3[]");
-                eventList.startEntity("1[]");
-                    eventList.startEntity("1");
-                        eventList.literal("lit4", "val4");
-                    eventList.endEntity();
-                eventList.endEntity();
-                eventList.startEntity("2[]");
-                    eventList.startEntity("1");
-                        eventList.literal("lit5", "val5");
-                    eventList.endEntity();
-                eventList.endEntity();
-            eventList.endEntity();
-        eventList.endRecord();
+        jsonDecoder.process("{\"lit\":\"value\"}XXX");
     }
 
 }
