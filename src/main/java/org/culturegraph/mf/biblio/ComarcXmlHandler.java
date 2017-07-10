@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.culturegraph.mf.biblio.comarc;
+package org.culturegraph.mf.biblio;
 
 import java.util.ArrayList;
 import java.util.List;
