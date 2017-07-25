@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
+	<rules>
+
+
+		<data source="002@.0" name="ok">
+			<substring start="0" end="2" />
+			<equals string="Tp" />
+		</data>
+
+		<combine name="{to:${ref}}refed" value="${v}">
+			<data
+				source="041A*.9|028A.9|029B*.9|028C*.9|028Q*.9|028P*.9|028F*.9|028M*.9|028D*.9|028E*.9"
+				name="ref">
+				<trim />
+				<unique />
+			</data>
+
+			<choose name="v">
+				<!-- DBSM: -->
+				<!-- (006U $0 “04p01*”) or (017A $a “yy”) -->
+				<data source="006U.0">
+					<regexp match="04p01.*" />
+					<constant value="DBSM|ALL" />
+				</data>
+				<data source="017A.a">
+					<equals string="yy" />
+					<constant value="DBSM|ALL" />
+				</data>
+				<!-- DEA: -->
+				<!-- (001@ $a 2””) or (209A $f “Exilarchiv” or 209A $f “HB/EB”) -->
+				<data source="001@.a">
+					<equals string="2" />
+					<constant value="DEA|ALL" />
+				</data>
+				<data source="209A.f">
+					<equals string="HB/EB" />
+					<constant value="DEA|ALL" />
+				</data>
+				<!-- DMA: -->
+				<!-- (002@ $0 “G*” or 002@ $0 “M*”) or (006U $0 “10,P01*”) -->
+				<data source="002@.0">
+					<regexp match="^[GM].*" />
+					<constant value="DMA|ALL" />
+				</data>
+				<data source="006U.0">
+					<regexp match="^10,P01.*" />
+					<constant value="DMA|ALL" />
+				</data>
+				<data source="_id">
+					<constant value="TITLE|ALL"/>
+				</data>
+				<postprocess>
+					<regexp match="$[type]"/>
+				</postprocess>
+			</choose>
+			
+		</combine>
+
+	</rules>
+</metamorph>

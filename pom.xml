@@ -102,6 +102,7 @@
 		<module>metafacture-json</module>
 		<module>metafacture-linkeddata</module>
 		<module>metafacture-flux</module>
+		<module>metafacture-runner</module>
 		<module>metamorph-api</module>
 		<module>metamorph</module>
 		<module>metamorph-test</module>
