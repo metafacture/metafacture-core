@@ -257,13 +257,19 @@
 				</executions>
 			</plugin>
 
+			<!-- The maven-dependency-plugin must appear before the
+			     maven-assembly-plugin in the pom to ensure its unpack goal is
+			     executed before building the assembly.
+
+			     Maven executes goals bound to the same phase in the order in
+			     which the plugins are listed in the pom. -->
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.10</version>
 				<executions>
 					<execution>
-						<id>unpack-schemata</id>
-						<phase>generate-resources</phase>
+						<id>add-xsd-schemas</id>
+						<phase>package</phase>
 						<goals>
 							<goal>unpack</goal>
 						</goals>
