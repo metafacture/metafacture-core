@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+	<groupId>org.culturegraph</groupId>
+	<artifactId>metafacture-runner</artifactId>
+	<version>5.0.0-SNAPSHOT</version>
+
+	<name>metafacture.runner</name>
+	<description>Standalone applications for working with Flux and Metamorph scripts</description>
+	<url>http://github.com/culturegraph/metafacture-runner</url>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>mgeipel</id>
+			<name>Markus M. Geipel</name>
+			<email>m.geipel@dnb.de</email>
+			<url>https://github.com/mgeipel</url>
+			<organization>Deutsche Nationalbibliothek</organization>
+			<organizationUrl>http://www.dnb.de</organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>cboehme</id>
+			<name>Christoph Böhme</name>
+			<email>c.boehme@dnb.de</email>
+			<url>https://github.com/cboehme</url>
+			<organization>Deutsche Nationalbibliothek</organization>
+			<organizationUrl>http://www.dnb.de</organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/culturegraph/metafacture-runner.git</connection>
+		<developerConnection>scm:git:git@github.com:culturegraph/metafacture-runner.git</developerConnection>
+		<url>http://github.com/culturegraph/metafacture-runner</url>
+		<tag>HEAD</tag>
+	</scm>
+	<distributionManagement>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Sonatype OSS Maven Repository : Releases</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+		<snapshotRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype OSS Maven Repository : Snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+			<!-- <uniqueVersion>true</uniqueVersion> -->
+		</snapshotRepository>
+	</distributionManagement>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<targetJdk>1.8</targetJdk>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.culturegraph</groupId>
+			<artifactId>metafacture-core</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+
+		<!-- In a perfect world the slf4j binding would be a
+		     provided dependency so that the user can replace
+		     it easily with a different binding. However, slf4j
+		     does not use the context class loader for loading
+		     its binding but the same class loader which was
+		     used to load the classes of the slf4j-api. Until
+		     a solution is found for this problem, the binding
+		     need to be placed on the class path. -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.21</version>
+		</dependency>
+
+		<!-- The following dependencies are placed in the "provided"
+		     scope to prevent them from being included in the class
+		     path but still have them available for building the
+		     distribution assembly.
+		     The reason for this is that an appropriate implementation
+		     for jndi depends on the runtime environment and
+		     should be chosen by the user of the package and not the
+		     package implementer. However, we also attempt to build
+		     a distribution package which should include everything
+		     that is required for metafacture-runner/Flux to work out
+		     of the box. By including the dependencies in the assembly
+		     without putting them on the class path, the user can
+		     replace them easily with other implementations if
+		     necessary. -->
+		<dependency>
+			<groupId>simple-jndi</groupId>
+			<artifactId>simple-jndi</artifactId>
+			<version>0.11.4.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<!-- Required for connection pooling with simple-jndi -->
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>assembly-resources/**/*</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.6.0</version>
+				<configuration>
+					<source>${targetJdk}</source>
+					<target>${targetJdk}</target>
+					<showWarnings>true</showWarnings>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<!-- Configures the classpath prefix. This configuration option is
+								used to specify that all needed libraries are found under lib/ directory. -->
+							<classpathPrefix>lib/</classpathPrefix>
+							<!-- Specifies the main class of the application -->
+							<mainClass>org.culturegraph.mf.runner.Flux</mainClass>
+						</manifest>
+						<manifestEntries>
+							<git-commit>${buildNumber}</git-commit>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.19.1</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<id>unpack-metafacture-core-resources</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.culturegraph</groupId>
+									<artifactId>metafacture-core</artifactId>
+								</artifactItem>
+							</artifactItems>
+							<includes>schemata/**/*</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<id>create-distribution-package</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>/src/main/assembly/assembly.xml</descriptor>
+							</descriptors>
+							<archive>
+								<manifest>
+									<mainClass>org.culturegraph.mf.cmdline.Flux</mainClass>
+									<addClasspath>true</addClasspath>
+									<classpathPrefix>lib/</classpathPrefix>
+								</manifest>
+								<manifestEntries>
+									<git-commit>${buildNumber}</git-commit>
+								</manifestEntries>
+							</archive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.3</version><!--$NO-MVN-MAN-VER$ -->
+				<!-- m2e complains about a different plugin version being specified in
+					the parent pom. However, this is not actually problem for maven. So, we can
+					ignore the warning. -->
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>sonatype-oss-release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.10.4</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<phase>package</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<configuration>
+									<show>public</show>
+									<nohelp>true</nohelp>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.0.1</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

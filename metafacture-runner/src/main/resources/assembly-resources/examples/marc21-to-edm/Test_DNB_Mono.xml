@@ -1,0 +1,1560 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection xmlns="http://www.loc.gov/MARC21/slim">
+	<record type="Bibliographic">
+		<leader>01677nas a2200481 c 4500</leader>
+		<controlfield tag="001">014538970</controlfield>
+		<controlfield tag="003">DE-101</controlfield>
+		<controlfield tag="005">20130204133944.0</controlfield>
+		<controlfield tag="007">tu</controlfield>
+		<controlfield tag="007">he uuu000uuau</controlfield>
+		<controlfield tag="008">991120c19129999gw z||m r ||| 0||||0ger
+			c</controlfield>
+		<datafield tag="015" ind1=" " ind2=" ">
+			<subfield code="a">07,A26,0080</subfield>
+			<subfield code="2">dnb</subfield>
+		</datafield>
+		<datafield tag="016" ind1="7" ind2=" ">
+			<subfield code="2">DE-101</subfield>
+			<subfield code="a">014538970</subfield>
+		</datafield>
+		<datafield tag="016" ind1="7" ind2=" ">
+			<subfield code="2">DE-600</subfield>
+			<subfield code="a">842411-1</subfield>
+		</datafield>
+		<datafield tag="022" ind1=" " ind2=" ">
+			<subfield code="a">0233-1047</subfield>
+		</datafield>
+		<datafield tag="029" ind1="a" ind2="a">
+			<subfield code="a">0233-1047</subfield>
+		</datafield>
+		<datafield tag="035" ind1=" " ind2=" ">
+			<subfield code="a">(DE-599)ZDB842411-1</subfield>
+		</datafield>
+		<datafield tag="040" ind1=" " ind2=" ">
+			<subfield code="a">9001</subfield>
+			<subfield code="b">ger</subfield>
+			<subfield code="c">DE-101</subfield>
+			<subfield code="d">1240</subfield>
+		</datafield>
+		<datafield tag="041" ind1=" " ind2=" ">
+			<subfield code="a">ger</subfield>
+		</datafield>
+		<datafield tag="044" ind1=" " ind2=" ">
+			<subfield code="c">XA-DE</subfield>
+		</datafield>
+		<datafield tag="082" ind1="7" ind2="4">
+			<subfield code="a">050</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">22sdnb</subfield>
+		</datafield>
+		<datafield tag="083" ind1="7" ind2=" ">
+			<subfield code="a">050</subfield>
+			<subfield code="q">DE-600</subfield>
+			<subfield code="2">22sdnb</subfield>
+		</datafield>
+		<datafield tag="084" ind1=" " ind2=" ">
+			<subfield code="a">050</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">sdnb</subfield>
+		</datafield>
+		<datafield tag="084" ind1=" " ind2=" ">
+			<subfield code="a">6,23</subfield>
+			<subfield code="2">ssgn</subfield>
+		</datafield>
+		<datafield tag="084" ind1=" " ind2=" ">
+			<subfield code="a">050</subfield>
+			<subfield code="q">DE-600</subfield>
+			<subfield code="2">sdnb</subfield>
+		</datafield>
+		<datafield tag="090" ind1=" " ind2=" ">
+			<subfield code="n">sm</subfield>
+		</datafield>
+		<datafield tag="245" ind1="1" ind2="0">
+			<subfield code="a">Insel-Bücherei</subfield>
+		</datafield>
+		<datafield tag="246" ind1="1" ind2="3">
+			<subfield code="a">Insel-Bücherei / Feldpostausgabe</subfield>
+		</datafield>
+		<datafield tag="260" ind1="3" ind2=" ">
+			<subfield code="a">Berlin</subfield>
+			<subfield code="b">Insel-Verl.</subfield>
+		</datafield>
+		<datafield tag="260" ind1=" " ind2=" ">
+			<subfield code="a">Frankfurt, M.</subfield>
+			<subfield code="a">Leipzig</subfield>
+			<subfield code="b">Insel-Verl.</subfield>
+			<subfield code="c">teils</subfield>
+		</datafield>
+		<datafield tag="260" ind1=" " ind2=" ">
+			<subfield code="a">Frankfurt, M.</subfield>
+			<subfield code="b">Insel-Verl.</subfield>
+			<subfield code="c">teils</subfield>
+		</datafield>
+		<datafield tag="260" ind1=" " ind2=" ">
+			<subfield code="a">Wiesbaden</subfield>
+			<subfield code="b">Insel-Verl.</subfield>
+			<subfield code="c">teils</subfield>
+		</datafield>
+		<datafield tag="260" ind1=" " ind2=" ">
+			<subfield code="a">Leipzig</subfield>
+			<subfield code="b">Insel-Verl.</subfield>
+			<subfield code="c">anfangs</subfield>
+		</datafield>
+		<datafield tag="362" ind1="0" ind2=" ">
+			<subfield code="a">1.1912 -</subfield>
+		</datafield>
+		<datafield tag="363" ind1="0" ind2="1">
+			<subfield code="8">1.1\x</subfield>
+			<subfield code="a">1</subfield>
+			<subfield code="i">1912</subfield>
+		</datafield>
+		<datafield tag="500" ind1=" " ind2=" ">
+			<subfield code="a">Repr.: Oberursel : Pharma-Dr. Hartmann, 1989;
+				ersch. teils auch als Online-Ausg.</subfield>
+		</datafield>
+		<datafield tag="515" ind1=" " ind2=" ">
+			<subfield code="a">Ersch. unregelmäßig; 23.1944, 39.1943,
+				96.1944, 448.1942, 494.1943 u. 543.1943 als Feldpostausg. bez.
+			</subfield>
+		</datafield>
+		<datafield tag="530" ind1=" " ind2=" ">
+			<subfield code="a">Mikrofiche-Ausg. einzelner Bd.: Berlin :
+				Staatsbibliothek zu Berlin - Preußischer Kulturbesitz, 2008
+			</subfield>
+		</datafield>
+		<datafield tag="533" ind1=" " ind2=" ">
+			<subfield code="7">d20082008</subfield>
+			<subfield code="b">Berlin</subfield>
+			<subfield code="c">Staatsbibliothek zu Berlin - Preußischer
+				Kulturbesitz</subfield>
+		</datafield>
+		<datafield tag="775" ind1="0" ind2="8">
+			<subfield code="i">Digital. Ausg.</subfield>
+			<subfield code="t">Insel-Bücherei</subfield>
+			<subfield code="w">(DE-600)2554539-5</subfield>
+			<subfield code="w">(DE-101)1002620155</subfield>
+		</datafield>
+		<datafield tag="787" ind1="0" ind2="8">
+			<subfield code="i">134=1 von</subfield>
+			<subfield code="t">Nyland / Nyland-Werke</subfield>
+			<subfield code="w">(DE-600)1138841-9</subfield>
+			<subfield code="w">(DE-101)016677102</subfield>
+		</datafield>
+		<datafield tag="889" ind1=" " ind2=" ">
+			<subfield code="w">(DE-101)551665475</subfield>
+		</datafield>
+		<datafield tag="925" ind1="r" ind2=" ">
+			<subfield code="a">ra</subfield>
+		</datafield>
+	</record>
+
+	<record type="Bibliographic">
+		<leader>01499nam a2200337 c 4500</leader>
+		<controlfield tag="001">1008216763</controlfield>
+		<controlfield tag="003">DE-101</controlfield>
+		<controlfield tag="005">20111116183849.0</controlfield>
+		<controlfield tag="007">cr||||||||||||</controlfield>
+		<controlfield tag="008">101110s2010 gw |||||om||| 00||||eng
+		</controlfield>
+		<datafield tag="015" ind1=" " ind2=" ">
+			<subfield code="a">10,O12</subfield>
+			<subfield code="2">dnb</subfield>
+		</datafield>
+		<datafield tag="016" ind1="7" ind2=" ">
+			<subfield code="2">DE-101</subfield>
+			<subfield code="a">1008216763</subfield>
+		</datafield>
+		<datafield tag="024" ind1="7" ind2=" ">
+			<subfield code="2">urn</subfield>
+			<subfield code="a">urn:nbn:de:gbv:46-00101666-18</subfield>
+		</datafield>
+		<datafield tag="035" ind1=" " ind2=" ">
+			<subfield code="a">(DE-599)DNB1008216763</subfield>
+		</datafield>
+		<datafield tag="035" ind1=" " ind2=" ">
+			<subfield code="a">(OCoLC)724590250</subfield>
+		</datafield>
+		<datafield tag="040" ind1=" " ind2=" ">
+			<subfield code="a">1240</subfield>
+			<subfield code="b">ger</subfield>
+			<subfield code="c">DE-101</subfield>
+			<subfield code="d">9999</subfield>
+			<subfield code="e">rakwb</subfield>
+		</datafield>
+		<datafield tag="041" ind1=" " ind2=" ">
+			<subfield code="a">eng</subfield>
+		</datafield>
+		<datafield tag="044" ind1=" " ind2=" ">
+			<subfield code="c">XA-DE</subfield>
+		</datafield>
+		<datafield tag="082" ind1="0" ind2="4">
+			<subfield code="8">1\x</subfield>
+			<subfield code="a">621.4023</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">22/ger</subfield>
+		</datafield>
+		<datafield tag="084" ind1=" " ind2=" ">
+			<subfield code="a">620</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">sdnb</subfield>
+		</datafield>
+		<datafield tag="085" ind1=" " ind2=" ">
+			<subfield code="8">1\x</subfield>
+			<subfield code="b">621.4023</subfield>
+		</datafield>
+		<datafield tag="100" ind1="1" ind2=" ">
+			<subfield code="0">(DE-588)14270850X</subfield>
+			<subfield code="0">(DE-101)14270850X</subfield>
+			<subfield code="a">Rickmers, Peter</subfield>
+			<subfield code="4">aut</subfield>
+		</datafield>
+		<datafield tag="245" ind1="1" ind2="0">
+			<subfield code="a">Experimental investigation of the spray
+				autoignition of n-heptane in
+				a jet in cross flow configuration and comparison to single droplet
+				ignition
+				simulations
+			</subfield>
+			<subfield code="h">[Elektronische Ressource]</subfield>
+			<subfield code="c">von Peter Rickmers</subfield>
+		</datafield>
+		<datafield tag="300" ind1=" " ind2=" ">
+			<subfield code="a">Online-Ressource</subfield>
+		</datafield>
+		<datafield tag="502" ind1=" " ind2=" ">
+			<subfield code="a">Bremen, Univ., Diss., 2010</subfield>
+		</datafield>
+		<datafield tag="583" ind1="1" ind2=" ">
+			<subfield code="a">Langzeitarchivierung gewährleistet
+			</subfield>
+			<subfield code="i">LZA</subfield>
+		</datafield>
+		<datafield tag="775" ind1="0" ind2="8">
+			<subfield code="i">Druckausg.</subfield>
+			<subfield code="a">Rickmers, Peter</subfield>
+			<subfield code="t">Experimental investigation of the spray
+				autoignition of n heptane in
+				a jet in cross flow configuration and comparison to single droplet
+				ignition
+				simulations
+			</subfield>
+			<subfield code="w">(DE-101)1008075035</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2="0">
+			<subfield code="u">http://nbn-resolving.de/urn:nbn:de:gbv:46-00101666-18
+			</subfield>
+			<subfield code="x">Resolving-System</subfield>
+		</datafield>
+		<datafield tag="856" ind1=" " ind2="0">
+			<subfield code="u">http://d-nb.info/1008216763/34</subfield>
+			<subfield code="x">Langzeitarchivierung Nationalbibliothek
+			</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2=" ">
+			<subfield code="u">http://elib.suub.uni-bremen.de/edocs/00101666-1.pdf
+			</subfield>
+			<subfield code="x">Verlag</subfield>
+			<subfield code="z">kostenfrei</subfield>
+		</datafield>
+		<datafield tag="925" ind1="r" ind2=" ">
+			<subfield code="a">ro</subfield>
+			<subfield code="a">rh</subfield>
+		</datafield>
+	</record>
+	<record type="Bibliographic">
+		<leader>01253nam a2200337 c 4500</leader>
+		<controlfield tag="001">998814423</controlfield>
+		<controlfield tag="003">DE-101</controlfield>
+		<controlfield tag="005">20110409183625.0</controlfield>
+		<controlfield tag="007">cr||||||||||||</controlfield>
+		<controlfield tag="008">091203s1919 gw |||||o|||| 00||||ger
+		</controlfield>
+		<datafield tag="015" ind1=" " ind2=" ">
+			<subfield code="a">10,O10</subfield>
+			<subfield code="2">dnb</subfield>
+		</datafield>
+		<datafield tag="016" ind1="7" ind2=" ">
+			<subfield code="2">DE-101</subfield>
+			<subfield code="a">998814423</subfield>
+		</datafield>
+		<datafield tag="024" ind1="7" ind2=" ">
+			<subfield code="2">urn</subfield>
+			<subfield code="a">urn:nbn:de:101:2-2009120303</subfield>
+		</datafield>
+		<datafield tag="035" ind1=" " ind2=" ">
+			<subfield code="a">(DE-599)DNB998814423</subfield>
+		</datafield>
+		<datafield tag="040" ind1=" " ind2=" ">
+			<subfield code="a">1140</subfield>
+			<subfield code="b">ger</subfield>
+			<subfield code="c">DE-101</subfield>
+			<subfield code="d">9999</subfield>
+			<subfield code="e">rakwb</subfield>
+		</datafield>
+		<datafield tag="041" ind1=" " ind2=" ">
+			<subfield code="a">ger</subfield>
+		</datafield>
+		<datafield tag="044" ind1=" " ind2=" ">
+			<subfield code="c">XA-DE</subfield>
+		</datafield>
+		<datafield tag="084" ind1=" " ind2=" ">
+			<subfield code="a">830</subfield>
+			<subfield code="a">B</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">sdnb</subfield>
+		</datafield>
+		<datafield tag="100" ind1="1" ind2=" ">
+			<subfield code="0">(DE-588)118540238</subfield>
+			<subfield code="0">(DE-101)118540238</subfield>
+			<subfield code="a">Goethe, Johann Wolfgang &#152;von&#156;
+			</subfield>
+			<subfield code="d">1749-1832</subfield>
+			<subfield code="4">aut</subfield>
+		</datafield>
+		<datafield tag="245" ind1="1" ind2="0">
+			<subfield code="a">Faust</subfield>
+			<subfield code="h">[Elektronische Ressource]</subfield>
+			<subfield code="b">eine Tragödie ; Teil 1</subfield>
+			<subfield code="c">Goethe</subfield>
+		</datafield>
+		<datafield tag="260" ind1="3" ind2=" ">
+			<subfield code="a">Leipzig</subfield>
+			<subfield code="b">Amelang</subfield>
+			<subfield code="c">1919</subfield>
+		</datafield>
+		<datafield tag="300" ind1=" " ind2=" ">
+			<subfield code="a">173 S.</subfield>
+		</datafield>
+		<datafield tag="500" ind1=" " ind2=" ">
+			<subfield code="a">In Fraktur</subfield>
+		</datafield>
+		<datafield tag="530" ind1=" " ind2=" ">
+			<subfield code="a">Online-Ausg.:</subfield>
+		</datafield>
+		<datafield tag="533" ind1=" " ind2=" ">
+			<subfield code="7">s2010uuuu</subfield>
+			<subfield code="b">Leipzig ; Frankfurt, M. ; Berlin</subfield>
+			<subfield code="c">Dt. Nationalbibliothek</subfield>
+			<subfield code="d">2010</subfield>
+			<subfield code="e">Online-Ressource</subfield>
+			<subfield code="n">[Online-Ausg.]</subfield>
+		</datafield>
+		<datafield tag="583" ind1="1" ind2=" ">
+			<subfield code="a">Langzeitarchivierung gewährleistet
+			</subfield>
+			<subfield code="i">LZA</subfield>
+		</datafield>
+		<datafield tag="775" ind1="0" ind2="8">
+			<subfield code="i">Druckausg.</subfield>
+			<subfield code="a">Goethe, Johann Wolfgang &#152;von&#156;
+			</subfield>
+			<subfield code="t">Faust</subfield>
+			<subfield code="w">(DE-101)573496293</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2="0">
+			<subfield code="u">http://nbn-resolving.de/urn:nbn:de:101:2-2009120303
+			</subfield>
+			<subfield code="x">Resolving-System</subfield>
+		</datafield>
+		<datafield tag="856" ind1=" " ind2="0">
+			<subfield code="u">http://d-nb.info/998814423/34</subfield>
+			<subfield code="x">Langzeitarchivierung Nationalbibliothek
+			</subfield>
+		</datafield>
+		<datafield tag="889" ind1=" " ind2=" ">
+			<subfield code="w">(DE-101)1005986665</subfield>
+		</datafield>
+		<datafield tag="925" ind1="r" ind2=" ">
+			<subfield code="a">ro</subfield>
+			<subfield code="a">rb</subfield>
+		</datafield>
+	</record>
+	<record type="Bibliographic">
+		<leader>01435nam a2200361 c 4500</leader>
+		<controlfield tag="001">999460560</controlfield>
+		<controlfield tag="003">DE-101</controlfield>
+		<controlfield tag="005">20110505085503.0</controlfield>
+		<controlfield tag="007">cr||||||||||||</controlfield>
+		<controlfield tag="008">100112s1913 gw |||||o|||| 00||||ger
+		</controlfield>
+		<datafield tag="015" ind1=" " ind2=" ">
+			<subfield code="a">10,O10</subfield>
+			<subfield code="2">dnb</subfield>
+		</datafield>
+		<datafield tag="016" ind1="7" ind2=" ">
+			<subfield code="2">DE-101</subfield>
+			<subfield code="a">999460560</subfield>
+		</datafield>
+		<datafield tag="024" ind1="7" ind2=" ">
+			<subfield code="2">urn</subfield>
+			<subfield code="a">urn:nbn:de:101:2-2010011268</subfield>
+		</datafield>
+		<datafield tag="035" ind1=" " ind2=" ">
+			<subfield code="a">(DE-599)DNB999460560</subfield>
+		</datafield>
+		<datafield tag="040" ind1=" " ind2=" ">
+			<subfield code="a">1140</subfield>
+			<subfield code="b">ger</subfield>
+			<subfield code="c">DE-101</subfield>
+			<subfield code="d">1141</subfield>
+			<subfield code="e">rakwb</subfield>
+		</datafield>
+		<datafield tag="041" ind1=" " ind2=" ">
+			<subfield code="a">ger</subfield>
+		</datafield>
+		<datafield tag="044" ind1=" " ind2=" ">
+			<subfield code="c">XA-DE</subfield>
+		</datafield>
+		<datafield tag="084" ind1=" " ind2=" ">
+			<subfield code="a">830</subfield>
+			<subfield code="a">B</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">sdnb</subfield>
+		</datafield>
+		<datafield tag="100" ind1="1" ind2=" ">
+			<subfield code="0">(DE-588)118557211</subfield>
+			<subfield code="0">(DE-101)118557211</subfield>
+			<subfield code="a">Paul, Jean</subfield>
+			<subfield code="d">1763-1825</subfield>
+			<subfield code="4">aut</subfield>
+		</datafield>
+		<datafield tag="245" ind1="1" ind2="0">
+			<subfield code="a">Leben des vergnügten Schulmeisterlein Maria
+				Wuz in
+				Auenthal
+			</subfield>
+			<subfield code="h">[Elektronische Ressource]</subfield>
+			<subfield code="c">Jean Paul</subfield>
+		</datafield>
+		<datafield tag="260" ind1="3" ind2=" ">
+			<subfield code="a">Leipzig</subfield>
+			<subfield code="b">Insel-Verl.</subfield>
+			<subfield code="c">1913, [1913]</subfield>
+		</datafield>
+		<datafield tag="300" ind1=" " ind2=" ">
+			<subfield code="a">51 S.</subfield>
+		</datafield>
+		<datafield tag="490" ind1="1" ind2=" ">
+			<subfield code="a">Insel-Bücherei</subfield>
+			<subfield code="v">Nr. 51</subfield>
+		</datafield>
+		<datafield tag="500" ind1=" " ind2=" ">
+			<subfield code="a">In Fraktur</subfield>
+		</datafield>
+		<datafield tag="530" ind1=" " ind2=" ">
+			<subfield code="a">Online-Ausg.:</subfield>
+		</datafield>
+		<datafield tag="533" ind1=" " ind2=" ">
+			<subfield code="7">s2010uuuu</subfield>
+			<subfield code="b">Leipzig ; Frankfurt, M. ; Berlin</subfield>
+			<subfield code="c">Dt. Nationalbibliothek</subfield>
+			<subfield code="d">2010</subfield>
+			<subfield code="e">Online-Ressource</subfield>
+			<subfield code="n">[Online-Ausg.]</subfield>
+		</datafield>
+		<datafield tag="583" ind1="1" ind2=" ">
+			<subfield code="a">Langzeitarchivierung gewährleistet
+			</subfield>
+			<subfield code="i">LZA</subfield>
+		</datafield>
+		<datafield tag="775" ind1="0" ind2="8">
+			<subfield code="i">Druckausg.</subfield>
+			<subfield code="a">Paul, Jean</subfield>
+			<subfield code="t">Leben des vergnügten Schulmeisterlein Maria
+				Wuz in
+				Auenthal
+			</subfield>
+			<subfield code="w">(DE-101)362012237</subfield>
+		</datafield>
+		<datafield tag="830" ind1=" " ind2="0">
+			<subfield code="a">Insel-Bücherei</subfield>
+			<subfield code="v">Nr. 51</subfield>
+			<subfield code="w">(DE-101)014538970</subfield>
+			<subfield code="w">(DE-600)842411-1</subfield>
+			<subfield code="9">251</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2="0">
+			<subfield code="u">http://nbn-resolving.de/urn:nbn:de:101:2-2010011268
+			</subfield>
+			<subfield code="x">Resolving-System</subfield>
+		</datafield>
+		<datafield tag="856" ind1=" " ind2="0">
+			<subfield code="u">http://d-nb.info/999460560/34</subfield>
+			<subfield code="x">Langzeitarchivierung Nationalbibliothek
+			</subfield>
+		</datafield>
+		<datafield tag="889" ind1=" " ind2=" ">
+			<subfield code="w">(DE-101)1005978360</subfield>
+		</datafield>
+		<datafield tag="925" ind1="r" ind2=" ">
+			<subfield code="a">ro</subfield>
+			<subfield code="a">rb</subfield>
+		</datafield>
+	</record>
+	<record type="Bibliographic">
+		<leader>01819nam a2200421 c 4500</leader>
+		<controlfield tag="001">1011131463</controlfield>
+		<controlfield tag="003">DE-101</controlfield>
+		<controlfield tag="005">20111116185318.0</controlfield>
+		<controlfield tag="007">cr||||||||||||</controlfield>
+		<controlfield tag="008">110419s2010 gw |||||om||| 00||||ger
+		</controlfield>
+		<datafield tag="015" ind1=" " ind2=" ">
+			<subfield code="a">11,O05</subfield>
+			<subfield code="2">dnb</subfield>
+		</datafield>
+		<datafield tag="016" ind1="7" ind2=" ">
+			<subfield code="2">DE-101</subfield>
+			<subfield code="a">1011131463</subfield>
+		</datafield>
+		<datafield tag="024" ind1="7" ind2=" ">
+			<subfield code="2">urn</subfield>
+			<subfield code="a">urn:nbn:de:bsz:93-opus-58459</subfield>
+		</datafield>
+		<datafield tag="035" ind1=" " ind2=" ">
+			<subfield code="a">(DE-599)DNB1011131463</subfield>
+		</datafield>
+		<datafield tag="040" ind1=" " ind2=" ">
+			<subfield code="a">1240</subfield>
+			<subfield code="b">ger</subfield>
+			<subfield code="c">DE-101</subfield>
+			<subfield code="d">9999</subfield>
+			<subfield code="e">rakwb</subfield>
+		</datafield>
+		<datafield tag="041" ind1=" " ind2=" ">
+			<subfield code="a">ger</subfield>
+		</datafield>
+		<datafield tag="044" ind1=" " ind2=" ">
+			<subfield code="c">XA-DE</subfield>
+		</datafield>
+		<datafield tag="082" ind1="0" ind2="4">
+			<subfield code="8">1\x</subfield>
+			<subfield code="a">338.47629222011</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">22/ger</subfield>
+		</datafield>
+		<datafield tag="084" ind1=" " ind2=" ">
+			<subfield code="a">330</subfield>
+			<subfield code="a">620</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">sdnb</subfield>
+		</datafield>
+		<datafield tag="085" ind1=" " ind2=" ">
+			<subfield code="8">1\x</subfield>
+			<subfield code="b">338.47</subfield>
+		</datafield>
+		<datafield tag="085" ind1=" " ind2=" ">
+			<subfield code="8">1\x</subfield>
+			<subfield code="s">629.222</subfield>
+		</datafield>
+		<datafield tag="085" ind1=" " ind2=" ">
+			<subfield code="8">1\x</subfield>
+			<subfield code="z">1</subfield>
+			<subfield code="s">011</subfield>
+		</datafield>
+		<datafield tag="088" ind1=" " ind2=" ">
+			<subfield code="a">DLR-FB-2010-26</subfield>
+		</datafield>
+		<datafield tag="100" ind1="1" ind2=" ">
+			<subfield code="0">(DE-588)143070851</subfield>
+			<subfield code="0">(DE-101)143070851</subfield>
+			<subfield code="a">Mock, Peter</subfield>
+			<subfield code="d">1981-</subfield>
+			<subfield code="4">aut</subfield>
+		</datafield>
+		<datafield tag="245" ind1="1" ind2="0">
+			<subfield code="a">Entwicklung eines Szenariomodells zur
+				Simulation der zukünftigen
+				Marktanteile und CO_1tn2-Emissionen von Kraftfahrzeugen (VECTOR21)
+			</subfield>
+			<subfield code="h">[Elektronische Ressource]</subfield>
+			<subfield code="c">Peter Mock</subfield>
+		</datafield>
+		<datafield tag="260" ind1="3" ind2=" ">
+			<subfield code="a">Köln</subfield>
+			<subfield code="b">DLR, Bibliotheks- und Informationswesen
+			</subfield>
+			<subfield code="c">2010</subfield>
+		</datafield>
+		<datafield tag="260" ind1="3" ind2=" ">
+			<subfield code="a">[Stuttgart]</subfield>
+			<subfield code="b">[Univ.-Bibliothek]</subfield>
+		</datafield>
+		<datafield tag="300" ind1=" " ind2=" ">
+			<subfield code="a">XX, 224 S.</subfield>
+			<subfield code="b">graph. Darst.</subfield>
+			<subfield code="c">21 cm</subfield>
+		</datafield>
+		<datafield tag="490" ind1="1" ind2=" ">
+			<subfield code="a">Forschungsbericht / Deutsches Zentrum für
+				Luft- und
+				Raumfahrt
+			</subfield>
+			<subfield code="v">2010,26</subfield>
+		</datafield>
+		<datafield tag="502" ind1=" " ind2=" ">
+			<subfield code="a">Zugl.: Stuttgart, Univ., Diss., 2010
+			</subfield>
+		</datafield>
+		<datafield tag="530" ind1=" " ind2=" ">
+			<subfield code="a">Online-Ausg.:</subfield>
+		</datafield>
+		<datafield tag="533" ind1=" " ind2=" ">
+			<subfield code="7">s2011uuuu</subfield>
+			<subfield code="d">2011, [2011]</subfield>
+			<subfield code="e">Online-Ressource</subfield>
+			<subfield code="n">[Online-Ausg.]</subfield>
+		</datafield>
+		<datafield tag="583" ind1="1" ind2=" ">
+			<subfield code="a">Langzeitarchivierung gewährleistet
+			</subfield>
+			<subfield code="i">LZA</subfield>
+		</datafield>
+		<datafield tag="810" ind1="2" ind2=" ">
+			<subfield code="a">Deutsches Zentrum für Luft- und Raumfahrt
+			</subfield>
+			<subfield code="g">Köln</subfield>
+			<subfield code="4">aut</subfield>
+			<subfield code="t">Forschungsbericht</subfield>
+			<subfield code="v">2010,26</subfield>
+			<subfield code="w">(DE-101)019035705</subfield>
+			<subfield code="w">(DE-600)1408820-4</subfield>
+			<subfield code="9">42010 226</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2="0">
+			<subfield code="u">http://nbn-resolving.de/urn:nbn:de:bsz:93-opus-58459
+			</subfield>
+			<subfield code="x">Resolving-System</subfield>
+		</datafield>
+		<datafield tag="856" ind1=" " ind2="0">
+			<subfield code="u">http://d-nb.info/1011131463/34</subfield>
+			<subfield code="x">Langzeitarchivierung Nationalbibliothek
+			</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2=" ">
+			<subfield code="q">application/pdf</subfield>
+			<subfield code="u">http://elib.uni-stuttgart.de/opus/volltexte/2011/5845/
+			</subfield>
+			<subfield code="x">Verlag</subfield>
+			<subfield code="z">kostenfrei</subfield>
+		</datafield>
+		<datafield tag="925" ind1="r" ind2=" ">
+			<subfield code="a">ro</subfield>
+			<subfield code="a">rb</subfield>
+		</datafield>
+	</record>
+	<record type="Bibliographic">
+		<leader>02831nam a2200565 c 4500</leader>
+		<controlfield tag="001">954307534</controlfield>
+		<controlfield tag="003">DE-101</controlfield>
+		<controlfield tag="005">20111116190501.0</controlfield>
+		<controlfield tag="007">cr||||||||||||</controlfield>
+		<controlfield tag="008">980806s1998 gw |||||om||| 00||||ger
+		</controlfield>
+		<datafield tag="015" ind1=" " ind2=" ">
+			<subfield code="a">00,H05,0381</subfield>
+			<subfield code="2">dnb</subfield>
+		</datafield>
+		<datafield tag="016" ind1="7" ind2=" ">
+			<subfield code="2">DE-101</subfield>
+			<subfield code="a">954307534</subfield>
+		</datafield>
+		<datafield tag="024" ind1="7" ind2=" ">
+			<subfield code="2">urn</subfield>
+			<subfield code="a">urn:nbn:de:gbv:089-2455540417</subfield>
+		</datafield>
+		<datafield tag="035" ind1=" " ind2=" ">
+			<subfield code="a">(DE-599)DNB954307534</subfield>
+		</datafield>
+		<datafield tag="035" ind1=" " ind2=" ">
+			<subfield code="a">(OCoLC)722734204</subfield>
+		</datafield>
+		<datafield tag="040" ind1=" " ind2=" ">
+			<subfield code="a">1230</subfield>
+			<subfield code="b">ger</subfield>
+			<subfield code="c">DE-101</subfield>
+			<subfield code="d">9999</subfield>
+			<subfield code="e">rakwb</subfield>
+		</datafield>
+		<datafield tag="041" ind1=" " ind2=" ">
+			<subfield code="a">ger</subfield>
+		</datafield>
+		<datafield tag="044" ind1=" " ind2=" ">
+			<subfield code="c">XA-DE</subfield>
+		</datafield>
+		<datafield tag="084" ind1=" " ind2=" ">
+			<subfield code="a">28</subfield>
+			<subfield code="a">29</subfield>
+			<subfield code="a">30</subfield>
+			<subfield code="a">004</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">sdnb</subfield>
+		</datafield>
+		<datafield tag="084" ind1=" " ind2=" ">
+			<subfield code="a">21.5</subfield>
+			<subfield code="a">31.1d</subfield>
+			<subfield code="a">30</subfield>
+			<subfield code="a">30</subfield>
+			<subfield code="a">21.5</subfield>
+			<subfield code="a">31.1d</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">sswd</subfield>
+		</datafield>
+		<datafield tag="245" ind1="1" ind2="0">
+			<subfield code="a">Charakterisierung poröser Medien mit Hilfe
+				der digitalen
+				Bildverarbeitung
+			</subfield>
+			<subfield code="h">[Elektronische Ressource]</subfield>
+			<subfield code="b">Methoden der Bildgewinnung und -auswertung
+			</subfield>
+			<subfield code="c"> von Roland Scharfenberg</subfield>
+		</datafield>
+		<datafield tag="502" ind1=" " ind2=" ">
+			<subfield code="a">Hannover, Univ., Diss., 1998</subfield>
+		</datafield>
+		<datafield tag="650" ind1=" " ind2="7">
+			<subfield code="0">(DE-588)4046811-2</subfield>
+			<subfield code="0">(DE-101)040468119</subfield>
+			<subfield code="a">Poröser Stoff</subfield>
+			<subfield code="2">gnd</subfield>
+		</datafield>
+		<datafield tag="650" ind1=" " ind2="7">
+			<subfield code="0">(DE-588)4006684-8</subfield>
+			<subfield code="0">(DE-101)040066843</subfield>
+			<subfield code="a">Bildverarbeitung</subfield>
+			<subfield code="2">gnd</subfield>
+		</datafield>
+		<datafield tag="650" ind1=" " ind2="7">
+			<subfield code="0">(DE-588)4150634-0</subfield>
+			<subfield code="0">(DE-101)041506340</subfield>
+			<subfield code="a">Dreidimensionale Rekonstruktion</subfield>
+			<subfield code="2">gnd</subfield>
+		</datafield>
+		<datafield tag="650" ind1=" " ind2="7">
+			<subfield code="0">(DE-588)4046811-2</subfield>
+			<subfield code="0">(DE-101)040468119</subfield>
+			<subfield code="a">Poröser Stoff</subfield>
+			<subfield code="2">gnd</subfield>
+		</datafield>
+		<datafield tag="650" ind1=" " ind2="7">
+			<subfield code="0">(DE-588)4039238-7</subfield>
+			<subfield code="0">(DE-101)040392384</subfield>
+			<subfield code="a">Mikroskopie</subfield>
+			<subfield code="2">gnd</subfield>
+		</datafield>
+		<datafield tag="650" ind1=" " ind2="7">
+			<subfield code="0">(DE-588)4254740-4</subfield>
+			<subfield code="0">(DE-101)042547407</subfield>
+			<subfield code="a">Grauwertbild</subfield>
+			<subfield code="2">gnd</subfield>
+		</datafield>
+		<datafield tag="650" ind1=" " ind2="7">
+			<subfield code="0">(DE-588)4403014-9</subfield>
+			<subfield code="0">(DE-101)94696193X</subfield>
+			<subfield code="a">Vorverarbeitung</subfield>
+			<subfield code="2">gnd</subfield>
+		</datafield>
+		<datafield tag="650" ind1=" " ind2="7">
+			<subfield code="0">(DE-588)4150634-0</subfield>
+			<subfield code="0">(DE-101)041506340</subfield>
+			<subfield code="a">Dreidimensionale Rekonstruktion</subfield>
+			<subfield code="2">gnd</subfield>
+		</datafield>
+		<datafield tag="650" ind1=" " ind2="7">
+			<subfield code="0">(DE-588)4145394-3</subfield>
+			<subfield code="0">(DE-101)041453948</subfield>
+			<subfield code="a">Bildauswertung</subfield>
+			<subfield code="2">gnd</subfield>
+		</datafield>
+		<datafield tag="655" ind1=" " ind2="7">
+			<subfield code="a">Online-Publikation</subfield>
+			<subfield code="2">gnd</subfield>
+		</datafield>
+		<datafield tag="689" ind1="0" ind2="0">
+			<subfield code="0">(DE-588)4046811-2</subfield>
+			<subfield code="0">(DE-101)040468119</subfield>
+			<subfield code="D">s</subfield>
+			<subfield code="a">Poröser Stoff</subfield>
+		</datafield>
+		<datafield tag="689" ind1="0" ind2="1">
+			<subfield code="0">(DE-588)4006684-8</subfield>
+			<subfield code="0">(DE-101)040066843</subfield>
+			<subfield code="D">s</subfield>
+			<subfield code="a">Bildverarbeitung</subfield>
+		</datafield>
+		<datafield tag="689" ind1="0" ind2="2">
+			<subfield code="0">(DE-588)4150634-0</subfield>
+			<subfield code="0">(DE-101)041506340</subfield>
+			<subfield code="D">s</subfield>
+			<subfield code="a">Dreidimensionale Rekonstruktion</subfield>
+		</datafield>
+		<datafield tag="689" ind1="0" ind2="3">
+			<subfield code="A">f</subfield>
+			<subfield code="a">Online-Publikation</subfield>
+		</datafield>
+		<datafield tag="689" ind1="0" ind2=" ">
+			<subfield code="5">DE-101</subfield>
+			<subfield code="5">DE-101</subfield>
+		</datafield>
+		<datafield tag="689" ind1="1" ind2="0">
+			<subfield code="0">(DE-588)4046811-2</subfield>
+			<subfield code="0">(DE-101)040468119</subfield>
+			<subfield code="D">s</subfield>
+			<subfield code="a">Poröser Stoff</subfield>
+		</datafield>
+		<datafield tag="689" ind1="1" ind2="1">
+			<subfield code="0">(DE-588)4039238-7</subfield>
+			<subfield code="0">(DE-101)040392384</subfield>
+			<subfield code="D">s</subfield>
+			<subfield code="a">Mikroskopie</subfield>
+		</datafield>
+		<datafield tag="689" ind1="1" ind2="2">
+			<subfield code="0">(DE-588)4254740-4</subfield>
+			<subfield code="0">(DE-101)042547407</subfield>
+			<subfield code="D">s</subfield>
+			<subfield code="a">Grauwertbild</subfield>
+		</datafield>
+		<datafield tag="689" ind1="1" ind2="3">
+			<subfield code="0">(DE-588)4403014-9</subfield>
+			<subfield code="0">(DE-101)94696193X</subfield>
+			<subfield code="D">s</subfield>
+			<subfield code="a">Vorverarbeitung</subfield>
+		</datafield>
+		<datafield tag="689" ind1="1" ind2="4">
+			<subfield code="0">(DE-588)4150634-0</subfield>
+			<subfield code="0">(DE-101)041506340</subfield>
+			<subfield code="D">s</subfield>
+			<subfield code="a">Dreidimensionale Rekonstruktion</subfield>
+		</datafield>
+		<datafield tag="689" ind1="1" ind2="5">
+			<subfield code="0">(DE-588)4145394-3</subfield>
+			<subfield code="0">(DE-101)041453948</subfield>
+			<subfield code="D">s</subfield>
+			<subfield code="a">Bildauswertung</subfield>
+		</datafield>
+		<datafield tag="689" ind1="1" ind2=" ">
+			<subfield code="5">DE-101</subfield>
+			<subfield code="5">DE-101</subfield>
+		</datafield>
+		<datafield tag="700" ind1="1" ind2=" ">
+			<subfield code="0">(DE-588)120402858</subfield>
+			<subfield code="0">(DE-101)120402858</subfield>
+			<subfield code="a">Scharfenberg, Roland</subfield>
+			<subfield code="d">1970-</subfield>
+			<subfield code="4">cre</subfield>
+		</datafield>
+		<datafield tag="775" ind1="0" ind2="8">
+			<subfield code="i">Druckausg.</subfield>
+			<subfield code="a">Scharfenberg, Roland</subfield>
+			<subfield code="t">Charakterisierung poröser Medien mit Hilfe
+				der digitalen
+				Bildverarbeitung
+			</subfield>
+			<subfield code="w">(DE-101)958893225</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2="0">
+			<subfield code="u">http://nbn-resolving.de/urn:nbn:de:gbv:089-2455540417
+			</subfield>
+			<subfield code="x">Resolving-System</subfield>
+		</datafield>
+		<datafield tag="856" ind1=" " ind2="0">
+			<subfield code="u">http://d-nb.info/954307534/34</subfield>
+			<subfield code="x">Langzeitarchivierung Nationalbibliothek
+			</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2=" ">
+			<subfield code="s">ca. 3,2 MB</subfield>
+			<subfield code="u">http://edok01.tib.uni-hannover.de/edoks/e002/245554041.pdf
+			</subfield>
+		</datafield>
+		<datafield tag="925" ind1="r" ind2=" ">
+			<subfield code="a">rh</subfield>
+		</datafield>
+	</record>
+	<record type="Bibliographic">
+		<leader>01786nam a2200397 c 4500</leader>
+		<controlfield tag="001">999112503</controlfield>
+		<controlfield tag="003">DE-101</controlfield>
+		<controlfield tag="005">20101203170810.0</controlfield>
+		<controlfield tag="007">cr||||||||||||</controlfield>
+		<controlfield tag="008">091215s2010 ne |||||o|||| 10||||eng
+		</controlfield>
+		<datafield tag="015" ind1=" " ind2=" ">
+			<subfield code="a">10,O01</subfield>
+			<subfield code="2">dnb</subfield>
+		</datafield>
+		<datafield tag="016" ind1="7" ind2=" ">
+			<subfield code="2">DE-101</subfield>
+			<subfield code="a">999112503</subfield>
+		</datafield>
+		<datafield tag="020" ind1=" " ind2=" ">
+			<subfield code="a">9789048134977</subfield>
+			<subfield code="9">978-90-481-3497-7</subfield>
+		</datafield>
+		<datafield tag="024" ind1="7" ind2=" ">
+			<subfield code="2">doi</subfield>
+			<subfield code="a">10.1007/978-90-481-3497-7</subfield>
+		</datafield>
+		<datafield tag="024" ind1="7" ind2=" ">
+			<subfield code="2">urn</subfield>
+			<subfield code="a">urn:nbn:de:1111-20100730262</subfield>
+		</datafield>
+		<datafield tag="035" ind1=" " ind2=" ">
+			<subfield code="a">(DE-599)DNB999112503</subfield>
+		</datafield>
+		<datafield tag="035" ind1=" " ind2=" ">
+			<subfield code="a">(OCoLC)724073995</subfield>
+		</datafield>
+		<datafield tag="040" ind1=" " ind2=" ">
+			<subfield code="a">1140</subfield>
+			<subfield code="b">ger</subfield>
+			<subfield code="c">DE-101</subfield>
+			<subfield code="d">1141</subfield>
+			<subfield code="e">rakwb</subfield>
+		</datafield>
+		<datafield tag="041" ind1=" " ind2=" ">
+			<subfield code="a">eng</subfield>
+		</datafield>
+		<datafield tag="044" ind1=" " ind2=" ">
+			<subfield code="c">XA-NL</subfield>
+			<subfield code="c">XA-DE</subfield>
+		</datafield>
+		<datafield tag="084" ind1=" " ind2=" ">
+			<subfield code="a">550</subfield>
+			<subfield code="a">620</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">sdnb</subfield>
+		</datafield>
+		<datafield tag="245" ind1="1" ind2="0">
+			<subfield code="a">Water treatment technologies for the removal
+				of high toxity
+				pollutants
+			</subfield>
+			<subfield code="h">[Elektronische Ressource]</subfield>
+			<subfield code="b">proceedings of the NATO Advanced Research
+				Workshop on Water Treatment
+				Technologies for the Removal of High Toxity Pollutants, Kosice, Slovak Republic,
+				13
+				- 17 September 2008
+			</subfield>
+			<subfield code="c">ed. by Miroslava Václavíková ...
+			</subfield>
+		</datafield>
+		<datafield tag="260" ind1="3" ind2=" ">
+			<subfield code="a">Dordrecht</subfield>
+			<subfield code="b">Springer</subfield>
+			<subfield code="c">2010</subfield>
+		</datafield>
+		<datafield tag="260" ind1="3" ind2=" ">
+			<subfield code="a">[Heidelberg]</subfield>
+			<subfield code="b">Springer</subfield>
+		</datafield>
+		<datafield tag="300" ind1=" " ind2=" ">
+			<subfield code="a">Online-Ressource</subfield>
+		</datafield>
+		<datafield tag="490" ind1="0" ind2=" ">
+			<subfield code="a">NATO science for peace and security series :
+				C</subfield>
+		</datafield>
+		<datafield tag="500" ind1=" " ind2=" ">
+			<subfield code="a">Lizenzpflichtig</subfield>
+		</datafield>
+		<datafield tag="583" ind1="1" ind2=" ">
+			<subfield code="a">Langzeitarchivierung gewährleistet
+			</subfield>
+			<subfield code="i">LZA</subfield>
+		</datafield>
+		<datafield tag="700" ind1="1" ind2=" ">
+			<subfield code="0">(DE-588)140064370</subfield>
+			<subfield code="0">(DE-101)140064370</subfield>
+			<subfield code="a">Václavíková, Miroslava</subfield>
+			<subfield code="4">cre</subfield>
+		</datafield>
+		<datafield tag="711" ind1="2" ind2=" ">
+			<subfield code="0">(DE-588)16050296-2</subfield>
+			<subfield code="0">(DE-101)999112082</subfield>
+			<subfield code="a">Advanced Research Workshop on Water Treatment
+				Technologies for the
+				Removal of High Toxity Pollutants
+			</subfield>
+			<subfield code="d">2008</subfield>
+			<subfield code="c">Košice</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2="0">
+			<subfield code="u">http://nbn-resolving.de/urn:nbn:de:1111-20100730262
+			</subfield>
+			<subfield code="x">Resolving-System</subfield>
+		</datafield>
+		<datafield tag="856" ind1=" " ind2="0">
+			<subfield code="u">http://d-nb.info/999112503/34</subfield>
+			<subfield code="x">Langzeitarchivierung Nationalbibliothek
+			</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2=" ">
+			<subfield code="q">application/pdf</subfield>
+			<subfield code="u">http://www.springerlink.com/content/j327h1/
+			</subfield>
+			<subfield code="x">Verlag</subfield>
+		</datafield>
+		<datafield tag="889" ind1=" " ind2=" ">
+			<subfield code="w">(DE-101)1005188505</subfield>
+		</datafield>
+		<datafield tag="912" ind1=" " ind2=" ">
+			<subfield code="a">ZDB-2-EES</subfield>
+		</datafield>
+		<datafield tag="925" ind1="r" ind2=" ">
+			<subfield code="a">ro</subfield>
+			<subfield code="a">ra</subfield>
+		</datafield>
+	</record>
+	<record type="Bibliographic">
+		<leader>01488nam a2200373 c 4500</leader>
+		<controlfield tag="001">999081810</controlfield>
+		<controlfield tag="003">DE-101</controlfield>
+		<controlfield tag="005">20100324171005.0</controlfield>
+		<controlfield tag="007">cr||||||||||||</controlfield>
+		<controlfield tag="008">091214s2010 ne |||||o|||| 00||||eng
+		</controlfield>
+		<datafield tag="015" ind1=" " ind2=" ">
+			<subfield code="a">10,O01</subfield>
+			<subfield code="2">dnb</subfield>
+		</datafield>
+		<datafield tag="016" ind1="7" ind2=" ">
+			<subfield code="2">DE-101</subfield>
+			<subfield code="a">999081810</subfield>
+		</datafield>
+		<datafield tag="020" ind1=" " ind2=" ">
+			<subfield code="a">9789048134588</subfield>
+			<subfield code="9">978-90-481-3458-8</subfield>
+		</datafield>
+		<datafield tag="024" ind1="7" ind2=" ">
+			<subfield code="2">doi</subfield>
+			<subfield code="a">10.1007/978-90-481-3458-8</subfield>
+		</datafield>
+		<datafield tag="024" ind1="7" ind2=" ">
+			<subfield code="2">urn</subfield>
+			<subfield code="a">urn:nbn:de:1111-20091214418</subfield>
+		</datafield>
+		<datafield tag="035" ind1=" " ind2=" ">
+			<subfield code="a">(DE-599)DNB999081810</subfield>
+		</datafield>
+		<datafield tag="035" ind1=" " ind2=" ">
+			<subfield code="a">(OCoLC)724064653</subfield>
+		</datafield>
+		<datafield tag="040" ind1=" " ind2=" ">
+			<subfield code="a">1140</subfield>
+			<subfield code="b">ger</subfield>
+			<subfield code="c">DE-101</subfield>
+			<subfield code="d">9999</subfield>
+			<subfield code="e">rakwb</subfield>
+		</datafield>
+		<datafield tag="041" ind1=" " ind2=" ">
+			<subfield code="a">eng</subfield>
+		</datafield>
+		<datafield tag="044" ind1=" " ind2=" ">
+			<subfield code="c">XA-NL</subfield>
+			<subfield code="c">XA-DE</subfield>
+		</datafield>
+		<datafield tag="084" ind1=" " ind2=" ">
+			<subfield code="a">570</subfield>
+			<subfield code="a">590</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">sdnb</subfield>
+		</datafield>
+		<datafield tag="245" ind1="1" ind2="0">
+			<subfield code="a">Chinese fishes</subfield>
+			<subfield code="h">[Elektronische Ressource]</subfield>
+			<subfield code="c">David L. G. Noakes ... ed.</subfield>
+		</datafield>
+		<datafield tag="260" ind1="3" ind2=" ">
+			<subfield code="a">Dordrecht</subfield>
+			<subfield code="a">Heidelberg</subfield>
+			<subfield code="a">London</subfield>
+			<subfield code="a">New York, NY</subfield>
+			<subfield code="b">Springer</subfield>
+			<subfield code="c">2010</subfield>
+		</datafield>
+		<datafield tag="300" ind1=" " ind2=" ">
+			<subfield code="a">Online-Ressource</subfield>
+		</datafield>
+		<datafield tag="490" ind1="1" ind2=" ">
+			<subfield code="a">Developments in environmental biology of
+				fishes</subfield>
+			<subfield code="v">28</subfield>
+		</datafield>
+		<datafield tag="500" ind1=" " ind2=" ">
+			<subfield code="a">Aus: Environmental biology of fishes ;
+				86.2009. -
+				Lizenzpflichtig
+			</subfield>
+		</datafield>
+		<datafield tag="583" ind1="1" ind2=" ">
+			<subfield code="a">Langzeitarchivierung gewährleistet
+			</subfield>
+			<subfield code="i">LZA</subfield>
+		</datafield>
+		<datafield tag="700" ind1="1" ind2=" ">
+			<subfield code="0">(DE-588)136372287</subfield>
+			<subfield code="0">(DE-101)136372287</subfield>
+			<subfield code="a">Noakes, David L. G.</subfield>
+			<subfield code="4">cre</subfield>
+		</datafield>
+		<datafield tag="830" ind1=" " ind2="0">
+			<subfield code="a">Developments in environmental biology of
+				fishes</subfield>
+			<subfield code="v">28</subfield>
+			<subfield code="w">(DE-101)987446320</subfield>
+			<subfield code="w">(DE-600)2408622-8</subfield>
+			<subfield code="9">228</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2="0">
+			<subfield code="u">http://nbn-resolving.de/urn:nbn:de:1111-20091214418
+			</subfield>
+			<subfield code="x">Resolving-System</subfield>
+		</datafield>
+		<datafield tag="856" ind1=" " ind2="0">
+			<subfield code="u">http://d-nb.info/999081810/34</subfield>
+			<subfield code="x">Langzeitarchivierung Nationalbibliothek
+			</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2=" ">
+			<subfield code="q">application/pdf</subfield>
+			<subfield code="u">http://www.springerlink.com/content/r5k24n/
+			</subfield>
+			<subfield code="x">Verlag</subfield>
+		</datafield>
+		<datafield tag="912" ind1=" " ind2=" ">
+			<subfield code="a">ZDB-2-EES</subfield>
+		</datafield>
+		<datafield tag="925" ind1="r" ind2=" ">
+			<subfield code="a">ro</subfield>
+			<subfield code="a">ra</subfield>
+		</datafield>
+	</record>
+	<record type="Bibliographic">
+		<leader>01727nam a2200349uc 4500</leader>
+		<controlfield tag="001">1025134699</controlfield>
+		<controlfield tag="003">DE-101</controlfield>
+		<controlfield tag="005">20120816052907.0</controlfield>
+		<controlfield tag="007">cr||||||||||||</controlfield>
+		<controlfield tag="008">120815s2010 gw |||||om||| 00||||ger
+		</controlfield>
+		<datafield tag="015" ind1=" " ind2=" ">
+			<subfield code="a">12,O09</subfield>
+			<subfield code="2">dnb</subfield>
+		</datafield>
+		<datafield tag="016" ind1="7" ind2=" ">
+			<subfield code="2">DE-101</subfield>
+			<subfield code="a">1025134699</subfield>
+		</datafield>
+		<datafield tag="024" ind1="7" ind2=" ">
+			<subfield code="2">urn</subfield>
+			<subfield code="a">urn:nbn:de:gbv:3:4-4745</subfield>
+		</datafield>
+		<datafield tag="035" ind1=" " ind2=" ">
+			<subfield code="a">(DE-599)DNB1025134699</subfield>
+		</datafield>
+		<datafield tag="040" ind1=" " ind2=" ">
+			<subfield code="a">1140</subfield>
+			<subfield code="b">ger</subfield>
+			<subfield code="c">DE-101</subfield>
+			<subfield code="d">9999</subfield>
+		</datafield>
+		<datafield tag="041" ind1=" " ind2=" ">
+			<subfield code="a">ger</subfield>
+		</datafield>
+		<datafield tag="044" ind1=" " ind2=" ">
+			<subfield code="c">XA-DE-ST</subfield>
+		</datafield>
+		<datafield tag="084" ind1=" " ind2=" ">
+			<subfield code="a">610</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">sdnb</subfield>
+		</datafield>
+		<datafield tag="100" ind1="1" ind2=" ">
+			<subfield code="0">(DE-588)129567310</subfield>
+			<subfield code="0">(DE-101)129567310</subfield>
+			<subfield code="a">Schäfer, Juliane</subfield>
+			<subfield code="4">aut</subfield>
+		</datafield>
+		<datafield tag="245" ind1="1" ind2="0">
+			<subfield code="a">&#152;Der&#156; Einfluss von
+				Enzym-induzierenden
+				Antiepileptika auf den Talspiegel von Imatinib bei Patienten mit Glioblastoma
+				multiforme
+			</subfield>
+			<subfield code="h">[Elektronische Ressource]</subfield>
+			<subfield code="c">Juliane Schäfer. Betreuer: Eberhard Schleyer
+				; Hans-Joachim Schmoll
+				; M. Bornhäuser ; Hans-Joachim Schmoll
+			</subfield>
+		</datafield>
+		<datafield tag="260" ind1="3" ind2=" ">
+			<subfield code="a">Halle, Saale</subfield>
+			<subfield code="b">Universitäts- und Landesbibliothek
+				Sachsen-Anhalt</subfield>
+			<subfield code="c">2010</subfield>
+		</datafield>
+		<datafield tag="300" ind1=" " ind2=" ">
+			<subfield code="a">Online-Ressource</subfield>
+		</datafield>
+		<datafield tag="502" ind1=" " ind2=" ">
+			<subfield code="a">Halle (Saale), Martin-Luther-Universität
+				Halle-Wittenberg, Diss.,
+				2010
+			</subfield>
+		</datafield>
+		<datafield tag="583" ind1="1" ind2=" ">
+			<subfield code="a">Langzeitarchivierung gewährleistet
+			</subfield>
+			<subfield code="i">LZA</subfield>
+		</datafield>
+		<datafield tag="700" ind1="1" ind2=" ">
+			<subfield code="0">(DE-588)112470246</subfield>
+			<subfield code="0">(DE-101)112470246</subfield>
+			<subfield code="a">Schleyer, Eberhard</subfield>
+			<subfield code="4">oth</subfield>
+			<subfield code="e">Betreuer</subfield>
+		</datafield>
+		<datafield tag="700" ind1="1" ind2=" ">
+			<subfield code="0">(DE-588)177355964</subfield>
+			<subfield code="0">(DE-101)177355964</subfield>
+			<subfield code="a">Schmoll, Hans-Joachim</subfield>
+			<subfield code="4">oth</subfield>
+			<subfield code="e">Betreuer</subfield>
+		</datafield>
+		<datafield tag="700" ind1="1" ind2=" ">
+			<subfield code="0">(DE-588)1025148940</subfield>
+			<subfield code="0">(DE-101)1025148940</subfield>
+			<subfield code="a">Bornhäuser, M.</subfield>
+			<subfield code="4">oth</subfield>
+			<subfield code="e">Betreuer</subfield>
+		</datafield>
+		<datafield tag="700" ind1="1" ind2=" ">
+			<subfield code="0">(DE-588)177355964</subfield>
+			<subfield code="0">(DE-101)177355964</subfield>
+			<subfield code="a">Schmoll, Hans-Joachim</subfield>
+			<subfield code="4">oth</subfield>
+			<subfield code="e">Betreuer</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2="0">
+			<subfield code="u">http://nbn-resolving.de/urn:nbn:de:gbv:3:4-4745
+			</subfield>
+			<subfield code="x">Resolving-System</subfield>
+		</datafield>
+		<datafield tag="856" ind1=" " ind2="0">
+			<subfield code="u">http://d-nb.info/1025134699/34</subfield>
+			<subfield code="x">Langzeitarchivierung Nationalbibliothek
+			</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2=" ">
+			<subfield code="u">http://digital.bibliothek.uni-halle.de/urn/urn:nbn:de:gbv:3:4-4745
+			</subfield>
+			<subfield code="x">Verlag</subfield>
+			<subfield code="z">kostenfrei</subfield>
+		</datafield>
+		<datafield tag="925" ind1="r" ind2=" ">
+			<subfield code="a">ro</subfield>
+			<subfield code="a">rh</subfield>
+		</datafield>
+	</record>
+	<record type="Bibliographic">
+		<leader>01829nam a2200421 c 4500</leader>
+		<controlfield tag="001">1000315134</controlfield>
+		<controlfield tag="003">DE-101</controlfield>
+		<controlfield tag="005">20111116181427.0</controlfield>
+		<controlfield tag="007">cr||||||||||||</controlfield>
+		<controlfield tag="008">100218s2009 gw |||||om||| 00||||ger
+		</controlfield>
+		<datafield tag="015" ind1=" " ind2=" ">
+			<subfield code="a">10,O02</subfield>
+			<subfield code="2">dnb</subfield>
+		</datafield>
+		<datafield tag="016" ind1="7" ind2=" ">
+			<subfield code="2">DE-101</subfield>
+			<subfield code="a">1000315134</subfield>
+		</datafield>
+		<datafield tag="024" ind1="7" ind2=" ">
+			<subfield code="2">urn</subfield>
+			<subfield code="a">urn:nbn:de:hbz:38-28722</subfield>
+		</datafield>
+		<datafield tag="035" ind1=" " ind2=" ">
+			<subfield code="a">(DE-599)DNB1000315134</subfield>
+		</datafield>
+		<datafield tag="040" ind1=" " ind2=" ">
+			<subfield code="a">1140</subfield>
+			<subfield code="b">ger</subfield>
+			<subfield code="c">DE-101</subfield>
+			<subfield code="d">9999</subfield>
+			<subfield code="e">rakwb</subfield>
+		</datafield>
+		<datafield tag="041" ind1=" " ind2=" ">
+			<subfield code="a">ger</subfield>
+		</datafield>
+		<datafield tag="044" ind1=" " ind2=" ">
+			<subfield code="c">XA-DE</subfield>
+		</datafield>
+		<datafield tag="082" ind1="0" ind2="4">
+			<subfield code="8">1\x</subfield>
+			<subfield code="a">551.5113015118</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">22/ger</subfield>
+		</datafield>
+		<datafield tag="084" ind1=" " ind2=" ">
+			<subfield code="a">550</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">sdnb</subfield>
+		</datafield>
+		<datafield tag="085" ind1=" " ind2=" ">
+			<subfield code="8">1\x</subfield>
+			<subfield code="b">551.5113</subfield>
+		</datafield>
+		<datafield tag="085" ind1=" " ind2=" ">
+			<subfield code="8">1\x</subfield>
+			<subfield code="s">511.8</subfield>
+		</datafield>
+		<datafield tag="085" ind1=" " ind2=" ">
+			<subfield code="8">1\x</subfield>
+			<subfield code="z">1</subfield>
+			<subfield code="s">015</subfield>
+		</datafield>
+		<datafield tag="088" ind1=" " ind2=" ">
+			<subfield code="a">DLR-FB-2009-16</subfield>
+		</datafield>
+		<datafield tag="100" ind1="1" ind2=" ">
+			<subfield code="0">(DE-588)139791396</subfield>
+			<subfield code="0">(DE-101)139791396</subfield>
+			<subfield code="a">Schroedter-Homscheidt, Marion</subfield>
+			<subfield code="d">1972-</subfield>
+			<subfield code="4">aut</subfield>
+		</datafield>
+		<datafield tag="245" ind1="1" ind2="0">
+			<subfield code="a">Beobachtungsoperator zur Assimilation
+				satellitenbasierter Messungen
+				verschiedener Aerosoltypen in ein Chemie-Transportmodell
+			</subfield>
+			<subfield code="h">[Elektronische Ressource]</subfield>
+			<subfield code="c">Marion Schroedter-Homscheidt</subfield>
+		</datafield>
+		<datafield tag="260" ind1="3" ind2=" ">
+			<subfield code="a">Köln</subfield>
+			<subfield code="b">DLR, Bibliotheks- und Informationswesen
+			</subfield>
+			<subfield code="c">2009</subfield>
+		</datafield>
+		<datafield tag="300" ind1=" " ind2=" ">
+			<subfield code="a">Online-Ressource</subfield>
+		</datafield>
+		<datafield tag="490" ind1="1" ind2=" ">
+			<subfield code="a">Forschungsbericht / Deutsches Zentrum für
+				Luft- und
+				Raumfahrt
+			</subfield>
+			<subfield code="v">2009,16</subfield>
+		</datafield>
+		<datafield tag="502" ind1=" " ind2=" ">
+			<subfield code="a">Zugl.: Köln, Univ., Diss., 2009</subfield>
+		</datafield>
+		<datafield tag="530" ind1=" " ind2=" ">
+			<subfield code="a">Online-Ausg.:</subfield>
+		</datafield>
+		<datafield tag="533" ind1=" " ind2=" ">
+			<subfield code="7">s2009uuuu</subfield>
+			<subfield code="b">[Köln]</subfield>
+			<subfield code="c">[Univ.-Bibliothek]</subfield>
+			<subfield code="d">2009</subfield>
+			<subfield code="n">[Online-Ausg.]</subfield>
+		</datafield>
+		<datafield tag="583" ind1="1" ind2=" ">
+			<subfield code="a">Langzeitarchivierung gewährleistet
+			</subfield>
+			<subfield code="i">LZA</subfield>
+		</datafield>
+		<datafield tag="583" ind1="1" ind2=" ">
+			<subfield code="a">Langzeitarchivierung gewährleistet
+			</subfield>
+			<subfield code="i">LZA</subfield>
+		</datafield>
+		<datafield tag="810" ind1="2" ind2=" ">
+			<subfield code="a">Deutsches Zentrum für Luft- und Raumfahrt
+			</subfield>
+			<subfield code="g">Köln</subfield>
+			<subfield code="4">aut</subfield>
+			<subfield code="t">Forschungsbericht</subfield>
+			<subfield code="v">2009,16</subfield>
+			<subfield code="w">(DE-101)019035705</subfield>
+			<subfield code="w">(DE-600)1408820-4</subfield>
+			<subfield code="9">42009 216</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2="0">
+			<subfield code="u">http://nbn-resolving.de/urn:nbn:de:hbz:38-28722
+			</subfield>
+			<subfield code="x">Resolving-System</subfield>
+		</datafield>
+		<datafield tag="856" ind1=" " ind2="0">
+			<subfield code="u">http://d-nb.info/1000315134/34</subfield>
+			<subfield code="x">Langzeitarchivierung Nationalbibliothek
+			</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2=" ">
+			<subfield code="q">application/pdf</subfield>
+			<subfield code="u">http://kups.ub.uni-koeln.de/volltexte/2009/2872/index.html
+			</subfield>
+			<subfield code="x">Verlag</subfield>
+			<subfield code="z">kostenfrei</subfield>
+		</datafield>
+		<datafield tag="925" ind1="r" ind2=" ">
+			<subfield code="a">ro</subfield>
+			<subfield code="a">rb</subfield>
+		</datafield>
+	</record>
+	<record type="Bibliographic">
+		<leader>01712nam a2200445uc 4500</leader>
+		<controlfield tag="001">1025374754</controlfield>
+		<controlfield tag="003">DE-101</controlfield>
+		<controlfield tag="005">20120824012852.0</controlfield>
+		<controlfield tag="007">cr||||||||||||</controlfield>
+		<controlfield tag="008">120823s2010 gw |||||o|||| 00||||ger
+		</controlfield>
+		<datafield tag="015" ind1=" " ind2=" ">
+			<subfield code="a">12,O09</subfield>
+			<subfield code="2">dnb</subfield>
+		</datafield>
+		<datafield tag="016" ind1="7" ind2=" ">
+			<subfield code="2">DE-101</subfield>
+			<subfield code="a">1025374754</subfield>
+		</datafield>
+		<datafield tag="020" ind1=" " ind2=" ">
+			<subfield code="a">9783981393903</subfield>
+			<subfield code="9">978-3-9813939-0-3</subfield>
+		</datafield>
+		<datafield tag="024" ind1="7" ind2=" ">
+			<subfield code="2">urn</subfield>
+			<subfield code="a">urn:nbn:de:101:1-2012082311717</subfield>
+		</datafield>
+		<datafield tag="035" ind1=" " ind2=" ">
+			<subfield code="a">(DE-599)DNB1025374754</subfield>
+		</datafield>
+		<datafield tag="040" ind1=" " ind2=" ">
+			<subfield code="a">1240</subfield>
+			<subfield code="b">ger</subfield>
+			<subfield code="c">DE-101</subfield>
+			<subfield code="d">9999</subfield>
+		</datafield>
+		<datafield tag="041" ind1=" " ind2=" ">
+			<subfield code="a">ger</subfield>
+		</datafield>
+		<datafield tag="044" ind1=" " ind2=" ">
+			<subfield code="c">XA-DE-BW</subfield>
+		</datafield>
+		<datafield tag="084" ind1=" " ind2=" ">
+			<subfield code="a">K</subfield>
+			<subfield code="q">DE-101</subfield>
+			<subfield code="2">sdnb</subfield>
+		</datafield>
+		<datafield tag="100" ind1="1" ind2=" ">
+			<subfield code="0">(DE-588)141867167</subfield>
+			<subfield code="0">(DE-101)141867167</subfield>
+			<subfield code="a">Schmuker, Barbara</subfield>
+			<subfield code="d">1970-</subfield>
+			<subfield code="4">aut</subfield>
+		</datafield>
+		<datafield tag="245" ind1="1" ind2="0">
+			<subfield code="a">&#152;Das&#156; kleine Schiff</subfield>
+			<subfield code="h">[Elektronische Ressource]</subfield>
+			<subfield code="b">Ein Kinderbuch vom See - eBook</subfield>
+			<subfield code="c">Barbara Schmuker</subfield>
+		</datafield>
+		<datafield tag="250" ind1=" " ind2=" ">
+			<subfield code="a">1. Aufl.</subfield>
+		</datafield>
+		<datafield tag="259" ind1=" " ind2=" ">
+			<subfield code="a">11</subfield>
+		</datafield>
+		<datafield tag="260" ind1="3" ind2=" ">
+			<subfield code="a">Überlingen</subfield>
+			<subfield code="b">Reichert</subfield>
+			<subfield code="c">2010</subfield>
+		</datafield>
+		<datafield tag="300" ind1=" " ind2=" ">
+			<subfield code="a">Online-Ressource</subfield>
+		</datafield>
+		<datafield tag="500" ind1=" " ind2=" ">
+			<subfield code="a">Lizenzpflichtig</subfield>
+		</datafield>
+		<datafield tag="583" ind1="1" ind2=" ">
+			<subfield code="a">Langzeitarchivierung gewährleistet
+			</subfield>
+			<subfield code="i">LZA</subfield>
+		</datafield>
+		<datafield tag="650" ind1=" " ind2="7">
+			<subfield code="0">(DE-588)4044820-4</subfield>
+			<subfield code="0">(DE-101)040448207</subfield>
+			<subfield code="a">Fahrgastschiff</subfield>
+			<subfield code="2">gnd</subfield>
+		</datafield>
+		<datafield tag="651" ind1=" " ind2="7">
+			<subfield code="0">(DE-588)4007403-1</subfield>
+			<subfield code="0">(DE-101)04007403X</subfield>
+			<subfield code="a">Bodensee</subfield>
+			<subfield code="2">gnd</subfield>
+		</datafield>
+		<datafield tag="655" ind1=" " ind2="7">
+			<subfield code="a">Bilderbuch</subfield>
+			<subfield code="2">gnd</subfield>
+		</datafield>
+		<datafield tag="689" ind1="0" ind2="0">
+			<subfield code="0">(DE-588)4007403-1</subfield>
+			<subfield code="0">(DE-101)04007403X</subfield>
+			<subfield code="D">g</subfield>
+			<subfield code="a">Bodensee</subfield>
+		</datafield>
+		<datafield tag="689" ind1="0" ind2="1">
+			<subfield code="0">(DE-588)4044820-4</subfield>
+			<subfield code="0">(DE-101)040448207</subfield>
+			<subfield code="D">s</subfield>
+			<subfield code="a">Fahrgastschiff</subfield>
+		</datafield>
+		<datafield tag="689" ind1="0" ind2="2">
+			<subfield code="A">f</subfield>
+			<subfield code="a">Bilderbuch</subfield>
+		</datafield>
+		<datafield tag="689" ind1="0" ind2=" ">
+			<subfield code="5">DE-101</subfield>
+			<subfield code="5">DE-101</subfield>
+		</datafield>
+		<datafield tag="700" ind1="1" ind2=" ">
+			<subfield code="0">(DE-588)141867248</subfield>
+			<subfield code="0">(DE-101)141867248</subfield>
+			<subfield code="a">Lohmann, Kristin</subfield>
+			<subfield code="d">1976-</subfield>
+			<subfield code="4">ill</subfield>
+			<subfield code="e">Ill.</subfield>
+		</datafield>
+		<datafield tag="775" ind1="0" ind2="8">
+			<subfield code="i">Druckausg.</subfield>
+			<subfield code="a">Schmuker, Barbara</subfield>
+			<subfield code="t">&#152;Das&#156; kleine Schiff</subfield>
+			<subfield code="w">(DE-101)1004797664</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2="0">
+			<subfield code="u">http://nbn-resolving.de/urn:nbn:de:101:1-2012082311717
+			</subfield>
+			<subfield code="x">Resolving-System</subfield>
+		</datafield>
+		<datafield tag="856" ind1=" " ind2="0">
+			<subfield code="u">http://d-nb.info/1025374754/34</subfield>
+			<subfield code="x">Langzeitarchivierung Nationalbibliothek
+			</subfield>
+		</datafield>
+		<datafield tag="856" ind1="4" ind2=" ">
+			<subfield code="u">http://www.daskleineschiff.de</subfield>
+			<subfield code="x">Verlag</subfield>
+		</datafield>
+		<datafield tag="925" ind1="r" ind2=" ">
+			<subfield code="a">ro</subfield>
+			<subfield code="a">ra</subfield>
+		</datafield>
+	</record>
+</collection>
