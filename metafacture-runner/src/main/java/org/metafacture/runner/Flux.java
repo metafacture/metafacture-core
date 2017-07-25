@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.runner;
+package org.metafacture.runner;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,10 +23,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.antlr.runtime.RecognitionException;
-import org.culturegraph.mf.commons.ResourceUtil;
-import org.culturegraph.mf.flux.FluxCompiler;
-import org.culturegraph.mf.flux.parser.FluxProgramm;
-import org.culturegraph.mf.runner.util.DirectoryClassLoader;
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.flux.FluxCompiler;
+import org.metafacture.flux.parser.FluxProgramm;
+import org.metafacture.runner.util.DirectoryClassLoader;
 
 /**
  * @author Markus Michael Geipel

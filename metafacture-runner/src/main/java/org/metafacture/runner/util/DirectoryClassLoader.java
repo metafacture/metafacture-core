@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.culturegraph.mf.runner.util;
+package org.metafacture.runner.util;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -21,7 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import org.culturegraph.mf.framework.MetafactureException;
+import org.metafacture.framework.MetafactureException;
 
 /**
  * A class loader which allows adding directories to the class

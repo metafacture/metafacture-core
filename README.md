@@ -18,7 +18,27 @@ You can use Metafacture either as a stand-alone application or as a Java library
 
 ## Metafacture as a stand-alone application
  
-As of version 2.0.0 the stand-alone application is no longer part of the core library package. The application package can now be found at [culturegraph/metafacture-runner](https://github.com/culturegraph/metafacture-runner). If you are only interested in running Flux scripts without doing any Java programming you should head over there. 
+If you are only interested in running Flux scripts without doing any Java programming this is the way to go. The instructions assume that you are using a *nix-like shell.
+
+1. Download the latest distribution package from the [metafacture-core/releases](https://github.com/culturegraph/metafacture-core/releases) page. Make sure that you do download a distribution package and _not_ a source code package.
+
+2. Extract the downloaded archive:
+   ```bash
+   $ tar xzf metafacture-runner-VERSION-dist.tar.gz
+   ```
+   This will create a new directory containing a ready-to-use metafacture distribution.
+3. Change into the newly created directory:
+   ```bash
+   $ cd metafacture-runner-VERSION
+   ```
+4. Run one of the example scripts:
+   ```bash
+   $ ./flux.sh examples/read/marc21/read-marc21.flux
+   ```
+   This example will print a number of marc21 records on standard out.
+
+The _examples_ folder contains many more examples which provide a good starting point for learning metafacture. If you have any questions please join our [mailing list](http://lists.dnb.de/mailman/listinfo/metafacture) or use our issue-based discussion forum over at [metafacture-documentation](https://github.com/culturegraph/metafacture-documentation).
+
 
 ## Using Metafacture as a Java libary
 

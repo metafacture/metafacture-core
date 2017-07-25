@@ -3,85 +3,168 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
+		<groupId>org.metafacture</groupId>
+		<artifactId>metafacture-core</artifactId>
+		<version>5.0.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>org.culturegraph</groupId>
 	<artifactId>metafacture-runner</artifactId>
-	<version>5.0.0-SNAPSHOT</version>
 
-	<name>metafacture.runner</name>
-	<description>Standalone applications for working with Flux and Metamorph scripts</description>
-	<url>http://github.com/culturegraph/metafacture-runner</url>
-	<licenses>
-		<license>
-			<name>Apache License, Version 2.0</name>
-			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
-		</license>
-	</licenses>
-
-	<developers>
-		<developer>
-			<id>mgeipel</id>
-			<name>Markus M. Geipel</name>
-			<email>m.geipel@dnb.de</email>
-			<url>https://github.com/mgeipel</url>
-			<organization>Deutsche Nationalbibliothek</organization>
-			<organizationUrl>http://www.dnb.de</organizationUrl>
-			<roles>
-				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>cboehme</id>
-			<name>Christoph Böhme</name>
-			<email>c.boehme@dnb.de</email>
-			<url>https://github.com/cboehme</url>
-			<organization>Deutsche Nationalbibliothek</organization>
-			<organizationUrl>http://www.dnb.de</organizationUrl>
-			<roles>
-				<role>architect</role>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-	</developers>
+	<name>Metafacture Runner</name>
+	<description>Standalone application for working with Flux and Metamorph scripts</description>
 
 	<scm>
-		<connection>scm:git:git://github.com/culturegraph/metafacture-runner.git</connection>
-		<developerConnection>scm:git:git@github.com:culturegraph/metafacture-runner.git</developerConnection>
-		<url>http://github.com/culturegraph/metafacture-runner</url>
-		<tag>HEAD</tag>
+		<connection>${project.parent.scm.connection}</connection>
+		<developerConnection>${project.parent.scm.developerConnection}</developerConnection>
+		<tag>${project.parent.scm.tag}</tag>
+		<url>${project.parent.scm.url}</url>
 	</scm>
-	<distributionManagement>
-		<repository>
-			<id>sonatype-nexus-staging</id>
-			<name>Sonatype OSS Maven Repository : Releases</name>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-		<snapshotRepository>
-			<id>sonatype-nexus-snapshots</id>
-			<name>Sonatype OSS Maven Repository : Snapshots</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-			<!-- <uniqueVersion>true</uniqueVersion> -->
-		</snapshotRepository>
-	</distributionManagement>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<targetJdk>1.8</targetJdk>
-	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-framework</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
 		<dependency>
-			<groupId>org.culturegraph</groupId>
-			<artifactId>metafacture-core</artifactId>
-			<version>4.0.0</version>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-commons</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-flux</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- Metafacture module packages -->
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-biblio</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-csv</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-elasticsearch</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-files</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-flowcontrol</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-formatting</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-formeta</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-io</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-javaintegration</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-jdom</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-json</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-linkeddata</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-mangling</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-monitoring</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-plumbing</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-scripting</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-statistics</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-strings</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-triples</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metafacture-xml</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.metafacture</groupId>
+			<artifactId>metamorph</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- In a perfect world the slf4j binding would be a
@@ -126,14 +209,6 @@
 			<version>1.4</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -146,22 +221,11 @@
 				</excludes>
 			</resource>
 		</resources>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.0</version>
-				<configuration>
-					<source>${targetJdk}</source>
-					<target>${targetJdk}</target>
-					<showWarnings>true</showWarnings>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.0.2</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -170,19 +234,13 @@
 								used to specify that all needed libraries are found under lib/ directory. -->
 							<classpathPrefix>lib/</classpathPrefix>
 							<!-- Specifies the main class of the application -->
-							<mainClass>org.culturegraph.mf.runner.Flux</mainClass>
+							<mainClass>org.metafacture.runner.Flux</mainClass>
 						</manifest>
 						<manifestEntries>
 							<git-commit>${buildNumber}</git-commit>
 						</manifestEntries>
 					</archive>
 				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
 			</plugin>
 
 			<plugin>
@@ -204,7 +262,7 @@
 				<version>2.10</version>
 				<executions>
 					<execution>
-						<id>unpack-metafacture-core-resources</id>
+						<id>unpack-schemata</id>
 						<phase>generate-resources</phase>
 						<goals>
 							<goal>unpack</goal>
@@ -212,8 +270,8 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>org.culturegraph</groupId>
-									<artifactId>metafacture-core</artifactId>
+									<groupId>org.metafacture</groupId>
+									<artifactId>metamorph</artifactId>
 								</artifactItem>
 							</artifactItems>
 							<includes>schemata/**/*</includes>
@@ -236,85 +294,10 @@
 							<descriptors>
 								<descriptor>/src/main/assembly/assembly.xml</descriptor>
 							</descriptors>
-							<archive>
-								<manifest>
-									<mainClass>org.culturegraph.mf.cmdline.Flux</mainClass>
-									<addClasspath>true</addClasspath>
-									<classpathPrefix>lib/</classpathPrefix>
-								</manifest>
-								<manifestEntries>
-									<git-commit>${buildNumber}</git-commit>
-								</manifestEntries>
-							</archive>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.3</version><!--$NO-MVN-MAN-VER$ -->
-				<!-- m2e complains about a different plugin version being specified in
-					the parent pom. However, this is not actually problem for maven. So, we can
-					ignore the warning. -->
-			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>sonatype-oss-release</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.10.4</version>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<phase>package</phase>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-								<configuration>
-									<show>public</show>
-									<nohelp>true</nohelp>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<version>3.0.1</version>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>jar-no-fork</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.6</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>
