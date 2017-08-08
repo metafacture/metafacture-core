@@ -65,7 +65,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 	private static final String BEGIN_CLOSE_ELEMENT = "</";
 	private static final String END_CLOSE_ELEMENT = ">";
 
-	private static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+	private static final String XML_HEADER = "<?xml version=\"%s\" encoding=\"%s\"?>\n";
 	private static final String XMLNS_MARKER = " xmlns";
 
 	private final StringBuilder builder = new StringBuilder();
@@ -75,6 +75,9 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 	private Map<String, String> namespaces = new HashMap<String, String>();
 	private boolean writeRootTag = true;
 	private boolean writeXmlHeader = true;
+	private String xmlHeaderEncoding = "UTF-8";
+	private String xmlHeaderVersion = "1.0";
+
 	private boolean separateRoots;
 
 	private Element element;
@@ -115,6 +118,10 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 	public void setWriteXmlHeader(final boolean writeXmlHeader) {
 		this.writeXmlHeader = writeXmlHeader;
 	}
+
+	public void setXmlHeaderEncoding(final String xmlHeaderEncoding) { this.xmlHeaderEncoding = xmlHeaderEncoding; }
+
+	public void setXmlHeaderVersion(final String xmlHeaderVersion) { this.xmlHeaderVersion = xmlHeaderVersion; }
 
 	public void setWriteRootTag(final boolean writeRootTag) {
 		this.writeRootTag  = writeRootTag;
@@ -208,7 +215,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
 	private void writeHeader() {
 		if (writeXmlHeader) {
-			builder.append(XML_HEADER);
+			builder.append(String.format(XML_HEADER, xmlHeaderVersion, xmlHeaderEncoding));
 		}
 		if (writeRootTag) {
 			builder.append(BEGIN_OPEN_ELEMENT);
