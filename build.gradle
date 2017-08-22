@@ -185,9 +185,13 @@ def getGitTag() {
     logger.warn("HEAD has ${tags.size()} tags. Making a snapshot build")
     return null
   }
-  def tagName = tags[0].name
-  logger.lifecycle("Found tag $tagName. Making a release build")
-  return tagName
+  def tag = tags[0]
+  if (tag.tagger == null || tag.dateTime == null) {
+    logger.warn("Found lightweight tag ${tag.name}. Making a snapshot build")
+    return null
+  }
+  logger.lifecycle("Found annotated tag ${tag.name}. Making a release build")
+  return tag.name
 }
 
 def static getGitTags(grgit) {
