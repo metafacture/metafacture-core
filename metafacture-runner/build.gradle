@@ -92,7 +92,7 @@ jar {
   }
   filesMatching('build.properties', {
     filter(ReplaceTokens, tokens: [
-      version: project.version,
+      version: project.version.toString(),
       timestamp: new Date().getTime().toString(),
       userName: System.properties['user.name']
     ])
