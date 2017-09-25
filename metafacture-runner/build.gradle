@@ -88,12 +88,10 @@ jar {
         'Implementation-Version': version,
         'Main-Class': 'org.metafacture.runner.Flux',
         'Class-Path':
-            configurations.runtimeClasspath.files.collect { it.name }.join(' '),
-        'git-commit': grgit.head().id)
+            configurations.runtimeClasspath.files.collect { it.name }.join(' '))
   }
   filesMatching('build.properties', {
     filter(ReplaceTokens, tokens: [
-      buildNumber: grgit.head().id,
       version: project.version,
       timestamp: new Date().getTime().toString(),
       userName: System.properties['user.name']
