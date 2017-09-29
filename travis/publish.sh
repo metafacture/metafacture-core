@@ -1,5 +1,21 @@
 #!/usr/bin/env bash
 
+#
+# Configures a GPG signing key in Gradle and invokes `./gradlew publish` to sign
+# and publish all artifacts.
+#
+
+function main {
+    require_no_pull_request
+    require_secure_vars
+    require_vars
+    fetch_keyring
+    configure_gradle
+    ./gradlew publish
+    clean_gradle_configuration
+    remove_keyring
+}
+
 function require_no_pull_request {
     if [ -v TRAVIS_PULL_REQUEST -a "$TRAVIS_PULL_REQUEST" != "false" ]; then
         echo "Building pull request. Will not publish."
@@ -30,6 +46,7 @@ function require_vars {
 }
 
 function fetch_keyring {
+    KEYRING_PATH=$( pwd )/$KEYRING_FILE
     echo -n "Fetching keyring: "
     wget --user="$KEYSERVER_USER" \
          --password="$KEYSERVER_PASSWORD" \
@@ -44,14 +61,6 @@ function fetch_keyring {
     echo "OK"
 }
 
-function configure_gradle {
-    echo -n "Configuring Gradle: "
-    echo "signing.secretKeyRingFile=$KEYRING_PATH" >> $GRADLE_PROPERTIES
-    echo "signing.keyId=$KEY_ID" >> $GRADLE_PROPERTIES
-    echo "signing.password=$KEY_PASSWORD" >> $GRADLE_PROPERTIES
-    echo "OK"
-}
-
 function remove_keyring {
     echo -n "Removing keyring: "
     rm -f "$KEYRING_PATH"
@@ -59,6 +68,15 @@ function remove_keyring {
         echo "FAILED"
         exit 1
     fi
+    echo "OK"
+}
+
+function configure_gradle {
+    GRADLE_PROPERTIES=~/.gradle/gradle.properties
+    echo -n "Configuring Gradle: "
+    echo "signing.secretKeyRingFile=$KEYRING_PATH" >> $GRADLE_PROPERTIES
+    echo "signing.keyId=$KEY_ID" >> $GRADLE_PROPERTIES
+    echo "signing.password=$KEY_PASSWORD" >> $GRADLE_PROPERTIES
     echo "OK"
 }
 
@@ -78,17 +96,4 @@ function clean_gradle_configuration {
     echo "OK"
 }
 
-require_no_pull_request
-require_secure_vars
-require_vars
-
-GRADLE_PROPERTIES=~/.gradle/gradle.properties
-KEYRING_PATH=$( pwd )/$KEYRING_FILE
-
-fetch_keyring
-configure_gradle
-
-./gradlew publish
-
-remove_keyring
-clean_gradle_configuration
+main
