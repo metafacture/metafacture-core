@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-function require_on_master {
-    if [ ! -v TRAVIS_BRANCH -o "$TRAVIS_BRANCH" != "master" ]; then
-        echo "Not on master branch. Will not publish."
+function require_no_pull_request {
+    if [ -v TRAVIS_PULL_REQUEST -a "$TRAVIS_PULL_REQUEST" != "false" ]; then
+        echo "Building pull request. Will not publish."
         exit 0
     fi
 }
@@ -78,7 +78,7 @@ function clean_gradle_configuration {
     echo "OK"
 }
 
-require_on_master
+require_no_pull_request
 require_secure_vars
 require_vars
 
