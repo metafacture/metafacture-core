@@ -4,6 +4,9 @@ language: java
 jdk:
   - oraclejdk8
 
+install:
+  - ./travis/switch-to-branch.sh
+
 after_success:
   - ./travis/publish.sh
 
