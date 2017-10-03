@@ -3,9 +3,20 @@ dist: trusty
 language: java
 jdk:
   - oraclejdk8
+addons:
+  sonarcloud:
+    organization: metafacture
+    token: $SONARCLOUD_TOKEN
+cache:
+  directories:
+    - $HOME/.sonar/cache
 
 before_install:
   - ./travis/switch-to-branch.sh
+
+script:
+  - ./gradlew check
+  - ./gradlew sonarqube
 
 after_success:
   - ./travis/publish.sh
