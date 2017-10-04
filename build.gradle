@@ -175,6 +175,12 @@ subprojects {
   }
 }
 
+sonarqube {
+  properties {
+    property "sonar.exclusions", "**/generated-src/**/*.java"
+  }
+}
+
 class ScmInfo {
   def version
   def tag
