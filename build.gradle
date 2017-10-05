@@ -19,6 +19,7 @@ import java.util.regex.Matcher
 plugins {
   id 'org.ajoberstar.grgit' version '2.0.1'
   id 'org.sonarqube' version '2.5'
+  id 'io.codearte.nexus-staging' version '0.11.0'
 }
 
 ext.scmInfo = getScmInfo()
@@ -180,6 +181,24 @@ sonarqube {
   properties {
     property 'sonar.exclusions', '**/generated-src/**/*.java'
   }
+}
+
+nexusStaging {
+  if (project.hasProperty('stagingServerUrl')) {
+    serverUrl = stagingServerUrl
+  }
+  if (project.hasProperty('releaseRepositoryUser')) {
+    username = releaseRepositoryUser
+    password = releaseRepositoryPassword
+  }
+}
+
+tasks.closeRepository.onlyIf {
+  rootProject.scmInfo.isRelease()
+}
+
+tasks.releaseRepository.onlyIf {
+  rootProject.scmInfo.isRelease()
 }
 
 class ScmInfo {
