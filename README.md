@@ -8,7 +8,7 @@ Originally, Metafacture was developed as part of the [Culturegraph](http://cultu
 
 # Build
 
-[![Build Status](https://secure.travis-ci.org/culturegraph/metafacture-core.svg?branch=master)](https://travis-ci.org/culturegraph/metafacture-core/) [![Maven Central](https://img.shields.io/maven-central/v/org.culturegraph/metafacture-core.svg)]()
+[![Build Status](https://secure.travis-ci.org/culturegraph/metafacture-core.svg?branch=master)](https://travis-ci.org/culturegraph/metafacture-core/)
 
 See the [.travis.yml](./.travis.yml) file for details on the CI config used by Travis.
 
