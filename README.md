@@ -1,12 +1,12 @@
-![Metafacture](https://raw.github.com/wiki/culturegraph/metafacture-core/img/metafacture.png)
+![Metafacture](https://raw.github.com/wiki/metafacture/metafacture-core/img/metafacture.png)
 
 Metafacture is a toolkit for processing semi-structured data with a focus on library metadata. It provides a versatile set of tools for reading, writing and transforming data. Metafacture can be used as a stand-alone application or as a Java library in other applications. The name Metafacture is a portmanteau of the words *meta* data and manu*facture*.
 
 Metafacture includes a large number of modules for operating on semi-structured data. These modules can be combined to build pipelines to perform complex metadata processing tasks. The pipelines can be constructed either in Java code or with the domain-specific language **Flux**. One of the core features of Metafacture is the **Metamorph** module. Metamorph is an xml-based language for specifying transformations of semi-structured data. It can be seamlessly integrated into Java code.
 
-At its heart Metafacture is a framework for implementing modules for metadata processing. This makes Metafacture easily extendable with additional modules. The [plugins and tools page](https://github.com/culturegraph/metafacture-core/wiki/Plugins-and-Tools) on the wiki shows supplementary packages and projects which extend Metafacture.
+At its heart Metafacture is a framework for implementing modules for metadata processing. This makes Metafacture easily extendable with additional modules. The [plugins and tools page](https://github.com/metafacture/metafacture-core/wiki/Plugins-and-Tools) on the wiki shows supplementary packages and projects which extend Metafacture.
 
-Originally, Metafacture was developed as part of the [Culturegraph](http://culturegraph.org) platform but it is developed independently now and used by others, too: [see who uses Metafacture](https://github.com/culturegraph/metafacture-core/wiki/Who-uses-Metafacture).
+Originally, Metafacture was developed as part of the [Culturegraph](http://culturegraph.org) platform but it is developed independently now and used by others, too: [see who uses Metafacture](https://github.com/metafacture/metafacture-core/wiki/Who-uses-Metafacture).
 
 # Getting started
 
@@ -16,7 +16,7 @@ You can either use Metafacture as a stand-alone application or include it as a J
  
 If you are only interested in running Flux scripts without doing any Java programming this is the way to go. The instructions assume that you are using a *nix-like shell.
 
-1. Download the latest distribution package from the [metafacture-core/releases](https://github.com/culturegraph/metafacture-core/releases) page. Make sure that you do download a distribution package and _not_ a source code package (the file name should include *-dist*).
+1. Download the latest distribution package from the [metafacture-core/releases](https://github.com/metafacture/metafacture-core/releases) page. Make sure that you do download a distribution package and _not_ a source code package (the file name should include *-dist*).
 
 2. Extract the downloaded archive:
    ```bash
@@ -33,7 +33,7 @@ If you are only interested in running Flux scripts without doing any Java progra
    ```
    This example will print a number of marc21 records on standard out.
 
-The _examples_ folder contains many more examples which provide a good starting point for learning metafacture. If you have any questions please join our [mailing list](http://lists.dnb.de/mailman/listinfo/metafacture) or use our issue-based discussion forum over at [metafacture-documentation](https://github.com/culturegraph/metafacture-documentation).
+The _examples_ folder contains many more examples which provide a good starting point for learning metafacture. If you have any questions please join our [mailing list](http://lists.dnb.de/mailman/listinfo/metafacture) or use our issue-based discussion forum over at [metafacture-documentation](https://github.com/metafacture/metafacture-documentation).
 
 
 ## Using Metafacture as a Java libary
@@ -58,7 +58,7 @@ dependencies {
 }
 ```
 
-Our integration server automatically publishes successful builds of all branches as snapshot versions on [Sonatype OSS Repository](https://oss.sonatype.org/index.html#nexus-search;quick~culturegraph). The version number is derived from the branch name. Snapshot builds from the master branch always have the version "master-SNAPSHOT".
+Our integration server automatically publishes successful builds of all branches as snapshot versions on [Sonatype OSS Repository](https://oss.sonatype.org/index.html#nexus-search;quick~metafacture). The version number is derived from the branch name. Snapshot builds from the master branch always have the version "master-SNAPSHOT".
 
 <!--
 TODO: Link to getting started tutorial
@@ -71,7 +71,7 @@ Building metafacture-core from source is easy. All you need is git and JDK 8:
 1. Clone the metafacture-core repository and change into the directory:
 
     ```bash
-    $ git clone https://github.com/culturegraph/metafacture-core.git
+    $ git clone https://github.com/metafacture/metafacture-core.git
     $ cd metafacture-core
     ```
 
@@ -82,7 +82,7 @@ Building metafacture-core from source is easy. All you need is git and JDK 8:
    ```
    on Windows call `gradlew.bat install` instead.
 
-See [Code Quality and Style](https://github.com/culturegraph/metafacture-core/wiki/Code-Quality-and-Style) on the wiki for further information on the sources.
+See [Code Quality and Style](https://github.com/metafacture/metafacture-core/wiki/Code-Quality-and-Style) on the wiki for further information on the sources.
 
 <!--
 TODO: Include a link to a page which explains how to write plugins

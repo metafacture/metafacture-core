@@ -29,6 +29,6 @@ deploy:
   file: ./metafacture-runner/build/distributions/metafacture-core-*
   skip-cleanup: true
   on:
-    repo: culturegraph/metafacture-core
+    repo: metafacture/metafacture-core
     tags: true
     condition: "$( git tag --list --format=\"%(objecttype)\" \"$TRAVIS_TAG\" ) == \"tag\""

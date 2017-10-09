@@ -25,7 +25,7 @@ plugins {
 ext.scmInfo = getScmInfo()
 
 allprojects {
-  group = 'org.culturegraph'
+  group = 'org.metafacture'
   version = scmInfo.version
   ext.mavenName = null
 }
@@ -117,18 +117,18 @@ subprojects {
       }
     }
     scm {
-      connection 'scm:git:https://github.com/culturegraph/metafacture-core.git'
-      developerConnection 'scm:git:https://github.com/culturegraph/metafacture-core.git'
-      url 'https://github.com/culturegraph/metafacture-core'
+      connection 'scm:git:https://github.com/metafacture/metafacture-core.git'
+      developerConnection 'scm:git:https://github.com/metafacture/metafacture-core.git'
+      url 'https://github.com/metafacture/metafacture-core'
       tag project.scmInfo.tag ?: 'HEAD'
     }
     issueManagement {
       system 'Github'
-      url 'https://github.com/culturegraph/metafacture-core/issues'
+      url 'https://github.com/metafacture/metafacture-core/issues'
     }
     ciManagement {
       system 'Travis CI'
-      url 'https://travis-ci.org/culturegraph/metafacture-core'
+      url 'https://travis-ci.org/metafacture/metafacture-core'
     }
   }
 
