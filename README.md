@@ -1,29 +1,31 @@
 ![Metafacture](https://raw.github.com/wiki/culturegraph/metafacture-core/img/metafacture.png)
 
-Metafacture is a toolkit for processing semi-structured data with a focus on library metadata. It provides a versatile set of tools for reading, writing and transforming data. Metafacture can be used as a stand-alone application or as a java library in other applications. The name Metafacture is a portmanteau of the words *meta* data and manu*facture*.
+Metafacture is a toolkit for processing semi-structured data with a focus on library metadata. It provides a versatile set of tools for reading, writing and transforming data. Metafacture can be used as a stand-alone application or as a Java library in other applications. The name Metafacture is a portmanteau of the words *meta* data and manu*facture*.
 
-Metafacture consists of a core library and a number of plugin packages and satellite projects which build on the core library and extend it with additional tools and features. This page describes the core package. Have a look at the [Plugins and Tools page](https://github.com/culturegraph/metafacture-core/wiki/Plugins-and-Tools) on the wiki for an overview of the supplementary packages and projects.
+Metafacture includes a large number of modules for operating on semi-structured data. These modules can be combined to build pipelines to perform complex metadata processing tasks. The pipelines can be constructed either in Java code or with the domain-specific language **Flux**. One of the core features of Metafacture is the **Metamorph** module. Metamorph is an xml-based language for specifying transformations of semi-structured data. It can be seamlessly integrated into Java code.
 
-Originally, Metafacture was developed as part of the [Culturegraph](http://culturegraph.org) platform but its now used by others, too: [see who uses Metafacture](https://github.com/culturegraph/metafacture-core/wiki/Who-uses-Metafacture).
+At its heart Metafacture is a framework for implementing modules for metadata processing. This makes Metafacture easily extendable with additional modules. The [plugins and tools page](https://github.com/culturegraph/metafacture-core/wiki/Plugins-and-Tools) on the wiki shows supplementary packages and projects which extend Metafacture.
+
+Originally, Metafacture was developed as part of the [Culturegraph](http://culturegraph.org) platform but it is developed independently now and used by others, too: [see who uses Metafacture](https://github.com/culturegraph/metafacture-core/wiki/Who-uses-Metafacture).
 
 # Getting started
 
-You can use Metafacture either as a stand-alone application or as a Java library in your own projects.
+You can either use Metafacture as a stand-alone application or include it as a Java library in your own projects.
 
 ## Metafacture as a stand-alone application
  
 If you are only interested in running Flux scripts without doing any Java programming this is the way to go. The instructions assume that you are using a *nix-like shell.
 
-1. Download the latest distribution package from the [metafacture-core/releases](https://github.com/culturegraph/metafacture-core/releases) page. Make sure that you do download a distribution package and _not_ a source code package.
+1. Download the latest distribution package from the [metafacture-core/releases](https://github.com/culturegraph/metafacture-core/releases) page. Make sure that you do download a distribution package and _not_ a source code package (the file name should include *-dist*).
 
 2. Extract the downloaded archive:
    ```bash
-   $ tar xzf metafacture-runner-VERSION-dist.tar.gz
+   $ tar xzf metafacture-core-VERSION-dist.tar.gz
    ```
    This will create a new directory containing a ready-to-use metafacture distribution.
 3. Change into the newly created directory:
    ```bash
-   $ cd metafacture-runner-VERSION
+   $ cd metafacture-core-VERSION
    ```
 4. Run one of the example scripts:
    ```bash
@@ -36,21 +38,30 @@ The _examples_ folder contains many more examples which provide a good starting 
 
 ## Using Metafacture as a Java libary
 
-If you want use Metafacture in your own Java projects all you need to do is to include the metafacture-core package as a dependency in your project. metafacture-core is available from [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.culturegraph%22). To use it, add the following dependency declaration to your `pom.xml`:
+If you want use Metafacture in your own Java projects all you need to add some dependencies to your project. As of Metafacture 5 the single metafacture-core package has been replaced with a number of domain-specific packages. You can find the list of packages on [Maven Central](https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.metafacture%22).
 
-    <dependency>
-    	<groupId>org.culturegraph</groupId>
-    	<artifactId>metafacture-core</artifactId>
-    	<version>4.0.0</version>
-    </dependency>
+Alternatively, you can simply guess the package names from the top-level folders in the source code repository -- they are the same. For instance, if you want to use Metamorph in your project, simply add the following dependency to your `pom.xml`:
 
-Our integration server automatically publishes successful builds of the master branch as snapshot versions on [Sonatype OSS Repository](https://oss.sonatype.org/index.html#nexus-search;quick~culturegraph).
+```xml
+<dependency>
+    <groupId>org.metafacture</groupId>
+    <artifactId>metamorph</artifactId>
+    <version>VERSION</version>
+</dependency>
+```
+
+or if Gradle is your build tool of choice use:
+
+```groovy
+dependencies {
+    implementation 'org.metafacture:metamorph:VERSION'
+}
+```
+
+Our integration server automatically publishes successful builds of all branches as snapshot versions on [Sonatype OSS Repository](https://oss.sonatype.org/index.html#nexus-search;quick~culturegraph). The version number is derived from the branch name. Snapshot builds from the master branch always have the version "master-SNAPSHOT".
 
 <!--
-TODO: Add
-
-* Link to getting started tutorial
-* Mention the application-archetype
+TODO: Link to getting started tutorial
 -->
 
 # Building metafacture-core from source
