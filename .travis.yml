@@ -17,6 +17,7 @@ before_install:
 script:
   - ./gradlew check
   - ./gradlew sonarqube
+  - if [ "$TRAVIS_BRANCH" == "master" ] ; then ./gradlew versioneye-update ; fi
 
 after_success:
   - ./travis/publish.sh
