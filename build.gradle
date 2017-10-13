@@ -67,18 +67,6 @@ subprojects {
     group 'build'
   }
 
-  task publish {
-    dependsOn tasks.uploadArchives
-  }
-
-  configurations {
-    mavenDeploySupport
-  }
-
-  dependencies {
-    mavenDeploySupport "org.apache.maven.wagon:wagon-http:2.2"
-  }
-
   artifacts {
     archives sourceJar
     archives javadocJar
@@ -91,90 +79,106 @@ subprojects {
     sign configurations.archives
   }
 
-  def mavenProjectDescription = {
-    name project.mavenName ?: project.name
-    if (project.description) {
-      description project.description
-    }
-    url 'https://github.com/culturegraph/metafacture-core'
-    inceptionYear '2011'
-    organization {
-      name 'Deutsche Nationalbibliothek'
-      url 'http://dnb.de/'
-    }
-    licenses {
-      license {
-        name 'The Apache License, Version 2.0'
-        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-      }
-    }
-    mailingLists {
-      mailingList {
-        name 'Metafacture Mailing List'
-        post 'metafacture@lists.dnb.de'
-        subscribe 'metafacture-subscribe@lists.dnb.de'
-        unsubscribe 'metafacture-unsubscribe@lists.dnb.de'
-        archive 'http://lists.dnb.de/pipermail/metafacture/'
-      }
-    }
-    scm {
-      connection 'scm:git:https://github.com/metafacture/metafacture-core.git'
-      developerConnection 'scm:git:https://github.com/metafacture/metafacture-core.git'
-      url 'https://github.com/metafacture/metafacture-core'
-      tag project.scmInfo.tag ?: 'HEAD'
-    }
-    issueManagement {
-      system 'Github'
-      url 'https://github.com/metafacture/metafacture-core/issues'
-    }
-    ciManagement {
-      system 'Travis CI'
-      url 'https://travis-ci.org/metafacture/metafacture-core'
-    }
-  }
-
-  install {
-    repositories {
-      mavenInstaller {
-        pom.project mavenProjectDescription
-        beforeDeployment {
-          MavenDeployment deployment -> signing.signPom(deployment)
-        }
-      }
-    }
-  }
-
-  uploadArchives {
-    repositories {
-      mavenDeployer {
-        configuration = configurations.mavenDeploySupport
-        if (project.hasProperty('releaseRepositoryUrl')) {
-          repository(url: releaseRepositoryUrl) {
-            if (project.hasProperty('releaseRepositoryUser')) {
-              authentication(userName: releaseRepositoryUser,
-                             password: releaseRepositoryPassword)
-            }
-          }
-        }
-        if (project.hasProperty('snapshotRepositoryUrl')) {
-          snapshotRepository(url: snapshotRepositoryUrl) {
-            if (project.hasProperty('snapshotRepositoryUser')) {
-              authentication(userName: snapshotRepositoryUser,
-                             password: snapshotRepositoryPassword)
-            }
-          }
-        }
-        pom.project mavenProjectDescription
-        beforeDeployment {
-          MavenDeployment deployment -> signing.signPom(deployment)
-        }
-      }
-    }
-  }
-
   repositories {
     mavenLocal()
     mavenCentral()
+  }
+}
+
+gradle.projectsEvaluated {
+  subprojects {
+    configurations {
+      mavenDeploySupport
+    }
+
+    dependencies {
+      mavenDeploySupport "org.apache.maven.wagon:wagon-http:2.2"
+    }
+
+    def mavenProjectDescription = {
+      name project.mavenName ?: project.name
+      if (project.description) {
+        description project.description
+      }
+      url 'https://github.com/culturegraph/metafacture-core'
+      inceptionYear '2011'
+      organization {
+        name 'Deutsche Nationalbibliothek'
+        url 'http://dnb.de/'
+      }
+      licenses {
+        license {
+          name 'The Apache License, Version 2.0'
+          url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+        }
+      }
+      mailingLists {
+        mailingList {
+          name 'Metafacture Mailing List'
+          post 'metafacture@lists.dnb.de'
+          subscribe 'metafacture-subscribe@lists.dnb.de'
+          unsubscribe 'metafacture-unsubscribe@lists.dnb.de'
+          archive 'http://lists.dnb.de/pipermail/metafacture/'
+        }
+      }
+      scm {
+        connection 'scm:git:https://github.com/metafacture/metafacture-core.git'
+        developerConnection 'scm:git:https://github.com/metafacture/metafacture-core.git'
+        url 'https://github.com/metafacture/metafacture-core'
+        tag rootProject.scmInfo.tag ?: 'HEAD'
+      }
+      issueManagement {
+        system 'Github'
+        url 'https://github.com/metafacture/metafacture-core/issues'
+      }
+      ciManagement {
+        system 'Travis CI'
+        url 'https://travis-ci.org/metafacture/metafacture-core'
+      }
+    }
+
+    install {
+      repositories {
+        mavenInstaller {
+          pom.project mavenProjectDescription
+          beforeDeployment {
+            MavenDeployment deployment -> signing.signPom(deployment)
+          }
+        }
+      }
+    }
+
+    uploadArchives {
+      repositories {
+        mavenDeployer {
+          configuration = configurations.mavenDeploySupport
+          if (project.hasProperty('releaseRepositoryUrl')) {
+            repository(url: releaseRepositoryUrl) {
+              if (project.hasProperty('releaseRepositoryUser')) {
+                authentication(userName: releaseRepositoryUser,
+                               password: releaseRepositoryPassword)
+              }
+            }
+          }
+          if (project.hasProperty('snapshotRepositoryUrl')) {
+            snapshotRepository(url: snapshotRepositoryUrl) {
+              if (project.hasProperty('snapshotRepositoryUser')) {
+                authentication(userName: snapshotRepositoryUser,
+                               password: snapshotRepositoryPassword)
+              }
+            }
+          }
+          pom.project mavenProjectDescription
+          beforeDeployment {
+            MavenDeployment deployment -> signing.signPom(deployment)
+          }
+        }
+      }
+    }
+
+    task publish {
+      dependsOn tasks.uploadArchives
+    }
   }
 }
 
