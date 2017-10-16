@@ -181,6 +181,22 @@ public final class JsonEncoderTest {
 		ordered.verify(receiver).process(fixQuotes("{'L2':'V2'}"));
 	}
 
+	@Test
+	public void testShouldNotPrefixPrettyPrintedOutputWithSpaces() {
+		encoder.setPrettyPrinting(true);
+
+		encoder.startRecord("");
+		encoder.literal(LITERAL1, VALUE1);
+		encoder.endRecord();
+		encoder.startRecord("");
+		encoder.literal(LITERAL2, VALUE2);
+		encoder.endRecord();
+
+		final InOrder ordered = inOrder(receiver);
+		ordered.verify(receiver).process(fixQuotes("{\n  'L1' : 'V1'\n}"));
+		ordered.verify(receiver).process(fixQuotes("{\n  'L2' : 'V2'\n}"));
+	}
+
 	/*
 	 * Utility method which replaces all single quotes in a string with double quotes.
 	 * This allows to specify the JSON output in the test cases without having to wrap
