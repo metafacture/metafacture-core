@@ -2,11 +2,13 @@ package org.metafacture.biblio.marc21;
 
 import java.util.Collections;
 
+import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
 /**
@@ -17,6 +19,8 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 
 @Description("Encodes a stream into MARCXML.")
 @In(StreamReceiver.class)
+@Out(String.class)
+@FluxCommand("encode-marc21")
 public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 {
     private static final String ROOT_OPEN = "<marc:collection xmlns:marc=\"http://www.loc.gov/MARC21/slim\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\">";
