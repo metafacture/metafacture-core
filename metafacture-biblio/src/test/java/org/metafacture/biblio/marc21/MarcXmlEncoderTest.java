@@ -1,4 +1,4 @@
-package org.metafacture.xml;
+package org.metafacture.biblio.marc21;
 
 import org.junit.After;
 import org.junit.Before;
