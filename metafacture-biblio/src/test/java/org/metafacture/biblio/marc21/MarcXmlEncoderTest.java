@@ -16,7 +16,7 @@ public class MarcXmlEncoderTest
     public void setUp() throws Exception
     {
         encoder = new MarcXmlEncoder();
-        encoder.setPrettyPrinting(false);
+        encoder.setFormatted(false);
         encoder.setReceiver(
                 new DefaultObjectReceiver<String>() {
                     @Override

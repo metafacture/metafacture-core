@@ -53,7 +53,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     private String currentEntity;
     private int indentationLevel;
-    private boolean prettyPrint;
+    private boolean formatted;
 
     public MarcXmlEncoder() {
         this.builder = new StringBuilder();
@@ -66,7 +66,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         this.currentEntity = "";
 
         this.indentationLevel = 0;
-        this.prettyPrint = true;
+        this.formatted = true;
     }
 
     public void omitXmlDeclaration(boolean omitXmlDeclaration)
@@ -86,11 +86,11 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     /**
      * Formats the resulting xml, by indentation.
-     * @param prettyPrint True, if formatting is activated.
+     * @param formatted True, if formatting is activated.
      */
-    public void setPrettyPrinting(boolean prettyPrint)
+    public void setFormatted(boolean formatted)
     {
-        this.prettyPrint = prettyPrint;
+        this.formatted = formatted;
     }
 
     @Override
@@ -268,7 +268,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     private void prettyPrintIndentation()
     {
-        if (prettyPrint)
+        if (formatted)
         {
             String prefix = String.join("", Collections.nCopies(indentationLevel, INDENT));
             builder.append(prefix);
@@ -277,7 +277,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     private void prettyPrintNewLine()
     {
-        if (prettyPrint)
+        if (formatted)
         {
             builder.append(NEW_LINE);
         }
