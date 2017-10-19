@@ -16,7 +16,7 @@ before_install:
 
 script:
   - ./gradlew check
-  - ./gradlew sonarqube
+  - ./travis/sonarqube.sh
 
 after_success:
   - ./travis/publish.sh
