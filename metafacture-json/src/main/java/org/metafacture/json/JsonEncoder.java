@@ -34,6 +34,7 @@ import com.fasterxml.jackson.core.JsonStreamContext;
 import com.fasterxml.jackson.core.SerializableString;
 import com.fasterxml.jackson.core.io.CharacterEscapes;
 import com.fasterxml.jackson.core.io.SerializedString;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 
 /**
  * Serialises an object as JSON. Records and entities are represented
@@ -66,11 +67,7 @@ public final class JsonEncoder extends
 	}
 
 	public void setPrettyPrinting(final boolean prettyPrinting) {
-		if (prettyPrinting) {
-			jsonGenerator.useDefaultPrettyPrinter();
-		} else {
-			jsonGenerator.setPrettyPrinter(null);
-		}
+		jsonGenerator.setPrettyPrinter(prettyPrinting ? new DefaultPrettyPrinter((SerializableString) null) : null);
 	}
 
 	public boolean getPrettyPrinting() {
