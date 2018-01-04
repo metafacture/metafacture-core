@@ -37,6 +37,7 @@ dependencies {
   plugins project(':metafacture-biblio')
   plugins project(':metafacture-csv')
   plugins project(':metafacture-elasticsearch')
+  plugins project(':metafacture-files')
   plugins project(':metafacture-flowcontrol')
   plugins project(':metafacture-formatting')
   plugins project(':metafacture-formeta')
@@ -55,7 +56,7 @@ dependencies {
   plugins project(':metafacture-xml')
   plugins project(':metamorph')
 
-  // The configurations need to be on the runtime classpath:
+  // The plugins configuration needs to be on the runtime classpath:
   runtime configurations.plugins
 
   // In a perfect world the slf4j binding would be a provided dependency so that
