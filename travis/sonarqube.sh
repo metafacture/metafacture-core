@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+#
+# Sonarqube analysis cannot be made when building pull requests because secure
+# variables are not available in such builds. To prevent build  failures, the
+# sonarqube target is only invoked if not building a pull request.
+#
+
 function main {
     require_no_pull_request
     ./gradlew sonarqube

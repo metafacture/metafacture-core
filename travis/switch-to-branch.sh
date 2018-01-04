@@ -2,12 +2,12 @@
 
 #
 # When building branches Travis does not check out the branch but a specific
-# commit. This results in the working copy being in "detached HEAD" state.  The
-# breaks the logic for deriving version numbers from branch names in the build
-# script.
+# commit. This results in the working copy being in "detached HEAD" state.
+# This breaks the logic for deriving version numbers from branch names in the
+# build script.
 # 
 # This script checks if the current build corresponds to the tip of a branch.
-# If it is then the branch is checked out.
+# If it does then the branch is checked out.
 #
 
 function main {
