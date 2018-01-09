@@ -193,8 +193,8 @@ public final class JsonEncoderTest {
 		encoder.endRecord();
 
 		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).process(fixQuotes("{\n  'L1' : 'V1'\n}"));
-		ordered.verify(receiver).process(fixQuotes("{\n  'L2' : 'V2'\n}"));
+		ordered.verify(receiver).process(useSystemSpecificLineSeparator(fixQuotes("{\n  'L1' : 'V1'\n}")));
+		ordered.verify(receiver).process(useSystemSpecificLineSeparator(fixQuotes("{\n  'L2' : 'V2'\n}")));
 	}
 
 	/*
@@ -204,6 +204,15 @@ public final class JsonEncoderTest {
 	 */
 	private String fixQuotes(final String str) {
 		return str.replace('\'', '"');
+	}
+
+	/*
+	 * Utility method which replaces the new-line character with the platform-specific
+	 * line separator. This is necessary since Jackson uses different line separators
+	 * depending on the system environment.
+	 */
+	private String useSystemSpecificLineSeparator(final String str) {
+		return str.replace("\n", System.lineSeparator());
 	}
 
 }
