@@ -33,3 +33,6 @@ indent_size=2
 
 [*.bat]
 end_of_line=crlf
+
+[metafacture-runner/src/main/dist/config/java-options.conf]
+end_of_line=crlf

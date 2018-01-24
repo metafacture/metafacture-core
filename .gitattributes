@@ -19,7 +19,7 @@
 
 # The batch script can only handle the config
 # properly if it uses crlf as end-of-line marker:
-metafacture-runner/src/main/config/java-options.conf text eol=crlf
+metafacture-runner/src/main/dist/config/java-options.conf text eol=crlf
 
 # Denote all files that are truly binary and should not be modified:
 *.bz2 binary
