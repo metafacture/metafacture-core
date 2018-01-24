@@ -27,6 +27,6 @@ import org.metafacture.framework.StreamReceiver;
  */
 public interface MetafactureSource {
 
-	void sendToStream(final StreamReceiver streamReceiver);
+    void sendToStream(final StreamReceiver streamReceiver);
 
 }

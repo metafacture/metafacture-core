@@ -37,33 +37,33 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(String.class)
 @FluxCommand("match")
 public final class StringMatcher extends
-		DefaultObjectPipe<String, ObjectReceiver<String>> {
+        DefaultObjectPipe<String, ObjectReceiver<String>> {
 
-	private Matcher matcher;
-	private String replacement;
+    private Matcher matcher;
+    private String replacement;
 
-	public String getPattern() {
-		return matcher.pattern().pattern();
-	}
+    public String getPattern() {
+        return matcher.pattern().pattern();
+    }
 
-	public void setPattern(final String pattern) {
-		this.matcher = Pattern.compile(pattern).matcher("");
-	}
+    public void setPattern(final String pattern) {
+        this.matcher = Pattern.compile(pattern).matcher("");
+    }
 
-	public String getReplacement() {
-		return replacement;
-	}
+    public String getReplacement() {
+        return replacement;
+    }
 
-	public void setReplacement(final String replacement) {
-		this.replacement = replacement;
-	}
+    public void setReplacement(final String replacement) {
+        this.replacement = replacement;
+    }
 
-	@Override
-	public void process(final String obj) {
-		assert !isClosed();
-		assert null!=obj;
-		matcher.reset(obj);
-		getReceiver().process(matcher.replaceAll(replacement));
-	}
+    @Override
+    public void process(final String obj) {
+        assert !isClosed();
+        assert null!=obj;
+        matcher.reset(obj);
+        getReceiver().process(matcher.replaceAll(replacement));
+    }
 
 }

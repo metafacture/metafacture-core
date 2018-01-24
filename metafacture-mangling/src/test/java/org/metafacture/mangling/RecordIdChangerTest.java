@@ -36,155 +36,155 @@ import org.mockito.MockitoAnnotations;
  */
 public final class RecordIdChangerTest {
 
-	private static final String OLD_RECORD_ID1 = "OLD ID 1";
-	private static final String OLD_RECORD_ID2 = "OLD ID 2";
-	private static final String NEW_RECORD_ID1 = "NEW ID 1";
-	private static final String NEW_RECORD_ID2 = "NEW ID 2";
-	private static final String ENTITY = "En";
-	private static final String LITERAL_NAME = "Li";
-	private static final String LITERAL_VALUE = "Va";
+    private static final String OLD_RECORD_ID1 = "OLD ID 1";
+    private static final String OLD_RECORD_ID2 = "OLD ID 2";
+    private static final String NEW_RECORD_ID1 = "NEW ID 1";
+    private static final String NEW_RECORD_ID2 = "NEW ID 2";
+    private static final String ENTITY = "En";
+    private static final String LITERAL_NAME = "Li";
+    private static final String LITERAL_VALUE = "Va";
 
-	private RecordIdChanger recordIdChanger;
+    private RecordIdChanger recordIdChanger;
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		recordIdChanger = new RecordIdChanger();
-		recordIdChanger.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        recordIdChanger = new RecordIdChanger();
+        recordIdChanger.setReceiver(receiver);
+    }
 
-	@After
-	public void cleanup() {
-		recordIdChanger.closeStream();
-	}
+    @After
+    public void cleanup() {
+        recordIdChanger.closeStream();
+    }
 
-	@Test
-	public void testShouldChangeIdsOfRecords() {
-		recordIdChanger.startRecord(OLD_RECORD_ID1);
-		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
-		recordIdChanger.endRecord();
+    @Test
+    public void testShouldChangeIdsOfRecords() {
+        recordIdChanger.startRecord(OLD_RECORD_ID1);
+        recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
+        recordIdChanger.endRecord();
 
-		recordIdChanger.startRecord(OLD_RECORD_ID2);
-		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
-		recordIdChanger.endRecord();
+        recordIdChanger.startRecord(OLD_RECORD_ID2);
+        recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
+        recordIdChanger.endRecord();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
-		ordered.verify(receiver).endRecord();
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
+        ordered.verify(receiver).endRecord();
 
-		ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
-		ordered.verify(receiver).endRecord();
-	}
+        ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void testShouldKeepRecordsWithoutIdLiteral() {
-		recordIdChanger.startRecord(OLD_RECORD_ID1);
-		recordIdChanger.literal(LITERAL_NAME, LITERAL_VALUE);
-		recordIdChanger.endRecord();
-		recordIdChanger.startRecord(OLD_RECORD_ID2);
-		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
-		recordIdChanger.endRecord();
+    @Test
+    public void testShouldKeepRecordsWithoutIdLiteral() {
+        recordIdChanger.startRecord(OLD_RECORD_ID1);
+        recordIdChanger.literal(LITERAL_NAME, LITERAL_VALUE);
+        recordIdChanger.endRecord();
+        recordIdChanger.startRecord(OLD_RECORD_ID2);
+        recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
+        recordIdChanger.endRecord();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(OLD_RECORD_ID1);
-		ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
-		ordered.verify(receiver).endRecord();
-		ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(OLD_RECORD_ID1);
+        ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
+        ordered.verify(receiver).endRecord();
+        ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void testShouldRemoveRecordsWithoutIdLiteral() {
-		recordIdChanger.setKeepRecordsWithoutIdLiteral(false);
+    @Test
+    public void testShouldRemoveRecordsWithoutIdLiteral() {
+        recordIdChanger.setKeepRecordsWithoutIdLiteral(false);
 
-		recordIdChanger.startRecord(OLD_RECORD_ID1);
-		recordIdChanger.literal(LITERAL_NAME, LITERAL_VALUE);
-		recordIdChanger.endRecord();
-		recordIdChanger.startRecord(OLD_RECORD_ID2);
-		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
-		recordIdChanger.endRecord();
+        recordIdChanger.startRecord(OLD_RECORD_ID1);
+        recordIdChanger.literal(LITERAL_NAME, LITERAL_VALUE);
+        recordIdChanger.endRecord();
+        recordIdChanger.startRecord(OLD_RECORD_ID2);
+        recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
+        recordIdChanger.endRecord();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
-		ordered.verify(receiver).endRecord();
-		verifyNoMoreInteractions(receiver);
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
+        ordered.verify(receiver).endRecord();
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void testShouldNotUseNestedIdLiteralAsNewId() {
-		recordIdChanger.startRecord(OLD_RECORD_ID1);
-		recordIdChanger.startEntity(ENTITY);
-		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
-		recordIdChanger.endEntity();
-		recordIdChanger.endRecord();
+    @Test
+    public void testShouldNotUseNestedIdLiteralAsNewId() {
+        recordIdChanger.startRecord(OLD_RECORD_ID1);
+        recordIdChanger.startEntity(ENTITY);
+        recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
+        recordIdChanger.endEntity();
+        recordIdChanger.endRecord();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(OLD_RECORD_ID1);
-		ordered.verify(receiver).startEntity(ENTITY);
-		ordered.verify(receiver).literal(StandardEventNames.ID, NEW_RECORD_ID1);
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(OLD_RECORD_ID1);
+        ordered.verify(receiver).startEntity(ENTITY);
+        ordered.verify(receiver).literal(StandardEventNames.ID, NEW_RECORD_ID1);
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void testShouldAcceptFullPathAsNewId() {
-		recordIdChanger.setIdLiteral(ENTITY + "." + StandardEventNames.ID);
+    @Test
+    public void testShouldAcceptFullPathAsNewId() {
+        recordIdChanger.setIdLiteral(ENTITY + "." + StandardEventNames.ID);
 
-		recordIdChanger.startRecord(OLD_RECORD_ID1);
-		recordIdChanger.startEntity(ENTITY);
-		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
-		recordIdChanger.endEntity();
-		recordIdChanger.endRecord();
+        recordIdChanger.startRecord(OLD_RECORD_ID1);
+        recordIdChanger.startEntity(ENTITY);
+        recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
+        recordIdChanger.endEntity();
+        recordIdChanger.endRecord();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
-		ordered.verify(receiver).startEntity(ENTITY);
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
+        ordered.verify(receiver).startEntity(ENTITY);
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void testShouldNotKeepIdLiteralByDefault() {
-		recordIdChanger.setIdLiteral(StandardEventNames.ID);
+    @Test
+    public void testShouldNotKeepIdLiteralByDefault() {
+        recordIdChanger.setIdLiteral(StandardEventNames.ID);
 
-		recordIdChanger.startRecord(OLD_RECORD_ID1);
-		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
-		recordIdChanger.endRecord();
+        recordIdChanger.startRecord(OLD_RECORD_ID1);
+        recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
+        recordIdChanger.endRecord();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
-		ordered.verify(receiver).endRecord();
-		verifyNoMoreInteractions(receiver);
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
+        ordered.verify(receiver).endRecord();
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void testShouldKeepIdLiteralIfConfigured() {
-		recordIdChanger.setIdLiteral(StandardEventNames.ID);
-		recordIdChanger.setKeepIdLiteral(true);
+    @Test
+    public void testShouldKeepIdLiteralIfConfigured() {
+        recordIdChanger.setIdLiteral(StandardEventNames.ID);
+        recordIdChanger.setKeepIdLiteral(true);
 
-		recordIdChanger.startRecord(OLD_RECORD_ID1);
-		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
-		recordIdChanger.endRecord();
+        recordIdChanger.startRecord(OLD_RECORD_ID1);
+        recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
+        recordIdChanger.endRecord();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
-		ordered.verify(receiver).literal(StandardEventNames.ID, NEW_RECORD_ID1);
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
+        ordered.verify(receiver).literal(StandardEventNames.ID, NEW_RECORD_ID1);
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void testShouldUseLastIdLiteralAsNewId() {
-		recordIdChanger.startRecord(OLD_RECORD_ID1);
-		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
-		recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
-		recordIdChanger.endRecord();
+    @Test
+    public void testShouldUseLastIdLiteralAsNewId() {
+        recordIdChanger.startRecord(OLD_RECORD_ID1);
+        recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
+        recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
+        recordIdChanger.endRecord();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
+        ordered.verify(receiver).endRecord();
+    }
 
 }

@@ -34,85 +34,85 @@ import org.mockito.MockitoAnnotations;
  */
 public final class NullFilterTest {
 
-	private static final String RECORD_ID = "id";
-	private static final String ENTITY_NAME = "entity-name";
-	private static final String LITERAL_NAME = "literal-name";
-	private static final String LITERAL_VALUE = "literal-value";
+    private static final String RECORD_ID = "id";
+    private static final String ENTITY_NAME = "entity-name";
+    private static final String LITERAL_NAME = "literal-name";
+    private static final String LITERAL_VALUE = "literal-value";
 
-	private NullFilter nullFilter;
+    private NullFilter nullFilter;
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		nullFilter = new NullFilter();
-		nullFilter.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        nullFilter = new NullFilter();
+        nullFilter.setReceiver(receiver);
+    }
 
-	@After
-	public void cleanup() {
-		nullFilter.closeStream();
-	}
+    @After
+    public void cleanup() {
+        nullFilter.closeStream();
+    }
 
-	@Test
-	public void shouldForwardAllEvents() {
-		nullFilter.startRecord(RECORD_ID);
-		nullFilter.startEntity(ENTITY_NAME);
-		nullFilter.literal(LITERAL_NAME, LITERAL_VALUE);
-		nullFilter.endEntity();
-		nullFilter.endRecord();
+    @Test
+    public void shouldForwardAllEvents() {
+        nullFilter.startRecord(RECORD_ID);
+        nullFilter.startEntity(ENTITY_NAME);
+        nullFilter.literal(LITERAL_NAME, LITERAL_VALUE);
+        nullFilter.endEntity();
+        nullFilter.endRecord();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID);
-		ordered.verify(receiver).startEntity(ENTITY_NAME);
-		ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(RECORD_ID);
+        ordered.verify(receiver).startEntity(ENTITY_NAME);
+        ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
 
-		verifyNoMoreInteractions(receiver);
-	}
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void shouldDiscardNullValues() {
-		nullFilter.startRecord(RECORD_ID);
-		nullFilter.startEntity(ENTITY_NAME);
-		nullFilter.literal(LITERAL_NAME, LITERAL_VALUE);
-		nullFilter.literal(LITERAL_NAME, null);
-		nullFilter.endEntity();
-		nullFilter.endRecord();
+    @Test
+    public void shouldDiscardNullValues() {
+        nullFilter.startRecord(RECORD_ID);
+        nullFilter.startEntity(ENTITY_NAME);
+        nullFilter.literal(LITERAL_NAME, LITERAL_VALUE);
+        nullFilter.literal(LITERAL_NAME, null);
+        nullFilter.endEntity();
+        nullFilter.endRecord();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID);
-		ordered.verify(receiver).startEntity(ENTITY_NAME);
-		ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(RECORD_ID);
+        ordered.verify(receiver).startEntity(ENTITY_NAME);
+        ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
 
-		verifyNoMoreInteractions(receiver);
-	}
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void shouldReplaceNullValues() {
-		nullFilter.setReplacement("replacement");
+    @Test
+    public void shouldReplaceNullValues() {
+        nullFilter.setReplacement("replacement");
 
-		nullFilter.startRecord(RECORD_ID);
-		nullFilter.startEntity(ENTITY_NAME);
-		nullFilter.literal(LITERAL_NAME, LITERAL_VALUE);
-		nullFilter.literal(LITERAL_NAME, null);
-		nullFilter.endEntity();
-		nullFilter.endRecord();
+        nullFilter.startRecord(RECORD_ID);
+        nullFilter.startEntity(ENTITY_NAME);
+        nullFilter.literal(LITERAL_NAME, LITERAL_VALUE);
+        nullFilter.literal(LITERAL_NAME, null);
+        nullFilter.endEntity();
+        nullFilter.endRecord();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID);
-		ordered.verify(receiver).startEntity(ENTITY_NAME);
-		ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
-		ordered.verify(receiver).literal(LITERAL_NAME, "replacement");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(RECORD_ID);
+        ordered.verify(receiver).startEntity(ENTITY_NAME);
+        ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
+        ordered.verify(receiver).literal(LITERAL_NAME, "replacement");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
 
-		verifyNoMoreInteractions(receiver);
-	}
+        verifyNoMoreInteractions(receiver);
+    }
 
 }

@@ -28,59 +28,59 @@ import org.metafacture.framework.helpers.DefaultObjectReceiver;
  */
 public final class ObjectTimerTest {
 
-	/**
-	 * A module with a slow process method.
-	 */
-	private static final class BenchmarkedModule extends DefaultObjectReceiver<String> {
+    /**
+     * A module with a slow process method.
+     */
+    private static final class BenchmarkedModule extends DefaultObjectReceiver<String> {
 
-		private static final long[] DURATIONS = { 150L, 20L, 30L, 202L };
+        private static final long[] DURATIONS = { 150L, 20L, 30L, 202L };
 
-		private int i;
+        private int i;
 
-		@Override
-		public void process(final String obj) {
-			try {
-				Thread.sleep(getDuration());
-			} catch (final InterruptedException e) {
-				return;
-			}
-		}
+        @Override
+        public void process(final String obj) {
+            try {
+                Thread.sleep(getDuration());
+            } catch (final InterruptedException e) {
+                return;
+            }
+        }
 
-		private long getDuration() {
-			final long duration = DURATIONS[i];
-			i += 1;
-			if (i == DURATIONS.length) {
-				i = 0;
-			}
-			return duration;
-		}
+        private long getDuration() {
+            final long duration = DURATIONS[i];
+            i += 1;
+            if (i == DURATIONS.length) {
+                i = 0;
+            }
+            return duration;
+        }
 
-	}
+    }
 
-	private ObjectTimer<String> objectTimer;
-	private BenchmarkedModule benchmarkedModule;
+    private ObjectTimer<String> objectTimer;
+    private BenchmarkedModule benchmarkedModule;
 
-	@Before
-	public void setup() {
-		objectTimer = new ObjectTimer<String>();
-		benchmarkedModule = new BenchmarkedModule();
-		objectTimer.setReceiver(benchmarkedModule);
-	}
+    @Before
+    public void setup() {
+        objectTimer = new ObjectTimer<String>();
+        benchmarkedModule = new BenchmarkedModule();
+        objectTimer.setReceiver(benchmarkedModule);
+    }
 
-	@Test
-	public void testShouldMeasureExecutionTime() {
+    @Test
+    public void testShouldMeasureExecutionTime() {
 
-		objectTimer.process("");
-		objectTimer.process("");
-		objectTimer.process("");
-		objectTimer.process("");
-		objectTimer.closeStream();
-	}
+        objectTimer.process("");
+        objectTimer.process("");
+        objectTimer.process("");
+        objectTimer.process("");
+        objectTimer.closeStream();
+    }
 
-	@Test
-	public void testShouldHandleImmediateCloseStreamWithNoProcessing() {
+    @Test
+    public void testShouldHandleImmediateCloseStreamWithNoProcessing() {
 
-		objectTimer.closeStream();
-	}
+        objectTimer.closeStream();
+    }
 
 }

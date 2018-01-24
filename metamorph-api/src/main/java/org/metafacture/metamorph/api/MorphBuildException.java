@@ -23,14 +23,14 @@ package org.metafacture.metamorph.api;
  */
 public final class MorphBuildException extends RuntimeException {
 
-	private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
 
-	public MorphBuildException(final String message) {
-		super(message);
-	}
+    public MorphBuildException(final String message) {
+        super(message);
+    }
 
-	public MorphBuildException(final String message, final Throwable cause) {
-		super(message, cause);
-	}
+    public MorphBuildException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 
 }

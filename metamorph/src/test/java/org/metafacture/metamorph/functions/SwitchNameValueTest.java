@@ -33,31 +33,31 @@ import org.mockito.junit.MockitoRule;
  */
 public final class SwitchNameValueTest {
 
-	@Rule
-	public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	private Metamorph metamorph;
+    private Metamorph metamorph;
 
-	@Test
-	public void issue265_shouldWorkIfLastFunctionInCombineStatement() {
-		metamorph = InlineMorph.in(this)
-				.with("<rules>")
-				.with("  <combine name='out' value='val'>")
-				.with("    <data source='in'>")
-				.with("      <switch-name-value />")
-				.with("    </data>")
-				.with("  </combine>")
-				.with("</rules>")
-				.createConnectedTo(receiver);
+    @Test
+    public void issue265_shouldWorkIfLastFunctionInCombineStatement() {
+        metamorph = InlineMorph.in(this)
+                .with("<rules>")
+                .with("  <combine name='out' value='val'>")
+                .with("    <data source='in'>")
+                .with("      <switch-name-value />")
+                .with("    </data>")
+                .with("  </combine>")
+                .with("</rules>")
+                .createConnectedTo(receiver);
 
-		metamorph.startRecord("1");
-		metamorph.literal("in", "val");
-		metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("in", "val");
+        metamorph.endRecord();
 
-		verify(receiver).literal("out", "val");
-	}
+        verify(receiver).literal("out", "val");
+    }
 
 }

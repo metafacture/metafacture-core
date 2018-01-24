@@ -35,81 +35,81 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public final class AlephMabXmlHandlerTest {
 
-	@Rule
-	public MockitoRule mockito = MockitoJUnit.rule();
+    @Rule
+    public MockitoRule mockito = MockitoJUnit.rule();
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	private AlephMabXmlHandler mabXmlHandler;
+    private AlephMabXmlHandler mabXmlHandler;
 
-	@Before
-	public void setup() {
-		mabXmlHandler = new AlephMabXmlHandler();
-		mabXmlHandler.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        mabXmlHandler = new AlephMabXmlHandler();
+        mabXmlHandler.setReceiver(receiver);
+    }
 
-	@Test
-	public void shouldIgnoreLeader() throws SAXException {
-		final String leader = "00000nM2.01200024------h";
-		mabXmlHandler.startElement(null, "ListRecords", "", new AttributesImpl());
-		mabXmlHandler.startElement(null, "leader", "", new AttributesImpl());
-		mabXmlHandler.characters(leader.toCharArray(), 0, leader.length());
-		mabXmlHandler.endElement(null, "leader", "");
-		mabXmlHandler.endElement(null, "ListRecords", "");
+    @Test
+    public void shouldIgnoreLeader() throws SAXException {
+        final String leader = "00000nM2.01200024------h";
+        mabXmlHandler.startElement(null, "ListRecords", "", new AttributesImpl());
+        mabXmlHandler.startElement(null, "leader", "", new AttributesImpl());
+        mabXmlHandler.characters(leader.toCharArray(), 0, leader.length());
+        mabXmlHandler.endElement(null, "leader", "");
+        mabXmlHandler.endElement(null, "ListRecords", "");
 
-		final InOrder ordered	= Mockito.inOrder(receiver);
-		ordered.verify(receiver).startRecord("");
-		ordered.verify(receiver).endRecord();
-		ordered.verifyNoMoreInteractions();
-	}
+        final InOrder ordered    = Mockito.inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
-	@Test
-	public void shouldParseControlField() throws SAXException {
-		final AttributesImpl attributes = new AttributesImpl();
-		final String data = "MH";
+    @Test
+    public void shouldParseControlField() throws SAXException {
+        final AttributesImpl attributes = new AttributesImpl();
+        final String data = "MH";
 
-		mabXmlHandler.startElement(null, "ListRecords", "", new AttributesImpl());
-		attributes.addAttribute(null, "tag", "tag", "CDATA", "FMT");
-		mabXmlHandler.startElement(null, "controlfield", "", attributes);
-		mabXmlHandler.characters(data.toCharArray(), 0, data.length());
-		mabXmlHandler.endElement(null, "controlfield", "");
-		mabXmlHandler.endElement(null, "ListRecords", "");
+        mabXmlHandler.startElement(null, "ListRecords", "", new AttributesImpl());
+        attributes.addAttribute(null, "tag", "tag", "CDATA", "FMT");
+        mabXmlHandler.startElement(null, "controlfield", "", attributes);
+        mabXmlHandler.characters(data.toCharArray(), 0, data.length());
+        mabXmlHandler.endElement(null, "controlfield", "");
+        mabXmlHandler.endElement(null, "ListRecords", "");
 
-		final InOrder ordered	= Mockito.inOrder(receiver);
-		ordered.verify(receiver).startRecord("");
-		ordered.verify(receiver).startEntity("FMT");
-		ordered.verify(receiver).literal("", data);
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
-		ordered.verifyNoMoreInteractions();
-	}
+        final InOrder ordered    = Mockito.inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
+        ordered.verify(receiver).startEntity("FMT");
+        ordered.verify(receiver).literal("", data);
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
-	@Test
-	public void shouldParseDataField() throws SAXException {
-		final AttributesImpl attributes = new AttributesImpl();
-		final String data = "1234";
+    @Test
+    public void shouldParseDataField() throws SAXException {
+        final AttributesImpl attributes = new AttributesImpl();
+        final String data = "1234";
 
-		mabXmlHandler.startElement(null, "ListRecords", "", new AttributesImpl());
-		attributes.addAttribute(null, "tag", "tag", "CDATA", "001");
-		attributes.addAttribute(null, "ind1", "ind1", "CDATA", "a");
-		attributes.addAttribute(null, "ind2", "ind2", "CDATA", "b");
-		mabXmlHandler.startElement(null, "datafield", "", attributes);
-		attributes.clear();
-		attributes.addAttribute(null, "code", "code", "CDATA", "a");
-		mabXmlHandler.startElement(null, "subfield", "", attributes);
-		mabXmlHandler.characters(data.toCharArray(), 0, data.length());
-		mabXmlHandler.endElement(null, "subfield", "");
-		mabXmlHandler.endElement(null, "datafield", "");
-		mabXmlHandler.endElement(null, "ListRecords", "");
+        mabXmlHandler.startElement(null, "ListRecords", "", new AttributesImpl());
+        attributes.addAttribute(null, "tag", "tag", "CDATA", "001");
+        attributes.addAttribute(null, "ind1", "ind1", "CDATA", "a");
+        attributes.addAttribute(null, "ind2", "ind2", "CDATA", "b");
+        mabXmlHandler.startElement(null, "datafield", "", attributes);
+        attributes.clear();
+        attributes.addAttribute(null, "code", "code", "CDATA", "a");
+        mabXmlHandler.startElement(null, "subfield", "", attributes);
+        mabXmlHandler.characters(data.toCharArray(), 0, data.length());
+        mabXmlHandler.endElement(null, "subfield", "");
+        mabXmlHandler.endElement(null, "datafield", "");
+        mabXmlHandler.endElement(null, "ListRecords", "");
 
-		final InOrder ordered	= Mockito.inOrder(receiver);
-		ordered.verify(receiver).startRecord("");
-		ordered.verify(receiver).startEntity("001ab");
-		ordered.verify(receiver).literal("a", data);
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
-		ordered.verifyNoMoreInteractions();
-	}
+        final InOrder ordered    = Mockito.inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
+        ordered.verify(receiver).startEntity("001ab");
+        ordered.verify(receiver).literal("a", data);
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
 }

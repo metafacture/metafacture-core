@@ -42,57 +42,57 @@ import org.mockito.MockitoAnnotations;
  */
 public final class TripleObjectRetrieverTest {
 
-	private static final String SUBJECT = "subject";
-	private static final String PREDICATE = "predicate";
-	private static final String OBJECT_VALUE = "object-data";
-	private static final String ENTITY = "{l=v}";
+    private static final String SUBJECT = "subject";
+    private static final String PREDICATE = "predicate";
+    private static final String OBJECT_VALUE = "object-data";
+    private static final String ENTITY = "{l=v}";
 
-	private TripleObjectRetriever tripleObjectRetriever;
+    private TripleObjectRetriever tripleObjectRetriever;
 
-	@Mock
-	private ObjectReceiver<Triple> receiver;
+    @Mock
+    private ObjectReceiver<Triple> receiver;
 
-	@Rule
-	public TemporaryFolder tempFolder = new TemporaryFolder();
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
 
-	private String objectUrl;
+    private String objectUrl;
 
-	@Before
-	public void setup() throws IOException {
-		MockitoAnnotations.initMocks(this);
+    @Before
+    public void setup() throws IOException {
+        MockitoAnnotations.initMocks(this);
 
-		tripleObjectRetriever = new TripleObjectRetriever();
-		tripleObjectRetriever.setReceiver(receiver);
+        tripleObjectRetriever = new TripleObjectRetriever();
+        tripleObjectRetriever.setReceiver(receiver);
 
-		objectUrl = createObjectResource(OBJECT_VALUE);
-	}
+        objectUrl = createObjectResource(OBJECT_VALUE);
+    }
 
-	private String createObjectResource(final String contents) throws IOException {
-		final File file = tempFolder.newFile();
-		final Writer writer = new FileWriter(file);
-		writer.write(contents);
-		writer.close();
-		return file.toURI().toURL().toString();
-	}
+    private String createObjectResource(final String contents) throws IOException {
+        final File file = tempFolder.newFile();
+        final Writer writer = new FileWriter(file);
+        writer.write(contents);
+        writer.close();
+        return file.toURI().toURL().toString();
+    }
 
-	@After
-	public void cleanup() {
-		tripleObjectRetriever.closeStream();
-	}
+    @After
+    public void cleanup() {
+        tripleObjectRetriever.closeStream();
+    }
 
-	@Test
-	public void shouldReplaceObjectValueWithResourceContentRetrievedFromUrl() {
-		tripleObjectRetriever.process(new Triple(SUBJECT, PREDICATE, objectUrl));
+    @Test
+    public void shouldReplaceObjectValueWithResourceContentRetrievedFromUrl() {
+        tripleObjectRetriever.process(new Triple(SUBJECT, PREDICATE, objectUrl));
 
-		verify(receiver).process(new Triple(SUBJECT, PREDICATE, OBJECT_VALUE));
-	}
+        verify(receiver).process(new Triple(SUBJECT, PREDICATE, OBJECT_VALUE));
+    }
 
-	@Test
-	public void shouldSkipTriplesWithObjectTypeEntity() {
-		tripleObjectRetriever.process(
-				new Triple(SUBJECT, PREDICATE, ENTITY, ObjectType.ENTITY));
+    @Test
+    public void shouldSkipTriplesWithObjectTypeEntity() {
+        tripleObjectRetriever.process(
+                new Triple(SUBJECT, PREDICATE, ENTITY, ObjectType.ENTITY));
 
-		verifyZeroInteractions(receiver);
-	}
+        verifyZeroInteractions(receiver);
+    }
 
 }

@@ -36,11 +36,11 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(java.io.Reader.class)
 @FluxCommand("read-string")
 public final class StringReader
-		extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
+        extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
-	@Override
-	public void process(final String str) {
-		getReceiver().process(new java.io.StringReader(str));
-	}
+    @Override
+    public void process(final String str) {
+        getReceiver().process(new java.io.StringReader(str));
+    }
 
 }

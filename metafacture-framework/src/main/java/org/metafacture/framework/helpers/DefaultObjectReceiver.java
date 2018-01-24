@@ -33,9 +33,9 @@ import org.metafacture.framework.ObjectReceiver;
  */
 public class DefaultObjectReceiver<T> extends DefaultLifeCycle implements ObjectReceiver<T> {
 
-	@Override
-	public void process(final T obj) {
-		// Default implementation does nothing
-	}
+    @Override
+    public void process(final T obj) {
+        // Default implementation does nothing
+    }
 
 }

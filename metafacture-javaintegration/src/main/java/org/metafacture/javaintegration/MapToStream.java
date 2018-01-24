@@ -60,42 +60,42 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(StreamReceiver.class)
 @FluxCommand("map-to-stream")
 public final class MapToStream extends
-		DefaultObjectPipe<Map<?, ?>, StreamReceiver> {
+        DefaultObjectPipe<Map<?, ?>, StreamReceiver> {
 
-	private Object idKey = StandardEventNames.ID;
+    private Object idKey = StandardEventNames.ID;
 
-	/**
-	 * Sets the key of the map entry that is used for the record id.
-	 * <p>
-	 * The default id key is &quot;{@value StandardEventNames#ID}&quot;.
-	 * <p>
-	 * This parameter can be changed anytime during processing. The new value
-	 * becomes effective with the next record being processed.
-	 *
-	 * @param idKey the id key. The object passed here is used in a call to
-	 * {@link Map#get(Object)} to get the identifier value.
-	 */
-	public void setIdKey(final Object idKey) {
-		this.idKey = idKey;
-	}
+    /**
+     * Sets the key of the map entry that is used for the record id.
+     * <p>
+     * The default id key is &quot;{@value StandardEventNames#ID}&quot;.
+     * <p>
+     * This parameter can be changed anytime during processing. The new value
+     * becomes effective with the next record being processed.
+     *
+     * @param idKey the id key. The object passed here is used in a call to
+     * {@link Map#get(Object)} to get the identifier value.
+     */
+    public void setIdKey(final Object idKey) {
+        this.idKey = idKey;
+    }
 
-	public Object getIdKey() {
-		return idKey;
-	}
+    public Object getIdKey() {
+        return idKey;
+    }
 
-	@Override
-	public void process(final Map<?, ?> map) {
-		final Object id = map.get(idKey);
-		if (id == null) {
-			getReceiver().startRecord("");
-		} else {
-			getReceiver().startRecord(id.toString());
-		}
-		for (final Map.Entry<?, ?> entry: map.entrySet()) {
-			getReceiver().literal(entry.getKey().toString(),
-					entry.getValue().toString());
-		}
-		getReceiver().endRecord();
-	}
+    @Override
+    public void process(final Map<?, ?> map) {
+        final Object id = map.get(idKey);
+        if (id == null) {
+            getReceiver().startRecord("");
+        } else {
+            getReceiver().startRecord(id.toString());
+        }
+        for (final Map.Entry<?, ?> entry: map.entrySet()) {
+            getReceiver().literal(entry.getKey().toString(),
+                    entry.getValue().toString());
+        }
+        getReceiver().endRecord();
+    }
 
 }

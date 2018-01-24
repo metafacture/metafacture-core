@@ -27,14 +27,14 @@ import org.xml.sax.helpers.XMLFilterImpl;
  */
 final class IgnorableWhitespaceFilter extends XMLFilterImpl {
 
-	IgnorableWhitespaceFilter(final XMLReader parent) {
-		super(parent);
-	}
+    IgnorableWhitespaceFilter(final XMLReader parent) {
+        super(parent);
+    }
 
-	@Override
-	public void ignorableWhitespace(final char[] ch, final int start, final int length)
-			throws SAXException {
-		// Do not forward ignorable whitespace events
-	}
+    @Override
+    public void ignorableWhitespace(final char[] ch, final int start, final int length)
+            throws SAXException {
+        // Do not forward ignorable whitespace events
+    }
 
 }

@@ -36,13 +36,13 @@ import org.metafacture.framework.helpers.DefaultTee;
 @Out(Object.class)
 @FluxCommand("object-tee")
 public final class ObjectTee<T> extends DefaultTee<ObjectReceiver<T>>
-		implements ObjectPipe<T, ObjectReceiver<T>> {
+        implements ObjectPipe<T, ObjectReceiver<T>> {
 
-	@Override
-	public void process(final T obj) {
-		for (ObjectReceiver<T> receiver : getReceivers()) {
-			receiver.process(obj);
-		}
-	}
+    @Override
+    public void process(final T obj) {
+        for (ObjectReceiver<T> receiver : getReceivers()) {
+            receiver.process(obj);
+        }
+    }
 
 }

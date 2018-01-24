@@ -30,5 +30,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface In {
-	Class<?> value();
+    Class<?> value();
 }

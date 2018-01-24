@@ -42,33 +42,33 @@ import org.metafacture.framework.objects.Triple;
  *
  */
 @Description("Builds a String from a template and an Object. Provide template in brackets. ${o} marks the place where the object is to be inserted. " +
-		"If the object in an instance of Triple ${s}, ${p} and ${o} are used instead")
+        "If the object in an instance of Triple ${s}, ${p} and ${o} are used instead")
 @In(Object.class)
 @Out(String.class)
 @FluxCommand("template")
 public final class ObjectTemplate<T> extends DefaultObjectPipe<T, ObjectReceiver<String>> {
 
-	//TODO: make replace more efficient
-	private static final Pattern OBJ_PATTERN = Pattern.compile("${o}", Pattern.LITERAL);
-	private final Map<String, String> vars = new HashMap<String, String>();
-	private final String template;
+    //TODO: make replace more efficient
+    private static final Pattern OBJ_PATTERN = Pattern.compile("${o}", Pattern.LITERAL);
+    private final Map<String, String> vars = new HashMap<String, String>();
+    private final String template;
 
-	public ObjectTemplate(final String template) {
-		super();
-		this.template = template;
-	}
+    public ObjectTemplate(final String template) {
+        super();
+        this.template = template;
+    }
 
-	@Override
-	public void process(final T obj) {
-		if(obj instanceof Triple){
-			final Triple triple = (Triple)obj;
-			vars.put("s", triple.getSubject());
-			vars.put("p", triple.getPredicate());
-			vars.put("o", triple.getObject());
-			getReceiver().process(StringUtil.format(template, vars));
-		}else{
-			final Matcher matcher = OBJ_PATTERN.matcher(template);
-			getReceiver().process(matcher.replaceAll(obj.toString()));
-		}
-	}
+    @Override
+    public void process(final T obj) {
+        if(obj instanceof Triple){
+            final Triple triple = (Triple)obj;
+            vars.put("s", triple.getSubject());
+            vars.put("p", triple.getPredicate());
+            vars.put("o", triple.getObject());
+            getReceiver().process(StringUtil.format(template, vars));
+        }else{
+            final Matcher matcher = OBJ_PATTERN.matcher(template);
+            getReceiver().process(matcher.replaceAll(obj.toString()));
+        }
+    }
 }

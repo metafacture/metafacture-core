@@ -32,41 +32,41 @@ import org.metafacture.framework.annotations.Out;
 @Description("Benchmarks the execution time of the downstream modules.")
 @FluxCommand("log-stream-time")
 public final class StreamTimer extends TimerBase<StreamReceiver> implements
-		StreamPipe<StreamReceiver> {
+        StreamPipe<StreamReceiver> {
 
-	public StreamTimer() {
-		this("");
-	}
+    public StreamTimer() {
+        this("");
+    }
 
-	public StreamTimer(final String logPrefix) {
-		super(logPrefix);
-	}
+    public StreamTimer(final String logPrefix) {
+        super(logPrefix);
+    }
 
-	@Override
-	public void startRecord(final String identifier) {
-		startMeasurement();
-		getReceiver().startRecord(identifier);
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        startMeasurement();
+        getReceiver().startRecord(identifier);
+    }
 
-	@Override
-	public void endRecord() {
-		getReceiver().endRecord();
-		stopMeasurement();
-	}
+    @Override
+    public void endRecord() {
+        getReceiver().endRecord();
+        stopMeasurement();
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		getReceiver().startEntity(name);
-	}
+    @Override
+    public void startEntity(final String name) {
+        getReceiver().startEntity(name);
+    }
 
-	@Override
-	public void endEntity() {
-		getReceiver().endEntity();
-	}
+    @Override
+    public void endEntity() {
+        getReceiver().endEntity();
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		getReceiver().literal(name, value);
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        getReceiver().literal(name, value);
+    }
 
 }

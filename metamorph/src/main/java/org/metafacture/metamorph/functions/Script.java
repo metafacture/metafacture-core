@@ -34,41 +34,41 @@ import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
  */
 public final class Script extends AbstractSimpleStatelessFunction {
 
-	private Invocable invocable;
-	private String invoke;
+    private Invocable invocable;
+    private String invoke;
 
-	public void setInvoke(final String invoke) {
-		this.invoke = invoke;
-	}
+    public void setInvoke(final String invoke) {
+        this.invoke = invoke;
+    }
 
-	public void setFile(final String file) {
+    public void setFile(final String file) {
 
-		final ScriptEngineManager manager = new ScriptEngineManager();
-		final ScriptEngine engine = manager.getEngineByName("JavaScript");
-		try {
-			// TODO: The script file should be loaded relatively to the base URI
-			engine.eval(ResourceUtil.getReader(file));
-		} catch (final ScriptException e) {
-			throw new MorphBuildException("Error in script", e);
-		} catch (final FileNotFoundException e) {
-			throw new MorphBuildException("Error loading script '" + file + "'",
-					e);
-		}
-		invocable = (Invocable) engine;
-	}
+        final ScriptEngineManager manager = new ScriptEngineManager();
+        final ScriptEngine engine = manager.getEngineByName("JavaScript");
+        try {
+            // TODO: The script file should be loaded relatively to the base URI
+            engine.eval(ResourceUtil.getReader(file));
+        } catch (final ScriptException e) {
+            throw new MorphBuildException("Error in script", e);
+        } catch (final FileNotFoundException e) {
+            throw new MorphBuildException("Error loading script '" + file + "'",
+                    e);
+        }
+        invocable = (Invocable) engine;
+    }
 
-	@Override
-	public String process(final String value) {
-		final Object obj;
-		try {
-			obj = invocable.invokeFunction(invoke, value);
-			return obj.toString();
-		} catch (final ScriptException e) {
-			throw new MorphExecutionException(
-					"Error in script while evaluating 'process' method", e);
-		} catch (final NoSuchMethodException e) {
-			throw new MorphExecutionException("'process' method is missing in script", e);
-		}
-	}
+    @Override
+    public String process(final String value) {
+        final Object obj;
+        try {
+            obj = invocable.invokeFunction(invoke, value);
+            return obj.toString();
+        } catch (final ScriptException e) {
+            throw new MorphExecutionException(
+                    "Error in script while evaluating 'process' method", e);
+        } catch (final NoSuchMethodException e) {
+            throw new MorphExecutionException("'process' method is missing in script", e);
+        }
+    }
 
 }

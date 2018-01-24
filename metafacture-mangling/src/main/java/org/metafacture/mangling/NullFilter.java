@@ -33,23 +33,23 @@ import org.metafacture.framework.helpers.ForwardingStreamPipe;
 @Out(StreamReceiver.class)
 public final class NullFilter extends ForwardingStreamPipe {
 
-	private String replacement = null;
+    private String replacement = null;
 
-	public void setReplacement(final String replacement) {
-		this.replacement = replacement;
-	}
+    public void setReplacement(final String replacement) {
+        this.replacement = replacement;
+    }
 
-	public String getReplacement() {
-		return replacement;
-	}
+    public String getReplacement() {
+        return replacement;
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		if (value != null) {
-			getReceiver().literal(name, value);
-		} else if (replacement != null) {
-			getReceiver().literal(name, replacement);
-		}
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        if (value != null) {
+            getReceiver().literal(name, value);
+        } else if (replacement != null) {
+            getReceiver().literal(name, replacement);
+        }
+    }
 
 }

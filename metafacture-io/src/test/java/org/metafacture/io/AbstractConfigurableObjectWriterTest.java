@@ -29,132 +29,132 @@ import org.junit.Test;
  */
 public abstract class AbstractConfigurableObjectWriterTest {
 
-	private static final String HEADER = "(header)";
-	private static final String FOOTER = "(footer)";
-	private static final String SEPARATOR = "(sep)";
+    private static final String HEADER = "(header)";
+    private static final String FOOTER = "(footer)";
+    private static final String SEPARATOR = "(sep)";
 
-	private static final String DATA1 = "data-1";
-	private static final String DATA2 = "data-2";
-	private static final String DATA3 = "data-3";
+    private static final String DATA1 = "data-1";
+    private static final String DATA2 = "data-2";
+    private static final String DATA3 = "data-3";
 
-	@Test
-	public final void testShouldAppendNewLinesByDefault() throws IOException {
-		final ConfigurableObjectWriter<String> writer = getWriter();
+    @Test
+    public final void testShouldAppendNewLinesByDefault() throws IOException {
+        final ConfigurableObjectWriter<String> writer = getWriter();
 
-		// Use default configuration
+        // Use default configuration
 
-		writer.process(DATA1);
-		writer.process(DATA2);
-		writer.process(DATA3);
-		writer.closeStream();
+        writer.process(DATA1);
+        writer.process(DATA2);
+        writer.process(DATA3);
+        writer.closeStream();
 
-		final String expectedResult =
-				DATA1 + "\n" +
-				DATA2 + "\n" +
-				DATA3 + "\n";
+        final String expectedResult =
+                DATA1 + "\n" +
+                DATA2 + "\n" +
+                DATA3 + "\n";
 
-		assertEquals(getOutput(), expectedResult);
-	}
+        assertEquals(getOutput(), expectedResult);
+    }
 
-	@Test
-	public final void testShouldOutputHeaderAtStreamStart() throws IOException {
-		final ConfigurableObjectWriter<String> writer = getWriter();
+    @Test
+    public final void testShouldOutputHeaderAtStreamStart() throws IOException {
+        final ConfigurableObjectWriter<String> writer = getWriter();
 
-		writer.setHeader(HEADER);
+        writer.setHeader(HEADER);
 
-		writer.process(DATA1);
-		writer.process(DATA2);
-		writer.process(DATA3);
-		writer.closeStream();
+        writer.process(DATA1);
+        writer.process(DATA2);
+        writer.process(DATA3);
+        writer.closeStream();
 
-		final String expectedResult =
-				HEADER +
-				DATA1 + ObjectWriter.DEFAULT_SEPARATOR +
-				DATA2 + ObjectWriter.DEFAULT_SEPARATOR +
-				DATA3 +
-				ObjectWriter.DEFAULT_FOOTER;
+        final String expectedResult =
+                HEADER +
+                DATA1 + ObjectWriter.DEFAULT_SEPARATOR +
+                DATA2 + ObjectWriter.DEFAULT_SEPARATOR +
+                DATA3 +
+                ObjectWriter.DEFAULT_FOOTER;
 
-		assertEquals(getOutput(), expectedResult);
-	}
+        assertEquals(getOutput(), expectedResult);
+    }
 
-	@Test
-	public final void testShouldOutputFooterAtStreamEnd() throws IOException {
-		final ConfigurableObjectWriter<String> writer = getWriter();
+    @Test
+    public final void testShouldOutputFooterAtStreamEnd() throws IOException {
+        final ConfigurableObjectWriter<String> writer = getWriter();
 
-		writer.setFooter(FOOTER);
+        writer.setFooter(FOOTER);
 
-		writer.process(DATA1);
-		writer.process(DATA2);
-		writer.process(DATA3);
-		writer.closeStream();
+        writer.process(DATA1);
+        writer.process(DATA2);
+        writer.process(DATA3);
+        writer.closeStream();
 
-		final String expectedResult =
-				ObjectWriter.DEFAULT_HEADER +
-				DATA1 + ObjectWriter.DEFAULT_SEPARATOR +
-				DATA2 + ObjectWriter.DEFAULT_SEPARATOR +
-				DATA3 +
-				FOOTER;
+        final String expectedResult =
+                ObjectWriter.DEFAULT_HEADER +
+                DATA1 + ObjectWriter.DEFAULT_SEPARATOR +
+                DATA2 + ObjectWriter.DEFAULT_SEPARATOR +
+                DATA3 +
+                FOOTER;
 
-		assertEquals(getOutput(), expectedResult);
-	}
+        assertEquals(getOutput(), expectedResult);
+    }
 
-	@Test
-	public final void testShouldOutputSeparatorBetweenObjects() throws IOException {
-		final ConfigurableObjectWriter<String> writer = getWriter();
+    @Test
+    public final void testShouldOutputSeparatorBetweenObjects() throws IOException {
+        final ConfigurableObjectWriter<String> writer = getWriter();
 
-		writer.setSeparator(SEPARATOR);
+        writer.setSeparator(SEPARATOR);
 
-		writer.process(DATA1);
-		writer.process(DATA2);
-		writer.process(DATA3);
-		writer.closeStream();
+        writer.process(DATA1);
+        writer.process(DATA2);
+        writer.process(DATA3);
+        writer.closeStream();
 
-		final String expectedResult =
-				ObjectWriter.DEFAULT_HEADER +
-				DATA1 + SEPARATOR +
-				DATA2 + SEPARATOR +
-				DATA3 +
-				ObjectWriter.DEFAULT_FOOTER;
+        final String expectedResult =
+                ObjectWriter.DEFAULT_HEADER +
+                DATA1 + SEPARATOR +
+                DATA2 + SEPARATOR +
+                DATA3 +
+                ObjectWriter.DEFAULT_FOOTER;
 
-		assertEquals(getOutput(), expectedResult);
-	}
+        assertEquals(getOutput(), expectedResult);
+    }
 
-	@Test
-	public final void testShouldOutputNoSeparatorifOnlyOneObjectIsOutput() throws IOException {
-		final ConfigurableObjectWriter<String> writer = getWriter();
+    @Test
+    public final void testShouldOutputNoSeparatorifOnlyOneObjectIsOutput() throws IOException {
+        final ConfigurableObjectWriter<String> writer = getWriter();
 
-		writer.setHeader(HEADER);
-		writer.setFooter(FOOTER);
-		writer.setSeparator(SEPARATOR);
+        writer.setHeader(HEADER);
+        writer.setFooter(FOOTER);
+        writer.setSeparator(SEPARATOR);
 
-		writer.process(DATA1);
-		writer.closeStream();
+        writer.process(DATA1);
+        writer.closeStream();
 
-		final String expectedResult =
-				HEADER +
-				DATA1 +
-				FOOTER;
+        final String expectedResult =
+                HEADER +
+                DATA1 +
+                FOOTER;
 
-		assertEquals(getOutput(), expectedResult);
-	}
+        assertEquals(getOutput(), expectedResult);
+    }
 
-	@Test
-	public final void testShouldOutputNothingIfNoObjectsAreProcessed() throws IOException {
-		final ConfigurableObjectWriter<String> writer = getWriter();
+    @Test
+    public final void testShouldOutputNothingIfNoObjectsAreProcessed() throws IOException {
+        final ConfigurableObjectWriter<String> writer = getWriter();
 
-		writer.setHeader(HEADER);
-		writer.setFooter(FOOTER);
-		writer.setSeparator(SEPARATOR);
+        writer.setHeader(HEADER);
+        writer.setFooter(FOOTER);
+        writer.setSeparator(SEPARATOR);
 
-		writer.closeStream();
+        writer.closeStream();
 
-		final String expectedResult = "";
+        final String expectedResult = "";
 
-		assertEquals(getOutput(), expectedResult);
-	}
+        assertEquals(getOutput(), expectedResult);
+    }
 
-	protected abstract ConfigurableObjectWriter<String> getWriter();
+    protected abstract ConfigurableObjectWriter<String> getWriter();
 
-	protected abstract String getOutput() throws IOException;
+    protected abstract String getOutput() throws IOException;
 
 }

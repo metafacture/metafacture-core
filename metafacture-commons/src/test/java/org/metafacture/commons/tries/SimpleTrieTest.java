@@ -31,32 +31,32 @@ import org.junit.Test;
  */
 public final class SimpleTrieTest {
 
-	private static final String KEY = "key";
-	private static final String VALUE = "value";
+    private static final String KEY = "key";
+    private static final String VALUE = "value";
 
-	@Test
-	public void testAdd() {
-		final SimpleTrie<String> trie = new SimpleTrie<String>();
-		assertNull(trie.get(KEY));
-		trie.put(KEY, VALUE);
-		assertEquals(VALUE, trie.get(KEY));
-	}
+    @Test
+    public void testAdd() {
+        final SimpleTrie<String> trie = new SimpleTrie<String>();
+        assertNull(trie.get(KEY));
+        trie.put(KEY, VALUE);
+        assertEquals(VALUE, trie.get(KEY));
+    }
 
-	@Test
-	public void testMultiAdd(){
-		final SimpleTrie<String> trie = new SimpleTrie<String>();
+    @Test
+    public void testMultiAdd(){
+        final SimpleTrie<String> trie = new SimpleTrie<String>();
 
-		final String[] megacities =  { "Brisbane", "Sydney", "Melbourne", "Adelaide", "Perth", "Berlin", "Berlin Center", "Bremen", "Petersburg"};
+        final String[] megacities =  { "Brisbane", "Sydney", "Melbourne", "Adelaide", "Perth", "Berlin", "Berlin Center", "Bremen", "Petersburg"};
 
-		for (int i = 0; i < megacities.length; ++i) {
-			final String city = megacities[i];
-			trie.put(city, city.toUpperCase(Locale.US));
-		}
+        for (int i = 0; i < megacities.length; ++i) {
+            final String city = megacities[i];
+            trie.put(city, city.toUpperCase(Locale.US));
+        }
 
-		for (int i = 0; i < megacities.length; ++i) {
-			final String city = megacities[i];
-			assertEquals(city.toUpperCase(Locale.US), trie.get(city));
-		}
-	}
+        for (int i = 0; i < megacities.length; ++i) {
+            final String city = megacities[i];
+            assertEquals(city.toUpperCase(Locale.US), trie.get(city));
+        }
+    }
 
 }

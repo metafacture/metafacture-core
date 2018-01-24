@@ -42,145 +42,145 @@ import org.xml.sax.InputSource;
  */
 final class MetamorphTestCase extends Statement {
 
-	private static final String NO_DATA_FOUND =
-			"Please specify either element content or a src attribute";
+    private static final String NO_DATA_FOUND =
+            "Please specify either element content or a src attribute";
 
-	private static final String NAME_ATTR = "name";
-	private static final String IGNORE_ATTR = "ignore";
-	private static final String RESULT_TAG = "result";
-	private static final String TRANSFORMATION_TAG = "transformation";
-	private static final String INPUT_TAG = "input";
-	private static final String SRC_ATTR = "src";
-	private static final String TYPE_ATTR = "type";
-	private static final String STRICT_RECORD_ORDER_ATTR = "strict-record-order";
-	private static final String STRICT_KEY_ORDER_ATTR = "strict-key-order";
-	private static final String STRICT_VALUE_ORDER_ATTR = "strict-value-order";
+    private static final String NAME_ATTR = "name";
+    private static final String IGNORE_ATTR = "ignore";
+    private static final String RESULT_TAG = "result";
+    private static final String TRANSFORMATION_TAG = "transformation";
+    private static final String INPUT_TAG = "input";
+    private static final String SRC_ATTR = "src";
+    private static final String TYPE_ATTR = "type";
+    private static final String STRICT_RECORD_ORDER_ATTR = "strict-record-order";
+    private static final String STRICT_KEY_ORDER_ATTR = "strict-key-order";
+    private static final String STRICT_VALUE_ORDER_ATTR = "strict-value-order";
 
-	private static final String MIME_METAMORPH = "text/x-metamorph+xml";
-	private static final String MIME_JAVACLASS = "application/java";
+    private static final String MIME_METAMORPH = "text/x-metamorph+xml";
+    private static final String MIME_JAVACLASS = "application/java";
 
-	private final Element config;
+    private final Element config;
 
-	MetamorphTestCase(final Element config) {
-		this.config = config;
-	}
+    MetamorphTestCase(final Element config) {
+        this.config = config;
+    }
 
-	public String getName() {
-		return config.getAttribute(NAME_ATTR);
-	}
+    public String getName() {
+        return config.getAttribute(NAME_ATTR);
+    }
 
-	public boolean isIgnore() {
-		return Boolean.parseBoolean(config.getAttribute(IGNORE_ATTR));
-	}
+    public boolean isIgnore() {
+        return Boolean.parseBoolean(config.getAttribute(IGNORE_ATTR));
+    }
 
-	@Override
-	public void evaluate() throws InitializationError {
-		final Reader inputReader = getReader(INPUT_TAG);
-		@SuppressWarnings("unchecked")
-		final StreamPipe<StreamReceiver>transformation = getTransformation();
-		final EventList resultStream = new EventList();
+    @Override
+    public void evaluate() throws InitializationError {
+        final Reader inputReader = getReader(INPUT_TAG);
+        @SuppressWarnings("unchecked")
+        final StreamPipe<StreamReceiver>transformation = getTransformation();
+        final EventList resultStream = new EventList();
 
-		if (transformation == null) {
-			inputReader.setReceiver(resultStream);
-		} else {
-			inputReader.setReceiver(transformation).setReceiver(resultStream);
-		}
+        if (transformation == null) {
+            inputReader.setReceiver(resultStream);
+        } else {
+            inputReader.setReceiver(transformation).setReceiver(resultStream);
+        }
 
-		inputReader.process(getInputData());
-		inputReader.closeStream();
+        inputReader.process(getInputData());
+        inputReader.closeStream();
 
-		final StreamValidator validator = new StreamValidator(resultStream.getEvents());
-		validator.setErrorHandler(msg -> { throw new AssertionError(msg); });
+        final StreamValidator validator = new StreamValidator(resultStream.getEvents());
+        validator.setErrorHandler(msg -> { throw new AssertionError(msg); });
 
-		final Element result = (Element) config.getElementsByTagName(RESULT_TAG).item(0);
-		validator.setStrictRecordOrder(Boolean.parseBoolean(
-				result.getAttribute(STRICT_RECORD_ORDER_ATTR)));
-		validator.setStrictKeyOrder(Boolean.parseBoolean(
-				result.getAttribute(STRICT_KEY_ORDER_ATTR)));
-		validator.setStrictValueOrder(Boolean.parseBoolean(
-				result.getAttribute(STRICT_VALUE_ORDER_ATTR)));
+        final Element result = (Element) config.getElementsByTagName(RESULT_TAG).item(0);
+        validator.setStrictRecordOrder(Boolean.parseBoolean(
+                result.getAttribute(STRICT_RECORD_ORDER_ATTR)));
+        validator.setStrictKeyOrder(Boolean.parseBoolean(
+                result.getAttribute(STRICT_KEY_ORDER_ATTR)));
+        validator.setStrictValueOrder(Boolean.parseBoolean(
+                result.getAttribute(STRICT_VALUE_ORDER_ATTR)));
 
-		final Reader resultReader = getReader(RESULT_TAG);
-		resultReader.setReceiver(validator);
+        final Reader resultReader = getReader(RESULT_TAG);
+        resultReader.setReceiver(validator);
 
-		resultReader.process(getExpectedResult());
-		validator.closeStream();
-	}
+        resultReader.process(getExpectedResult());
+        validator.closeStream();
+    }
 
-	private Reader getReader(final String tag) {
-		final Element element = (Element) config.getElementsByTagName(tag).item(0);
-		final String mimeType = element.getAttribute(TYPE_ATTR);
-		return new MultiFormatReader(mimeType);
-	}
+    private Reader getReader(final String tag) {
+        final Element element = (Element) config.getElementsByTagName(tag).item(0);
+        final String mimeType = element.getAttribute(TYPE_ATTR);
+        return new MultiFormatReader(mimeType);
+    }
 
-	@SuppressWarnings("rawtypes")
-	private StreamPipe getTransformation() throws InitializationError {
-		final NodeList nodes = config.getElementsByTagName(TRANSFORMATION_TAG);
-		if (nodes.getLength() == 0) {
-			return null;
-		}
-		final Element transformationElement = (Element) nodes.item(0);
+    @SuppressWarnings("rawtypes")
+    private StreamPipe getTransformation() throws InitializationError {
+        final NodeList nodes = config.getElementsByTagName(TRANSFORMATION_TAG);
+        if (nodes.getLength() == 0) {
+            return null;
+        }
+        final Element transformationElement = (Element) nodes.item(0);
 
-		final String type = transformationElement.getAttribute(TYPE_ATTR);
-		final String src = transformationElement.getAttribute(SRC_ATTR);
+        final String type = transformationElement.getAttribute(TYPE_ATTR);
+        final String src = transformationElement.getAttribute(SRC_ATTR);
 
-		if (MIME_METAMORPH.equals(type)) {
-			if (src.isEmpty()) {
-				final InputSource transformationSource =
-						new InputSource(getDataEmbedded(transformationElement));
-				transformationSource.setSystemId(transformationElement.getBaseURI());
-				return new Metamorph(transformationSource);
-			}
-			return new Metamorph(src);
+        if (MIME_METAMORPH.equals(type)) {
+            if (src.isEmpty()) {
+                final InputSource transformationSource =
+                        new InputSource(getDataEmbedded(transformationElement));
+                transformationSource.setSystemId(transformationElement.getBaseURI());
+                return new Metamorph(transformationSource);
+            }
+            return new Metamorph(src);
 
-		} else if (MIME_JAVACLASS.equals(type)) {
-			if (src.isEmpty()) {
-				throw new InitializationError(
-						"class defining transformation not specified");
-			}
-			return ReflectionUtil.loadClass(src, StreamPipe.class).newInstance();
-		}
-		throw new InitializationError("transformation of type " + type +
-				" is not supperted");
-	}
+        } else if (MIME_JAVACLASS.equals(type)) {
+            if (src.isEmpty()) {
+                throw new InitializationError(
+                        "class defining transformation not specified");
+            }
+            return ReflectionUtil.loadClass(src, StreamPipe.class).newInstance();
+        }
+        throw new InitializationError("transformation of type " + type +
+                " is not supperted");
+    }
 
-	private java.io.Reader getInputData() throws InitializationError {
-		final Element input = (Element) config.getElementsByTagName(INPUT_TAG).item(0);
+    private java.io.Reader getInputData() throws InitializationError {
+        final Element input = (Element) config.getElementsByTagName(INPUT_TAG).item(0);
 
-		if (input.hasAttribute(SRC_ATTR)) {
-			return getDataFromSource(input.getAttribute(SRC_ATTR));
-		}
-		return getDataEmbedded(input);
-	}
+        if (input.hasAttribute(SRC_ATTR)) {
+            return getDataFromSource(input.getAttribute(SRC_ATTR));
+        }
+        return getDataEmbedded(input);
+    }
 
-	private java.io.Reader getExpectedResult() throws InitializationError {
-		final Element result = (Element) config.getElementsByTagName(RESULT_TAG).item(0);
-		if (result.hasAttribute(SRC_ATTR)) {
-			return getDataFromSource(result.getAttribute(SRC_ATTR));
-		}
-		return getDataEmbedded(result);
-	}
+    private java.io.Reader getExpectedResult() throws InitializationError {
+        final Element result = (Element) config.getElementsByTagName(RESULT_TAG).item(0);
+        if (result.hasAttribute(SRC_ATTR)) {
+            return getDataFromSource(result.getAttribute(SRC_ATTR));
+        }
+        return getDataEmbedded(result);
+    }
 
-	private java.io.Reader getDataFromSource(final String src)
-			throws InitializationError {
-		try {
-			return ResourceUtil.getReader(src);
-		} catch (final FileNotFoundException e) {
-			throw new InitializationError("Could not find input file '" + src +
-					"': " + e.getMessage());
-		}
-	}
+    private java.io.Reader getDataFromSource(final String src)
+            throws InitializationError {
+        try {
+            return ResourceUtil.getReader(src);
+        } catch (final FileNotFoundException e) {
+            throw new InitializationError("Could not find input file '" + src +
+                    "': " + e.getMessage());
+        }
+    }
 
-	private java.io.Reader getDataEmbedded(final Element input)
-			throws InitializationError {
-		final String inputType = input.getAttribute(TYPE_ATTR);
-		if (input.hasChildNodes()) {
-			if (XmlUtil.isXmlMimeType(inputType)) {
-				return new StringReader(XmlUtil.nodeListToString(input.getChildNodes()));
-			}
-			return new StringReader(input.getTextContent());
-		}
-		throw new InitializationError(NO_DATA_FOUND);
-	}
+    private java.io.Reader getDataEmbedded(final Element input)
+            throws InitializationError {
+        final String inputType = input.getAttribute(TYPE_ATTR);
+        if (input.hasChildNodes()) {
+            if (XmlUtil.isXmlMimeType(inputType)) {
+                return new StringReader(XmlUtil.nodeListToString(input.getChildNodes()));
+            }
+            return new StringReader(input.getTextContent());
+        }
+        throw new InitializationError(NO_DATA_FOUND);
+    }
 
 }

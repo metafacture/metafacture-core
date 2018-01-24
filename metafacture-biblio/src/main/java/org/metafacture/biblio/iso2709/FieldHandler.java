@@ -23,14 +23,14 @@ package org.metafacture.biblio.iso2709;
  */
 public interface FieldHandler {
 
-	void referenceField(char[] tag, char[] implDefinedPart, String value);
+    void referenceField(char[] tag, char[] implDefinedPart, String value);
 
-	void startDataField(char[] tag, char[] implDefinedPart, char[] indicators);
+    void startDataField(char[] tag, char[] implDefinedPart, char[] indicators);
 
-	void endDataField();
+    void endDataField();
 
-	void additionalImplDefinedPart(char[] implDefinedPart);
+    void additionalImplDefinedPart(char[] implDefinedPart);
 
-	void data(char[] identifier, String value);
+    void data(char[] identifier, String value);
 
 }

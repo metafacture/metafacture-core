@@ -23,23 +23,23 @@ package org.metafacture.metamorph.api;
  */
 public interface SourceLocation {
 
-	String getFileName();
+    String getFileName();
 
-	Position getStartPosition();
+    Position getStartPosition();
 
-	Position getEndPosition();
+    Position getEndPosition();
 
-	/**
-	 * Describes a position in a file by line and column number.
-	 *
-	 * @author Christoph Böhme
-	 */
-	interface Position {
+    /**
+     * Describes a position in a file by line and column number.
+     *
+     * @author Christoph Böhme
+     */
+    interface Position {
 
-		int getLineNumber();
+        int getLineNumber();
 
-		int getColumnNumber();
+        int getColumnNumber();
 
-	}
+    }
 
 }

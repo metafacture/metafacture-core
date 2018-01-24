@@ -26,50 +26,50 @@ import org.metafacture.metamorph.xml.Location;
  */
 final class XmlSourceLocation implements SourceLocation {
 
-	private final Location location;
+    private final Location location;
 
-	XmlSourceLocation(final Location location) {
-		this.location = location;
-	}
+    XmlSourceLocation(final Location location) {
+        this.location = location;
+    }
 
-	@Override
-	public String getFileName() {
-		return location.getSystemId();
-	}
+    @Override
+    public String getFileName() {
+        return location.getSystemId();
+    }
 
-	@Override
-	public Position getStartPosition() {
-		return new Position() {
-			@Override
-			public int getLineNumber() {
-				return location.getElementStart().getLineNumber();
-			}
+    @Override
+    public Position getStartPosition() {
+        return new Position() {
+            @Override
+            public int getLineNumber() {
+                return location.getElementStart().getLineNumber();
+            }
 
-			@Override
-			public int getColumnNumber() {
-				return location.getElementStart().getColumnNumber();
-			}
-		};
-	}
+            @Override
+            public int getColumnNumber() {
+                return location.getElementStart().getColumnNumber();
+            }
+        };
+    }
 
-	@Override
-	public Position getEndPosition() {
-		return new Position() {
-			@Override
-			public int getLineNumber() {
-				return location.getElementEnd().getLineNumber();
-			}
+    @Override
+    public Position getEndPosition() {
+        return new Position() {
+            @Override
+            public int getLineNumber() {
+                return location.getElementEnd().getLineNumber();
+            }
 
-			@Override
-			public int getColumnNumber() {
-				return location.getElementEnd().getColumnNumber();
-			}
-		};
-	}
+            @Override
+            public int getColumnNumber() {
+                return location.getElementEnd().getColumnNumber();
+            }
+        };
+    }
 
-	@Override
-	public String toString() {
-		return location.toString();
-	}
+    @Override
+    public String toString() {
+        return location.toString();
+    }
 
 }

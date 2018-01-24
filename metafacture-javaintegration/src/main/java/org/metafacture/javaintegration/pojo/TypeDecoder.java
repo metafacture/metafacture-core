@@ -25,7 +25,7 @@ import org.metafacture.framework.StreamReceiver;
  */
 interface TypeDecoder {
 
-	void decodeToStream(final StreamReceiver streamReceiver, final String name,
-			final Object object);
+    void decodeToStream(final StreamReceiver streamReceiver, final String name,
+            final Object object);
 
 }

@@ -26,37 +26,37 @@ import org.metafacture.framework.StreamReceiver;
  */
 public final class FullRecordEmitter implements Emitter {
 
-	private StreamReceiver receiver;
+    private StreamReceiver receiver;
 
-	@Override
-	public void setReceiver(final StreamReceiver receiver) {
-		this.receiver = receiver;
-	}
+    @Override
+    public void setReceiver(final StreamReceiver receiver) {
+        this.receiver = receiver;
+    }
 
-	@Override
-	public void startGroup(final String name, final int nestingLevel) {
-		if (nestingLevel == 0) {
-			receiver.startRecord(name);
-		} else {
-			receiver.startEntity(name);
-		}
-	}
+    @Override
+    public void startGroup(final String name, final int nestingLevel) {
+        if (nestingLevel == 0) {
+            receiver.startRecord(name);
+        } else {
+            receiver.startEntity(name);
+        }
+    }
 
-	@Override
-	public void endGroup(final int nestingLevel) {
-		if (nestingLevel == 0) {
-			receiver.endRecord();
-		} else {
-			receiver.endEntity();
-		}
-	}
+    @Override
+    public void endGroup(final int nestingLevel) {
+        if (nestingLevel == 0) {
+            receiver.endRecord();
+        } else {
+            receiver.endEntity();
+        }
+    }
 
-	@Override
-	public void literal(final String name, final String value, final int nestingLevel) {
-		if (nestingLevel == 0) {
-			throw new FormatException("literals may only appear in records");
-		}
-		receiver.literal(name, value);
-	}
+    @Override
+    public void literal(final String name, final String value, final int nestingLevel) {
+        if (nestingLevel == 0) {
+            throw new FormatException("literals may only appear in records");
+        }
+        receiver.literal(name, value);
+    }
 
 }

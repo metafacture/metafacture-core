@@ -38,55 +38,55 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @Out(StreamReceiver.class)
 @FluxCommand("merge-same-ids")
 public final class StreamMerger
-		extends DefaultStreamPipe<StreamReceiver> {
+        extends DefaultStreamPipe<StreamReceiver> {
 
-	private boolean hasRecordsReceived;
-	private String currentId = "";
+    private boolean hasRecordsReceived;
+    private String currentId = "";
 
-	@Override
-	public void startRecord(final String identifier) {
-		assert !isClosed();
-		if (!currentId.equals(identifier)) {
-			if (hasRecordsReceived) {
-				getReceiver().endRecord();
-			}
-			getReceiver().startRecord(identifier);
-			currentId = identifier;
-		}
+    @Override
+    public void startRecord(final String identifier) {
+        assert !isClosed();
+        if (!currentId.equals(identifier)) {
+            if (hasRecordsReceived) {
+                getReceiver().endRecord();
+            }
+            getReceiver().startRecord(identifier);
+            currentId = identifier;
+        }
 
-		hasRecordsReceived = true;
-	}
+        hasRecordsReceived = true;
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		assert !isClosed();
-		getReceiver().startEntity(name);
-	}
+    @Override
+    public void startEntity(final String name) {
+        assert !isClosed();
+        getReceiver().startEntity(name);
+    }
 
-	@Override
-	public void endEntity() {
-		assert !isClosed();
-		getReceiver().endEntity();
-	}
+    @Override
+    public void endEntity() {
+        assert !isClosed();
+        getReceiver().endEntity();
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		assert !isClosed();
-		getReceiver().literal(name, value);
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        assert !isClosed();
+        getReceiver().literal(name, value);
+    }
 
-	@Override
-	protected void onResetStream() {
-		hasRecordsReceived = false;
-		currentId = "";
-	}
+    @Override
+    protected void onResetStream() {
+        hasRecordsReceived = false;
+        currentId = "";
+    }
 
-	@Override
-	protected void onCloseStream() {
-		if (hasRecordsReceived) {
-			getReceiver().endRecord();
-		}
-		onResetStream();
-	}
+    @Override
+    protected void onCloseStream() {
+        if (hasRecordsReceived) {
+            getReceiver().endRecord();
+        }
+        onResetStream();
+    }
 
 }

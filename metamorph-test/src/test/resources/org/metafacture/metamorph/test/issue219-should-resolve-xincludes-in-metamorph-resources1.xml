@@ -15,9 +15,9 @@
   limitations under the License.
   -->
 <metamorph xmlns="http://www.culturegraph.org/metamorph"
-	xmlns:xi="http://www.w3.org/2001/XInclude"
-	version="1" >
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    version="1" >
 
-	<xi:include href="issue219-should-resolve-xincludes-in-metamorph-resources2.xml" />
+    <xi:include href="issue219-should-resolve-xincludes-in-metamorph-resources2.xml" />
 
 </metamorph>

@@ -39,47 +39,47 @@ import org.metafacture.commons.ResourceUtil;
  *
  */
 public final class ObjectFileWriterTest
-		extends AbstractConfigurableObjectWriterTest {
+        extends AbstractConfigurableObjectWriterTest {
 
-	private static final String DATA = "Überfacture";
+    private static final String DATA = "Überfacture";
 
-	@Rule
-	public final TemporaryFolder tempFolder = new TemporaryFolder();
+    @Rule
+    public final TemporaryFolder tempFolder = new TemporaryFolder();
 
-	private File file;
-	private ObjectFileWriter<String> writer;
+    private File file;
+    private ObjectFileWriter<String> writer;
 
-	@Before
-	public void setup() throws IOException {
-		file = tempFolder.newFile();
-		writer = new ObjectFileWriter<String>(file.getAbsolutePath());
-	}
+    @Before
+    public void setup() throws IOException {
+        file = tempFolder.newFile();
+        writer = new ObjectFileWriter<String>(file.getAbsolutePath());
+    }
 
-	@Test
-	public void shouldWriteUTF8EncodedOutput() throws IOException {
-		assumeFalse("Default encoding is UTF-8: It is not possible to test whether " +
-						"ObjectFileWriter sets the encoding to UTF-8 correctly.",
-				StandardCharsets.UTF_8.equals(Charset.defaultCharset()));
+    @Test
+    public void shouldWriteUTF8EncodedOutput() throws IOException {
+        assumeFalse("Default encoding is UTF-8: It is not possible to test whether " +
+                        "ObjectFileWriter sets the encoding to UTF-8 correctly.",
+                StandardCharsets.UTF_8.equals(Charset.defaultCharset()));
 
-		writer.process(DATA);
-		writer.closeStream();
+        writer.process(DATA);
+        writer.closeStream();
 
-		final byte[] bytesWritten = Files.readAllBytes(file.toPath());
-		assertArrayEquals((DATA + "\n").getBytes(StandardCharsets.UTF_8),
-				bytesWritten); // FileObjectWriter appends new lines
-	}
+        final byte[] bytesWritten = Files.readAllBytes(file.toPath());
+        assertArrayEquals((DATA + "\n").getBytes(StandardCharsets.UTF_8),
+                bytesWritten); // FileObjectWriter appends new lines
+    }
 
-	@Override
-	protected ConfigurableObjectWriter<String> getWriter() {
-		return writer;
-	}
+    @Override
+    protected ConfigurableObjectWriter<String> getWriter() {
+        return writer;
+    }
 
-	@Override
-	protected String getOutput() throws IOException {
-		final Charset encoding = Charset.forName(writer.getEncoding());
-		try (InputStream inputStream = new FileInputStream(file)) {
-			return ResourceUtil.readAll(inputStream, encoding);
-		}
-	}
+    @Override
+    protected String getOutput() throws IOException {
+        final Charset encoding = Charset.forName(writer.getEncoding());
+        try (InputStream inputStream = new FileInputStream(file)) {
+            return ResourceUtil.readAll(inputStream, encoding);
+        }
+    }
 
 }

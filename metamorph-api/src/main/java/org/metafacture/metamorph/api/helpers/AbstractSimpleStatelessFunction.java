@@ -27,20 +27,20 @@ import org.metafacture.metamorph.api.NamedValueSource;
  */
 public abstract class AbstractSimpleStatelessFunction extends AbstractFunction {
 
-	@Override
-	public final void receive(final String name, final String value,
-			final NamedValueSource source, final int recordCount,
-			final int entityCount) {
+    @Override
+    public final void receive(final String name, final String value,
+            final NamedValueSource source, final int recordCount,
+            final int entityCount) {
 
-		final String processedValue = process(value);
-		if (processedValue == null) {
-			return;
-		}
+        final String processedValue = process(value);
+        if (processedValue == null) {
+            return;
+        }
 
-		getNamedValueReceiver().receive(name, processedValue, this,
-				recordCount, entityCount);
-	}
+        getNamedValueReceiver().receive(name, processedValue, this,
+                recordCount, entityCount);
+    }
 
-	protected abstract String process(String value);
+    protected abstract String process(String value);
 
 }

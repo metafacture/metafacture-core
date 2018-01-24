@@ -33,50 +33,50 @@ import java.util.Set;
  */
 public class ObjectFactory<T> {
 
-	private final Map<String, ConfigurableClass<? extends T>> classes =
-			new HashMap<>();
+    private final Map<String, ConfigurableClass<? extends T>> classes =
+            new HashMap<>();
 
-	public final void loadClassesFromMap(Map<?, ?> classMap, Class<T> baseType) {
-		final ClassLoader loader = ReflectionUtil.getContextClassLoader();
-		for (final Entry<?, ?> entry : classMap.entrySet()) {
-			final String key = entry.getKey().toString();
-			final String className = entry.getValue().toString();
-			registerClass(key, ReflectionUtil.loadClass(loader, className, baseType));
-		}
-	}
+    public final void loadClassesFromMap(Map<?, ?> classMap, Class<T> baseType) {
+        final ClassLoader loader = ReflectionUtil.getContextClassLoader();
+        for (final Entry<?, ?> entry : classMap.entrySet()) {
+            final String key = entry.getKey().toString();
+            final String className = entry.getValue().toString();
+            registerClass(key, ReflectionUtil.loadClass(loader, className, baseType));
+        }
+    }
 
-	public final void registerClass(String key, Class<? extends T> objectClass) {
-		registerClass(key, new ConfigurableClass<>(objectClass));
-	}
+    public final void registerClass(String key, Class<? extends T> objectClass) {
+        registerClass(key, new ConfigurableClass<>(objectClass));
+    }
 
-	public final void registerClass(String key,
-			ConfigurableClass<? extends T> objectClass) {
-		classes.put(key, objectClass);
-	}
+    public final void registerClass(String key,
+            ConfigurableClass<? extends T> objectClass) {
+        classes.put(key, objectClass);
+    }
 
-	public final T newInstance(String key, Object... constructorArgs) {
-		return newInstance(key, Collections.emptyMap(), constructorArgs);
-	}
+    public final T newInstance(String key, Object... constructorArgs) {
+        return newInstance(key, Collections.emptyMap(), constructorArgs);
+    }
 
-	public final T newInstance(String key, Map<String, String> values,
-			Object... constructorArgs) {
-		if (!classes.containsKey(key)) {
-			throw new NoSuchElementException("no registered class for: " + key);
-		}
-		final ConfigurableClass<? extends T> instanceClass = classes.get(key);
-		return instanceClass.newInstance(values, constructorArgs);
-	}
+    public final T newInstance(String key, Map<String, String> values,
+            Object... constructorArgs) {
+        if (!classes.containsKey(key)) {
+            throw new NoSuchElementException("no registered class for: " + key);
+        }
+        final ConfigurableClass<? extends T> instanceClass = classes.get(key);
+        return instanceClass.newInstance(values, constructorArgs);
+    }
 
-	public final boolean containsKey(String key) {
-		return classes.containsKey(key);
-	}
+    public final boolean containsKey(String key) {
+        return classes.containsKey(key);
+    }
 
-	public final Set<String> keySet() {
-		return Collections.unmodifiableSet(classes.keySet());
-	}
+    public final Set<String> keySet() {
+        return Collections.unmodifiableSet(classes.keySet());
+    }
 
-	public final ConfigurableClass<? extends T> get(String key) {
-		return classes.get(key);
-	}
+    public final ConfigurableClass<? extends T> get(String key) {
+        return classes.get(key);
+    }
 
 }

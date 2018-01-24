@@ -41,49 +41,49 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(java.io.Reader.class)
 @FluxCommand("open-http")
 public final class HttpOpener
-		extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
+        extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
-	private String encoding = "UTF-8";
-	private String accept = "*/*";
+    private String encoding = "UTF-8";
+    private String accept = "*/*";
 
-	/**
-	 * Sets the HTTP accept header value. This is a mime-type such as text/plain
-	 * or text/html. The default value of the accept is *&#47;* which means
-	 * any mime-type.
-	 *
-	 * @param accept mime-type to use for the HTTP accept header
-	 */
-	public void setAccept(final String accept) {
-		this.accept = accept;
-	}
+    /**
+     * Sets the HTTP accept header value. This is a mime-type such as text/plain
+     * or text/html. The default value of the accept is *&#47;* which means
+     * any mime-type.
+     *
+     * @param accept mime-type to use for the HTTP accept header
+     */
+    public void setAccept(final String accept) {
+        this.accept = accept;
+    }
 
-	/**
-	 * Sets the preferred encoding of the HTTP response. This value is in the
-	 * accept-charset header. Additonally, the encoding is used for reading the
-	 * HTTP resonse if it does not  specify an encoding. The default value for
-	 * the encoding is UTF-8.
-	 *
-	 * @param encoding name of the encoding used for the accept-charset HTTP
-	 *                 header
-	 */
-	public void setEncoding(final String encoding) {
-		this.encoding = encoding;
-	}
+    /**
+     * Sets the preferred encoding of the HTTP response. This value is in the
+     * accept-charset header. Additonally, the encoding is used for reading the
+     * HTTP resonse if it does not  specify an encoding. The default value for
+     * the encoding is UTF-8.
+     *
+     * @param encoding name of the encoding used for the accept-charset HTTP
+     *                 header
+     */
+    public void setEncoding(final String encoding) {
+        this.encoding = encoding;
+    }
 
-	@Override
-	public void process(final String urlStr) {
-		try {
-			final URL url = new URL(urlStr);
-			final URLConnection con = url.openConnection();
-			con.addRequestProperty("Accept", accept);
-			con.addRequestProperty("Accept-Charset", encoding);
-			String enc = con.getContentEncoding();
-			if (enc == null) {
-				enc = encoding;
-			}
-			getReceiver().process(new InputStreamReader(con.getInputStream(), enc));
-		} catch (IOException e) {
-			throw new MetafactureException(e);
-		}
-	}
+    @Override
+    public void process(final String urlStr) {
+        try {
+            final URL url = new URL(urlStr);
+            final URLConnection con = url.openConnection();
+            con.addRequestProperty("Accept", accept);
+            con.addRequestProperty("Accept-Charset", encoding);
+            String enc = con.getContentEncoding();
+            if (enc == null) {
+                enc = encoding;
+            }
+            getReceiver().process(new InputStreamReader(con.getInputStream(), enc));
+        } catch (IOException e) {
+            throw new MetafactureException(e);
+        }
+    }
 }

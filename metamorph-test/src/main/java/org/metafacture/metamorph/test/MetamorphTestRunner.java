@@ -32,48 +32,48 @@ import org.junit.runners.model.InitializationError;
  */
 final class MetamorphTestRunner extends ParentRunner<MetamorphTestCase> {
 
-	private final List<MetamorphTestCase> metamorphTestCases;
-	private final String testDefinition;
+    private final List<MetamorphTestCase> metamorphTestCases;
+    private final String testDefinition;
 
-	MetamorphTestRunner(final Class<?> testClass, final String testDefinition)
-			throws InitializationError {
-		super(testClass);
-		final URL testDefinitionUrl = testClass.getResource(testDefinition);
-		if (testDefinitionUrl == null) {
-			throw new InitializationError("'" + testDefinition + "' does not exist!");
-		}
-		this.metamorphTestCases = MetamorphTestLoader.load(testDefinitionUrl);
-		this.testDefinition = testDefinition;
-	}
+    MetamorphTestRunner(final Class<?> testClass, final String testDefinition)
+            throws InitializationError {
+        super(testClass);
+        final URL testDefinitionUrl = testClass.getResource(testDefinition);
+        if (testDefinitionUrl == null) {
+            throw new InitializationError("'" + testDefinition + "' does not exist!");
+        }
+        this.metamorphTestCases = MetamorphTestLoader.load(testDefinitionUrl);
+        this.testDefinition = testDefinition;
+    }
 
-	@Override
-	protected String getName() {
-		final int nameLength = testDefinition.indexOf('.');
-		if (nameLength < 0) {
-			return "xml: " + testDefinition;
-		}
-		return "xml: " + testDefinition.substring(0, nameLength);
-	}
+    @Override
+    protected String getName() {
+        final int nameLength = testDefinition.indexOf('.');
+        if (nameLength < 0) {
+            return "xml: " + testDefinition;
+        }
+        return "xml: " + testDefinition.substring(0, nameLength);
+    }
 
-	@Override
-	protected List<MetamorphTestCase> getChildren() {
-		return metamorphTestCases;
-	}
+    @Override
+    protected List<MetamorphTestCase> getChildren() {
+        return metamorphTestCases;
+    }
 
-	@Override
-	protected Description describeChild(final MetamorphTestCase child) {
-		return Description.createTestDescription(getName(), child.getName());
-	}
+    @Override
+    protected Description describeChild(final MetamorphTestCase child) {
+        return Description.createTestDescription(getName(), child.getName());
+    }
 
-	@Override
-	protected void runChild(final MetamorphTestCase child,
-			final RunNotifier notifier) {
-		final Description description = describeChild(child);
-		if (child.isIgnore()) {
-			notifier.fireTestIgnored(description);
-		} else {
-			runLeaf(child, description, notifier);
-		}
-	}
+    @Override
+    protected void runChild(final MetamorphTestCase child,
+            final RunNotifier notifier) {
+        final Description description = describeChild(child);
+        if (child.isIgnore()) {
+            notifier.fireTestIgnored(description);
+        } else {
+            runLeaf(child, description, notifier);
+        }
+    }
 
 }

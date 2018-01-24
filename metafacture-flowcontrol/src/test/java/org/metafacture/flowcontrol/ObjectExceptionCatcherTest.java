@@ -32,39 +32,39 @@ import org.mockito.MockitoAnnotations;
  */
 public final class ObjectExceptionCatcherTest {
 
-	@Mock
-	private ObjectReceiver<String> exceptionThrowingModule;
+    @Mock
+    private ObjectReceiver<String> exceptionThrowingModule;
 
-	private ObjectExceptionCatcher<String> exceptionCatcher;
+    private ObjectExceptionCatcher<String> exceptionCatcher;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		doThrow(new TestException("Exception Message"))
-				.when(exceptionThrowingModule).process(anyString());
-		exceptionCatcher = new ObjectExceptionCatcher<>();
-		exceptionCatcher.setReceiver(exceptionThrowingModule);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        doThrow(new TestException("Exception Message"))
+                .when(exceptionThrowingModule).process(anyString());
+        exceptionCatcher = new ObjectExceptionCatcher<>();
+        exceptionCatcher.setReceiver(exceptionThrowingModule);
+    }
 
-	@Test
-	public void shouldCatchException() {
-		exceptionCatcher.process("data");
+    @Test
+    public void shouldCatchException() {
+        exceptionCatcher.process("data");
 
-		// Test passed if no exception is thrown by ObjectReceiver#process(T)
-	}
+        // Test passed if no exception is thrown by ObjectReceiver#process(T)
+    }
 
-	/**
-	 * A special exception to make sure the test is not passed accidentally on a
-	 * different exception.
-	 */
-	private static final class TestException extends RuntimeException {
+    /**
+     * A special exception to make sure the test is not passed accidentally on a
+     * different exception.
+     */
+    private static final class TestException extends RuntimeException {
 
-		private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
-		TestException(final String msg) {
-			super(msg);
-		}
+        TestException(final String msg) {
+            super(msg);
+        }
 
-	}
+    }
 
 }

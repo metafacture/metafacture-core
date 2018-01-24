@@ -29,74 +29,74 @@ import org.metafacture.framework.MetafactureException;
  */
 class ComplexTypeEncoder implements TypeEncoder {
 
-	private final Object instance;
-	private final Map<String, ValueSetter> valueSetters;
+    private final Object instance;
+    private final Map<String, ValueSetter> valueSetters;
 
-	ComplexTypeEncoder(final Class<?> clazz) {
-		assert supportsType(clazz);
-		instance = createInstance(clazz);
-		valueSetters = new HashMap<>();
-		addFieldValueSettersFor(clazz);
-		addMethodValueSettersFor(clazz);
-	}
+    ComplexTypeEncoder(final Class<?> clazz) {
+        assert supportsType(clazz);
+        instance = createInstance(clazz);
+        valueSetters = new HashMap<>();
+        addFieldValueSettersFor(clazz);
+        addMethodValueSettersFor(clazz);
+    }
 
-	private static Object createInstance(final Class<?> clazz) {
-		try {
-			return clazz.newInstance();
-		} catch (final Exception e) {
-			throw new MetafactureException(
-					"Can't instantiate object of class: " + clazz, e);
-		}
-	}
+    private static Object createInstance(final Class<?> clazz) {
+        try {
+            return clazz.newInstance();
+        } catch (final Exception e) {
+            throw new MetafactureException(
+                    "Can't instantiate object of class: " + clazz, e);
+        }
+    }
 
-	private void addFieldValueSettersFor(Class<?> clazz) {
-		final Field[] fields = clazz.getDeclaredFields();
-		for (final Field field : fields) {
-			if (FieldValueSetter.supportsField(field)) {
-				final FieldValueSetter fieldValueSetter = new FieldValueSetter(
-						field);
-				valueSetters.put(fieldValueSetter.getName(),
-						fieldValueSetter);
-			}
-		}
-	}
+    private void addFieldValueSettersFor(Class<?> clazz) {
+        final Field[] fields = clazz.getDeclaredFields();
+        for (final Field field : fields) {
+            if (FieldValueSetter.supportsField(field)) {
+                final FieldValueSetter fieldValueSetter = new FieldValueSetter(
+                        field);
+                valueSetters.put(fieldValueSetter.getName(),
+                        fieldValueSetter);
+            }
+        }
+    }
 
-	private void addMethodValueSettersFor(Class<?> clazz) {
-		final Method[] methods = clazz.getDeclaredMethods();
-		for (final Method method : methods) {
-			if (MethodValueSetter.supportsMethod(method)) {
-				final MethodValueSetter methodValueSetter = new MethodValueSetter(
-						method);
-				valueSetters.put(methodValueSetter.getName(),
-						methodValueSetter);
-			}
-		}
-	}
+    private void addMethodValueSettersFor(Class<?> clazz) {
+        final Method[] methods = clazz.getDeclaredMethods();
+        for (final Method method : methods) {
+            if (MethodValueSetter.supportsMethod(method)) {
+                final MethodValueSetter methodValueSetter = new MethodValueSetter(
+                        method);
+                valueSetters.put(methodValueSetter.getName(),
+                        methodValueSetter);
+            }
+        }
+    }
 
-	static boolean supportsType(final Class<?> clazz) {
-		return !clazz.isPrimitive() && !clazz.equals(String.class)
-				&& !MapTypeEncoder.supportsType(clazz)
-				&& !ListTypeEncoder.supportsType(clazz);
-	}
+    static boolean supportsType(final Class<?> clazz) {
+        return !clazz.isPrimitive() && !clazz.equals(String.class)
+                && !MapTypeEncoder.supportsType(clazz)
+                && !ListTypeEncoder.supportsType(clazz);
+    }
 
-	@Override
-	public void setValue(final String name, final Object value) {
-		final ValueSetter valueSetter = valueSetters.get(name);
-		valueSetter.setValue(instance, value);
-	}
+    @Override
+    public void setValue(final String name, final Object value) {
+        final ValueSetter valueSetter = valueSetters.get(name);
+        valueSetter.setValue(instance, value);
+    }
 
-	@Override
-	public ValueType getValueType(final String name) {
-		final ValueSetter valueSetter = valueSetters.get(name);
-		if (valueSetter == null) {
-			throw new MetafactureException("There is no attribute with name " + name);
-		}
-		return valueSetter.getValueType();
-	}
+    @Override
+    public ValueType getValueType(final String name) {
+        final ValueSetter valueSetter = valueSetters.get(name);
+        if (valueSetter == null) {
+            throw new MetafactureException("There is no attribute with name " + name);
+        }
+        return valueSetter.getValueType();
+    }
 
-	@Override
-	public Object getInstance() {
-		return instance;
-	}
+    @Override
+    public Object getInstance() {
+        return instance;
+    }
 
 }

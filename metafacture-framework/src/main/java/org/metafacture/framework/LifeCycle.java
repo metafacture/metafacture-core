@@ -24,20 +24,20 @@ package org.metafacture.framework;
  */
 public interface LifeCycle {
 
-	/**
-	 * Resets the module to its initial state. All unsaved data is discarded. This
-	 * method may throw {@link UnsupportedOperationException} if the model cannot
-	 * be reset. This method may be called any time during processing.
-	 */
-	void resetStream();
+    /**
+     * Resets the module to its initial state. All unsaved data is discarded. This
+     * method may throw {@link UnsupportedOperationException} if the model cannot
+     * be reset. This method may be called any time during processing.
+     */
+    void resetStream();
 
-	/**
-	 * Notifies the module that processing is completed. Resources such as files or
-	 * search indexes should be closed. The module cannot be used anymore after
-	 * closeStream() has been called. The module may be reset, however, so
-	 * it can be used again. This is not guaranteed to work though.
-	 * This method may be called any time during processing.
-	 */
-	void closeStream();
+    /**
+     * Notifies the module that processing is completed. Resources such as files or
+     * search indexes should be closed. The module cannot be used anymore after
+     * closeStream() has been called. The module may be reset, however, so
+     * it can be used again. This is not guaranteed to work though.
+     * This method may be called any time during processing.
+     */
+    void closeStream();
 
 }

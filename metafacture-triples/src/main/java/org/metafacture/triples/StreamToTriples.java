@@ -52,155 +52,155 @@ import org.metafacture.framework.objects.Triple.ObjectType;
  *
  */
 @Description("Emits the literals which are received as triples such " +
-		 "that the name and value become the predicate and the object " +
-		 "of the triple. The record id containing the literal becomes " +
-		 "the subject. " +
-		 "If 'redirect' is true, the value of the subject is determined " +
-		 "by using either the value of a literal named '_id', or for " +
-		 "individual literals by prefixing their name with '{to:ID}'. " +
-		 "Set 'recordPredicate' to encode a complete record in one triple. " +
-		 "The value of 'recordPredicate' is used as the predicate of the " +
-		 "triple. If 'recordPredicate' is set, no {to:ID}NAME-style " +
-		 "redirects are possible.")
+         "that the name and value become the predicate and the object " +
+         "of the triple. The record id containing the literal becomes " +
+         "the subject. " +
+         "If 'redirect' is true, the value of the subject is determined " +
+         "by using either the value of a literal named '_id', or for " +
+         "individual literals by prefixing their name with '{to:ID}'. " +
+         "Set 'recordPredicate' to encode a complete record in one triple. " +
+         "The value of 'recordPredicate' is used as the predicate of the " +
+         "triple. If 'recordPredicate' is set, no {to:ID}NAME-style " +
+         "redirects are possible.")
 @In(StreamReceiver.class)
 @Out(Triple.class)
 @FluxCommand("stream-to-triples")
 public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Triple>> {
 
-	private static final Pattern REDIRECT_PATTERN = Pattern.compile("^\\{to:(.+)}(.+)$");
+    private static final Pattern REDIRECT_PATTERN = Pattern.compile("^\\{to:(.+)}(.+)$");
 
-	private final List<String> nameBuffer = new ArrayList<String>();
-	private final List<String> valueBuffer = new ArrayList<String>();
-	private final List<ObjectType> typeBuffer = new ArrayList<ObjectType>();
-	private final Formatter formatter = new ConciseFormatter();
+    private final List<String> nameBuffer = new ArrayList<String>();
+    private final List<String> valueBuffer = new ArrayList<String>();
+    private final List<ObjectType> typeBuffer = new ArrayList<ObjectType>();
+    private final Formatter formatter = new ConciseFormatter();
 
-	private boolean redirect;
-	private String recordPredicate;
+    private boolean redirect;
+    private String recordPredicate;
 
-	private int nestingLevel;
-	private int encodeLevel;
-	private String predicateName;
-	private String currentId;
+    private int nestingLevel;
+    private int encodeLevel;
+    private String predicateName;
+    private String currentId;
 
-	public boolean isRedirect() {
-		return redirect;
-	}
+    public boolean isRedirect() {
+        return redirect;
+    }
 
-	public void setRedirect(final boolean redirect) {
-		this.redirect = redirect;
-	}
+    public void setRedirect(final boolean redirect) {
+        this.redirect = redirect;
+    }
 
-	public String getRecordPredicate() {
-		return recordPredicate;
-	}
+    public String getRecordPredicate() {
+        return recordPredicate;
+    }
 
-	public void setRecordPredicate(final String recordPredicate) {
-		this.recordPredicate = recordPredicate;
-	}
+    public void setRecordPredicate(final String recordPredicate) {
+        this.recordPredicate = recordPredicate;
+    }
 
-	@Override
-	public void startRecord(final String identifier) {
-		assert !isClosed();
+    @Override
+    public void startRecord(final String identifier) {
+        assert !isClosed();
 
-		currentId = identifier;
+        currentId = identifier;
 
-		if (recordPredicate != null) {
-			encodeLevel = 0;
-			startEncode(recordPredicate);
-		} else {
-			encodeLevel = 1;
-		}
+        if (recordPredicate != null) {
+            encodeLevel = 0;
+            startEncode(recordPredicate);
+        } else {
+            encodeLevel = 1;
+        }
 
-		nestingLevel = 1;
-	}
+        nestingLevel = 1;
+    }
 
-	@Override
-	public void endRecord() {
-		assert !isClosed();
+    @Override
+    public void endRecord() {
+        assert !isClosed();
 
-		nestingLevel = 0;
+        nestingLevel = 0;
 
-		if (nestingLevel == encodeLevel) {
-			endEncode();
-		}
+        if (nestingLevel == encodeLevel) {
+            endEncode();
+        }
 
-		if (redirect) {
-			for (int i = 0; i < nameBuffer.size(); ++i) {
-				getReceiver().process(new Triple(currentId, nameBuffer.get(i), valueBuffer.get(i), typeBuffer.get(i)));
-			}
-			nameBuffer.clear();
-			valueBuffer.clear();
-			typeBuffer.clear();
-		}
-	}
+        if (redirect) {
+            for (int i = 0; i < nameBuffer.size(); ++i) {
+                getReceiver().process(new Triple(currentId, nameBuffer.get(i), valueBuffer.get(i), typeBuffer.get(i)));
+            }
+            nameBuffer.clear();
+            valueBuffer.clear();
+            typeBuffer.clear();
+        }
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		assert !isClosed();
+    @Override
+    public void startEntity(final String name) {
+        assert !isClosed();
 
-		if (nestingLevel > encodeLevel) {
-			formatter.startGroup(name);
-		} else {
-			startEncode(name);
-		}
-		++nestingLevel;
-	}
+        if (nestingLevel > encodeLevel) {
+            formatter.startGroup(name);
+        } else {
+            startEncode(name);
+        }
+        ++nestingLevel;
+    }
 
-	@Override
-	public void endEntity() {
-		assert !isClosed();
+    @Override
+    public void endEntity() {
+        assert !isClosed();
 
-		--nestingLevel;
-		if (nestingLevel == encodeLevel) {
-			endEncode();
-		} else {
-			formatter.endGroup();
-		}
-	}
+        --nestingLevel;
+        if (nestingLevel == encodeLevel) {
+            endEncode();
+        } else {
+            formatter.endGroup();
+        }
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		assert !isClosed();
+    @Override
+    public void literal(final String name, final String value) {
+        assert !isClosed();
 
-		if (nestingLevel > encodeLevel) {
-			if (nestingLevel == 1 && redirect && StandardEventNames.ID.equals(name)) {
-				currentId = value;
-			} else {
-				formatter.literal(name, value);
-			}
-		} else {
-			dispatch(name, value, ObjectType.STRING);
-		}
-	}
+        if (nestingLevel > encodeLevel) {
+            if (nestingLevel == 1 && redirect && StandardEventNames.ID.equals(name)) {
+                currentId = value;
+            } else {
+                formatter.literal(name, value);
+            }
+        } else {
+            dispatch(name, value, ObjectType.STRING);
+        }
+    }
 
-	private void startEncode(final String predicate) {
-		predicateName = predicate;
-		formatter.reset();
-		formatter.startGroup("");
-	}
+    private void startEncode(final String predicate) {
+        predicateName = predicate;
+        formatter.reset();
+        formatter.startGroup("");
+    }
 
-	private void endEncode() {
-		formatter.endGroup();
-		dispatch(predicateName, formatter.toString(), ObjectType.ENTITY);
-	}
+    private void endEncode() {
+        formatter.endGroup();
+        dispatch(predicateName, formatter.toString(), ObjectType.ENTITY);
+    }
 
-	private void dispatch(final String name, final String value, final ObjectType type) {
-		if (redirect) {
-			if (StandardEventNames.ID.equals(name)) {
-				currentId = value;
-			} else {
-				final Matcher matcher = REDIRECT_PATTERN.matcher(name);
-				if (matcher.find()) {
-					getReceiver().process(new Triple(matcher.group(1), matcher.group(2), value, type));
-				} else {
-					nameBuffer.add(name);
-					valueBuffer.add(value);
-					typeBuffer.add(type);
-				}
-			}
-		} else {
-			getReceiver().process(new Triple(currentId, name, value, type));
-		}
-	}
+    private void dispatch(final String name, final String value, final ObjectType type) {
+        if (redirect) {
+            if (StandardEventNames.ID.equals(name)) {
+                currentId = value;
+            } else {
+                final Matcher matcher = REDIRECT_PATTERN.matcher(name);
+                if (matcher.find()) {
+                    getReceiver().process(new Triple(matcher.group(1), matcher.group(2), value, type));
+                } else {
+                    nameBuffer.add(name);
+                    valueBuffer.add(value);
+                    typeBuffer.add(type);
+                }
+            }
+        } else {
+            getReceiver().process(new Triple(currentId, name, value, type));
+        }
+    }
 
 }

@@ -22,83 +22,83 @@ package org.metafacture.formeta.parser;
  */
 class StructureParserContext {
 
-	private Emitter emitter;
+    private Emitter emitter;
 
-	private final TextParserContext textParserContext = new TextParserContext();
-	private TextParserState textParser = TextParserState.LEADING_WHITESPACE;
-	private String parsedText = "";
+    private final TextParserContext textParserContext = new TextParserContext();
+    private TextParserState textParser = TextParserState.LEADING_WHITESPACE;
+    private String parsedText = "";
 
-	private String literalName;
-	private int nestingLevel;
+    private String literalName;
+    private int nestingLevel;
 
-	public void setEmitter(final Emitter emitter) {
-		this.emitter = emitter;
-	}
+    public void setEmitter(final Emitter emitter) {
+        this.emitter = emitter;
+    }
 
-	public Emitter getEmitter() {
-		return emitter;
-	}
+    public Emitter getEmitter() {
+        return emitter;
+    }
 
-	/**
-	 * Passes {@code ch} to the embedded text parser for processing. If
-	 * the text parser reaches {@code DELIMITER_REACHED} it is
-	 * automatically reset.
-	 *
-	 * @param ch the character to process
-	 * @return true if the text parser reached the
-	 *         {@code DELIMITER_REACHED} state.
-	 */
-	public boolean processCharWithTextParser(final char ch) {
-		textParser = textParser.processChar(ch, textParserContext);
-		if (textParser == TextParserState.DELIMITER_REACHED) {
-			parsedText = textParserContext.getText();
-			textParser = TextParserState.LEADING_WHITESPACE;
-			textParserContext.reset();
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Passes {@code ch} to the embedded text parser for processing. If
+     * the text parser reaches {@code DELIMITER_REACHED} it is
+     * automatically reset.
+     *
+     * @param ch the character to process
+     * @return true if the text parser reached the
+     *         {@code DELIMITER_REACHED} state.
+     */
+    public boolean processCharWithTextParser(final char ch) {
+        textParser = textParser.processChar(ch, textParserContext);
+        if (textParser == TextParserState.DELIMITER_REACHED) {
+            parsedText = textParserContext.getText();
+            textParser = TextParserState.LEADING_WHITESPACE;
+            textParserContext.reset();
+            return true;
+        }
+        return false;
+    }
 
-	public void processEOIWithTextParser() {
-		textParser.endOfInput(textParserContext);
-		parsedText = textParserContext.getText();
-		textParser = TextParserState.LEADING_WHITESPACE;
-		textParserContext.reset();
-	}
+    public void processEOIWithTextParser() {
+        textParser.endOfInput(textParserContext);
+        parsedText = textParserContext.getText();
+        textParser = TextParserState.LEADING_WHITESPACE;
+        textParserContext.reset();
+    }
 
-	public void startGroup() {
-		emitter.startGroup(parsedText, nestingLevel);
-		nestingLevel += 1;
-	}
+    public void startGroup() {
+        emitter.startGroup(parsedText, nestingLevel);
+        nestingLevel += 1;
+    }
 
-	public void endGroup() {
-		nestingLevel -= 1;
-		emitter.endGroup(nestingLevel);
-	}
+    public void endGroup() {
+        nestingLevel -= 1;
+        emitter.endGroup(nestingLevel);
+    }
 
-	public void startLiteral() {
-		literalName = parsedText;
-	}
+    public void startLiteral() {
+        literalName = parsedText;
+    }
 
-	public void endLiteral() {
-		emitter.literal(literalName, parsedText, nestingLevel);
-		literalName = null;
-	}
+    public void endLiteral() {
+        emitter.literal(literalName, parsedText, nestingLevel);
+        literalName = null;
+    }
 
-	public boolean isTextEmpty() {
-		return parsedText.isEmpty();
-	}
+    public boolean isTextEmpty() {
+        return parsedText.isEmpty();
+    }
 
-	public boolean isNested() {
-		return nestingLevel > 0;
-	}
+    public boolean isNested() {
+        return nestingLevel > 0;
+    }
 
-	public void reset() {
-		textParser = TextParserState.LEADING_WHITESPACE;
-		textParserContext.reset();
-		parsedText = "";
-		literalName = null;
-		nestingLevel = 0;
-	}
+    public void reset() {
+        textParser = TextParserState.LEADING_WHITESPACE;
+        textParserContext.reset();
+        parsedText = "";
+        literalName = null;
+        nestingLevel = 0;
+    }
 
 }

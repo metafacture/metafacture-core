@@ -26,20 +26,20 @@ import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
  */
 public final class Replace extends AbstractSimpleStatelessFunction {
 
-	private Pattern pattern;
-	private String with;
+    private Pattern pattern;
+    private String with;
 
-	@Override
-	public String process(final String value) {
-		return pattern.matcher(value).replaceAll(with);
-	}
+    @Override
+    public String process(final String value) {
+        return pattern.matcher(value).replaceAll(with);
+    }
 
-	public void setPattern(final String string) {
-		this.pattern = Pattern.compile(string);
-	}
+    public void setPattern(final String string) {
+        this.pattern = Pattern.compile(string);
+    }
 
-	public void setWith(final String with) {
-		this.with = with;
-	}
+    public void setWith(final String with) {
+        this.with = with;
+    }
 
 }

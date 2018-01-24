@@ -26,14 +26,14 @@ import org.metafacture.framework.LifeCycle;
  */
 public class DefaultLifeCycle implements LifeCycle {
 
-	@Override
-	public void resetStream() {
-		// Default implementation does nothing
-	}
+    @Override
+    public void resetStream() {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void closeStream() {
-		// Default implementation does nothing
-	}
+    @Override
+    public void closeStream() {
+        // Default implementation does nothing
+    }
 
 }

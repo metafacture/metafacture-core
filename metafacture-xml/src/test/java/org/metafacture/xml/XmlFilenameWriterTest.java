@@ -37,42 +37,42 @@ import org.junit.rules.TemporaryFolder;
  */
 public class XmlFilenameWriterTest {
 
-	@Rule
-	public TemporaryFolder tempFolder = new TemporaryFolder();
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
 
-	private XmlFilenameWriter xmlFilenameWriter;
+    private XmlFilenameWriter xmlFilenameWriter;
 
-	@Before
-	public void createSystemUnderTest() {
-		xmlFilenameWriter = new XmlFilenameWriter();
-		xmlFilenameWriter.setStartIndex(0);
-		xmlFilenameWriter.setEndIndex(1);
-		xmlFilenameWriter.setTarget(tempFolder.getRoot().getAbsolutePath());
-	}
+    @Before
+    public void createSystemUnderTest() {
+        xmlFilenameWriter = new XmlFilenameWriter();
+        xmlFilenameWriter.setStartIndex(0);
+        xmlFilenameWriter.setEndIndex(1);
+        xmlFilenameWriter.setTarget(tempFolder.getRoot().getAbsolutePath());
+    }
 
-	@Test
-	public void testPicaXmlSplits() throws IOException {
-		xmlFilenameWriter.setProperty("xmldata/@id");
+    @Test
+    public void testPicaXmlSplits() throws IOException {
+        xmlFilenameWriter.setProperty("xmldata/@id");
 
-		xmlFilenameWriter.startRecord("0");
-		xmlFilenameWriter.literal("Element", createXml("1"));
-		xmlFilenameWriter.endRecord();
-		xmlFilenameWriter.startRecord("1");
-		xmlFilenameWriter.literal("Element", createXml("2"));
-		xmlFilenameWriter.endRecord();
+        xmlFilenameWriter.startRecord("0");
+        xmlFilenameWriter.literal("Element", createXml("1"));
+        xmlFilenameWriter.endRecord();
+        xmlFilenameWriter.startRecord("1");
+        xmlFilenameWriter.literal("Element", createXml("2"));
+        xmlFilenameWriter.endRecord();
 
-		assertEquals(createXml("1"), readFile("1/1.xml"));
-		assertEquals(createXml("2"), readFile("2/2.xml"));
-	}
+        assertEquals(createXml("1"), readFile("1/1.xml"));
+        assertEquals(createXml("2"), readFile("2/2.xml"));
+    }
 
-	private String readFile(final String fileName) throws IOException {
-		final Path path = tempFolder.getRoot().toPath().resolve(fileName);
-		return new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
-	}
+    private String readFile(final String fileName) throws IOException {
+        final Path path = tempFolder.getRoot().toPath().resolve(fileName);
+        return new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+    }
 
-	private String createXml(final String id) {
-		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xmldata id=\"" + id +
-				"\" />";
-	}
+    private String createXml(final String id) {
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><xmldata id=\"" + id +
+                "\" />";
+    }
 
 }

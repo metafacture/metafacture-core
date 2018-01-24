@@ -25,38 +25,38 @@ import org.metafacture.framework.ObjectReceiver;
  */
 public final class StringConcatenator implements ObjectReceiver<String> {
 
-	private StringBuilder builder = new StringBuilder();
-	private String separator = "";
+    private StringBuilder builder = new StringBuilder();
+    private String separator = "";
 
-	@Override
-	public void resetStream() {
-		reset();
+    @Override
+    public void resetStream() {
+        reset();
 
-	}
+    }
 
-	public void setSeparator(final String separator) {
-		this.separator = separator;
-	}
+    public void setSeparator(final String separator) {
+        this.separator = separator;
+    }
 
-	@Override
-	public void closeStream() {
-		// nothing to do
+    @Override
+    public void closeStream() {
+        // nothing to do
 
-	}
+    }
 
-	@Override
-	public void process(final String obj) {
-		builder.append(separator);
-		builder.append(obj);
+    @Override
+    public void process(final String obj) {
+        builder.append(separator);
+        builder.append(obj);
 
-	}
+    }
 
-	public void reset(){
-		builder = new StringBuilder();
-	}
+    public void reset(){
+        builder = new StringBuilder();
+    }
 
-	public String getString(){
-		return builder.toString();
-	}
+    public String getString(){
+        return builder.toString();
+    }
 
 }

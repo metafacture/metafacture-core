@@ -25,63 +25,63 @@ import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
  */
 public final class Concat extends AbstractFlushingCollect {
 
-	private final StringBuilder builder = new StringBuilder();
+    private final StringBuilder builder = new StringBuilder();
 
-	private String prefix = "";
-	private String postfix = "";
-	private String delimiter = "";
-	private boolean reverse = false;
+    private String prefix = "";
+    private String postfix = "";
+    private String delimiter = "";
+    private boolean reverse = false;
 
-	private String currentDelimiter = "";
+    private String currentDelimiter = "";
 
-	public void setPrefix(final String prefix) {
-		this.prefix = prefix;
-	}
+    public void setPrefix(final String prefix) {
+        this.prefix = prefix;
+    }
 
-	public void setPostfix(final String postfix) {
-		this.postfix = postfix;
-	}
+    public void setPostfix(final String postfix) {
+        this.postfix = postfix;
+    }
 
-	public void setDelimiter(final String delimiter) {
-		this.delimiter = delimiter;
-	}
+    public void setDelimiter(final String delimiter) {
+        this.delimiter = delimiter;
+    }
 
-	public void setReverse(final boolean reverse) {
-		this.reverse = reverse;
-	}
+    public void setReverse(final boolean reverse) {
+        this.reverse = reverse;
+    }
 
-	@Override
-	protected void emit() {
-		if (builder.length() != 0) {
-			final String value = prefix + builder.toString() + postfix;
-			getNamedValueReceiver().receive(getName(), value, this,
-					getRecordCount(), getEntityCount());
-		}
-	}
+    @Override
+    protected void emit() {
+        if (builder.length() != 0) {
+            final String value = prefix + builder.toString() + postfix;
+            getNamedValueReceiver().receive(getName(), value, this,
+                    getRecordCount(), getEntityCount());
+        }
+    }
 
-	@Override
-	protected boolean isComplete() {
-		return false;
-	}
+    @Override
+    protected boolean isComplete() {
+        return false;
+    }
 
-	@Override
-	protected void receive(final String name, final String value,
-			final NamedValueSource source) {
+    @Override
+    protected void receive(final String name, final String value,
+            final NamedValueSource source) {
 
-		if (reverse) {
-			builder.insert(0, currentDelimiter);
-			builder.insert(0, value);
-		} else {
-			builder.append(currentDelimiter);
-			builder.append(value);
-		}
-		currentDelimiter = delimiter;
-	}
+        if (reverse) {
+            builder.insert(0, currentDelimiter);
+            builder.insert(0, value);
+        } else {
+            builder.append(currentDelimiter);
+            builder.append(value);
+        }
+        currentDelimiter = delimiter;
+    }
 
-	@Override
-	protected void clear() {
-		builder.delete(0, builder.length());
-		currentDelimiter = "";
-	}
+    @Override
+    protected void clear() {
+        builder.delete(0, builder.length());
+        currentDelimiter = "";
+    }
 
 }

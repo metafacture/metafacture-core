@@ -38,86 +38,86 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @FluxCommand("stream-count")
 public final class Counter extends DefaultStreamPipe<StreamReceiver> {
 
-	private int numRecords;
-	private int numEntities;
-	private int numLiterals;
+    private int numRecords;
+    private int numEntities;
+    private int numLiterals;
 
-	/**
-	 * @return the numRecords
-	 */
-	public int getNumRecords() {
-		return numRecords;
-	}
+    /**
+     * @return the numRecords
+     */
+    public int getNumRecords() {
+        return numRecords;
+    }
 
-	/**
-	 * @return the numEntities
-	 */
-	public int getNumEntities() {
-		return numEntities;
-	}
+    /**
+     * @return the numEntities
+     */
+    public int getNumEntities() {
+        return numEntities;
+    }
 
-	/**
-	 * @return the numLiterals
-	 */
-	public int getNumLiterals() {
-		return numLiterals;
-	}
+    /**
+     * @return the numLiterals
+     */
+    public int getNumLiterals() {
+        return numLiterals;
+    }
 
-	@Override
-	public void startRecord(final String identifier) {
-		assert !isClosed();
-		++numRecords;
-		if(getReceiver() != null) {
-			getReceiver().startRecord(identifier);
-		}
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        assert !isClosed();
+        ++numRecords;
+        if(getReceiver() != null) {
+            getReceiver().startRecord(identifier);
+        }
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		assert !isClosed();
-		++numEntities;
-		if(getReceiver() != null) {
-			getReceiver().startEntity(name);
-		}
-	}
+    @Override
+    public void startEntity(final String name) {
+        assert !isClosed();
+        ++numEntities;
+        if(getReceiver() != null) {
+            getReceiver().startEntity(name);
+        }
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		assert !isClosed();
-		++numLiterals;
-		if(getReceiver() != null) {
-			getReceiver().literal(name, value);
-		}
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        assert !isClosed();
+        ++numLiterals;
+        if(getReceiver() != null) {
+            getReceiver().literal(name, value);
+        }
+    }
 
-	@Override
-	public void endRecord() {
-		if(getReceiver() != null) {
-			getReceiver().endRecord();
-		}
-	}
+    @Override
+    public void endRecord() {
+        if(getReceiver() != null) {
+            getReceiver().endRecord();
+        }
+    }
 
-	@Override
-	public void endEntity() {
-		if(getReceiver() != null) {
-			getReceiver().endEntity();
-		}
-	}
+    @Override
+    public void endEntity() {
+        if(getReceiver() != null) {
+            getReceiver().endEntity();
+        }
+    }
 
-	@Override
-	public void onResetStream() {
-		numRecords = 0;
-		numEntities = 0;
-		numLiterals = 0;
-	}
+    @Override
+    public void onResetStream() {
+        numRecords = 0;
+        numEntities = 0;
+        numLiterals = 0;
+    }
 
-	@Override
-	public String toString() {
-		String streamClosed = "";
-		if (isClosed()) {
-			streamClosed =" Stream has been closed.";
-		}
+    @Override
+    public String toString() {
+        String streamClosed = "";
+        if (isClosed()) {
+            streamClosed =" Stream has been closed.";
+        }
 
-		return "counted " + numRecords + " records, " + numEntities + " entities, " + numLiterals + " literals." + streamClosed;
-	}
+        return "counted " + numRecords + " records, " + numEntities + " entities, " + numLiterals + " literals." + streamClosed;
+    }
 }

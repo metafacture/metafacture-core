@@ -31,13 +31,13 @@ import org.metafacture.metamorph.api.Collect;
  */
 final class CollectFactory extends ObjectFactory<Collect> {
 
-	CollectFactory() {
-		try {
-			loadClassesFromMap(ResourceUtil.loadProperties(
-					"morph-collectors.properties"), Collect.class);
-		} catch (IOException e) {
-			throw new MetafactureException("Failed to load collectors list", e);
-		}
-	}
+    CollectFactory() {
+        try {
+            loadClassesFromMap(ResourceUtil.loadProperties(
+                    "morph-collectors.properties"), Collect.class);
+        } catch (IOException e) {
+            throw new MetafactureException("Failed to load collectors list", e);
+        }
+    }
 
 }

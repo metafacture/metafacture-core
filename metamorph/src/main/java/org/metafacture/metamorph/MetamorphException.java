@@ -25,10 +25,10 @@ import org.metafacture.framework.MetafactureException;
  */
 public class MetamorphException extends MetafactureException {
 
-	private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
 
-	public MetamorphException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public MetamorphException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

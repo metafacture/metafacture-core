@@ -26,76 +26,76 @@ import org.metafacture.framework.helpers.DefaultStreamReceiver;
  *
  */
 public final class SingleValue extends DefaultStreamReceiver
-		implements Collector<String> {
+        implements Collector<String> {
 
-	private boolean closed;
-	private String value = "";
-	private Collection<String> collection;
+    private boolean closed;
+    private String value = "";
+    private Collection<String> collection;
 
-	public SingleValue() {
-		super();
-		collection = null;
-	}
+    public SingleValue() {
+        super();
+        collection = null;
+    }
 
-	public SingleValue(final Collection<String> collection) {
-		super();
-		this.collection = collection;
-	}
+    public SingleValue(final Collection<String> collection) {
+        super();
+        this.collection = collection;
+    }
 
-	public boolean isClosed() {
-		return closed;
-	}
+    public boolean isClosed() {
+        return closed;
+    }
 
-	/**
-	 * @return collected value, if nothing collected return ""
-	 */
-	public String getValue() {
-		return value;
-	}
+    /**
+     * @return collected value, if nothing collected return ""
+     */
+    public String getValue() {
+        return value;
+    }
 
-	private void setValue(final String value) {
-		this.value = value;
-	}
+    private void setValue(final String value) {
+        this.value = value;
+    }
 
-	@Override
-	public void startRecord(final String identifier) {
-		this.setValue("");
+    @Override
+    public void startRecord(final String identifier) {
+        this.setValue("");
 
-	}
+    }
 
-	@Override
-	public void endRecord() {
-		assert !closed;
-		if (collection != null) {
-			collection.add(value);
-		}
-	}
+    @Override
+    public void endRecord() {
+        assert !closed;
+        if (collection != null) {
+            collection.add(value);
+        }
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		assert !closed;
-		this.setValue(value);
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        assert !closed;
+        this.setValue(value);
+    }
 
-	@Override
-	public void resetStream() {
-		value = "";
-		closed = false;
-	}
+    @Override
+    public void resetStream() {
+        value = "";
+        closed = false;
+    }
 
-	@Override
-	public void closeStream() {
-		closed = true;
-	}
+    @Override
+    public void closeStream() {
+        closed = true;
+    }
 
-	@Override
-	public Collection<String> getCollection() {
-		return collection;
-	}
+    @Override
+    public Collection<String> getCollection() {
+        return collection;
+    }
 
-	@Override
-	public void setCollection(final Collection<String> collection) {
-		this.collection = collection;
-	}
+    @Override
+    public void setCollection(final Collection<String> collection) {
+        this.collection = collection;
+    }
 
 }

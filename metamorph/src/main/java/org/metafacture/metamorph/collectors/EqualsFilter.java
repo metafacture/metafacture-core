@@ -32,47 +32,47 @@ import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
  */
 public final class EqualsFilter extends AbstractFlushingCollect {
 
-	private final Map<String, String> variables = new HashMap<String, String>();
-	private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
-	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
-	private boolean isEqual = true;
+    private final Map<String, String> variables = new HashMap<String, String>();
+    private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
+    private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
+    private boolean isEqual = true;
 
-	@Override
-	protected void emit() {
-		final String name = StringUtil.format(getName(), this.variables);
-		final String value = StringUtil.format(getValue(), this.variables);
-		if (this.isEqual) {
-			getNamedValueReceiver().receive(name, value, this,
-					getRecordCount(), getEntityCount());
-		}
-	}
+    @Override
+    protected void emit() {
+        final String name = StringUtil.format(getName(), this.variables);
+        final String value = StringUtil.format(getValue(), this.variables);
+        if (this.isEqual) {
+            getNamedValueReceiver().receive(name, value, this,
+                    getRecordCount(), getEntityCount());
+        }
+    }
 
-	@Override
-	protected boolean isComplete() {
-		return this.sourcesLeft.isEmpty();
-	}
+    @Override
+    protected boolean isComplete() {
+        return this.sourcesLeft.isEmpty();
+    }
 
-	@Override
-	protected void receive(final String name, final String value,
-			final NamedValueSource source) {
-		if (this.variables.size() > 0 && !this.variables.containsValue(value)) {
-			this.isEqual = false;
-		}
-		this.variables.put(name, value);
-		this.sourcesLeft.remove(source);
-	}
+    @Override
+    protected void receive(final String name, final String value,
+            final NamedValueSource source) {
+        if (this.variables.size() > 0 && !this.variables.containsValue(value)) {
+            this.isEqual = false;
+        }
+        this.variables.put(name, value);
+        this.sourcesLeft.remove(source);
+    }
 
-	@Override
-	public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
-		this.sources.add(namedValueSource);
-		this.sourcesLeft.add(namedValueSource);
-	}
+    @Override
+    public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
+        this.sources.add(namedValueSource);
+        this.sourcesLeft.add(namedValueSource);
+    }
 
-	@Override
-	protected void clear() {
-		this.sourcesLeft.addAll(this.sources);
-		this.variables.clear();
-		this.isEqual = true;
-	}
+    @Override
+    protected void clear() {
+        this.sourcesLeft.addAll(this.sources);
+        this.variables.clear();
+        this.isEqual = true;
+    }
 
 }

@@ -38,135 +38,135 @@ import org.xml.sax.SAXParseException;
  */
 public class DefaultXmlReceiver extends DefaultLifeCycle implements XmlReceiver {
 
-	@Override
-	public void setDocumentLocator(final Locator locator) {
-		// Default implementation does nothing
-	}
+    @Override
+    public void setDocumentLocator(final Locator locator) {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void startDocument() throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void startDocument() throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void endDocument() throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void endDocument() throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void startPrefixMapping(final String prefix, final String uri)
-			throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void startPrefixMapping(final String prefix, final String uri)
+            throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void endPrefixMapping(final String prefix) throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void endPrefixMapping(final String prefix) throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void startElement(final String uri, final String localName,
-			final String qName, final Attributes atts) throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void startElement(final String uri, final String localName,
+            final String qName, final Attributes atts) throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void endElement(final String uri, final String localName,
-			final String qName) throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void endElement(final String uri, final String localName,
+            final String qName) throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void characters(final char[] chars, final int start, final int length)
-			throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void characters(final char[] chars, final int start, final int length)
+            throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void ignorableWhitespace(final char[] chars, final int start,
-			final int length) throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void ignorableWhitespace(final char[] chars, final int start,
+            final int length) throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void processingInstruction(final String target, final String data)
-			throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void processingInstruction(final String target, final String data)
+            throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void skippedEntity(final String name) throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void skippedEntity(final String name) throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void notationDecl(final String name, final String publicId, final String systemId)
-			throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void notationDecl(final String name, final String publicId, final String systemId)
+            throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void unparsedEntityDecl(final String name, final String publicId,
-			final String systemId, final String notationName) throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void unparsedEntityDecl(final String name, final String publicId,
+            final String systemId, final String notationName) throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public InputSource resolveEntity(final String publicId, final String systemId)
-			throws SAXException, IOException {
-		return null;
-	}
+    @Override
+    public InputSource resolveEntity(final String publicId, final String systemId)
+            throws SAXException, IOException {
+        return null;
+    }
 
-	@Override
-	public void warning(final SAXParseException exception) throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void warning(final SAXParseException exception) throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void error(final SAXParseException exception) throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void error(final SAXParseException exception) throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void fatalError(final SAXParseException exception) throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void fatalError(final SAXParseException exception) throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void startDTD(final String name, final String publicId, final String systemId)
-			throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void startDTD(final String name, final String publicId, final String systemId)
+            throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void endDTD() throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void endDTD() throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void startEntity(final String name) throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void startEntity(final String name) throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void endEntity(final String name) throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void endEntity(final String name) throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void startCDATA() throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void startCDATA() throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void endCDATA() throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void endCDATA() throws SAXException {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void comment(final char[] chars, final int start, final int length)
-			throws SAXException {
-		// Default implementation does nothing
-	}
+    @Override
+    public void comment(final char[] chars, final int start, final int length)
+            throws SAXException {
+        // Default implementation does nothing
+    }
 
 }

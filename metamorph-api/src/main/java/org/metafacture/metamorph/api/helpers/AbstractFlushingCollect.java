@@ -24,17 +24,17 @@ package org.metafacture.metamorph.api.helpers;
  */
 public abstract class AbstractFlushingCollect extends AbstractCollect {
 
-	@Override
-	public final void flush(final int recordCount, final int entityCount) {
-		if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount)) {
-			if(isConditionMet()) {
-				emit();
-			}
-			if (getReset()) {
-				resetCondition();
-				clear();
-			}
-		}
-	}
+    @Override
+    public final void flush(final int recordCount, final int entityCount) {
+        if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount)) {
+            if(isConditionMet()) {
+                emit();
+            }
+            if (getReset()) {
+                resetCondition();
+                clear();
+            }
+        }
+    }
 
 }

@@ -26,35 +26,35 @@ import java.util.Map;
  */
 class ValueType {
 
-	private final Class<?> rawClass;
-	private final Class<?> elementClass;
+    private final Class<?> rawClass;
+    private final Class<?> elementClass;
 
-	ValueType(final Class<?> clazz) {
-		rawClass = clazz;
-		elementClass = null;
-	}
+    ValueType(final Class<?> clazz) {
+        rawClass = clazz;
+        elementClass = null;
+    }
 
-	ValueType(final Class<?> clazz, final Type type) {
-		rawClass = clazz;
-		if (type instanceof ParameterizedType) {
-			final Type[] actualTypeArguments = ((ParameterizedType) type)
-					.getActualTypeArguments();
-			if (Map.class.isAssignableFrom(clazz)) {
-				elementClass = (Class<?>) actualTypeArguments[1];
-			} else {
-				elementClass = (Class<?>) actualTypeArguments[0];
-			}
-		} else {
-			elementClass = null;
-		}
-	}
+    ValueType(final Class<?> clazz, final Type type) {
+        rawClass = clazz;
+        if (type instanceof ParameterizedType) {
+            final Type[] actualTypeArguments = ((ParameterizedType) type)
+                    .getActualTypeArguments();
+            if (Map.class.isAssignableFrom(clazz)) {
+                elementClass = (Class<?>) actualTypeArguments[1];
+            } else {
+                elementClass = (Class<?>) actualTypeArguments[0];
+            }
+        } else {
+            elementClass = null;
+        }
+    }
 
-	Class<?> getRawClass() {
-		return rawClass;
-	}
+    Class<?> getRawClass() {
+        return rawClass;
+    }
 
-	Class<?> getElementClass() {
-		return elementClass;
-	}
+    Class<?> getElementClass() {
+        return elementClass;
+    }
 
 }

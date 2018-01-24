@@ -23,6 +23,6 @@ package org.metafacture.metamorph.api;
  */
 public interface NamedValuePipe extends NamedValueReceiver, NamedValueSource {
 
-	// Just a combination of NamedValueReceiver and NamedValueSource
+    // Just a combination of NamedValueReceiver and NamedValueSource
 
 }

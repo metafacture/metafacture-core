@@ -27,18 +27,18 @@ import org.mockito.Mockito;
  */
 public final class CloseSuppressorTest {
 
-	@Test
-	public void testSuppression() {
-		final CloseSuppressor<Object> supressor = new CloseSuppressor<>(3);
-		final ObjectReceiver<Object> receiver = Mockito.mock(ObjectReceiver.class);
-		supressor.setReceiver(receiver);
-		supressor.closeStream();
-		supressor.closeStream();
-		Mockito.verifyZeroInteractions(receiver);
-		supressor.closeStream();
-		Mockito.verify(receiver).closeStream();
-		supressor.closeStream();
-		Mockito.verifyNoMoreInteractions(receiver);
-	}
+    @Test
+    public void testSuppression() {
+        final CloseSuppressor<Object> supressor = new CloseSuppressor<>(3);
+        final ObjectReceiver<Object> receiver = Mockito.mock(ObjectReceiver.class);
+        supressor.setReceiver(receiver);
+        supressor.closeStream();
+        supressor.closeStream();
+        Mockito.verifyZeroInteractions(receiver);
+        supressor.closeStream();
+        Mockito.verify(receiver).closeStream();
+        supressor.closeStream();
+        Mockito.verifyNoMoreInteractions(receiver);
+    }
 
 }

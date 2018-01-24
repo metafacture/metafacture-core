@@ -33,32 +33,32 @@ import org.mockito.junit.MockitoRule;
  */
 public final class SplitTest {
 
-	@Rule
-	public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	private Metamorph metamorph;
+    private Metamorph metamorph;
 
-	@Test
-	public void issue265_shouldWorkIfLastFunctionInCombineStatement() {
-		metamorph = InlineMorph.in(this)
-				.with("<rules>")
-				.with("  <combine name='out' value='${v}'>")
-				.with("    <data source='in' name='v'>")
-				.with("      <split delimiter=' ' />")
-				.with("    </data>")
-				.with("  </combine>")
-				.with("</rules>")
-				.createConnectedTo(receiver);
+    @Test
+    public void issue265_shouldWorkIfLastFunctionInCombineStatement() {
+        metamorph = InlineMorph.in(this)
+                .with("<rules>")
+                .with("  <combine name='out' value='${v}'>")
+                .with("    <data source='in' name='v'>")
+                .with("      <split delimiter=' ' />")
+                .with("    </data>")
+                .with("  </combine>")
+                .with("</rules>")
+                .createConnectedTo(receiver);
 
-		metamorph.startRecord("1");
-		metamorph.literal("in", "1 2");
-		metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("in", "1 2");
+        metamorph.endRecord();
 
-		verify(receiver).literal("out", "1");
-		verify(receiver).literal("out", "2");
-	}
+        verify(receiver).literal("out", "1");
+        verify(receiver).literal("out", "2");
+    }
 
 }

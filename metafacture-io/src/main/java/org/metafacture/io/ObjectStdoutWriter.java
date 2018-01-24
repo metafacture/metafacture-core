@@ -33,60 +33,60 @@ import org.metafacture.framework.annotations.In;
 @FluxCommand("print")
 public final class ObjectStdoutWriter<T> extends AbstractObjectWriter<T>  {
 
-	private static final String SET_COMPRESSION_ERROR = "Cannot compress standard out";
+    private static final String SET_COMPRESSION_ERROR = "Cannot compress standard out";
 
-	private boolean firstObject = true;
-	private boolean closed;
+    private boolean firstObject = true;
+    private boolean closed;
 
-	@Override
-	public String getEncoding() {
-		return Charset.defaultCharset().toString();
-	}
+    @Override
+    public String getEncoding() {
+        return Charset.defaultCharset().toString();
+    }
 
-	@Override
-	public void setEncoding(final String encoding) {
-		throw new UnsupportedOperationException("Cannot change encoding of standard out");
-	}
+    @Override
+    public void setEncoding(final String encoding) {
+        throw new UnsupportedOperationException("Cannot change encoding of standard out");
+    }
 
-	@Override
-	public FileCompression getCompression() {
-		return FileCompression.NONE;
-	}
+    @Override
+    public FileCompression getCompression() {
+        return FileCompression.NONE;
+    }
 
-	@Override
-	public void setCompression(final FileCompression compression) {
-		throw new UnsupportedOperationException(SET_COMPRESSION_ERROR);
-	}
+    @Override
+    public void setCompression(final FileCompression compression) {
+        throw new UnsupportedOperationException(SET_COMPRESSION_ERROR);
+    }
 
-	@Override
-	public void setCompression(final String compression) {
-		throw new UnsupportedOperationException(SET_COMPRESSION_ERROR);
-	}
+    @Override
+    public void setCompression(final String compression) {
+        throw new UnsupportedOperationException(SET_COMPRESSION_ERROR);
+    }
 
-	@Override
-	public void process(final T obj) {
-		assert !closed;
+    @Override
+    public void process(final T obj) {
+        assert !closed;
 
-		if (firstObject) {
-			System.out.print(getHeader());
-			firstObject = false;
-		} else {
-			System.out.print(getSeparator());
-		}
-		System.out.print(obj);
-	}
+        if (firstObject) {
+            System.out.print(getHeader());
+            firstObject = false;
+        } else {
+            System.out.print(getSeparator());
+        }
+        System.out.print(obj);
+    }
 
-	@Override
-	public void resetStream() {
-		firstObject = true;
-	}
+    @Override
+    public void resetStream() {
+        firstObject = true;
+    }
 
-	@Override
-	public void closeStream() {
-		if (!firstObject) {
-			System.out.print(getFooter());
-		}
-		closed = true;
-	}
+    @Override
+    public void closeStream() {
+        if (!firstObject) {
+            System.out.print(getFooter());
+        }
+        closed = true;
+    }
 
 }

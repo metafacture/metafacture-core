@@ -16,11 +16,11 @@
   -->
 
 <metamorph-test version="1.0"
-	xmlns="http://www.culturegraph.org/metamorph-test">
+    xmlns="http://www.culturegraph.org/metamorph-test">
 
-	<test-case name="dummy">
-		<input type="text/x-formeta" />
-		<result type="text/x-formeta" />
-	</test-case>
+    <test-case name="dummy">
+        <input type="text/x-formeta" />
+        <result type="text/x-formeta" />
+    </test-case>
 
 </metamorph-test>

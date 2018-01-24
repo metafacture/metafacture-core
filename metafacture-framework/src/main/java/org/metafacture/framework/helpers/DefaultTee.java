@@ -32,109 +32,109 @@ import org.metafacture.framework.Tee;
  */
 public class DefaultTee<T extends Receiver> implements Tee<T> {
 
-	private final List<T> receivers = new ArrayList<T>();
+    private final List<T> receivers = new ArrayList<T>();
 
-	@Override
-	public final <R extends T> R setReceiver(final R receiver) {
-		receivers.clear();
-		receivers.add(receiver);
-		onChangeReceivers();
-		return receiver;
-	}
+    @Override
+    public final <R extends T> R setReceiver(final R receiver) {
+        receivers.clear();
+        receivers.add(receiver);
+        onChangeReceivers();
+        return receiver;
+    }
 
-	@Override
-	public final <R extends T> R setReceivers(final R receiver, final T lateralReceiver) {
-		receivers.clear();
-		receivers.add(receiver);
-		receivers.add(lateralReceiver);
-		onChangeReceivers();
-		return receiver;
-	}
+    @Override
+    public final <R extends T> R setReceivers(final R receiver, final T lateralReceiver) {
+        receivers.clear();
+        receivers.add(receiver);
+        receivers.add(lateralReceiver);
+        onChangeReceivers();
+        return receiver;
+    }
 
-	@Override
-	public final Tee<T> addReceiver(final T receiver) {
-		receivers.add(receiver);
-		onChangeReceivers();
-		return this;
-	}
+    @Override
+    public final Tee<T> addReceiver(final T receiver) {
+        receivers.add(receiver);
+        onChangeReceivers();
+        return this;
+    }
 
-	@Override
-	public final Tee<T> removeReceiver(final T receiver) {
-		receivers.remove(receiver);
-		onChangeReceivers();
-		return this;
-	}
+    @Override
+    public final Tee<T> removeReceiver(final T receiver) {
+        receivers.remove(receiver);
+        onChangeReceivers();
+        return this;
+    }
 
-	@Override
-	public final Tee<T> clearReceivers() {
-		receivers.clear();
-		onChangeReceivers();
-		return this;
-	}
+    @Override
+    public final Tee<T> clearReceivers() {
+        receivers.clear();
+        onChangeReceivers();
+        return this;
+    }
 
-	@Override
-	public final void resetStream() {
-		onResetStream();
-		for (final T receiver : receivers) {
-			receiver.resetStream();
-		}
-	}
+    @Override
+    public final void resetStream() {
+        onResetStream();
+        for (final T receiver : receivers) {
+            receiver.resetStream();
+        }
+    }
 
-	@Override
-	public final void closeStream() {
-		onCloseStream();
-		for (final T receiver : receivers) {
-			receiver.closeStream();
-		}
-	}
+    @Override
+    public final void closeStream() {
+        onCloseStream();
+        for (final T receiver : receivers) {
+            receiver.closeStream();
+        }
+    }
 
-	/**
-	 * Invoked when the list of receivers connected to this tee is changed.
-	 * This method is called after the receiver has been updated. Hence,
-	 * {@code getReceivers} will return a reference to the new list of
-	 * receivers.
-	 */
-	protected void onChangeReceivers() {
-		// Default implementation does nothing
-	}
+    /**
+     * Invoked when the list of receivers connected to this tee is changed.
+     * This method is called after the receiver has been updated. Hence,
+     * {@code getReceivers} will return a reference to the new list of
+     * receivers.
+     */
+    protected void onChangeReceivers() {
+        // Default implementation does nothing
+    }
 
-	/**
-	 * Invoked when the {@code resetStream()} method is called.
-	 * Override this method to perform a reset of the module.
-	 *
-	 * Do not call the {@code resetStream()} method of the next modules downstream.
-	 * This is handled by the implementation of {@code resetStream()} in
-	 * {@code DefaultTee}.
-	 *
-	 * {@code onResetStream()} is called before {@code DefaultTee} calls the
-	 * {@code resetStream()} method of the downstream modules.
-	 */
-	protected void onResetStream() {
-		// Default implementation does nothing
-	}
+    /**
+     * Invoked when the {@code resetStream()} method is called.
+     * Override this method to perform a reset of the module.
+     *
+     * Do not call the {@code resetStream()} method of the next modules downstream.
+     * This is handled by the implementation of {@code resetStream()} in
+     * {@code DefaultTee}.
+     *
+     * {@code onResetStream()} is called before {@code DefaultTee} calls the
+     * {@code resetStream()} method of the downstream modules.
+     */
+    protected void onResetStream() {
+        // Default implementation does nothing
+    }
 
-	/**
-	 * Invoked when the {@code closeStream()} method is called. Override
-	 * this method to close any resources used by the module.
-	 *
-	 * Do not call the {@code closeStream()} method of the next modules
-	 * downstream. This is handled by the implementation of
-	 * {@code closeStream()} in {@code DefaultTee}.
-	 *
-	 * {@code onCloseStream()} is called before {@code DefaultTee} calls
-	 * the {@code closeStream()} method of the downstream modules.
-	 */
-	protected void onCloseStream() {
-		// Default implementation does nothing
-	}
+    /**
+     * Invoked when the {@code closeStream()} method is called. Override
+     * this method to close any resources used by the module.
+     *
+     * Do not call the {@code closeStream()} method of the next modules
+     * downstream. This is handled by the implementation of
+     * {@code closeStream()} in {@code DefaultTee}.
+     *
+     * {@code onCloseStream()} is called before {@code DefaultTee} calls
+     * the {@code closeStream()} method of the downstream modules.
+     */
+    protected void onCloseStream() {
+        // Default implementation does nothing
+    }
 
-	/**
-	 * Returns a reference to the downstream module.
-	 *
-	 * @return reference to the downstream module
-	 */
-	protected final List<T> getReceivers() {
-		return Collections.unmodifiableList(receivers);
-	}
+    /**
+     * Returns a reference to the downstream module.
+     *
+     * @return reference to the downstream module
+     */
+    protected final List<T> getReceivers() {
+        return Collections.unmodifiableList(receivers);
+    }
 
 }

@@ -34,88 +34,88 @@ import org.metafacture.framework.objects.Triple;
 public abstract class AbstractCountProcessor extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
 
 
-	private static final Pattern KEY_SPLIT_PATTERN = Pattern.compile("&", Pattern.LITERAL);
+    private static final Pattern KEY_SPLIT_PATTERN = Pattern.compile("&", Pattern.LITERAL);
 
-	private static final String MARGINAL_PREFIX = "1:";
-	private static final String JOINT_PREFIX = "2:";
+    private static final String MARGINAL_PREFIX = "1:";
+    private static final String JOINT_PREFIX = "2:";
 
-	private final Map<String, Integer> marginals = new Hashtable<String, Integer>();
-	private boolean inHeader = true;
-	private int minCount;
+    private final Map<String, Integer> marginals = new Hashtable<String, Integer>();
+    private boolean inHeader = true;
+    private int minCount;
 
-	protected final int getTotal() {
-		return getMarginal("");
-	}
+    protected final int getTotal() {
+        return getMarginal("");
+    }
 
-	protected final void setMinCount(final int min) {
-		minCount = min;
-	}
+    protected final void setMinCount(final int min) {
+        minCount = min;
+    }
 
-	@Override
-	public final void process(final Triple triple) {
-		if (triple.getSubject().indexOf('&') == -1) {
-			if (!inHeader) {
-				throw new IllegalArgumentException(
-						"Marginal counts and joint count must not be mixed. Marginal counts must appear first, joint counts second");
-			}
-			if (!triple.getSubject().startsWith(MARGINAL_PREFIX)) {
-				throw new IllegalArgumentException("Marginal counts must start with '1:'");
-			}
-			final int marginal = Integer.parseInt(triple.getObject());
-			if (marginal >= minCount) {
+    @Override
+    public final void process(final Triple triple) {
+        if (triple.getSubject().indexOf('&') == -1) {
+            if (!inHeader) {
+                throw new IllegalArgumentException(
+                        "Marginal counts and joint count must not be mixed. Marginal counts must appear first, joint counts second");
+            }
+            if (!triple.getSubject().startsWith(MARGINAL_PREFIX)) {
+                throw new IllegalArgumentException("Marginal counts must start with '1:'");
+            }
+            final int marginal = Integer.parseInt(triple.getObject());
+            if (marginal >= minCount) {
 
-				marginals.put(triple.getSubject().substring(2), Integer.valueOf(marginal));
-			}
+                marginals.put(triple.getSubject().substring(2), Integer.valueOf(marginal));
+            }
 
-		} else {
-			inHeader = false;
-			if (!triple.getSubject().startsWith(JOINT_PREFIX)) {
-				throw new IllegalArgumentException("Joint counts must start with '2:'");
-			}
+        } else {
+            inHeader = false;
+            if (!triple.getSubject().startsWith(JOINT_PREFIX)) {
+                throw new IllegalArgumentException("Joint counts must start with '2:'");
+            }
 
-			final int nab = Integer.parseInt(triple.getObject());
-			final String[] keyParts = KEY_SPLIT_PATTERN.split(triple.getSubject().substring(2));
-			if (nab >= minCount) {
+            final int nab = Integer.parseInt(triple.getObject());
+            final String[] keyParts = KEY_SPLIT_PATTERN.split(triple.getSubject().substring(2));
+            if (nab >= minCount) {
 
-				final int na = getMarginal(keyParts[0]);
-				final int nb = getMarginal(keyParts[1]);
-				processCount(keyParts[0], keyParts[1], na, nb, nab);
-			}
-		}
-	}
+                final int na = getMarginal(keyParts[0]);
+                final int nb = getMarginal(keyParts[1]);
+                processCount(keyParts[0], keyParts[1], na, nb, nab);
+            }
+        }
+    }
 
-	protected abstract void processCount(final String varA, final String varB, final int countA, final int countB,
-			final int countAandB);
+    protected abstract void processCount(final String varA, final String varB, final int countA, final int countB,
+            final int countAandB);
 
-	private int getMarginal(final String string) {
-		final Integer value = marginals.get(string);
-		if(null==value){
-			return 0;
-		}
-		return value.intValue();
-	}
+    private int getMarginal(final String string) {
+        final Integer value = marginals.get(string);
+        if(null==value){
+            return 0;
+        }
+        return value.intValue();
+    }
 
-	@Override
-	protected final void onResetStream() {
-		marginals.clear();
-		inHeader = true;
-		reset();
-	}
+    @Override
+    protected final void onResetStream() {
+        marginals.clear();
+        inHeader = true;
+        reset();
+    }
 
-	protected void reset() {
-		// nothing to do
+    protected void reset() {
+        // nothing to do
 
-	}
+    }
 
-	@Override
-	protected final void onCloseStream() {
-		onResetStream();
-		close();
-	}
+    @Override
+    protected final void onCloseStream() {
+        onResetStream();
+        close();
+    }
 
-	protected void close() {
-		// nothing to do
+    protected void close() {
+        // nothing to do
 
-	}
+    }
 
 }

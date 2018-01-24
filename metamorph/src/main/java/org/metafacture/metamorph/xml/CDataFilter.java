@@ -33,18 +33,18 @@ import org.xml.sax.XMLReader;
  */
 final class CDataFilter extends LexicalHandlerXmlFilter {
 
-	CDataFilter(final XMLReader parent) {
-		super(parent);
-	}
+    CDataFilter(final XMLReader parent) {
+        super(parent);
+    }
 
-	@Override
-	public void startCDATA() throws SAXException {
-		// Do not forward CDATA section events
-	}
+    @Override
+    public void startCDATA() throws SAXException {
+        // Do not forward CDATA section events
+    }
 
-	@Override
-	public void endCDATA() throws SAXException {
-		// Do not forward CDATA section events
-	}
+    @Override
+    public void endCDATA() throws SAXException {
+        // Do not forward CDATA section events
+    }
 
 }

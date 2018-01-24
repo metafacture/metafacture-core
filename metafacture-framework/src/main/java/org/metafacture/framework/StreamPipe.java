@@ -30,5 +30,5 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
  *
  */
 public interface StreamPipe<R extends Receiver> extends StreamReceiver, Sender<R> {
-	// Just a combination of sender and receiver
+    // Just a combination of sender and receiver
 }

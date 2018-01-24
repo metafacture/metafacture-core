@@ -28,32 +28,32 @@ import org.junit.Test;
  */
 public final class SetReplaceTest {
 
-	@Test
-	public void testReplace() {
+    @Test
+    public void testReplace() {
 
-		final SetReplacer setReplace = new SetReplacer();
-		final String text = "auf sylt mit super krabben entsafter und apfel";
-		final String target = "auf hawaii mit Mai Tai und surfboard";
+        final SetReplacer setReplace = new SetReplacer();
+        final String text = "auf sylt mit super krabben entsafter und apfel";
+        final String target = "auf hawaii mit Mai Tai und surfboard";
 
-		setReplace.addReplacement("sylt", "hawaii");
-		setReplace.addReplacement("apfel", "surfboard");
-		setReplace.addReplacement("krabben", "shirt");
-		setReplace.addReplacement("super krabben entsafter", "Mai Tai");
+        setReplace.addReplacement("sylt", "hawaii");
+        setReplace.addReplacement("apfel", "surfboard");
+        setReplace.addReplacement("krabben", "shirt");
+        setReplace.addReplacement("super krabben entsafter", "Mai Tai");
 
-		assertEquals(target, setReplace.replaceIn(text));
-	}
+        assertEquals(target, setReplace.replaceIn(text));
+    }
 
-	@Test
-	public void testReplaceWithInclusion() {
+    @Test
+    public void testReplaceWithInclusion() {
 
-		final SetReplacer setReplace = new SetReplacer();
+        final SetReplacer setReplace = new SetReplacer();
 
 
-		setReplace.addReplacement("fünf", "5");
-		setReplace.addReplacement("fünfzig", "50");
+        setReplace.addReplacement("fünf", "5");
+        setReplace.addReplacement("fünfzig", "50");
 
-		assertEquals("50 äpfel", setReplace.replaceIn("fünfzig äpfel"));
-		assertEquals("5 äpfel", setReplace.replaceIn("fünf äpfel"));
-	}
+        assertEquals("50 äpfel", setReplace.replaceIn("fünfzig äpfel"));
+        assertEquals("5 äpfel", setReplace.replaceIn("fünf äpfel"));
+    }
 
 }

@@ -29,66 +29,66 @@ import org.xml.sax.helpers.LocatorImpl;
  */
 public final class Location {
 
-	public static final String USER_DATA_ID = "http://culturegraph.org/mf/user_data/location";
+    public static final String USER_DATA_ID = "http://culturegraph.org/mf/user_data/location";
 
-	public static final UserDataHandler USER_DATA_HANDLER = new UserDataHandler() {
+    public static final UserDataHandler USER_DATA_HANDLER = new UserDataHandler() {
 
-		@Override
-		public void handle(final short operation, final String key, final Object data,
-				final Node src, final Node dst) {
+        @Override
+        public void handle(final short operation, final String key, final Object data,
+                final Node src, final Node dst) {
 
-			if (operation == NODE_IMPORTED || operation == NODE_CLONED) {
-				if (dst != null) {
-					dst.setUserData(key, data, this);
-				}
-			}
-		}
+            if (operation == NODE_IMPORTED || operation == NODE_CLONED) {
+                if (dst != null) {
+                    dst.setUserData(key, data, this);
+                }
+            }
+        }
 
-	};
+    };
 
-	private final Locator elementStart;
-	private final Locator elementEnd;
+    private final Locator elementStart;
+    private final Locator elementEnd;
 
-	public Location(final Locator elementStart, final Locator elementEnd) {
-		this.elementStart = new LocatorImpl(elementStart);
-		this.elementEnd = new LocatorImpl(elementEnd);
-	}
+    public Location(final Locator elementStart, final Locator elementEnd) {
+        this.elementStart = new LocatorImpl(elementStart);
+        this.elementEnd = new LocatorImpl(elementEnd);
+    }
 
-	public Location(final Location src) {
-		elementStart = new LocatorImpl(src.elementStart);
-		elementEnd = new LocatorImpl(src.elementEnd);
-	}
+    public Location(final Location src) {
+        elementStart = new LocatorImpl(src.elementStart);
+        elementEnd = new LocatorImpl(src.elementEnd);
+    }
 
-	public Locator getElementStart() {
-		return elementStart;
-	}
+    public Locator getElementStart() {
+        return elementStart;
+    }
 
-	public Locator getElementEnd() {
-		return elementEnd;
-	}
+    public Locator getElementEnd() {
+        return elementEnd;
+    }
 
-	public String getSystemId() {
-		return elementStart.getSystemId();
-	}
+    public String getSystemId() {
+        return elementStart.getSystemId();
+    }
 
-	public String getPublicId() {
-		return elementStart.getPublicId();
-	}
+    public String getPublicId() {
+        return elementStart.getPublicId();
+    }
 
-	@Override
-	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append(getSystemId());
-		builder.append(':');
-		builder.append(elementStart.getLineNumber());
-		builder.append(':');
-		builder.append(elementStart.getColumnNumber());
-		builder.append(" - ");
-		builder.append(elementEnd.getLineNumber());
-		builder.append(':');
-		builder.append(elementEnd.getColumnNumber());
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(getSystemId());
+        builder.append(':');
+        builder.append(elementStart.getLineNumber());
+        builder.append(':');
+        builder.append(elementStart.getColumnNumber());
+        builder.append(" - ");
+        builder.append(elementEnd.getLineNumber());
+        builder.append(':');
+        builder.append(elementEnd.getColumnNumber());
 
-		return builder.toString();
-	}
+        return builder.toString();
+    }
 
 }

@@ -29,60 +29,60 @@ import java.util.Set;
  */
 public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
 
-	@Override
-	public final int size() {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public final int size() {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public final boolean isEmpty() {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public final boolean isEmpty() {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public final boolean containsKey(final Object key) {
-		return get(key) != null;
-	}
+    @Override
+    public final boolean containsKey(final Object key) {
+        return get(key) != null;
+    }
 
-	@Override
-	public final boolean containsValue(final Object value) {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public final boolean containsValue(final Object value) {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public final V put(final K key, final V value) {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public final V put(final K key, final V value) {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public final V remove(final Object key) {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public final V remove(final Object key) {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public final void putAll(final Map<? extends K, ? extends V> m) {
-		throw new UnsupportedOperationException();
+    @Override
+    public final void putAll(final Map<? extends K, ? extends V> m) {
+        throw new UnsupportedOperationException();
 
-	}
+    }
 
-	@Override
-	public final void clear() {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public final void clear() {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public final Set<K> keySet() {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public final Set<K> keySet() {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public final Collection<V> values() {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public final Collection<V> values() {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	public final Set<java.util.Map.Entry<K, V>> entrySet() {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public final Set<java.util.Map.Entry<K, V>> entrySet() {
+        throw new UnsupportedOperationException();
+    }
 
 }

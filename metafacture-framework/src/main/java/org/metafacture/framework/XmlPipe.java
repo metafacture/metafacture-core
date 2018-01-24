@@ -30,5 +30,5 @@ import org.metafacture.framework.helpers.DefaultXmlPipe;
  *
  */
 public interface XmlPipe<R extends Receiver> extends XmlReceiver, Sender<R> {
-	// Just a combination of sender and receiver
+    // Just a combination of sender and receiver
 }

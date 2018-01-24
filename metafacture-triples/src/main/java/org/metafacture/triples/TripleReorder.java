@@ -34,56 +34,56 @@ import org.metafacture.framework.objects.Triple;
 @Out(Triple.class)
 @FluxCommand("reorder-triple")
 public final class TripleReorder extends
-		DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
+        DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
 
-	/**
-	 * Names of the elements in the triple
-	 */
-	public enum TripleElement { SUBJECT, PREDICATE, OBJECT };
-	// Do not change the item order because the process method
-	// uses ordinal().
+    /**
+     * Names of the elements in the triple
+     */
+    public enum TripleElement { SUBJECT, PREDICATE, OBJECT };
+    // Do not change the item order because the process method
+    // uses ordinal().
 
-	private TripleElement subjectFrom = TripleElement.SUBJECT;
-	private TripleElement predicateFrom = TripleElement.PREDICATE;
-	private TripleElement objectFrom =  TripleElement.OBJECT;
+    private TripleElement subjectFrom = TripleElement.SUBJECT;
+    private TripleElement predicateFrom = TripleElement.PREDICATE;
+    private TripleElement objectFrom =  TripleElement.OBJECT;
 
-	public TripleElement getSubjectFrom() {
-		return subjectFrom;
-	}
+    public TripleElement getSubjectFrom() {
+        return subjectFrom;
+    }
 
-	public TripleElement getPredicateFrom() {
-		return predicateFrom;
-	}
+    public TripleElement getPredicateFrom() {
+        return predicateFrom;
+    }
 
-	public TripleElement getObjectFrom() {
-		return objectFrom;
-	}
+    public TripleElement getObjectFrom() {
+        return objectFrom;
+    }
 
-	public void setSubjectFrom(final TripleElement subjectFrom) {
-		this.subjectFrom = subjectFrom;
-	}
+    public void setSubjectFrom(final TripleElement subjectFrom) {
+        this.subjectFrom = subjectFrom;
+    }
 
-	public void setPredicateFrom(final TripleElement predicateFrom) {
-		this.predicateFrom = predicateFrom;
-	}
+    public void setPredicateFrom(final TripleElement predicateFrom) {
+        this.predicateFrom = predicateFrom;
+    }
 
-	public void setObjectFrom(final TripleElement objectFrom) {
-		this.objectFrom = objectFrom;
-	}
+    public void setObjectFrom(final TripleElement objectFrom) {
+        this.objectFrom = objectFrom;
+    }
 
-	@Override
-	public void process(final Triple triple) {
-		final String[] elements = {
-				triple.getSubject(),
-				triple.getPredicate(),
-				triple.getObject(),
-		};
+    @Override
+    public void process(final Triple triple) {
+        final String[] elements = {
+                triple.getSubject(),
+                triple.getPredicate(),
+                triple.getObject(),
+        };
 
-		getReceiver().process(new Triple(
-				elements[subjectFrom.ordinal()],
-				elements[predicateFrom.ordinal()],
-				elements[objectFrom.ordinal()]
-		));
-	}
+        getReceiver().process(new Triple(
+                elements[subjectFrom.ordinal()],
+                elements[predicateFrom.ordinal()],
+                elements[objectFrom.ordinal()]
+        ));
+    }
 
 }

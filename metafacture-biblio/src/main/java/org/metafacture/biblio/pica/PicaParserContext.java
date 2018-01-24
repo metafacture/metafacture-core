@@ -30,107 +30,107 @@ import org.metafacture.framework.StreamReceiver;
  */
 final class PicaParserContext {
 
-	private final StringBuilder builder = new StringBuilder();
+    private final StringBuilder builder = new StringBuilder();
 
-	private boolean normalizeUTF8;
-	private boolean skipEmptyFields = true;
-	private boolean trimFieldNames = true;
+    private boolean normalizeUTF8;
+    private boolean skipEmptyFields = true;
+    private boolean trimFieldNames = true;
 
-	private StreamReceiver receiver;
+    private StreamReceiver receiver;
 
-	private String entityName;
-	private boolean literalsEmitted;
+    private String entityName;
+    private boolean literalsEmitted;
 
-	private String subfieldName;
+    private String subfieldName;
 
-	public void setNormalizeUTF8(final boolean normalizeUTF8) {
-		this.normalizeUTF8 = normalizeUTF8;
-	}
+    public void setNormalizeUTF8(final boolean normalizeUTF8) {
+        this.normalizeUTF8 = normalizeUTF8;
+    }
 
-	public boolean getNormalizeUTF8() {
-		return normalizeUTF8;
-	}
+    public boolean getNormalizeUTF8() {
+        return normalizeUTF8;
+    }
 
-	public void setSkipEmptyFields(final boolean skipEmptyFields) {
-		this.skipEmptyFields = skipEmptyFields;
-	}
+    public void setSkipEmptyFields(final boolean skipEmptyFields) {
+        this.skipEmptyFields = skipEmptyFields;
+    }
 
-	public boolean getSkipEmptyFields() {
-		return skipEmptyFields;
-	}
+    public boolean getSkipEmptyFields() {
+        return skipEmptyFields;
+    }
 
-	public void setTrimFieldNames(final boolean trimFieldNames) {
-		this.trimFieldNames = trimFieldNames;
-	}
+    public void setTrimFieldNames(final boolean trimFieldNames) {
+        this.trimFieldNames = trimFieldNames;
+    }
 
-	public boolean getTrimFieldNames() {
-		return trimFieldNames;
-	}
+    public boolean getTrimFieldNames() {
+        return trimFieldNames;
+    }
 
-	public void setReceiver(final StreamReceiver receiver) {
-		this.receiver = receiver;
-	}
+    public void setReceiver(final StreamReceiver receiver) {
+        this.receiver = receiver;
+    }
 
-	public void reset() {
-		getTextAndReset();
-		entityName = null;
-		literalsEmitted = false;
-		subfieldName = null;
-	}
+    public void reset() {
+        getTextAndReset();
+        entityName = null;
+        literalsEmitted = false;
+        subfieldName = null;
+    }
 
-	protected void appendText(final char ch) {
-		builder.append(ch);
-	}
+    protected void appendText(final char ch) {
+        builder.append(ch);
+    }
 
-	protected void emitStartEntity() {
-		// Output of the startEntity event is postponed
-		// until a literal is emitted in order to able
-		// to skip empty entities
+    protected void emitStartEntity() {
+        // Output of the startEntity event is postponed
+        // until a literal is emitted in order to able
+        // to skip empty entities
 
-		entityName = getTextAndReset();
-		if (trimFieldNames) {
-			entityName = entityName.trim();
-		}
-		literalsEmitted = false;
-	}
+        entityName = getTextAndReset();
+        if (trimFieldNames) {
+            entityName = entityName.trim();
+        }
+        literalsEmitted = false;
+    }
 
-	protected void emitEndEntity() {
-		if (!literalsEmitted) {
-			if (skipEmptyFields || entityName.isEmpty()) {
-				return;
-			}
-			receiver.startEntity(entityName);
-			entityName = null;
-		}
-		receiver.endEntity();
-	}
+    protected void emitEndEntity() {
+        if (!literalsEmitted) {
+            if (skipEmptyFields || entityName.isEmpty()) {
+                return;
+            }
+            receiver.startEntity(entityName);
+            entityName = null;
+        }
+        receiver.endEntity();
+    }
 
-	protected void setSubfieldName(final char name) {
-		subfieldName = String.valueOf(name);
-	}
+    protected void setSubfieldName(final char name) {
+        subfieldName = String.valueOf(name);
+    }
 
-	protected void emitLiteral() {
-		assert subfieldName != null;
-		assert entityName != null || literalsEmitted;
+    protected void emitLiteral() {
+        assert subfieldName != null;
+        assert entityName != null || literalsEmitted;
 
-		if (entityName != null) {
-			receiver.startEntity(entityName);
-			entityName = null;
-			literalsEmitted = true;
-		}
+        if (entityName != null) {
+            receiver.startEntity(entityName);
+            entityName = null;
+            literalsEmitted = true;
+        }
 
-		String value = getTextAndReset();
-		if (normalizeUTF8) {
-			value = Normalizer.normalize(value, Form.NFC);
-		}
-		receiver.literal(subfieldName, value);
-		subfieldName = null;
-	}
+        String value = getTextAndReset();
+        if (normalizeUTF8) {
+            value = Normalizer.normalize(value, Form.NFC);
+        }
+        receiver.literal(subfieldName, value);
+        subfieldName = null;
+    }
 
-	private String getTextAndReset() {
-		final String text = builder.toString();
-		builder.setLength(0);
-		return text;
-	}
+    private String getTextAndReset() {
+        final String text = builder.toString();
+        builder.setLength(0);
+        return text;
+    }
 
 }

@@ -33,5 +33,5 @@ import java.util.Collection;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ReturnsAvailableArguments {
-	// just an indicator
+    // just an indicator
 }

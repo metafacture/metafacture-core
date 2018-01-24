@@ -23,12 +23,12 @@ package org.metafacture.formeta.formatter;
  */
 public interface Formatter {
 
-	void reset();
+    void reset();
 
-	void startGroup(final String name);
+    void startGroup(final String name);
 
-	void endGroup();
+    void endGroup();
 
-	void literal(final String name, final String value);
+    void literal(final String name, final String value);
 
 }

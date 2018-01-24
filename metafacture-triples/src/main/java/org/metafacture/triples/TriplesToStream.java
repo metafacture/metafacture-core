@@ -41,32 +41,32 @@ import org.metafacture.framework.objects.Triple.ObjectType;
 @Out(StreamReceiver.class)
 @FluxCommand("triples-to-stream")
 public final class TriplesToStream extends
-		DefaultObjectPipe<Triple, StreamReceiver> {
+        DefaultObjectPipe<Triple, StreamReceiver> {
 
-	private final FormetaParser parser = new FormetaParser();
-	private final PartialRecordEmitter emitter = new PartialRecordEmitter();
+    private final FormetaParser parser = new FormetaParser();
+    private final PartialRecordEmitter emitter = new PartialRecordEmitter();
 
-	public TriplesToStream() {
-		parser.setEmitter(emitter);
-	}
+    public TriplesToStream() {
+        parser.setEmitter(emitter);
+    }
 
-	@Override
-	public void process(final Triple triple) {
-		getReceiver().startRecord(triple.getSubject());
-		if(triple.getObjectType() == ObjectType.STRING){
-			getReceiver().literal(triple.getPredicate(), triple.getObject());
-		}else if (triple.getObjectType() == ObjectType.ENTITY){
-			emitter.setDefaultName(triple.getPredicate());
-			parser.parse(triple.getObject());
-		}else{
-			throw new UnsupportedOperationException(triple.getObjectType() + " can not yet be decoded");
-		}
-		getReceiver().endRecord();
-	}
+    @Override
+    public void process(final Triple triple) {
+        getReceiver().startRecord(triple.getSubject());
+        if(triple.getObjectType() == ObjectType.STRING){
+            getReceiver().literal(triple.getPredicate(), triple.getObject());
+        }else if (triple.getObjectType() == ObjectType.ENTITY){
+            emitter.setDefaultName(triple.getPredicate());
+            parser.parse(triple.getObject());
+        }else{
+            throw new UnsupportedOperationException(triple.getObjectType() + " can not yet be decoded");
+        }
+        getReceiver().endRecord();
+    }
 
-	@Override
-	protected void onSetReceiver() {
-		emitter.setReceiver(getReceiver());
-	}
+    @Override
+    protected void onSetReceiver() {
+        emitter.setReceiver(getReceiver());
+    }
 
 }

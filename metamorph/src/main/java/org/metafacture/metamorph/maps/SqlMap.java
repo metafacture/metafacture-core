@@ -34,101 +34,101 @@ import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
  *
  */
 public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
-		Closeable {
+        Closeable {
 
-	private boolean isUninitialized = true;
+    private boolean isUninitialized = true;
 
-	private Connection conn;
-	private String host;
-	private String login;
-	private String password;
-	private String database;
-	private String query;
-	private String driver;
+    private Connection conn;
+    private String host;
+    private String login;
+    private String password;
+    private String database;
+    private String query;
+    private String driver;
 
-	private PreparedStatement preparedStatement;
+    private PreparedStatement preparedStatement;
 
-	public void init() {
+    public void init() {
 
-		try {
-			preparedStatement = getMySqlConnection().prepareStatement(query);
-		} catch (final SQLException e) {
-			throw new MorphExecutionException(
-					"sqlmap: could not create prepared statement for query", e);
-		}
-		isUninitialized = false;
-	}
+        try {
+            preparedStatement = getMySqlConnection().prepareStatement(query);
+        } catch (final SQLException e) {
+            throw new MorphExecutionException(
+                    "sqlmap: could not create prepared statement for query", e);
+        }
+        isUninitialized = false;
+    }
 
-	@Override
-	public void close() throws IOException {
-		try {
+    @Override
+    public void close() throws IOException {
+        try {
 
-			if (conn != null) {
-				conn.close();
-			}
-		} catch (final SQLException e) {
-			throw new MorphExecutionException("sqlmap: could not close db connection",
-					e);
-		}
-	}
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (final SQLException e) {
+            throw new MorphExecutionException("sqlmap: could not close db connection",
+                    e);
+        }
+    }
 
-	private Connection getMySqlConnection() {
-		try {
-			Class.forName(driver);
+    private Connection getMySqlConnection() {
+        try {
+            Class.forName(driver);
 
-			conn = DriverManager.getConnection("jdbc:mysql://" + host + "/"
-					+ database + "?" + "user=" + login + "&" + "password="
-					+ password);
-		} catch (final ClassNotFoundException | SQLException e) {
-			throw new MorphExecutionException("sqlmap: cannot create db connection",
-					e);
-		}
-		return conn;
-	}
+            conn = DriverManager.getConnection("jdbc:mysql://" + host + "/"
+                    + database + "?" + "user=" + login + "&" + "password="
+                    + password);
+        } catch (final ClassNotFoundException | SQLException e) {
+            throw new MorphExecutionException("sqlmap: cannot create db connection",
+                    e);
+        }
+        return conn;
+    }
 
-	@Override
-	public String get(final Object key) {
-		if (isUninitialized) {
-			init();
-		}
-		String resultString = null;
-		final ResultSet resultSet;
-		try {
-			preparedStatement.setString(1, key.toString());
-			resultSet = preparedStatement.executeQuery();
-			if (resultSet.first()) {
-				resultString = resultSet.getString(1);
-			}
-			resultSet.close();
-		} catch (final SQLException e) {
-			throw new MorphExecutionException(
-					"sqlmap: execution of prepared statement failed", e);
-		}
-		return resultString;
-	}
+    @Override
+    public String get(final Object key) {
+        if (isUninitialized) {
+            init();
+        }
+        String resultString = null;
+        final ResultSet resultSet;
+        try {
+            preparedStatement.setString(1, key.toString());
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.first()) {
+                resultString = resultSet.getString(1);
+            }
+            resultSet.close();
+        } catch (final SQLException e) {
+            throw new MorphExecutionException(
+                    "sqlmap: execution of prepared statement failed", e);
+        }
+        return resultString;
+    }
 
-	public void setDriver(final String driver) {
-		this.driver = driver;
-	}
+    public void setDriver(final String driver) {
+        this.driver = driver;
+    }
 
-	public void setHost(final String host) {
-		this.host = host;
-	}
+    public void setHost(final String host) {
+        this.host = host;
+    }
 
-	public void setLogin(final String login) {
-		this.login = login;
-	}
+    public void setLogin(final String login) {
+        this.login = login;
+    }
 
-	public void setPassword(final String password) {
-		this.password = password;
-	}
+    public void setPassword(final String password) {
+        this.password = password;
+    }
 
-	public void setDatabase(final String database) {
-		this.database = database;
-	}
+    public void setDatabase(final String database) {
+        this.database = database;
+    }
 
-	public void setQuery(final String query) {
-		this.query = query;
-	}
+    public void setQuery(final String query) {
+        this.query = query;
+    }
 
 }

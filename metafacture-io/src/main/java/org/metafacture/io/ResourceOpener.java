@@ -39,35 +39,35 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(java.io.Reader.class)
 @FluxCommand("open-resource")
 public final class ResourceOpener
-		extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
+        extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
-	private String encoding = "UTF-8";
+    private String encoding = "UTF-8";
 
-	/**
-	 * Returns the encoding used to open the resource.
-	 *
-	 * @return current default setting
-	 */
-	public String getEncoding() {
-		return encoding;
-	}
+    /**
+     * Returns the encoding used to open the resource.
+     *
+     * @return current default setting
+     */
+    public String getEncoding() {
+        return encoding;
+    }
 
-	/**
-	 * Sets the encoding used to open the resource.
-	 *
-	 * @param encoding new encoding
-	 */
-	public void setEncoding(final String encoding) {
-		this.encoding = encoding;
-	}
+    /**
+     * Sets the encoding used to open the resource.
+     *
+     * @param encoding new encoding
+     */
+    public void setEncoding(final String encoding) {
+        this.encoding = encoding;
+    }
 
-	@Override
-	public void process(final String file) {
-		try {
-			getReceiver().process(ResourceUtil.getReader(file, encoding));
-		} catch (java.io.IOException e) {
-			throw new MetafactureException(e);
-		}
-	}
+    @Override
+    public void process(final String file) {
+        try {
+            getReceiver().process(ResourceUtil.getReader(file, encoding));
+        } catch (java.io.IOException e) {
+            throw new MetafactureException(e);
+        }
+    }
 
 }

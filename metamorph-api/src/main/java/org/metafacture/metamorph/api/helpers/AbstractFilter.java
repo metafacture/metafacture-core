@@ -22,24 +22,24 @@ package org.metafacture.metamorph.api.helpers;
  */
 public abstract class AbstractFilter extends AbstractSimpleStatelessFunction {
 
-	private String string;
+    private String string;
 
-	@Override
-	public final String process(final String value) {
-		if(accept(value)){
-			return value;
-		}
-		return null;
-	}
+    @Override
+    public final String process(final String value) {
+        if(accept(value)){
+            return value;
+        }
+        return null;
+    }
 
-	protected abstract boolean accept(String value);
+    protected abstract boolean accept(String value);
 
-	protected final  String getString() {
-		return string;
-	}
+    protected final  String getString() {
+        return string;
+    }
 
-	public final void setString(final String string) {
-		this.string = string;
-	}
+    public final void setString(final String string) {
+        this.string = string;
+    }
 
 }

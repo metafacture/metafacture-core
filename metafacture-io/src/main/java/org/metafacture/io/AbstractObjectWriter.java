@@ -23,38 +23,38 @@ package org.metafacture.io;
  */
 public abstract class AbstractObjectWriter<T> implements ConfigurableObjectWriter<T> {
 
-	private String header = DEFAULT_HEADER;
-	private String footer = DEFAULT_FOOTER;
-	private String separator = DEFAULT_SEPARATOR;
+    private String header = DEFAULT_HEADER;
+    private String footer = DEFAULT_FOOTER;
+    private String separator = DEFAULT_SEPARATOR;
 
-	@Override
-	public final String getHeader() {
-		return header;
-	}
+    @Override
+    public final String getHeader() {
+        return header;
+    }
 
-	@Override
-	public final void setHeader(final String header) {
-		this.header = header;
-	}
+    @Override
+    public final void setHeader(final String header) {
+        this.header = header;
+    }
 
-	@Override
-	public final String getFooter() {
-		return footer;
-	}
+    @Override
+    public final String getFooter() {
+        return footer;
+    }
 
-	@Override
-	public final void setFooter(final String footer) {
-		this.footer = footer;
-	}
+    @Override
+    public final void setFooter(final String footer) {
+        this.footer = footer;
+    }
 
-	@Override
-	public final String getSeparator() {
-		return separator;
-	}
+    @Override
+    public final String getSeparator() {
+        return separator;
+    }
 
-	@Override
-	public final void setSeparator(final String separator) {
-		this.separator = separator;
-	}
+    @Override
+    public final void setSeparator(final String separator) {
+        this.separator = separator;
+    }
 
 }

@@ -26,19 +26,19 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  */
 public final class StringSender extends DefaultObjectPipe<Object, ObjectReceiver<String>>{
 
-	private final String string;
+    private final String string;
 
-	public StringSender(final String string) {
-		this.string = string;
-	}
+    public StringSender(final String string) {
+        this.string = string;
+    }
 
-	@Override
-	public void process(final Object notUsed) {
-		if(notUsed==null){
-		getReceiver().process(string);
-		}else{
-			throw new IllegalArgumentException("Parameter not used. Must be null");
-		}
-	}
+    @Override
+    public void process(final Object notUsed) {
+        if(notUsed==null){
+        getReceiver().process(string);
+        }else{
+            throw new IllegalArgumentException("Parameter not used. Must be null");
+        }
+    }
 
 }

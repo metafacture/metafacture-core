@@ -30,13 +30,13 @@ import org.metafacture.framework.MetafactureException;
  */
 final class MapFactory extends ObjectFactory<Map> {
 
-	  MapFactory() {
-		  try {
-			  loadClassesFromMap(ResourceUtil.loadProperties(
-					  "morph-maps.properties"), Map.class);
-		  } catch (IOException e) {
-			  throw new MetafactureException("Failed to load maps list", e);
-		  }
-	  }
+      MapFactory() {
+          try {
+              loadClassesFromMap(ResourceUtil.loadProperties(
+                      "morph-maps.properties"), Map.class);
+          } catch (IOException e) {
+              throw new MetafactureException("Failed to load maps list", e);
+          }
+      }
 
 }

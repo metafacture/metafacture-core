@@ -27,17 +27,17 @@ import org.junit.Test;
  */
 public final class NormalizeUTF8Test {
 
-	// The umlauts in this string are composed of two characters (u and ", e.g.):
-	private static final String INPUT_STR =
-			"Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
+    // The umlauts in this string are composed of two characters (u and ", e.g.):
+    private static final String INPUT_STR =
+            "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 
-	// The umlauts in this string are individual characters:
-	private static final String OUTPUT_STR =
-			"Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
+    // The umlauts in this string are individual characters:
+    private static final String OUTPUT_STR =
+            "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 
-	@Test
-	public void testProcess() {
-		final NormalizeUTF8 normalize = new NormalizeUTF8();
-		assertEquals("Normalization incorrect", OUTPUT_STR, normalize.process(INPUT_STR));
-	}
+    @Test
+    public void testProcess() {
+        final NormalizeUTF8 normalize = new NormalizeUTF8();
+        assertEquals("Normalization incorrect", OUTPUT_STR, normalize.process(INPUT_STR));
+    }
 }

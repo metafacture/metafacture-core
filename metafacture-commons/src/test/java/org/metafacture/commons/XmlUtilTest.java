@@ -26,42 +26,42 @@ import org.junit.Test;
  */
 public class XmlUtilTest {
 
-	@Test
-	public void escape_shouldEscapeXmlSpecialChars() {
-		final String unescaped = "< > ' & \"";
+    @Test
+    public void escape_shouldEscapeXmlSpecialChars() {
+        final String unescaped = "< > ' & \"";
 
-		final String result = XmlUtil.escape(unescaped);
+        final String result = XmlUtil.escape(unescaped);
 
-		assertEquals("&lt; &gt; &apos; &amp; &quot;", result);
-	}
+        assertEquals("&lt; &gt; &apos; &amp; &quot;", result);
+    }
 
-	@Test
-	public void escape_shouldNotEscapeAsciiChars() {
-		final String unescaped ="Kafka";
+    @Test
+    public void escape_shouldNotEscapeAsciiChars() {
+        final String unescaped ="Kafka";
 
-		final String result = XmlUtil.escape(unescaped);
+        final String result = XmlUtil.escape(unescaped);
 
-		assertEquals("Kafka", result);
-	}
+        assertEquals("Kafka", result);
+    }
 
-	@Test
-	public void escape_shouldEscapeAllNonAsciiChars() {
-		final String unescaped = "K\u00f8benhavn";
+    @Test
+    public void escape_shouldEscapeAllNonAsciiChars() {
+        final String unescaped = "K\u00f8benhavn";
 
-		final String result = XmlUtil.escape(unescaped);
+        final String result = XmlUtil.escape(unescaped);
 
-		assertEquals("K&#248;benhavn", result);
-	}
+        assertEquals("K&#248;benhavn", result);
+    }
 
-	/**
-	 * Test for <a href="https://github.com/culturegraph/metafacture-core/issues/267">#267</a>.
-	 */
-	@Test
-	public void escape_shouldEscapeSurrogatePairsAsSingleEntity() {
-		final String unescaped = "Smile: \ud83d\ude09";
-		final String result = XmlUtil.escape(unescaped);
+    /**
+     * Test for <a href="https://github.com/culturegraph/metafacture-core/issues/267">#267</a>.
+     */
+    @Test
+    public void escape_shouldEscapeSurrogatePairsAsSingleEntity() {
+        final String unescaped = "Smile: \ud83d\ude09";
+        final String result = XmlUtil.escape(unescaped);
 
-		assertEquals("Smile: &#128521;", result);
-	}
+        assertEquals("Smile: &#128521;", result);
+    }
 
 }

@@ -35,139 +35,139 @@ import org.mockito.junit.MockitoRule;
  */
 public final class TestMetamorphBasics {
 
-	@Rule
-	public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	private Metamorph metamorph;
+    private Metamorph metamorph;
 
-	@Test
-	public void shouldUseCustomEntityMarker() {
-		metamorph = InlineMorph.in(this)
-				.with("<metamorph version='1' entityMarker='~'")
-				.with("    xmlns='http://www.culturegraph.org/metamorph'>")
-				.with("  <rules>")
-				.with("    <data source='entity~literal' name='data' />")
-				.with("  </rules>")
-				.with("</metamorph>")
-				.createConnectedTo(receiver);
+    @Test
+    public void shouldUseCustomEntityMarker() {
+        metamorph = InlineMorph.in(this)
+                .with("<metamorph version='1' entityMarker='~'")
+                .with("    xmlns='http://www.culturegraph.org/metamorph'>")
+                .with("  <rules>")
+                .with("    <data source='entity~literal' name='data' />")
+                .with("  </rules>")
+                .with("</metamorph>")
+                .createConnectedTo(receiver);
 
-		metamorph.startRecord("1");
-		metamorph.startEntity("entity");
-		metamorph.literal("literal", "Aloha");
-		metamorph.endEntity();
-		metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.startEntity("entity");
+        metamorph.literal("literal", "Aloha");
+        metamorph.endEntity();
+        metamorph.endRecord();
 
-		verify(receiver).literal("data", "Aloha");
-	}
+        verify(receiver).literal("data", "Aloha");
+    }
 
-	@Test
-	public void shouldHandleUnmatchedLiteralsInElseSource() {
-		metamorph = InlineMorph.in(this)
-				.with("<rules>")
-				.with("  <data source='Sylt' name='Hawaii' />")
-				.with("  <data source='_else' />")
-				.with("</rules>")
-				.createConnectedTo(receiver);
+    @Test
+    public void shouldHandleUnmatchedLiteralsInElseSource() {
+        metamorph = InlineMorph.in(this)
+                .with("<rules>")
+                .with("  <data source='Sylt' name='Hawaii' />")
+                .with("  <data source='_else' />")
+                .with("</rules>")
+                .createConnectedTo(receiver);
 
-		metamorph.startRecord("1");
-		metamorph.literal("Langeoog", "Moin");
-		metamorph.literal("Sylt", "Aloha");
-		metamorph.literal("Baltrum", "Moin Moin");
-		metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("Langeoog", "Moin");
+        metamorph.literal("Sylt", "Aloha");
+        metamorph.literal("Baltrum", "Moin Moin");
+        metamorph.endRecord();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("1");
-		ordered.verify(receiver).literal("Langeoog", "Moin");
-		ordered.verify(receiver).literal("Hawaii", "Aloha");
-		ordered.verify(receiver).literal("Baltrum", "Moin Moin");
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("Langeoog", "Moin");
+        ordered.verify(receiver).literal("Hawaii", "Aloha");
+        ordered.verify(receiver).literal("Baltrum", "Moin Moin");
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void shouldMatchCharacterWithQuestionMarkWildcard() {
-		metamorph = InlineMorph.in(this)
-				.with("<rules>")
-				.with("  <data source='lit-?' />")
-				.with("</rules>")
-				.createConnectedTo(receiver);
+    @Test
+    public void shouldMatchCharacterWithQuestionMarkWildcard() {
+        metamorph = InlineMorph.in(this)
+                .with("<rules>")
+                .with("  <data source='lit-?' />")
+                .with("</rules>")
+                .createConnectedTo(receiver);
 
-		metamorph.startRecord("1");
-		metamorph.literal("lit", "Moin");
-		metamorph.literal("lit-A", "Aloha");
-		metamorph.literal("lit-B", "Aloha 'oe");
-		metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("lit", "Moin");
+        metamorph.literal("lit-A", "Aloha");
+        metamorph.literal("lit-B", "Aloha 'oe");
+        metamorph.endRecord();
 
-		verify(receiver).literal("lit-A", "Aloha");
-		verify(receiver).literal("lit-B", "Aloha 'oe");
-		verify(receiver, times(2)).literal(any(), any());
-	}
+        verify(receiver).literal("lit-A", "Aloha");
+        verify(receiver).literal("lit-B", "Aloha 'oe");
+        verify(receiver, times(2)).literal(any(), any());
+    }
 
-	@Test
-	public void shouldMatchCharactersInCharacterClass() {
-		metamorph = InlineMorph.in(this)
-				.with("<rules>")
-				.with("  <data source='lit-[AB]' />")
-				.with("</rules>")
-				.createConnectedTo(receiver);
+    @Test
+    public void shouldMatchCharactersInCharacterClass() {
+        metamorph = InlineMorph.in(this)
+                .with("<rules>")
+                .with("  <data source='lit-[AB]' />")
+                .with("</rules>")
+                .createConnectedTo(receiver);
 
-		metamorph.startRecord("1");
-		metamorph.literal("lit-A", "Hawaii");
-		metamorph.literal("lit-B", "Oahu");
-		metamorph.literal("lit-C", "Fehmarn");
-		metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("lit-A", "Hawaii");
+        metamorph.literal("lit-B", "Oahu");
+        metamorph.literal("lit-C", "Fehmarn");
+        metamorph.endRecord();
 
-		verify(receiver).literal("lit-A", "Hawaii");
-		verify(receiver).literal("lit-B", "Oahu");
-		verify(receiver, times(2)).literal(any(), any());
-	}
+        verify(receiver).literal("lit-A", "Hawaii");
+        verify(receiver).literal("lit-B", "Oahu");
+        verify(receiver, times(2)).literal(any(), any());
+    }
 
-	@Test
-	public void shouldReplaceVariables() {
-		metamorph = InlineMorph.in(this)
-				.with("<vars>")
-				.with("  <var name='in' value='Honolulu' />")
-				.with("  <var name='out' value='Hawaii' />")
-				.with("</vars>")
-				.with("<rules>")
-				.with("  <data source='$[in]' name='$[out]' />")
-				.with("</rules>")
-				.createConnectedTo(receiver);
+    @Test
+    public void shouldReplaceVariables() {
+        metamorph = InlineMorph.in(this)
+                .with("<vars>")
+                .with("  <var name='in' value='Honolulu' />")
+                .with("  <var name='out' value='Hawaii' />")
+                .with("</vars>")
+                .with("<rules>")
+                .with("  <data source='$[in]' name='$[out]' />")
+                .with("</rules>")
+                .createConnectedTo(receiver);
 
-		metamorph.startRecord("1");
-		metamorph.literal("Honolulu", "Aloha");
-		metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("Honolulu", "Aloha");
+        metamorph.endRecord();
 
-		verify(receiver).literal("Hawaii", "Aloha");
-	}
+        verify(receiver).literal("Hawaii", "Aloha");
+    }
 
-	@Test
-	public void shouldAllowTreatingEntityEndEventsAsLiterals() {
-		metamorph = InlineMorph.in(this)
-				.with("<rules>")
-				.with("  <data source='e1' />")
-				.with("  <data source='e1.e2' />")
-				.with("  <data source='e1.e2.d' />")
-				.with("</rules>")
-				.createConnectedTo(receiver);
+    @Test
+    public void shouldAllowTreatingEntityEndEventsAsLiterals() {
+        metamorph = InlineMorph.in(this)
+                .with("<rules>")
+                .with("  <data source='e1' />")
+                .with("  <data source='e1.e2' />")
+                .with("  <data source='e1.e2.d' />")
+                .with("</rules>")
+                .createConnectedTo(receiver);
 
-		metamorph.startRecord("entity end info");
-		metamorph.startEntity("e1");
-		metamorph.startEntity("e2");
-		metamorph.literal("d", "a");
-		metamorph.endEntity();
-		metamorph.endEntity();
-		metamorph.endRecord();
+        metamorph.startRecord("entity end info");
+        metamorph.startEntity("e1");
+        metamorph.startEntity("e2");
+        metamorph.literal("d", "a");
+        metamorph.endEntity();
+        metamorph.endEntity();
+        metamorph.endRecord();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("entity end info");
-		ordered.verify(receiver).literal("e1.e2.d", "a");
-		ordered.verify(receiver).literal("e1.e2", "");
-		ordered.verify(receiver).literal("e1", "");
-		ordered.verify(receiver).endRecord();
-		ordered.verifyNoMoreInteractions();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("entity end info");
+        ordered.verify(receiver).literal("e1.e2.d", "a");
+        ordered.verify(receiver).literal("e1.e2", "");
+        ordered.verify(receiver).literal("e1", "");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
 }

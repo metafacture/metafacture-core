@@ -29,13 +29,13 @@ import org.metafacture.framework.MetafactureException;
  */
 final class ReaderFactory extends ObjectFactory<Reader> {
 
-	ReaderFactory() {
-		try {
-			loadClassesFromMap(ResourceUtil.loadProperties(
-					"test-readers.properties"), Reader.class);
-		} catch (IOException e) {
-			throw new MetafactureException("Failed to load readers list", e);
-		}
-	}
+    ReaderFactory() {
+        try {
+            loadClassesFromMap(ResourceUtil.loadProperties(
+                    "test-readers.properties"), Reader.class);
+        } catch (IOException e) {
+            throw new MetafactureException("Failed to load readers list", e);
+        }
+    }
 
 }

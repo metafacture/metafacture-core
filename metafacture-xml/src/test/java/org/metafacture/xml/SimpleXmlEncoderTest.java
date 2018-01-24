@@ -34,168 +34,168 @@ import org.metafacture.framework.helpers.DefaultObjectReceiver;
  */
 public final class SimpleXmlEncoderTest {
 
-	private static final String TAG = "tag";
-	private static final String VALUE = "value";
+    private static final String TAG = "tag";
+    private static final String VALUE = "value";
 
-	private SimpleXmlEncoder simpleXmlEncoder;
+    private SimpleXmlEncoder simpleXmlEncoder;
 
-	private StringBuilder resultCollector;
+    private StringBuilder resultCollector;
 
-	@Before
-	public void initSystemUnderTest() {
-		simpleXmlEncoder = new SimpleXmlEncoder();
-		simpleXmlEncoder.setReceiver(
-				new DefaultObjectReceiver<String>() {
-					@Override
-					public void process(final String obj) {
-						resultCollector.append(obj);
-					}
-				});
-		resultCollector = new StringBuilder();
-	}
+    @Before
+    public void initSystemUnderTest() {
+        simpleXmlEncoder = new SimpleXmlEncoder();
+        simpleXmlEncoder.setReceiver(
+                new DefaultObjectReceiver<String>() {
+                    @Override
+                    public void process(final String obj) {
+                        resultCollector.append(obj);
+                    }
+                });
+        resultCollector = new StringBuilder();
+    }
 
-	@Test
-	public void issue249_shouldNotEmitClosingRootTagOnCloseStreamIfNoOutputWasGenerated() {
-		simpleXmlEncoder.closeStream();
+    @Test
+    public void issue249_shouldNotEmitClosingRootTagOnCloseStreamIfNoOutputWasGenerated() {
+        simpleXmlEncoder.closeStream();
 
-		assertTrue(getResultXml().isEmpty());
-	}
+        assertTrue(getResultXml().isEmpty());
+    }
 
-	@Test
-	public void shouldNotEmitClosingRootTagOnResetStreamIfNoOutputWasGenerated() {
-		simpleXmlEncoder.resetStream();
+    @Test
+    public void shouldNotEmitClosingRootTagOnResetStreamIfNoOutputWasGenerated() {
+        simpleXmlEncoder.resetStream();
 
-		assertTrue(getResultXml().isEmpty());
-	}
+        assertTrue(getResultXml().isEmpty());
+    }
 
-	@Test
-	public void shouldOnlyEscapeXmlReservedCharacters() {
-		final StringBuilder builder = new StringBuilder();
+    @Test
+    public void shouldOnlyEscapeXmlReservedCharacters() {
+        final StringBuilder builder = new StringBuilder();
 
-		SimpleXmlEncoder.writeEscaped(builder , "&<>'\" üäö");
+        SimpleXmlEncoder.writeEscaped(builder , "&<>'\" üäö");
 
-		assertEquals("&amp;&lt;&gt;&apos;&quot; üäö", builder.toString());
-	}
+        assertEquals("&amp;&lt;&gt;&apos;&quot; üäö", builder.toString());
+    }
 
-	@Test
-	public void shouldWrapEachRecordInRootTagIfSeparateRootsIsTrue() {
-		simpleXmlEncoder.setSeparateRoots(true);
+    @Test
+    public void shouldWrapEachRecordInRootTagIfSeparateRootsIsTrue() {
+        simpleXmlEncoder.setSeparateRoots(true);
 
-		emitTwoRecords();
+        emitTwoRecords();
 
-		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records><record><tag>value</tag></record></records><?xml version=\"1.0\" encoding=\"UTF-8\"?><records><record><tag>value</tag></record></records>",
-				getResultXml());
-	}
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records><record><tag>value</tag></record></records><?xml version=\"1.0\" encoding=\"UTF-8\"?><records><record><tag>value</tag></record></records>",
+                getResultXml());
+    }
 
-	@Test
-	public void shouldWrapAllRecordsInOneRootTagtIfSeparateRootsIsFalse() {
-		simpleXmlEncoder.setSeparateRoots(false);
+    @Test
+    public void shouldWrapAllRecordsInOneRootTagtIfSeparateRootsIsFalse() {
+        simpleXmlEncoder.setSeparateRoots(false);
 
-		emitTwoRecords();
+        emitTwoRecords();
 
-		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records><record><tag>value</tag></record><record><tag>value</tag></record></records>",
-				getResultXml());
-	}
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records><record><tag>value</tag></record><record><tag>value</tag></record></records>",
+                getResultXml());
+    }
 
-	@Test
-	public void shouldAddNamespaceToRootElement() {
-		final Map<String, String> namespaces = new HashMap<String, String>();
-		namespaces.put("ns", "http://example.org/ns");
-		simpleXmlEncoder.setNamespaces(namespaces);
+    @Test
+    public void shouldAddNamespaceToRootElement() {
+        final Map<String, String> namespaces = new HashMap<String, String>();
+        namespaces.put("ns", "http://example.org/ns");
+        simpleXmlEncoder.setNamespaces(namespaces);
 
-		emitEmptyRecord();
+        emitEmptyRecord();
 
-		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns:ns=\"http://example.org/ns\"><record /></records>",
-				getResultXml());
-	}
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns:ns=\"http://example.org/ns\"><record /></records>",
+                getResultXml());
+    }
 
-	@Test
-	public void shouldAddNamespaceWithEmptyKeyAsDefaultNamespaceToRootTag() {
-		final Map<String, String> namespaces = new HashMap<String, String>();
-		namespaces.put("", "http://example.org/ns");
-		simpleXmlEncoder.setNamespaces(namespaces);
+    @Test
+    public void shouldAddNamespaceWithEmptyKeyAsDefaultNamespaceToRootTag() {
+        final Map<String, String> namespaces = new HashMap<String, String>();
+        namespaces.put("", "http://example.org/ns");
+        simpleXmlEncoder.setNamespaces(namespaces);
 
-		emitEmptyRecord();
+        emitEmptyRecord();
 
-		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns=\"http://example.org/ns\"><record /></records>",
-				getResultXml());
-	}
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns=\"http://example.org/ns\"><record /></records>",
+                getResultXml());
+    }
 
-	@Test
-	public void shouldAddNamespaceWithEmptyKeyFromPropertiesFileAsDefaultNamespaceToRootTag() {
-		simpleXmlEncoder.setNamespaceFile("org/metafacture/xml/SimpleXmlEncoderTest_namespaces.properties");
+    @Test
+    public void shouldAddNamespaceWithEmptyKeyFromPropertiesFileAsDefaultNamespaceToRootTag() {
+        simpleXmlEncoder.setNamespaceFile("org/metafacture/xml/SimpleXmlEncoderTest_namespaces.properties");
 
-		emitEmptyRecord();
+        emitEmptyRecord();
 
-		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns=\"http://example.org/ns\"><record /></records>",
-				getResultXml());
-	}
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns=\"http://example.org/ns\"><record /></records>",
+                getResultXml());
+    }
 
-	@Test
-	public void shouldNotEmitRootTagIfWriteRootTagIsFalse() {
-		simpleXmlEncoder.setWriteRootTag(false);
+    @Test
+    public void shouldNotEmitRootTagIfWriteRootTagIsFalse() {
+        simpleXmlEncoder.setWriteRootTag(false);
 
-		emitEmptyRecord();
+        emitEmptyRecord();
 
-		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record />",
-				getResultXml());
-	}
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record />",
+                getResultXml());
+    }
 
-	@Test
-	public void shouldAddNamespacesToRecordTagIfWriteRootTagIsFalse() {
-		final Map<String, String> namespaces = new HashMap<String, String>();
-		namespaces.put("ns", "http://example.org/ns");
-		simpleXmlEncoder.setNamespaces(namespaces);
-		simpleXmlEncoder.setWriteRootTag(false);
+    @Test
+    public void shouldAddNamespacesToRecordTagIfWriteRootTagIsFalse() {
+        final Map<String, String> namespaces = new HashMap<String, String>();
+        namespaces.put("ns", "http://example.org/ns");
+        simpleXmlEncoder.setNamespaces(namespaces);
+        simpleXmlEncoder.setWriteRootTag(false);
 
-		emitEmptyRecord();
+        emitEmptyRecord();
 
-		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns:ns=\"http://example.org/ns\" />",
-				getResultXml());
-	}
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns:ns=\"http://example.org/ns\" />",
+                getResultXml());
+    }
 
-	@Test
-	public void shouldAddNamespaceWithEmptyKeyAsDefaultNamespaceToRecordTag() {
-		final Map<String, String> namespaces = new HashMap<String, String>();
-		namespaces.put("", "http://example.org/ns");
-		simpleXmlEncoder.setNamespaces(namespaces);
-		simpleXmlEncoder.setWriteRootTag(false);
+    @Test
+    public void shouldAddNamespaceWithEmptyKeyAsDefaultNamespaceToRecordTag() {
+        final Map<String, String> namespaces = new HashMap<String, String>();
+        namespaces.put("", "http://example.org/ns");
+        simpleXmlEncoder.setNamespaces(namespaces);
+        simpleXmlEncoder.setWriteRootTag(false);
 
-		emitEmptyRecord();
+        emitEmptyRecord();
 
-		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns=\"http://example.org/ns\" />",
-				getResultXml());
-	}
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns=\"http://example.org/ns\" />",
+                getResultXml());
+    }
 
-	@Test
-	public void shouldAddNamespaceWithEmptyKeyFromPropertiesFileAsDefaultNamespaceToRecordTag() {
-		simpleXmlEncoder.setNamespaceFile("org/metafacture/xml/SimpleXmlEncoderTest_namespaces.properties");
-		simpleXmlEncoder.setWriteRootTag(false);
+    @Test
+    public void shouldAddNamespaceWithEmptyKeyFromPropertiesFileAsDefaultNamespaceToRecordTag() {
+        simpleXmlEncoder.setNamespaceFile("org/metafacture/xml/SimpleXmlEncoderTest_namespaces.properties");
+        simpleXmlEncoder.setWriteRootTag(false);
 
-		emitEmptyRecord();
+        emitEmptyRecord();
 
-		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns=\"http://example.org/ns\" />",
-				getResultXml());
-	}
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns=\"http://example.org/ns\" />",
+                getResultXml());
+    }
 
-	private void emitTwoRecords() {
-		simpleXmlEncoder.startRecord("X");
-		simpleXmlEncoder.literal(TAG, VALUE);
-		simpleXmlEncoder.endRecord();
-		simpleXmlEncoder.startRecord("Y");
-		simpleXmlEncoder.literal(TAG, VALUE);
-		simpleXmlEncoder.endRecord();
-		simpleXmlEncoder.closeStream();
-	}
+    private void emitTwoRecords() {
+        simpleXmlEncoder.startRecord("X");
+        simpleXmlEncoder.literal(TAG, VALUE);
+        simpleXmlEncoder.endRecord();
+        simpleXmlEncoder.startRecord("Y");
+        simpleXmlEncoder.literal(TAG, VALUE);
+        simpleXmlEncoder.endRecord();
+        simpleXmlEncoder.closeStream();
+    }
 
-	private void emitEmptyRecord() {
-		simpleXmlEncoder.startRecord("");
-		simpleXmlEncoder.endRecord();
-		simpleXmlEncoder.closeStream();
-	}
+    private void emitEmptyRecord() {
+        simpleXmlEncoder.startRecord("");
+        simpleXmlEncoder.endRecord();
+        simpleXmlEncoder.closeStream();
+    }
 
-	private String getResultXml() {
-		return resultCollector.toString().replaceAll("[\\n\\t]", "");
-	}
+    private String getResultXml() {
+        return resultCollector.toString().replaceAll("[\\n\\t]", "");
+    }
 
 }

@@ -26,24 +26,24 @@ package org.metafacture.metamorph.api;
  */
 public interface InterceptorFactory {
 
-	/**
-	 * Returns an interceptor which is placed between a NamedValueSource and a
-	 * NamedValueReceiver to intercept named values passed between the two
-	 * objects.
-	 *
-	 * @return an interceptor object
-	 */
-	NamedValuePipe createNamedValueInterceptor();
+    /**
+     * Returns an interceptor which is placed between a NamedValueSource and a
+     * NamedValueReceiver to intercept named values passed between the two
+     * objects.
+     *
+     * @return an interceptor object
+     */
+    NamedValuePipe createNamedValueInterceptor();
 
-	/**
-	 * Returns an interceptor which wraps the flush listener passed as an
-	 * argument and intercepts calls of the {@link FlushListener#flush} method.
-	 *
-	 * @param listener flush listener object whose invocations should be
-	 *                 intercepted.
-	 * @return an interceptor object which should be registered in place of the
-	 * original {@code listener}.
-	 */
-	FlushListener createFlushInterceptor(FlushListener listener);
+    /**
+     * Returns an interceptor which wraps the flush listener passed as an
+     * argument and intercepts calls of the {@link FlushListener#flush} method.
+     *
+     * @param listener flush listener object whose invocations should be
+     *                 intercepted.
+     * @return an interceptor object which should be registered in place of the
+     * original {@code listener}.
+     */
+    FlushListener createFlushInterceptor(FlushListener listener);
 
 }

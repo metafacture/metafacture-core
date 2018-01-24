@@ -30,61 +30,61 @@ import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
  */
 public final class Range extends AbstractFlushingCollect {
 
-	private final SortedSet<Integer> values = new TreeSet<Integer>(new IncrementDependingComparator());
+    private final SortedSet<Integer> values = new TreeSet<Integer>(new IncrementDependingComparator());
 
-	private int increment;
-	private Integer first;
+    private int increment;
+    private Integer first;
 
-	/**
-	 * A comparator which defines the sort order of the values in the range
-	 * depending on the increment.
-	 */
-	private class IncrementDependingComparator implements Comparator<Integer> {
+    /**
+     * A comparator which defines the sort order of the values in the range
+     * depending on the increment.
+     */
+    private class IncrementDependingComparator implements Comparator<Integer> {
 
-		@Override
-		public int compare(final Integer o1, final Integer o2) {
-			return Integer.signum(increment) * (o1 - o2);
-		}
+        @Override
+        public int compare(final Integer o1, final Integer o2) {
+            return Integer.signum(increment) * (o1 - o2);
+        }
 
-	}
+    }
 
-	public int getIncrement() {
-		return increment;
-	}
+    public int getIncrement() {
+        return increment;
+    }
 
-	public void setIncrement(final int increment) {
-		this.increment = increment;
-	}
+    public void setIncrement(final int increment) {
+        this.increment = increment;
+    }
 
-	@Override
-	protected void emit() {
-		for (final Integer i: values) {
-			getNamedValueReceiver().receive(getName(), i.toString(), this, getRecordCount(), getEntityCount());
-		}
-	}
+    @Override
+    protected void emit() {
+        for (final Integer i: values) {
+            getNamedValueReceiver().receive(getName(), i.toString(), this, getRecordCount(), getEntityCount());
+        }
+    }
 
-	@Override
-	protected boolean isComplete() {
-		return false;
-	}
+    @Override
+    protected boolean isComplete() {
+        return false;
+    }
 
-	@Override
-	protected void receive(final String name, final String value, final NamedValueSource source) {
-		if (first == null) {
-			first = Integer.valueOf(value);
-		} else {
-			final int last = Integer.valueOf(value).intValue();
-			for (int i = first.intValue(); (increment > 0 && i <= last) || (increment < 0 && i >= last); i += increment) {
-				values.add(Integer.valueOf(i));
-			}
-			first = null;
-		}
-	}
+    @Override
+    protected void receive(final String name, final String value, final NamedValueSource source) {
+        if (first == null) {
+            first = Integer.valueOf(value);
+        } else {
+            final int last = Integer.valueOf(value).intValue();
+            for (int i = first.intValue(); (increment > 0 && i <= last) || (increment < 0 && i >= last); i += increment) {
+                values.add(Integer.valueOf(i));
+            }
+            first = null;
+        }
+    }
 
-	@Override
-	protected void clear() {
-		values.clear();
-		first = null;
-	}
+    @Override
+    protected void clear() {
+        values.clear();
+        first = null;
+    }
 
 }

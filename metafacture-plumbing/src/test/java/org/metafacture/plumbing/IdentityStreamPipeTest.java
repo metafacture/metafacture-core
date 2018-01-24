@@ -34,54 +34,54 @@ import org.mockito.MockitoAnnotations;
  */
 public final class IdentityStreamPipeTest {
 
-	private static final String RECORD_ID1 = "Re1";
-	private static final String RECORD_ID2 = "Re2";
-	private static final String LITERAL_NAME1 = "Li1";
-	private static final String LITERAL_NAME2 = "Li2";
-	private static final String LITERAL_VALUE1 = "Va1";
-	private static final String LITERAL_VALUE2 = "Va2";
-	private static final String ENTITY1 = "En1";
+    private static final String RECORD_ID1 = "Re1";
+    private static final String RECORD_ID2 = "Re2";
+    private static final String LITERAL_NAME1 = "Li1";
+    private static final String LITERAL_NAME2 = "Li2";
+    private static final String LITERAL_VALUE1 = "Va1";
+    private static final String LITERAL_VALUE2 = "Va2";
+    private static final String ENTITY1 = "En1";
 
-	private IdentityStreamPipe identityPipe;
+    private IdentityStreamPipe identityPipe;
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		identityPipe = new IdentityStreamPipe();
-		identityPipe.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        identityPipe = new IdentityStreamPipe();
+        identityPipe.setReceiver(receiver);
+    }
 
-	@After
-	public void cleanup() {
-		identityPipe.closeStream();
-	}
+    @After
+    public void cleanup() {
+        identityPipe.closeStream();
+    }
 
-	@Test
-	public void testShouldNotChangeTheStreamInAnyWay() {
-		identityPipe.startRecord(RECORD_ID1);
-		identityPipe.literal(LITERAL_NAME1, LITERAL_VALUE1);
-		identityPipe.startEntity(ENTITY1);
-		identityPipe.literal(LITERAL_NAME2, LITERAL_VALUE2);
-		identityPipe.endEntity();
-		identityPipe.endRecord();
-		identityPipe.startRecord(RECORD_ID2);
-		identityPipe.literal(LITERAL_NAME1, LITERAL_VALUE1);
-		identityPipe.literal(LITERAL_NAME1, LITERAL_VALUE1);
-		identityPipe.endRecord();
+    @Test
+    public void testShouldNotChangeTheStreamInAnyWay() {
+        identityPipe.startRecord(RECORD_ID1);
+        identityPipe.literal(LITERAL_NAME1, LITERAL_VALUE1);
+        identityPipe.startEntity(ENTITY1);
+        identityPipe.literal(LITERAL_NAME2, LITERAL_VALUE2);
+        identityPipe.endEntity();
+        identityPipe.endRecord();
+        identityPipe.startRecord(RECORD_ID2);
+        identityPipe.literal(LITERAL_NAME1, LITERAL_VALUE1);
+        identityPipe.literal(LITERAL_NAME1, LITERAL_VALUE1);
+        identityPipe.endRecord();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID1);
-		ordered.verify(receiver).literal(LITERAL_NAME1, LITERAL_VALUE1);
-		ordered.verify(receiver).startEntity(ENTITY1);
-		ordered.verify(receiver).literal(LITERAL_NAME2, LITERAL_VALUE2);
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
-		ordered.verify(receiver).startRecord(RECORD_ID2);
-		ordered.verify(receiver, times(2)).literal(LITERAL_NAME1, LITERAL_VALUE1);
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(RECORD_ID1);
+        ordered.verify(receiver).literal(LITERAL_NAME1, LITERAL_VALUE1);
+        ordered.verify(receiver).startEntity(ENTITY1);
+        ordered.verify(receiver).literal(LITERAL_NAME2, LITERAL_VALUE2);
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+        ordered.verify(receiver).startRecord(RECORD_ID2);
+        ordered.verify(receiver, times(2)).literal(LITERAL_NAME1, LITERAL_VALUE1);
+        ordered.verify(receiver).endRecord();
+    }
 
 }

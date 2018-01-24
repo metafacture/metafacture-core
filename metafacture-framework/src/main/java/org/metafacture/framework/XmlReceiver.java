@@ -34,5 +34,5 @@ import org.xml.sax.ext.LexicalHandler;
  *
  */
 public interface XmlReceiver extends Receiver, ContentHandler, DTDHandler, EntityResolver, ErrorHandler, LexicalHandler {
-	// Just a combination of LifeCycle and the SAX handler interfaces
+    // Just a combination of LifeCycle and the SAX handler interfaces
 }

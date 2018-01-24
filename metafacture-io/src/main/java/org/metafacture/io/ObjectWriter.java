@@ -41,92 +41,92 @@ import org.metafacture.framework.annotations.ReturnsAvailableArguments;
 @FluxCommand("write")
 public final class ObjectWriter<T> implements ConfigurableObjectWriter<T> {
 
-	private static final String STDOUT = "stdout";
-	private static final List<String> ARGUMENTS = Collections.unmodifiableList(Arrays.asList(STDOUT, "PATH"));
+    private static final String STDOUT = "stdout";
+    private static final List<String> ARGUMENTS = Collections.unmodifiableList(Arrays.asList(STDOUT, "PATH"));
 
-	private final ConfigurableObjectWriter<T> objectWriter;
+    private final ConfigurableObjectWriter<T> objectWriter;
 
-	public ObjectWriter(final String destination) {
-		if (STDOUT.equals(destination)) {
-			objectWriter = new ObjectStdoutWriter<T>();
-		} else {
-			objectWriter = new ObjectFileWriter<T>(destination);
-		}
-	}
+    public ObjectWriter(final String destination) {
+        if (STDOUT.equals(destination)) {
+            objectWriter = new ObjectStdoutWriter<T>();
+        } else {
+            objectWriter = new ObjectFileWriter<T>(destination);
+        }
+    }
 
-	@ReturnsAvailableArguments
-	public static Collection<String> getArguments() {
-		return ARGUMENTS;
-	}
-	@Override
-	public String getEncoding() {
-		return objectWriter.getEncoding();
-	}
+    @ReturnsAvailableArguments
+    public static Collection<String> getArguments() {
+        return ARGUMENTS;
+    }
+    @Override
+    public String getEncoding() {
+        return objectWriter.getEncoding();
+    }
 
-	@Override
-	public void setEncoding(final String encoding) {
-		objectWriter.setEncoding(encoding);
-	}
+    @Override
+    public void setEncoding(final String encoding) {
+        objectWriter.setEncoding(encoding);
+    }
 
-	@Override
-	public FileCompression getCompression() {
-		return objectWriter.getCompression();
-	}
+    @Override
+    public FileCompression getCompression() {
+        return objectWriter.getCompression();
+    }
 
-	@Override
-	public void setCompression(final FileCompression compression) {
-		objectWriter.setCompression(compression);
-	}
+    @Override
+    public void setCompression(final FileCompression compression) {
+        objectWriter.setCompression(compression);
+    }
 
-	@Override
-	public void setCompression(final String compression) {
-		objectWriter.setCompression(compression);
-	}
+    @Override
+    public void setCompression(final String compression) {
+        objectWriter.setCompression(compression);
+    }
 
 
-	@Override
-	public String getHeader() {
-		return objectWriter.getHeader();
-	}
+    @Override
+    public String getHeader() {
+        return objectWriter.getHeader();
+    }
 
-	@Override
-	public void setHeader(final String header) {
-		objectWriter.setHeader(header);
-	}
+    @Override
+    public void setHeader(final String header) {
+        objectWriter.setHeader(header);
+    }
 
-	@Override
-	public String getFooter() {
-		return objectWriter.getFooter();
-	}
+    @Override
+    public String getFooter() {
+        return objectWriter.getFooter();
+    }
 
-	@Override
-	public void setFooter(final String footer) {
-		objectWriter.setFooter(footer);
-	}
+    @Override
+    public void setFooter(final String footer) {
+        objectWriter.setFooter(footer);
+    }
 
-	@Override
-	public String getSeparator() {
-		return objectWriter.getSeparator();
-	}
+    @Override
+    public String getSeparator() {
+        return objectWriter.getSeparator();
+    }
 
-	@Override
-	public void setSeparator(final String separator) {
-		objectWriter.setSeparator(separator);
-	}
+    @Override
+    public void setSeparator(final String separator) {
+        objectWriter.setSeparator(separator);
+    }
 
-	@Override
-	public void process(final T obj) {
-		objectWriter.process(obj);
-	}
+    @Override
+    public void process(final T obj) {
+        objectWriter.process(obj);
+    }
 
-	@Override
-	public void resetStream() {
-		objectWriter.resetStream();
-	}
+    @Override
+    public void resetStream() {
+        objectWriter.resetStream();
+    }
 
-	@Override
-	public void closeStream() {
-		objectWriter.closeStream();
-	}
+    @Override
+    public void closeStream() {
+        objectWriter.closeStream();
+    }
 
 }

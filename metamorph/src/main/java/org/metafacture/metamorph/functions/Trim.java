@@ -24,9 +24,9 @@ import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
  */
 public final class Trim extends AbstractSimpleStatelessFunction {
 
-	@Override
-	public String process(final String value) {
-		return value.trim();
-	}
+    @Override
+    public String process(final String value) {
+        return value.trim();
+    }
 
 }

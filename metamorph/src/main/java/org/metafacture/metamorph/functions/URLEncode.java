@@ -29,14 +29,14 @@ import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
  */
 public final class URLEncode extends AbstractSimpleStatelessFunction {
 
-	@Override
-	public String process(final String value) {
-		try {
-			return URLEncoder.encode(value, "UTF-8");
-		} catch (final UnsupportedEncodingException e) {
-			throw new MorphExecutionException("urlencode: unsupported encoding UTF-8",
-					e);
-		}
-	}
+    @Override
+    public String process(final String value) {
+        try {
+            return URLEncoder.encode(value, "UTF-8");
+        } catch (final UnsupportedEncodingException e) {
+            throw new MorphExecutionException("urlencode: unsupported encoding UTF-8",
+                    e);
+        }
+    }
 
 }

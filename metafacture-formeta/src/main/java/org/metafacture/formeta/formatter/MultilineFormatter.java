@@ -25,72 +25,72 @@ import org.metafacture.formeta.Formeta;
  */
 public final class MultilineFormatter extends AbstractFormatter {
 
-	public static final String INDENT = "\t";
+    public static final String INDENT = "\t";
 
-	private static final String GROUP_START = " " + Formeta.GROUP_START;
-	private static final String NAME_VALUE_SEPARATOR = Formeta.NAME_VALUE_SEPARATOR + " ";
+    private static final String GROUP_START = " " + Formeta.GROUP_START;
+    private static final String NAME_VALUE_SEPARATOR = Formeta.NAME_VALUE_SEPARATOR + " ";
 
-	private final StringBuilder indent = new StringBuilder();
+    private final StringBuilder indent = new StringBuilder();
 
-	private boolean appendItemSeparator;
-	private boolean firstItem;
+    private boolean appendItemSeparator;
+    private boolean firstItem;
 
-	public MultilineFormatter() {
-		super();
-		onReset();
-	}
+    public MultilineFormatter() {
+        super();
+        onReset();
+    }
 
-	@Override
-	public void startGroup(final String name) {
-		if (appendItemSeparator) {
-			append(Formeta.ITEM_SEPARATOR);
-		}
-		if (!firstItem) {
-			append(indent);
-		}
-		escapeAndAppend(name);
-		append(GROUP_START);
+    @Override
+    public void startGroup(final String name) {
+        if (appendItemSeparator) {
+            append(Formeta.ITEM_SEPARATOR);
+        }
+        if (!firstItem) {
+            append(indent);
+        }
+        escapeAndAppend(name);
+        append(GROUP_START);
 
-		indent.append(INDENT);
-		appendItemSeparator = false;
-		firstItem = false;
-	}
+        indent.append(INDENT);
+        appendItemSeparator = false;
+        firstItem = false;
+    }
 
-	@Override
-	public void endGroup() {
-		indent.delete(indent.length() - INDENT.length(), indent.length());
+    @Override
+    public void endGroup() {
+        indent.delete(indent.length() - INDENT.length(), indent.length());
 
-		append(indent);
-		append(Formeta.GROUP_END);
-		appendItemSeparator = true;
-	}
+        append(indent);
+        append(Formeta.GROUP_END);
+        appendItemSeparator = true;
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		if (appendItemSeparator) {
-			append(Formeta.ITEM_SEPARATOR);
-		}
-		if (!firstItem) {
-			append(indent);
-		}
-		escapeAndAppend(name);
-		append(NAME_VALUE_SEPARATOR);
-		escapeAndAppend(value);
-		appendItemSeparator = true;
-		firstItem = false;
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        if (appendItemSeparator) {
+            append(Formeta.ITEM_SEPARATOR);
+        }
+        if (!firstItem) {
+            append(indent);
+        }
+        escapeAndAppend(name);
+        append(NAME_VALUE_SEPARATOR);
+        escapeAndAppend(value);
+        appendItemSeparator = true;
+        firstItem = false;
+    }
 
-	@Override
-	protected void onReset() {
-		indent.delete(0, indent.length());
-		indent.append('\n');
-		appendItemSeparator = false;
-		firstItem = true;
-	}
+    @Override
+    protected void onReset() {
+        indent.delete(0, indent.length());
+        indent.append('\n');
+        appendItemSeparator = false;
+        firstItem = true;
+    }
 
-	@Override
-	protected boolean shouldQuoteText(final char[] buffer, final int len) {
-		return true;
-	}
+    @Override
+    protected boolean shouldQuoteText(final char[] buffer, final int len) {
+        return true;
+    }
 
 }

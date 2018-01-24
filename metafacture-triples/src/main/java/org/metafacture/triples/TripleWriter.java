@@ -38,47 +38,47 @@ import org.metafacture.framework.objects.Triple;
 @FluxCommand("write-triples")
 public final class TripleWriter extends DefaultObjectReceiver<Triple> {
 
-	public static final int BUFFERSIZE = 2048;
+    public static final int BUFFERSIZE = 2048;
 
-	private final String filename;
+    private final String filename;
 
-	private ObjectOutputStream outputStream;
+    private ObjectOutputStream outputStream;
 
-	public TripleWriter(final String filename) {
-		this.filename = filename;
-		resetStream();
-	}
+    public TripleWriter(final String filename) {
+        this.filename = filename;
+        resetStream();
+    }
 
-	@Override
-	public void process(final Triple obj) {
-		try {
-			obj.write(outputStream);
-		} catch (IOException e) {
-			throw new MetafactureException(e);
-		}
-	}
+    @Override
+    public void process(final Triple obj) {
+        try {
+            obj.write(outputStream);
+        } catch (IOException e) {
+            throw new MetafactureException(e);
+        }
+    }
 
-	@Override
-	public void resetStream() {
-		try {
-			if (outputStream != null) {
-				outputStream.close();
-			}
-			outputStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename), BUFFERSIZE));
-		} catch (IOException e) {
-			throw new MetafactureException(e);
-		}
-	}
+    @Override
+    public void resetStream() {
+        try {
+            if (outputStream != null) {
+                outputStream.close();
+            }
+            outputStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename), BUFFERSIZE));
+        } catch (IOException e) {
+            throw new MetafactureException(e);
+        }
+    }
 
-	@Override
-	public void closeStream() {
-		try {
-			if (outputStream != null) {
-				outputStream.close();
-			}
-		} catch (IOException e) {
-			throw new MetafactureException(e);
-		}
-	}
+    @Override
+    public void closeStream() {
+        try {
+            if (outputStream != null) {
+                outputStream.close();
+            }
+        } catch (IOException e) {
+            throw new MetafactureException(e);
+        }
+    }
 
 }

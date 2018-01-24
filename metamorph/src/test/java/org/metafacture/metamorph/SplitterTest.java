@@ -35,68 +35,68 @@ import org.mockito.MockitoAnnotations;
  */
 public final class SplitterTest {
 
-	@Mock
-	private StreamReceiver receiver1;
+    @Mock
+    private StreamReceiver receiver1;
 
-	@Mock
-	private StreamReceiver receiver2;
+    @Mock
+    private StreamReceiver receiver2;
 
-	private Splitter splitter;
+    private Splitter splitter;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		splitter = new Splitter("org/metafacture/metamorph/splitter-test.xml");
-		splitter.setReceiver("receiver-1", receiver1);
-		splitter.setReceiver("receiver-2", receiver2);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        splitter = new Splitter("org/metafacture/metamorph/splitter-test.xml");
+        splitter.setReceiver("receiver-1", receiver1);
+        splitter.setReceiver("receiver-2", receiver2);
+    }
 
-	@Test
-	public void shouldPassRecordToReceiverWithMatchingKey() {
-		splitter.startRecord("1");
-		splitter.startEntity("data");
-		splitter.literal("forward-to", "receiver-1");
-		splitter.endEntity();
-		splitter.endRecord();
-		splitter.startRecord("2");
-		splitter.literal("forward-to", "receiver-2");
-		splitter.endRecord();
+    @Test
+    public void shouldPassRecordToReceiverWithMatchingKey() {
+        splitter.startRecord("1");
+        splitter.startEntity("data");
+        splitter.literal("forward-to", "receiver-1");
+        splitter.endEntity();
+        splitter.endRecord();
+        splitter.startRecord("2");
+        splitter.literal("forward-to", "receiver-2");
+        splitter.endRecord();
 
-		final InOrder ordered = inOrder(receiver1, receiver2);
-		ordered.verify(receiver1).startRecord("1");
-		ordered.verify(receiver1).startEntity("data");
-		ordered.verify(receiver1).literal("forward-to", "receiver-1");
-		ordered.verify(receiver1).endEntity();
-		ordered.verify(receiver1).endRecord();
-		ordered.verify(receiver2).startRecord("2");
-		ordered.verify(receiver2).literal("forward-to", "receiver-2");
-		ordered.verify(receiver2).endRecord();
-		ordered.verifyNoMoreInteractions();
-	}
+        final InOrder ordered = inOrder(receiver1, receiver2);
+        ordered.verify(receiver1).startRecord("1");
+        ordered.verify(receiver1).startEntity("data");
+        ordered.verify(receiver1).literal("forward-to", "receiver-1");
+        ordered.verify(receiver1).endEntity();
+        ordered.verify(receiver1).endRecord();
+        ordered.verify(receiver2).startRecord("2");
+        ordered.verify(receiver2).literal("forward-to", "receiver-2");
+        ordered.verify(receiver2).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
-	@Test
-	public void shouldDiscardNonMatchingRecords() {
-		splitter.startRecord("1");
-		splitter.literal("forward-to", "none");
-		splitter.endRecord();
+    @Test
+    public void shouldDiscardNonMatchingRecords() {
+        splitter.startRecord("1");
+        splitter.literal("forward-to", "none");
+        splitter.endRecord();
 
-		verifyZeroInteractions(receiver1, receiver2);
-	}
+        verifyZeroInteractions(receiver1, receiver2);
+    }
 
-	@Test
-	public void shouldPassResetStreamToAllReceivers() {
-		splitter.resetStream();
+    @Test
+    public void shouldPassResetStreamToAllReceivers() {
+        splitter.resetStream();
 
-		verify(receiver1).resetStream();
-		verify(receiver2).resetStream();
-	}
+        verify(receiver1).resetStream();
+        verify(receiver2).resetStream();
+    }
 
-	@Test
-	public void shouldPassCloseStreamToAllReceivers() {
-		splitter.closeStream();
+    @Test
+    public void shouldPassCloseStreamToAllReceivers() {
+        splitter.closeStream();
 
-		verify(receiver1).closeStream();
-		verify(receiver2).closeStream();
-	}
+        verify(receiver1).closeStream();
+        verify(receiver2).closeStream();
+    }
 
 }

@@ -34,99 +34,99 @@ import org.mockito.MockitoAnnotations;
  */
 public final class StreamToTriplesTest {
 
-	@Mock
-	private ObjectReceiver<Triple> receiver;
+    @Mock
+    private ObjectReceiver<Triple> receiver;
 
-	private StreamToTriples streamToTriples;
+    private StreamToTriples streamToTriples;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		streamToTriples = new StreamToTriples();
-		streamToTriples.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        streamToTriples = new StreamToTriples();
+        streamToTriples.setReceiver(receiver);
+    }
 
-	@Test
-	public void shouldBuildTripleFromLiteral() {
-		streamToTriples.startRecord("id");
-		streamToTriples.literal("literal", "value");
-		streamToTriples.endRecord();
+    @Test
+    public void shouldBuildTripleFromLiteral() {
+        streamToTriples.startRecord("id");
+        streamToTriples.literal("literal", "value");
+        streamToTriples.endRecord();
 
-		Mockito.verify(receiver).process(new Triple("id", "literal", "value"));
-	}
+        Mockito.verify(receiver).process(new Triple("id", "literal", "value"));
+    }
 
-	@Test
-	public void shouldEncodeEntities() {
-		streamToTriples.startRecord("id");
-		streamToTriples.startEntity("entity1");
-		streamToTriples.literal("literal1", "value1");
-		streamToTriples.startEntity("entity2");
-		streamToTriples.literal("literal2", "value2");
-		streamToTriples.endEntity();
-		streamToTriples.endEntity();
-		streamToTriples.endRecord();
+    @Test
+    public void shouldEncodeEntities() {
+        streamToTriples.startRecord("id");
+        streamToTriples.startEntity("entity1");
+        streamToTriples.literal("literal1", "value1");
+        streamToTriples.startEntity("entity2");
+        streamToTriples.literal("literal2", "value2");
+        streamToTriples.endEntity();
+        streamToTriples.endEntity();
+        streamToTriples.endRecord();
 
-		final String encodedEntity =
-				"{literal1:value1,entity2{literal2:value2}}";
-		Mockito.verify(receiver).process(
-				new Triple("id",  "entity1", encodedEntity, ObjectType.ENTITY));
-	}
+        final String encodedEntity =
+                "{literal1:value1,entity2{literal2:value2}}";
+        Mockito.verify(receiver).process(
+                new Triple("id",  "entity1", encodedEntity, ObjectType.ENTITY));
+    }
 
-	@Test
-	public void shouldRedirectOnMoveToInName() {
-		streamToTriples.setRedirect(true);
+    @Test
+    public void shouldRedirectOnMoveToInName() {
+        streamToTriples.setRedirect(true);
 
-		streamToTriples.startRecord("id");
-		streamToTriples.literal("{to:altId}literal", "value");
-		streamToTriples.endRecord();
+        streamToTriples.startRecord("id");
+        streamToTriples.literal("{to:altId}literal", "value");
+        streamToTriples.endRecord();
 
-		Mockito.verify(receiver).process(new Triple("altId", "literal", "value"));
-	}
+        Mockito.verify(receiver).process(new Triple("altId", "literal", "value"));
+    }
 
-	@Test
-	public void shouldRedirectIfAltIdGiven() {
-		streamToTriples.setRedirect(true);
+    @Test
+    public void shouldRedirectIfAltIdGiven() {
+        streamToTriples.setRedirect(true);
 
-		streamToTriples.startRecord("id");
-		streamToTriples.literal(StandardEventNames.ID, "altId");
-		streamToTriples.literal("literal", "value");
-		streamToTriples.endRecord();
+        streamToTriples.startRecord("id");
+        streamToTriples.literal(StandardEventNames.ID, "altId");
+        streamToTriples.literal("literal", "value");
+        streamToTriples.endRecord();
 
-		Mockito.verify(receiver).process(new Triple("altId", "literal", "value"));
-	}
+        Mockito.verify(receiver).process(new Triple("altId", "literal", "value"));
+    }
 
-	@Test
-	public void shouldEncodeWholeRecordsIfRecordPredicateIsGiven() {
-		streamToTriples.setRecordPredicate("record");
+    @Test
+    public void shouldEncodeWholeRecordsIfRecordPredicateIsGiven() {
+        streamToTriples.setRecordPredicate("record");
 
-		streamToTriples.startRecord("id");
-		streamToTriples.startEntity("entity1");
-		streamToTriples.literal("literal1", "value1");
-		streamToTriples.endEntity();
-		streamToTriples.startEntity("entity2");
-		streamToTriples.literal("literal2", "value2");
-		streamToTriples.endEntity();
-		streamToTriples.endRecord();
+        streamToTriples.startRecord("id");
+        streamToTriples.startEntity("entity1");
+        streamToTriples.literal("literal1", "value1");
+        streamToTriples.endEntity();
+        streamToTriples.startEntity("entity2");
+        streamToTriples.literal("literal2", "value2");
+        streamToTriples.endEntity();
+        streamToTriples.endRecord();
 
-		final String encodedRecord =
-				"{entity1{literal1:value1}entity2{literal2:value2}}";
-		Mockito.verify(receiver).process(
-				new Triple("id", "record", encodedRecord, ObjectType.ENTITY));
-	}
+        final String encodedRecord =
+                "{entity1{literal1:value1}entity2{literal2:value2}}";
+        Mockito.verify(receiver).process(
+                new Triple("id", "record", encodedRecord, ObjectType.ENTITY));
+    }
 
-	@Test
-	public void shouldRedirectEvenIfRecordPredicateIsGiven() {
-		streamToTriples.setRecordPredicate("record");
-		streamToTriples.setRedirect(true);
+    @Test
+    public void shouldRedirectEvenIfRecordPredicateIsGiven() {
+        streamToTriples.setRecordPredicate("record");
+        streamToTriples.setRedirect(true);
 
-		streamToTriples.startRecord("id");
-		streamToTriples.literal(StandardEventNames.ID, "altId");
-		streamToTriples.literal("literal", "value");
-		streamToTriples.endRecord();
+        streamToTriples.startRecord("id");
+        streamToTriples.literal(StandardEventNames.ID, "altId");
+        streamToTriples.literal("literal", "value");
+        streamToTriples.endRecord();
 
-		final String encodedRecord = "{literal:value}";
-		Mockito.verify(receiver).process(
-				new Triple("altId", "record", encodedRecord, ObjectType.ENTITY));
-	}
+        final String encodedRecord = "{literal:value}";
+        Mockito.verify(receiver).process(
+                new Triple("altId", "record", encodedRecord, ObjectType.ENTITY));
+    }
 
 }

@@ -36,73 +36,73 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @FluxCommand("merge-batch-stream")
 public final class StreamBatchMerger extends DefaultStreamPipe<StreamReceiver> {
 
-	/**
-	 * The default value for {@link #setBatchSize(long)}.
-	 */
-	public static final long DEFAULT_BATCH_SIZE = 1;
+    /**
+     * The default value for {@link #setBatchSize(long)}.
+     */
+    public static final long DEFAULT_BATCH_SIZE = 1;
 
-	private long batchSize = DEFAULT_BATCH_SIZE;
-	private long recordCount;
+    private long batchSize = DEFAULT_BATCH_SIZE;
+    private long recordCount;
 
-	/**
-	 * Sets the number of records that should be merged into a batch.
-	 * <p>
-	 * The default batch size is 1, wich means that no records are merged.
-	 * <p>
-	 * This parameter must not be changed during processing.
-	 *
-	 * @param batchSize the number of records that should be merged.
-	 */
-	public void setBatchSize(final long batchSize) {
-		this.batchSize = batchSize;
-	}
+    /**
+     * Sets the number of records that should be merged into a batch.
+     * <p>
+     * The default batch size is 1, wich means that no records are merged.
+     * <p>
+     * This parameter must not be changed during processing.
+     *
+     * @param batchSize the number of records that should be merged.
+     */
+    public void setBatchSize(final long batchSize) {
+        this.batchSize = batchSize;
+    }
 
-	public long getBatchSize() {
-		return batchSize;
-	}
+    public long getBatchSize() {
+        return batchSize;
+    }
 
-	@Override
-	public void startRecord(final String identifier) {
-		if (recordCount == 0) {
-			getReceiver().startRecord(identifier);
-		}
-		recordCount += 1;
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        if (recordCount == 0) {
+            getReceiver().startRecord(identifier);
+        }
+        recordCount += 1;
+    }
 
-	@Override
-	public void endRecord() {
-		if (recordCount >= batchSize) {
-			getReceiver().endRecord();
-			recordCount = 0;
-		}
-	}
+    @Override
+    public void endRecord() {
+        if (recordCount >= batchSize) {
+            getReceiver().endRecord();
+            recordCount = 0;
+        }
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		getReceiver().startEntity(name);
-	}
+    @Override
+    public void startEntity(final String name) {
+        getReceiver().startEntity(name);
+    }
 
-	@Override
-	public void endEntity() {
-		getReceiver().endEntity();
-	}
+    @Override
+    public void endEntity() {
+        getReceiver().endEntity();
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		getReceiver().literal(name, value);
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        getReceiver().literal(name, value);
+    }
 
-	@Override
-	protected void onResetStream() {
-		recordCount = 0;
-	}
+    @Override
+    protected void onResetStream() {
+        recordCount = 0;
+    }
 
-	@Override
-	protected void onCloseStream() {
-		if (recordCount > 0) {
-			getReceiver().endRecord();
-			recordCount = 0;
-		}
-	}
+    @Override
+    protected void onCloseStream() {
+        if (recordCount > 0) {
+            getReceiver().endRecord();
+            recordCount = 0;
+        }
+    }
 
 }

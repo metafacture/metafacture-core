@@ -44,45 +44,45 @@ import org.xml.sax.helpers.XMLReaderFactory;
 @Out(XmlReceiver.class)
 @FluxCommand("decode-xml")
 public final class XmlDecoder
-		extends DefaultObjectPipe<Reader, XmlReceiver> {
+        extends DefaultObjectPipe<Reader, XmlReceiver> {
 
-	private static final String SAX_PROPERTY_LEXICAL_HANDLER = "http://xml.org/sax/properties/lexical-handler";
+    private static final String SAX_PROPERTY_LEXICAL_HANDLER = "http://xml.org/sax/properties/lexical-handler";
 
-	private final XMLReader saxReader;
+    private final XMLReader saxReader;
 
-	public XmlDecoder() {
-		super();
-		try {
-			saxReader = XMLReaderFactory.createXMLReader();
-		} catch (SAXException e) {
-			throw new MetafactureException(e);
-		}
-	}
+    public XmlDecoder() {
+        super();
+        try {
+            saxReader = XMLReaderFactory.createXMLReader();
+        } catch (SAXException e) {
+            throw new MetafactureException(e);
+        }
+    }
 
-	@Override
-	public void process(final Reader reader) {
-		try {
-			saxReader.parse(new InputSource(reader));
-		} catch (IOException e) {
-			throw new MetafactureException(e);
-		} catch (SAXException e) {
-			throw new MetafactureException(e);
-		}
-	}
+    @Override
+    public void process(final Reader reader) {
+        try {
+            saxReader.parse(new InputSource(reader));
+        } catch (IOException e) {
+            throw new MetafactureException(e);
+        } catch (SAXException e) {
+            throw new MetafactureException(e);
+        }
+    }
 
-	@Override
-	protected void onSetReceiver() {
-		saxReader.setContentHandler(getReceiver());
-		saxReader.setDTDHandler(getReceiver());
-		saxReader.setEntityResolver(getReceiver());
-		saxReader.setErrorHandler(getReceiver());
-		try {
-			saxReader.setProperty(SAX_PROPERTY_LEXICAL_HANDLER, getReceiver());
-		} catch (SAXNotRecognizedException e) {
-			throw new MetafactureException(e);
-		} catch (SAXNotSupportedException e) {
-			throw new MetafactureException(e);
-		}
-	}
+    @Override
+    protected void onSetReceiver() {
+        saxReader.setContentHandler(getReceiver());
+        saxReader.setDTDHandler(getReceiver());
+        saxReader.setEntityResolver(getReceiver());
+        saxReader.setErrorHandler(getReceiver());
+        try {
+            saxReader.setProperty(SAX_PROPERTY_LEXICAL_HANDLER, getReceiver());
+        } catch (SAXNotRecognizedException e) {
+            throw new MetafactureException(e);
+        } catch (SAXNotSupportedException e) {
+            throw new MetafactureException(e);
+        }
+    }
 
 }

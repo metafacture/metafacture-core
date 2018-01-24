@@ -68,7 +68,7 @@ public final class AllTest {
     ordered.verify(receiver).endRecord();
     ordered.verify(receiver).startRecord("2");
     ordered.verify(receiver).endRecord();
-	  ordered.verifyNoMoreInteractions();
+      ordered.verifyNoMoreInteractions();
   }
 
   @Test
@@ -91,7 +91,7 @@ public final class AllTest {
     ordered.verify(receiver).startRecord("1");
     ordered.verify(receiver).literal("ALL", "found all");
     ordered.verify(receiver).endRecord();
-	  ordered.verifyNoMoreInteractions();
+      ordered.verifyNoMoreInteractions();
   }
 
   @Test
@@ -119,7 +119,7 @@ public final class AllTest {
     ordered.verify(receiver).startRecord("1");
     ordered.verify(receiver, times(2)).literal("", "true");
     ordered.verify(receiver).endRecord();
-	  ordered.verifyNoMoreInteractions();
+      ordered.verifyNoMoreInteractions();
   }
 
   @Test
@@ -147,7 +147,7 @@ public final class AllTest {
     ordered.verify(receiver).startRecord("1");
     ordered.verify(receiver).literal("", "true");
     ordered.verify(receiver).endRecord();
-	  ordered.verifyNoMoreInteractions();
+      ordered.verifyNoMoreInteractions();
   }
 
   @Test
@@ -170,7 +170,7 @@ public final class AllTest {
     final InOrder ordered = inOrder(receiver);
     ordered.verify(receiver).startRecord("1");
     ordered.verify(receiver).endRecord();
-	  ordered.verifyNoMoreInteractions();
+      ordered.verifyNoMoreInteractions();
   }
 
   @Test
@@ -196,7 +196,7 @@ public final class AllTest {
     final InOrder ordered = inOrder(receiver);
     ordered.verify(receiver).startRecord("1");
     ordered.verify(receiver).endRecord();
-	  ordered.verifyNoMoreInteractions();
+      ordered.verifyNoMoreInteractions();
   }
 
 }

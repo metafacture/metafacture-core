@@ -28,36 +28,36 @@ import java.util.List;
  */
 public class SimpleRegexTrie<P> {
 
-	private final WildcardTrie<P> trie;
-	public static final String SIMPLE_CHARACTER_CLASS = "\\[.*\\]";
+    private final WildcardTrie<P> trie;
+    public static final String SIMPLE_CHARACTER_CLASS = "\\[.*\\]";
 
-	public SimpleRegexTrie() {
-		trie = new WildcardTrie<P>();
-	}
+    public SimpleRegexTrie() {
+        trie = new WildcardTrie<P>();
+    }
 
-	/**
-	 * Enables the use of simple character classes like 'a[agt][ac]'. Calls the
-	 * method of {@link WildcardTrie} for further treatment.
-	 *
-	 * @param keys pattern of keys
-	 * @param value value to associate with the key pattern
-	 */
-	public void put(final String keys, final P value) {
-		if (keys.matches(".*" + SIMPLE_CHARACTER_CLASS + ".*")) {
-			int charClassStart = keys.indexOf('[', 0);
-			final int charClassEnd = keys.indexOf(']', 1);
-			String begin = keys.substring(0, charClassStart);
-			for (; charClassStart < charClassEnd - 1; charClassStart++) {
-				char middle = keys.charAt(charClassStart + 1);
-				String end = keys.substring(charClassEnd + 1, keys.length());
-				put(begin + middle + end, value);
-			}
-		} else
-			trie.put(keys, value);
-	}
+    /**
+     * Enables the use of simple character classes like 'a[agt][ac]'. Calls the
+     * method of {@link WildcardTrie} for further treatment.
+     *
+     * @param keys pattern of keys
+     * @param value value to associate with the key pattern
+     */
+    public void put(final String keys, final P value) {
+        if (keys.matches(".*" + SIMPLE_CHARACTER_CLASS + ".*")) {
+            int charClassStart = keys.indexOf('[', 0);
+            final int charClassEnd = keys.indexOf(']', 1);
+            String begin = keys.substring(0, charClassStart);
+            for (; charClassStart < charClassEnd - 1; charClassStart++) {
+                char middle = keys.charAt(charClassStart + 1);
+                String end = keys.substring(charClassEnd + 1, keys.length());
+                put(begin + middle + end, value);
+            }
+        } else
+            trie.put(keys, value);
+    }
 
-	public List<P> get(final String key) {
-		return trie.get(key);
-	}
+    public List<P> get(final String key) {
+        return trie.get(key);
+    }
 
 }

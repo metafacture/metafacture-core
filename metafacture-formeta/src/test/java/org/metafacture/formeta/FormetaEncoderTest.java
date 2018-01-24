@@ -35,88 +35,88 @@ import org.mockito.MockitoAnnotations;
  */
 public final class FormetaEncoderTest {
 
-	private static final String CONCISE_RECORD =
-			"1{lit1:value 1,' ent1'{lit2:value \\{x\\},lit\\\\3:'value 2 '}lit4:value \\'3\\'}";
+    private static final String CONCISE_RECORD =
+            "1{lit1:value 1,' ent1'{lit2:value \\{x\\},lit\\\\3:'value 2 '}lit4:value \\'3\\'}";
 
-	private static final String VERBOSE_RECORD =
-			"1{ lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value \\'3\\'' }";
+    private static final String VERBOSE_RECORD =
+            "1{ lit1: 'value 1', ' ent1'{ lit2: 'value {x}', 'lit\\\\3': 'value 2 ' }, lit4: 'value \\'3\\'' }";
 
-	private static final String MULTILINE_RECORD =
-			"'1' {\n" +
-			"\t'lit1': 'value 1',\n" +
-			"\t' ent1' {\n" +
-			"\t\t'lit2': 'value {x}',\n" +
-			"\t\t'lit\\\\3': 'value 2 '\n" +
-			"\t},\n" +
-			"\t'lit4': 'value \\'3\\''\n" +
-			"}";
+    private static final String MULTILINE_RECORD =
+            "'1' {\n" +
+            "\t'lit1': 'value 1',\n" +
+            "\t' ent1' {\n" +
+            "\t\t'lit2': 'value {x}',\n" +
+            "\t\t'lit\\\\3': 'value 2 '\n" +
+            "\t},\n" +
+            "\t'lit4': 'value \\'3\\''\n" +
+            "}";
 
-	private FormetaEncoder encoder;
+    private FormetaEncoder encoder;
 
-	@Mock
-	private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		encoder = new FormetaEncoder();
-		encoder.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        encoder = new FormetaEncoder();
+        encoder.setReceiver(receiver);
+    }
 
-	@After
-	public void cleanup() {
-		encoder.closeStream();
-	}
+    @After
+    public void cleanup() {
+        encoder.closeStream();
+    }
 
-	@Test
-	public void testShouldOutputConciseRecordRepresentation() {
-		encoder.setStyle(FormatterStyle.CONCISE);
+    @Test
+    public void testShouldOutputConciseRecordRepresentation() {
+        encoder.setStyle(FormatterStyle.CONCISE);
 
-		executeEvents();
+        executeEvents();
 
-		verify(receiver).process(CONCISE_RECORD);
-	}
+        verify(receiver).process(CONCISE_RECORD);
+    }
 
-	@Test
-	public void testShouldOutputVerboseRecordRepresentation() {
-		encoder.setStyle(FormatterStyle.VERBOSE);
+    @Test
+    public void testShouldOutputVerboseRecordRepresentation() {
+        encoder.setStyle(FormatterStyle.VERBOSE);
 
-		executeEvents();
+        executeEvents();
 
-		verify(receiver).process(VERBOSE_RECORD);
-	}
+        verify(receiver).process(VERBOSE_RECORD);
+    }
 
-	@Test
-	public void testShouldOutputMultilineRecordRepresentation() {
-		encoder.setStyle(FormatterStyle.MULTILINE);
+    @Test
+    public void testShouldOutputMultilineRecordRepresentation() {
+        encoder.setStyle(FormatterStyle.MULTILINE);
 
-		executeEvents();
+        executeEvents();
 
-		verify(receiver).process(MULTILINE_RECORD);
-	}
+        verify(receiver).process(MULTILINE_RECORD);
+    }
 
-	@Test
-	public void testShouldIgnoreIncompleteRecord() {
-		encoder.setStyle(FormatterStyle.CONCISE);
+    @Test
+    public void testShouldIgnoreIncompleteRecord() {
+        encoder.setStyle(FormatterStyle.CONCISE);
 
-		encoder.startRecord("incomplete");
-		encoder.literal("lit", "value");
-		encoder.startEntity("entity");
-		executeEvents();
+        encoder.startRecord("incomplete");
+        encoder.literal("lit", "value");
+        encoder.startEntity("entity");
+        executeEvents();
 
-		verify(receiver).process(CONCISE_RECORD);
-		verifyNoMoreInteractions(receiver);
-	}
+        verify(receiver).process(CONCISE_RECORD);
+        verifyNoMoreInteractions(receiver);
+    }
 
-	private void executeEvents() {
-		encoder.startRecord("1");
-		encoder.literal("lit1", "value 1");
-		encoder.startEntity(" ent1");
-		encoder.literal("lit2", "value {x}");
-		encoder.literal("lit\\3", "value 2 ");
-		encoder.endEntity();
-		encoder.literal("lit4", "value '3'");
-		encoder.endRecord();
-	}
+    private void executeEvents() {
+        encoder.startRecord("1");
+        encoder.literal("lit1", "value 1");
+        encoder.startEntity(" ent1");
+        encoder.literal("lit2", "value {x}");
+        encoder.literal("lit\\3", "value 2 ");
+        encoder.endEntity();
+        encoder.literal("lit4", "value '3'");
+        encoder.endRecord();
+    }
 
 }

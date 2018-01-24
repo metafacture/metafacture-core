@@ -41,100 +41,100 @@ import org.metafacture.framework.annotations.ReturnsAvailableArguments;
  * @author Markus Michael Geipel
  */
 public final class HelpPrinter {
-	private HelpPrinter() {
-		// no instances
-	}
+    private HelpPrinter() {
+        // no instances
+    }
 
-	public static void print(final ObjectFactory<?> factory,
-			final PrintStream out) {
-		out.println("WELCOME TO METAFACTURE");
-		out.println(getVersionInfo());
+    public static void print(final ObjectFactory<?> factory,
+            final PrintStream out) {
+        out.println("WELCOME TO METAFACTURE");
+        out.println(getVersionInfo());
 
-		out.println("\nUsage:\tflux FLOW_FILE [VARNAME=VALUE ...]\n");
-		out.println("Available pipe elements:\n");
+        out.println("\nUsage:\tflux FLOW_FILE [VARNAME=VALUE ...]\n");
+        out.println("Available pipe elements:\n");
 
-		final List<String> keyWords = new ArrayList<String>();
-		keyWords.addAll(factory.keySet());
-		Collections.sort(keyWords);
-		for (String name : keyWords) {
-			describe(name, factory, out);
-		}
-	}
+        final List<String> keyWords = new ArrayList<String>();
+        keyWords.addAll(factory.keySet());
+        Collections.sort(keyWords);
+        for (String name : keyWords) {
+            describe(name, factory, out);
+        }
+    }
 
-	private static String getVersionInfo() {
-		try {
-			return ResourceUtil.loadProperties("build.properties").toString();
-		} catch (IOException e) {
-			throw new MetafactureException("Failed to load build infos", e);
-		}
-	}
+    private static String getVersionInfo() {
+        try {
+            return ResourceUtil.loadProperties("build.properties").toString();
+        } catch (IOException e) {
+            throw new MetafactureException("Failed to load build infos", e);
+        }
+    }
 
-	private static <T> void describe(String name, ObjectFactory<T> factory,
-			PrintStream out) {
-		final Class<? extends T> moduleClass = factory.get(name).getPlainClass();
-		final Description desc = moduleClass.getAnnotation(Description.class);
+    private static <T> void describe(String name, ObjectFactory<T> factory,
+            PrintStream out) {
+        final Class<? extends T> moduleClass = factory.get(name).getPlainClass();
+        final Description desc = moduleClass.getAnnotation(Description.class);
 
-		out.println(name);
+        out.println(name);
 
-		if (desc != null) {
-			out.println("description:\t" + desc.value());
-		}
-		final Collection<String> arguments = getAvailableArguments(moduleClass);
-		if (!arguments.isEmpty()) {
-			out.println("argument in\t" + arguments);
-		}
+        if (desc != null) {
+            out.println("description:\t" + desc.value());
+        }
+        final Collection<String> arguments = getAvailableArguments(moduleClass);
+        if (!arguments.isEmpty()) {
+            out.println("argument in\t" + arguments);
+        }
 
-		final Map<String, Class<?>> attributes = factory.get(name).getSetterTypes();
+        final Map<String, Class<?>> attributes = factory.get(name).getSetterTypes();
 
-		if (!attributes.isEmpty()) {
-			out.print("options:\t");
-			final StringBuilder builder = new StringBuilder();
-			for (Entry<String, Class<?>> entry : attributes.entrySet()) {
-				if (entry.getValue().isEnum()) {
-					builder.append(entry.getKey())
-							.append(" ")
-							.append(Arrays.toString(entry.getValue().getEnumConstants()))
-							.append(", ");
-				} else {
-					builder.append(entry.getKey())
-							.append(" (")
-							.append(entry.getValue().getName())
-							.append("), ");
-				}
+        if (!attributes.isEmpty()) {
+            out.print("options:\t");
+            final StringBuilder builder = new StringBuilder();
+            for (Entry<String, Class<?>> entry : attributes.entrySet()) {
+                if (entry.getValue().isEnum()) {
+                    builder.append(entry.getKey())
+                            .append(" ")
+                            .append(Arrays.toString(entry.getValue().getEnumConstants()))
+                            .append(", ");
+                } else {
+                    builder.append(entry.getKey())
+                            .append(" (")
+                            .append(entry.getValue().getName())
+                            .append("), ");
+                }
 
-			}
-			out.println(builder.substring(0, builder.length() - 2));
-		}
+            }
+            out.println(builder.substring(0, builder.length() - 2));
+        }
 
-		out.println("implementation:\t" + moduleClass.getCanonicalName());
-		String inString = "<unknown>";
-		String outString = "";
-		final In inClass = moduleClass.getAnnotation(In.class);
-		if (inClass != null) {
-			inString = inClass.value().getCanonicalName();
-		}
-		final Out outClass = moduleClass.getAnnotation(Out.class);
-		if (outClass != null) {
-			outString = outClass.value().getCanonicalName();
-		}
-		out.println("signature:\t" + inString + " -> " + outString);
-		out.println();
-	}
+        out.println("implementation:\t" + moduleClass.getCanonicalName());
+        String inString = "<unknown>";
+        String outString = "";
+        final In inClass = moduleClass.getAnnotation(In.class);
+        if (inClass != null) {
+            inString = inClass.value().getCanonicalName();
+        }
+        final Out outClass = moduleClass.getAnnotation(Out.class);
+        if (outClass != null) {
+            outString = outClass.value().getCanonicalName();
+        }
+        out.println("signature:\t" + inString + " -> " + outString);
+        out.println();
+    }
 
-	@SuppressWarnings("unchecked")
-	private static Collection<String> getAvailableArguments(
-			Class<?> moduleClass) {
-		for (Method method : moduleClass.getMethods()) {
-			if (method.getAnnotation(ReturnsAvailableArguments.class) != null) {
-				try {
-					return (Collection<String>) method.invoke(moduleClass);
-				} catch (IllegalAccessException | InvocationTargetException |
-						IllegalArgumentException e) {
-					// silently ignore
-				}
-			}
-		}
-		return Collections.emptyList();
-	}
+    @SuppressWarnings("unchecked")
+    private static Collection<String> getAvailableArguments(
+            Class<?> moduleClass) {
+        for (Method method : moduleClass.getMethods()) {
+            if (method.getAnnotation(ReturnsAvailableArguments.class) != null) {
+                try {
+                    return (Collection<String>) method.invoke(moduleClass);
+                } catch (IllegalAccessException | InvocationTargetException |
+                        IllegalArgumentException e) {
+                    // silently ignore
+                }
+            }
+        }
+        return Collections.emptyList();
+    }
 
 }

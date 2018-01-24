@@ -25,44 +25,44 @@ import org.metafacture.formeta.Formeta;
  */
 public final class ConciseFormatter extends AbstractFormatter {
 
-	private boolean appendItemSeparator;
+    private boolean appendItemSeparator;
 
-	@Override
-	public void startGroup(final String name) {
-		if (appendItemSeparator) {
-			append(Formeta.ITEM_SEPARATOR);
-		}
-		escapeAndAppend(name);
-		append(Formeta.GROUP_START);
-		appendItemSeparator = false;
-	}
+    @Override
+    public void startGroup(final String name) {
+        if (appendItemSeparator) {
+            append(Formeta.ITEM_SEPARATOR);
+        }
+        escapeAndAppend(name);
+        append(Formeta.GROUP_START);
+        appendItemSeparator = false;
+    }
 
-	@Override
-	public void endGroup() {
-		append(Formeta.GROUP_END);
-		appendItemSeparator = false;
-	}
+    @Override
+    public void endGroup() {
+        append(Formeta.GROUP_END);
+        appendItemSeparator = false;
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		if (appendItemSeparator) {
-			append(Formeta.ITEM_SEPARATOR);
-		}
-		escapeAndAppend(name);
-		append(Formeta.NAME_VALUE_SEPARATOR);
-		escapeAndAppend(value);
-		appendItemSeparator = true;
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        if (appendItemSeparator) {
+            append(Formeta.ITEM_SEPARATOR);
+        }
+        escapeAndAppend(name);
+        append(Formeta.NAME_VALUE_SEPARATOR);
+        escapeAndAppend(value);
+        appendItemSeparator = true;
+    }
 
-	@Override
-	protected void onReset() {
-		appendItemSeparator = false;
-	}
+    @Override
+    protected void onReset() {
+        appendItemSeparator = false;
+    }
 
-	@Override
-	protected boolean shouldQuoteText(final char[] buffer, final int len) {
-		return len != 0 && (Formeta.WHITESPACE.indexOf(buffer[0]) > -1 ||
-				Formeta.WHITESPACE.indexOf(buffer[len - 1]) > -1);
-	}
+    @Override
+    protected boolean shouldQuoteText(final char[] buffer, final int len) {
+        return len != 0 && (Formeta.WHITESPACE.indexOf(buffer[0]) > -1 ||
+                Formeta.WHITESPACE.indexOf(buffer[len - 1]) > -1);
+    }
 
 }

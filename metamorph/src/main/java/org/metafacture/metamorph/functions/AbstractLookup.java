@@ -24,14 +24,14 @@ import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
  */
 abstract class AbstractLookup extends AbstractSimpleStatelessFunction {
 
-	protected final String lookup(final String key) {
-		final String returnValue;
-		if (getMapName() == null) {
-			returnValue = getLocalValue(key);
-		} else {
-			returnValue = getValue(getMapName(), key);
-		}
-		return returnValue;
-	}
+    protected final String lookup(final String key) {
+        final String returnValue;
+        if (getMapName() == null) {
+            returnValue = getLocalValue(key);
+        } else {
+            returnValue = getValue(getMapName(), key);
+        }
+        return returnValue;
+    }
 
 }

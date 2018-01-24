@@ -37,35 +37,35 @@ import org.mockito.MockitoAnnotations;
  */
 public final class DuplicateObjectFilterTest {
 
-	private static final String OBJECT1 = "Object 1";
-	private static final String OBJECT2 = "Object 2";
+    private static final String OBJECT1 = "Object 1";
+    private static final String OBJECT2 = "Object 2";
 
-	private DuplicateObjectFilter<String> duplicateObjectFilter;
+    private DuplicateObjectFilter<String> duplicateObjectFilter;
 
-	@Mock
-	private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		duplicateObjectFilter = new DuplicateObjectFilter<String>();
-		duplicateObjectFilter.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        duplicateObjectFilter = new DuplicateObjectFilter<String>();
+        duplicateObjectFilter.setReceiver(receiver);
+    }
 
-	@After
-	public void cleanup() {
-		duplicateObjectFilter.closeStream();
-	}
+    @After
+    public void cleanup() {
+        duplicateObjectFilter.closeStream();
+    }
 
-	@Test
-	public void testShouldEliminateDuplicateObjects() {
-		duplicateObjectFilter.process(OBJECT1);
-		duplicateObjectFilter.process(OBJECT1);
-		duplicateObjectFilter.process(OBJECT2);
+    @Test
+    public void testShouldEliminateDuplicateObjects() {
+        duplicateObjectFilter.process(OBJECT1);
+        duplicateObjectFilter.process(OBJECT1);
+        duplicateObjectFilter.process(OBJECT2);
 
-		verify(receiver).process(OBJECT1);
-		verify(receiver).process(OBJECT2);
-		verifyNoMoreInteractions(receiver);
-	}
+        verify(receiver).process(OBJECT1);
+        verify(receiver).process(OBJECT2);
+        verifyNoMoreInteractions(receiver);
+    }
 
 }

@@ -23,38 +23,38 @@ package org.metafacture.commons.reflection;
  */
 public final class ReflectionUtil {
 
-	private ReflectionUtil() {
-		throw new AssertionError("No instances allowed");
-	}
+    private ReflectionUtil() {
+        throw new AssertionError("No instances allowed");
+    }
 
-	public static ClassLoader getContextClassLoader() {
-		final ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		if (loader == null) {
-			throw new ReflectionException("Class loader could not be found.");
-		}
-		return loader;
-	}
+    public static ClassLoader getContextClassLoader() {
+        final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        if (loader == null) {
+            throw new ReflectionException("Class loader could not be found.");
+        }
+        return loader;
+    }
 
-	public static <T> ConfigurableClass<? extends T> loadClass(String className,
-			Class<T> baseType) {
-		return loadClass(getContextClassLoader(), className, baseType);
-	}
+    public static <T> ConfigurableClass<? extends T> loadClass(String className,
+            Class<T> baseType) {
+        return loadClass(getContextClassLoader(), className, baseType);
+    }
 
-	public static <T> ConfigurableClass<? extends T> loadClass(ClassLoader loader,
-			String className, Class<T> baseType) {
-		final Class<?> clazz;
-		try {
-			clazz = loader.loadClass(className);
-		} catch (ClassNotFoundException e) {
-			throw new ReflectionException("Class not found: " + className, e);
-		}
-		if (!baseType.isAssignableFrom(clazz)) {
-			throw new ReflectionException(className + " must extend or implement " +
-					baseType.getName());
-		}
-		@SuppressWarnings("unchecked")  // protected by isAssignableFrom check
-		final Class<? extends T> castedClass = (Class<? extends T>) clazz;
-		return new ConfigurableClass<>(castedClass);
-	}
+    public static <T> ConfigurableClass<? extends T> loadClass(ClassLoader loader,
+            String className, Class<T> baseType) {
+        final Class<?> clazz;
+        try {
+            clazz = loader.loadClass(className);
+        } catch (ClassNotFoundException e) {
+            throw new ReflectionException("Class not found: " + className, e);
+        }
+        if (!baseType.isAssignableFrom(clazz)) {
+            throw new ReflectionException(className + " must extend or implement " +
+                    baseType.getName());
+        }
+        @SuppressWarnings("unchecked")  // protected by isAssignableFrom check
+        final Class<? extends T> castedClass = (Class<? extends T>) clazz;
+        return new ConfigurableClass<>(castedClass);
+    }
 
 }

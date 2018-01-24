@@ -25,22 +25,22 @@ import org.metafacture.metamorph.api.helpers.AbstractStatefulFunction;
  */
 public final class Count extends AbstractStatefulFunction {
 
-	private int count;
+    private int count;
 
-	@Override
-	public String process(final String value) {
-		++count;
-		return String.valueOf(count);
-	}
+    @Override
+    public String process(final String value) {
+        ++count;
+        return String.valueOf(count);
+    }
 
-	@Override
-	protected void reset() {
-		count = 0;
-	}
+    @Override
+    protected void reset() {
+        count = 0;
+    }
 
-	@Override
-	protected boolean doResetOnEntityChange() {
-		return false;
-	}
+    @Override
+    protected boolean doResetOnEntityChange() {
+        return false;
+    }
 
 }

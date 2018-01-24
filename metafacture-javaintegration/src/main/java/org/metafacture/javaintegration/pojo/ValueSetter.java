@@ -23,10 +23,10 @@ package org.metafacture.javaintegration.pojo;
  */
 interface ValueSetter {
 
-	void setValue(final Object object, final Object value);
+    void setValue(final Object object, final Object value);
 
-	String getName();
+    String getName();
 
-	ValueType getValueType();
+    ValueType getValueType();
 
 }

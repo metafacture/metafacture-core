@@ -40,94 +40,94 @@ import org.metafacture.javaintegration.SingleValue;
 @Out(StreamReceiver.class)
 public final class Splitter implements StreamPipe<StreamReceiver> {
 
-	private final StreamBuffer buffer = new StreamBuffer();
-	private final SingleValue singleValue = new SingleValue();
-	private final Map<String, StreamReceiver> receiverMap = new HashMap<String, StreamReceiver>();
-	private final Metamorph metamorph;
+    private final StreamBuffer buffer = new StreamBuffer();
+    private final SingleValue singleValue = new SingleValue();
+    private final Map<String, StreamReceiver> receiverMap = new HashMap<String, StreamReceiver>();
+    private final Metamorph metamorph;
 
-	public Splitter(final String morphDef) {
-		metamorph = new Metamorph(morphDef);
-		metamorph.setReceiver(singleValue);
-	}
+    public Splitter(final String morphDef) {
+        metamorph = new Metamorph(morphDef);
+        metamorph.setReceiver(singleValue);
+    }
 
-	public Splitter(final Reader morphDef) {
-		metamorph = new Metamorph(morphDef);
-		metamorph.setReceiver(singleValue);
-	}
+    public Splitter(final Reader morphDef) {
+        metamorph = new Metamorph(morphDef);
+        metamorph.setReceiver(singleValue);
+    }
 
-	public Splitter(final Metamorph metamorph) {
-		this.metamorph = metamorph;
-		metamorph.setReceiver(singleValue);
-	}
+    public Splitter(final Metamorph metamorph) {
+        this.metamorph = metamorph;
+        metamorph.setReceiver(singleValue);
+    }
 
-	@Override
-	public <R extends StreamReceiver> R setReceiver(final R receiver) {
-		receiverMap.put("", receiver);
-		return receiver;
-	}
+    @Override
+    public <R extends StreamReceiver> R setReceiver(final R receiver) {
+        receiverMap.put("", receiver);
+        return receiver;
+    }
 
-	public <R extends StreamReceiver> R setReceiver(final String key, final R receiver) {
-		receiverMap.put(key, receiver);
-		return receiver;
-	}
+    public <R extends StreamReceiver> R setReceiver(final String key, final R receiver) {
+        receiverMap.put(key, receiver);
+        return receiver;
+    }
 
-	private void dispatch(){
-		final String key = singleValue.getValue();
-		final StreamReceiver receiver = receiverMap.get(key);
+    private void dispatch(){
+        final String key = singleValue.getValue();
+        final StreamReceiver receiver = receiverMap.get(key);
 
-		if(null != receiver){
-			buffer.setReceiver(receiver);
-			buffer.replay();
-		}
-		buffer.clear();
-	}
+        if(null != receiver){
+            buffer.setReceiver(receiver);
+            buffer.replay();
+        }
+        buffer.clear();
+    }
 
-	@Override
-	public void startRecord(final String identifier) {
-		buffer.startRecord(identifier);
-		metamorph.startRecord(identifier);
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        buffer.startRecord(identifier);
+        metamorph.startRecord(identifier);
+    }
 
-	@Override
-	public void endRecord() {
-		buffer.endRecord();
-		metamorph.endRecord();
-		dispatch();
-	}
+    @Override
+    public void endRecord() {
+        buffer.endRecord();
+        metamorph.endRecord();
+        dispatch();
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		buffer.startEntity(name);
-		metamorph.startEntity(name);
-	}
+    @Override
+    public void startEntity(final String name) {
+        buffer.startEntity(name);
+        metamorph.startEntity(name);
+    }
 
-	@Override
-	public void endEntity() {
-		buffer.endEntity();
-		metamorph.endEntity();
-	}
+    @Override
+    public void endEntity() {
+        buffer.endEntity();
+        metamorph.endEntity();
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		buffer.literal(name, value);
-		metamorph.literal(name, value);
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        buffer.literal(name, value);
+        metamorph.literal(name, value);
+    }
 
-	@Override
-	public void resetStream() {
-		buffer.clear();
-		metamorph.resetStream();
-		for (final StreamReceiver receiver: receiverMap.values()) {
-			receiver.resetStream();
-		}
-	}
+    @Override
+    public void resetStream() {
+        buffer.clear();
+        metamorph.resetStream();
+        for (final StreamReceiver receiver: receiverMap.values()) {
+            receiver.resetStream();
+        }
+    }
 
-	@Override
-	public void closeStream() {
-		buffer.clear();
-		metamorph.closeStream();
-		for (final StreamReceiver receiver: receiverMap.values()) {
-			receiver.closeStream();
-		}
-	}
+    @Override
+    public void closeStream() {
+        buffer.clear();
+        metamorph.closeStream();
+        for (final StreamReceiver receiver: receiverMap.values()) {
+            receiver.closeStream();
+        }
+    }
 }

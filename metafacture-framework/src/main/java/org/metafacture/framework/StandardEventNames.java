@@ -22,15 +22,15 @@ package org.metafacture.framework;
  */
 public final class StandardEventNames {
 
-	/**
-	 * Name of the literal holding the record id. The literal's value should
-	 * either be the same as the record id in the <i>start-record</i> event or be
-	 * intended to replace the current record id in a subsequent processing step.
-	 */
-	public static final String ID = "_id";
+    /**
+     * Name of the literal holding the record id. The literal's value should
+     * either be the same as the record id in the <i>start-record</i> event or be
+     * intended to replace the current record id in a subsequent processing step.
+     */
+    public static final String ID = "_id";
 
-	private StandardEventNames() {
-		throw new AssertionError("no instances allowed");
-	}
+    private StandardEventNames() {
+        throw new AssertionError("no instances allowed");
+    }
 
 }

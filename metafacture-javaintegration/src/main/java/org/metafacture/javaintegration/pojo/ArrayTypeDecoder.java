@@ -24,25 +24,25 @@ import org.metafacture.framework.StreamReceiver;
  */
 class ArrayTypeDecoder implements TypeDecoder {
 
-	private final TypeDecoderFactory typeDecoderFactory;
+    private final TypeDecoderFactory typeDecoderFactory;
 
-	ArrayTypeDecoder(final TypeDecoderFactory typeDecoderFactory) {
-		this.typeDecoderFactory = typeDecoderFactory;
-	}
+    ArrayTypeDecoder(final TypeDecoderFactory typeDecoderFactory) {
+        this.typeDecoderFactory = typeDecoderFactory;
+    }
 
-	static boolean supportsType(final Class<?> clazz) {
-		return clazz.isArray();
-	}
+    static boolean supportsType(final Class<?> clazz) {
+        return clazz.isArray();
+    }
 
-	@Override
-	public void decodeToStream(final StreamReceiver streamReceiver,
-			final String name, final Object object) {
-		final Object[] array = (Object[]) object;
-		for (final Object element : array) {
-			final TypeDecoder typeDecoder = typeDecoderFactory
-					.create(element.getClass());
-			typeDecoder.decodeToStream(streamReceiver, name, element);
-		}
-	}
+    @Override
+    public void decodeToStream(final StreamReceiver streamReceiver,
+            final String name, final Object object) {
+        final Object[] array = (Object[]) object;
+        for (final Object element : array) {
+            final TypeDecoder typeDecoder = typeDecoderFactory
+                    .create(element.getClass());
+            typeDecoder.decodeToStream(streamReceiver, name, element);
+        }
+    }
 
 }

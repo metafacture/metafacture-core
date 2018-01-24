@@ -77,18 +77,18 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @FluxCommand("decode-pojo")
 public class PojoDecoder<T> extends DefaultObjectPipe<T, StreamReceiver> {
 
-	private final TypeDecoderFactory typeDecoderFactory = new TypeDecoderFactory();
+    private final TypeDecoderFactory typeDecoderFactory = new TypeDecoderFactory();
 
-	@Override
-	public void process(final T obj) {
-		if (obj == null) {
-			return;
-		}
-		assert !isClosed();
-		final TypeDecoder typeDecoder = typeDecoderFactory.create(obj.getClass());
-		getReceiver().startRecord("");
-		typeDecoder.decodeToStream(getReceiver(), null, obj);
-		getReceiver().endRecord();
-	}
+    @Override
+    public void process(final T obj) {
+        if (obj == null) {
+            return;
+        }
+        assert !isClosed();
+        final TypeDecoder typeDecoder = typeDecoderFactory.create(obj.getClass());
+        getReceiver().startRecord("");
+        typeDecoder.decodeToStream(getReceiver(), null, obj);
+        getReceiver().endRecord();
+    }
 
 }

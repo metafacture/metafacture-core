@@ -27,86 +27,86 @@ import org.metafacture.framework.ObjectReceiver;
  */
 public interface ConfigurableObjectWriter<T> extends ObjectReceiver<T> {
 
-	String DEFAULT_HEADER = "";
-	String DEFAULT_FOOTER = "\n";
-	String DEFAULT_SEPARATOR = "\n";
+    String DEFAULT_HEADER = "";
+    String DEFAULT_FOOTER = "\n";
+    String DEFAULT_SEPARATOR = "\n";
 
-	/**
-	 * Returns the encoding used by the underlying writer.
-	 *
-	 * @return current encoding
-	 */
-	String getEncoding();
+    /**
+     * Returns the encoding used by the underlying writer.
+     *
+     * @return current encoding
+     */
+    String getEncoding();
 
-	/**
-	 * Sets the encoding used by the underlying writer.
-	 *
-	 * @param encoding
-	 *            name of the encoding
-	 */
-	void setEncoding(String encoding);
+    /**
+     * Sets the encoding used by the underlying writer.
+     *
+     * @param encoding
+     *            name of the encoding
+     */
+    void setEncoding(String encoding);
 
-	/**
-	 * Returns the compression mode.
-	 *
-	 * @return current compression mode
-	 */
-	FileCompression getCompression();
+    /**
+     * Returns the compression mode.
+     *
+     * @return current compression mode
+     */
+    FileCompression getCompression();
 
-	/**
-	 * Sets the compression mode.
-	 *
-	 * @param compression type of compression
-	 */
-	void setCompression(final FileCompression compression);
+    /**
+     * Sets the compression mode.
+     *
+     * @param compression type of compression
+     */
+    void setCompression(final FileCompression compression);
 
-	/**
-	 * Sets the compression mode.
-	 *
-	 * @param compression type of compression
-	 */
-	void setCompression(final String compression);
+    /**
+     * Sets the compression mode.
+     *
+     * @param compression type of compression
+     */
+    void setCompression(final String compression);
 
-	/**
-	 * Returns the header which is output before the first object.
-	 *
-	 * @return header string
-	 */
-	String getHeader();
+    /**
+     * Returns the header which is output before the first object.
+     *
+     * @return header string
+     */
+    String getHeader();
 
-	/**
-	 * Sets the header which is output before the first object.
-	 *
-	 * @param header new header string
-	 */
-	void setHeader(final String header);
+    /**
+     * Sets the header which is output before the first object.
+     *
+     * @param header new header string
+     */
+    void setHeader(final String header);
 
-	/**
-	 * Returns the footer which is output after the last object.
-	 *
-	 * @return footer string
-	 */
-	String getFooter();
+    /**
+     * Returns the footer which is output after the last object.
+     *
+     * @return footer string
+     */
+    String getFooter();
 
-	/**
-	 * Sets the footer which is output after the last object.
-	 *
-	 * @param footer new footer string
-	 */
-	void setFooter(final String footer);
+    /**
+     * Sets the footer which is output after the last object.
+     *
+     * @param footer new footer string
+     */
+    void setFooter(final String footer);
 
-	/**
-	 * Returns the separator which is output between objects.
-	 *
-	 * @return separator string
-	 */
-	String getSeparator();
+    /**
+     * Returns the separator which is output between objects.
+     *
+     * @return separator string
+     */
+    String getSeparator();
 
-	/**
-	 * Sets the separator which is output between objects.
-	 *
-	 * @param separator new separator string
-	 */
-	void setSeparator(final String separator);
+    /**
+     * Sets the separator which is output between objects.
+     *
+     * @param separator new separator string
+     */
+    void setSeparator(final String separator);
 
 }

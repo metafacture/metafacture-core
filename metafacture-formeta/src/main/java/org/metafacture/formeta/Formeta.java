@@ -23,24 +23,24 @@ package org.metafacture.formeta;
  */
 public final class Formeta {
 
-	public static final char QUOT_CHAR = '\'';
-	public static final char ESCAPE_CHAR = '\\';
-	public static final char NEWLINE_ESC_SEQ = 'n';
-	public static final char CARRIAGE_RETURN_ESC_SEQ = 'r';
+    public static final char QUOT_CHAR = '\'';
+    public static final char ESCAPE_CHAR = '\\';
+    public static final char NEWLINE_ESC_SEQ = 'n';
+    public static final char CARRIAGE_RETURN_ESC_SEQ = 'r';
 
-	public static final String WHITESPACE = "\t\n\r ";
+    public static final String WHITESPACE = "\t\n\r ";
 
-	public static final char GROUP_START = '{';
-	public static final char GROUP_END = '}';
-	public static final char ITEM_SEPARATOR = ',';
-	public static final char NAME_VALUE_SEPARATOR = ':';
+    public static final char GROUP_START = '{';
+    public static final char GROUP_END = '}';
+    public static final char ITEM_SEPARATOR = ',';
+    public static final char NAME_VALUE_SEPARATOR = ':';
 
-	private Formeta() {
-		// No instances allowed
-	}
+    private Formeta() {
+        // No instances allowed
+    }
 
-	public static boolean isWhitespace(final char ch) {
-		return WHITESPACE.indexOf(ch) > -1;
-	}
+    public static boolean isWhitespace(final char ch) {
+        return WHITESPACE.indexOf(ch) > -1;
+    }
 
 }

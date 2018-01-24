@@ -36,24 +36,24 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(StreamReceiver.class)
 @FluxCommand("string-list-map-to-stream")
 public final class StringListMapToStream
-		extends DefaultObjectPipe<ListMap<String, String>, StreamReceiver> {
+        extends DefaultObjectPipe<ListMap<String, String>, StreamReceiver> {
 
-	@Override
-	public void process(final ListMap<String, String> listMap){
-		assert !isClosed();
-		process(listMap, getReceiver());
-	}
+    @Override
+    public void process(final ListMap<String, String> listMap){
+        assert !isClosed();
+        process(listMap, getReceiver());
+    }
 
-	public static void process(final ListMap<String, String> listMap, final StreamReceiver receiver) {
+    public static void process(final ListMap<String, String> listMap, final StreamReceiver receiver) {
 
-		receiver.startRecord(listMap.getId());
-		for(Entry<String, List<String>> entry: listMap.entrySet()){
-			final String name = entry.getKey();
-			for(String value:entry.getValue()){
-				receiver.literal(name, value);
-			}
-		}
-		receiver.endRecord();
-	}
+        receiver.startRecord(listMap.getId());
+        for(Entry<String, List<String>> entry: listMap.entrySet()){
+            final String name = entry.getKey();
+            for(String value:entry.getValue()){
+                receiver.literal(name, value);
+            }
+        }
+        receiver.endRecord();
+    }
 
 }

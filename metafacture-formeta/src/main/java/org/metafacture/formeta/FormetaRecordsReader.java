@@ -37,67 +37,67 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Description("Reads a stream of formeta data and splits between each top-level element")
 @FluxCommand("as-formeta-records")
 public final class FormetaRecordsReader extends
-		DefaultObjectPipe<Reader, ObjectReceiver<String>> {
+        DefaultObjectPipe<Reader, ObjectReceiver<String>> {
 
-	private static final int BUFFER_SIZE = 1024 * 1024 * 16;
+    private static final int BUFFER_SIZE = 1024 * 1024 * 16;
 
-	private final StringBuilder builder = new StringBuilder();
-	private final char[] buffer = new char[BUFFER_SIZE];
+    private final StringBuilder builder = new StringBuilder();
+    private final char[] buffer = new char[BUFFER_SIZE];
 
-	@Override
-	public void process(final Reader reader) {
-		assert !isClosed();
+    @Override
+    public void process(final Reader reader) {
+        assert !isClosed();
 
-		try {
-			boolean readSomething = false;
-			boolean inQuotedText = false;
-			int groupLevel = 0;
-			int size;
-			while ((size = reader.read(buffer)) != -1) {
-				readSomething = true;
-				int offset = 0;
-				for (int i = 0; i < size; ++i) {
-					switch (buffer[i]) {
-					case Formeta.ESCAPE_CHAR:
-						i += 1; // Skip next character
-						break;
-					case Formeta.GROUP_START:
-						if (!inQuotedText) {
-							groupLevel += 1;
-						}
-						break;
-					case Formeta.GROUP_END:
-						if (!inQuotedText) {
-							groupLevel -= 1;
-						}
-						// Fall through
-					case Formeta.ITEM_SEPARATOR:
-						if (!inQuotedText && groupLevel == 0) {
-							builder.append(buffer, offset, i - offset + 1);
-							offset = i + 1;
-							emitRecord();
-						}
-						break;
-					case Formeta.QUOT_CHAR:
-						inQuotedText = !inQuotedText;
-						break;
-					}
-				}
-				builder.append(buffer, offset, size - offset);
-			}
-			if (readSomething) {
-				emitRecord();
-			}
+        try {
+            boolean readSomething = false;
+            boolean inQuotedText = false;
+            int groupLevel = 0;
+            int size;
+            while ((size = reader.read(buffer)) != -1) {
+                readSomething = true;
+                int offset = 0;
+                for (int i = 0; i < size; ++i) {
+                    switch (buffer[i]) {
+                    case Formeta.ESCAPE_CHAR:
+                        i += 1; // Skip next character
+                        break;
+                    case Formeta.GROUP_START:
+                        if (!inQuotedText) {
+                            groupLevel += 1;
+                        }
+                        break;
+                    case Formeta.GROUP_END:
+                        if (!inQuotedText) {
+                            groupLevel -= 1;
+                        }
+                        // Fall through
+                    case Formeta.ITEM_SEPARATOR:
+                        if (!inQuotedText && groupLevel == 0) {
+                            builder.append(buffer, offset, i - offset + 1);
+                            offset = i + 1;
+                            emitRecord();
+                        }
+                        break;
+                    case Formeta.QUOT_CHAR:
+                        inQuotedText = !inQuotedText;
+                        break;
+                    }
+                }
+                builder.append(buffer, offset, size - offset);
+            }
+            if (readSomething) {
+                emitRecord();
+            }
 
-		} catch (final IOException e) {
-			throw new MetafactureException(e);
-		}
-	}
+        } catch (final IOException e) {
+            throw new MetafactureException(e);
+        }
+    }
 
-	private void emitRecord() {
-		final String record = builder.toString();
-		getReceiver().process(record);
-		builder.delete(0, builder.length());
-	}
+    private void emitRecord() {
+        final String record = builder.toString();
+        getReceiver().process(record);
+        builder.delete(0, builder.length());
+    }
 
 }

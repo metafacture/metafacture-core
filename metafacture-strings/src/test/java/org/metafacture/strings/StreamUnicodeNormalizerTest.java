@@ -36,134 +36,134 @@ import org.mockito.MockitoAnnotations;
  */
 public final class StreamUnicodeNormalizerTest {
 
-	private static final String RECORD_ID = "id";
-	private static final String ENTITY_NAME = "entity-name";
-	private static final String LITERAL_NAME = "literal-name";
-	private static final String LITERAL_VALUE = "literal-value";
+    private static final String RECORD_ID = "id";
+    private static final String ENTITY_NAME = "entity-name";
+    private static final String LITERAL_NAME = "literal-name";
+    private static final String LITERAL_VALUE = "literal-value";
 
-	private static final String VALUE_WITH_DIACRITICS =
-			"Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
-	private static final String VALUE_WITH_PRECOMPOSED_CHARS =
-			"Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
+    private static final String VALUE_WITH_DIACRITICS =
+            "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
+    private static final String VALUE_WITH_PRECOMPOSED_CHARS =
+            "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 
-	private static final String ID_WITH_DIACRITICS = "id-Üä";
-	private static final String ID_WITH_PRECOMPOSED_CHARS = "id-Üä";
+    private static final String ID_WITH_DIACRITICS = "id-Üä";
+    private static final String ID_WITH_PRECOMPOSED_CHARS = "id-Üä";
 
-	private static final String KEY_WITH_DIACRITICS = "key-Üä";
-	private static final String KEY_WITH_PRECOMPOSED_CHARS = "key-Üä";
+    private static final String KEY_WITH_DIACRITICS = "key-Üä";
+    private static final String KEY_WITH_PRECOMPOSED_CHARS = "key-Üä";
 
-	private StreamUnicodeNormalizer streamUnicodeNormalizer;
+    private StreamUnicodeNormalizer streamUnicodeNormalizer;
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		streamUnicodeNormalizer = new StreamUnicodeNormalizer();
-		streamUnicodeNormalizer.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        streamUnicodeNormalizer = new StreamUnicodeNormalizer();
+        streamUnicodeNormalizer.setReceiver(receiver);
+    }
 
-	@After
-	public void cleanup() {
-		streamUnicodeNormalizer.closeStream();
-	}
+    @After
+    public void cleanup() {
+        streamUnicodeNormalizer.closeStream();
+    }
 
-	@Test
-	public void shouldForwardAllEvents() {
-		streamUnicodeNormalizer.startRecord(RECORD_ID);
-		streamUnicodeNormalizer.startEntity(ENTITY_NAME);
-		streamUnicodeNormalizer.literal(LITERAL_NAME, LITERAL_VALUE);
-		streamUnicodeNormalizer.endEntity();
-		streamUnicodeNormalizer.endRecord();
+    @Test
+    public void shouldForwardAllEvents() {
+        streamUnicodeNormalizer.startRecord(RECORD_ID);
+        streamUnicodeNormalizer.startEntity(ENTITY_NAME);
+        streamUnicodeNormalizer.literal(LITERAL_NAME, LITERAL_VALUE);
+        streamUnicodeNormalizer.endEntity();
+        streamUnicodeNormalizer.endRecord();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID);
-		ordered.verify(receiver).startEntity(ENTITY_NAME);
-		ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(RECORD_ID);
+        ordered.verify(receiver).startEntity(ENTITY_NAME);
+        ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void shouldNormalizeValuesToNFCByDefault() {
-		streamUnicodeNormalizer.startRecord(RECORD_ID);
-		streamUnicodeNormalizer.literal(LITERAL_NAME, VALUE_WITH_DIACRITICS);
-		streamUnicodeNormalizer.endRecord();
+    @Test
+    public void shouldNormalizeValuesToNFCByDefault() {
+        streamUnicodeNormalizer.startRecord(RECORD_ID);
+        streamUnicodeNormalizer.literal(LITERAL_NAME, VALUE_WITH_DIACRITICS);
+        streamUnicodeNormalizer.endRecord();
 
-		verify(receiver).literal(LITERAL_NAME, VALUE_WITH_PRECOMPOSED_CHARS);
-	}
+        verify(receiver).literal(LITERAL_NAME, VALUE_WITH_PRECOMPOSED_CHARS);
+    }
 
-	@Test
-	public void shouldNotNormalizeValuesIfConfigured() {
-		streamUnicodeNormalizer.setNormalizeValues(false);
-		streamUnicodeNormalizer.startRecord(RECORD_ID);
-		streamUnicodeNormalizer.literal(LITERAL_NAME, VALUE_WITH_DIACRITICS);
-		streamUnicodeNormalizer.endRecord();
+    @Test
+    public void shouldNotNormalizeValuesIfConfigured() {
+        streamUnicodeNormalizer.setNormalizeValues(false);
+        streamUnicodeNormalizer.startRecord(RECORD_ID);
+        streamUnicodeNormalizer.literal(LITERAL_NAME, VALUE_WITH_DIACRITICS);
+        streamUnicodeNormalizer.endRecord();
 
-		verify(receiver).literal(LITERAL_NAME, VALUE_WITH_DIACRITICS);
-	}
+        verify(receiver).literal(LITERAL_NAME, VALUE_WITH_DIACRITICS);
+    }
 
-	@Test
-	public void shouldIgnoreNullValues() {
-		streamUnicodeNormalizer.startRecord(RECORD_ID);
-		streamUnicodeNormalizer.literal(LITERAL_NAME, null);
-		streamUnicodeNormalizer.endRecord();
+    @Test
+    public void shouldIgnoreNullValues() {
+        streamUnicodeNormalizer.startRecord(RECORD_ID);
+        streamUnicodeNormalizer.literal(LITERAL_NAME, null);
+        streamUnicodeNormalizer.endRecord();
 
-		verify(receiver).literal(LITERAL_NAME, null);
-	}
+        verify(receiver).literal(LITERAL_NAME, null);
+    }
 
-	@Test
-	public void shouldNotNormalizeIdByDefault() {
-		streamUnicodeNormalizer.startRecord(ID_WITH_DIACRITICS);
-		streamUnicodeNormalizer.endRecord();
+    @Test
+    public void shouldNotNormalizeIdByDefault() {
+        streamUnicodeNormalizer.startRecord(ID_WITH_DIACRITICS);
+        streamUnicodeNormalizer.endRecord();
 
-		verify(receiver).startRecord(ID_WITH_DIACRITICS);
-	}
+        verify(receiver).startRecord(ID_WITH_DIACRITICS);
+    }
 
-	@Test
-	public void shouldNormalizeIdToNFCIfConfigured() {
-		streamUnicodeNormalizer.setNormalizeIds(true);
-		streamUnicodeNormalizer.startRecord(ID_WITH_DIACRITICS);
-		streamUnicodeNormalizer.endRecord();
+    @Test
+    public void shouldNormalizeIdToNFCIfConfigured() {
+        streamUnicodeNormalizer.setNormalizeIds(true);
+        streamUnicodeNormalizer.startRecord(ID_WITH_DIACRITICS);
+        streamUnicodeNormalizer.endRecord();
 
-		verify(receiver).startRecord(ID_WITH_PRECOMPOSED_CHARS);
-	}
+        verify(receiver).startRecord(ID_WITH_PRECOMPOSED_CHARS);
+    }
 
-	@Test
-	public void shouldNotNormalizeKeyByDefault() {
-		streamUnicodeNormalizer.startRecord(RECORD_ID);
-		streamUnicodeNormalizer.literal(KEY_WITH_DIACRITICS, LITERAL_VALUE);
-		streamUnicodeNormalizer.startEntity(KEY_WITH_DIACRITICS);
-		streamUnicodeNormalizer.endEntity();
-		streamUnicodeNormalizer.endRecord();
+    @Test
+    public void shouldNotNormalizeKeyByDefault() {
+        streamUnicodeNormalizer.startRecord(RECORD_ID);
+        streamUnicodeNormalizer.literal(KEY_WITH_DIACRITICS, LITERAL_VALUE);
+        streamUnicodeNormalizer.startEntity(KEY_WITH_DIACRITICS);
+        streamUnicodeNormalizer.endEntity();
+        streamUnicodeNormalizer.endRecord();
 
-		verify(receiver).literal(KEY_WITH_DIACRITICS, LITERAL_VALUE);
-		verify(receiver).startEntity(KEY_WITH_DIACRITICS);
-	}
+        verify(receiver).literal(KEY_WITH_DIACRITICS, LITERAL_VALUE);
+        verify(receiver).startEntity(KEY_WITH_DIACRITICS);
+    }
 
-	@Test
-	public void shouldNormalizeKeysIfConfigured() {
-		streamUnicodeNormalizer.setNormalizeKeys(true);
-		streamUnicodeNormalizer.startRecord(RECORD_ID);
-		streamUnicodeNormalizer.literal(KEY_WITH_DIACRITICS, LITERAL_VALUE);
-		streamUnicodeNormalizer.startEntity(KEY_WITH_DIACRITICS);
-		streamUnicodeNormalizer.endEntity();
-		streamUnicodeNormalizer.endRecord();
+    @Test
+    public void shouldNormalizeKeysIfConfigured() {
+        streamUnicodeNormalizer.setNormalizeKeys(true);
+        streamUnicodeNormalizer.startRecord(RECORD_ID);
+        streamUnicodeNormalizer.literal(KEY_WITH_DIACRITICS, LITERAL_VALUE);
+        streamUnicodeNormalizer.startEntity(KEY_WITH_DIACRITICS);
+        streamUnicodeNormalizer.endEntity();
+        streamUnicodeNormalizer.endRecord();
 
-		verify(receiver).literal(KEY_WITH_PRECOMPOSED_CHARS, LITERAL_VALUE);
-		verify(receiver).startEntity(KEY_WITH_PRECOMPOSED_CHARS);
-	}
+        verify(receiver).literal(KEY_WITH_PRECOMPOSED_CHARS, LITERAL_VALUE);
+        verify(receiver).startEntity(KEY_WITH_PRECOMPOSED_CHARS);
+    }
 
-	@Test
-	public void shouldNormalizeToNFDIfConfigured() {
-		streamUnicodeNormalizer.setNormalizationForm(Normalizer.Form.NFD);
-		streamUnicodeNormalizer.startRecord(RECORD_ID);
-		streamUnicodeNormalizer.literal(LITERAL_NAME,
-				KEY_WITH_PRECOMPOSED_CHARS);
-		streamUnicodeNormalizer.endRecord();
+    @Test
+    public void shouldNormalizeToNFDIfConfigured() {
+        streamUnicodeNormalizer.setNormalizationForm(Normalizer.Form.NFD);
+        streamUnicodeNormalizer.startRecord(RECORD_ID);
+        streamUnicodeNormalizer.literal(LITERAL_NAME,
+                KEY_WITH_PRECOMPOSED_CHARS);
+        streamUnicodeNormalizer.endRecord();
 
-		verify(receiver).literal(LITERAL_NAME, KEY_WITH_DIACRITICS);
-	}
+        verify(receiver).literal(LITERAL_NAME, KEY_WITH_DIACRITICS);
+    }
 
 }

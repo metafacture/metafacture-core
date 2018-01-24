@@ -36,23 +36,23 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(StreamReceiver.class)
 @FluxCommand("decode-formeta")
 public final class FormetaDecoder extends
-		DefaultObjectPipe<String, StreamReceiver> {
+        DefaultObjectPipe<String, StreamReceiver> {
 
-	private final FormetaParser parser = new FormetaParser();
-	private final Emitter emitter = new FullRecordEmitter();
+    private final FormetaParser parser = new FormetaParser();
+    private final Emitter emitter = new FullRecordEmitter();
 
-	public FormetaDecoder() {
-		parser.setEmitter(emitter);
-	}
+    public FormetaDecoder() {
+        parser.setEmitter(emitter);
+    }
 
-	@Override
-	public void process(final String record) {
-		parser.parse(record);
-	}
+    @Override
+    public void process(final String record) {
+        parser.parse(record);
+    }
 
-	@Override
-	protected void onSetReceiver() {
-		emitter.setReceiver(getReceiver());
-	}
+    @Override
+    protected void onSetReceiver() {
+        emitter.setReceiver(getReceiver());
+    }
 
 }

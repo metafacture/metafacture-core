@@ -42,71 +42,71 @@ import static org.metafacture.biblio.iso2709.Iso2709Constants.SYSTEM_CHARS_START
  */
 class Label {
 
-	private final Iso646ByteBuffer buffer;
+    private final Iso646ByteBuffer buffer;
 
-	Label(final Iso646ByteBuffer buffer) {
-		final int bufferLength = buffer.getLength();
-		assert bufferLength >= RECORD_LABEL_LENGTH;
-		this.buffer = buffer;
-	}
+    Label(final Iso646ByteBuffer buffer) {
+        final int bufferLength = buffer.getLength();
+        assert bufferLength >= RECORD_LABEL_LENGTH;
+        this.buffer = buffer;
+    }
 
-	RecordFormat getRecordFormat() {
-		return RecordFormat.create()
-				.withIndicatorLength(getIndicatorLength())
-				.withIdentifierLength(getIdentifierLength())
-				.withFieldLengthLength(getFieldLengthLength())
-				.withFieldStartLength(getFieldStartLength())
-				.withImplDefinedPartLength(getImplDefinedPartLength())
-				.build();
-	}
+    RecordFormat getRecordFormat() {
+        return RecordFormat.create()
+                .withIndicatorLength(getIndicatorLength())
+                .withIdentifierLength(getIdentifierLength())
+                .withFieldLengthLength(getFieldLengthLength())
+                .withFieldStartLength(getFieldStartLength())
+                .withImplDefinedPartLength(getImplDefinedPartLength())
+                .build();
+    }
 
-	int getRecordLength() {
-		return buffer.parseIntAt(RECORD_LENGTH_START, RECORD_LENGTH_LENGTH);
-	}
+    int getRecordLength() {
+        return buffer.parseIntAt(RECORD_LENGTH_START, RECORD_LENGTH_LENGTH);
+    }
 
-	char getRecordStatus() {
-		return buffer.charAt(RECORD_STATUS_POS);
-	}
+    char getRecordStatus() {
+        return buffer.charAt(RECORD_STATUS_POS);
+    }
 
-	char[] getImplCodes() {
-		return buffer.charsAt(IMPL_CODES_START, IMPL_CODES_LENGTH);
-	}
+    char[] getImplCodes() {
+        return buffer.charsAt(IMPL_CODES_START, IMPL_CODES_LENGTH);
+    }
 
-	int getIndicatorLength() {
-		return buffer.parseIntAt(INDICATOR_LENGTH_POS);
-	}
+    int getIndicatorLength() {
+        return buffer.parseIntAt(INDICATOR_LENGTH_POS);
+    }
 
-	int getIdentifierLength() {
-		return buffer.parseIntAt(IDENTIFIER_LENGTH_POS);
-	}
+    int getIdentifierLength() {
+        return buffer.parseIntAt(IDENTIFIER_LENGTH_POS);
+    }
 
-	int getBaseAddress() {
-		return buffer.parseIntAt(BASE_ADDRESS_START, BASE_ADDRESS_LENGTH);
-	}
+    int getBaseAddress() {
+        return buffer.parseIntAt(BASE_ADDRESS_START, BASE_ADDRESS_LENGTH);
+    }
 
-	char[] getSystemChars() {
-		return buffer.charsAt(SYSTEM_CHARS_START, SYSTEM_CHARS_LENGTH);
-	}
+    char[] getSystemChars() {
+        return buffer.charsAt(SYSTEM_CHARS_START, SYSTEM_CHARS_LENGTH);
+    }
 
-	int getFieldLengthLength() {
-		return buffer.parseIntAt(FIELD_LENGTH_LENGTH_POS);
-	}
+    int getFieldLengthLength() {
+        return buffer.parseIntAt(FIELD_LENGTH_LENGTH_POS);
+    }
 
-	int getFieldStartLength() {
-		return buffer.parseIntAt(FIELD_START_LENGTH_POS);
-	}
+    int getFieldStartLength() {
+        return buffer.parseIntAt(FIELD_START_LENGTH_POS);
+    }
 
-	int getImplDefinedPartLength() {
-		return buffer.parseIntAt(IMPL_DEFINED_PART_LENGTH_POS);
-	}
+    int getImplDefinedPartLength() {
+        return buffer.parseIntAt(IMPL_DEFINED_PART_LENGTH_POS);
+    }
 
-	char getReservedChar() {
-		return buffer.charAt(RESERVED_CHAR_POS);
-	}
+    char getReservedChar() {
+        return buffer.charAt(RESERVED_CHAR_POS);
+    }
 
-	@Override
-	public String toString() {
-		return buffer.stringAt(0, RECORD_LABEL_LENGTH, Iso646Constants.CHARSET);
-	}
+    @Override
+    public String toString() {
+        return buffer.stringAt(0, RECORD_LABEL_LENGTH, Iso646Constants.CHARSET);
+    }
 
 }

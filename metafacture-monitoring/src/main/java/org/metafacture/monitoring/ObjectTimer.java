@@ -35,21 +35,21 @@ import org.metafacture.framework.annotations.Out;
 @Description("Benchmarks the execution time of the downstream modules.")
 @FluxCommand("log-time")
 public final class ObjectTimer<T> extends TimerBase<ObjectReceiver<T>>
-		implements ObjectPipe<T, ObjectReceiver<T>> {
+        implements ObjectPipe<T, ObjectReceiver<T>> {
 
-	public ObjectTimer() {
-		this("");
-	}
+    public ObjectTimer() {
+        this("");
+    }
 
-	public ObjectTimer(final String logPrefix) {
-		super(logPrefix);
-	}
+    public ObjectTimer(final String logPrefix) {
+        super(logPrefix);
+    }
 
-	@Override
-	public void process(final T obj) {
-		startMeasurement();
-		getReceiver().process(obj);
-		stopMeasurement();
-	}
+    @Override
+    public void process(final T obj) {
+        startMeasurement();
+        getReceiver().process(obj);
+        stopMeasurement();
+    }
 
 }

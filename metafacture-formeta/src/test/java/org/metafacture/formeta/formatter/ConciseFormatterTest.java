@@ -28,47 +28,47 @@ import org.junit.Test;
  */
 public final class ConciseFormatterTest {
 
-	private static final String CONCISE_RECORD =
-			"1{lit1:value 1,' ent1'{lit2:value \\{x\\},lit\\\\3:'value 2 '}lit4:value \\'3\\'}";
+    private static final String CONCISE_RECORD =
+            "1{lit1:value 1,' ent1'{lit2:value \\{x\\},lit\\\\3:'value 2 '}lit4:value \\'3\\'}";
 
-	private static final String INNER_RECORD =
-			"inner{ lit1: value 1, ent1{ lit2: 'hello worlds\\'s end!' } }";
+    private static final String INNER_RECORD =
+            "inner{ lit1: value 1, ent1{ lit2: 'hello worlds\\'s end!' } }";
 
-	private static final String OUTER_RECORD =
-			"outer{" +
-			"nested:inner\\{ lit1\\: value 1\\, ent1\\{ lit2\\: \\'hello worlds\\\\\\'s end!\\' \\} \\}," +
-			"note:nested records" +
-			"}";
+    private static final String OUTER_RECORD =
+            "outer{" +
+            "nested:inner\\{ lit1\\: value 1\\, ent1\\{ lit2\\: \\'hello worlds\\\\\\'s end!\\' \\} \\}," +
+            "note:nested records" +
+            "}";
 
-	private ConciseFormatter conciseFormatter;
+    private ConciseFormatter conciseFormatter;
 
-	@Before
-	public void setup() {
-		conciseFormatter = new ConciseFormatter();
-	}
+    @Before
+    public void setup() {
+        conciseFormatter = new ConciseFormatter();
+    }
 
-	@Test
-	public void testShouldBuildRecordRepresentation() {
-		conciseFormatter.startGroup("1");
-		conciseFormatter.literal("lit1", "value 1");
-		conciseFormatter.startGroup(" ent1");
-		conciseFormatter.literal("lit2", "value {x}");
-		conciseFormatter.literal("lit\\3", "value 2 ");
-		conciseFormatter.endGroup();
-		conciseFormatter.literal("lit4", "value '3'");
-		conciseFormatter.endGroup();
+    @Test
+    public void testShouldBuildRecordRepresentation() {
+        conciseFormatter.startGroup("1");
+        conciseFormatter.literal("lit1", "value 1");
+        conciseFormatter.startGroup(" ent1");
+        conciseFormatter.literal("lit2", "value {x}");
+        conciseFormatter.literal("lit\\3", "value 2 ");
+        conciseFormatter.endGroup();
+        conciseFormatter.literal("lit4", "value '3'");
+        conciseFormatter.endGroup();
 
-		assertEquals(CONCISE_RECORD, conciseFormatter.toString());
-	}
+        assertEquals(CONCISE_RECORD, conciseFormatter.toString());
+    }
 
-	@Test
-	public void testShouldCorrectlyEscapeNestedRecords() {
-		conciseFormatter.startGroup("outer");
-		conciseFormatter.literal("nested", INNER_RECORD);
-		conciseFormatter.literal("note", "nested records");
-		conciseFormatter.endGroup();
+    @Test
+    public void testShouldCorrectlyEscapeNestedRecords() {
+        conciseFormatter.startGroup("outer");
+        conciseFormatter.literal("nested", INNER_RECORD);
+        conciseFormatter.literal("note", "nested records");
+        conciseFormatter.endGroup();
 
-		assertEquals(OUTER_RECORD, conciseFormatter.toString());
-	}
+        assertEquals(OUTER_RECORD, conciseFormatter.toString());
+    }
 
 }

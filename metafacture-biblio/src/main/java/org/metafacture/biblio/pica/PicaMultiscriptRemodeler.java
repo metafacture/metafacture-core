@@ -104,146 +104,146 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @Description("Groups multiscript fields in entities")
 @FluxCommand("remodel-pica-multiscript")
 public final class PicaMultiscriptRemodeler extends
-		DefaultStreamPipe<StreamReceiver> {
+        DefaultStreamPipe<StreamReceiver> {
 
-	public static final String ENTITY_NAME_FOR_LATIN = "Latin";
-	public static final String ENTITY_NAME_FOR_NON_LATIN_LR = "NonLatinLR";
-	public static final String ENTITY_NAME_FOR_NON_LATIN_RL = "NonLatinRL";
+    public static final String ENTITY_NAME_FOR_LATIN = "Latin";
+    public static final String ENTITY_NAME_FOR_NON_LATIN_LR = "NonLatinLR";
+    public static final String ENTITY_NAME_FOR_NON_LATIN_RL = "NonLatinRL";
 
-	private static final BufferedField BEFORE_FIRST_FIELD = new BufferedField("", null);
+    private static final BufferedField BEFORE_FIRST_FIELD = new BufferedField("", null);
 
-	private static final String GROUP_SUBFIELD = "T";
-	private static final String SCRIPT_SUBFIELD = "U";
+    private static final String GROUP_SUBFIELD = "T";
+    private static final String SCRIPT_SUBFIELD = "U";
 
-	private static final String LATIN_SCRIPT = "Latn";
-	private static final String ARABIC_SCRIPT = "Arab";
-	private static final String HEBREW_SCRIPT = "Hebr";
+    private static final String LATIN_SCRIPT = "Latn";
+    private static final String ARABIC_SCRIPT = "Arab";
+    private static final String HEBREW_SCRIPT = "Hebr";
 
-	private BufferedField currentField;
-	private BufferedField lastField;
+    private BufferedField currentField;
+    private BufferedField lastField;
 
-	private final SortedMap<String, BufferedField> bufferedFields = new TreeMap<String, BufferedField>();
+    private final SortedMap<String, BufferedField> bufferedFields = new TreeMap<String, BufferedField>();
 
-	@Override
-	public void startRecord(final String identifier) {
-		getReceiver().startRecord(identifier);
+    @Override
+    public void startRecord(final String identifier) {
+        getReceiver().startRecord(identifier);
 
-		currentField = null;
-		lastField = BEFORE_FIRST_FIELD;
+        currentField = null;
+        lastField = BEFORE_FIRST_FIELD;
 
-		bufferedFields.clear();
-	}
+        bufferedFields.clear();
+    }
 
-	@Override
-	public void endRecord() {
-		emitAsSingleMultiscriptFields(bufferedFields);
-		getReceiver().endRecord();
-	}
+    @Override
+    public void endRecord() {
+        emitAsSingleMultiscriptFields(bufferedFields);
+        getReceiver().endRecord();
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		currentField = new BufferedField(name);
-		currentField.stream.setReceiver(getReceiver());
+    @Override
+    public void startEntity(final String name) {
+        currentField = new BufferedField(name);
+        currentField.stream.setReceiver(getReceiver());
 
-		if (!lastField.name.equals(currentField.name)) {
-			emitAsSingleMultiscriptFields(bufferedFields);
-		}
-	}
+        if (!lastField.name.equals(currentField.name)) {
+            emitAsSingleMultiscriptFields(bufferedFields);
+        }
+    }
 
-	@Override
-	public void endEntity() {
-		if (currentField.group == null || currentField.script == null) {
-			emitNonMultiscriptField();
-		} else {
-			if (bufferedFields.containsKey(currentField.group)) {
-				emitAsSingleMultiscriptFields(getSingleMultiscriptFieldsBeforeCurrentField());
-				emitRemodeledMultiscriptField(bufferedFields.remove(currentField.group), currentField);
-			} else {
-				bufferMultiscriptField(currentField);
-			}
-		}
+    @Override
+    public void endEntity() {
+        if (currentField.group == null || currentField.script == null) {
+            emitNonMultiscriptField();
+        } else {
+            if (bufferedFields.containsKey(currentField.group)) {
+                emitAsSingleMultiscriptFields(getSingleMultiscriptFieldsBeforeCurrentField());
+                emitRemodeledMultiscriptField(bufferedFields.remove(currentField.group), currentField);
+            } else {
+                bufferMultiscriptField(currentField);
+            }
+        }
 
-		lastField = currentField;
-		currentField = null;
-	}
+        lastField = currentField;
+        currentField = null;
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		currentField.stream.literal(name, value);
+    @Override
+    public void literal(final String name, final String value) {
+        currentField.stream.literal(name, value);
 
-		if (GROUP_SUBFIELD.equals(name)) {
-			currentField.group = value;
-		} else if (SCRIPT_SUBFIELD.equals(name)) {
-			currentField.script = value;
-		}
-	}
+        if (GROUP_SUBFIELD.equals(name)) {
+            currentField.group = value;
+        } else if (SCRIPT_SUBFIELD.equals(name)) {
+            currentField.script = value;
+        }
+    }
 
-	private void bufferMultiscriptField(final BufferedField field) {
-		bufferedFields.put(field.group, field);
-	}
+    private void bufferMultiscriptField(final BufferedField field) {
+        bufferedFields.put(field.group, field);
+    }
 
-	private Map<?, BufferedField> getSingleMultiscriptFieldsBeforeCurrentField() {
-		return bufferedFields.headMap(currentField.group);
-	}
+    private Map<?, BufferedField> getSingleMultiscriptFieldsBeforeCurrentField() {
+        return bufferedFields.headMap(currentField.group);
+    }
 
-	private void emitNonMultiscriptField() {
-		getReceiver().startEntity(currentField.name);
-		currentField.stream.replay();
-		getReceiver().endEntity();
-	}
+    private void emitNonMultiscriptField() {
+        getReceiver().startEntity(currentField.name);
+        currentField.stream.replay();
+        getReceiver().endEntity();
+    }
 
-	private void emitRemodeledMultiscriptField(final BufferedField firstField, final BufferedField secondField) {
-		getReceiver().startEntity(firstField.name);
+    private void emitRemodeledMultiscriptField(final BufferedField firstField, final BufferedField secondField) {
+        getReceiver().startEntity(firstField.name);
 
-		getReceiver().startEntity(mapScriptToEntityName(firstField.script));
-		firstField.stream.replay();
-		getReceiver().endEntity();
+        getReceiver().startEntity(mapScriptToEntityName(firstField.script));
+        firstField.stream.replay();
+        getReceiver().endEntity();
 
-		getReceiver().startEntity(mapScriptToEntityName(secondField.script));
-		secondField.stream.replay();
-		getReceiver().endEntity();
+        getReceiver().startEntity(mapScriptToEntityName(secondField.script));
+        secondField.stream.replay();
+        getReceiver().endEntity();
 
-		getReceiver().endEntity();
-	}
+        getReceiver().endEntity();
+    }
 
-	private void emitAsSingleMultiscriptFields(final Map<?, BufferedField> fields) {
-		for (final BufferedField field : fields.values()) {
-			getReceiver().startEntity(field.name);
-			field.stream.replay();
-			getReceiver().endEntity();
-		}
-		fields.clear();
-	}
+    private void emitAsSingleMultiscriptFields(final Map<?, BufferedField> fields) {
+        for (final BufferedField field : fields.values()) {
+            getReceiver().startEntity(field.name);
+            field.stream.replay();
+            getReceiver().endEntity();
+        }
+        fields.clear();
+    }
 
-	private String mapScriptToEntityName(final String script) {
-		if (LATIN_SCRIPT.equals(script)) {
-			return ENTITY_NAME_FOR_LATIN;
-		} else if (ARABIC_SCRIPT.equals(script)
-				|| HEBREW_SCRIPT.equals(script)) {
-			return ENTITY_NAME_FOR_NON_LATIN_RL;
-		}
-		return ENTITY_NAME_FOR_NON_LATIN_LR;
-	}
+    private String mapScriptToEntityName(final String script) {
+        if (LATIN_SCRIPT.equals(script)) {
+            return ENTITY_NAME_FOR_LATIN;
+        } else if (ARABIC_SCRIPT.equals(script)
+                || HEBREW_SCRIPT.equals(script)) {
+            return ENTITY_NAME_FOR_NON_LATIN_RL;
+        }
+        return ENTITY_NAME_FOR_NON_LATIN_LR;
+    }
 
-	private static class BufferedField {
+    private static class BufferedField {
 
-		public String group;
-		public String script;
+        public String group;
+        public String script;
 
-		public final String name;
-		public final StreamBuffer stream;
+        public final String name;
+        public final StreamBuffer stream;
 
-		public BufferedField(final String name) {
-			this(name, new StreamBuffer());
-		}
+        public BufferedField(final String name) {
+            this(name, new StreamBuffer());
+        }
 
-		public BufferedField(final String name, final StreamBuffer stream) {
-			this.group = null;
-			this.script = null;
-			this.name = name;
-			this.stream = stream;
-		}
+        public BufferedField(final String name, final StreamBuffer stream) {
+            this.group = null;
+            this.script = null;
+            this.name = name;
+            this.stream = stream;
+        }
 
-	}
+    }
 
 }

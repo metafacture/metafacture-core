@@ -34,43 +34,43 @@ import org.metafacture.framework.helpers.ForwardingStreamPipe;
 @FluxCommand("batch-reset")
 public final class StreamBatchResetter extends ForwardingStreamPipe {
 
-	public static final long DEFAULT_BATCH_SIZE = 1000;
+    public static final long DEFAULT_BATCH_SIZE = 1000;
 
-	private long batchSize = DEFAULT_BATCH_SIZE;
-	private long recordCount;
-	private long batchCount;
+    private long batchSize = DEFAULT_BATCH_SIZE;
+    private long recordCount;
+    private long batchCount;
 
-	public final void setBatchSize(final int batchSize) {
-		this.batchSize = batchSize;
-	}
+    public final void setBatchSize(final int batchSize) {
+        this.batchSize = batchSize;
+    }
 
-	public final long getBatchSize() {
-		return batchSize;
-	}
+    public final long getBatchSize() {
+        return batchSize;
+    }
 
-	public final long getBatchCount() {
-		return batchCount;
-	}
+    public final long getBatchCount() {
+        return batchCount;
+    }
 
-	public final long getRecordCount() {
-		return recordCount;
-	}
+    public final long getRecordCount() {
+        return recordCount;
+    }
 
-	@Override
-	public final void endRecord() {
-		getReceiver().endRecord();
-		recordCount++;
-		recordCount %= batchSize;
-		if (recordCount == 0) {
-			batchCount++;
-			getReceiver().resetStream();
-		}
-	}
+    @Override
+    public final void endRecord() {
+        getReceiver().endRecord();
+        recordCount++;
+        recordCount %= batchSize;
+        if (recordCount == 0) {
+            batchCount++;
+            getReceiver().resetStream();
+        }
+    }
 
-	@Override
-	protected final void onResetStream() {
-		recordCount = 0;
-		batchCount = 0;
-	}
+    @Override
+    protected final void onResetStream() {
+        recordCount = 0;
+        batchCount = 0;
+    }
 
 }

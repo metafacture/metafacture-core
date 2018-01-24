@@ -48,99 +48,99 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @FluxCommand("add-oreaggregation")
 public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver> {
 
-	private static final String RDF_ABOUT = "~rdf:about";
-	private static final ListMap<String, String> AGGREGATED_ENTITIES = new ListMap<String, String>();
-	private static final String ORE_AGGREGATION_PROPERTIES = "ore-aggregation.properties";
-	private static final String ORE_AGGREGATION = "ore:Aggregation";
-	private static final String AGGREGATION_ID = "aggregation_id";
-	private static final String RDF_REFERENCE = "~rdf:resource";
-	private static final Pattern SPLIT_PATTERN = Pattern.compile("\\s*,\\s*");
-	private final Deque<String> entityStack = new LinkedList<String>();
-	private final ListMap<String, String> aggregation = new ListMap<String, String>();
-	private String aggregationId;
+    private static final String RDF_ABOUT = "~rdf:about";
+    private static final ListMap<String, String> AGGREGATED_ENTITIES = new ListMap<String, String>();
+    private static final String ORE_AGGREGATION_PROPERTIES = "ore-aggregation.properties";
+    private static final String ORE_AGGREGATION = "ore:Aggregation";
+    private static final String AGGREGATION_ID = "aggregation_id";
+    private static final String RDF_REFERENCE = "~rdf:resource";
+    private static final Pattern SPLIT_PATTERN = Pattern.compile("\\s*,\\s*");
+    private final Deque<String> entityStack = new LinkedList<String>();
+    private final ListMap<String, String> aggregation = new ListMap<String, String>();
+    private String aggregationId;
 
-	static {
-		final Properties properties;
-		try {
-			properties = ResourceUtil.loadProperties(ORE_AGGREGATION_PROPERTIES);
-		} catch (IOException e) {
-			throw new MetafactureException("Failed to load properties", e);
-		}
-		for (Entry<Object, Object> entry : properties.entrySet()) {
-			final String[] parts = SPLIT_PATTERN.split(entry.getValue().toString());
-			final String name = entry.getKey().toString();
-			for (String value : parts) {
-				AGGREGATED_ENTITIES.add(name, value);
-			}
-		}
-	}
+    static {
+        final Properties properties;
+        try {
+            properties = ResourceUtil.loadProperties(ORE_AGGREGATION_PROPERTIES);
+        } catch (IOException e) {
+            throw new MetafactureException("Failed to load properties", e);
+        }
+        for (Entry<Object, Object> entry : properties.entrySet()) {
+            final String[] parts = SPLIT_PATTERN.split(entry.getValue().toString());
+            final String name = entry.getKey().toString();
+            for (String value : parts) {
+                AGGREGATED_ENTITIES.add(name, value);
+            }
+        }
+    }
 
-	@Override
-	public void startRecord(final String identifier) {
-		entityStack.clear();
-		aggregationId = identifier;
-		getReceiver().startRecord(identifier);
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        entityStack.clear();
+        aggregationId = identifier;
+        getReceiver().startRecord(identifier);
+    }
 
-	@Override
-	public void endRecord() {
-		writeAggregation();
-		aggregation.clear();
-		getReceiver().endRecord();
-	}
+    @Override
+    public void endRecord() {
+        writeAggregation();
+        aggregation.clear();
+        getReceiver().endRecord();
+    }
 
-	private void writeAggregation() {
-		if (!aggregation.isEmpty()) {
-			final StreamReceiver receiver = getReceiver();
-			receiver.startEntity(ORE_AGGREGATION);
-			receiver.literal(RDF_ABOUT, aggregationId);
-			for (Entry<String, List<String>> entry : aggregation.entrySet()) {
-				final String key = entry.getKey();
-				if (AGGREGATED_ENTITIES.containsKey(key)) {
+    private void writeAggregation() {
+        if (!aggregation.isEmpty()) {
+            final StreamReceiver receiver = getReceiver();
+            receiver.startEntity(ORE_AGGREGATION);
+            receiver.literal(RDF_ABOUT, aggregationId);
+            for (Entry<String, List<String>> entry : aggregation.entrySet()) {
+                final String key = entry.getKey();
+                if (AGGREGATED_ENTITIES.containsKey(key)) {
 
-					for (String entity : AGGREGATED_ENTITIES.get(key)) {
-						for (String value : entry.getValue()) {
-							receiver.startEntity(entity);
-							receiver.literal(RDF_REFERENCE, value);
-							receiver.endEntity();
-						}
-					}
-				} else {
-					for (String value : entry.getValue()) {
-						receiver.literal(key, value);
-					}
-				}
-			}
-			receiver.endEntity();
-		}
-	}
+                    for (String entity : AGGREGATED_ENTITIES.get(key)) {
+                        for (String value : entry.getValue()) {
+                            receiver.startEntity(entity);
+                            receiver.literal(RDF_REFERENCE, value);
+                            receiver.endEntity();
+                        }
+                    }
+                } else {
+                    for (String value : entry.getValue()) {
+                        receiver.literal(key, value);
+                    }
+                }
+            }
+            receiver.endEntity();
+        }
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		entityStack.push(name);
-		getReceiver().startEntity(name);
-	}
+    @Override
+    public void startEntity(final String name) {
+        entityStack.push(name);
+        getReceiver().startEntity(name);
+    }
 
-	@Override
-	public void endEntity() {
-		entityStack.pop();
-		getReceiver().endEntity();
-	}
+    @Override
+    public void endEntity() {
+        entityStack.pop();
+        getReceiver().endEntity();
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		if (entityStack.isEmpty()) {
-			if (AGGREGATION_ID.equals(name)) {
-				aggregationId = value;
-			} else {
-				aggregation.add(name, value);
-			}
-			return;
-		}
+    @Override
+    public void literal(final String name, final String value) {
+        if (entityStack.isEmpty()) {
+            if (AGGREGATION_ID.equals(name)) {
+                aggregationId = value;
+            } else {
+                aggregation.add(name, value);
+            }
+            return;
+        }
 
-		if (entityStack.size()==1 && RDF_ABOUT.equals(name) && AGGREGATED_ENTITIES.containsKey(entityStack.peek())) {
-			aggregation.add(entityStack.peek(), value);
-		}
-		getReceiver().literal(name, value);
-	}
+        if (entityStack.size()==1 && RDF_ABOUT.equals(name) && AGGREGATED_ENTITIES.containsKey(entityStack.peek())) {
+            aggregation.add(entityStack.peek(), value);
+        }
+        getReceiver().literal(name, value);
+    }
 }

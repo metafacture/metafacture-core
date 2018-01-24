@@ -39,117 +39,117 @@ import org.metafacture.framework.helpers.DefaultStreamReceiver;
  */
 public class EntityPathTracker extends DefaultStreamReceiver {
 
-	public static final String DEFAULT_ENTITY_SEPARATOR = ".";
+    public static final String DEFAULT_ENTITY_SEPARATOR = ".";
 
-	private final Deque<String> entityStack = new ArrayDeque<String>();
-	private final StringBuilder currentPath = new StringBuilder();
+    private final Deque<String> entityStack = new ArrayDeque<String>();
+    private final StringBuilder currentPath = new StringBuilder();
 
-	private String entitySeparator = DEFAULT_ENTITY_SEPARATOR;
+    private String entitySeparator = DEFAULT_ENTITY_SEPARATOR;
 
-	/**
-	 * Returns the current entity path.
-	 *
-	 * @return the current entity path or an empty string if not within a record.
-	 */
-	public String getCurrentPath() {
-		return currentPath.toString();
-	}
+    /**
+     * Returns the current entity path.
+     *
+     * @return the current entity path or an empty string if not within a record.
+     */
+    public String getCurrentPath() {
+        return currentPath.toString();
+    }
 
-	/**
-	 * Returns the current entity path with the given literal name appended.
-	 *
-	 * @param literalName the literal name to append to the current entity path.
-	 *                    Must not be null.
-	 * @return the current entity path with the literal name appended. The {@link
-	 * #getEntitySeparator()} is used to separate both unless no entity was
-	 * received yet in which case only the literal name is returned.
-	 */
-	public String getCurrentPathWith(final String literalName) {
-		if (entityStack.size() == 0) {
-			return literalName;
-		}
-		return getCurrentPath() + entitySeparator + literalName;
-	}
+    /**
+     * Returns the current entity path with the given literal name appended.
+     *
+     * @param literalName the literal name to append to the current entity path.
+     *                    Must not be null.
+     * @return the current entity path with the literal name appended. The {@link
+     * #getEntitySeparator()} is used to separate both unless no entity was
+     * received yet in which case only the literal name is returned.
+     */
+    public String getCurrentPathWith(final String literalName) {
+        if (entityStack.size() == 0) {
+            return literalName;
+        }
+        return getCurrentPath() + entitySeparator + literalName;
+    }
 
-	/**
-	 * Returns the name of the current entity.
-	 *
-	 * @return the name of the current entity or null if not in an entity.
-	 */
-	public String getCurrentEntityName() {
-		return entityStack.peek();
-	}
+    /**
+     * Returns the name of the current entity.
+     *
+     * @return the name of the current entity or null if not in an entity.
+     */
+    public String getCurrentEntityName() {
+        return entityStack.peek();
+    }
 
-	public String getEntitySeparator() {
-		return entitySeparator;
-	}
+    public String getEntitySeparator() {
+        return entitySeparator;
+    }
 
-	/**
-	 * Sets the separator between entity names in the path. The default separator
-	 * is &quot;{@value DEFAULT_ENTITY_SEPARATOR}&quot;.
-	 *
-	 * <p>The separator must not be changed while processing a stream.
-	 *
-	 * @param entitySeparator the new entity separator. Can be empty to join
-	 *                        entity names without any separator. Multi-character
-	 *                        separators are also supported. Must not be null.
-	 */
-	public void setEntitySeparator(final String entitySeparator) {
-		this.entitySeparator = entitySeparator;
-	}
+    /**
+     * Sets the separator between entity names in the path. The default separator
+     * is &quot;{@value DEFAULT_ENTITY_SEPARATOR}&quot;.
+     *
+     * <p>The separator must not be changed while processing a stream.
+     *
+     * @param entitySeparator the new entity separator. Can be empty to join
+     *                        entity names without any separator. Multi-character
+     *                        separators are also supported. Must not be null.
+     */
+    public void setEntitySeparator(final String entitySeparator) {
+        this.entitySeparator = entitySeparator;
+    }
 
-	@Override
-	public void startRecord(final String identifier) {
-		clearStackAndPath();
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        clearStackAndPath();
+    }
 
-	@Override
-	public void endRecord() {
-		clearStackAndPath();
-	}
+    @Override
+    public void endRecord() {
+        clearStackAndPath();
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		entityStack.push(name);
-		appendEntityToPath();
-	}
+    @Override
+    public void startEntity(final String name) {
+        entityStack.push(name);
+        appendEntityToPath();
+    }
 
-	@Override
-	public void endEntity() {
-		removeEntityFromPath();
-		entityStack.pop();
-	}
+    @Override
+    public void endEntity() {
+        removeEntityFromPath();
+        entityStack.pop();
+    }
 
-	@Override
-	public void closeStream() {
-		clearStackAndPath();
-	}
+    @Override
+    public void closeStream() {
+        clearStackAndPath();
+    }
 
-	@Override
-	public void resetStream() {
-		clearStackAndPath();
-	}
+    @Override
+    public void resetStream() {
+        clearStackAndPath();
+    }
 
-	private void clearStackAndPath() {
-		entityStack.clear();
-		currentPath.setLength(0);
-	}
+    private void clearStackAndPath() {
+        entityStack.clear();
+        currentPath.setLength(0);
+    }
 
-	private void appendEntityToPath() {
-		if (entityStack.size() > 1) {
-			currentPath.append(entitySeparator);
-		}
-		currentPath.append(entityStack.peek());
-	}
+    private void appendEntityToPath() {
+        if (entityStack.size() > 1) {
+            currentPath.append(entitySeparator);
+        }
+        currentPath.append(entityStack.peek());
+    }
 
-	private void removeEntityFromPath() {
-		final String entityName = entityStack.peek();
-		final int oldPathLength = currentPath.length();
-		int lastEntityLength = entityName.length();
-		if (entityStack.size() > 1) {
-			lastEntityLength += entitySeparator.length();
-		}
-		currentPath.setLength(oldPathLength - lastEntityLength);
-	}
+    private void removeEntityFromPath() {
+        final String entityName = entityStack.peek();
+        final int oldPathLength = currentPath.length();
+        int lastEntityLength = entityName.length();
+        if (entityStack.size() > 1) {
+            lastEntityLength += entitySeparator.length();
+        }
+        currentPath.setLength(oldPathLength - lastEntityLength);
+    }
 
 }

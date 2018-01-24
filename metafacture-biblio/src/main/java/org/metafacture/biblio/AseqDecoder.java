@@ -32,39 +32,39 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(StreamReceiver.class)
 @FluxCommand("decode-aseq")
 public final class AseqDecoder
-		extends DefaultObjectPipe<String, StreamReceiver> {
+        extends DefaultObjectPipe<String, StreamReceiver> {
 
-	private static final String FIELD_DELIMITER = "\n";
+    private static final String FIELD_DELIMITER = "\n";
 
-	@Override
-	public void process(final String record) {
-		assert !isClosed();
-		final String trimedRecord = record.trim();
-		if (trimedRecord.isEmpty()) {
-			return;
-		}
-		final String[] lines = trimedRecord.split(FIELD_DELIMITER);
-		for (int i = 0; i < lines.length; i++) {
-			final String field = lines[i];
-			if (i == 0) {
-				getReceiver().startRecord(field.substring(0, 9));
-			}
-			final String category = field.substring(10, 15).trim();
-			final String fieldContent = field.substring(18).trim();
-			if (!fieldContent.startsWith("$$")) {
-				getReceiver().literal(category, fieldContent);
-			} else {
-				getReceiver().startEntity(category);
-				final String[] subfields = fieldContent.split("\\$\\$");
-				for (final String subfield : subfields) {
-					if (!subfield.isEmpty()) {
-						getReceiver().literal(subfield.substring(0, 1), subfield.substring(1));
-					}
-				}
-				getReceiver().endEntity();
-			}
-		}
-		getReceiver().endRecord();
-	}
+    @Override
+    public void process(final String record) {
+        assert !isClosed();
+        final String trimedRecord = record.trim();
+        if (trimedRecord.isEmpty()) {
+            return;
+        }
+        final String[] lines = trimedRecord.split(FIELD_DELIMITER);
+        for (int i = 0; i < lines.length; i++) {
+            final String field = lines[i];
+            if (i == 0) {
+                getReceiver().startRecord(field.substring(0, 9));
+            }
+            final String category = field.substring(10, 15).trim();
+            final String fieldContent = field.substring(18).trim();
+            if (!fieldContent.startsWith("$$")) {
+                getReceiver().literal(category, fieldContent);
+            } else {
+                getReceiver().startEntity(category);
+                final String[] subfields = fieldContent.split("\\$\\$");
+                for (final String subfield : subfields) {
+                    if (!subfield.isEmpty()) {
+                        getReceiver().literal(subfield.substring(0, 1), subfield.substring(1));
+                    }
+                }
+                getReceiver().endEntity();
+            }
+        }
+        getReceiver().endRecord();
+    }
 
 }

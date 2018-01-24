@@ -32,18 +32,18 @@ import org.metafacture.framework.objects.Triple;
 @FluxCommand("sort-triples")
 public final class TripleSort extends AbstractTripleSort {
 
-	@Override
-	protected void sortedTriple(final Triple triple) {
-		getReceiver().process(triple);
-	}
+    @Override
+    protected void sortedTriple(final Triple triple) {
+        getReceiver().process(triple);
+    }
 
-	public void setBy(final Compare compare){
-		setCompare(compare);
-	}
+    public void setBy(final Compare compare){
+        setCompare(compare);
+    }
 
-	public void setOrder(final Order order){
-		setSortOrder(order);
-	}
+    public void setOrder(final Order order){
+        setSortOrder(order);
+    }
 
 
 }

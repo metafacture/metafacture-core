@@ -73,7 +73,7 @@ public final class AnyTest {
     ordered.verify(receiver).endRecord();
     ordered.verify(receiver).startRecord("3");
     ordered.verify(receiver).endRecord();
-	  ordered.verifyNoMoreInteractions();
+      ordered.verifyNoMoreInteractions();
   }
 
   @Test
@@ -95,7 +95,7 @@ public final class AnyTest {
     ordered.verify(receiver).startRecord("1");
     ordered.verify(receiver).literal("ANY", "found one");
     ordered.verify(receiver).endRecord();
-	  ordered.verifyNoMoreInteractions();
+      ordered.verifyNoMoreInteractions();
   }
 
   @Test
@@ -119,7 +119,7 @@ public final class AnyTest {
     ordered.verify(receiver).startRecord("1");
     ordered.verify(receiver).literal("", "true");
     ordered.verify(receiver).endRecord();
-	  ordered.verifyNoMoreInteractions();
+      ordered.verifyNoMoreInteractions();
   }
 
   @Test
@@ -143,7 +143,7 @@ public final class AnyTest {
     ordered.verify(receiver).startRecord("1");
     ordered.verify(receiver, times(3)).literal("", "true");
     ordered.verify(receiver).endRecord();
-	  ordered.verifyNoMoreInteractions();
+      ordered.verifyNoMoreInteractions();
   }
 
   @Test
@@ -170,7 +170,7 @@ public final class AnyTest {
     ordered.verify(receiver).startRecord("1");
     ordered.verify(receiver, times(2)).literal("", "true");
     ordered.verify(receiver).endRecord();
-	  ordered.verifyNoMoreInteractions();
+      ordered.verifyNoMoreInteractions();
   }
 
   @Test
@@ -193,7 +193,7 @@ public final class AnyTest {
     final InOrder ordered = inOrder(receiver);
     ordered.verify(receiver).startRecord("1");
     ordered.verify(receiver).endRecord();
-	  ordered.verifyNoMoreInteractions();
+      ordered.verifyNoMoreInteractions();
   }
 
 }

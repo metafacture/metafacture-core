@@ -135,140 +135,140 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Description("Decodes MARC 21 records")
 @FluxCommand("decode-marc21")
 public final class Marc21Decoder
-		extends DefaultObjectPipe<String, StreamReceiver> {
+        extends DefaultObjectPipe<String, StreamReceiver> {
 
-	private final FieldHandler fieldHandler = new Marc21Handler();
+    private final FieldHandler fieldHandler = new Marc21Handler();
 
-	private boolean ignoreMissingId;
+    private boolean ignoreMissingId;
 
-	/**
-	 * Controls whether the decoder aborts processing if a record has no
-	 * identifier. A {@link MissingIdException} is thrown in these cases.
-	 * If this parameter is set to true then the identifier emitted with the
-	 * <i>start-record</i> event of records without field &quot;001&quot; will
-	 * be an empty string.
-	 * <p>
-	 * The default value of {@code ignoreMissingId} is false.
-	 * <p>
-	 * This parameter can be changed anytime during processing. The new value
-	 * becomes effective with the next record being processed.
-	 *
-	 * @param ignoreMissingId
-	 *            true if missing identifiers should be silently ignored.
-	 */
-	public void setIgnoreMissingId(final boolean ignoreMissingId) {
-		this.ignoreMissingId = ignoreMissingId;
-	}
+    /**
+     * Controls whether the decoder aborts processing if a record has no
+     * identifier. A {@link MissingIdException} is thrown in these cases.
+     * If this parameter is set to true then the identifier emitted with the
+     * <i>start-record</i> event of records without field &quot;001&quot; will
+     * be an empty string.
+     * <p>
+     * The default value of {@code ignoreMissingId} is false.
+     * <p>
+     * This parameter can be changed anytime during processing. The new value
+     * becomes effective with the next record being processed.
+     *
+     * @param ignoreMissingId
+     *            true if missing identifiers should be silently ignored.
+     */
+    public void setIgnoreMissingId(final boolean ignoreMissingId) {
+        this.ignoreMissingId = ignoreMissingId;
+    }
 
-	public boolean getIgnoreMissingId() {
-		return ignoreMissingId;
-	}
+    public boolean getIgnoreMissingId() {
+        return ignoreMissingId;
+    }
 
-	@Override
-	public void process(final String obj) {
-		if (obj.isEmpty()) {
-			return;
-		}
-		final Record record = new Record(obj.getBytes(Marc21Constants.MARC21_CHARSET));
-		record.setCharset(Marc21Constants.MARC21_CHARSET);
+    @Override
+    public void process(final String obj) {
+        if (obj.isEmpty()) {
+            return;
+        }
+        final Record record = new Record(obj.getBytes(Marc21Constants.MARC21_CHARSET));
+        record.setCharset(Marc21Constants.MARC21_CHARSET);
 
-		requireMarc21RecordFormat(record.getRecordFormat());
-		requireUTF8Encoding(record);
+        requireMarc21RecordFormat(record.getRecordFormat());
+        requireUTF8Encoding(record);
 
-		getReceiver().startRecord(tryGetRecordId(record));
-		emitLeader(record);
-		record.processFields(fieldHandler);
-		getReceiver().endRecord();
-	}
+        getReceiver().startRecord(tryGetRecordId(record));
+        emitLeader(record);
+        record.processFields(fieldHandler);
+        getReceiver().endRecord();
+    }
 
-	private void requireMarc21RecordFormat(final RecordFormat format) {
-		if (!Marc21Constants.MARC21_FORMAT.equals(format)) {
-			throw new FormatException("invalid record format. Expected " +
-					Marc21Constants.MARC21_FORMAT + " but got " + format);
-		}
-	}
+    private void requireMarc21RecordFormat(final RecordFormat format) {
+        if (!Marc21Constants.MARC21_FORMAT.equals(format)) {
+            throw new FormatException("invalid record format. Expected " +
+                    Marc21Constants.MARC21_FORMAT + " but got " + format);
+        }
+    }
 
-	private void requireUTF8Encoding(final Record record) {
-		if (record.getImplCodes()[Marc21Constants.CHARACTER_CODING_INDEX] != 'a') {
-			throw new FormatException(
-					"invalid record encoding. Only UTF-8 is supported");
-		}
-	}
+    private void requireUTF8Encoding(final Record record) {
+        if (record.getImplCodes()[Marc21Constants.CHARACTER_CODING_INDEX] != 'a') {
+            throw new FormatException(
+                    "invalid record encoding. Only UTF-8 is supported");
+        }
+    }
 
-	private String tryGetRecordId(final Record record) {
-		final String id = record.getRecordId();
-		if (id == null) {
-			if (!ignoreMissingId) {
-				throw new MissingIdException("record has no id");
-			}
-			return "";
-		}
-		return id;
-	}
+    private String tryGetRecordId(final Record record) {
+        final String id = record.getRecordId();
+        if (id == null) {
+            if (!ignoreMissingId) {
+                throw new MissingIdException("record has no id");
+            }
+            return "";
+        }
+        return id;
+    }
 
-	private void emitLeader(final Record record) {
-		final char[] implCodes = record.getImplCodes();
-		final char[] systemChars = record.getSystemChars();
-		getReceiver().startEntity(Marc21EventNames.LEADER_ENTITY);
-		getReceiver().literal(Marc21EventNames.RECORD_STATUS_LITERAL, String.valueOf(
-				record.getRecordStatus()));
-		getReceiver().literal(Marc21EventNames.RECORD_TYPE_LITERAL, String.valueOf(
-				implCodes[Marc21Constants.RECORD_TYPE_INDEX]));
-		getReceiver().literal(Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL, String.valueOf(
-				implCodes[Marc21Constants.BIBLIOGRAPHIC_LEVEL_INDEX]));
-		getReceiver().literal(Marc21EventNames.TYPE_OF_CONTROL_LITERAL, String.valueOf(
-				implCodes[Marc21Constants.TYPE_OF_CONTROL_INDEX]));
-		getReceiver().literal(Marc21EventNames.CHARACTER_CODING_LITERAL, String.valueOf(
-				implCodes[Marc21Constants.CHARACTER_CODING_INDEX]));
-		getReceiver().literal(Marc21EventNames.ENCODING_LEVEL_LITERAL, String.valueOf(
-				systemChars[Marc21Constants.ENCODING_LEVEL_INDEX]));
-		getReceiver().literal(Marc21EventNames.CATALOGING_FORM_LITERAL, String.valueOf(
-				systemChars[Marc21Constants.CATALOGING_FORM_INDEX]));
-		getReceiver().literal(Marc21EventNames.MULTIPART_LEVEL_LITERAL, String.valueOf(
-				systemChars[Marc21Constants.MULTIPART_LEVEL_INDEX]));
-		getReceiver().endEntity();
-	}
+    private void emitLeader(final Record record) {
+        final char[] implCodes = record.getImplCodes();
+        final char[] systemChars = record.getSystemChars();
+        getReceiver().startEntity(Marc21EventNames.LEADER_ENTITY);
+        getReceiver().literal(Marc21EventNames.RECORD_STATUS_LITERAL, String.valueOf(
+                record.getRecordStatus()));
+        getReceiver().literal(Marc21EventNames.RECORD_TYPE_LITERAL, String.valueOf(
+                implCodes[Marc21Constants.RECORD_TYPE_INDEX]));
+        getReceiver().literal(Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL, String.valueOf(
+                implCodes[Marc21Constants.BIBLIOGRAPHIC_LEVEL_INDEX]));
+        getReceiver().literal(Marc21EventNames.TYPE_OF_CONTROL_LITERAL, String.valueOf(
+                implCodes[Marc21Constants.TYPE_OF_CONTROL_INDEX]));
+        getReceiver().literal(Marc21EventNames.CHARACTER_CODING_LITERAL, String.valueOf(
+                implCodes[Marc21Constants.CHARACTER_CODING_INDEX]));
+        getReceiver().literal(Marc21EventNames.ENCODING_LEVEL_LITERAL, String.valueOf(
+                systemChars[Marc21Constants.ENCODING_LEVEL_INDEX]));
+        getReceiver().literal(Marc21EventNames.CATALOGING_FORM_LITERAL, String.valueOf(
+                systemChars[Marc21Constants.CATALOGING_FORM_INDEX]));
+        getReceiver().literal(Marc21EventNames.MULTIPART_LEVEL_LITERAL, String.valueOf(
+                systemChars[Marc21Constants.MULTIPART_LEVEL_INDEX]));
+        getReceiver().endEntity();
+    }
 
-	/**
-	 * Emits the fields in a MARC 21 record as stream events.
-	 */
-	private final class Marc21Handler implements FieldHandler {
+    /**
+     * Emits the fields in a MARC 21 record as stream events.
+     */
+    private final class Marc21Handler implements FieldHandler {
 
-		@Override
-		public void referenceField(final char[] tag, final char[] implDefinedPart,
-				final String value) {
-			getReceiver().literal(String.valueOf(tag), value);
-		}
+        @Override
+        public void referenceField(final char[] tag, final char[] implDefinedPart,
+                final String value) {
+            getReceiver().literal(String.valueOf(tag), value);
+        }
 
-		@Override
-		public void startDataField(final char[] tag, final char[] implDefinedPart,
-				final char[] indicators) {
-			getReceiver().startEntity(buildName(tag, indicators));
-		}
+        @Override
+        public void startDataField(final char[] tag, final char[] implDefinedPart,
+                final char[] indicators) {
+            getReceiver().startEntity(buildName(tag, indicators));
+        }
 
-		private String buildName(final char[] tag, final char[] indicators) {
-			final int nameLength = tag.length + indicators.length;
-			final char[] name = new char[nameLength];
-			System.arraycopy(tag, 0, name, 0, tag.length);
-			System.arraycopy(indicators, 0, name, tag.length, indicators.length);
-			return String.valueOf(name);
-		}
+        private String buildName(final char[] tag, final char[] indicators) {
+            final int nameLength = tag.length + indicators.length;
+            final char[] name = new char[nameLength];
+            System.arraycopy(tag, 0, name, 0, tag.length);
+            System.arraycopy(indicators, 0, name, tag.length, indicators.length);
+            return String.valueOf(name);
+        }
 
-		@Override
-		public void endDataField() {
-			getReceiver().endEntity();
-		}
+        @Override
+        public void endDataField() {
+            getReceiver().endEntity();
+        }
 
-		@Override
-		public void additionalImplDefinedPart(final char[] implDefinedPart) {
-			// Nothing to do. MARC 21 does not use implementation defined parts.
-		}
+        @Override
+        public void additionalImplDefinedPart(final char[] implDefinedPart) {
+            // Nothing to do. MARC 21 does not use implementation defined parts.
+        }
 
-		@Override
-		public void data(final char[] identifier, final String value) {
-			getReceiver().literal(String.valueOf(identifier[0]), value);
-		}
+        @Override
+        public void data(final char[] identifier, final String value) {
+            getReceiver().literal(String.valueOf(identifier[0]), value);
+        }
 
-	}
+    }
 
 }

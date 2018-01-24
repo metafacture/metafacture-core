@@ -29,14 +29,14 @@ import org.metafacture.metamorph.api.NamedValuePipe;
  */
 final class NullInterceptorFactory implements InterceptorFactory {
 
-	@Override
-	public NamedValuePipe createNamedValueInterceptor() {
-		return null;
-	}
+    @Override
+    public NamedValuePipe createNamedValueInterceptor() {
+        return null;
+    }
 
-	@Override
-	public FlushListener createFlushInterceptor(final FlushListener listener) {
-		return null;
-	}
+    @Override
+    public FlushListener createFlushInterceptor(final FlushListener listener) {
+        return null;
+    }
 
 }

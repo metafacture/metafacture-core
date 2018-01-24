@@ -29,119 +29,119 @@ import org.metafacture.framework.StreamReceiver;
  */
 public final class EventList implements StreamReceiver {
 
-	private final List<Event> events = new ArrayList<Event>();
+    private final List<Event> events = new ArrayList<Event>();
 
-	private boolean closed;
+    private boolean closed;
 
-	public List<Event> getEvents() {
-		return Collections.unmodifiableList(events);
-	}
+    public List<Event> getEvents() {
+        return Collections.unmodifiableList(events);
+    }
 
-	public boolean isClosed() {
-		return closed;
-	}
+    public boolean isClosed() {
+        return closed;
+    }
 
-	@Override
-	public void startRecord(final String identifier) {
-		assert !closed;
-		events.add(new Event(Event.Type.START_RECORD, identifier));
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        assert !closed;
+        events.add(new Event(Event.Type.START_RECORD, identifier));
+    }
 
-	@Override
-	public void endRecord() {
-		assert !closed;
-		events.add(new Event(Event.Type.END_RECORD));
-	}
+    @Override
+    public void endRecord() {
+        assert !closed;
+        events.add(new Event(Event.Type.END_RECORD));
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		assert !closed;
-		events.add(new Event(Event.Type.START_ENTITY, name));
-	}
+    @Override
+    public void startEntity(final String name) {
+        assert !closed;
+        events.add(new Event(Event.Type.START_ENTITY, name));
+    }
 
-	@Override
-	public void endEntity() {
-		assert !closed;
-		events.add(new Event(Event.Type.END_ENTITY));
-	}
+    @Override
+    public void endEntity() {
+        assert !closed;
+        events.add(new Event(Event.Type.END_ENTITY));
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		assert !closed;
-		events.add(new Event(Event.Type.LITERAL, name, value));
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        assert !closed;
+        events.add(new Event(Event.Type.LITERAL, name, value));
+    }
 
-	@Override
-	public void resetStream() {
-		closed = false;
-		events.clear();
-	}
+    @Override
+    public void resetStream() {
+        closed = false;
+        events.clear();
+    }
 
-	@Override
-	public void closeStream() {
-		closed = true;
-	}
+    @Override
+    public void closeStream() {
+        closed = true;
+    }
 
-	/**
-	 * Data type for stream events.
-	 *
-	 * @author Christoph Böhme
-	 */
-	public static final class Event {
+    /**
+     * Data type for stream events.
+     *
+     * @author Christoph Böhme
+     */
+    public static final class Event {
 
-		/**
-		 * Event types
-		 */
-		public enum Type {
-			START_RECORD, END_RECORD, START_ENTITY, END_ENTITY, LITERAL
-		}
+        /**
+         * Event types
+         */
+        public enum Type {
+            START_RECORD, END_RECORD, START_ENTITY, END_ENTITY, LITERAL
+        }
 
-		private final Type type;
-		private final String name;
-		private final String value;
+        private final Type type;
+        private final String name;
+        private final String value;
 
-		Event(final Type type) {
-			this(type, null);
-		}
+        Event(final Type type) {
+            this(type, null);
+        }
 
-		Event(final Type type, final String name) {
-			this(type, name, null);
-		}
+        Event(final Type type, final String name) {
+            this(type, name, null);
+        }
 
-		Event(final Type type, final String name, final String value) {
-			this.type = type;
-			this.name = name;
-			this.value = value;
-		}
+        Event(final Type type, final String name, final String value) {
+            this.type = type;
+            this.name = name;
+            this.value = value;
+        }
 
-		public Type getType() {
-			return type;
-		}
+        public Type getType() {
+            return type;
+        }
 
-		public String getName() {
-			return name;
-		}
+        public String getName() {
+            return name;
+        }
 
-		public String getValue() {
-			return value;
-		}
+        public String getValue() {
+            return value;
+        }
 
-		@Override
-		public String toString() {
-			final StringBuilder builder = new StringBuilder();
-			builder.append(type);
-			if (name != null) {
-				builder.append("(" );
-				builder.append(name);
-				if (value != null) {
-					builder.append("=");
-					builder.append(value);
-				}
-				builder.append(")");
-			}
-			return builder.toString();
-		}
+        @Override
+        public String toString() {
+            final StringBuilder builder = new StringBuilder();
+            builder.append(type);
+            if (name != null) {
+                builder.append("(" );
+                builder.append(name);
+                if (value != null) {
+                    builder.append("=");
+                    builder.append(value);
+                }
+                builder.append(")");
+            }
+            return builder.toString();
+        }
 
-	}
+    }
 
 }

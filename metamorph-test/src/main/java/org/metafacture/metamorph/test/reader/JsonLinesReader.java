@@ -26,8 +26,8 @@ import org.metafacture.json.JsonDecoder;
  */
 public class JsonLinesReader extends ReaderBase {
 
-	public JsonLinesReader() {
-		super(new LineReader(), new JsonDecoder());
-	}
+    public JsonLinesReader() {
+        super(new LineReader(), new JsonDecoder());
+    }
 
 }

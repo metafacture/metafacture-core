@@ -69,144 +69,144 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @FluxCommand("change-id")
 public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
 
-	private final StreamBuffer streamBuffer = new StreamBuffer();
-	private final EntityPathTracker entityPathTracker = new EntityPathTracker();
+    private final StreamBuffer streamBuffer = new StreamBuffer();
+    private final EntityPathTracker entityPathTracker = new EntityPathTracker();
 
-	private String idLiteral = StandardEventNames.ID;
-	private String currentIdentifier;
-	private String originalIdentifier;
-	private boolean keepRecordsWithoutIdLiteral = true;
-	private boolean keepIdLiteral;
+    private String idLiteral = StandardEventNames.ID;
+    private String currentIdentifier;
+    private String originalIdentifier;
+    private boolean keepRecordsWithoutIdLiteral = true;
+    private boolean keepIdLiteral;
 
-	/**
-	 * Sets the name of the literal that contains the new record id. This must be
-	 * a qualified literal name including the entities in which the literal is
-	 * contained.
-	 * <p>
-	 * For instance, the id literal &ldquo;metadata.id&rdquo; matches only
-	 * literals named &ldquo;id&rdquo; which are part of an entity named
-	 * &ldquo;metadata&rdquo;.
-	 * <p>
-	 * The default value is &ldquo;{@value StandardEventNames#ID}&rdquo;.
-	 * <p>
-	 * This parameter must only be changed between records otherwise the
-	 * behaviour of the module is undefined.
-	 *
-	 * @param idLiteral a qualified literal name
-	 */
-	public void setIdLiteral(final String idLiteral) {
-		this.idLiteral = idLiteral;
-	}
+    /**
+     * Sets the name of the literal that contains the new record id. This must be
+     * a qualified literal name including the entities in which the literal is
+     * contained.
+     * <p>
+     * For instance, the id literal &ldquo;metadata.id&rdquo; matches only
+     * literals named &ldquo;id&rdquo; which are part of an entity named
+     * &ldquo;metadata&rdquo;.
+     * <p>
+     * The default value is &ldquo;{@value StandardEventNames#ID}&rdquo;.
+     * <p>
+     * This parameter must only be changed between records otherwise the
+     * behaviour of the module is undefined.
+     *
+     * @param idLiteral a qualified literal name
+     */
+    public void setIdLiteral(final String idLiteral) {
+        this.idLiteral = idLiteral;
+    }
 
-	public String getIdLiteral() {
-		return idLiteral;
-	}
+    public String getIdLiteral() {
+        return idLiteral;
+    }
 
-	/**
-	 * Controls whether records without an id literal are kept in the stream or
-	 * removed from the stream.
-	 * <p>
-	 * By default records without an id literal are kept in the stream.
-	 * <p>
-	 * This parameter may be changed at any time it becomes effective with the
-	 * next <i>end-record</i> event.
-	 *
-	 * @param keepRecordsWithoutIdLiteral true to keep records without id
-	 * literal, false to remove them
-	 */
-	public void setKeepRecordsWithoutIdLiteral(
-			final boolean keepRecordsWithoutIdLiteral) {
-		this.keepRecordsWithoutIdLiteral = keepRecordsWithoutIdLiteral;
-	}
+    /**
+     * Controls whether records without an id literal are kept in the stream or
+     * removed from the stream.
+     * <p>
+     * By default records without an id literal are kept in the stream.
+     * <p>
+     * This parameter may be changed at any time it becomes effective with the
+     * next <i>end-record</i> event.
+     *
+     * @param keepRecordsWithoutIdLiteral true to keep records without id
+     * literal, false to remove them
+     */
+    public void setKeepRecordsWithoutIdLiteral(
+            final boolean keepRecordsWithoutIdLiteral) {
+        this.keepRecordsWithoutIdLiteral = keepRecordsWithoutIdLiteral;
+    }
 
-	public boolean getKeepRecordsWithoutIdLiteral() {
-		return keepRecordsWithoutIdLiteral;
-	}
+    public boolean getKeepRecordsWithoutIdLiteral() {
+        return keepRecordsWithoutIdLiteral;
+    }
 
-	/**
-	 * Controls whether the id literal is kept in the record after changing the
-	 * record id. If a record contains multiple id literals, all of them are
-	 * removed.
-	 * <p>
-	 * By default the id literal is removed from the stream.
-	 * <p>
-	 * This parameter must only be changed between records otherwise the
-	 * behaviour of the module is undefined.
-	 *
-	 * @param keepIdLiteral true to keep id literals in records, false to
-	 * remove them
-	 */
-	public void setKeepIdLiteral(final boolean keepIdLiteral) {
-		this.keepIdLiteral = keepIdLiteral;
-	}
+    /**
+     * Controls whether the id literal is kept in the record after changing the
+     * record id. If a record contains multiple id literals, all of them are
+     * removed.
+     * <p>
+     * By default the id literal is removed from the stream.
+     * <p>
+     * This parameter must only be changed between records otherwise the
+     * behaviour of the module is undefined.
+     *
+     * @param keepIdLiteral true to keep id literals in records, false to
+     * remove them
+     */
+    public void setKeepIdLiteral(final boolean keepIdLiteral) {
+        this.keepIdLiteral = keepIdLiteral;
+    }
 
-	public boolean getKeepIdLiteral() {
-		return keepIdLiteral;
-	}
+    public boolean getKeepIdLiteral() {
+        return keepIdLiteral;
+    }
 
-	@Override
-	public void startRecord(final String identifier) {
-		assert !isClosed();
-		currentIdentifier = null;
-		originalIdentifier = identifier;
-		entityPathTracker.startRecord(identifier);
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        assert !isClosed();
+        currentIdentifier = null;
+        originalIdentifier = identifier;
+        entityPathTracker.startRecord(identifier);
+    }
 
-	@Override
-	public void endRecord() {
-		assert !isClosed();
-		if (currentIdentifier != null || keepRecordsWithoutIdLiteral) {
-			if (currentIdentifier == null) {
-				getReceiver().startRecord(originalIdentifier);
-			} else {
-				getReceiver().startRecord(currentIdentifier);
-			}
-			streamBuffer.replay();
-			getReceiver().endRecord();
-		}
-		streamBuffer.clear();
-		entityPathTracker.endRecord();
-	}
+    @Override
+    public void endRecord() {
+        assert !isClosed();
+        if (currentIdentifier != null || keepRecordsWithoutIdLiteral) {
+            if (currentIdentifier == null) {
+                getReceiver().startRecord(originalIdentifier);
+            } else {
+                getReceiver().startRecord(currentIdentifier);
+            }
+            streamBuffer.replay();
+            getReceiver().endRecord();
+        }
+        streamBuffer.clear();
+        entityPathTracker.endRecord();
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		streamBuffer.startEntity(name);
-		entityPathTracker.startEntity(name);
-	}
+    @Override
+    public void startEntity(final String name) {
+        streamBuffer.startEntity(name);
+        entityPathTracker.startEntity(name);
+    }
 
-	@Override
-	public void endEntity() {
-		streamBuffer.endEntity();
-		entityPathTracker.endEntity();
-	}
+    @Override
+    public void endEntity() {
+        streamBuffer.endEntity();
+        entityPathTracker.endEntity();
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		final String qualifiedName = entityPathTracker.getCurrentPathWith(name);
-		if (idLiteral.equals(qualifiedName)) {
-			currentIdentifier = value;
-			if (!keepIdLiteral) {
-				return;
-			}
-		}
-		streamBuffer.literal(name, value);
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        final String qualifiedName = entityPathTracker.getCurrentPathWith(name);
+        if (idLiteral.equals(qualifiedName)) {
+            currentIdentifier = value;
+            if (!keepIdLiteral) {
+                return;
+            }
+        }
+        streamBuffer.literal(name, value);
+    }
 
-	@Override
-	public void onSetReceiver() {
-		streamBuffer.setReceiver(getReceiver());
-	}
+    @Override
+    public void onSetReceiver() {
+        streamBuffer.setReceiver(getReceiver());
+    }
 
-	@Override
-	public void onResetStream() {
-		streamBuffer.clear();
-		entityPathTracker.resetStream();
-	}
+    @Override
+    public void onResetStream() {
+        streamBuffer.clear();
+        entityPathTracker.resetStream();
+    }
 
-	@Override
-	public void onCloseStream() {
-		streamBuffer.clear();
-		entityPathTracker.closeStream();
-	}
+    @Override
+    public void onCloseStream() {
+        streamBuffer.clear();
+        entityPathTracker.closeStream();
+    }
 
 }

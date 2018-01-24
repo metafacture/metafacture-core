@@ -34,23 +34,23 @@ import org.metafacture.framework.StreamReceiver;
  */
 public final class DefaultSenderTest {
 
-	@Test
-	public void shouldCallOnCloseStreamOnlyOnce() {
-		final DefaultSender<StreamReceiver> defaultSender =
-				spy(new DefaultSender<>());
+    @Test
+    public void shouldCallOnCloseStreamOnlyOnce() {
+        final DefaultSender<StreamReceiver> defaultSender =
+                spy(new DefaultSender<>());
 
-		verify(defaultSender, never()).onCloseStream();
-		assertFalse(defaultSender.isClosed());
+        verify(defaultSender, never()).onCloseStream();
+        assertFalse(defaultSender.isClosed());
 
-		defaultSender.closeStream();
+        defaultSender.closeStream();
 
-		verify(defaultSender, times(1)).onCloseStream();
-		assertTrue(defaultSender.isClosed());
+        verify(defaultSender, times(1)).onCloseStream();
+        assertTrue(defaultSender.isClosed());
 
-		defaultSender.closeStream();
+        defaultSender.closeStream();
 
-		verify(defaultSender, times(1)).onCloseStream();
-		assertTrue(defaultSender.isClosed());
-	}
+        verify(defaultSender, times(1)).onCloseStream();
+        assertTrue(defaultSender.isClosed());
+    }
 
 }

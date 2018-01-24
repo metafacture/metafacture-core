@@ -35,87 +35,87 @@ import org.mockito.MockitoAnnotations;
  */
 public final class Marc21DecoderTest {
 
-	private static final char SUBFIELD_MARKER = '\u001f';
-	private static final char FIELD_SEPARATOR = '\u001e';
-	private static final char RECORD_SEPARATOR = '\u001d';
+    private static final char SUBFIELD_MARKER = '\u001f';
+    private static final char FIELD_SEPARATOR = '\u001e';
+    private static final char RECORD_SEPARATOR = '\u001d';
 
-	private static final String RECORD_ID = "identifier";
-	private static final String CONTROLFIELD_VALUE = "controlfield";
+    private static final String RECORD_ID = "identifier";
+    private static final String CONTROLFIELD_VALUE = "controlfield";
 
-	private static final String FIELD1 = "AB" + SUBFIELD_MARKER + "1"
-			+ "value1";
-	private static final String FIELD2 = "CD" + SUBFIELD_MARKER + "2"
-			+ "value2" + SUBFIELD_MARKER + "3" + "value3";
+    private static final String FIELD1 = "AB" + SUBFIELD_MARKER + "1"
+            + "value1";
+    private static final String FIELD2 = "CD" + SUBFIELD_MARKER + "2"
+            + "value2" + SUBFIELD_MARKER + "3" + "value3";
 
-	private static final String RECORD_LABEL = "00128noa a2200073zu 4500";
-	private static final String DIRECTORY = "001001100000" + "002001300011"
-			+ "100001100024" + "200003100035";
-	private static final String DATA = RECORD_ID + FIELD_SEPARATOR
-			+ CONTROLFIELD_VALUE + FIELD_SEPARATOR + FIELD1 + FIELD_SEPARATOR
-			+ FIELD2 + FIELD_SEPARATOR;
-	private static final String RECORD = RECORD_LABEL + DIRECTORY
-			+ FIELD_SEPARATOR + DATA + RECORD_SEPARATOR;
+    private static final String RECORD_LABEL = "00128noa a2200073zu 4500";
+    private static final String DIRECTORY = "001001100000" + "002001300011"
+            + "100001100024" + "200003100035";
+    private static final String DATA = RECORD_ID + FIELD_SEPARATOR
+            + CONTROLFIELD_VALUE + FIELD_SEPARATOR + FIELD1 + FIELD_SEPARATOR
+            + FIELD2 + FIELD_SEPARATOR;
+    private static final String RECORD = RECORD_LABEL + DIRECTORY
+            + FIELD_SEPARATOR + DATA + RECORD_SEPARATOR;
 
-	private Marc21Decoder marc21Decoder;
+    private Marc21Decoder marc21Decoder;
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		marc21Decoder = new Marc21Decoder();
-		marc21Decoder.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        marc21Decoder = new Marc21Decoder();
+        marc21Decoder.setReceiver(receiver);
+    }
 
-	@After
-	public void cleanup() {
-		marc21Decoder.closeStream();
-	}
+    @After
+    public void cleanup() {
+        marc21Decoder.closeStream();
+    }
 
-	@Test
-	public void shouldProcessMarc21Record() {
-		marc21Decoder.process(RECORD);
+    @Test
+    public void shouldProcessMarc21Record() {
+        marc21Decoder.process(RECORD);
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord(RECORD_ID);
-		ordered.verify(receiver).startEntity("leader");
-		ordered.verify(receiver).literal("status", "n");
-		ordered.verify(receiver).literal("type", "o");
-		ordered.verify(receiver).literal("bibliographicLevel", "a");
-		ordered.verify(receiver).literal("typeOfControl", " ");
-		ordered.verify(receiver).literal("characterCodingScheme", "a");
-		ordered.verify(receiver).literal("encodingLevel", "z");
-		ordered.verify(receiver).literal("catalogingForm", "u");
-		ordered.verify(receiver).literal("multipartLevel", " ");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).literal("001", RECORD_ID);
-		ordered.verify(receiver).literal("002", CONTROLFIELD_VALUE);
-		ordered.verify(receiver).startEntity("100AB");
-		ordered.verify(receiver).literal("1", "value1");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).startEntity("200CD");
-		ordered.verify(receiver).literal("2", "value2");
-		ordered.verify(receiver).literal("3", "value3");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(RECORD_ID);
+        ordered.verify(receiver).startEntity("leader");
+        ordered.verify(receiver).literal("status", "n");
+        ordered.verify(receiver).literal("type", "o");
+        ordered.verify(receiver).literal("bibliographicLevel", "a");
+        ordered.verify(receiver).literal("typeOfControl", " ");
+        ordered.verify(receiver).literal("characterCodingScheme", "a");
+        ordered.verify(receiver).literal("encodingLevel", "z");
+        ordered.verify(receiver).literal("catalogingForm", "u");
+        ordered.verify(receiver).literal("multipartLevel", " ");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).literal("001", RECORD_ID);
+        ordered.verify(receiver).literal("002", CONTROLFIELD_VALUE);
+        ordered.verify(receiver).startEntity("100AB");
+        ordered.verify(receiver).literal("1", "value1");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).startEntity("200CD");
+        ordered.verify(receiver).literal("2", "value2");
+        ordered.verify(receiver).literal("3", "value3");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void shouldIgnoreEmptyRecords() {
-		marc21Decoder.process("");
-		verifyZeroInteractions(receiver);
-	}
+    @Test
+    public void shouldIgnoreEmptyRecords() {
+        marc21Decoder.process("");
+        verifyZeroInteractions(receiver);
+    }
 
-	@Test(expected = FormatException.class)
-	public void shouldThrowFormatExceptionIfRecordIsNotMarc21() {
-		marc21Decoder.process("00026RIMPL1100024SYS3330" + FIELD_SEPARATOR
-				+ RECORD_SEPARATOR);
-	}
+    @Test(expected = FormatException.class)
+    public void shouldThrowFormatExceptionIfRecordIsNotMarc21() {
+        marc21Decoder.process("00026RIMPL1100024SYS3330" + FIELD_SEPARATOR
+                + RECORD_SEPARATOR);
+    }
 
-	@Test(expected = FormatException.class)
-	public void shouldThrowFormatExceptionIfRecordIsTooShort() {
-		marc21Decoder.process("00005");
-	}
+    @Test(expected = FormatException.class)
+    public void shouldThrowFormatExceptionIfRecordIsTooShort() {
+        marc21Decoder.process("00005");
+    }
 
 }

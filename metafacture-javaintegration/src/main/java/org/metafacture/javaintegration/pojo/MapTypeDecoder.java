@@ -26,32 +26,32 @@ import org.metafacture.framework.StreamReceiver;
  */
 class MapTypeDecoder implements TypeDecoder {
 
-	private final TypeDecoderFactory typeDecoderFactory;
+    private final TypeDecoderFactory typeDecoderFactory;
 
-	MapTypeDecoder(final TypeDecoderFactory typeDecoderFactory) {
-		this.typeDecoderFactory = typeDecoderFactory;
-	}
+    MapTypeDecoder(final TypeDecoderFactory typeDecoderFactory) {
+        this.typeDecoderFactory = typeDecoderFactory;
+    }
 
-	static boolean supportsType(final Class<?> clazz) {
-		return Map.class.isAssignableFrom(clazz);
-	}
+    static boolean supportsType(final Class<?> clazz) {
+        return Map.class.isAssignableFrom(clazz);
+    }
 
-	@Override
-	public void decodeToStream(final StreamReceiver streamReceiver,
-			final String name, final Object object) {
-		final Map<?, ?> map = (Map<?, ?>) object;
-		if (name != null) {
-			streamReceiver.startEntity(name);
-		}
-		for (final Map.Entry<?, ?> entry : map.entrySet()) {
-			final String key = entry.getKey().toString();
-			final Object value = entry.getValue();
-			final TypeDecoder typeDecoder = typeDecoderFactory.create(value
-					.getClass());
-			typeDecoder.decodeToStream(streamReceiver, key, value);
-		}
-		if (name != null) {
-			streamReceiver.endEntity();
-		}
-	}
+    @Override
+    public void decodeToStream(final StreamReceiver streamReceiver,
+            final String name, final Object object) {
+        final Map<?, ?> map = (Map<?, ?>) object;
+        if (name != null) {
+            streamReceiver.startEntity(name);
+        }
+        for (final Map.Entry<?, ?> entry : map.entrySet()) {
+            final String key = entry.getKey().toString();
+            final Object value = entry.getValue();
+            final TypeDecoder typeDecoder = typeDecoderFactory.create(value
+                    .getClass());
+            typeDecoder.decodeToStream(streamReceiver, key, value);
+        }
+        if (name != null) {
+            streamReceiver.endEntity();
+        }
+    }
 }

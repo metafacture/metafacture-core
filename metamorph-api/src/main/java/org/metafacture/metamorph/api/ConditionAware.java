@@ -23,6 +23,6 @@ package org.metafacture.metamorph.api;
  */
 public interface ConditionAware {
 
-	void setConditionSource(NamedValueSource receiver);
+    void setConditionSource(NamedValueSource receiver);
 
 }

@@ -29,51 +29,51 @@ import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
  */
 public final class Square extends AbstractFlushingCollect {
 
-	private final List<String> values = new ArrayList<String>();
-	private String prefix = "";
-	private String postfix = "";
-	private String delimiter = "";
+    private final List<String> values = new ArrayList<String>();
+    private String prefix = "";
+    private String postfix = "";
+    private String delimiter = "";
 
-	public void setPrefix(final String prefix) {
-		this.prefix = prefix;
-	}
+    public void setPrefix(final String prefix) {
+        this.prefix = prefix;
+    }
 
-	public void setPostfix(final String postfix) {
-		this.postfix = postfix;
-	}
+    public void setPostfix(final String postfix) {
+        this.postfix = postfix;
+    }
 
-	public void setDelimiter(final String delimiter) {
-		this.delimiter = delimiter;
-	}
+    public void setDelimiter(final String delimiter) {
+        this.delimiter = delimiter;
+    }
 
-	@Override
-	protected void emit() {
-		Collections.sort(values);
-		final int size = values.size();
-		for (int i = 0; i < size; i++) {
-			final String last = values.remove(values.size() - 1);
-			for (final String value : values) {
-				getNamedValueReceiver().receive(getName(),
-						prefix + value + delimiter + last + postfix, this,
-						getRecordCount(), getEntityCount());
-			}
-		}
-	}
+    @Override
+    protected void emit() {
+        Collections.sort(values);
+        final int size = values.size();
+        for (int i = 0; i < size; i++) {
+            final String last = values.remove(values.size() - 1);
+            for (final String value : values) {
+                getNamedValueReceiver().receive(getName(),
+                        prefix + value + delimiter + last + postfix, this,
+                        getRecordCount(), getEntityCount());
+            }
+        }
+    }
 
-	@Override
-	protected boolean isComplete() {
-		return false;
-	}
+    @Override
+    protected boolean isComplete() {
+        return false;
+    }
 
-	@Override
-	protected void receive(final String name, final String value,
-			final NamedValueSource source) {
-		values.add(value);
-	}
+    @Override
+    protected void receive(final String name, final String value,
+            final NamedValueSource source) {
+        values.add(value);
+    }
 
-	@Override
-	protected void clear() {
-		values.clear();
-	}
+    @Override
+    protected void clear() {
+        values.clear();
+    }
 
 }

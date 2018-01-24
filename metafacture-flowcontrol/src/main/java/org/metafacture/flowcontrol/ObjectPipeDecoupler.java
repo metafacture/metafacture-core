@@ -40,114 +40,114 @@ import org.slf4j.LoggerFactory;
 @FluxCommand("decouple")
 public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceiver<T>> {
 
-	public static final int DEFAULT_CAPACITY = 10000;
-	private static final Logger LOG = LoggerFactory.getLogger(ObjectPipeDecoupler.class);
+    public static final int DEFAULT_CAPACITY = 10000;
+    private static final Logger LOG = LoggerFactory.getLogger(ObjectPipeDecoupler.class);
 
-	private final BlockingQueue<Object> queue;
-	private Thread thread;
-	private ObjectReceiver<T> receiver;
-	private boolean debug;
+    private final BlockingQueue<Object> queue;
+    private Thread thread;
+    private ObjectReceiver<T> receiver;
+    private boolean debug;
 
-	public ObjectPipeDecoupler() {
-		queue = new LinkedBlockingQueue<Object>(DEFAULT_CAPACITY);
-	}
+    public ObjectPipeDecoupler() {
+        queue = new LinkedBlockingQueue<Object>(DEFAULT_CAPACITY);
+    }
 
-	public ObjectPipeDecoupler(final int capacity) {
-		queue = new LinkedBlockingQueue<Object>(capacity);
-	}
+    public ObjectPipeDecoupler(final int capacity) {
+        queue = new LinkedBlockingQueue<Object>(capacity);
+    }
 
-	public ObjectPipeDecoupler(final String capacity) {
-		queue = new LinkedBlockingQueue<Object>(Integer.parseInt(capacity));
-	}
+    public ObjectPipeDecoupler(final String capacity) {
+        queue = new LinkedBlockingQueue<Object>(Integer.parseInt(capacity));
+    }
 
-	public void setDebug(final boolean debug) {
-		this.debug = debug;
-	}
+    public void setDebug(final boolean debug) {
+        this.debug = debug;
+    }
 
-	@Override
-	public void process(final T obj) {
+    @Override
+    public void process(final T obj) {
 
-		if (null == thread) {
-			start();
-		}
-		try {
-			queue.put(obj);
-			if (debug) {
-				LOG.info("Current buffer size: " + queue.size());
-			}
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
-	}
+        if (null == thread) {
+            start();
+        }
+        try {
+            queue.put(obj);
+            if (debug) {
+                LOG.info("Current buffer size: " + queue.size());
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 
-	private void start() {
-		thread = new Thread(new Feeder<T>(receiver, queue));
-		thread.start();
-	}
+    private void start() {
+        thread = new Thread(new Feeder<T>(receiver, queue));
+        thread.start();
+    }
 
-	@Override
-	public <R extends ObjectReceiver<T>> R setReceiver(final R receiver) {
-		if (null != thread) {
-			throw new IllegalStateException("Receiver cannot be changed while processing thread is running.");
-		}
+    @Override
+    public <R extends ObjectReceiver<T>> R setReceiver(final R receiver) {
+        if (null != thread) {
+            throw new IllegalStateException("Receiver cannot be changed while processing thread is running.");
+        }
 
-		this.receiver = receiver;
-		return receiver;
-	}
+        this.receiver = receiver;
+        return receiver;
+    }
 
-	@Override
-	public void resetStream() {
-		queue.add(Feeder.BLUE_PILL);
-	}
+    @Override
+    public void resetStream() {
+        queue.add(Feeder.BLUE_PILL);
+    }
 
-	@Override
-	public void closeStream() {
-		queue.add(Feeder.RED_PILL);
-		try {
-			thread.join();
-		} catch (InterruptedException e) {
-			Thread.currentThread().interrupt();
-		}
-		thread = null;
-	}
+    @Override
+    public void closeStream() {
+        queue.add(Feeder.RED_PILL);
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        thread = null;
+    }
 
-	/**
-	 * Pushes the content in the {@link BlockingQueue} to the receiver.
-	 *
-	 * @param <T> the type of objects the {@link ObjectPipeDecoupler} works on
-	 */
-	static final class Feeder<T> implements Runnable {
-		public static final Object RED_PILL = new Object();
-		public static final Object BLUE_PILL = new Object();
+    /**
+     * Pushes the content in the {@link BlockingQueue} to the receiver.
+     *
+     * @param <T> the type of objects the {@link ObjectPipeDecoupler} works on
+     */
+    static final class Feeder<T> implements Runnable {
+        public static final Object RED_PILL = new Object();
+        public static final Object BLUE_PILL = new Object();
 
-		private final ObjectReceiver<T> receiver;
-		private final BlockingQueue<Object> queue;
+        private final ObjectReceiver<T> receiver;
+        private final BlockingQueue<Object> queue;
 
-		public Feeder(final ObjectReceiver<T> receiver, final BlockingQueue<Object> queue) {
-			this.receiver = receiver;
-			this.queue = queue;
-		}
+        public Feeder(final ObjectReceiver<T> receiver, final BlockingQueue<Object> queue) {
+            this.receiver = receiver;
+            this.queue = queue;
+        }
 
-		@SuppressWarnings("unchecked")
-		// OK because queue is only filled with T by Decoupler<T>
-		@Override
-		public void run() {
-			try {
-				while (true) {
-					final Object object = queue.take();
-					if (RED_PILL == object) {
-						receiver.closeStream();
-						break;
-					}
-					if (BLUE_PILL == object) {
-						receiver.resetStream();
-						continue;
-					}
-					receiver.process((T) object);
-				}
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
-		}
-	}
+        @SuppressWarnings("unchecked")
+        // OK because queue is only filled with T by Decoupler<T>
+        @Override
+        public void run() {
+            try {
+                while (true) {
+                    final Object object = queue.take();
+                    if (RED_PILL == object) {
+                        receiver.closeStream();
+                        break;
+                    }
+                    if (BLUE_PILL == object) {
+                        receiver.resetStream();
+                        continue;
+                    }
+                    receiver.process((T) object);
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
 }

@@ -30,12 +30,12 @@ import org.metafacture.framework.helpers.DefaultObjectReceiver;
  */
 public interface ObjectReceiver<T> extends Receiver {
 
-	/**
-	 * This method is called by upstream modules to trigger the
-	 * processing of {@code obj}.
-	 *
-	 * @param obj the object to be processed
-	 */
-	void process(T obj);
+    /**
+     * This method is called by upstream modules to trigger the
+     * processing of {@code obj}.
+     *
+     * @param obj the object to be processed
+     */
+    void process(T obj);
 
 }

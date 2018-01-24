@@ -35,60 +35,60 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
 
 
-	public static final char REFERENCE_MARKER = '*';
-	public static final char LANGUAGE_MARKER = '$';
-	public static final String RDF_REFERENCE = "~rdf:resource";
-	public static final String RDF_ABOUT = "~rdf:about";
-	public static final String XML_LANG = "~xml:lang";
-	private String autoAddedSubject = "";
+    public static final char REFERENCE_MARKER = '*';
+    public static final char LANGUAGE_MARKER = '$';
+    public static final String RDF_REFERENCE = "~rdf:resource";
+    public static final String RDF_ABOUT = "~rdf:about";
+    public static final String XML_LANG = "~xml:lang";
+    private String autoAddedSubject = "";
 
-	public void setAutoAddedSubject(final String autoAddedSubject) {
-		this.autoAddedSubject = autoAddedSubject;
-	}
+    public void setAutoAddedSubject(final String autoAddedSubject) {
+        this.autoAddedSubject = autoAddedSubject;
+    }
 
 
-	@Override
-	public void startRecord(final String identifier) {
-		getReceiver().startRecord(identifier);
-		if(!autoAddedSubject.isEmpty()){
-			getReceiver().startEntity(autoAddedSubject);
-			getReceiver().literal(RDF_ABOUT, identifier);
-		}
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        getReceiver().startRecord(identifier);
+        if(!autoAddedSubject.isEmpty()){
+            getReceiver().startEntity(autoAddedSubject);
+            getReceiver().literal(RDF_ABOUT, identifier);
+        }
+    }
 
-	@Override
-	public void endRecord() {
-		if(!autoAddedSubject.isEmpty()){
-			getReceiver().endEntity();
-		}
-		getReceiver().endRecord();
-	}
+    @Override
+    public void endRecord() {
+        if(!autoAddedSubject.isEmpty()){
+            getReceiver().endEntity();
+        }
+        getReceiver().endRecord();
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		getReceiver().startEntity(name);
-	}
+    @Override
+    public void startEntity(final String name) {
+        getReceiver().startEntity(name);
+    }
 
-	@Override
-	public void endEntity() {
-		getReceiver().endEntity();
+    @Override
+    public void endEntity() {
+        getReceiver().endEntity();
 
-	}
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		final int index = name.indexOf(LANGUAGE_MARKER);
-		if (!name.isEmpty() && name.charAt(0) == REFERENCE_MARKER) {
-			getReceiver().startEntity(name.substring(1));
-			getReceiver().literal(RDF_REFERENCE, value);
-			getReceiver().endEntity();
-		} else if (index > 0) {
-			getReceiver().startEntity(name.substring(0, index));
-			getReceiver().literal(XML_LANG, name.substring(index + 1));
-			getReceiver().literal("", value);
-			getReceiver().endEntity();
-		} else {
-			getReceiver().literal(name, value);
-		}
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        final int index = name.indexOf(LANGUAGE_MARKER);
+        if (!name.isEmpty() && name.charAt(0) == REFERENCE_MARKER) {
+            getReceiver().startEntity(name.substring(1));
+            getReceiver().literal(RDF_REFERENCE, value);
+            getReceiver().endEntity();
+        } else if (index > 0) {
+            getReceiver().startEntity(name.substring(0, index));
+            getReceiver().literal(XML_LANG, name.substring(index + 1));
+            getReceiver().literal("", value);
+            getReceiver().endEntity();
+        } else {
+            getReceiver().literal(name, value);
+        }
+    }
 }

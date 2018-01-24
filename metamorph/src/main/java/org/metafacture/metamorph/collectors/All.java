@@ -29,40 +29,40 @@ import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
  */
 public final class All extends AbstractFlushingCollect {
 
-	private static final String DEFAULT_NAME = "";
-	private static final String DEFAULT_VALUE = "true";
+    private static final String DEFAULT_NAME = "";
+    private static final String DEFAULT_VALUE = "true";
 
-	private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
-	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
+    private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
+    private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
 
-	@Override
-	protected void receive(final String name, final String value, final NamedValueSource source) {
-		sourcesLeft.remove(source);
-	}
+    @Override
+    protected void receive(final String name, final String value, final NamedValueSource source) {
+        sourcesLeft.remove(source);
+    }
 
-	@Override
-	protected boolean isComplete() {
-		return sourcesLeft.isEmpty();
-	}
+    @Override
+    protected boolean isComplete() {
+        return sourcesLeft.isEmpty();
+    }
 
-	@Override
-	protected void clear() {
-		sourcesLeft.addAll(sources);
-	}
+    @Override
+    protected void clear() {
+        sourcesLeft.addAll(sources);
+    }
 
-	@Override
-	protected void emit() {
-		if (sourcesLeft.isEmpty()) {
-			final String name = StringUtil.fallback(getName(), DEFAULT_NAME);
-			final String value = StringUtil.fallback(getValue(), DEFAULT_VALUE);
-			getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
-		}
-	}
+    @Override
+    protected void emit() {
+        if (sourcesLeft.isEmpty()) {
+            final String name = StringUtil.fallback(getName(), DEFAULT_NAME);
+            final String value = StringUtil.fallback(getValue(), DEFAULT_VALUE);
+            getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
+        }
+    }
 
-	@Override
-	public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
-		sources.add(namedValueSource);
-		sourcesLeft.add(namedValueSource);
-	}
+    @Override
+    public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
+        sources.add(namedValueSource);
+        sourcesLeft.add(namedValueSource);
+    }
 
 }

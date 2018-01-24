@@ -24,17 +24,17 @@ import org.metafacture.framework.StreamReceiver;
  */
 class MetafactureSourceTypeDecoder implements TypeDecoder {
 
-	public static boolean supportsType(final Class<?> clazz) {
-		return MetafactureSource.class.isAssignableFrom(clazz);
-	}
+    public static boolean supportsType(final Class<?> clazz) {
+        return MetafactureSource.class.isAssignableFrom(clazz);
+    }
 
-	@Override
-	public void decodeToStream(final StreamReceiver streamReceiver,
-			final String name, final Object object) {
-		final MetafactureSource metafactureSource = (MetafactureSource) object;
-		streamReceiver.startEntity(name);
-		metafactureSource.sendToStream(streamReceiver);
-		streamReceiver.endEntity();
-	}
+    @Override
+    public void decodeToStream(final StreamReceiver streamReceiver,
+            final String name, final Object object) {
+        final MetafactureSource metafactureSource = (MetafactureSource) object;
+        streamReceiver.startEntity(name);
+        metafactureSource.sendToStream(streamReceiver);
+        streamReceiver.endEntity();
+    }
 
 }

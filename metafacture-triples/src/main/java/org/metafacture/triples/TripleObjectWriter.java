@@ -43,77 +43,77 @@ import org.metafacture.framework.objects.Triple;
  * @author Christoph Böhme
  */
 @Description("Writes the object value of the triple into a file. The filename is "
-		+ "constructed from subject and predicate. Please note: This module does "
-		+ "not check if the filename constructed from subject and predicate stays "
-		+ "within `baseDir`. THIS MODULE SHOULD NOT BE USED IN ENVIRONMENTS IN WHICH "
-		+ "THE VALUES OF SUBJECT AND PREDICATE A PROVIDED BY AN UNTRUSTED SOURCE!")
+        + "constructed from subject and predicate. Please note: This module does "
+        + "not check if the filename constructed from subject and predicate stays "
+        + "within `baseDir`. THIS MODULE SHOULD NOT BE USED IN ENVIRONMENTS IN WHICH "
+        + "THE VALUES OF SUBJECT AND PREDICATE A PROVIDED BY AN UNTRUSTED SOURCE!")
 @In(Triple.class)
 @Out(Void.class)
 @FluxCommand("write-triple-objects")
 public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
 
-	private final Path baseDir;
+    private final Path baseDir;
 
-	private Charset encoding = StandardCharsets.UTF_8;
+    private Charset encoding = StandardCharsets.UTF_8;
 
-	public TripleObjectWriter(final String baseDir) {
-		this.baseDir = Paths.get(baseDir);
-	}
+    public TripleObjectWriter(final String baseDir) {
+        this.baseDir = Paths.get(baseDir);
+    }
 
-	/**
-	 * Sets the encoding used to open the resource.
-	 *
-	 * @param encoding
-	 *            new encoding
-	 */
-	public void setEncoding(final String encoding) {
-		this.encoding = Charset.forName(encoding);
-	}
+    /**
+     * Sets the encoding used to open the resource.
+     *
+     * @param encoding
+     *            new encoding
+     */
+    public void setEncoding(final String encoding) {
+        this.encoding = Charset.forName(encoding);
+    }
 
-	/**
-	 * Sets the encoding used to open the resource.
-	 *
-	 * @param encoding
-	 *            new encoding
-	 */
-	public void setEncoding(final Charset encoding) {
-		this.encoding = encoding;
-	}
+    /**
+     * Sets the encoding used to open the resource.
+     *
+     * @param encoding
+     *            new encoding
+     */
+    public void setEncoding(final Charset encoding) {
+        this.encoding = encoding;
+    }
 
-	/**
-	 * Returns the encoding used to open the resource.
-	 *
-	 * @return current default setting
-	 */
-	public String getEncoding() {
-		return encoding.name();
-	}
+    /**
+     * Returns the encoding used to open the resource.
+     *
+     * @return current default setting
+     */
+    public String getEncoding() {
+        return encoding.name();
+    }
 
-	@Override
-	public void process(final Triple triple) {
-		final Path filePath = buildFilePath(triple);
-		ensureParentPathExists(filePath);
-		try(final Writer writer = Files.newBufferedWriter(filePath, encoding)) {
-			writer.write(triple.getObject());
-		} catch (final IOException e) {
-			throw new MetafactureException(e);
-		}
-	}
+    @Override
+    public void process(final Triple triple) {
+        final Path filePath = buildFilePath(triple);
+        ensureParentPathExists(filePath);
+        try(final Writer writer = Files.newBufferedWriter(filePath, encoding)) {
+            writer.write(triple.getObject());
+        } catch (final IOException e) {
+            throw new MetafactureException(e);
+        }
+    }
 
-	private Path buildFilePath(final Triple triple) {
-		final Path file = Paths.get(triple.getSubject(), triple.getPredicate());
-		return baseDir.resolve(file).toAbsolutePath().normalize();
-	}
+    private Path buildFilePath(final Triple triple) {
+        final Path file = Paths.get(triple.getSubject(), triple.getPredicate());
+        return baseDir.resolve(file).toAbsolutePath().normalize();
+    }
 
-	private void ensureParentPathExists(final Path path) {
-		final Path parentDir = path.getParent();
-		if (parentDir != null) {
-			try {
-				Files.createDirectories(parentDir);
-			} catch (final IOException e) {
-				throw new MetafactureException(e);
-			}
-		}
-	}
+    private void ensureParentPathExists(final Path path) {
+        final Path parentDir = path.getParent();
+        if (parentDir != null) {
+            try {
+                Files.createDirectories(parentDir);
+            } catch (final IOException e) {
+                throw new MetafactureException(e);
+            }
+        }
+    }
 
 }

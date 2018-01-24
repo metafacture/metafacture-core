@@ -31,64 +31,64 @@ import org.mockito.MockitoAnnotations;
  */
 public final class StreamBatchMergerTest {
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	private StreamBatchMerger batchMerger;
+    private StreamBatchMerger batchMerger;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		batchMerger = new StreamBatchMerger();
-		batchMerger.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        batchMerger = new StreamBatchMerger();
+        batchMerger.setReceiver(receiver);
+    }
 
-	@Test
-	public void testShouldMergeNConsecutiveRecords() {
-		batchMerger.setBatchSize(2);
+    @Test
+    public void testShouldMergeNConsecutiveRecords() {
+        batchMerger.setBatchSize(2);
 
-		batchMerger.startRecord("0");
-		batchMerger.literal("lit0", "A");
-		batchMerger.endRecord();
+        batchMerger.startRecord("0");
+        batchMerger.literal("lit0", "A");
+        batchMerger.endRecord();
 
-		batchMerger.startRecord("1");
-		batchMerger.literal("lit1", "B");
-		batchMerger.endRecord();
+        batchMerger.startRecord("1");
+        batchMerger.literal("lit1", "B");
+        batchMerger.endRecord();
 
-		batchMerger.startRecord("2");
-		batchMerger.literal("lit2", "C");
-		batchMerger.startEntity("ent2");
-		batchMerger.literal("ent2lit1", "D");
-		batchMerger.endEntity();
-		batchMerger.endRecord();
+        batchMerger.startRecord("2");
+        batchMerger.literal("lit2", "C");
+        batchMerger.startEntity("ent2");
+        batchMerger.literal("ent2lit1", "D");
+        batchMerger.endEntity();
+        batchMerger.endRecord();
 
-		batchMerger.startRecord("3");
-		batchMerger.literal("lit3", "E");
-		batchMerger.endRecord();
+        batchMerger.startRecord("3");
+        batchMerger.literal("lit3", "E");
+        batchMerger.endRecord();
 
-		batchMerger.startRecord("4");
-		batchMerger.literal("lit4", "F");
-		batchMerger.endRecord();
+        batchMerger.startRecord("4");
+        batchMerger.literal("lit4", "F");
+        batchMerger.endRecord();
 
-		batchMerger.closeStream();
+        batchMerger.closeStream();
 
-		final InOrder ordered = Mockito.inOrder(receiver);
-		ordered.verify(receiver).startRecord("0");
-		ordered.verify(receiver).literal("lit0", "A");
-		ordered.verify(receiver).literal("lit1", "B");
-		ordered.verify(receiver).endRecord();
+        final InOrder ordered = Mockito.inOrder(receiver);
+        ordered.verify(receiver).startRecord("0");
+        ordered.verify(receiver).literal("lit0", "A");
+        ordered.verify(receiver).literal("lit1", "B");
+        ordered.verify(receiver).endRecord();
 
-		ordered.verify(receiver).startRecord("2");
-		ordered.verify(receiver).literal("lit2", "C");
-		ordered.verify(receiver).startEntity("ent2");
-		ordered.verify(receiver).literal("ent2lit1", "D");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).literal("lit3", "E");
-		ordered.verify(receiver).endRecord();
+        ordered.verify(receiver).startRecord("2");
+        ordered.verify(receiver).literal("lit2", "C");
+        ordered.verify(receiver).startEntity("ent2");
+        ordered.verify(receiver).literal("ent2lit1", "D");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).literal("lit3", "E");
+        ordered.verify(receiver).endRecord();
 
-		ordered.verify(receiver).startRecord("4");
-		ordered.verify(receiver).literal("lit4", "F");
-		ordered.verify(receiver).endRecord();
-	}
+        ordered.verify(receiver).startRecord("4");
+        ordered.verify(receiver).literal("lit4", "F");
+        ordered.verify(receiver).endRecord();
+    }
 
 }

@@ -31,29 +31,29 @@ import org.metafacture.framework.StreamReceiver;
  */
 public class DefaultStreamReceiver extends DefaultLifeCycle implements StreamReceiver {
 
-	@Override
-	public void startRecord(final String identifier) {
-		// Default implementation does nothing
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void endRecord(){
-		// Default implementation does nothing
-	}
+    @Override
+    public void endRecord(){
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		// Default implementation does nothing
-	}
+    @Override
+    public void startEntity(final String name) {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void endEntity() {
-		// Default implementation does nothing
-	}
+    @Override
+    public void endEntity() {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		// Default implementation does nothing
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        // Default implementation does nothing
+    }
 
 }

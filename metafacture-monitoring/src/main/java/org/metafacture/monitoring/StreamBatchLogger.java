@@ -40,84 +40,84 @@ import org.slf4j.LoggerFactory;
 @FluxCommand("batch-log")
 public final class StreamBatchLogger extends ForwardingStreamPipe {
 
-	public static final String RECORD_COUNT_VAR = "records";
-	public static final String BATCH_COUNT_VAR = "batches";
-	public static final String BATCH_SIZE_VAR = "batchSize";
-	public static final String TOTAL_RECORD_COUNT_VAR = "totalRecords";
+    public static final String RECORD_COUNT_VAR = "records";
+    public static final String BATCH_COUNT_VAR = "batches";
+    public static final String BATCH_SIZE_VAR = "batchSize";
+    public static final String TOTAL_RECORD_COUNT_VAR = "totalRecords";
 
-	public static final long DEFAULT_BATCH_SIZE = 1000;
+    public static final long DEFAULT_BATCH_SIZE = 1000;
 
-	private static final Logger LOG =
-			LoggerFactory.getLogger(StreamBatchLogger.class);
+    private static final Logger LOG =
+            LoggerFactory.getLogger(StreamBatchLogger.class);
 
-	private static final String DEFAULT_FORMAT =
-			"records processed: ${totalRecords}";
+    private static final String DEFAULT_FORMAT =
+            "records processed: ${totalRecords}";
 
-	private final Map<String, String> vars = new HashMap<>();
-	private final String format;
+    private final Map<String, String> vars = new HashMap<>();
+    private final String format;
 
-	private long batchSize = DEFAULT_BATCH_SIZE;
-	private long recordCount;
-	private long batchCount;
+    private long batchSize = DEFAULT_BATCH_SIZE;
+    private long recordCount;
+    private long batchCount;
 
-	public StreamBatchLogger() {
-		this.format = DEFAULT_FORMAT;
-	}
+    public StreamBatchLogger() {
+        this.format = DEFAULT_FORMAT;
+    }
 
-	public StreamBatchLogger(final String format) {
-		this.format = format;
-	}
+    public StreamBatchLogger(final String format) {
+        this.format = format;
+    }
 
-	public StreamBatchLogger(final String format, final Map<String, String> vars) {
-		this.format = format;
-		this.vars.putAll(vars);
-	}
+    public StreamBatchLogger(final String format, final Map<String, String> vars) {
+        this.format = format;
+        this.vars.putAll(vars);
+    }
 
-	public final void setBatchSize(final int batchSize) {
-		this.batchSize = batchSize;
-	}
+    public final void setBatchSize(final int batchSize) {
+        this.batchSize = batchSize;
+    }
 
-	public final long getBatchSize() {
-		return batchSize;
-	}
+    public final long getBatchSize() {
+        return batchSize;
+    }
 
-	public long getBatchCount() {
-		return batchCount;
-	}
+    public long getBatchCount() {
+        return batchCount;
+    }
 
-	public long getRecordCount() {
-		return recordCount;
-	}
+    public long getRecordCount() {
+        return recordCount;
+    }
 
-	@Override
-	public final void endRecord() {
-		getReceiver().endRecord();
-		recordCount++;
-		recordCount %= batchSize;
-		if (recordCount == 0) {
-			batchCount++;
-			writeLog();
-		}
-	}
+    @Override
+    public final void endRecord() {
+        getReceiver().endRecord();
+        recordCount++;
+        recordCount %= batchSize;
+        if (recordCount == 0) {
+            batchCount++;
+            writeLog();
+        }
+    }
 
-	@Override
-	protected void onCloseStream() {
-		writeLog();
-	}
+    @Override
+    protected void onCloseStream() {
+        writeLog();
+    }
 
-	@Override
-	protected final void onResetStream() {
-		recordCount = 0;
-		batchCount = 0;
-	}
+    @Override
+    protected final void onResetStream() {
+        recordCount = 0;
+        batchCount = 0;
+    }
 
-	private void writeLog() {
-		vars.put(RECORD_COUNT_VAR, Long.toString(recordCount));
-		vars.put(BATCH_COUNT_VAR, Long.toString(batchCount));
-		vars.put(BATCH_SIZE_VAR, Long.toString(batchSize));
-		vars.put(TOTAL_RECORD_COUNT_VAR,
-				Long.toString(batchSize * batchCount + recordCount));
-		LOG.info(StringUtil.format(format, vars));
-	}
+    private void writeLog() {
+        vars.put(RECORD_COUNT_VAR, Long.toString(recordCount));
+        vars.put(BATCH_COUNT_VAR, Long.toString(batchCount));
+        vars.put(BATCH_SIZE_VAR, Long.toString(batchSize));
+        vars.put(TOTAL_RECORD_COUNT_VAR,
+                Long.toString(batchSize * batchCount + recordCount));
+        LOG.info(StringUtil.format(format, vars));
+    }
 
 }

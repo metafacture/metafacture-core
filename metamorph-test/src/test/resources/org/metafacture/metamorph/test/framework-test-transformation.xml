@@ -15,7 +15,7 @@
   limitations under the License.
   -->
 <metamorph xmlns="http://www.culturegraph.org/metamorph" version="1">
-	<rules>
-		<data name="output" source="data" />
-	</rules>
+    <rules>
+        <data name="output" source="data" />
+    </rules>
 </metamorph>
