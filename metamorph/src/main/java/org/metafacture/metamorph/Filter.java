@@ -38,76 +38,76 @@ import org.metafacture.javaintegration.SingleValue;
 @FluxCommand("filter")
 public final class Filter extends DefaultStreamPipe<StreamReceiver> {
 
-	private final StreamBuffer buffer = new StreamBuffer();
-	private final SingleValue singleValue = new SingleValue();
-	private final Metamorph metamorph;
+    private final StreamBuffer buffer = new StreamBuffer();
+    private final SingleValue singleValue = new SingleValue();
+    private final Metamorph metamorph;
 
-	public Filter(final String morphDef) {
-		super();
-		metamorph = new Metamorph(morphDef);
-		metamorph.setReceiver(singleValue);
-	}
+    public Filter(final String morphDef) {
+        super();
+        metamorph = new Metamorph(morphDef);
+        metamorph.setReceiver(singleValue);
+    }
 
-	public Filter(final Metamorph metamorph) {
-		super();
-		this.metamorph = metamorph;
-		metamorph.setReceiver(singleValue);
-	}
+    public Filter(final Metamorph metamorph) {
+        super();
+        this.metamorph = metamorph;
+        metamorph.setReceiver(singleValue);
+    }
 
-	@Override
-	protected void onSetReceiver() {
-		buffer.setReceiver(getReceiver());
-	}
+    @Override
+    protected void onSetReceiver() {
+        buffer.setReceiver(getReceiver());
+    }
 
 
-	private void dispatch(){
-		final String key = singleValue.getValue();
-		if(!key.isEmpty()){
-			buffer.replay();
-		}
-		buffer.clear();
-	}
+    private void dispatch(){
+        final String key = singleValue.getValue();
+        if(!key.isEmpty()){
+            buffer.replay();
+        }
+        buffer.clear();
+    }
 
-	@Override
-	public void startRecord(final String identifier) {
-		buffer.startRecord(identifier);
-		metamorph.startRecord(identifier);
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        buffer.startRecord(identifier);
+        metamorph.startRecord(identifier);
+    }
 
-	@Override
-	public void endRecord() {
-		buffer.endRecord();
-		metamorph.endRecord();
-		dispatch();
-	}
+    @Override
+    public void endRecord() {
+        buffer.endRecord();
+        metamorph.endRecord();
+        dispatch();
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		buffer.startEntity(name);
-		metamorph.startEntity(name);
-	}
+    @Override
+    public void startEntity(final String name) {
+        buffer.startEntity(name);
+        metamorph.startEntity(name);
+    }
 
-	@Override
-	public void endEntity() {
-		buffer.endEntity();
-		metamorph.endEntity();
-	}
+    @Override
+    public void endEntity() {
+        buffer.endEntity();
+        metamorph.endEntity();
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		buffer.literal(name, value);
-		metamorph.literal(name, value);
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        buffer.literal(name, value);
+        metamorph.literal(name, value);
+    }
 
-	@Override
-	protected void onResetStream() {
-		buffer.clear();
-		metamorph.resetStream();
-	}
+    @Override
+    protected void onResetStream() {
+        buffer.clear();
+        metamorph.resetStream();
+    }
 
-	@Override
-	protected void onCloseStream() {
-		buffer.clear();
-		metamorph.closeStream();
-	}
+    @Override
+    protected void onCloseStream() {
+        buffer.clear();
+        metamorph.closeStream();
+    }
 }

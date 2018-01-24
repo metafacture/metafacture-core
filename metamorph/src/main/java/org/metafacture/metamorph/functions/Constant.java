@@ -24,15 +24,15 @@ import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
  */
 public final class Constant extends AbstractSimpleStatelessFunction {
 
-	private String constValue;
+    private String constValue;
 
-	@Override
-	public String process(final String value) {
-		return constValue;
-	}
+    @Override
+    public String process(final String value) {
+        return constValue;
+    }
 
-	public void setValue(final String string) {
-		this.constValue = string;
-	}
+    public void setValue(final String string) {
+        this.constValue = string;
+    }
 
 }

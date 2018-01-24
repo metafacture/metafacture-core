@@ -36,60 +36,60 @@ import org.metafacture.flux.parser.FluxProgramm;
  */
 public final class FluxGrammarTest {
 
-	private ByteArrayOutputStream stdoutBuffer;
-	private ByteArrayOutputStream stderrBuffer;
+    private ByteArrayOutputStream stdoutBuffer;
+    private ByteArrayOutputStream stderrBuffer;
 
-	@Before
-	public void setup() {
-		// Redirect standard out:
-		stdoutBuffer = new ByteArrayOutputStream();
-		System.setOut(new PrintStream(stdoutBuffer));
+    @Before
+    public void setup() {
+        // Redirect standard out:
+        stdoutBuffer = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(stdoutBuffer));
 
-		// Redirect standard err:
-		stderrBuffer = new ByteArrayOutputStream();
-		System.setErr(new PrintStream(stderrBuffer));
-	}
+        // Redirect standard err:
+        stderrBuffer = new ByteArrayOutputStream();
+        System.setErr(new PrintStream(stderrBuffer));
+    }
 
-	@Test
-	public void shouldAllowEmptyCommentInLastLineOfFile()
-			throws RecognitionException, IOException {
-		final String script = "\"test\"|write(\"stdout\"); //";
+    @Test
+    public void shouldAllowEmptyCommentInLastLineOfFile()
+            throws RecognitionException, IOException {
+        final String script = "\"test\"|write(\"stdout\"); //";
 
-		FluxCompiler.compile(createInputStream(script), emptyMap());
+        FluxCompiler.compile(createInputStream(script), emptyMap());
 
-		assertEquals("", stderrBuffer.toString());
-		assertEquals("", stdoutBuffer.toString());
-	}
+        assertEquals("", stderrBuffer.toString());
+        assertEquals("", stdoutBuffer.toString());
+    }
 
-	@Test
-	public void shouldAllowEmptyCommentInFile()
-			throws RecognitionException, IOException {
-		final String script = "\"test\"|write(\"stdout\"); //\n";
+    @Test
+    public void shouldAllowEmptyCommentInFile()
+            throws RecognitionException, IOException {
+        final String script = "\"test\"|write(\"stdout\"); //\n";
 
-		FluxCompiler.compile(createInputStream(script), emptyMap());
+        FluxCompiler.compile(createInputStream(script), emptyMap());
 
-		assertEquals("", stderrBuffer.toString());
-		assertEquals("", stdoutBuffer.toString());
-	}
+        assertEquals("", stderrBuffer.toString());
+        assertEquals("", stdoutBuffer.toString());
+    }
 
-	@Test
-	public void shouldReplaceJavaEscapeSequences()
-			throws IOException, RecognitionException {
-		final String script =
-				"\"quot=\\\" octal1=\\7 octal2=\\60 octal3=\\103 unicode=\\u00f8 tab=[\\t]\"" +
-						"|write(\"stdout\");";
+    @Test
+    public void shouldReplaceJavaEscapeSequences()
+            throws IOException, RecognitionException {
+        final String script =
+                "\"quot=\\\" octal1=\\7 octal2=\\60 octal3=\\103 unicode=\\u00f8 tab=[\\t]\"" +
+                        "|write(\"stdout\");";
 
-		final FluxProgramm program = FluxCompiler.compile(
-				createInputStream(script), emptyMap());
-		program.start();
+        final FluxProgramm program = FluxCompiler.compile(
+                createInputStream(script), emptyMap());
+        program.start();
 
-		assertEquals("", stderrBuffer.toString());
-		assertEquals("quot=\" octal1=\7 octal2=0 octal3=C unicode=\u00f8 tab=[\t]\n",
-				stdoutBuffer.toString());
-	}
+        assertEquals("", stderrBuffer.toString());
+        assertEquals("quot=\" octal1=\7 octal2=0 octal3=C unicode=\u00f8 tab=[\t]\n",
+                stdoutBuffer.toString());
+    }
 
-	private ByteArrayInputStream createInputStream(String script) {
-		return new ByteArrayInputStream(script.getBytes(StandardCharsets.UTF_8));
-	}
+    private ByteArrayInputStream createInputStream(String script) {
+        return new ByteArrayInputStream(script.getBytes(StandardCharsets.UTF_8));
+    }
 
 }

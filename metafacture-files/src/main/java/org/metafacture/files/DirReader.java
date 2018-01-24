@@ -38,46 +38,46 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @FluxCommand("read-dir")
 public final class DirReader extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
-	private boolean recursive;
+    private boolean recursive;
 
-	private String filenameFilterPattern = null;
+    private String filenameFilterPattern = null;
 
-	public void setRecursive(final boolean recursive) {
-		this.recursive = recursive;
-	}
+    public void setRecursive(final boolean recursive) {
+        this.recursive = recursive;
+    }
 
-	public void setFilenamePattern(final String filenameFilterPattern) {
-		this.filenameFilterPattern = filenameFilterPattern;
-	}
+    public void setFilenamePattern(final String filenameFilterPattern) {
+        this.filenameFilterPattern = filenameFilterPattern;
+    }
 
-	@Override
-	public void process(final String dir) {
-		final File file = new File(dir);
-		if (file.isDirectory()) {
-			dir(file);
-		} else {
-			getReceiver().process(dir);
-		}
-	}
+    @Override
+    public void process(final String dir) {
+        final File file = new File(dir);
+        if (file.isDirectory()) {
+            dir(file);
+        } else {
+            getReceiver().process(dir);
+        }
+    }
 
-	private void dir(final File dir) {
-		final ObjectReceiver<String> receiver = getReceiver();
-		final File[] files = filenameFilterPattern == null ? dir.listFiles()
-				: dir.listFiles(new FilenameFilter() {
-					@Override
-					public boolean accept(final File dir, final String name) {
-						return name.matches(filenameFilterPattern);
-					}
-				});
-		Arrays.sort(files);
-		for (File file : files) {
-			if (file.isDirectory()) {
-				if (recursive) {
-					dir(file);
-				}
-			} else {
-				receiver.process(file.getAbsolutePath());
-			}
-		}
-	}
+    private void dir(final File dir) {
+        final ObjectReceiver<String> receiver = getReceiver();
+        final File[] files = filenameFilterPattern == null ? dir.listFiles()
+                : dir.listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(final File dir, final String name) {
+                        return name.matches(filenameFilterPattern);
+                    }
+                });
+        Arrays.sort(files);
+        for (File file : files) {
+            if (file.isDirectory()) {
+                if (recursive) {
+                    dir(file);
+                }
+            } else {
+                receiver.process(file.getAbsolutePath());
+            }
+        }
+    }
 }

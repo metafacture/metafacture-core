@@ -26,143 +26,143 @@ import org.metafacture.metamorph.api.NamedValueSource;
  *
  */
 public abstract class AbstractCollect extends AbstractNamedValuePipe
-		implements Collect {
+        implements Collect {
 
-	private int oldRecord;
-	private int oldEntity;
-	private boolean resetAfterEmit;
-	private boolean sameEntity;
-	private String name;
-	private String value;
-	private boolean waitForFlush;
-	private boolean conditionMet;
+    private int oldRecord;
+    private int oldEntity;
+    private boolean resetAfterEmit;
+    private boolean sameEntity;
+    private String name;
+    private String value;
+    private boolean waitForFlush;
+    private boolean conditionMet;
 
-	private NamedValueSource conditionSource;
+    private NamedValueSource conditionSource;
 
-	protected final int getRecordCount() {
-		return oldRecord;
-	}
+    protected final int getRecordCount() {
+        return oldRecord;
+    }
 
-	protected final int getEntityCount() {
-		return oldEntity;
-	}
+    protected final int getEntityCount() {
+        return oldEntity;
+    }
 
-	protected final boolean isConditionMet() {
-		return conditionMet;
-	}
+    protected final boolean isConditionMet() {
+        return conditionMet;
+    }
 
-	protected final void setConditionMet(final boolean conditionMet) {
-		this.conditionMet = conditionMet;
-	}
+    protected final void setConditionMet(final boolean conditionMet) {
+        this.conditionMet = conditionMet;
+    }
 
-	protected final void resetCondition() {
-		setConditionMet(conditionSource == null);
-	}
+    protected final void resetCondition() {
+        setConditionMet(conditionSource == null);
+    }
 
-	@Override
-	public final void setWaitForFlush(final boolean waitForFlush) {
-		this.waitForFlush = waitForFlush;
-		// metamorph.addEntityEndListener(this, flushEntity);
-	}
+    @Override
+    public final void setWaitForFlush(final boolean waitForFlush) {
+        this.waitForFlush = waitForFlush;
+        // metamorph.addEntityEndListener(this, flushEntity);
+    }
 
-	@Override
-	public final void setSameEntity(final boolean sameEntity) {
-		this.sameEntity = sameEntity;
-	}
+    @Override
+    public final void setSameEntity(final boolean sameEntity) {
+        this.sameEntity = sameEntity;
+    }
 
-	public final boolean getReset() {
-		return resetAfterEmit;
-	}
+    public final boolean getReset() {
+        return resetAfterEmit;
+    }
 
-	@Override
-	public final void setReset(final boolean reset) {
-		this.resetAfterEmit = reset;
-	}
+    @Override
+    public final void setReset(final boolean reset) {
+        this.resetAfterEmit = reset;
+    }
 
-	@Override
-	public final String getName() {
-		return name;
-	}
+    @Override
+    public final String getName() {
+        return name;
+    }
 
-	@Override
-	public final void setName(final String name) {
-		this.name = name;
-	}
+    @Override
+    public final void setName(final String name) {
+        this.name = name;
+    }
 
-	@Override
-	public final void setConditionSource(final NamedValueSource source) {
-		conditionSource = source;
-		conditionSource.setNamedValueReceiver(this);
-		resetCondition();
-	}
+    @Override
+    public final void setConditionSource(final NamedValueSource source) {
+        conditionSource = source;
+        conditionSource.setNamedValueReceiver(this);
+        resetCondition();
+    }
 
-	public final String getValue() {
-		return value;
-	}
+    public final String getValue() {
+        return value;
+    }
 
-	/**
-	 * @param value
-	 *            the value to set
-	 */
-	public final void setValue(final String value) {
-		this.value = value;
-	}
+    /**
+     * @param value
+     *            the value to set
+     */
+    public final void setValue(final String value) {
+        this.value = value;
+    }
 
-	protected final void updateCounts(final int currentRecord,
-			final int currentEntity) {
-		if (!isSameRecord(currentRecord)) {
-			resetCondition();
-			clear();
-			oldRecord = currentRecord;
-		}
-		if (resetNeedFor(currentEntity)) {
-			resetCondition();
-			clear();
-		}
-		oldEntity = currentEntity;
-	}
+    protected final void updateCounts(final int currentRecord,
+            final int currentEntity) {
+        if (!isSameRecord(currentRecord)) {
+            resetCondition();
+            clear();
+            oldRecord = currentRecord;
+        }
+        if (resetNeedFor(currentEntity)) {
+            resetCondition();
+            clear();
+        }
+        oldEntity = currentEntity;
+    }
 
-	private boolean resetNeedFor(final int currentEntity) {
-		return sameEntity && oldEntity != currentEntity;
-	}
+    private boolean resetNeedFor(final int currentEntity) {
+        return sameEntity && oldEntity != currentEntity;
+    }
 
-	protected final boolean isSameRecord(final int currentRecord) {
-		return currentRecord == oldRecord;
-	}
+    protected final boolean isSameRecord(final int currentRecord) {
+        return currentRecord == oldRecord;
+    }
 
-	@Override
-	public final void receive(final String name, final String value,
-			final NamedValueSource source, final int recordCount,
-			final int entityCount) {
+    @Override
+    public final void receive(final String name, final String value,
+            final NamedValueSource source, final int recordCount,
+            final int entityCount) {
 
-		updateCounts(recordCount, entityCount);
+        updateCounts(recordCount, entityCount);
 
-		if (source == conditionSource) {
-			conditionMet = true;
-		} else {
-			receive(name, value, source);
-		}
+        if (source == conditionSource) {
+            conditionMet = true;
+        } else {
+            receive(name, value, source);
+        }
 
-		if (!waitForFlush && isConditionMet() && isComplete()) {
-			emit();
-			if (resetAfterEmit) {
-				resetCondition();
-				clear();
-			}
-		}
-	}
+        if (!waitForFlush && isConditionMet() && isComplete()) {
+            emit();
+            if (resetAfterEmit) {
+                resetCondition();
+                clear();
+            }
+        }
+    }
 
-	protected final boolean sameEntityConstraintSatisfied(final int entityCount) {
-		return !sameEntity || oldEntity == entityCount;
-	}
+    protected final boolean sameEntityConstraintSatisfied(final int entityCount) {
+        return !sameEntity || oldEntity == entityCount;
+    }
 
-	protected abstract void receive(final String name, final String value,
-			final NamedValueSource source);
+    protected abstract void receive(final String name, final String value,
+            final NamedValueSource source);
 
-	protected abstract boolean isComplete();
+    protected abstract boolean isComplete();
 
-	protected abstract void clear();
+    protected abstract void clear();
 
-	protected abstract void emit();
+    protected abstract void emit();
 
 }

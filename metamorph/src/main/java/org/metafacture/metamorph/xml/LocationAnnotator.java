@@ -42,58 +42,58 @@ import org.xml.sax.helpers.XMLFilterImpl;
  */
 final class LocationAnnotator extends XMLFilterImpl {
 
-	private static final String DOM_NODE_INSERTED = "DOMNodeInserted";
+    private static final String DOM_NODE_INSERTED = "DOMNodeInserted";
 
-	private final Deque<Node> domNodes = new LinkedList<Node>();
-	private final Deque<Locator> locatorsAtElementStart = new LinkedList<Locator>();
+    private final Deque<Node> domNodes = new LinkedList<Node>();
+    private final Deque<Locator> locatorsAtElementStart = new LinkedList<Locator>();
 
-	private Locator locator;
+    private Locator locator;
 
-	public LocationAnnotator(final XMLReader xmlReader, final Document document) {
-		super(xmlReader);
+    public LocationAnnotator(final XMLReader xmlReader, final Document document) {
+        super(xmlReader);
 
-		final EventListener listener = new EventListener() {
+        final EventListener listener = new EventListener() {
 
-			@Override
-			public void handleEvent(final Event event) {
-				final Node node = (Node) event.getTarget();
-				if (node.getNodeType() == Node.ELEMENT_NODE) {
-					domNodes.push(node);
-				}
-			}
+            @Override
+            public void handleEvent(final Event event) {
+                final Node node = (Node) event.getTarget();
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    domNodes.push(node);
+                }
+            }
 
-		};
+        };
 
-		((EventTarget) document).addEventListener(DOM_NODE_INSERTED, listener, true);
-	}
+        ((EventTarget) document).addEventListener(DOM_NODE_INSERTED, listener, true);
+    }
 
-	@Override
-	public void setDocumentLocator(final Locator locator) {
-		super.setDocumentLocator(locator);
-		this.locator = locator;
-	}
+    @Override
+    public void setDocumentLocator(final Locator locator) {
+        super.setDocumentLocator(locator);
+        this.locator = locator;
+    }
 
-	@Override
-	public void startElement(final String uri, final String localName, final String qName,
-			final Attributes atts) throws SAXException {
+    @Override
+    public void startElement(final String uri, final String localName, final String qName,
+            final Attributes atts) throws SAXException {
 
-		super.startElement(uri, localName, qName, atts);
+        super.startElement(uri, localName, qName, atts);
 
-		locatorsAtElementStart.push(new LocatorImpl(locator));
-	}
+        locatorsAtElementStart.push(new LocatorImpl(locator));
+    }
 
-	@Override
-	public void endElement(final String uri, final String localName, final String qName)
-			throws SAXException {
+    @Override
+    public void endElement(final String uri, final String localName, final String qName)
+            throws SAXException {
 
-		super.endElement(uri, localName, qName);
+        super.endElement(uri, localName, qName);
 
-		final Locator elementStartLocator = locatorsAtElementStart.pop();
+        final Locator elementStartLocator = locatorsAtElementStart.pop();
 
-		final Location location = new Location(elementStartLocator, locator);
+        final Location location = new Location(elementStartLocator, locator);
 
-		final Node domNode = domNodes.pop();
-		domNode.setUserData(Location.USER_DATA_ID, location, Location.USER_DATA_HANDLER);
-	}
+        final Node domNode = domNodes.pop();
+        domNode.setUserData(Location.USER_DATA_ID, location, Location.USER_DATA_HANDLER);
+    }
 
 }

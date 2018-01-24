@@ -43,88 +43,88 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @FluxCommand("read-beacon")
 public final class BeaconReader extends DefaultObjectPipe<java.io.Reader, StreamReceiver> {
 
-	private static final int MB = 1024 * 1024;
-	private static final int BUFFER_SIZE = MB * 2;
+    private static final int MB = 1024 * 1024;
+    private static final int BUFFER_SIZE = MB * 2;
 
-	private static final int COLUMNS_EXTENDED_BEACON = 3;
+    private static final int COLUMNS_EXTENDED_BEACON = 3;
 
-	private static final String TARGET = "target";
-	private static final Pattern ID_PATTERN = Pattern.compile("(\\{ID\\})|\\$PND");
-	private static final String DEFAULT_RELATION = "seeAlso";
+    private static final String TARGET = "target";
+    private static final Pattern ID_PATTERN = Pattern.compile("(\\{ID\\})|\\$PND");
+    private static final String DEFAULT_RELATION = "seeAlso";
 
-	private int bufferSize = BUFFER_SIZE;
-	private Pattern metaDataFilter = Pattern.compile(".*");
-	private String relation = DEFAULT_RELATION;
+    private int bufferSize = BUFFER_SIZE;
+    private Pattern metaDataFilter = Pattern.compile(".*");
+    private String relation = DEFAULT_RELATION;
 
-	/**
-	 * @param bufferSize
-	 *            in MB
-	 */
-	public void setBufferSize(final int bufferSize) {
-		this.bufferSize = MB * bufferSize;
-	}
+    /**
+     * @param bufferSize
+     *            in MB
+     */
+    public void setBufferSize(final int bufferSize) {
+        this.bufferSize = MB * bufferSize;
+    }
 
-	public void setRelation(final String relation) {
-		this.relation = relation;
-	}
+    public void setRelation(final String relation) {
+        this.relation = relation;
+    }
 
-	public void setMetaDataFilter(final String metaDataFilter) {
-		this.metaDataFilter = Pattern.compile(metaDataFilter);
-	}
+    public void setMetaDataFilter(final String metaDataFilter) {
+        this.metaDataFilter = Pattern.compile(metaDataFilter);
+    }
 
-	@Override
-	public void process(final Reader reader) {
-		final BufferedReader bReader = new BufferedReader(reader, bufferSize);
-		final Map<String, String> institution = new HashMap<String, String>();
-		final StreamReceiver receiver = getReceiver();
-		String line;
-		try {
-			line = bReader.readLine();
-			String target = null;
-			while (line != null) {
-				line = line.trim();
-				if (!line.isEmpty()) {
+    @Override
+    public void process(final Reader reader) {
+        final BufferedReader bReader = new BufferedReader(reader, bufferSize);
+        final Map<String, String> institution = new HashMap<String, String>();
+        final StreamReceiver receiver = getReceiver();
+        String line;
+        try {
+            line = bReader.readLine();
+            String target = null;
+            while (line != null) {
+                line = line.trim();
+                if (!line.isEmpty()) {
 
-					if (line.charAt(0) == '#') {
-						final int splitPoint = line.indexOf(':');
-						if (splitPoint > 1 && splitPoint < line.length() - 1) {
-							final String key = line.substring(1, splitPoint).toLowerCase();
-							final String value = line.substring(splitPoint + 1).trim();
-							if (TARGET.equals(key)) {
-								target = value;
-							} else if (metaDataFilter.matcher(key).find()) {
-								institution.put(key, value);
-							}
-						}
-					} else {
-						final String[] parts = line.split("\\|");
-						final String url;
-						if (parts.length == COLUMNS_EXTENDED_BEACON) {
-							url = parts[2];
-						} else {
-							if (target == null || target.isEmpty()) {
-								throw new MetafactureException("Error in BEACON file: target missing");
-							}
-							final Matcher matcher = ID_PATTERN.matcher(target);
-							url = matcher.replaceFirst(parts[0]);
-						}
-						receiver.startRecord(parts[0]);
-						receiver.startEntity(relation);
-						receiver.literal("url", url);
-						for (Map.Entry<String, String> instEntry : institution.entrySet()) {
-							receiver.literal(instEntry.getKey(), instEntry.getValue());
-						}
-						receiver.endEntity();
-						receiver.endRecord();
-					}
-				}
-				line = bReader.readLine();
-			}
-			bReader.close();
+                    if (line.charAt(0) == '#') {
+                        final int splitPoint = line.indexOf(':');
+                        if (splitPoint > 1 && splitPoint < line.length() - 1) {
+                            final String key = line.substring(1, splitPoint).toLowerCase();
+                            final String value = line.substring(splitPoint + 1).trim();
+                            if (TARGET.equals(key)) {
+                                target = value;
+                            } else if (metaDataFilter.matcher(key).find()) {
+                                institution.put(key, value);
+                            }
+                        }
+                    } else {
+                        final String[] parts = line.split("\\|");
+                        final String url;
+                        if (parts.length == COLUMNS_EXTENDED_BEACON) {
+                            url = parts[2];
+                        } else {
+                            if (target == null || target.isEmpty()) {
+                                throw new MetafactureException("Error in BEACON file: target missing");
+                            }
+                            final Matcher matcher = ID_PATTERN.matcher(target);
+                            url = matcher.replaceFirst(parts[0]);
+                        }
+                        receiver.startRecord(parts[0]);
+                        receiver.startEntity(relation);
+                        receiver.literal("url", url);
+                        for (Map.Entry<String, String> instEntry : institution.entrySet()) {
+                            receiver.literal(instEntry.getKey(), instEntry.getValue());
+                        }
+                        receiver.endEntity();
+                        receiver.endRecord();
+                    }
+                }
+                line = bReader.readLine();
+            }
+            bReader.close();
 
-		} catch (IOException e) {
-			throw new MetafactureException("Error reading BEACON format", e);
-		}
-	}
+        } catch (IOException e) {
+            throw new MetafactureException("Error reading BEACON format", e);
+        }
+    }
 
 }

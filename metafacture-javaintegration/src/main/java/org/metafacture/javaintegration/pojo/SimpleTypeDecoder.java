@@ -24,14 +24,14 @@ import org.metafacture.framework.StreamReceiver;
  */
 class SimpleTypeDecoder implements TypeDecoder {
 
-	static boolean supportsType(final Class<?> clazz) {
-		return clazz.isPrimitive() || clazz.equals(String.class);
-	}
+    static boolean supportsType(final Class<?> clazz) {
+        return clazz.isPrimitive() || clazz.equals(String.class);
+    }
 
-	@Override
-	public void decodeToStream(final StreamReceiver streamReceiver,
-			final String name, final Object object) {
-		streamReceiver.literal(name, object.toString());
-	}
+    @Override
+    public void decodeToStream(final StreamReceiver streamReceiver,
+            final String name, final Object object) {
+        streamReceiver.literal(name, object.toString());
+    }
 
 }

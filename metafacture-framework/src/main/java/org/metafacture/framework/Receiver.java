@@ -22,6 +22,6 @@ package org.metafacture.framework;
  *
  */
 public interface Receiver extends LifeCycle {
-	// This interface servces only as a common
-	// base for all receiver interfaces.
+    // This interface servces only as a common
+    // base for all receiver interfaces.
 }

@@ -28,64 +28,64 @@ import org.metafacture.framework.helpers.DefaultStreamReceiver;
  */
 public final class StreamTimerTest {
 
-	/**
-	 * A module with a slow process method.
-	 */
-	private static final class BenchmarkedModule extends DefaultStreamReceiver {
+    /**
+     * A module with a slow process method.
+     */
+    private static final class BenchmarkedModule extends DefaultStreamReceiver {
 
-		private static final long[] DURATIONS = { 150L, 20L, 30L, 202L };
+        private static final long[] DURATIONS = { 150L, 20L, 30L, 202L };
 
-		private int i;
+        private int i;
 
-		@Override
-		public void startRecord(final String id) {
-			try {
-				Thread.sleep(getDuration());
-			} catch (final InterruptedException e) {
-				return;
-			}
-		}
+        @Override
+        public void startRecord(final String id) {
+            try {
+                Thread.sleep(getDuration());
+            } catch (final InterruptedException e) {
+                return;
+            }
+        }
 
-		private long getDuration() {
-			final long duration = DURATIONS[i];
-			i += 1;
-			if (i == DURATIONS.length) {
-				i = 0;
-			}
-			return duration;
-		}
+        private long getDuration() {
+            final long duration = DURATIONS[i];
+            i += 1;
+            if (i == DURATIONS.length) {
+                i = 0;
+            }
+            return duration;
+        }
 
-	}
+    }
 
-	private StreamTimer streamTimer;
-	private BenchmarkedModule benchmarkedModule;
+    private StreamTimer streamTimer;
+    private BenchmarkedModule benchmarkedModule;
 
-	@Before
-	public void setup() {
-		streamTimer = new StreamTimer();
-		benchmarkedModule = new BenchmarkedModule();
-		streamTimer.setReceiver(benchmarkedModule);
-	}
+    @Before
+    public void setup() {
+        streamTimer = new StreamTimer();
+        benchmarkedModule = new BenchmarkedModule();
+        streamTimer.setReceiver(benchmarkedModule);
+    }
 
-	@Test
-	public void testShouldMeasureExecutionTime() {
+    @Test
+    public void testShouldMeasureExecutionTime() {
 
-		streamTimer.startRecord("");
-		streamTimer.endRecord();
-		streamTimer.startRecord("");
-		streamTimer.endRecord();
-		streamTimer.startRecord("");
-		streamTimer.endRecord();
-		streamTimer.startRecord("");
-		streamTimer.endRecord();
+        streamTimer.startRecord("");
+        streamTimer.endRecord();
+        streamTimer.startRecord("");
+        streamTimer.endRecord();
+        streamTimer.startRecord("");
+        streamTimer.endRecord();
+        streamTimer.startRecord("");
+        streamTimer.endRecord();
 
-		streamTimer.closeStream();
-	}
+        streamTimer.closeStream();
+    }
 
-	@Test
-	public void testShouldHandleImmediateCloseStreamWithNoProcessing() {
+    @Test
+    public void testShouldHandleImmediateCloseStreamWithNoProcessing() {
 
-		streamTimer.closeStream();
-	}
+        streamTimer.closeStream();
+    }
 
 }

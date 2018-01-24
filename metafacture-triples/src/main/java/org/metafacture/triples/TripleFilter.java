@@ -37,60 +37,60 @@ import org.metafacture.framework.objects.Triple;
 @Out(Triple.class)
 @FluxCommand("filter-triples")
 public final class TripleFilter extends
-		DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
+        DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
 
-	// A regexp that is guaranteed to never match ( an `a` after the end
-	// of the string, see http://stackoverflow.com/a/1723225 for details):
-	private static final Matcher MATCH_NOTHING = Pattern.compile("$a").matcher("");
+    // A regexp that is guaranteed to never match ( an `a` after the end
+    // of the string, see http://stackoverflow.com/a/1723225 for details):
+    private static final Matcher MATCH_NOTHING = Pattern.compile("$a").matcher("");
 
-	private Matcher subjectMatcher = MATCH_NOTHING;
-	private Matcher predicateMatcher = MATCH_NOTHING;
-	private Matcher objectMatcher = MATCH_NOTHING;
-	private boolean passMatches = true;
+    private Matcher subjectMatcher = MATCH_NOTHING;
+    private Matcher predicateMatcher = MATCH_NOTHING;
+    private Matcher objectMatcher = MATCH_NOTHING;
+    private boolean passMatches = true;
 
-	public String getSubjectPattern() {
-		return subjectMatcher.pattern().pattern();
-	}
+    public String getSubjectPattern() {
+        return subjectMatcher.pattern().pattern();
+    }
 
-	public void setSubjectPattern(final String pattern) {
-		subjectMatcher = Pattern.compile(pattern).matcher("");
-	}
+    public void setSubjectPattern(final String pattern) {
+        subjectMatcher = Pattern.compile(pattern).matcher("");
+    }
 
-	public String getPredicatePattern() {
-		return predicateMatcher.pattern().pattern();
-	}
+    public String getPredicatePattern() {
+        return predicateMatcher.pattern().pattern();
+    }
 
-	public void setPredicatePattern(final String pattern) {
-		predicateMatcher = Pattern.compile(pattern).matcher("");
-	}
+    public void setPredicatePattern(final String pattern) {
+        predicateMatcher = Pattern.compile(pattern).matcher("");
+    }
 
-	public String getObjectPattern() {
-		return objectMatcher.pattern().pattern();
-	}
+    public String getObjectPattern() {
+        return objectMatcher.pattern().pattern();
+    }
 
-	public void setObjectPattern(final String pattern) {
-		objectMatcher = Pattern.compile(pattern).matcher("");
-	}
+    public void setObjectPattern(final String pattern) {
+        objectMatcher = Pattern.compile(pattern).matcher("");
+    }
 
-	public boolean isPassMatches() {
-		return passMatches;
-	}
+    public boolean isPassMatches() {
+        return passMatches;
+    }
 
-	public void setPassMatches(final boolean passMatches) {
-		this.passMatches = passMatches;
-	}
+    public void setPassMatches(final boolean passMatches) {
+        this.passMatches = passMatches;
+    }
 
-	@Override
-	public void process(final Triple obj) {
-		subjectMatcher.reset(obj.getSubject());
-		predicateMatcher.reset(obj.getPredicate());
-		objectMatcher.reset(obj.getObject());
+    @Override
+    public void process(final Triple obj) {
+        subjectMatcher.reset(obj.getSubject());
+        predicateMatcher.reset(obj.getPredicate());
+        objectMatcher.reset(obj.getObject());
 
-		final boolean matches = subjectMatcher.matches() || predicateMatcher.matches() || objectMatcher.matches();
+        final boolean matches = subjectMatcher.matches() || predicateMatcher.matches() || objectMatcher.matches();
 
-		if ((matches && passMatches) || (!matches && !passMatches)) {
-			getReceiver().process(obj);
-		}
-	}
+        if ((matches && passMatches) || (!matches && !passMatches)) {
+            getReceiver().process(obj);
+        }
+    }
 
 }

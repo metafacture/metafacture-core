@@ -28,30 +28,30 @@ import org.metafacture.commons.tries.SetMatcher.Match;
  */
 public final class SetMatchTest {
 
-	@Test
-	public void testSetMatch() {
-		final SetMatcher<String> setMatch = new SetMatcher<String>();
+    @Test
+    public void testSetMatch() {
+        final SetMatcher<String> setMatch = new SetMatcher<String>();
 
-		final String[] cities = { "Perth", "York", "York Town", "München", "New York City", "New York", "Petersburg",
-				"ert", };
-		final int[] matches = { 7, 0, 7, 5, 1, 4, 1, 1, 2, 3 };
-		final String text = "Pexrt Perth Peerth New York City York York Town München";
+        final String[] cities = { "Perth", "York", "York Town", "München", "New York City", "New York", "Petersburg",
+                "ert", };
+        final int[] matches = { 7, 0, 7, 5, 1, 4, 1, 1, 2, 3 };
+        final String text = "Pexrt Perth Peerth New York City York York Town München";
 
-		for (int i = 0; i < cities.length; ++i) {
-			final String city = cities[i];
-			setMatch.put(city, city);
-		}
-		int index = 0;
+        for (int i = 0; i < cities.length; ++i) {
+            final String city = cities[i];
+            setMatch.put(city, city);
+        }
+        int index = 0;
 
-		//System.out.println(text);
-		for (Match<String> match : setMatch.match(text)) {
-			//System.out.println(match.getValue() + " " + match.getStart());
-			assertEquals(cities[matches[index]], match.getValue());
-			++index;
-		}
-		// setMatch.printDebug(System.err);
+        //System.out.println(text);
+        for (Match<String> match : setMatch.match(text)) {
+            //System.out.println(match.getValue() + " " + match.getStart());
+            assertEquals(cities[matches[index]], match.getValue());
+            ++index;
+        }
+        // setMatch.printDebug(System.err);
 
-		assertEquals("missing matches", matches.length, index);
-	}
+        assertEquals("missing matches", matches.length, index);
+    }
 
 }

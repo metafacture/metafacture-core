@@ -28,70 +28,70 @@ import org.junit.Test;
  */
 public final class RequireTest {
 
-	@Test(expected = IllegalArgumentException.class)
-	public void notNullShouldThrowIllegalArgumentExceptionIfArgIsNull() {
-		Require.notNull(null);
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void notNullShouldThrowIllegalArgumentExceptionIfArgIsNull() {
+        Require.notNull(null);
+    }
 
-	@Test
-	public void notNullShouldReturnArgIfArgIsNotNull() {
-		final Object obj = new Object();
-		assertSame(obj, Require.notNull(obj));
-	}
+    @Test
+    public void notNullShouldReturnArgIfArgIsNotNull() {
+        final Object obj = new Object();
+        assertSame(obj, Require.notNull(obj));
+    }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void notNegativeShouldThrowIllegalArgumentExceptionIfArgIsNegative() {
-		Require.notNegative(-1);
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void notNegativeShouldThrowIllegalArgumentExceptionIfArgIsNegative() {
+        Require.notNegative(-1);
+    }
 
-	@Test
-	public void notNegativeShouldReturnArgIfArgIsNotNegative() {
-		assertEquals(0, Require.notNegative(0));
-	}
+    @Test
+    public void notNegativeShouldReturnArgIfArgIsNotNegative() {
+        assertEquals(0, Require.notNegative(0));
+    }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void thatShouldFailIfArgumentIsFalse() {
-		Require.that(false);
-	}
+    @Test(expected = IllegalArgumentException.class)
+    public void thatShouldFailIfArgumentIsFalse() {
+        Require.that(false);
+    }
 
-	@Test
-	public void thatShouldDoNothingIfArgumentIsTrue() {
-		Require.that(true);
-	}
+    @Test
+    public void thatShouldDoNothingIfArgumentIsTrue() {
+        Require.that(true);
+    }
 
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void validArrayIndexShouldThrowIndexOutOfBoundsExceptionIfIndexIsNegative() {
-		Require.validArrayIndex(-1, 2);
-	}
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void validArrayIndexShouldThrowIndexOutOfBoundsExceptionIfIndexIsNegative() {
+        Require.validArrayIndex(-1, 2);
+    }
 
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void validArrayIndexShouldThrowIndexOutOfBoundsExceptionIfIndexIsGreaterThanArrayLength() {
-		Require.validArrayIndex(2, 2);
-	}
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void validArrayIndexShouldThrowIndexOutOfBoundsExceptionIfIndexIsGreaterThanArrayLength() {
+        Require.validArrayIndex(2, 2);
+    }
 
-	@Test
-	public void validArrayIndexShouldDoNothingIfIndexIsWithinArrayBounds() {
-		assertEquals(1, Require.validArrayIndex(1, 2));
-	}
+    @Test
+    public void validArrayIndexShouldDoNothingIfIndexIsWithinArrayBounds() {
+        assertEquals(1, Require.validArrayIndex(1, 2));
+    }
 
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void validArraySliceShouldThrowIndexOutOfBoundsExceptionIfIndexIsNegative() {
-		Require.validArraySlice(-1, 1, 2);
-	}
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void validArraySliceShouldThrowIndexOutOfBoundsExceptionIfIndexIsNegative() {
+        Require.validArraySlice(-1, 1, 2);
+    }
 
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void validArraySliceShouldThrowIndexOutOfBoundsExceptionIfLengthIsNegative() {
-		Require.validArraySlice(0, -1, 2);
-	}
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void validArraySliceShouldThrowIndexOutOfBoundsExceptionIfLengthIsNegative() {
+        Require.validArraySlice(0, -1, 2);
+    }
 
-	@Test(expected = IndexOutOfBoundsException.class)
-	public void validArraySliceShouldThrowIndexOutOfBoundsExceptionIfIndexPlusLengthIsGreaterThanArrayLength() {
-		Require.validArraySlice(1, 2, 2);
-	}
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void validArraySliceShouldThrowIndexOutOfBoundsExceptionIfIndexPlusLengthIsGreaterThanArrayLength() {
+        Require.validArraySlice(1, 2, 2);
+    }
 
-	@Test
-	public void validArraySliceShouldDoNothingIfIndexAndLengthAreWithinArrayBounds() {
-		Require.validArraySlice(0, 1, 2);
-	}
+    @Test
+    public void validArraySliceShouldDoNothingIfIndexAndLengthAreWithinArrayBounds() {
+        Require.validArraySlice(0, 1, 2);
+    }
 
 }

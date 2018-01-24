@@ -26,19 +26,19 @@ import java.nio.charset.StandardCharsets;
  */
 final class Iso646Constants {
 
-	static final Charset CHARSET = StandardCharsets.US_ASCII;
+    static final Charset CHARSET = StandardCharsets.US_ASCII;
 
-	static final char INFORMATION_SEPARATOR_3 = 0x1d;
-	static final char INFORMATION_SEPARATOR_2 = 0x1e;
-	static final char INFORMATION_SEPARATOR_1 = 0x1f;
+    static final char INFORMATION_SEPARATOR_3 = 0x1d;
+    static final char INFORMATION_SEPARATOR_2 = 0x1e;
+    static final char INFORMATION_SEPARATOR_1 = 0x1f;
 
-	static final char ZERO = 0x30;
-	static final char NINE = 0x39;
+    static final char ZERO = 0x30;
+    static final char NINE = 0x39;
 
-	static final char MAX_CHAR_CODE = 0x7f;
+    static final char MAX_CHAR_CODE = 0x7f;
 
-	private Iso646Constants() {
-		throw new AssertionError("class should not be instantiated");
-	}
+    private Iso646Constants() {
+        throw new AssertionError("class should not be instantiated");
+    }
 
 }

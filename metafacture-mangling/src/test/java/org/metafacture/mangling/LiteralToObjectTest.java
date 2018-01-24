@@ -34,70 +34,70 @@ import org.mockito.MockitoAnnotations;
  */
 public final class LiteralToObjectTest {
 
-	private static final String LITERAL_NAME = "extract_this";
-	private static final String LITERAL_VALUE1 =
-			"I've been extracted from a record";
-	private static final String LITERAL_VALUE2 =
-			"I've been extracted from a record, too";
+    private static final String LITERAL_NAME = "extract_this";
+    private static final String LITERAL_VALUE1 =
+            "I've been extracted from a record";
+    private static final String LITERAL_VALUE2 =
+            "I've been extracted from a record, too";
 
-	@Mock
-	private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
-	private LiteralToObject literalToObject;
+    private LiteralToObject literalToObject;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		literalToObject = new LiteralToObject();
-		literalToObject.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        literalToObject = new LiteralToObject();
+        literalToObject.setReceiver(receiver);
+    }
 
-	@After
-	public void cleanup() {
-		literalToObject.closeStream();
-	}
+    @After
+    public void cleanup() {
+        literalToObject.closeStream();
+    }
 
-	@Test
-	public void shouldEmitLiteralValueAsObject() {
-		literalToObject.setPattern(LITERAL_NAME);
+    @Test
+    public void shouldEmitLiteralValueAsObject() {
+        literalToObject.setPattern(LITERAL_NAME);
 
-		literalToObject.startRecord("");
-		literalToObject.literal("L1", "V1");
-		literalToObject.literal(LITERAL_NAME, LITERAL_VALUE1);
-		literalToObject.literal("L2", "V2");
-		literalToObject.endRecord();
+        literalToObject.startRecord("");
+        literalToObject.literal("L1", "V1");
+        literalToObject.literal(LITERAL_NAME, LITERAL_VALUE1);
+        literalToObject.literal("L2", "V2");
+        literalToObject.endRecord();
 
-		verify(receiver).process(LITERAL_VALUE1);
-		verifyNoMoreInteractions(receiver);
-	}
+        verify(receiver).process(LITERAL_VALUE1);
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void shouldEmitValueOfNestedLiteralsAsObject() {
-		literalToObject.setPattern(LITERAL_NAME);
+    @Test
+    public void shouldEmitValueOfNestedLiteralsAsObject() {
+        literalToObject.setPattern(LITERAL_NAME);
 
-		literalToObject.startRecord("");
-		literalToObject.startEntity("En1");
-		literalToObject.literal(LITERAL_NAME, LITERAL_VALUE1);
-		literalToObject.endEntity();
-		literalToObject.endRecord();
+        literalToObject.startRecord("");
+        literalToObject.startEntity("En1");
+        literalToObject.literal(LITERAL_NAME, LITERAL_VALUE1);
+        literalToObject.endEntity();
+        literalToObject.endRecord();
 
-		verify(receiver).process(LITERAL_VALUE1);
-		verifyNoMoreInteractions(receiver);
-	}
+        verify(receiver).process(LITERAL_VALUE1);
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void shouldUseRegExForMatchingLiteralNames() {
-		literalToObject.setPattern("^ex_\\d$");
+    @Test
+    public void shouldUseRegExForMatchingLiteralNames() {
+        literalToObject.setPattern("^ex_\\d$");
 
-		literalToObject.startRecord("");
-		literalToObject.literal("ex_1", LITERAL_VALUE1);
-		literalToObject.literal("L1", "V1");
-		literalToObject.literal("ex_2", LITERAL_VALUE2);
-		literalToObject.endRecord();
+        literalToObject.startRecord("");
+        literalToObject.literal("ex_1", LITERAL_VALUE1);
+        literalToObject.literal("L1", "V1");
+        literalToObject.literal("ex_2", LITERAL_VALUE2);
+        literalToObject.endRecord();
 
-		verify(receiver).process(LITERAL_VALUE1);
-		verify(receiver).process(LITERAL_VALUE2);
-		verifyNoMoreInteractions(receiver);
-	}
+        verify(receiver).process(LITERAL_VALUE1);
+        verify(receiver).process(LITERAL_VALUE2);
+        verifyNoMoreInteractions(receiver);
+    }
 
 }

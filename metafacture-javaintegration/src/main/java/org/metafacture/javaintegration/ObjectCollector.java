@@ -30,61 +30,61 @@ import org.metafacture.framework.ObjectReceiver;
  */
 public final class ObjectCollector<T> implements ObjectReceiver<T> {
 
-	private final Queue<T> buffer = new LinkedList<>();
-	private final int maxCapacity;
+    private final Queue<T> buffer = new LinkedList<>();
+    private final int maxCapacity;
 
-	private boolean closed;
+    private boolean closed;
 
-	public ObjectCollector() {
-		this(-1);
-	}
+    public ObjectCollector() {
+        this(-1);
+    }
 
-	public ObjectCollector(final int maxCapacity) {
-		super();
-		this.maxCapacity = maxCapacity;
-	}
+    public ObjectCollector(final int maxCapacity) {
+        super();
+        this.maxCapacity = maxCapacity;
+    }
 
-	public boolean isClosed() {
-		return closed;
-	}
+    public boolean isClosed() {
+        return closed;
+    }
 
-	@Override
-	public void process(final T obj) {
-		if (closed) {
-			throw new IllegalStateException("Module has been closed.");
-		}
-		if (buffer.size() == maxCapacity) {
-			throw new IllegalStateException("Buffer reached max capacity.");
-		}
+    @Override
+    public void process(final T obj) {
+        if (closed) {
+            throw new IllegalStateException("Module has been closed.");
+        }
+        if (buffer.size() == maxCapacity) {
+            throw new IllegalStateException("Buffer reached max capacity.");
+        }
 
-		buffer.add(obj);
-	}
+        buffer.add(obj);
+    }
 
-	@Override
-	public void resetStream() {
-		buffer.clear();
-		closed = false;
-	}
+    @Override
+    public void resetStream() {
+        buffer.clear();
+        closed = false;
+    }
 
-	@Override
-	public void closeStream() {
-		closed = true;
-	}
+    @Override
+    public void closeStream() {
+        closed = true;
+    }
 
-	/**
-	 * Discards the current content of the buffer.
-	 */
-	public void clear() {
-		buffer.clear();
-	}
+    /**
+     * Discards the current content of the buffer.
+     */
+    public void clear() {
+        buffer.clear();
+    }
 
-	/**
-	 * Returns and removes the next item from the buffer.
-	 *
-	 * @return next item from the buffer.
-	 */
-	public T pop() {
-		return buffer.poll();
-	}
+    /**
+     * Returns and removes the next item from the buffer.
+     *
+     * @return next item from the buffer.
+     */
+    public T pop() {
+        return buffer.poll();
+    }
 
 }

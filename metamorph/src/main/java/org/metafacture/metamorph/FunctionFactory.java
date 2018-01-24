@@ -31,13 +31,13 @@ import org.metafacture.metamorph.api.Function;
  */
 final class FunctionFactory extends ObjectFactory<Function> {
 
-	FunctionFactory() {
-		try {
-			loadClassesFromMap(ResourceUtil.loadProperties(
-					"morph-functions.properties"), Function.class);
-		} catch (IOException e) {
-			throw new MetafactureException("Failed to load functions list", e);
-		}
-	}
+    FunctionFactory() {
+        try {
+            loadClassesFromMap(ResourceUtil.loadProperties(
+                    "morph-functions.properties"), Function.class);
+        } catch (IOException e) {
+            throw new MetafactureException("Failed to load functions list", e);
+        }
+    }
 
 }

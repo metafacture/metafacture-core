@@ -57,60 +57,60 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @FluxCommand("flatten")
 public final class StreamFlattener extends DefaultStreamPipe<StreamReceiver> {
 
-	public static final String DEFAULT_ENTITY_MARKER = ".";
+    public static final String DEFAULT_ENTITY_MARKER = ".";
 
-	private final EntityPathTracker pathTracker = new EntityPathTracker();
+    private final EntityPathTracker pathTracker = new EntityPathTracker();
 
-	public StreamFlattener() {
-		setEntityMarker(DEFAULT_ENTITY_MARKER);
-	}
+    public StreamFlattener() {
+        setEntityMarker(DEFAULT_ENTITY_MARKER);
+    }
 
-	public String getEntityMarker() {
-		return pathTracker.getEntitySeparator();
-	}
+    public String getEntityMarker() {
+        return pathTracker.getEntitySeparator();
+    }
 
-	public void setEntityMarker(final String entityMarker) {
-		pathTracker.setEntitySeparator(entityMarker);
-	}
+    public void setEntityMarker(final String entityMarker) {
+        pathTracker.setEntitySeparator(entityMarker);
+    }
 
-	@Override
-	public void startRecord(final String identifier) {
-		assert !isClosed();
-		pathTracker.startRecord(identifier);
-		getReceiver().startRecord(identifier);
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        assert !isClosed();
+        pathTracker.startRecord(identifier);
+        getReceiver().startRecord(identifier);
+    }
 
-	@Override
-	public void endRecord() {
-		assert !isClosed();
-		pathTracker.endRecord();
-		getReceiver().endRecord();
-	}
+    @Override
+    public void endRecord() {
+        assert !isClosed();
+        pathTracker.endRecord();
+        getReceiver().endRecord();
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		assert !isClosed();
-		pathTracker.startEntity(name);
-	}
+    @Override
+    public void startEntity(final String name) {
+        assert !isClosed();
+        pathTracker.startEntity(name);
+    }
 
-	@Override
-	public void endEntity() {
-		assert !isClosed();
-		pathTracker.endEntity();
-	}
+    @Override
+    public void endEntity() {
+        assert !isClosed();
+        pathTracker.endEntity();
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		assert !isClosed();
-		getReceiver().literal(pathTracker.getCurrentPathWith(name), value);
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        assert !isClosed();
+        getReceiver().literal(pathTracker.getCurrentPathWith(name), value);
+    }
 
-	public String getCurrentEntityName() {
-		return pathTracker.getCurrentEntityName();
-	}
+    public String getCurrentEntityName() {
+        return pathTracker.getCurrentEntityName();
+    }
 
-	public String getCurrentPath() {
-		return pathTracker.getCurrentPath();
-	}
+    public String getCurrentPath() {
+        return pathTracker.getCurrentPath();
+    }
 
 }

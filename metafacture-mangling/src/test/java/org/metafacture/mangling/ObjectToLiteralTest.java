@@ -34,47 +34,47 @@ import org.mockito.MockitoAnnotations;
  */
 public final class ObjectToLiteralTest {
 
-	private static final String LITERAL_NAME = "myObject";
-	private static final String OBJ_DATA = "This is a data object";
+    private static final String LITERAL_NAME = "myObject";
+    private static final String OBJ_DATA = "This is a data object";
 
-	private ObjectToLiteral<String> objectToLiteral;
+    private ObjectToLiteral<String> objectToLiteral;
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		objectToLiteral = new ObjectToLiteral<String>();
-		objectToLiteral.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        objectToLiteral = new ObjectToLiteral<String>();
+        objectToLiteral.setReceiver(receiver);
+    }
 
-	@After
-	public void cleanup() {
-		objectToLiteral.closeStream();
-	}
+    @After
+    public void cleanup() {
+        objectToLiteral.closeStream();
+    }
 
-	@Test
-	public void testShouldUseObjectAsLiteralValue() {
+    @Test
+    public void testShouldUseObjectAsLiteralValue() {
 
-		objectToLiteral.process(OBJ_DATA);
+        objectToLiteral.process(OBJ_DATA);
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("");
-		ordered.verify(receiver).literal(ObjectToLiteral.DEFAULT_LITERAL_NAME, OBJ_DATA);
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
+        ordered.verify(receiver).literal(ObjectToLiteral.DEFAULT_LITERAL_NAME, OBJ_DATA);
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void testShouldUseCustomLiteralName() {
-		objectToLiteral.setLiteralName(LITERAL_NAME);
+    @Test
+    public void testShouldUseCustomLiteralName() {
+        objectToLiteral.setLiteralName(LITERAL_NAME);
 
-		objectToLiteral.process(OBJ_DATA);
+        objectToLiteral.process(OBJ_DATA);
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("");
-		ordered.verify(receiver).literal(LITERAL_NAME, OBJ_DATA);
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
+        ordered.verify(receiver).literal(LITERAL_NAME, OBJ_DATA);
+        ordered.verify(receiver).endRecord();
+    }
 
 }

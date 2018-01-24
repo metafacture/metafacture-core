@@ -41,79 +41,79 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @FluxCommand("encode-pojo")
 public class PojoEncoder<T> extends DefaultStreamPipe<ObjectReceiver<T>> {
 
-	static {
-		// Initialize the property manager to map the primitive data types to
-		// the corresponding object based types, e.g. int to Integer
-		PropertyEditorManager.registerEditor(Boolean.class,
-				PropertyEditorManager.findEditor(boolean.class).getClass());
-		PropertyEditorManager.registerEditor(Integer.class,
-				PropertyEditorManager.findEditor(int.class).getClass());
-		PropertyEditorManager.registerEditor(Long.class, PropertyEditorManager
-				.findEditor(long.class).getClass());
-	}
+    static {
+        // Initialize the property manager to map the primitive data types to
+        // the corresponding object based types, e.g. int to Integer
+        PropertyEditorManager.registerEditor(Boolean.class,
+                PropertyEditorManager.findEditor(boolean.class).getClass());
+        PropertyEditorManager.registerEditor(Integer.class,
+                PropertyEditorManager.findEditor(int.class).getClass());
+        PropertyEditorManager.registerEditor(Long.class, PropertyEditorManager
+                .findEditor(long.class).getClass());
+    }
 
-	private final TypeEncoderFactory typeEncoderFactory = new TypeEncoderFactory();
-	private final Deque<TypeEncoder> typeEncoderStack = new ArrayDeque<>();
-	private final Class<T> pojoClass;
+    private final TypeEncoderFactory typeEncoderFactory = new TypeEncoderFactory();
+    private final Deque<TypeEncoder> typeEncoderStack = new ArrayDeque<>();
+    private final Class<T> pojoClass;
 
-	public PojoEncoder(final Class<T> pojoClass) {
-		this.pojoClass = pojoClass;
-	}
+    public PojoEncoder(final Class<T> pojoClass) {
+        this.pojoClass = pojoClass;
+    }
 
-	@Override
-	public void startRecord(final String identifier) {
-		typeEncoderStack.clear();
-		typeEncoderStack.push(new ComplexTypeEncoder(pojoClass));
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        typeEncoderStack.clear();
+        typeEncoderStack.push(new ComplexTypeEncoder(pojoClass));
+    }
 
-	@Override
-	public void endRecord() {
-		assert typeEncoderStack.size() == 1;
-		@SuppressWarnings("unchecked")
-		final T instance = (T) typeEncoderStack.peek().getInstance();
-		getReceiver().process(instance);
-		typeEncoderStack.clear();
-	}
+    @Override
+    public void endRecord() {
+        assert typeEncoderStack.size() == 1;
+        @SuppressWarnings("unchecked")
+        final T instance = (T) typeEncoderStack.peek().getInstance();
+        getReceiver().process(instance);
+        typeEncoderStack.clear();
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		final TypeEncoder currentTypeEncoder = typeEncoderStack.peek();
-		final ValueType newType = currentTypeEncoder.getValueType(name);
-		final TypeEncoder newTypeEncoder = typeEncoderFactory.create(newType);
-		currentTypeEncoder.setValue(name, newTypeEncoder.getInstance());
-		typeEncoderStack.push(newTypeEncoder);
-	}
+    @Override
+    public void startEntity(final String name) {
+        final TypeEncoder currentTypeEncoder = typeEncoderStack.peek();
+        final ValueType newType = currentTypeEncoder.getValueType(name);
+        final TypeEncoder newTypeEncoder = typeEncoderFactory.create(newType);
+        currentTypeEncoder.setValue(name, newTypeEncoder.getInstance());
+        typeEncoderStack.push(newTypeEncoder);
+    }
 
-	@Override
-	public void endEntity() {
-		typeEncoderStack.pop();
-	}
+    @Override
+    public void endEntity() {
+        typeEncoderStack.pop();
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		final TypeEncoder currentTypeEncoder = typeEncoderStack.peek();
-		final Class<?> targetType = currentTypeEncoder.getValueType(name)
-				.getRawClass();
-		currentTypeEncoder.setValue(name,
-				createObjectFromString(value, targetType));
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        final TypeEncoder currentTypeEncoder = typeEncoderStack.peek();
+        final Class<?> targetType = currentTypeEncoder.getValueType(name)
+                .getRawClass();
+        currentTypeEncoder.setValue(name,
+                createObjectFromString(value, targetType));
+    }
 
-	private static Object createObjectFromString(final String value,
-			final Class<?> targetType) {
-		final PropertyEditor propertyEditor = PropertyEditorManager
-				.findEditor(targetType);
-		propertyEditor.setAsText(value);
-		return propertyEditor.getValue();
-	}
+    private static Object createObjectFromString(final String value,
+            final Class<?> targetType) {
+        final PropertyEditor propertyEditor = PropertyEditorManager
+                .findEditor(targetType);
+        propertyEditor.setAsText(value);
+        return propertyEditor.getValue();
+    }
 
-	@Override
-	public void onCloseStream() {
-		typeEncoderStack.clear();
-	}
+    @Override
+    public void onCloseStream() {
+        typeEncoderStack.clear();
+    }
 
-	@Override
-	public void onResetStream() {
-		typeEncoderStack.clear();
-	}
+    @Override
+    public void onResetStream() {
+        typeEncoderStack.clear();
+    }
 
 }

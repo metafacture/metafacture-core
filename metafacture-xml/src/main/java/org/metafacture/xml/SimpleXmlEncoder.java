@@ -49,325 +49,325 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @FluxCommand("stream-to-xml")
 public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
-	public static final String ATTRIBUTE_MARKER = "~";
+    public static final String ATTRIBUTE_MARKER = "~";
 
-	public static final String DEFAULT_ROOT_TAG = "records";
-	public static final String DEFAULT_RECORD_TAG = "record";
+    public static final String DEFAULT_ROOT_TAG = "records";
+    public static final String DEFAULT_RECORD_TAG = "record";
 
-	private static final String NEW_LINE = "\n";
-	private static final String INDENT = "\t";
+    private static final String NEW_LINE = "\n";
+    private static final String INDENT = "\t";
 
-	private static final String BEGIN_ATTRIBUTE = "=\"";
-	private static final String END_ATTRIBUTE = "\"";
-	private static final String BEGIN_OPEN_ELEMENT = "<";
-	private static final String END_OPEN_ELEMENT = ">";
-	private static final String END_EMPTY_ELEMENT = " />";
-	private static final String BEGIN_CLOSE_ELEMENT = "</";
-	private static final String END_CLOSE_ELEMENT = ">";
+    private static final String BEGIN_ATTRIBUTE = "=\"";
+    private static final String END_ATTRIBUTE = "\"";
+    private static final String BEGIN_OPEN_ELEMENT = "<";
+    private static final String END_OPEN_ELEMENT = ">";
+    private static final String END_EMPTY_ELEMENT = " />";
+    private static final String BEGIN_CLOSE_ELEMENT = "</";
+    private static final String END_CLOSE_ELEMENT = ">";
 
-	private static final String XML_HEADER = "<?xml version=\"%s\" encoding=\"%s\"?>\n";
-	private static final String XMLNS_MARKER = " xmlns";
+    private static final String XML_HEADER = "<?xml version=\"%s\" encoding=\"%s\"?>\n";
+    private static final String XMLNS_MARKER = " xmlns";
 
-	private final StringBuilder builder = new StringBuilder();
+    private final StringBuilder builder = new StringBuilder();
 
-	private String rootTag = DEFAULT_ROOT_TAG;
-	private String recordTag = DEFAULT_RECORD_TAG;
-	private Map<String, String> namespaces = new HashMap<String, String>();
-	private boolean writeRootTag = true;
-	private boolean writeXmlHeader = true;
-	private String xmlHeaderEncoding = "UTF-8";
-	private String xmlHeaderVersion = "1.0";
+    private String rootTag = DEFAULT_ROOT_TAG;
+    private String recordTag = DEFAULT_RECORD_TAG;
+    private Map<String, String> namespaces = new HashMap<String, String>();
+    private boolean writeRootTag = true;
+    private boolean writeXmlHeader = true;
+    private String xmlHeaderEncoding = "UTF-8";
+    private String xmlHeaderVersion = "1.0";
 
-	private boolean separateRoots;
+    private boolean separateRoots;
 
-	private Element element;
-	private boolean atStreamStart = true;
+    private Element element;
+    private boolean atStreamStart = true;
 
-	public void setRootTag(final String rootTag) {
-		this.rootTag = rootTag;
-	}
+    public void setRootTag(final String rootTag) {
+        this.rootTag = rootTag;
+    }
 
-	public void setRecordTag(final String tag) {
-		recordTag = tag;
-	}
+    public void setRecordTag(final String tag) {
+        recordTag = tag;
+    }
 
-	public void setNamespaceFile(final String file) {
-		final Properties properties;
-		try {
-			properties = ResourceUtil.loadProperties(file);
-		} catch (IOException e) {
-			throw new MetafactureException("Failed to load namespaces list", e);
-		}
-		for (final Entry<Object, Object> entry : properties.entrySet()) {
-			namespaces.put(entry.getKey().toString(), entry.getValue().toString());
-		}
-	}
+    public void setNamespaceFile(final String file) {
+        final Properties properties;
+        try {
+            properties = ResourceUtil.loadProperties(file);
+        } catch (IOException e) {
+            throw new MetafactureException("Failed to load namespaces list", e);
+        }
+        for (final Entry<Object, Object> entry : properties.entrySet()) {
+            namespaces.put(entry.getKey().toString(), entry.getValue().toString());
+        }
+    }
 
-	public void setNamespaceFile(final URL url) {
-		final Properties properties;
-		try {
-			properties = ResourceUtil.loadProperties(url);
-		} catch (IOException e) {
-			throw new MetafactureException("Failed to load namespaces list", e);
-		}
-		for (final Entry<Object, Object> entry : properties.entrySet()) {
-			namespaces.put(entry.getKey().toString(), entry.getValue().toString());
-		}
-	}
+    public void setNamespaceFile(final URL url) {
+        final Properties properties;
+        try {
+            properties = ResourceUtil.loadProperties(url);
+        } catch (IOException e) {
+            throw new MetafactureException("Failed to load namespaces list", e);
+        }
+        for (final Entry<Object, Object> entry : properties.entrySet()) {
+            namespaces.put(entry.getKey().toString(), entry.getValue().toString());
+        }
+    }
 
-	public void setWriteXmlHeader(final boolean writeXmlHeader) {
-		this.writeXmlHeader = writeXmlHeader;
-	}
+    public void setWriteXmlHeader(final boolean writeXmlHeader) {
+        this.writeXmlHeader = writeXmlHeader;
+    }
 
-	public void setXmlHeaderEncoding(final String xmlHeaderEncoding) { this.xmlHeaderEncoding = xmlHeaderEncoding; }
+    public void setXmlHeaderEncoding(final String xmlHeaderEncoding) { this.xmlHeaderEncoding = xmlHeaderEncoding; }
 
-	public void setXmlHeaderVersion(final String xmlHeaderVersion) { this.xmlHeaderVersion = xmlHeaderVersion; }
+    public void setXmlHeaderVersion(final String xmlHeaderVersion) { this.xmlHeaderVersion = xmlHeaderVersion; }
 
-	public void setWriteRootTag(final boolean writeRootTag) {
-		this.writeRootTag  = writeRootTag;
-	}
+    public void setWriteRootTag(final boolean writeRootTag) {
+        this.writeRootTag  = writeRootTag;
+    }
 
-	public void setSeparateRoots(final boolean separateRoots) {
-		this.separateRoots = separateRoots;
-	}
+    public void setSeparateRoots(final boolean separateRoots) {
+        this.separateRoots = separateRoots;
+    }
 
-	public void setNamespaces(final Map<String, String> namespaces) {
-		this.namespaces = namespaces;
-	}
+    public void setNamespaces(final Map<String, String> namespaces) {
+        this.namespaces = namespaces;
+    }
 
-	@Override
-	public void startRecord(final String identifier) {
-		if (separateRoots) {
-			writeHeader();
-		} else if (atStreamStart) {
-			writeHeader();
-			sendAndClearData();
-		}
-		atStreamStart = false;
+    @Override
+    public void startRecord(final String identifier) {
+        if (separateRoots) {
+            writeHeader();
+        } else if (atStreamStart) {
+            writeHeader();
+            sendAndClearData();
+        }
+        atStreamStart = false;
 
-		element = new Element(recordTag);
-		if (!writeRootTag) {
-			addNamespacesToElement();
-		}
-	}
+        element = new Element(recordTag);
+        if (!writeRootTag) {
+            addNamespacesToElement();
+        }
+    }
 
-	private void addNamespacesToElement() {
-		for (final Entry<String, String> namespace : namespaces.entrySet()) {
-			final String key = namespace.getKey();
-			final String name = XMLNS_MARKER + (key.isEmpty() ? "" : ":") + key;
-			element.addAttribute(name, namespace.getValue());
-		}
-	}
+    private void addNamespacesToElement() {
+        for (final Entry<String, String> namespace : namespaces.entrySet()) {
+            final String key = namespace.getKey();
+            final String name = XMLNS_MARKER + (key.isEmpty() ? "" : ":") + key;
+            element.addAttribute(name, namespace.getValue());
+        }
+    }
 
-	@Override
-	public void endRecord() {
-		element.writeElement(builder, 1);
-		if (separateRoots) {
-			writeFooter();
-		}
-		sendAndClearData();
-	}
+    @Override
+    public void endRecord() {
+        element.writeElement(builder, 1);
+        if (separateRoots) {
+            writeFooter();
+        }
+        sendAndClearData();
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		element = element.createChild(name);
-	}
+    @Override
+    public void startEntity(final String name) {
+        element = element.createChild(name);
+    }
 
-	@Override
-	public void endEntity() {
-		element = element.getParent();
-	}
+    @Override
+    public void endEntity() {
+        element = element.getParent();
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		if (name.isEmpty()) {
-			element.setText(value);
-		} else if (name.startsWith(ATTRIBUTE_MARKER)) {
-			element.addAttribute(name.substring(1), value);
-		} else {
-			element.createChild(name).setText(value);
-		}
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        if (name.isEmpty()) {
+            element.setText(value);
+        } else if (name.startsWith(ATTRIBUTE_MARKER)) {
+            element.addAttribute(name.substring(1), value);
+        } else {
+            element.createChild(name).setText(value);
+        }
+    }
 
-	@Override
-	protected void onResetStream() {
-		if (!atStreamStart) {
-			writeFooter();
-		}
-		sendAndClearData();
-		atStreamStart = true;
-	}
+    @Override
+    protected void onResetStream() {
+        if (!atStreamStart) {
+            writeFooter();
+        }
+        sendAndClearData();
+        atStreamStart = true;
+    }
 
-	@Override
-	protected void onCloseStream() {
-		if (!separateRoots) {
-			if (!atStreamStart) {
-				writeFooter();
-			}
-			sendAndClearData();
-		}
-	}
+    @Override
+    protected void onCloseStream() {
+        if (!separateRoots) {
+            if (!atStreamStart) {
+                writeFooter();
+            }
+            sendAndClearData();
+        }
+    }
 
-	private void sendAndClearData() {
-		getReceiver().process(builder.toString());
-		builder.delete(0, builder.length());
-	}
+    private void sendAndClearData() {
+        getReceiver().process(builder.toString());
+        builder.delete(0, builder.length());
+    }
 
-	private void writeHeader() {
-		if (writeXmlHeader) {
-			builder.append(String.format(XML_HEADER, xmlHeaderVersion, xmlHeaderEncoding));
-		}
-		if (writeRootTag) {
-			builder.append(BEGIN_OPEN_ELEMENT);
-			builder.append(rootTag);
-			for (final Entry<String, String> entry : namespaces.entrySet()) {
-				builder.append(XMLNS_MARKER);
-				if (!entry.getKey().isEmpty()) {
-					builder.append(':');
-					builder.append(entry.getKey());
-				}
-				builder.append(BEGIN_ATTRIBUTE);
-				writeEscaped(builder, entry.getValue());
-				builder.append(END_ATTRIBUTE);
-			}
-			builder.append(END_OPEN_ELEMENT);
-		}
-	}
+    private void writeHeader() {
+        if (writeXmlHeader) {
+            builder.append(String.format(XML_HEADER, xmlHeaderVersion, xmlHeaderEncoding));
+        }
+        if (writeRootTag) {
+            builder.append(BEGIN_OPEN_ELEMENT);
+            builder.append(rootTag);
+            for (final Entry<String, String> entry : namespaces.entrySet()) {
+                builder.append(XMLNS_MARKER);
+                if (!entry.getKey().isEmpty()) {
+                    builder.append(':');
+                    builder.append(entry.getKey());
+                }
+                builder.append(BEGIN_ATTRIBUTE);
+                writeEscaped(builder, entry.getValue());
+                builder.append(END_ATTRIBUTE);
+            }
+            builder.append(END_OPEN_ELEMENT);
+        }
+    }
 
-	private void writeFooter() {
-		if (writeRootTag) {
-			builder.append(NEW_LINE);
-			builder.append(BEGIN_CLOSE_ELEMENT);
-			builder.append(rootTag);
-			builder.append(END_CLOSE_ELEMENT);
-		}
-	}
+    private void writeFooter() {
+        if (writeRootTag) {
+            builder.append(NEW_LINE);
+            builder.append(BEGIN_CLOSE_ELEMENT);
+            builder.append(rootTag);
+            builder.append(END_CLOSE_ELEMENT);
+        }
+    }
 
-	protected static void writeEscaped(final StringBuilder builder, final String str) {
+    protected static void writeEscaped(final StringBuilder builder, final String str) {
 
-		final int len = str.length();
-		for (int i = 0; i < len; ++i) {
-			final char c = str.charAt(i);
-			final String entityName;
-			switch (c) {
-			case '&':
-				entityName = "amp";
-				break;
-			case '<':
-				entityName = "lt";
-				break;
-			case '>':
-				entityName = "gt";
-				break;
-			case '\'':
-				entityName = "apos";
-				break;
-			case '"':
-				entityName = "quot";
-				break;
-			default:
-				entityName = null;
-				break;
-			}
+        final int len = str.length();
+        for (int i = 0; i < len; ++i) {
+            final char c = str.charAt(i);
+            final String entityName;
+            switch (c) {
+            case '&':
+                entityName = "amp";
+                break;
+            case '<':
+                entityName = "lt";
+                break;
+            case '>':
+                entityName = "gt";
+                break;
+            case '\'':
+                entityName = "apos";
+                break;
+            case '"':
+                entityName = "quot";
+                break;
+            default:
+                entityName = null;
+                break;
+            }
 
-			if (entityName == null) {
-				builder.append(c);
-			} else {
-				builder.append('&');
-				builder.append(entityName);
-				builder.append(';');
-			}
-		}
-	}
+            if (entityName == null) {
+                builder.append(c);
+            } else {
+                builder.append('&');
+                builder.append(entityName);
+                builder.append(';');
+            }
+        }
+    }
 
-	/**
-	 * An XML element.
-	 *
-	 */
-	private static final class Element {
+    /**
+     * An XML element.
+     *
+     */
+    private static final class Element {
 
-		private static final List<Element> NO_CHILDREN = Collections.emptyList();
+        private static final List<Element> NO_CHILDREN = Collections.emptyList();
 
-		private final StringBuilder attributes = new StringBuilder();
-		private final Element parent;
-		private final String name;
+        private final StringBuilder attributes = new StringBuilder();
+        private final Element parent;
+        private final String name;
 
-		private String text = "";
-		private List<Element> children = NO_CHILDREN;
+        private String text = "";
+        private List<Element> children = NO_CHILDREN;
 
-		public Element(final String name) {
-			this.name = name;
-			this.parent = null;
-		}
+        public Element(final String name) {
+            this.name = name;
+            this.parent = null;
+        }
 
-		private Element(final String name, final Element parent) {
-			this.name = name;
-			this.parent = parent;
-		}
+        private Element(final String name, final Element parent) {
+            this.name = name;
+            this.parent = parent;
+        }
 
-		public void addAttribute(final String name, final String value) {
-			attributes.append(" ");
-			attributes.append(name);
-			attributes.append(BEGIN_ATTRIBUTE);
-			writeEscaped(attributes, value);
-			attributes.append(END_ATTRIBUTE);
-		}
+        public void addAttribute(final String name, final String value) {
+            attributes.append(" ");
+            attributes.append(name);
+            attributes.append(BEGIN_ATTRIBUTE);
+            writeEscaped(attributes, value);
+            attributes.append(END_ATTRIBUTE);
+        }
 
-		public void setText(final String text) {
-			this.text = text;
-		}
+        public void setText(final String text) {
+            this.text = text;
+        }
 
-		public Element createChild(final String name) {
-			final Element child = new Element(name, this);
-			if (children == NO_CHILDREN) {
-				children = new ArrayList<SimpleXmlEncoder.Element>();
-			}
-			children.add(child);
-			return child;
-		}
+        public Element createChild(final String name) {
+            final Element child = new Element(name, this);
+            if (children == NO_CHILDREN) {
+                children = new ArrayList<SimpleXmlEncoder.Element>();
+            }
+            children.add(child);
+            return child;
+        }
 
-		public Element getParent() {
-			return parent;
-		}
+        public Element getParent() {
+            return parent;
+        }
 
-		public void writeElement(final StringBuilder builder, final int indent) {
-			if (!name.isEmpty()) {
-				builder.append(NEW_LINE);
-				writeIndent(builder, indent);
-				builder.append(BEGIN_OPEN_ELEMENT);
-				builder.append(name);
-				builder.append(attributes);
-				if (text.isEmpty() && children.isEmpty()) {
-					builder.append(END_EMPTY_ELEMENT);
-					return;
-				}
-				builder.append(END_OPEN_ELEMENT);
-			}
+        public void writeElement(final StringBuilder builder, final int indent) {
+            if (!name.isEmpty()) {
+                builder.append(NEW_LINE);
+                writeIndent(builder, indent);
+                builder.append(BEGIN_OPEN_ELEMENT);
+                builder.append(name);
+                builder.append(attributes);
+                if (text.isEmpty() && children.isEmpty()) {
+                    builder.append(END_EMPTY_ELEMENT);
+                    return;
+                }
+                builder.append(END_OPEN_ELEMENT);
+            }
 
-			writeEscaped(builder, text);
+            writeEscaped(builder, text);
 
-			for (final Element element : children) {
-				element.writeElement(builder, indent + 1);
-			}
+            for (final Element element : children) {
+                element.writeElement(builder, indent + 1);
+            }
 
-			if (text.isEmpty() && !children.isEmpty()) {
-				builder.append(NEW_LINE);
-				writeIndent(builder, indent);
-			}
+            if (text.isEmpty() && !children.isEmpty()) {
+                builder.append(NEW_LINE);
+                writeIndent(builder, indent);
+            }
 
-			if (!name.isEmpty()) {
-				builder.append(BEGIN_CLOSE_ELEMENT);
-				builder.append(name);
-				builder.append(END_CLOSE_ELEMENT);
-			}
-		}
+            if (!name.isEmpty()) {
+                builder.append(BEGIN_CLOSE_ELEMENT);
+                builder.append(name);
+                builder.append(END_CLOSE_ELEMENT);
+            }
+        }
 
-		private static void writeIndent(final StringBuilder builder, final int indent) {
-			for (int i = 0; i < indent; ++i) {
-				builder.append(INDENT);
-			}
-		}
+        private static void writeIndent(final StringBuilder builder, final int indent) {
+            for (int i = 0; i < indent; ++i) {
+                builder.append(INDENT);
+            }
+        }
 
-	}
+    }
 
 }

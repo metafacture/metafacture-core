@@ -32,34 +32,34 @@ import org.mockito.MockitoAnnotations;
  */
 public final class UnicodeNormalizerTest {
 
-	private static final String STRING_WITH_DIACRITICS =
-			"Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
+    private static final String STRING_WITH_DIACRITICS =
+            "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 
-	private static final String STRING_WITH_PRECOMPOSED_CHARS =
-			"Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
+    private static final String STRING_WITH_PRECOMPOSED_CHARS =
+            "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 
-	private UnicodeNormalizer normalizer;
+    private UnicodeNormalizer normalizer;
 
-	@Mock
-	private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		normalizer = new UnicodeNormalizer();
-		normalizer.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        normalizer = new UnicodeNormalizer();
+        normalizer.setReceiver(receiver);
+    }
 
-	@After
-	public void cleanup() {
-		normalizer.closeStream();
-	}
+    @After
+    public void cleanup() {
+        normalizer.closeStream();
+    }
 
-	@Test
-	public void testShouldReplaceDiacriticsWithPrecomposedChars() {
-		normalizer.process(STRING_WITH_DIACRITICS);
+    @Test
+    public void testShouldReplaceDiacriticsWithPrecomposedChars() {
+        normalizer.process(STRING_WITH_DIACRITICS);
 
-		verify(receiver).process(STRING_WITH_PRECOMPOSED_CHARS);
-	}
+        verify(receiver).process(STRING_WITH_PRECOMPOSED_CHARS);
+    }
 
 }

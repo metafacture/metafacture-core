@@ -28,50 +28,50 @@ import java.util.Map;
  */
 public final class ScopedHashMap<K, V> extends HashMap<K, V> {
 
-	private static final long serialVersionUID = -7184066609960144713L;
-	private final ScopedHashMap<K, V> outerScope;
+    private static final long serialVersionUID = -7184066609960144713L;
+    private final ScopedHashMap<K, V> outerScope;
 
-	public ScopedHashMap(final ScopedHashMap<K, V> outerScope) {
-		super();
-		this.outerScope = outerScope;
-	}
+    public ScopedHashMap(final ScopedHashMap<K, V> outerScope) {
+        super();
+        this.outerScope = outerScope;
+    }
 
-	public ScopedHashMap() {
-		super();
-		outerScope = null;
-	}
+    public ScopedHashMap() {
+        super();
+        outerScope = null;
+    }
 
-	@Override
-	public boolean containsKey(final Object key) {
-		if (super.containsKey(key)) {
-			return true;
-		}
-		return outerScope != null && outerScope.containsKey(key);
-	}
+    @Override
+    public boolean containsKey(final Object key) {
+        if (super.containsKey(key)) {
+            return true;
+        }
+        return outerScope != null && outerScope.containsKey(key);
+    }
 
-	@Override
-	public boolean containsValue(final Object value) {
-		if (super.containsValue(value)) {
-			return true;
-		}
-		return outerScope != null && outerScope.containsValue(value);
-	}
+    @Override
+    public boolean containsValue(final Object value) {
+        if (super.containsValue(value)) {
+            return true;
+        }
+        return outerScope != null && outerScope.containsValue(value);
+    }
 
-	@Override
-	public V get(final Object key) {
-		final V ret = super.get(key);
-		if (null == ret && outerScope != null) {
-			return outerScope.get(key);
-		}
-		return ret;
-	}
+    @Override
+    public V get(final Object key) {
+        final V ret = super.get(key);
+        if (null == ret && outerScope != null) {
+            return outerScope.get(key);
+        }
+        return ret;
+    }
 
-	public ScopedHashMap<K, V> getOuterScope() {
-		return outerScope;
-	}
+    public ScopedHashMap<K, V> getOuterScope() {
+        return outerScope;
+    }
 
-	@Override
-	public String toString() {
-		return super.toString() + (getOuterScope() == null ? "" : "\n" + getOuterScope().toString());
-	}
+    @Override
+    public String toString() {
+        return super.toString() + (getOuterScope() == null ? "" : "\n" + getOuterScope().toString());
+    }
 }

@@ -22,16 +22,16 @@ package org.metafacture.metamorph.api;
  *
  */
 public interface Collect extends FlushListener, ConditionAware,
-		NamedValuePipe {
+        NamedValuePipe {
 
-	void setWaitForFlush(final boolean waitForFlush);
+    void setWaitForFlush(final boolean waitForFlush);
 
-	void setSameEntity(boolean sameEntity);
+    void setSameEntity(boolean sameEntity);
 
-	void setReset(boolean reset);
+    void setReset(boolean reset);
 
-	String getName();
+    String getName();
 
-	void setName(String name);
+    void setName(String name);
 
 }

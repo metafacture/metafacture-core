@@ -46,147 +46,147 @@ import org.mockito.junit.MockitoRule;
  */
 public final class MetamorphTest {
 
-	@Rule
-	public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-	@Mock
-	private NamedValueReceiver namedValueReceiver;
+    @Mock
+    private NamedValueReceiver namedValueReceiver;
 
-	private Metamorph metamorph;
+    private Metamorph metamorph;
 
-	@Before
-	public void createSystemUnderTest() {
-		metamorph = new Metamorph();
-		metamorph.setReceiver(new DefaultStreamReceiver());
-	}
+    @Before
+    public void createSystemUnderTest() {
+        metamorph = new Metamorph();
+        metamorph.setReceiver(new DefaultStreamReceiver());
+    }
 
-	@Test
-	public void shouldMapMatchingPath() {
-		setupSimpleMappingMorph();
+    @Test
+    public void shouldMapMatchingPath() {
+        setupSimpleMappingMorph();
 
-		metamorph.startRecord("");
-		metamorph.literal("testEntity.testLiteral", "testValue");
+        metamorph.startRecord("");
+        metamorph.literal("testEntity.testLiteral", "testValue");
 
-		verify(namedValueReceiver).receive(eq("outName"), eq("testValue"),
-				any(), anyInt(), anyInt());
-	}
+        verify(namedValueReceiver).receive(eq("outName"), eq("testValue"),
+                any(), anyInt(), anyInt());
+    }
 
-	@Test
-	public void shouldNotMapNonMatchingPath() {
-		setupSimpleMappingMorph();
+    @Test
+    public void shouldNotMapNonMatchingPath() {
+        setupSimpleMappingMorph();
 
-		metamorph.startRecord("");
-		metamorph.literal("nonMatching.path", "testValue");
+        metamorph.startRecord("");
+        metamorph.literal("nonMatching.path", "testValue");
 
-		verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(),
-				anyInt());
-	}
+        verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(),
+                anyInt());
+    }
 
-	@Test
-	public void shouldMapMatchingLiteralInMatchingEntity() {
-		setupSimpleMappingMorph();
+    @Test
+    public void shouldMapMatchingLiteralInMatchingEntity() {
+        setupSimpleMappingMorph();
 
-		metamorph.startRecord("");
-		metamorph.startEntity("testEntity");
-		metamorph.literal("testLiteral", "testValue");
+        metamorph.startRecord("");
+        metamorph.startEntity("testEntity");
+        metamorph.literal("testLiteral", "testValue");
 
-		verify(namedValueReceiver).receive(eq("outName"), eq("testValue"),
-				any(), anyInt(), anyInt());
-	}
+        verify(namedValueReceiver).receive(eq("outName"), eq("testValue"),
+                any(), anyInt(), anyInt());
+    }
 
-	@Test
-	public void shouldNotMapNonMatchingLiteralInMatchingEntity() {
-		setupSimpleMappingMorph();
+    @Test
+    public void shouldNotMapNonMatchingLiteralInMatchingEntity() {
+        setupSimpleMappingMorph();
 
-		metamorph.startRecord("");
-		metamorph.startEntity("testEntity");
-		metamorph.literal("nonMatching", "testValue");
+        metamorph.startRecord("");
+        metamorph.startEntity("testEntity");
+        metamorph.literal("nonMatching", "testValue");
 
-		verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(),
-				anyInt());
-	}
+        verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(),
+                anyInt());
+    }
 
-	@Test
-	public void shouldNotMapMatchingLiteralInNonMatchingEntity() {
-		setupSimpleMappingMorph();
+    @Test
+    public void shouldNotMapMatchingLiteralInNonMatchingEntity() {
+        setupSimpleMappingMorph();
 
-		metamorph.startRecord("");
-		metamorph.startEntity("nonMatching");
-		metamorph.literal("testLiteral", "testValue");
+        metamorph.startRecord("");
+        metamorph.startEntity("nonMatching");
+        metamorph.literal("testLiteral", "testValue");
 
-		verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(),
-				anyInt());
-	}
-	@Test
-	public void shouldNotMapLiteralWithoutMatchingEntity() {
-		setupSimpleMappingMorph();
+        verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(),
+                anyInt());
+    }
+    @Test
+    public void shouldNotMapLiteralWithoutMatchingEntity() {
+        setupSimpleMappingMorph();
 
-		metamorph.startRecord("");
-		metamorph.literal("testLiteral", "testValue");
+        metamorph.startRecord("");
+        metamorph.literal("testLiteral", "testValue");
 
-		verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(),
-				anyInt());
-	}
+        verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(),
+                anyInt());
+    }
 
-	/**
-	 * Creates the Metamorph structure that corresponds to the Metamorph XML
-	 * statement {@code <data source="testEntity.testLiteral" name="outName" />}.
-	 */
-	private void setupSimpleMappingMorph() {
-		final Data data = new Data();
-		data.setName("outName");
-		data.setNamedValueReceiver(namedValueReceiver);
-		metamorph.registerNamedValueReceiver("testEntity" + '.' + "testLiteral", data);
-	}
+    /**
+     * Creates the Metamorph structure that corresponds to the Metamorph XML
+     * statement {@code <data source="testEntity.testLiteral" name="outName" />}.
+     */
+    private void setupSimpleMappingMorph() {
+        final Data data = new Data();
+        data.setName("outName");
+        data.setNamedValueReceiver(namedValueReceiver);
+        metamorph.registerNamedValueReceiver("testEntity" + '.' + "testLiteral", data);
+    }
 
-	@Test
-	public void shouldReturnValueFromNestedMap() {
-		final Map<String, String> map = new HashMap<>();
-		map.put("outName", "testValue");
+    @Test
+    public void shouldReturnValueFromNestedMap() {
+        final Map<String, String> map = new HashMap<>();
+        map.put("outName", "testValue");
 
-		metamorph.putMap("testMap", map);
+        metamorph.putMap("testMap", map);
 
-		assertNotNull(metamorph.getMap("testMap"));
-		assertEquals("testValue", metamorph.getValue("testMap", "outName"));
-	}
+        assertNotNull(metamorph.getMap("testMap"));
+        assertEquals("testValue", metamorph.getValue("testMap", "outName"));
+    }
 
-	@Test
-	public void shouldReturnDefaultValueIfMapIsKnownButNameIsUnknown() {
-		final Map<String, String> map = new HashMap<>();
-		map.put(Maps.DEFAULT_MAP_KEY, "defaultValue");
+    @Test
+    public void shouldReturnDefaultValueIfMapIsKnownButNameIsUnknown() {
+        final Map<String, String> map = new HashMap<>();
+        map.put(Maps.DEFAULT_MAP_KEY, "defaultValue");
 
-		metamorph.putMap("testMap", map);
+        metamorph.putMap("testMap", map);
 
-		assertEquals("defaultValue", metamorph.getValue("testMap", "nameNotInMap"));
-	}
+        assertEquals("defaultValue", metamorph.getValue("testMap", "nameNotInMap"));
+    }
 
-	@Test
-	public void shouldFedbackLiteralsStartingWithAtIntoMetamorph() {
-		final Data data1;
-		data1 = new Data();
-		data1.setName("@feedback");
-		metamorph.addNamedValueSource(data1);
-		metamorph.registerNamedValueReceiver("testLiteral", data1);
+    @Test
+    public void shouldFedbackLiteralsStartingWithAtIntoMetamorph() {
+        final Data data1;
+        data1 = new Data();
+        data1.setName("@feedback");
+        metamorph.addNamedValueSource(data1);
+        metamorph.registerNamedValueReceiver("testLiteral", data1);
 
-		final Data data2 = new Data();
-		data2.setName("outName");
-		data2.setNamedValueReceiver(namedValueReceiver);
-		metamorph.registerNamedValueReceiver("@feedback", data2);
+        final Data data2 = new Data();
+        data2.setName("outName");
+        data2.setNamedValueReceiver(namedValueReceiver);
+        metamorph.registerNamedValueReceiver("@feedback", data2);
 
-		metamorph.startRecord("");
-		metamorph.literal("testLiteral", "testValue");
+        metamorph.startRecord("");
+        metamorph.literal("testLiteral", "testValue");
 
-		verify(namedValueReceiver).receive(eq("outName"), eq("testValue"),
-				any(), anyInt(), anyInt());
-	}
+        verify(namedValueReceiver).receive(eq("outName"), eq("testValue"),
+                any(), anyInt(), anyInt());
+    }
 
-	@Test(expected=IllegalStateException.class)
-	public void shouldThrowIllegalStateExceptionIfEntityIsNotClosed() {
-		metamorph.startRecord("");
-		metamorph.startEntity("testEntity");
-		metamorph.startEntity("testEntity");
-		metamorph.endEntity();
-		metamorph.endRecord();  // Exception expected
-	}
+    @Test(expected=IllegalStateException.class)
+    public void shouldThrowIllegalStateExceptionIfEntityIsNotClosed() {
+        metamorph.startRecord("");
+        metamorph.startEntity("testEntity");
+        metamorph.startEntity("testEntity");
+        metamorph.endEntity();
+        metamorph.endRecord();  // Exception expected
+    }
 
 }

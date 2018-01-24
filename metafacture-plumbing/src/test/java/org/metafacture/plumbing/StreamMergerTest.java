@@ -33,60 +33,60 @@ import org.mockito.MockitoAnnotations;
  */
 public final class StreamMergerTest {
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	private StreamMerger streamMerger;
+    private StreamMerger streamMerger;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		streamMerger = new StreamMerger();
-		streamMerger.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        streamMerger = new StreamMerger();
+        streamMerger.setReceiver(receiver);
+    }
 
-	@Test
-	public  void shouldMergeSequencesOfRecordsWithTheSameId() {
-		streamMerger.startRecord("1");
-		streamMerger.startEntity("entity-1");
-		streamMerger.endEntity();
-		streamMerger.literal("literal-1", "value-1");
-		streamMerger.endRecord();
-		streamMerger.startRecord("1");
-		streamMerger.startEntity("entity-2");
-		streamMerger.endEntity();
-		streamMerger.literal("literal-2", "value-2");
-		streamMerger.endRecord();
-		streamMerger.closeStream();
+    @Test
+    public  void shouldMergeSequencesOfRecordsWithTheSameId() {
+        streamMerger.startRecord("1");
+        streamMerger.startEntity("entity-1");
+        streamMerger.endEntity();
+        streamMerger.literal("literal-1", "value-1");
+        streamMerger.endRecord();
+        streamMerger.startRecord("1");
+        streamMerger.startEntity("entity-2");
+        streamMerger.endEntity();
+        streamMerger.literal("literal-2", "value-2");
+        streamMerger.endRecord();
+        streamMerger.closeStream();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("1");
-		ordered.verify(receiver).startEntity("entity-1");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).literal("literal-1", "value-1");
-		ordered.verify(receiver).startEntity("entity-2");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).literal("literal-2", "value-2");
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).startEntity("entity-1");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).literal("literal-1", "value-1");
+        ordered.verify(receiver).startEntity("entity-2");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).literal("literal-2", "value-2");
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public  void shouldNoMergeRecordsWithDifferentIds() {
-		streamMerger.startRecord("1");
-		streamMerger.literal("literal-1", "value-1");
-		streamMerger.endRecord();
-		streamMerger.startRecord("2");
-		streamMerger.literal("literal-2", "value-2");
-		streamMerger.endRecord();
-		streamMerger.closeStream();
+    @Test
+    public  void shouldNoMergeRecordsWithDifferentIds() {
+        streamMerger.startRecord("1");
+        streamMerger.literal("literal-1", "value-1");
+        streamMerger.endRecord();
+        streamMerger.startRecord("2");
+        streamMerger.literal("literal-2", "value-2");
+        streamMerger.endRecord();
+        streamMerger.closeStream();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("1");
-		ordered.verify(receiver).literal("literal-1", "value-1");
-		ordered.verify(receiver).endRecord();
-		ordered.verify(receiver).startRecord("2");
-		ordered.verify(receiver).literal("literal-2", "value-2");
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("literal-1", "value-1");
+        ordered.verify(receiver).endRecord();
+        ordered.verify(receiver).startRecord("2");
+        ordered.verify(receiver).literal("literal-2", "value-2");
+        ordered.verify(receiver).endRecord();
+    }
 
 }

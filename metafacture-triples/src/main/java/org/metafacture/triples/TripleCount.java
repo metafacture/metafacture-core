@@ -35,61 +35,61 @@ import org.metafacture.framework.objects.Triple;
 @FluxCommand("count-triples")
 public final class TripleCount extends AbstractTripleSort {
 
-	public static final String DEFAULT_COUNTP_REDICATE = "count";
+    public static final String DEFAULT_COUNTP_REDICATE = "count";
 
-	private static final Triple INIT = new Triple("", "", "");
+    private static final Triple INIT = new Triple("", "", "");
 
-	private Triple current = INIT;
-	private int count;
-	private String countPredicate = DEFAULT_COUNTP_REDICATE;
-	private Comparator<Triple> comparator;
+    private Triple current = INIT;
+    private int count;
+    private String countPredicate = DEFAULT_COUNTP_REDICATE;
+    private Comparator<Triple> comparator;
 
-	@Override
-	protected void sortedTriple(final Triple triple) {
+    @Override
+    protected void sortedTriple(final Triple triple) {
 
-		if(current==INIT){
-			current = triple;
-			comparator = createComparator();
-		}
+        if(current==INIT){
+            current = triple;
+            comparator = createComparator();
+        }
 
-		if(comparator.compare(current, triple)==0){
-			++count;
-		}else{
-			writeResult();
-			current = triple;
-			count = 1;
-		}
-	}
+        if(comparator.compare(current, triple)==0){
+            ++count;
+        }else{
+            writeResult();
+            current = triple;
+            count = 1;
+        }
+    }
 
-	public void setCountPredicate(final String countPredicate) {
-		this.countPredicate = countPredicate;
-	}
+    public void setCountPredicate(final String countPredicate) {
+        this.countPredicate = countPredicate;
+    }
 
-	@Override
-	protected void onFinished() {
-		writeResult();
-	}
+    @Override
+    protected void onFinished() {
+        writeResult();
+    }
 
-	private void writeResult() {
-		final Compare compareBy = getCompare();
-		switch (compareBy) {
-		case ALL:
-			getReceiver().process(new Triple(current.toString(), countPredicate , String.valueOf(count)));
-			break;
-		case OBJECT:
-			getReceiver().process(new Triple(current.getObject(), countPredicate, String.valueOf(count)));
-			break;
-		case PREDICATE:
-			getReceiver().process(new Triple(current.getPredicate(), countPredicate, String.valueOf(count)));
-			break;
-		case SUBJECT:
-		default:
-			getReceiver().process(new Triple(current.getSubject(), countPredicate, String.valueOf(count)));
-			break;
-		}
-	}
+    private void writeResult() {
+        final Compare compareBy = getCompare();
+        switch (compareBy) {
+        case ALL:
+            getReceiver().process(new Triple(current.toString(), countPredicate , String.valueOf(count)));
+            break;
+        case OBJECT:
+            getReceiver().process(new Triple(current.getObject(), countPredicate, String.valueOf(count)));
+            break;
+        case PREDICATE:
+            getReceiver().process(new Triple(current.getPredicate(), countPredicate, String.valueOf(count)));
+            break;
+        case SUBJECT:
+        default:
+            getReceiver().process(new Triple(current.getSubject(), countPredicate, String.valueOf(count)));
+            break;
+        }
+    }
 
-	public void setCountBy(final Compare countBy){
-		setCompare(countBy);
-	}
+    public void setCountBy(final Compare countBy){
+        setCompare(countBy);
+    }
 }

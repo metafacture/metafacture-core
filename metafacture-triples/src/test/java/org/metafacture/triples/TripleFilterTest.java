@@ -34,62 +34,62 @@ import org.mockito.MockitoAnnotations;
  */
 public final class TripleFilterTest {
 
-	private static final Triple TRIPLE1 = new Triple("sA", "pA", "oA");
-	private static final Triple TRIPLE2 = new Triple("sB", "pB", "oB");
-	private static final Triple TRIPLE3 = new Triple("sC", "pC", "oC");
+    private static final Triple TRIPLE1 = new Triple("sA", "pA", "oA");
+    private static final Triple TRIPLE2 = new Triple("sB", "pB", "oB");
+    private static final Triple TRIPLE3 = new Triple("sC", "pC", "oC");
 
-	private TripleFilter tripleFilter;
+    private TripleFilter tripleFilter;
 
-	@Mock
-	private ObjectReceiver<Triple> receiver;
+    @Mock
+    private ObjectReceiver<Triple> receiver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		tripleFilter = new TripleFilter();
-		tripleFilter.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        tripleFilter = new TripleFilter();
+        tripleFilter.setReceiver(receiver);
+    }
 
-	@After
-	public void cleanup() {
-		tripleFilter.closeStream();
-	}
+    @After
+    public void cleanup() {
+        tripleFilter.closeStream();
+    }
 
-	@Test
-	public void testShouldPassMatchingTripleByDefault() {
-		tripleFilter.setSubjectPattern("sA");
+    @Test
+    public void testShouldPassMatchingTripleByDefault() {
+        tripleFilter.setSubjectPattern("sA");
 
-		tripleFilter.process(TRIPLE1);
-		tripleFilter.process(TRIPLE2);
+        tripleFilter.process(TRIPLE1);
+        tripleFilter.process(TRIPLE2);
 
-		verify(receiver).process(TRIPLE1);
-		verifyNoMoreInteractions(receiver);
-	}
+        verify(receiver).process(TRIPLE1);
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void testShouldPassNonMatchingTripleIfPassMatchesIsFalse() {
-		tripleFilter.setSubjectPattern("sA");
-		tripleFilter.setPassMatches(false);
+    @Test
+    public void testShouldPassNonMatchingTripleIfPassMatchesIsFalse() {
+        tripleFilter.setSubjectPattern("sA");
+        tripleFilter.setPassMatches(false);
 
-		tripleFilter.process(TRIPLE1);
-		tripleFilter.process(TRIPLE2);
+        tripleFilter.process(TRIPLE1);
+        tripleFilter.process(TRIPLE2);
 
-		verify(receiver).process(TRIPLE2);
-		verifyNoMoreInteractions(receiver);
-	}
+        verify(receiver).process(TRIPLE2);
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void testShouldUseDisjunctionForPatterns() {
-		tripleFilter.setSubjectPattern("sA");
-		tripleFilter.setObjectPattern("oC");
+    @Test
+    public void testShouldUseDisjunctionForPatterns() {
+        tripleFilter.setSubjectPattern("sA");
+        tripleFilter.setObjectPattern("oC");
 
-		tripleFilter.process(TRIPLE1);
-		tripleFilter.process(TRIPLE2);
-		tripleFilter.process(TRIPLE3);
+        tripleFilter.process(TRIPLE1);
+        tripleFilter.process(TRIPLE2);
+        tripleFilter.process(TRIPLE3);
 
-		verify(receiver).process(TRIPLE1);
-		verify(receiver).process(TRIPLE3);
-		verifyNoMoreInteractions(receiver);
-	}
+        verify(receiver).process(TRIPLE1);
+        verify(receiver).process(TRIPLE3);
+        verifyNoMoreInteractions(receiver);
+    }
 
 }

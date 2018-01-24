@@ -36,92 +36,92 @@ import org.mockito.MockitoAnnotations;
  */
 public final class MapToStreamTest {
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	private MapToStream mapToStream;
+    private MapToStream mapToStream;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		mapToStream = new MapToStream();
-		mapToStream.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        mapToStream = new MapToStream();
+        mapToStream.setReceiver(receiver);
+    }
 
-	@Test
-	public void shouldEmitEmptyRecordIfMapIsEmpty() {
-		mapToStream.process(new HashMap<>());
+    @Test
+    public void shouldEmitEmptyRecordIfMapIsEmpty() {
+        mapToStream.process(new HashMap<>());
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("");
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void shouldEmitMapEntryAsLiteral() {
-		final Map<String, String> map = new HashMap<>();
-		map.put("key", "value");
-		mapToStream.process(map);
+    @Test
+    public void shouldEmitMapEntryAsLiteral() {
+        final Map<String, String> map = new HashMap<>();
+        map.put("key", "value");
+        mapToStream.process(map);
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("");
-		ordered.verify(receiver).literal("key", "value");
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
+        ordered.verify(receiver).literal("key", "value");
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void shouldEmitAllMapEntriesAsLiterals() {
-		final Map<String, String> map = new HashMap<>();
-		map.put("key-1", "value-1");
-		map.put("key-2", "value-2");
-		mapToStream.process(map);
+    @Test
+    public void shouldEmitAllMapEntriesAsLiterals() {
+        final Map<String, String> map = new HashMap<>();
+        map.put("key-1", "value-1");
+        map.put("key-2", "value-2");
+        mapToStream.process(map);
 
-		verify(receiver).literal("key-1", "value-1");
-		verify(receiver).literal("key-2", "value-2");
-	}
+        verify(receiver).literal("key-1", "value-1");
+        verify(receiver).literal("key-2", "value-2");
+    }
 
-	@Test
-	public void shouldUseMapEntryWithIdKeyAsRecordId() {
-		mapToStream.setIdKey("id");
+    @Test
+    public void shouldUseMapEntryWithIdKeyAsRecordId() {
+        mapToStream.setIdKey("id");
 
-		final Map<String, String> map = new HashMap<>();
-		map.put("id", "id-1");
-		mapToStream.process(map);
+        final Map<String, String> map = new HashMap<>();
+        map.put("id", "id-1");
+        mapToStream.process(map);
 
-		verify(receiver).startRecord("id-1");
-	}
+        verify(receiver).startRecord("id-1");
+    }
 
-	@Test
-	public void shouldUseMapEntryWithDefaultIdNameAsRecordId() {
-		final Map<String, String> map = new HashMap<>();
-		map.put("_id", "id-1");
-		mapToStream.process(map);
+    @Test
+    public void shouldUseMapEntryWithDefaultIdNameAsRecordId() {
+        final Map<String, String> map = new HashMap<>();
+        map.put("_id", "id-1");
+        mapToStream.process(map);
 
-		verify(receiver).startRecord("id-1");
-	}
+        verify(receiver).startRecord("id-1");
+    }
 
-	@Test
-	public void shouldEmitEmptyRecordIdIfNoEntryWithIdKeyIsFoundInMap() {
-		final Map<String, String> map = new HashMap<>();
-		map.put("noid", "noid");
-		mapToStream.process(map);
+    @Test
+    public void shouldEmitEmptyRecordIdIfNoEntryWithIdKeyIsFoundInMap() {
+        final Map<String, String> map = new HashMap<>();
+        map.put("noid", "noid");
+        mapToStream.process(map);
 
-		verify(receiver).startRecord("");
-	}
+        verify(receiver).startRecord("");
+    }
 
-	@Test
-	public void shouldConvertObjectsInMapToStrings() {
-		mapToStream.setIdKey(-1);
+    @Test
+    public void shouldConvertObjectsInMapToStrings() {
+        mapToStream.setIdKey(-1);
 
-		final Map<Integer, Integer> map = new HashMap<>();
-		map.put(1, 11);
-		map.put(2, 12);
-		map.put(-1, 100);
-		mapToStream.process(map);
+        final Map<Integer, Integer> map = new HashMap<>();
+        map.put(1, 11);
+        map.put(2, 12);
+        map.put(-1, 100);
+        mapToStream.process(map);
 
-		verify(receiver).startRecord("100");
-		verify(receiver).literal("1", "11");
-		verify(receiver).literal("2", "12");
-	}
+        verify(receiver).startRecord("100");
+        verify(receiver).literal("1", "11");
+        verify(receiver).literal("2", "12");
+    }
 
 }

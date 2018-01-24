@@ -31,50 +31,50 @@ import org.metafacture.framework.helpers.DefaultTee;
  */
 public interface Tee<T extends Receiver> extends Sender<T> {
 
-	/**
-	 * Replaces all receivers attached to the module with {@code receiver}.
-	 *
-	 * @param <R> type of the receiver of the downstream module
-	 * @param receiver the downstream module to which the tee should connect
-	 * @return reference to the downstream receiver for method chaining
-	 */
-	@Override
-	<R extends T> R setReceiver(R receiver);
+    /**
+     * Replaces all receivers attached to the module with {@code receiver}.
+     *
+     * @param <R> type of the receiver of the downstream module
+     * @param receiver the downstream module to which the tee should connect
+     * @return reference to the downstream receiver for method chaining
+     */
+    @Override
+    <R extends T> R setReceiver(R receiver);
 
-	/**
-	 * Sets two receivers and returns the first. All other
-	 * receivers attached to the module are removed.
-	 *
-	 * @param <R> type of the receiver of the downstream module
-	 * @param receiver the main downstream module to which the tee should connect
-	 * @param lateralReceiver the second downstream module to which the tee should
-	 *                        connect
-	 * @return reference to the main downstream receiver for method chaining
-	 */
-	<R extends T> R setReceivers(R receiver, T lateralReceiver);
+    /**
+     * Sets two receivers and returns the first. All other
+     * receivers attached to the module are removed.
+     *
+     * @param <R> type of the receiver of the downstream module
+     * @param receiver the main downstream module to which the tee should connect
+     * @param lateralReceiver the second downstream module to which the tee should
+     *                        connect
+     * @return reference to the main downstream receiver for method chaining
+     */
+    <R extends T> R setReceivers(R receiver, T lateralReceiver);
 
-	/**
-	 * Adds receiver even if receiver is already added.
-	 *
-	 * @param receiver a downstream module to which the tee should connect
-	 * @return reference to the tee for method chaining
-	 */
-	Tee<T> addReceiver(T receiver);
+    /**
+     * Adds receiver even if receiver is already added.
+     *
+     * @param receiver a downstream module to which the tee should connect
+     * @return reference to the tee for method chaining
+     */
+    Tee<T> addReceiver(T receiver);
 
-	/**
-	 * Removes a receiver from the list of receivers.
-	 *
-	 * @param receiver the downstream receiver to remove from the list of
-	 *                 connected receivers.
-	 * @return reference to the tee for method chaining
-	 */
-	Tee<T> removeReceiver(T receiver);
+    /**
+     * Removes a receiver from the list of receivers.
+     *
+     * @param receiver the downstream receiver to remove from the list of
+     *                 connected receivers.
+     * @return reference to the tee for method chaining
+     */
+    Tee<T> removeReceiver(T receiver);
 
-	/**
-	 * Clears the list of receivers.
-	 *
-	 * @return reference to the tee for method chaining
-	 */
-	 Tee<T> clearReceivers();
+    /**
+     * Clears the list of receivers.
+     *
+     * @return reference to the tee for method chaining
+     */
+     Tee<T> clearReceivers();
 
 }

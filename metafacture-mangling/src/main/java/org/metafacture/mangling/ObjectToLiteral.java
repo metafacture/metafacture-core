@@ -31,27 +31,27 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(StreamReceiver.class)
 @FluxCommand("object-to-literal")
 public final class ObjectToLiteral<T> extends
-		DefaultObjectPipe<T, StreamReceiver> {
+        DefaultObjectPipe<T, StreamReceiver> {
 
-	public static final String DEFAULT_LITERAL_NAME = "obj";
+    public static final String DEFAULT_LITERAL_NAME = "obj";
 
-	private String literalName = DEFAULT_LITERAL_NAME;
+    private String literalName = DEFAULT_LITERAL_NAME;
 
-	public void setLiteralName(final String literalName) {
-		this.literalName = literalName;
-	}
+    public void setLiteralName(final String literalName) {
+        this.literalName = literalName;
+    }
 
-	public String getLiteralName() {
-		return literalName;
-	}
+    public String getLiteralName() {
+        return literalName;
+    }
 
-	@Override
-	public void process(final T obj) {
-		assert obj!=null;
-		assert !isClosed();
-		getReceiver().startRecord("");
-		getReceiver().literal(literalName, obj.toString());
-		getReceiver().endRecord();
-	}
+    @Override
+    public void process(final T obj) {
+        assert obj!=null;
+        assert !isClosed();
+        getReceiver().startRecord("");
+        getReceiver().literal(literalName, obj.toString());
+        getReceiver().endRecord();
+    }
 
 }

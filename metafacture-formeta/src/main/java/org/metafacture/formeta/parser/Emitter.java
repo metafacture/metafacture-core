@@ -25,12 +25,12 @@ import org.metafacture.framework.StreamReceiver;
  */
 public interface Emitter {
 
-	void setReceiver(final StreamReceiver receiver);
+    void setReceiver(final StreamReceiver receiver);
 
-	void startGroup(final String name, final int nestingLevel);
+    void startGroup(final String name, final int nestingLevel);
 
-	void endGroup(final int nestingLevel);
+    void endGroup(final int nestingLevel);
 
-	void literal(final String name, final String value, final int nestingLevel);
+    void literal(final String name, final String value, final int nestingLevel);
 
 }

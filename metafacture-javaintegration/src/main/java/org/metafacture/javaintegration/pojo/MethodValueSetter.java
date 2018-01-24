@@ -30,52 +30,52 @@ import org.metafacture.framework.MetafactureException;
  */
 class MethodValueSetter implements ValueSetter {
 
-	private static final String METHOD_PREFIX = "set";
+    private static final String METHOD_PREFIX = "set";
 
-	private final String name;
-	private final Method method;
+    private final String name;
+    private final Method method;
 
-	MethodValueSetter(final Method method) {
-		assert supportsMethod(method);
-		this.method = method;
-		// remove prefix then lower case first character
-		name = Introspector.decapitalize(method.getName().substring(
-				METHOD_PREFIX.length()));
-	}
+    MethodValueSetter(final Method method) {
+        assert supportsMethod(method);
+        this.method = method;
+        // remove prefix then lower case first character
+        name = Introspector.decapitalize(method.getName().substring(
+                METHOD_PREFIX.length()));
+    }
 
-	static boolean supportsMethod(final Method m) {
-		return Modifier.isPublic(m.getModifiers())
-				&& m.getName().length() > METHOD_PREFIX.length()
-				&& m.getName().startsWith(METHOD_PREFIX)
-				&& m.getParameterTypes().length == 1;
-	}
+    static boolean supportsMethod(final Method m) {
+        return Modifier.isPublic(m.getModifiers())
+                && m.getName().length() > METHOD_PREFIX.length()
+                && m.getName().startsWith(METHOD_PREFIX)
+                && m.getParameterTypes().length == 1;
+    }
 
-	@Override
-	public void setValue(final Object object, final Object value) {
-		try {
-			method.invoke(object, value);
-		} catch (final IllegalArgumentException e) {
-			throw new MetafactureException(
-					"The given object don't have a method named "
-							+ method.getName(), e);
-		} catch (final IllegalAccessException e) {
-			throw new MetafactureException("Can't access the method named "
-					+ method.getName(), e);
-		} catch (final InvocationTargetException e) {
-			throw new MetafactureException("Invoking the method named "
-					+ method.getName() + " throws an excpetion", e);
-		}
-	}
+    @Override
+    public void setValue(final Object object, final Object value) {
+        try {
+            method.invoke(object, value);
+        } catch (final IllegalArgumentException e) {
+            throw new MetafactureException(
+                    "The given object don't have a method named "
+                            + method.getName(), e);
+        } catch (final IllegalAccessException e) {
+            throw new MetafactureException("Can't access the method named "
+                    + method.getName(), e);
+        } catch (final InvocationTargetException e) {
+            throw new MetafactureException("Invoking the method named "
+                    + method.getName() + " throws an excpetion", e);
+        }
+    }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public ValueType getValueType() {
-		return new ValueType(method.getParameterTypes()[0],
-				method.getGenericParameterTypes()[0]);
-	}
+    @Override
+    public ValueType getValueType() {
+        return new ValueType(method.getParameterTypes()[0],
+                method.getGenericParameterTypes()[0]);
+    }
 
 }

@@ -23,14 +23,14 @@ package org.metafacture.framework;
  */
 public final class MissingIdException extends MetafactureException {
 
-	private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
 
-	public MissingIdException(final String message) {
-		super(message);
-	}
+    public MissingIdException(final String message) {
+        super(message);
+    }
 
-	public MissingIdException(final String message, final Throwable cause) {
-		super(message, cause);
-	}
+    public MissingIdException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 
 }

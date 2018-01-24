@@ -20,12 +20,12 @@ package org.metafacture.commons.reflection;
  */
 public class ReflectionException extends RuntimeException {
 
-	ReflectionException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    ReflectionException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	ReflectionException(String message) {
-		super(message);
-	}
+    ReflectionException(String message) {
+        super(message);
+    }
 
 }

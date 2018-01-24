@@ -23,14 +23,14 @@ package org.metafacture.framework;
  */
 public class FormatException extends MetafactureException {
 
-	private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
 
-	public FormatException(final String message) {
-		super(message);
-	}
+    public FormatException(final String message) {
+        super(message);
+    }
 
-	public FormatException(final String message, final Throwable cause) {
-		super(message, cause);
-	}
+    public FormatException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 
 }

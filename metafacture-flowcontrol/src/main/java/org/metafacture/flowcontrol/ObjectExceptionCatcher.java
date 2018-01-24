@@ -45,51 +45,51 @@ import org.slf4j.LoggerFactory;
 @Out(Object.class)
 @FluxCommand("catch-object-exception")
 public final class ObjectExceptionCatcher<T> extends
-		DefaultObjectPipe<T, ObjectReceiver<T>> {
+        DefaultObjectPipe<T, ObjectReceiver<T>> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ObjectExceptionCatcher.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ObjectExceptionCatcher.class);
 
-	private String logPrefix;
-	private boolean logStackTrace;
+    private String logPrefix;
+    private boolean logStackTrace;
 
-	public ObjectExceptionCatcher() {
-		this("");
-	}
+    public ObjectExceptionCatcher() {
+        this("");
+    }
 
-	public ObjectExceptionCatcher(final String logPrefix) {
-		super();
-		this.logPrefix = logPrefix;
-	}
+    public ObjectExceptionCatcher(final String logPrefix) {
+        super();
+        this.logPrefix = logPrefix;
+    }
 
-	public void setLogPrefix(final String logPrefix) {
-		this.logPrefix = logPrefix;
-	}
+    public void setLogPrefix(final String logPrefix) {
+        this.logPrefix = logPrefix;
+    }
 
-	public String getLogPrefix() {
-		return logPrefix;
-	}
+    public String getLogPrefix() {
+        return logPrefix;
+    }
 
-	public void setLogStackTrace(final boolean logStackTrace) {
-		this.logStackTrace = logStackTrace;
-	}
+    public void setLogStackTrace(final boolean logStackTrace) {
+        this.logStackTrace = logStackTrace;
+    }
 
-	public boolean isLogStackTrace() {
-		return logStackTrace;
-	}
+    public boolean isLogStackTrace() {
+        return logStackTrace;
+    }
 
-	@Override
-	public void process(final T obj) {
-		try {
-			getReceiver().process(obj);
-		} catch(final Exception e) {
-			LOG.error("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
+    @Override
+    public void process(final T obj) {
+        try {
+            getReceiver().process(obj);
+        } catch(final Exception e) {
+            LOG.error("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
 
-			if (logStackTrace) {
-				final StringWriter stackTraceWriter = new StringWriter();
-				e.printStackTrace(new PrintWriter(stackTraceWriter));
-				LOG.error("{}Stack Trace:\n{}", logPrefix, stackTraceWriter.toString());
-			}
-		}
-	}
+            if (logStackTrace) {
+                final StringWriter stackTraceWriter = new StringWriter();
+                e.printStackTrace(new PrintWriter(stackTraceWriter));
+                LOG.error("{}Stack Trace:\n{}", logPrefix, stackTraceWriter.toString());
+            }
+        }
+    }
 
 }

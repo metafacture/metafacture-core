@@ -32,106 +32,106 @@ import org.metafacture.framework.FormatException;
  */
 final class FieldsBuilder {
 
-	private static final int NO_MARKER_SET = -1;
-	private static final char[] NO_INDICATORS = new char[0];
+    private static final int NO_MARKER_SET = -1;
+    private static final char[] NO_INDICATORS = new char[0];
 
-	private final Iso646ByteBuffer buffer;
-	private final int identifierLength;
+    private final Iso646ByteBuffer buffer;
+    private final int identifierLength;
 
-	private Charset charset = StandardCharsets.UTF_8;
+    private Charset charset = StandardCharsets.UTF_8;
 
-	private int undoMarker = NO_MARKER_SET;
-	private boolean inField;
+    private int undoMarker = NO_MARKER_SET;
+    private boolean inField;
 
 
-	FieldsBuilder(final RecordFormat format, final int maxSize) {
-		buffer = new Iso646ByteBuffer(maxSize);
-		identifierLength = format.getIdentifierLength();
-	}
+    FieldsBuilder(final RecordFormat format, final int maxSize) {
+        buffer = new Iso646ByteBuffer(maxSize);
+        identifierLength = format.getIdentifierLength();
+    }
 
-	void setCharset(final Charset charset) {
-		assert charset != null;
-		this.charset = charset;
-	}
+    void setCharset(final Charset charset) {
+        assert charset != null;
+        this.charset = charset;
+    }
 
-	Charset getCharset() {
-		return charset;
-	}
+    Charset getCharset() {
+        return charset;
+    }
 
-	int startField() {
-		return startField(NO_INDICATORS);
-	}
+    int startField() {
+        return startField(NO_INDICATORS);
+    }
 
-	int startField(final char[] indicators) {
-		assert !inField;
-		checkCapacity(indicators.length + Byte.BYTES);
-		inField = true;
-		undoMarker = buffer.getWritePosition();
-		buffer.writeChars(indicators);
-		return undoMarker;
-	}
+    int startField(final char[] indicators) {
+        assert !inField;
+        checkCapacity(indicators.length + Byte.BYTES);
+        inField = true;
+        undoMarker = buffer.getWritePosition();
+        buffer.writeChars(indicators);
+        return undoMarker;
+    }
 
-	int endField() {
-		assert inField;
-		checkCapacity(Byte.BYTES);
-		inField = false;
-		buffer.writeByte(FIELD_SEPARATOR);
-		return buffer.getWritePosition();
-	}
+    int endField() {
+        assert inField;
+        checkCapacity(Byte.BYTES);
+        inField = false;
+        buffer.writeByte(FIELD_SEPARATOR);
+        return buffer.getWritePosition();
+    }
 
-	void appendValue(final String value) {
-		assert inField;
-		final byte[] bytes = value.getBytes(charset);
-		checkCapacity(bytes.length + Byte.BYTES);
-		buffer.writeBytes(bytes);
-	}
+    void appendValue(final String value) {
+        assert inField;
+        final byte[] bytes = value.getBytes(charset);
+        checkCapacity(bytes.length + Byte.BYTES);
+        buffer.writeBytes(bytes);
+    }
 
-	void appendSubfield(final char[] identifier, final String value) {
-		assert inField;
-		final byte[] bytes = value.getBytes(charset);
-		checkCapacity(bytes.length + identifierLength + Byte.BYTES);
-		if (identifierLength > 0) {
-			buffer.writeByte(IDENTIFIER_MARKER);
-			buffer.writeChars(identifier);
-		}
-		buffer.writeBytes(bytes);
-	}
+    void appendSubfield(final char[] identifier, final String value) {
+        assert inField;
+        final byte[] bytes = value.getBytes(charset);
+        checkCapacity(bytes.length + identifierLength + Byte.BYTES);
+        if (identifierLength > 0) {
+            buffer.writeByte(IDENTIFIER_MARKER);
+            buffer.writeChars(identifier);
+        }
+        buffer.writeBytes(bytes);
+    }
 
-	private void checkCapacity(final int dataLength) {
-		if (dataLength > buffer.getFreeSpace()) {
-			throw new FormatException("not enough space for field");
-		}
-	}
+    private void checkCapacity(final int dataLength) {
+        if (dataLength > buffer.getFreeSpace()) {
+            throw new FormatException("not enough space for field");
+        }
+    }
 
-	void undoLastField() {
-		assert undoMarker != NO_MARKER_SET;
-		buffer.setWritePosition(undoMarker);
-		undoMarker = NO_MARKER_SET;
-	}
+    void undoLastField() {
+        assert undoMarker != NO_MARKER_SET;
+        buffer.setWritePosition(undoMarker);
+        undoMarker = NO_MARKER_SET;
+    }
 
-	void reset() {
-		buffer.setWritePosition(0);
-		undoMarker = NO_MARKER_SET;
-		inField = false;
-	}
+    void reset() {
+        buffer.setWritePosition(0);
+        undoMarker = NO_MARKER_SET;
+        inField = false;
+    }
 
-	int length() {
-		assert !inField;
-		return buffer.getWritePosition() + Byte.BYTES;
-	}
+    int length() {
+        assert !inField;
+        return buffer.getWritePosition() + Byte.BYTES;
+    }
 
-	void copyToBuffer(final byte[] destBuffer, final int fromIndex) {
-		assert !inField;
-		final int fieldLength = buffer.getWritePosition();
-		System.arraycopy(buffer.getByteArray(), 0, destBuffer, fromIndex,
-				fieldLength);
-		final int fieldsEnd = fromIndex + fieldLength;
-		destBuffer[fieldsEnd] = RECORD_SEPARATOR;
-	}
+    void copyToBuffer(final byte[] destBuffer, final int fromIndex) {
+        assert !inField;
+        final int fieldLength = buffer.getWritePosition();
+        System.arraycopy(buffer.getByteArray(), 0, destBuffer, fromIndex,
+                fieldLength);
+        final int fieldsEnd = fromIndex + fieldLength;
+        destBuffer[fieldsEnd] = RECORD_SEPARATOR;
+    }
 
-	@Override
-	public String toString() {
-		return buffer.stringAt(0, buffer.getWritePosition(), charset);
-	}
+    @Override
+    public String toString() {
+        return buffer.stringAt(0, buffer.getWritePosition(), charset);
+    }
 
 }

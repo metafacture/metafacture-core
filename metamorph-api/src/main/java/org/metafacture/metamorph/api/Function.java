@@ -24,7 +24,7 @@ package org.metafacture.metamorph.api;
  */
 public interface Function extends NamedValuePipe, FlushListener {
 
-	void putValue(String key, String value);
-	void setMaps(Maps maps);
+    void putValue(String key, String value);
+    void setMaps(Maps maps);
 
 }

@@ -35,86 +35,86 @@ import org.metafacture.io.StdInOpener;
  */
 final class Flow {
 
-	private final Deque<Tee<?>> teeStack = new LinkedList<Tee<?>>();
-	private final Deque<List<LifeCycle>> looseEndsStack = new LinkedList<List<LifeCycle>>();
+    private final Deque<Tee<?>> teeStack = new LinkedList<Tee<?>>();
+    private final Deque<List<LifeCycle>> looseEndsStack = new LinkedList<List<LifeCycle>>();
 
-	private LifeCycle element;
-	private ObjectReceiver<? extends Object> start;
-	private boolean joinLooseEnds;
+    private LifeCycle element;
+    private ObjectReceiver<? extends Object> start;
+    private boolean joinLooseEnds;
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void addElement(final Receiver nextElement) {
-		if(element==null){
-			setStart((ObjectReceiver<? extends Object>) nextElement);
-			return;
-		}
-		if (element instanceof Sender) {
-			final Sender sender = (Sender) element;
-			if (joinLooseEnds) {
-				teeStack.pop();
-				for (final LifeCycle looseEnd : looseEndsStack.pop()) {
-					if (looseEnd instanceof Tee) {
-						((Tee) looseEnd).addReceiver(nextElement);
-					} else {
-						((Sender) looseEnd).setReceiver(nextElement);
-					}
-				}
-				joinLooseEnds = false;
-			} else {
-				if (sender instanceof Tee) {
-					((Tee) sender).addReceiver(nextElement);
-				} else {
-					sender.setReceiver(nextElement);
-				}
-			}
-		} else {
-			throw new FluxParseException(element.getClass().getCanonicalName() + "is not a sender");
-		}
-		element = nextElement;
-	}
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public void addElement(final Receiver nextElement) {
+        if(element==null){
+            setStart((ObjectReceiver<? extends Object>) nextElement);
+            return;
+        }
+        if (element instanceof Sender) {
+            final Sender sender = (Sender) element;
+            if (joinLooseEnds) {
+                teeStack.pop();
+                for (final LifeCycle looseEnd : looseEndsStack.pop()) {
+                    if (looseEnd instanceof Tee) {
+                        ((Tee) looseEnd).addReceiver(nextElement);
+                    } else {
+                        ((Sender) looseEnd).setReceiver(nextElement);
+                    }
+                }
+                joinLooseEnds = false;
+            } else {
+                if (sender instanceof Tee) {
+                    ((Tee) sender).addReceiver(nextElement);
+                } else {
+                    sender.setReceiver(nextElement);
+                }
+            }
+        } else {
+            throw new FluxParseException(element.getClass().getCanonicalName() + "is not a sender");
+        }
+        element = nextElement;
+    }
 
-	public void startTee() {
-		if (element instanceof Tee) {
-			final Tee<?> tee = (Tee<?>) element;
-			teeStack.push(tee);
-			looseEndsStack.push(new ArrayList<LifeCycle>());
-		} else {
-			throw new FluxParseException("Flow cannot be split without a tee-element.");
-		}
-	}
+    public void startTee() {
+        if (element instanceof Tee) {
+            final Tee<?> tee = (Tee<?>) element;
+            teeStack.push(tee);
+            looseEndsStack.push(new ArrayList<LifeCycle>());
+        } else {
+            throw new FluxParseException("Flow cannot be split without a tee-element.");
+        }
+    }
 
-	public void endTee() {
-		joinLooseEnds = true;
+    public void endTee() {
+        joinLooseEnds = true;
 
-	}
+    }
 
-	public void endSubFlow() {
-		looseEndsStack.peek().add(element);
-		element = teeStack.peek();
-	}
+    public void endSubFlow() {
+        looseEndsStack.peek().add(element);
+        element = teeStack.peek();
+    }
 
-	private void setStart(final ObjectReceiver<? extends Object> start){
-		this.start = start;
-		element = start;
-	}
+    private void setStart(final ObjectReceiver<? extends Object> start){
+        this.start = start;
+        element = start;
+    }
 
-	public void setStringStart(final String string) {
-		setStart(new StringSender(string));
-	}
+    public void setStringStart(final String string) {
+        setStart(new StringSender(string));
+    }
 
-	public void setStdInStart() {
-		setStart(new StdInOpener());
-	}
+    public void setStdInStart() {
+        setStart(new StdInOpener());
+    }
 
-	public void start() {
-		start.process(null);
-	}
+    public void start() {
+        start.process(null);
+    }
 
-	public void close() {
-		start.closeStream();
-	}
+    public void close() {
+        start.closeStream();
+    }
 
-	public Receiver getFirst() {
-		return start;
-	}
+    public Receiver getFirst() {
+        return start;
+    }
 }

@@ -32,31 +32,31 @@ import org.metafacture.framework.MetafactureException;
  */
 public final class DirectoryClassLoader extends URLClassLoader {
 
-	private static final String JAR_FILE_EXTENSION = ".jar";
-	private static final String CLASS_FILE_EXTENSION = ".class";
+    private static final String JAR_FILE_EXTENSION = ".jar";
+    private static final String CLASS_FILE_EXTENSION = ".class";
 
-	private static final FilenameFilter JAR_AND_CLASS_FILTER =
-			new FilenameFilter() {
+    private static final FilenameFilter JAR_AND_CLASS_FILTER =
+            new FilenameFilter() {
 
-				@Override
-				public boolean accept(final File dir, final String name) {
-					return name.endsWith(JAR_FILE_EXTENSION)
-							|| name.endsWith(CLASS_FILE_EXTENSION);
-				}
-			};
+                @Override
+                public boolean accept(final File dir, final String name) {
+                    return name.endsWith(JAR_FILE_EXTENSION)
+                            || name.endsWith(CLASS_FILE_EXTENSION);
+                }
+            };
 
-	public DirectoryClassLoader(final ClassLoader parent) {
-		super(new URL[0], parent);
-	}
+    public DirectoryClassLoader(final ClassLoader parent) {
+        super(new URL[0], parent);
+    }
 
-	public void addDirectory(final File dir) {
-		for (final File file : dir.listFiles(JAR_AND_CLASS_FILTER)) {
-			try {
-				addURL(file.toURI().toURL());
-			} catch (final MalformedURLException e) {
-				throw new MetafactureException("Could not add " + file + " to class loader", e);
-			}
-		}
-	}
+    public void addDirectory(final File dir) {
+        for (final File file : dir.listFiles(JAR_AND_CLASS_FILTER)) {
+            try {
+                addURL(file.toURI().toURL());
+            } catch (final MalformedURLException e) {
+                throw new MetafactureException("Could not add " + file + " to class loader", e);
+            }
+        }
+    }
 
 }

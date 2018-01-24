@@ -42,64 +42,64 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(java.io.Reader.class)
 @FluxCommand("open-file")
 public final class FileOpener
-		extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
+        extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
-	private String encoding = "UTF-8";
-	private FileCompression compression = FileCompression.AUTO;
+    private String encoding = "UTF-8";
+    private FileCompression compression = FileCompression.AUTO;
 
-	/**
-	 * Returns the encoding used to open the resource.
-	 *
-	 * @return current default setting
-	 */
-	public String getEncoding() {
-		return encoding;
-	}
+    /**
+     * Returns the encoding used to open the resource.
+     *
+     * @return current default setting
+     */
+    public String getEncoding() {
+        return encoding;
+    }
 
-	/**
-	 * Sets the encoding used to open the resource.
-	 *
-	 * @param encoding
-	 *            new encoding
-	 */
-	public void setEncoding(final String encoding) {
-		this.encoding = encoding;
-	}
+    /**
+     * Sets the encoding used to open the resource.
+     *
+     * @param encoding
+     *            new encoding
+     */
+    public void setEncoding(final String encoding) {
+        this.encoding = encoding;
+    }
 
-	public FileCompression getCompression() {
-		return compression;
-	}
+    public FileCompression getCompression() {
+        return compression;
+    }
 
-	public void setCompression(final FileCompression compression) {
-		this.compression = compression;
-	}
+    public void setCompression(final FileCompression compression) {
+        this.compression = compression;
+    }
 
-	public void setCompression(final String compression) {
-		setCompression(FileCompression.valueOf(compression.toUpperCase()));
-	}
+    public void setCompression(final String compression) {
+        setCompression(FileCompression.valueOf(compression.toUpperCase()));
+    }
 
-	@Override
-	public void process(final String file) {
-		try {
-			final InputStream fileStream = new FileInputStream(file);
-			try {
-				final InputStream decompressor = compression.createDecompressor(fileStream);
-				try {
+    @Override
+    public void process(final String file) {
+        try {
+            final InputStream fileStream = new FileInputStream(file);
+            try {
+                final InputStream decompressor = compression.createDecompressor(fileStream);
+                try {
 
-					final Reader reader = new InputStreamReader(new BOMInputStream(
-							decompressor), encoding);
-					getReceiver().process(reader);
-				} catch (final IOException | MetafactureException e) {
-					decompressor.close();
-					throw e;
-				}
-			} catch (final IOException | MetafactureException e) {
-				fileStream.close();
-				throw e;
-			}
-		} catch (final IOException e) {
-			throw new MetafactureException(e);
-		}
-	}
+                    final Reader reader = new InputStreamReader(new BOMInputStream(
+                            decompressor), encoding);
+                    getReceiver().process(reader);
+                } catch (final IOException | MetafactureException e) {
+                    decompressor.close();
+                    throw e;
+                }
+            } catch (final IOException | MetafactureException e) {
+                fileStream.close();
+                throw e;
+            }
+        } catch (final IOException e) {
+            throw new MetafactureException(e);
+        }
+    }
 
 }

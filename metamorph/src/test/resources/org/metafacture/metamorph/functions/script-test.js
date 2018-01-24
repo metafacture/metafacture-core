@@ -1,7 +1,7 @@
 function process(val){
-	return val + "!";
+    return val + "!";
 }
 
 function process2(val) {
-	return val + val;
+    return val + val;
 }

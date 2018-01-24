@@ -24,10 +24,10 @@ package org.metafacture.javaintegration.pojo;
  */
 interface ValueGetter {
 
-	Object getValue(final Object object);
+    Object getValue(final Object object);
 
-	String getName();
+    String getName();
 
-	Class<?> getValueType();
+    Class<?> getValueType();
 
 }

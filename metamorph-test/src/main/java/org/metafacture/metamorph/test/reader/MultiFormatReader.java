@@ -26,43 +26,43 @@ import org.metafacture.framework.StreamReceiver;
  */
 public final class MultiFormatReader implements Reader {
 
-	private static final ReaderFactory READER_FACTORY = new ReaderFactory();
+    private static final ReaderFactory READER_FACTORY = new ReaderFactory();
 
-	private StreamReceiver downstreamReceiver;
-	private Reader currentReader;
+    private StreamReceiver downstreamReceiver;
+    private Reader currentReader;
 
-	public MultiFormatReader(final String format) {
-		setFormat(format);
-	}
+    public MultiFormatReader(final String format) {
+        setFormat(format);
+    }
 
-	public void setFormat(final String format) {
-		if(!READER_FACTORY.containsKey(format)){
-			throw new IllegalArgumentException("Format '" + format +
-					"' not regognized");
-		}
-		currentReader = READER_FACTORY.newInstance(format);
-		currentReader.setReceiver(downstreamReceiver);
-	}
+    public void setFormat(final String format) {
+        if(!READER_FACTORY.containsKey(format)){
+            throw new IllegalArgumentException("Format '" + format +
+                    "' not regognized");
+        }
+        currentReader = READER_FACTORY.newInstance(format);
+        currentReader.setReceiver(downstreamReceiver);
+    }
 
-	@Override
-	public <R extends StreamReceiver> R setReceiver(final R streamReceiver) {
-		downstreamReceiver = streamReceiver;
-		return currentReader.setReceiver(streamReceiver);
-	}
+    @Override
+    public <R extends StreamReceiver> R setReceiver(final R streamReceiver) {
+        downstreamReceiver = streamReceiver;
+        return currentReader.setReceiver(streamReceiver);
+    }
 
-	@Override
-	public void process(final java.io.Reader reader) {
-		currentReader.process(reader);
-	}
+    @Override
+    public void process(final java.io.Reader reader) {
+        currentReader.process(reader);
+    }
 
-	@Override
-	public void resetStream() {
-		currentReader.resetStream();
-	}
+    @Override
+    public void resetStream() {
+        currentReader.resetStream();
+    }
 
-	@Override
-	public void closeStream() {
-		currentReader.closeStream();
-	}
+    @Override
+    public void closeStream() {
+        currentReader.closeStream();
+    }
 
 }

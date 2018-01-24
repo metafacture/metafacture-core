@@ -41,63 +41,63 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(Object.class)
 @FluxCommand("draw-uniform-sample")
 public final class UniformSampler<T> extends
-		DefaultObjectPipe<T, ObjectReceiver<T>> {
+        DefaultObjectPipe<T, ObjectReceiver<T>> {
 
-	private final int sampleSize;
-	private final List<T> sample;
-	private final Random random = new Random();
+    private final int sampleSize;
+    private final List<T> sample;
+    private final Random random = new Random();
 
-	private long count;
+    private long count;
 
-	public UniformSampler(final int sampleSize) {
-		super();
-		this.sampleSize = sampleSize;
-		sample = new ArrayList<T>(sampleSize);
-	}
-
-
-	public UniformSampler(final String sampleSize) {
-		this(Integer.parseInt(sampleSize));
-	}
+    public UniformSampler(final int sampleSize) {
+        super();
+        this.sampleSize = sampleSize;
+        sample = new ArrayList<T>(sampleSize);
+    }
 
 
-	public int getSampleSize() {
-		return sampleSize;
-	}
+    public UniformSampler(final String sampleSize) {
+        this(Integer.parseInt(sampleSize));
+    }
 
 
-	public void setSeed(final long seed) {
-		random.setSeed(seed);
-	}
+    public int getSampleSize() {
+        return sampleSize;
+    }
 
-	@Override
-	public void process(final T obj) {
-		assert !isClosed();
-		assert null!=obj;
-		count += 1;
-		if (sample.size() < sampleSize) {
-			sample.add(obj);
-		} else {
-			final double p = sampleSize / (double)count;
-			if (random.nextDouble() < p) {
-				sample.set(random.nextInt(sampleSize), obj);
-			}
-		}
-	}
 
-	@Override
-	protected void onCloseStream() {
-		for(T obj : sample) {
-			getReceiver().process(obj);
-		}
-		sample.clear();
-		count = 0;
-	}
+    public void setSeed(final long seed) {
+        random.setSeed(seed);
+    }
 
-	@Override
-	protected void onResetStream() {
-		sample.clear();
-		count = 0;
-	}
+    @Override
+    public void process(final T obj) {
+        assert !isClosed();
+        assert null!=obj;
+        count += 1;
+        if (sample.size() < sampleSize) {
+            sample.add(obj);
+        } else {
+            final double p = sampleSize / (double)count;
+            if (random.nextDouble() < p) {
+                sample.set(random.nextInt(sampleSize), obj);
+            }
+        }
+    }
+
+    @Override
+    protected void onCloseStream() {
+        for(T obj : sample) {
+            getReceiver().process(obj);
+        }
+        sample.clear();
+        count = 0;
+    }
+
+    @Override
+    protected void onResetStream() {
+        sample.clear();
+        count = 0;
+    }
 
 }

@@ -33,62 +33,62 @@ import org.mockito.MockitoAnnotations;
  */
 public class RecordToEntityTest {
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	private RecordToEntity recordToEntity;
+    private RecordToEntity recordToEntity;
 
-	@Before
-	public void init() {
-		MockitoAnnotations.initMocks(this);
-		recordToEntity = new RecordToEntity();
-		recordToEntity.setReceiver(receiver);
-	}
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+        recordToEntity = new RecordToEntity();
+        recordToEntity.setReceiver(receiver);
+    }
 
-	@Test
-	public void shouldReplaceRecordEventsWithEntityEvents() {
-		recordToEntity.startRecord("1");
-		recordToEntity.literal("literal", "value");
-		recordToEntity.startEntity("entity");
-		recordToEntity.endEntity();
-		recordToEntity.endRecord();
-		recordToEntity.closeStream();
+    @Test
+    public void shouldReplaceRecordEventsWithEntityEvents() {
+        recordToEntity.startRecord("1");
+        recordToEntity.literal("literal", "value");
+        recordToEntity.startEntity("entity");
+        recordToEntity.endEntity();
+        recordToEntity.endRecord();
+        recordToEntity.closeStream();
 
-		InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver)
-				.startEntity(RecordToEntity.DEFAULT_ENTITY_NAME);
-		ordered.verify(receiver).literal("literal", "value");
-		ordered.verify(receiver).startEntity("entity");
-		ordered.verify(receiver, times(2)).endEntity();
-		ordered.verify(receiver).closeStream();
-	}
+        InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver)
+                .startEntity(RecordToEntity.DEFAULT_ENTITY_NAME);
+        ordered.verify(receiver).literal("literal", "value");
+        ordered.verify(receiver).startEntity("entity");
+        ordered.verify(receiver, times(2)).endEntity();
+        ordered.verify(receiver).closeStream();
+    }
 
-	@Test
-	public void setEntityName_shouldChangeNameOfGeneratedEntity() {
-		recordToEntity.setEntityName("container");
+    @Test
+    public void setEntityName_shouldChangeNameOfGeneratedEntity() {
+        recordToEntity.setEntityName("container");
 
-		recordToEntity.startRecord("1");
-		recordToEntity.endRecord();
-		recordToEntity.closeStream();
+        recordToEntity.startRecord("1");
+        recordToEntity.endRecord();
+        recordToEntity.closeStream();
 
-		InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startEntity("container");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).closeStream();
-	}
+        InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startEntity("container");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).closeStream();
+    }
 
-	@Test
-	public void setIdLiteralName_shouldEnableOutputOfRecordIdAsLiteral() {
-		recordToEntity.setIdLiteralName("record-id");
+    @Test
+    public void setIdLiteralName_shouldEnableOutputOfRecordIdAsLiteral() {
+        recordToEntity.setIdLiteralName("record-id");
 
-		recordToEntity.startRecord("1");
-		receiver.endRecord();
-		receiver.closeStream();
+        recordToEntity.startRecord("1");
+        receiver.endRecord();
+        receiver.closeStream();
 
-		InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver)
-				.startEntity(RecordToEntity.DEFAULT_ENTITY_NAME);
-		ordered.verify(receiver).literal("record-id", "1");
-	}
+        InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver)
+                .startEntity(RecordToEntity.DEFAULT_ENTITY_NAME);
+        ordered.verify(receiver).literal("record-id", "1");
+    }
 
 }

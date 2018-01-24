@@ -35,18 +35,18 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(String.class)
 @FluxCommand("split-lines")
 public final class LineSplitter
-		extends DefaultObjectPipe<String, ObjectReceiver<String>> {
+        extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
-	private static final char NEWLINE = '\n';
-	private static final Pattern LINE_PATTERN = Pattern.compile(
-			String.valueOf(NEWLINE), Pattern.LITERAL);
+    private static final char NEWLINE = '\n';
+    private static final Pattern LINE_PATTERN = Pattern.compile(
+            String.valueOf(NEWLINE), Pattern.LITERAL);
 
-	@Override
-	public void process(final String lines) {
-		assert !isClosed();
-		for (final String record : LINE_PATTERN.split(lines)) {
-			getReceiver().process(record);
-		}
-	}
+    @Override
+    public void process(final String lines) {
+        assert !isClosed();
+        for (final String record : LINE_PATTERN.split(lines)) {
+            getReceiver().process(record);
+        }
+    }
 
 }

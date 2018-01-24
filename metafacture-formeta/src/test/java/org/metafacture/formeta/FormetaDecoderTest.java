@@ -34,39 +34,39 @@ import org.mockito.MockitoAnnotations;
  */
 public final class FormetaDecoderTest {
 
-	private static final String RECORD =
-			"1{lit1:value 1,' ent1'{lit2:value \\{x\\},lit\\\\3:'value 2 '}lit4:value \\'3\\'}";
+    private static final String RECORD =
+            "1{lit1:value 1,' ent1'{lit2:value \\{x\\},lit\\\\3:'value 2 '}lit4:value \\'3\\'}";
 
-	private FormetaDecoder decoder;
+    private FormetaDecoder decoder;
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		decoder = new FormetaDecoder();
-		decoder.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        decoder = new FormetaDecoder();
+        decoder.setReceiver(receiver);
+    }
 
-	@After
-	public void cleanup() {
-		decoder.closeStream();
-	}
+    @After
+    public void cleanup() {
+        decoder.closeStream();
+    }
 
-	@Test
-	public void testShouldProcessRecords() {
-		decoder.process(RECORD);
+    @Test
+    public void testShouldProcessRecords() {
+        decoder.process(RECORD);
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("1");
-		ordered.verify(receiver).literal("lit1", "value 1");
-		ordered.verify(receiver).startEntity(" ent1");
-		ordered.verify(receiver).literal("lit2", "value {x}");
-		ordered.verify(receiver).literal("lit\\3", "value 2 ");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).literal("lit4", "value '3'");
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("lit1", "value 1");
+        ordered.verify(receiver).startEntity(" ent1");
+        ordered.verify(receiver).literal("lit2", "value {x}");
+        ordered.verify(receiver).literal("lit\\3", "value 2 ");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).literal("lit4", "value '3'");
+        ordered.verify(receiver).endRecord();
+    }
 
 }

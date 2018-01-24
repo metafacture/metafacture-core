@@ -26,11 +26,11 @@ import org.metafacture.metamorph.api.MorphErrorHandler;
  */
 public final class DefaultErrorHandler implements MorphErrorHandler {
 
-	@Override
-	public void error(final Exception exception) {
-		throw new MetamorphException(
-				"Error while exectuing the Metamorph transformation pipeline: " +
-						exception.getMessage(), exception);
-	}
+    @Override
+    public void error(final Exception exception) {
+        throw new MetamorphException(
+                "Error while exectuing the Metamorph transformation pipeline: " +
+                        exception.getMessage(), exception);
+    }
 
 }

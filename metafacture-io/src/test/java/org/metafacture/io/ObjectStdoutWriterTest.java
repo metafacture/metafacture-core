@@ -28,30 +28,30 @@ import org.junit.Before;
  *
  */
 public final class ObjectStdoutWriterTest
-		extends AbstractConfigurableObjectWriterTest {
+        extends AbstractConfigurableObjectWriterTest {
 
-	private ObjectStdoutWriter<String> writer;
+    private ObjectStdoutWriter<String> writer;
 
-	private ByteArrayOutputStream stdoutBuffer;
+    private ByteArrayOutputStream stdoutBuffer;
 
-	@Before
-	public void setup() {
-		writer = new ObjectStdoutWriter<String>();
+    @Before
+    public void setup() {
+        writer = new ObjectStdoutWriter<String>();
 
-		// Redirect standard out:
-		stdoutBuffer = new ByteArrayOutputStream();
-		System.setOut(new PrintStream(stdoutBuffer));
-	}
+        // Redirect standard out:
+        stdoutBuffer = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(stdoutBuffer));
+    }
 
-	@Override
-	protected ConfigurableObjectWriter<String> getWriter() {
-		return writer;
-	}
+    @Override
+    protected ConfigurableObjectWriter<String> getWriter() {
+        return writer;
+    }
 
-	@Override
-	protected String getOutput() throws IOException {
-		System.out.flush();
-		return stdoutBuffer.toString();
-	}
+    @Override
+    protected String getOutput() throws IOException {
+        System.out.flush();
+        return stdoutBuffer.toString();
+    }
 
 }

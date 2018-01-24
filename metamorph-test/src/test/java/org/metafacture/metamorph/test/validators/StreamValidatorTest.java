@@ -35,28 +35,28 @@ import org.mockito.MockitoAnnotations;
  */
 public final class StreamValidatorTest {
 
-	@Mock
-	private Consumer<String> errorHandler;
+    @Mock
+    private Consumer<String> errorHandler;
 
-	@Before
-	public void initMocks() {
-		MockitoAnnotations.initMocks(this);
-	}
+    @Before
+    public void initMocks() {
+        MockitoAnnotations.initMocks(this);
+    }
 
-	@Test
-	public void shouldFailIfEndRecordEventIsMissing() {
-		final EventList stream = new EventList();
-		stream.startRecord("1");
-		stream.endRecord();
-		stream.closeStream();
+    @Test
+    public void shouldFailIfEndRecordEventIsMissing() {
+        final EventList stream = new EventList();
+        stream.startRecord("1");
+        stream.endRecord();
+        stream.closeStream();
 
-		final StreamValidator validator = new StreamValidator(stream.getEvents());
-		validator.setErrorHandler(errorHandler);
+        final StreamValidator validator = new StreamValidator(stream.getEvents());
+        validator.setErrorHandler(errorHandler);
 
-		validator.startRecord("1");
-		validator.closeStream();
+        validator.startRecord("1");
+        validator.closeStream();
 
-		verify(errorHandler, atLeastOnce()).accept(any());
-	}
+        verify(errorHandler, atLeastOnce()).accept(any());
+    }
 
 }

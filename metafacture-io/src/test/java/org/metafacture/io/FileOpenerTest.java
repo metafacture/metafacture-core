@@ -46,43 +46,43 @@ import org.mockito.junit.MockitoRule;
  */
 public final class FileOpenerTest {
 
-	private static final String DATA = "Überfacture";
+    private static final String DATA = "Überfacture";
 
-	@Rule
-	public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-	@Rule
-	public TemporaryFolder tempFolder = new TemporaryFolder();
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
 
-	@Mock
-	private ObjectReceiver<Reader> receiver;
+    @Mock
+    private ObjectReceiver<Reader> receiver;
 
-	@Captor
-	private ArgumentCaptor<Reader> processedObject;
+    @Captor
+    private ArgumentCaptor<Reader> processedObject;
 
-	@Test
-	public void testUtf8IsDefaultEncoding() throws IOException {
-		assumeFalse("Default encoding is UTF-8: It is not possible to test whether " +
-						"FileOpener sets the encoding to UTF-8 correctly.",
-				StandardCharsets.UTF_8.equals(Charset.defaultCharset()));
+    @Test
+    public void testUtf8IsDefaultEncoding() throws IOException {
+        assumeFalse("Default encoding is UTF-8: It is not possible to test whether " +
+                        "FileOpener sets the encoding to UTF-8 correctly.",
+                StandardCharsets.UTF_8.equals(Charset.defaultCharset()));
 
-		final File testFile = createTestFile();
+        final File testFile = createTestFile();
 
-		final FileOpener opener = new FileOpener();
-		opener.setReceiver(receiver);
-		opener.process(testFile.getAbsolutePath());
-		opener.closeStream();
+        final FileOpener opener = new FileOpener();
+        opener.setReceiver(receiver);
+        opener.process(testFile.getAbsolutePath());
+        opener.closeStream();
 
-		verify(receiver).process(processedObject.capture());
-		assertEquals(DATA, ResourceUtil.readAll(processedObject.getValue()));
-	}
+        verify(receiver).process(processedObject.capture());
+        assertEquals(DATA, ResourceUtil.readAll(processedObject.getValue()));
+    }
 
-	private File createTestFile() throws IOException {
-		final File file = tempFolder.newFile();
-		try (OutputStream stream = new FileOutputStream(file)) {
-			stream.write(DATA.getBytes(StandardCharsets.UTF_8));
-		}
-		return file;
-	}
+    private File createTestFile() throws IOException {
+        final File file = tempFolder.newFile();
+        try (OutputStream stream = new FileOutputStream(file)) {
+            stream.write(DATA.getBytes(StandardCharsets.UTF_8));
+        }
+        return file;
+    }
 
 }

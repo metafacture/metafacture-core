@@ -35,56 +35,56 @@ import org.mockito.MockitoAnnotations;
  */
 public final class StringFilterTest {
 
-	private static final String[] RECORDS = {
-		"Record 1: Data",
-		"Record 42: Data",
-		"Record 3: Data",
-	};
+    private static final String[] RECORDS = {
+        "Record 1: Data",
+        "Record 42: Data",
+        "Record 3: Data",
+    };
 
-	private static final String PATTERN = "\\d\\d";
+    private static final String PATTERN = "\\d\\d";
 
-	private StringFilter filter;
+    private StringFilter filter;
 
-	@Mock
-	private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		filter = new StringFilter(PATTERN);
-		filter.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        filter = new StringFilter(PATTERN);
+        filter.setReceiver(receiver);
+    }
 
-	@After
-	public void cleanup() {
-		filter.closeStream();
-	}
+    @After
+    public void cleanup() {
+        filter.closeStream();
+    }
 
-	@Test
-	public void testShouldPassMatchingInput() {
-		filter.setPassMatches(true);
+    @Test
+    public void testShouldPassMatchingInput() {
+        filter.setPassMatches(true);
 
-		filter.process(RECORDS[0]);
-		filter.process(RECORDS[1]);
-		filter.process(RECORDS[2]);
+        filter.process(RECORDS[0]);
+        filter.process(RECORDS[1]);
+        filter.process(RECORDS[2]);
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).process(RECORDS[1]);
-		verifyNoMoreInteractions(receiver);
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).process(RECORDS[1]);
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void testShouldPassNonMatchingInput() {
-		filter.setPassMatches(false);
+    @Test
+    public void testShouldPassNonMatchingInput() {
+        filter.setPassMatches(false);
 
-		filter.process(RECORDS[0]);
-		filter.process(RECORDS[1]);
-		filter.process(RECORDS[2]);
+        filter.process(RECORDS[0]);
+        filter.process(RECORDS[1]);
+        filter.process(RECORDS[2]);
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).process(RECORDS[0]);
-		ordered.verify(receiver).process(RECORDS[2]);
-		verifyNoMoreInteractions(receiver);
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).process(RECORDS[0]);
+        ordered.verify(receiver).process(RECORDS[2]);
+        verifyNoMoreInteractions(receiver);
+    }
 
 }

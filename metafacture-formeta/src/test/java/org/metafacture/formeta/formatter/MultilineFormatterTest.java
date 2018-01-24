@@ -28,54 +28,54 @@ import org.junit.Test;
  */
 public final class MultilineFormatterTest {
 
-	private static final String MULTILINE_RECORD =
-			"'1' {\n" +
-			"\t'lit1': 'value 1',\n" +
-			"\t' ent1' {\n" +
-			"\t\t'lit2': 'value {x}',\n" +
-			"\t\t'lit\\\\3': 'value 2 '\n" +
-			"\t},\n" +
-			"\t'lit4': 'value \\'3\\''\n" +
-			"}";
+    private static final String MULTILINE_RECORD =
+            "'1' {\n" +
+            "\t'lit1': 'value 1',\n" +
+            "\t' ent1' {\n" +
+            "\t\t'lit2': 'value {x}',\n" +
+            "\t\t'lit\\\\3': 'value 2 '\n" +
+            "\t},\n" +
+            "\t'lit4': 'value \\'3\\''\n" +
+            "}";
 
-	private static final String INNER_RECORD =
-			"inner{ lit1: value 1, ent1{ lit2: 'hello worlds\\'s end!' } }";
+    private static final String INNER_RECORD =
+            "inner{ lit1: value 1, ent1{ lit2: 'hello worlds\\'s end!' } }";
 
-	private static final String OUTER_RECORD =
-			"'outer' {\n" +
-			"\t'nested': 'inner{ lit1: value 1, ent1{ lit2: \\'hello worlds\\\\\\'s end!\\' } }',\n" +
-			"\t'note': 'nested records'\n" +
-			"}";
+    private static final String OUTER_RECORD =
+            "'outer' {\n" +
+            "\t'nested': 'inner{ lit1: value 1, ent1{ lit2: \\'hello worlds\\\\\\'s end!\\' } }',\n" +
+            "\t'note': 'nested records'\n" +
+            "}";
 
-	private MultilineFormatter multilineFormatter;
+    private MultilineFormatter multilineFormatter;
 
-	@Before
-	public void setup() {
-		multilineFormatter = new MultilineFormatter();
-	}
+    @Before
+    public void setup() {
+        multilineFormatter = new MultilineFormatter();
+    }
 
-	@Test
-	public void testShouldBuildRecordRepresentation() {
-		multilineFormatter.startGroup("1");
-		multilineFormatter.literal("lit1", "value 1");
-		multilineFormatter.startGroup(" ent1");
-		multilineFormatter.literal("lit2", "value {x}");
-		multilineFormatter.literal("lit\\3", "value 2 ");
-		multilineFormatter.endGroup();
-		multilineFormatter.literal("lit4", "value '3'");
-		multilineFormatter.endGroup();
+    @Test
+    public void testShouldBuildRecordRepresentation() {
+        multilineFormatter.startGroup("1");
+        multilineFormatter.literal("lit1", "value 1");
+        multilineFormatter.startGroup(" ent1");
+        multilineFormatter.literal("lit2", "value {x}");
+        multilineFormatter.literal("lit\\3", "value 2 ");
+        multilineFormatter.endGroup();
+        multilineFormatter.literal("lit4", "value '3'");
+        multilineFormatter.endGroup();
 
-		assertEquals(MULTILINE_RECORD, multilineFormatter.toString());
-	}
+        assertEquals(MULTILINE_RECORD, multilineFormatter.toString());
+    }
 
-	@Test
-	public void testShouldCorrectlyEscapeNestedRecords() {
-		multilineFormatter.startGroup("outer");
-		multilineFormatter.literal("nested", INNER_RECORD);
-		multilineFormatter.literal("note", "nested records");
-		multilineFormatter.endGroup();
+    @Test
+    public void testShouldCorrectlyEscapeNestedRecords() {
+        multilineFormatter.startGroup("outer");
+        multilineFormatter.literal("nested", INNER_RECORD);
+        multilineFormatter.literal("note", "nested records");
+        multilineFormatter.endGroup();
 
-		assertEquals(OUTER_RECORD, multilineFormatter.toString());
-	}
+        assertEquals(OUTER_RECORD, multilineFormatter.toString());
+    }
 
 }

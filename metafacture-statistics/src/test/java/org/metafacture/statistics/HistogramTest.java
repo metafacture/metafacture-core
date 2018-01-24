@@ -34,124 +34,124 @@ import org.junit.Test;
  */
 public final class HistogramTest {
 
-	private static final String RECORD_ID = "1";
-	private static final String[] ENTITIES = { "Entity 1", "Entity 2" };
-	private static final String[] LITERALS = { "Literal 1", "Literal 2" };
-	private static final String[] VALUES = { "Value A", "Value B" };
+    private static final String RECORD_ID = "1";
+    private static final String[] ENTITIES = { "Entity 1", "Entity 2" };
+    private static final String[] LITERALS = { "Literal 1", "Literal 2" };
+    private static final String[] VALUES = { "Value A", "Value B" };
 
-	@Test
-	public void testCountEntities() {
-		final Histogram histogram = new Histogram();
-		histogram.setCountEntities(true);
+    @Test
+    public void testCountEntities() {
+        final Histogram histogram = new Histogram();
+        histogram.setCountEntities(true);
 
-		assertTrue(histogram.isCountEntities());
-		assertFalse(histogram.isCountLiterals());
-		assertNull(histogram.getCountField());
+        assertTrue(histogram.isCountEntities());
+        assertFalse(histogram.isCountLiterals());
+        assertNull(histogram.getCountField());
 
-		histogram.startRecord(RECORD_ID);
-		histogram.startEntity(ENTITIES[0]);
-		histogram.literal(LITERALS[0], VALUES[0]);
-		histogram.endEntity();
-		histogram.startEntity(ENTITIES[1]);
-		histogram.startEntity(ENTITIES[0]);
-		histogram.endEntity();
-		histogram.endEntity();
-		histogram.endRecord();
-		histogram.closeStream();
+        histogram.startRecord(RECORD_ID);
+        histogram.startEntity(ENTITIES[0]);
+        histogram.literal(LITERALS[0], VALUES[0]);
+        histogram.endEntity();
+        histogram.startEntity(ENTITIES[1]);
+        histogram.startEntity(ENTITIES[0]);
+        histogram.endEntity();
+        histogram.endEntity();
+        histogram.endRecord();
+        histogram.closeStream();
 
-		final Map<String, Integer> expected = new HashMap<String, Integer>();
-		expected.put(ENTITIES[0], Integer.valueOf(2));
-		expected.put(ENTITIES[1], Integer.valueOf(1));
+        final Map<String, Integer> expected = new HashMap<String, Integer>();
+        expected.put(ENTITIES[0], Integer.valueOf(2));
+        expected.put(ENTITIES[1], Integer.valueOf(1));
 
-		assertEquals(expected, histogram.getHistogram());
-	}
+        assertEquals(expected, histogram.getHistogram());
+    }
 
-	@Test
-	public void testCountLiterals() {
-		final Histogram histogram = new Histogram();
-		histogram.setCountLiterals(true);
+    @Test
+    public void testCountLiterals() {
+        final Histogram histogram = new Histogram();
+        histogram.setCountLiterals(true);
 
-		assertFalse(histogram.isCountEntities());
-		assertTrue(histogram.isCountLiterals());
-		assertNull(histogram.getCountField());
+        assertFalse(histogram.isCountEntities());
+        assertTrue(histogram.isCountLiterals());
+        assertNull(histogram.getCountField());
 
-		histogram.startRecord(RECORD_ID);
-		histogram.startEntity(ENTITIES[0]);
-		histogram.literal(LITERALS[0], VALUES[0]);
-		histogram.endEntity();
-		histogram.literal(LITERALS[0], VALUES[1]);
-		histogram.literal(LITERALS[1], VALUES[0]);
-		histogram.endRecord();
-		histogram.closeStream();
+        histogram.startRecord(RECORD_ID);
+        histogram.startEntity(ENTITIES[0]);
+        histogram.literal(LITERALS[0], VALUES[0]);
+        histogram.endEntity();
+        histogram.literal(LITERALS[0], VALUES[1]);
+        histogram.literal(LITERALS[1], VALUES[0]);
+        histogram.endRecord();
+        histogram.closeStream();
 
-		final Map<String, Integer> expected = new HashMap<String, Integer>();
-		expected.put(LITERALS[0], Integer.valueOf(2));
-		expected.put(LITERALS[1], Integer.valueOf(1));
+        final Map<String, Integer> expected = new HashMap<String, Integer>();
+        expected.put(LITERALS[0], Integer.valueOf(2));
+        expected.put(LITERALS[1], Integer.valueOf(1));
 
-		assertEquals(expected, histogram.getHistogram());
-	}
+        assertEquals(expected, histogram.getHistogram());
+    }
 
-	@Test
-	public void testCountField() {
-		final Histogram histogram = new Histogram();
-		histogram.setCountField(LITERALS[0]);
+    @Test
+    public void testCountField() {
+        final Histogram histogram = new Histogram();
+        histogram.setCountField(LITERALS[0]);
 
-		assertFalse(histogram.isCountEntities());
-		assertFalse(histogram.isCountLiterals());
-		assertEquals(LITERALS[0], histogram.getCountField());
+        assertFalse(histogram.isCountEntities());
+        assertFalse(histogram.isCountLiterals());
+        assertEquals(LITERALS[0], histogram.getCountField());
 
-		histogram.startRecord(RECORD_ID);
-		histogram.startEntity(ENTITIES[0]);
-		histogram.literal(LITERALS[0], VALUES[0]);
-		histogram.endEntity();
-		histogram.literal(LITERALS[0], VALUES[1]);
-		histogram.literal(LITERALS[1], VALUES[0]);
-		histogram.literal(LITERALS[0], VALUES[1]);
-		histogram.endRecord();
-		histogram.closeStream();
+        histogram.startRecord(RECORD_ID);
+        histogram.startEntity(ENTITIES[0]);
+        histogram.literal(LITERALS[0], VALUES[0]);
+        histogram.endEntity();
+        histogram.literal(LITERALS[0], VALUES[1]);
+        histogram.literal(LITERALS[1], VALUES[0]);
+        histogram.literal(LITERALS[0], VALUES[1]);
+        histogram.endRecord();
+        histogram.closeStream();
 
-		final Map<String, Integer> expected = new HashMap<String, Integer>();
-		expected.put(VALUES[0], Integer.valueOf(1));
-		expected.put(VALUES[1], Integer.valueOf(2));
+        final Map<String, Integer> expected = new HashMap<String, Integer>();
+        expected.put(VALUES[0], Integer.valueOf(1));
+        expected.put(VALUES[1], Integer.valueOf(2));
 
-		assertEquals(expected, histogram.getHistogram());
-	}
+        assertEquals(expected, histogram.getHistogram());
+    }
 
-	@Test
-	public void testCountFieldConstructor() {
-		final Histogram histogram = new Histogram(LITERALS[0]);
+    @Test
+    public void testCountFieldConstructor() {
+        final Histogram histogram = new Histogram(LITERALS[0]);
 
-		assertFalse(histogram.isCountEntities());
-		assertFalse(histogram.isCountLiterals());
-		assertEquals(LITERALS[0], histogram.getCountField());
+        assertFalse(histogram.isCountEntities());
+        assertFalse(histogram.isCountLiterals());
+        assertEquals(LITERALS[0], histogram.getCountField());
 
-	}
+    }
 
 
-	@Test
-	public void testResetStream() {
-		final Histogram histogram = new Histogram();
-		histogram.setCountEntities(true);
+    @Test
+    public void testResetStream() {
+        final Histogram histogram = new Histogram();
+        histogram.setCountEntities(true);
 
-		assertTrue(histogram.isCountEntities());
-		assertFalse(histogram.isCountLiterals());
-		assertNull(histogram.getCountField());
+        assertTrue(histogram.isCountEntities());
+        assertFalse(histogram.isCountLiterals());
+        assertNull(histogram.getCountField());
 
-		histogram.startRecord(RECORD_ID);
-		histogram.startEntity(ENTITIES[0]);
-		histogram.endEntity();
-		histogram.endRecord();
+        histogram.startRecord(RECORD_ID);
+        histogram.startEntity(ENTITIES[0]);
+        histogram.endEntity();
+        histogram.endRecord();
 
-		final Map<String, Integer> expected = new HashMap<String, Integer>();
-		expected.put(ENTITIES[0], Integer.valueOf(1));
+        final Map<String, Integer> expected = new HashMap<String, Integer>();
+        expected.put(ENTITIES[0], Integer.valueOf(1));
 
-		assertEquals(expected, histogram.getHistogram());
+        assertEquals(expected, histogram.getHistogram());
 
-		histogram.resetStream();
+        histogram.resetStream();
 
-		expected.clear();
+        expected.clear();
 
-		assertEquals(expected, histogram.getHistogram());
-	}
+        assertEquals(expected, histogram.getHistogram());
+    }
 
 }

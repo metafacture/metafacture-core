@@ -29,13 +29,13 @@ import org.metafacture.framework.helpers.DefaultSender;
  */
 public interface Sender<T extends Receiver> extends LifeCycle {
 
-	/**
-	 * Connect to a downstream module.
-	 *
-	 * @param <R> type of the receiver of the downstream module
-	 * @param receiver the downstream module to which the sender should connect
-	 * @return reference to the downstream receiver to enable method chaining
-	 */
-	<R extends T> R setReceiver(R receiver);
+    /**
+     * Connect to a downstream module.
+     *
+     * @param <R> type of the receiver of the downstream module
+     * @param receiver the downstream module to which the sender should connect
+     * @return reference to the downstream receiver to enable method chaining
+     */
+    <R extends T> R setReceiver(R receiver);
 
 }

@@ -33,49 +33,49 @@ import org.junit.Test;
  */
 public class ResourceUtilTest {
 
-	@Test
-	public void readAll_shouldReturnEmptyStringIfStreamIsEmpty()
-			throws IOException {
+    @Test
+    public void readAll_shouldReturnEmptyStringIfStreamIsEmpty()
+            throws IOException {
 
-		final String result = ResourceUtil.readAll(new StringReader(""));
+        final String result = ResourceUtil.readAll(new StringReader(""));
 
-		assertTrue(result.isEmpty());
-	}
+        assertTrue(result.isEmpty());
+    }
 
-	@Test
-	public void readAll_shouldReadStreamThatFitsIntoOneBuffer()
-			throws IOException {
-		final String input = repeat("a", BUFFER_SIZE - 1);
+    @Test
+    public void readAll_shouldReadStreamThatFitsIntoOneBuffer()
+            throws IOException {
+        final String input = repeat("a", BUFFER_SIZE - 1);
 
-		final String result = ResourceUtil.readAll(new StringReader(input));
+        final String result = ResourceUtil.readAll(new StringReader(input));
 
-		assertEquals(input, result);
-	}
+        assertEquals(input, result);
+    }
 
-	@Test
-	public void readAll_shouldReadStreamThatFitsExactlyIntoOneBuffer()
-			throws IOException {
-		final String input = repeat("b", BUFFER_SIZE);
+    @Test
+    public void readAll_shouldReadStreamThatFitsExactlyIntoOneBuffer()
+            throws IOException {
+        final String input = repeat("b", BUFFER_SIZE);
 
-		final String result = ResourceUtil.readAll(new StringReader(input));
+        final String result = ResourceUtil.readAll(new StringReader(input));
 
-		assertEquals(input, result);
-	}
+        assertEquals(input, result);
+    }
 
-	@Test
-	public void readAll_shouldReadStreamThatSpansMultipleBuffers()
-			throws IOException {
-		final String input = repeat("c", BUFFER_SIZE * 2 + 1);
+    @Test
+    public void readAll_shouldReadStreamThatSpansMultipleBuffers()
+            throws IOException {
+        final String input = repeat("c", BUFFER_SIZE * 2 + 1);
 
-		final String result = ResourceUtil.readAll(new StringReader(input));
+        final String result = ResourceUtil.readAll(new StringReader(input));
 
-		assertEquals(input, result);
-	}
+        assertEquals(input, result);
+    }
 
-	private String repeat(String string, int times) {
-		return IntStream.range(0, times)
-				.mapToObj(i -> string)
-				.collect(joining());
-	}
+    private String repeat(String string, int times) {
+        return IntStream.range(0, times)
+                .mapToObj(i -> string)
+                .collect(joining());
+    }
 
 }

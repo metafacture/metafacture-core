@@ -31,40 +31,40 @@ import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
  */
 public final class Combine extends AbstractFlushingCollect {
 
-	private final Map<String, String> variables = new HashMap<String, String>();
-	private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
-	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
+    private final Map<String, String> variables = new HashMap<String, String>();
+    private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
+    private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
 
-	@Override
-	protected void emit() {
-		final String name = StringUtil.format(getName(), variables);
-		final String value = StringUtil.format(getValue(), variables);
-		getNamedValueReceiver().receive(name, value, this, getRecordCount(),
-				getEntityCount());
-	}
+    @Override
+    protected void emit() {
+        final String name = StringUtil.format(getName(), variables);
+        final String value = StringUtil.format(getValue(), variables);
+        getNamedValueReceiver().receive(name, value, this, getRecordCount(),
+                getEntityCount());
+    }
 
-	@Override
-	protected boolean isComplete() {
-		return sourcesLeft.isEmpty();
-	}
+    @Override
+    protected boolean isComplete() {
+        return sourcesLeft.isEmpty();
+    }
 
-	@Override
-	protected void receive(final String name, final String value,
-			final NamedValueSource source) {
-		variables.put(name, value);
-		sourcesLeft.remove(source);
-	}
+    @Override
+    protected void receive(final String name, final String value,
+            final NamedValueSource source) {
+        variables.put(name, value);
+        sourcesLeft.remove(source);
+    }
 
-	@Override
-	public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
-		sources.add(namedValueSource);
-		sourcesLeft.add(namedValueSource);
-	}
+    @Override
+    public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
+        sources.add(namedValueSource);
+        sourcesLeft.add(namedValueSource);
+    }
 
-	@Override
-	protected void clear() {
-		sourcesLeft.addAll(sources);
-		variables.clear();
-	}
+    @Override
+    protected void clear() {
+        sourcesLeft.addAll(sources);
+        variables.clear();
+    }
 
 }

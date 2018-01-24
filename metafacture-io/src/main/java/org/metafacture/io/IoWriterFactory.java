@@ -24,5 +24,5 @@ import java.io.Writer;
  *
  */
 public interface IoWriterFactory {
-	Writer createWriter();
+    Writer createWriter();
 }

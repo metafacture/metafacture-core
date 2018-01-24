@@ -26,16 +26,16 @@ import java.util.Map;
  */
 public interface Maps {
 
-	String DEFAULT_MAP_KEY = "__default";
+    String DEFAULT_MAP_KEY = "__default";
 
-	Collection<String> getMapNames();
+    Collection<String> getMapNames();
 
-	Map<String, String> getMap(String mapName);
+    Map<String, String> getMap(String mapName);
 
-	String getValue(String mapName, String key);
+    String getValue(String mapName, String key);
 
-	Map<String, String> putMap(String mapName, Map<String, String> map);
+    Map<String, String> putMap(String mapName, Map<String, String> map);
 
-	String putValue(String mapName, String key, String value);
+    String putValue(String mapName, String key, String value);
 
 }

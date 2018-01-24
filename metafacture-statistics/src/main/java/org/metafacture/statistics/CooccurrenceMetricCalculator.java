@@ -33,92 +33,92 @@ import org.metafacture.framework.objects.Triple;
  * @author Markus Michael Geipel
  */
 @Description("Calculates values for various cooccurrence metrics. The expected inputs are triples containing as subject the var name and as object the count. "
-		+ "Marginal counts must appear first, joint counts second. Marinal counts must be written as 1:A, Joint counts as 2:A&B")
+        + "Marginal counts must appear first, joint counts second. Marinal counts must be written as 1:A, Joint counts as 2:A&B")
 @In(Triple.class)
 @Out(Triple.class)
 @FluxCommand("calculate-metrics")
 public final class CooccurrenceMetricCalculator extends AbstractCountProcessor {
 
-	/**
-	 * implementation of the different metrics
-	 */
-	enum Metric {
-		X2 {
-			@Override
-			double calculate(final int countA, final int countB, final int countAandB, final int total) {
-				final double o12 = countA - countAandB;
-				final double o21 = countB - countAandB;
-				final double o22 = total - countAandB;
-				final double d = (countAandB * o22) - (o12 * o21);
+    /**
+     * implementation of the different metrics
+     */
+    enum Metric {
+        X2 {
+            @Override
+            double calculate(final int countA, final int countB, final int countAandB, final int total) {
+                final double o12 = countA - countAandB;
+                final double o21 = countB - countAandB;
+                final double o22 = total - countAandB;
+                final double d = (countAandB * o22) - (o12 * o21);
 
-				final double x2 = total * Math.pow(d, 2)
-						/ ((countAandB + o12) * (countAandB + o21) * (o12 + o22) * (o21 + o22));
-				return x2 * Math.signum(d);
-			}
-		},
-		F {
-			@Override
-			double calculate(final int countA, final int countB, final int countAandB, final int total) {
-				final double pa = (double) countA / total;
-				final double pb = (double) countB / total;
-				final double pab = (double) countAandB / total;
-				final double precission = pab / pa;
-				final double recall = pab / pb;
+                final double x2 = total * Math.pow(d, 2)
+                        / ((countAandB + o12) * (countAandB + o21) * (o12 + o22) * (o21 + o22));
+                return x2 * Math.signum(d);
+            }
+        },
+        F {
+            @Override
+            double calculate(final int countA, final int countB, final int countAandB, final int total) {
+                final double pa = (double) countA / total;
+                final double pb = (double) countB / total;
+                final double pab = (double) countAandB / total;
+                final double precission = pab / pa;
+                final double recall = pab / pb;
 
-				return 2 * precission * recall / (precission + recall);
-			}
-		},
-		PRECISSION {
-			@Override
-			double calculate(final int countA, final int countB, final int countAandB, final int total) {
-				final double pa = (double) countA / total;
-				final double pab = (double) countAandB / total;
-				return pab / pa;
-			}
-		},
-		RECALL {
-			@Override
-			double calculate(final int countA, final int countB, final int countAandB, final int total) {
-				final double pb = (double) countB / total;
-				final double pab = (double) countAandB / total;
-				return pab / pb;
-			}
-		},
-		JACCARD {
-			@Override
-			double calculate(final int countA, final int countB, final int countAandB, final int total) {
-				return countAandB / (double)(countA + countB - countAandB);
-			}
-		};
+                return 2 * precission * recall / (precission + recall);
+            }
+        },
+        PRECISSION {
+            @Override
+            double calculate(final int countA, final int countB, final int countAandB, final int total) {
+                final double pa = (double) countA / total;
+                final double pab = (double) countAandB / total;
+                return pab / pa;
+            }
+        },
+        RECALL {
+            @Override
+            double calculate(final int countA, final int countB, final int countAandB, final int total) {
+                final double pb = (double) countB / total;
+                final double pab = (double) countAandB / total;
+                return pab / pb;
+            }
+        },
+        JACCARD {
+            @Override
+            double calculate(final int countA, final int countB, final int countAandB, final int total) {
+                return countAandB / (double)(countA + countB - countAandB);
+            }
+        };
 
-		abstract double calculate(final int countA, final int countB, final int countAandB, final int total);
-	}
+        abstract double calculate(final int countA, final int countB, final int countAandB, final int total);
+    }
 
-	private static final int MIN_COUNT = 5;
+    private static final int MIN_COUNT = 5;
 
-	private final List<Metric> metrics = new ArrayList<Metric>();
+    private final List<Metric> metrics = new ArrayList<Metric>();
 
-	public CooccurrenceMetricCalculator(final String allMetrics) {
-		final String[] metrics = allMetrics.split("\\s*,\\s*");
-		setMinCount(MIN_COUNT);
-		for (String metric : metrics) {
-			this.metrics.add(Metric.valueOf(metric));
-		}
-	}
+    public CooccurrenceMetricCalculator(final String allMetrics) {
+        final String[] metrics = allMetrics.split("\\s*,\\s*");
+        setMinCount(MIN_COUNT);
+        for (String metric : metrics) {
+            this.metrics.add(Metric.valueOf(metric));
+        }
+    }
 
-	public CooccurrenceMetricCalculator(final Metric... metrics) {
-		setMinCount(MIN_COUNT);
-		for (Metric metric : metrics) {
-			this.metrics.add(metric);
-		}
-	}
+    public CooccurrenceMetricCalculator(final Metric... metrics) {
+        setMinCount(MIN_COUNT);
+        for (Metric metric : metrics) {
+            this.metrics.add(metric);
+        }
+    }
 
-	@Override
-	protected void processCount(final String varA, final String varB, final int countA, final int countB,
-			final int countAandB) {
-		for (Metric metric : metrics) {
-			final double value = metric.calculate(countA, countB, countAandB, getTotal());
-			getReceiver().process(new Triple(varA + "&" + varB, metric.toString(), String.valueOf(value)));
-		}
-	}
+    @Override
+    protected void processCount(final String varA, final String varB, final int countA, final int countB,
+            final int countAandB) {
+        for (Metric metric : metrics) {
+            final double value = metric.calculate(countA, countB, countAandB, getTotal());
+            getReceiver().process(new Triple(varA + "&" + varB, metric.toString(), String.valueOf(value)));
+        }
+    }
 }

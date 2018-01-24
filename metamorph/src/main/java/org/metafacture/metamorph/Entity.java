@@ -34,75 +34,75 @@ import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
  */
 public final class Entity extends AbstractFlushingCollect {
 
-	private final List<NamedValueSource> sourceList = new ArrayList<NamedValueSource>();
-	private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
-	private final StreamBuffer buffer = new StreamBuffer();
+    private final List<NamedValueSource> sourceList = new ArrayList<NamedValueSource>();
+    private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
+    private final StreamBuffer buffer = new StreamBuffer();
 
-	private final Metamorph metamorph;
+    private final Metamorph metamorph;
 
-	private NamedValueSource nameSource;
-	private String currentName;
+    private NamedValueSource nameSource;
+    private String currentName;
 
-	public Entity(final Metamorph metamorph) {
-		this.metamorph = metamorph;
-	}
+    public Entity(final Metamorph metamorph) {
+        this.metamorph = metamorph;
+    }
 
-	public void setNameSource(final NamedValueSource source) {
-		nameSource = source;
-		nameSource.setNamedValueReceiver(this);
-		onNamedValueSourceAdded(nameSource);
-	}
+    public void setNameSource(final NamedValueSource source) {
+        nameSource = source;
+        nameSource.setNamedValueReceiver(this);
+        onNamedValueSourceAdded(nameSource);
+    }
 
-	@Override
-	protected void emit() {
-		final NamedValueReceiver namedValueReceiver = getNamedValueReceiver();
-		if (namedValueReceiver instanceof Entity) {
-			final Entity parent = (Entity) namedValueReceiver;
-			parent.receive(null, null, this, getRecordCount(), getEntityCount());
-		} else {
-			write(metamorph.getStreamReceiver());
-		}
-	}
+    @Override
+    protected void emit() {
+        final NamedValueReceiver namedValueReceiver = getNamedValueReceiver();
+        if (namedValueReceiver instanceof Entity) {
+            final Entity parent = (Entity) namedValueReceiver;
+            parent.receive(null, null, this, getRecordCount(), getEntityCount());
+        } else {
+            write(metamorph.getStreamReceiver());
+        }
+    }
 
-	private void write(final StreamReceiver receiver) {
-		if (!buffer.isEmpty()) {
-			receiver.startEntity(StringUtil.fallback(currentName, getName()));
-			buffer.setReceiver(receiver);
-			buffer.replay();
-			receiver.endEntity();
-		}
-	}
+    private void write(final StreamReceiver receiver) {
+        if (!buffer.isEmpty()) {
+            receiver.startEntity(StringUtil.fallback(currentName, getName()));
+            buffer.setReceiver(receiver);
+            buffer.replay();
+            receiver.endEntity();
+        }
+    }
 
-	@Override
-	protected void receive(final String name, final String value,
-			final NamedValueSource source) {
-		if (source == nameSource) {
-			currentName = value;
-		} else if (source instanceof Entity) {
-			final Entity child = (Entity) source;
-			child.write(buffer);
-		} else {
-			buffer.literal(name, value);
-		}
-		sourcesLeft.remove(source);
-	}
+    @Override
+    protected void receive(final String name, final String value,
+            final NamedValueSource source) {
+        if (source == nameSource) {
+            currentName = value;
+        } else if (source instanceof Entity) {
+            final Entity child = (Entity) source;
+            child.write(buffer);
+        } else {
+            buffer.literal(name, value);
+        }
+        sourcesLeft.remove(source);
+    }
 
-	@Override
-	protected boolean isComplete() {
-		return sourcesLeft.isEmpty();
-	}
+    @Override
+    protected boolean isComplete() {
+        return sourcesLeft.isEmpty();
+    }
 
-	@Override
-	protected void clear() {
-		sourcesLeft.addAll(sourceList);
-		buffer.clear();
-		currentName = null;
-	}
+    @Override
+    protected void clear() {
+        sourcesLeft.addAll(sourceList);
+        buffer.clear();
+        currentName = null;
+    }
 
-	@Override
-	public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
-		sourceList.add(namedValueSource);
-		sourcesLeft.add(namedValueSource);
-	}
+    @Override
+    public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
+        sourceList.add(namedValueSource);
+        sourcesLeft.add(namedValueSource);
+    }
 
 }

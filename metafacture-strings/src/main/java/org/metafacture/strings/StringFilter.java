@@ -38,35 +38,35 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(String.class)
 @FluxCommand("filter-strings")
 public final class StringFilter extends
-		DefaultObjectPipe<String, ObjectReceiver<String>> {
+        DefaultObjectPipe<String, ObjectReceiver<String>> {
 
-	private final Matcher matcher;
-	private boolean passMatches=true;
+    private final Matcher matcher;
+    private boolean passMatches=true;
 
-	public StringFilter(final String pattern) {
-		this.matcher = Pattern.compile(pattern).matcher("");
-	}
+    public StringFilter(final String pattern) {
+        this.matcher = Pattern.compile(pattern).matcher("");
+    }
 
-	public String getPattern() {
-		return matcher.pattern().pattern();
-	}
+    public String getPattern() {
+        return matcher.pattern().pattern();
+    }
 
-	public boolean isPassMatches() {
-		return passMatches;
-	}
+    public boolean isPassMatches() {
+        return passMatches;
+    }
 
-	public void setPassMatches(final boolean passMatches) {
-		this.passMatches = passMatches;
-	}
+    public void setPassMatches(final boolean passMatches) {
+        this.passMatches = passMatches;
+    }
 
-	@Override
-	public void process(final String obj) {
-		assert !isClosed();
-		assert null!=obj;
-		matcher.reset(obj);
-		if (matcher.find() == passMatches) {
-			getReceiver().process(obj);
-		}
-	}
+    @Override
+    public void process(final String obj) {
+        assert !isClosed();
+        assert null!=obj;
+        matcher.reset(obj);
+        if (matcher.find() == passMatches) {
+            getReceiver().process(obj);
+        }
+    }
 
 }

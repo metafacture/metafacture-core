@@ -23,14 +23,14 @@ import org.metafacture.framework.MetafactureException;
  */
 public final class FluxParseException extends MetafactureException {
 
-	private static final long serialVersionUID = -5728526458760884738L;
+    private static final long serialVersionUID = -5728526458760884738L;
 
-	public FluxParseException(final String message, final Throwable cause) {
-		super(message, cause);
-	}
+    public FluxParseException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 
-	public FluxParseException(final String message) {
-		super(message);
-	}
+    public FluxParseException(final String message) {
+        super(message);
+    }
 
 }

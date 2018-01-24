@@ -34,48 +34,48 @@ import org.mockito.MockitoAnnotations;
  */
 public final class StreamTeeTest {
 
-	@Mock
-	private StreamReceiver receiver1;
+    @Mock
+    private StreamReceiver receiver1;
 
-	@Mock
-	private StreamReceiver receiver2;
+    @Mock
+    private StreamReceiver receiver2;
 
-	private StreamTee streamTee;
+    private StreamTee streamTee;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		streamTee = new StreamTee();
-		streamTee
-				.addReceiver(receiver1)
-				.addReceiver(receiver2);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        streamTee = new StreamTee();
+        streamTee
+                .addReceiver(receiver1)
+                .addReceiver(receiver2);
+    }
 
-	@Test
-	public void shouldForwardAllEventsToAllDownStreamReceivers() {
-		streamTee.startRecord("1");
-		streamTee.literal("literal", "value");
-		streamTee.startEntity("entity");
-		streamTee.endEntity();
-		streamTee.endRecord();
-		streamTee.resetStream();
-		streamTee.closeStream();
+    @Test
+    public void shouldForwardAllEventsToAllDownStreamReceivers() {
+        streamTee.startRecord("1");
+        streamTee.literal("literal", "value");
+        streamTee.startEntity("entity");
+        streamTee.endEntity();
+        streamTee.endRecord();
+        streamTee.resetStream();
+        streamTee.closeStream();
 
-		final InOrder ordered = inOrder(receiver1, receiver2);
-		ordered.verify(receiver1).startRecord("1");
-		ordered.verify(receiver2).startRecord("1");
-		ordered.verify(receiver1).literal("literal", "value");
-		ordered.verify(receiver2).literal("literal", "value");
-		ordered.verify(receiver1).startEntity("entity");
-		ordered.verify(receiver2).startEntity("entity");
-		ordered.verify(receiver1).endEntity();
-		ordered.verify(receiver2).endEntity();
-		ordered.verify(receiver1).endRecord();
-		ordered.verify(receiver2).endRecord();
-		ordered.verify(receiver1).resetStream();
-		ordered.verify(receiver2).resetStream();
-		ordered.verify(receiver1).closeStream();
-		ordered.verify(receiver2).closeStream();
-	}
+        final InOrder ordered = inOrder(receiver1, receiver2);
+        ordered.verify(receiver1).startRecord("1");
+        ordered.verify(receiver2).startRecord("1");
+        ordered.verify(receiver1).literal("literal", "value");
+        ordered.verify(receiver2).literal("literal", "value");
+        ordered.verify(receiver1).startEntity("entity");
+        ordered.verify(receiver2).startEntity("entity");
+        ordered.verify(receiver1).endEntity();
+        ordered.verify(receiver2).endEntity();
+        ordered.verify(receiver1).endRecord();
+        ordered.verify(receiver2).endRecord();
+        ordered.verify(receiver1).resetStream();
+        ordered.verify(receiver2).resetStream();
+        ordered.verify(receiver1).closeStream();
+        ordered.verify(receiver2).closeStream();
+    }
 
 }

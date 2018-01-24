@@ -31,57 +31,57 @@ import org.metafacture.framework.objects.Triple;
  *
  */
 public final class SortedTripleFileFacade {
-	public static final int BUFFERSIZE = 2048;
-	private final ObjectInputStream in;
-	private final File file;
-	private Triple triple;
-	private boolean empty;
+    public static final int BUFFERSIZE = 2048;
+    private final ObjectInputStream in;
+    private final File file;
+    private Triple triple;
+    private boolean empty;
 
-	public SortedTripleFileFacade(final File file) throws IOException {
-		this.file = file;
-		in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file), BUFFERSIZE));
-		next();
-	}
+    public SortedTripleFileFacade(final File file) throws IOException {
+        this.file = file;
+        in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file), BUFFERSIZE));
+        next();
+    }
 
-	public boolean isEmpty() {
-		return empty;
-	}
+    public boolean isEmpty() {
+        return empty;
+    }
 
-	private void next() throws IOException {
-		try {
-			triple = Triple.read(in);
-			empty = false;
+    private void next() throws IOException {
+        try {
+            triple = Triple.read(in);
+            empty = false;
 
-		} catch (EOFException e) {
-			empty = true;
-			triple = null;
-		}
-	}
+        } catch (EOFException e) {
+            empty = true;
+            triple = null;
+        }
+    }
 
-	public void close() {
+    public void close() {
 
-		try {
-			in.close();
-		} catch (IOException e) {
-			throw new MetafactureException("Error closing input stream", e);
-		}
-		if (file.exists()) {
-			file.delete();
-		}
-	}
+        try {
+            in.close();
+        } catch (IOException e) {
+            throw new MetafactureException("Error closing input stream", e);
+        }
+        if (file.exists()) {
+            file.delete();
+        }
+    }
 
-	public Triple peek() {
-		if (isEmpty()) {
-			return null;
-		}
-		return triple;
-	}
+    public Triple peek() {
+        if (isEmpty()) {
+            return null;
+        }
+        return triple;
+    }
 
-	public Triple pop() throws IOException {
-		final Triple triple = peek();
-		next();
-		return triple;
-	}
+    public Triple pop() throws IOException {
+        final Triple triple = peek();
+        next();
+        return triple;
+    }
 
 
 }

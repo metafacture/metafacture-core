@@ -48,91 +48,91 @@ import org.xml.sax.SAXException;
 @FluxCommand("handle-comarcxml")
 public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
-	private static final String SUBFIELD = "subfield";
-	private static final String DATAFIELD = "datafield";
-	private static final String RECORD = "record";
-	private static final String NAMESPACE = "http://www.loc.gov/MARC21/slim";
-	private static final int RECORD_NOT_INITIALISED = 0;
-	private static final int RECORD_INITIALISED = 1;
+    private static final String SUBFIELD = "subfield";
+    private static final String DATAFIELD = "datafield";
+    private static final String RECORD = "record";
+    private static final String NAMESPACE = "http://www.loc.gov/MARC21/slim";
+    private static final int RECORD_NOT_INITIALISED = 0;
+    private static final int RECORD_INITIALISED = 1;
 
-	private final List<Entry> subfieldValues = new ArrayList<Entry>();
+    private final List<Entry> subfieldValues = new ArrayList<Entry>();
 
-	private int state = RECORD_NOT_INITIALISED;
-	private String currentTag = "";
-	private StringBuilder builder = new StringBuilder();
+    private int state = RECORD_NOT_INITIALISED;
+    private String currentTag = "";
+    private StringBuilder builder = new StringBuilder();
 
-	private class Entry {
-		String key;
-		String value;
+    private class Entry {
+        String key;
+        String value;
 
-		Entry(final String key, final String value) {
-			this.key = key;
-			this.value = value;
-		}
-	}
+        Entry(final String key, final String value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
 
-	@Override
-	public void startElement(final String uri, final String localName,
-			final String qName, final Attributes attributes)
-			throws SAXException {
-		if (SUBFIELD.equals(localName)) {
-			this.builder = new StringBuilder();
-			this.currentTag = attributes.getValue("code");
-		} else if (DATAFIELD.equals(localName)
-				&& this.state == RECORD_INITIALISED) {
-			getReceiver().startEntity(
-					attributes.getValue("tag") + attributes.getValue("ind1")
-							+ attributes.getValue("ind2"));
-		} else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
-			this.state = RECORD_NOT_INITIALISED;
-		}
-	}
+    @Override
+    public void startElement(final String uri, final String localName,
+            final String qName, final Attributes attributes)
+            throws SAXException {
+        if (SUBFIELD.equals(localName)) {
+            this.builder = new StringBuilder();
+            this.currentTag = attributes.getValue("code");
+        } else if (DATAFIELD.equals(localName)
+                && this.state == RECORD_INITIALISED) {
+            getReceiver().startEntity(
+                    attributes.getValue("tag") + attributes.getValue("ind1")
+                            + attributes.getValue("ind2"));
+        } else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
+            this.state = RECORD_NOT_INITIALISED;
+        }
+    }
 
-	@Override
-	public void endElement(final String uri, final String localName,
-			final String qName) throws SAXException {
-		if (SUBFIELD.equals(localName)) {
-			this.subfieldValues.add(new Entry(this.currentTag, this.builder
-					.toString().trim()));
-		} else if (DATAFIELD.equals(localName)) {
-			switch (this.state) {
-			case RECORD_NOT_INITIALISED:
-				super.getReceiver().startRecord(getFirstSubfield("x"));
-				super.getReceiver().startEntity("000  ");
-				this.state = RECORD_INITIALISED;
-				// this should fall through so that the entity 000 is properly
-				// ended
-			case RECORD_INITIALISED:
-				for (final Entry entry : this.subfieldValues) {
-					super.getReceiver().literal(entry.key, entry.value);
-				}
-				super.getReceiver().endEntity();
-				this.subfieldValues.clear();
-				break;
-			default:
-				throw new SAXException(
-						"State was not one of initialised or not initialised");
-			}
-		} else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
-			getReceiver().endRecord();
-		}
-	}
+    @Override
+    public void endElement(final String uri, final String localName,
+            final String qName) throws SAXException {
+        if (SUBFIELD.equals(localName)) {
+            this.subfieldValues.add(new Entry(this.currentTag, this.builder
+                    .toString().trim()));
+        } else if (DATAFIELD.equals(localName)) {
+            switch (this.state) {
+            case RECORD_NOT_INITIALISED:
+                super.getReceiver().startRecord(getFirstSubfield("x"));
+                super.getReceiver().startEntity("000  ");
+                this.state = RECORD_INITIALISED;
+                // this should fall through so that the entity 000 is properly
+                // ended
+            case RECORD_INITIALISED:
+                for (final Entry entry : this.subfieldValues) {
+                    super.getReceiver().literal(entry.key, entry.value);
+                }
+                super.getReceiver().endEntity();
+                this.subfieldValues.clear();
+                break;
+            default:
+                throw new SAXException(
+                        "State was not one of initialised or not initialised");
+            }
+        } else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
+            getReceiver().endRecord();
+        }
+    }
 
-	@Override
-	public void characters(final char[] chars, final int start, final int length)
-			throws SAXException {
-		this.builder.append(chars, start, length);
-	}
+    @Override
+    public void characters(final char[] chars, final int start, final int length)
+            throws SAXException {
+        this.builder.append(chars, start, length);
+    }
 
-	private String getFirstSubfield(final String subfieldCode) {
-		String ret = null;
-		for (final Entry entry : this.subfieldValues) {
-			if (subfieldCode.equals(entry.key)) {
-				ret = entry.value;
-				break;
-			}
-		}
-		return ret;
-	}
+    private String getFirstSubfield(final String subfieldCode) {
+        String ret = null;
+        for (final Entry entry : this.subfieldValues) {
+            if (subfieldCode.equals(entry.key)) {
+                ret = entry.value;
+                break;
+            }
+        }
+        return ret;
+    }
 
 }

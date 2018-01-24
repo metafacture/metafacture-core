@@ -26,25 +26,25 @@ import org.metafacture.framework.StreamReceiver;
  */
 class CollectionTypeDecoder implements TypeDecoder {
 
-	private final TypeDecoderFactory typeDecoderFactury;
+    private final TypeDecoderFactory typeDecoderFactury;
 
-	CollectionTypeDecoder(final TypeDecoderFactory typeDecoderFactury) {
-		this.typeDecoderFactury = typeDecoderFactury;
-	}
+    CollectionTypeDecoder(final TypeDecoderFactory typeDecoderFactury) {
+        this.typeDecoderFactury = typeDecoderFactury;
+    }
 
-	static boolean supportsType(final Class<?> clazz) {
-		return Collection.class.isAssignableFrom(clazz);
-	}
+    static boolean supportsType(final Class<?> clazz) {
+        return Collection.class.isAssignableFrom(clazz);
+    }
 
-	@Override
-	public void decodeToStream(final StreamReceiver streamReceiver,
-			final String name, final Object object) {
-		final Collection<?> collection = (Collection<?>) object;
-		for (final Object element : collection) {
-			final TypeDecoder typeDecoder = typeDecoderFactury
-					.create(element.getClass());
-			typeDecoder.decodeToStream(streamReceiver, name, element);
-		}
-	}
+    @Override
+    public void decodeToStream(final StreamReceiver streamReceiver,
+            final String name, final Object object) {
+        final Collection<?> collection = (Collection<?>) object;
+        for (final Object element : collection) {
+            final TypeDecoder typeDecoder = typeDecoderFactury
+                    .create(element.getClass());
+            typeDecoder.decodeToStream(streamReceiver, name, element);
+        }
+    }
 
 }

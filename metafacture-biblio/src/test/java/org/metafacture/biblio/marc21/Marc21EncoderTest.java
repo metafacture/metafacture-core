@@ -35,71 +35,71 @@ import org.mockito.MockitoAnnotations;
  */
 public final class Marc21EncoderTest {
 
-	private static final String LEADER_LITERAL = "leader";
+    private static final String LEADER_LITERAL = "leader";
 
-	private Marc21Encoder marc21Encoder;
+    private Marc21Encoder marc21Encoder;
 
-	@Mock
-	private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		marc21Encoder = new Marc21Encoder();
-		marc21Encoder.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        marc21Encoder = new Marc21Encoder();
+        marc21Encoder.setReceiver(receiver);
+    }
 
-	@After
-	public void cleanup() {
-		marc21Encoder.closeStream();
-	}
+    @After
+    public void cleanup() {
+        marc21Encoder.closeStream();
+    }
 
-	@Test
-	public void shouldOutputTopLevelLiteralsAsReferenceFields() {
-		marc21Encoder.startRecord("");
-		marc21Encoder.literal("001", "identifier");
-		marc21Encoder.endRecord();
+    @Test
+    public void shouldOutputTopLevelLiteralsAsReferenceFields() {
+        marc21Encoder.startRecord("");
+        marc21Encoder.literal("001", "identifier");
+        marc21Encoder.endRecord();
 
-		verify(receiver).process(
-				matches(".*001001100000\u001eidentifier\u001e.*"));
-	}
+        verify(receiver).process(
+                matches(".*001001100000\u001eidentifier\u001e.*"));
+    }
 
-	@Test
-	public void shouldOutputEntitiesAsDataFields() {
-		marc21Encoder.startRecord("");
-		marc21Encoder.startEntity("021a ");
-		marc21Encoder.endEntity();
-		marc21Encoder.endRecord();
+    @Test
+    public void shouldOutputEntitiesAsDataFields() {
+        marc21Encoder.startRecord("");
+        marc21Encoder.startEntity("021a ");
+        marc21Encoder.endEntity();
+        marc21Encoder.endRecord();
 
-		verify(receiver).process(matches(".*021000300000\u001ea \u001e.*"));
-	}
+        verify(receiver).process(matches(".*021000300000\u001ea \u001e.*"));
+    }
 
-	@Test
-	public void shouldOutputLiteralsInEntitiesAsSubfields() {
-		marc21Encoder.startRecord("");
-		marc21Encoder.startEntity("021a ");
-		marc21Encoder.literal("v", "Fritz");
-		marc21Encoder.literal("n", "Bauer");
-		marc21Encoder.endEntity();
-		marc21Encoder.endRecord();
+    @Test
+    public void shouldOutputLiteralsInEntitiesAsSubfields() {
+        marc21Encoder.startRecord("");
+        marc21Encoder.startEntity("021a ");
+        marc21Encoder.literal("v", "Fritz");
+        marc21Encoder.literal("n", "Bauer");
+        marc21Encoder.endEntity();
+        marc21Encoder.endRecord();
 
-		verify(receiver).process(
-				matches(".*021001700000\u001ea \u001fvFritz\u001fnBauer\u001e.*"));
-	}
+        verify(receiver).process(
+                matches(".*021001700000\u001ea \u001fvFritz\u001fnBauer\u001e.*"));
+    }
 
-	@Test(expected = FormatException.class)
-	public void shouldThrowFormatExceptionIfEntityNameLengthIsNotFive() {
-		marc21Encoder.startRecord("");
-		marc21Encoder.startEntity("012abc");
-	}
+    @Test(expected = FormatException.class)
+    public void shouldThrowFormatExceptionIfEntityNameLengthIsNotFive() {
+        marc21Encoder.startRecord("");
+        marc21Encoder.startEntity("012abc");
+    }
 
-	@Test
-	public void issue231ShouldIgnoreTypeLiterals() {
-		marc21Encoder.startRecord("");
-		marc21Encoder.literal("type", "ignoreme");
-		marc21Encoder.endRecord();
+    @Test
+    public void issue231ShouldIgnoreTypeLiterals() {
+        marc21Encoder.startRecord("");
+        marc21Encoder.literal("type", "ignoreme");
+        marc21Encoder.endRecord();
 
-		verify(receiver).process(any(String.class));
-	}
+        verify(receiver).process(any(String.class));
+    }
 
 }

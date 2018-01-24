@@ -34,51 +34,51 @@ import org.mockito.MockitoAnnotations;
  */
 public final class StreamLoggerTest {
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	private StreamLogger logger;
+    private StreamLogger logger;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		logger = new StreamLogger();
-		logger.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        logger = new StreamLogger();
+        logger.setReceiver(receiver);
+    }
 
-	@Test
-	public void shouldForwardAllReceivedEvents() {
-		logger.startRecord("1");
-		logger.startEntity("entity");
-		logger.literal("literal", "value");
-		logger.endEntity();
-		logger.endRecord();
-		logger.resetStream();
-		logger.closeStream();
+    @Test
+    public void shouldForwardAllReceivedEvents() {
+        logger.startRecord("1");
+        logger.startEntity("entity");
+        logger.literal("literal", "value");
+        logger.endEntity();
+        logger.endRecord();
+        logger.resetStream();
+        logger.closeStream();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("1");
-		ordered.verify(receiver).startEntity("entity");
-		ordered.verify(receiver).literal("literal", "value");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
-		ordered.verify(receiver).resetStream();
-		ordered.verify(receiver).closeStream();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).startEntity("entity");
+        ordered.verify(receiver).literal("literal", "value");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+        ordered.verify(receiver).resetStream();
+        ordered.verify(receiver).closeStream();
+    }
 
-	@Test
-	public void shouldActAsSinkIfNoReceiverIsSet() {
-		logger.setReceiver(null);
+    @Test
+    public void shouldActAsSinkIfNoReceiverIsSet() {
+        logger.setReceiver(null);
 
-		logger.startRecord("1");
-		logger.startEntity("entity");
-		logger.literal("literal", "value");
-		logger.endEntity();
-		logger.endRecord();
-		logger.resetStream();
-		logger.closeStream();
+        logger.startRecord("1");
+        logger.startEntity("entity");
+        logger.literal("literal", "value");
+        logger.endEntity();
+        logger.endRecord();
+        logger.resetStream();
+        logger.closeStream();
 
-		// No exceptions expected
-	}
+        // No exceptions expected
+    }
 
 }

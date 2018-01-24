@@ -37,47 +37,47 @@ import org.metafacture.framework.annotations.Out;
 @Out(Object.class)
 @FluxCommand("wait-for-inputs")
 public final class CloseSuppressor<T>
-		implements ObjectPipe<T, ObjectReceiver<T>> {
+        implements ObjectPipe<T, ObjectReceiver<T>> {
 
-	private ObjectReceiver<T> receiver;
-	private final int numCloses;
-	private int count;
+    private ObjectReceiver<T> receiver;
+    private final int numCloses;
+    private int count;
 
-	public CloseSuppressor(final String numCloses) {
-		this(Integer.parseInt(numCloses));
-	}
+    public CloseSuppressor(final String numCloses) {
+        this(Integer.parseInt(numCloses));
+    }
 
-	public CloseSuppressor(final int numCloses) {
-		this.numCloses = numCloses;
-	}
+    public CloseSuppressor(final int numCloses) {
+        this.numCloses = numCloses;
+    }
 
-	@Override
-	public void process(final T obj) {
-		if (receiver != null) {
-			receiver.process(obj);
-		}
-	}
+    @Override
+    public void process(final T obj) {
+        if (receiver != null) {
+            receiver.process(obj);
+        }
+    }
 
-	@Override
-	public <R extends ObjectReceiver<T>> R setReceiver(final R receiver) {
-		this.receiver = receiver;
-		return receiver;
-	}
+    @Override
+    public <R extends ObjectReceiver<T>> R setReceiver(final R receiver) {
+        this.receiver = receiver;
+        return receiver;
+    }
 
-	@Override
-	public void resetStream() {
-		count = 0;
-		if (receiver != null) {
-			receiver.resetStream();
-		}
-	}
+    @Override
+    public void resetStream() {
+        count = 0;
+        if (receiver != null) {
+            receiver.resetStream();
+        }
+    }
 
-	@Override
-	public void closeStream() {
-		++count;
-		if (count == numCloses && receiver != null) {
-			receiver.closeStream();
-		}
-	}
+    @Override
+    public void closeStream() {
+        ++count;
+        if (count == numCloses && receiver != null) {
+            receiver.closeStream();
+        }
+    }
 
 }

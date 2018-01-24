@@ -26,8 +26,8 @@ import org.metafacture.formeta.FormetaRecordsReader;
  */
 public class FormetaReader extends ReaderBase {
 
-	public FormetaReader() {
-		super(new FormetaRecordsReader(), new FormetaDecoder());
-	}
+    public FormetaReader() {
+        super(new FormetaRecordsReader(), new FormetaDecoder());
+    }
 
 }

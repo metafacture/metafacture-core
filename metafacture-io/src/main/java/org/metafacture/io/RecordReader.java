@@ -41,76 +41,76 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(String.class)
 @FluxCommand("as-records")
 public final class RecordReader extends
-		DefaultObjectPipe<Reader, ObjectReceiver<String>> {
+        DefaultObjectPipe<Reader, ObjectReceiver<String>> {
 
-	public static final char DEFAULT_SEPARATOR = '\u001d';
+    public static final char DEFAULT_SEPARATOR = '\u001d';
 
-	private static final int BUFFER_SIZE = 1024 * 1024 * 16;
+    private static final int BUFFER_SIZE = 1024 * 1024 * 16;
 
-	private final StringBuilder builder = new StringBuilder();
-	private final char[] buffer = new char[BUFFER_SIZE];
+    private final StringBuilder builder = new StringBuilder();
+    private final char[] buffer = new char[BUFFER_SIZE];
 
-	private char separator = DEFAULT_SEPARATOR;
-	private boolean skipEmptyRecords = true;
+    private char separator = DEFAULT_SEPARATOR;
+    private boolean skipEmptyRecords = true;
 
-	public void setSeparator(final String separator) {
-		if (separator.length() >= 1) {
-			this.separator = separator.charAt(0);
-		} else {
-			this.separator = DEFAULT_SEPARATOR;
-		}
-	}
+    public void setSeparator(final String separator) {
+        if (separator.length() >= 1) {
+            this.separator = separator.charAt(0);
+        } else {
+            this.separator = DEFAULT_SEPARATOR;
+        }
+    }
 
-	public void setSeparator(final char separator) {
-		this.separator = separator;
-	}
+    public void setSeparator(final char separator) {
+        this.separator = separator;
+    }
 
-	public char getSeparator() {
-		return separator;
-	}
+    public char getSeparator() {
+        return separator;
+    }
 
-	public void setSkipEmptyRecords(final boolean skipEmptyRecords) {
-		this.skipEmptyRecords = skipEmptyRecords;
-	}
+    public void setSkipEmptyRecords(final boolean skipEmptyRecords) {
+        this.skipEmptyRecords = skipEmptyRecords;
+    }
 
-	public boolean getSkipEmptyRecords() {
-		return skipEmptyRecords;
-	}
+    public boolean getSkipEmptyRecords() {
+        return skipEmptyRecords;
+    }
 
-	@Override
-	public void process(final Reader reader) {
-		assert !isClosed();
+    @Override
+    public void process(final Reader reader) {
+        assert !isClosed();
 
-		try {
-			boolean nothingRead = true;
-			int size;
-			while ((size = reader.read(buffer)) != -1) {
-				nothingRead = false;
-				int offset = 0;
-				for (int i = 0; i < size; ++i) {
-					if (buffer[i] == separator) {
-						builder.append(buffer, offset, i - offset);
-						offset = i + 1;
-						emitRecord();
-					}
-				}
-				builder.append(buffer, offset, size - offset);
-			}
-			if (!nothingRead) {
-				emitRecord();
-			}
+        try {
+            boolean nothingRead = true;
+            int size;
+            while ((size = reader.read(buffer)) != -1) {
+                nothingRead = false;
+                int offset = 0;
+                for (int i = 0; i < size; ++i) {
+                    if (buffer[i] == separator) {
+                        builder.append(buffer, offset, i - offset);
+                        offset = i + 1;
+                        emitRecord();
+                    }
+                }
+                builder.append(buffer, offset, size - offset);
+            }
+            if (!nothingRead) {
+                emitRecord();
+            }
 
-		} catch (final IOException e) {
-			throw new MetafactureException(e);
-		}
-	}
+        } catch (final IOException e) {
+            throw new MetafactureException(e);
+        }
+    }
 
-	private void emitRecord() {
-		final String record = builder.toString();
-		if (!skipEmptyRecords || !record.isEmpty()) {
-			getReceiver().process(record);
-			builder.delete(0, builder.length());
-		}
-	}
+    private void emitRecord() {
+        final String record = builder.toString();
+        if (!skipEmptyRecords || !record.isEmpty()) {
+            getReceiver().process(record);
+            builder.delete(0, builder.length());
+        }
+    }
 
 }

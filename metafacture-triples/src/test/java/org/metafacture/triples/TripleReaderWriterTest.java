@@ -38,32 +38,32 @@ import org.mockito.MockitoAnnotations;
  */
 public final class TripleReaderWriterTest {
 
-	private static final Triple TRIPLE1 = new Triple("S", "P", "O1");
-	private static final Triple TRIPLE2 = new Triple("S", "P", "O2", ObjectType.ENTITY);
+    private static final Triple TRIPLE1 = new Triple("S", "P", "O1");
+    private static final Triple TRIPLE2 = new Triple("S", "P", "O2", ObjectType.ENTITY);
 
-	@Rule
-	public TemporaryFolder tempFolder = new TemporaryFolder();
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
 
-	@Mock
-	private ObjectReceiver<Triple> receiver;
+    @Mock
+    private ObjectReceiver<Triple> receiver;
 
-	@Test
-	public void testShouldWriteAndReadTriples() throws IOException {
-		MockitoAnnotations.initMocks(this);
+    @Test
+    public void testShouldWriteAndReadTriples() throws IOException {
+        MockitoAnnotations.initMocks(this);
 
-		final File file = tempFolder.newFile();
-		final TripleWriter tripleWriter = new TripleWriter(file.getAbsolutePath());
-		final TripleReader tripleReader = new TripleReader();
-		tripleReader.setReceiver(receiver);
+        final File file = tempFolder.newFile();
+        final TripleWriter tripleWriter = new TripleWriter(file.getAbsolutePath());
+        final TripleReader tripleReader = new TripleReader();
+        tripleReader.setReceiver(receiver);
 
-		tripleWriter.process(TRIPLE1);
-		tripleWriter.process(TRIPLE2);
-		tripleWriter.closeStream();
+        tripleWriter.process(TRIPLE1);
+        tripleWriter.process(TRIPLE2);
+        tripleWriter.closeStream();
 
-		tripleReader.process(file.getAbsolutePath());
+        tripleReader.process(file.getAbsolutePath());
 
-		verify(receiver).process(TRIPLE1);
-		verify(receiver).process(TRIPLE2);
-	}
+        verify(receiver).process(TRIPLE1);
+        verify(receiver).process(TRIPLE2);
+    }
 
 }

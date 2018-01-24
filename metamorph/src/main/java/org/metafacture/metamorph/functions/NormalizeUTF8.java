@@ -27,9 +27,9 @@ import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
  */
 public final class NormalizeUTF8 extends AbstractSimpleStatelessFunction {
 
-	@Override
-	public String process(final String value) {
-		return Normalizer.normalize(value, Form.NFC);
-	}
+    @Override
+    public String process(final String value) {
+        return Normalizer.normalize(value, Form.NFC);
+    }
 
 }

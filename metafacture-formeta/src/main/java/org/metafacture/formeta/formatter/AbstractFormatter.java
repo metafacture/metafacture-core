@@ -26,94 +26,94 @@ import org.metafacture.formeta.Formeta;
  */
 public abstract class AbstractFormatter implements Formatter {
 
-	public static final String CHARS_TO_ESCAPE_QUOTED = "\n\r"
-			+ Formeta.QUOT_CHAR
-			+ Formeta.ESCAPE_CHAR;
+    public static final String CHARS_TO_ESCAPE_QUOTED = "\n\r"
+            + Formeta.QUOT_CHAR
+            + Formeta.ESCAPE_CHAR;
 
-	public static final String CHARS_TO_ESCAPE = CHARS_TO_ESCAPE_QUOTED
-			+ Formeta.GROUP_START
-			+ Formeta.GROUP_END
-			+ Formeta.ITEM_SEPARATOR
-			+ Formeta.NAME_VALUE_SEPARATOR;
+    public static final String CHARS_TO_ESCAPE = CHARS_TO_ESCAPE_QUOTED
+            + Formeta.GROUP_START
+            + Formeta.GROUP_END
+            + Formeta.ITEM_SEPARATOR
+            + Formeta.NAME_VALUE_SEPARATOR;
 
-	protected static final int BUFFER_SIZE = 1024;
+    protected static final int BUFFER_SIZE = 1024;
 
-	private final StringBuilder builder = new StringBuilder();
+    private final StringBuilder builder = new StringBuilder();
 
-	private char[] buffer = new char[BUFFER_SIZE];
+    private char[] buffer = new char[BUFFER_SIZE];
 
-	@Override
-	public final void reset() {
-		builder.delete(0, builder.length());
-		onReset();
-	}
+    @Override
+    public final void reset() {
+        builder.delete(0, builder.length());
+        onReset();
+    }
 
-	@Override
-	public final String toString() {
-		return builder.toString();
-	}
+    @Override
+    public final String toString() {
+        return builder.toString();
+    }
 
-	protected final void append(final char ch) {
-		builder.append(ch);
-	}
+    protected final void append(final char ch) {
+        builder.append(ch);
+    }
 
-	protected final void append(final CharSequence charSeq) {
-		builder.append(charSeq);
-	}
+    protected final void append(final CharSequence charSeq) {
+        builder.append(charSeq);
+    }
 
-	protected final void escapeAndAppend(final String str) {
-		// According to http://stackoverflow.com/a/11876086 it is faster to copy
-		// a string into a char array then to use charAt():
-		buffer = StringUtil.copyToBuffer(str, buffer);
-		final int bufferLen = str.length();
+    protected final void escapeAndAppend(final String str) {
+        // According to http://stackoverflow.com/a/11876086 it is faster to copy
+        // a string into a char array then to use charAt():
+        buffer = StringUtil.copyToBuffer(str, buffer);
+        final int bufferLen = str.length();
 
-		if (shouldQuoteText(buffer, bufferLen)) {
-			builder.append(Formeta.QUOT_CHAR);
-			for (int i = 0; i < bufferLen; ++i) {
-				escapeAndAppendChar(buffer[i], CHARS_TO_ESCAPE_QUOTED);
-			}
-			builder.append(Formeta.QUOT_CHAR);
-		} else {
-			if (bufferLen > 0) {
-				escapeAndAppendChar(buffer[0],
-						CHARS_TO_ESCAPE + Formeta.WHITESPACE);
-			}
-			for (int i = 1; i < bufferLen-1; ++i) {
-				escapeAndAppendChar(buffer[i], CHARS_TO_ESCAPE);
-			}
-			if (bufferLen > 1) {
-				escapeAndAppendChar(buffer[bufferLen-1],
-						CHARS_TO_ESCAPE + Formeta.WHITESPACE);
-			}
-		}
-	}
+        if (shouldQuoteText(buffer, bufferLen)) {
+            builder.append(Formeta.QUOT_CHAR);
+            for (int i = 0; i < bufferLen; ++i) {
+                escapeAndAppendChar(buffer[i], CHARS_TO_ESCAPE_QUOTED);
+            }
+            builder.append(Formeta.QUOT_CHAR);
+        } else {
+            if (bufferLen > 0) {
+                escapeAndAppendChar(buffer[0],
+                        CHARS_TO_ESCAPE + Formeta.WHITESPACE);
+            }
+            for (int i = 1; i < bufferLen-1; ++i) {
+                escapeAndAppendChar(buffer[i], CHARS_TO_ESCAPE);
+            }
+            if (bufferLen > 1) {
+                escapeAndAppendChar(buffer[bufferLen-1],
+                        CHARS_TO_ESCAPE + Formeta.WHITESPACE);
+            }
+        }
+    }
 
-	protected void onReset() {
-		// Default implementation does nothing
-	}
+    protected void onReset() {
+        // Default implementation does nothing
+    }
 
-	protected abstract boolean shouldQuoteText(final char[] buffer, final int len);
+    protected abstract boolean shouldQuoteText(final char[] buffer, final int len);
 
-	private void escapeAndAppendChar(final char ch, final String charsToEscape) {
-		if (charsToEscape.indexOf(ch) > -1) {
-			appendEscapedChar(ch);
-		} else {
-			builder.append(ch);
-		}
-	}
+    private void escapeAndAppendChar(final char ch, final String charsToEscape) {
+        if (charsToEscape.indexOf(ch) > -1) {
+            appendEscapedChar(ch);
+        } else {
+            builder.append(ch);
+        }
+    }
 
-	private void appendEscapedChar(final char ch) {
-		builder.append(Formeta.ESCAPE_CHAR);
-		switch (ch) {
-		case '\n':
-			builder.append(Formeta.NEWLINE_ESC_SEQ);
-			break;
-		case '\r':
-			builder.append(Formeta.CARRIAGE_RETURN_ESC_SEQ);
-			break;
-		default:
-			builder.append(ch);
-		}
-	}
+    private void appendEscapedChar(final char ch) {
+        builder.append(Formeta.ESCAPE_CHAR);
+        switch (ch) {
+        case '\n':
+            builder.append(Formeta.NEWLINE_ESC_SEQ);
+            break;
+        case '\r':
+            builder.append(Formeta.CARRIAGE_RETURN_ESC_SEQ);
+            break;
+        default:
+            builder.append(ch);
+        }
+    }
 
 }

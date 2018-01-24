@@ -37,48 +37,48 @@ import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
  *
  */
 public final class JndiSqlMap extends AbstractReadOnlyMap<String, String>
-		implements Closeable {
+        implements Closeable {
 
-	private DataSource datasource;
-	private String query;
+    private DataSource datasource;
+    private String query;
 
-	public void setDatasource(final String name) {
-		try {
-			this.datasource = (DataSource) new InitialContext().lookup(name);
-		} catch (final NamingException e) {
-			throw new MorphExecutionException(
-					"jndisqlmap: lookup of data source failed", e);
-		}
-	}
+    public void setDatasource(final String name) {
+        try {
+            this.datasource = (DataSource) new InitialContext().lookup(name);
+        } catch (final NamingException e) {
+            throw new MorphExecutionException(
+                    "jndisqlmap: lookup of data source failed", e);
+        }
+    }
 
-	public void setQuery(final String query) {
-		this.query = query;
-	}
+    public void setQuery(final String query) {
+        this.query = query;
+    }
 
-	@Override
-	public String get(final Object key) {
-		String resultString = null;
-		try(
-				final Connection connection = datasource.getConnection();
-				final PreparedStatement statement =
-						connection.prepareStatement(query);
-		) {
-			statement.setString(1, key.toString());
-			try(final ResultSet resultSet = statement.executeQuery()) {
-				if (resultSet.first()) {
-					resultString = resultSet.getString(1);
-				}
-			}
-		} catch (final SQLException e) {
-			throw new MorphExecutionException(
-					"jndisqlmap: execution of sql query failed", e);
-		}
-		return resultString;
-	}
+    @Override
+    public String get(final Object key) {
+        String resultString = null;
+        try(
+                final Connection connection = datasource.getConnection();
+                final PreparedStatement statement =
+                        connection.prepareStatement(query);
+        ) {
+            statement.setString(1, key.toString());
+            try(final ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.first()) {
+                    resultString = resultSet.getString(1);
+                }
+            }
+        } catch (final SQLException e) {
+            throw new MorphExecutionException(
+                    "jndisqlmap: execution of sql query failed", e);
+        }
+        return resultString;
+    }
 
-	@Override
-	public void close() throws IOException {
-		// Nothing to do
-	}
+    @Override
+    public void close() throws IOException {
+        // Nothing to do
+    }
 
 }

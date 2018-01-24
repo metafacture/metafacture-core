@@ -31,49 +31,49 @@ import org.metafacture.framework.objects.Triple;
  */
  public final class AbstractTripleSortTest {
 
-	private static final Triple T1 = new Triple("s", "p", "o");
+    private static final Triple T1 = new Triple("s", "p", "o");
 
-	private AbstractTripleSort tripleSort;
+    private AbstractTripleSort tripleSort;
 
-	@Before
-	public void setup() {
-		tripleSort = new AbstractTripleSort() {
-			@Override
-			protected void sortedTriple(final Triple namedValue) {}
-		};
-	}
+    @Before
+    public void setup() {
+        tripleSort = new AbstractTripleSort() {
+            @Override
+            protected void sortedTriple(final Triple namedValue) {}
+        };
+    }
 
-	@Test
-	public void shouldNotFailIfFlushingBeforeFirstRecord() {
-		tripleSort.memoryLow(0, 0);
-		tripleSort.process(T1);
-		tripleSort.closeStream();
-	}
+    @Test
+    public void shouldNotFailIfFlushingBeforeFirstRecord() {
+        tripleSort.memoryLow(0, 0);
+        tripleSort.process(T1);
+        tripleSort.closeStream();
+    }
 
-	/**
-	 * This test case may throw fail unexpectedly as it relies on the
-	 * garbage collector to run when calling {@code System.gc()}. This
-	 * is not guaranteed by the JVM.
-	 *
-	 * @throws InterruptedException thrown the the waiting period for the garbage
-	 * collector is interrupted.
-	 */
-	@Test
-	public void issue192ShouldUnregisterFromTheJVMToNotCauseMemoryLeak() throws InterruptedException {
+    /**
+     * This test case may throw fail unexpectedly as it relies on the
+     * garbage collector to run when calling {@code System.gc()}. This
+     * is not guaranteed by the JVM.
+     *
+     * @throws InterruptedException thrown the the waiting period for the garbage
+     * collector is interrupted.
+     */
+    @Test
+    public void issue192ShouldUnregisterFromTheJVMToNotCauseMemoryLeak() throws InterruptedException {
 
-		// Get weak reference for checking whether the object was actually freed later:
-		final ReferenceQueue<AbstractTripleSort> refQueue = new ReferenceQueue<AbstractTripleSort>();
-		final WeakReference<AbstractTripleSort> weakRef = new WeakReference<AbstractTripleSort>(tripleSort, refQueue);
+        // Get weak reference for checking whether the object was actually freed later:
+        final ReferenceQueue<AbstractTripleSort> refQueue = new ReferenceQueue<AbstractTripleSort>();
+        final WeakReference<AbstractTripleSort> weakRef = new WeakReference<AbstractTripleSort>(tripleSort, refQueue);
 
-		tripleSort.closeStream();
-		tripleSort = null;
+        tripleSort.closeStream();
+        tripleSort = null;
 
-		System.gc();
+        System.gc();
 
-		// Wait a tiny bit since GC Thread is not immediately done in Java 8
-		Thread.sleep(10);
+        // Wait a tiny bit since GC Thread is not immediately done in Java 8
+        Thread.sleep(10);
 
-		assertTrue(weakRef.isEnqueued());
-	}
+        assertTrue(weakRef.isEnqueued());
+    }
 
 }

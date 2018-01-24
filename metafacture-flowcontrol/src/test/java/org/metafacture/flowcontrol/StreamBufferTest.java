@@ -37,74 +37,74 @@ import org.mockito.MockitoAnnotations;
  */
 public final class StreamBufferTest {
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	private StreamBuffer streamBuffer;
+    private StreamBuffer streamBuffer;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		streamBuffer = new StreamBuffer();
-		streamBuffer.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        streamBuffer = new StreamBuffer();
+        streamBuffer.setReceiver(receiver);
+    }
 
-	@Test
-	public void shouldReplayRecordEvents() {
-		streamBuffer.startRecord("1");
-		streamBuffer.literal("l", "v");
-		streamBuffer.startEntity("e");
-		streamBuffer.endEntity();
-		streamBuffer.endRecord();
+    @Test
+    public void shouldReplayRecordEvents() {
+        streamBuffer.startRecord("1");
+        streamBuffer.literal("l", "v");
+        streamBuffer.startEntity("e");
+        streamBuffer.endEntity();
+        streamBuffer.endRecord();
 
-		verifyZeroInteractions(receiver);
+        verifyZeroInteractions(receiver);
 
-		streamBuffer.replay();
+        streamBuffer.replay();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("1");
-		ordered.verify(receiver).literal("l", "v");
-		ordered.verify(receiver).startEntity("e");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("l", "v");
+        ordered.verify(receiver).startEntity("e");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void shouldReplayBufferMultipleTimes() {
-		streamBuffer.startRecord("1");
-		streamBuffer.endRecord();
+    @Test
+    public void shouldReplayBufferMultipleTimes() {
+        streamBuffer.startRecord("1");
+        streamBuffer.endRecord();
 
-		streamBuffer.replay();
-		streamBuffer.replay();
+        streamBuffer.replay();
+        streamBuffer.replay();
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("1");
-		ordered.verify(receiver).endRecord();
-		ordered.verify(receiver).startRecord("1");
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).endRecord();
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void shouldClearBufferIfClearIsCalled() {
-		streamBuffer.startRecord("1");
-		streamBuffer.endRecord();
+    @Test
+    public void shouldClearBufferIfClearIsCalled() {
+        streamBuffer.startRecord("1");
+        streamBuffer.endRecord();
 
-		streamBuffer.clear();
-		streamBuffer.replay();
+        streamBuffer.clear();
+        streamBuffer.replay();
 
-		verifyZeroInteractions(receiver);
-	}
+        verifyZeroInteractions(receiver);
+    }
 
-	@Test
-	public void shouldClearBufferIfStreamIsReset() {
-		streamBuffer.startRecord("1");
-		streamBuffer.endRecord();
+    @Test
+    public void shouldClearBufferIfStreamIsReset() {
+        streamBuffer.startRecord("1");
+        streamBuffer.endRecord();
 
-		streamBuffer.resetStream();
-		streamBuffer.replay();
+        streamBuffer.resetStream();
+        streamBuffer.replay();
 
-		verify(receiver).resetStream();
-		verifyNoMoreInteractions(receiver);
-	}
+        verify(receiver).resetStream();
+        verifyNoMoreInteractions(receiver);
+    }
 
 }

@@ -40,83 +40,83 @@ import org.xml.sax.Attributes;
 @FluxCommand("handle-generic-xml")
 public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
-	private static final Pattern TABS = Pattern.compile("\t+");
-	private final String recordTagName;
-	private boolean inRecord;
-	private StringBuilder valueBuffer = new StringBuilder();
+    private static final Pattern TABS = Pattern.compile("\t+");
+    private final String recordTagName;
+    private boolean inRecord;
+    private StringBuilder valueBuffer = new StringBuilder();
 
-	public GenericXmlHandler() {
-		super();
-		this.recordTagName = System.getProperty(
-				"org.culturegraph.metamorph.xml.recordtag");
-		if (recordTagName == null) {
-			throw new MetafactureException("Missing name for the tag marking a record.");
-		}
-	}
+    public GenericXmlHandler() {
+        super();
+        this.recordTagName = System.getProperty(
+                "org.culturegraph.metamorph.xml.recordtag");
+        if (recordTagName == null) {
+            throw new MetafactureException("Missing name for the tag marking a record.");
+        }
+    }
 
-	public GenericXmlHandler(final String recordTagName) {
-		super();
-		this.recordTagName = recordTagName;
-	}
+    public GenericXmlHandler(final String recordTagName) {
+        super();
+        this.recordTagName = recordTagName;
+    }
 
-	@Override
-	public void startElement(final String uri, final String localName,
-			final String qName, final Attributes attributes) {
+    @Override
+    public void startElement(final String uri, final String localName,
+            final String qName, final Attributes attributes) {
 
-		if (inRecord) {
-			writeValue();
-			getReceiver().startEntity(localName);
-			writeAttributes(attributes);
-		} else if (localName.equals(recordTagName)) {
-			final String identifier = attributes.getValue("id");
-			if (identifier == null) {
-				getReceiver().startRecord("");
-			} else {
-				getReceiver().startRecord(identifier);
-			}
-			writeAttributes(attributes);
-			inRecord = true;
-		}
-	}
+        if (inRecord) {
+            writeValue();
+            getReceiver().startEntity(localName);
+            writeAttributes(attributes);
+        } else if (localName.equals(recordTagName)) {
+            final String identifier = attributes.getValue("id");
+            if (identifier == null) {
+                getReceiver().startRecord("");
+            } else {
+                getReceiver().startRecord(identifier);
+            }
+            writeAttributes(attributes);
+            inRecord = true;
+        }
+    }
 
-	@Override
-	public void endElement(final String uri, final String localName,
-			final String qName) {
-		if (inRecord) {
-			writeValue();
-			if (localName.equals(recordTagName)) {
-				inRecord = false;
-				getReceiver().endRecord();
-			} else {
-				getReceiver().endEntity();
-			}
-		}
-	}
+    @Override
+    public void endElement(final String uri, final String localName,
+            final String qName) {
+        if (inRecord) {
+            writeValue();
+            if (localName.equals(recordTagName)) {
+                inRecord = false;
+                getReceiver().endRecord();
+            } else {
+                getReceiver().endEntity();
+            }
+        }
+    }
 
-	@Override
-	public void characters(final char[] chars, final int start, final int length) {
-		if (inRecord) {
-			valueBuffer.append(TABS.matcher(new String(chars, start, length))
-					.replaceAll(""));
-		}
-	}
+    @Override
+    public void characters(final char[] chars, final int start, final int length) {
+        if (inRecord) {
+            valueBuffer.append(TABS.matcher(new String(chars, start, length))
+                    .replaceAll(""));
+        }
+    }
 
-	private void writeValue() {
-		final String value = valueBuffer.toString();
-		if (!value.trim().isEmpty()) {
-			getReceiver().literal("value", value.replace('\n', ' '));
-		}
-		valueBuffer = new StringBuilder();
-	}
+    private void writeValue() {
+        final String value = valueBuffer.toString();
+        if (!value.trim().isEmpty()) {
+            getReceiver().literal("value", value.replace('\n', ' '));
+        }
+        valueBuffer = new StringBuilder();
+    }
 
-	private void writeAttributes(final Attributes attributes) {
-		final int length = attributes.getLength();
+    private void writeAttributes(final Attributes attributes) {
+        final int length = attributes.getLength();
 
-		for (int i = 0; i < length; ++i) {
-			final String name = attributes.getLocalName(i);
-			final String value = attributes.getValue(i);
-			getReceiver().literal(name, value);
-		}
-	}
+        for (int i = 0; i < length; ++i) {
+            final String name = attributes.getLocalName(i);
+            final String value = attributes.getValue(i);
+            getReceiver().literal(name, value);
+        }
+    }
 
 }

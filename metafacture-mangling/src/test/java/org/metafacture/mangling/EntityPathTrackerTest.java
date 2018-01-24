@@ -30,118 +30,118 @@ import org.junit.Test;
  */
 public class EntityPathTrackerTest {
 
-	private EntityPathTracker pathTracker;
+    private EntityPathTracker pathTracker;
 
-	@Before
-	public void initSystemUnderTest() {
-		pathTracker = new EntityPathTracker();
-	}
+    @Before
+    public void initSystemUnderTest() {
+        pathTracker = new EntityPathTracker();
+    }
 
-	@Test
-	public void getCurrentPath_shouldReturnEmptyPathIfProcessingHasNotStarted() {
-		assertTrue(pathTracker.getCurrentPath().isEmpty());
-	}
+    @Test
+    public void getCurrentPath_shouldReturnEmptyPathIfProcessingHasNotStarted() {
+        assertTrue(pathTracker.getCurrentPath().isEmpty());
+    }
 
-	@Test
-	public void getCurrentPath_shouldReturnEmptyPathIfNotInRecord() {
-		pathTracker.startRecord("1");
-		pathTracker.endRecord();
-		assertTrue(pathTracker.getCurrentPath().isEmpty());
-	}
+    @Test
+    public void getCurrentPath_shouldReturnEmptyPathIfNotInRecord() {
+        pathTracker.startRecord("1");
+        pathTracker.endRecord();
+        assertTrue(pathTracker.getCurrentPath().isEmpty());
+    }
 
-	@Test
-	public void getCurrentPath_shouldReturnPathToCurrentEntity() {
-		pathTracker.startRecord("1");
-		assertEquals("", pathTracker.getCurrentPath());
-		pathTracker.startEntity("granny");
-		assertEquals("granny", pathTracker.getCurrentPath());
-		pathTracker.startEntity("mommy");
-		assertEquals("granny.mommy", pathTracker.getCurrentPath());
-		pathTracker.startEntity("me");
-		assertEquals("granny.mommy.me", pathTracker.getCurrentPath());
-		pathTracker.endEntity();
-		assertEquals("granny.mommy", pathTracker.getCurrentPath());
-		pathTracker.startEntity("my-sister");
-		assertEquals("granny.mommy.my-sister", pathTracker.getCurrentPath());
-		pathTracker.endEntity();
-		assertEquals("granny.mommy", pathTracker.getCurrentPath());
-		pathTracker.endEntity();
-		assertEquals("granny", pathTracker.getCurrentPath());
-		pathTracker.endEntity();
-		assertEquals("", pathTracker.getCurrentPath());
-	}
+    @Test
+    public void getCurrentPath_shouldReturnPathToCurrentEntity() {
+        pathTracker.startRecord("1");
+        assertEquals("", pathTracker.getCurrentPath());
+        pathTracker.startEntity("granny");
+        assertEquals("granny", pathTracker.getCurrentPath());
+        pathTracker.startEntity("mommy");
+        assertEquals("granny.mommy", pathTracker.getCurrentPath());
+        pathTracker.startEntity("me");
+        assertEquals("granny.mommy.me", pathTracker.getCurrentPath());
+        pathTracker.endEntity();
+        assertEquals("granny.mommy", pathTracker.getCurrentPath());
+        pathTracker.startEntity("my-sister");
+        assertEquals("granny.mommy.my-sister", pathTracker.getCurrentPath());
+        pathTracker.endEntity();
+        assertEquals("granny.mommy", pathTracker.getCurrentPath());
+        pathTracker.endEntity();
+        assertEquals("granny", pathTracker.getCurrentPath());
+        pathTracker.endEntity();
+        assertEquals("", pathTracker.getCurrentPath());
+    }
 
-	@Test
-	public void startRecord_shouldResetPath() {
-		pathTracker.startRecord("1");
-		pathTracker.startEntity("entity");
-		assertEquals("entity", pathTracker.getCurrentPath());
+    @Test
+    public void startRecord_shouldResetPath() {
+        pathTracker.startRecord("1");
+        pathTracker.startEntity("entity");
+        assertEquals("entity", pathTracker.getCurrentPath());
 
-		pathTracker.startRecord("2");
-		assertTrue(pathTracker.getCurrentPath().isEmpty());
-	}
+        pathTracker.startRecord("2");
+        assertTrue(pathTracker.getCurrentPath().isEmpty());
+    }
 
-	@Test
-	public void resetStream_shouldResetPath() {
-		pathTracker.startRecord("1");
-		pathTracker.startEntity("entity");
-		assertEquals("entity", pathTracker.getCurrentPath());
+    @Test
+    public void resetStream_shouldResetPath() {
+        pathTracker.startRecord("1");
+        pathTracker.startEntity("entity");
+        assertEquals("entity", pathTracker.getCurrentPath());
 
-		pathTracker.resetStream();
-		assertTrue(pathTracker.getCurrentPath().isEmpty());
-	}
+        pathTracker.resetStream();
+        assertTrue(pathTracker.getCurrentPath().isEmpty());
+    }
 
-	@Test
-	public void closeStream_shouldResetPath() {
-		pathTracker.startRecord("1");
-		pathTracker.startEntity("entity");
-		assertEquals("entity", pathTracker.getCurrentPath());
+    @Test
+    public void closeStream_shouldResetPath() {
+        pathTracker.startRecord("1");
+        pathTracker.startEntity("entity");
+        assertEquals("entity", pathTracker.getCurrentPath());
 
-		pathTracker.closeStream();
-		assertTrue(pathTracker.getCurrentPath().isEmpty());
-	}
+        pathTracker.closeStream();
+        assertTrue(pathTracker.getCurrentPath().isEmpty());
+    }
 
-	@Test
-	public void getCurrentPathWith_shouldAppendLiteralNameToPath() {
-		pathTracker.startRecord("1");
-		pathTracker.startEntity("entity");
+    @Test
+    public void getCurrentPathWith_shouldAppendLiteralNameToPath() {
+        pathTracker.startRecord("1");
+        pathTracker.startEntity("entity");
 
-		assertEquals("entity.literal", pathTracker.getCurrentPathWith("literal"));
-	}
+        assertEquals("entity.literal", pathTracker.getCurrentPathWith("literal"));
+    }
 
-	@Test
-	public void getCurrentPathWith_shouldReturnOnlyLiteralNameIfNotInEntity() {
-		pathTracker.startRecord("1");
+    @Test
+    public void getCurrentPathWith_shouldReturnOnlyLiteralNameIfNotInEntity() {
+        pathTracker.startRecord("1");
 
-		assertEquals("literal", pathTracker.getCurrentPathWith("literal"));
-	}
+        assertEquals("literal", pathTracker.getCurrentPathWith("literal"));
+    }
 
-	@Test
-	public void getCurrentEntityName_shouldReturnNullIfProcessingNotStarted() {
-		assertNull(pathTracker.getCurrentEntityName());
-	}
+    @Test
+    public void getCurrentEntityName_shouldReturnNullIfProcessingNotStarted() {
+        assertNull(pathTracker.getCurrentEntityName());
+    }
 
-	@Test
-	public void getCurrentEntityName_shouldReturnNullIfNotInRecord() {
-		pathTracker.startRecord("1");
-		pathTracker.endRecord();
+    @Test
+    public void getCurrentEntityName_shouldReturnNullIfNotInRecord() {
+        pathTracker.startRecord("1");
+        pathTracker.endRecord();
 
-		assertNull(pathTracker.getCurrentEntityName());
-	}
+        assertNull(pathTracker.getCurrentEntityName());
+    }
 
-	@Test
-	public void getCurrentEntityName_shouldReturnNameOfCurrentEntity() {
-		pathTracker.startRecord("1");
-		assertNull(pathTracker.getCurrentEntityName());
-		pathTracker.startEntity("grandad");
-		assertEquals("grandad", pathTracker.getCurrentEntityName());
-		pathTracker.startEntity("daddy");
-		assertEquals("daddy", pathTracker.getCurrentEntityName());
-		pathTracker.endEntity();
-		assertEquals("grandad", pathTracker.getCurrentEntityName());
-		pathTracker.endEntity();
-		assertNull(pathTracker.getCurrentEntityName());
-		pathTracker.endRecord();
-	}
+    @Test
+    public void getCurrentEntityName_shouldReturnNameOfCurrentEntity() {
+        pathTracker.startRecord("1");
+        assertNull(pathTracker.getCurrentEntityName());
+        pathTracker.startEntity("grandad");
+        assertEquals("grandad", pathTracker.getCurrentEntityName());
+        pathTracker.startEntity("daddy");
+        assertEquals("daddy", pathTracker.getCurrentEntityName());
+        pathTracker.endEntity();
+        assertEquals("grandad", pathTracker.getCurrentEntityName());
+        pathTracker.endEntity();
+        assertNull(pathTracker.getCurrentEntityName());
+        pathTracker.endRecord();
+    }
 
 }

@@ -28,56 +28,56 @@ import java.util.Set;
  */
 final class ACNode<P> {
 
-	private P value;
-	private final CharMap<ACNode<P>> links = new CharMap<ACNode<P>>();
-	private ACNode<P> failure;
-	private final int depth;
+    private P value;
+    private final CharMap<ACNode<P>> links = new CharMap<ACNode<P>>();
+    private ACNode<P> failure;
+    private final int depth;
 
-	ACNode(final P value, final int depth) {
-		this.value = value;
-		this.depth = depth;
-	}
+    ACNode(final P value, final int depth) {
+        this.value = value;
+        this.depth = depth;
+    }
 
-	ACNode<P> addNext(final char key){
-		return addNext(key, null);
-	}
+    ACNode<P> addNext(final char key){
+        return addNext(key, null);
+    }
 
-	ACNode<P> addNext(final char key, final P value){
-		final ACNode<P> next = new ACNode<P>(value, depth+1);
-		links.put(key, next);
-		return next;
-	}
+    ACNode<P> addNext(final char key, final P value){
+        final ACNode<P> next = new ACNode<P>(value, depth+1);
+        links.put(key, next);
+        return next;
+    }
 
-	void setValue(final P value) {
-		this.value = value;
-	}
+    void setValue(final P value) {
+        this.value = value;
+    }
 
-	P getValue(){
-		return value;
-	}
+    P getValue(){
+        return value;
+    }
 
-	ACNode<P> getNext(final char key){
-		return links.get(key);
-	}
+    ACNode<P> getNext(final char key){
+        return links.get(key);
+    }
 
-	ACNode<P> getFailure() {
-		return failure;
-	}
+    ACNode<P> getFailure() {
+        return failure;
+    }
 
-	void setFailure(final ACNode<P> failure) {
-		this.failure = failure;
-	}
+    void setFailure(final ACNode<P> failure) {
+        this.failure = failure;
+    }
 
-	int getDepth() {
-		return depth;
-	}
+    int getDepth() {
+        return depth;
+    }
 
-	Collection<ACNode<P>> getNext(){
-		return links.values();
-	}
+    Collection<ACNode<P>> getNext(){
+        return links.values();
+    }
 
-	Set<Entry<Character, ACNode<P>>> getLinks() {
-		return links.entrySet();
-	}
+    Set<Entry<Character, ACNode<P>>> getLinks() {
+        return links.entrySet();
+    }
 
 }

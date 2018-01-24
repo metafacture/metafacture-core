@@ -23,17 +23,17 @@ import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
  */
 public final class SetReplace extends AbstractSimpleStatelessFunction {
 
-	private final SetReplacer setReplacer = new SetReplacer();
-	private boolean prepared;
+    private final SetReplacer setReplacer = new SetReplacer();
+    private boolean prepared;
 
-	@Override
-	public String process(final String text) {
-		if (!prepared) {
-			setReplacer.addReplacements(getMap());
-			prepared = true;
-		}
-		return setReplacer.replaceIn(text);
+    @Override
+    public String process(final String text) {
+        if (!prepared) {
+            setReplacer.addReplacements(getMap());
+            prepared = true;
+        }
+        return setReplacer.replaceIn(text);
 
-	}
+    }
 
 }

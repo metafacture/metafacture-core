@@ -35,21 +35,21 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(Object.class)
 @FluxCommand("filter-duplicate-objects")
 public final class DuplicateObjectFilter<T> extends
-		DefaultObjectPipe<T, ObjectReceiver<T>> {
+        DefaultObjectPipe<T, ObjectReceiver<T>> {
 
-	private T lastObj;
+    private T lastObj;
 
-	@Override
-	public void process(final T obj) {
-		if (!obj.equals(lastObj)) {
-			lastObj = obj;
-			getReceiver().process(obj);
-		}
-	}
+    @Override
+    public void process(final T obj) {
+        if (!obj.equals(lastObj)) {
+            lastObj = obj;
+            getReceiver().process(obj);
+        }
+    }
 
-	@Override
-	protected void onResetStream() {
-		lastObj = null;
-	}
+    @Override
+    protected void onResetStream() {
+        lastObj = null;
+    }
 
 }

@@ -25,138 +25,138 @@ import org.metafacture.framework.FormatException;
  */
 enum TextParserState {
 
-	LEADING_WHITESPACE {
-		public TextParserState processChar(final char ch, final TextParserContext ctx) {
-			final TextParserState newState;
-			switch(ch) {
-			case Formeta.ESCAPE_CHAR:
-				ctx.setQuoted(false);
-				newState = ESCAPE_SEQ;
-				break;
-			case Formeta.QUOT_CHAR:
-				ctx.setQuoted(true);
-				newState = QUOTED_TEXT;
-				break;
-			case Formeta.GROUP_START:
-			case Formeta.GROUP_END:
-			case Formeta.ITEM_SEPARATOR:
-			case Formeta.NAME_VALUE_SEPARATOR:
-				ctx.setQuoted(false);
-				newState = DELIMITER_REACHED;
-				break;
-			default:
-				if (Formeta.isWhitespace(ch)) {
-					newState = LEADING_WHITESPACE;
-				} else {
-					ctx.setQuoted(false);
-					ctx.appendChar(ch);
-					newState = TEXT;
-				}
-			}
-			return newState;
-		}
-	},
-	TEXT {
-		public TextParserState processChar(final char ch, final TextParserContext ctx) {
-			final TextParserState newState;
-			switch(ch) {
-			case Formeta.ESCAPE_CHAR:
-				newState = ESCAPE_SEQ;
-				break;
-			case Formeta.GROUP_START:
-			case Formeta.GROUP_END:
-			case Formeta.ITEM_SEPARATOR:
-			case Formeta.NAME_VALUE_SEPARATOR:
-				newState = DELIMITER_REACHED;
-				break;
-			default:
-				ctx.appendChar(ch);
-				newState = TEXT;
-			}
-			return newState;
-		}
-	},
-	ESCAPE_SEQ {
-		public TextParserState processChar(final char ch, final TextParserContext ctx) {
-			ctx.appendEscapedChar(ch);
-			return TEXT;
-		}
+    LEADING_WHITESPACE {
+        public TextParserState processChar(final char ch, final TextParserContext ctx) {
+            final TextParserState newState;
+            switch(ch) {
+            case Formeta.ESCAPE_CHAR:
+                ctx.setQuoted(false);
+                newState = ESCAPE_SEQ;
+                break;
+            case Formeta.QUOT_CHAR:
+                ctx.setQuoted(true);
+                newState = QUOTED_TEXT;
+                break;
+            case Formeta.GROUP_START:
+            case Formeta.GROUP_END:
+            case Formeta.ITEM_SEPARATOR:
+            case Formeta.NAME_VALUE_SEPARATOR:
+                ctx.setQuoted(false);
+                newState = DELIMITER_REACHED;
+                break;
+            default:
+                if (Formeta.isWhitespace(ch)) {
+                    newState = LEADING_WHITESPACE;
+                } else {
+                    ctx.setQuoted(false);
+                    ctx.appendChar(ch);
+                    newState = TEXT;
+                }
+            }
+            return newState;
+        }
+    },
+    TEXT {
+        public TextParserState processChar(final char ch, final TextParserContext ctx) {
+            final TextParserState newState;
+            switch(ch) {
+            case Formeta.ESCAPE_CHAR:
+                newState = ESCAPE_SEQ;
+                break;
+            case Formeta.GROUP_START:
+            case Formeta.GROUP_END:
+            case Formeta.ITEM_SEPARATOR:
+            case Formeta.NAME_VALUE_SEPARATOR:
+                newState = DELIMITER_REACHED;
+                break;
+            default:
+                ctx.appendChar(ch);
+                newState = TEXT;
+            }
+            return newState;
+        }
+    },
+    ESCAPE_SEQ {
+        public TextParserState processChar(final char ch, final TextParserContext ctx) {
+            ctx.appendEscapedChar(ch);
+            return TEXT;
+        }
 
-		public void endOfInput(final TextParserContext ctx) {
-			throw new FormatException("incomplete escape sequence");
-		}
-	},
-	QUOTED_TEXT {
-		public TextParserState processChar(final char ch, final TextParserContext ctx) {
-			final TextParserState newState;
-			switch(ch) {
-			case Formeta.ESCAPE_CHAR:
-				newState = QUOTED_ESCAPE_SEQ;
-				break;
-			case Formeta.QUOT_CHAR:
-				newState = TRAILING_WHITESPACE;
-				break;
-			default:
-				ctx.appendChar(ch);
-				newState = QUOTED_TEXT;
-			}
-			return newState;
-		}
+        public void endOfInput(final TextParserContext ctx) {
+            throw new FormatException("incomplete escape sequence");
+        }
+    },
+    QUOTED_TEXT {
+        public TextParserState processChar(final char ch, final TextParserContext ctx) {
+            final TextParserState newState;
+            switch(ch) {
+            case Formeta.ESCAPE_CHAR:
+                newState = QUOTED_ESCAPE_SEQ;
+                break;
+            case Formeta.QUOT_CHAR:
+                newState = TRAILING_WHITESPACE;
+                break;
+            default:
+                ctx.appendChar(ch);
+                newState = QUOTED_TEXT;
+            }
+            return newState;
+        }
 
-		public void endOfInput(final TextParserContext ctx) {
-			throw new FormatException("quoted string is not terminated");
-		}
-	},
-	QUOTED_ESCAPE_SEQ {
-		public TextParserState processChar(final char ch, final TextParserContext ctx) {
-			ctx.appendEscapedChar(ch);
-			return QUOTED_TEXT;
-		}
+        public void endOfInput(final TextParserContext ctx) {
+            throw new FormatException("quoted string is not terminated");
+        }
+    },
+    QUOTED_ESCAPE_SEQ {
+        public TextParserState processChar(final char ch, final TextParserContext ctx) {
+            ctx.appendEscapedChar(ch);
+            return QUOTED_TEXT;
+        }
 
-		public void endOfInput(final TextParserContext ctx) {
-			throw new FormatException("incomplete escape sequence and quoted string is not terminated");
-		}
-	},
-	TRAILING_WHITESPACE {
-		public TextParserState processChar(final char ch, final TextParserContext ctx) {
-			final TextParserState newState;
-			switch(ch) {
-			case Formeta.GROUP_START:
-			case Formeta.GROUP_END:
-			case Formeta.ITEM_SEPARATOR:
-			case Formeta.NAME_VALUE_SEPARATOR:
-				newState = DELIMITER_REACHED;
-				break;
-			default:
-				if (Formeta.isWhitespace(ch)) {
-					newState = TRAILING_WHITESPACE;
-				} else {
-					final String sep = "', '";
-					final String expected = "whitespace or one of '"
-							+ Formeta.GROUP_START + sep
-							+ Formeta.GROUP_END + sep
-							+ Formeta.ITEM_SEPARATOR + sep
-							+ Formeta.NAME_VALUE_SEPARATOR + "'";
-					throw new FormatException(getUnexpectedCharMsg(expected, ch));
-				}
-			}
-			return newState;
-		}
-	},
-	DELIMITER_REACHED {
-		public TextParserState processChar(final char ch, final TextParserContext ctx) {
-			throw new UnsupportedOperationException("Cannot process characters in state DELIMITER_REACHED");
-		}
-	};
+        public void endOfInput(final TextParserContext ctx) {
+            throw new FormatException("incomplete escape sequence and quoted string is not terminated");
+        }
+    },
+    TRAILING_WHITESPACE {
+        public TextParserState processChar(final char ch, final TextParserContext ctx) {
+            final TextParserState newState;
+            switch(ch) {
+            case Formeta.GROUP_START:
+            case Formeta.GROUP_END:
+            case Formeta.ITEM_SEPARATOR:
+            case Formeta.NAME_VALUE_SEPARATOR:
+                newState = DELIMITER_REACHED;
+                break;
+            default:
+                if (Formeta.isWhitespace(ch)) {
+                    newState = TRAILING_WHITESPACE;
+                } else {
+                    final String sep = "', '";
+                    final String expected = "whitespace or one of '"
+                            + Formeta.GROUP_START + sep
+                            + Formeta.GROUP_END + sep
+                            + Formeta.ITEM_SEPARATOR + sep
+                            + Formeta.NAME_VALUE_SEPARATOR + "'";
+                    throw new FormatException(getUnexpectedCharMsg(expected, ch));
+                }
+            }
+            return newState;
+        }
+    },
+    DELIMITER_REACHED {
+        public TextParserState processChar(final char ch, final TextParserContext ctx) {
+            throw new UnsupportedOperationException("Cannot process characters in state DELIMITER_REACHED");
+        }
+    };
 
-	public abstract TextParserState processChar(final char ch, final TextParserContext ctx);
+    public abstract TextParserState processChar(final char ch, final TextParserContext ctx);
 
-	public void endOfInput(final TextParserContext ctx) {
-		// Default implementation does nothing
-	}
+    public void endOfInput(final TextParserContext ctx) {
+        // Default implementation does nothing
+    }
 
-	private static String getUnexpectedCharMsg(final String expected, final char actual) {
-		return expected + " expected but got '" + actual + "'";
-	}
+    private static String getUnexpectedCharMsg(final String expected, final char actual) {
+        return expected + " expected but got '" + actual + "'";
+    }
 
 }

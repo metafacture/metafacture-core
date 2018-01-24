@@ -22,18 +22,18 @@ package org.metafacture.framework;
  */
 public class MetafactureException extends RuntimeException {
 
-	private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
 
-	public MetafactureException(final String message) {
-		super(message);
-	}
+    public MetafactureException(final String message) {
+        super(message);
+    }
 
-	public MetafactureException(final Throwable cause) {
-		super(cause);
-	}
+    public MetafactureException(final Throwable cause) {
+        super(cause);
+    }
 
-	public MetafactureException(final String message, final Throwable cause) {
-		super(message, cause);
-	}
+    public MetafactureException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 
 }

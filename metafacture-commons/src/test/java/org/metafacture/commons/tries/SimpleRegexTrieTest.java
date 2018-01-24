@@ -25,13 +25,13 @@ import org.junit.Test;
  *
  */
 public final class SimpleRegexTrieTest {
-	private static final String SCC = "aacbb|a[ab]bb";
-	private static final String AACBB = "aacbb";
+    private static final String SCC = "aacbb|a[ab]bb";
+    private static final String AACBB = "aacbb";
 
-	@Test
-	public void testWithSimpleCharacterClass() {
-		final SimpleRegexTrie<String> trie = new SimpleRegexTrie<String>();
-		trie.put(SCC, SCC);
-		assertTrue(AACBB, trie.get(AACBB).size() == 1);
-	}
+    @Test
+    public void testWithSimpleCharacterClass() {
+        final SimpleRegexTrie<String> trie = new SimpleRegexTrie<String>();
+        trie.put(SCC, SCC);
+        assertTrue(AACBB, trie.get(AACBB).size() == 1);
+    }
 }

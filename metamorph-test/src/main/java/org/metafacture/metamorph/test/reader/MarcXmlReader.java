@@ -25,8 +25,8 @@ import org.metafacture.biblio.marc21.MarcXmlHandler;
  */
 public class MarcXmlReader extends XmlReaderBase {
 
-	public MarcXmlReader() {
-		super(new MarcXmlHandler());
-	}
+    public MarcXmlReader() {
+        super(new MarcXmlHandler());
+    }
 
 }

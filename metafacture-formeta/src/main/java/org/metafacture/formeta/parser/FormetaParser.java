@@ -26,88 +26,88 @@ import org.metafacture.framework.FormatException;
  */
 public final class FormetaParser {
 
-	public static final int SNIPPET_SIZE = 20;
-	public static final String SNIPPET_ELLIPSIS = "\u2026";
-	public static final String POS_MARKER_LEFT = ">";
-	public static final String POS_MARKER_RIGHT = "<";
+    public static final int SNIPPET_SIZE = 20;
+    public static final String SNIPPET_ELLIPSIS = "\u2026";
+    public static final String POS_MARKER_LEFT = ">";
+    public static final String POS_MARKER_RIGHT = "<";
 
-	private static final int BUFFER_SIZE = 1024 * 1024;
+    private static final int BUFFER_SIZE = 1024 * 1024;
 
-	private char[] buffer = new char[BUFFER_SIZE];
-	private final StructureParserContext structureParserContext = new StructureParserContext();
+    private char[] buffer = new char[BUFFER_SIZE];
+    private final StructureParserContext structureParserContext = new StructureParserContext();
 
-	public void setEmitter(final Emitter emitter) {
-		structureParserContext.setEmitter(emitter);
-	}
+    public void setEmitter(final Emitter emitter) {
+        structureParserContext.setEmitter(emitter);
+    }
 
-	public Emitter getEmitter() {
-		return structureParserContext.getEmitter();
-	}
+    public Emitter getEmitter() {
+        return structureParserContext.getEmitter();
+    }
 
-	public void parse(final String data) {
-		assert structureParserContext.getEmitter() != null: "No emitter set";
+    public void parse(final String data) {
+        assert structureParserContext.getEmitter() != null: "No emitter set";
 
-		// According to http://stackoverflow.com/a/11876086 it is faster to copy
-		// a string into a char array then to use charAt():
-		buffer = StringUtil.copyToBuffer(data, buffer);
-		final int bufferLen = data.length();
+        // According to http://stackoverflow.com/a/11876086 it is faster to copy
+        // a string into a char array then to use charAt():
+        buffer = StringUtil.copyToBuffer(data, buffer);
+        final int bufferLen = data.length();
 
-		structureParserContext.reset();
-		StructureParserState state = StructureParserState.ITEM_NAME;
-		int i = 0;
-		try {
-			for (; i < bufferLen; ++i) {
-				state = state.processChar(buffer[i], structureParserContext);
-			}
-		} catch (final FormatException e) {
-			final String errorMsg = "Parsing error at position "
-					+ (i + 1) + ": "
-					+ getErrorSnippet(data, i) + ", "
-					+ e.getMessage();
-			throw new FormatException(errorMsg, e);
-		}
-		try {
-			state.endOfInput(structureParserContext);
-		} catch (final FormatException e) {
-			throw new FormatException("Parsing error: " + e.getMessage(), e);
-		}
-	}
+        structureParserContext.reset();
+        StructureParserState state = StructureParserState.ITEM_NAME;
+        int i = 0;
+        try {
+            for (; i < bufferLen; ++i) {
+                state = state.processChar(buffer[i], structureParserContext);
+            }
+        } catch (final FormatException e) {
+            final String errorMsg = "Parsing error at position "
+                    + (i + 1) + ": "
+                    + getErrorSnippet(data, i) + ", "
+                    + e.getMessage();
+            throw new FormatException(errorMsg, e);
+        }
+        try {
+            state.endOfInput(structureParserContext);
+        } catch (final FormatException e) {
+            throw new FormatException("Parsing error: " + e.getMessage(), e);
+        }
+    }
 
-	/**
-	 * Extracts a text snippet from the record for showing the position at
-	 * which an error occurred. The exact position additionally highlighted
-	 * with {@link POS_MARKER_LEFT} and {@link POS_MARKER_RIGHT}.
-	 *
-	 * @param record the record currently being parsed
-	 * @param pos the position at which the error occurred
-	 * @return a text snippet.
-	 */
-	private static String getErrorSnippet(final String record, final int pos) {
-		final StringBuilder snippet = new StringBuilder();
+    /**
+     * Extracts a text snippet from the record for showing the position at
+     * which an error occurred. The exact position additionally highlighted
+     * with {@link POS_MARKER_LEFT} and {@link POS_MARKER_RIGHT}.
+     *
+     * @param record the record currently being parsed
+     * @param pos the position at which the error occurred
+     * @return a text snippet.
+     */
+    private static String getErrorSnippet(final String record, final int pos) {
+        final StringBuilder snippet = new StringBuilder();
 
-		final int start = pos - SNIPPET_SIZE / 2;
-		if (start < 0) {
-			snippet.append(record.substring(0, pos));
-		} else {
-			snippet.append(SNIPPET_ELLIPSIS);
-			snippet.append(record.substring(start, pos));
-		}
+        final int start = pos - SNIPPET_SIZE / 2;
+        if (start < 0) {
+            snippet.append(record.substring(0, pos));
+        } else {
+            snippet.append(SNIPPET_ELLIPSIS);
+            snippet.append(record.substring(start, pos));
+        }
 
-		snippet.append(POS_MARKER_LEFT);
-		snippet.append(record.charAt(pos));
-		snippet.append(POS_MARKER_RIGHT);
+        snippet.append(POS_MARKER_LEFT);
+        snippet.append(record.charAt(pos));
+        snippet.append(POS_MARKER_RIGHT);
 
-		if (pos + 1 < record.length()) {
-			final int end = pos + SNIPPET_SIZE / 2;
-			if (end > record.length()) {
-				snippet.append(record.substring(pos + 1));
-			} else {
-				snippet.append(record.substring(pos + 1, end));
-				snippet.append(SNIPPET_ELLIPSIS);
-			}
-		}
+        if (pos + 1 < record.length()) {
+            final int end = pos + SNIPPET_SIZE / 2;
+            if (end > record.length()) {
+                snippet.append(record.substring(pos + 1));
+            } else {
+                snippet.append(record.substring(pos + 1, end));
+                snippet.append(SNIPPET_ELLIPSIS);
+            }
+        }
 
-		return snippet.toString();
-	}
+        return snippet.toString();
+    }
 
 }

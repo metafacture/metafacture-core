@@ -22,45 +22,45 @@ import org.metafacture.framework.StreamReceiver;
  */
 public final class PartialRecordEmitter implements Emitter {
 
-	private StreamReceiver receiver;
-	private String defaultName;
+    private StreamReceiver receiver;
+    private String defaultName;
 
 
 
-	public void setDefaultName(final String defaultName) {
-		this.defaultName = defaultName;
-	}
+    public void setDefaultName(final String defaultName) {
+        this.defaultName = defaultName;
+    }
 
-	public String getDefaultName() {
-		return defaultName;
-	}
+    public String getDefaultName() {
+        return defaultName;
+    }
 
-	@Override
-	public void setReceiver(final StreamReceiver receiver) {
-		this.receiver = receiver;
-	}
+    @Override
+    public void setReceiver(final StreamReceiver receiver) {
+        this.receiver = receiver;
+    }
 
-	@Override
-	public void startGroup(final String name, final int nestingLevel) {
-		if (nestingLevel == 0 && defaultName != null && name.isEmpty()) {
-			receiver.startEntity(defaultName);
-		} else {
-			receiver.startEntity(name);
-		}
-	}
+    @Override
+    public void startGroup(final String name, final int nestingLevel) {
+        if (nestingLevel == 0 && defaultName != null && name.isEmpty()) {
+            receiver.startEntity(defaultName);
+        } else {
+            receiver.startEntity(name);
+        }
+    }
 
-	@Override
-	public void endGroup(final int nestingLevel) {
-		receiver.endEntity();
-	}
+    @Override
+    public void endGroup(final int nestingLevel) {
+        receiver.endEntity();
+    }
 
-	@Override
-	public void literal(final String name, final String value, final int nestingLevel) {
-		if (nestingLevel == 0 && defaultName != null && name.isEmpty()) {
-			receiver.literal(defaultName, value);
-		} else {
-			receiver.literal(name, value);
-		}
-	}
+    @Override
+    public void literal(final String name, final String value, final int nestingLevel) {
+        if (nestingLevel == 0 && defaultName != null && name.isEmpty()) {
+            receiver.literal(defaultName, value);
+        } else {
+            receiver.literal(name, value);
+        }
+    }
 
 }

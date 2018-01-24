@@ -35,100 +35,100 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public final class GenericXMLHandlerTest {
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	private GenericXmlHandler genericXmlHandler;
+    private GenericXmlHandler genericXmlHandler;
 
-	private AttributesImpl attributes;
+    private AttributesImpl attributes;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		genericXmlHandler = new GenericXmlHandler("record");
-		genericXmlHandler.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        genericXmlHandler = new GenericXmlHandler("record");
+        genericXmlHandler.setReceiver(receiver);
+    }
 
-	@Before
-	public void createHelperObjects() {
-		attributes = new AttributesImpl();
-	}
+    @Before
+    public void createHelperObjects() {
+        attributes = new AttributesImpl();
+    }
 
-	@Test
-	public void shouldIgnoreElementsOutsideRecordElement() {
-		genericXmlHandler.startElement("", "ignore-me", "ignore-me", attributes);
+    @Test
+    public void shouldIgnoreElementsOutsideRecordElement() {
+        genericXmlHandler.startElement("", "ignore-me", "ignore-me", attributes);
 
-		verifyZeroInteractions(receiver);
-	}
+        verifyZeroInteractions(receiver);
+    }
 
-	@Test
-	public void shouldEmitRecordElementAsStartAndEndRecordEvent() {
-		genericXmlHandler.startElement("", "record", "record", attributes);
-		genericXmlHandler.endElement("", "record", "record");
+    @Test
+    public void shouldEmitRecordElementAsStartAndEndRecordEvent() {
+        genericXmlHandler.startElement("", "record", "record", attributes);
+        genericXmlHandler.endElement("", "record", "record");
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("");
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void shouldEmitEmptyStringIfRecordTagHasNoIdAttribute() {
-		genericXmlHandler.startElement("", "record", "record", attributes);
+    @Test
+    public void shouldEmitEmptyStringIfRecordTagHasNoIdAttribute() {
+        genericXmlHandler.startElement("", "record", "record", attributes);
 
-		verify(receiver).startRecord("");
-	}
+        verify(receiver).startRecord("");
+    }
 
-	@Test
-	public void shouldEmitValueOfIdAttribute() {
-		attributes.addAttribute("", "id", "id", "CDATA", "theRecordID");
-		genericXmlHandler.startElement("", "record", "record", attributes);
+    @Test
+    public void shouldEmitValueOfIdAttribute() {
+        attributes.addAttribute("", "id", "id", "CDATA", "theRecordID");
+        genericXmlHandler.startElement("", "record", "record", attributes);
 
-		verify(receiver).startRecord("theRecordID");
-	}
+        verify(receiver).startRecord("theRecordID");
+    }
 
-	@Test
-	public void shouldEmitAttributesOnRecordElementAsLiterals() {
-		attributes.addAttribute("", "attr", "attr", "CDATA", "attr-value");
-		genericXmlHandler.startElement("", "record", "record", attributes);
+    @Test
+    public void shouldEmitAttributesOnRecordElementAsLiterals() {
+        attributes.addAttribute("", "attr", "attr", "CDATA", "attr-value");
+        genericXmlHandler.startElement("", "record", "record", attributes);
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("");
-		ordered.verify(receiver).literal("attr", "attr-value");
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
+        ordered.verify(receiver).literal("attr", "attr-value");
+    }
 
-	@Test
-	public void shouldEmitElementsAsStartAndEndEntityEvents() {
-		genericXmlHandler.startElement("", "record", "record", attributes);
-		genericXmlHandler.startElement("", "entity", "entity", attributes);
-		genericXmlHandler.endElement("", "entity", "entity");
+    @Test
+    public void shouldEmitElementsAsStartAndEndEntityEvents() {
+        genericXmlHandler.startElement("", "record", "record", attributes);
+        genericXmlHandler.startElement("", "entity", "entity", attributes);
+        genericXmlHandler.endElement("", "entity", "entity");
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startEntity("entity");
-		ordered.verify(receiver).endEntity();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startEntity("entity");
+        ordered.verify(receiver).endEntity();
+    }
 
-	@Test
-	public void shouldEmitAttributesOnEntityElementAsLiterals() {
-		genericXmlHandler.startElement("", "record", "record", attributes);
-		attributes.addAttribute("", "attr", "attr", "CDATA", "attr-value");
-		genericXmlHandler.startElement("", "entity", "entity", attributes);
+    @Test
+    public void shouldEmitAttributesOnEntityElementAsLiterals() {
+        genericXmlHandler.startElement("", "record", "record", attributes);
+        attributes.addAttribute("", "attr", "attr", "CDATA", "attr-value");
+        genericXmlHandler.startElement("", "entity", "entity", attributes);
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startEntity("entity");
-		ordered.verify(receiver).literal("attr", "attr-value");
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startEntity("entity");
+        ordered.verify(receiver).literal("attr", "attr-value");
+    }
 
-	@Test
-	public void shouldEmitPCDataAsALiteralNamedValue() {
-		final char[] charData = "char-data".toCharArray();
-		genericXmlHandler.startElement("", "record", "record", attributes);
-		genericXmlHandler.startElement("", "entity", "entity", attributes);
-		genericXmlHandler.characters(charData, 0, charData.length);
-		genericXmlHandler.endElement("", "entity", "entity");
+    @Test
+    public void shouldEmitPCDataAsALiteralNamedValue() {
+        final char[] charData = "char-data".toCharArray();
+        genericXmlHandler.startElement("", "record", "record", attributes);
+        genericXmlHandler.startElement("", "entity", "entity", attributes);
+        genericXmlHandler.characters(charData, 0, charData.length);
+        genericXmlHandler.endElement("", "entity", "entity");
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startEntity("entity");
-		ordered.verify(receiver).literal("value", "char-data");
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startEntity("entity");
+        ordered.verify(receiver).literal("value", "char-data");
+    }
 
 }

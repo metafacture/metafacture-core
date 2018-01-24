@@ -37,52 +37,52 @@ import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
  */
 public final class RestMap extends AbstractReadOnlyMap<String, String> {
 
-	private static final Pattern VAR_PATTERN = Pattern.compile("${key}", Pattern.LITERAL);
-	private String charsetName = "UTF-8";
-	private String url;
+    private static final Pattern VAR_PATTERN = Pattern.compile("${key}", Pattern.LITERAL);
+    private String charsetName = "UTF-8";
+    private String url;
 
-	public RestMap() {
-	}
+    public RestMap() {
+    }
 
-	public RestMap(String url) {
-		this.url = url;
-	}
+    public RestMap(String url) {
+        this.url = url;
+    }
 
-	@Override
-	public String get(final Object key) {
-		final Matcher matcher = VAR_PATTERN.matcher(url);
-		try {
-			String urlString = matcher.replaceAll(key.toString());
-			return readFromUrl(urlString);
-		} catch (IOException | URISyntaxException e) {
-			// There was no data result for the given URL
-			return null;
-		}
-	}
+    @Override
+    public String get(final Object key) {
+        final Matcher matcher = VAR_PATTERN.matcher(url);
+        try {
+            String urlString = matcher.replaceAll(key.toString());
+            return readFromUrl(urlString);
+        } catch (IOException | URISyntaxException e) {
+            // There was no data result for the given URL
+            return null;
+        }
+    }
 
-	private String readFromUrl(final String url) throws IOException, URISyntaxException {
-		InputStream inputStream = new URL(new URI(url.replace(" ", "%20")).toASCIIString()).openConnection()
-				.getInputStream();
-		try {
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(inputStream, Charset.forName(charsetName)));
-			StringBuilder stringBuffer = new StringBuilder();
-			int value;
-			while ((value = reader.read()) != -1) {
-				stringBuffer.append((char) value);
-			}
-			return stringBuffer.toString();
-		} finally {
-			inputStream.close();
-		}
-	}
+    private String readFromUrl(final String url) throws IOException, URISyntaxException {
+        InputStream inputStream = new URL(new URI(url.replace(" ", "%20")).toASCIIString()).openConnection()
+                .getInputStream();
+        try {
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(inputStream, Charset.forName(charsetName)));
+            StringBuilder stringBuffer = new StringBuilder();
+            int value;
+            while ((value = reader.read()) != -1) {
+                stringBuffer.append((char) value);
+            }
+            return stringBuffer.toString();
+        } finally {
+            inputStream.close();
+        }
+    }
 
-	public void setUrl(final String url) {
-		this.url = url;
-	}
+    public void setUrl(final String url) {
+        this.url = url;
+    }
 
-	public void setCharsetName(String name) {
-		charsetName = name;
-	}
+    public void setCharsetName(String name) {
+        charsetName = name;
+    }
 
 }

@@ -28,29 +28,29 @@ import org.metafacture.framework.StreamReceiver;
  */
 public class ForwardingStreamPipe extends DefaultStreamPipe<StreamReceiver> {
 
-	@Override
-	public void startRecord(final String identifier) {
-		getReceiver().startRecord(identifier);
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        getReceiver().startRecord(identifier);
+    }
 
-	@Override
-	public void endRecord() {
-		getReceiver().endRecord();
-	}
+    @Override
+    public void endRecord() {
+        getReceiver().endRecord();
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		getReceiver().startEntity(name);
-	}
+    @Override
+    public void startEntity(final String name) {
+        getReceiver().startEntity(name);
+    }
 
-	@Override
-	public void endEntity() {
-		getReceiver().endEntity();
-	}
+    @Override
+    public void endEntity() {
+        getReceiver().endEntity();
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		getReceiver().literal(name, value);
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        getReceiver().literal(name, value);
+    }
 
 }

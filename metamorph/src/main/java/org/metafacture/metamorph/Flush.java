@@ -30,32 +30,32 @@ import org.metafacture.metamorph.api.SourceLocation;
  */
 public final class Flush implements NamedValueReceiver {
 
-	private final FlushListener listener;
+    private final FlushListener listener;
 
-	private SourceLocation sourceLocation;
+    private SourceLocation sourceLocation;
 
-	public Flush(final FlushListener listener) {
-		this.listener = listener;
-	}
+    public Flush(final FlushListener listener) {
+        this.listener = listener;
+    }
 
-	@Override
-	public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
-		listener.flush(recordCount, entityCount);
-	}
+    @Override
+    public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
+        listener.flush(recordCount, entityCount);
+    }
 
-	@Override
-	public void addNamedValueSource(final NamedValueSource namedValueSource) {
-		// Nothing to do
-	}
+    @Override
+    public void addNamedValueSource(final NamedValueSource namedValueSource) {
+        // Nothing to do
+    }
 
-	@Override
-	public void setSourceLocation(final SourceLocation sourceLocation) {
-		this.sourceLocation = sourceLocation;
-	}
+    @Override
+    public void setSourceLocation(final SourceLocation sourceLocation) {
+        this.sourceLocation = sourceLocation;
+    }
 
-	@Override
-	public SourceLocation getSourceLocation() {
-		return sourceLocation;
-	}
+    @Override
+    public SourceLocation getSourceLocation() {
+        return sourceLocation;
+    }
 
 }

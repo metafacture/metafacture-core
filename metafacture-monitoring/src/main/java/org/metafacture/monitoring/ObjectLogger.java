@@ -38,37 +38,37 @@ import org.slf4j.LoggerFactory;
 @Out(Object.class)
 @FluxCommand("log-object")
 public final class ObjectLogger<T>
-		extends DefaultObjectPipe<T, ObjectReceiver<T>> {
+        extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ObjectLogger.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ObjectLogger.class);
 
-	private final String logPrefix;
+    private final String logPrefix;
 
-	public ObjectLogger() {
-		this("");
-	}
+    public ObjectLogger() {
+        this("");
+    }
 
-	public ObjectLogger(final String logPrefix) {
-		super();
-		this.logPrefix = logPrefix;
-	}
+    public ObjectLogger(final String logPrefix) {
+        super();
+        this.logPrefix = logPrefix;
+    }
 
-	@Override
-	public void process(final T obj) {
-		LOG.debug("{}{}", logPrefix, obj);
-		if (getReceiver() != null) {
-			getReceiver().process(obj);
-		}
-	}
+    @Override
+    public void process(final T obj) {
+        LOG.debug("{}{}", logPrefix, obj);
+        if (getReceiver() != null) {
+            getReceiver().process(obj);
+        }
+    }
 
-	@Override
-	protected void onResetStream() {
-		LOG.debug("{}resetStream", logPrefix);
-	}
+    @Override
+    protected void onResetStream() {
+        LOG.debug("{}resetStream", logPrefix);
+    }
 
-	@Override
-	protected void onCloseStream() {
-		LOG.debug("{}closeStream", logPrefix);
-	}
+    @Override
+    protected void onCloseStream() {
+        LOG.debug("{}closeStream", logPrefix);
+    }
 
 }

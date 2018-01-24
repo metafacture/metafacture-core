@@ -38,7 +38,7 @@ private FluxProgramm flux = new FluxProgramm();
 private Map<String, String> vars = new HashMap<String, String>();
 
 public final void addVaribleAssignements(final Map<String, String> vars) {
-	this.vars.putAll(vars);
+    this.vars.putAll(vars);
 }
 }
 
@@ -99,7 +99,7 @@ varDef
 
   {
    if (!vars.containsKey($name.text)) {
-   	vars.put($name.text, $e.value);
+    vars.put($name.text, $e.value);
    }
   }
   ;
@@ -146,7 +146,7 @@ exp returns [String value]
                  {
                   $value = vars.get($id.text);
                   if ($value == null) {
-                  	throw new FluxParseException("Variable " + $id.text + " not assigned.");
+                    throw new FluxParseException("Variable " + $id.text + " not assigned.");
                   }
                  }
   |

@@ -30,73 +30,73 @@ import org.slf4j.LoggerFactory;
  */
 public class TimerBase<R extends Receiver> implements Sender<R> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TimerBase.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TimerBase.class);
 
-	private final String logPrefix;
+    private final String logPrefix;
 
-	private long count;
-	private long cumulativeDuration;
-	private long startTime;
+    private long count;
+    private long cumulativeDuration;
+    private long startTime;
 
-	private R receiver;
+    private R receiver;
 
-	protected TimerBase(final String logPrefix) {
-		super();
-		this.logPrefix = logPrefix;
-	}
+    protected TimerBase(final String logPrefix) {
+        super();
+        this.logPrefix = logPrefix;
+    }
 
-	@Override
-	public final <S extends R> S setReceiver(final S receiver) {
-		this.receiver = receiver;
-		return receiver;
-	}
+    @Override
+    public final <S extends R> S setReceiver(final S receiver) {
+        this.receiver = receiver;
+        return receiver;
+    }
 
-	public final R getReceiver() {
-		return receiver;
-	}
+    public final R getReceiver() {
+        return receiver;
+    }
 
-	@Override
-	public final void resetStream() {
-		count = 0;
-		cumulativeDuration = 0;
-		if (receiver != null) {
-			receiver.resetStream();
-		}
-	}
+    @Override
+    public final void resetStream() {
+        count = 0;
+        cumulativeDuration = 0;
+        if (receiver != null) {
+            receiver.resetStream();
+        }
+    }
 
-	@Override
-	public final void closeStream() {
-		final long averageDuration;
-		if (count > 0) {
-			averageDuration = cumulativeDuration / count;
-		} else {
-			averageDuration = 0;
-		}
-		LOG.info(logPrefix
-				+ String.format("Executions: %d; Cumulative duration: %s; Average duration: %s", Long.valueOf(count),
-						TimeUtil.formatDuration(cumulativeDuration), TimeUtil.formatDuration(averageDuration)));
-		startMeasurement();
-		if (receiver != null) {
-			receiver.closeStream();
-		}
-		stopMeasurement("Time to close stream: ");
-	}
+    @Override
+    public final void closeStream() {
+        final long averageDuration;
+        if (count > 0) {
+            averageDuration = cumulativeDuration / count;
+        } else {
+            averageDuration = 0;
+        }
+        LOG.info(logPrefix
+                + String.format("Executions: %d; Cumulative duration: %s; Average duration: %s", Long.valueOf(count),
+                        TimeUtil.formatDuration(cumulativeDuration), TimeUtil.formatDuration(averageDuration)));
+        startMeasurement();
+        if (receiver != null) {
+            receiver.closeStream();
+        }
+        stopMeasurement("Time to close stream: ");
+    }
 
-	protected final void startMeasurement() {
-		startTime = System.nanoTime();
-	}
+    protected final void startMeasurement() {
+        startTime = System.nanoTime();
+    }
 
-	protected final void stopMeasurement(){
-		stopMeasurement("Execution %1$d:");
-	}
+    protected final void stopMeasurement(){
+        stopMeasurement("Execution %1$d:");
+    }
 
-	protected final void stopMeasurement(final String prefix) {
-		final long duration = System.nanoTime() - startTime;
+    protected final void stopMeasurement(final String prefix) {
+        final long duration = System.nanoTime() - startTime;
 
-		count += 1;
-		cumulativeDuration += duration;
+        count += 1;
+        cumulativeDuration += duration;
 
-		LOG.info(logPrefix + String.format(prefix + " %2$s", Long.valueOf(count), TimeUtil.formatDuration(duration)));
-	}
+        LOG.info(logPrefix + String.format(prefix + " %2$s", Long.valueOf(count), TimeUtil.formatDuration(duration)));
+    }
 
 }

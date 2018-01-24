@@ -38,75 +38,75 @@ import org.slf4j.LoggerFactory;
 @Out(StreamReceiver.class)
 @FluxCommand("log-stream")
 public final class StreamLogger
-		extends DefaultStreamPipe<StreamReceiver> {
+        extends DefaultStreamPipe<StreamReceiver> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(StreamLogger.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StreamLogger.class);
 
-	private final String logPrefix;
+    private final String logPrefix;
 
-	public StreamLogger() {
-		this("");
-	}
+    public StreamLogger() {
+        this("");
+    }
 
-	public StreamLogger(final String logPrefix) {
-		super();
-		this.logPrefix = logPrefix;
-	}
+    public StreamLogger(final String logPrefix) {
+        super();
+        this.logPrefix = logPrefix;
+    }
 
-	@Override
-	public void startRecord(final String identifier) {
-		assert !isClosed();
-		LOG.debug("{}start record {}", logPrefix, identifier);
-		if (null != getReceiver()) {
-			getReceiver().startRecord(identifier);
-		}
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        assert !isClosed();
+        LOG.debug("{}start record {}", logPrefix, identifier);
+        if (null != getReceiver()) {
+            getReceiver().startRecord(identifier);
+        }
+    }
 
-	@Override
-	public void endRecord() {
-		assert !isClosed();
-		LOG.debug("{}end record", logPrefix);
-		if (null != getReceiver()) {
-			getReceiver().endRecord();
-		}
-	}
+    @Override
+    public void endRecord() {
+        assert !isClosed();
+        LOG.debug("{}end record", logPrefix);
+        if (null != getReceiver()) {
+            getReceiver().endRecord();
+        }
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		assert !isClosed();
-		LOG.debug("{}start entity {}", logPrefix, name);
-		if (null != getReceiver()) {
-			getReceiver().startEntity(name);
-		}
-	}
+    @Override
+    public void startEntity(final String name) {
+        assert !isClosed();
+        LOG.debug("{}start entity {}", logPrefix, name);
+        if (null != getReceiver()) {
+            getReceiver().startEntity(name);
+        }
+    }
 
-	@Override
-	public void endEntity() {
-		assert !isClosed();
-		LOG.debug("{}end entity", logPrefix);
-		if (null != getReceiver()) {
-			getReceiver().endEntity();
-		}
+    @Override
+    public void endEntity() {
+        assert !isClosed();
+        LOG.debug("{}end entity", logPrefix);
+        if (null != getReceiver()) {
+            getReceiver().endEntity();
+        }
 
-	}
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		assert !isClosed();
-		LOG.debug("{}literal {}={}", logPrefix, name, value);
-		if (null != getReceiver()) {
-			getReceiver().literal(name, value);
-		}
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        assert !isClosed();
+        LOG.debug("{}literal {}={}", logPrefix, name, value);
+        if (null != getReceiver()) {
+            getReceiver().literal(name, value);
+        }
+    }
 
-	@Override
-	protected void onResetStream() {
-		LOG.debug("{}resetStream", logPrefix);
-	}
+    @Override
+    protected void onResetStream() {
+        LOG.debug("{}resetStream", logPrefix);
+    }
 
-	@Override
-	protected void onCloseStream() {
-		LOG.debug("{}closeStream", logPrefix);
-	}
+    @Override
+    protected void onCloseStream() {
+        LOG.debug("{}closeStream", logPrefix);
+    }
 
 }

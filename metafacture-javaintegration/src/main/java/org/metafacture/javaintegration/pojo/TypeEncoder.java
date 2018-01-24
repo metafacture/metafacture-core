@@ -22,10 +22,10 @@ package org.metafacture.javaintegration.pojo;
  */
 interface TypeEncoder {
 
-	void setValue(String name, Object value);
+    void setValue(String name, Object value);
 
-	ValueType getValueType(String name);
+    ValueType getValueType(String name);
 
-	Object getInstance();
+    Object getInstance();
 
 }

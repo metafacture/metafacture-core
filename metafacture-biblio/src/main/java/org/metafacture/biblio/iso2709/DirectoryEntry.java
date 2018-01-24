@@ -30,91 +30,91 @@ import static org.metafacture.biblio.iso2709.Iso2709Constants.TAG_LENGTH;
  */
 class DirectoryEntry {
 
-	private final Iso646ByteBuffer buffer;
+    private final Iso646ByteBuffer buffer;
 
-	private final int directoryEnd;
-	private final int fieldLengthLength;
-	private final int fieldStartLength;
-	private final int implDefinedPartLength;
-	private final int entryLength;
+    private final int directoryEnd;
+    private final int fieldLengthLength;
+    private final int fieldStartLength;
+    private final int implDefinedPartLength;
+    private final int entryLength;
 
-	private int currentPosition;
+    private int currentPosition;
 
-	DirectoryEntry(final Iso646ByteBuffer buffer, final RecordFormat recordFormat,
-			final int baseAddress) {
-		assert buffer != null;
-		assert baseAddress >= MIN_BASE_ADDRESS;
-		assert baseAddress <= MAX_BASE_ADDRESS;
+    DirectoryEntry(final Iso646ByteBuffer buffer, final RecordFormat recordFormat,
+            final int baseAddress) {
+        assert buffer != null;
+        assert baseAddress >= MIN_BASE_ADDRESS;
+        assert baseAddress <= MAX_BASE_ADDRESS;
 
-		this.buffer = buffer;
-		directoryEnd = baseAddress - Byte.BYTES;
-		fieldLengthLength = recordFormat.getFieldLengthLength();
-		fieldStartLength = recordFormat.getFieldStartLength();
-		implDefinedPartLength = recordFormat.getImplDefinedPartLength();
-		entryLength = TAG_LENGTH + fieldLengthLength + fieldStartLength +
-				implDefinedPartLength;
-		rewind();
-	}
+        this.buffer = buffer;
+        directoryEnd = baseAddress - Byte.BYTES;
+        fieldLengthLength = recordFormat.getFieldLengthLength();
+        fieldStartLength = recordFormat.getFieldStartLength();
+        implDefinedPartLength = recordFormat.getImplDefinedPartLength();
+        entryLength = TAG_LENGTH + fieldLengthLength + fieldStartLength +
+                implDefinedPartLength;
+        rewind();
+    }
 
-	void rewind() {
-		currentPosition = RECORD_LABEL_LENGTH;
-	}
+    void rewind() {
+        currentPosition = RECORD_LABEL_LENGTH;
+    }
 
-	void gotoNext() {
-		assert currentPosition < directoryEnd;
-		currentPosition += entryLength;
-	}
+    void gotoNext() {
+        assert currentPosition < directoryEnd;
+        currentPosition += entryLength;
+    }
 
-	boolean endOfDirectoryReached() {
-		return currentPosition >= directoryEnd;
-	}
+    boolean endOfDirectoryReached() {
+        return currentPosition >= directoryEnd;
+    }
 
-	char[] getTag() {
-		assert currentPosition < directoryEnd;
-		return buffer.charsAt(currentPosition, TAG_LENGTH);
-	}
+    char[] getTag() {
+        assert currentPosition < directoryEnd;
+        return buffer.charsAt(currentPosition, TAG_LENGTH);
+    }
 
-	int getFieldLength() {
-		assert currentPosition < directoryEnd;
-		final int fieldLengthStart = currentPosition + TAG_LENGTH;
-		return buffer.parseIntAt(fieldLengthStart, fieldLengthLength);
-	}
+    int getFieldLength() {
+        assert currentPosition < directoryEnd;
+        final int fieldLengthStart = currentPosition + TAG_LENGTH;
+        return buffer.parseIntAt(fieldLengthStart, fieldLengthLength);
+    }
 
-	int getFieldStart() {
-		assert currentPosition < directoryEnd;
-		final int fieldStartStart = currentPosition + TAG_LENGTH +
-				fieldLengthLength;
-		return buffer.parseIntAt(fieldStartStart, fieldStartLength);
-	}
+    int getFieldStart() {
+        assert currentPosition < directoryEnd;
+        final int fieldStartStart = currentPosition + TAG_LENGTH +
+                fieldLengthLength;
+        return buffer.parseIntAt(fieldStartStart, fieldStartLength);
+    }
 
-	char[] getImplDefinedPart() {
-		assert currentPosition < directoryEnd;
-		final int implDefinedPartStart = currentPosition + TAG_LENGTH +
-				fieldLengthLength + fieldStartLength;
-		return buffer.charsAt(implDefinedPartStart, implDefinedPartLength);
-	}
+    char[] getImplDefinedPart() {
+        assert currentPosition < directoryEnd;
+        final int implDefinedPartStart = currentPosition + TAG_LENGTH +
+                fieldLengthLength + fieldStartLength;
+        return buffer.charsAt(implDefinedPartStart, implDefinedPartLength);
+    }
 
-	boolean isRecordIdField() {
-		final char[] tag = getTag();
-		return tag[0] == '0' && tag[1] == '0' && tag[2] == '1';
-	}
+    boolean isRecordIdField() {
+        final char[] tag = getTag();
+        return tag[0] == '0' && tag[1] == '0' && tag[2] == '1';
+    }
 
-	boolean isReferenceField() {
-		final char[] tag = getTag();
-		return tag[0] == '0' && tag[1] == '0';
-	}
+    boolean isReferenceField() {
+        final char[] tag = getTag();
+        return tag[0] == '0' && tag[1] == '0';
+    }
 
-	boolean isContinuedField() {
-		return getFieldLength() == 0;
-	}
+    boolean isContinuedField() {
+        return getFieldLength() == 0;
+    }
 
-	@Override
-	public String toString() {
-		if (endOfDirectoryReached()) {
-			return "@END-OF-DIRECTORY";
-		}
-		return String.valueOf(getTag()) + String.valueOf(getFieldLength()) +
-				String.valueOf(getFieldStart()) + String.valueOf(getImplDefinedPart());
-	}
+    @Override
+    public String toString() {
+        if (endOfDirectoryReached()) {
+            return "@END-OF-DIRECTORY";
+        }
+        return String.valueOf(getTag()) + String.valueOf(getFieldLength()) +
+                String.valueOf(getFieldStart()) + String.valueOf(getImplDefinedPart());
+    }
 
 }

@@ -22,6 +22,6 @@ package org.metafacture.metamorph.api;
  */
 public interface FlushListener {
 
-	void flush(final int recordCount, final int entityCount);
+    void flush(final int recordCount, final int entityCount);
 
 }

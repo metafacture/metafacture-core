@@ -29,39 +29,39 @@ import org.metafacture.metamorph.api.SourceLocation;
  */
 public abstract class AbstractNamedValuePipe implements NamedValuePipe {
 
-	private NamedValueReceiver namedValueReceiver;
+    private NamedValueReceiver namedValueReceiver;
 
-	private SourceLocation sourceLocation;
+    private SourceLocation sourceLocation;
 
-	@Override
-	public final void setNamedValueReceiver(final NamedValueReceiver receiver) {
-		namedValueReceiver = receiver;
-	}
+    @Override
+    public final void setNamedValueReceiver(final NamedValueReceiver receiver) {
+        namedValueReceiver = receiver;
+    }
 
-	@Override
-	public final void addNamedValueSource(final NamedValueSource source) {
+    @Override
+    public final void addNamedValueSource(final NamedValueSource source) {
 
-		source.setNamedValueReceiver(this);
-		onNamedValueSourceAdded(source);
-	}
+        source.setNamedValueReceiver(this);
+        onNamedValueSourceAdded(source);
+    }
 
-	protected final NamedValueReceiver getNamedValueReceiver() {
-		return namedValueReceiver;
-	}
+    protected final NamedValueReceiver getNamedValueReceiver() {
+        return namedValueReceiver;
+    }
 
-	@Override
-	public final void setSourceLocation(final SourceLocation sourceLocation) {
-		this.sourceLocation = sourceLocation;
-	}
+    @Override
+    public final void setSourceLocation(final SourceLocation sourceLocation) {
+        this.sourceLocation = sourceLocation;
+    }
 
-	@Override
-	public final SourceLocation getSourceLocation() {
-		return sourceLocation;
-	}
+    @Override
+    public final SourceLocation getSourceLocation() {
+        return sourceLocation;
+    }
 
-	protected void onNamedValueSourceAdded(
-			final NamedValueSource namedValueSource) {
-		// Default implementation does nothing
-	}
+    protected void onNamedValueSourceAdded(
+            final NamedValueSource namedValueSource) {
+        // Default implementation does nothing
+    }
 
 }

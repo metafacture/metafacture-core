@@ -26,45 +26,45 @@ import org.metafacture.metamorph.api.helpers.AbstractCollect;
  */
 public final class None extends AbstractCollect {
 
-	private static final String DEFAULT_NAME = "";
-	private static final String DEFAULT_VALUE = "true";
+    private static final String DEFAULT_NAME = "";
+    private static final String DEFAULT_VALUE = "true";
 
-	private boolean receivedInput;
-	private boolean emittedResult;
+    private boolean receivedInput;
+    private boolean emittedResult;
 
-	@Override
-	protected void receive(final String name, final String value, final NamedValueSource source) {
-		receivedInput = true;
-	}
+    @Override
+    protected void receive(final String name, final String value, final NamedValueSource source) {
+        receivedInput = true;
+    }
 
-	@Override
-	protected boolean isComplete() {
-		return false;
-	}
+    @Override
+    protected boolean isComplete() {
+        return false;
+    }
 
-	@Override
-	protected void clear() {
-		receivedInput = false;
-		emittedResult = false;
-	}
+    @Override
+    protected void clear() {
+        receivedInput = false;
+        emittedResult = false;
+    }
 
-	@Override
-	protected void emit() {
-		if (!receivedInput && !emittedResult) {
-			final String name = StringUtil.fallback(getName(), DEFAULT_NAME);
-			final String value = StringUtil.fallback(getValue(), DEFAULT_VALUE);
-			getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
-			emittedResult = true;
-		}
-	}
+    @Override
+    protected void emit() {
+        if (!receivedInput && !emittedResult) {
+            final String name = StringUtil.fallback(getName(), DEFAULT_NAME);
+            final String value = StringUtil.fallback(getValue(), DEFAULT_VALUE);
+            getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
+            emittedResult = true;
+        }
+    }
 
-	@Override
-	public void flush(final int recordCount, final int entityCount) {
-		updateCounts(recordCount, entityCount);
-		emit();
-		if (getReset()) {
-			clear();
-		}
-	}
+    @Override
+    public void flush(final int recordCount, final int entityCount) {
+        updateCounts(recordCount, entityCount);
+        emit();
+        if (getReset()) {
+            clear();
+        }
+    }
 
 }

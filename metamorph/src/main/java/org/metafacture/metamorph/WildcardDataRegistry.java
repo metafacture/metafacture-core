@@ -28,17 +28,17 @@ import org.metafacture.commons.tries.WildcardTrie;
  */
 final class WildcardRegistry<T> implements Registry<T> {
 
-	private final SimpleRegexTrie<T> trie = new SimpleRegexTrie<T>();
+    private final SimpleRegexTrie<T> trie = new SimpleRegexTrie<T>();
 
-	@Override
-	public void register(final String path, final T value) {
-		trie.put(path, value);
+    @Override
+    public void register(final String path, final T value) {
+        trie.put(path, value);
 
-	}
+    }
 
-	@Override
-	public List<T> get(final String path) {
-		return trie.get(path);
-	}
+    @Override
+    public List<T> get(final String path) {
+        return trie.get(path);
+    }
 
 }

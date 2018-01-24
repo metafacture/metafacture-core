@@ -36,106 +36,106 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public final class CGXmlHandlerTest {
 
-	private static final String CGXML_NS = "http://www.culturegraph.org/cgxml";
+    private static final String CGXML_NS = "http://www.culturegraph.org/cgxml";
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	private AttributesImpl attributes;
+    private AttributesImpl attributes;
 
-	private CGXmlHandler cgXmlHandler;
+    private CGXmlHandler cgXmlHandler;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		cgXmlHandler = new CGXmlHandler();
-		cgXmlHandler.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        cgXmlHandler = new CGXmlHandler();
+        cgXmlHandler.setReceiver(receiver);
+    }
 
-	@Before
-	public void createHelperObjects() {
-		attributes = new AttributesImpl();
-	}
+    @Before
+    public void createHelperObjects() {
+        attributes = new AttributesImpl();
+    }
 
-	@Test
-	public void shouldAcceptCgXmlVersion1() {
-		attributes.addAttribute("", "version", "cgxml:version", "CDATA",
-				"1.0");
-		cgXmlHandler.startElement(CGXML_NS, "cgxml", "cgxml:cgxml", attributes);
-		cgXmlHandler.endElement(CGXML_NS, "cgxml", "cgxml:cgxml");
+    @Test
+    public void shouldAcceptCgXmlVersion1() {
+        attributes.addAttribute("", "version", "cgxml:version", "CDATA",
+                "1.0");
+        cgXmlHandler.startElement(CGXML_NS, "cgxml", "cgxml:cgxml", attributes);
+        cgXmlHandler.endElement(CGXML_NS, "cgxml", "cgxml:cgxml");
 
-		verifyZeroInteractions(receiver);
-	}
+        verifyZeroInteractions(receiver);
+    }
 
-	@Test(expected = FormatException.class)
-	public void shouldThrowFormatExceptionIfVersionIsNot1() {
-		attributes.addAttribute("", "version", "cgxml:version", "CDATA",
-				"2.0");
-		cgXmlHandler.startElement(CGXML_NS, "cgxml", "cgxml:cgxml", attributes);
+    @Test(expected = FormatException.class)
+    public void shouldThrowFormatExceptionIfVersionIsNot1() {
+        attributes.addAttribute("", "version", "cgxml:version", "CDATA",
+                "2.0");
+        cgXmlHandler.startElement(CGXML_NS, "cgxml", "cgxml:cgxml", attributes);
 
-		// Exception expected
-	}
+        // Exception expected
+    }
 
-	@Test
-	public void shouldIgnoreRecordsElement() {
-		cgXmlHandler.startElement(CGXML_NS, "records", "cgxml:records", attributes);
-		cgXmlHandler.endElement(CGXML_NS, "records", "cgxml:records");
+    @Test
+    public void shouldIgnoreRecordsElement() {
+        cgXmlHandler.startElement(CGXML_NS, "records", "cgxml:records", attributes);
+        cgXmlHandler.endElement(CGXML_NS, "records", "cgxml:records");
 
-		verifyZeroInteractions(receiver);
-	}
+        verifyZeroInteractions(receiver);
+    }
 
-	@Test
-	public void shouldEmitStartAndEndRecordEventsForRecordElements() {
-		attributes.addAttribute("", "id", "cgxml:id", "CDATA", "1");
-		cgXmlHandler.startElement(CGXML_NS, "record", "cgxml:record", attributes);
-		cgXmlHandler.endElement(CGXML_NS, "record", "cgxml:record");
+    @Test
+    public void shouldEmitStartAndEndRecordEventsForRecordElements() {
+        attributes.addAttribute("", "id", "cgxml:id", "CDATA", "1");
+        cgXmlHandler.startElement(CGXML_NS, "record", "cgxml:record", attributes);
+        cgXmlHandler.endElement(CGXML_NS, "record", "cgxml:record");
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("1");
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void shouldEmitStartRecordWithEmptyIdIfIdAttributeIsMissing() {
-		cgXmlHandler.startElement(CGXML_NS, "record", "cgxml:record", attributes);
+    @Test
+    public void shouldEmitStartRecordWithEmptyIdIfIdAttributeIsMissing() {
+        cgXmlHandler.startElement(CGXML_NS, "record", "cgxml:record", attributes);
 
-		verify(receiver).startRecord("");
-	}
+        verify(receiver).startRecord("");
+    }
 
-	@Test
-	public void shouldEmitStartAndEndEntityEventsForEntityElements() {
-		attributes.addAttribute("", "name", "cgxml:name", "CDATA", "e-name");
-		cgXmlHandler.startElement(CGXML_NS, "entity", "cgxml:entity", attributes);
-		cgXmlHandler.endElement(CGXML_NS, "entity", "cgxml:entity");
+    @Test
+    public void shouldEmitStartAndEndEntityEventsForEntityElements() {
+        attributes.addAttribute("", "name", "cgxml:name", "CDATA", "e-name");
+        cgXmlHandler.startElement(CGXML_NS, "entity", "cgxml:entity", attributes);
+        cgXmlHandler.endElement(CGXML_NS, "entity", "cgxml:entity");
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startEntity("e-name");
-		ordered.verify(receiver).endEntity();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startEntity("e-name");
+        ordered.verify(receiver).endEntity();
+    }
 
-	@Test(expected = FormatException.class)
-	public void shouldThrowFormatExceptionEmptyNameAttributeIsMissing() {
-		cgXmlHandler.startElement(CGXML_NS, "entity", "cgxml:entity", attributes);
+    @Test(expected = FormatException.class)
+    public void shouldThrowFormatExceptionEmptyNameAttributeIsMissing() {
+        cgXmlHandler.startElement(CGXML_NS, "entity", "cgxml:entity", attributes);
 
-		// Exception expected
-	}
+        // Exception expected
+    }
 
-	@Test
-	public void shouldEmitLiteralEventForLiteralElements() {
-		attributes.addAttribute("", "name", "cgxml:name", "CDATA", "l-name");
-		attributes.addAttribute("", "value", "cgxml:value", "CDATA", "l-val");
-		cgXmlHandler.startElement(CGXML_NS, "literal", "cgxml:literal", attributes);
-		cgXmlHandler.endElement(CGXML_NS, "literal", "cgxml:literal");
+    @Test
+    public void shouldEmitLiteralEventForLiteralElements() {
+        attributes.addAttribute("", "name", "cgxml:name", "CDATA", "l-name");
+        attributes.addAttribute("", "value", "cgxml:value", "CDATA", "l-val");
+        cgXmlHandler.startElement(CGXML_NS, "literal", "cgxml:literal", attributes);
+        cgXmlHandler.endElement(CGXML_NS, "literal", "cgxml:literal");
 
-		verify(receiver).literal("l-name", "l-val");
-	}
+        verify(receiver).literal("l-name", "l-val");
+    }
 
-	@Test(expected = FormatException.class)
-	public void shouldThrowFormatExceptionIfLiteralNameAttributeIsMissing() {
-		attributes.addAttribute("", "value", "cgxml:value", "CDATA", "l-val");
-		cgXmlHandler.startElement(CGXML_NS, "literal", "cgxml:literal", attributes);
+    @Test(expected = FormatException.class)
+    public void shouldThrowFormatExceptionIfLiteralNameAttributeIsMissing() {
+        attributes.addAttribute("", "value", "cgxml:value", "CDATA", "l-val");
+        cgXmlHandler.startElement(CGXML_NS, "literal", "cgxml:literal", attributes);
 
-		// Exception expected
-	}
+        // Exception expected
+    }
 
 }

@@ -23,13 +23,13 @@ package org.metafacture.biblio.pica;
  */
 final class PicaConstants {
 
-	public static final char RECORD_MARKER = '\u001d';
-	public static final char FIELD_MARKER = '\u001e';
-	public static final char SUBFIELD_MARKER = '\u001f';
-	public static final char FIELD_END_MARKER = '\n';
+    public static final char RECORD_MARKER = '\u001d';
+    public static final char FIELD_MARKER = '\u001e';
+    public static final char SUBFIELD_MARKER = '\u001f';
+    public static final char FIELD_END_MARKER = '\n';
 
-	private PicaConstants() {
-		// No instances allowed
-	}
+    private PicaConstants() {
+        // No instances allowed
+    }
 
 }

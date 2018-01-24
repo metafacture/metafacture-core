@@ -26,29 +26,29 @@ import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
  */
 public final class Group extends AbstractFlushingCollect {
 
-	@Override
-	protected void receive(final String recName, final String recValue,
-			final NamedValueSource source) {
-		getNamedValueReceiver().receive(
-				StringUtil.fallback(getName(), recName),
-				StringUtil.fallback(getValue(), recValue), this,
-				getRecordCount(), getEntityCount());
-	}
+    @Override
+    protected void receive(final String recName, final String recValue,
+            final NamedValueSource source) {
+        getNamedValueReceiver().receive(
+                StringUtil.fallback(getName(), recName),
+                StringUtil.fallback(getValue(), recValue), this,
+                getRecordCount(), getEntityCount());
+    }
 
-	@Override
-	protected boolean isComplete() {
-		// Nothing to do
-		return false;
-	}
+    @Override
+    protected boolean isComplete() {
+        // Nothing to do
+        return false;
+    }
 
-	@Override
-	protected void clear() {
-		// Nothing to do
-	}
+    @Override
+    protected void clear() {
+        // Nothing to do
+    }
 
-	@Override
-	protected void emit() {
-		// Nothing to do
-	}
+    @Override
+    protected void emit() {
+        // Nothing to do
+    }
 
 }

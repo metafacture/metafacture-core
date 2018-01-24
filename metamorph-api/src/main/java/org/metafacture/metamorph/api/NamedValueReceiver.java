@@ -24,9 +24,9 @@ package org.metafacture.metamorph.api;
  */
 public interface NamedValueReceiver extends KnowsSourceLocation {
 
-	void receive(String name, String value, NamedValueSource source,
-			int recordCount, int entityCount);
+    void receive(String name, String value, NamedValueSource source,
+            int recordCount, int entityCount);
 
-	void addNamedValueSource(final NamedValueSource namedValueSource);
+    void addNamedValueSource(final NamedValueSource namedValueSource);
 
 }

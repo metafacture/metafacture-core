@@ -34,41 +34,41 @@ import org.metafacture.framework.helpers.DefaultTee;
 @Out(StreamReceiver.class)
 @FluxCommand("stream-tee")
 public final class StreamTee extends DefaultTee<StreamReceiver>
-		implements StreamPipe<StreamReceiver> {
+        implements StreamPipe<StreamReceiver> {
 
-	@Override
-	public void startRecord(final String identifier) {
-		for (StreamReceiver receiver : getReceivers()) {
-			receiver.startRecord(identifier);
-		}
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        for (StreamReceiver receiver : getReceivers()) {
+            receiver.startRecord(identifier);
+        }
+    }
 
-	@Override
-	public void endRecord() {
-		for (StreamReceiver receiver : getReceivers()) {
-			receiver.endRecord();
-		}
-	}
+    @Override
+    public void endRecord() {
+        for (StreamReceiver receiver : getReceivers()) {
+            receiver.endRecord();
+        }
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		for (StreamReceiver receiver : getReceivers()) {
-			receiver.startEntity(name);
-		}
-	}
+    @Override
+    public void startEntity(final String name) {
+        for (StreamReceiver receiver : getReceivers()) {
+            receiver.startEntity(name);
+        }
+    }
 
-	@Override
-	public void endEntity() {
-		for (StreamReceiver receiver : getReceivers()) {
-			receiver.endEntity();
-		}
-	}
+    @Override
+    public void endEntity() {
+        for (StreamReceiver receiver : getReceivers()) {
+            receiver.endEntity();
+        }
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		for (StreamReceiver receiver : getReceivers()) {
-			receiver.literal(name, value);
-		}
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        for (StreamReceiver receiver : getReceivers()) {
+            receiver.literal(name, value);
+        }
+    }
 
 }

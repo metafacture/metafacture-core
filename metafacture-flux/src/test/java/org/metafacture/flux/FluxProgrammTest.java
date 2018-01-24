@@ -31,20 +31,20 @@ import org.metafacture.flux.parser.FluxProgramm;
 
 public final class FluxProgrammTest {
 
-	@Test
-	public void testCommandRegistration() {
-		// all commands must properly load to print the help
-		FluxProgramm.printHelp(discardOutput());
+    @Test
+    public void testCommandRegistration() {
+        // all commands must properly load to print the help
+        FluxProgramm.printHelp(discardOutput());
 
-	}
+    }
 
-	private PrintStream discardOutput() {
-		return new PrintStream(new OutputStream() {
-			@Override
-			public void write(int b) throws IOException {
-				// Do not write any output.
-			}
-		});
-	}
+    private PrintStream discardOutput() {
+        return new PrintStream(new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
+                // Do not write any output.
+            }
+        });
+    }
 
 }

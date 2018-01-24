@@ -27,39 +27,39 @@ import org.metafacture.framework.MetafactureException;
  */
 class FieldValueGetter implements ValueGetter {
 
-	private final Field field;
+    private final Field field;
 
-	FieldValueGetter(final Field field) {
-		assert supportsField(field);
-		this.field = field;
-	}
+    FieldValueGetter(final Field field) {
+        assert supportsField(field);
+        this.field = field;
+    }
 
-	static boolean supportsField(final Field f) {
-		return Modifier.isPublic(f.getModifiers());
-	}
+    static boolean supportsField(final Field f) {
+        return Modifier.isPublic(f.getModifiers());
+    }
 
-	@Override
-	public Object getValue(final Object object) {
-		try {
-			return field.get(object);
-		} catch (final IllegalArgumentException e) {
-			throw new MetafactureException(
-					"The given object don't have a field named "
-							+ field.getName(), e);
-		} catch (final IllegalAccessException e) {
-			throw new MetafactureException("Can't access the field named "
-					+ field.getName(), e);
-		}
-	}
+    @Override
+    public Object getValue(final Object object) {
+        try {
+            return field.get(object);
+        } catch (final IllegalArgumentException e) {
+            throw new MetafactureException(
+                    "The given object don't have a field named "
+                            + field.getName(), e);
+        } catch (final IllegalAccessException e) {
+            throw new MetafactureException("Can't access the field named "
+                    + field.getName(), e);
+        }
+    }
 
-	@Override
-	public String getName() {
-		return field.getName();
-	}
+    @Override
+    public String getName() {
+        return field.getName();
+    }
 
-	@Override
-	public Class<?> getValueType() {
-		return field.getType();
-	}
+    @Override
+    public Class<?> getValueType() {
+        return field.getType();
+    }
 
 }

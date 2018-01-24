@@ -28,31 +28,31 @@ import org.metafacture.framework.StreamPipe;
  * @see ForwardingStreamPipe
  */
 public class DefaultStreamPipe<R extends Receiver>
-		extends DefaultSender<R> implements StreamPipe<R> {
+        extends DefaultSender<R> implements StreamPipe<R> {
 
-	@Override
-	public void startRecord(final String identifier) {
-		// Default implementation does nothing
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void endRecord() {
-		// Default implementation does nothing
-	}
+    @Override
+    public void endRecord() {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		// Default implementation does nothing
-	}
+    @Override
+    public void startEntity(final String name) {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void endEntity() {
-		// Default implementation does nothing
-	}
+    @Override
+    public void endEntity() {
+        // Default implementation does nothing
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		// Default implementation does nothing
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        // Default implementation does nothing
+    }
 
 }

@@ -26,24 +26,24 @@ import org.metafacture.metamorph.api.helpers.AbstractNamedValuePipe;
  */
 final class Data extends AbstractNamedValuePipe {
 
-	private String name;
+    private String name;
 
-	@Override
-	public void receive(final String recName, final String recValue,
-			final NamedValueSource source, final int recordCount,
-			final int entityCount) {
+    @Override
+    public void receive(final String recName, final String recValue,
+            final NamedValueSource source, final int recordCount,
+            final int entityCount) {
 
-		getNamedValueReceiver().receive(StringUtil.fallback(name, recName),
-				recValue, this, recordCount, entityCount);
-	}
+        getNamedValueReceiver().receive(StringUtil.fallback(name, recName),
+                recValue, this, recordCount, entityCount);
+    }
 
-	public void setName(final String name) {
-		this.name = name;
-	}
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-	@Override
-	public String toString() {
-		return name;
-	}
+    @Override
+    public String toString() {
+        return name;
+    }
 
 }

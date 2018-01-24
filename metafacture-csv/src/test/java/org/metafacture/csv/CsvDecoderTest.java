@@ -33,45 +33,45 @@ import org.mockito.MockitoAnnotations;
  */
 public final class CsvDecoderTest {
 
-	private CsvDecoder decoder;
+    private CsvDecoder decoder;
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		decoder = new CsvDecoder(',');
-		decoder.setHasHeader(true);
-		decoder.setReceiver(receiver);
-		decoder.process("h1,h2,h3");
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        decoder = new CsvDecoder(',');
+        decoder.setHasHeader(true);
+        decoder.setReceiver(receiver);
+        decoder.process("h1,h2,h3");
+    }
 
-	@After
-	public void cleanup() {
-		decoder.closeStream();
-	}
+    @After
+    public void cleanup() {
+        decoder.closeStream();
+    }
 
-	@Test
-	public void testSimple() {
-		decoder.process("a,b,c");
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("1");
-		ordered.verify(receiver).literal("h1", "a");
-		ordered.verify(receiver).literal("h2", "b");
-		ordered.verify(receiver).literal("h3", "c");
-		ordered.verify(receiver).endRecord();
-	}
+    @Test
+    public void testSimple() {
+        decoder.process("a,b,c");
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("h1", "a");
+        ordered.verify(receiver).literal("h2", "b");
+        ordered.verify(receiver).literal("h3", "c");
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void testQuoted() {
-		decoder.process("a,\"b1,b2,b3\",c");
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("1");
-		ordered.verify(receiver).literal("h1", "a");
-		ordered.verify(receiver).literal("h2", "b1,b2,b3");
-		ordered.verify(receiver).literal("h3", "c");
-		ordered.verify(receiver).endRecord();
-	}
+    @Test
+    public void testQuoted() {
+        decoder.process("a,\"b1,b2,b3\",c");
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("h1", "a");
+        ordered.verify(receiver).literal("h2", "b1,b2,b3");
+        ordered.verify(receiver).literal("h3", "c");
+        ordered.verify(receiver).endRecord();
+    }
 
 }

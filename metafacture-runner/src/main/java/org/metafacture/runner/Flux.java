@@ -35,72 +35,72 @@ import org.metafacture.runner.util.DirectoryClassLoader;
  */
 public final class Flux {
 
-	public static final String PLUGINS_DIR_PROPERTY = "flux.pluginsdir";
-	public static final String PROVIDED_DIR_PROPERTY = "flux.provideddir";
+    public static final String PLUGINS_DIR_PROPERTY = "flux.pluginsdir";
+    public static final String PROVIDED_DIR_PROPERTY = "flux.provideddir";
 
-	private static final Pattern VAR_PATTERN = Pattern.compile("([^=]*)=(.*)");
-	private static final String SCRIPT_HOME = "FLUX_DIR";
+    private static final Pattern VAR_PATTERN = Pattern.compile("([^=]*)=(.*)");
+    private static final String SCRIPT_HOME = "FLUX_DIR";
 
-	private Flux() {
-		// No instances allowed
-	}
+    private Flux() {
+        // No instances allowed
+    }
 
-	public static void main(final String[] args) throws IOException, RecognitionException {
+    public static void main(final String[] args) throws IOException, RecognitionException {
 
-		loadCustomJars();
+        loadCustomJars();
 
-		if (args.length < (1)) {
-			FluxProgramm.printHelp(System.out);
-			System.exit(2);
-		} else {
+        if (args.length < (1)) {
+            FluxProgramm.printHelp(System.out);
+            System.exit(2);
+        } else {
 
-			final File fluxFile = new File(args[0]);
-			if (!fluxFile.exists()) {
-				System.err.println("File not found: " + args[0]);
-				System.exit(1);
-				return;
-			}
+            final File fluxFile = new File(args[0]);
+            if (!fluxFile.exists()) {
+                System.err.println("File not found: " + args[0]);
+                System.exit(1);
+                return;
+            }
 
-			// get variable assignments
-			final Map<String, String> vars = new HashMap<String, String>();
-			vars.put(SCRIPT_HOME, fluxFile.getAbsoluteFile().getParent()
-					+ System.getProperty("file.separator"));
+            // get variable assignments
+            final Map<String, String> vars = new HashMap<String, String>();
+            vars.put(SCRIPT_HOME, fluxFile.getAbsoluteFile().getParent()
+                    + System.getProperty("file.separator"));
 
-			for (int i = 1; i < args.length; ++i) {
-				final Matcher matcher = VAR_PATTERN.matcher(args[i]);
-				if (!matcher.find()) {
-					FluxProgramm.printHelp(System.err);
-					return;
-				}
-				vars.put(matcher.group(1), matcher.group(2));
-			}
+            for (int i = 1; i < args.length; ++i) {
+                final Matcher matcher = VAR_PATTERN.matcher(args[i]);
+                if (!matcher.find()) {
+                    FluxProgramm.printHelp(System.err);
+                    return;
+                }
+                vars.put(matcher.group(1), matcher.group(2));
+            }
 
-			// run parser and builder
-			FluxCompiler.compile(ResourceUtil.getStream(fluxFile), vars).start();
-		}
-	}
+            // run parser and builder
+            FluxCompiler.compile(ResourceUtil.getStream(fluxFile), vars).start();
+        }
+    }
 
-	private static void loadCustomJars() {
-		final DirectoryClassLoader dirClassLoader = new DirectoryClassLoader(getClassLoader());
+    private static void loadCustomJars() {
+        final DirectoryClassLoader dirClassLoader = new DirectoryClassLoader(getClassLoader());
 
-		final String pluginsDir = System.getProperty(PLUGINS_DIR_PROPERTY);
-		if (pluginsDir != null) {
-			dirClassLoader.addDirectory(new File(pluginsDir));
-		}
-		final String providedDir = System.getProperty(PROVIDED_DIR_PROPERTY);
-		if (providedDir != null) {
-			dirClassLoader.addDirectory(new File(providedDir));
-		}
+        final String pluginsDir = System.getProperty(PLUGINS_DIR_PROPERTY);
+        if (pluginsDir != null) {
+            dirClassLoader.addDirectory(new File(pluginsDir));
+        }
+        final String providedDir = System.getProperty(PROVIDED_DIR_PROPERTY);
+        if (providedDir != null) {
+            dirClassLoader.addDirectory(new File(providedDir));
+        }
 
-		setClassLoader(dirClassLoader);
-	}
+        setClassLoader(dirClassLoader);
+    }
 
-	private static ClassLoader getClassLoader() {
-		return Thread.currentThread().getContextClassLoader();
-	}
+    private static ClassLoader getClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
+    }
 
-	private static void setClassLoader(final ClassLoader classLoader) {
-		Thread.currentThread().setContextClassLoader(classLoader);
-	}
+    private static void setClassLoader(final ClassLoader classLoader) {
+        Thread.currentThread().setContextClassLoader(classLoader);
+    }
 
 }

@@ -2,6 +2,6 @@
 
 <test-schema xmlns="http://www.example.org/test-schema">
 
-	<string-element>    </string-element>
-	
+    <string-element>    </string-element>
+    
 </test-schema>

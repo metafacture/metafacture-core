@@ -27,30 +27,30 @@ import org.metafacture.framework.MetafactureException;
  */
 class TypeDecoderFactory {
 
-	private final Map<Class<?>, TypeDecoder> typeDecoders = new HashMap<>();
+    private final Map<Class<?>, TypeDecoder> typeDecoders = new HashMap<>();
 
-	TypeDecoder create(final Class<?> clazz) {
-		if (typeDecoders.containsKey(clazz)) {
-			return typeDecoders.get(clazz);
-		}
-		final TypeDecoder typeDecoder;
-		if (SimpleTypeDecoder.supportsType(clazz)) {
-			typeDecoder = new SimpleTypeDecoder();
-		} else if (MetafactureSourceTypeDecoder.supportsType(clazz)) {
-			typeDecoder = new MetafactureSourceTypeDecoder();
-		} else if (CollectionTypeDecoder.supportsType(clazz)) {
-			typeDecoder = new CollectionTypeDecoder(this);
-		} else if (ArrayTypeDecoder.supportsType(clazz)) {
-			typeDecoder = new ArrayTypeDecoder(this);
-		} else if (ComplexTypeDecoder.supportsType(clazz)) {
-			typeDecoder = new ComplexTypeDecoder(clazz, this);
-		} else if (MapTypeDecoder.supportsType(clazz)) {
-			typeDecoder = new MapTypeDecoder(this);
-		} else {
-			throw new MetafactureException("Can't decode type " + clazz);
-		}
-		typeDecoders.put(clazz, typeDecoder);
-		return typeDecoder;
-	}
+    TypeDecoder create(final Class<?> clazz) {
+        if (typeDecoders.containsKey(clazz)) {
+            return typeDecoders.get(clazz);
+        }
+        final TypeDecoder typeDecoder;
+        if (SimpleTypeDecoder.supportsType(clazz)) {
+            typeDecoder = new SimpleTypeDecoder();
+        } else if (MetafactureSourceTypeDecoder.supportsType(clazz)) {
+            typeDecoder = new MetafactureSourceTypeDecoder();
+        } else if (CollectionTypeDecoder.supportsType(clazz)) {
+            typeDecoder = new CollectionTypeDecoder(this);
+        } else if (ArrayTypeDecoder.supportsType(clazz)) {
+            typeDecoder = new ArrayTypeDecoder(this);
+        } else if (ComplexTypeDecoder.supportsType(clazz)) {
+            typeDecoder = new ComplexTypeDecoder(clazz, this);
+        } else if (MapTypeDecoder.supportsType(clazz)) {
+            typeDecoder = new MapTypeDecoder(this);
+        } else {
+            throw new MetafactureException("Can't decode type " + clazz);
+        }
+        typeDecoders.put(clazz, typeDecoder);
+        return typeDecoder;
+    }
 
 }

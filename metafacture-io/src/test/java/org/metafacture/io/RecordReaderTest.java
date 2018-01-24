@@ -38,191 +38,191 @@ import org.mockito.MockitoAnnotations;
  */
 public final class RecordReaderTest {
 
-	private static final String RECORD1 = "record1";
-	private static final String RECORD2 = "record2";
-	private static final String EMPTY_RECORD = "";
-	private static final char SEPARATOR = ':';
-	private static final char DEFAULT_SEPARATOR = '\u001d';
+    private static final String RECORD1 = "record1";
+    private static final String RECORD2 = "record2";
+    private static final String EMPTY_RECORD = "";
+    private static final char SEPARATOR = ':';
+    private static final char DEFAULT_SEPARATOR = '\u001d';
 
-	private RecordReader recordReader;
+    private RecordReader recordReader;
 
-	@Mock
-	private ObjectReceiver<String> receiver;
+    @Mock
+    private ObjectReceiver<String> receiver;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		recordReader = new RecordReader();
-		recordReader.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        recordReader = new RecordReader();
+        recordReader.setReceiver(receiver);
+    }
 
-	@After
-	public void cleanup() {
-		recordReader.closeStream();
-	}
+    @After
+    public void cleanup() {
+        recordReader.closeStream();
+    }
 
-	@Test
-	public void testShouldProcessRecordsFollowedbySeparator() {
-		recordReader.setSeparator(SEPARATOR);
+    @Test
+    public void testShouldProcessRecordsFollowedbySeparator() {
+        recordReader.setSeparator(SEPARATOR);
 
-		recordReader.process(new StringReader(
-				RECORD1 + SEPARATOR +
-				RECORD2 + SEPARATOR));
+        recordReader.process(new StringReader(
+                RECORD1 + SEPARATOR +
+                RECORD2 + SEPARATOR));
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).process(RECORD1);
-		ordered.verify(receiver).process(RECORD2);
-		verifyNoMoreInteractions(receiver);
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).process(RECORD1);
+        ordered.verify(receiver).process(RECORD2);
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void testShouldProcessRecordsPrecededbySeparator() {
-		recordReader.setSeparator(SEPARATOR);
+    @Test
+    public void testShouldProcessRecordsPrecededbySeparator() {
+        recordReader.setSeparator(SEPARATOR);
 
-		recordReader.process(new StringReader(
-				SEPARATOR + RECORD1 +
-				SEPARATOR + RECORD2));
+        recordReader.process(new StringReader(
+                SEPARATOR + RECORD1 +
+                SEPARATOR + RECORD2));
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).process(RECORD1);
-		ordered.verify(receiver).process(RECORD2);
-		verifyNoMoreInteractions(receiver);
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).process(RECORD1);
+        ordered.verify(receiver).process(RECORD2);
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void testShouldProcessRecordsSeparatedBySeparator() {
-		recordReader.setSeparator(SEPARATOR);
+    @Test
+    public void testShouldProcessRecordsSeparatedBySeparator() {
+        recordReader.setSeparator(SEPARATOR);
 
-		recordReader.process(new StringReader(
-				RECORD1 + SEPARATOR +
-				RECORD2));
+        recordReader.process(new StringReader(
+                RECORD1 + SEPARATOR +
+                RECORD2));
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).process(RECORD1);
-		ordered.verify(receiver).process(RECORD2);
-		verifyNoMoreInteractions(receiver);
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).process(RECORD1);
+        ordered.verify(receiver).process(RECORD2);
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void testShouldProcessSingleRecordWithoutSeparator() {
-		recordReader.setSeparator(SEPARATOR);
+    @Test
+    public void testShouldProcessSingleRecordWithoutSeparator() {
+        recordReader.setSeparator(SEPARATOR);
 
-		recordReader.process(new StringReader(
-				RECORD1));
+        recordReader.process(new StringReader(
+                RECORD1));
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).process(RECORD1);
-		verifyNoMoreInteractions(receiver);
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).process(RECORD1);
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void testShouldNotEmitRecordIfInputIsEmpty() {
-		recordReader.setSeparator(SEPARATOR);
-		// Make sure empty records are
-		// normally emitted:
-		recordReader.setSkipEmptyRecords(false);
+    @Test
+    public void testShouldNotEmitRecordIfInputIsEmpty() {
+        recordReader.setSeparator(SEPARATOR);
+        // Make sure empty records are
+        // normally emitted:
+        recordReader.setSkipEmptyRecords(false);
 
-		recordReader.process(new StringReader(
-				EMPTY_RECORD));
+        recordReader.process(new StringReader(
+                EMPTY_RECORD));
 
-		verifyZeroInteractions(receiver);
-	}
+        verifyZeroInteractions(receiver);
+    }
 
-	@Test
-	public void testShouldSkipEmptyRecordsByDefault() {
-		recordReader.setSeparator(SEPARATOR);
+    @Test
+    public void testShouldSkipEmptyRecordsByDefault() {
+        recordReader.setSeparator(SEPARATOR);
 
-		recordReader.process(new StringReader(
-				RECORD1 + SEPARATOR +
-				EMPTY_RECORD + SEPARATOR +
-				RECORD2));
+        recordReader.process(new StringReader(
+                RECORD1 + SEPARATOR +
+                EMPTY_RECORD + SEPARATOR +
+                RECORD2));
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).process(RECORD1);
-		ordered.verify(receiver).process(RECORD2);
-		verifyNoMoreInteractions(receiver);
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).process(RECORD1);
+        ordered.verify(receiver).process(RECORD2);
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void testShouldOutputEmptyRecordsIfConfigured() {
-		recordReader.setSeparator(SEPARATOR);
-		recordReader.setSkipEmptyRecords(false);
+    @Test
+    public void testShouldOutputEmptyRecordsIfConfigured() {
+        recordReader.setSeparator(SEPARATOR);
+        recordReader.setSkipEmptyRecords(false);
 
-		recordReader.process(new StringReader(
-				RECORD1 + SEPARATOR +
-				EMPTY_RECORD + SEPARATOR +
-				RECORD2));
+        recordReader.process(new StringReader(
+                RECORD1 + SEPARATOR +
+                EMPTY_RECORD + SEPARATOR +
+                RECORD2));
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).process(RECORD1);
-		ordered.verify(receiver).process(EMPTY_RECORD);
-		ordered.verify(receiver).process(RECORD2);
-		verifyNoMoreInteractions(receiver);
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).process(RECORD1);
+        ordered.verify(receiver).process(EMPTY_RECORD);
+        ordered.verify(receiver).process(RECORD2);
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void testShouldOutputEmptyRecordsAtStartOfInputIfConfigured() {
-		recordReader.setSeparator(SEPARATOR);
-		recordReader.setSkipEmptyRecords(false);
+    @Test
+    public void testShouldOutputEmptyRecordsAtStartOfInputIfConfigured() {
+        recordReader.setSeparator(SEPARATOR);
+        recordReader.setSkipEmptyRecords(false);
 
-		recordReader.process(new StringReader(
-				EMPTY_RECORD + SEPARATOR +
-				RECORD1 + SEPARATOR +
-				RECORD2));
+        recordReader.process(new StringReader(
+                EMPTY_RECORD + SEPARATOR +
+                RECORD1 + SEPARATOR +
+                RECORD2));
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).process(EMPTY_RECORD);
-		ordered.verify(receiver).process(RECORD1);
-		ordered.verify(receiver).process(RECORD2);
-		verifyNoMoreInteractions(receiver);
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).process(EMPTY_RECORD);
+        ordered.verify(receiver).process(RECORD1);
+        ordered.verify(receiver).process(RECORD2);
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void testShouldOutputEmptyRecordsAtEndOfInputIfConfigured() {
-		recordReader.setSeparator(SEPARATOR);
-		recordReader.setSkipEmptyRecords(false);
+    @Test
+    public void testShouldOutputEmptyRecordsAtEndOfInputIfConfigured() {
+        recordReader.setSeparator(SEPARATOR);
+        recordReader.setSkipEmptyRecords(false);
 
-		recordReader.process(new StringReader(
-				RECORD1 + SEPARATOR +
-				RECORD2 + SEPARATOR +
-				EMPTY_RECORD));
+        recordReader.process(new StringReader(
+                RECORD1 + SEPARATOR +
+                RECORD2 + SEPARATOR +
+                EMPTY_RECORD));
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).process(RECORD1);
-		ordered.verify(receiver).process(RECORD2);
-		ordered.verify(receiver).process(EMPTY_RECORD);
-		verifyNoMoreInteractions(receiver);
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).process(RECORD1);
+        ordered.verify(receiver).process(RECORD2);
+        ordered.verify(receiver).process(EMPTY_RECORD);
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void testShouldUseGlobalSeparatorAsDefaultSeparator() {
-		recordReader.process(new StringReader(
-				RECORD1 + DEFAULT_SEPARATOR +
-				RECORD2 + DEFAULT_SEPARATOR));
+    @Test
+    public void testShouldUseGlobalSeparatorAsDefaultSeparator() {
+        recordReader.process(new StringReader(
+                RECORD1 + DEFAULT_SEPARATOR +
+                RECORD2 + DEFAULT_SEPARATOR));
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).process(RECORD1);
-		ordered.verify(receiver).process(RECORD2);
-		verifyNoMoreInteractions(receiver);
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).process(RECORD1);
+        ordered.verify(receiver).process(RECORD2);
+        verifyNoMoreInteractions(receiver);
+    }
 
-	@Test
-	public void testShouldProcessMultipleReaders() {
-		recordReader.setSeparator(SEPARATOR);
+    @Test
+    public void testShouldProcessMultipleReaders() {
+        recordReader.setSeparator(SEPARATOR);
 
-		recordReader.process(new StringReader(
-				RECORD1 + SEPARATOR +
-				RECORD2));
-		recordReader.process(new StringReader(
-				RECORD2 + SEPARATOR +
-				RECORD1));
+        recordReader.process(new StringReader(
+                RECORD1 + SEPARATOR +
+                RECORD2));
+        recordReader.process(new StringReader(
+                RECORD2 + SEPARATOR +
+                RECORD1));
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).process(RECORD1);
-		ordered.verify(receiver, times(2)).process(RECORD2);
-		ordered.verify(receiver).process(RECORD1);
-		verifyNoMoreInteractions(receiver);
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).process(RECORD1);
+        ordered.verify(receiver, times(2)).process(RECORD2);
+        ordered.verify(receiver).process(RECORD1);
+        verifyNoMoreInteractions(receiver);
 
-	}
+    }
 
 }

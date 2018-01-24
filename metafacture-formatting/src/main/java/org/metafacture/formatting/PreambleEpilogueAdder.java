@@ -41,68 +41,68 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @FluxCommand("add-preamble-epilogue")
 public final class PreambleEpilogueAdder extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
-	private String preamble = "";
-	private String epilogue = "";
+    private String preamble = "";
+    private String epilogue = "";
 
-	private boolean objectsReceived = false;
+    private boolean objectsReceived = false;
 
-	/**
-	 * Sets the <i>preamble</i> string which is emitted before the first object.
-	 * <p>
-	 * The default preamble is an empty string. That means by default no
-	 * preamble is emitted.
-	 * <p>
-	 * The parameter may only be changed before the first object is processed
-	 * otherwise the change has no effect.
-	 *
-	 * @param preamble the preamble string
-	 */
-	public void setPreamble(final String preamble) {
-		this.preamble = preamble;
-	}
+    /**
+     * Sets the <i>preamble</i> string which is emitted before the first object.
+     * <p>
+     * The default preamble is an empty string. That means by default no
+     * preamble is emitted.
+     * <p>
+     * The parameter may only be changed before the first object is processed
+     * otherwise the change has no effect.
+     *
+     * @param preamble the preamble string
+     */
+    public void setPreamble(final String preamble) {
+        this.preamble = preamble;
+    }
 
-	public String getPreamble() {
-		return preamble;
-	}
+    public String getPreamble() {
+        return preamble;
+    }
 
-	/**
-	 * Sets the <i>epilogue</i> string which is emitted after the last object.
-	 * <p>
-	 * The default epilogue string is an empty string. That means by default no
-	 * epilogue is emitted.
-	 * <p>
-	 * The parameter may be changed at any time. Its becomes effective when a
-	 * <i>close-stream</i> event is received.
-	 *
-	 * @param epilogue the epilogue string
-	 */
-	public void setEpilogue(final String epilogue) {
-		this.epilogue = epilogue;
-	}
+    /**
+     * Sets the <i>epilogue</i> string which is emitted after the last object.
+     * <p>
+     * The default epilogue string is an empty string. That means by default no
+     * epilogue is emitted.
+     * <p>
+     * The parameter may be changed at any time. Its becomes effective when a
+     * <i>close-stream</i> event is received.
+     *
+     * @param epilogue the epilogue string
+     */
+    public void setEpilogue(final String epilogue) {
+        this.epilogue = epilogue;
+    }
 
-	public String getEpilogue() {
-		return epilogue;
-	}
+    public String getEpilogue() {
+        return epilogue;
+    }
 
-	@Override
-	public void process(final String obj) {
-		if(!objectsReceived && !preamble.isEmpty()) {
-			getReceiver().process(preamble);
-		}
-		objectsReceived = true;
-		getReceiver().process(obj);
-	}
+    @Override
+    public void process(final String obj) {
+        if(!objectsReceived && !preamble.isEmpty()) {
+            getReceiver().process(preamble);
+        }
+        objectsReceived = true;
+        getReceiver().process(obj);
+    }
 
-	@Override
-	protected void onCloseStream() {
-		if(objectsReceived && !epilogue.isEmpty()) {
-			getReceiver().process(epilogue);
-		}
-	}
+    @Override
+    protected void onCloseStream() {
+        if(objectsReceived && !epilogue.isEmpty()) {
+            getReceiver().process(epilogue);
+        }
+    }
 
-	@Override
-	protected void onResetStream() {
-		objectsReceived = false;
-	}
+    @Override
+    protected void onResetStream() {
+        objectsReceived = false;
+    }
 
 }

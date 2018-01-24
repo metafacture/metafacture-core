@@ -26,13 +26,13 @@ import org.xml.sax.XMLReader;
  */
 final class CommentsFilter extends LexicalHandlerXmlFilter {
 
-	CommentsFilter(final XMLReader parent) {
-		super(parent);
-	}
+    CommentsFilter(final XMLReader parent) {
+        super(parent);
+    }
 
-	@Override
-	public void comment(final char[] ch, final int start, final int length) throws SAXException {
-		// Do not forward comment events
-	}
+    @Override
+    public void comment(final char[] ch, final int start, final int length) throws SAXException {
+        // Do not forward comment events
+    }
 
 }

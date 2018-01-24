@@ -29,60 +29,60 @@ import org.metafacture.framework.StreamReceiver;
  */
 class ComplexTypeDecoder implements TypeDecoder {
 
-	private final TypeDecoderFactory typeDecoderFactory;
-	private final List<ValueGetter> valueGetters;
+    private final TypeDecoderFactory typeDecoderFactory;
+    private final List<ValueGetter> valueGetters;
 
-	ComplexTypeDecoder(final Class<?> clazz,
-			final TypeDecoderFactory typeDecoderFactory) {
-		this.typeDecoderFactory = typeDecoderFactory;
-		valueGetters = new ArrayList<>();
-		addFieldValueGettersFor(clazz);
-		addMethodValueGettersFor(clazz);
-	}
+    ComplexTypeDecoder(final Class<?> clazz,
+            final TypeDecoderFactory typeDecoderFactory) {
+        this.typeDecoderFactory = typeDecoderFactory;
+        valueGetters = new ArrayList<>();
+        addFieldValueGettersFor(clazz);
+        addMethodValueGettersFor(clazz);
+    }
 
-	private void addFieldValueGettersFor(Class<?> clazz) {
-		final Field[] fields = clazz.getDeclaredFields();
-		for (final Field field : fields) {
-			if (FieldValueGetter.supportsField(field)) {
-				valueGetters.add(new FieldValueGetter(field));
-			}
-		}
-	}
+    private void addFieldValueGettersFor(Class<?> clazz) {
+        final Field[] fields = clazz.getDeclaredFields();
+        for (final Field field : fields) {
+            if (FieldValueGetter.supportsField(field)) {
+                valueGetters.add(new FieldValueGetter(field));
+            }
+        }
+    }
 
-	private void addMethodValueGettersFor(Class<?> clazz) {
-		final Method[] methods = clazz.getDeclaredMethods();
-		for (final Method method : methods) {
-			if (MethodValueGetter.supportsMethod(method)) {
-				valueGetters.add(new MethodValueGetter(method));
-			}
-		}
-	}
+    private void addMethodValueGettersFor(Class<?> clazz) {
+        final Method[] methods = clazz.getDeclaredMethods();
+        for (final Method method : methods) {
+            if (MethodValueGetter.supportsMethod(method)) {
+                valueGetters.add(new MethodValueGetter(method));
+            }
+        }
+    }
 
-	static boolean supportsType(final Class<?> clazz) {
-		return !SimpleTypeDecoder.supportsType(clazz)
-				&& !MetafactureSourceTypeDecoder.supportsType(clazz)
-				&& !CollectionTypeDecoder.supportsType(clazz)
-				&& !ArrayTypeDecoder.supportsType(clazz)
-				&& !MapTypeDecoder.supportsType(clazz);
-	}
+    static boolean supportsType(final Class<?> clazz) {
+        return !SimpleTypeDecoder.supportsType(clazz)
+                && !MetafactureSourceTypeDecoder.supportsType(clazz)
+                && !CollectionTypeDecoder.supportsType(clazz)
+                && !ArrayTypeDecoder.supportsType(clazz)
+                && !MapTypeDecoder.supportsType(clazz);
+    }
 
-	@Override
-	public void decodeToStream(final StreamReceiver streamReceiver,
-			final String name, final Object object) {
+    @Override
+    public void decodeToStream(final StreamReceiver streamReceiver,
+            final String name, final Object object) {
 
-		if (name != null) {
-			streamReceiver.startEntity(name);
-		}
-		for (final ValueGetter valueGetter : valueGetters) {
-			final Object value = valueGetter.getValue(object);
-			final Class<?> valueType = valueGetter.getValueType();
-			final String valueName = valueGetter.getName();
-			final TypeDecoder typeDecoder = typeDecoderFactory.create(valueType);
-			typeDecoder.decodeToStream(streamReceiver, valueName, value);
-		}
-		if (name != null) {
-			streamReceiver.endEntity();
-		}
-	}
+        if (name != null) {
+            streamReceiver.startEntity(name);
+        }
+        for (final ValueGetter valueGetter : valueGetters) {
+            final Object value = valueGetter.getValue(object);
+            final Class<?> valueType = valueGetter.getValueType();
+            final String valueName = valueGetter.getName();
+            final TypeDecoder typeDecoder = typeDecoderFactory.create(valueType);
+            typeDecoder.decodeToStream(streamReceiver, valueName, value);
+        }
+        if (name != null) {
+            streamReceiver.endEntity();
+        }
+    }
 
 }

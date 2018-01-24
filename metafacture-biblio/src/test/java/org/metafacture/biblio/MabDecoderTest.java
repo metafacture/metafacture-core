@@ -35,47 +35,47 @@ import org.mockito.MockitoAnnotations;
  */
 public final class MabDecoderTest {
 
-	@Mock
-	private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-	private MabDecoder mabDecoder;
+    private MabDecoder mabDecoder;
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		mabDecoder = new MabDecoder();
-		mabDecoder.setReceiver(receiver);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        mabDecoder = new MabDecoder();
+        mabDecoder.setReceiver(receiver);
+    }
 
-	@Test
-	public void shouldParseMabRecord() {
-		mabDecoder.process("00068nM2.01200024      h" +
-				"001 1234\u001E" +
-				"705a\u001FaSubfield 1\u001FbSubfield 2\u001E" +
-				"705b\u001FcSubfield 3\u001FdSubfield 4\u001E" +
-				"\u001D");
+    @Test
+    public void shouldParseMabRecord() {
+        mabDecoder.process("00068nM2.01200024      h" +
+                "001 1234\u001E" +
+                "705a\u001FaSubfield 1\u001FbSubfield 2\u001E" +
+                "705b\u001FcSubfield 3\u001FdSubfield 4\u001E" +
+                "\u001D");
 
-		final InOrder ordered = inOrder(receiver);
-		ordered.verify(receiver).startRecord("1234");
-		ordered.verify(receiver).literal("001", "1234");
-		ordered.verify(receiver).startEntity("705a");
-		ordered.verify(receiver).literal("a", "Subfield 1");
-		ordered.verify(receiver).literal("b", "Subfield 2");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).startEntity("705b");
-		ordered.verify(receiver).literal("c", "Subfield 3");
-		ordered.verify(receiver).literal("d", "Subfield 4");
-		ordered.verify(receiver).endEntity();
-		ordered.verify(receiver).endRecord();
-	}
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1234");
+        ordered.verify(receiver).literal("001", "1234");
+        ordered.verify(receiver).startEntity("705a");
+        ordered.verify(receiver).literal("a", "Subfield 1");
+        ordered.verify(receiver).literal("b", "Subfield 2");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).startEntity("705b");
+        ordered.verify(receiver).literal("c", "Subfield 3");
+        ordered.verify(receiver).literal("d", "Subfield 4");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+    }
 
-	@Test
-	public void shouldSkipWhitespaceOnlyInput() {
-		mabDecoder.process("   ");
-		mabDecoder.closeStream();
+    @Test
+    public void shouldSkipWhitespaceOnlyInput() {
+        mabDecoder.process("   ");
+        mabDecoder.closeStream();
 
-		verify(receiver).closeStream();
-		verifyNoMoreInteractions(receiver);
-	}
+        verify(receiver).closeStream();
+        verifyNoMoreInteractions(receiver);
+    }
 
 }

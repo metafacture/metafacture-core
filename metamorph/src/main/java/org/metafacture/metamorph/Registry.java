@@ -26,21 +26,21 @@ import java.util.List;
  */
 interface Registry<T> {
 
-	/**
-	 * Binds a value to a path.
-	 *
-	 * @param path the path to which the {@code value} is bound
-	 * @param value the value which is bound to {@code path}
-	 */
-	void register(String path, T value);
+    /**
+     * Binds a value to a path.
+     *
+     * @param path the path to which the {@code value} is bound
+     * @param value the value which is bound to {@code path}
+     */
+    void register(String path, T value);
 
-	/**
-	 * Returns values registered on a path.
-	 *
-	 * @param path for which the registered values will be returned
-	 * @return matching values. Should <strong>never</strong> be null. If no
-	 * matches found, an empty {@link List} is to be returned.
-	 */
-	List<T> get(String path);
+    /**
+     * Returns values registered on a path.
+     *
+     * @param path for which the registered values will be returned
+     * @return matching values. Should <strong>never</strong> be null. If no
+     * matches found, an empty {@link List} is to be returned.
+     */
+    List<T> get(String path);
 
 }

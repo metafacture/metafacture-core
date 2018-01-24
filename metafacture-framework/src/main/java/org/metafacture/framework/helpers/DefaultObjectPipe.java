@@ -29,11 +29,11 @@ import org.metafacture.framework.Receiver;
  *
  */
 public class DefaultObjectPipe<T, R extends Receiver>
-		extends DefaultSender<R> implements ObjectPipe<T, R> {
+        extends DefaultSender<R> implements ObjectPipe<T, R> {
 
-	@Override
-	public void process(final T obj) {
-		// Default implementation does nothing
-	}
+    @Override
+    public void process(final T obj) {
+        // Default implementation does nothing
+    }
 
 }

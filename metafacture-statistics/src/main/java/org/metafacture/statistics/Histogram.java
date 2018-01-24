@@ -29,82 +29,82 @@ import org.metafacture.framework.helpers.DefaultStreamReceiver;
  */
 public final class Histogram extends DefaultStreamReceiver {
 
-	private final Map<String, Integer> histogram = new HashMap<String, Integer>();
+    private final Map<String, Integer> histogram = new HashMap<String, Integer>();
 
-	private boolean countEntities;
-	private boolean countLiterals;
-	private String countField;
+    private boolean countEntities;
+    private boolean countLiterals;
+    private String countField;
 
-	public Histogram() {
-		super();
-	}
+    public Histogram() {
+        super();
+    }
 
-	/**
-	 * Initialises the module with a countField.
-	 *
-	 * @param countField name of the field whose content is counted
-	 */
-	public Histogram(final String countField) {
-		super();
-		setCountField(countField);
-	}
+    /**
+     * Initialises the module with a countField.
+     *
+     * @param countField name of the field whose content is counted
+     */
+    public Histogram(final String countField) {
+        super();
+        setCountField(countField);
+    }
 
-	public Map<String, Integer> getHistogram() {
-		return Collections.unmodifiableMap(histogram);
-	}
+    public Map<String, Integer> getHistogram() {
+        return Collections.unmodifiableMap(histogram);
+    }
 
-	public boolean isCountEntities() {
-		return countEntities;
-	}
+    public boolean isCountEntities() {
+        return countEntities;
+    }
 
-	public void setCountEntities(final boolean countEntities) {
-		this.countEntities = countEntities;
-	}
+    public void setCountEntities(final boolean countEntities) {
+        this.countEntities = countEntities;
+    }
 
-	public boolean isCountLiterals() {
-		return countLiterals;
-	}
+    public boolean isCountLiterals() {
+        return countLiterals;
+    }
 
-	public void setCountLiterals(final boolean countLiterals) {
-		this.countLiterals = countLiterals;
-	}
+    public void setCountLiterals(final boolean countLiterals) {
+        this.countLiterals = countLiterals;
+    }
 
-	public String getCountField() {
-		return countField;
-	}
+    public String getCountField() {
+        return countField;
+    }
 
-	public void setCountField(final String countField) {
-		this.countField = countField;
-	}
+    public void setCountField(final String countField) {
+        this.countField = countField;
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		if (countEntities) {
-			count(name);
-		}
-	}
+    @Override
+    public void startEntity(final String name) {
+        if (countEntities) {
+            count(name);
+        }
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		if (countLiterals) {
-			count(name);
-		}
-		if (name.equals(countField)) {
-			count(value);
-		}
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        if (countLiterals) {
+            count(name);
+        }
+        if (name.equals(countField)) {
+            count(value);
+        }
+    }
 
-	@Override
-	public void resetStream() {
-		histogram.clear();
-	}
+    @Override
+    public void resetStream() {
+        histogram.clear();
+    }
 
-	private void count(final String value) {
-		Integer c = histogram.get(value);
-		if (c == null) {
-			c = Integer.valueOf(0);
-		}
-		histogram.put(value, Integer.valueOf(c.intValue() + 1));
-	}
+    private void count(final String value) {
+        Integer c = histogram.get(value);
+        if (c == null) {
+            c = Integer.valueOf(0);
+        }
+        histogram.put(value, Integer.valueOf(c.intValue() + 1));
+    }
 
 }

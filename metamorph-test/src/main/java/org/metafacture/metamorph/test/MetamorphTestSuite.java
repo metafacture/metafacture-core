@@ -37,62 +37,62 @@ import org.junit.runners.model.InitializationError;
  */
 public final class MetamorphTestSuite extends ParentRunner<Runner> {
 
-	private final List<Runner> runners;
+    private final List<Runner> runners;
 
-	public MetamorphTestSuite(final Class<?> suiteRoot)
-			throws InitializationError {
-		super(suiteRoot);
-		runners = loadDefinitions(suiteRoot);
-	}
+    public MetamorphTestSuite(final Class<?> suiteRoot)
+            throws InitializationError {
+        super(suiteRoot);
+        runners = loadDefinitions(suiteRoot);
+    }
 
-	private static List<Runner> loadDefinitions(final Class<?> suiteRoot)
-			throws InitializationError{
-		final List<Runner> runners = new ArrayList<>();
-		for (final String testDef : getTestDefinitionNames(suiteRoot)) {
-			runners.add(new MetamorphTestRunner(suiteRoot, testDef));
-		}
-		return runners;
-	}
+    private static List<Runner> loadDefinitions(final Class<?> suiteRoot)
+            throws InitializationError{
+        final List<Runner> runners = new ArrayList<>();
+        for (final String testDef : getTestDefinitionNames(suiteRoot)) {
+            runners.add(new MetamorphTestRunner(suiteRoot, testDef));
+        }
+        return runners;
+    }
 
-	private static String[] getTestDefinitionNames(final Class<?> suiteRoot){
-		final TestDefinitions testDefs =
-				suiteRoot.getAnnotation(TestDefinitions.class);
-		if (testDefs == null) {
-			// if no xmls are given assume an xml with the same name as the class:
-			return new String[]{suiteRoot.getSimpleName() + ".xml"};
-		}
-		return testDefs.value();
-	}
+    private static String[] getTestDefinitionNames(final Class<?> suiteRoot){
+        final TestDefinitions testDefs =
+                suiteRoot.getAnnotation(TestDefinitions.class);
+        if (testDefs == null) {
+            // if no xmls are given assume an xml with the same name as the class:
+            return new String[]{suiteRoot.getSimpleName() + ".xml"};
+        }
+        return testDefs.value();
+    }
 
-	@Override
-	protected List<Runner> getChildren() {
-		return runners;
-	}
+    @Override
+    protected List<Runner> getChildren() {
+        return runners;
+    }
 
-	@Override
-	protected Description describeChild(final Runner child) {
-		return child.getDescription();
-	}
+    @Override
+    protected Description describeChild(final Runner child) {
+        return child.getDescription();
+    }
 
-	@Override
-	protected void runChild(final Runner child, final RunNotifier notifier) {
-		child.run(notifier);
-	}
+    @Override
+    protected void runChild(final Runner child, final RunNotifier notifier) {
+        child.run(notifier);
+    }
 
-	/**
-	 * Defines the test definition resources to run when the annoteated class is
-	 * tested.
-	 *
-	 * @author Christoph Böhme
-	 *
-	 */
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	public @interface TestDefinitions {
-		/**
-		 * @return the files containing the test case definitions
-		 */
-		String[] value();
-	}
+    /**
+     * Defines the test definition resources to run when the annoteated class is
+     * tested.
+     *
+     * @author Christoph Böhme
+     *
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+    public @interface TestDefinitions {
+        /**
+         * @return the files containing the test case definitions
+         */
+        String[] value();
+    }
 
 }

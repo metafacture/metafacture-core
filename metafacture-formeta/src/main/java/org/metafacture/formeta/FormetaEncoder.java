@@ -36,46 +36,46 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @Out(String.class)
 @FluxCommand("encode-formeta")
 public final class FormetaEncoder extends
-		DefaultStreamPipe<ObjectReceiver<String>> {
+        DefaultStreamPipe<ObjectReceiver<String>> {
 
-	private FormatterStyle style = FormatterStyle.CONCISE;
-	private Formatter formatter = style.createFormatter();
+    private FormatterStyle style = FormatterStyle.CONCISE;
+    private Formatter formatter = style.createFormatter();
 
-	public FormatterStyle getStyle() {
-		return style;
-	}
+    public FormatterStyle getStyle() {
+        return style;
+    }
 
-	public void setStyle(final FormatterStyle formatterStyle) {
-		this.style = formatterStyle;
-		formatter = formatterStyle.createFormatter();
-	}
+    public void setStyle(final FormatterStyle formatterStyle) {
+        this.style = formatterStyle;
+        formatter = formatterStyle.createFormatter();
+    }
 
 
-	@Override
-	public void startRecord(final String identifier) {
-		formatter.reset();
-		formatter.startGroup(identifier);
-	}
+    @Override
+    public void startRecord(final String identifier) {
+        formatter.reset();
+        formatter.startGroup(identifier);
+    }
 
-	@Override
-	public void endRecord() {
-		formatter.endGroup();
-		getReceiver().process(formatter.toString());
-	}
+    @Override
+    public void endRecord() {
+        formatter.endGroup();
+        getReceiver().process(formatter.toString());
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		formatter.startGroup(name);
-	}
+    @Override
+    public void startEntity(final String name) {
+        formatter.startGroup(name);
+    }
 
-	@Override
-	public void endEntity() {
-		formatter.endGroup();
-	}
+    @Override
+    public void endEntity() {
+        formatter.endGroup();
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		formatter.literal(name, value);
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        formatter.literal(name, value);
+    }
 
 }

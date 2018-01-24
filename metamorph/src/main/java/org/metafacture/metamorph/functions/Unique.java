@@ -28,68 +28,68 @@ import org.metafacture.metamorph.api.helpers.AbstractStatefulFunction;
  */
 public final class Unique extends AbstractStatefulFunction {
 
-	private static final String ENTITY = "entity";
-	private static final String NAME = "name";
-	private static final String VALUE = "value";
+    private static final String ENTITY = "entity";
+    private static final String NAME = "name";
+    private static final String VALUE = "value";
 
-	private final Set<String> set = new HashSet<String>();
+    private final Set<String> set = new HashSet<String>();
 
-	private boolean uniqueInEntity;
+    private boolean uniqueInEntity;
 
-	private KeyGenerator keyGenerator = new KeyGenerator() {
-		@Override
-		public String createKey(final String name, final String value) {
-			return name + "\0" + value;
-		}
-	};
+    private KeyGenerator keyGenerator = new KeyGenerator() {
+        @Override
+        public String createKey(final String name, final String value) {
+            return name + "\0" + value;
+        }
+    };
 
-	@Override
-	public String process(final String value) {
-		final String key = keyGenerator.createKey(getLastName(), value);
-		if (set.contains(key)) {
-			return null;
-		}
-		set.add(key);
-		return value;
-	}
+    @Override
+    public String process(final String value) {
+        final String key = keyGenerator.createKey(getLastName(), value);
+        if (set.contains(key)) {
+            return null;
+        }
+        set.add(key);
+        return value;
+    }
 
-	@Override
-	protected void reset() {
-		set.clear();
-	}
+    @Override
+    protected void reset() {
+        set.clear();
+    }
 
-	@Override
-	protected boolean doResetOnEntityChange() {
-		return uniqueInEntity;
-	}
+    @Override
+    protected boolean doResetOnEntityChange() {
+        return uniqueInEntity;
+    }
 
-	public void setIn(final String scope) {
-		uniqueInEntity = ENTITY.equals(scope);
-	}
+    public void setIn(final String scope) {
+        uniqueInEntity = ENTITY.equals(scope);
+    }
 
-	public void setPart(final String part) {
-		if (NAME.equals(part)) {
-			keyGenerator = new KeyGenerator() {
-				@Override
-				public String createKey(final String name, final String value) {
-					return name;
-				}
-			};
-		} else if (VALUE.equals(part)) {
-			keyGenerator = new KeyGenerator() {
-				@Override
-				public String createKey(final String name, final String value) {
-					return value;
-				}
-			};
-		}
-	}
+    public void setPart(final String part) {
+        if (NAME.equals(part)) {
+            keyGenerator = new KeyGenerator() {
+                @Override
+                public String createKey(final String name, final String value) {
+                    return name;
+                }
+            };
+        } else if (VALUE.equals(part)) {
+            keyGenerator = new KeyGenerator() {
+                @Override
+                public String createKey(final String name, final String value) {
+                    return value;
+                }
+            };
+        }
+    }
 
-	/**
-	 * To implement different uniqueness strategies
-	 */
-	private interface KeyGenerator {
-		String createKey(String name, String value);
-	}
+    /**
+     * To implement different uniqueness strategies
+     */
+    private interface KeyGenerator {
+        String createKey(String name, String value);
+    }
 
 }

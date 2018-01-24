@@ -41,72 +41,72 @@ import org.metafacture.framework.objects.Triple.ObjectType;
  * @author Christoph Böhme
  */
 @Description("Uses the object value of the triple as a URL and emits a new triple "
-		+ "in which the object value is replaced with the contents of the resource "
-		+ "identified by the URL.")
+        + "in which the object value is replaced with the contents of the resource "
+        + "identified by the URL.")
 @In(Triple.class)
 @Out(Triple.class)
 @FluxCommand("retrieve-triple-objects")
 public final class TripleObjectRetriever
-		extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
+        extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
 
-	private Charset defaultEncoding = StandardCharsets.UTF_8;
+    private Charset defaultEncoding = StandardCharsets.UTF_8;
 
-	/**
-	 * Sets the default encoding to use when no encoding is
-	 * provided by the server. The default setting is UTF-8.
-	 *
-	 * @param defaultEncoding new default encoding
-	 */
-	public void setDefaultEncoding(final String defaultEncoding) {
-		this.defaultEncoding = Charset.forName(defaultEncoding);
-	}
+    /**
+     * Sets the default encoding to use when no encoding is
+     * provided by the server. The default setting is UTF-8.
+     *
+     * @param defaultEncoding new default encoding
+     */
+    public void setDefaultEncoding(final String defaultEncoding) {
+        this.defaultEncoding = Charset.forName(defaultEncoding);
+    }
 
-	/**
-	 * Sets the default encoding to use when no encoding is
-	 * provided by the server. The default setting is UTF-8.
-	 *
-	 * @param defaultEncoding new default encoding
-	 */
-	public void setDefaultEncoding(final Charset defaultEncoding) {
-		this.defaultEncoding = defaultEncoding;
-	}
+    /**
+     * Sets the default encoding to use when no encoding is
+     * provided by the server. The default setting is UTF-8.
+     *
+     * @param defaultEncoding new default encoding
+     */
+    public void setDefaultEncoding(final Charset defaultEncoding) {
+        this.defaultEncoding = defaultEncoding;
+    }
 
-	/**
-	 * Returns the default encoding used when no encoding is
-	 * provided by the server. The default setting is UTF-8.
-	 *
-	 * @return current default setting
-	 */
-	public String getDefaultEncoding() {
-		return defaultEncoding.name();
-	}
+    /**
+     * Returns the default encoding used when no encoding is
+     * provided by the server. The default setting is UTF-8.
+     *
+     * @return current default setting
+     */
+    public String getDefaultEncoding() {
+        return defaultEncoding.name();
+    }
 
-	@Override
-	public void process(final Triple triple) {
-		assert !isClosed();
-		if (triple.getObjectType() != ObjectType.STRING) {
-			return;
-		}
-		final String objectValue = retrieveObjectValue(triple.getObject());
-		getReceiver().process(new Triple(triple.getSubject(), triple.getPredicate(),
-				objectValue));
-	}
+    @Override
+    public void process(final Triple triple) {
+        assert !isClosed();
+        if (triple.getObjectType() != ObjectType.STRING) {
+            return;
+        }
+        final String objectValue = retrieveObjectValue(triple.getObject());
+        getReceiver().process(new Triple(triple.getSubject(), triple.getPredicate(),
+                objectValue));
+    }
 
-	private String retrieveObjectValue(final String urlString) {
-		try {
-			final URL url = new URL(urlString);
-			final URLConnection connection = url.openConnection();
-			connection.connect();
-			final String encodingName = connection.getContentEncoding();
-			final Charset encoding = encodingName != null ?
-					Charset.forName(encodingName) :
-					defaultEncoding;
-			try (InputStream inputStream = connection.getInputStream()) {
-				return ResourceUtil.readAll(inputStream, encoding);
-			}
-		} catch (final IOException e) {
-			throw new MetafactureException(e);
-		}
-	}
+    private String retrieveObjectValue(final String urlString) {
+        try {
+            final URL url = new URL(urlString);
+            final URLConnection connection = url.openConnection();
+            connection.connect();
+            final String encodingName = connection.getContentEncoding();
+            final Charset encoding = encodingName != null ?
+                    Charset.forName(encodingName) :
+                    defaultEncoding;
+            try (InputStream inputStream = connection.getInputStream()) {
+                return ResourceUtil.readAll(inputStream, encoding);
+            }
+        } catch (final IOException e) {
+            throw new MetafactureException(e);
+        }
+    }
 
 }

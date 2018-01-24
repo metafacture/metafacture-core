@@ -54,95 +54,95 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @FluxCommand("encode-pica")
 public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
-	private static final String FIELD_DELIMITER = "\u001e";
-	private static final String SUB_DELIMITER = "\u001f";
-	private static final String FIELD_IDN_INTERN = "003@";
-	private static final String FIELD_NAME_PATTERN_STRING = "\\d{3}.(/..)?";
-	private static final Pattern FIELD_NAME_PATTERN = Pattern.compile(FIELD_NAME_PATTERN_STRING);
+    private static final String FIELD_DELIMITER = "\u001e";
+    private static final String SUB_DELIMITER = "\u001f";
+    private static final String FIELD_IDN_INTERN = "003@";
+    private static final String FIELD_NAME_PATTERN_STRING = "\\d{3}.(/..)?";
+    private static final Pattern FIELD_NAME_PATTERN = Pattern.compile(FIELD_NAME_PATTERN_STRING);
 
-	private static StringBuilder builder = new StringBuilder(); //Result of the encoding process
+    private static StringBuilder builder = new StringBuilder(); //Result of the encoding process
 
-	private boolean entityOpen;         //Flag to inform whether an entity is opened.
-	private boolean idnControlSubField; //Flag to inform whether it is the 003@ field.
-	private boolean ignoreRecordId;     //Flag to decide whether the record Id is checked.
+    private boolean entityOpen;         //Flag to inform whether an entity is opened.
+    private boolean idnControlSubField; //Flag to inform whether it is the 003@ field.
+    private boolean ignoreRecordId;     //Flag to decide whether the record Id is checked.
 
-	private String id;
+    private String id;
 
-	@Override
-	public void startRecord(final String recordId) {
-		// the name is a idn, which should be found in the encoded data under 003@.
-		//any rest of the previous record is cleared before the new begins.
-		builder.setLength(0);
-		this.id = recordId;
-		//Now an entity can be opened. But no literal is allowed.
-		this.entityOpen = false;
-	}
+    @Override
+    public void startRecord(final String recordId) {
+        // the name is a idn, which should be found in the encoded data under 003@.
+        //any rest of the previous record is cleared before the new begins.
+        builder.setLength(0);
+        this.id = recordId;
+        //Now an entity can be opened. But no literal is allowed.
+        this.entityOpen = false;
+    }
 
-	public void setIgnoreRecordId(final boolean ignoreRecordId) {
-		this.ignoreRecordId = ignoreRecordId;
-	}
+    public void setIgnoreRecordId(final boolean ignoreRecordId) {
+        this.ignoreRecordId = ignoreRecordId;
+    }
 
-	public boolean getIgnoreRecordId() {
-		return this.ignoreRecordId;
-	}
+    public boolean getIgnoreRecordId() {
+        return this.ignoreRecordId;
+    }
 
-	@Override
-	public void startEntity(final String name) {
-		// Here begins a field (i.e. "028A ", which is given in the name.
-		// It is unknown, whether there are any subfields in the field.
-		final Matcher fieldNameMatcher = FIELD_NAME_PATTERN.matcher(name);
-		if (!fieldNameMatcher.matches()) {
-			throw new FormatException(name);
-		}
-		if (entityOpen) { //No nested entities are allowed in pica+.
-			throw new FormatException(name);
-		}
-		builder.append(name.trim()+ " ");
+    @Override
+    public void startEntity(final String name) {
+        // Here begins a field (i.e. "028A ", which is given in the name.
+        // It is unknown, whether there are any subfields in the field.
+        final Matcher fieldNameMatcher = FIELD_NAME_PATTERN.matcher(name);
+        if (!fieldNameMatcher.matches()) {
+            throw new FormatException(name);
+        }
+        if (entityOpen) { //No nested entities are allowed in pica+.
+            throw new FormatException(name);
+        }
+        builder.append(name.trim()+ " ");
 
-		idnControlSubField = !ignoreRecordId && FIELD_IDN_INTERN.equals(name.trim());
-		//Now literals can be opened but no more entities.
-		this.entityOpen = true;
-	}
+        idnControlSubField = !ignoreRecordId && FIELD_IDN_INTERN.equals(name.trim());
+        //Now literals can be opened but no more entities.
+        this.entityOpen = true;
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		//A Subfield has one character or digit exactly.
-		if (name.length() != 1) {
-			throw new FormatException(name);
-		}
-		if (!entityOpen) {
-			throw new FormatException(name); //new exceptions definition for literal out of entity
-		}
-		final String valueNew = Normalizer.normalize(value, Form.NFD);
-		if (idnControlSubField) {
-			// it is a 003@ field, the same record id delivered with record should follow
-			if (!this.id.equals(value)) {
-				throw new MissingIdException(value);
-			}
-			idnControlSubField = false; //only one record Id will be checked.
-		}
-		builder.append(SUB_DELIMITER);
-		builder.append(name);
-		builder.append(valueNew);
+    @Override
+    public void literal(final String name, final String value) {
+        //A Subfield has one character or digit exactly.
+        if (name.length() != 1) {
+            throw new FormatException(name);
+        }
+        if (!entityOpen) {
+            throw new FormatException(name); //new exceptions definition for literal out of entity
+        }
+        final String valueNew = Normalizer.normalize(value, Form.NFD);
+        if (idnControlSubField) {
+            // it is a 003@ field, the same record id delivered with record should follow
+            if (!this.id.equals(value)) {
+                throw new MissingIdException(value);
+            }
+            idnControlSubField = false; //only one record Id will be checked.
+        }
+        builder.append(SUB_DELIMITER);
+        builder.append(name);
+        builder.append(valueNew);
 }
 
-	@Override
-	public void endEntity() {
-		builder.append(FIELD_DELIMITER);
-		//Now an entity can be opened. But no literal is allowed.
-		this.entityOpen = false;
-	}
+    @Override
+    public void endEntity() {
+        builder.append(FIELD_DELIMITER);
+        //Now an entity can be opened. But no literal is allowed.
+        this.entityOpen = false;
+    }
 
-	@Override
-	public void endRecord() {
-		getReceiver().process(builder.toString());
-		//No literal is allowed.
-		this.entityOpen = false;
-	}
+    @Override
+    public void endRecord() {
+        getReceiver().process(builder.toString());
+        //No literal is allowed.
+        this.entityOpen = false;
+    }
 
-	@Override
-	protected void onResetStream() {
-		builder.setLength(0);
-	}
+    @Override
+    protected void onResetStream() {
+        builder.setLength(0);
+    }
 
 }

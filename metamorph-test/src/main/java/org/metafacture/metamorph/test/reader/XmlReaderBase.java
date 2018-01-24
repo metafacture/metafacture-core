@@ -28,33 +28,33 @@ import org.metafacture.xml.XmlDecoder;
  */
 class XmlReaderBase implements Reader {
 
-	private final XmlDecoder xmlDecoder = new XmlDecoder();
-	private final XmlPipe<StreamReceiver> xmlHandler;
+    private final XmlDecoder xmlDecoder = new XmlDecoder();
+    private final XmlPipe<StreamReceiver> xmlHandler;
 
-	XmlReaderBase(final XmlPipe<StreamReceiver> xmlHandler) {
-		this.xmlHandler = xmlHandler;
-		xmlDecoder.setReceiver(this.xmlHandler);
-	}
+    XmlReaderBase(final XmlPipe<StreamReceiver> xmlHandler) {
+        this.xmlHandler = xmlHandler;
+        xmlDecoder.setReceiver(this.xmlHandler);
+    }
 
-	@Override
-	public final <R extends StreamReceiver> R setReceiver(final R receiver) {
-		xmlHandler.setReceiver(receiver);
-		return receiver;
-	}
+    @Override
+    public final <R extends StreamReceiver> R setReceiver(final R receiver) {
+        xmlHandler.setReceiver(receiver);
+        return receiver;
+    }
 
-	@Override
-	public final void process(final java.io.Reader reader) {
-		xmlDecoder.process(reader);
-	}
+    @Override
+    public final void process(final java.io.Reader reader) {
+        xmlDecoder.process(reader);
+    }
 
-	@Override
-	public final void resetStream() {
-		xmlDecoder.resetStream();
-	}
+    @Override
+    public final void resetStream() {
+        xmlDecoder.resetStream();
+    }
 
-	@Override
-	public final void closeStream() {
-		xmlDecoder.closeStream();
-	}
+    @Override
+    public final void closeStream() {
+        xmlDecoder.closeStream();
+    }
 
 }

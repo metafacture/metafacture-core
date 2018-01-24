@@ -37,42 +37,42 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @FluxCommand("decode-string")
 public final class StringDecoder extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
-	/**
-	 * determines whether string is split by the regexp or parts matching the
-	 * regexp are extracted
-	 *
-	 */
-	public enum Mode {
-		SPLIT, EXTRACT
-	}
+    /**
+     * determines whether string is split by the regexp or parts matching the
+     * regexp are extracted
+     *
+     */
+    public enum Mode {
+        SPLIT, EXTRACT
+    }
 
-	private Mode mode = Mode.SPLIT;
+    private Mode mode = Mode.SPLIT;
 
-	private final Pattern pattern;
+    private final Pattern pattern;
 
-	public StringDecoder(final String pattern) {
-		this.pattern = Pattern.compile(pattern);
-	}
+    public StringDecoder(final String pattern) {
+        this.pattern = Pattern.compile(pattern);
+    }
 
-	public void setMode(final Mode mode) {
-		this.mode = mode;
-	}
+    public void setMode(final Mode mode) {
+        this.mode = mode;
+    }
 
-	@Override
-	public void process(final String obj) {
-		assert !isClosed();
-		assert null != obj;
+    @Override
+    public void process(final String obj) {
+        assert !isClosed();
+        assert null != obj;
 
-		final ObjectReceiver<String> receiver = getReceiver();
-		if (mode == Mode.SPLIT) {
-			for (String part : pattern.split(obj)) {
-				receiver.process(part);
-			}
-		} else {
-			final Matcher matcher = pattern.matcher(obj);
-			while (matcher.find()) {
-				receiver.process(matcher.group());
-			}
-		}
-	}
+        final ObjectReceiver<String> receiver = getReceiver();
+        if (mode == Mode.SPLIT) {
+            for (String part : pattern.split(obj)) {
+                receiver.process(part);
+            }
+        } else {
+            final Matcher matcher = pattern.matcher(obj);
+            while (matcher.find()) {
+                receiver.process(matcher.group());
+            }
+        }
+    }
 }

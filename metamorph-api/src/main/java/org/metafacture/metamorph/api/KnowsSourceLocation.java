@@ -25,20 +25,20 @@ package org.metafacture.metamorph.api;
  */
 public interface KnowsSourceLocation {
 
-	/**
-	 * Sets the {@link SourceLocation} object which describes where in the morph
-	 * definition file the implementing object is defined.
-	 *
-	 * @param sourceLocation a source location
-	 */
-	void setSourceLocation(final SourceLocation sourceLocation);
+    /**
+     * Sets the {@link SourceLocation} object which describes where in the morph
+     * definition file the implementing object is defined.
+     *
+     * @param sourceLocation a source location
+     */
+    void setSourceLocation(final SourceLocation sourceLocation);
 
-	/**
-	 * Gets the location object for the location in the morph definition file
-	 * where the implementing object instance is defined.
-	 *
-	 * @return a source location
-	 */
-	SourceLocation getSourceLocation();
+    /**
+     * Gets the location object for the location in the morph definition file
+     * where the implementing object instance is defined.
+     *
+     * @return a source location
+     */
+    SourceLocation getSourceLocation();
 
 }

@@ -29,38 +29,38 @@ import org.metafacture.commons.StringUtil;
  */
 public final class AbstactFormatterTest {
 
-	private AbstractFormatter abstractFormatter;
+    private AbstractFormatter abstractFormatter;
 
-	@Before
-	public void setup() {
-		abstractFormatter = new AbstractFormatter() {
-			@Override
-			public void startGroup(final String name) {}
+    @Before
+    public void setup() {
+        abstractFormatter = new AbstractFormatter() {
+            @Override
+            public void startGroup(final String name) {}
 
-			@Override
-			public void endGroup() {}
+            @Override
+            public void endGroup() {}
 
-			@Override
-			public void literal(final String name, final String value) {
+            @Override
+            public void literal(final String name, final String value) {
 
-			}
-			@Override
-			protected boolean shouldQuoteText(final char[] buffer, final int len) {
-				return false;
-			}
-		};
-	}
+            }
+            @Override
+            protected boolean shouldQuoteText(final char[] buffer, final int len) {
+                return false;
+            }
+        };
+    }
 
-	/*
-	 * Test for issue https://github.com/culturegraph/metafacture-core/issues/161
-	 */
-	@Test
-	public void issue161() {
-		final String longValue = StringUtil.repeatChars('a', AbstractFormatter.BUFFER_SIZE * 2 + 1);
+    /*
+     * Test for issue https://github.com/culturegraph/metafacture-core/issues/161
+     */
+    @Test
+    public void issue161() {
+        final String longValue = StringUtil.repeatChars('a', AbstractFormatter.BUFFER_SIZE * 2 + 1);
 
-		abstractFormatter.escapeAndAppend(longValue);
+        abstractFormatter.escapeAndAppend(longValue);
 
-		assertEquals(longValue, abstractFormatter.toString());
-	}
+        assertEquals(longValue, abstractFormatter.toString());
+    }
 
 }

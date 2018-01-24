@@ -24,9 +24,9 @@ import org.metafacture.metamorph.api.helpers.AbstractFilter;
  */
 public final class Equals extends AbstractFilter {
 
-	@Override
-	protected boolean accept(final String value) {
-		return getString().equals(value);
-	}
+    @Override
+    protected boolean accept(final String value) {
+        return getString().equals(value);
+    }
 
 }

@@ -31,66 +31,66 @@ import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
  */
 public final class Tuples extends AbstractFlushingCollect {
 
-	private final ListMap<String, String> listMap = new ListMap<String, String>();
-	private int minN = 1;
-	private String separator = "";
+    private final ListMap<String, String> listMap = new ListMap<String, String>();
+    private int minN = 1;
+    private String separator = "";
 
-	public void setMinN(final int minN) {
-		this.minN = minN;
-	}
+    public void setMinN(final int minN) {
+        this.minN = minN;
+    }
 
-	public void setSeparator(final String separator) {
-		this.separator = separator;
-	}
+    public void setSeparator(final String separator) {
+        this.separator = separator;
+    }
 
-	@Override
-	protected void receive(final String name, final String value,
-			final NamedValueSource source) {
-		listMap.add(name, value);
-	}
+    @Override
+    protected void receive(final String name, final String value,
+            final NamedValueSource source) {
+        listMap.add(name, value);
+    }
 
-	@Override
-	protected boolean isComplete() {
-		return false;
-	}
+    @Override
+    protected boolean isComplete() {
+        return false;
+    }
 
-	@Override
-	protected void clear() {
-		listMap.clear();
+    @Override
+    protected void clear() {
+        listMap.clear();
 
-	}
+    }
 
-	@Override
-	protected void emit() {
+    @Override
+    protected void emit() {
 
-		if (listMap.size() < minN) {
-			return;
-		}
-		final List<String> keys = new ArrayList<String>();
-		keys.addAll(listMap.keySet());
-		Collections.sort(keys);
+        if (listMap.size() < minN) {
+            return;
+        }
+        final List<String> keys = new ArrayList<String>();
+        keys.addAll(listMap.keySet());
+        Collections.sort(keys);
 
-		List<String> temp = new ArrayList<String>();
-		List<String> nextTemp = new ArrayList<String>();
-		temp.add("");
+        List<String> temp = new ArrayList<String>();
+        List<String> nextTemp = new ArrayList<String>();
+        temp.add("");
 
-		for (final String key : keys) {
-			final List<String> values = listMap.get(key);
-			nextTemp = new ArrayList<String>(temp.size() * values.size());
-			for (final String value : values) {
-				for (final String base : temp) {
-					nextTemp.add(base + separator + value);
-				}
-			}
-			temp = nextTemp;
-		}
+        for (final String key : keys) {
+            final List<String> values = listMap.get(key);
+            nextTemp = new ArrayList<String>(temp.size() * values.size());
+            for (final String value : values) {
+                for (final String base : temp) {
+                    nextTemp.add(base + separator + value);
+                }
+            }
+            temp = nextTemp;
+        }
 
-		for (final String string : temp) {
-			getNamedValueReceiver().receive(getName(),
-					string.substring(separator.length()), this,
-					getRecordCount(), getEntityCount());
-		}
-		clear();
-	}
+        for (final String string : temp) {
+            getNamedValueReceiver().receive(getName(),
+                    string.substring(separator.length()), this,
+                    getRecordCount(), getEntityCount());
+        }
+        clear();
+    }
 
 }

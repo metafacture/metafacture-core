@@ -24,6 +24,6 @@ package org.metafacture.metamorph.api;
  */
 public interface MorphErrorHandler {
 
-	void error(Exception exception);
+    void error(Exception exception);
 
 }

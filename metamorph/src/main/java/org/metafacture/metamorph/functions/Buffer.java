@@ -31,55 +31,55 @@ import org.metafacture.metamorph.api.helpers.AbstractFunction;
  */
 public final class Buffer extends AbstractFunction {
 
-	private final List<Receipt> receipts = new ArrayList<Receipt>();
-	private int currentRecord;
+    private final List<Receipt> receipts = new ArrayList<Receipt>();
+    private int currentRecord;
 
-	@Override
-	public void receive(final String name, final String value,
-			final NamedValueSource source, final int recordCount,
-			final int entityCount) {
+    @Override
+    public void receive(final String name, final String value,
+            final NamedValueSource source, final int recordCount,
+            final int entityCount) {
 
-		if (currentRecord != recordCount) {
-			receipts.clear();
-			currentRecord = recordCount;
-		}
+        if (currentRecord != recordCount) {
+            receipts.clear();
+            currentRecord = recordCount;
+        }
 
-		receipts.add(new Receipt(name, value, this, recordCount, entityCount));
+        receipts.add(new Receipt(name, value, this, recordCount, entityCount));
 
-	}
+    }
 
-	@Override
-	public void flush(final int recordCount, final int entityCount) {
+    @Override
+    public void flush(final int recordCount, final int entityCount) {
 
-		for (final Receipt receipt : receipts) {
-			receipt.send(getNamedValueReceiver());
-		}
-		receipts.clear();
-	}
+        for (final Receipt receipt : receipts) {
+            receipt.send(getNamedValueReceiver());
+        }
+        receipts.clear();
+    }
 
-	/**
-	 * buffer element
-	 */
-	private static final class Receipt {
-		private final String name;
-		private final String value;
-		private final NamedValueSource source;
-		private final int recordCount;
-		private final int entityCount;
+    /**
+     * buffer element
+     */
+    private static final class Receipt {
+        private final String name;
+        private final String value;
+        private final NamedValueSource source;
+        private final int recordCount;
+        private final int entityCount;
 
-		protected Receipt(final String name, final String value,
-				final NamedValueSource source, final int recordCount,
-				final int entityCount) {
-			this.name = name;
-			this.value = value;
-			this.source = source;
-			this.recordCount = recordCount;
-			this.entityCount = entityCount;
-		}
+        protected Receipt(final String name, final String value,
+                final NamedValueSource source, final int recordCount,
+                final int entityCount) {
+            this.name = name;
+            this.value = value;
+            this.source = source;
+            this.recordCount = recordCount;
+            this.entityCount = entityCount;
+        }
 
-		protected void send(final NamedValueReceiver receiver) {
-			receiver.receive(name, value, source, recordCount, entityCount);
-		}
-	}
+        protected void send(final NamedValueReceiver receiver) {
+            receiver.receive(name, value, source, recordCount, entityCount);
+        }
+    }
 
 }

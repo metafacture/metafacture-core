@@ -43,51 +43,51 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @FluxCommand("jscript")
 public final class JScriptObjectPipe extends DefaultObjectPipe<Object, ObjectReceiver<Object>> {
 
-	private static final String PROCESS = "process";
-	private String invoke = PROCESS;
-	private Invocable invocable;
+    private static final String PROCESS = "process";
+    private String invoke = PROCESS;
+    private Invocable invocable;
 
-	public JScriptObjectPipe(final String script) {
-		setScript(script);
-	}
+    public JScriptObjectPipe(final String script) {
+        setScript(script);
+    }
 
-	public void setInvoke(final String invoke) {
-		this.invoke = invoke;
-	}
+    public void setInvoke(final String invoke) {
+        this.invoke = invoke;
+    }
 
-	private void setScript(final String file) {
+    private void setScript(final String file) {
 
-		final ScriptEngineManager manager = new ScriptEngineManager();
-		final ScriptEngine engine = manager.getEngineByName("JavaScript");
-		try {
-			// LOG.info("loading code from '" + file + "'");
-			engine.eval(ResourceUtil.getReader(file));
-		} catch (ScriptException e) {
-			throw new MetafactureException("Error in script", e);
-		} catch (FileNotFoundException e) {
-			throw new MetafactureException("Error loading script '" + file + "'", e);
-		}
-		invocable = (Invocable) engine;
-	}
+        final ScriptEngineManager manager = new ScriptEngineManager();
+        final ScriptEngine engine = manager.getEngineByName("JavaScript");
+        try {
+            // LOG.info("loading code from '" + file + "'");
+            engine.eval(ResourceUtil.getReader(file));
+        } catch (ScriptException e) {
+            throw new MetafactureException("Error in script", e);
+        } catch (FileNotFoundException e) {
+            throw new MetafactureException("Error loading script '" + file + "'", e);
+        }
+        invocable = (Invocable) engine;
+    }
 
 
 
-	@Override
-	public void process(final Object obj) {
-		assert !isClosed();
-		try {
+    @Override
+    public void process(final Object obj) {
+        assert !isClosed();
+        try {
 
-			// LOG.info("processing: " + value);
-			final Object retObj = invocable.invokeFunction(invoke, obj);
-			// LOG.info("returning: " + obj);
+            // LOG.info("processing: " + value);
+            final Object retObj = invocable.invokeFunction(invoke, obj);
+            // LOG.info("returning: " + obj);
 
-			getReceiver().process(retObj);
+            getReceiver().process(retObj);
 
-		} catch (ScriptException e) {
-			throw new MetafactureException("Error in script while evaluating 'process' method", e);
-		} catch (NoSuchMethodException e) {
-			throw new MetafactureException("'process' method is missing in script", e);
-		}
-	}
+        } catch (ScriptException e) {
+            throw new MetafactureException("Error in script while evaluating 'process' method", e);
+        } catch (NoSuchMethodException e) {
+            throw new MetafactureException("'process' method is missing in script", e);
+        }
+    }
 
 }

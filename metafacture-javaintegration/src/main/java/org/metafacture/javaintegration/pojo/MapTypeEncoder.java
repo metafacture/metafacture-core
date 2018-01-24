@@ -25,31 +25,31 @@ import java.util.Map;
  */
 class MapTypeEncoder implements TypeEncoder {
 
-	private final ValueType valueType;
-	private final Map<String, Object> objectMap;
+    private final ValueType valueType;
+    private final Map<String, Object> objectMap;
 
-	MapTypeEncoder(final ValueType valueType) {
-		this.valueType = valueType;
-		objectMap = new HashMap<>();
-	}
+    MapTypeEncoder(final ValueType valueType) {
+        this.valueType = valueType;
+        objectMap = new HashMap<>();
+    }
 
-	static boolean supportsType(final Class<?> clazz) {
-		return Map.class.isAssignableFrom(clazz);
-	}
+    static boolean supportsType(final Class<?> clazz) {
+        return Map.class.isAssignableFrom(clazz);
+    }
 
-	@Override
-	public void setValue(final String name, final Object value) {
-		objectMap.put(name, value);
-	}
+    @Override
+    public void setValue(final String name, final Object value) {
+        objectMap.put(name, value);
+    }
 
-	@Override
-	public ValueType getValueType(final String name) {
-		return new ValueType(valueType.getElementClass());
-	}
+    @Override
+    public ValueType getValueType(final String name) {
+        return new ValueType(valueType.getElementClass());
+    }
 
-	@Override
-	public Object getInstance() {
-		return objectMap;
-	}
+    @Override
+    public Object getInstance() {
+        return objectMap;
+    }
 
 }

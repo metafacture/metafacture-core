@@ -23,24 +23,24 @@ package org.metafacture.metamorph.functions;
  */
 public final class Lookup extends AbstractLookup {
 
-	private String defaultValue;
+    private String defaultValue;
 
-	public void setDefault(final String defaultValue) {
-		this.defaultValue = defaultValue;
-	}
+    public void setDefault(final String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
 
-	@Override
-	public String process(final String key) {
-		final String returnValue = lookup(key);
+    @Override
+    public String process(final String key) {
+        final String returnValue = lookup(key);
 
-		if (returnValue == null) {
-			return defaultValue;
-		}
-		return returnValue;
-	}
+        if (returnValue == null) {
+            return defaultValue;
+        }
+        return returnValue;
+    }
 
-	public void setIn(final String mapName) {
-		setMap(mapName);
-	}
+    public void setIn(final String mapName) {
+        setMap(mapName);
+    }
 
 }

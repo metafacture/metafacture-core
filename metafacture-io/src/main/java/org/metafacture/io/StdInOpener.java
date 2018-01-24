@@ -37,18 +37,18 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(java.io.Reader.class)
 public final class StdInOpener extends DefaultObjectPipe<Object, ObjectReceiver<java.io.Reader>> {
 
-	@Override
-	public void process(final Object notUsed) {
-		if (notUsed == null) {
-			BufferedReader stdin;
-			try {
-				stdin = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
-			} catch (UnsupportedEncodingException e) {
-				throw new IllegalStateException("UTF-8 not supported", e);
-			}
-			getReceiver().process(stdin);
-		} else {
-			throw new IllegalArgumentException("Parameter not used. Must be null");
-		}
-	}
+    @Override
+    public void process(final Object notUsed) {
+        if (notUsed == null) {
+            BufferedReader stdin;
+            try {
+                stdin = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                throw new IllegalStateException("UTF-8 not supported", e);
+            }
+            getReceiver().process(stdin);
+        } else {
+            throw new IllegalArgumentException("Parameter not used. Must be null");
+        }
+    }
 }

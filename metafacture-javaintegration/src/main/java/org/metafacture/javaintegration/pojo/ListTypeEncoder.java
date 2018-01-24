@@ -25,31 +25,31 @@ import java.util.List;
  */
 class ListTypeEncoder implements TypeEncoder {
 
-	private final ValueType valueType;
-	private final List<Object> objects;
+    private final ValueType valueType;
+    private final List<Object> objects;
 
-	ListTypeEncoder(final ValueType valueType) {
-		this.valueType = valueType;
-		objects = new ArrayList<>();
-	}
+    ListTypeEncoder(final ValueType valueType) {
+        this.valueType = valueType;
+        objects = new ArrayList<>();
+    }
 
-	static boolean supportsType(final Class<?> clazz) {
-		return List.class.isAssignableFrom(clazz);
-	}
+    static boolean supportsType(final Class<?> clazz) {
+        return List.class.isAssignableFrom(clazz);
+    }
 
-	@Override
-	public void setValue(final String name, final Object value) {
-		objects.add(value);
-	}
+    @Override
+    public void setValue(final String name, final Object value) {
+        objects.add(value);
+    }
 
-	@Override
-	public ValueType getValueType(final String name) {
-		return new ValueType(valueType.getElementClass());
-	}
+    @Override
+    public ValueType getValueType(final String name) {
+        return new ValueType(valueType.getElementClass());
+    }
 
-	@Override
-	public Object getInstance() {
-		return objects;
-	}
+    @Override
+    public Object getInstance() {
+        return objects;
+    }
 
 }

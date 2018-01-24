@@ -38,27 +38,27 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(String.class)
 @FluxCommand("as-lines")
 public final class LineReader
-		extends DefaultObjectPipe<Reader, ObjectReceiver<String>> {
-	private static final int BUFFER_SIZE = 1024 * 1024 * 16;
+        extends DefaultObjectPipe<Reader, ObjectReceiver<String>> {
+    private static final int BUFFER_SIZE = 1024 * 1024 * 16;
 
-	@Override
-	public void process(final Reader reader) {
-		assert !isClosed();
-		assert null!=reader;
-		process(reader, getReceiver());
-	}
+    @Override
+    public void process(final Reader reader) {
+        assert !isClosed();
+        assert null!=reader;
+        process(reader, getReceiver());
+    }
 
-	public static void process(final Reader reader, final ObjectReceiver<String> receiver) {
-		final BufferedReader lineReader = new BufferedReader(reader, BUFFER_SIZE);
-		try {
-			String line = lineReader.readLine();
-			while (line != null) {
-				receiver.process(line);
-				line = lineReader.readLine();
-			}
-		} catch (IOException e) {
-			throw new MetafactureException(e);
-		}
-	}
+    public static void process(final Reader reader, final ObjectReceiver<String> receiver) {
+        final BufferedReader lineReader = new BufferedReader(reader, BUFFER_SIZE);
+        try {
+            String line = lineReader.readLine();
+            while (line != null) {
+                receiver.process(line);
+                line = lineReader.readLine();
+            }
+        } catch (IOException e) {
+            throw new MetafactureException(e);
+        }
+    }
 
 }

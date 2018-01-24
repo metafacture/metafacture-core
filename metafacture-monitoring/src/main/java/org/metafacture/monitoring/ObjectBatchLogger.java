@@ -43,69 +43,69 @@ import org.slf4j.LoggerFactory;
 @FluxCommand("object-batch-log")
 public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 
-	public static final String RECORD_COUNT_VAR = "records";
-	public static final String TOTAL_RECORD_COUNT_VAR = "totalRecords";
-	public static final long DEFAULT_BATCH_SIZE = 1000;
-	public static final String BATCH_COUNT_VAR = "batches";
-	public static final String BATCH_SIZE_VAR = "batchSize";
+    public static final String RECORD_COUNT_VAR = "records";
+    public static final String TOTAL_RECORD_COUNT_VAR = "totalRecords";
+    public static final long DEFAULT_BATCH_SIZE = 1000;
+    public static final String BATCH_COUNT_VAR = "batches";
+    public static final String BATCH_SIZE_VAR = "batchSize";
 
-	private static final Logger LOG = LoggerFactory.getLogger(ObjectBatchLogger.class);
-	private static final String DEFAULT_FORMAT = "records processed: ${totalRecords}";
+    private static final Logger LOG = LoggerFactory.getLogger(ObjectBatchLogger.class);
+    private static final String DEFAULT_FORMAT = "records processed: ${totalRecords}";
 
-	private final Map<String, String> vars = new HashMap<String, String>();
-	private final String format;
+    private final Map<String, String> vars = new HashMap<String, String>();
+    private final String format;
 
-	private long batchSize = DEFAULT_BATCH_SIZE;
-	private long recordCount;
-	private long batchCount;
+    private long batchSize = DEFAULT_BATCH_SIZE;
+    private long recordCount;
+    private long batchCount;
 
-	public ObjectBatchLogger() {
-		super();
-		this.format = DEFAULT_FORMAT;
+    public ObjectBatchLogger() {
+        super();
+        this.format = DEFAULT_FORMAT;
 
-	}
+    }
 
-	public ObjectBatchLogger(final String format) {
-		super();
-		this.format = format;
-	}
+    public ObjectBatchLogger(final String format) {
+        super();
+        this.format = format;
+    }
 
-	public ObjectBatchLogger(final String format, final Map<String, String> vars) {
-		super();
-		this.format = format;
-		this.vars.putAll(vars);
-	}
+    public ObjectBatchLogger(final String format, final Map<String, String> vars) {
+        super();
+        this.format = format;
+        this.vars.putAll(vars);
+    }
 
-	public void setBatchSize(final int batchSize) {
-		this.batchSize = batchSize;
-	}
+    public void setBatchSize(final int batchSize) {
+        this.batchSize = batchSize;
+    }
 
-	private void writeLog() {
-		vars.put(RECORD_COUNT_VAR, Long.toString(recordCount));
-		vars.put(BATCH_COUNT_VAR, Long.toString(batchCount));
-		vars.put(BATCH_SIZE_VAR, Long.toString(batchSize));
-		vars.put(TOTAL_RECORD_COUNT_VAR, Long.toString((batchSize * batchCount) + recordCount));
-		LOG.info(StringUtil.format(format, vars));
-	}
+    private void writeLog() {
+        vars.put(RECORD_COUNT_VAR, Long.toString(recordCount));
+        vars.put(BATCH_COUNT_VAR, Long.toString(batchCount));
+        vars.put(BATCH_SIZE_VAR, Long.toString(batchSize));
+        vars.put(TOTAL_RECORD_COUNT_VAR, Long.toString((batchSize * batchCount) + recordCount));
+        LOG.info(StringUtil.format(format, vars));
+    }
 
-	@Override
-	protected void onCloseStream() {
-		writeLog();
-	}
+    @Override
+    protected void onCloseStream() {
+        writeLog();
+    }
 
-	@Override
-	public void process(final T obj) {
+    @Override
+    public void process(final T obj) {
 
-		if (getReceiver() != null) {
-			getReceiver().process(obj);
-		}
+        if (getReceiver() != null) {
+            getReceiver().process(obj);
+        }
 
-		++recordCount;
-		recordCount %= batchSize;
-		if (0 == recordCount) {
-			++batchCount;
-			writeLog();
-		}
-	}
+        ++recordCount;
+        recordCount %= batchSize;
+        if (0 == recordCount) {
+            ++batchCount;
+            writeLog();
+        }
+    }
 
 }

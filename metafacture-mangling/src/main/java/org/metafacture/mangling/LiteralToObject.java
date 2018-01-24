@@ -42,39 +42,39 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @FluxCommand("literal-to-object")
 public final class LiteralToObject extends DefaultStreamPipe<ObjectReceiver<String>> {
 
-	/**
-	 * Default value for {@link #setPattern(String)}.
-	 */
-	public static final java.lang.String DEFAULT_PATTERN = ".*";
+    /**
+     * Default value for {@link #setPattern(String)}.
+     */
+    public static final java.lang.String DEFAULT_PATTERN = ".*";
 
-	private Matcher matcher = Pattern.compile(DEFAULT_PATTERN).matcher("");
+    private Matcher matcher = Pattern.compile(DEFAULT_PATTERN).matcher("");
 
-	/**
-	 * Sets the pattern against which literal names are matched. Only the
-	 * values of matching literals are converted into objects.
-	 * <p>
-	 * The parameter can be changed at any time during processing. It becomes
-	 * effective with the next literal being processed.
-	 * <p>
-	 * The default pattern matches all literal names including empty ones.
-	 *
-	 * @param pattern a Java regular expression
-	 */
-	public void setPattern(final String pattern) {
-		this.matcher = Pattern.compile(pattern).matcher("");
-	}
+    /**
+     * Sets the pattern against which literal names are matched. Only the
+     * values of matching literals are converted into objects.
+     * <p>
+     * The parameter can be changed at any time during processing. It becomes
+     * effective with the next literal being processed.
+     * <p>
+     * The default pattern matches all literal names including empty ones.
+     *
+     * @param pattern a Java regular expression
+     */
+    public void setPattern(final String pattern) {
+        this.matcher = Pattern.compile(pattern).matcher("");
+    }
 
-	public String getPattern() {
-		return matcher.pattern().pattern();
-	}
+    public String getPattern() {
+        return matcher.pattern().pattern();
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		assert !isClosed();
-		matcher.reset(name);
-		if (matcher.matches()) {
-			getReceiver().process(value);
-		}
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        assert !isClosed();
+        matcher.reset(name);
+        if (matcher.matches()) {
+            getReceiver().process(value);
+        }
+    }
 
 }

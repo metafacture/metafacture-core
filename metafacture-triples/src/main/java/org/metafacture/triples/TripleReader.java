@@ -33,26 +33,26 @@ import org.metafacture.framework.objects.Triple;
  */
 @FluxCommand("read-triples")
 public final class TripleReader extends
-		DefaultObjectPipe<String, ObjectReceiver<Triple>> {
+        DefaultObjectPipe<String, ObjectReceiver<Triple>> {
 
-	public static final int BUFFERSIZE = 2048;
+    public static final int BUFFERSIZE = 2048;
 
-	@Override
-	public void process(final String filename) {
-		try {
-			final ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename), BUFFERSIZE));
+    @Override
+    public void process(final String filename) {
+        try {
+            final ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename), BUFFERSIZE));
 
-			try {
-				while (true) {
-					getReceiver().process(Triple.read(in));
-				}
-			} catch (EOFException e) {
-			} finally {
-				in.close();
-			}
-		} catch (IOException e) {
-			throw new MetafactureException(e);
-		}
-	}
+            try {
+                while (true) {
+                    getReceiver().process(Triple.read(in));
+                }
+            } catch (EOFException e) {
+            } finally {
+                in.close();
+            }
+        } catch (IOException e) {
+            throw new MetafactureException(e);
+        }
+    }
 
 }

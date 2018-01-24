@@ -30,51 +30,51 @@ import org.metafacture.framework.ObjectReceiver;
  */
 public final class ObjectJavaIoWriter<T> implements ObjectReceiver<T> {
 
-	private Writer writer;
-	private boolean closed;
-	private final IoWriterFactory writerFactory;
+    private Writer writer;
+    private boolean closed;
+    private final IoWriterFactory writerFactory;
 
-	public ObjectJavaIoWriter(final Writer writer) {
-		this.writer = writer;
-		writerFactory = null;
-	}
+    public ObjectJavaIoWriter(final Writer writer) {
+        this.writer = writer;
+        writerFactory = null;
+    }
 
-	public ObjectJavaIoWriter(final IoWriterFactory writerFactory) {
-		this.writerFactory = writerFactory;
-		this.writer = writerFactory.createWriter();
-	}
+    public ObjectJavaIoWriter(final IoWriterFactory writerFactory) {
+        this.writerFactory = writerFactory;
+        this.writer = writerFactory.createWriter();
+    }
 
-	@Override
-	public void process(final T obj) {
-		assert !closed;
-		try {
-			writer.write(obj.toString());
-			writer.append('\n');
-		} catch (IOException e) {
-			throw new MetafactureException(e);
-		}
-	}
+    @Override
+    public void process(final T obj) {
+        assert !closed;
+        try {
+            writer.write(obj.toString());
+            writer.append('\n');
+        } catch (IOException e) {
+            throw new MetafactureException(e);
+        }
+    }
 
-	@Override
-	public void resetStream() {
-		if(writerFactory==null){
-			throw new UnsupportedOperationException("Cannot reset ObjectJavaIoWriter. No IOWriterFactory set.");
-		}
-		writer = writerFactory.createWriter();
+    @Override
+    public void resetStream() {
+        if(writerFactory==null){
+            throw new UnsupportedOperationException("Cannot reset ObjectJavaIoWriter. No IOWriterFactory set.");
+        }
+        writer = writerFactory.createWriter();
 
-	}
+    }
 
-	@Override
-	public void closeStream() {
-		if (!closed) {
-			try {
-				writer.close();
-			} catch (IOException e) {
-				throw new MetafactureException(e);
-			}finally{
-				closed=true;
-			}
+    @Override
+    public void closeStream() {
+        if (!closed) {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                throw new MetafactureException(e);
+            }finally{
+                closed=true;
+            }
 
-		}
-	}
+        }
+    }
 }

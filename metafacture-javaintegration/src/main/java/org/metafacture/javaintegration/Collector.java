@@ -27,8 +27,8 @@ import java.util.Collection;
  */
 public interface Collector <V> {
 
-	Collection<V> getCollection();
+    Collection<V> getCollection();
 
-	void setCollection(Collection<V> collection);
+    void setCollection(Collection<V> collection);
 
 }

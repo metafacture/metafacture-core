@@ -25,54 +25,54 @@ import org.metafacture.formeta.Formeta;
  */
 public final class VerboseFormatter extends AbstractFormatter {
 
-	private static final String GROUP_START = Formeta.GROUP_START + " ";
-	private static final String GROUP_END = " " + Formeta.GROUP_END;
-	private static final String ITEM_SEPARATOR = Formeta.ITEM_SEPARATOR + " ";
-	private static final String NAME_VALUE_SEPARATOR = Formeta.NAME_VALUE_SEPARATOR + " ";
+    private static final String GROUP_START = Formeta.GROUP_START + " ";
+    private static final String GROUP_END = " " + Formeta.GROUP_END;
+    private static final String ITEM_SEPARATOR = Formeta.ITEM_SEPARATOR + " ";
+    private static final String NAME_VALUE_SEPARATOR = Formeta.NAME_VALUE_SEPARATOR + " ";
 
-	private boolean appendItemSeparator;
+    private boolean appendItemSeparator;
 
-	@Override
-	public void startGroup(final String name) {
-		if (appendItemSeparator) {
-			append(ITEM_SEPARATOR);
-		}
-		escapeAndAppend(name);
-		append(GROUP_START);
-		appendItemSeparator = false;
-	}
+    @Override
+    public void startGroup(final String name) {
+        if (appendItemSeparator) {
+            append(ITEM_SEPARATOR);
+        }
+        escapeAndAppend(name);
+        append(GROUP_START);
+        appendItemSeparator = false;
+    }
 
-	@Override
-	public void endGroup() {
-		append(GROUP_END);
-		appendItemSeparator = true;
-	}
+    @Override
+    public void endGroup() {
+        append(GROUP_END);
+        appendItemSeparator = true;
+    }
 
-	@Override
-	public void literal(final String name, final String value) {
-		if (appendItemSeparator) {
-			append(ITEM_SEPARATOR);
-		}
-		escapeAndAppend(name);
-		append(NAME_VALUE_SEPARATOR);
-		escapeAndAppend(value);
-		appendItemSeparator = true;
-	}
+    @Override
+    public void literal(final String name, final String value) {
+        if (appendItemSeparator) {
+            append(ITEM_SEPARATOR);
+        }
+        escapeAndAppend(name);
+        append(NAME_VALUE_SEPARATOR);
+        escapeAndAppend(value);
+        appendItemSeparator = true;
+    }
 
-	@Override
-	protected void onReset() {
-		appendItemSeparator = false;
-	}
+    @Override
+    protected void onReset() {
+        appendItemSeparator = false;
+    }
 
-	@Override
-	protected boolean shouldQuoteText(final char[] buffer, final int len) {
-		final String triggerChars = Formeta.WHITESPACE + CHARS_TO_ESCAPE;
-		for (int i = 0; i < len; ++i) {
-			if (triggerChars.indexOf(buffer[i]) > -1) {
-				return true;
-			}
-		}
-		return len == 0;
-	}
+    @Override
+    protected boolean shouldQuoteText(final char[] buffer, final int len) {
+        final String triggerChars = Formeta.WHITESPACE + CHARS_TO_ESCAPE;
+        for (int i = 0; i < len; ++i) {
+            if (triggerChars.indexOf(buffer[i]) > -1) {
+                return true;
+            }
+        }
+        return len == 0;
+    }
 
 }

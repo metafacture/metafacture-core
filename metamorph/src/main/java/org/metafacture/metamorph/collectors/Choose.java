@@ -32,53 +32,53 @@ import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
  */
 public final class Choose extends AbstractFlushingCollect {
 
-	private String value;
-	private String name;
-	private int priority = Integer.MAX_VALUE;
-	private final Map<NamedValueSource, Integer> priorities =
-			new HashMap<NamedValueSource, Integer>();
-	private int nextPriority;
+    private String value;
+    private String name;
+    private int priority = Integer.MAX_VALUE;
+    private final Map<NamedValueSource, Integer> priorities =
+            new HashMap<NamedValueSource, Integer>();
+    private int nextPriority;
 
-	@Override
-	protected void emit() {
-		if(!isEmpty()){
-			getNamedValueReceiver().receive(StringUtil.fallback(getName(), name),
-					StringUtil.fallback(getValue(), value), this, getRecordCount(),
-					getEntityCount());
-		}
-	}
+    @Override
+    protected void emit() {
+        if(!isEmpty()){
+            getNamedValueReceiver().receive(StringUtil.fallback(getName(), name),
+                    StringUtil.fallback(getValue(), value), this, getRecordCount(),
+                    getEntityCount());
+        }
+    }
 
-	private boolean isEmpty() {
-		return name == null;
-	}
+    private boolean isEmpty() {
+        return name == null;
+    }
 
-	@Override
-	protected boolean isComplete() {
-		return false;
-	}
+    @Override
+    protected boolean isComplete() {
+        return false;
+    }
 
-	@Override
-	protected void clear() {
-		value = null;
-		name = null;
-		priority = Integer.MAX_VALUE;
-	}
+    @Override
+    protected void clear() {
+        value = null;
+        name = null;
+        priority = Integer.MAX_VALUE;
+    }
 
-	@Override
-	protected void receive(final String name, final String value,
-			final NamedValueSource source) {
-		final int sourcePriority = priorities.get(source).intValue();
-		if (sourcePriority <= priority) {
-			this.value = value;
-			this.name = name;
-			this.priority = sourcePriority;
-		}
-	}
+    @Override
+    protected void receive(final String name, final String value,
+            final NamedValueSource source) {
+        final int sourcePriority = priorities.get(source).intValue();
+        if (sourcePriority <= priority) {
+            this.value = value;
+            this.name = name;
+            this.priority = sourcePriority;
+        }
+    }
 
-	@Override
-	public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
-		priorities.put(namedValueSource, Integer.valueOf(nextPriority));
-		nextPriority += 1;
-	}
+    @Override
+    public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
+        priorities.put(namedValueSource, Integer.valueOf(nextPriority));
+        nextPriority += 1;
+    }
 
 }

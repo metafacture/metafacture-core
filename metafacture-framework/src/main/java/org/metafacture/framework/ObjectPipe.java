@@ -31,5 +31,5 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  *
  */
 public interface ObjectPipe<T, R extends Receiver> extends ObjectReceiver<T>, Sender<R> {
-	// Just a combination of sender and receiver
+    // Just a combination of sender and receiver
 }

@@ -22,9 +22,9 @@ package org.metafacture.metamorph.functions;
  */
 public final class Compose extends AbstractCompose {
 
-	@Override
-	public String process(final String value) {
-		return getPrefix() + value + getPostfix();
-	}
+    @Override
+    public String process(final String value) {
+        return getPrefix() + value + getPostfix();
+    }
 
 }

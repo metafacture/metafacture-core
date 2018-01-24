@@ -1,4 +1,4 @@
-	/*
+    /*
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -43,55 +43,55 @@ import org.xml.sax.SAXException;
  */
 final class MetamorphTestLoader {
 
-	private static final String SCHEMA_FILE = "schemata/metamorph-test.xsd";
-	private static final String TEST_CASE_TAG = "test-case";
+    private static final String SCHEMA_FILE = "schemata/metamorph-test.xsd";
+    private static final String TEST_CASE_TAG = "test-case";
 
-	private MetamorphTestLoader() {
-		// No instances allowed
-	}
+    private MetamorphTestLoader() {
+        // No instances allowed
+    }
 
-	static List<MetamorphTestCase> load(final URL testDef)
-			throws InitializationError {
-		final InputSource inputSource = new InputSource(testDef.toExternalForm());
-		return load(inputSource);
-	}
+    static List<MetamorphTestCase> load(final URL testDef)
+            throws InitializationError {
+        final InputSource inputSource = new InputSource(testDef.toExternalForm());
+        return load(inputSource);
+    }
 
-	private static List<MetamorphTestCase> load(final InputSource inputSource)
-			throws InitializationError {
+    private static List<MetamorphTestCase> load(final InputSource inputSource)
+            throws InitializationError {
 
-		try {
-			final SchemaFactory schemaFactory = SchemaFactory.newInstance(
-					XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			final URL schemaUrl = Thread.currentThread().getContextClassLoader()
-					.getResource(SCHEMA_FILE);
-			if (schemaUrl == null) {
-				throw new InitializationError("XML Schema not found: " + SCHEMA_FILE);
-			}
-			final Schema schema = schemaFactory.newSchema(schemaUrl);
+        try {
+            final SchemaFactory schemaFactory = SchemaFactory.newInstance(
+                    XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            final URL schemaUrl = Thread.currentThread().getContextClassLoader()
+                    .getResource(SCHEMA_FILE);
+            if (schemaUrl == null) {
+                throw new InitializationError("XML Schema not found: " + SCHEMA_FILE);
+            }
+            final Schema schema = schemaFactory.newSchema(schemaUrl);
 
-			final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-			builderFactory.setIgnoringElementContentWhitespace(true);
-			builderFactory.setIgnoringComments(true);
-			builderFactory.setNamespaceAware(true);
-			builderFactory.setCoalescing(true);
-			builderFactory.setSchema(schema);
+            final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+            builderFactory.setIgnoringElementContentWhitespace(true);
+            builderFactory.setIgnoringComments(true);
+            builderFactory.setNamespaceAware(true);
+            builderFactory.setCoalescing(true);
+            builderFactory.setSchema(schema);
 
-			final DocumentBuilder builder = builderFactory.newDocumentBuilder();
-			final Document doc = builder.parse(inputSource);
+            final DocumentBuilder builder = builderFactory.newDocumentBuilder();
+            final Document doc = builder.parse(inputSource);
 
-			final List<MetamorphTestCase> metamorphTestCases = new ArrayList<>();
-			final NodeList testCaseNodes = doc.getElementsByTagName(TEST_CASE_TAG);
-			for(int i=0; i < testCaseNodes.getLength(); ++i) {
-				final Element testCaseElement = (Element) testCaseNodes.item(i);
-				metamorphTestCases.add(new MetamorphTestCase(testCaseElement));
-			}
+            final List<MetamorphTestCase> metamorphTestCases = new ArrayList<>();
+            final NodeList testCaseNodes = doc.getElementsByTagName(TEST_CASE_TAG);
+            for(int i=0; i < testCaseNodes.getLength(); ++i) {
+                final Element testCaseElement = (Element) testCaseNodes.item(i);
+                metamorphTestCases.add(new MetamorphTestCase(testCaseElement));
+            }
 
-			return metamorphTestCases;
+            return metamorphTestCases;
 
-		} catch (final ParserConfigurationException|SAXException|IOException e) {
-			throw new InitializationError(e);
-		}
-	}
+        } catch (final ParserConfigurationException|SAXException|IOException e) {
+            throw new InitializationError(e);
+        }
+    }
 
 }
 

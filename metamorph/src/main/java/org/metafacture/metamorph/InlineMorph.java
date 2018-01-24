@@ -53,126 +53,126 @@ import org.xml.sax.InputSource;
  */
 public final class InlineMorph {
 
-	private final StringBuilder scriptBuilder = new StringBuilder();
+    private final StringBuilder scriptBuilder = new StringBuilder();
 
-	private String systemId;
+    private String systemId;
 
-	private boolean needFinishMetamorphBoilerplate;
+    private boolean needFinishMetamorphBoilerplate;
 
-	private InlineMorph() {
-		// Instance may only be created via #in(Object) or #in(Class)
-	}
+    private InlineMorph() {
+        // Instance may only be created via #in(Object) or #in(Class)
+    }
 
-	/**
-	 * Sets the object which contains the morph script.
-	 * <p>
-	 * This is an alternative to the {@link #in(Class)} method and has been
-	 * defined for convenience.
-	 *
-	 * @param owner the object which contains the morph script
-	 * @return an instance of {@code InlineMorph} for continuation
-	 */
-	public static InlineMorph in(Object owner) {
-		return in(owner.getClass());
-	}
+    /**
+     * Sets the object which contains the morph script.
+     * <p>
+     * This is an alternative to the {@link #in(Class)} method and has been
+     * defined for convenience.
+     *
+     * @param owner the object which contains the morph script
+     * @return an instance of {@code InlineMorph} for continuation
+     */
+    public static InlineMorph in(Object owner) {
+        return in(owner.getClass());
+    }
 
-	/**
-	 * Sets the class which contains the morph script. It will be used to create
-	 * a system identifier for the morph script. The identifier is created by
-	 * constructing a resource name from the class's package and converting it
-	 * into a url. This allows inline scripts to refer to files that are placed
-	 * in the same package as the class.
-	 *
-	 * @param owner the class which contains the morph script
-	 * @return an instance of {@code InlineMorph} for continuation
-	 */
-	public static InlineMorph in(Class<?> owner) {
-		return new InlineMorph().setClassAsSystemId(owner);
-	}
+    /**
+     * Sets the class which contains the morph script. It will be used to create
+     * a system identifier for the morph script. The identifier is created by
+     * constructing a resource name from the class's package and converting it
+     * into a url. This allows inline scripts to refer to files that are placed
+     * in the same package as the class.
+     *
+     * @param owner the class which contains the morph script
+     * @return an instance of {@code InlineMorph} for continuation
+     */
+    public static InlineMorph in(Class<?> owner) {
+        return new InlineMorph().setClassAsSystemId(owner);
+    }
 
-	private InlineMorph setClassAsSystemId(Class<?> owner) {
-		final URL baseUrl = owner.getResource("");
-		systemId = baseUrl.toExternalForm();
-		return this;
-	}
+    private InlineMorph setClassAsSystemId(Class<?> owner) {
+        final URL baseUrl = owner.getResource("");
+        systemId = baseUrl.toExternalForm();
+        return this;
+    }
 
-	/**
-	 * Adds a line to the morph script.
-	 *
-	 * @param line the next line of the morph script
-	 * @return a reference to {@code this} for continuation
-	 */
-	public InlineMorph with(String line) {
-		if (scriptBuilder.length() == 0) {
-			appendBoilerplate(line);
-		}
-		scriptBuilder
-				.append(line)
-				.append("\n");
-		return this;
-	}
+    /**
+     * Adds a line to the morph script.
+     *
+     * @param line the next line of the morph script
+     * @return a reference to {@code this} for continuation
+     */
+    public InlineMorph with(String line) {
+        if (scriptBuilder.length() == 0) {
+            appendBoilerplate(line);
+        }
+        scriptBuilder
+                .append(line)
+                .append("\n");
+        return this;
+    }
 
-	private void appendBoilerplate(String line) {
-		final String trimmedLine = line.trim();
-		if (!trimmedLine.startsWith("<?xml ")) {
-			appendXmlBoilerplate();
-			if (!trimmedLine.startsWith("<metamorph ")) {
-				appendMetamorphBoilerplate();
-				needFinishMetamorphBoilerplate = true;
-			}
-		}
-	}
+    private void appendBoilerplate(String line) {
+        final String trimmedLine = line.trim();
+        if (!trimmedLine.startsWith("<?xml ")) {
+            appendXmlBoilerplate();
+            if (!trimmedLine.startsWith("<metamorph ")) {
+                appendMetamorphBoilerplate();
+                needFinishMetamorphBoilerplate = true;
+            }
+        }
+    }
 
-	private void appendXmlBoilerplate() {
-		scriptBuilder.append("<?xml version='1.1' encoding='UTF-8'?>\n");
-	}
+    private void appendXmlBoilerplate() {
+        scriptBuilder.append("<?xml version='1.1' encoding='UTF-8'?>\n");
+    }
 
-	private void appendMetamorphBoilerplate() {
-		scriptBuilder.append(
-						"<metamorph version='1'\n" +
-						"    xmlns='http://www.culturegraph.org/metamorph'>");
-	}
+    private void appendMetamorphBoilerplate() {
+        scriptBuilder.append(
+                        "<metamorph version='1'\n" +
+                        "    xmlns='http://www.culturegraph.org/metamorph'>");
+    }
 
-	/**
-	 * Creates a {@link Metamorph} instance.
-	 *
-	 * @return a Metamorph object initialised with the inline script
-	 */
-	public Metamorph create() {
-		finishBoilerplate();
-		return new Metamorph(createScriptSource());
-	}
+    /**
+     * Creates a {@link Metamorph} instance.
+     *
+     * @return a Metamorph object initialised with the inline script
+     */
+    public Metamorph create() {
+        finishBoilerplate();
+        return new Metamorph(createScriptSource());
+    }
 
-	private void finishBoilerplate() {
-		if (needFinishMetamorphBoilerplate) {
-			scriptBuilder.append("</metamorph>\n");
-			needFinishMetamorphBoilerplate = false;
-		}
-	}
+    private void finishBoilerplate() {
+        if (needFinishMetamorphBoilerplate) {
+            scriptBuilder.append("</metamorph>\n");
+            needFinishMetamorphBoilerplate = false;
+        }
+    }
 
-	private InputSource createScriptSource() {
-		final InputSource scriptSource = new InputSource();
-		scriptSource.setSystemId(systemId);
-		scriptSource.setCharacterStream(new StringReader(scriptBuilder.toString()));
-		return scriptSource;
-	}
+    private InputSource createScriptSource() {
+        final InputSource scriptSource = new InputSource();
+        scriptSource.setSystemId(systemId);
+        scriptSource.setCharacterStream(new StringReader(scriptBuilder.toString()));
+        return scriptSource;
+    }
 
-	/**
-	 * Creates a {@link Metamorph} instance. The {@code Metamorph} instance will
-	 * be connected to the receiver passed as argument.
-	 * <p>
-	 * This is a convenience method. It is equivalent to calling {@link #create()}
-	 * to create a {@link Metamorph} object and then call
-	 * {@link Metamorph#setReceiver(StreamReceiver)} on the returned object.
-	 *
-	 * @param receiver downstream module to which the metamorph instance should
-	 *                  send its output.
-	 * @return a Metamorph object initialised with the inline script
-	 */
-	public Metamorph createConnectedTo(StreamReceiver receiver) {
-		final Metamorph metamorph = create();
-		metamorph.setReceiver(receiver);
-		return metamorph;
-	}
+    /**
+     * Creates a {@link Metamorph} instance. The {@code Metamorph} instance will
+     * be connected to the receiver passed as argument.
+     * <p>
+     * This is a convenience method. It is equivalent to calling {@link #create()}
+     * to create a {@link Metamorph} object and then call
+     * {@link Metamorph#setReceiver(StreamReceiver)} on the returned object.
+     *
+     * @param receiver downstream module to which the metamorph instance should
+     *                  send its output.
+     * @return a Metamorph object initialised with the inline script
+     */
+    public Metamorph createConnectedTo(StreamReceiver receiver) {
+        final Metamorph metamorph = create();
+        metamorph.setReceiver(receiver);
+        return metamorph;
+    }
 
 }

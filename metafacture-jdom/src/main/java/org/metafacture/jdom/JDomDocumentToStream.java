@@ -34,40 +34,40 @@ import org.metafacture.framework.annotations.Out;
 @Out(StreamReceiver.class)
 @FluxCommand("from-jdom-document")
 public final class JDomDocumentToStream
-		implements ObjectPipe<Document, StreamReceiver> {
+        implements ObjectPipe<Document, StreamReceiver> {
 
-	private final SAXOutputter saxOutputer;
-	private final XmlPipe<StreamReceiver> xmlPipe;
+    private final SAXOutputter saxOutputer;
+    private final XmlPipe<StreamReceiver> xmlPipe;
 
-	public JDomDocumentToStream(final XmlPipe<StreamReceiver> xmlPipe) {
-		this.xmlPipe = xmlPipe;
-		saxOutputer = new SAXOutputter(xmlPipe);
-	}
+    public JDomDocumentToStream(final XmlPipe<StreamReceiver> xmlPipe) {
+        this.xmlPipe = xmlPipe;
+        saxOutputer = new SAXOutputter(xmlPipe);
+    }
 
-	@Override
-	public void process(final Document document) {
-		assert null!=document;
-		try {
-			saxOutputer.output(document);
-		} catch (JDOMException e) {
-			throw new IllegalArgumentException("Invalid JDOM document", e);
-		}
-	}
+    @Override
+    public void process(final Document document) {
+        assert null!=document;
+        try {
+            saxOutputer.output(document);
+        } catch (JDOMException e) {
+            throw new IllegalArgumentException("Invalid JDOM document", e);
+        }
+    }
 
-	@Override
-	public void resetStream() {
-		xmlPipe.resetStream();
-	}
+    @Override
+    public void resetStream() {
+        xmlPipe.resetStream();
+    }
 
-	@Override
-	public void closeStream() {
-		xmlPipe.closeStream();
+    @Override
+    public void closeStream() {
+        xmlPipe.closeStream();
 
-	}
+    }
 
-	@Override
-	public <R extends StreamReceiver> R setReceiver(final R receiver) {
-		return xmlPipe.setReceiver(receiver);
-	}
+    @Override
+    public <R extends StreamReceiver> R setReceiver(final R receiver) {
+        return xmlPipe.setReceiver(receiver);
+    }
 
 }
