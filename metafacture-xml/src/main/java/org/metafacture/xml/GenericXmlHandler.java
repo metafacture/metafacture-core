@@ -59,7 +59,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     /**
-     * Creates a new {@ode GenericXmlReader} with the given tag name as
+     * Creates a new {@code GenericXmlReader} with the given tag name as
      * marker for records.
      *
      * @deprecated Use default constructor and set the tag name latter
