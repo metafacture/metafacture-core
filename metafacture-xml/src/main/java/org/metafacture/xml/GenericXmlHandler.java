@@ -40,23 +40,55 @@ import org.xml.sax.Attributes;
 @FluxCommand("handle-generic-xml")
 public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
+    public static final String DEFAULT_RECORD_TAG = "record";
+
     private static final Pattern TABS = Pattern.compile("\t+");
-    private final String recordTagName;
+
+    private String recordTagName = DEFAULT_RECORD_TAG;
+
     private boolean inRecord;
     private StringBuilder valueBuffer = new StringBuilder();
 
     public GenericXmlHandler() {
         super();
-        this.recordTagName = System.getProperty(
+        final String recordTagNameProperty = System.getProperty(
                 "org.culturegraph.metamorph.xml.recordtag");
-        if (recordTagName == null) {
-            throw new MetafactureException("Missing name for the tag marking a record.");
+        if (recordTagNameProperty != null) {
+           recordTagName = recordTagNameProperty;
         }
     }
 
+    /**
+     * Creates a new {@ode GenericXmlReader} with the given tag name as
+     * marker for records.
+     *
+     * @deprecated Use default constructor and set the tag name latter
+     * with {@link #setRecordTagName(String)}.
+     *
+     * @param recordTagName tag name marking the start of a record.
+     */
+    @Deprecated
     public GenericXmlHandler(final String recordTagName) {
         super();
         this.recordTagName = recordTagName;
+    }
+
+    /**
+     * Sets the tag name which marks the start of a record.
+     * <p>
+     * This value may only be changed between records. If it is changed
+     * while processing a record the behaviour of this module is undefined.
+     * <p>
+     * <strong>Default value: {@value DEFAULT_RECORD_TAG}</strong>
+     *
+     * @param recordTagName the tag name which marks the start of a record.
+     */
+    public void setRecordTagName(String recordTagName) {
+        this.recordTagName = recordTagName;
+    }
+
+    public String getRecordTagName() {
+        return recordTagName;
     }
 
     @Override
