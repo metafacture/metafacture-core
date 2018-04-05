@@ -54,6 +54,7 @@ dependencies {
   plugins project(':metafacture-strings')
   plugins project(':metafacture-triples')
   plugins project(':metafacture-xml')
+  plugins project(':metafacture-xslt')
   plugins project(':metamorph')
 
   // The plugins configuration needs to be on the runtime classpath:
