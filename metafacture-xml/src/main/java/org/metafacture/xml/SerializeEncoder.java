@@ -34,7 +34,7 @@ public class SerializeEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     private boolean initStream;
     private boolean prettyPrint;
-    private int indentation;
+    private int indentationLevel;
     private StringBuilder stringBuilder;
 
     private boolean omitDeclaration = false;
@@ -42,7 +42,7 @@ public class SerializeEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     public SerializeEncoder()
     {
-        this.indentation = 0;
+        this.indentationLevel = 0;
         this.prettyPrint = true;
         this.initStream = true;
     }
@@ -81,7 +81,7 @@ public class SerializeEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         String elem = "<record id=\"" + identifier + "\">";
         if (prettyPrint)
         {
-            indentation++;
+            indentationLevel++;
             getReceiver().process(spacer + elem);
         }
         else
@@ -97,8 +97,8 @@ public class SerializeEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         String elem = "<entity name=\"" + escape(name) + "\">";
         if (prettyPrint)
         {
-            indentation++;
-            getReceiver().process(separators(indentation, spacer) + elem);
+            indentationLevel++;
+            getReceiver().process(repeat(spacer, indentationLevel) + elem);
         }
         else
         {
@@ -112,7 +112,7 @@ public class SerializeEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         String elem = "<literal name=\"" + escape(name) + "\">" + escape(value) + "</literal>";
         if (prettyPrint)
         {
-            getReceiver().process(separators(indentation+1, spacer) + elem);
+            getReceiver().process(repeat(spacer, indentationLevel + 1) + elem);
         }
         else
         {
@@ -126,8 +126,8 @@ public class SerializeEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         String elem = "</entity>";
         if (prettyPrint)
         {
-            getReceiver().process(separators(indentation, spacer) + elem);
-            indentation--;
+            getReceiver().process(repeat(spacer, indentationLevel) + elem);
+            indentationLevel--;
         }
         else
         {
@@ -142,7 +142,7 @@ public class SerializeEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         if (prettyPrint)
         {
             getReceiver().process(spacer + "</record>");
-            indentation--;
+            indentationLevel--;
         }
         else
         {
@@ -163,16 +163,19 @@ public class SerializeEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     @Override
     public void onResetStream()
     {
-        this.indentation = 0;
+        this.indentationLevel = 0;
         this.initStream = true;
     }
 
-    private String separators(int amount, String separator)
+    /**
+     * Build a String consists of {@code n} repetitions of a String {@code s}.
+     */
+    private String repeat(String s, int n)
     {
-        StringBuilder sb = new StringBuilder(separator);
-        for (int i = 0; i < amount - 1; i++)
+        StringBuilder sb = new StringBuilder(s);
+        for (int i = 0; i < n - 1; i++)
         {
-            sb.append(separator);
+            sb.append(s);
         }
         return sb.toString();
     }
