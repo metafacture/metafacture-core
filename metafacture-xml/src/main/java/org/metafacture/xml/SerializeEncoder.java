@@ -23,11 +23,11 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
-@Description("MarshalEncoder a stream to XML.")
+@Description("Converts a Metafacture stream into its XML equivalent.")
 @In(StreamReceiver.class)
 @Out(String.class)
-@FluxCommand("marshal-to-xml")
-public class MarshalEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
+@FluxCommand("serialize-to-xml")
+public class SerializeEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 {
     final private String xmlDeclaration = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     final private String spacer = "  ";
@@ -40,7 +40,7 @@ public class MarshalEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     private boolean omitDeclaration = false;
     private boolean omitRoot = false;
 
-    public MarshalEncoder()
+    public SerializeEncoder()
     {
         this.indentation = 0;
         this.prettyPrint = true;

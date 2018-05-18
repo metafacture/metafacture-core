@@ -25,10 +25,10 @@ import org.mockito.MockitoAnnotations;
 import org.xml.sax.helpers.AttributesImpl;
 import static org.mockito.Mockito.inOrder;
 
-public class MarshalXmlHandlerTest
+public class SerializeXmlHandlerTest
 {
 
-    private MarshalXmlHandler handler;
+    private SerializeXmlHandler handler;
 
     @Mock
     private StreamReceiver receiver;
@@ -37,7 +37,7 @@ public class MarshalXmlHandlerTest
     public void setUp()
     {
         MockitoAnnotations.initMocks(this);
-        handler = new MarshalXmlHandler();
+        handler = new SerializeXmlHandler();
         handler.setReceiver(receiver);
     }
 

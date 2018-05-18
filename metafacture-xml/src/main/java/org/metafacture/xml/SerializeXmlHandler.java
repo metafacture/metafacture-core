@@ -25,11 +25,11 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
 import org.xml.sax.Attributes;
 
-@Description("Unmarshalling a XML stream.")
+@Description("Deserialize a XML encoded Metafacture stream.")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
-@FluxCommand("handle-marshal-xml")
-public class MarshalXmlHandler extends DefaultXmlPipe<StreamReceiver>
+@FluxCommand("handle-serialize-xml")
+public class SerializeXmlHandler extends DefaultXmlPipe<StreamReceiver>
 {
 
     final private String ID = "id";
@@ -40,7 +40,7 @@ public class MarshalXmlHandler extends DefaultXmlPipe<StreamReceiver>
     private String currentLiteralName;
     private StringBuilder stringBuilder;
 
-    public MarshalXmlHandler()
+    public SerializeXmlHandler()
     {
         streamTagCount = 0;
         stringBuilder = new StringBuilder();

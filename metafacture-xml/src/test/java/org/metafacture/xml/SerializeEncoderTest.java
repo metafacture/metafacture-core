@@ -21,13 +21,14 @@ import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
-public class MarshalEncoderTest
+public class SerializeEncoderTest
 {
-    private MarshalEncoder encoder;
+    private SerializeEncoder encoder;
 
     @Mock
     private ObjectReceiver<String> receiver;
@@ -36,12 +37,12 @@ public class MarshalEncoderTest
     public void setUp()
     {
         MockitoAnnotations.initMocks(this);
-        encoder = new MarshalEncoder();
+        encoder = new SerializeEncoder();
         encoder.setReceiver(receiver);
     }
 
     @Test
-    public void marshalling()
+    public void serialize()
     {
         encoder.startRecord("1");
         encoder.literal("id", "1");
@@ -78,7 +79,7 @@ public class MarshalEncoderTest
     }
 
     @Test
-    public void marshallingWithoutPrettyPrinting()
+    public void serializeWithoutPrettyPrinting()
     {
         encoder.setPrettyPrint(false);
 
@@ -110,7 +111,7 @@ public class MarshalEncoderTest
     }
 
     @Test
-    public void marshallingWithNullValue()
+    public void serializeWithNullValue()
     {
         encoder.setPrettyPrint(false);
 
