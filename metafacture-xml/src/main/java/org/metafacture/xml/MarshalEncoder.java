@@ -177,6 +177,9 @@ public class MarshalEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         return sb.toString();
     }
 
+    /**
+     * Escapes the following control characters: {@code <}, {@code >}, {@code "}, {@code '}, and {@code &} .
+     */
     private String escape(final String s)
     {
         if (s == null || s.isEmpty())
