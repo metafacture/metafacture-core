@@ -118,4 +118,36 @@ public final class Marc21DecoderTest {
         marc21Decoder.process("00005");
     }
 
+    @Test
+    public void shouldBeCompatibleWithEncoder() {
+        Marc21Encoder marc21Encoder = new Marc21Encoder();
+        marc21Encoder.setReceiver(marc21Decoder);
+
+        marc21Encoder.startRecord("identifier");
+
+        marc21Encoder.startEntity("leader");
+        marc21Encoder.literal("characterCodingScheme", "a");
+        marc21Encoder.endEntity();
+
+        marc21Encoder.literal("001", "identifier");
+
+        marc21Encoder.startEntity("021a ");
+        marc21Encoder.literal("v", "Fritz");
+        marc21Encoder.literal("n", "Bauer");
+        marc21Encoder.endEntity();
+        marc21Encoder.endRecord();
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("identifier");
+
+        ordered.verify(receiver).startEntity("leader");
+        ordered.verify(receiver).literal("characterCodingScheme", "a");
+        ordered.verify(receiver).endEntity();
+
+        ordered.verify(receiver).startEntity("021a ");
+        ordered.verify(receiver).literal("v", "Fritz");
+        ordered.verify(receiver).literal("n", "Bauer");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+    }
 }
