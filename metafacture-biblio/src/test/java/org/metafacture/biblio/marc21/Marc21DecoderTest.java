@@ -49,7 +49,7 @@ public final class Marc21DecoderTest {
 
     private static final String RECORD_LABEL = "00128noa a2200073zu 4500";
     private static final String DIRECTORY = "001001100000" + "002001300011"
-            + "100001100024" + "200003100035";
+            + "100001100024" + "200001900035";
     private static final String DATA = RECORD_ID + FIELD_SEPARATOR
             + CONTROLFIELD_VALUE + FIELD_SEPARATOR + FIELD1 + FIELD_SEPARATOR
             + FIELD2 + FIELD_SEPARATOR;
