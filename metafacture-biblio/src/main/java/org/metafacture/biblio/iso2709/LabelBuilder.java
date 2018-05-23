@@ -128,6 +128,21 @@ class LabelBuilder {
         buffer.writeChar(value);
     }
 
+    void setEncodingLevel(final char value) {
+        buffer.setWritePosition(17);
+        buffer.writeChar(value);
+    }
+
+    void setCatalogingForm(final char value) {
+        buffer.setWritePosition(18);
+        buffer.writeChar(value);
+    }
+
+    void setMultipartLevel(final char value) {
+        buffer.setWritePosition(19);
+        buffer.writeChar(value);
+    }
+
     void setReservedChar(final char reservedChar) {
         buffer.setWritePosition(RESERVED_CHAR_POS);
         buffer.writeChar(reservedChar);
