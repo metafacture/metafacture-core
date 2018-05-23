@@ -22,6 +22,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.metafacture.framework.FormatException;
+import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -60,6 +61,9 @@ public final class Marc21DecoderTest {
 
     @Mock
     private StreamReceiver receiver;
+
+    @Mock
+    private ObjectReceiver<String> objectReceiver;
 
     @Before
     public void setup() {
@@ -149,5 +153,16 @@ public final class Marc21DecoderTest {
         ordered.verify(receiver).literal("n", "Bauer");
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).endRecord();
+    }
+
+    @Test
+    public void shouldNotChangeRecordWhenDecodingAndEncoding() {
+        Marc21Decoder decoder = new Marc21Decoder();
+        Marc21Encoder encoder = new Marc21Encoder();
+        decoder.setReceiver(encoder).setReceiver(objectReceiver);
+
+        decoder.process(RECORD);
+        final InOrder ordered = inOrder(objectReceiver);
+        ordered.verify(objectReceiver).process(RECORD);
     }
 }
