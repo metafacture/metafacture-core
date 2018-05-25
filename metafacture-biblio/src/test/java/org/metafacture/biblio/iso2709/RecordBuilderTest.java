@@ -183,6 +183,11 @@ public final class RecordBuilderTest {
         builder.setSystemChars(null);  // Exception expected
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionIfSystemCharIndexGreaterThan2() {
+        builder.setSystemChar(3, '1');
+    }
+
     @Test
     public void shouldWriteReserverdCharToRecordLabel() {
         builder.setReservedChar('R');
