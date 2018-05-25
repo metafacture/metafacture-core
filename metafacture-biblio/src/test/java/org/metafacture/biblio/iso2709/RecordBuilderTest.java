@@ -183,6 +183,18 @@ public final class RecordBuilderTest {
         builder.setSystemChars(null);  // Exception expected
     }
 
+    @Test
+    public void shouldWriteSystemCharToRecordLabel() {
+        builder.setSystemChar(0, 'U');
+        builder.setSystemChar(1, 'S');
+        builder.setSystemChar(2, 'C');
+
+        final byte[] record = builder.build();
+
+        assertEquals(0x55, record[17]);
+        assertEquals(0x53, record[18]);
+        assertEquals(0x43, record[19]);
+    }
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionIfSystemCharIndexGreaterThan2() {
         builder.setSystemChar(3, '1');
