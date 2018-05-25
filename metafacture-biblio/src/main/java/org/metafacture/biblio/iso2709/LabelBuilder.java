@@ -124,7 +124,7 @@ class LabelBuilder {
 
     void setSystemChar(final int index, final char value) {
         assert 0 <= index && index < SYSTEM_CHARS_LENGTH;
-        buffer.setWritePosition(SYSTEM_CHARS_LENGTH + index);
+        buffer.setWritePosition(SYSTEM_CHARS_START + index);
         buffer.writeChar(value);
     }
 
