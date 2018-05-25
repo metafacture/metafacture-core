@@ -122,7 +122,7 @@ public final class RecordBuilder {
     }
 
     public void setSystemChar(final int index, final char value) {
-        Require.that(0 <= index && index < IMPL_CODES_LENGTH);
+        Require.that(0 <= index && index < SYSTEM_CHARS_LENGTH);
         Require.that(value < Iso646Constants.MAX_CHAR_CODE);
         label.setSystemChar(index, value);
     }
