@@ -102,16 +102,14 @@ public final class RecordBuilder {
     public void setImplCodes(final char[] implCodes) {
         Require.notNull(implCodes);
         Require.that(implCodes.length == IMPL_CODES_LENGTH);
-        for (final char implCode : implCodes) {
-            Require.that(implCode < Iso646Constants.MAX_CHAR_CODE);
-        }
+        require7BitAscii(implCodes);
         label.setImplCodes(implCodes);
     }
 
-    public void setImplCode(final int index, final char value) {
+    public void setImplCode(final int index, final char implCode) {
         Require.that(0 <= index && index < IMPL_CODES_LENGTH);
-        Require.that(value < Iso646Constants.MAX_CHAR_CODE);
-        label.setImplCode(index, value);
+        require7BitAscii(implCode);
+        label.setImplCode(index, implCode);
     }
 
     public void setSystemChars(final char[] systemChars) {
@@ -121,10 +119,10 @@ public final class RecordBuilder {
         label.setSystemChars(systemChars);
     }
 
-    public void setSystemChar(final int index, final char value) {
+    public void setSystemChar(final int index, final char systemChar) {
         Require.that(0 <= index && index < SYSTEM_CHARS_LENGTH);
-        Require.that(value < Iso646Constants.MAX_CHAR_CODE);
-        label.setSystemChar(index, value);
+        require7BitAscii(systemChar);
+        label.setSystemChar(index, systemChar);
     }
 
     public void setReservedChar(final char reservedChar) {
