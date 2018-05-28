@@ -132,18 +132,6 @@ public final class RecordBuilder {
         label.setReservedChar(reservedChar);
     }
 
-    public void setEncodingLevel(char value) {
-        label.setEncodingLevel(value);
-    }
-
-    public void setCatalogingForm(char value) {
-        label.setCatalogingForm(value);
-    }
-
-    public void setMultipartLevel(char value) {
-        label.setMultipartLevel(value);
-    }
-
     public void appendIdentifierField(final String value) {
         appendIdentifierField(defaultImplDefinedPart,value);
     }

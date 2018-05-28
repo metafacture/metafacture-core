@@ -206,15 +206,15 @@ public final class Marc21Encoder extends
                 break;
             case Marc21EventNames.ENCODING_LEVEL_LITERAL:
                 requireValidCode(code, Marc21Constants.ENCODING_LEVEL_CODES);
-                builder.setEncodingLevel(code);
+                builder.setSystemChar(Marc21Constants.ENCODING_LEVEL_INDEX, code);
                 break;
             case Marc21EventNames.CATALOGING_FORM_LITERAL:
                 requireValidCode(code, Marc21Constants.CATALOGING_FORM_CODES);
-                builder.setCatalogingForm(code);
+                builder.setSystemChar(Marc21Constants.CATALOGING_FORM_INDEX, code);
                 break;
             case Marc21EventNames.MULTIPART_LEVEL_LITERAL:
                 requireValidCode(code, Marc21Constants.MULTIPART_LEVEL_CODES);
-                builder.setMultipartLevel(code);
+                builder.setSystemChar(Marc21Constants.MULTIPART_LEVEL_INDEX, code);
                 break;
             default:
                 throw new FormatException("unknown literal in leader entity: " + name);
