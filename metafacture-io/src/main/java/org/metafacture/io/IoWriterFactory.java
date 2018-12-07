@@ -21,8 +21,9 @@ import java.io.Writer;
  * Interface for classes creating {@link Writer}s. Used in {@link ObjectJavaIoWriter}.
  *
  * @author markus geipel
- *
+ * @deprecated Use the new writer components based on {@link ObjectWriter} instead.
  */
+@Deprecated
 public interface IoWriterFactory {
     Writer createWriter();
 }

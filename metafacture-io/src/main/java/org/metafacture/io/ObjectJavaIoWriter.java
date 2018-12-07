@@ -26,8 +26,9 @@ import org.metafacture.framework.ObjectReceiver;
  *            object type
  *
  * @author Christoph Böhme, Markus Geipel
- *
+ * @deprecated Use {@link ObjectWriter} or {@link ObjectFileWriter} instead.
  */
+@Deprecated
 public final class ObjectJavaIoWriter<T> implements ObjectReceiver<T> {
 
     private Writer writer;
