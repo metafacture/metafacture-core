@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.helpers.DefaultObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
@@ -111,6 +112,22 @@ public class ObjectBatchResetterTest {
                 .isZero();
         assertThat(systemUnderTest.getObjectCount())
                 .isZero();
+    }
+
+    @Test
+    public void shouldEmitResetStreamEventAfterUpdatingCounts() {
+
+        systemUnderTest.setBatchSize(2);
+        systemUnderTest.setReceiver(new DefaultObjectReceiver<String>() {
+            @Override
+            public void resetStream() {
+                assertThat(systemUnderTest.getObjectCount()).isZero();
+                assertThat(systemUnderTest.getBatchCount()).isEqualTo(1);
+            }
+        });
+
+        systemUnderTest.process("1");
+        systemUnderTest.process("2");
     }
 
     @Rule

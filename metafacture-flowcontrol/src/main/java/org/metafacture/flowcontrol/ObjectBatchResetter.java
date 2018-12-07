@@ -91,9 +91,9 @@ public class ObjectBatchResetter<T> extends DefaultObjectPipe<T, ObjectReceiver<
 
         objectCount += 1;
         if (objectCount >= batchSize) {
-            getReceiver().resetStream();
             batchCount += 1;
             objectCount = 0;
+            getReceiver().resetStream();
         }
     }
 
