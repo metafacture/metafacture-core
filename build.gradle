@@ -20,7 +20,6 @@ plugins {
   id 'org.ajoberstar.grgit' version '2.3.0'
   id 'org.sonarqube' version '2.5'
   id 'io.codearte.nexus-staging' version '0.11.0'
-  id "org.standardout.versioneye" version "1.5.0"
 }
 
 ext.scmInfo = getScmInfo()
@@ -208,10 +207,6 @@ sonarqube {
   properties {
     property 'sonar.exclusions', '**/generated-src/**/*.java'
   }
-}
-
-versioneye {
-  includeSubProjects = true
 }
 
 nexusStaging {
