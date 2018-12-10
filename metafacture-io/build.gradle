@@ -25,4 +25,5 @@ dependencies {
   runtimeOnly 'org.tukaani:xz:1.6'
   testImplementation 'junit:junit:4.12'
   testImplementation 'org.mockito:mockito-core:2.5.5'
+  testImplementation 'org.assertj:assertj-core:3.11.1'
 }
