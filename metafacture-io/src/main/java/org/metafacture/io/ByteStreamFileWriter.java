@@ -24,6 +24,7 @@ public class ByteStreamFileWriter extends DefaultObjectReceiver<byte[]> {
 
     private Supplier<File> fileNameSupplier;
     private boolean appendIfFileExists;
+    private boolean flushAfterWrite;
 
     private OutputStream outputStream;
 
@@ -63,6 +64,23 @@ public class ByteStreamFileWriter extends DefaultObjectReceiver<byte[]> {
     }
 
     /**
+     * Controls whether the output stream is flushed after each write
+     * operation in {@link #process(byte[])}.
+     * <p>
+     * The default value is {@code false}.
+     * <p>
+     * This property can be changed anytime during processing. It becomes
+     * effective on the next invocation of {@link #process(byte[])}.
+     *
+     * @param flushAfterWrite true if the output stream should be flushed
+     *                        after every write.
+     */
+    public void setFlushAfterWrite(boolean flushAfterWrite) {
+
+        this.flushAfterWrite = flushAfterWrite;
+    }
+
+    /**
      * Writes {@code bytes} to file.
      *
      * @param bytes to write to file
@@ -74,6 +92,9 @@ public class ByteStreamFileWriter extends DefaultObjectReceiver<byte[]> {
         ensureOpenStream();
         try {
             outputStream.write(bytes);
+            if (flushAfterWrite) {
+                outputStream.flush();
+            }
 
         } catch (IOException e) {
             throw new WriteFailed("Error while writing bytes to output stream", e);
