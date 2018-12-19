@@ -15,6 +15,8 @@
  */
 package org.metafacture.biblio.marc21;
 
+import static org.metafacture.biblio.marc21.Marc21EventNames.LEADER_ENTITY;
+import static org.metafacture.biblio.marc21.Marc21EventNames.RECORD_STATUS_LITERAL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.Mockito.verify;
@@ -34,8 +36,6 @@ import org.mockito.MockitoAnnotations;
  *
  */
 public final class Marc21EncoderTest {
-
-    private static final String LEADER_LITERAL = "leader";
 
     private Marc21Encoder marc21Encoder;
 
@@ -97,6 +97,17 @@ public final class Marc21EncoderTest {
     public void issue231ShouldIgnoreTypeLiterals() {
         marc21Encoder.startRecord("");
         marc21Encoder.literal("type", "ignoreme");
+        marc21Encoder.endRecord();
+
+        verify(receiver).process(any(String.class));
+    }
+
+    @Test
+    public void issue278ShouldNotFailWhenProcessingLeaderEntity() {
+        marc21Encoder.startRecord("");
+        marc21Encoder.startEntity(LEADER_ENTITY);
+        marc21Encoder.literal(RECORD_STATUS_LITERAL, "a");
+        marc21Encoder.endEntity();
         marc21Encoder.endRecord();
 
         verify(receiver).process(any(String.class));
