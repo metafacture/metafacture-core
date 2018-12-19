@@ -156,7 +156,9 @@ public final class Marc21Encoder extends
 
     @Override
     public void endEntity() {
-        builder.endDataField();
+        if (state.equals(State.IN_FIELD_ENTITY)) {
+            builder.endDataField();
+        }
         state = State.IN_RECORD;
     }
 
