@@ -168,6 +168,22 @@ public class TestMetamorphMacros {
         verify(receiver).literal("Honolulu", "Aloha");
     }
 
+    @Test
+    public void shouldSupportXPointer() {
+        metamorph = InlineMorph.in(this)
+                .with("<include href='should-support-xpointer.xml'")
+                .with("    xmlns='http://www.w3.org/2001/XInclude'")
+                .with("    xpointer='element(/1/1)' />")
+                .with("<rules>")
+                .with("  <call-macro name='included-macro' />")
+                .with("</rules>")
+                .createConnectedTo(receiver);
+
+        processRecordWithSingleLiteral();
+
+        verify(receiver).literal("Honolulu", "Aloha");
+    }
+
     private void processRecordWithSingleLiteral() {
         metamorph.startRecord("1");
         metamorph.literal("Honolulu", "Aloha");
