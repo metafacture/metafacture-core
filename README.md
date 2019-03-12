@@ -33,7 +33,7 @@ If you are only interested in running Flux scripts without doing any Java progra
    ```
    This example will print a number of marc21 records on standard out.
 
-The _examples_ folder contains many more examples which provide a good starting point for learning metafacture. If you have any questions please join our [mailing list](http://lists.dnb.de/mailman/listinfo/metafacture) or use our issue-based discussion forum over at [metafacture-documentation](https://github.com/metafacture/metafacture-documentation).
+The _examples_ folder contains many more examples which provide a good starting point for learning metafacture. If you have any questions please join our [mailing list](http://lists.dnb.de/mailman/listinfo/metafacture) or use our issue-based discussion forum over at [metafacture-documentation](https://github.com/culturegraph/metafacture-documentation).
 
 
 ## Using Metafacture as a Java libary
