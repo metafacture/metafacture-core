@@ -97,13 +97,17 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
 
     @Override
     public void resetStream() {
-        queue.add(Feeder.BLUE_PILL);
+        try {
+            queue.put(Feeder.BLUE_PILL);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     @Override
     public void closeStream() {
-        queue.add(Feeder.RED_PILL);
         try {
+            queue.put(Feeder.RED_PILL);
             thread.join();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -147,6 +151,7 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                return;
             }
         }
     }
