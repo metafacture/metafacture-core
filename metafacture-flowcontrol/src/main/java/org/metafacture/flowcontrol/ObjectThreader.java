@@ -15,7 +15,6 @@
 
 package org.metafacture.flowcontrol;
 
-import org.metafacture.flowcontrol.ObjectPipeDecoupler;
 import org.metafacture.framework.ObjectPipe;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.Tee;
@@ -59,7 +58,7 @@ public class ObjectThreader<T> extends DefaultTee<ObjectReceiver<T>> implements 
 
     @Override
     public Tee<ObjectReceiver<T>> addReceiver(final ObjectReceiver<T> receiver) {
-        LOG.info("Adding thread " + (getReceivers().size() + 1));
+        LOG.info("Adding thread {0}" + (getReceivers().size() + 1));
         ObjectPipeDecoupler<T> opd = new ObjectPipeDecoupler<>();
         opd.setReceiver(receiver);
         return super.addReceiver(opd);
