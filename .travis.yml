@@ -21,7 +21,7 @@ jdk:
   - oraclejdk8
 addons:
   sonarcloud:
-    organization: metafacture
+    organization: hbz
     token: $SONARCLOUD_TOKEN
 cache:
   directories:
