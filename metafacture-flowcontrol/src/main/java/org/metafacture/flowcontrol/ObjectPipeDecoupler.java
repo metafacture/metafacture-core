@@ -49,15 +49,15 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
     private boolean debug;
 
     public ObjectPipeDecoupler() {
-        queue = new LinkedBlockingQueue<Object>(DEFAULT_CAPACITY);
+        queue = new LinkedBlockingQueue<>(DEFAULT_CAPACITY);
     }
 
     public ObjectPipeDecoupler(final int capacity) {
-        queue = new LinkedBlockingQueue<Object>(capacity);
+        queue = new LinkedBlockingQueue<>(capacity);
     }
 
     public ObjectPipeDecoupler(final String capacity) {
-        queue = new LinkedBlockingQueue<Object>(Integer.parseInt(capacity));
+        queue = new LinkedBlockingQueue<>(Integer.parseInt(capacity));
     }
 
     public void setDebug(final boolean debug) {
@@ -73,7 +73,7 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
         try {
             queue.put(obj);
             if (debug) {
-                LOG.info("Current buffer size: " + queue.size());
+                LOG.info("Current buffer size: {}", queue.size());
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
