@@ -206,6 +206,7 @@ gradle.projectsEvaluated {
 sonarqube {
   properties {
     property 'sonar.exclusions', '**/generated-src/**/*.java'
+    property 'sonar.projectKey', 'hbz_metafacture-core'
   }
 }
 
