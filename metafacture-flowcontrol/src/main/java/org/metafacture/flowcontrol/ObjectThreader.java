@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 @In(Object.class)
 @Out(Object.class)
 @Description("incoming objects are distributed to the added receivers, running in their own threads")
-@FluxCommand("object-threader-tee")
+@FluxCommand("thread-object-tee")
 public class ObjectThreader<T> extends DefaultTee<ObjectReceiver<T>> implements ObjectPipe<T, ObjectReceiver<T>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ObjectThreader.class);
