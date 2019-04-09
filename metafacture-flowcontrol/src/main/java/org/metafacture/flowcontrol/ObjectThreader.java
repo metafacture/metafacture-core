@@ -1,4 +1,4 @@
-/* Copyright 2019 hbz, Pascal Christoph. 
+/* Copyright 2019 Pascal Christoph, hbz.
  * 
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -34,12 +34,12 @@ import org.slf4j.LoggerFactory;
  * 
  * @param <T> Object type
  *
- * @author Pascal Christoph(dr0i)
+ * @author Pascal Christoph (dr0i)
  * 
  */
 @In(Object.class)
 @Out(Object.class)
-@Description("incoming objects are distributed to the added receivers, running in their own threads")
+@Description("Incoming objects are distributed to the added receivers, running in their own threads.")
 @FluxCommand("thread-object-tee")
 public class ObjectThreader<T> extends DefaultTee<ObjectReceiver<T>> implements ObjectPipe<T, ObjectReceiver<T>> {
 
@@ -49,10 +49,11 @@ public class ObjectThreader<T> extends DefaultTee<ObjectReceiver<T>> implements 
     @Override
     public void process(final T obj) {
         getReceivers().get(objectNumber).process(obj);
-        if (objectNumber == getReceivers().size() - 1)
+        if (objectNumber == getReceivers().size() - 1) {
             objectNumber = 0;
-        else
+        } else {
             objectNumber++;
+        }
     }
 
     @Override

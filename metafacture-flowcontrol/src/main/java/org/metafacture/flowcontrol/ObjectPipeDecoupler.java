@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013-2019 Deutsche Nationalbibliothek and others
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
  * @param <T> Object type
  *
  * @author Markus Micheal Geipel
+ * @author Pascal Christoph (dr0i)
  */
 @In(Object.class)
 @Out(Object.class)

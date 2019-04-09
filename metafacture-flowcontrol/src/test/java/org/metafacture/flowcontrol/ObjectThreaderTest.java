@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 hbz
+ * Copyright 2019 Pascal Christoph, hbz.
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package org.metafacture.flowcontrol;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.atMost;
@@ -31,7 +33,7 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link ObjectThreader} (which itself uses
  * {@link org.metafacture.flowcontrol.ObjectPipeDecoupler} to thread receivers).
  *
- * @author Pascal Christoph(dr0i)
+ * @author Pascal Christoph (dr0i)
  *
  */
 public final class ObjectThreaderTest {
@@ -59,7 +61,7 @@ public final class ObjectThreaderTest {
 		objectThreader.process("a");
 		objectThreader.process("c");
 		// check if two more threads were indeed created
-		assert (Thread.getAllStackTraces().keySet().size() - ACTIVE_THREADS_AT_BEGINNING == 2);
+		assertThat(Thread.getAllStackTraces().keySet().size() - ACTIVE_THREADS_AT_BEGINNING).isEqualTo(2);
 		objectThreader.closeStream();
 		// verify thread 1
 		verify(receiverThread1, atLeast(2)).process("a");
