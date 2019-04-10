@@ -35,7 +35,7 @@ public class DefaultTee<T extends Receiver> implements Tee<T> {
     private final List<T> receivers = new ArrayList<T>();
 
     @Override
-    public <R extends T> R setReceiver(final R receiver) {
+    public final <R extends T> R setReceiver(final R receiver) {
         receivers.clear();
         receivers.add(receiver);
         onChangeReceivers();
@@ -52,7 +52,7 @@ public class DefaultTee<T extends Receiver> implements Tee<T> {
     }
 
     @Override
-    public Tee<T> addReceiver(final T receiver) {
+    public final Tee<T> addReceiver(final T receiver) {
         receivers.add(receiver);
         onChangeReceivers();
         return this;
