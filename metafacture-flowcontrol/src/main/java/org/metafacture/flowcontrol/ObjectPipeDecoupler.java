@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013-2019 Deutsche Nationalbibliothek and others
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
  * @param <T> Object type
  *
  * @author Markus Micheal Geipel
+ * @author Pascal Christoph (dr0i)
  */
 @In(Object.class)
 @Out(Object.class)
@@ -49,15 +50,15 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
     private boolean debug;
 
     public ObjectPipeDecoupler() {
-        queue = new LinkedBlockingQueue<Object>(DEFAULT_CAPACITY);
+        queue = new LinkedBlockingQueue<>(DEFAULT_CAPACITY);
     }
 
     public ObjectPipeDecoupler(final int capacity) {
-        queue = new LinkedBlockingQueue<Object>(capacity);
+        queue = new LinkedBlockingQueue<>(capacity);
     }
 
     public ObjectPipeDecoupler(final String capacity) {
-        queue = new LinkedBlockingQueue<Object>(Integer.parseInt(capacity));
+        queue = new LinkedBlockingQueue<>(Integer.parseInt(capacity));
     }
 
     public void setDebug(final boolean debug) {
@@ -73,7 +74,7 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
         try {
             queue.put(obj);
             if (debug) {
-                LOG.info("Current buffer size: " + queue.size());
+                LOG.info("Current buffer size: {}", queue.size());
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -97,13 +98,17 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
 
     @Override
     public void resetStream() {
-        queue.add(Feeder.BLUE_PILL);
+        try {
+            queue.put(Feeder.BLUE_PILL);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     @Override
     public void closeStream() {
-        queue.add(Feeder.RED_PILL);
         try {
+            queue.put(Feeder.RED_PILL);
             thread.join();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -147,6 +152,7 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                return;
             }
         }
     }
