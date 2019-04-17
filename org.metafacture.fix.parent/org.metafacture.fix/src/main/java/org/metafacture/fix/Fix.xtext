@@ -2,32 +2,39 @@ grammar org.metafacture.fix.Fix with org.eclipse.xtext.xbase.Xbase
 generate fix "http://www.metafacture.org/fix/Fix"
 
 Fix:
-    importSection=XImportSection?
-    elements+=AbstractElement*;
- 
-AbstractElement:
-    PackageDeclaration | Entity;
- 
-PackageDeclaration:
-    'package' name=QualifiedName '{'
-        elements+=AbstractElement*
-    '}';
- 
-Entity:
-    'entity' name=ValidID ('extends' superType=JvmTypeReference)? '{'
-        features+=Feature*
-    '}';
- 
-Feature:
-    Property | Operation;
- 
-Property:
-    name=ValidID ':' type=JvmTypeReference;
- 
-Operation:
-    'op' name=ValidID 
-        '('(params+=FullJvmFormalParameter 
-        (',' params+=FullJvmFormalParameter)*)?')'
-        ':' type=JvmTypeReference 
-    body=XBlockExpression;
- 
+    elements+=Expression*;
+
+Expression :
+    If | Do | MethodCall | {Expression} SL_COMMENT
+;
+
+If: 'if' MethodCall BEGIN
+    elements+=Expression*
+END
+elseIf=ElsIf?
+else=Else?
+'end';
+
+ElsIf: 'elsif' MethodCall BEGIN
+	elements+=Expression*
+END;
+
+Else: {Else} 'else' BEGIN
+	elements+=Expression*
+END;
+
+Do: 'do' MethodCall BEGIN
+    elements+=Expression*
+END
+'end';
+
+MethodCall:
+    name=ValidID '('(params+=QualifiedName 
+        (',' params+=QualifiedName)*)?')';
+
+terminal BEGIN: 'synthetic:BEGIN';
+terminal END: 'synthetic:END';
+
+@Override 
+terminal SL_COMMENT: 
+	'#' !('\r'|'\n')* ('\r'? '\n');

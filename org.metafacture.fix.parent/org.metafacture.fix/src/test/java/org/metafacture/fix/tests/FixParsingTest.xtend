@@ -21,30 +21,39 @@ class FixParsingTest {
 	@Test
 	def void loadModel() {
 		val result = parseHelper.parse('''
-			import java.util.List
-			 
-			package my.model {
-			 
-			    entity Person {
-			        name: String
-			        firstName: String
-			        friends: List<Person>
-			        address : Address
-			        op getFullName() : String {
-			            return firstName + " " + name;
-			        }
-			        
-			        op getFriendsSortedByFullName() : List<Person> {
-			            return friends.sortBy[ f | f.fullName ]
-			        }
-			    }
-			    
-			    entity Address {
-			        street: String
-			        zip: String
-			        city: String
-			    }
-			}
+			# FIX is a macro-language for data transformations
+			
+			# Simple fixes
+			
+			add_field(hello,world)
+			remove_field(my.deep.nested.junk)
+			copy_field(stats,output.$append)
+			
+			# Conditionals
+			
+			if exists(error)
+				set_field(is_valid, no)
+				log(error)
+			elsif exists(warning)
+				set_field(is_valid, yes)
+				log(warning)
+			else
+				set_field(is_valid, yes)
+			end
+			
+			# Loops
+			
+			do list(path)
+				add_field(foo,bar)
+			end
+			
+			# Nested expressions
+			
+			do marc_each()
+				if marc_has(f700)
+					marc_map(f700a,authors.$append)
+				end
+			end
 		''')
 		Assertions.assertNotNull(result)
 		val errors = result.eResource.errors
