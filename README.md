@@ -10,6 +10,8 @@ State
 
 This repo contains an Xtext web project with a basic FIX grammar, which generates a parser and a web editor.
 
+[![Build Status](https://travis-ci.org/metafacture/metafacture-fix.svg?branch=master)](https://travis-ci.org/metafacture/metafacture-fix)
+
 Setup
 -----
 
