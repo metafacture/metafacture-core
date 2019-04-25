@@ -3,50 +3,45 @@
  */
 package org.metafacture.fix.jvmmodel
 
-import com.google.inject.Inject
-import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
-import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
+import org.metafacture.fix.fix.Do
 import org.metafacture.fix.fix.Expression
+import org.metafacture.fix.fix.If
+import org.metafacture.fix.fix.MethodCall
 
 class FixJvmModelInferrer extends AbstractModelInferrer {
- 
-  /**
-   * a builder API to programmatically create Jvm elements 
-   * in readable way.
-   */
-  @Inject extension JvmTypesBuilder
-  
-  @Inject extension IQualifiedNameProvider
-  
-  def dispatch void infer(Expression element, 
-                IJvmDeclaredTypeAcceptor acceptor, 
-                boolean isPrelinkingPhase) {
-    acceptor.accept(element.toClass( element.fullyQualifiedName )) [
-      documentation = element.documentation
-//      if (element.superType !== null)
-//        superTypes += element.superType.cloneWithProxies
-//      for (feature : element.features) {
-//        switch feature {
-//          
-//          SimpleFix : {
-//            members += feature.toField(feature.name, feature.type)
-//            members += feature.toGetter(feature.name, feature.type)
-//            members += feature.toSetter(feature.name, feature.type)
-//          }
-//          
-//          Operation : {
-//            members += feature.toMethod(feature.name, feature.type) [
-//              documentation = feature.documentation
-//              for (p : feature.params) {
-//                parameters += p.toParameter(p.name, p.parameterType)
-//              }
-//              body = feature.body
-//            ]
-//          }
-//        }
-//      }
-    ]
-  }
+
+	def dispatch void infer(Expression expression, IJvmDeclaredTypeAcceptor acceptor, boolean isPrelinkingPhase) {
+		switch expression {
+			If: {
+				println("if: " + expression)
+				for (ifExpression : expression.elements) {
+					this.infer(ifExpression, acceptor, isPrelinkingPhase)
+				}
+				if (expression.elseIf !== null) {
+					println("else if: " + expression.elseIf)
+					for (elseIfExpression : expression.elseIf.elements) {
+						this.infer(elseIfExpression, acceptor, isPrelinkingPhase)
+					}
+				}
+				if (expression.^else !== null) {
+					println("else: " + expression.elseIf)
+					for (elseExpression : expression.^else.elements) {
+						this.infer(elseExpression, acceptor, isPrelinkingPhase)
+					}
+				}
+			}
+			Do: {
+				println("do: " + expression)
+				for (doExpression : expression.elements) {
+					this.infer(doExpression, acceptor, isPrelinkingPhase)
+				}
+			}
+			MethodCall: {
+				println("method call: " + expression)
+			}
+		}
+	}
+
 }

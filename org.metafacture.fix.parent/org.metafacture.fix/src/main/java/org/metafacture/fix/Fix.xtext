@@ -8,14 +8,16 @@ Expression :
     If | Do | MethodCall | {Expression} SL_COMMENT
 ;
 
-If: 'if' MethodCall BEGIN
+If: 'if' name=ValidID '('(params+=QualifiedName 
+        (',' params+=QualifiedName)*)?')' BEGIN
     elements+=Expression*
 END
 elseIf=ElsIf?
 else=Else?
 'end';
 
-ElsIf: 'elsif' MethodCall BEGIN
+ElsIf: 'elsif' name=ValidID '('(params+=QualifiedName 
+        (',' params+=QualifiedName)*)?')' BEGIN
 	elements+=Expression*
 END;
 
@@ -23,7 +25,8 @@ Else: {Else} 'else' BEGIN
 	elements+=Expression*
 END;
 
-Do: 'do' MethodCall BEGIN
+Do: 'do' name=ValidID '('(params+=QualifiedName 
+        (',' params+=QualifiedName)*)?')' BEGIN
     elements+=Expression*
 END
 'end';
