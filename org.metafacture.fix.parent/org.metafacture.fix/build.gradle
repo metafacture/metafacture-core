@@ -5,6 +5,9 @@ dependencies {
 	testCompile "org.eclipse.xtext:org.eclipse.xtext.xbase.testing:${xtextVersion}"
 	compile "org.eclipse.xtext:org.eclipse.xtext:${xtextVersion}"
 	compile "org.eclipse.xtext:org.eclipse.xtext.xbase:${xtextVersion}"
+	implementation 'org.metafacture:metamorph:5.0.1'
+	testImplementation 'org.mockito:mockito-core:2.27.0'
+	testImplementation 'org.mockito:mockito-junit-jupiter:2.27.0'
 }
 configurations {
 	mwe2 {

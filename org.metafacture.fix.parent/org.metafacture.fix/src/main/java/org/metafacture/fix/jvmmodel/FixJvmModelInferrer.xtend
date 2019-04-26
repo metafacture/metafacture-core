@@ -3,39 +3,64 @@
  */
 package org.metafacture.fix.jvmmodel
 
+import javax.inject.Inject
+import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
+import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
 import org.metafacture.fix.fix.Do
 import org.metafacture.fix.fix.Expression
+import org.metafacture.fix.fix.Fix
 import org.metafacture.fix.fix.If
 import org.metafacture.fix.fix.MethodCall
+import org.metafacture.metamorph.Metafix
 
 class FixJvmModelInferrer extends AbstractModelInferrer {
 
-	def dispatch void infer(Expression expression, IJvmDeclaredTypeAcceptor acceptor, boolean isPrelinkingPhase) {
+	/**
+	 * a builder API to programmatically create Jvm elements 
+	 * in readable way.
+	 */
+	@Inject extension JvmTypesBuilder
+
+	@Inject extension IQualifiedNameProvider
+
+	def dispatch void infer(Fix fix, IJvmDeclaredTypeAcceptor acceptor, boolean isPrelinkingPhase) {
+		var metafix = new Metafix();
+		for (expression : fix.elements) {
+			process(expression, metafix)
+		}
+		acceptor.accept(fix.toClass(fix.fullyQualifiedName)) [
+			documentation = fix.documentation
+		]
+		println("Metafix: " + metafix)
+		// TODO interpreter, see https://www.eclipse.org/Xtext/documentation/208_tortoise.html
+	}
+
+	def void process(Expression expression, Metafix metafix) {
 		switch expression {
 			If: {
 				println("if: " + expression)
 				for (ifExpression : expression.elements) {
-					this.infer(ifExpression, acceptor, isPrelinkingPhase)
+					process(ifExpression, metafix)
 				}
 				if (expression.elseIf !== null) {
 					println("else if: " + expression.elseIf)
 					for (elseIfExpression : expression.elseIf.elements) {
-						this.infer(elseIfExpression, acceptor, isPrelinkingPhase)
+						process(elseIfExpression, metafix)
 					}
 				}
 				if (expression.^else !== null) {
 					println("else: " + expression.elseIf)
 					for (elseExpression : expression.^else.elements) {
-						this.infer(elseExpression, acceptor, isPrelinkingPhase)
+						process(elseExpression, metafix)
 					}
 				}
 			}
 			Do: {
 				println("do: " + expression)
 				for (doExpression : expression.elements) {
-					this.infer(doExpression, acceptor, isPrelinkingPhase)
+					process(doExpression, metafix)
 				}
 			}
 			MethodCall: {
