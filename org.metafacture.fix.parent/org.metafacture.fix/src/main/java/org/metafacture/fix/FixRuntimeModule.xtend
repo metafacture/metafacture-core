@@ -3,9 +3,13 @@
  */
 package org.metafacture.fix
 
+import org.metafacture.fix.interpreter.FixInterpreter
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
 class FixRuntimeModule extends AbstractFixRuntimeModule {
+	def Class<FixInterpreter> bindFixInterpreter() {
+		return FixInterpreter
+	}
 }

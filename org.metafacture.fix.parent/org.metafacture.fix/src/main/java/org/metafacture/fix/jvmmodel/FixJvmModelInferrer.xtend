@@ -8,11 +8,7 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
-import org.metafacture.fix.fix.Do
-import org.metafacture.fix.fix.Expression
 import org.metafacture.fix.fix.Fix
-import org.metafacture.fix.fix.If
-import org.metafacture.fix.fix.MethodCall
 import org.metafacture.metamorph.Metafix
 
 class FixJvmModelInferrer extends AbstractModelInferrer {
@@ -26,47 +22,10 @@ class FixJvmModelInferrer extends AbstractModelInferrer {
 	@Inject extension IQualifiedNameProvider
 
 	def dispatch void infer(Fix fix, IJvmDeclaredTypeAcceptor acceptor, boolean isPrelinkingPhase) {
-		var metafix = new Metafix();
-		for (expression : fix.elements) {
-			process(expression, metafix)
-		}
 		acceptor.accept(fix.toClass(fix.fullyQualifiedName)) [
 			documentation = fix.documentation
+			superTypes += typeRef(Metafix)
 		]
-		println("Metafix: " + metafix)
-		// TODO interpreter, see https://www.eclipse.org/Xtext/documentation/208_tortoise.html
-	}
-
-	def void process(Expression expression, Metafix metafix) {
-		switch expression {
-			If: {
-				println("if: " + expression)
-				for (ifExpression : expression.elements) {
-					process(ifExpression, metafix)
-				}
-				if (expression.elseIf !== null) {
-					println("else if: " + expression.elseIf)
-					for (elseIfExpression : expression.elseIf.elements) {
-						process(elseIfExpression, metafix)
-					}
-				}
-				if (expression.^else !== null) {
-					println("else: " + expression.elseIf)
-					for (elseExpression : expression.^else.elements) {
-						process(elseExpression, metafix)
-					}
-				}
-			}
-			Do: {
-				println("do: " + expression)
-				for (doExpression : expression.elements) {
-					process(doExpression, metafix)
-				}
-			}
-			MethodCall: {
-				println("method call: " + expression)
-			}
-		}
 	}
 
 }

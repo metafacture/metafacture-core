@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.metafacture.fix.fix.Expression;
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.metamorph.Registry;
@@ -20,6 +21,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
 	public static final String ELSE_KEYWORD = "_else";
 	private final List<NamedValueReceiver> elseSources = new ArrayList<>();
 	private final Registry<NamedValueReceiver> dataRegistry = new WildcardRegistry<>();
+	public List<Expression> expressions = new ArrayList<>();
 
 	@Override
 	public void startRecord(String identifier) {
