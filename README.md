@@ -70,17 +70,18 @@ Building metafacture-core from source is easy. All you need is git and JDK 8:
 
 1. Clone the metafacture-core repository and change into the directory:
 
-    ```bash
-    $ git clone https://github.com/metafacture/metafacture-core.git
-    $ cd metafacture-core
-    ```
+```bash
+$ git clone https://github.com/metafacture/metafacture-core.git
+$ cd metafacture-core
+```
 
-2. Invoke the gradle-wrapper to download Gradle and build metafacture-core:
+2. Invoke the gradle-wrapper to download Gradle and build metafacture-core (on Windows call `gradlew.bat install`):
 
-   ```bash
-   $ ./gradlew install
-   ```
-   on Windows call `gradlew.bat install` instead.
+```bash
+$ ./gradlew install
+```
+
+The resulting distribution can be found in `metafacture-core/metafacture-runner/build/distributions/`.
 
 See [Code Quality and Style](https://github.com/metafacture/metafacture-core/wiki/Code-Quality-and-Style) on the wiki for further information on the sources.
 
