@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Christoph Böhme
+ * Copyright 2016,2019 Christoph Böhme and hbz
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,13 @@ package org.metafacture.biblio.pica;
  * The parser ignores spaces in field names. They are not included in the
  * field name.
  *
- * Empty subfields are skipped. For instance, parsing the following input
- * would NOT produce an empty literal: 003@ \u001f\u001e. The parser also
+ * Empty subfields are skipped. For instance, parsing the following normalized 
+ * pica+ would NOT produce an empty literal: 003@ \u001f\u001e. The parser also
  * skips unnamed fields without any subfields.
  *
  * @author Christoph Böhme
- *
+ * @author Pascal Christoph (dr0i)
+ * 
  */
 enum PicaParserState {
 
@@ -38,19 +39,16 @@ enum PicaParserState {
         @Override
         protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
             final PicaParserState next;
-            switch (ch) {
-            case PicaConstants.RECORD_MARKER:
-            case PicaConstants.FIELD_MARKER:
-            case PicaConstants.FIELD_END_MARKER:
+            if(ch==PicaConstants.RECORD_MARKER ||
+               ch==PicaConstants.FIELD_MARKER ||
+               ch==PicaConstants.FIELD_END_MARKER){
                 ctx.emitStartEntity();
                 ctx.emitEndEntity();
                 next = FIELD_NAME;
-                break;
-            case PicaConstants.SUBFIELD_MARKER:
+            }else if(ch==PicaConstants.SUBFIELD_MARKER){
                 ctx.emitStartEntity();
                 next = SUBFIELD_NAME;
-                break;
-            default:
+            }else{
                 ctx.appendText(ch);
                 next = this;
             }
@@ -67,17 +65,14 @@ enum PicaParserState {
         @Override
         protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
             final PicaParserState next;
-            switch (ch) {
-            case PicaConstants.RECORD_MARKER:
-            case PicaConstants.FIELD_MARKER:
-            case PicaConstants.FIELD_END_MARKER:
+            if(ch==PicaConstants.RECORD_MARKER ||
+               ch==PicaConstants.FIELD_MARKER ||
+               ch==PicaConstants.FIELD_END_MARKER){
                 ctx.emitEndEntity();
                 next = FIELD_NAME;
-                break;
-            case PicaConstants.SUBFIELD_MARKER:
+            }else if(ch==PicaConstants.SUBFIELD_MARKER)
                 next = this;
-                break;
-            default:
+            else{
                 ctx.setSubfieldName(ch);
                 next = SUBFIELD_VALUE;
             }
@@ -93,19 +88,16 @@ enum PicaParserState {
         @Override
         protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
             final PicaParserState next;
-            switch (ch) {
-            case PicaConstants.RECORD_MARKER:
-            case PicaConstants.FIELD_MARKER:
-            case PicaConstants.FIELD_END_MARKER:
+            if(ch==PicaConstants.RECORD_MARKER ||
+               ch==PicaConstants.FIELD_MARKER ||
+               ch==PicaConstants.FIELD_END_MARKER){
                 ctx.emitLiteral();
                 ctx.emitEndEntity();
                 next = FIELD_NAME;
-                break;
-            case PicaConstants.SUBFIELD_MARKER:
+            }else if(ch==PicaConstants.SUBFIELD_MARKER){
                 ctx.emitLiteral();
                 next = SUBFIELD_NAME;
-                break;
-            default:
+            }else{
                 ctx.appendText(ch);
                 next = this;
             }
@@ -122,5 +114,4 @@ enum PicaParserState {
     protected abstract PicaParserState parseChar(final char ch, final PicaParserContext ctx);
 
     protected abstract void endOfInput(final PicaParserContext ctx);
-
 }

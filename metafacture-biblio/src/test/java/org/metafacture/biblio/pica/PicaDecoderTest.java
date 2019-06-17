@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Christoph Böhme
+ * Copyright 2016-2019 Christoph Böhme and hbz
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.biblio.pica;
 
 import static org.mockito.Mockito.inOrder;
@@ -32,6 +33,7 @@ import org.mockito.MockitoAnnotations;
  * Tests for class {@link PicaDecoder}.
  *
  * @author Christoph Böhme
+ * @author Pascal Christoph (dr0i)
  *
  */
 public final class PicaDecoderTest {
@@ -50,6 +52,10 @@ public final class PicaDecoderTest {
     private static final String SUBFIELD_MARKER = "\u001f";
     private static final String FIELD_END_MARKER = "\n";
 
+    private static final String NONNORMALIZED_RECORD_MARKER = "\n";
+    private static final String NONNORMALIZED_SUBFIELD_MARKER = "$";
+    private static final String NONNORMALIZED_FIELD_END_MARKER = "\n";
+
     private static final String FIELD_001AT_0_TEST = "001@ " + SUBFIELD_MARKER + "0test";
     private static final String FIELD_003AT_0_ID = "003@ " + SUBFIELD_MARKER + "0" + RECORD_ID;
     private static final String FIELD_107F_0_ID = "107F " + SUBFIELD_MARKER + "0" + RECORD_ID;
@@ -58,6 +64,9 @@ public final class PicaDecoderTest {
     private static final String FIELD_203AT_100_0_ID = "203@/100 " + SUBFIELD_MARKER + "0" + RECORD_ID;
     private static final String FIELD_021A_A_UEBER = "021A " + SUBFIELD_MARKER + "a" + COMPOSED_UTF8;
     private static final String FIELD_028A = ENTITY_028A + " ";
+
+    private static final String NONNORMALIZED_FIELD_001AT_0_TEST = "001@ " + NONNORMALIZED_SUBFIELD_MARKER + "0test";
+    private static final String NONNORMALIZED_FIELD_003AT_0_ID = "003@ " + NONNORMALIZED_SUBFIELD_MARKER + "0" + RECORD_ID;
 
     private PicaDecoder picaDecoder;
 
@@ -560,6 +569,24 @@ public final class PicaDecoderTest {
                 FIELD_MARKER + FIELD_003AT_0_ID);
 
         verify(receiver).startEntity("  fieldname  ");
+    }
+
+    @Test
+    public void nonNormalizedPica() {
+        picaDecoder.setNormalizedSerialization(false);
+        picaDecoder.process(
+            NONNORMALIZED_FIELD_001AT_0_TEST  +
+            NONNORMALIZED_FIELD_END_MARKER +
+            NONNORMALIZED_FIELD_003AT_0_ID +
+            NONNORMALIZED_RECORD_MARKER);
+        try {
+            verify(receiver).startEntity("001@");
+            verify(receiver).literal("0", "test");
+            verify(receiver).startEntity("003@");
+            verify(receiver).literal("0", "2809");
+        } finally { //ensure reset to the default used by the other tests
+            picaDecoder.setNormalizedSerialization(true);
+        }
     }
 
     private void verify003At0ID(final InOrder ordered) {
