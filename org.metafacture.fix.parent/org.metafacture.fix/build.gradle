@@ -1,3 +1,7 @@
+plugins {
+	id 'com.adarshr.test-logger' version '1.7.0'
+}
+
 dependencies {
 	testCompile 'org.junit.jupiter:junit-jupiter-api'
 	testRuntime 'org.junit.jupiter:junit-jupiter-engine'
@@ -6,6 +10,8 @@ dependencies {
 	compile "org.eclipse.xtext:org.eclipse.xtext:${xtextVersion}"
 	compile "org.eclipse.xtext:org.eclipse.xtext.xbase:${xtextVersion}"
 	implementation 'org.metafacture:metamorph:5.0.1'
+	implementation 'org.metafacture:metafacture-commons:5.0.1'
+	implementation 'org.metafacture:metafacture-mangling:5.0.1'
 	testImplementation 'org.mockito:mockito-core:2.27.0'
 	testImplementation 'org.mockito:mockito-junit-jupiter:2.27.0'
 }

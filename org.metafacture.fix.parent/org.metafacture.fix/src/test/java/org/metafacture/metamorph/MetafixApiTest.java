@@ -1,5 +1,5 @@
 /*
- * Copyright 2016–2019 Christoph Böhme and others
+ * Copyright 2013, 2019 Deutsche Nationalbibliothek and others
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -41,14 +40,14 @@ import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- * Tests for class {@link Metafix}.
+ * Tests the basic functionality of Metafix via API.
  *
  * @author Markus Michael Geipel (MetamorphTest)
  * @author Christoph Böhme (rewrite MetamorphTest)
- * @author Fabian Steeg (adapt MetamorphTest for Metafix and JUnit 5)
+ * @author Fabian Steeg (MetafixApiTest)
  */
 @ExtendWith(MockitoExtension.class)
-public final class MetafixTest {
+public final class MetafixApiTest {
 
 	@RegisterExtension
 	public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -64,7 +63,6 @@ public final class MetafixTest {
 		metafix.setReceiver(new DefaultStreamReceiver());
 	}
 
-	@Disabled
 	@Test
 	public void shouldMapMatchingPath() {
 		setupSimpleMappingMorph();
@@ -85,7 +83,6 @@ public final class MetafixTest {
 		verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(), anyInt());
 	}
 
-	@Disabled
 	@Test
 	public void shouldMapMatchingLiteralInMatchingEntity() {
 		setupSimpleMappingMorph();
@@ -130,8 +127,8 @@ public final class MetafixTest {
 	}
 
 	/**
-	 * Creates the Metamorph structure that corresponds to the Metamorph XML
-	 * statement {@code <data source="testEntity.testLiteral" name="outName" />}.
+	 * Creates the Metafix object structure that corresponds to the Metafix DSL
+	 * statement {@code map(testEntity.testLiteral, outName)}.
 	 */
 	private void setupSimpleMappingMorph() {
 		final Data data = new Data();
@@ -140,7 +137,6 @@ public final class MetafixTest {
 		metafix.registerNamedValueReceiver("testEntity" + '.' + "testLiteral", data);
 	}
 
-	@Disabled
 	@Test
 	public void shouldReturnValueFromNestedMap() {
 		final Map<String, String> map = new HashMap<>();
@@ -152,7 +148,6 @@ public final class MetafixTest {
 		assertEquals("testValue", metafix.getValue("testMap", "outName"));
 	}
 
-	@Disabled
 	@Test
 	public void shouldReturnDefaultValueIfMapIsKnownButNameIsUnknown() {
 		final Map<String, String> map = new HashMap<>();
@@ -163,7 +158,6 @@ public final class MetafixTest {
 		assertEquals("defaultValue", metafix.getValue("testMap", "nameNotInMap"));
 	}
 
-	@Disabled
 	@Test
 	public void shouldFeedbackLiteralsStartingWithAtIntoMetamorph() {
 		final Data data1;
@@ -183,10 +177,9 @@ public final class MetafixTest {
 		verify(namedValueReceiver).receive(eq("outName"), eq("testValue"), any(), anyInt(), anyInt());
 	}
 
-	@Disabled
 	@Test
 	public void shouldThrowIllegalStateExceptionIfEntityIsNotClosed() {
-		assertThrows(ArithmeticException.class, () -> {
+		assertThrows(IllegalStateException.class, () -> {
 			metafix.startRecord("");
 			metafix.startEntity("testEntity");
 			metafix.startEntity("testEntity");

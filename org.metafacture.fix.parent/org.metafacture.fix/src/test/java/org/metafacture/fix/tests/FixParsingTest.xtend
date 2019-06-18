@@ -19,8 +19,32 @@ class FixParsingTest {
 	ParseHelper<Fix> parseHelper
 	
 	@Test
-	def void loadModel() {
-		val result = parseHelper.parse('''
+	def void load0() {
+		loadModel('''map(a,b)''')
+	}
+
+	@Test
+	def void load1() {
+		loadModel('''
+			# simple field name mappings
+			
+			map(a,b)
+			
+			# nested field structure
+			
+			map(e1)
+			map(e1.e2)
+			map(e1.e2.d)
+			
+			# pass-through for unmapped fields
+			
+			map(_else)
+		''')
+	}
+
+	@Test
+	def void load2() {
+		loadModel('''
 			# FIX is a macro-language for data transformations
 			
 			# Simple fixes
@@ -55,6 +79,10 @@ class FixParsingTest {
 				end
 			end
 		''')
+	}
+
+	def void loadModel(String fix) {
+		val result = parseHelper.parse(fix)
 		println("Result: " + result)
 		Assertions.assertNotNull(result)
 		val errors = result.eResource.errors

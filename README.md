@@ -1,14 +1,16 @@
 About
 -----
 
-This is early work in progress towards an implementation of the FIX language for Metafacture.
+This is early work in progress towards an implementation of the Fix language for Metafacture.
 
 See [https://github.com/elag/FIG](https://github.com/elag/FIG)
 
 State
 -----
 
-This repo contains an Xtext web project with a basic FIX grammar, which generates a parser and a web editor.
+This repo contains an Xtext web project with a basic Fix grammar, which generates a parser and a web editor.
+
+It also contains an interpreter to build `Metafix` objects from the Fix DSL. These are intended as a replacement for the `Metamorph` stream module in Metafacture workflows. In Flux workflows, the idea is to replace `morph(sample.xml)` with something like `fix(sample.fix)`.
 
 [![Build Status](https://travis-ci.org/metafacture/metafacture-fix.svg?branch=master)](https://travis-ci.org/metafacture/metafacture-fix)
 
@@ -19,9 +21,9 @@ Go to the Xtext parent project:
 
 `cd metafacture-fix/org.metafacture.fix.parent`
 
-Run the tests (see `FixParsingTest.xtend`):
+Run the tests (in `org.metafacture.fix/src/test/java`):
 
-`./gradlew test`
+`./gradlew clean test`
 
 Editor
 ------
@@ -33,7 +35,7 @@ Start the server:
 Visit [http://localhost:8080/](http://localhost:8080/), and paste this into the editor:
 
 ```
-# FIX is a macro-language for data transformations
+# Fix is a macro-language for data transformations
 			
 # Simple fixes
 
@@ -69,3 +71,26 @@ end
 ```
 
 Content assist is triggered with Ctrl-Space. The input above is also used in `FixParsingTest.xtend`.
+
+Module
+======
+
+The `Metafix` stream module currently supports:
+
+```
+# simple field name mappings
+
+map(a,b)
+
+# nested field structure
+
+map(e1)
+map(e1.e2)
+map(e1.e2.d)
+
+# pass-through for unmapped fields
+
+map(_else)
+```
+
+See also `MetafixDslTest.java`.
