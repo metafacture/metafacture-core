@@ -41,7 +41,7 @@ a:hover {
 	top: 90px;
 	bottom: 0;
 	left: 0;
-	width: 640px;
+	width: 100%;
 }
 
 #xtext-editor {
@@ -53,4 +53,20 @@ a:hover {
 	right: 0;
 	padding: 4px;
 	border: 1px solid #aaa;
+	width: 50%;
+}
+
+.row {
+	display: flex;
+}
+
+.col {
+	flex: 50%;
+}
+
+#result {
+	margin-left: 25px;
+	margin-top: 0px;
+	white-space: pre-wrap;
+	text-align: right
 }

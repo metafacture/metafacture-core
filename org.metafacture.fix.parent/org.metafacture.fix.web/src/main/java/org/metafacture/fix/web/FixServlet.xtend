@@ -6,21 +6,25 @@ package org.metafacture.fix.web
 import javax.servlet.annotation.WebServlet
 import org.eclipse.xtext.util.DisposableRegistry
 import org.eclipse.xtext.web.servlet.XtextServlet
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+import com.google.common.base.Charsets
+import org.metafacture.metamorph.Metafix
 
 /**
  * Deploy this class into a servlet container to enable DSL-specific services.
  */
-@WebServlet(name = 'XtextServices', urlPatterns = '/xtext-service/*')
+@WebServlet(name='XtextServices', urlPatterns='/xtext-service/*')
 class FixServlet extends XtextServlet {
-	
+
 	DisposableRegistry disposableRegistry
-	
+
 	override init() {
 		super.init()
 		val injector = new FixWebSetup().createInjectorAndDoEMFRegistration()
 		disposableRegistry = injector.getInstance(DisposableRegistry)
 	}
-	
+
 	override destroy() {
 		if (disposableRegistry !== null) {
 			disposableRegistry.dispose()
@@ -28,5 +32,17 @@ class FixServlet extends XtextServlet {
 		}
 		super.destroy()
 	}
-	
+
+	override doPost(HttpServletRequest request, HttpServletResponse response) {
+		println("Request: " + request)
+		val fixString = request.getParameter("fix")
+		println(fixString)
+		val metafix = new Metafix(fixString);
+		// TODO: do this only on POST to /run
+		// TODO: use the request body, it's POST
+		// TODO: run a test transformation, write result
+		// TODO: add POST tests sending data
+		response.outputStream.write(metafix.expressions.toString.getBytes(Charsets.UTF_8))
+	}
+
 }

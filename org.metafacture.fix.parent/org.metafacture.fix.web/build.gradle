@@ -12,6 +12,9 @@ dependencies {
 	compile "org.webjars:ace:1.3.3"
 	providedCompile "org.eclipse.jetty:jetty-annotations:9.4.14.v20181114"
 	providedCompile "org.slf4j:slf4j-simple:1.7.21"
+	implementation 'org.metafacture:metamorph:5.0.1'
+	implementation 'org.metafacture:metafacture-commons:5.0.1'
+	implementation 'org.metafacture:metafacture-mangling:5.0.1'
 }
 task jettyRun(type:JavaExec) {
 	dependsOn(sourceSets.main.runtimeClasspath)

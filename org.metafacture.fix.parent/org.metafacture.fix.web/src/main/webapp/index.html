@@ -31,12 +31,42 @@
 </head>
 <body>
 
+<script>
+	function loadContent() {
+		var editor = ace.edit("xtext-editor");
+		editor.setValue('map(a,b)\nmap(_else)');
+		return true;
+	}
+	function sendContent() {
+		var editor = ace.edit("xtext-editor");
+		var fix =  editor.getValue();
+		console.log('Fix from editor: ' +fix);
+		var url = "/xtext-service/run?fix=" + fix;
+		// TODO: Send the data using POST body
+		$.post( url ).done(function( data ) {
+			console.log("Response: " + data);
+			$( "#result" ).empty().append( data );
+		});
+		return true;
+	}
+</script>
+
 <div class="container">
 	<div class="header">
-		<h1>Example Fix Web Editor</h1>
+		<!-- TODO: use xtext web persistence -->
+		<h1>Fix Web Editor <small>
+		| <a href="#" onclick="return loadContent();">Load sample</a>
+		| <a href="#" onclick="return sendContent();">Process</a></small></h1>
 	</div>
 	<div class="content">
-		<div id="xtext-editor" data-editor-xtext-lang="fix"></div>
+		<div class='row'>
+			<div class='col'>
+				<div id="xtext-editor" data-editor-xtext-lang="fix"></div>
+			</div>
+			<div class='col'>
+				<small><code><pre id='result'>No result</pre></code></small>
+			</div>
+		</div>
 	</div>
 </div>
 
