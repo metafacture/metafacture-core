@@ -1,5 +1,5 @@
 /*
- * Copyright 2016, 2019 Christoph Böhme and hbz
+ * Copyright 2016, 2019 Christoph Böhme and others
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -143,7 +143,8 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * support other pica encodings.
  *
  * @author Christoph Böhme
- * @author Pascal Christoph (dr0i)
+ * @author Pascal Christoph (dr0i) (add support for non-normalized pica+)
+ * @author Fabian Steeg (fsteeg) (switch to enum)
  *
  */
 @Description("Parses pica+ records. The parser only parses single records. " +
@@ -167,37 +168,36 @@ public final class PicaDecoder
     private int recordLen;
 
     private boolean ignoreMissingIdn;
+    private boolean isNormalized;
 
     public PicaDecoder() {
-        makeConstants();
+        this(true);
     }
 
     public PicaDecoder(boolean normalized) {
         setNormalizedSerialization(normalized);
-        makeConstants();
     }
+
     /**
-     * Controls wether the input is serialzed as normalized or non-normalized
+     * Controls whether the input is read as normalized or non-normalized
      * pica+. As the default "normalized" is assumed.
      *
-     * @param normalized if true, the input is treated as "normalized" pica+ ;
-     *                   if false, it's treated as non-normalized serialized.
+     * @param normalized if true, the input is treated as normalized pica+ ;
+     *                   if false, it's treated as non-normalized.
      */
     public void setNormalizedSerialization(boolean normalized) {
-        if (normalized)
-            PicaConstants.setNormalizedSerialization();
-        else
-            PicaConstants.setNonNormalizedSerialization();
+        this.isNormalized = normalized;
         makeConstants();
     }
+
     private void makeConstants() {
-        START_MARKERS = "(?:^|" + PicaConstants.FIELD_MARKER + "|"
-                + PicaConstants.FIELD_END_MARKER + "|"
-                + PicaConstants.RECORD_MARKER + "|.*\n" + ")";
+        START_MARKERS = "(?:^|" + PicaConstants.FIELD_MARKER.get(isNormalized) + "|"
+                + PicaConstants.FIELD_END_MARKER.get(isNormalized) + "|"
+                + PicaConstants.RECORD_MARKER.get(isNormalized) + "|.*\n" + ")";
         ID_FIELDS_PATTERN = Pattern
                 .compile(START_MARKERS + "(?:003@|203@(?:/..+)?|107F) "
-                        + " ?(\\" + PicaConstants.SUBFIELD_MARKER + "|"
-                        + PicaConstants.SUBFIELD_MARKER + ")0");
+                        + " ?(\\" + PicaConstants.SUBFIELD_MARKER.get(isNormalized) + "|"
+                        + PicaConstants.SUBFIELD_MARKER.get(isNormalized) + ")0");
         idFieldMatcher = ID_FIELDS_PATTERN.matcher("");
     }
     /**
@@ -303,7 +303,7 @@ public final class PicaDecoder
 
         PicaParserState state = PicaParserState.FIELD_NAME;
         for (int i = 0; i < recordLen; ++i) {
-            state = state.parseChar(buffer[i], parserContext);
+            state = state.parseChar(buffer[i], parserContext, isNormalized);
         }
         state.endOfInput(parserContext);
 
@@ -337,7 +337,7 @@ public final class PicaDecoder
         idBuilder.setLength(0);
         for (int i = idFromIndex; i < recordLen; ++i) {
             final char ch = buffer[i];
-            if (isSubfieldDelimiter(ch)) {
+            if (isMarker(ch)) {
                 break;
             }
             idBuilder.append(ch);
@@ -353,11 +353,8 @@ public final class PicaDecoder
         return idFieldMatcher.end();
     }
 
-    private static boolean isSubfieldDelimiter(final char ch) {
-        return ch == PicaConstants.RECORD_MARKER
-                || ch == PicaConstants.FIELD_MARKER
-                || ch == PicaConstants.FIELD_END_MARKER
-                || ch == PicaConstants.SUBFIELD_MARKER;
+    private boolean isMarker(final char ch) {
+        return PicaConstants.from(isNormalized, ch) != PicaConstants.NO_MARKER;
     }
 
 }
