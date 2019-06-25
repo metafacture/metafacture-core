@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Christoph Böhme
+ * Copyright 2016,2019 Christoph Böhme and others
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -30,23 +30,24 @@ package org.metafacture.biblio.pica;
  * skips unnamed fields without any subfields.
  *
  * @author Christoph Böhme
- *
+ * @author Pascal Christoph (dr0i) (add support for non-normalized pica+)
+ * @author Fabian Steeg (fsteeg) (switch to enum)
  */
 enum PicaParserState {
 
     FIELD_NAME {
         @Override
-        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
+        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx, boolean normalized) {
             final PicaParserState next;
-            switch (ch) {
-            case PicaConstants.RECORD_MARKER:
-            case PicaConstants.FIELD_MARKER:
-            case PicaConstants.FIELD_END_MARKER:
+            switch (PicaConstants.from(normalized, ch)) {
+            case RECORD_MARKER:
+            case FIELD_MARKER:
+            case FIELD_END_MARKER:
                 ctx.emitStartEntity();
                 ctx.emitEndEntity();
                 next = FIELD_NAME;
                 break;
-            case PicaConstants.SUBFIELD_MARKER:
+            case SUBFIELD_MARKER:
                 ctx.emitStartEntity();
                 next = SUBFIELD_NAME;
                 break;
@@ -65,16 +66,16 @@ enum PicaParserState {
     },
     SUBFIELD_NAME {
         @Override
-        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
+        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx, boolean normalized) {
             final PicaParserState next;
-            switch (ch) {
-            case PicaConstants.RECORD_MARKER:
-            case PicaConstants.FIELD_MARKER:
-            case PicaConstants.FIELD_END_MARKER:
+            switch (PicaConstants.from(normalized, ch)) {
+            case RECORD_MARKER:
+            case FIELD_MARKER:
+            case FIELD_END_MARKER:
                 ctx.emitEndEntity();
                 next = FIELD_NAME;
                 break;
-            case PicaConstants.SUBFIELD_MARKER:
+            case SUBFIELD_MARKER:
                 next = this;
                 break;
             default:
@@ -91,17 +92,17 @@ enum PicaParserState {
     },
     SUBFIELD_VALUE {
         @Override
-        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx) {
+        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx, boolean normalized) {
             final PicaParserState next;
-            switch (ch) {
-            case PicaConstants.RECORD_MARKER:
-            case PicaConstants.FIELD_MARKER:
-            case PicaConstants.FIELD_END_MARKER:
+            switch (PicaConstants.from(normalized, ch)) {
+            case RECORD_MARKER:
+            case FIELD_MARKER:
+            case FIELD_END_MARKER:
                 ctx.emitLiteral();
                 ctx.emitEndEntity();
                 next = FIELD_NAME;
                 break;
-            case PicaConstants.SUBFIELD_MARKER:
+            case SUBFIELD_MARKER:
                 ctx.emitLiteral();
                 next = SUBFIELD_NAME;
                 break;
@@ -119,7 +120,7 @@ enum PicaParserState {
         }
     };
 
-    protected abstract PicaParserState parseChar(final char ch, final PicaParserContext ctx);
+    protected abstract PicaParserState parseChar(final char ch, final PicaParserContext ctx, final boolean normalized);
 
     protected abstract void endOfInput(final PicaParserContext ctx);
 

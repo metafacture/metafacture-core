@@ -1,5 +1,4 @@
-/*
- * Copyright 2016 Christoph Böhme
+/* Copyright 2016,2019 Christoph Böhme and others
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,23 +12,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.biblio.pica;
 
 /**
- * Useful constants for PICA+
+ * Useful constants for PICA+.
+ * PICA+ comes with two possible serializations:
+ * a normalized one and a non-normalized.
  *
- * @author Christoph Böhme
+ * @author Christoph Böhme (initial implementation)
+ * @author Pascal Christoph (dr0i) (add support for non-normalized pica+)
+ * @author Fabian Steeg (fsteeg) (switch to enum)
  *
  */
-final class PicaConstants {
+enum PicaConstants {
+	// We use '\0' for null/empty
+	RECORD_MARKER('\u001d', '\n'), //
+	FIELD_MARKER('\u001e', '\0'), //
+	SUBFIELD_MARKER('\u001f', '$'), //
+	FIELD_END_MARKER('\n', '\n'), //
+	NO_MARKER('\0', '\0');
 
-    public static final char RECORD_MARKER = '\u001d';
-    public static final char FIELD_MARKER = '\u001e';
-    public static final char SUBFIELD_MARKER = '\u001f';
-    public static final char FIELD_END_MARKER = '\n';
+	char normalized;
+	char nonNormalized;
 
-    private PicaConstants() {
-        // No instances allowed
-    }
+	PicaConstants(char normalized, char nonNormalized) {
+		this.normalized = normalized;
+		this.nonNormalized = nonNormalized;
+	}
 
+	public char get(boolean isNormalized) {
+		return isNormalized ? normalized : nonNormalized;
+	}
+
+	public static PicaConstants from(boolean isNormalized, char ch) {
+		for (PicaConstants value : values()) {
+			if (ch == (isNormalized ? value.normalized : value.nonNormalized)) {
+				return value;
+			}
+		}
+		return NO_MARKER;
+	}
 }

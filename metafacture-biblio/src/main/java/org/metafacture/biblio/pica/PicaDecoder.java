@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Christoph Böhme
+ * Copyright 2016, 2019 Christoph Böhme and others
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -32,9 +32,11 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * containing multiple records must be split into individual records before
  * passing it to {@code PicaDecoder}.
  * <p>
- * The parser is designed to accept any string as valid input and to parse pica
- * plain format as well as normalised pica. To achieve this, the parser behaves
- * as following:
+ * The parser is designed to accept any string as valid input and to parse
+ * pica+ in its two serialization forms:
+ * as non-normalized and as normalized.
+ * To achieve this, the parser behaves as following when parsing:
+ * normalized pica+:
  * <ul>
  *   <li>The parser assumes that the input starts with a field name.
  *
@@ -56,6 +58,26 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  *   that field names, subfields, subfield names or subfield values can be
  *   empty.
  * </ul>
+ *  * non-normalized pica+:
+ * <ul>
+ *   <li>The parser assumes that the input starts with a field name.
+ *
+ *   <li>The field name and the first subfield are separated by a subfield
+ *   marker ($).
+ *
+ *   <li>Fields are separated by record markers (&#92;n) or field end
+ *   markers (&#92;n).
+ *
+ *   <li>Subfields are separated by subfield markers ($).
+ *
+ *   <li>The first character of a subfield is the name of the subfield
+ *
+ *   <li>The parser assumes that the end of the input marks the end of the
+ *   current field and the end of the record.
+ *
+ *   <li>As multiple fields and subfields are not empty in non-normailzed pica+
+ *   they are just treated like anything else.
+ * </ul>
  * Please note that the record marker is treated as a field delimiter and not
  * as a record delimiter. Records need to be separated prior to parsing them.
  * <p>
@@ -69,7 +91,8 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  *
  *   <li>Subfields which only have a name but no value are always parsed.
  *
- *   <li>Unnamed fields are only parsed if the contain not-ignored subfields.
+ *   <li>In normalized pica+ unnamed fields are only parsed if they contain
+ *    not-ignored subfields. In Non-normalized pica+ unnamed fields don't exist.
  *
  *   <li>Named fields containing none or only ignored subfields are only parsed
  *   if {@link #setSkipEmptyFields(boolean)} is set to false otherwise they are
@@ -85,7 +108,7 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * {@link #setTrimFieldNames(boolean)} to false.
  * <p>
  * The record id emitted with the <i>start-record</i> event is extracted from
- * one of the following pica fields:
+ * one of the following non-normalized pica+ fields:
  * <ul>
  *   <li><i>003&#64; $0</i>
  *   <li><i>107F $0</i>
@@ -97,7 +120,7 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * found in the record a {@link MissingIdException} is thrown otherwise the
  * record identifier is an empty string.
  * <p>
- * For example, when run on the input
+ * For example, when run on this input in its normalized serialization form:
  * <pre>
  * 003&#64; &#92;u001f01234&#92;u001e
  * 028A &#92;u001faAndy&#92;u001fdWarhol&#92;u001e
@@ -120,6 +143,8 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * support other pica encodings.
  *
  * @author Christoph Böhme
+ * @author Pascal Christoph (dr0i) (add support for non-normalized pica+)
+ * @author Fabian Steeg (fsteeg) (switch to enum)
  *
  */
 @Description("Parses pica+ records. The parser only parses single records. " +
@@ -131,14 +156,11 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 public final class PicaDecoder
         extends DefaultObjectPipe<String, StreamReceiver> {
 
-    private static final String START_MARKERS ="(?:^|" + PicaConstants.FIELD_MARKER +
-            "|" + PicaConstants.FIELD_END_MARKER + "|" + PicaConstants.RECORD_MARKER + ")";
-    private static final Pattern ID_FIELDS_PATTERN = Pattern.compile(
-            START_MARKERS + "(?:003@|203@(?:/..+)?|107F) " + PicaConstants.SUBFIELD_MARKER + "0");
-
+    private static String START_MARKERS;
+    private static Pattern ID_FIELDS_PATTERN;
     private static final int BUFFER_SIZE = 1024 * 1024;
 
-    private final Matcher idFieldMatcher = ID_FIELDS_PATTERN.matcher("");
+    private Matcher idFieldMatcher;
     private final StringBuilder idBuilder = new StringBuilder();
     private final PicaParserContext parserContext = new PicaParserContext();
 
@@ -146,7 +168,38 @@ public final class PicaDecoder
     private int recordLen;
 
     private boolean ignoreMissingIdn;
+    private boolean isNormalized;
 
+    public PicaDecoder() {
+        this(true);
+    }
+
+    public PicaDecoder(boolean normalized) {
+        setNormalizedSerialization(normalized);
+    }
+
+    /**
+     * Controls whether the input is read as normalized or non-normalized
+     * pica+. As the default "normalized" is assumed.
+     *
+     * @param normalized if true, the input is treated as normalized pica+ ;
+     *                   if false, it's treated as non-normalized.
+     */
+    public void setNormalizedSerialization(boolean normalized) {
+        this.isNormalized = normalized;
+        makeConstants();
+    }
+
+    private void makeConstants() {
+        START_MARKERS = "(?:^|" + PicaConstants.FIELD_MARKER.get(isNormalized) + "|"
+                + PicaConstants.FIELD_END_MARKER.get(isNormalized) + "|"
+                + PicaConstants.RECORD_MARKER.get(isNormalized) + "|.*\n" + ")";
+        ID_FIELDS_PATTERN = Pattern
+                .compile(START_MARKERS + "(?:003@|203@(?:/..+)?|107F) "
+                        + " ?(\\" + PicaConstants.SUBFIELD_MARKER.get(isNormalized) + "|"
+                        + PicaConstants.SUBFIELD_MARKER.get(isNormalized) + ")0");
+        idFieldMatcher = ID_FIELDS_PATTERN.matcher("");
+    }
     /**
      * Controls whether records having no record id are reported as faulty. By
      * default such records are reported by the {@code PicaDecoder} by throwing
@@ -250,7 +303,7 @@ public final class PicaDecoder
 
         PicaParserState state = PicaParserState.FIELD_NAME;
         for (int i = 0; i < recordLen; ++i) {
-            state = state.parseChar(buffer[i], parserContext);
+            state = state.parseChar(buffer[i], parserContext, isNormalized);
         }
         state.endOfInput(parserContext);
 
@@ -284,7 +337,7 @@ public final class PicaDecoder
         idBuilder.setLength(0);
         for (int i = idFromIndex; i < recordLen; ++i) {
             final char ch = buffer[i];
-            if (isSubfieldDelimiter(ch)) {
+            if (isMarker(ch)) {
                 break;
             }
             idBuilder.append(ch);
@@ -300,11 +353,8 @@ public final class PicaDecoder
         return idFieldMatcher.end();
     }
 
-    private static boolean isSubfieldDelimiter(final char ch) {
-        return ch == PicaConstants.RECORD_MARKER
-                || ch == PicaConstants.FIELD_MARKER
-                || ch == PicaConstants.FIELD_END_MARKER
-                || ch == PicaConstants.SUBFIELD_MARKER;
+    private boolean isMarker(final char ch) {
+        return PicaConstants.from(isNormalized, ch) != PicaConstants.NO_MARKER;
     }
 
 }
