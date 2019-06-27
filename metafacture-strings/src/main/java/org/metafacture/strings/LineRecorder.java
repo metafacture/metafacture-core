@@ -23,12 +23,14 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 /**
- * Joins strings and emits them as records when a line matches the pattern.
+ * Collects trings and emits them as records when a line matches the pattern.
+ * Appends to every incoming line a line feed so that the original structure is
+ * preserved.
  *
  * @author Pascal Christoph (dr0i).
  *
  */
-@Description("Joins strings and emits them as records when a line matches the pattern.")
+@Description("Collects strings and emits them as records when a line matches the pattern.")
 @In(String.class)
 @Out(String.class)
 @FluxCommand("lines-to-records")
@@ -50,7 +52,7 @@ public final class LineRecorder
             getReceiver().process(record.toString());
             record = new StringBuilder(SB_CAPACITY);
         } else
-            record.append(line);
+            record.append(line + "\n");
     }
 
 }
