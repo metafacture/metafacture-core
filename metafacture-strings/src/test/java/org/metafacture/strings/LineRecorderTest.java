@@ -32,17 +32,19 @@ import org.mockito.MockitoAnnotations;
  */
 public final class LineRecorderTest {
 
-    private static final String RECORD1_PART1 = "a1\n";
-    private static final String RECORD1_PART2 = "a2\n";
+    private static final String RECORD1_PART1 = "a1";
+    private static final String RECORD1_PART2 = "a2";
     private static final String RECORD1_ENDMARKER = "\n";
 
-    private static final String RECORD2_PART1 = "b1\n";
-    private static final String RECORD2_PART2 = "b2\n";
+    private static final String RECORD2_PART1 = "b1";
+    private static final String RECORD2_PART2 = "b2";
     private static final String RECORD2_ENDMARKER = "\n";
 
-    private static final String RECORD3_PART1 = "c1\n";
-    private static final String RECORD3_PART2 = "c2\n";
+    private static final String RECORD3_PART1 = "c1";
+    private static final String RECORD3_PART2 = "c2";
     private static final String RECORD3_ENDMARKER = "EOR";
+
+    private static final String LINE_SEPARATOR = "\n";
 
     private LineRecorder lineRecorder;
 
@@ -63,13 +65,21 @@ public final class LineRecorderTest {
         lineRecorder.process(RECORD1_ENDMARKER);
 
         final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).process(RECORD1_PART1 + RECORD1_PART2);
+        ordered.verify(receiver).process(
+                RECORD1_PART1 +
+                LINE_SEPARATOR +
+                RECORD1_PART2 +
+                LINE_SEPARATOR);
 
         lineRecorder.process(RECORD2_PART1);
         lineRecorder.process(RECORD2_PART2);
         lineRecorder.process(RECORD2_ENDMARKER);
 
-        ordered.verify(receiver).process(RECORD2_PART1 + RECORD2_PART2);
+        ordered.verify(receiver).process(
+                RECORD2_PART1 +
+                LINE_SEPARATOR +
+                RECORD2_PART2 +
+                LINE_SEPARATOR);
         ordered.verifyNoMoreInteractions();
     }
 
@@ -81,7 +91,11 @@ public final class LineRecorderTest {
         lineRecorder.process(RECORD3_ENDMARKER);
 
         final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).process(RECORD3_PART1 + RECORD3_PART2);
+        ordered.verify(receiver).process(
+                RECORD3_PART1 +
+                LINE_SEPARATOR +
+                RECORD3_PART2 +
+                LINE_SEPARATOR);
         ordered.verifyNoMoreInteractions();
     }
 
