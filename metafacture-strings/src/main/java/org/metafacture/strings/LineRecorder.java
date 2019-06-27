@@ -23,7 +23,7 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 /**
- * Collects trings and emits them as records when a line matches the pattern.
+ * Collects strings and emits them as records when a line matches the pattern.
  * Appends to every incoming line a line feed so that the original structure is
  * preserved.
  *
