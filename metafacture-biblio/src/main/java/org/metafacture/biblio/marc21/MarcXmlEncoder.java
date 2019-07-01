@@ -38,6 +38,9 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     private static final String SUBFIELD_OPEN_TEMPLATE = "<marc:subfield code=\"%s\">";
     private static final String SUBFIELD_CLOSE = "</marc:subfield>";
 
+    private static final String LEADER_OPEN_TEMPLATE = "<marc:leader>";
+    private static final String LEADER_CLOSE_TEMPLATE = "</marc:leader>";
+
     private static final String NEW_LINE = "\n";
     private static final String INDENT = "\t";
 
@@ -152,25 +155,27 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     }
 
     @Override
-    public void literal(final String name, final String value)
-    {
-        if (currentEntity.equals(""))
-        {
+    public void literal(final String name, final String value) {
+        if (currentEntity.equals("")) {
             prettyPrintIndentation();
             writeRaw(String.format(CONTROLFIELD_OPEN_TEMPLATE, name));
             writeEscaped(value.trim());
             writeRaw(CONTROLFIELD_CLOSE);
             prettyPrintNewLine();
-        }
-        else if (!currentEntity.equals("leader"))
-        {
+        } else if (!currentEntity.equals("leader")) {
             prettyPrintIndentation();
             writeRaw(String.format(SUBFIELD_OPEN_TEMPLATE, name));
             writeEscaped(value.trim());
             writeRaw(SUBFIELD_CLOSE);
             prettyPrintNewLine();
+        } else {
+            if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
+                prettyPrintIndentation();
+                writeRaw(LEADER_OPEN_TEMPLATE + value + LEADER_CLOSE_TEMPLATE);
+                prettyPrintNewLine();
+            }
         }
-        else {
+
     }
 
     @Override

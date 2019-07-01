@@ -157,6 +157,14 @@ public final class Record {
     }
 
     /**
+     * Returns the record leader.
+     *
+     * @return a string which is the record leader.
+     */
+    public String getLabel() {
+        return label.toString();
+    }
+    /**
      * Iterates through all fields in the record and calls the appropriate method
      * on the supplied {@link FieldHandler} instance.
      *
