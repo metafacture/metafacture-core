@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Pascal Christoph
+ * Copyright 2019 Pascal Christoph (hbz)
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -90,6 +90,20 @@ public final class LineRecorderTest {
         lineRecorder.process(RECORD3_PART2);
         lineRecorder.process(RECORD3_ENDMARKER);
 
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).process(
+                RECORD3_PART1 +
+                LINE_SEPARATOR +
+                RECORD3_PART2 +
+                LINE_SEPARATOR);
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldEmitLastRecordWithoutRecordMarkerWhenClosingStream() {
+        lineRecorder.process(RECORD3_PART1);
+        lineRecorder.process(RECORD3_PART2);
+        lineRecorder.closeStream();
         final InOrder ordered = inOrder(receiver);
         ordered.verify(receiver).process(
                 RECORD3_PART1 +

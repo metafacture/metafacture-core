@@ -1,5 +1,4 @@
-/*
- * Copyright 2019 hbz
+/* Copyright 2019 Pascal Christoph (hbz)
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,46 +12,81 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.strings;
 
 import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.ObjectPipe;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
-import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 /**
  * Collects strings and emits them as records when a line matches the pattern.
- * Appends to every incoming line a line feed so that the original structure is
- * preserved.
+ * Appends to every incoming line a line feed so that the original structure
+ * is preserved.
  *
  * @author Pascal Christoph (dr0i).
  *
  */
-@Description("Collects strings and emits them as records when a line matches the pattern.")
-@In(String.class)
-@Out(String.class)
-@FluxCommand("lines-to-records")
+@Description ( "Collects strings and emits them as records when a"
+        +" line matches the pattern or the stream is closed." )
+@In ( String.class )
+@Out ( String.class )
+@FluxCommand ( "lines-to-records" )
 public final class LineRecorder
-        extends DefaultObjectPipe<String, ObjectReceiver<String>> {
+        implements ObjectPipe<String,ObjectReceiver<String>> {
 
-    private final int SB_CAPACITY = 4096 * 7;
-    private String recordMarkerRegexp = "^\\s*$"; // empty line is default
-    StringBuilder record = new StringBuilder(SB_CAPACITY);
+    private final static int SB_CAPACITY=4096*7;
+    // empty line is the default
+    private String recordMarkerRegexp="^\\s*$";
+    StringBuilder record=new StringBuilder(
+            SB_CAPACITY);
+    ObjectReceiver<String> receiver;
 
-    public void setRecordMarkerRegexp(final String regexp) {
-        this.recordMarkerRegexp = regexp;
+    public void setRecordMarkerRegexp ( final String regexp ) {
+        recordMarkerRegexp=regexp;
     }
 
     @Override
-    public void process(final String line) {
-        assert !isClosed();
-        if (line.matches(recordMarkerRegexp)) {
-            getReceiver().process(record.toString());
-            record = new StringBuilder(SB_CAPACITY);
-        } else
-            record.append(line + "\n");
+    public void process ( final String line ) {
+        if(line.matches(
+                recordMarkerRegexp)){
+            getReceiver().process(
+                    record.toString());
+            record=new StringBuilder(
+                    SB_CAPACITY);
+        }else
+            record.append(
+                    line+"\n");
+    }
+
+    @Override
+    public void resetStream ( ) {
+        record=new StringBuilder(
+                SB_CAPACITY);
+    }
+
+    @Override
+    public void closeStream ( ) {
+        getReceiver().process(
+                record.toString());
+    }
+
+    @Override
+    public <R extends ObjectReceiver<String>> R setReceiver ( R receiver ) {
+        this.receiver=receiver;
+        return receiver;
+    }
+
+    /**
+     * Returns a reference to the downstream module.
+     *
+     * @return reference to the downstream module
+     */
+    protected final ObjectReceiver<String> getReceiver ( ) {
+        return receiver;
     }
 
 }
