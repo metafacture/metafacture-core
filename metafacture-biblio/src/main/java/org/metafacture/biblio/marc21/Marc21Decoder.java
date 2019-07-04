@@ -140,6 +140,7 @@ public final class Marc21Decoder
     private final FieldHandler fieldHandler = new Marc21Handler();
 
     private boolean ignoreMissingId;
+    private boolean emitLeaderAsWhole;
 
     /**
      * Controls whether the decoder aborts processing if a record has no
@@ -162,6 +163,24 @@ public final class Marc21Decoder
 
     public boolean getIgnoreMissingId() {
         return ignoreMissingId;
+    }
+
+    /**
+     * Controls whether the Record Leader should be emitted as a whole instead of
+     * extracting the bibliographic information in the record leader.
+     *
+     * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
+     * Standard: Record Leader</a>
+     *
+     * @param emitLeaderAsWhole
+     *             true if the leader should be emitted as a whole.
+     */
+    public void setEmitLeaderAsWhole(final boolean emitLeaderAsWhole) {
+        this.emitLeaderAsWhole = emitLeaderAsWhole;
+    }
+
+    public boolean getEmitLeaderAsWhole() {
+        return emitLeaderAsWhole;
     }
 
     @Override
@@ -207,9 +226,12 @@ public final class Marc21Decoder
     }
 
     private void emitLeader(final Record record) {
+        getReceiver().startEntity(Marc21EventNames.LEADER_ENTITY);
+        if (emitLeaderAsWhole){
+            getReceiver().literal(Marc21EventNames.LEADER_ENTITY, record.getLabel());
+        }else {
         final char[] implCodes = record.getImplCodes();
         final char[] systemChars = record.getSystemChars();
-        getReceiver().startEntity(Marc21EventNames.LEADER_ENTITY);
         getReceiver().literal(Marc21EventNames.RECORD_STATUS_LITERAL, String.valueOf(
                 record.getRecordStatus()));
         getReceiver().literal(Marc21EventNames.RECORD_TYPE_LITERAL, String.valueOf(
@@ -226,6 +248,7 @@ public final class Marc21Decoder
                 systemChars[Marc21Constants.CATALOGING_FORM_INDEX]));
         getReceiver().literal(Marc21EventNames.MULTIPART_LEVEL_LITERAL, String.valueOf(
                 systemChars[Marc21Constants.MULTIPART_LEVEL_INDEX]));
+        }
         getReceiver().endEntity();
     }
 
