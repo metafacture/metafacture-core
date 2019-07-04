@@ -24,59 +24,57 @@ import org.metafacture.framework.annotations.Out;
 
 /**
  * Collects strings and emits them as records when a line matches the pattern.
- * Appends to every incoming line a line feed so that the original structure
- * is preserved.
+ * Appends to every incoming line a line feed so that the original structure is
+ * preserved.
  *
  * @author Pascal Christoph (dr0i).
  *
  */
-@Description ( "Collects strings and emits them as records when a"
-        +" line matches the pattern or the stream is closed." )
-@In ( String.class )
-@Out ( String.class )
-@FluxCommand ( "lines-to-records" )
-public final class LineRecorder
-        implements ObjectPipe<String,ObjectReceiver<String>> {
+@Description("Collects strings and emits them as records when a line matches the pattern or the stream is closed.")
+@In(String.class)
+@Out(String.class)
+@FluxCommand("lines-to-records")
+public final class LineRecorder implements ObjectPipe<String, ObjectReceiver<String>> {
 
-    private final static int SB_CAPACITY=4096*7;
+    private final static int SB_CAPACITY = 4096 * 7;
     // empty line is the default
-    private String recordMarkerRegexp="^\\s*$";
-    StringBuilder record=new StringBuilder(
-            SB_CAPACITY);
-    ObjectReceiver<String> receiver;
+    private String recordMarkerRegexp = "^\\s*$";
+    private StringBuilder record = new StringBuilder(SB_CAPACITY);
+    private ObjectReceiver<String> receiver;
+    private boolean isClosed = false;
 
-    public void setRecordMarkerRegexp ( final String regexp ) {
-        recordMarkerRegexp=regexp;
+    public void setRecordMarkerRegexp(final String regexp) {
+        recordMarkerRegexp = regexp;
     }
 
     @Override
-    public void process ( final String line ) {
-        if(line.matches(
-                recordMarkerRegexp)){
-            getReceiver().process(
-                    record.toString());
-            record=new StringBuilder(
-                    SB_CAPACITY);
-        }else
-            record.append(
-                    line+"\n");
+    public void process(final String line) {
+        assert !isClosed();
+        if (line.matches(recordMarkerRegexp)) {
+            getReceiver().process(record.toString());
+            record = new StringBuilder(SB_CAPACITY);
+        } else
+            record.append(line + "\n");
+    }
+
+    private boolean isClosed() {
+        return isClosed;
     }
 
     @Override
-    public void resetStream ( ) {
-        record=new StringBuilder(
-                SB_CAPACITY);
+    public void resetStream() {
+        record = new StringBuilder(SB_CAPACITY);
     }
 
     @Override
-    public void closeStream ( ) {
-        getReceiver().process(
-                record.toString());
+    public void closeStream() {
+        getReceiver().process(record.toString());
+        isClosed = true;
     }
 
     @Override
-    public <R extends ObjectReceiver<String>> R setReceiver ( R receiver ) {
-        this.receiver=receiver;
+    public <R extends ObjectReceiver<String>> R setReceiver(R receiver) {
+        this.receiver = receiver;
         return receiver;
     }
 
@@ -85,7 +83,7 @@ public final class LineRecorder
      *
      * @return reference to the downstream module
      */
-    protected final ObjectReceiver<String> getReceiver ( ) {
+    protected final ObjectReceiver<String> getReceiver() {
         return receiver;
     }
 

@@ -113,4 +113,10 @@ public final class LineRecorderTest {
         ordered.verifyNoMoreInteractions();
     }
 
+    @Test(expected = AssertionError.class)
+    public void shouldEmitAsseertionErorWhenProcessingAfterStreamIsClosed() {
+            lineRecorder.closeStream();
+            lineRecorder.process("");
+    }
+
 }
