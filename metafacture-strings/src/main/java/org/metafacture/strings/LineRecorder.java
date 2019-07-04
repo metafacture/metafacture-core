@@ -36,7 +36,7 @@ import org.metafacture.framework.annotations.Out;
 @FluxCommand("lines-to-records")
 public final class LineRecorder implements ObjectPipe<String, ObjectReceiver<String>> {
 
-    private final static int SB_CAPACITY = 4096 * 7;
+    private static final int SB_CAPACITY = 4096 * 7;
     // empty line is the default
     private String recordMarkerRegexp = "^\\s*$";
     private StringBuilder record = new StringBuilder(SB_CAPACITY);

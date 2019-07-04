@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.helpers.DefaultObjectReceiver;
 
 /**
@@ -33,8 +34,8 @@ import org.metafacture.framework.helpers.DefaultObjectReceiver;
  */
 
 public class MarcXmlEncoderTest {
-    private static StringBuilder resultCollector ;
-    private static MarcXmlEncoder encoder ;
+    private static StringBuilder resultCollector;
+    private static MarcXmlEncoder encoder;
     private static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     private static final String XML_1_DECLARATION = "<?xml version=\"1.1\" encoding=\"UTF-8\"?>";
     private static final String XML_16_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-16\"?>";
@@ -46,9 +47,9 @@ public class MarcXmlEncoderTest {
             + "</marc:datafield></marc:record>";
     private static final String XML_MARC_COLLECTION_END_TAG = "</marc:collection>";
     private static final String RECORD_ID = "92005291";
-    
+
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         encoder = new MarcXmlEncoder();
         encoder.setFormatted(false);
         encoder.setReceiver(new DefaultObjectReceiver<String>() {
@@ -57,11 +58,11 @@ public class MarcXmlEncoderTest {
                 resultCollector.append(obj);
             }
         });
-        resultCollector= new StringBuilder();
+        resultCollector = new StringBuilder();
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     private void addOneRecord(MarcXmlEncoder encoder) {
@@ -74,7 +75,7 @@ public class MarcXmlEncoderTest {
     }
 
     @Test
-    public void doNotOmitXmlDeclaration() throws Exception {
+    public void doNotOmitXmlDeclaration() {
         encoder.omitXmlDeclaration(false);
         addOneRecord(encoder);
         encoder.closeStream();
@@ -84,7 +85,7 @@ public class MarcXmlEncoderTest {
     }
 
     @Test
-    public void omitXmlDeclaration() throws Exception {
+    public void omitXmlDeclaration() {
         encoder.omitXmlDeclaration(true);
         addOneRecord(encoder);
         encoder.closeStream();
@@ -94,7 +95,7 @@ public class MarcXmlEncoderTest {
     }
 
     @Test
-    public void setXmlVersion() throws Exception {
+    public void setXmlVersion() {
         encoder.omitXmlDeclaration(false);
         encoder.setXmlVersion("1.1");
         addOneRecord(encoder);
@@ -105,7 +106,7 @@ public class MarcXmlEncoderTest {
     }
 
     @Test
-    public void setXmlEncoding() throws Exception {
+    public void setXmlEncoding() {
         encoder.omitXmlDeclaration(false);
         encoder.setXmlEncoding("UTF-16");
         addOneRecord(encoder);
@@ -116,45 +117,90 @@ public class MarcXmlEncoderTest {
     }
 
     @Test
-    public void createAnEmptyRecord() throws Exception {
-        encoder.startRecord("1");
+    public void createAnEmptyRecord() {
+        encoder.startRecord(RECORD_ID);
         encoder.endRecord();
         encoder.closeStream();
-        String expected = XML_DECLARATION + XML_ROOT_OPEN + "<marc:record></marc:record>"
-               + XML_MARC_COLLECTION_END_TAG;
+        String expected = XML_DECLARATION + XML_ROOT_OPEN + "<marc:record></marc:record>" + XML_MARC_COLLECTION_END_TAG;
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
     }
 
     @Test
-    public void createARecord() throws Exception {
+    public void createARecordPrettyPrint() {
+        encoder.setFormatted(true);
         addOneRecord(encoder);
         encoder.closeStream();
-        String expected = XML_DECLARATION + XML_ROOT_OPEN + XML_RECORD + "</marc:collection>";
+        String expected = XML_DECLARATION + "\n" + XML_ROOT_OPEN + "\n"// " <marc:record>\n"
+                + "\t<marc:record>\n"//
+                + "\t\t<marc:controlfield tag=\"001\">92005291</marc:controlfield>\n"//
+                + "\t\t<marc:datafield tag=\"010\" ind1=\" \" ind2=\" \">\n"//
+                + "\t\t\t<marc:subfield code=\"a\">92005291</marc:subfield>\n"//
+                + "\t\t</marc:datafield>\n"
+                + "\t</marc:record>\n"//
+                + XML_MARC_COLLECTION_END_TAG;
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
     }
 
     @Test
-    public void createTwoRecordsInOneCollection() throws Exception {
+    public void createARecordWithEscapedSequences() {
+        encoder.startRecord(RECORD_ID);
+        encoder.literal("001", "&<>\"");
+        encoder.endRecord();
+        encoder.onResetStream();
+        String expected = XML_DECLARATION + XML_ROOT_OPEN + "<marc:record>"
+                + "<marc:controlfield tag=\"001\">&amp;&lt;&gt;&quot;</marc:controlfield>" + "</marc:record>"
+                + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void createTwoRecordsInOneCollection() {
         addOneRecord(encoder);
         addOneRecord(encoder);
         encoder.closeStream();
-        String expected = XML_DECLARATION + XML_ROOT_OPEN + XML_RECORD + XML_RECORD + "</marc:collection>";
+        String expected = XML_DECLARATION + XML_ROOT_OPEN + XML_RECORD + XML_RECORD + XML_MARC_COLLECTION_END_TAG;
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
     }
 
+    @Test(expected = MetafactureException.class)
+    public void emitExceptionWhenEntityLengthNot5() {
+        encoder.startRecord(RECORD_ID);
+        encoder.startEntity("123456");
+    }
+
     @Test
-    public void createAnRecordWithLeader() throws Exception {
+    public void createAnRecordWithLeader() {
         encoder.startRecord("1");
-        encoder.startEntity("leader");
-        encoder.literal("leader", "dummy");
+        encoder.startEntity(Marc21EventNames.LEADER_ENTITY);
+        encoder.literal(Marc21EventNames.LEADER_ENTITY, "dummy");
         encoder.endEntity();
         encoder.endRecord();
         encoder.closeStream();
-        String expected = XML_DECLARATION + XML_ROOT_OPEN + "<marc:record><marc:leader>dummy</marc:leader></marc:record>"
-               + XML_MARC_COLLECTION_END_TAG;
+        String expected = XML_DECLARATION + XML_ROOT_OPEN
+                + "<marc:record><marc:leader>dummy</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void sendDataAndClearWhenRecordStartedAndStreamResets() {
+        encoder.startRecord("1");
+        encoder.onResetStream();
+        encoder.endRecord();
+        String expected = XML_DECLARATION + XML_ROOT_OPEN + "<marc:record>" + XML_MARC_COLLECTION_END_TAG
+                + "</marc:record>";
+        String actual = resultCollector.toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void sendAndClearDataWhenOnResetStream() {
+        encoder.onResetStream();
+        String expected = "";
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
     }

@@ -1,3 +1,18 @@
+/* Copyright 2019 Pascal Christoph (hbz) and others
+ *
+ * Licensed under the Apache License, Version 2.0 the "License";
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.metafacture.biblio.marc21;
 
 import java.util.Collections;
@@ -126,7 +141,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     @Override
     public void startEntity(final String name) {
         currentEntity = name;
-        if (!name.equals("leader")) {
+        if (!name.equals(Marc21EventNames.LEADER_ENTITY)) {
             if (name.length() != 5) {
                 String message = String.format("Entity too short." + "Got a string ('%s') of length %d."
                         + "Expected a length of 5 (field + indicators).", name, name.length());
@@ -145,7 +160,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     @Override
     public void endEntity() {
-        if (!currentEntity.equals("leader")) {
+        if (!currentEntity.equals(Marc21EventNames.LEADER_ENTITY)) {
             decrementIndentationLevel();
             prettyPrintIndentation();
             writeRaw(DATAFIELD_CLOSE);
@@ -162,7 +177,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
             writeEscaped(value.trim());
             writeRaw(CONTROLFIELD_CLOSE);
             prettyPrintNewLine();
-        } else if (!currentEntity.equals("leader")) {
+        } else if (!currentEntity.equals(Marc21EventNames.LEADER_ENTITY)) {
             prettyPrintIndentation();
             writeRaw(String.format(SUBFIELD_OPEN_TEMPLATE, name));
             writeEscaped(value.trim());
