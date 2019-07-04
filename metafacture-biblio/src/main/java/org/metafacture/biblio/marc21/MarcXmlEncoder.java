@@ -21,7 +21,7 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @Description("Encodes a stream into MARCXML.")
 @In(StreamReceiver.class)
 @Out(String.class)
-@FluxCommand("encode-marc21")
+@FluxCommand("encode-marcxml")
 public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
     private static final String ROOT_OPEN = "<marc:collection xmlns:marc=\"http://www.loc.gov/MARC21/slim\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\">";
     private static final String ROOT_CLOSE = "</marc:collection>";
