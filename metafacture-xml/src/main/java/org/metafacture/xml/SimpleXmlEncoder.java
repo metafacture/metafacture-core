@@ -26,6 +26,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.metafacture.commons.ResourceUtil;
+import org.metafacture.commons.XmlUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -244,40 +245,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     }
 
     protected static void writeEscaped(final StringBuilder builder, final String str) {
-
-        final int len = str.length();
-        for (int i = 0; i < len; ++i) {
-            final char c = str.charAt(i);
-            final String entityName;
-            switch (c) {
-            case '&':
-                entityName = "amp";
-                break;
-            case '<':
-                entityName = "lt";
-                break;
-            case '>':
-                entityName = "gt";
-                break;
-            case '\'':
-                entityName = "apos";
-                break;
-            case '"':
-                entityName = "quot";
-                break;
-            default:
-                entityName = null;
-                break;
-            }
-
-            if (entityName == null) {
-                builder.append(c);
-            } else {
-                builder.append('&');
-                builder.append(entityName);
-                builder.append(';');
-            }
-        }
+        builder.append(XmlUtil.escape(str, false));
     }
 
     /**

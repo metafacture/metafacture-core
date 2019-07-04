@@ -95,24 +95,28 @@ public final class XmlUtil {
                 mimeType.endsWith(XML_BASE_MIME_TYPE);
     }
 
-    public static String escape(String unescaped) {
-        return unescaped.codePoints()
-                .mapToObj(XmlUtil::escapeCodePoint)
-                .collect(joining());
+    public static String escape(final String unescaped) {
+        return escape(unescaped, true);
     }
 
-    private static String escapeCodePoint(int codePoint) {
+    public static String escape(final String unescaped, final boolean escapeUnicode) {
+        return unescaped.codePoints()
+                .mapToObj(value -> escapeCodePoint(value, escapeUnicode))
+                .collect(joining());
+    }
+    
+    private static String escapeCodePoint(final int codePoint, final boolean escapeUnicode) {
         final String entity = entityFor(codePoint);
         if (entity != null) {
             return entity;
         }
-        if (codePoint > 0x7f) {
+        if (escapeUnicode && codePoint > 0x7f) {
             return "&#" + Integer.toString(codePoint) + ";";
         }
         return Character.toString((char) codePoint);
     }
 
-    private static String entityFor(int ch) {
+    private static String entityFor(final int ch) {
         switch (ch) {
             case '<': return "&lt;";
             case '>': return "&gt;";
