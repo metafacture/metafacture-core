@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
+	<rules>
+		<!-- maps PICA+ to marc21Xml -->
+		<!-- setting the encoding scheme is mandatory. This sets it to utf8. -->
+		<entity name="leader" flushWith="record">
+			<choose>
+				<data source="003.@" name="characterCodingScheme">
+					<constant value="a" />
+				</data>
+				<data source="????" name="characterCodingScheme">
+					<constant value="a" />
+				</data>
+			</choose>
+		</entity>
+		<!-- directly invoke "data" creats "controlfields" -->
+		<data name="001" source="003@.0" />
+		<!-- entities triggers creation of "datafields" following the pattern: -->
+		<!--'entity.name="$fieldname$ind1$ind2"' => '<datafield tag="$fieldname"
+			ind1="$ind1" ind2="$ind2">' -->
+		<!-- and 'source.name="$subfield" => <subfield code="$subfield"/> -->
+		<entity name="650 0" reset="true">
+			<data source="044N.a" name="a" />
+		</entity>
+	</rules>
+</metamorph>
