@@ -3,13 +3,19 @@
  */
 package org.metafacture.fix.web
 
+import com.google.common.base.Charsets
+import java.io.File
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
 import javax.servlet.annotation.WebServlet
-import org.eclipse.xtext.util.DisposableRegistry
-import org.eclipse.xtext.web.servlet.XtextServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import com.google.common.base.Charsets
+import org.eclipse.xtext.util.DisposableRegistry
+import org.eclipse.xtext.web.servlet.XtextServlet
 import org.metafacture.metamorph.Metafix
+import org.metafacture.runner.Flux
+import java.nio.file.Paths
+import java.util.stream.Collectors
 
 /**
  * Deploy this class into a servlet container to enable DSL-specific services.
@@ -34,7 +40,7 @@ class FixServlet extends XtextServlet {
 	}
 
 	override doPost(HttpServletRequest request, HttpServletResponse response) {
-		println("Request: " + request)
+		println("POST Request: " + request)
 		val fixString = request.getParameter("fix")
 		println(fixString)
 		val metafix = new Metafix(fixString);
@@ -43,6 +49,32 @@ class FixServlet extends XtextServlet {
 		// TODO: run a test transformation, write result
 		// TODO: add POST tests sending data
 		response.outputStream.write(metafix.expressions.toString.getBytes(Charsets.UTF_8))
+	}
+
+	// sample call:
+	// http://localhost:8080/xtext-service/run
+	// ?data='1'{'a': '5', 'z': 10}
+	// &flux=as-lines|decode-formeta|fix|encode-formeta(style="multiline")
+	// &fix=map(a,c) map(_else)
+	override doGet(HttpServletRequest request, HttpServletResponse response) {
+		println("GET Request: " + request)
+		val inFile = absPathToTempFile(request.getParameter("data"), ".txt")
+		val fixFile = absPathToTempFile(request.getParameter("fix"), ".fix")
+		val outFile = absPathToTempFile("", ".txt")
+		val passedFlux = request.getParameter("flux").replace("fix",
+			"org.metafacture.metamorph.Metafix(fixFile=\"" + fixFile + "\")");
+		val fullFlux = '''"«inFile»"|open-file|«passedFlux»|write("«outFile»");'''
+		println("full flux: " + fullFlux)
+		Flux.main(#[absPathToTempFile(fullFlux, ".flux")])
+		val result = Files.readAllLines(Paths.get(outFile))
+		response.outputStream.write(result.stream.collect(Collectors.joining("\n")).getBytes(Charsets.UTF_8))
+	}
+
+	protected def String absPathToTempFile(String content, String suffix) {
+		val file = File.createTempFile("fixweb", suffix)
+		Files.write(file.toPath, #[content], StandardCharsets.UTF_8)
+		val fluxWithAbsolutePaths = file.absolutePath
+		fluxWithAbsolutePaths
 	}
 
 }

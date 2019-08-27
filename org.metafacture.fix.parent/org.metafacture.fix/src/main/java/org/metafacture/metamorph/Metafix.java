@@ -18,6 +18,7 @@ package org.metafacture.metamorph;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -112,6 +113,15 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
 
 	public Metafix(final String fixDef) {
 		this(fixDef, NO_VARS);
+	}
+
+	public void setFixFile(final String fixFile) {
+		try {
+			buildPipeline(new FileReader(fixFile), NO_VARS, NULL_INTERCEPTOR_FACTORY);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		init();
 	}
 
 	public Metafix(final String fixDef, final Map<String, String> vars) {
