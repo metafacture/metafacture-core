@@ -73,7 +73,7 @@ end
 Content assist is triggered with Ctrl-Space. The input above is also used in `FixParsingTest.xtend`.
 
 Module
-======
+------
 
 The `Metafix` stream module currently supports:
 
@@ -94,3 +94,20 @@ map(_else)
 ```
 
 See also `MetafixDslTest.java`.
+
+Xtext
+-----
+
+To import the projects in Eclipse, choose File > Import > Existing Gradle Project:
+
+![Import projects](docs/xtext-import.png)
+
+This repo has been originally set up with Xtext 2.17.0 and Eclipse for Java 2019-03, following [https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html](https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html). Below are some details to reproduce the original setup:
+
+In the New > Xtext Project wizard, the language details are specified:
+
+![Language details](docs/xtext-setup-1.png)
+
+As well as the project and build customization:
+
+![Build details](docs/xtext-setup-2.png)
