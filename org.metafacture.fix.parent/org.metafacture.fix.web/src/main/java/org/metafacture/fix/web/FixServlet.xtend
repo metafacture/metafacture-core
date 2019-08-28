@@ -58,16 +58,20 @@ class FixServlet extends XtextServlet {
 	// &fix=map(a,c) map(_else)
 	override doGet(HttpServletRequest request, HttpServletResponse response) {
 		println("GET Request: " + request)
-		val inFile = absPathToTempFile(request.getParameter("data"), ".txt")
-		val fixFile = absPathToTempFile(request.getParameter("fix"), ".fix")
-		val outFile = absPathToTempFile("", ".txt")
-		val passedFlux = request.getParameter("flux").replace("fix",
-			"org.metafacture.metamorph.Metafix(fixFile=\"" + fixFile + "\")");
-		val fullFlux = '''"«inFile»"|open-file|«passedFlux»|write("«outFile»");'''
-		println("full flux: " + fullFlux)
-		Flux.main(#[absPathToTempFile(fullFlux, ".flux")])
-		val result = Files.readAllLines(Paths.get(outFile))
-		response.outputStream.write(result.stream.collect(Collectors.joining("\n")).getBytes(Charsets.UTF_8))
+		if (request.parameterMap.containsKey("data") && request.parameterMap.containsKey("flux") &&
+			request.parameterMap.containsKey("fix")) {
+			val inFile = absPathToTempFile(request.getParameter("data"), ".txt")
+			val fixFile = absPathToTempFile(request.getParameter("fix"), ".fix")
+			val outFile = absPathToTempFile("", ".txt")
+			val passedFlux = request.getParameter("flux").replace("fix",
+				"org.metafacture.metamorph.Metafix(fixFile=\"" + fixFile + "\")");
+			val fullFlux = '''"«inFile»"|open-file|«passedFlux»|write("«outFile»");'''
+			println("full flux: " + fullFlux)
+			Flux.main(#[absPathToTempFile(fullFlux, ".flux")])
+			val result = Files.readAllLines(Paths.get(outFile))
+			response.outputStream.write(result.stream.collect(Collectors.joining("\n")).getBytes(Charsets.UTF_8))
+		} else
+			super.doGet(request, response)
 	}
 
 	protected def String absPathToTempFile(String content, String suffix) {

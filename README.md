@@ -12,6 +12,8 @@ This repo contains an Xtext web project with a basic Fix grammar, which generate
 
 It also contains an interpreter to build `Metafix` objects from the Fix DSL. These are intended as a replacement for the `Metamorph` stream module in Metafacture workflows. In Flux workflows, the idea is to replace `morph(sample.xml)` with something like `fix(sample.fix)`.
 
+The editor UI contains input fields for sample data and a Flux definition to run workflows with the given Fix.
+
 [![Build Status](https://travis-ci.org/metafacture/metafacture-fix.svg?branch=master)](https://travis-ci.org/metafacture/metafacture-fix)
 
 Setup
