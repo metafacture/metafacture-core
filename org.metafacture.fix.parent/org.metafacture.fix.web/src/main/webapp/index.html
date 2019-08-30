@@ -43,7 +43,7 @@
 		var editor = ace.edit("xtext-editor");
 		var fix =  editor.getValue();
 		console.log('Fix from editor: ' + fix);
-		var url = "/xtext-service/run";
+		var url = "xtext-service/run";
 		// TODO: Send the data using POST body
 		$.get(url, {
 			fix: fix,
