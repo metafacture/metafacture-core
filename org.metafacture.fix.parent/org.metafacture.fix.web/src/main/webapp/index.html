@@ -2,7 +2,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta http-equiv="Content-Language" content="en-us">
-	<title>Example Web Editor</title>
+	<title>Fix Web Editor</title>
 	<link rel="stylesheet" type="text/css" href="xtext/2.17.0/xtext-ace.css"/>
 	<link rel="stylesheet" type="text/css" href="style.css"/>
 	<script src="webjars/requirejs/2.3.6/require.min.js"></script>
@@ -34,18 +34,23 @@
 <script>
 	function loadContent() {
 		var editor = ace.edit("xtext-editor");
-		editor.setValue('map(a,b)\nmap(_else)');
+		editor.setValue('map(_id, id)\nmap(a,title)\nmap(b.n,author)\n/*map(_else)*/\n');
+		document.getElementById("data").value = "1{a: Faust, b {n: Goethe, v: JW}, c: Weimar}\n 2{a: Räuber, b {n: Schiller, v: F}, c: Weimar}";
+		document.getElementById("flux").value = "as-lines|decode-formeta|fix|stream-to-xml(rootTag=\"collection\")";
 		return true;
 	}
 	function sendContent() {
 		var editor = ace.edit("xtext-editor");
 		var fix =  editor.getValue();
-		console.log('Fix from editor: ' +fix);
-		var url = "/xtext-service/run?fix=" + fix;
+		console.log('Fix from editor: ' + fix);
+		var url = "xtext-service/run";
 		// TODO: Send the data using POST body
-		$.post( url ).done(function( data ) {
+		$.get(url, {
+			fix: fix,
+			data: document.getElementById("data").value,
+			flux: document.getElementById("flux").value } ).done(function( data ) {
 			console.log("Response: " + data);
-			$( "#result" ).empty().append( data );
+			$( "#result" ).text( data );
 		});
 		return true;
 	}
@@ -61,10 +66,26 @@
 	<div class="content">
 		<div class='row'>
 			<div class='col'>
-				<div id="xtext-editor" data-editor-xtext-lang="fix"></div>
+				<div class='row'>
+					<div class='col'>
+						<div>Data: <input type="text" id="data"></input></div>
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						<div>Flux: <input type="text" id="flux"></input></div>
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col'>
+						<div id="xtext-editor" data-editor-xtext-lang="fix"></div>
+					</div>
+				</div>
 			</div>
 			<div class='col'>
-				<small><code><pre id='result'>No result</pre></code></small>
+			<textarea rows="25" cols="80" style="border:none;" id='result'>
+No result
+			</textarea>
 			</div>
 		</div>
 	</div>

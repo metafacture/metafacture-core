@@ -15,6 +15,9 @@ dependencies {
 	implementation 'org.metafacture:metamorph:5.0.1'
 	implementation 'org.metafacture:metafacture-commons:5.0.1'
 	implementation 'org.metafacture:metafacture-mangling:5.0.1'
+	implementation 'org.metafacture:metafacture-runner:5.0.1'
+	implementation 'org.metafacture:metafacture-formeta:5.0.1'
+	implementation 'org.metafacture:metafacture-xml:5.0.1'
 }
 task jettyRun(type:JavaExec) {
 	dependsOn(sourceSets.main.runtimeClasspath)

@@ -47,13 +47,23 @@ a:hover {
 #xtext-editor {
 	display: block;
 	position: absolute;
-	top: 0;
+	top: 10em;
 	bottom: 0;
 	left: 0;
 	right: 0;
 	padding: 4px;
 	border: 1px solid #aaa;
 	width: 50%;
+	height: 50%;
+}
+
+#data {
+	width: 100%;
+	margin-bottom: 5px;
+}
+
+#flux {
+	width: 100%;
 }
 
 .row {
@@ -65,8 +75,7 @@ a:hover {
 }
 
 #result {
-	margin-left: 25px;
-	margin-top: 0px;
+	margin: 25px;
 	white-space: pre-wrap;
-	text-align: right
+	text-align: left
 }
