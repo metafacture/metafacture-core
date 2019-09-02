@@ -8,13 +8,19 @@ See [https://github.com/elag/FIG](https://github.com/elag/FIG)
 State
 -----
 
-This repo contains an Xtext web project with a basic Fix grammar, which generates a parser and a web editor.
-
-It also contains an interpreter to build `Metafix` objects from the Fix DSL. These are intended as a replacement for the `Metamorph` stream module in Metafacture workflows. In Flux workflows, the idea is to replace `morph(sample.xml)` with something like `fix(sample.fix)`.
-
-The editor UI contains input fields for sample data and a Flux definition to run workflows with the given Fix.
-
 [![Build Status](https://travis-ci.org/metafacture/metafacture-fix.svg?branch=master)](https://travis-ci.org/metafacture/metafacture-fix)
+
+This repo contains an Xtext web project with a basic Fix grammar, which generates a parser and a web editor. The editor UI contains input fields for sample data and a Flux definition to run workflows with the given Fix. A test deployment is available at: [http://test.lobid.org/fix](http://test.lobid.org/fix)
+
+- [x] Grammar, parser, and editor for the [Fix language]((https://github.com/LibreCat/Catmandu/wiki/Fix-language)) ([details](#editor))
+- [x] Run Fix as a module in Flux workflows ([wiki](https://github.com/metafacture/metafacture-core/wiki/Flux-user-guide)) ([details](http://test.lobid.org/fix))
+- [x] Change field names, (nested) field [paths](https://github.com/LibreCat/Catmandu/wiki/Paths) ([details](http://test.lobid.org/fix))
+- [ ] Change field values, use `metamorph.functions` ([wiki](https://github.com/metafacture/metafacture-core/wiki/Metamorph-functions)) as Fix [functions](https://github.com/LibreCat/Catmandu/wiki/Functions) like `replace_all(title,"My (.*) Pony","Our $1 Fish")` [#5](https://github.com/metafacture/metafacture-fix/issues/5)
+- [ ] Data lookup, use `metamorph.maps` ([wiki](https://github.com/metafacture/metafacture-core/wiki/Data-lookup)) like `lookup(title,"dict.csv",default:'NONE')`
+- [ ] Use `metamorph.collectors` and `<if>` ([wiki](https://github.com/metafacture/metafacture-core/wiki/Metamorph-collectors), [commit](https://github.com/metafacture/metafacture-core/commit/0530d6ad72ced992b479bff94d6f56bbef77bb2d)) for Fix [selectors](https://github.com/LibreCat/Catmandu/wiki/Selectors) and [conditionals](https://github.com/LibreCat/Catmandu/wiki/Conditionals) like `if exists(my.deep.field) <function1 function2> end`
+- [ ] Support function grouping ([wiki](https://github.com/metafacture/metafacture-core/wiki/Metamorph-User-Guide#processing-pieces-of-data)) with [binds](https://github.com/LibreCat/Catmandu/wiki/Binds) like `do list(path:colors.*, var:c) <function1(c) function2(c)> end`
+- [ ] [Comments](https://github.com/LibreCat/Catmandu/wiki/Comments) like `# This is a comment` [#4](https://github.com/metafacture/metafacture-fix/issues/4)
+- [ ] Integrated web playground with Fix and Flux editors ([language](https://github.com/culturegraph/metafacture-ide/tree/master/bundles/org.culturegraph.mf.ide/src/org/culturegraph/mf/ide), [setup](https://github.com/metafacture/metafacture-fix#xtext))
 
 Setup
 -----
@@ -120,3 +126,4 @@ In the New > Xtext Project wizard, the language details are specified:
 As well as the project and build customization:
 
 ![Build details](docs/xtext-setup-2.png)
+
