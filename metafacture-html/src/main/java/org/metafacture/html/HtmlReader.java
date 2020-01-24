@@ -17,6 +17,7 @@ package org.metafacture.html;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 
 import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
@@ -35,15 +36,15 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  */
 @Description("Parses HTML to X(HT)ML")
 @In(Reader.class)
-@Out(String.class)
+@Out(Reader.class)
 @FluxCommand("html-to-xml")
-public class HtmlReader extends DefaultObjectPipe<Reader, ObjectReceiver<String>> {
+public class HtmlReader extends DefaultObjectPipe<Reader, ObjectReceiver<Reader>> {
     @Override
     public void process(final Reader reader) {
         try {
             Document document = Jsoup.parse(IOUtils.toString(reader));
             document.outputSettings().prettyPrint(false).syntax(Document.OutputSettings.Syntax.xml);
-            getReceiver().process(document.html());
+            getReceiver().process(new StringReader(document.html()));
         } catch (IOException e) {
             e.printStackTrace();
         }
