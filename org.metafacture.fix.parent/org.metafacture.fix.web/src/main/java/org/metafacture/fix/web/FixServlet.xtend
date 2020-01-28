@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import org.eclipse.xtext.util.DisposableRegistry
 import org.eclipse.xtext.web.servlet.XtextServlet
-import org.metafacture.metamorph.Metafix
 import org.metafacture.runner.Flux
 import java.nio.file.Paths
 import java.util.stream.Collectors
@@ -41,14 +40,11 @@ class FixServlet extends XtextServlet {
 
 	override doPost(HttpServletRequest request, HttpServletResponse response) {
 		println("POST Request: " + request)
-		val fixString = request.getParameter("fix")
-		println(fixString)
-		val metafix = new Metafix(fixString);
-		// TODO: do this only on POST to /run
-		// TODO: use the request body, it's POST
-		// TODO: run a test transformation, write result
-		// TODO: add POST tests sending data
-		response.outputStream.write(metafix.expressions.toString.getBytes(Charsets.UTF_8))
+		if (request.pathInfo.endsWith("/run") && request.parameterMap.containsKey("data") &&
+			request.parameterMap.containsKey("flux") && request.parameterMap.containsKey("fix")) {
+			process(request,response)
+		} else
+			super.doPost(request, response)
 	}
 
 	// sample call:
@@ -60,18 +56,22 @@ class FixServlet extends XtextServlet {
 		println("GET Request: " + request)
 		if (request.parameterMap.containsKey("data") && request.parameterMap.containsKey("flux") &&
 			request.parameterMap.containsKey("fix")) {
-			val inFile = absPathToTempFile(request.getParameter("data"), ".txt")
-			val fixFile = absPathToTempFile(request.getParameter("fix"), ".fix")
-			val outFile = absPathToTempFile("", ".txt")
-			val passedFlux = request.getParameter("flux").replace("fix",
-				"org.metafacture.metamorph.Metafix(fixFile=\"" + fixFile + "\")");
-			val fullFlux = '''"«inFile»"|open-file|«passedFlux»|write("«outFile»");'''
-			println("full flux: " + fullFlux)
-			Flux.main(#[absPathToTempFile(fullFlux, ".flux")])
-			val result = Files.readAllLines(Paths.get(outFile))
-			response.outputStream.write(result.stream.collect(Collectors.joining("\n")).getBytes(Charsets.UTF_8))
+			process(request,response)
 		} else
 			super.doGet(request, response)
+	}
+
+	def process(HttpServletRequest request, HttpServletResponse response) {
+		val inFile = absPathToTempFile(request.getParameter("data"), ".txt")
+		val fixFile = absPathToTempFile(request.getParameter("fix"), ".fix")
+		val outFile = absPathToTempFile("", ".txt")
+		val passedFlux = request.getParameter("flux").replace("fix",
+			"org.metafacture.metamorph.Metafix(fixFile=\"" + fixFile + "\")");
+		val fullFlux = '''"«inFile»"|open-file|«passedFlux»|write("«outFile»");'''
+		println("full flux: " + fullFlux)
+		Flux.main(#[absPathToTempFile(fullFlux, ".flux")])
+		val result = Files.readAllLines(Paths.get(outFile))
+		response.outputStream.write(result.stream.collect(Collectors.joining("\n")).getBytes(Charsets.UTF_8))
 	}
 
 	protected def String absPathToTempFile(String content, String suffix) {
