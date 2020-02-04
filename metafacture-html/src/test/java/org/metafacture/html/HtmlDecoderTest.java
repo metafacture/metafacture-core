@@ -16,6 +16,7 @@
 package org.metafacture.html;
 
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.times;
 
 import java.io.StringReader;
 
@@ -50,23 +51,28 @@ public final class HtmlDecoderTest {
     public void htmlElementsAsEntities() {
         htmlDecoder.process(new StringReader("<h1>Header</h1><p>Paragraph</p>"));
         final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startEntity("html");
+        ordered.verify(receiver).startEntity("head");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).startEntity("body");
         ordered.verify(receiver).startEntity("h1");
         ordered.verify(receiver).literal("value", "Header");
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).startEntity("p");
         ordered.verify(receiver).literal("value", "Paragraph");
-        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver, times(3)).endEntity();
     }
 
     @Test
     public void nestedEntities() {
-        htmlDecoder.process(new StringReader("<ul><li>Item</li><ul>"));
+        htmlDecoder.process(new StringReader("<ul><li>Item</li></ul>"));
         final InOrder ordered = inOrder(receiver);
         ordered.verify(receiver).startEntity("ul");
         ordered.verify(receiver).startEntity("li");
         ordered.verify(receiver).literal("value", "Item");
-        ordered.verify(receiver).endEntity();
-        ordered.verify(receiver).endEntity();
+        // elements above plus body, html
+        ordered.verify(receiver, times(4)).endEntity();
+
     }
 
     @Test
@@ -76,9 +82,10 @@ public final class HtmlDecoderTest {
         ordered.verify(receiver).startEntity("p");
         ordered.verify(receiver).literal("class", "lead");
         ordered.verify(receiver).literal("value", "Text");
-        ordered.verify(receiver).endEntity();
+        // elements above plus body, html
+        ordered.verify(receiver, times(3)).endEntity();
     }
-    
+
     @Test
     public void htmlScriptElementData() {
         htmlDecoder.process(new StringReader("<script type=application/ld+json>{\"id\":\"theId\"}</script>"));
@@ -86,7 +93,8 @@ public final class HtmlDecoderTest {
         ordered.verify(receiver).startEntity("script");
         ordered.verify(receiver).literal("type", "application/ld+json");
         ordered.verify(receiver).literal("value", "{\"id\":\"theId\"}");
-        ordered.verify(receiver).endEntity();
+        // elements above plus body, html
+        ordered.verify(receiver, times(4)).endEntity();
     }
 
 }

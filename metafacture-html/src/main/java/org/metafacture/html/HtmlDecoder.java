@@ -17,11 +17,13 @@ package org.metafacture.html;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
@@ -46,21 +48,31 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
     public void process(final Reader reader) {
         try {
             StreamReceiver receiver = getReceiver();
-            receiver.startRecord(null);
-            String html = IOUtils.toString(reader);
-            for (Element element : Jsoup.parse(html).getAllElements()) {
-                receiver.startEntity(element.nodeName());
-                Attributes attributes = element.attributes();
-                for (Attribute attribute : attributes) {
-                    receiver.literal(attribute.getKey(), attribute.getValue());
-                }
-                String text = element.text().trim();
-                receiver.literal("value", text.isEmpty() ? element.data() : text);
-                receiver.endEntity();
-            }
+            receiver.startRecord(UUID.randomUUID().toString());
+            Document document = Jsoup.parse(IOUtils.toString(reader));
+            process(document, receiver);
             receiver.endRecord();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void process(Element parent, StreamReceiver receiver) {
+        for (Element element : parent.children()) {
+            receiver.startEntity(element.nodeName());
+            Attributes attributes = element.attributes();
+            for (Attribute attribute : attributes) {
+                receiver.literal(attribute.getKey(), attribute.getValue());
+            }
+            if (element.children().isEmpty()) {
+                String text = element.text().trim();
+                String value = text.isEmpty() ? element.data() : text;
+                if (!value.isEmpty()) {
+                    receiver.literal("value", value);
+                }
+            }
+            process(element, receiver);
+            receiver.endEntity();
         }
     }
 }
