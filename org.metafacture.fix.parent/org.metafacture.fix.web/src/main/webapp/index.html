@@ -44,8 +44,7 @@
 		var fix =  editor.getValue();
 		console.log('Fix from editor: ' + fix);
 		var url = "xtext-service/run";
-		// TODO: Send the data using POST body
-		$.get(url, {
+		$.post(url, {
 			fix: fix,
 			data: document.getElementById("data").value,
 			flux: document.getElementById("flux").value } ).done(function( data ) {
