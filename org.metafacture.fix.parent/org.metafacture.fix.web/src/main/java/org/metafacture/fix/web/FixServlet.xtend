@@ -62,12 +62,17 @@ class FixServlet extends XtextServlet {
 	}
 
 	def process(HttpServletRequest request, HttpServletResponse response) {
-		val inFile = absPathToTempFile(request.getParameter("data"), ".txt")
+		val inData = request.getParameter("data")
+		var prefix = ""
+		if(inData !== null && !inData.isEmpty){
+			val inFile = absPathToTempFile(inData, ".txt")
+			prefix = '''"«inFile»"|open-file|'''
+		}
 		val fixFile = absPathToTempFile(request.getParameter("fix"), ".fix")
 		val outFile = absPathToTempFile("", ".txt")
 		val passedFlux = request.getParameter("flux").replace("fix",
 			"org.metafacture.metamorph.Metafix(fixFile=\"" + fixFile + "\")");
-		val fullFlux = '''"«inFile»"|open-file|«passedFlux»|write("«outFile»");'''
+		val fullFlux = '''«prefix»«passedFlux»|write("«outFile»");'''
 		println("full flux: " + fullFlux)
 		Flux.main(#[absPathToTempFile(fullFlux, ".flux")])
 		val result = Files.readAllLines(Paths.get(outFile))

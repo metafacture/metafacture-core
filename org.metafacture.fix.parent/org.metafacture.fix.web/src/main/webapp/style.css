@@ -54,7 +54,7 @@ a:hover {
 	padding: 4px;
 	border: 1px solid #aaa;
 	width: 50%;
-	height: 50%;
+	height: 70%;
 }
 
 #data {
@@ -75,7 +75,9 @@ a:hover {
 }
 
 #result {
-	margin: 25px;
+	padding: 15px;
+	margin: 15px;
 	white-space: pre-wrap;
-	text-align: left
+	text-align: left;
+	width: 100%;
 }
