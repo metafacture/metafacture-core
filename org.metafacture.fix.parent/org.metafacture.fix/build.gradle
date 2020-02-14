@@ -1,5 +1,6 @@
 plugins {
 	id 'com.adarshr.test-logger' version '1.7.0'
+	id 'maven'
 }
 
 dependencies {
