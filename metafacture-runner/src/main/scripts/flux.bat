@@ -55,7 +55,7 @@ REM default we make sure that it can always be substituted.
 IF "x%FLUX_JAVA_OPTIONS%" == "x" (
     REM The space character at the end of the following
     REM line is important and must not be removed:
-    SET FLUX_JAVA_OPTIONS=
+    SET FLUX_JAVA_OPTIONS= 
 )
 FOR /F "tokens=1,* delims==" %%I IN ('SET') DO (
     SET JAVA_OPTS=!JAVA_OPTS:$%%I=%%J!
