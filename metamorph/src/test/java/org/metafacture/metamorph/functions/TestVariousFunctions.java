@@ -27,6 +27,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+
 /**
  * Tests for various Metamorph functions.
  *
@@ -213,31 +218,57 @@ public final class TestVariousFunctions {
     ordered.verifyNoMoreInteractions();
   }
 
-  @Test
-  public void testEqualsFunction() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='data' name='data1'>")
-        .with("    <equals string='Aloha' />")
-        .with("  </data>")
-        .with("  <data source='data' name='data2'>")
-        .with("    <not-equals string='Aloha' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void testEqualsFunction() {
+        metamorph = InlineMorph.in(this)
+                .with("<rules>")
+                .with("  <data source='data' name='data1'>")
+                .with("    <equals string='Aloha' />")
+                .with("  </data>")
+                .with("  <data source='data' name='data2'>")
+                .with("    <not-equals string='Aloha' />")
+                .with("  </data>")
+                .with("</rules>")
+                .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.literal("data", "Aloha");
-    metamorph.literal("data", "Hawaii");
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("data", "Aloha");
+        metamorph.literal("data", "Hawaii");
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("data1", "Aloha");
-    ordered.verify(receiver).literal("data2", "Hawaii");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("data1", "Aloha");
+        ordered.verify(receiver).literal("data2", "Hawaii");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void testContainsFunction() {
+        metamorph = InlineMorph.in(this)
+                .with("<rules>")
+                .with("  <data source='data' name='data1'>")
+                .with("    <contains string='Periodical' />")
+                .with("  </data>")
+                .with("  <data source='data' name='data2'>")
+                .with("    <not-contains string='Periodical' />")
+                .with("  </data>")
+                .with("</rules>")
+                .createConnectedTo(receiver);
+
+        metamorph.startRecord("1");
+        metamorph.literal("data", "1990 Periodical MultiVolumeBook");
+        metamorph.literal("data", "2013 BibliographicResource Book Series");
+        metamorph.endRecord();
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("data1", "1990 Periodical MultiVolumeBook");
+        ordered.verify(receiver).literal("data2", "2013 BibliographicResource Book Series");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
   @Test
   public void testBufferFunction() {

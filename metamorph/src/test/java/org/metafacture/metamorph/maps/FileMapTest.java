@@ -69,4 +69,31 @@ public final class FileMapTest {
     ordered.verifyNoMoreInteractions();
   }
 
+    @Test
+    public void shouldWhitelistValuesInFileBasedMap() {
+        metamorph = InlineMorph.in(this)
+                .with("<rules>")
+                .with("  <data source='1'>")
+                .with("    <whitelist map='map1' />")
+                .with("  </data>")
+                .with("</rules>")
+                .with("<maps>")
+                .with("  <filemap name='map1' files='org/metafacture/metamorph/maps/file-map-test.txt' />")
+                .with("</maps>")
+                .createConnectedTo(receiver);
+
+        metamorph.startRecord("1");
+        metamorph.literal("1", "gw");
+        metamorph.literal("1", "fj");
+        metamorph.literal("1", "bla");
+        metamorph.endRecord();
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("1", "gw");
+        ordered.verify(receiver).literal("1", "fj");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
 }

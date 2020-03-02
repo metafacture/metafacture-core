@@ -302,9 +302,27 @@
             <attribute name="value" type="string" use="required" />
 
             <attribute name="reset" type="boolean" use="optional"
-                default="false" />
+                       default="false" />
             <attribute name="sameEntity" type="boolean" use="optional"
-                default="false" />
+                       default="false" />
+            <attribute name="flushWith" type="string" use="optional" />
+        </complexType>
+    </element>
+
+    <element name="containsFilter">
+        <complexType>
+            <sequence>
+                <element ref="tns:if" minOccurs="0" maxOccurs="1" />
+                <group ref="tns:literal-rule" minOccurs="1" maxOccurs="unbounded" />
+                <element ref="tns:postprocess" minOccurs="0" maxOccurs="1" />
+            </sequence>
+            <attribute name="name" type="string" use="required" />
+            <attribute name="value" type="string" use="required" />
+
+            <attribute name="reset" type="boolean" use="optional"
+                       default="false" />
+            <attribute name="sameEntity" type="boolean" use="optional"
+                       default="false" />
             <attribute name="flushWith" type="string" use="optional" />
         </complexType>
     </element>
@@ -653,6 +671,7 @@
             <element ref="tns:tuples" />
             <element ref="tns:range" />
             <element ref="tns:equalsFilter" />
+            <element ref="tns:containsFilter" />
         </choice>
     </group>
 
@@ -668,6 +687,8 @@
             <element ref="tns:isbn" />
             <element ref="tns:equals" />
             <element ref="tns:not-equals" />
+            <element ref="tns:contains" />
+            <element ref="tns:not-contains" />
             <element ref="tns:case" />
             <element ref="tns:timestamp" />
             <element ref="tns:dateformat" />
@@ -907,6 +928,16 @@
         </complexType>
     </element>
 
+    <element name="contains">
+        <annotation>
+            <documentation>Returns the value only if given string is contained.
+            </documentation>
+        </annotation>
+        <complexType>
+            <attribute name="string" type="string" use="required" />
+        </complexType>
+    </element>
+
     <element name="unique">
         <annotation>
             <documentation>Filters out dublicate literals</documentation>
@@ -942,6 +973,16 @@
     <element name="not-equals">
         <annotation>
             <documentation>Returns value only if equality does not hold.
+            </documentation>
+        </annotation>
+        <complexType>
+            <attribute name="string" type="string" use="required" />
+        </complexType>
+    </element>
+
+    <element name="not-contains">
+        <annotation>
+            <documentation>Returns value only if given string is not contained.
             </documentation>
         </annotation>
         <complexType>

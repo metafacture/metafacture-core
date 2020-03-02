@@ -24,6 +24,9 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 import org.metafacture.javaintegration.SingleValue;
+import org.metafacture.metamorph.api.InterceptorFactory;
+
+import java.util.Map;
 
 /**
  * Filters a stream based on a morph definition. A record is accepted if the
@@ -42,6 +45,7 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
     private final SingleValue singleValue = new SingleValue();
     private final Metamorph metamorph;
 
+
     public Filter(final String morphDef) {
         super();
         metamorph = new Metamorph(morphDef);
@@ -51,6 +55,20 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
     public Filter(final Metamorph metamorph) {
         super();
         this.metamorph = metamorph;
+        metamorph.setReceiver(singleValue);
+    }
+
+    public Filter(final String morphDef, final Map<String, String> vars) {
+
+        super();
+        metamorph = new Metamorph(morphDef, vars);
+        metamorph.setReceiver(singleValue);
+    }
+
+    public Filter(final String morphDef, final InterceptorFactory interceptorFactory) {
+
+        super();
+        metamorph = new Metamorph(morphDef, interceptorFactory);
         metamorph.setReceiver(singleValue);
     }
 
