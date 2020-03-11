@@ -1,5 +1,5 @@
+.gradle/
 bin/
 build/
-*-gen/
-.gradle/
 generated/
+xtext-gen/

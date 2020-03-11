@@ -44,5 +44,6 @@ test {
 	useJUnitPlatform()
 }
 generateXtext.dependsOn(generateXtextLanguage)
+compileJava.dependsOn(generateXtextLanguage)
 clean.dependsOn(cleanGenerateXtextLanguage)
 eclipse.classpath.plusConfigurations += [configurations.mwe2]

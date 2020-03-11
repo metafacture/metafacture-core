@@ -18,7 +18,7 @@ subprojects {
 		compile platform("org.eclipse.xtext:xtext-dev-bom:${xtextVersion}")
 	}
 
-	apply plugin: 'org.xtext.xtend'
+	apply plugin: 'org.xtext.builder'
 	apply from: "${rootDir}/gradle/source-layout.gradle"
 	apply plugin: 'eclipse'
 	
