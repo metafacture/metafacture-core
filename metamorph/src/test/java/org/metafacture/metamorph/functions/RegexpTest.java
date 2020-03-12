@@ -95,5 +95,4 @@ public final class RegexpTest {
     ordered.verify(receiver).endRecord();
     ordered.verifyNoMoreInteractions();
   }
-
 }
