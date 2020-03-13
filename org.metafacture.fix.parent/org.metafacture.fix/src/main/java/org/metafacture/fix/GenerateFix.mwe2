@@ -44,6 +44,7 @@ Workflow {
 				generateStub = false
 			}
 			webSupport = {
+				framework = "ace"
 				generateServlet = false
 				generateJettyLauncher = false
 			}
