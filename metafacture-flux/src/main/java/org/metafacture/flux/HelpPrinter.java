@@ -47,11 +47,13 @@ public final class HelpPrinter {
 
     public static void print(final ObjectFactory<?> factory,
             final PrintStream out) {
-        out.println("WELCOME TO METAFACTURE");
+        out.println("Welcome to Metafacture");
+        out.println("======================");
+        out.println();
         out.println(getVersionInfo());
 
         out.println("\nUsage:\tflux FLOW_FILE [VARNAME=VALUE ...]\n");
-        out.println("Available pipe elements:\n");
+        out.println("Available flux commands:\n");
 
         final List<String> keyWords = new ArrayList<String>();
         keyWords.addAll(factory.keySet());
@@ -75,30 +77,34 @@ public final class HelpPrinter {
         final Description desc = moduleClass.getAnnotation(Description.class);
 
         out.println(name);
+        name.chars().forEach(c-> {
+            out.print("-");
+        });
+        out.println();
 
         if (desc != null) {
-            out.println("description:\t" + desc.value());
+            out.println("- description:\t" + desc.value());
         }
         final Collection<String> arguments = getAvailableArguments(moduleClass);
         if (!arguments.isEmpty()) {
-            out.println("argument in\t" + arguments);
+            out.println("- arguments:\t" + arguments);
         }
 
         final Map<String, Class<?>> attributes = factory.get(name).getSetterTypes();
 
         if (!attributes.isEmpty()) {
-            out.print("options:\t");
+            out.print("- options:\t");
             final StringBuilder builder = new StringBuilder();
             for (Entry<String, Class<?>> entry : attributes.entrySet()) {
                 if (entry.getValue().isEnum()) {
                     builder.append(entry.getKey())
                             .append(" ")
-                            .append(Arrays.toString(entry.getValue().getEnumConstants()))
+                            .append(Arrays.asList(entry.getValue().getEnumConstants()))
                             .append(", ");
                 } else {
                     builder.append(entry.getKey())
                             .append(" (")
-                            .append(entry.getValue().getName())
+                            .append(entry.getValue().getSimpleName())
                             .append("), ");
                 }
 
@@ -106,18 +112,18 @@ public final class HelpPrinter {
             out.println(builder.substring(0, builder.length() - 2));
         }
 
-        out.println("implementation:\t" + moduleClass.getCanonicalName());
         String inString = "<unknown>";
         String outString = "";
         final In inClass = moduleClass.getAnnotation(In.class);
         if (inClass != null) {
-            inString = inClass.value().getCanonicalName();
+            inString = inClass.value().getSimpleName();
         }
         final Out outClass = moduleClass.getAnnotation(Out.class);
         if (outClass != null) {
-            outString = outClass.value().getCanonicalName();
+            outString = outClass.value().getSimpleName();
         }
-        out.println("signature:\t" + inString + " -> " + outString);
+        out.println("- signature:\t" + inString + " -> " + outString);
+        out.println("- java class:\t" + moduleClass.getCanonicalName());
         out.println();
     }
 
