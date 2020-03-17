@@ -1,2 +1,1 @@
 language: java
-before_install: cd org.metafacture.fix.parent

@@ -25,9 +25,9 @@ This repo contains an Xtext web project with a basic Fix grammar, which generate
 Setup
 -----
 
-Go to the Xtext parent project:
+Go to the Xtext project:
 
-`cd metafacture-fix/org.metafacture.fix.parent`
+`cd metafacture-fix/`
 
 Run the tests (in `org.metafacture.fix/src/test/java`):
 
@@ -44,7 +44,7 @@ Visit [http://localhost:8080/](http://localhost:8080/), and paste this into the 
 
 ```
 # Fix is a macro-language for data transformations
-			
+
 # Simple fixes
 
 add_field(hello,world)
@@ -126,4 +126,3 @@ In the New > Xtext Project wizard, the language details are specified:
 As well as the project and build customization:
 
 ![Build details](docs/xtext-setup-2.png)
-
