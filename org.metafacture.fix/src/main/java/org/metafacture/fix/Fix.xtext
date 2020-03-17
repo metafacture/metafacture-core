@@ -1,43 +1,60 @@
-grammar org.metafacture.fix.Fix with org.eclipse.xtext.xbase.Xbase
+grammar org.metafacture.fix.Fix
+  with org.eclipse.xtext.xbase.Xbase
+
 generate fix "http://www.metafacture.org/fix/Fix"
 
 Fix:
-    elements+=Expression*;
-
-Expression :
-    If | Do | MethodCall | {Expression} SL_COMMENT
+  elements += Expression*
 ;
 
-If: 'if' name=ValidID '('(params+=QualifiedName 
-        (',' params+=QualifiedName)*)?')' BEGIN
-    elements+=Expression*
-END
-elseIf=ElsIf?
-else=Else?
-'end';
+Expression:
+  Do |
+  If |
+  MethodCall |
+  {Expression} SL_COMMENT
+;
 
-ElsIf: 'elsif' name=ValidID '('(params+=QualifiedName 
-        (',' params+=QualifiedName)*)?')' BEGIN
-	elements+=Expression*
-END;
+If:
+  'if' name = ValidID '(' ( params += QualifiedName ( ',' params += QualifiedName )* )? ')' BEGIN
+    elements += Expression*
+  END
+  elseIf = ElsIf?
+  else = Else?
+  'end'
+;
 
-Else: {Else} 'else' BEGIN
-	elements+=Expression*
-END;
+ElsIf:
+  'elsif' name = ValidID '(' ( params += QualifiedName ( ',' params += QualifiedName )* )? ')' BEGIN
+    elements += Expression*
+  END
+;
 
-Do: 'do' name=ValidID '('(params+=QualifiedName 
-        (',' params+=QualifiedName)*)?')' BEGIN
-    elements+=Expression*
-END
-'end';
+Else:
+  {Else} 'else' BEGIN
+    elements += Expression*
+  END
+;
+
+Do:
+  'do' name = ValidID '(' ( params += QualifiedName ( ',' params += QualifiedName )* )? ')' BEGIN
+    elements += Expression*
+  END
+  'end'
+;
 
 MethodCall:
-    name=ValidID '('(params+=QualifiedName 
-        (',' params+=QualifiedName)*)?')';
+  name = ValidID '(' ( params += QualifiedName ( ',' params += QualifiedName )* )? ')'
+;
 
-terminal BEGIN: 'synthetic:BEGIN';
-terminal END: 'synthetic:END';
+terminal BEGIN:
+  'synthetic:BEGIN'
+;
 
-@Override 
-terminal SL_COMMENT: 
-	'#' !('\r'|'\n')* ('\r'? '\n');
+terminal END:
+  'synthetic:END'
+;
+
+@Override
+terminal SL_COMMENT:
+  '#' -> ( '\r'? '\n' )
+;
