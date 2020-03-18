@@ -25,14 +25,14 @@ import org.metafacture.fix.tests.FixInjectorProvider;
 public class FixParsingTest {
   @Inject
   private ParseHelper<Fix> parseHelper;
-  
+
   @Test
   public void load0() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("map(a,b)");
     this.loadModel(_builder.toString());
   }
-  
+
   @Test
   public void load1() {
     StringConcatenation _builder = new StringConcatenation();
@@ -59,7 +59,7 @@ public class FixParsingTest {
     _builder.newLine();
     this.loadModel(_builder.toString());
   }
-  
+
   @Test
   public void load2() {
     StringConcatenation _builder = new StringConcatenation();
@@ -132,7 +132,7 @@ public class FixParsingTest {
     _builder.newLine();
     this.loadModel(_builder.toString());
   }
-  
+
   public void loadModel(final String fix) {
     try {
       final Fix result = this.parseHelper.parse(fix);

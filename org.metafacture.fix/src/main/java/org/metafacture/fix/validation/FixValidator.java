@@ -7,7 +7,7 @@ import org.metafacture.fix.validation.AbstractFixValidator;
 
 /**
  * This class contains custom validation rules.
- * 
+ *
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 @SuppressWarnings("all")

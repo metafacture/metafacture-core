@@ -25,11 +25,11 @@ public class InterpreterTest {
   @Inject
   @Extension
   private FixInterpreter _fixInterpreter;
-  
+
   @Inject
   @Extension
   private ParseHelper<Fix> _parseHelper;
-  
+
   @Test
   public void testSimpleProgram() {
     try {
@@ -52,7 +52,7 @@ public class InterpreterTest {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   @Test
   public void testNestedProgram() {
     try {

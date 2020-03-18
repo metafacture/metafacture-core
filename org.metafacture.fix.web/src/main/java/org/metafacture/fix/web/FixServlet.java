@@ -31,7 +31,7 @@ import org.metafacture.runner.Flux;
 @SuppressWarnings("all")
 public class FixServlet extends XtextServlet {
   private DisposableRegistry disposableRegistry;
-  
+
   @Override
   public void init() {
     try {
@@ -42,7 +42,7 @@ public class FixServlet extends XtextServlet {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   @Override
   public void destroy() {
     if ((this.disposableRegistry != null)) {
@@ -51,12 +51,12 @@ public class FixServlet extends XtextServlet {
     }
     super.destroy();
   }
-  
+
   @Override
   public void doPost(final HttpServletRequest request, final HttpServletResponse response) {
     try {
       InputOutput.<String>println(("POST Request: " + request));
-      if ((((request.getPathInfo().endsWith("/run") && request.getParameterMap().containsKey("data")) && 
+      if ((((request.getPathInfo().endsWith("/run") && request.getParameterMap().containsKey("data")) &&
         request.getParameterMap().containsKey("flux")) && request.getParameterMap().containsKey("fix"))) {
         this.process(request, response);
       } else {
@@ -66,12 +66,12 @@ public class FixServlet extends XtextServlet {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   @Override
   public void doGet(final HttpServletRequest request, final HttpServletResponse response) {
     try {
       InputOutput.<String>println(("GET Request: " + request));
-      if (((request.getParameterMap().containsKey("data") && request.getParameterMap().containsKey("flux")) && 
+      if (((request.getParameterMap().containsKey("data") && request.getParameterMap().containsKey("flux")) &&
         request.getParameterMap().containsKey("fix"))) {
         this.process(request, response);
       } else {
@@ -81,7 +81,7 @@ public class FixServlet extends XtextServlet {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   public void process(final HttpServletRequest request, final HttpServletResponse response) {
     try {
       final String inData = request.getParameter("data");
@@ -96,7 +96,7 @@ public class FixServlet extends XtextServlet {
       }
       final String fixFile = this.absPathToTempFile(request.getParameter("fix"), ".fix");
       final String outFile = this.absPathToTempFile("", ".txt");
-      final String passedFlux = request.getParameter("flux").replace("fix", 
+      final String passedFlux = request.getParameter("flux").replace("fix",
         (("org.metafacture.metamorph.Metafix(fixFile=\"" + fixFile) + "\")"));
       StringConcatenation _builder_1 = new StringConcatenation();
       _builder_1.append(prefix);
@@ -114,7 +114,7 @@ public class FixServlet extends XtextServlet {
       throw Exceptions.sneakyThrow(_e);
     }
   }
-  
+
   protected String absPathToTempFile(final String content, final String suffix) {
     try {
       String _xblockexpression = null;

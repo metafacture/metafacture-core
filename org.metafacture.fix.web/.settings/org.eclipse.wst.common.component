@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-modules id="moduleCoreId" project-version="1.5.0">
-	<wb-module deploy-name="org.metafacture.fix.web">
-		<property name="context-root" value="org.metafacture.fix.web"/>
-		<wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/xtext-gen"/>
-		<wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/java"/>
-		<wb-resource deploy-path="/" source-path="src/main/webapp"/>
-		<dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/org.metafacture.fix.ide/org.metafacture.fix.ide">
-			<dependency-type>uses</dependency-type>
-		</dependent-module>
-		<dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/org.metafacture.fix/org.metafacture.fix">
-			<dependency-type>uses</dependency-type>
-		</dependent-module>
-	</wb-module>
+    <wb-module deploy-name="org.metafacture.fix.web">
+        <property name="context-root" value="org.metafacture.fix.web"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/xtext-gen"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/java"/>
+        <wb-resource deploy-path="/" source-path="src/main/webapp"/>
+        <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/org.metafacture.fix.ide/org.metafacture.fix.ide">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/org.metafacture.fix/org.metafacture.fix">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
 </project-modules>

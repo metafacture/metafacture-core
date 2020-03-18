@@ -54,27 +54,27 @@ copy_field(stats,output.$append)
 # Conditionals
 
 if exists(error)
-	set_field(is_valid, no)
-	log(error)
+    set_field(is_valid, no)
+    log(error)
 elsif exists(warning)
-	set_field(is_valid, yes)
-	log(warning)
+    set_field(is_valid, yes)
+    log(warning)
 else
-	set_field(is_valid, yes)
+    set_field(is_valid, yes)
 end
 
 # Loops
 
 do list(path)
-	add_field(foo,bar)
+    add_field(foo,bar)
 end
 
 # Nested expressions
 
 do marc_each()
-	if marc_has(f700)
-		marc_map(f700a,authors.$append)
-	end
+    if marc_has(f700)
+        marc_map(f700a,authors.$append)
+    end
 end
 ```
 

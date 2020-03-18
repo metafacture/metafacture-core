@@ -27,11 +27,11 @@ public class FixJvmModelInferrer extends AbstractModelInferrer {
   @Inject
   @Extension
   private JvmTypesBuilder _jvmTypesBuilder;
-  
+
   @Inject
   @Extension
   private IQualifiedNameProvider _iQualifiedNameProvider;
-  
+
   protected void _infer(final Fix fix, final IJvmDeclaredTypeAcceptor acceptor, final boolean isPrelinkingPhase) {
     final Procedure1<JvmGenericType> _function = (JvmGenericType it) -> {
       this._jvmTypesBuilder.setDocumentation(it, this._jvmTypesBuilder.getDocumentation(fix));
@@ -41,7 +41,7 @@ public class FixJvmModelInferrer extends AbstractModelInferrer {
     };
     acceptor.<JvmGenericType>accept(this._jvmTypesBuilder.toClass(fix, this._iQualifiedNameProvider.getFullyQualifiedName(fix)), _function);
   }
-  
+
   public void infer(final EObject fix, final IJvmDeclaredTypeAcceptor acceptor, final boolean isPrelinkingPhase) {
     if (fix instanceof Fix) {
       _infer((Fix)fix, acceptor, isPrelinkingPhase);

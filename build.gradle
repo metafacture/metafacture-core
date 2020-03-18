@@ -1,6 +1,17 @@
 plugins {
+  id 'org.ec4j.editorconfig' version '0.0.3'
   id 'org.xtext.builder' version '2.0.8'
 }
+
+editorconfig {
+  excludes = [
+    '**/generated',
+    '**/xtext-gen',
+    'gradlew*'
+  ]
+}
+
+check.dependsOn(editorconfigCheck)
 
 subprojects {
   group = 'org.metafacture.fix'

@@ -16,7 +16,7 @@ import org.metafacture.metamorph.Metafix;
 @SuppressWarnings("all")
 public class FixInterpreter extends XbaseInterpreter {
   private Metafix metafix;
-  
+
   public void run(final Metafix metafix, final EObject program) {
     if (((metafix != null) && (program != null))) {
       this.metafix = metafix;
@@ -28,7 +28,7 @@ public class FixInterpreter extends XbaseInterpreter {
       }
     }
   }
-  
+
   public void process(final Expression expression) {
     this.metafix.expressions.add(expression);
     boolean _matched = false;
