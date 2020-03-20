@@ -51,4 +51,10 @@ subprojects {
   configurations.all {
     exclude group: 'asm'
   }
+
+  tasks.withType(JavaCompile) {
+    'all -processing -rawtypes -serial'.split().each {
+      options.compilerArgs << "-Xlint:${it}"
+    }
+  }
 }
