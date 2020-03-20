@@ -13,31 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
+import org.metafacture.metamorph.api.Maps;
+import org.metafacture.metamorph.api.NamedValueReceiver;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-import org.metafacture.metamorph.api.Maps;
-import org.metafacture.metamorph.api.NamedValueReceiver;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Tests the basic functionality of Metafix via API.
@@ -47,145 +44,155 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * @author Fabian Steeg (MetafixApiTest)
  */
 @ExtendWith(MockitoExtension.class)
-public final class MetafixApiTest {
+public class MetafixApiTest {
 
-	@RegisterExtension
-	public MockitoRule mockitoRule = MockitoJUnit.rule();
+    private static final String OUT_NAME = "outName";
 
-	@Mock
-	private NamedValueReceiver namedValueReceiver;
+    private static final String TEST_ENTITY = "testEntity";
+    private static final String TEST_LITERAL = "testLiteral";
+    private static final String TEST_MAP = "testMap";
+    private static final String TEST_VALUE = "testValue";
 
-	private Metafix metafix;
+    @RegisterExtension
+    private MockitoRule mockitoRule = MockitoJUnit.rule();
 
-	@BeforeEach
-	public void createSystemUnderTest() {
-		metafix = new Metafix();
-		metafix.setReceiver(new DefaultStreamReceiver());
-	}
+    @Mock
+    private NamedValueReceiver namedValueReceiver;
 
-	@Test
-	public void shouldMapMatchingPath() {
-		setupSimpleMappingMorph();
+    private Metafix metafix;
 
-		metafix.startRecord("");
-		metafix.literal("testEntity.testLiteral", "testValue");
+    public MetafixApiTest() {
+    }
 
-		verify(namedValueReceiver).receive(eq("outName"), eq("testValue"), any(), anyInt(), anyInt());
-	}
+    @BeforeEach
+    public void createSystemUnderTest() {
+        metafix = new Metafix();
+        metafix.setReceiver(new DefaultStreamReceiver());
+    }
 
-	@Test
-	public void shouldNotMapNonMatchingPath() {
-		setupSimpleMappingMorph();
+    @Test
+    public void shouldMapMatchingPath() {
+        setupSimpleMappingMorph();
 
-		metafix.startRecord("");
-		metafix.literal("nonMatching.path", "testValue");
+        metafix.startRecord("");
+        metafix.literal(TEST_ENTITY + "." + TEST_LITERAL, TEST_VALUE);
 
-		verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(), anyInt());
-	}
+        Mockito.verify(namedValueReceiver).receive(ArgumentMatchers.eq(OUT_NAME), ArgumentMatchers.eq(TEST_VALUE), ArgumentMatchers.any(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt());
+    }
 
-	@Test
-	public void shouldMapMatchingLiteralInMatchingEntity() {
-		setupSimpleMappingMorph();
+    @Test
+    public void shouldNotMapNonMatchingPath() {
+        setupSimpleMappingMorph();
 
-		metafix.startRecord("");
-		metafix.startEntity("testEntity");
-		metafix.literal("testLiteral", "testValue");
+        metafix.startRecord("");
+        metafix.literal("nonMatching.path", TEST_VALUE);
 
-		verify(namedValueReceiver).receive(eq("outName"), eq("testValue"), any(), anyInt(), anyInt());
-	}
+        Mockito.verify(namedValueReceiver, Mockito.never()).receive(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt());
+    }
 
-	@Test
-	public void shouldNotMapNonMatchingLiteralInMatchingEntity() {
-		setupSimpleMappingMorph();
+    @Test
+    public void shouldMapMatchingLiteralInMatchingEntity() {
+        setupSimpleMappingMorph();
 
-		metafix.startRecord("");
-		metafix.startEntity("testEntity");
-		metafix.literal("nonMatching", "testValue");
+        metafix.startRecord("");
+        metafix.startEntity(TEST_ENTITY);
+        metafix.literal(TEST_LITERAL, TEST_VALUE);
 
-		verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(), anyInt());
-	}
+        Mockito.verify(namedValueReceiver).receive(ArgumentMatchers.eq(OUT_NAME), ArgumentMatchers.eq(TEST_VALUE), ArgumentMatchers.any(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt());
+    }
 
-	@Test
-	public void shouldNotMapMatchingLiteralInNonMatchingEntity() {
-		setupSimpleMappingMorph();
+    @Test
+    public void shouldNotMapNonMatchingLiteralInMatchingEntity() {
+        setupSimpleMappingMorph();
 
-		metafix.startRecord("");
-		metafix.startEntity("nonMatching");
-		metafix.literal("testLiteral", "testValue");
+        metafix.startRecord("");
+        metafix.startEntity(TEST_ENTITY);
+        metafix.literal("nonMatching", TEST_VALUE);
 
-		verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(), anyInt());
-	}
+        Mockito.verify(namedValueReceiver, Mockito.never()).receive(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt());
+    }
 
-	@Test
-	public void shouldNotMapLiteralWithoutMatchingEntity() {
-		setupSimpleMappingMorph();
+    @Test
+    public void shouldNotMapMatchingLiteralInNonMatchingEntity() {
+        setupSimpleMappingMorph();
 
-		metafix.startRecord("");
-		metafix.literal("testLiteral", "testValue");
+        metafix.startRecord("");
+        metafix.startEntity("nonMatching");
+        metafix.literal(TEST_LITERAL, TEST_VALUE);
 
-		verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(), anyInt());
-	}
+        Mockito.verify(namedValueReceiver, Mockito.never()).receive(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt());
+    }
 
-	/**
-	 * Creates the Metafix object structure that corresponds to the Metafix DSL
-	 * statement {@code map(testEntity.testLiteral, outName)}.
-	 */
-	private void setupSimpleMappingMorph() {
-		final Data data = new Data();
-		data.setName("outName");
-		data.setNamedValueReceiver(namedValueReceiver);
-		metafix.registerNamedValueReceiver("testEntity" + '.' + "testLiteral", data);
-	}
+    @Test
+    public void shouldNotMapLiteralWithoutMatchingEntity() {
+        setupSimpleMappingMorph();
 
-	@Test
-	public void shouldReturnValueFromNestedMap() {
-		final Map<String, String> map = new HashMap<>();
-		map.put("outName", "testValue");
+        metafix.startRecord("");
+        metafix.literal(TEST_LITERAL, TEST_VALUE);
 
-		metafix.putMap("testMap", map);
+        Mockito.verify(namedValueReceiver, Mockito.never()).receive(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt());
+    }
 
-		assertNotNull(metafix.getMap("testMap"));
-		assertEquals("testValue", metafix.getValue("testMap", "outName"));
-	}
+    /**
+     * Creates the Metafix object structure that corresponds to the Metafix DSL
+     * statement {@code map(testEntity.testLiteral, outName)}.
+     */
+    private void setupSimpleMappingMorph() {
+        final Data data = new Data();
+        data.setName(OUT_NAME);
+        data.setNamedValueReceiver(namedValueReceiver);
+        metafix.registerNamedValueReceiver(TEST_ENTITY + '.' + TEST_LITERAL, data);
+    }
 
-	@Test
-	public void shouldReturnDefaultValueIfMapIsKnownButNameIsUnknown() {
-		final Map<String, String> map = new HashMap<>();
-		map.put(Maps.DEFAULT_MAP_KEY, "defaultValue");
+    @Test
+    public void shouldReturnValueFromNestedMap() {
+        final Map<String, String> map = new HashMap<>();
+        map.put(OUT_NAME, TEST_VALUE);
 
-		metafix.putMap("testMap", map);
+        metafix.putMap(TEST_MAP, map);
 
-		assertEquals("defaultValue", metafix.getValue("testMap", "nameNotInMap"));
-	}
+        Assert.assertNotNull(metafix.getMap(TEST_MAP));
+        Assert.assertEquals(TEST_VALUE, metafix.getValue(TEST_MAP, OUT_NAME));
+    }
 
-	@Test
-	public void shouldFeedbackLiteralsStartingWithAtIntoMetamorph() {
-		final Data data1;
-		data1 = new Data();
-		data1.setName("@feedback");
-		metafix.addNamedValueSource(data1);
-		metafix.registerNamedValueReceiver("testLiteral", data1);
+    @Test
+    public void shouldReturnDefaultValueIfMapIsKnownButNameIsUnknown() {
+        final Map<String, String> map = new HashMap<>();
+        map.put(Maps.DEFAULT_MAP_KEY, "defaultValue");
 
-		final Data data2 = new Data();
-		data2.setName("outName");
-		data2.setNamedValueReceiver(namedValueReceiver);
-		metafix.registerNamedValueReceiver("@feedback", data2);
+        metafix.putMap(TEST_MAP, map);
 
-		metafix.startRecord("");
-		metafix.literal("testLiteral", "testValue");
+        Assert.assertEquals("defaultValue", metafix.getValue(TEST_MAP, "nameNotInMap"));
+    }
 
-		verify(namedValueReceiver).receive(eq("outName"), eq("testValue"), any(), anyInt(), anyInt());
-	}
+    @Test
+    public void shouldFeedbackLiteralsStartingWithAtIntoMetamorph() {
+        final Data data1;
+        data1 = new Data();
+        data1.setName("@feedback");
+        metafix.addNamedValueSource(data1);
+        metafix.registerNamedValueReceiver(TEST_LITERAL, data1);
 
-	@Test
-	public void shouldThrowIllegalStateExceptionIfEntityIsNotClosed() {
-		assertThrows(IllegalStateException.class, () -> {
-			metafix.startRecord("");
-			metafix.startEntity("testEntity");
-			metafix.startEntity("testEntity");
-			metafix.endEntity();
-			metafix.endRecord(); // Exception expected
-		});
-	}
+        final Data data2 = new Data();
+        data2.setName(OUT_NAME);
+        data2.setNamedValueReceiver(namedValueReceiver);
+        metafix.registerNamedValueReceiver("@feedback", data2);
+
+        metafix.startRecord("");
+        metafix.literal(TEST_LITERAL, TEST_VALUE);
+
+        Mockito.verify(namedValueReceiver).receive(ArgumentMatchers.eq(OUT_NAME), ArgumentMatchers.eq(TEST_VALUE), ArgumentMatchers.any(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt());
+    }
+
+    @Test
+    public void shouldThrowIllegalStateExceptionIfEntityIsNotClosed() {
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            metafix.startRecord("");
+            metafix.startEntity(TEST_ENTITY);
+            metafix.startEntity(TEST_ENTITY);
+            metafix.endEntity();
+            metafix.endRecord(); // Exception expected
+        });
+    }
 
 }

@@ -15,6 +15,10 @@ import java.util.List;
 
 public class XtextValidator {
 
+    private XtextValidator() {
+        throw new IllegalAccessError("Utility class");
+    }
+
     public static void main(final String[] args) throws IOException {
         if (args == null || args.length != 1) {
             throw new IllegalArgumentException(String.format("Usage: %s <xtext-file>",

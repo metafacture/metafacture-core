@@ -16,16 +16,17 @@
 
 package org.metafacture.metamorph;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Map;
-
-import org.eclipse.emf.common.util.EList;
 import org.metafacture.fix.fix.Expression;
 import org.metafacture.fix.fix.Fix;
 import org.metafacture.metamorph.api.ConditionAware;
 import org.metafacture.metamorph.api.InterceptorFactory;
 import org.metafacture.metamorph.api.NamedValuePipe;
+
+import org.eclipse.emf.common.util.EList;
+
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Builds a {@link Metafix} from an Fix DSL description
@@ -37,117 +38,120 @@ import org.metafacture.metamorph.api.NamedValuePipe;
  */
 public class FixBuilder {
 
-	private final Deque<StackFrame> stack = new LinkedList<StackFrame>();
-	private Metafix metafix;
-	private InterceptorFactory interceptorFactory;
+    private final Deque<StackFrame> stack = new LinkedList<StackFrame>();
+    private Metafix metafix;
+    private InterceptorFactory interceptorFactory;
 
-	@SuppressWarnings("unused") // not all implemented yet
-	private static final class StackFrame {
+    public FixBuilder(final Metafix metafix, final InterceptorFactory interceptorFactory) {
+        this.metafix = metafix;
+        this.interceptorFactory = interceptorFactory;
+        stack.push(new StackFrame(metafix));
+    }
 
-		private final NamedValuePipe headPipe;
+    public void walk(final Fix fix, final Map<String, String> vars) {
+        final EList<Expression> elements = fix.getElements();
+        for (final Expression expression : elements) {
+            if (expression.getName().equals("map")) {
+                final EList<String> params = expression.getParams();
+                enterData(params);
+                exitData();
+            }
+        }
+    }
 
-		private NamedValuePipe pipe;
-		private boolean inEntityName;
-		private boolean inCondition;
+    private void exitData() {
+        final NamedValuePipe dataPipe = stack.pop().getPipe();
 
-		public StackFrame(final NamedValuePipe headPipe) {
-			this.headPipe = headPipe;
-			this.pipe = headPipe;
-		}
+        final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+        final NamedValuePipe delegate;
+        if (interceptor == null) {
+            delegate = dataPipe;
+        }
+        else {
+            delegate = interceptor;
+            delegate.addNamedValueSource(dataPipe);
+        }
 
-		public NamedValuePipe getHeadPipe() {
-			return headPipe;
-		}
+        final StackFrame parent = stack.peek();
+        if (parent.isInEntityName()) {
+            // Protected xsd schema and by assertion in enterName:
+            ((Entity) parent.getPipe()).setNameSource(delegate);
+        }
+        else if (parent.isInCondition()) {
+            // Protected xsd schema and by assertion in enterIf:
+            ((ConditionAware) parent.getPipe()).setConditionSource(delegate);
+        }
+        else {
+            parent.getPipe().addNamedValueSource(delegate);
+        }
+    }
 
-		public void setPipe(final NamedValuePipe pipe) {
-			this.pipe = pipe;
-		}
+    private void enterData(final EList<String> params) {
+        final Data data = new Data();
+        data.setName(resolvedAttribute(params, 2));
 
-		public NamedValuePipe getPipe() {
-			return pipe;
-		}
+        final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+        final NamedValuePipe delegate;
+        if (interceptor == null) {
+            delegate = data;
+        }
+        else {
+            delegate = interceptor;
+            data.addNamedValueSource(delegate);
+        }
 
-		public void setInEntityName(final boolean inEntityName) {
-			this.inEntityName = inEntityName;
-		}
+        final String source = resolvedAttribute(params, 1);
+        metafix.registerNamedValueReceiver(source, delegate);
 
-		public boolean isInEntityName() {
-			return inEntityName;
-		}
+        stack.push(new StackFrame(data));
+    }
 
-		public void setInCondition(final boolean inCondition) {
-			this.inCondition = inCondition;
-		}
+    private String resolvedAttribute(final EList<String> params, final int i) {
+        // TODO: resolve from vars/map/etc
+        return params.size() < i ? null : params.get(i - 1);
+    }
 
-		public boolean isInCondition() {
-			return inCondition;
-		}
+    private static class StackFrame {
 
-	}
+        private final NamedValuePipe headPipe;
 
-	public FixBuilder(Metafix metafix, InterceptorFactory interceptorFactory) {
-		this.metafix = metafix;
-		this.interceptorFactory = interceptorFactory;
-		stack.push(new StackFrame(metafix));
-	}
+        private NamedValuePipe pipe;
+        private boolean inEntityName;
+        private boolean inCondition;
 
-	public void walk(Fix fix, Map<String, String> vars) {
-		EList<Expression> elements = fix.getElements();
-		for (Expression expression : elements) {
-			if (expression.getName().equals("map")) {
-				EList<String> params = expression.getParams();
-				enterData(params);
-				exitData();
-			}
-		}
-	}
+        private StackFrame(final NamedValuePipe headPipe) {
+            this.headPipe = headPipe;
+            this.pipe = headPipe;
+        }
 
-	private void exitData() {
-		final NamedValuePipe dataPipe = stack.pop().getPipe();
+        public NamedValuePipe getHeadPipe() {
+            return headPipe;
+        }
 
-		final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
-		final NamedValuePipe delegate;
-		if (interceptor == null) {
-			delegate = dataPipe;
-		} else {
-			delegate = interceptor;
-			delegate.addNamedValueSource(dataPipe);
-		}
+        public void setPipe(final NamedValuePipe pipe) {
+            this.pipe = pipe;
+        }
 
-		final StackFrame parent = stack.peek();
-		if (parent.isInEntityName()) {
-			// Protected xsd schema and by assertion in enterName:
-			((Entity) parent.getPipe()).setNameSource(delegate);
-		} else if (parent.isInCondition()) {
-			// Protected xsd schema and by assertion in enterIf:
-			((ConditionAware) parent.getPipe()).setConditionSource(delegate);
-		} else {
-			parent.getPipe().addNamedValueSource(delegate);
-		}
-	}
+        public NamedValuePipe getPipe() {
+            return pipe;
+        }
 
-	private void enterData(EList<String> params) {
-		final Data data = new Data();
-		data.setName(resolvedAttribute(params, 2));
+        public void setInEntityName(final boolean inEntityName) {
+            this.inEntityName = inEntityName;
+        }
 
-		final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
-		final NamedValuePipe delegate;
-		if (interceptor == null) {
-			delegate = data;
-		} else {
-			delegate = interceptor;
-			data.addNamedValueSource(delegate);
-		}
+        public boolean isInEntityName() {
+            return inEntityName;
+        }
 
-		final String source = resolvedAttribute(params, 1);
-		metafix.registerNamedValueReceiver(source, delegate);
+        public void setInCondition(final boolean inCondition) {
+            this.inCondition = inCondition;
+        }
 
-		stack.push(new StackFrame(data));
-	}
+        public boolean isInCondition() {
+            return inCondition;
+        }
 
-	private String resolvedAttribute(EList<String> params, int i) {
-		// TODO: resolve from vars/map/etc
-		return params.size() < i ? null : params.get(i - 1);
-	}
+    }
 
 }
