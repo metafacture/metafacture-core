@@ -51,14 +51,14 @@ public class MetafixDslTest {
     @Mock
     private StreamReceiver streamReceiver;
 
-    private Metafix metafix;
-
     public MetafixDslTest() {
     }
 
     @Test
-    public void map() {
-        metafix = fix("map(a,b)");
+    public void shouldMapLiteral() {
+        final Metafix metafix = fix(
+                "map(a,b)"
+        );
 
         metafix.startRecord("1");
         metafix.literal("a", LITERAL_ALOHA);
@@ -66,13 +66,17 @@ public class MetafixDslTest {
 
         final InOrder ordered = Mockito.inOrder(streamReceiver);
         ordered.verify(streamReceiver).startRecord("1");
-        Mockito.verify(streamReceiver).literal("b", LITERAL_ALOHA);
+        ordered.verify(streamReceiver).literal("b", LITERAL_ALOHA);
         ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
     }
 
     @Test
     public void shouldHandleUnmatchedLiteralsInElseSource() {
-        metafix = fix("map(Sylt,Hawaii)\n" + "map(_else)");
+        final Metafix metafix = fix(
+                "map(Sylt,Hawaii)",
+                "map(_else)"
+        );
 
         metafix.startRecord("1");
         metafix.literal("Langeoog", LITERAL_MOIN);
@@ -86,11 +90,16 @@ public class MetafixDslTest {
         ordered.verify(streamReceiver).literal(LITERAL_HAWAII, LITERAL_ALOHA);
         ordered.verify(streamReceiver).literal("Baltrum", "Moin Moin");
         ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
     }
 
     @Test
     public void shouldAllowTreatingEntityEndEventsAsLiterals() {
-        metafix = fix("map(e1)\n" + "map(e1.e2)\n" + "map(e1.e2.d)");
+        final Metafix metafix = fix(
+                "map(e1)",
+                "map(e1.e2)",
+                "map(e1.e2.d)"
+        );
 
         metafix.startRecord("entity end info");
         metafix.startEntity("e1");
@@ -110,9 +119,11 @@ public class MetafixDslTest {
     }
 
     @Test
-    @Disabled // Fix syntax
+    @Disabled("Fix syntax")
     public void shouldUseCustomEntityMarker() {
-        metafix = fix("map(entity~literal,data)");
+        final Metafix metafix = fix(
+                "map(entity~literal,data)"
+        );
 
         metafix.startRecord("1");
         metafix.startEntity("entity");
@@ -124,9 +135,11 @@ public class MetafixDslTest {
     }
 
     @Test
-    @Disabled // Fix syntax
+    @Disabled("Fix syntax")
     public void shouldMatchCharacterWithQuestionMarkWildcard() {
-        metafix = fix("map(lit-?)");
+        final Metafix metafix = fix(
+                "map(lit-?)"
+        );
 
         metafix.startRecord("1");
         metafix.literal("lit", LITERAL_MOIN);
@@ -140,9 +153,11 @@ public class MetafixDslTest {
     }
 
     @Test
-    @Disabled // Fix syntax
+    @Disabled("Fix syntax")
     public void shouldMatchCharactersInCharacterClass() {
-        metafix = fix("map(lit-[AB])");
+        final Metafix metafix = fix(
+                "map(lit-[AB])"
+        );
 
         metafix.startRecord("1");
         metafix.literal(LITERAL_A, LITERAL_HAWAII);
@@ -156,9 +171,12 @@ public class MetafixDslTest {
     }
 
     @Test
-    @Disabled // Fix syntax
+    @Disabled("Fix syntax")
     public void shouldReplaceVariables() {
-        metafix = fix("vars(in: Honolulu, out: Hawaii)\n" + "map($[in],$[out])");
+        final Metafix metafix = fix(
+                "vars(in: Honolulu, out: Hawaii)",
+                "map($[in],$[out])"
+        );
 
         metafix.startRecord("1");
         metafix.literal("Honolulu", LITERAL_ALOHA);
@@ -167,11 +185,14 @@ public class MetafixDslTest {
         Mockito.verify(streamReceiver).literal(LITERAL_HAWAII, LITERAL_ALOHA);
     }
 
-    private Metafix fix(final String fixString) {
+    private Metafix fix(final String... fix) {
+        final String fixString = String.join("\n", fix);
         System.out.println("\nFix string: " + fixString);
-        final Metafix result = new Metafix(fixString);
-        result.setReceiver(streamReceiver);
-        return result;
+
+        final Metafix metafix = new Metafix(fixString);
+        metafix.setReceiver(streamReceiver);
+
+        return metafix;
     }
 
 }

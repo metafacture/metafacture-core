@@ -1,13 +1,14 @@
 package org.metafacture.fix.interpreter;
 
 import org.metafacture.fix.fix.Do;
+import org.metafacture.fix.fix.ElsIf;
+import org.metafacture.fix.fix.Else;
 import org.metafacture.fix.fix.Expression;
 import org.metafacture.fix.fix.Fix;
 import org.metafacture.fix.fix.If;
 import org.metafacture.fix.fix.MethodCall;
 import org.metafacture.metamorph.Metafix;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.eclipse.xtext.xbase.lib.InputOutput;
@@ -19,54 +20,70 @@ public class FixInterpreter extends XbaseInterpreter {
     public FixInterpreter() {
     }
 
-    public void run(final Metafix metafix, final EObject program) { // checkstyle-disable-line HiddenField
-        if (metafix != null && program != null) {
-            this.metafix = metafix;
+    public void run(final Metafix metafixParam, final EObject program) {
+        if (metafixParam != null && program != null) {
+            metafix = metafixParam;
+
             if (program instanceof Fix) {
-                final EList<Expression> elements = ((Fix) program).getElements();
-                for (final Expression expression : elements) {
-                    this.process(expression);
+                for (final Expression expression : ((Fix) program).getElements()) {
+                    process(expression);
                 }
             }
         }
     }
 
-    public void process(final Expression expression) { // checkstyle-disable-line CyclomaticComplexity|NPathComplexity
-        this.metafix.getExpressions().add(expression);
+    private void process(final Expression expression) { // checkstyle-disable-line CyclomaticComplexity|NPathComplexity
+        metafix.getExpressions().add(expression);
+
         boolean matched = false;
+
         if (expression instanceof If) {
             matched = true;
-            InputOutput.<String>println("if: " + expression);
-            final EList<Expression> elements = ((If) expression).getElements();
-            for (final Expression ifExpression : elements) {
-                this.process(ifExpression);
+
+            final If ifExpression = (If) expression;
+            InputOutput.println("if: " + ifExpression);
+
+            for (final Expression element : ifExpression.getElements()) {
+                process(element);
             }
-            if (((If) expression).getElseIf() != null) {
-                InputOutput.<String>println("else if: " + ((If) expression).getElseIf());
-                for (final Expression elseIfExpression : ((If) expression).getElseIf().getElements()) {
-                    this.process(elseIfExpression);
+
+            final ElsIf elseIfExpression = ifExpression.getElseIf();
+            if (elseIfExpression != null) {
+                InputOutput.println("else if: " + elseIfExpression);
+
+                for (final Expression element : elseIfExpression.getElements()) {
+                    process(element);
                 }
             }
-            if (((If) expression).getElse() != null) {
-                InputOutput.<String>println("else: " + ((If) expression).getElseIf());
-                for (final Expression elseExpression : ((If) expression).getElse().getElements()) {
-                    this.process(elseExpression);
+
+            final Else elseExpression = ifExpression.getElse();
+            if (elseExpression != null) {
+                InputOutput.println("else: " + elseExpression);
+
+                for (final Expression element : elseExpression.getElements()) {
+                    process(element);
                 }
             }
         }
+
         if (!matched) {
             if (expression instanceof Do) {
                 matched = true;
-                InputOutput.<String>println("do: " + expression);
-                for (final Expression doExpression : ((Do) expression).getElements()) {
-                    this.process(doExpression);
+
+                final Do doExpression = (Do) expression;
+                InputOutput.println("do: " + doExpression);
+
+                for (final Expression element : doExpression.getElements()) {
+                    process(element);
                 }
             }
         }
+
         if (!matched) {
             if (expression instanceof MethodCall) {
                 matched = true;
-                InputOutput.<String>println("method call: " + expression);
+                InputOutput.println("method call: " + expression);
+                // TODO
             }
         }
     }

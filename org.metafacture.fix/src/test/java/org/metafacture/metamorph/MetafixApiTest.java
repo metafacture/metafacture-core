@@ -77,7 +77,7 @@ public class MetafixApiTest {
         metafix.startRecord("");
         metafix.literal(TEST_ENTITY + "." + TEST_LITERAL, TEST_VALUE);
 
-        Mockito.verify(namedValueReceiver).receive(ArgumentMatchers.eq(OUT_NAME), ArgumentMatchers.eq(TEST_VALUE), ArgumentMatchers.any(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt());
+        receive();
     }
 
     @Test
@@ -87,7 +87,7 @@ public class MetafixApiTest {
         metafix.startRecord("");
         metafix.literal("nonMatching.path", TEST_VALUE);
 
-        Mockito.verify(namedValueReceiver, Mockito.never()).receive(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt());
+        neverReceive();
     }
 
     @Test
@@ -98,7 +98,7 @@ public class MetafixApiTest {
         metafix.startEntity(TEST_ENTITY);
         metafix.literal(TEST_LITERAL, TEST_VALUE);
 
-        Mockito.verify(namedValueReceiver).receive(ArgumentMatchers.eq(OUT_NAME), ArgumentMatchers.eq(TEST_VALUE), ArgumentMatchers.any(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt());
+        receive();
     }
 
     @Test
@@ -109,7 +109,7 @@ public class MetafixApiTest {
         metafix.startEntity(TEST_ENTITY);
         metafix.literal("nonMatching", TEST_VALUE);
 
-        Mockito.verify(namedValueReceiver, Mockito.never()).receive(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt());
+        neverReceive();
     }
 
     @Test
@@ -120,7 +120,7 @@ public class MetafixApiTest {
         metafix.startEntity("nonMatching");
         metafix.literal(TEST_LITERAL, TEST_VALUE);
 
-        Mockito.verify(namedValueReceiver, Mockito.never()).receive(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt());
+        neverReceive();
     }
 
     @Test
@@ -130,18 +130,7 @@ public class MetafixApiTest {
         metafix.startRecord("");
         metafix.literal(TEST_LITERAL, TEST_VALUE);
 
-        Mockito.verify(namedValueReceiver, Mockito.never()).receive(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt());
-    }
-
-    /**
-     * Creates the Metafix object structure that corresponds to the Metafix DSL
-     * statement {@code map(testEntity.testLiteral, outName)}.
-     */
-    private void setupSimpleMappingMorph() {
-        final Data data = new Data();
-        data.setName(OUT_NAME);
-        data.setNamedValueReceiver(namedValueReceiver);
-        metafix.registerNamedValueReceiver(TEST_ENTITY + '.' + TEST_LITERAL, data);
+        neverReceive();
     }
 
     @Test
@@ -167,21 +156,21 @@ public class MetafixApiTest {
 
     @Test
     public void shouldFeedbackLiteralsStartingWithAtIntoMetamorph() {
-        final Data data1;
-        data1 = new Data();
-        data1.setName("@feedback");
-        metafix.addNamedValueSource(data1);
-        metafix.registerNamedValueReceiver(TEST_LITERAL, data1);
+        final Data dataIn;
+        dataIn = new Data();
+        dataIn.setName("@feedback");
+        metafix.addNamedValueSource(dataIn);
+        metafix.registerNamedValueReceiver(TEST_LITERAL, dataIn);
 
-        final Data data2 = new Data();
-        data2.setName(OUT_NAME);
-        data2.setNamedValueReceiver(namedValueReceiver);
-        metafix.registerNamedValueReceiver("@feedback", data2);
+        final Data dataOut = new Data();
+        dataOut.setName(OUT_NAME);
+        dataOut.setNamedValueReceiver(namedValueReceiver);
+        metafix.registerNamedValueReceiver("@feedback", dataOut);
 
         metafix.startRecord("");
         metafix.literal(TEST_LITERAL, TEST_VALUE);
 
-        Mockito.verify(namedValueReceiver).receive(ArgumentMatchers.eq(OUT_NAME), ArgumentMatchers.eq(TEST_VALUE), ArgumentMatchers.any(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt());
+        receive();
     }
 
     @Test
@@ -193,6 +182,33 @@ public class MetafixApiTest {
             metafix.endEntity();
             metafix.endRecord(); // Exception expected
         });
+    }
+
+    /**
+     * Creates the Metafix object structure that corresponds to the Metafix DSL
+     * statement {@code map(testEntity.testLiteral, outName)}.
+     */
+    private void setupSimpleMappingMorph() {
+        final Data data = new Data();
+        data.setName(OUT_NAME);
+        data.setNamedValueReceiver(namedValueReceiver);
+        metafix.registerNamedValueReceiver(TEST_ENTITY + '.' + TEST_LITERAL, data);
+    }
+
+    private void receive() {
+        Mockito.verify(namedValueReceiver).receive(
+                ArgumentMatchers.eq(OUT_NAME),
+                ArgumentMatchers.eq(TEST_VALUE),
+                ArgumentMatchers.isA(Data.class),
+                ArgumentMatchers.anyInt(),
+                ArgumentMatchers.anyInt()
+        );
+
+        Mockito.verifyNoMoreInteractions(namedValueReceiver);
+    }
+
+    private void neverReceive() {
+        Mockito.verifyZeroInteractions(namedValueReceiver);
     }
 
 }

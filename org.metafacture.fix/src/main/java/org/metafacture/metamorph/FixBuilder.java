@@ -29,7 +29,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * Builds a {@link Metafix} from an Fix DSL description
+ * Builds a {@link Metafix} from a Fix DSL description
  *
  * @author Markus Michael Geipel (MorphBuilder)
  * @author Christoph Böhme (MorphBuilder)
@@ -38,41 +38,30 @@ import java.util.Map;
  */
 public class FixBuilder {
 
-    private final Deque<StackFrame> stack = new LinkedList<StackFrame>();
-    private Metafix metafix;
-    private InterceptorFactory interceptorFactory;
+    private final Deque<StackFrame> stack = new LinkedList<>();
+    private final InterceptorFactory interceptorFactory;
+    private final Metafix metafix;
 
     public FixBuilder(final Metafix metafix, final InterceptorFactory interceptorFactory) {
         this.metafix = metafix;
         this.interceptorFactory = interceptorFactory;
+
         stack.push(new StackFrame(metafix));
     }
 
     public void walk(final Fix fix, final Map<String, String> vars) {
-        final EList<Expression> elements = fix.getElements();
-        for (final Expression expression : elements) {
+        for (final Expression expression : fix.getElements()) {
             if (expression.getName().equals("map")) {
-                final EList<String> params = expression.getParams();
-                enterData(params);
+                enterData(expression.getParams());
                 exitData();
             }
         }
     }
 
     private void exitData() {
-        final NamedValuePipe dataPipe = stack.pop().getPipe();
-
-        final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
-        final NamedValuePipe delegate;
-        if (interceptor == null) {
-            delegate = dataPipe;
-        }
-        else {
-            delegate = interceptor;
-            delegate.addNamedValueSource(dataPipe);
-        }
-
+        final NamedValuePipe delegate = getDelegate(stack.pop().getPipe());
         final StackFrame parent = stack.peek();
+
         if (parent.isInEntityName()) {
             // Protected xsd schema and by assertion in enterName:
             ((Entity) parent.getPipe()).setNameSource(delegate);
@@ -90,8 +79,16 @@ public class FixBuilder {
         final Data data = new Data();
         data.setName(resolvedAttribute(params, 2));
 
+        final String source = resolvedAttribute(params, 1);
+        metafix.registerNamedValueReceiver(source, getDelegate(data));
+
+        stack.push(new StackFrame(data));
+    }
+
+    private NamedValuePipe getDelegate(final NamedValuePipe data) {
         final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
         final NamedValuePipe delegate;
+
         if (interceptor == null) {
             delegate = data;
         }
@@ -100,10 +97,7 @@ public class FixBuilder {
             data.addNamedValueSource(delegate);
         }
 
-        final String source = resolvedAttribute(params, 1);
-        metafix.registerNamedValueReceiver(source, delegate);
-
-        stack.push(new StackFrame(data));
+        return delegate;
     }
 
     private String resolvedAttribute(final EList<String> params, final int i) {
@@ -113,22 +107,12 @@ public class FixBuilder {
 
     private static class StackFrame {
 
-        private final NamedValuePipe headPipe;
+        private final NamedValuePipe pipe;
 
-        private NamedValuePipe pipe;
-        private boolean inEntityName;
         private boolean inCondition;
+        private boolean inEntityName;
 
-        private StackFrame(final NamedValuePipe headPipe) {
-            this.headPipe = headPipe;
-            this.pipe = headPipe;
-        }
-
-        public NamedValuePipe getHeadPipe() {
-            return headPipe;
-        }
-
-        public void setPipe(final NamedValuePipe pipe) {
+        private StackFrame(final NamedValuePipe pipe) {
             this.pipe = pipe;
         }
 

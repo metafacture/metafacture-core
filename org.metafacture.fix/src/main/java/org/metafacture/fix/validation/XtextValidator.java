@@ -19,16 +19,9 @@ public class XtextValidator {
         throw new IllegalAccessError("Utility class");
     }
 
-    public static void main(final String[] args) throws IOException {
-        if (args == null || args.length != 1) {
-            throw new IllegalArgumentException(String.format("Usage: %s <xtext-file>",
-                        XtextValidator.class.getName()));
-        }
-
+    public static boolean validate(final URI uri) throws IOException {
         final Injector injector = new XtextStandaloneSetup().createInjectorAndDoEMFRegistration();
-
-        final Resource resource = injector.getInstance(ResourceSet.class)
-            .getResource(URI.createURI(args[0]), true);
+        final Resource resource = injector.getInstance(ResourceSet.class).getResource(uri, true);
         resource.load(null);
 
         final List<Issue> issues = injector.getInstance(IResourceValidator.class)
@@ -43,9 +36,20 @@ public class XtextValidator {
                 System.out.println(String.format("- %s: %s (%d:%d)",
                             issue.getSeverity(), issue.getMessage(), issue.getLineNumber(), issue.getColumn()));
             }
+
+            return false;
         }
 
-        System.exit(count);
+        return true;
+    }
+
+    public static void main(final String[] args) throws IOException {
+        if (args == null || args.length != 1) {
+            throw new IllegalArgumentException(String.format("Usage: %s <xtext-file>",
+                        XtextValidator.class.getName()));
+        }
+
+        System.exit(validate(URI.createURI(args[0])) ? 0 : 1);
     }
 
 }

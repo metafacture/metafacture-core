@@ -5,7 +5,6 @@ import org.metafacture.fix.fix.Fix;
 import com.google.inject.Inject;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.eclipse.xtext.testing.util.ParseHelper;
@@ -28,121 +27,79 @@ public class FixParsingTest {
     }
 
     @Test
-    public void load0() throws Exception {
-        final StringConcatenation builder = new StringConcatenation();
-        builder.append("map(a,b)");
-        this.loadModel(builder.toString());
+    public void shouldParseSimple() throws Exception {
+        parse(
+                "map(a,b)"
+        );
     }
 
     @Test
-    public void load1() throws Exception {
-        final StringConcatenation builder = new StringConcatenation();
-        builder.append("# simple field name mappings");
-        builder.newLine();
-        builder.newLine();
-        builder.append("map(a,b)");
-        builder.newLine();
-        builder.newLine();
-        builder.append("# nested field structure");
-        builder.newLine();
-        builder.newLine();
-        builder.append("map(e1)");
-        builder.newLine();
-        builder.append("map(e1.e2)");
-        builder.newLine();
-        builder.append("map(e1.e2.d)");
-        builder.newLine();
-        builder.newLine();
-        builder.append("# pass-through for unmapped fields");
-        builder.newLine();
-        builder.newLine();
-        builder.append("map(_else)");
-        builder.newLine();
-        this.loadModel(builder.toString());
+    public void shouldParseMappings() throws Exception {
+        parse(
+                "# simple field name mappings",
+                "",
+                "map(a,b)",
+                "",
+                "# nested field structure",
+                "",
+                "map(e1)",
+                "map(e1.e2)",
+                "map(e1.e2.d)",
+                "",
+                "# pass-through for unmapped fields",
+                "",
+                "map(_else)",
+                ""
+        );
     }
 
-    @Test // checkstyle-disable-line ExecutableStatementCount|JavaNCSS
-    public void load2() throws Exception {
-        final StringConcatenation builder = new StringConcatenation();
-        builder.append("# FIX is a macro-language for data transformations");
-        builder.newLine();
-        builder.newLine();
-        builder.append("# Simple fixes");
-        builder.newLine();
-        builder.newLine();
-        builder.append("add_field(hello,world)");
-        builder.newLine();
-        builder.append("remove_field(my.deep.nested.junk)");
-        builder.newLine();
-        builder.append("copy_field(stats,output.$append)");
-        builder.newLine();
-        builder.newLine();
-        builder.append("# Conditionals");
-        builder.newLine();
-        builder.newLine();
-        builder.append("if exists(error)");
-        builder.newLine();
-        builder.append("\t");
-        builder.append("set_field(is_valid, no)");
-        builder.newLine();
-        builder.append("\t");
-        builder.append("log(error)");
-        builder.newLine();
-        builder.append("elsif exists(warning)");
-        builder.newLine();
-        builder.append("\t");
-        builder.append("set_field(is_valid, yes)");
-        builder.newLine();
-        builder.append("\t");
-        builder.append("log(warning)");
-        builder.newLine();
-        builder.append("else");
-        builder.newLine();
-        builder.append("\t");
-        builder.append("set_field(is_valid, yes)");
-        builder.newLine();
-        builder.append(LITERAL_END);
-        builder.newLine();
-        builder.newLine();
-        builder.append("# Loops");
-        builder.newLine();
-        builder.newLine();
-        builder.append("do list(path)");
-        builder.newLine();
-        builder.append("\t");
-        builder.append("add_field(foo,bar)");
-        builder.newLine();
-        builder.append(LITERAL_END);
-        builder.newLine();
-        builder.newLine();
-        builder.append("# Nested expressions");
-        builder.newLine();
-        builder.newLine();
-        builder.append("do marc_each()");
-        builder.newLine();
-        builder.append("\t");
-        builder.append("if marc_has(f700)");
-        builder.newLine();
-        builder.append("\t\t");
-        builder.append("marc_map(f700a,authors.$append)");
-        builder.newLine();
-        builder.append("\t");
-        builder.append(LITERAL_END);
-        builder.newLine();
-        builder.append(LITERAL_END);
-        builder.newLine();
-        this.loadModel(builder.toString());
+    @Test
+    public void shouldParseTransformations() throws Exception {
+        parse(
+                "# FIX is a macro-language for data transformations",
+                "",
+                "# Simple fixes",
+                "",
+                "add_field(hello,world)",
+                "remove_field(my.deep.nested.junk)",
+                "copy_field(stats,output.$append)",
+                "",
+                "# Conditionals",
+                "",
+                "if exists(error)",
+                "\tset_field(is_valid, no)",
+                "\tlog(error)",
+                "elsif exists(warning)",
+                "\tset_field(is_valid, yes)",
+                "\tlog(warning)",
+                "else",
+                "\tset_field(is_valid, yes)",
+                LITERAL_END,
+                "",
+                "# Loops",
+                "",
+                "do list(path)",
+                "\tadd_field(foo,bar)",
+                LITERAL_END,
+                "",
+                "# Nested expressions",
+                "",
+                "do marc_each()",
+                "\tif marc_has(f700)",
+                "\t\tmarc_map(f700a,authors.$append)",
+                "\t" + LITERAL_END,
+                LITERAL_END,
+                ""
+        );
     }
 
-    public void loadModel(final String fix) throws Exception {
-        final Fix result = this.parseHelper.parse(fix);
-        InputOutput.<String>println("Result: " + result);
+    private void parse(final String... fix) throws Exception {
+        final Fix result = parseHelper.parse(String.join("\n", fix));
+        InputOutput.println("Result: " + result);
         Assertions.assertNotNull(result);
+
         final EList<Resource.Diagnostic> errors = result.eResource().getErrors();
-        final StringConcatenation builder = new StringConcatenation();
-        builder.append("Unexpected errors: ");
-        builder.append(IterableExtensions.join(errors, ", "));
-        Assertions.assertTrue(errors.isEmpty(), builder.toString());
+        Assertions.assertTrue(errors.isEmpty(), "Unexpected errors: " + IterableExtensions.join(errors, ", "));
     }
 
 }

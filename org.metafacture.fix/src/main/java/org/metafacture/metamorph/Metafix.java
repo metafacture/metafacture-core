@@ -41,7 +41,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.service.OperationCanceledError;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
@@ -49,16 +48,13 @@ import org.eclipse.xtext.validation.Issue;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -69,7 +65,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Transforms a data stream send via the {@link StreamReceiver} interface. Use
+ * Transforms a data stream sent via the {@link StreamReceiver} interface. Use
  * {@link FixBuilder} to create an instance based on a Fix DSL description.
  *
  * @author Markus Michael Geipel (Metamorph)
@@ -99,7 +95,6 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         @Override
         public void register(final String path, final NamedValueReceiver value) {
             trie.put(path, value);
-
         }
 
         @Override
@@ -107,15 +102,15 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
             return trie.get(path);
         }
     };
-    private final List<NamedValueReceiver> elseSources = new ArrayList<>();
 
-    private final Map<String, Map<String, String>> maps = new HashMap<>();
     private final List<Closeable> resources = new ArrayList<>();
+    private final List<NamedValueReceiver> elseSources = new ArrayList<>();
+    private final Map<String, Map<String, String>> maps = new HashMap<>();
     private final StreamFlattener flattener = new StreamFlattener();
 
     private final Deque<Integer> entityCountStack = new LinkedList<>();
-    private int entityCount;
     private int currentEntityCount;
+    private int entityCount;
 
     private StreamReceiver outputStreamReceiver;
     private MorphErrorHandler errorHandler = new DefaultErrorHandler();
@@ -181,53 +176,15 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         try {
             buildPipeline(new FileReader(fixFile), NO_VARS, NULL_INTERCEPTOR_FACTORY);
         }
-        catch (final FileNotFoundException e) {
+        catch (final IOException e) {
             e.printStackTrace();
         }
+
         init();
     }
 
     public List<Expression> getExpressions() {
         return expressions;
-    }
-
-    private void buildPipeline(final Reader fixDef, final Map<String, String> vars, final InterceptorFactory interceptorFactory) {
-        final Fix fix = parseFix(fixDef);
-        // TODO: unify FixInterpreter and FixBuilder
-        new FixInterpreter().run(this, fix);
-        new FixBuilder(this, interceptorFactory).walk(fix, vars);
-    }
-
-    private Fix parseFix(final Reader fixDef) throws OperationCanceledError {
-        // TODO: do this only once per application
-        final Injector injector = new FixStandaloneSetup().createInjectorAndDoEMFRegistration();
-        FixStandaloneSetup.doSetup();
-        try {
-            final XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
-            final URI modelFileUri = URI.createFileURI(tempFile(fixDef).getAbsolutePath());
-            final Resource resource = resourceSet.getResource(modelFileUri, true);
-            final IResourceValidator validator = ((XtextResource) resource).getResourceServiceProvider()
-                .getResourceValidator();
-            final List<Issue> issues = validator.validate(resource, CheckMode.ALL, CancelIndicator.NullImpl);
-            for (final Issue issue : issues) {
-                System.err.println(issue.getMessage());
-            }
-            return (Fix) resource.getContents().get(0);
-        }
-        catch (final IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private File tempFile(final Reader fixDef) throws IOException, FileNotFoundException {
-        // TODO: avoid temp file creation
-        final File tmpFile = Files.createTempFile("test0_", ".fix").toFile();
-        tmpFile.deleteOnExit();
-        try (PrintWriter out = new PrintWriter(new FileWriter(tmpFile))) {
-            out.println(CharStreams.toString(fixDef));
-        }
-        return tmpFile;
     }
 
     private void init() {
@@ -239,6 +196,48 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         });
     }
 
+    private void buildPipeline(final Reader fixDef, final Map<String, String> vars, final InterceptorFactory interceptorFactory) {
+        final Fix fix = parseFix(fixDef);
+
+        // TODO: unify FixInterpreter and FixBuilder
+        new FixInterpreter().run(this, fix);
+        new FixBuilder(this, interceptorFactory).walk(fix, vars);
+    }
+
+    private Fix parseFix(final Reader fixDef) {
+        // TODO: do this only once per application
+        final Injector injector = new FixStandaloneSetup().createInjectorAndDoEMFRegistration();
+        FixStandaloneSetup.doSetup();
+
+        try {
+            final URI uri = URI.createFileURI(absPathToTempFile(fixDef, ".fix"));
+            final Resource resource = injector.getInstance(XtextResourceSet.class).getResource(uri, true);
+            final IResourceValidator validator = ((XtextResource) resource).getResourceServiceProvider().getResourceValidator();
+
+            for (final Issue issue : validator.validate(resource, CheckMode.ALL, CancelIndicator.NullImpl)) {
+                System.err.println(issue.getMessage());
+            }
+
+            return (Fix) resource.getContents().get(0);
+        }
+        catch (final IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String absPathToTempFile(final Reader fixDef, final String suffix) throws IOException {
+        // TODO: avoid temp file creation
+        final File file = File.createTempFile("metafix", suffix);
+        file.deleteOnExit();
+
+        try (FileWriter out = new FileWriter(file)) {
+            CharStreams.copy(fixDef, out);
+        }
+
+        return file.getAbsolutePath();
+    }
+
     protected List<NamedValueReceiver> getElseSources() {
         return elseSources;
     }
@@ -247,7 +246,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         flattener.setEntityMarker(entityMarker);
     }
 
-    public void setErrorHandler(final MorphErrorHandler errorHandler) {
+    protected void setErrorHandler(final MorphErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
     }
 
@@ -267,16 +266,13 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
 
         entityCount = 0;
         currentEntityCount = 0;
+        entityCountStack.add(Integer.valueOf(entityCount));
 
         ++recordCount;
         recordCount %= Integer.MAX_VALUE;
 
-        entityCountStack.add(Integer.valueOf(entityCount));
-
-        final String identifierFinal = identifier;
-
-        outputStreamReceiver.startRecord(identifierFinal);
-        dispatch(StandardEventNames.ID, identifierFinal, null);
+        outputStreamReceiver.startRecord(identifier);
+        dispatch(StandardEventNames.ID, identifier, null);
     }
 
     @Override
@@ -287,6 +283,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
 
         outputStreamReceiver.endRecord();
         entityCountStack.removeLast();
+
         if (!entityCountStack.isEmpty()) {
             throw new IllegalStateException(ENTITIES_NOT_BALANCED);
         }
@@ -305,7 +302,6 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         entityCountStack.push(Integer.valueOf(entityCount));
 
         flattener.startEntity(name);
-
     }
 
     @Override
@@ -336,22 +332,21 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
                 errorHandler.error(e);
             }
         }
+
         outputStreamReceiver.closeStream();
     }
 
-    protected void dispatch(final String path, final String value, final List<NamedValueReceiver> fallback) {
+    private void dispatch(final String path, final String value, final List<NamedValueReceiver> fallback) {
         final List<NamedValueReceiver> matchingData = findMatchingData(path, fallback);
-        if (null != matchingData) {
+
+        if (matchingData != null) {
             send(path, value, matchingData);
         }
     }
 
     private List<NamedValueReceiver> findMatchingData(final String path, final List<NamedValueReceiver> fallback) {
         final List<NamedValueReceiver> matchingData = dataRegistry.get(path);
-        if (matchingData == null || matchingData.isEmpty()) {
-            return fallback;
-        }
-        return matchingData;
+        return matchingData == null || matchingData.isEmpty() ? fallback : matchingData;
     }
 
     private void send(final String key, final String value, final List<NamedValueReceiver> dataList) {
@@ -368,7 +363,9 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         if (streamReceiver == null) {
             throw new IllegalArgumentException("'streamReceiver' must not be null");
         }
-        this.outputStreamReceiver = streamReceiver;
+
+        outputStreamReceiver = streamReceiver;
+
         return streamReceiver;
     }
 
@@ -378,7 +375,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
 
     @Override
     public void receive(final String name, final String value, final NamedValueSource source, final int recordCountParam, final int entityCountParam) {
-        if (null == name) {
+        if (name == null) {
             throw new IllegalArgumentException(
                     "encountered literal with name='null'. This indicates a bug in a function or a collector.");
         }
@@ -388,10 +385,15 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
             return;
         }
 
-        String unescapedName = name;
+        final String unescapedName;
+
         if (name.length() > 1 && name.charAt(0) == ESCAPE_CHAR && (name.charAt(1) == FEEDBACK_CHAR || name.charAt(1) == ESCAPE_CHAR)) {
             unescapedName = name.substring(1);
         }
+        else {
+            unescapedName = name;
+        }
+
         outputStreamReceiver.literal(unescapedName, value);
     }
 
@@ -403,10 +405,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
     @Override
     public String getValue(final String mapName, final String key) {
         final Map<String, String> map = getMap(mapName);
-        if (map.containsKey(key)) {
-            return map.get(key);
-        }
-        return map.get(Maps.DEFAULT_MAP_KEY);
+        return map.containsKey(key) ? map.get(key) : map.get(Maps.DEFAULT_MAP_KEY);
     }
 
     @Override
@@ -415,6 +414,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
             final Closeable closable = (Closeable) map;
             resources.add(closable);
         }
+
         return maps.put(mapName, map);
     }
 

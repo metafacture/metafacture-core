@@ -9,7 +9,6 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebInfConfiguration;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 
 import java.net.InetSocketAddress;
 
@@ -24,34 +23,40 @@ public class ServerLauncher { // checkstyle-disable-line ClassDataAbstractionCou
     }
 
     public static void main(final String[] args) {
+        final WebAppContext context = new WebAppContext();
+        context.setResourceBase("src/main/webapp");
+        context.setWelcomeFiles(new String[] {"index.html"});
+        context.setContextPath("/");
+        context.setConfigurations(new Configuration[] {new AnnotationConfiguration(), new WebXmlConfiguration(), new WebInfConfiguration(), new MetaInfConfiguration()});
+        context.setAttribute(WebInfConfiguration.CONTAINER_JAR_PATTERN, ".*/org\\.metafacture\\.fix\\.web/.*,.*\\.jar");
+        context.setInitParameter("org.mortbay.jetty.servlet.Default.useFileMappedBuffer", "false");
+
         final Server server = new Server(new InetSocketAddress("0.0.0.0", 8080));
-        server.setHandler(ObjectExtensions.<WebAppContext>operator_doubleArrow(new WebAppContext(), (WebAppContext it) -> {
-            it.setResourceBase("src/main/webapp");
-            it.setWelcomeFiles(new String[] {"index.html"});
-            it.setContextPath("/");
-            it.setConfigurations(new Configuration[] {new AnnotationConfiguration(), new WebXmlConfiguration(), new WebInfConfiguration(), new MetaInfConfiguration()});
-            it.setAttribute(WebInfConfiguration.CONTAINER_JAR_PATTERN, ".*/org\\.metafacture\\.fix\\.web/.*,.*\\.jar");
-            it.setInitParameter("org.mortbay.jetty.servlet.Default.useFileMappedBuffer", "false");
-        }));
+        server.setHandler(context);
+
         final Slf4jLog log = new Slf4jLog(ServerLauncher.class.getName());
+
         try {
             server.start();
+
             log.info("Server started " + server.getURI() + "...");
+
             new Thread(() -> {
                 try {
                     log.info("Press enter to stop the server...");
-                    final int key = System.in.read();
-                    if (key != -1) {
+
+                    if (System.in.read() != -1) {
                         server.stop();
                     }
                     else {
-                        log.warn("Console input is not available. In order to stop the server, you need to cancel process manually.");
+                        log.warn("Console input is not available. In order to stop the server, you need to cancel the process manually.");
                     }
                 }
                 catch (final Exception e) { // checkstyle-disable-line IllegalCatch
                     throw Exceptions.sneakyThrow(e);
                 }
             }).start();
+
             server.join();
         }
         catch (final Throwable e) { // checkstyle-disable-line IllegalCatch
