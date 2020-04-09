@@ -42,7 +42,7 @@ import com.opencsv.CSVReader;
 public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver>  {
 
     private static final char DEFAULT_SEP = ',';
-    private final char separator;
+    private char separator;
 
     private String[] header = new String[0];
     private int count;
@@ -51,9 +51,9 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
     /**
      * @param separator to split lines
      */
-    public CsvDecoder(final char separator) {
+    public CsvDecoder(final String separator) {
         super();
-        this.separator = separator;
+        this.separator = separator.charAt(0);
     }
 
     public CsvDecoder() {
@@ -109,4 +109,5 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
         this.hasHeader = hasHeader;
     }
 
+    public void setSeparator(final String separator) { this.separator = separator.charAt(0); }
 }

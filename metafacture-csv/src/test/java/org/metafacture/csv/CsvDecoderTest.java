@@ -74,4 +74,18 @@ public final class CsvDecoderTest {
         ordered.verify(receiver).endRecord();
     }
 
+    @Test
+    public void testTabSeparated() {
+
+        decoder.setSeparator('\t');
+
+        decoder.process("a\tb\tc");
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("h1", "a");
+        ordered.verify(receiver).literal("h2", "b");
+        ordered.verify(receiver).literal("h3", "c");
+        ordered.verify(receiver).endRecord();
+    }
+
 }
