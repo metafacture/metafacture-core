@@ -77,7 +77,7 @@ public final class CsvDecoderTest {
     @Test
     public void testTabSeparated() {
 
-        decoder.setSeparator('\t');
+        decoder.setSeparator("\t");
 
         decoder.process("a\tb\tc");
         final InOrder ordered = inOrder(receiver);
