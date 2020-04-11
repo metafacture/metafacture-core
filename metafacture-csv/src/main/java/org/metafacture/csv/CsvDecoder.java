@@ -56,6 +56,14 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
         this.separator = separator.charAt(0);
     }
 
+    /**
+     * @param separator to split lines
+     */
+    public CsvDecoder(final char separator) {
+        super();
+        this.separator = separator;
+    }
+
     public CsvDecoder() {
         super();
         this.separator = DEFAULT_SEP;
