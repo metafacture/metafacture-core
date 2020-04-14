@@ -25,13 +25,13 @@ This repo contains an Xtext web project with a basic Fix grammar, which generate
 Setup
 -----
 
-Go to the Xtext project:
+Go to the Git repository root:
 
 `cd metafacture-fix/`
 
-Run the tests (in `org.metafacture.fix/src/test/java`):
+Run the tests (in `org.metafacture.fix/src/test/java`) and checks (`.editorconfig`, `config/checkstyle/checkstyle.xml`):
 
-`./gradlew clean test`
+`./gradlew clean check`
 
 Editor
 ------
@@ -110,12 +110,13 @@ Run workflows, passing `data`, `flux`, and `fix`:
 
 [http://localhost:8080/xtext-service/run?data='1'{'a': '5', 'z': 10}&flux=as-lines|decode-formeta|fix|encode-formeta(style="multiline")&fix=map(a,b) map(_else)](http://localhost:8080/xtext-service/run?data=%271%27{%27a%27:%20%275%27,%20%27z%27:%2010}&flux=as-lines|decode-formeta|fix|encode-formeta(style=%22multiline%22)&fix=map(a,c)%20map(_else))
 
+Eclipse IDE
+-----------
+
+To import the projects in Eclipse, choose File > Import > Existing Gradle Project and select the `metafacture-fix` directory.
+
 Xtext
 -----
-
-To import the projects in Eclipse, choose File > Import > Existing Gradle Project:
-
-![Import projects](docs/xtext-import.png)
 
 This repo has been originally set up with Xtext 2.17.0 and Eclipse for Java 2019-03, following [https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html](https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html). Below are some details to reproduce the original setup:
 
