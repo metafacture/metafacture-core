@@ -1,0 +1,65 @@
+plugins {
+  id 'com.adarshr.test-logger' version '1.7.0'
+  id 'maven'
+}
+
+dependencies {
+  compile "org.eclipse.xtext:org.eclipse.xtext:${versions.xtext}"
+  compile "org.eclipse.xtext:org.eclipse.xtext.xbase:${versions.xtext}"
+
+  testCompile "org.junit.jupiter:junit-jupiter-api:${versions.jupiter}"
+  testCompile "org.eclipse.xtext:org.eclipse.xtext.testing:${versions.xtext}"
+  testCompile "org.eclipse.xtext:org.eclipse.xtext.xbase.testing:${versions.xtext}"
+
+  testRuntime "org.junit.jupiter:junit-jupiter-engine:${versions.jupiter}"
+
+  implementation "org.metafacture:metafacture-commons:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-mangling:${versions.metafacture}"
+  implementation "org.metafacture:metamorph:${versions.metafacture}"
+
+  testImplementation "org.mockito:mockito-core:${versions.mockito}"
+  testImplementation "org.mockito:mockito-junit-jupiter:${versions.mockito}"
+}
+
+configurations {
+  mwe2 {
+    extendsFrom compile
+  }
+}
+
+dependencies {
+  mwe2 'org.eclipse.emf:org.eclipse.emf.mwe2.launch'
+  mwe2 "org.eclipse.xtext:org.eclipse.xtext.common.types:${versions.xtext}"
+  mwe2 "org.eclipse.xtext:org.eclipse.xtext.xtext.generator:${versions.xtext}"
+  mwe2 'org.eclipse.xtext:xtext-antlr-generator'
+}
+
+test {
+  useJUnitPlatform()
+}
+
+def xtextFile = 'src/main/java/org/metafacture/fix/Fix.xtext'
+
+task validateXtextLanguage(type: JavaExec) {
+  main = 'org.metafacture.fix.validation.XtextValidator'
+  classpath = sourceSets.main.runtimeClasspath
+  args += xtextFile
+}
+
+task generateXtextLanguage(type: JavaExec) {
+  main = 'org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher'
+  classpath = configurations.mwe2
+  inputs.file 'src/main/java/org/metafacture/fix/GenerateFix.mwe2'
+  inputs.file xtextFile
+  outputs.dir 'src/main/xtext-gen'
+  args += 'src/main/java/org/metafacture/fix/GenerateFix.mwe2'
+  args += '-p'
+  args += "rootPath=/${projectDir}/.."
+}
+
+generateXtext.dependsOn(generateXtextLanguage)
+compileJava.dependsOn(generateXtextLanguage)
+clean.dependsOn(cleanGenerateXtextLanguage)
+check.dependsOn(validateXtextLanguage)
+
+eclipse.classpath.plusConfigurations += [configurations.mwe2]
