@@ -84,8 +84,9 @@ public class FixServlet extends XtextServlet {
         final String fixFile = absPathToTempFile(request.getParameter(PARAM_FIX), ".fix");
         final String outFile = absPathToTempFile("", ".txt");
 
-        builder.append(request.getParameter(PARAM_FLUX).replace(COMMAND_FIX,
-                    "org.metafacture.metamorph.Metafix(fixFile=\"" + fixFile + "\")"));
+        builder.append(request.getParameter(PARAM_FLUX).replaceAll("\\s?\\|\\s?", "|").replace(
+                "|" + COMMAND_FIX + "|",
+                "|org.metafacture.metamorph.Metafix(fixFile=\"" + fixFile + "\")|"));
         builder.append("|write(\"");
         builder.append(outFile);
         builder.append("\");");
