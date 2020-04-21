@@ -45,7 +45,7 @@ public final class JsonToElasticsearchBulkTest {
     private static final String TYPE1  = "T1";
     private static final String INDEX1 = "I1";
 
-    private static final String METADATA = "{'index':{'_index':'I1','_type':'T1','_id':%s}}";
+    private static final String METADATA = "{'index':{'_index':'I1','_type':'T1'%s}}";
 
     private static final String ENTITY_SEPARATOR1 = ".";
     private static final String ENTITY_SEPARATOR2 = ":";
@@ -122,7 +122,13 @@ public final class JsonToElasticsearchBulkTest {
     @Test
     public void testShouldNotExtractEmptyIdPath() {
         setBulk(new String[0]);
-        shouldNotExtractId("{'L1':'V1','L2':'V2','L3':'V3'}");
+        shouldExtractId("{'L1':'V1','L2':'V2','L3':'V3'}", null);
+    }
+
+    @Test
+    public void testShouldNotExtractOmittedIdPath() {
+        bulk = new JsonToElasticsearchBulk(TYPE1, INDEX1);
+        shouldExtractId("{'L1':'V1','L2':'V2','L3':'V3'}", null);
     }
 
     @Test
@@ -220,7 +226,9 @@ public final class JsonToElasticsearchBulkTest {
         bulk.setReceiver(receiver);
         bulk.process(fixQuotes(obj));
 
-        verify(receiver).process(fixQuotes(String.format(METADATA, idValue) + "\n" + resultObj));
+        final String metadata = String.format(METADATA, idValue != null ? ",'_id':" + idValue : "");
+
+        verify(receiver).process(fixQuotes(metadata + "\n" + resultObj));
         verifyNoMoreInteractions(receiver);
     }
 

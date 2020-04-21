@@ -79,6 +79,16 @@ public class JsonToElasticsearchBulk extends
     private String index;
 
     /**
+     * As an id is not required it can be omitted.
+     *
+     * @param type The Elasticsearch index type
+     * @param index The Elasticsearch index name
+     */
+    public JsonToElasticsearchBulk(String type, String index) {
+        this(new String[] { }, type, index);
+    }
+
+    /**
      * @param idPath The key path of the JSON value to be used as the ID for the record
      * @param type The Elasticsearch index type
      * @param index The Elasticsearch index name
@@ -116,7 +126,7 @@ public class JsonToElasticsearchBulk extends
             Map<String, Object> detailsMap = new HashMap<String, Object>();
             Map<String, Object> indexMap = new HashMap<String, Object>();
             indexMap.put("index", detailsMap);
-            detailsMap.put("_id", findId(json));
+            if (idPath.length > 0) detailsMap.put("_id", findId(json));
             detailsMap.put("_type", type);
             detailsMap.put("_index", index);
             mapper.writeValue(stringWriter, indexMap);
@@ -129,10 +139,6 @@ public class JsonToElasticsearchBulk extends
     }
 
     private Object findId(Object value) {
-        if (idPath.length < 1) {
-            return null;
-        }
-
         for (final String key : idPath) {
             if (value instanceof Map) {
                 @SuppressWarnings("unchecked")
