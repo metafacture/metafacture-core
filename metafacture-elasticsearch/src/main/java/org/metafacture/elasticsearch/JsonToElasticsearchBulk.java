@@ -78,6 +78,25 @@ public class JsonToElasticsearchBulk extends
     private String type;
     private String index;
 
+    public void setIdKey(String idKey) {
+        this.idPath = new String[]{idKey};
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
+    }
+
+    public JsonToElasticsearchBulk() {
+        super();
+        this.idPath = new String[]{};
+        this.type = null;
+        this.index = null;
+    }
+
     /**
      * As an id is not required it can be omitted.
      *
