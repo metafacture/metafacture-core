@@ -72,6 +72,24 @@ public class MetafixDslTest {
     }
 
     @Test
+    public void shouldAddLiteral() {
+        final Metafix metafix = fix(
+                "add_field(a,A)",
+                "add_field(a.b,AB)"
+        );
+
+        metafix.startRecord("1");
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("a", "A");
+        ordered.verify(streamReceiver).literal("a.b", "AB");
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void shouldHandleUnmatchedLiteralsInElseSource() {
         final Metafix metafix = fix(
                 "map(Sylt,Hawaii)",

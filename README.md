@@ -99,6 +99,10 @@ map(e1.e2.d)
 # pass-through for unmapped fields
 
 map(_else)
+
+# adding fields
+
+add_field(hello,world)
 ```
 
 See also `MetafixDslTest.java`.

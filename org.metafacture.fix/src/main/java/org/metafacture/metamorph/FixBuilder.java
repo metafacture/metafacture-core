@@ -21,6 +21,7 @@ import org.metafacture.fix.fix.Fix;
 import org.metafacture.metamorph.api.ConditionAware;
 import org.metafacture.metamorph.api.InterceptorFactory;
 import org.metafacture.metamorph.api.NamedValuePipe;
+import org.metafacture.metamorph.functions.Constant;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -51,9 +52,17 @@ public class FixBuilder {
 
     public void walk(final Fix fix, final Map<String, String> vars) {
         for (final Expression expression : fix.getElements()) {
-            if (expression.getName().equals("map")) {
-                enterData(expression.getParams());
-                exitData();
+            final EList<String> params = expression.getParams();
+            switch (expression.getName()) {
+                case "map" :
+                    enterDataMap(params);
+                    exitData();
+                    break;
+                case "add_field" :
+                    enterDataAdd(params);
+                    exitData();
+                    break;
+                default: break;
             }
         }
     }
@@ -75,13 +84,23 @@ public class FixBuilder {
         }
     }
 
-    private void enterData(final EList<String> params) {
+    private void enterDataMap(final EList<String> params) {
         final Data data = new Data();
         data.setName(resolvedAttribute(params, 2));
 
         final String source = resolvedAttribute(params, 1);
         metafix.registerNamedValueReceiver(source, getDelegate(data));
 
+        stack.push(new StackFrame(data));
+    }
+
+    private void enterDataAdd(final EList<String> params) {
+        final Data data = new Data();
+        data.setName(resolvedAttribute(params, 1));
+        final Constant constant = new Constant();
+        constant.setValue(resolvedAttribute(params, 2));
+        data.addNamedValueSource(constant);
+        metafix.registerNamedValueReceiver("_id", constant);
         stack.push(new StackFrame(data));
     }
 
