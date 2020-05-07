@@ -7,11 +7,12 @@ dependencies {
   compile "org.eclipse.xtext:org.eclipse.xtext:${versions.xtext}"
   compile "org.eclipse.xtext:org.eclipse.xtext.xbase:${versions.xtext}"
 
-  testCompile "org.junit.jupiter:junit-jupiter-api:${versions.jupiter}"
+  testCompile "org.junit.jupiter:junit-jupiter-api:${versions.junit_jupiter}"
+  testCompile "org.junit.platform:junit-platform-launcher:${versions.junit_platform}"
   testCompile "org.eclipse.xtext:org.eclipse.xtext.testing:${versions.xtext}"
   testCompile "org.eclipse.xtext:org.eclipse.xtext.xbase.testing:${versions.xtext}"
 
-  testRuntime "org.junit.jupiter:junit-jupiter-engine:${versions.jupiter}"
+  testRuntime "org.junit.jupiter:junit-jupiter-engine:${versions.junit_jupiter}"
 
   implementation "org.metafacture:metafacture-commons:${versions.metafacture}"
   implementation "org.metafacture:metafacture-mangling:${versions.metafacture}"
