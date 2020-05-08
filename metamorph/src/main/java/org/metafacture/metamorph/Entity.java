@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2020 Deutsche Nationalbibliothek and others
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.metafacture.commons.StringUtil;
 import org.metafacture.flowcontrol.StreamBuffer;
@@ -38,13 +39,17 @@ public final class Entity extends AbstractFlushingCollect {
     private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
     private final StreamBuffer buffer = new StreamBuffer();
 
-    private final Metamorph metamorph;
+    private final Supplier<StreamReceiver> receiver;
 
     private NamedValueSource nameSource;
     private String currentName;
 
     public Entity(final Metamorph metamorph) {
-        this.metamorph = metamorph;
+        this.receiver = () -> metamorph.getStreamReceiver();
+    }
+
+    public Entity(final StreamReceiver receiver) {
+        this.receiver = () -> receiver;
     }
 
     public void setNameSource(final NamedValueSource source) {
@@ -60,7 +65,7 @@ public final class Entity extends AbstractFlushingCollect {
             final Entity parent = (Entity) namedValueReceiver;
             parent.receive(null, null, this, getRecordCount(), getEntityCount());
         } else {
-            write(metamorph.getStreamReceiver());
+            write(receiver.get());
         }
     }
 
