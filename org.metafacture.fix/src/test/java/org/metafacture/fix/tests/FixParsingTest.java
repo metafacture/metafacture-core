@@ -34,6 +34,18 @@ public class FixParsingTest {
     }
 
     @Test
+    public void shouldParseQuotedStrings() throws Exception {
+        parse(
+                "add_field(hello,'world')",
+                "add_field(hello,\"world\")",
+                "add_field(hello,\"w-o:r l/d\")",
+                "add_field(hello,'\tw\n\torld')",
+                "add_field(hello,'\\tw\\n\\torld')",
+                "add_field(hello,'\"world\"')"
+        );
+    }
+
+    @Test
     public void shouldParseMappings() throws Exception {
         parse(
                 "# simple field name mappings",
@@ -60,7 +72,7 @@ public class FixParsingTest {
                 "",
                 "# Simple fixes",
                 "",
-                "add_field(hello,world)",
+                "add_field(hello,\"world\")",
                 "remove_field(my.deep.nested.junk)",
                 "copy_field(stats,output.$append)",
                 "",

@@ -74,8 +74,8 @@ public class MetafixDslTest {
     @Test
     public void shouldAddLiteral() {
         final Metafix metafix = fix(
-                "add_field(a,A)",
-                "add_field(a.b,AB)"
+                "add_field(a,'A')",
+                "add_field(a.b,'AB')"
         );
 
         metafix.startRecord("1");

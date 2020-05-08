@@ -47,7 +47,7 @@ Visit [http://localhost:8080/](http://localhost:8080/), and paste this into the 
 
 # Simple fixes
 
-add_field(hello,world)
+add_field(hello,"world")
 remove_field(my.deep.nested.junk)
 copy_field(stats,output.$append)
 
@@ -102,7 +102,7 @@ map(_else)
 
 # adding fields
 
-add_field(hello,world)
+add_field(hello,"world")
 ```
 
 See also `MetafixDslTest.java`.
