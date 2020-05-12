@@ -74,8 +74,7 @@ public class MetafixDslTest {
     @Test
     public void shouldAddLiteral() {
         final Metafix metafix = fix(
-                "add_field(a,'A')",
-                "add_field(a.b,'AB')"
+                "add_field(a,'A')"
         );
 
         metafix.startRecord("1");
@@ -84,7 +83,45 @@ public class MetafixDslTest {
         final InOrder ordered = Mockito.inOrder(streamReceiver);
         ordered.verify(streamReceiver).startRecord("1");
         ordered.verify(streamReceiver).literal("a", "A");
-        ordered.verify(streamReceiver).literal("a.b", "AB");
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldAddEntity() {
+        final Metafix metafix = fix(
+                "add_field(a.b,'AB')"
+        );
+
+        metafix.startRecord("1");
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).startEntity("a");
+        ordered.verify(streamReceiver).literal("b", "AB");
+        ordered.verify(streamReceiver).endEntity();
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldAddEntityNested() {
+        final Metafix metafix = fix(
+                "add_field(a.b.c.d.e,'ABCDE')"
+        );
+
+        metafix.startRecord("1");
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).startEntity("a");
+        ordered.verify(streamReceiver).startEntity("b");
+        ordered.verify(streamReceiver).startEntity("c");
+        ordered.verify(streamReceiver).startEntity("d");
+        ordered.verify(streamReceiver).literal("e", "ABCDE");
+        ordered.verify(streamReceiver, Mockito.times(4)).endEntity(); // checkstyle-disable-line MagicNumber
         ordered.verify(streamReceiver).endRecord();
         ordered.verifyNoMoreInteractions();
     }

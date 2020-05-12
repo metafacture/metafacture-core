@@ -95,13 +95,44 @@ public class FixBuilder {
     }
 
     private void enterDataAdd(final EList<String> params) {
-        final Data data = new Data();
-        data.setName(resolvedAttribute(params, 1));
+        final String resolvedAttribute = resolvedAttribute(params, 1);
+        if (resolvedAttribute.contains(".")) {
+            addNestedField(params, resolvedAttribute);
+        }
+        else {
+            final Data data = new Data();
+            data.setName(resolvedAttribute);
+            final Constant constant = new Constant();
+            constant.setValue(resolvedAttribute(params, 2));
+            data.addNamedValueSource(constant);
+            metafix.registerNamedValueReceiver("_id", constant);
+            stack.push(new StackFrame(data));
+        }
+    }
+
+    private void addNestedField(final EList<String> params, final String resolvedAttribute) {
+        final String[] keyElements = resolvedAttribute.split("\\.");
+        Entity firstEntity = null;
+        Entity lastEntity = null;
+        for (int i = 0; i < keyElements.length - 1; i = i + 1) {
+            final Entity currentEntity = new Entity(() -> metafix.getStreamReceiver());
+            currentEntity.setName(keyElements[i]);
+            if (firstEntity == null) {
+                firstEntity = currentEntity;
+            }
+            if (lastEntity != null) {
+                lastEntity.addNamedValueSource(currentEntity);
+            }
+            lastEntity = currentEntity;
+        }
         final Constant constant = new Constant();
         constant.setValue(resolvedAttribute(params, 2));
+        final Data data = new Data();
+        data.setName(keyElements[keyElements.length - 1]);
         data.addNamedValueSource(constant);
+        lastEntity.addNamedValueSource(data);
         metafix.registerNamedValueReceiver("_id", constant);
-        stack.push(new StackFrame(data));
+        stack.push(new StackFrame(firstEntity));
     }
 
     private NamedValuePipe getDelegate(final NamedValuePipe data) {

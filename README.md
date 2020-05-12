@@ -104,9 +104,13 @@ map(e1.e2.d)
 
 map(_else)
 
-# adding fields
+# adding simple fields
 
 add_field(hello,"world")
+
+# adding nested fields
+
+add_field(my.deep.nested,"world")
 ```
 
 See also `MetafixDslTest.java`.
