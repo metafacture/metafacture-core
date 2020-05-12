@@ -1,1 +1,2 @@
 language: java
+before_install: sh install_core_snapshot.sh
