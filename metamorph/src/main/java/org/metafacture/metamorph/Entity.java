@@ -48,8 +48,8 @@ public final class Entity extends AbstractFlushingCollect {
         this.receiver = () -> metamorph.getStreamReceiver();
     }
 
-    public Entity(final StreamReceiver receiver) {
-        this.receiver = () -> receiver;
+    public Entity(final Supplier<StreamReceiver> receiver) {
+        this.receiver = receiver;
     }
 
     public void setNameSource(final NamedValueSource source) {
