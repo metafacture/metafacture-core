@@ -103,8 +103,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     /**
      * Formats the resulting xml, by indentation.
      * 
-     * @param formatted
-     *            True, if formatting is activated.
+     * @param formatted True, if formatting is activated.
      */
     public void setFormatted(boolean formatted) {
         this.formatted = formatted;
@@ -144,10 +143,10 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         currentEntity = name;
         if (!name.equals(Marc21EventNames.LEADER_ENTITY)) {
             if (name.length() != 5) {
-                 String message = String.format("Entity too short." + "Got a string ('%s') of length %d."
-                         + "Expected a length of 5 (field + indicators).", name, name.length());
-                 throw new MetafactureException(message);
-             }
+                String message = String.format("Entity too short." + "Got a string ('%s') of length %d."
+                        + "Expected a length of 5 (field + indicators).", name, name.length());
+                throw new MetafactureException(message);
+            }
 
             String tag = name.substring(0, 3);
             String ind1 = name.substring(3, 4);
@@ -156,9 +155,10 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
             writeRaw(String.format(DATAFIELD_OPEN_TEMPLATE, tag, ind1, ind2));
             prettyPrintNewLine();
             incrementIndentationLevel();
-        } else { prettyPrintIndentation();
-        writeRaw(LEADER_OPEN_TEMPLATE);
-    }
+        } else {
+            prettyPrintIndentation();
+            writeRaw(LEADER_OPEN_TEMPLATE);
+        }
 
     }
 
@@ -176,22 +176,22 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     @Override
     public void literal(final String name, final String value) {
         if (value == null || value.isEmpty())
-        return;
+            return;
         if (currentEntity.equals("")) {
             prettyPrintIndentation();
-            writeRaw(String.format(CONTROLFIELD_OPEN_TEMPLATE, name.replaceFirst("\\W","")));
+            writeRaw(String.format(CONTROLFIELD_OPEN_TEMPLATE, name.replaceFirst("\\W", "")));
             writeEscaped(value.trim());
             writeRaw(CONTROLFIELD_CLOSE);
             prettyPrintNewLine();
         } else if (!currentEntity.equals(Marc21EventNames.LEADER_ENTITY)) {
             prettyPrintIndentation();
-            writeRaw(String.format(SUBFIELD_OPEN_TEMPLATE, name.charAt(name.indexOf('.')+1)));
+            writeRaw(String.format(SUBFIELD_OPEN_TEMPLATE, name.charAt(name.indexOf('.') + 1)));
             writeEscaped(value.trim());
             writeRaw(SUBFIELD_CLOSE);
             prettyPrintNewLine();
         } else {
             {
-               writeRaw(value + LEADER_CLOSE_TEMPLATE);
+                writeRaw(value + LEADER_CLOSE_TEMPLATE);
                 prettyPrintNewLine();
             }
         }
@@ -245,8 +245,8 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     private void prettyPrintIndentation() {
         if (formatted) {
-          String prefix = String.join("", Collections.nCopies(indentationLevel, INDENT));
-          builder.append(prefix);
+            String prefix = String.join("", Collections.nCopies(indentationLevel, INDENT));
+            builder.append(prefix);
         }
     }
 
