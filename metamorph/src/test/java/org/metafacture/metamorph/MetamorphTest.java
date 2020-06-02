@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -30,9 +31,11 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.api.NamedValueReceiver;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -45,12 +48,14 @@ import org.mockito.junit.MockitoRule;
  * @author Christoph Böhme (rewrite)
  */
 public final class MetamorphTest {
-
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Mock
     private NamedValueReceiver namedValueReceiver;
+
+    @Mock
+    private StreamReceiver receiver;
 
     private Metamorph metamorph;
 
@@ -189,4 +194,57 @@ public final class MetamorphTest {
         metamorph.endRecord();  // Exception expected
     }
 
+    @Test
+    public void metamorph1() {
+        metamorph = InlineMorph.in(this) //
+                .with("<rules>") //
+                .with("    <data source='_else'/>")//
+                .with("</rules>")//
+                .createConnectedTo(receiver);
+
+        metamorph.startRecord("1");
+        metamorph.startEntity("clone");
+        metamorph.literal("id", "0");
+        metamorph.endEntity();
+        metamorph.startEntity("clone");
+        metamorph.literal("id", "1");
+        metamorph.endEntity();
+        metamorph.endRecord();
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("clone.id", "0");
+        ordered.verify(receiver).literal("clone.id", "1");
+        ordered.verify(receiver).endRecord();
+    }
+
+    @Test
+    public void metamorph1_1() {
+        metamorph = InlineMorph.in(this).with("<meta>") //
+                .with("<version>1.1</version>")//
+                .with("</meta>")//
+                .with("<rules>")//
+                .with("    <data source='_else'/>")//
+                .with("</rules>")//
+                .createConnectedTo(receiver);
+
+        metamorph.startRecord("1");
+        metamorph.startEntity("clone");
+        metamorph.literal("id", "0");
+        metamorph.endEntity();
+        metamorph.startEntity("clone");
+        metamorph.literal("id", "1");
+        metamorph.endEntity();
+        metamorph.endRecord();
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).startEntity("clone");
+        ordered.verify(receiver).literal("clone.id", "0");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).startEntity("clone");
+        ordered.verify(receiver).literal("clone.id", "1");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+    }
 }

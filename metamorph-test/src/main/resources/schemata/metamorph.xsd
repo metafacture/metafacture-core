@@ -54,12 +54,14 @@
         <complexType>
             <sequence>
                 <element ref="tns:name" maxOccurs="1" minOccurs="0" />
+                <element ref="tns:version" maxOccurs="1" minOccurs="0" />
                 <element ref="tns:annotation" maxOccurs="1" minOccurs="0" />
             </sequence>
         </complexType>
     </element>
 
     <element name="name" type="string" />
+    <element name="version" type="string" />
     <element name="annotation" type="string" />
 
     <element name="macros">
@@ -302,9 +304,9 @@
             <attribute name="value" type="string" use="required" />
 
             <attribute name="reset" type="boolean" use="optional"
-                default="false" />
+                       default="false" />
             <attribute name="sameEntity" type="boolean" use="optional"
-                default="false" />
+                       default="false" />
             <attribute name="flushWith" type="string" use="optional" />
         </complexType>
     </element>

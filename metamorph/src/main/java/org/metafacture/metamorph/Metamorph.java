@@ -268,8 +268,8 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         entityCountStack.push(Integer.valueOf(entityCount));
 
         flattener.startEntity(name);
-
-
+        if (maps.containsKey(METADATA) && maps.get(METADATA).getOrDefault("version","").equals("1.1"))
+            outputStreamReceiver.startEntity(name);
 
     }
 
@@ -278,7 +278,8 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         dispatch(flattener.getCurrentPath(), "", null);
         currentEntityCount = entityCountStack.pop().intValue();
         flattener.endEntity();
-
+        if (maps.containsKey(METADATA) && maps.get(METADATA).getOrDefault("version","").equals("1.1"))
+            outputStreamReceiver.endEntity();
     }
 
 
