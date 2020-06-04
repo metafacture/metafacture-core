@@ -94,11 +94,9 @@ The `Metafix` stream module currently supports:
 
 map(a,b)
 
-# nested field structure
+# nested field name mappings
 
-map(e1)
-map(e1.e2)
-map(e1.e2.d)
+map(a,my.deep.nested.b)
 
 # pass-through for unmapped fields
 

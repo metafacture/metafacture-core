@@ -24,6 +24,7 @@ import org.metafacture.metamorph.api.NamedValuePipe;
 import org.metafacture.metamorph.functions.Constant;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -85,13 +86,24 @@ public class FixBuilder {
     }
 
     private void enterDataMap(final EList<String> params) {
-        final Data data = new Data();
-        data.setName(resolvedAttribute(params, 2));
-
-        final String source = resolvedAttribute(params, 1);
-        metafix.registerNamedValueReceiver(source, getDelegate(data));
-
-        stack.push(new StackFrame(data));
+        final String resolvedAttribute = resolvedAttribute(params, 2);
+        if (resolvedAttribute != null && resolvedAttribute.contains(".")) {
+            final String[] keyElements = resolvedAttribute.split("\\.");
+            final Pair<Entity, Entity> firstAndLast = createEntities(keyElements);
+            final Data data = new Data();
+            data.setName(keyElements[keyElements.length - 1]);
+            final String source = resolvedAttribute(params, 1);
+            firstAndLast.getValue().addNamedValueSource(data);
+            metafix.registerNamedValueReceiver(source, getDelegate(data));
+            stack.push(new StackFrame(firstAndLast.getKey()));
+        }
+        else {
+            final Data data = new Data();
+            data.setName(resolvedAttribute(params, 2));
+            final String source = resolvedAttribute(params, 1);
+            metafix.registerNamedValueReceiver(source, getDelegate(data));
+            stack.push(new StackFrame(data));
+        }
     }
 
     private void enterDataAdd(final EList<String> params) {
@@ -112,6 +124,18 @@ public class FixBuilder {
 
     private void addNestedField(final EList<String> params, final String resolvedAttribute) {
         final String[] keyElements = resolvedAttribute.split("\\.");
+        final Pair<Entity, Entity> firstAndLast = createEntities(keyElements);
+        final Constant constant = new Constant();
+        constant.setValue(resolvedAttribute(params, 2));
+        final Data data = new Data();
+        data.setName(keyElements[keyElements.length - 1]);
+        data.addNamedValueSource(constant);
+        firstAndLast.getValue().addNamedValueSource(data);
+        metafix.registerNamedValueReceiver("_id", constant);
+        stack.push(new StackFrame(firstAndLast.getKey()));
+    }
+
+    private Pair<Entity, Entity> createEntities(final String[] keyElements) {
         Entity firstEntity = null;
         Entity lastEntity = null;
         for (int i = 0; i < keyElements.length - 1; i = i + 1) {
@@ -125,14 +149,7 @@ public class FixBuilder {
             }
             lastEntity = currentEntity;
         }
-        final Constant constant = new Constant();
-        constant.setValue(resolvedAttribute(params, 2));
-        final Data data = new Data();
-        data.setName(keyElements[keyElements.length - 1]);
-        data.addNamedValueSource(constant);
-        lastEntity.addNamedValueSource(data);
-        metafix.registerNamedValueReceiver("_id", constant);
-        stack.push(new StackFrame(firstEntity));
+        return new Pair<>(firstEntity, lastEntity);
     }
 
     private NamedValuePipe getDelegate(final NamedValuePipe data) {

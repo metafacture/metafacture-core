@@ -72,6 +72,48 @@ public class MetafixDslTest {
     }
 
     @Test
+    public void shouldMapNested() {
+        final Metafix metafix = fix(
+                "map(a,b.c)"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).startEntity("b");
+        ordered.verify(streamReceiver).literal("c", LITERAL_ALOHA);
+        ordered.verify(streamReceiver).endEntity();
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldMapNestedMulti() {
+        final Metafix metafix = fix(
+                "map(a,b)",
+                "map(a.c, b.c)",
+                "map(a.d, b.d)"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a.c", LITERAL_A);
+        metafix.literal("a.d", LITERAL_B);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).startEntity("b");
+        ordered.verify(streamReceiver).literal("c", LITERAL_A);
+        ordered.verify(streamReceiver).literal("d", LITERAL_B);
+        ordered.verify(streamReceiver).endEntity();
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void shouldAddLiteral() {
         final Metafix metafix = fix(
                 "add_field(a,'A')"
