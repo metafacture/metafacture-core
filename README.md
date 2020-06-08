@@ -29,10 +29,6 @@ Go to the Git repository root:
 
 `cd metafacture-fix/`
 
-Install the metafacture-core `master-SNAPSHOT`:
-
-`sh install_core_snapshot.sh`
-
 Run the tests (in `org.metafacture.fix/src/test/java`) and checks (`.editorconfig`, `config/checkstyle/checkstyle.xml`):
 
 `./gradlew clean check`
