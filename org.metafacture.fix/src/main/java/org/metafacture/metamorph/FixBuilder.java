@@ -22,6 +22,7 @@ import org.metafacture.metamorph.api.ConditionAware;
 import org.metafacture.metamorph.api.InterceptorFactory;
 import org.metafacture.metamorph.api.NamedValuePipe;
 import org.metafacture.metamorph.functions.Constant;
+import org.metafacture.metamorph.functions.Replace;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -61,6 +62,13 @@ public class FixBuilder {
                     break;
                 case "add_field" :
                     enterDataAdd(params);
+                    exitData();
+                    break;
+                case "replace_all" :
+                    final Replace replace = new Replace();
+                    replace.setPattern(resolvedAttribute(params, 2));
+                    replace.setWith(resolvedAttribute(params, 3)); // checkstyle-disable-line MagicNumber
+                    enterDataFunction(resolvedAttribute(params, 1), replace);
                     exitData();
                     break;
                 default: break;
@@ -122,6 +130,13 @@ public class FixBuilder {
         }
     }
 
+    private void enterDataFunction(final String fieldName, final NamedValuePipe interceptor) {
+        final Data data = new Data();
+        data.setName("@" + fieldName);
+        metafix.registerNamedValueReceiver(fieldName, getDelegate(data, interceptor));
+        stack.push(new StackFrame(data));
+    }
+
     private void addNestedField(final EList<String> params, final String resolvedAttribute) {
         final String[] keyElements = resolvedAttribute.split("\\.");
         final Pair<Entity, Entity> firstAndLast = createEntities(keyElements);
@@ -153,7 +168,10 @@ public class FixBuilder {
     }
 
     private NamedValuePipe getDelegate(final NamedValuePipe data) {
-        final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+        return getDelegate(data, interceptorFactory.createNamedValueInterceptor());
+    }
+
+    private NamedValuePipe getDelegate(final NamedValuePipe data, final NamedValuePipe interceptor) {
         final NamedValuePipe delegate;
 
         if (interceptor == null) {

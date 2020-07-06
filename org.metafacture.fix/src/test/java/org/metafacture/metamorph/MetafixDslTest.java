@@ -169,6 +169,64 @@ public class MetafixDslTest {
     }
 
     @Test
+    public void shouldReplaceInLiteral() {
+        final Metafix metafix = fix(
+                "replace_all(a,'a','b')", // create @a internally to use it
+                "map('@a',a)"             // need to map back to 'a' for now
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("a", LITERAL_ALOHA.replaceAll("a", "b"));
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldReplaceAndMap() {
+        final Metafix metafix = fix(
+                "replace_all(a,'a','b')",
+                "map('@a',b)" // actually map to a different name
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("b", LITERAL_ALOHA.replaceAll("a", "b"));
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldReplaceWithEntities() {
+        final Metafix metafix = fix(
+                "replace_all(a.b,'a','b')",
+                "map('@a.b',a.b)"
+        );
+
+        metafix.startRecord("1");
+        metafix.startEntity("a");
+        metafix.literal("b", LITERAL_ALOHA);
+        metafix.endEntity();
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).startEntity("a");
+        ordered.verify(streamReceiver).literal("b", LITERAL_ALOHA.replaceAll("a", "b"));
+        ordered.verify(streamReceiver).endEntity();
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void shouldHandleUnmatchedLiteralsInElseSource() {
         final Metafix metafix = fix(
                 "map(Sylt,Hawaii)",
