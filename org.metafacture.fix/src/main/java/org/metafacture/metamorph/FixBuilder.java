@@ -21,6 +21,7 @@ import org.metafacture.fix.fix.Fix;
 import org.metafacture.metamorph.api.ConditionAware;
 import org.metafacture.metamorph.api.InterceptorFactory;
 import org.metafacture.metamorph.api.NamedValuePipe;
+import org.metafacture.metamorph.functions.Compose;
 import org.metafacture.metamorph.functions.Constant;
 import org.metafacture.metamorph.functions.Replace;
 
@@ -71,9 +72,23 @@ public class FixBuilder {
                     enterDataFunction(resolvedAttribute(params, 1), replace);
                     exitData();
                     break;
+                case "append" :
+                    compose(resolvedAttribute(params, 1), "", resolvedAttribute(params, 2));
+                    break;
+                case "prepend" :
+                    compose(resolvedAttribute(params, 1), resolvedAttribute(params, 2), "");
+                    break;
                 default: break;
             }
         }
+    }
+
+    private void compose(final String field, final String prefix, final String postfix) {
+        final Compose compose = new Compose();
+        compose.setPrefix(prefix);
+        compose.setPostfix(postfix);
+        enterDataFunction(field, compose);
+        exitData();
     }
 
     private void exitData() {

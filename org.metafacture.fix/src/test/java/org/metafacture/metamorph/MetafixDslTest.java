@@ -172,7 +172,7 @@ public class MetafixDslTest {
     public void shouldReplaceInLiteral() {
         final Metafix metafix = fix(
                 "replace_all(a,'a','b')", // create @a internally to use it
-                "map('@a',a)"             // need to map back to 'a' for now
+                "map('@a',a)"             // need to map back to 'a' for now // checkstyle-disable-line MultipleStringLiterals
         );
 
         metafix.startRecord("1");
@@ -222,6 +222,42 @@ public class MetafixDslTest {
         ordered.verify(streamReceiver).startEntity("a");
         ordered.verify(streamReceiver).literal("b", LITERAL_ALOHA.replaceAll("a", "b"));
         ordered.verify(streamReceiver).endEntity();
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void appendLiteral() {
+        final Metafix metafix = fix(
+                "append(a,'eha')",
+                "map('@a',a)"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("a", LITERAL_ALOHA + "eha");
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void prependLiteral() {
+        final Metafix metafix = fix(
+                "prepend(a,'eha')",
+                "map('@a',a)"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("a", "eha" + LITERAL_ALOHA);
         ordered.verify(streamReceiver).endRecord();
         ordered.verifyNoMoreInteractions();
     }
