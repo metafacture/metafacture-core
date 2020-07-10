@@ -171,8 +171,7 @@ public class MetafixDslTest {
     @Test
     public void shouldReplaceInLiteral() {
         final Metafix metafix = fix(
-                "replace_all(a,'a','b')", // create @a internally to use it
-                "map('@a',a)"             // need to map back to 'a' for now // checkstyle-disable-line MultipleStringLiterals
+                "replace_all(a,'a','b')"
         );
 
         metafix.startRecord("1");
@@ -190,7 +189,7 @@ public class MetafixDslTest {
     public void shouldReplaceAndMap() {
         final Metafix metafix = fix(
                 "replace_all(a,'a','b')",
-                "map('@a',b)" // actually map to a different name
+                "map('@a',b)"
         );
 
         metafix.startRecord("1");
@@ -207,8 +206,7 @@ public class MetafixDslTest {
     @Test
     public void shouldReplaceWithEntities() {
         final Metafix metafix = fix(
-                "replace_all(a.b,'a','b')",
-                "map('@a.b',a.b)"
+                "replace_all(a.b,'a','b')"
         );
 
         metafix.startRecord("1");
@@ -229,8 +227,7 @@ public class MetafixDslTest {
     @Test
     public void appendLiteral() {
         final Metafix metafix = fix(
-                "append(a,'eha')",
-                "map('@a',a)"
+                "append(a,'eha')"
         );
 
         metafix.startRecord("1");
@@ -247,8 +244,7 @@ public class MetafixDslTest {
     @Test
     public void prependLiteral() {
         final Metafix metafix = fix(
-                "prepend(a,'eha')",
-                "map('@a',a)"
+                "prepend(a,'eha')"
         );
 
         metafix.startRecord("1");

@@ -25,9 +25,11 @@ import org.metafacture.metamorph.functions.Compose;
 import org.metafacture.metamorph.functions.Constant;
 import org.metafacture.metamorph.functions.Replace;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.xbase.lib.Pair;
 
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
@@ -40,7 +42,7 @@ import java.util.Map;
  * @author Fabian Steeg (FixBuilder)
  *
  */
-public class FixBuilder {
+public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCoupling
 
     private final Deque<StackFrame> stack = new LinkedList<>();
     private final InterceptorFactory interceptorFactory;
@@ -56,6 +58,8 @@ public class FixBuilder {
     public void walk(final Fix fix, final Map<String, String> vars) {
         for (final Expression expression : fix.getElements()) {
             final EList<String> params = expression.getParams();
+            final String firstParam = resolvedAttribute(params, 1);
+            final String secondParam = resolvedAttribute(params, 2);
             switch (expression.getName()) {
                 case "map" :
                     enterDataMap(params);
@@ -67,16 +71,19 @@ public class FixBuilder {
                     break;
                 case "replace_all" :
                     final Replace replace = new Replace();
-                    replace.setPattern(resolvedAttribute(params, 2));
+                    replace.setPattern(secondParam);
                     replace.setWith(resolvedAttribute(params, 3)); // checkstyle-disable-line MagicNumber
-                    enterDataFunction(resolvedAttribute(params, 1), replace);
+                    enterDataFunction(firstParam, replace);
                     exitData();
+                    mapBack(firstParam);
                     break;
                 case "append" :
-                    compose(resolvedAttribute(params, 1), "", resolvedAttribute(params, 2));
+                    compose(firstParam, "", secondParam);
+                    mapBack(firstParam);
                     break;
                 case "prepend" :
-                    compose(resolvedAttribute(params, 1), resolvedAttribute(params, 2), "");
+                    compose(firstParam, secondParam, "");
+                    mapBack(firstParam);
                     break;
                 default: break;
             }
@@ -88,6 +95,11 @@ public class FixBuilder {
         compose.setPrefix(prefix);
         compose.setPostfix(postfix);
         enterDataFunction(field, compose);
+        exitData();
+    }
+
+    private void mapBack(final String name) {
+        enterDataMap(new BasicEList<String>(Arrays.asList("@" + name, name)));
         exitData();
     }
 
