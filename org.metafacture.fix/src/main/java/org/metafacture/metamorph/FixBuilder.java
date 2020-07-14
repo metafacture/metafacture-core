@@ -16,11 +16,15 @@
 
 package org.metafacture.metamorph;
 
+import org.metafacture.fix.fix.Do;
 import org.metafacture.fix.fix.Expression;
 import org.metafacture.fix.fix.Fix;
+import org.metafacture.metamorph.api.Collect;
 import org.metafacture.metamorph.api.ConditionAware;
 import org.metafacture.metamorph.api.InterceptorFactory;
 import org.metafacture.metamorph.api.NamedValuePipe;
+import org.metafacture.metamorph.api.NamedValueSource;
+import org.metafacture.metamorph.collectors.Combine;
 import org.metafacture.metamorph.functions.Compose;
 import org.metafacture.metamorph.functions.Constant;
 import org.metafacture.metamorph.functions.Replace;
@@ -58,35 +62,86 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
     public void walk(final Fix fix, final Map<String, String> vars) {
         for (final Expression expression : fix.getElements()) {
             final EList<String> params = expression.getParams();
-            final String firstParam = resolvedAttribute(params, 1);
-            final String secondParam = resolvedAttribute(params, 2);
-            switch (expression.getName()) {
-                case "map" :
-                    enterDataMap(params);
-                    exitData();
-                    break;
-                case "add_field" :
-                    enterDataAdd(params);
-                    exitData();
-                    break;
-                case "replace_all" :
-                    final Replace replace = new Replace();
-                    replace.setPattern(secondParam);
-                    replace.setWith(resolvedAttribute(params, 3)); // checkstyle-disable-line MagicNumber
-                    enterDataFunction(firstParam, replace);
-                    exitData();
-                    mapBack(firstParam);
-                    break;
-                case "append" :
-                    compose(firstParam, "", secondParam);
-                    mapBack(firstParam);
-                    break;
-                case "prepend" :
-                    compose(firstParam, secondParam, "");
-                    mapBack(firstParam);
-                    break;
-                default: break;
+            if (expression instanceof Do) {
+                processCollector(expression, params);
             }
+            else {
+                processExpression(expression, params);
+            }
+        }
+    }
+
+    private void processCollector(final Expression expression, final EList<String> params) {
+        final String firstParam = resolvedAttribute(params, 1);
+        final String secondParam = resolvedAttribute(params, 2);
+        final Do theDo = (Do) expression;
+        Collect collect = null;
+        switch (expression.getName()) {
+            case "combine":
+                final Combine combine = new Combine();
+                collect = combine;
+                combine.setName(firstParam);
+                combine.setValue(secondParam);
+                break;
+            default:
+                break;
+        }
+        if (collect != null) {
+            stack.push(new StackFrame(collect));
+            for (final Expression doExpression : theDo.getElements()) {
+                processExpression(doExpression, doExpression.getParams());
+            }
+            final StackFrame currentCollect = stack.pop();
+            final NamedValuePipe tailPipe = currentCollect.getPipe();
+            final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+            final NamedValuePipe delegate;
+            if (interceptor == null || tailPipe instanceof Entity) {
+                // The result of entity collectors cannot be intercepted
+                // because they only use the receive/emit interface for
+                // signaling while the actual data is transferred using
+                // a custom mechanism. In order for this to work the Entity
+                // class checks whether source and receiver are an
+                // instances of Entity. If an interceptor is inserted between
+                // entity elements this mechanism will break.
+                delegate = tailPipe;
+            }
+            else {
+                delegate = interceptor;
+                delegate.addNamedValueSource(tailPipe);
+            }
+            exitData(delegate);
+        }
+    }
+
+    private void processExpression(final Expression expression, final EList<String> params) {
+        final String firstParam = resolvedAttribute(params, 1);
+        final String secondParam = resolvedAttribute(params, 2);
+        switch (expression.getName()) {
+            case "map" :
+                enterDataMap(params);
+                exitData(getDelegate(stack.pop().getPipe()));
+                break;
+            case "add_field" :
+                enterDataAdd(params);
+                exitData(getDelegate(stack.pop().getPipe()));
+                break;
+            case "replace_all" :
+                final Replace replace = new Replace();
+                replace.setPattern(secondParam);
+                replace.setWith(resolvedAttribute(params, 3)); // checkstyle-disable-line MagicNumber
+                enterDataFunction(firstParam, replace);
+                exitData(getDelegate(stack.pop().getPipe()));
+                mapBack(firstParam);
+                break;
+            case "append" :
+                compose(firstParam, "", secondParam);
+                mapBack(firstParam);
+                break;
+            case "prepend" :
+                compose(firstParam, secondParam, "");
+                mapBack(firstParam);
+                break;
+            default: break;
         }
     }
 
@@ -95,16 +150,15 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
         compose.setPrefix(prefix);
         compose.setPostfix(postfix);
         enterDataFunction(field, compose);
-        exitData();
+        exitData(getDelegate(stack.pop().getPipe()));
     }
 
     private void mapBack(final String name) {
         enterDataMap(new BasicEList<String>(Arrays.asList("@" + name, name)));
-        exitData();
+        exitData(getDelegate(stack.pop().getPipe()));
     }
 
-    private void exitData() {
-        final NamedValuePipe delegate = getDelegate(stack.pop().getPipe());
+    private void exitData(final NamedValueSource delegate) {
         final StackFrame parent = stack.peek();
 
         if (parent.isInEntityName()) {

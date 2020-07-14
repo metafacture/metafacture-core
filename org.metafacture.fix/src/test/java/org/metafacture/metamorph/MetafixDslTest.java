@@ -306,6 +306,57 @@ public class MetafixDslTest {
     }
 
     @Test
+    public void shouldCombineLiterals() {
+        final Metafix metafix = fix(
+                "do combine(d,'${place}, ${greet}')",
+                "  map(a, greet)",
+                "  map(b, place)",
+                "end",
+                "map(c, e)"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.literal("b", LITERAL_HAWAII);
+        metafix.literal("c", LITERAL_MOIN);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("d", LITERAL_HAWAII + ", " + LITERAL_ALOHA);
+        ordered.verify(streamReceiver).literal("e", LITERAL_MOIN);
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    @Disabled("Fix collectors")
+    public void shouldCombineToEntity() {
+        final Metafix metafix = fix(
+                "do combine(d.a,'${place}, ${greet}')",
+                "  map(a, greet)",
+                "  map(b, place)",
+                "end",
+                "map(c, e)"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.literal("b", LITERAL_HAWAII);
+        metafix.literal("c", LITERAL_MOIN);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).startEntity("d");
+        ordered.verify(streamReceiver).literal("a", LITERAL_HAWAII + ", " + LITERAL_ALOHA);
+        ordered.verify(streamReceiver).endEntity();
+        ordered.verify(streamReceiver).literal("e", LITERAL_MOIN);
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
     @Disabled("Fix syntax")
     public void shouldUseCustomEntityMarker() {
         final Metafix metafix = fix(

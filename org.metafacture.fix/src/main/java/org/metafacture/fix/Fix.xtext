@@ -15,7 +15,7 @@ Expression:
 ;
 
 If:
-  'if' name = ValidID '(' ( params += QualifiedName ( ',' params += QualifiedName )* )? ')' BEGIN
+  'if' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')' BEGIN
     elements += Expression*
   END
   elseIf = ElsIf?
@@ -24,7 +24,7 @@ If:
 ;
 
 ElsIf:
-  'elsif' name = ValidID '(' ( params += QualifiedName ( ',' params += QualifiedName )* )? ')' BEGIN
+  'elsif' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')' BEGIN
     elements += Expression*
   END
 ;
@@ -36,7 +36,7 @@ Else:
 ;
 
 Do:
-  'do' name = ValidID '(' ( params += QualifiedName ( ',' params += QualifiedName )* )? ')' BEGIN
+  'do' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')' BEGIN
     elements += Expression*
   END
   'end'
