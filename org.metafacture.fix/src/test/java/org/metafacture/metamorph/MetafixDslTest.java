@@ -306,6 +306,27 @@ public class MetafixDslTest {
     }
 
     @Test
+    public void shouldLookupInline() {
+        final Metafix metafix = fix(
+                "lookup(a, Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.literal("a", LITERAL_MOIN);
+        metafix.literal("a", LITERAL_HAWAII);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("a", "Alohaeha");
+        ordered.verify(streamReceiver).literal("a", "Moin zäme");
+        ordered.verify(streamReceiver).literal("a", "Tach");
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void shouldCombineLiterals() {
         final Metafix metafix = fix(
                 "do combine(d,'${place}, ${greet}')",

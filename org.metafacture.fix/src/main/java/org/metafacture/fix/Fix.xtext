@@ -43,7 +43,11 @@ Do:
 ;
 
 MethodCall:
-  name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')'
+  name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ( ',' options = Options )? ')'
+;
+
+Options:
+  keys += (QualifiedName|STRING) ':' values += (QualifiedName|STRING) ( ',' keys += (QualifiedName|STRING) ':' values += (QualifiedName|STRING) )*
 ;
 
 terminal fragment ESCAPED_CHAR:

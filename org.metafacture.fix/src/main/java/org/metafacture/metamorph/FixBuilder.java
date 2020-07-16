@@ -19,6 +19,8 @@ package org.metafacture.metamorph;
 import org.metafacture.fix.fix.Do;
 import org.metafacture.fix.fix.Expression;
 import org.metafacture.fix.fix.Fix;
+import org.metafacture.fix.fix.MethodCall;
+import org.metafacture.fix.fix.Options;
 import org.metafacture.metamorph.api.Collect;
 import org.metafacture.metamorph.api.ConditionAware;
 import org.metafacture.metamorph.api.InterceptorFactory;
@@ -27,6 +29,7 @@ import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.collectors.Combine;
 import org.metafacture.metamorph.functions.Compose;
 import org.metafacture.metamorph.functions.Constant;
+import org.metafacture.metamorph.functions.Lookup;
 import org.metafacture.metamorph.functions.Replace;
 
 import org.eclipse.emf.common.util.BasicEList;
@@ -35,6 +38,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -46,8 +50,7 @@ import java.util.Map;
  * @author Fabian Steeg (FixBuilder)
  *
  */
-public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCoupling
-
+public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
     private final Deque<StackFrame> stack = new LinkedList<>();
     private final InterceptorFactory interceptorFactory;
     private final Metafix metafix;
@@ -141,8 +144,25 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
                 compose(firstParam, secondParam, "");
                 mapBack(firstParam);
                 break;
+            case "lookup" :
+                final Lookup lookup = new Lookup();
+                lookup.setMaps(metafix);
+                lookup.setIn("inline");
+                metafix.putMap("inline", buildMap(((MethodCall) expression).getOptions()));
+                enterDataFunction(firstParam, lookup);
+                exitData(getDelegate(stack.pop().getPipe()));
+                mapBack(firstParam);
+                break;
             default: break;
         }
+    }
+
+    private Map<String, String> buildMap(final Options options) {
+        final Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < options.getKeys().size(); i += 1) {
+            map.put(options.getKeys().get(i), options.getValues().get(i));
+        }
+        return map;
     }
 
     private void compose(final String field, final String prefix, final String postfix) {
