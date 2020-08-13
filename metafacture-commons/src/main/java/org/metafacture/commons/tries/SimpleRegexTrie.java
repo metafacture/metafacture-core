@@ -29,7 +29,7 @@ import java.util.List;
 public class SimpleRegexTrie<P> {
 
     private final WildcardTrie<P> trie;
-    public static final String SIMPLE_CHARACTER_CLASS = "\\[.*\\]";
+    public static final String SIMPLE_CHARACTER_CLASS = "\\[.+\\]";
 
     public SimpleRegexTrie() {
         trie = new WildcardTrie<P>();

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2013, 2014 Pascal Christoph, hbz
+ *  Copyright 2013, 2020 Pascal Christoph, hbz and others
  *  Licensed under the Apache License, Version 2.0 the "License";
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
@@ -21,17 +21,27 @@ import org.junit.Test;
 /**
  * tests {@link SimpleRegexTrie}
  *
- * @author Pascal Christoph
+ * @author Pascal Christoph, Fabian Steeg
  *
  */
 public final class SimpleRegexTrieTest {
-    private static final String SCC = "aacbb|a[ab]bb";
+
     private static final String AACBB = "aacbb";
+    private static final String ABCBB = "abcbb";
 
     @Test
     public void testWithSimpleCharacterClass() {
         final SimpleRegexTrie<String> trie = new SimpleRegexTrie<String>();
-        trie.put(SCC, SCC);
-        assertTrue(AACBB, trie.get(AACBB).size() == 1);
+        trie.put("a[ab]cbb", "value");
+        assertTrue("Expecting to find: " + AACBB, trie.get(AACBB).size() == 1);
+        assertTrue("Expecting to find: " + ABCBB, trie.get(ABCBB).size() == 1);
+    }
+
+    @Test
+    public void testWithEmptyCharacterClass() {
+        final SimpleRegexTrie<String> trie = new SimpleRegexTrie<String>();
+        // Should not be treated as character class (used for JSON arrays):
+        trie.put("a[].1", "value");
+        assertTrue("Expecting to find: a[].1", trie.get("a[].1").size() == 1);
     }
 }
