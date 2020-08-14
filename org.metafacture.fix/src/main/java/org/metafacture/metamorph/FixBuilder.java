@@ -32,11 +32,9 @@ import org.metafacture.metamorph.functions.Constant;
 import org.metafacture.metamorph.functions.Lookup;
 import org.metafacture.metamorph.functions.Replace;
 
-import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.xbase.lib.Pair;
 
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -134,15 +132,12 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
                 replace.setWith(resolvedAttribute(params, 3)); // checkstyle-disable-line MagicNumber
                 enterDataFunction(firstParam, replace);
                 exitData(getDelegate(stack.pop().getPipe()));
-                mapBack(firstParam);
                 break;
             case "append" :
                 compose(firstParam, "", secondParam);
-                mapBack(firstParam);
                 break;
             case "prepend" :
                 compose(firstParam, secondParam, "");
-                mapBack(firstParam);
                 break;
             case "lookup" :
                 final Lookup lookup = new Lookup();
@@ -151,7 +146,6 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
                 metafix.putMap("inline", buildMap(((MethodCall) expression).getOptions()));
                 enterDataFunction(firstParam, lookup);
                 exitData(getDelegate(stack.pop().getPipe()));
-                mapBack(firstParam);
                 break;
             default: break;
         }
@@ -170,11 +164,6 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
         compose.setPrefix(prefix);
         compose.setPostfix(postfix);
         enterDataFunction(field, compose);
-        exitData(getDelegate(stack.pop().getPipe()));
-    }
-
-    private void mapBack(final String name) {
-        enterDataMap(new BasicEList<String>(Arrays.asList("@" + name, name)));
         exitData(getDelegate(stack.pop().getPipe()));
     }
 

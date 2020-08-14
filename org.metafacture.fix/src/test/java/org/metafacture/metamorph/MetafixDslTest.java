@@ -171,7 +171,8 @@ public class MetafixDslTest {
     @Test
     public void shouldReplaceInLiteral() {
         final Metafix metafix = fix(
-                "replace_all(a,'a','b')"
+                "replace_all(a,'a','b')",
+                "map('@a','a')"
         );
 
         metafix.startRecord("1");
@@ -189,7 +190,7 @@ public class MetafixDslTest {
     public void shouldReplaceAndMap() {
         final Metafix metafix = fix(
                 "replace_all(a,'a','b')",
-                "map('@a',b)"
+                "map('@a',a)"
         );
 
         metafix.startRecord("1");
@@ -198,7 +199,7 @@ public class MetafixDslTest {
 
         final InOrder ordered = Mockito.inOrder(streamReceiver);
         ordered.verify(streamReceiver).startRecord("1");
-        ordered.verify(streamReceiver).literal("b", LITERAL_ALOHA.replaceAll("a", "b"));
+        ordered.verify(streamReceiver).literal("a", LITERAL_ALOHA.replaceAll("a", "b"));
         ordered.verify(streamReceiver).endRecord();
         ordered.verifyNoMoreInteractions();
     }
@@ -206,7 +207,8 @@ public class MetafixDslTest {
     @Test
     public void shouldReplaceWithEntities() {
         final Metafix metafix = fix(
-                "replace_all(a.b,'a','b')"
+                "replace_all(a.b,'a','b')",
+                "map('@a.b','a.b')"
         );
 
         metafix.startRecord("1");
@@ -227,7 +229,8 @@ public class MetafixDslTest {
     @Test
     public void appendLiteral() {
         final Metafix metafix = fix(
-                "append(a,'eha')"
+                "append(a,'eha')",
+                "map('@a', 'a')" // checkstyle-disable-line MultipleStringLiterals
         );
 
         metafix.startRecord("1");
@@ -244,7 +247,8 @@ public class MetafixDslTest {
     @Test
     public void prependLiteral() {
         final Metafix metafix = fix(
-                "prepend(a,'eha')"
+                "prepend(a,'eha')",
+                "map('@a', 'a')"
         );
 
         metafix.startRecord("1");
@@ -308,7 +312,8 @@ public class MetafixDslTest {
     @Test
     public void shouldLookupInline() {
         final Metafix metafix = fix(
-                "lookup(a, Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"
+                "lookup(a, Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)",
+                "map('@a', 'a')"
         );
 
         metafix.startRecord("1");
