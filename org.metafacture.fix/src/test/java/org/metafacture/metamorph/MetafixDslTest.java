@@ -72,6 +72,46 @@ public class MetafixDslTest {
     }
 
     @Test
+    public void shouldMapAndChangeLiteralSingle() {
+        final Metafix metafix = fix(
+                "do map(a,b)", // checkstyle-disable-line MultipleStringLiterals
+                "  replace_all('a-val','b-val')",
+                "end" // checkstyle-disable-line MultipleStringLiterals
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", "a-val");
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("b", "b-val");
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldMapAndChangeLiteralMulti() {
+        final Metafix metafix = fix(
+                "do map(a,b)",
+                "  replace_all('a-val','b-val')",
+                "  prepend('pre-')",
+                "  append('-post')",
+                "end" // checkstyle-disable-line MultipleStringLiterals
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", "a-val");
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("b", "pre-b-val-post");
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void shouldMapNested() {
         final Metafix metafix = fix(
                 "map(a,b.c)"
@@ -171,26 +211,7 @@ public class MetafixDslTest {
     @Test
     public void shouldReplaceInLiteral() {
         final Metafix metafix = fix(
-                "replace_all(a,'a','b')",
-                "map('@a','a')"
-        );
-
-        metafix.startRecord("1");
-        metafix.literal("a", LITERAL_ALOHA);
-        metafix.endRecord();
-
-        final InOrder ordered = Mockito.inOrder(streamReceiver);
-        ordered.verify(streamReceiver).startRecord("1");
-        ordered.verify(streamReceiver).literal("a", LITERAL_ALOHA.replaceAll("a", "b"));
-        ordered.verify(streamReceiver).endRecord();
-        ordered.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void shouldReplaceAndMap() {
-        final Metafix metafix = fix(
-                "replace_all(a,'a','b')",
-                "map('@a',a)"
+                "replace_all(a,'a','b')"
         );
 
         metafix.startRecord("1");
@@ -207,8 +228,7 @@ public class MetafixDslTest {
     @Test
     public void shouldReplaceWithEntities() {
         final Metafix metafix = fix(
-                "replace_all(a.b,'a','b')",
-                "map('@a.b','a.b')"
+                "replace_all(a.b,'a','b')"
         );
 
         metafix.startRecord("1");
@@ -229,8 +249,7 @@ public class MetafixDslTest {
     @Test
     public void appendLiteral() {
         final Metafix metafix = fix(
-                "append(a,'eha')",
-                "map('@a', 'a')" // checkstyle-disable-line MultipleStringLiterals
+                "append(a,'eha')"
         );
 
         metafix.startRecord("1");
@@ -247,8 +266,7 @@ public class MetafixDslTest {
     @Test
     public void prependLiteral() {
         final Metafix metafix = fix(
-                "prepend(a,'eha')",
-                "map('@a', 'a')"
+                "prepend(a,'eha')"
         );
 
         metafix.startRecord("1");
@@ -312,8 +330,7 @@ public class MetafixDslTest {
     @Test
     public void shouldLookupInline() {
         final Metafix metafix = fix(
-                "lookup(a, Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)",
-                "map('@a', 'a')"
+                "lookup(a, Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"
         );
 
         metafix.startRecord("1");
@@ -324,9 +341,109 @@ public class MetafixDslTest {
 
         final InOrder ordered = Mockito.inOrder(streamReceiver);
         ordered.verify(streamReceiver).startRecord("1");
-        ordered.verify(streamReceiver).literal("a", "Alohaeha");
-        ordered.verify(streamReceiver).literal("a", "Moin zäme");
-        ordered.verify(streamReceiver).literal("a", "Tach");
+        ordered.verify(streamReceiver).literal("a", "Alohaeha"); // checkstyle-disable-line MultipleStringLiterals
+        ordered.verify(streamReceiver).literal("a", "Moin zäme"); // checkstyle-disable-line MultipleStringLiterals
+        ordered.verify(streamReceiver).literal("a", "Tach"); // checkstyle-disable-line MultipleStringLiterals
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldMapAndLookupInline() {
+        final Metafix metafix = fix(
+                "do map(a,b)",
+                "  lookup(Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)", // checkstyle-disable-line MultipleStringLiterals
+                "end"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.literal("a", LITERAL_MOIN);
+        metafix.literal("a", LITERAL_HAWAII);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("b", "Alohaeha");
+        ordered.verify(streamReceiver).literal("b", "Moin zäme");
+        ordered.verify(streamReceiver).literal("b", "Tach");
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldMapToExplicitEntityAndLookupInline() {
+        final Metafix metafix = fix(
+                "do entity('c')",
+                "  do map(a,b)",
+                "    lookup(Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)",
+                "  end",
+                "end"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.literal("a", LITERAL_MOIN);
+        metafix.literal("a", LITERAL_HAWAII);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).startEntity("c");
+        ordered.verify(streamReceiver).literal("b", "Alohaeha");
+        ordered.verify(streamReceiver).literal("b", "Moin zäme");
+        ordered.verify(streamReceiver).literal("b", "Tach");
+        ordered.verify(streamReceiver).endEntity();
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldMapToImplicitEntityAndLookupInline() {
+        final Metafix metafix = fix(
+                "do map(a,c.b)",
+                "  lookup(Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)",
+                "end"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.literal("a", LITERAL_MOIN);
+        metafix.literal("a", LITERAL_HAWAII);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).startEntity("c");
+        ordered.verify(streamReceiver).literal("b", "Alohaeha");
+        ordered.verify(streamReceiver).literal("b", "Moin zäme");
+        ordered.verify(streamReceiver).literal("b", "Tach");
+        ordered.verify(streamReceiver).endEntity();
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldMapAndChangeAndLookupInline() {
+        final Metafix metafix = fix(
+                "do map(a,b)",
+                "  replace_all('lit-A','Aloha')",
+                "  replace_all('lit-B','Moin')",
+                "  lookup(Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)",
+                "end"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_A);
+        metafix.literal("a", LITERAL_B);
+        metafix.literal("a", LITERAL_HAWAII);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("b", "Alohaeha");
+        ordered.verify(streamReceiver).literal("b", "Moin zäme");
+        ordered.verify(streamReceiver).literal("b", "Tach");
         ordered.verify(streamReceiver).endRecord();
         ordered.verifyNoMoreInteractions();
     }
@@ -356,12 +473,81 @@ public class MetafixDslTest {
     }
 
     @Test
-    @Disabled("Fix collectors")
+    public void shouldDoEntityAndMap() {
+        final Metafix metafix = fix(
+                "do entity(b)",
+                " map(a, c)",
+                "end"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_A);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).startEntity("b");
+        ordered.verify(streamReceiver).literal("c", LITERAL_A);
+        ordered.verify(streamReceiver).endEntity();
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldMapAndChangeNestedExplicit() {
+        final Metafix metafix = fix(
+                "do entity(b)",
+                " do map(a, c)",
+                "  replace_all('A','B')",
+                " end",
+                "end"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_A);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).startEntity("b");
+        ordered.verify(streamReceiver).literal("c", LITERAL_B);
+        ordered.verify(streamReceiver).endEntity();
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldMapAndChangeNestedImplicit() {
+        final Metafix metafix = fix(
+                "do map(a, b.c)",
+                "  replace_all('A','B')",
+                "end",
+                "map(x, y)"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_A);
+        metafix.literal("x", LITERAL_A);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).startEntity("b");
+        ordered.verify(streamReceiver).literal("c", LITERAL_B);
+        ordered.verify(streamReceiver).endEntity();
+        ordered.verify(streamReceiver).literal("y", LITERAL_A);
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void shouldCombineToEntity() {
         final Metafix metafix = fix(
-                "do combine(d.a,'${place}, ${greet}')",
+                "do entity(d)",
+                " do combine(a,'${place}, ${greet}')",
                 "  map(a, greet)",
                 "  map(b, place)",
+                " end",
                 "end",
                 "map(c, e)"
         );

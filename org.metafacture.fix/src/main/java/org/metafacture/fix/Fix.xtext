@@ -43,7 +43,7 @@ Do:
 ;
 
 MethodCall:
-  name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ( ',' options = Options )? ')'
+  name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* ','? )? ( options = Options )? ')'
 ;
 
 Options:
