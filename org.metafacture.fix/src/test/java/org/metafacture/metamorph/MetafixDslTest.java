@@ -72,6 +72,66 @@ public class MetafixDslTest {
     }
 
     @Test
+    public void shouldMapAndFilterNeqLiteral() {
+        final Metafix metafix = fix(
+                "do map(a,b)", // checkstyle-disable-line MultipleStringLiterals
+                "  not_equals('')",
+                "end" // checkstyle-disable-line MultipleStringLiterals
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", "");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("b", LITERAL_ALOHA);
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldMapAndFilterEqLiteral() {
+        final Metafix metafix = fix(
+                "do map(a,b)", // checkstyle-disable-line MultipleStringLiterals
+                "  equals('')",
+                "end" // checkstyle-disable-line MultipleStringLiterals
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", "");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("b", "");
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void shouldMapAndFilterRegexLiteral() {
+        final Metafix metafix = fix(
+                "do map(a,b)", // checkstyle-disable-line MultipleStringLiterals
+                "  regexp('.+')",
+                "end" // checkstyle-disable-line MultipleStringLiterals
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", "");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("b", LITERAL_ALOHA);
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void shouldMapAndChangeLiteralSingle() {
         final Metafix metafix = fix(
                 "do map(a,b)", // checkstyle-disable-line MultipleStringLiterals

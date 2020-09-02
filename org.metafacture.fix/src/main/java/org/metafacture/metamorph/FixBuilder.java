@@ -28,7 +28,10 @@ import org.metafacture.metamorph.api.NamedValuePipe;
 import org.metafacture.metamorph.collectors.Combine;
 import org.metafacture.metamorph.functions.Compose;
 import org.metafacture.metamorph.functions.Constant;
+import org.metafacture.metamorph.functions.Equals;
 import org.metafacture.metamorph.functions.Lookup;
+import org.metafacture.metamorph.functions.NotEquals;
+import org.metafacture.metamorph.functions.Regexp;
 import org.metafacture.metamorph.functions.Replace;
 
 import org.eclipse.emf.common.util.BasicEList;
@@ -232,6 +235,30 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
                 final List<String> p = standalone ? params.subList(1, params.size()) : params;
                 builder.compose(source, builder.resolvedAttribute(p, 1), "", standalone);
                 return standalone;
+            }
+        },
+        EQUALS {
+            public boolean apply(final FixBuilder builder, final Expression expression, final List<String> params, final String source) {
+                final Equals eq = new Equals();
+                eq.setString(builder.resolvedAttribute(params, 1));
+                builder.enterDataFunction(source, eq, false);
+                return false;
+            }
+        },
+        NOT_EQUALS {
+            public boolean apply(final FixBuilder builder, final Expression expression, final List<String> params, final String source) {
+                final NotEquals neq = new NotEquals();
+                neq.setString(builder.resolvedAttribute(params, 1));
+                builder.enterDataFunction(source, neq, false);
+                return false;
+            }
+        },
+        REGEXP {
+            public boolean apply(final FixBuilder builder, final Expression expression, final List<String> params, final String source) {
+                final Regexp regexp = new Regexp();
+                regexp.setMatch(builder.resolvedAttribute(params, 1));
+                builder.enterDataFunction(source, regexp, false);
+                return false;
             }
         },
         LOOKUP {
