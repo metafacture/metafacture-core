@@ -25,7 +25,9 @@ import org.metafacture.metamorph.api.Collect;
 import org.metafacture.metamorph.api.FlushListener;
 import org.metafacture.metamorph.api.InterceptorFactory;
 import org.metafacture.metamorph.api.NamedValuePipe;
+import org.metafacture.metamorph.collectors.Choose;
 import org.metafacture.metamorph.collectors.Combine;
+import org.metafacture.metamorph.collectors.Group;
 import org.metafacture.metamorph.functions.Compose;
 import org.metafacture.metamorph.functions.Constant;
 import org.metafacture.metamorph.functions.Equals;
@@ -58,12 +60,17 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
     private final Deque<StackFrame> stack = new LinkedList<>();
     private final InterceptorFactory interceptorFactory;
     private final Metafix metafix;
+    private CollectFactory collectFactory;
 
     public FixBuilder(final Metafix metafix, final InterceptorFactory interceptorFactory) {
         this.metafix = metafix;
         this.interceptorFactory = interceptorFactory;
 
         stack.push(new StackFrame(metafix));
+        collectFactory = new CollectFactory();
+        collectFactory.registerClass("combine", Combine.class);
+        collectFactory.registerClass("choose", Choose.class);
+        collectFactory.registerClass("group", Group.class);
     }
 
     public void walk(final Fix fix, final Map<String, String> vars) {
@@ -72,39 +79,48 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
 
     private void processBind(final Expression expression, final EList<String> params) {
         final String firstParam = resolvedAttribute(params, 1);
-        final String secondParam = resolvedAttribute(params, 2);
         final Do theDo = (Do) expression;
         Collect collect = null;
+
+        // Special bind cases, no generic no-args collectors
         switch (expression.getName()) {
-            case "array":
-                collect = createEntity(firstParam + "[]");
-                break;
             case "entity":
                 collect = createEntity(firstParam);
                 break;
-            case "combine":
-                final Combine combine = new Combine();
-                combine.setName(firstParam);
-                combine.setValue(secondParam);
-                collect = combine;
+            case "array":
+                collect = createEntity(firstParam + "[]");
                 break;
             case "map":
-                // not an actual metafacture collector, but data with functions
                 final NamedValuePipe enterDataMap = enterDataMap(params, false);
                 processSubexpressions(theDo.getElements(), firstParam);
                 exitData();
                 if (enterDataMap instanceof Entity) {
                     exitCollectorAndFlushWith(firstParam);
                 }
-                break;
+                return;
             default:
                 break;
         }
+
+        // try generic no-args collectors, registered in collectFactory
+        if (collect == null) {
+            final Map<String, String> attributes = resolvedAttributeMap(expression, params);
+            collect = collectFactory.newInstance(expression.getName(), attributes);
+        }
+
         if (collect != null) {
             stack.push(new StackFrame(collect));
             processSubexpressions(theDo.getElements(), firstParam);
             exitCollectorAndFlushWith(null);
         }
+    }
+
+    protected final Map<String, String> resolvedAttributeMap(final Expression expression, final EList<String> params) {
+        final Map<String, String> attributes = new HashMap<String, String>();
+        // TODO implement actual attributes for binds in the grammar
+        attributes.put("name", resolvedAttribute(params, 1));
+        attributes.put("value", resolvedAttribute(params, 2));
+        return attributes;
     }
 
     private Collect createEntity(final String name) {

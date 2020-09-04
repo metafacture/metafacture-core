@@ -437,7 +437,7 @@ public class MetafixDslTest {
                 "do entity('c')",
                 "  do map(a,b)",
                 "    lookup(Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)",
-                "  end",
+                "  end", // checkstyle-disable-line MultipleStringLiterals
                 "end"
         );
 
@@ -624,6 +624,60 @@ public class MetafixDslTest {
         ordered.verify(streamReceiver).literal("a", LITERAL_HAWAII + ", " + LITERAL_ALOHA);
         ordered.verify(streamReceiver).endEntity();
         ordered.verify(streamReceiver).literal("e", LITERAL_MOIN);
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    @Disabled("Fix choose flushing")
+    public void shouldChooseFirstMap() {
+        final Metafix metafix = fix(
+                "do choose()",
+                "  map(a, c)",
+                "  map(b, c)",
+                "end",
+                "map(d,e)"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("b", LITERAL_B);
+        metafix.literal("a", LITERAL_A);
+        metafix.literal("d", LITERAL_B);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("c", LITERAL_A);
+        ordered.verify(streamReceiver).literal("e", LITERAL_B);
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    @Disabled("Fix choose flushing")
+    public void shouldChooseFirstDoMap() {
+        final Metafix metafix = fix(
+                "do choose()",
+                "  do map(a, c)",
+                "    not_equals('')",
+                "  end",
+                "  do map(b, c)",
+                "    not_equals('')",
+                "  end",
+                "end",
+                "map(d,e)"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("b", LITERAL_B);
+        metafix.literal("a", LITERAL_A);
+        metafix.literal("d", LITERAL_B);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("c", LITERAL_A);
+        ordered.verify(streamReceiver).literal("e", LITERAL_B);
         ordered.verify(streamReceiver).endRecord();
         ordered.verifyNoMoreInteractions();
     }
