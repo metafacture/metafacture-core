@@ -629,6 +629,30 @@ public class MetafixDslTest {
     }
 
     @Test
+    public void shouldChooseFirstMapFlushWith() {
+        final Metafix metafix = fix(
+                "do choose(flushWith: 'd|record')",
+                "  map(a, c)",
+                "  map(b, c)",
+                "end",
+                "map(d,e)" // checkstyle-disable-line MultipleStringLiterals
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("b", LITERAL_B);
+        metafix.literal("a", LITERAL_A);
+        metafix.literal("d", LITERAL_B);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("c", LITERAL_A);
+        ordered.verify(streamReceiver).literal("e", LITERAL_B);
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
     @Disabled("Fix choose flushing")
     public void shouldChooseFirstMap() {
         final Metafix metafix = fix(

@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Builds a {@link Metafix} from a Fix DSL description
@@ -56,7 +57,8 @@ import java.util.Map;
  *
  */
 public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
-    private static final String FLUSH_WITH_RECORD = "record";
+    private static final String FLUSH_WITH = "flushWith";
+    private static final String RECORD = "record";
     private final Deque<StackFrame> stack = new LinkedList<>();
     private final InterceptorFactory interceptorFactory;
     private final Metafix metafix;
@@ -104,22 +106,37 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
 
         // try generic no-args collectors, registered in collectFactory
         if (collect == null) {
-            final Map<String, String> attributes = resolvedAttributeMap(expression, params);
+            if (!collectFactory.containsKey(expression.getName())) {
+                throw new IllegalArgumentException("Collector " + expression.getName() +
+                        " not found");
+            }
+            final Map<String, String> attributes = resolvedAttributeMap(params, theDo.getOptions());
+            // flushWith should not be passed to the headPipe object via a
+            // setter (see newInstance):
+            attributes.remove(FLUSH_WITH);
             collect = collectFactory.newInstance(expression.getName(), attributes);
         }
-
         if (collect != null) {
             stack.push(new StackFrame(collect));
             processSubexpressions(theDo.getElements(), firstParam);
-            exitCollectorAndFlushWith(null);
+            // must be set after recursive calls to flush descendants before parent
+            final String flushWith = resolvedAttribute(resolvedAttributeMap(params, theDo.getOptions()), FLUSH_WITH);
+            exitCollectorAndFlushWith(flushWith);
         }
     }
 
-    protected final Map<String, String> resolvedAttributeMap(final Expression expression, final EList<String> params) {
+    protected final Map<String, String> resolvedAttributeMap(final EList<String> params, final Options options) {
         final Map<String, String> attributes = new HashMap<String, String>();
-        // TODO implement actual attributes for binds in the grammar
         attributes.put("name", resolvedAttribute(params, 1));
         attributes.put("value", resolvedAttribute(params, 2));
+        if (options == null) {
+            return attributes;
+        }
+        final EList<String> keys = options.getKeys();
+        final EList<String> values = options.getValues();
+        for (int i = 0; i < keys.size() && i < values.size(); i = i + 1) {
+            attributes.put(keys.get(i), values.get(i));
+        }
         return attributes;
     }
 
@@ -167,19 +184,22 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
     }
 
     private void registerFlush(final String flushWith, final Collect flushListener) {
-        final FlushListener interceptor = interceptorFactory.createFlushInterceptor(flushListener);
-        final FlushListener delegate;
-        if (interceptor == null) {
-            delegate = flushListener;
-        }
-        else {
-            delegate = interceptor;
-        }
-        if (flushWith.equals(FLUSH_WITH_RECORD)) {
-            metafix.registerRecordEndFlush(delegate);
-        }
-        else {
-            metafix.registerNamedValueReceiver(flushWith, new Flush(delegate));
+    	final String[] keysSplit = Pattern.compile("|", Pattern.LITERAL).split(flushWith);
+        for (final String key : keysSplit) {
+            final FlushListener interceptor = interceptorFactory.createFlushInterceptor(flushListener);
+            final FlushListener delegate;
+            if (interceptor == null) {
+                delegate = flushListener;
+            }
+            else {
+                delegate = interceptor;
+            }
+            if (key.equals(RECORD)) {
+                metafix.registerRecordEndFlush(delegate);
+            }
+            else {
+                metafix.registerNamedValueReceiver(key, new Flush(delegate));
+            }
         }
     }
 
@@ -448,6 +468,11 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
     private String resolvedAttribute(final List<String> params, final int i) {
         // TODO: resolve from vars/map/etc
         return params.size() < i ? null : params.get(i - 1);
+    }
+
+    private String resolvedAttribute(final Map<String, String> attributes, final String string) {
+        // TODO: resolve from vars/map/etc
+        return attributes.get(string);
     }
 
     private static class StackFrame {

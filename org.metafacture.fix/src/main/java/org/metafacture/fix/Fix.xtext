@@ -36,7 +36,7 @@ Else:
 ;
 
 Do:
-  'do' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')' BEGIN
+  'do' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* ','? )? ( options = Options )? ')' BEGIN
     elements += Expression*
   END
   'end'
