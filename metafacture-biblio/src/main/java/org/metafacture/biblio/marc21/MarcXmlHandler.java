@@ -45,7 +45,16 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private static final String LEADER = "leader";
     private static final String TYPE = "type";
     private String currentTag = "";
+    private String namespace = NAMESPACE;
     private StringBuilder builder = new StringBuilder();
+
+    public void setNamespace(final String namespace) {
+        this.namespace = namespace;
+    }
+
+    private boolean checkNamespace(final String uri) {
+        return namespace == null || namespace.equals(uri);
+    }
 
     @Override
     public void startElement(final String uri, final String localName, final String qName, final Attributes attributes)
@@ -58,7 +67,7 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
             }else if(CONTROLFIELD.equals(localName)){
                 builder = new StringBuilder();
                 currentTag = attributes.getValue("tag");
-            }else if(RECORD.equals(localName) && NAMESPACE.equals(uri)){
+            }else if(RECORD.equals(localName) && checkNamespace(uri)){
                 getReceiver().startRecord("");
                 getReceiver().literal(TYPE, attributes.getValue(TYPE));
             }else if(LEADER.equals(localName)){
@@ -77,7 +86,7 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         }else if(CONTROLFIELD.equals(localName)){
             getReceiver().literal(currentTag, builder.toString().trim());
 
-        }else if(RECORD.equals(localName)  && NAMESPACE.equals(uri)){
+        }else if(RECORD.equals(localName) && checkNamespace(uri)){
             getReceiver().endRecord();
 
         }else if(LEADER.equals(localName)){

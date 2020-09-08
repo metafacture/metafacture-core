@@ -16,6 +16,7 @@
 package org.metafacture.biblio.marc21;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.After;
 import org.junit.Before;
@@ -37,6 +38,8 @@ public final class MarcXmlHandlerTest {
     private static final String LEADER = "leader";
     private static final String CONTROLFIELD = "controlfield";
     private static final String NAMESPACE = "http://www.loc.gov/MARC21/slim";
+    private static final String RECORD = "record";
+    private static final String TYPE = "type";
 
     private MarcXmlHandler marcXmlHandler;
 
@@ -82,6 +85,48 @@ public final class MarcXmlHandlerTest {
         marcXmlHandler.endElement(NAMESPACE, LEADER, "");
 
         verify(receiver).literal("leader", leaderValue);
+    }
+
+    @Test
+    public void shouldRecognizeRecordsWithNamespace()
+            throws SAXException {
+        final AttributesImpl attributes = new AttributesImpl();
+
+        marcXmlHandler.startElement(NAMESPACE, RECORD, "", attributes);
+        marcXmlHandler.endElement(NAMESPACE, RECORD, "");
+
+        verify(receiver).startRecord("");
+        verify(receiver).literal(TYPE, null);
+        verify(receiver).endRecord();
+
+        verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
+    public void shouldNotRecognizeRecordsWithoutNamespace()
+            throws SAXException {
+        final AttributesImpl attributes = new AttributesImpl();
+
+        marcXmlHandler.startElement(null, RECORD, "", attributes);
+        marcXmlHandler.endElement(null, RECORD, "");
+
+        verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
+    public void issue330ShouldOptionallyRecognizeRecordsWithoutNamespace()
+            throws SAXException {
+        final AttributesImpl attributes = new AttributesImpl();
+
+        marcXmlHandler.setNamespace(null);
+        marcXmlHandler.startElement(null, RECORD, "", attributes);
+        marcXmlHandler.endElement(null, RECORD, "");
+
+        verify(receiver).startRecord("");
+        verify(receiver).literal(TYPE, null);
+        verify(receiver).endRecord();
+
+        verifyNoMoreInteractions(receiver);
     }
 
 }
