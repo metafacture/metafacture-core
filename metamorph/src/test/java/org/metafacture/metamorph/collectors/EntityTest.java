@@ -17,6 +17,7 @@ package org.metafacture.metamorph.collectors;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -117,6 +118,40 @@ public final class EntityTest {
     ordered.verify(receiver).endEntity();
     ordered.verify(receiver).endRecord();
     ordered.verifyNoMoreInteractions();
+  }
+
+  @Test
+  public void shouldNotEmitEnityOnFlushEventIfIncomplete() {
+    metamorph = InlineMorph.in(this)
+        .with("<rules>")
+        .with("  <entity name='entity' flushWith='record' flushIncomplete='false'>")
+        .with("    <data source='d1' name='l1' />")
+        .with("    <data source='d2' name='l2' />")
+        .with("  </entity>")
+        .with("</rules>")
+        .createConnectedTo(receiver);
+
+    metamorph.startRecord("1");
+    metamorph.literal("d1", "a");
+    metamorph.literal("d1", "b");
+    metamorph.literal("d2", "c");
+    metamorph.endRecord();
+    metamorph.startRecord("2");
+    metamorph.literal("d2", "c");
+    metamorph.endRecord();
+
+    final InOrder ordered = inOrder(receiver);
+    ordered.verify(receiver).startRecord("1");
+    ordered.verify(receiver).startEntity("entity");
+    ordered.verify(receiver).literal("l1", "a");
+    ordered.verify(receiver).literal("l1", "b");
+    ordered.verify(receiver).literal("l2", "c");
+    ordered.verify(receiver).endEntity();
+    ordered.verify(receiver).endRecord();
+    ordered.verify(receiver).startRecord("2");
+    ordered.verify(receiver).endRecord();
+    ordered.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(receiver);
   }
 
   @Test
@@ -488,7 +523,7 @@ public final class EntityTest {
   }
 
   @Test
-  public void shouldNotEmitEntityContentsAgainIfResetIsFalse() {
+  public void shouldNotEmitEntityContentsAgainIfResetIsTrue() {
     metamorph = InlineMorph.in(this)
         .with("<rules>")
         .with("  <entity name='entity' reset='true'>")

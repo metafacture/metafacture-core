@@ -19,6 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -231,6 +232,87 @@ public final class EqualsFilterTest {
     ordered.verify(receiver).literal("equalsFiltered", "a");
     ordered.verify(receiver).endRecord();
     ordered.verifyNoMoreInteractions();
+  }
+
+  @Test
+  public void shouldFireOnFlush() {
+    metamorph = InlineMorph.in(this)
+        .with("<rules>")
+        .with("  <equalsFilter name='equalsFiltered' value='${one}' flushWith='field1.data2'>")
+        .with("    <data source='field1.data1' name='one' />")
+        .with("    <data source='field1.data2' name='two' />")
+        .with("  </equalsFilter>")
+        .with("</rules>")
+        .createConnectedTo(receiver);
+
+    metamorph.startRecord("1");
+    metamorph.startEntity("field1");
+    metamorph.literal("data1", "a");
+    metamorph.endEntity();
+    metamorph.endRecord();
+    metamorph.startRecord("2");
+    metamorph.startEntity("field1");
+    metamorph.literal("data2", "a");
+    metamorph.endEntity();
+    metamorph.endRecord();
+    metamorph.startRecord("3");
+    metamorph.startEntity("field1");
+    metamorph.literal("data1", "a");
+    metamorph.literal("data2", "a");
+    metamorph.endEntity();
+    metamorph.endRecord();
+
+    final InOrder ordered = inOrder(receiver);
+    ordered.verify(receiver).startRecord("1");
+    ordered.verify(receiver).endRecord();
+    ordered.verify(receiver).startRecord("2");
+    ordered.verify(receiver).literal("equalsFiltered", "");
+    ordered.verify(receiver).endRecord();
+    ordered.verify(receiver).startRecord("3");
+    ordered.verify(receiver).literal("equalsFiltered", "a");
+    ordered.verify(receiver).endRecord();
+    ordered.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(receiver);
+  }
+
+  @Test
+  public void shouldNotFireOnFlushIfIncomplete() {
+    metamorph = InlineMorph.in(this)
+        .with("<rules>")
+        .with("  <equalsFilter name='equalsFiltered' value='${one}' flushWith='field1.data2' flushIncomplete='false'>")
+        .with("    <data source='field1.data1' name='one' />")
+        .with("    <data source='field1.data2' name='two' />")
+        .with("  </equalsFilter>")
+        .with("</rules>")
+        .createConnectedTo(receiver);
+
+    metamorph.startRecord("1");
+    metamorph.startEntity("field1");
+    metamorph.literal("data1", "a");
+    metamorph.endEntity();
+    metamorph.endRecord();
+    metamorph.startRecord("2");
+    metamorph.startEntity("field1");
+    metamorph.literal("data2", "a");
+    metamorph.endEntity();
+    metamorph.endRecord();
+    metamorph.startRecord("3");
+    metamorph.startEntity("field1");
+    metamorph.literal("data1", "a");
+    metamorph.literal("data2", "a");
+    metamorph.endEntity();
+    metamorph.endRecord();
+
+    final InOrder ordered = inOrder(receiver);
+    ordered.verify(receiver).startRecord("1");
+    ordered.verify(receiver).endRecord();
+    ordered.verify(receiver).startRecord("2");
+    ordered.verify(receiver).endRecord();
+    ordered.verify(receiver).startRecord("3");
+    ordered.verify(receiver).literal("equalsFiltered", "a");
+    ordered.verify(receiver).endRecord();
+    ordered.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(receiver);
   }
 
 }

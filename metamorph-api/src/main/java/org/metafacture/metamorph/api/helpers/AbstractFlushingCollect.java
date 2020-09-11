@@ -24,10 +24,16 @@ package org.metafacture.metamorph.api.helpers;
  */
 public abstract class AbstractFlushingCollect extends AbstractCollect {
 
+    private boolean flushIncomplete = true;
+
+    public final void setFlushIncomplete(final boolean flushIncomplete) {
+        this.flushIncomplete = flushIncomplete;
+    }
+
     @Override
     public final void flush(final int recordCount, final int entityCount) {
         if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount)) {
-            if(isConditionMet()) {
+            if(isConditionMet() && (flushIncomplete || isComplete())) {
                 emit();
             }
             if (getReset()) {

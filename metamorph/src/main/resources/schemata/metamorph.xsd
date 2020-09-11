@@ -283,6 +283,8 @@
             <attribute name="name" type="string" use="required" />
             <attribute name="value" type="string" use="required" />
 
+            <attribute name="flushIncomplete" type="boolean" use="optional"
+                default="true" />
             <attribute name="reset" type="boolean" use="optional"
                 default="false" />
             <attribute name="sameEntity" type="boolean" use="optional"
@@ -301,6 +303,8 @@
             <attribute name="name" type="string" use="required" />
             <attribute name="value" type="string" use="required" />
 
+            <attribute name="flushIncomplete" type="boolean" use="optional"
+                       default="true" />
             <attribute name="reset" type="boolean" use="optional"
                        default="false" />
             <attribute name="sameEntity" type="boolean" use="optional"
@@ -442,6 +446,8 @@
                         have an entity-name element otherwise an empty name is emitted</documentation>
                 </annotation>
             </attribute>
+            <attribute name="flushIncomplete" type="boolean" use="optional"
+                default="true" />
             <attribute name="reset" type="boolean" use="optional"
                 default="false" />
             <attribute name="sameEntity" type="boolean" use="optional"

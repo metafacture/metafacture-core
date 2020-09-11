@@ -16,6 +16,7 @@
 package org.metafacture.metamorph.collectors;
 
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -163,6 +164,38 @@ public final class CombineTest {
     ordered.verify(receiver).literal("combi", "3");
     ordered.verify(receiver).endRecord();
     ordered.verifyNoMoreInteractions();
+  }
+
+  @Test
+  public void shouldNotEmitCurrentValueOnFlushEventIfIncomplete() {
+    metamorph = InlineMorph.in(this)
+        .with("<rules>")
+        .with("  <combine name='combi' value='${one}${two}' flushWith='e' flushIncomplete='false' reset='true'>")
+        .with("    <data source='e.l' name='one' />")
+        .with("    <data source='e.m' name='two' />")
+        .with("  </combine>")
+        .with("</rules>")
+        .createConnectedTo(receiver);
+
+    metamorph.startRecord("1");
+    metamorph.startEntity("e");
+    metamorph.literal("l", "1");
+    metamorph.endEntity();
+    metamorph.startEntity("e");
+    metamorph.literal("l", "2");
+    metamorph.literal("m", "2");
+    metamorph.endEntity();
+    metamorph.startEntity("e");
+    metamorph.literal("l", "3");
+    metamorph.endEntity();
+    metamorph.endRecord();
+
+    final InOrder ordered = inOrder(receiver);
+    ordered.verify(receiver).startRecord("1");
+    ordered.verify(receiver).literal("combi", "22");
+    ordered.verify(receiver).endRecord();
+    ordered.verifyNoMoreInteractions();
+    verifyNoMoreInteractions(receiver);
   }
 
   @Test
