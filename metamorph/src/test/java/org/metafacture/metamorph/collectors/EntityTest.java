@@ -85,7 +85,7 @@ public final class EntityTest {
   }
 
   @Test
-  public void shouldEmitEnityOnFlushEvent() {
+  public void shouldEmitEntityOnFlushEvent() {
     metamorph = InlineMorph.in(this)
         .with("<rules>")
         .with("  <entity name='entity' flushWith='record'>")
@@ -121,7 +121,7 @@ public final class EntityTest {
   }
 
   @Test
-  public void shouldNotEmitEnityOnFlushEventIfIncomplete() {
+  public void shouldNotEmitEntityOnFlushEventIfIncomplete() {
     metamorph = InlineMorph.in(this)
         .with("<rules>")
         .with("  <entity name='entity' flushWith='record' flushIncomplete='false'>")
