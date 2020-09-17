@@ -30,6 +30,8 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.net.URISyntaxException;
+
 /**
  * Tests the basic functionality of Metafix via DSL.
  *
@@ -389,10 +391,26 @@ public class MetafixDslTest {
 
     @Test
     public void shouldLookupInline() {
-        final Metafix metafix = fix(
+        verifyLookup(fix(
                 "lookup(a, Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"
-        );
+        ));
+    }
 
+    @Test
+    public void shouldLookupInTsvFile() throws URISyntaxException {
+        verifyLookup(fix(
+                "lookup(a, in: 'src/test/java/org/metafacture/metamorph/maps/test.tsv')"
+        ));
+    }
+
+    @Test
+    public void shouldLookupInCsvFile() throws URISyntaxException {
+        verifyLookup(fix(
+                "lookup(a, in: 'src/test/java/org/metafacture/metamorph/maps/test.csv', separator: ',')"
+        ));
+    }
+
+    private void verifyLookup(final Metafix metafix) {
         metafix.startRecord("1");
         metafix.literal("a", LITERAL_ALOHA);
         metafix.literal("a", LITERAL_MOIN);
@@ -410,12 +428,32 @@ public class MetafixDslTest {
 
     @Test
     public void shouldMapAndLookupInline() {
-        final Metafix metafix = fix(
+        verifyMapAndLookup(fix(
                 "do map(a,b)",
                 "  lookup(Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)", // checkstyle-disable-line MultipleStringLiterals
                 "end"
-        );
+        ));
+    }
 
+    @Test
+    public void shouldMapAndLookupInTsvFile() {
+        verifyMapAndLookup(fix(
+                "do map(a,b)",
+                "  lookup(in: 'src/test/java/org/metafacture/metamorph/maps/test.tsv')", // checkstyle-disable-line MultipleStringLiterals
+                "end"
+        ));
+    }
+
+    @Test
+    public void shouldMapAndLookupInCsvFile() {
+        verifyMapAndLookup(fix(
+                "do map(a,b)",
+                "  lookup(in: 'src/test/java/org/metafacture/metamorph/maps/test.csv', separator: ',')", // checkstyle-disable-line MultipleStringLiterals
+                "end"
+        ));
+    }
+
+    private void verifyMapAndLookup(final Metafix metafix) {
         metafix.startRecord("1");
         metafix.literal("a", LITERAL_ALOHA);
         metafix.literal("a", LITERAL_MOIN);

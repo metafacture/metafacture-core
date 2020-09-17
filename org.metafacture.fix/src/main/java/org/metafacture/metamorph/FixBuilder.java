@@ -35,6 +35,7 @@ import org.metafacture.metamorph.functions.Lookup;
 import org.metafacture.metamorph.functions.NotEquals;
 import org.metafacture.metamorph.functions.Regexp;
 import org.metafacture.metamorph.functions.Replace;
+import org.metafacture.metamorph.maps.FileMap;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
@@ -184,7 +185,7 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
     }
 
     private void registerFlush(final String flushWith, final Collect flushListener) {
-    	final String[] keysSplit = Pattern.compile("|", Pattern.LITERAL).split(flushWith);
+        final String[] keysSplit = Pattern.compile("|", Pattern.LITERAL).split(flushWith);
         for (final String key : keysSplit) {
             final FlushListener interceptor = interceptorFactory.createFlushInterceptor(flushListener);
             final FlushListener delegate;
@@ -302,21 +303,45 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
                 final boolean standalone = builder.resolvedAttribute(params, 1) != null;
                 final Lookup lookup = new Lookup();
                 lookup.setMaps(builder.metafix);
-                lookup.setIn("inline");
-                builder.metafix.putMap("inline", buildMap(((MethodCall) expression).getOptions()));
+                final Map<String, String> map = buildMap(expression);
+                final String name = map.hashCode() + "";
+                lookup.setMap(name);
+                builder.metafix.putMap(name, map);
                 builder.enterDataFunction(source, lookup, standalone);
                 return standalone;
             }
+
+            private Map<String, String> buildMap(final Expression expression) {
+                final Map<String, String> options = options((MethodCall) expression);
+                final String file = options.get("in");
+                final String sep = "separator";
+                final boolean useFileMap = file != null && (options.size() == 1 || options.size() == 2 && options.containsKey(sep));
+                final Map<String, String> map = useFileMap ? fileMap(file, options.get(sep)) : options;
+                return map;
+            }
+
+            private Map<String, String> options(final MethodCall method) {
+                final Options options = method.getOptions();
+                final Map<String, String> map = new HashMap<>();
+                if (options != null) {
+                    for (int i = 0; i < options.getKeys().size(); i += 1) {
+                        map.put(options.getKeys().get(i), options.getValues().get(i));
+                    }
+                }
+                return map;
+            }
+
+            private Map<String, String> fileMap(final String secondParam, final String separator) {
+                final FileMap fileMap = new FileMap();
+                if (separator != null) {
+                    fileMap.setSeparator(separator);
+                }
+                fileMap.setFile(secondParam);
+                return fileMap;
+            }
+
         };
         public abstract boolean apply(FixBuilder builder, Expression expression, List<String> params, String source);
-
-        private static Map<String, String> buildMap(final Options options) {
-            final Map<String, String> map = new HashMap<>();
-            for (int i = 0; i < options.getKeys().size(); i += 1) {
-                map.put(options.getKeys().get(i), options.getValues().get(i));
-            }
-            return map;
-        }
     }
 
     private void compose(final String field, final String prefix, final String postfix, final boolean standalone) {
