@@ -30,6 +30,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 
 /**
@@ -815,9 +816,14 @@ public class MetafixDslTest {
         final String fixString = String.join("\n", fix);
         System.out.println("\nFix string: " + fixString);
 
-        final Metafix metafix = new Metafix(fixString);
-        metafix.setReceiver(streamReceiver);
-
+        Metafix metafix = null;
+        try {
+            metafix = new Metafix(fixString);
+            metafix.setReceiver(streamReceiver);
+        }
+        catch (final FileNotFoundException e) {
+            e.printStackTrace();
+        }
         return metafix;
     }
 

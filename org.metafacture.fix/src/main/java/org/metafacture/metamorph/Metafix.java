@@ -48,6 +48,7 @@ import org.eclipse.xtext.validation.Issue;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -118,25 +119,26 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
     private final List<FlushListener> recordEndListener = new ArrayList<>();
 
     private final List<Expression> expressions = new ArrayList<>();
+    private Map<String, String> vars = NO_VARS;
 
     public Metafix() {
         init();
     }
 
-    public Metafix(final String fixDef) {
+    public Metafix(final String fixDef) throws FileNotFoundException {
         this(fixDef, NO_VARS);
     }
 
-    public Metafix(final String fixDef, final Map<String, String> vars) {
+    public Metafix(final String fixDef, final Map<String, String> vars) throws FileNotFoundException {
         this(fixDef, vars, NULL_INTERCEPTOR_FACTORY);
     }
 
-    public Metafix(final String fixDef, final InterceptorFactory interceptorFactory) {
+    public Metafix(final String fixDef, final InterceptorFactory interceptorFactory) throws FileNotFoundException {
         this(fixDef, NO_VARS, interceptorFactory);
     }
 
-    public Metafix(final String fixDef, final Map<String, String> vars, final InterceptorFactory interceptorFactory) {
-        this(new StringReader(fixDef), vars, interceptorFactory);
+    public Metafix(final String fixDef, final Map<String, String> vars, final InterceptorFactory interceptorFactory) throws FileNotFoundException {
+        this(fixDef.endsWith(".fix") ? new FileReader(fixDef) : new StringReader(fixDef), vars, interceptorFactory);
     }
 
     public Metafix(final Reader morphDef) {
@@ -172,17 +174,6 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         this(new InputStreamReader(fixDef), vars, interceptorFactory);
     }
 
-    public void setFixFile(final String fixFile) {
-        try {
-            buildPipeline(new FileReader(fixFile), NO_VARS, NULL_INTERCEPTOR_FACTORY);
-        }
-        catch (final IOException e) {
-            e.printStackTrace();
-        }
-
-        init();
-    }
-
     public List<Expression> getExpressions() {
         return expressions;
     }
@@ -196,12 +187,12 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         });
     }
 
-    private void buildPipeline(final Reader fixDef, final Map<String, String> vars, final InterceptorFactory interceptorFactory) {
+    private void buildPipeline(final Reader fixDef, final Map<String, String> theVars, final InterceptorFactory interceptorFactory) {
         final Fix fix = parseFix(fixDef);
-
+        this.vars = theVars;
         // TODO: unify FixInterpreter and FixBuilder
         new FixInterpreter().run(this, fix);
-        new FixBuilder(this, interceptorFactory).walk(fix, vars);
+        new FixBuilder(this, interceptorFactory).walk(fix);
     }
 
     private Fix parseFix(final Reader fixDef) {
@@ -454,6 +445,10 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
     public SourceLocation getSourceLocation() {
         // Metafix does not have a source location
         return null;
+    }
+
+    public Map<String, String> getVars() {
+        return vars;
     }
 
 }

@@ -16,6 +16,7 @@
 
 package org.metafacture.metamorph;
 
+import org.metafacture.commons.StringUtil;
 import org.metafacture.fix.fix.Do;
 import org.metafacture.fix.fix.Expression;
 import org.metafacture.fix.fix.Fix;
@@ -76,7 +77,7 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
         collectFactory.registerClass("group", Group.class);
     }
 
-    public void walk(final Fix fix, final Map<String, String> vars) {
+    public void walk(final Fix fix) {
         processSubexpressions(fix.getElements(), null);
     }
 
@@ -124,6 +125,10 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
             final String flushWith = resolvedAttribute(resolvedAttributeMap(params, theDo.getOptions()), FLUSH_WITH);
             exitCollectorAndFlushWith(flushWith);
         }
+    }
+
+    protected final String resolveVars(final String string) {
+        return string == null ? null : StringUtil.format(string, Metafix.VAR_START, Metafix.VAR_END, false, metafix.getVars());
     }
 
     protected final Map<String, String> resolvedAttributeMap(final EList<String> params, final Options options) {
@@ -491,13 +496,11 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
     }
 
     private String resolvedAttribute(final List<String> params, final int i) {
-        // TODO: resolve from vars/map/etc
-        return params.size() < i ? null : params.get(i - 1);
+        return params.size() < i ? null : resolveVars(params.get(i - 1));
     }
 
     private String resolvedAttribute(final Map<String, String> attributes, final String string) {
-        // TODO: resolve from vars/map/etc
-        return attributes.get(string);
+        return resolveVars(attributes.get(string));
     }
 
     private static class StackFrame {
