@@ -762,10 +762,9 @@ public class MetafixDslTest {
     }
 
     @Test
-    @Disabled("Fix syntax")
     public void shouldMatchCharacterWithQuestionMarkWildcard() {
         final Metafix metafix = fix(
-                "map(lit-?)"
+                "map('lit-?')"
         );
 
         metafix.startRecord("1");
@@ -780,10 +779,9 @@ public class MetafixDslTest {
     }
 
     @Test
-    @Disabled("Fix syntax")
     public void shouldMatchCharactersInCharacterClass() {
         final Metafix metafix = fix(
-                "map(lit-[AB])"
+                "map('lit-[AB]')"
         );
 
         metafix.startRecord("1");
