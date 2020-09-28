@@ -310,6 +310,25 @@ public class MetafixDslTest {
     }
 
     @Test
+    public void shouldTrim() {
+        final Metafix metafix = fix(
+                "do map(a,b)",
+                "  trim()",
+                "end"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("a", "\t" + LITERAL_ALOHA + " ");
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("b", LITERAL_ALOHA);
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void appendLiteral() {
         final Metafix metafix = fix(
                 "append(a,'eha')"

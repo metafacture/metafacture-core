@@ -36,6 +36,7 @@ import org.metafacture.metamorph.functions.Lookup;
 import org.metafacture.metamorph.functions.NotEquals;
 import org.metafacture.metamorph.functions.Regexp;
 import org.metafacture.metamorph.functions.Replace;
+import org.metafacture.metamorph.functions.Trim;
 import org.metafacture.metamorph.maps.FileMap;
 
 import org.eclipse.emf.common.util.BasicEList;
@@ -300,6 +301,12 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
                 final Regexp regexp = new Regexp();
                 regexp.setMatch(builder.resolvedAttribute(params, 1));
                 builder.enterDataFunction(source, regexp, false);
+                return false;
+            }
+        },
+        TRIM {
+            public boolean apply(final FixBuilder builder, final Expression expression, final List<String> params, final String source) {
+                builder.enterDataFunction(source, new Trim(), false);
                 return false;
             }
         },
