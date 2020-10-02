@@ -78,7 +78,7 @@ public class MetafixDslTest {
     public void shouldMapAndFilterNeqLiteral() {
         final Metafix metafix = fix(
                 "do map(a,b)", // checkstyle-disable-line MultipleStringLiterals
-                "  not_equals('')",
+                "  not_equals(string: '')",
                 "end" // checkstyle-disable-line MultipleStringLiterals
         );
 
@@ -98,7 +98,7 @@ public class MetafixDslTest {
     public void shouldMapAndFilterEqLiteral() {
         final Metafix metafix = fix(
                 "do map(a,b)", // checkstyle-disable-line MultipleStringLiterals
-                "  equals('')",
+                "  equals(string: '')",
                 "end" // checkstyle-disable-line MultipleStringLiterals
         );
 
@@ -118,7 +118,7 @@ public class MetafixDslTest {
     public void shouldMapAndFilterRegexLiteral() {
         final Metafix metafix = fix(
                 "do map(a,b)", // checkstyle-disable-line MultipleStringLiterals
-                "  regexp('.+')",
+                "  regexp(match: '.+')",
                 "end" // checkstyle-disable-line MultipleStringLiterals
         );
 
@@ -138,7 +138,7 @@ public class MetafixDslTest {
     public void shouldMapAndChangeLiteralSingle() {
         final Metafix metafix = fix(
                 "do map(a,b)", // checkstyle-disable-line MultipleStringLiterals
-                "  replace_all('a-val','b-val')",
+                "  replace_all(pattern: 'a-val', with: 'b-val')",
                 "end" // checkstyle-disable-line MultipleStringLiterals
         );
 
@@ -157,9 +157,9 @@ public class MetafixDslTest {
     public void shouldMapAndChangeLiteralMulti() {
         final Metafix metafix = fix(
                 "do map(a,b)",
-                "  replace_all('a-val','b-val')",
-                "  prepend('pre-')",
-                "  append('-post')",
+                "  replace_all(pattern: 'a-val', with: 'b-val')",
+                "  compose(prefix: 'pre-')",
+                "  compose(postfix: '-post')",
                 "end" // checkstyle-disable-line MultipleStringLiterals
         );
 
@@ -274,7 +274,9 @@ public class MetafixDslTest {
     @Test
     public void shouldReplaceInLiteral() {
         final Metafix metafix = fix(
-                "replace_all(a,'a','b')"
+                "do map(a)", // checkstyle-disable-line MultipleStringLiterals
+                "  replace_all(pattern: 'a', with: 'b')",
+                "end"
         );
 
         metafix.startRecord("1");
@@ -291,7 +293,9 @@ public class MetafixDslTest {
     @Test
     public void shouldReplaceWithEntities() {
         final Metafix metafix = fix(
-                "replace_all(a.b,'a','b')"
+                "do map(a.b, a.b)",
+                "  replace_all(pattern: 'a', with: 'b')",
+                "end"
         );
 
         metafix.startRecord("1");
@@ -331,7 +335,9 @@ public class MetafixDslTest {
     @Test
     public void appendLiteral() {
         final Metafix metafix = fix(
-                "append(a,'eha')"
+                "do map(a)",
+                "  compose(postfix: 'eha')",
+                "end"
         );
 
         metafix.startRecord("1");
@@ -348,7 +354,9 @@ public class MetafixDslTest {
     @Test
     public void prependLiteral() {
         final Metafix metafix = fix(
-                "prepend(a,'eha')"
+                "do map(a)",
+                "  compose(prefix: 'eha')",
+                "end"
         );
 
         metafix.startRecord("1");
@@ -412,21 +420,27 @@ public class MetafixDslTest {
     @Test
     public void shouldLookupInline() {
         verifyLookup(fix(
-                "lookup(a, Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"
+                "do map(a)", // checkstyle-disable-line MultipleStringLiterals
+                "  lookup(Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)", // checkstyle-disable-line MultipleStringLiterals
+                "end"
         ));
     }
 
     @Test
     public void shouldLookupInTsvFile() throws URISyntaxException {
         verifyLookup(fix(
-                "lookup(a, in: 'src/test/java/org/metafacture/metamorph/maps/test.tsv')"
+                "do map(a)",
+                "  lookup(in: 'src/test/java/org/metafacture/metamorph/maps/test.tsv')",
+                "end"
         ));
     }
 
     @Test
     public void shouldLookupInCsvFile() throws URISyntaxException {
         verifyLookup(fix(
-                "lookup(a, in: 'src/test/java/org/metafacture/metamorph/maps/test.csv', separator: ',')"
+                "do map(a)",
+                "  lookup(in: 'src/test/java/org/metafacture/metamorph/maps/test.csv', separator: ',')",
+                "end"
         ));
     }
 
@@ -545,8 +559,8 @@ public class MetafixDslTest {
     public void shouldMapAndChangeAndLookupInline() {
         final Metafix metafix = fix(
                 "do map(a,b)",
-                "  replace_all('lit-A','Aloha')",
-                "  replace_all('lit-B','Moin')",
+                "  replace_all(pattern: 'lit-A', with: 'Aloha')",
+                "  replace_all(pattern: 'lit-B', with: 'Moin')",
                 "  lookup(Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)",
                 "end"
         );
@@ -569,7 +583,7 @@ public class MetafixDslTest {
     @Test
     public void shouldCombineLiterals() {
         final Metafix metafix = fix(
-                "do combine(d,'${place}, ${greet}')",
+                "do combine(name: d, value: '${place}, ${greet}')",
                 "  map(a, greet)",
                 "  map(b, place)",
                 "end",
@@ -616,7 +630,7 @@ public class MetafixDslTest {
         final Metafix metafix = fix(
                 "do entity(b)",
                 " do map(a, c)",
-                "  replace_all('A','B')",
+                "  replace_all(pattern: 'A', with: 'B')",
                 " end",
                 "end"
         );
@@ -638,7 +652,7 @@ public class MetafixDslTest {
     public void shouldMapAndChangeNestedImplicit() {
         final Metafix metafix = fix(
                 "do map(a, b.c)",
-                "  replace_all('A','B')",
+                "  replace_all(pattern: 'A', with: 'B')",
                 "end",
                 "map(x, y)"
         );
@@ -662,7 +676,7 @@ public class MetafixDslTest {
     public void shouldCombineToEntity() {
         final Metafix metafix = fix(
                 "do entity(d)",
-                " do combine(a,'${place}, ${greet}')",
+                " do combine(name: a, value: '${place}, ${greet}')",
                 "  map(a, greet)",
                 "  map(b, place)",
                 " end",

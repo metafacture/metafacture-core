@@ -24,26 +24,16 @@ import org.metafacture.fix.fix.MethodCall;
 import org.metafacture.fix.fix.Options;
 import org.metafacture.metamorph.api.Collect;
 import org.metafacture.metamorph.api.FlushListener;
+import org.metafacture.metamorph.api.Function;
 import org.metafacture.metamorph.api.InterceptorFactory;
 import org.metafacture.metamorph.api.NamedValuePipe;
-import org.metafacture.metamorph.collectors.Choose;
-import org.metafacture.metamorph.collectors.Combine;
-import org.metafacture.metamorph.collectors.Group;
-import org.metafacture.metamorph.functions.Compose;
 import org.metafacture.metamorph.functions.Constant;
-import org.metafacture.metamorph.functions.Equals;
-import org.metafacture.metamorph.functions.Lookup;
 import org.metafacture.metamorph.functions.NotEquals;
-import org.metafacture.metamorph.functions.Regexp;
 import org.metafacture.metamorph.functions.Replace;
-import org.metafacture.metamorph.functions.Trim;
-import org.metafacture.metamorph.maps.FileMap;
 
-import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.xbase.lib.Pair;
 
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -65,17 +55,25 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
     private final Deque<StackFrame> stack = new LinkedList<>();
     private final InterceptorFactory interceptorFactory;
     private final Metafix metafix;
+
     private CollectFactory collectFactory;
+    private FunctionFactory functionFactory;
 
     public FixBuilder(final Metafix metafix, final InterceptorFactory interceptorFactory) {
         this.metafix = metafix;
         this.interceptorFactory = interceptorFactory;
 
         stack.push(new StackFrame(metafix));
+
         collectFactory = new CollectFactory();
-        collectFactory.registerClass("combine", Combine.class);
-        collectFactory.registerClass("choose", Choose.class);
-        collectFactory.registerClass("group", Group.class);
+        functionFactory = new FunctionFactory();
+        // morph: not-equals, replace, fix: not_equals, replace_all
+        functionFactory.registerClass("not_equals", NotEquals.class);
+        functionFactory.registerClass("replace_all", Replace.class);
+    }
+
+    Metafix getMetafix() {
+        return metafix;
     }
 
     public void walk(final Fix fix) {
@@ -132,10 +130,8 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
         return string == null ? null : StringUtil.format(string, Metafix.VAR_START, Metafix.VAR_END, false, metafix.getVars());
     }
 
-    protected final Map<String, String> resolvedAttributeMap(final EList<String> params, final Options options) {
+    protected final Map<String, String> resolvedAttributeMap(final List<String> params, final Options options) {
         final Map<String, String> attributes = new HashMap<String, String>();
-        attributes.put("name", resolvedAttribute(params, 1));
-        attributes.put("value", resolvedAttribute(params, 2));
         if (options == null) {
             return attributes;
         }
@@ -190,7 +186,7 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
         }
     }
 
-    private void registerFlush(final String flushWith, final Collect flushListener) {
+    private void registerFlush(final String flushWith, final FlushListener flushListener) {
         final String[] keysSplit = Pattern.compile("|", Pattern.LITERAL).split(flushWith);
         for (final String key : keysSplit) {
             final FlushListener interceptor = interceptorFactory.createFlushInterceptor(flushListener);
@@ -227,148 +223,52 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
     }
 
     private void processFunction(final Expression expression, final List<String> params, final String source) {
-        final boolean standalone = Exp.valueOf(expression.getName().toUpperCase()).apply(this, expression, params, source);
-        if (standalone) {
-            exitData();
-            mapBack(source, true);
+        final FixFunction functionToRun = findFixFunction(expression);
+        if (functionToRun != null) {
+            functionToRun.apply(this, expression, params, source);
+        }
+        else {
+            runMetamorphFunction(expression, params);
         }
     }
 
-    private enum Exp {
-        MAP {
-            public boolean apply(final FixBuilder builder, final Expression expression, final List<String> params, final String source) {
-                final NamedValuePipe enterDataMap = builder.enterDataMap(params, false);
-                builder.exitData();
-                if (enterDataMap instanceof Entity) {
-                    builder.exitCollectorAndFlushWith(null);
-                }
-                return false;
+    private FixFunction findFixFunction(final Expression expression) {
+        for (final FixFunction exp : FixFunction.values()) {
+            if (exp.name().equalsIgnoreCase(expression.getName())) {
+                return exp;
             }
-        },
-        ADD_FIELD {
-            public boolean apply(final FixBuilder builder, final Expression expression, final List<String> params, final String source) {
-                builder.enterDataAdd(params);
-                builder.exitData();
-                return false;
-            }
-        },
-        REPLACE_ALL {
-            public boolean apply(final FixBuilder builder, final Expression expression, final List<String> params, final String source) {
-                final Replace replace = new Replace();
-                final String thirdParam = builder.resolvedAttribute(params, 3);
-                final boolean standalone = thirdParam != null;
-                final List<String> p = standalone ? params.subList(1, params.size()) : params;
-                replace.setPattern(builder.resolvedAttribute(p, 1));
-                replace.setWith(builder.resolvedAttribute(p, 2));
-                builder.enterDataFunction(source, replace, standalone);
-                return standalone;
-            }
-        },
-        APPEND {
-            public boolean apply(final FixBuilder builder, final Expression expression, final List<String> params, final String source) {
-                final boolean standalone = params.size() > 1;
-                final List<String> p = standalone ? params.subList(1, params.size()) : params;
-                builder.compose(source, "", builder.resolvedAttribute(p, 1), standalone);
-                return standalone;
-            }
-        },
-        PREPEND {
-            public boolean apply(final FixBuilder builder, final Expression expression, final List<String> params, final String source) {
-                final boolean standalone = params.size() > 1;
-                final List<String> p = standalone ? params.subList(1, params.size()) : params;
-                builder.compose(source, builder.resolvedAttribute(p, 1), "", standalone);
-                return standalone;
-            }
-        },
-        EQUALS {
-            public boolean apply(final FixBuilder builder, final Expression expression, final List<String> params, final String source) {
-                final Equals eq = new Equals();
-                eq.setString(builder.resolvedAttribute(params, 1));
-                builder.enterDataFunction(source, eq, false);
-                return false;
-            }
-        },
-        NOT_EQUALS {
-            public boolean apply(final FixBuilder builder, final Expression expression, final List<String> params, final String source) {
-                final NotEquals neq = new NotEquals();
-                neq.setString(builder.resolvedAttribute(params, 1));
-                builder.enterDataFunction(source, neq, false);
-                return false;
-            }
-        },
-        REGEXP {
-            public boolean apply(final FixBuilder builder, final Expression expression, final List<String> params, final String source) {
-                final Regexp regexp = new Regexp();
-                regexp.setMatch(builder.resolvedAttribute(params, 1));
-                builder.enterDataFunction(source, regexp, false);
-                return false;
-            }
-        },
-        TRIM {
-            public boolean apply(final FixBuilder builder, final Expression expression, final List<String> params, final String source) {
-                builder.enterDataFunction(source, new Trim(), false);
-                return false;
-            }
-        },
-        LOOKUP {
-            public boolean apply(final FixBuilder builder, final Expression expression, final List<String> params, final String source) {
-                final boolean standalone = builder.resolvedAttribute(params, 1) != null;
-                final Lookup lookup = new Lookup();
-                lookup.setMaps(builder.metafix);
-                final Map<String, String> map = buildMap(expression);
-                final String name = map.hashCode() + "";
-                lookup.setMap(name);
-                builder.metafix.putMap(name, map);
-                builder.enterDataFunction(source, lookup, standalone);
-                return standalone;
-            }
-
-            private Map<String, String> buildMap(final Expression expression) {
-                final Map<String, String> options = options((MethodCall) expression);
-                final String file = options.get("in");
-                final String sep = "separator";
-                final boolean useFileMap = file != null && (options.size() == 1 || options.size() == 2 && options.containsKey(sep));
-                final Map<String, String> map = useFileMap ? fileMap(file, options.get(sep)) : options;
-                return map;
-            }
-
-            private Map<String, String> options(final MethodCall method) {
-                final Options options = method.getOptions();
-                final Map<String, String> map = new HashMap<>();
-                if (options != null) {
-                    for (int i = 0; i < options.getKeys().size(); i += 1) {
-                        map.put(options.getKeys().get(i), options.getValues().get(i));
-                    }
-                }
-                return map;
-            }
-
-            private Map<String, String> fileMap(final String secondParam, final String separator) {
-                final FileMap fileMap = new FileMap();
-                if (separator != null) {
-                    fileMap.setSeparator(separator);
-                }
-                fileMap.setFile(secondParam);
-                return fileMap;
-            }
-
-        };
-        public abstract boolean apply(FixBuilder builder, Expression expression, List<String> params, String source);
+        }
+        return null;
     }
 
-    private void compose(final String field, final String prefix, final String postfix, final boolean standalone) {
-        final Compose compose = new Compose();
-        compose.setPrefix(prefix);
-        compose.setPostfix(postfix);
-        enterDataFunction(field, compose, standalone);
+    private void runMetamorphFunction(final Expression expression, final List<String> params) {
+        final Map<String, String> attributes = resolvedAttributeMap(params, ((MethodCall) expression).getOptions());
+        if (functionFactory.containsKey(expression.getName())) {
+            final String flushWith = attributes.remove(FLUSH_WITH);
+            final Function function = functionFactory.newInstance(expression.getName(), attributes);
+            if (null != flushWith) {
+                registerFlush(flushWith, function);
+            }
+            function.setMaps(metafix);
+            final StackFrame head = stack.peek();
+            final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+            final NamedValuePipe delegate;
+            if (interceptor == null) {
+                delegate = function;
+            }
+            else {
+                delegate = interceptor;
+                function.addNamedValueSource(delegate);
+            }
+            delegate.addNamedValueSource(head.getPipe());
+            head.setPipe(function);
+        }
+        else {
+            throw new IllegalArgumentException(expression.getName() + " not found");
+        }
     }
 
-    private void mapBack(final String name, final boolean standalone) {
-        enterDataMap(new BasicEList<String>(Arrays.asList("@" + name, name)), standalone);
-        exitData();
-    }
-
-    private void exitData() {
+    void exitData() {
         final NamedValuePipe dataPipe = stack.pop().getPipe();
 
         final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
@@ -392,7 +292,7 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
         parent.getPipe().addNamedValueSource(delegate);
     }
 
-    private NamedValuePipe enterDataMap(final List<String> params, final boolean standalone) {
+    NamedValuePipe enterDataMap(final List<String> params, final boolean standalone) {
         Entity entity = null;
         final Data data = new Data();
         String dataName = resolvedAttribute(params, 2);
@@ -416,7 +316,7 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
         return entity != null ? entity : data;
     }
 
-    private void enterDataAdd(final List<String> params) {
+    void enterDataAdd(final List<String> params) {
         final String resolvedAttribute = resolvedAttribute(params, 1);
         if (resolvedAttribute.contains(".")) {
             addNestedField(params, resolvedAttribute);
@@ -432,7 +332,7 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
         }
     }
 
-    private void enterDataFunction(final String fieldName, final NamedValuePipe function, final boolean standalone) {
+    void enterDataFunction(final String fieldName, final NamedValuePipe function, final boolean standalone) {
         if (standalone) {
             final Data data = new Data();
             data.setName("@" + fieldName);
