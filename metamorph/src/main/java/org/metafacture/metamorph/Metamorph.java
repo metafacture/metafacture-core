@@ -326,16 +326,20 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         for (final NamedValueReceiver data : dataList) {
             String key=path;
             if (fallback && value != null && passEntityEvents) {
-                outputStreamReceiver.startEntity(flattener.getCurrentEntityName());
-                key=literalPatternOfEntityMarker.split(path)[1];
+                if (flattener.getCurrentEntityName() != null) {
+                    outputStreamReceiver.startEntity(flattener.getCurrentEntityName());
+                    key = literalPatternOfEntityMarker.split(path)[1];
+                }
             }
             try {
                 data.receive(key, value, null, recordCount, currentEntityCount);
             } catch (final RuntimeException e) {
                 errorHandler.error(e);
             }
-            if (fallback && value!=null && passEntityEvents) {
-                outputStreamReceiver.endEntity();
+            if (fallback && value != null && passEntityEvents) {
+                if (flattener.getCurrentEntityName() != null) {
+                    outputStreamReceiver.endEntity();
+                }
             }
         }
     }
