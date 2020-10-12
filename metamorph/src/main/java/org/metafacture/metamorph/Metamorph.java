@@ -49,6 +49,8 @@ import org.metafacture.metamorph.api.NamedValuePipe;
 import org.metafacture.metamorph.api.NamedValueReceiver;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.SourceLocation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 /**
@@ -99,6 +101,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     private final List<FlushListener> recordEndListener = new ArrayList<>();
     private boolean elseNested;
     final private Pattern literalPatternOfEntityMarker = Pattern.compile(flattener.getEntityMarker(), Pattern.LITERAL);
+    private static final Logger LOG = LoggerFactory.getLogger(Metamorph.class);
 
     protected Metamorph() {
         // package private
@@ -224,7 +227,11 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
             this.elseNested = true;
         }
         if (ELSE_KEYWORD.equals(source) || ELSE_FLATTENED_KEYWORD.equals(source) || elseNested) {
-            elseSources.add(data);
+            if (elseSources.isEmpty())
+                elseSources.add(data);
+            else
+                LOG.warn(
+                        "Only one of '_else', '_elseFlattened' and '_elseNested' is allowed. Ignoring the superflous ones.");
         } else {
             dataRegistry.register(source, data);
         }
