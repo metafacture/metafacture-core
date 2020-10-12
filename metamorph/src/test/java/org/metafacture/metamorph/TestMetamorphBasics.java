@@ -87,6 +87,78 @@ public final class TestMetamorphBasics {
     }
 
     @Test
+    public void shouldHandleUnmatchedLiteralsAndEntitiesInElseSource() {
+        metamorph = InlineMorph.in(this) //
+                .with("<rules>") //
+                .with("    <data source='_else'/>")//
+                .with("</rules>")//
+                .createConnectedTo(receiver);
+        testElseData();
+    }
+
+    @Test
+    public void shouldHandleUnmatchedLiteralsAndEntitiesInElseFlattenedSource() {
+        metamorph = InlineMorph.in(this) //
+                .with("<rules>") //
+                .with("    <data source='_elseFlattened'/>")//
+                .with("</rules>")//
+                .createConnectedTo(receiver);
+        testElseData();
+    }
+    private void testElseData() {
+        metamorph.startRecord("1");
+        metamorph.literal("Shikotan", "Aekap");
+        metamorph.startEntity("Germany");
+        metamorph.literal("Langeoog", "Moin");
+        metamorph.endEntity();
+        metamorph.startEntity("Germany");
+        metamorph.literal("Baltrum", "Moin Moin");
+        metamorph.endEntity();
+        metamorph.endRecord();
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("Shikotan", "Aekap");
+        ordered.verify(receiver).literal("Germany.Langeoog", "Moin");
+        ordered.verify(receiver).literal("Germany.Baltrum", "Moin Moin");
+        ordered.verify(receiver).endRecord();
+    }
+
+    @Test
+    public void shouldHandleUnmatchedLiteralsAndEntitiesInElseNestedSource() {
+        metamorph = InlineMorph.in(this).with("<rules>")//
+                .with("  <entity name='USA' >")//
+                .with("    <data source='USA.Sylt' name='Hawaii' />")
+                .with("  </entity>")//
+                .with("  <data source='_elseNested' />")//
+                .with("</rules>")//
+                .createConnectedTo(receiver);
+
+        metamorph.startRecord("1");
+        metamorph.literal("Shikotan", "Aekap");
+        metamorph.startEntity("Germany");
+        metamorph.literal("Langeoog", "Moin");
+        metamorph.literal("Baltrum", "Moin Moin");
+        metamorph.endEntity();
+        metamorph.startEntity("USA");
+        metamorph.literal("Sylt", "Aloha");
+        metamorph.endEntity();
+        metamorph.endRecord();
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("Shikotan", "Aekap");
+        ordered.verify(receiver).startEntity("Germany");
+        ordered.verify(receiver).literal("Langeoog", "Moin");
+        ordered.verify(receiver).literal("Baltrum", "Moin Moin");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).startEntity("USA");
+        ordered.verify(receiver).literal("Hawaii", "Aloha");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+    }
+
+    @Test
     public void shouldMatchCharacterWithQuestionMarkWildcard() {
         metamorph = InlineMorph.in(this)
                 .with("<rules>")

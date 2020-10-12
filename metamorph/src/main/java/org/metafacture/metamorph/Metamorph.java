@@ -65,8 +65,9 @@ import org.xml.sax.InputSource;
 @FluxCommand("morph")
 public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps {
 
-    private static final String ELSE_AND_PASS_ENTITY_EVENTS_KEYWORD = "_elseAndPassEntityEvents";
+    private static final String ELSE_NESTED_KEYWORD = "_elseNested";
     public static final String ELSE_KEYWORD = "_else";
+    public static final String ELSE_FLATTENED_KEYWORD = "_elseFlattened";
     public static final char FEEDBACK_CHAR = '@';
     public static final char ESCAPE_CHAR = '\\';
     public static final String METADATA = "__meta";
@@ -96,7 +97,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     private MorphErrorHandler errorHandler = new DefaultErrorHandler();
     private int recordCount;
     private final List<FlushListener> recordEndListener = new ArrayList<>();
-    private boolean passEntityEvents;
+    private boolean elseNested;
     final private Pattern literalPatternOfEntityMarker = Pattern.compile(flattener.getEntityMarker(), Pattern.LITERAL);
 
     protected Metamorph() {
@@ -219,10 +220,10 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     }
 
     protected void registerNamedValueReceiver(final String source, final NamedValueReceiver data) {
-        if (ELSE_AND_PASS_ENTITY_EVENTS_KEYWORD.equals(source)) {
-            this.passEntityEvents = true;
+        if (ELSE_NESTED_KEYWORD.equals(source)) {
+            this.elseNested = true;
         }
-        if (ELSE_KEYWORD.equals(source) || this.passEntityEvents) {
+        if (ELSE_KEYWORD.equals(source) || ELSE_FLATTENED_KEYWORD.equals(source) || elseNested) {
             elseSources.add(data);
         } else {
             dataRegistry.register(source, data);
@@ -325,7 +326,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     private void send(final String path, final String value, final List<NamedValueReceiver> dataList, final boolean fallback) {
         for (final NamedValueReceiver data : dataList) {
             String key=path;
-            if (fallback && value != null && passEntityEvents) {
+            if (fallback &&  value != null && elseNested) {
                 if (flattener.getCurrentEntityName() != null) {
                     outputStreamReceiver.startEntity(flattener.getCurrentEntityName());
                     key = literalPatternOfEntityMarker.split(path)[1];
@@ -336,7 +337,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
             } catch (final RuntimeException e) {
                 errorHandler.error(e);
             }
-            if (fallback && value != null && passEntityEvents) {
+            if (fallback &&  value != null && elseNested) {
                 if (flattener.getCurrentEntityName() != null) {
                     outputStreamReceiver.endEntity();
                 }
