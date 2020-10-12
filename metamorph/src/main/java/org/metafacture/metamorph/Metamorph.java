@@ -323,10 +323,11 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         }
     }
 
-    private void send(final String path, final String value, final List<NamedValueReceiver> dataList, final boolean fallback) {
+    private void send(final String path, final String value, final List<NamedValueReceiver> dataList,
+            final boolean fallback) {
         for (final NamedValueReceiver data : dataList) {
-            String key=path;
-            if (fallback &&  value != null && elseNested) {
+            String key = path;
+            if (fallback && elseNested) {
                 if (flattener.getCurrentEntityName() != null) {
                     outputStreamReceiver.startEntity(flattener.getCurrentEntityName());
                     key = literalPatternOfEntityMarker.split(path)[1];
@@ -337,7 +338,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
             } catch (final RuntimeException e) {
                 errorHandler.error(e);
             }
-            if (fallback &&  value != null && elseNested) {
+            if (fallback && elseNested) {
                 if (flattener.getCurrentEntityName() != null) {
                     outputStreamReceiver.endEntity();
                 }

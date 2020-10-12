@@ -204,4 +204,17 @@ public class MarcXmlEncoderTest {
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void shouldIgnoreNullValueOfLiteral() {
+        encoder.startRecord(RECORD_ID);
+        encoder.literal("type", null);
+        encoder.endRecord();
+        encoder.closeStream();
+        String expected = XML_DECLARATION + XML_ROOT_OPEN
+                + "<marc:record><marc:controlfield tag=\"type\"></marc:controlfield></marc:record>"
+                + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertEquals(expected, actual);
+    }
 }
