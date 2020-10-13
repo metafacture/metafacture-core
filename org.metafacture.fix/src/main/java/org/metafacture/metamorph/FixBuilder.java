@@ -138,7 +138,7 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
         final EList<String> keys = options.getKeys();
         final EList<String> values = options.getValues();
         for (int i = 0; i < keys.size() && i < values.size(); i = i + 1) {
-            attributes.put(keys.get(i), values.get(i));
+            attributes.put(resolveVars(keys.get(i)), resolveVars(values.get(i)));
         }
         return attributes;
     }

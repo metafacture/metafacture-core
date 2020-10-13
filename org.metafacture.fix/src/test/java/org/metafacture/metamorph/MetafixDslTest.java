@@ -29,9 +29,12 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
+import com.google.common.collect.ImmutableMap;
 
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Tests the basic functionality of Metafix via DSL.
@@ -346,7 +349,7 @@ public class MetafixDslTest {
 
         final InOrder ordered = Mockito.inOrder(streamReceiver);
         ordered.verify(streamReceiver).startRecord("1");
-        ordered.verify(streamReceiver).literal("a", LITERAL_ALOHA + "eha");
+        ordered.verify(streamReceiver).literal("a", LITERAL_ALOHA + "eha"); // checkstyle-disable-line MultipleStringLiterals
         ordered.verify(streamReceiver).endRecord();
         ordered.verifyNoMoreInteractions();
     }
@@ -359,6 +362,44 @@ public class MetafixDslTest {
                 "end"
         );
 
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("a", "eha" + LITERAL_ALOHA);
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void prependLiteralWithVarVal() {
+        final Metafix metafix = fix(
+                ImmutableMap.of("pre", "eha"),
+                "do map(a)",
+                "  compose(prefix: '$[pre]')",
+                "end"
+        );
+        metafix.startRecord("1");
+        metafix.literal("a", LITERAL_ALOHA);
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("a", "eha" + LITERAL_ALOHA);
+        ordered.verify(streamReceiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void prependLiteralWithVarKey() {
+        final Metafix metafix = fix(
+                ImmutableMap.of("composeOperation", "prefix"),
+                "do map(a)",
+                "  compose('$[composeOperation]': 'eha')",
+                "end"
+        );
         metafix.startRecord("1");
         metafix.literal("a", LITERAL_ALOHA);
         metafix.endRecord();
@@ -844,12 +885,16 @@ public class MetafixDslTest {
     }
 
     private Metafix fix(final String... fix) {
+        return fix(Collections.emptyMap(), fix);
+    }
+
+    private Metafix fix(final Map<String, String> vars, final String... fix) {
         final String fixString = String.join("\n", fix);
         System.out.println("\nFix string: " + fixString);
 
         Metafix metafix = null;
         try {
-            metafix = new Metafix(fixString);
+            metafix = new Metafix(fixString, vars);
             metafix.setReceiver(streamReceiver);
         }
         catch (final FileNotFoundException e) {
