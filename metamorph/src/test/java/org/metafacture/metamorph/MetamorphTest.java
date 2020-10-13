@@ -52,6 +52,9 @@ public final class MetamorphTest {
     @Mock
     private NamedValueReceiver namedValueReceiver;
 
+    @Mock
+    private DefaultStreamReceiver receiver = new DefaultStreamReceiver();
+
     private Metamorph metamorph;
 
     @Before
@@ -59,6 +62,7 @@ public final class MetamorphTest {
         metamorph = new Metamorph();
         metamorph.setReceiver(new DefaultStreamReceiver());
     }
+
 
     @Test
     public void shouldMapMatchingPath() {

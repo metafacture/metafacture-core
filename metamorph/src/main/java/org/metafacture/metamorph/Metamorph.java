@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.FluxCommand;
@@ -48,6 +49,8 @@ import org.metafacture.metamorph.api.NamedValuePipe;
 import org.metafacture.metamorph.api.NamedValueReceiver;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.SourceLocation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 /**
@@ -64,7 +67,9 @@ import org.xml.sax.InputSource;
 @FluxCommand("morph")
 public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps {
 
+    private static final String ELSE_NESTED_KEYWORD = "_elseNested";
     public static final String ELSE_KEYWORD = "_else";
+    public static final String ELSE_FLATTENED_KEYWORD = "_elseFlattened";
     public static final char FEEDBACK_CHAR = '@';
     public static final char ESCAPE_CHAR = '\\';
     public static final String METADATA = "__meta";
@@ -94,6 +99,9 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     private MorphErrorHandler errorHandler = new DefaultErrorHandler();
     private int recordCount;
     private final List<FlushListener> recordEndListener = new ArrayList<>();
+    private boolean elseNested;
+    final private Pattern literalPatternOfEntityMarker = Pattern.compile(flattener.getEntityMarker(), Pattern.LITERAL);
+    private static final Logger LOG = LoggerFactory.getLogger(Metamorph.class);
 
     protected Metamorph() {
         // package private
@@ -215,8 +223,15 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     }
 
     protected void registerNamedValueReceiver(final String source, final NamedValueReceiver data) {
-        if (ELSE_KEYWORD.equals(source)) {
-            elseSources.add(data);
+        if (ELSE_NESTED_KEYWORD.equals(source)) {
+            this.elseNested = true;
+        }
+        if (ELSE_KEYWORD.equals(source) || ELSE_FLATTENED_KEYWORD.equals(source) || elseNested) {
+            if (elseSources.isEmpty())
+                elseSources.add(data);
+            else
+                LOG.warn(
+                        "Only one of '_else', '_elseFlattened' and '_elseNested' is allowed. Ignoring the superflous ones.");
         } else {
             dataRegistry.register(source, data);
         }
@@ -268,9 +283,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         entityCountStack.push(Integer.valueOf(entityCount));
 
         flattener.startEntity(name);
-
-
-
     }
 
     @Override
@@ -306,27 +318,37 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         outputStreamReceiver.closeStream();
     }
 
-    protected void dispatch(final String path, final String value, final List<NamedValueReceiver> fallback) {
-        final List<NamedValueReceiver> matchingData = findMatchingData(path, fallback);
-        if (null != matchingData) {
-            send(path, value, matchingData);
-        }
-    }
-
-    private List<NamedValueReceiver> findMatchingData(final String path, final List<NamedValueReceiver> fallback) {
-        final List<NamedValueReceiver> matchingData = dataRegistry.get(path);
+    protected void dispatch(final String path, final String value, final List<NamedValueReceiver> fallbackReceiver) {
+        List<NamedValueReceiver> matchingData = dataRegistry.get(path);
+        boolean fallback = false;
         if (matchingData == null || matchingData.isEmpty()) {
-            return fallback;
+            fallback = true;
+            matchingData = fallbackReceiver;
         }
-        return matchingData;
+        if (null != matchingData) {
+            send(path, value, matchingData, fallback);
+        }
     }
 
-    private void send(final String key, final String value, final List<NamedValueReceiver> dataList) {
+    private void send(final String path, final String value, final List<NamedValueReceiver> dataList,
+            final boolean fallback) {
         for (final NamedValueReceiver data : dataList) {
+            String key = path;
+            if (fallback && elseNested) {
+                if (flattener.getCurrentEntityName() != null) {
+                    outputStreamReceiver.startEntity(flattener.getCurrentEntityName());
+                    key = literalPatternOfEntityMarker.split(path)[1];
+                }
+            }
             try {
                 data.receive(key, value, null, recordCount, currentEntityCount);
             } catch (final RuntimeException e) {
                 errorHandler.error(e);
+            }
+            if (fallback && elseNested) {
+                if (flattener.getCurrentEntityName() != null) {
+                    outputStreamReceiver.endEntity();
+                }
             }
         }
     }

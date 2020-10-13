@@ -175,7 +175,8 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         if (currentEntity.equals("")) {
             prettyPrintIndentation();
             writeRaw(String.format(CONTROLFIELD_OPEN_TEMPLATE, name));
-            writeEscaped(value.trim());
+            if (value != null)
+                writeEscaped(value.trim());
             writeRaw(CONTROLFIELD_CLOSE);
             prettyPrintNewLine();
         } else if (!currentEntity.equals(Marc21EventNames.LEADER_ENTITY)) {
