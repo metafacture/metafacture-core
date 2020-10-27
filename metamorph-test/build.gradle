@@ -33,3 +33,7 @@ dependencies {
   testImplementation project(':metafacture-formeta')
   testRuntimeOnly 'org.slf4j:slf4j-simple:1.7.21'
 }
+
+test {
+  systemProperty "javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"
+}
