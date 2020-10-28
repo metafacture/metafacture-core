@@ -39,6 +39,9 @@ public final class Regexp extends AbstractFunction {
     public void receive(final String name, final String value,
             final NamedValueSource source, final int recordCount,
             final int entityCount) {
+        if (null == value) {
+            return;
+        }
         matcher.reset(value);
         if (null == format) {
             while (matcher.find()) {
