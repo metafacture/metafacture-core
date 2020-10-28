@@ -95,4 +95,27 @@ public final class RegexpTest {
     ordered.verify(receiver).endRecord();
     ordered.verifyNoMoreInteractions();
   }
+
+  @Test
+  public void shouldIgnoreNullValues() {
+    metamorph = InlineMorph.in(this)
+        .with("<rules>")
+        .with("  <data source='s'>")
+        .with("    <regexp match='a.*' />")
+        .with("  </data>")
+        .with("</rules>")
+        .createConnectedTo(receiver);
+
+    metamorph.startRecord("1");
+    metamorph.literal("s", "aaccdd");
+    metamorph.literal("s", null);
+    metamorph.endRecord();
+
+    final InOrder ordered = inOrder(receiver);
+    ordered.verify(receiver).startRecord("1");
+    ordered.verify(receiver).literal("s", "aaccdd");
+    ordered.verify(receiver).endRecord();
+    ordered.verifyNoMoreInteractions();
+  }
+
 }
