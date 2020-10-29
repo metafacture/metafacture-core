@@ -50,8 +50,7 @@ public final class OaiPmhOpener extends
 	 * Default constructor
 	 */
 	public OaiPmhOpener() {
-		// See https://github.com/metafacture/metafacture-core/issues/334
-		System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+
 	}
 
 	/**

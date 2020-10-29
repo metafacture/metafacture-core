@@ -200,12 +200,6 @@ gradle.projectsEvaluated {
     task publish {
       dependsOn tasks.uploadArchives
     }
-
-    test {
-      testLogging {
-        exceptionFormat = 'full'
-      }
-    }
   }
 }
 
