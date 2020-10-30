@@ -39,3 +39,10 @@ sourceSets {
     output.resourcesDir = sourceSets.test.java.outputDir
   }
 }
+
+test {
+  testLogging {
+    showStandardStreams = true
+    exceptionFormat = 'full'
+  }
+}
