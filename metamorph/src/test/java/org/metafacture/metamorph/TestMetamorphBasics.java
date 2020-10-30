@@ -15,15 +15,11 @@
  */
 package org.metafacture.metamorph;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -41,205 +37,225 @@ public final class TestMetamorphBasics {
     @Mock
     private StreamReceiver receiver;
 
-    private Metamorph metamorph;
-
     @Test
     public void shouldUseCustomEntityMarker() {
-        metamorph = InlineMorph.in(this)
-                .with("<metamorph version='1' entityMarker='~'")
-                .with("    xmlns='http://www.culturegraph.org/metamorph'>")
-                .with("  <rules>")
-                .with("    <data source='entity~literal' name='data' />")
-                .with("  </rules>")
-                .with("</metamorph>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.startEntity("entity");
-        metamorph.literal("literal", "Aloha");
-        metamorph.endEntity();
-        metamorph.endRecord();
-
-        verify(receiver).literal("data", "Aloha");
+        assertMorph(receiver,
+                "<metamorph version='1' entityMarker='~'" +
+                "    xmlns='http://www.culturegraph.org/metamorph'>" +
+                "  <rules>" +
+                "    <data source='entity~literal' name='data' />" +
+                "  </rules>" +
+                "</metamorph>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("entity");
+                    i.literal("literal", "Aloha");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("data", "Aloha");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldHandleUnmatchedLiteralsInElseSource() {
-        metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <data source='Sylt' name='Hawaii' />")
-                .with("  <data source='_else' />")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("Langeoog", "Moin");
-        metamorph.literal("Sylt", "Aloha");
-        metamorph.literal("Baltrum", "Moin Moin");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("Langeoog", "Moin");
-        ordered.verify(receiver).literal("Hawaii", "Aloha");
-        ordered.verify(receiver).literal("Baltrum", "Moin Moin");
-        ordered.verify(receiver).endRecord();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='Sylt' name='Hawaii' />" +
+                "  <data source='_else' />" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("Langeoog", "Moin");
+                    i.literal("Sylt", "Aloha");
+                    i.literal("Baltrum", "Moin Moin");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("Langeoog", "Moin");
+                    o.get().literal("Hawaii", "Aloha");
+                    o.get().literal("Baltrum", "Moin Moin");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldHandleUnmatchedLiteralsAndEntitiesInElseSource() {
-        metamorph = InlineMorph.in(this) //
-                .with("<rules>") //
-                .with("    <data source='_else'/>")//
-                .with("</rules>")//
-                .createConnectedTo(receiver);
-        testElseData();
+        testElseData(
+                "<rules>" +
+                "    <data source='_else'/>" +
+                "</rules>"
+        );
     }
 
     @Test
     public void shouldHandleUnmatchedLiteralsAndEntitiesInElseFlattenedSource() {
-        metamorph = InlineMorph.in(this) //
-                .with("<rules>") //
-                .with("    <data source='_elseFlattened'/>")//
-                .with("</rules>")//
-                .createConnectedTo(receiver);
-        testElseData();
+        testElseData(
+                "<rules>" +
+                "    <data source='_elseFlattened'/>" +
+                "</rules>"
+        );
     }
-    private void testElseData() {
-        metamorph.startRecord("1");
-        metamorph.literal("Shikotan", "Aekap");
-        metamorph.startEntity("Germany");
-        metamorph.literal("Langeoog", "Moin");
-        metamorph.endEntity();
-        metamorph.startEntity("Germany");
-        metamorph.literal("Baltrum", "Moin Moin");
-        metamorph.endEntity();
-        metamorph.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("Shikotan", "Aekap");
-        ordered.verify(receiver).literal("Germany.Langeoog", "Moin");
-        ordered.verify(receiver).literal("Germany.Baltrum", "Moin Moin");
-        ordered.verify(receiver).endRecord();
+    private void testElseData(final String morphDef) {
+        assertMorph(receiver, morphDef,
+                i -> {
+                    i.startRecord("1");
+                    i.literal("Shikotan", "Aekap");
+                    i.startEntity("Germany");
+                    i.literal("Langeoog", "Moin");
+                    i.endEntity();
+                    i.startEntity("Germany");
+                    i.literal("Baltrum", "Moin Moin");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("Shikotan", "Aekap");
+                    o.get().literal("Germany.Langeoog", "Moin");
+                    o.get().literal("Germany.Baltrum", "Moin Moin");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldHandleUnmatchedLiteralsAndEntitiesInElseNestedSource() {
-        metamorph = InlineMorph.in(this).with("<rules>")//
-                .with("  <entity name='USA' >")//
-                .with("    <data source='USA.Sylt' name='Hawaii' />")
-                .with("  </entity>")//
-                .with("  <data source='_elseNested' />")//
-                .with("</rules>")//
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("Shikotan", "Aekap");
-        metamorph.startEntity("Germany");
-        metamorph.literal("Langeoog", "Moin");
-        metamorph.literal("Baltrum", "Moin Moin");
-        metamorph.endEntity();
-        metamorph.startEntity("USA");
-        metamorph.literal("Sylt", "Aloha");
-        metamorph.endEntity();
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("Shikotan", "Aekap");
-        ordered.verify(receiver).startEntity("Germany");
-        ordered.verify(receiver).literal("Langeoog", "Moin");
-        ordered.verify(receiver).literal("Baltrum", "Moin Moin");
-        ordered.verify(receiver).endEntity();
-        ordered.verify(receiver).startEntity("USA");
-        ordered.verify(receiver).literal("Hawaii", "Aloha");
-        ordered.verify(receiver).endEntity();
-        ordered.verify(receiver).endRecord();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <entity name='USA' >" +
+                "    <data source='USA.Sylt' name='Hawaii' />" +
+                "  </entity>" +
+                "  <data source='_elseNested' />" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("Shikotan", "Aekap");
+                    i.startEntity("Germany");
+                    i.literal("Langeoog", "Moin");
+                    i.literal("Baltrum", "Moin Moin");
+                    i.endEntity();
+                    i.startEntity("USA");
+                    i.literal("Sylt", "Aloha");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("Shikotan", "Aekap");
+                    o.get().startEntity("Germany");
+                    o.get().literal("Langeoog", "Moin");
+                    //o.get().endEntity();
+                    //o.get().startEntity("Germany");
+                    o.get().literal("Baltrum", "Moin Moin");
+                    o.get().endEntity();
+                    o.get().startEntity("USA");
+                    o.get().literal("Hawaii", "Aloha");
+                    o.get().endEntity();
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldMatchCharacterWithQuestionMarkWildcard() {
-        metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <data source='lit-?' />")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("lit", "Moin");
-        metamorph.literal("lit-A", "Aloha");
-        metamorph.literal("lit-B", "Aloha 'oe");
-        metamorph.endRecord();
-
-        verify(receiver).literal("lit-A", "Aloha");
-        verify(receiver).literal("lit-B", "Aloha 'oe");
-        verify(receiver, times(2)).literal(any(), any());
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='lit-?' />" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("lit", "Moin");
+                    i.literal("lit-A", "Aloha");
+                    i.literal("lit-B", "Aloha 'oe");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("lit-A", "Aloha");
+                    o.get().literal("lit-B", "Aloha 'oe");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldMatchCharactersInCharacterClass() {
-        metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <data source='lit-[AB]' />")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("lit-A", "Hawaii");
-        metamorph.literal("lit-B", "Oahu");
-        metamorph.literal("lit-C", "Fehmarn");
-        metamorph.endRecord();
-
-        verify(receiver).literal("lit-A", "Hawaii");
-        verify(receiver).literal("lit-B", "Oahu");
-        verify(receiver, times(2)).literal(any(), any());
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='lit-[AB]' />" +
+                "</rules>",
+                i ->  {
+                    i.startRecord("1");
+                    i.literal("lit-A", "Hawaii");
+                    i.literal("lit-B", "Oahu");
+                    i.literal("lit-C", "Fehmarn");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("lit-A", "Hawaii");
+                    o.get().literal("lit-B", "Oahu");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldReplaceVariables() {
-        metamorph = InlineMorph.in(this)
-                .with("<vars>")
-                .with("  <var name='in' value='Honolulu' />")
-                .with("  <var name='out' value='Hawaii' />")
-                .with("</vars>")
-                .with("<rules>")
-                .with("  <data source='$[in]' name='$[out]' />")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("Honolulu", "Aloha");
-        metamorph.endRecord();
-
-        verify(receiver).literal("Hawaii", "Aloha");
+        assertMorph(receiver,
+                "<vars>" +
+                "  <var name='in' value='Honolulu' />" +
+                "  <var name='out' value='Hawaii' />" +
+                "</vars>" +
+                "<rules>" +
+                "  <data source='$[in]' name='$[out]' />" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("Honolulu", "Aloha");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("Hawaii", "Aloha");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldAllowTreatingEntityEndEventsAsLiterals() {
-        metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <data source='e1' />")
-                .with("  <data source='e1.e2' />")
-                .with("  <data source='e1.e2.d' />")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("entity end info");
-        metamorph.startEntity("e1");
-        metamorph.startEntity("e2");
-        metamorph.literal("d", "a");
-        metamorph.endEntity();
-        metamorph.endEntity();
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("entity end info");
-        ordered.verify(receiver).literal("e1.e2.d", "a");
-        ordered.verify(receiver).literal("e1.e2", "");
-        ordered.verify(receiver).literal("e1", "");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='e1' />" +
+                "  <data source='e1.e2' />" +
+                "  <data source='e1.e2.d' />" +
+                "</rules>",
+                i -> {
+                    i.startRecord("entity end info");
+                    i.startEntity("e1");
+                    i.startEntity("e2");
+                    i.literal("d", "a");
+                    i.endEntity();
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("entity end info");
+                    o.get().literal("e1.e2.d", "a");
+                    o.get().literal("e1.e2", "");
+                    o.get().literal("e1", "");
+                    o.get().endRecord();
+                }
+        );
     }
 
 }

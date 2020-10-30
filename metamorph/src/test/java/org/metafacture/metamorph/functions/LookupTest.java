@@ -49,7 +49,7 @@ public final class LookupTest {
     private static final String VALUE = "Kafka";
 
     @Rule
-    public MockitoRule mockito = MockitoJUnit.rule();
+    public MockitoRule mockito = MockitoJUnit.rule().silent();
 
     @Mock
     private Maps maps;
