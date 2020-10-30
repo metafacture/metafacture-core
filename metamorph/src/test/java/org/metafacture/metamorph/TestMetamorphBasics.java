@@ -152,8 +152,8 @@ public final class TestMetamorphBasics {
                     o.get().literal("Shikotan", "Aekap");
                     o.get().startEntity("Germany");
                     o.get().literal("Langeoog", "Moin");
-                    //o.get().endEntity();
-                    //o.get().startEntity("Germany");
+                    o.get().endEntity();
+                    o.get().startEntity("Germany");
                     o.get().literal("Baltrum", "Moin Moin");
                     o.get().endEntity();
                     o.get().startEntity("USA");

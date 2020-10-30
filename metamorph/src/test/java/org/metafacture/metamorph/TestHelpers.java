@@ -45,7 +45,7 @@ public final class TestHelpers {
             out.accept(() -> ordered.verify(receiver), i -> ordered.verify(receiver, Mockito.times(i)));
 
             ordered.verifyNoMoreInteractions();
-            //Mockito.verifyNoMoreInteractions(receiver);
+            Mockito.verifyNoMoreInteractions(receiver);
         }
         catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());
