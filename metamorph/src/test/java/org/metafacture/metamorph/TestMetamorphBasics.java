@@ -156,8 +156,8 @@ public final class TestMetamorphBasics {
                     o.get().literal("Shikotan", "Aekap");
                     o.get().startEntity("Germany");
                     o.get().literal("Langeoog", "Moin");
-                    //o.get().endEntity();
-                    //o.get().startEntity("Germany");
+                    o.get().endEntity();
+                    o.get().startEntity("Germany");
                     o.get().literal("Baltrum", "Moin Moin");
                     o.get().endEntity();
                     o.get().startEntity("USA");
@@ -271,7 +271,7 @@ public final class TestMetamorphBasics {
             out.accept(() -> ordered.verify(receiver));
 
             ordered.verifyNoMoreInteractions();
-            //Mockito.verifyNoMoreInteractions(receiver);
+            Mockito.verifyNoMoreInteractions(receiver);
         }
         catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());
