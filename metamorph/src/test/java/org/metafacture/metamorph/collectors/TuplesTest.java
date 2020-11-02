@@ -15,14 +15,11 @@
  */
 package org.metafacture.metamorph.collectors;
 
-import static org.mockito.Mockito.inOrder;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
-import org.metafacture.metamorph.Metamorph;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -35,127 +32,125 @@ import org.mockito.junit.MockitoRule;
  */
 public final class TuplesTest {
 
-  @Rule
-  public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-  @Mock
-  private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-  private Metamorph metamorph;
+    @Test
+    public void shouldEmitTwoAndThreeTuples() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <tuples name='product'>" +
+                "    <data source='1' />" +
+                "    <data source='3' />" +
+                "    <data source='2' />" +
+                "  </tuples>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("1", "a");
+                    i.literal("1", "b");
+                    i.literal("2", "A");
+                    i.literal("2", "B");
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.literal("3", "X");
+                    i.literal("1", "c");
+                    i.literal("1", "d");
+                    i.literal("2", "C");
+                    i.literal("3", "Y");
+                    i.literal("2", "D");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("product", "aA");
+                    o.get().literal("product", "bA");
+                    o.get().literal("product", "aB");
+                    o.get().literal("product", "bB");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().literal("product", "cCX");
+                    o.get().literal("product", "dCX");
+                    o.get().literal("product", "cDX");
+                    o.get().literal("product", "dDX");
+                    o.get().literal("product", "cCY");
+                    o.get().literal("product", "dCY");
+                    o.get().literal("product", "cDY");
+                    o.get().literal("product", "dDY");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-  @Test
-  public void shouldEmitTwoandThreeTuples() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <tuples name='product'>")
-        .with("    <data source='1' />")
-        .with("    <data source='3' />")
-        .with("    <data source='2' />")
-        .with("  </tuples>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldOnlyEmitTriplesWithMoreThanMinNValues() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <tuples name='product' minN='3'>" +
+                "    <data source='1' />" +
+                "    <data source='3' />" +
+                "    <data source='2' />" +
+                "  </tuples>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("1", "a");
+                    i.literal("1", "b");
+                    i.literal("2", "A");
+                    i.literal("2", "B");
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.literal("3", "X");
+                    i.literal("1", "c");
+                    i.literal("1", "d");
+                    i.literal("2", "C");
+                    i.literal("3", "Y");
+                    i.literal("2", "D");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().literal("product", "cCX");
+                    o.get().literal("product", "dCX");
+                    o.get().literal("product", "cDX");
+                    o.get().literal("product", "dDX");
+                    o.get().literal("product", "cCY");
+                    o.get().literal("product", "dCY");
+                    o.get().literal("product", "cDY");
+                    o.get().literal("product", "dDY");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    metamorph.startRecord("1");
-    metamorph.literal("1", "a");
-    metamorph.literal("1", "b");
-    metamorph.literal("2", "A");
-    metamorph.literal("2", "B");
-    metamorph.endRecord();
-    metamorph.startRecord("2");
-    metamorph.literal("3", "X");
-    metamorph.literal("1", "c");
-    metamorph.literal("1", "d");
-    metamorph.literal("2", "C");
-    metamorph.literal("3", "Y");
-    metamorph.literal("2", "D");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("product", "aA");
-    ordered.verify(receiver).literal("product", "bA");
-    ordered.verify(receiver).literal("product", "aB");
-    ordered.verify(receiver).literal("product", "bB");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("2");
-    ordered.verify(receiver).literal("product", "cCX");
-    ordered.verify(receiver).literal("product", "dCX");
-    ordered.verify(receiver).literal("product", "cDX");
-    ordered.verify(receiver).literal("product", "dDX");
-    ordered.verify(receiver).literal("product", "cCY");
-    ordered.verify(receiver).literal("product", "dCY");
-    ordered.verify(receiver).literal("product", "cDY");
-    ordered.verify(receiver).literal("product", "dDY");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void shouldOnlyEmitTriplesWithMoreThanMinNValues() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <tuples name='product' minN='3'>")
-        .with("    <data source='1' />")
-        .with("    <data source='3' />")
-        .with("    <data source='2' />")
-        .with("  </tuples>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("1", "a");
-    metamorph.literal("1", "b");
-    metamorph.literal("2", "A");
-    metamorph.literal("2", "B");
-    metamorph.endRecord();
-    metamorph.startRecord("2");
-    metamorph.literal("3", "X");
-    metamorph.literal("1", "c");
-    metamorph.literal("1", "d");
-    metamorph.literal("2", "C");
-    metamorph.literal("3", "Y");
-    metamorph.literal("2", "D");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("2");
-    ordered.verify(receiver).literal("product", "cCX");
-    ordered.verify(receiver).literal("product", "dCX");
-    ordered.verify(receiver).literal("product", "cDX");
-    ordered.verify(receiver).literal("product", "dDX");
-    ordered.verify(receiver).literal("product", "cCY");
-    ordered.verify(receiver).literal("product", "dCY");
-    ordered.verify(receiver).literal("product", "cDY");
-    ordered.verify(receiver).literal("product", "dDY");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void shouldEmitTuplesWithMinNIfNotAllStatementsFired() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <tuples name='product' minN='1'>")
-        .with("    <data source='1' />")
-        .with("    <data source='3' />")
-        .with("    <data source='2' />")
-        .with("  </tuples>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("1", "a");
-    metamorph.literal("1", "b");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("product", "a");
-    ordered.verify(receiver).literal("product", "b");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+    @Test
+    public void shouldEmitTuplesWithMinNIfNotAllStatementsFired() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <tuples name='product' minN='1'>" +
+                "    <data source='1' />" +
+                "    <data source='3' />" +
+                "    <data source='2' />" +
+                "  </tuples>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("1", "a");
+                    i.literal("1", "b");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("product", "a");
+                    o.get().literal("product", "b");
+                    o.get().endRecord();
+                }
+        );
+    }
 
 }
