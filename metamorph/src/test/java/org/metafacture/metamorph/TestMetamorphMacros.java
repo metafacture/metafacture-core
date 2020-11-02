@@ -15,13 +15,11 @@
  */
 package org.metafacture.metamorph;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -39,162 +37,152 @@ public class TestMetamorphMacros {
     @Mock
     private StreamReceiver receiver;
 
-    private Metamorph metamorph;
-
     @Test
     public void shouldReplaceCallMacroWithMacro() {
-        metamorph = InlineMorph.in(this)
-                .with("<macros>")
-                .with("  <macro name='simple-macro'>")
-                .with("    <data source='$[in]' name='$[out]' />")
-                .with("  </macro>")
-                .with("</macros>")
-                .with("<rules>")
-                .with("  <call-macro name='simple-macro' in='in1' out='out1' />")
-                .with("  <call-macro name='simple-macro' in='in2' out='out2' />")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("in1", "Hawaii");
-        metamorph.literal("in2", "Maui");
-        metamorph.endRecord();
-
-        verify(receiver).literal("out1", "Hawaii");
-        verify(receiver).literal("out2", "Maui");
+        assertMorph(receiver,
+                "<macros>" +
+                "  <macro name='simple-macro'>" +
+                "    <data source='$[in]' name='$[out]' />" +
+                "  </macro>" +
+                "</macros>" +
+                "<rules>" +
+                "  <call-macro name='simple-macro' in='in1' out='out1' />" +
+                "  <call-macro name='simple-macro' in='in2' out='out2' />" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("in1", "Hawaii");
+                    i.literal("in2", "Maui");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("out1", "Hawaii");
+                    o.get().literal("out2", "Maui");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldAllowCallMacroInEntities() {
-        metamorph = InlineMorph.in(this)
-                .with("<macros>")
-                .with("  <macro name='simple-macro'>")
-                .with("    <data source='Honolulu' name='Honolulu' />")
-                .with("  </macro>")
-                .with("</macros>")
-                .with("<rules>")
-                .with("  <entity name='Hawaii'>")
-                .with("    <call-macro name='simple-macro' />")
-                .with("  </entity>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        processRecordWithSingleLiteral();
-
-        verifyEntityWithSingleLiteral();
+        testSingleLiteral(true,
+                "<macros>" +
+                "  <macro name='simple-macro'>" +
+                "    <data source='Honolulu' name='Honolulu' />" +
+                "  </macro>" +
+                "</macros>" +
+                "<rules>" +
+                "  <entity name='Hawaii'>" +
+                "    <call-macro name='simple-macro' />" +
+                "  </entity>" +
+                "</rules>"
+        );
     }
 
     @Test
     public void shouldAllowNestedMacros() {
-        metamorph = InlineMorph.in(this)
-                .with("<macros>")
-                .with("  <macro name='inner-macro'>")
-                .with("    <data source='$[literal]' />")
-                .with("  </macro>")
-                .with("  <macro name='outer-macro'>")
-                .with("    <entity name='$[entity]'>")
-                .with("      <call-macro name='inner-macro' literal='Honolulu' />")
-                .with("    </entity>")
-                .with("  </macro>")
-                .with("</macros>")
-                .with("<rules>")
-                .with("  <call-macro name='outer-macro' entity='Hawaii' />")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        processRecordWithSingleLiteral();
-
-        verifyEntityWithSingleLiteral();
+        testSingleLiteral(true,
+                "<macros>" +
+                "  <macro name='inner-macro'>" +
+                "    <data source='$[literal]' />" +
+                "  </macro>" +
+                "  <macro name='outer-macro'>" +
+                "    <entity name='$[entity]'>" +
+                "      <call-macro name='inner-macro' literal='Honolulu' />" +
+                "    </entity>" +
+                "  </macro>" +
+                "</macros>" +
+                "<rules>" +
+                "  <call-macro name='outer-macro' entity='Hawaii' />" +
+                "</rules>"
+        );
     }
 
     @Test
     public void shouldAllowoForwardReferencingMacros() {
-        metamorph = InlineMorph.in(this)
-                .with("<macros>")
-                .with("  <macro name='referencing'>")
-                .with("    <entity name='Hawaii'>")
-                .with("      <call-macro name='forward-referenced' />")
-                .with("    </entity>")
-                .with("  </macro>")
-                .with("  <macro name='forward-referenced'>")
-                .with("    <data source='Honolulu' />")
-                .with("  </macro>")
-                .with("</macros>")
-                .with("<rules>")
-                .with("  <call-macro name='referencing' />")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        processRecordWithSingleLiteral();
-
-        verifyEntityWithSingleLiteral();
+        testSingleLiteral(true,
+                "<macros>" +
+                "  <macro name='referencing'>" +
+                "    <entity name='Hawaii'>" +
+                "      <call-macro name='forward-referenced' />" +
+                "    </entity>" +
+                "  </macro>" +
+                "  <macro name='forward-referenced'>" +
+                "    <data source='Honolulu' />" +
+                "  </macro>" +
+                "</macros>" +
+                "<rules>" +
+                "  <call-macro name='referencing' />" +
+                "</rules>"
+        );
     }
 
     @Test
     public void shouldSupportVariablesInMacroParameters() {
-        metamorph = InlineMorph.in(this)
-                .with("<macros>")
-                .with("  <macro name='inner-macro'>")
-                .with("    <data source='$[source]' />")
-                .with("  </macro>")
-                .with("  <macro name='outer-macro'>")
-                .with("    <entity name='Hawaii'>")
-                .with("      <call-macro name='inner-macro' source='$[literal]' />")
-                .with("    </entity>")
-                .with("  </macro>")
-                .with("</macros>")
-                .with("<rules>")
-                .with("  <call-macro name='outer-macro' literal='Honolulu' />")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        processRecordWithSingleLiteral();
-
-        verifyEntityWithSingleLiteral();
+        testSingleLiteral(true,
+                "<macros>" +
+                "  <macro name='inner-macro'>" +
+                "    <data source='$[source]' />" +
+                "  </macro>" +
+                "  <macro name='outer-macro'>" +
+                "    <entity name='Hawaii'>" +
+                "      <call-macro name='inner-macro' source='$[literal]' />" +
+                "    </entity>" +
+                "  </macro>" +
+                "</macros>" +
+                "<rules>" +
+                "  <call-macro name='outer-macro' literal='Honolulu' />" +
+                "</rules>"
+        );
     }
 
     @Test
     public void issue227_shouldSupportXincludeForMacros() {
-        metamorph = InlineMorph.in(this)
-                .with("<include href='issue227_should-support-xinclude-for-macros.xml'")
-                .with("    xmlns='http://www.w3.org/2001/XInclude' />")
-                .with("<rules>")
-                .with("  <call-macro name='included-macro' />")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        processRecordWithSingleLiteral();
-
-        verify(receiver).literal("Honolulu", "Aloha");
+        testSingleLiteral(false,
+                "<include href='issue227_should-support-xinclude-for-macros.xml'" +
+                "    xmlns='http://www.w3.org/2001/XInclude' />" +
+                "<rules>" +
+                "  <call-macro name='included-macro' />" +
+                "</rules>"
+        );
     }
 
     @Test
     public void shouldSupportXPointer() {
-        metamorph = InlineMorph.in(this)
-                .with("<include href='should-support-xpointer.xml'")
-                .with("    xmlns='http://www.w3.org/2001/XInclude'")
-                .with("    xpointer='element(/1/1)' />")
-                .with("<rules>")
-                .with("  <call-macro name='included-macro' />")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        processRecordWithSingleLiteral();
-
-        verify(receiver).literal("Honolulu", "Aloha");
+        testSingleLiteral(false,
+                "<include href='should-support-xpointer.xml'" +
+                "    xmlns='http://www.w3.org/2001/XInclude'" +
+                "    xpointer='element(/1/1)' />" +
+                "<rules>" +
+                "  <call-macro name='included-macro' />" +
+                "</rules>"
+        );
     }
 
-    private void processRecordWithSingleLiteral() {
-        metamorph.startRecord("1");
-        metamorph.literal("Honolulu", "Aloha");
-        metamorph.endRecord();
-    }
+    private void testSingleLiteral(final boolean withEntity, final String morphDef) {
+        assertMorph(receiver, morphDef,
+                i -> {
+                    i.startRecord("1");
+                    i.literal("Honolulu", "Aloha");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
 
-    private void verifyEntityWithSingleLiteral() {
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startEntity("Hawaii");
-        ordered.verify(receiver).literal("Honolulu", "Aloha");
-        ordered.verify(receiver).endEntity();
+                    if (withEntity) {
+                        o.get().startEntity("Hawaii");
+                    }
+
+                    o.get().literal("Honolulu", "Aloha");
+
+                    if (withEntity) {
+                        o.get().endEntity();
+                    }
+
+                    o.get().endRecord();
+                }
+        );
     }
 
 }
