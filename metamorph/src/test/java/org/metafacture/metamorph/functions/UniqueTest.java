@@ -15,15 +15,11 @@
  */
 package org.metafacture.metamorph.functions;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.times;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
-import org.metafacture.metamorph.Metamorph;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -42,114 +38,112 @@ public final class UniqueTest {
   @Mock
   private StreamReceiver receiver;
 
-  private Metamorph metamorph;
-
   @Test
   public void shouldAllowSelectingTheUniqueScope() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='data' name='inRecord'>")
-        .with("    <unique />")
-        .with("  </data>")
-        .with("  <data source='e.data' name='inEntity'>")
-        .with("    <unique in='entity' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.startEntity("e");
-    metamorph.literal("data", "d");
-    metamorph.literal("data", "d");
-    metamorph.endEntity();
-    metamorph.startEntity("e");
-    metamorph.literal("data", "d");
-    metamorph.literal("data", "d");
-    metamorph.endEntity();
-    metamorph.literal("data", "d");
-    metamorph.literal("data", "d");
-    metamorph.literal("data", "d");
-    metamorph.endRecord();
-    metamorph.startRecord("2");
-    metamorph.startEntity("e");
-    metamorph.literal("data", "d");
-    metamorph.literal("data", "d");
-    metamorph.endEntity();
-    metamorph.startEntity("e");
-    metamorph.literal("data", "d");
-    metamorph.literal("data", "d");
-    metamorph.endEntity();
-    metamorph.literal("data", "d");
-    metamorph.literal("data", "d");
-    metamorph.literal("data", "d");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver, times(2)).literal("inEntity", "d");
-    ordered.verify(receiver).literal("inRecord", "d");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("2");
-    ordered.verify(receiver, times(2)).literal("inEntity", "d");
-    ordered.verify(receiver).literal("inRecord", "d");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
+      assertMorph(receiver,
+              "<rules>" +
+              "  <data source='data' name='inRecord'>" +
+              "    <unique />" +
+              "  </data>" +
+              "  <data source='e.data' name='inEntity'>" +
+              "    <unique in='entity' />" +
+              "  </data>" +
+              "</rules>",
+              i -> {
+                  i.startRecord("1");
+                  i.startEntity("e");
+                  i.literal("data", "d");
+                  i.literal("data", "d");
+                  i.endEntity();
+                  i.startEntity("e");
+                  i.literal("data", "d");
+                  i.literal("data", "d");
+                  i.endEntity();
+                  i.literal("data", "d");
+                  i.literal("data", "d");
+                  i.literal("data", "d");
+                  i.endRecord();
+                  i.startRecord("2");
+                  i.startEntity("e");
+                  i.literal("data", "d");
+                  i.literal("data", "d");
+                  i.endEntity();
+                  i.startEntity("e");
+                  i.literal("data", "d");
+                  i.literal("data", "d");
+                  i.endEntity();
+                  i.literal("data", "d");
+                  i.literal("data", "d");
+                  i.literal("data", "d");
+                  i.endRecord();
+              },
+              (o, f) -> {
+                  o.get().startRecord("1");
+                  f.apply(2).literal("inEntity", "d");
+                  o.get().literal("inRecord", "d");
+                  o.get().endRecord();
+                  o.get().startRecord("2");
+                  f.apply(2).literal("inEntity", "d");
+                  o.get().literal("inRecord", "d");
+                  o.get().endRecord();
+              }
+      );
   }
 
   @Test
   public void shouldAllowSelectingTheUniquePart() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <group name='name'>")
-        .with("    <group>")
-        .with("      <data source='data1' />")
-        .with("      <data source='data2' />")
-        .with("      <postprocess>")
-        .with("        <unique part='name' />")
-        .with("      </postprocess>")
-        .with("    </group>")
-        .with("  </group>")
-        .with("  <group name='value'>")
-        .with("    <group>")
-        .with("      <data source='data1' />")
-        .with("      <data source='data2' />")
-        .with("      <postprocess>")
-        .with("        <unique part='value' />")
-        .with("      </postprocess>")
-        .with("    </group>")
-        .with("  </group>")
-        .with("  <group name='both'>")
-        .with("    <group>")
-        .with("      <data source='data1' />")
-        .with("      <data source='data2' />")
-        .with("      <postprocess>")
-        .with("        <unique part='name-value' />")
-        .with("      </postprocess>")
-        .with("    </group>")
-        .with("  </group>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("data1", "d1");
-    metamorph.literal("data1", "d1");
-    metamorph.literal("data1", "d2");
-    metamorph.literal("data1", "d2");
-    metamorph.literal("data2", "d2");
-    metamorph.literal("data2", "d2");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("name", "d1");
-    ordered.verify(receiver).literal("value", "d1");
-    ordered.verify(receiver).literal("both", "d1");
-    ordered.verify(receiver).literal("value", "d2");
-    ordered.verify(receiver).literal("both", "d2");
-    ordered.verify(receiver).literal("name", "d2");
-    ordered.verify(receiver).literal("both", "d2");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
+      assertMorph(receiver,
+              "<rules>" +
+              "  <group name='name'>" +
+              "    <group>" +
+              "      <data source='data1' />" +
+              "      <data source='data2' />" +
+              "      <postprocess>" +
+              "        <unique part='name' />" +
+              "      </postprocess>" +
+              "    </group>" +
+              "  </group>" +
+              "  <group name='value'>" +
+              "    <group>" +
+              "      <data source='data1' />" +
+              "      <data source='data2' />" +
+              "      <postprocess>" +
+              "        <unique part='value' />" +
+              "      </postprocess>" +
+              "    </group>" +
+              "  </group>" +
+              "  <group name='both'>" +
+              "    <group>" +
+              "      <data source='data1' />" +
+              "      <data source='data2' />" +
+              "      <postprocess>" +
+              "        <unique part='name-value' />" +
+              "      </postprocess>" +
+              "    </group>" +
+              "  </group>" +
+              "</rules>",
+          i -> {
+              i.startRecord("1");
+              i.literal("data1", "d1");
+              i.literal("data1", "d1");
+              i.literal("data1", "d2");
+              i.literal("data1", "d2");
+              i.literal("data2", "d2");
+              i.literal("data2", "d2");
+              i.endRecord();
+          },
+          o -> {
+              o.get().startRecord("1");
+              o.get().literal("name", "d1");
+              o.get().literal("value", "d1");
+              o.get().literal("both", "d1");
+              o.get().literal("value", "d2");
+              o.get().literal("both", "d2");
+              o.get().literal("name", "d2");
+              o.get().literal("both", "d2");
+              o.get().endRecord();
+          }
+      );
   }
 
 }
