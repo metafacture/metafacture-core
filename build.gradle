@@ -68,3 +68,9 @@ subprojects {
     options.compilerArgs << '-Werror'
   }
 }
+
+task installServer(type: Copy) {
+	dependsOn(':org.metafacture.fix.ide:installDist')
+    from "org.metafacture.fix.ide/build/install/xtext-server"
+    into "vscode-extension/xtext-server"
+}
