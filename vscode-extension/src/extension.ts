@@ -19,7 +19,7 @@ export function activate(context: ExtensionContext) {
 	const executable = 'xtext-server' + executablExt;
     const command = context.asAbsolutePath(path.join('xtext-server', 'bin', executable));
     const serverOptions = { command };
-    
+
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
         // Register the server for plain text documents
@@ -31,11 +31,11 @@ export function activate(context: ExtensionContext) {
             fileEvents: workspace.createFileSystemWatcher('**/*.*')
         }
     }
-	
+
 	// Create the language client and start the client.
 	const disposable = new LanguageClient('Xtext Server', serverOptions, clientOptions).start();
-	
-	// Push the disposable to the context's subscriptions so that the 
+
+	// Push the disposable to the context's subscriptions so that the
 	// client can be deactivated on extension deactivation
 	context.subscriptions.push(disposable);
 }
