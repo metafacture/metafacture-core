@@ -98,6 +98,10 @@ public final class TestMetamorphBasics {
     private void testElseData(final String elseKeyword) {
         assertMorph(receiver,
                 "<rules>" +
+                "  <entity name='Germany'>" +
+                "    <data source='Germany.Sylt' name='Hawaii' />" +
+                "    <data source='Germany.Borkum' />" +
+                "  </entity>" +
                 "  <data source='" + elseKeyword + "'/>" +
                 "</rules>",
                 i -> {
@@ -105,6 +109,8 @@ public final class TestMetamorphBasics {
                     i.literal("Shikotan", "Aekap");
                     i.startEntity("Germany");
                     i.literal("Langeoog", "Moin");
+                    i.literal("Sylt", "Aloha");
+                    i.literal("Borkum", "Tach");
                     i.endEntity();
                     i.startEntity("Germany");
                     i.literal("Baltrum", "Moin Moin");
@@ -115,7 +121,92 @@ public final class TestMetamorphBasics {
                     o.get().startRecord("1");
                     o.get().literal("Shikotan", "Aekap");
                     o.get().literal("Germany.Langeoog", "Moin");
+                    o.get().startEntity("Germany");
+                    o.get().literal("Hawaii", "Aloha");
+                    o.get().literal("Germany.Borkum", "Tach");
+                    o.get().endEntity();
                     o.get().literal("Germany.Baltrum", "Moin Moin");
+                    o.get().endRecord();
+                }
+        );
+    }
+
+    @Test
+    public void issue338_shouldPreserveSameEntitiesInElseNestedSource() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='_elseNested' />" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("lit1", "val1");
+                    i.startEntity("ent1");
+                    i.literal("lit2", "val2");
+                    i.literal("lit3", "val3");
+                    i.endEntity();
+                    i.literal("lit4", "val4");
+                    i.startEntity("ent2");
+                    i.literal("lit5", "val5");
+                    i.literal("lit6", "val6");
+                    i.literal("lit7", "val7");
+                    i.endEntity();
+                    i.startEntity("ent2"); // sic!
+                    i.literal("lit8", "val8");
+                    i.literal("lit9", "val9");
+                    i.endEntity();
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.startEntity("ent1");
+                    i.literal("lit1", "val1");
+                    i.literal("lit2", "val2");
+                    i.endEntity();
+                    i.startEntity("ent2");
+                    i.literal("lit3", "val3");
+                    i.literal("lit4", "val4");
+                    i.literal("lit5", "val5");
+                    i.literal("lit6", "val6");
+                    i.endEntity();
+                    i.startEntity("ent3");
+                    i.literal("lit7", "val7");
+                    i.literal("lit8", "val8");
+                    i.endEntity();
+                    i.literal("lit9", "val9");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("lit1", "val1");
+                    o.get().startEntity("ent1");
+                    o.get().literal("lit2", "val2");
+                    o.get().literal("lit3", "val3");
+                    o.get().endEntity();
+                    o.get().literal("lit4", "val4");
+                    o.get().startEntity("ent2");
+                    o.get().literal("lit5", "val5");
+                    o.get().literal("lit6", "val6");
+                    o.get().literal("lit7", "val7");
+                    o.get().endEntity();
+                    o.get().startEntity("ent2");
+                    o.get().literal("lit8", "val8");
+                    o.get().literal("lit9", "val9");
+                    o.get().endEntity();
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().startEntity("ent1");
+                    o.get().literal("lit1", "val1");
+                    o.get().literal("lit2", "val2");
+                    o.get().endEntity();
+                    o.get().startEntity("ent2");
+                    o.get().literal("lit3", "val3");
+                    o.get().literal("lit4", "val4");
+                    o.get().literal("lit5", "val5");
+                    o.get().literal("lit6", "val6");
+                    o.get().endEntity();
+                    o.get().startEntity("ent3");
+                    o.get().literal("lit7", "val7");
+                    o.get().literal("lit8", "val8");
+                    o.get().endEntity();
+                    o.get().literal("lit9", "val9");
                     o.get().endRecord();
                 }
         );
@@ -147,13 +238,118 @@ public final class TestMetamorphBasics {
                     o.get().literal("Shikotan", "Aekap");
                     o.get().startEntity("Germany");
                     o.get().literal("Langeoog", "Moin");
-                    o.get().endEntity();
-                    o.get().startEntity("Germany");
                     o.get().literal("Baltrum", "Moin Moin");
                     o.get().endEntity();
                     o.get().startEntity("USA");
                     o.get().literal("Hawaii", "Aloha");
                     o.get().endEntity();
+                    o.get().endRecord();
+                }
+        );
+    }
+
+    @Test
+    public void shouldHandlePartiallyUnmatchedLiteralsAndEntitiesInElseNestedSource() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <entity name='USA1'>" +
+                "    <data source='USA1.Sylt' name='Hawaii' />" +
+                "  </entity>" +
+                "  <entity name='USA2'>" +
+                "    <data source='USA2.Sylt' name='Hawaii' />" +
+                "  </entity>" +
+                "  <entity name='USA3'>" +
+                "    <data source='USA3.Sylt' name='Hawaii' />" +
+                "  </entity>" +
+                "  <entity name='USA4'>" +
+                "    <data source='USA4.Sylt' name='Hawaii' />" +
+                "  </entity>" +
+                "  <data source='_elseNested' />" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("Shikotan", "Aekap");
+                    i.startEntity("Germany");
+                    i.literal("Langeoog", "Moin");
+                    i.literal("Baltrum", "Moin Moin");
+                    i.endEntity();
+                    i.startEntity("USA1");
+                    i.literal("Sylt", "Aloha");
+                    i.endEntity();
+                    i.startEntity("USA2");
+                    i.literal("Sylt", "Aloha");
+                    i.literal("Langeoog", "Moin");
+                    i.literal("Baltrum", "Moin Moin");
+                    i.endEntity();
+                    i.startEntity("USA3");
+                    i.literal("Langeoog", "Moin");
+                    i.literal("Sylt", "Aloha");
+                    i.literal("Baltrum", "Moin Moin");
+                    i.endEntity();
+                    i.startEntity("USA4");
+                    i.literal("Langeoog", "Moin");
+                    i.literal("Baltrum", "Moin Moin");
+                    i.literal("Sylt", "Aloha");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    final boolean coordinatesWithEntity = false;
+                    final boolean separatesFromEntity = false;
+                    o.get().startRecord("1");
+                    o.get().literal("Shikotan", "Aekap");
+                    o.get().startEntity("Germany");
+                    o.get().literal("Langeoog", "Moin");
+                    o.get().literal("Baltrum", "Moin Moin");
+                    o.get().endEntity();
+                    o.get().startEntity("USA1");
+                    o.get().literal("Hawaii", "Aloha");
+                    o.get().endEntity();
+                    o.get().startEntity("USA2");
+                    o.get().literal("Hawaii", "Aloha");
+                    if (!coordinatesWithEntity) {
+                    o.get().endEntity();
+                    o.get().startEntity("USA2");
+                    }
+                    o.get().literal("Langeoog", "Moin");
+                    o.get().literal("Baltrum", "Moin Moin");
+                    o.get().endEntity();
+                    o.get().startEntity("USA3");
+                    o.get().literal("Langeoog", "Moin");
+                    if (!coordinatesWithEntity) {
+                    o.get().startEntity("USA3");
+                    }
+                    else if (separatesFromEntity) {
+                    o.get().endEntity();
+                    o.get().startEntity("USA3");
+                    }
+                    o.get().literal("Hawaii", "Aloha");
+                    if (!coordinatesWithEntity) {
+                    o.get().endEntity();
+                    }
+                    else if (separatesFromEntity) {
+                    o.get().endEntity();
+                    o.get().startEntity("USA3");
+                    }
+                    o.get().literal("Baltrum", "Moin Moin");
+                    o.get().endEntity();
+                    o.get().startEntity("USA4");
+                    o.get().literal("Langeoog", "Moin");
+                    o.get().literal("Baltrum", "Moin Moin");
+                    if (!coordinatesWithEntity) {
+                    o.get().startEntity("USA4");
+                    }
+                    else if (separatesFromEntity) {
+                    o.get().endEntity();
+                    o.get().startEntity("USA4");
+                    }
+                    o.get().literal("Hawaii", "Aloha");
+                    if (!coordinatesWithEntity) {
+                    f.apply(2).endEntity();
+                    }
+                    else {
+                    o.get().endEntity();
+                    }
                     o.get().endRecord();
                 }
         );
