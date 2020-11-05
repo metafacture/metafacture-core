@@ -122,7 +122,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
     public Metamorph(final String morphDef, final Map<String, String> vars,
             final InterceptorFactory interceptorFactory) {
-
         this(getInputSource(morphDef), vars, interceptorFactory);
     }
 
@@ -140,7 +139,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
     public Metamorph(final Reader morphDef, final Map<String, String> vars,
             final InterceptorFactory interceptorFactory) {
-
         this(new InputSource(morphDef), vars, interceptorFactory);
     }
 
@@ -158,7 +156,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
     public Metamorph(final InputStream morphDef, final Map<String, String> vars,
             final InterceptorFactory interceptorFactory) {
-
         this(new InputSource(morphDef), vars, interceptorFactory);
     }
 
@@ -224,14 +221,16 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
     protected void registerNamedValueReceiver(final String source, final NamedValueReceiver data) {
         if (ELSE_NESTED_KEYWORD.equals(source)) {
-            this.elseNested = true;
+            elseNested = true;
         }
+
         if (ELSE_KEYWORD.equals(source) || ELSE_FLATTENED_KEYWORD.equals(source) || elseNested) {
-            if (elseSources.isEmpty())
+            if (elseSources.isEmpty()) {
                 elseSources.add(data);
-            else
-                LOG.warn(
-                        "Only one of '_else', '_elseFlattened' and '_elseNested' is allowed. Ignoring the superflous ones.");
+            }
+            else {
+                LOG.warn("Only one of '_else', '_elseFlattened' and '_elseNested' is allowed. Ignoring the superflous ones.");
+            }
         } else {
             dataRegistry.register(source, data);
         }
@@ -258,7 +257,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
     @Override
     public void endRecord() {
-
         for(final FlushListener listener: recordEndListener){
             listener.flush(recordCount, currentEntityCount);
         }
@@ -290,14 +288,12 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         dispatch(flattener.getCurrentPath(), "", null);
         currentEntityCount = entityCountStack.pop().intValue();
         flattener.endEntity();
-
     }
 
 
     @Override
     public void literal(final String name, final String value) {
         flattener.literal(name, value);
-
     }
 
     @Override

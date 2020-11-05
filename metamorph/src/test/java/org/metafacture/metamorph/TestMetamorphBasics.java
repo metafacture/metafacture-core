@@ -87,24 +87,19 @@ public final class TestMetamorphBasics {
 
     @Test
     public void shouldHandleUnmatchedLiteralsAndEntitiesInElseSource() {
-        testElseData(
-                "<rules>" +
-                "    <data source='_else'/>" +
-                "</rules>"
-        );
+        testElseData("_else");
     }
 
     @Test
     public void shouldHandleUnmatchedLiteralsAndEntitiesInElseFlattenedSource() {
-        testElseData(
-                "<rules>" +
-                "    <data source='_elseFlattened'/>" +
-                "</rules>"
-        );
+        testElseData("_elseFlattened");
     }
 
-    private void testElseData(final String morphDef) {
-        assertMorph(receiver, morphDef,
+    private void testElseData(final String elseKeyword) {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='" + elseKeyword + "'/>" +
+                "</rules>",
                 i -> {
                     i.startRecord("1");
                     i.literal("Shikotan", "Aekap");
