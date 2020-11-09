@@ -133,3 +133,22 @@ In the New > Xtext Project wizard, the language details are specified:
 As well as the project and build customization:
 
 ![Build details](docs/xtext-setup-2.png)
+
+Visual Studio Code Extension
+---------------------------
+The project `org.metafacture.fix.vsc` provides an extension for Visual Studio Code for `fix` via the language server protocol (LSP). In the current state the extension supports auto completion, simple syntax highlightning and auto closing brackets and quotes.
+
+Start extension:
+
+```
+# 1. install Visual Studio Code / alternative: VS Codium
+# 2. install Node.js (including npm)
+# 3. checkout metfacture-fix project
+# 4. in metafacture-fix execute:
+ ./gradlew installServer
+# 5. in vscode-extension execute
+ npm install
+# 6. open vscode-extension folder in Visaul Studio Code
+# 7. launch vscode extension by pressing F5 (opens new window of Visual Studio Code)
+# 8. open new file (file-ending .fix) or open existing fix-file
+```
