@@ -1,1 +1,7 @@
 language: java
+
+before_script:
+  - ./gradlew installServer
+  - cd org.metafacture.fix.vsc/
+  - npm install
+  - cd ..
