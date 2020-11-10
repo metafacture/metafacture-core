@@ -421,6 +421,114 @@ public final class TestMetamorphBasics {
         );
     }
 
+    // https://github.com/hagbeck/metafacture-sandbox/tree/master/else-nested-entities
+    @Test
+    public void shouldHandleUseCaseSandboxElseNestedEntities() {
+        assertMorph(receiver,
+                "<rules>" +
+                  "<entity name='85640' flushWith='85640.3' reset='true'>" +
+                    "<data source='85640.u' name='u'>" +
+                      "<contains string='hdl.handle.net/2003/' />" +
+                      "<replace pattern='http://' with='https://' />" +
+                    "</data>" +
+                    "<data source='85640.u' name='u'>" +
+                      "<contains string='doi.org/10.17877/' />" +
+                      "<replace pattern='http://' with='https://' />" +
+                      "<replace pattern='dx.doi.org' with='doi.org' />" +
+                    "</data>" +
+                    "<data source='85640.x' name='x' />" +
+                    "<data source='85640.3' name='3' />" +
+                  "</entity>" +
+                  "<entity name='8564 ' flushWith='8564 .3' reset='true'>" +
+                    "<data source='8564 .u' name='u'>" +
+                      "<contains string='hdl.handle.net/2003/' />" +
+                      "<replace pattern='http://' with='https://' />" +
+                    "</data>" +
+                    "<data source='8564 .u' name='u'>" +
+                      "<contains string='doi.org/10.17877/' />" +
+                      "<replace pattern='http://' with='https://' />" +
+                      "<replace pattern='dx.doi.org' with='doi.org' />" +
+                    "</data>" +
+                    "<data source='8564 .x' name='x' />" +
+                    "<data source='8564 .3' name='3' />" +
+                  "</entity>" +
+                  "<data source='_elseNested' />" +
+                "</rules>",
+                i -> {
+                    i.startRecord("ID1687931");
+                    i.literal("leader", "00564nam a2200024 c 4500");
+                    i.literal("001", "1687931");
+                    i.literal("007", "|| ||||||||||||||||||||");
+                    i.literal("008", "||||||nuuuuuuuu|||||| | |||||||||||und||");
+                    i.startEntity("035  ");
+                    i.literal("a", "(UNION_SEAL)HT019953476");
+                    i.endEntity();
+                    i.startEntity("24500");
+                    i.literal("a", "Design and analysis of an asymmetric mutation operator");
+                    i.literal("c", "Thomas Jansen and Dirk Sudholt");
+                    i.endEntity();
+                    i.startEntity("8564 ");
+                    i.literal("z", "Freie Internetressource");
+                    i.endEntity();
+                    i.startEntity("85640");
+                    i.literal("u", "http://hdl.handle.net/2003/22116");
+                    i.literal("x", "Resolving-System");
+                    i.literal("3", "Volltext");
+                    i.endEntity();
+                    i.startEntity("85640");
+                    i.literal("u", "http://dx.doi.org/10.17877/DE290R-14123");
+                    i.literal("x", "Resolving-System");
+                    i.literal("3", "Volltext");
+                    i.endEntity();
+                    i.startEntity("9801 ");
+                    i.literal("e", "HBZ");
+                    i.endEntity();
+                    i.startEntity("997  ");
+                    i.literal("a", "20190130");
+                    i.endEntity();
+                    i.startEntity("9984 ");
+                    i.literal("z", "Freie Internetressource");
+                    i.endEntity();
+                },
+                o -> {
+                    o.get().startRecord("ID1687931");
+                    o.get().literal("leader", "00564nam a2200024 c 4500");
+                    o.get().literal("001", "1687931");
+                    o.get().literal("007", "|| ||||||||||||||||||||");
+                    o.get().literal("008", "||||||nuuuuuuuu|||||| | |||||||||||und||");
+                    o.get().startEntity("035  ");
+                    o.get().literal("a", "(UNION_SEAL)HT019953476");
+                    o.get().endEntity();
+                    o.get().startEntity("24500");
+                    o.get().literal("a", "Design and analysis of an asymmetric mutation operator");
+                    o.get().literal("c", "Thomas Jansen and Dirk Sudholt");
+                    o.get().endEntity();
+                    o.get().startEntity("8564 ");
+                    o.get().literal("z", "Freie Internetressource");
+                    o.get().endEntity();
+                    o.get().startEntity("85640");
+                    o.get().literal("u", "https://hdl.handle.net/2003/22116");
+                    o.get().literal("x", "Resolving-System");
+                    o.get().literal("3", "Volltext");
+                    o.get().endEntity();
+                    o.get().startEntity("85640");
+                    o.get().literal("u", "https://doi.org/10.17877/DE290R-14123");
+                    o.get().literal("x", "Resolving-System");
+                    o.get().literal("3", "Volltext");
+                    o.get().endEntity();
+                    o.get().startEntity("9801 ");
+                    o.get().literal("e", "HBZ");
+                    o.get().endEntity();
+                    o.get().startEntity("997  ");
+                    o.get().literal("a", "20190130");
+                    o.get().endEntity();
+                    o.get().startEntity("9984 ");
+                    o.get().literal("z", "Freie Internetressource");
+                    o.get().endEntity();
+                }
+        );
+    }
+
 
     @Test
     public void shouldMatchCharacterWithQuestionMarkWildcard() {
