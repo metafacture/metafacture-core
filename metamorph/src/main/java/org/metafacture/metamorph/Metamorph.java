@@ -82,8 +82,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     private static final InterceptorFactory NULL_INTERCEPTOR_FACTORY = new NullInterceptorFactory();
     private static final Map<String, String> NO_VARS = Collections.emptyMap();
 
-    private final Registry<NamedValueReceiver> dataRegistry =
-            new WildcardRegistry<>();
+    private final Registry<NamedValueReceiver> dataRegistry = new WildcardRegistry<>();
     private final List<NamedValueReceiver> elseSources = new ArrayList<>();
 
     private final Map<String, Map<String, String>> maps = new HashMap<>();
@@ -103,7 +102,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     private boolean elseNestedEntityStarted;
     private String currentLiteralName;
     private static final Logger LOG = LoggerFactory.getLogger(Metamorph.class);
-    final private Pattern literalPatternOfEntityMarker = Pattern.compile(flattener.getEntityMarker(), Pattern.LITERAL);
+
     protected Metamorph() {
         // package private
         init();
@@ -280,6 +279,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         ++entityCount;
         currentEntityCount = entityCount;
         entityCountStack.push(Integer.valueOf(entityCount));
+
         flattener.startEntity(name);
     }
 
@@ -316,11 +316,12 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     }
 
     private void dispatch(final String path, final String value, final List<NamedValueReceiver> fallbackReceiver, final boolean endEntity) {
-        final List<NamedValueReceiver> matchingData = dataRegistry.get(path);
-        if (matchingData != null && !matchingData.isEmpty()) {
+        final List<NamedValueReceiver> matchingData = getData(path);
+
+        if (matchingData != null) {
             send(path, value, matchingData);
         }
-        else if (fallbackReceiver != null && (literalPatternOfEntityMarker.split(path).length >0 && dataRegistry.get(literalPatternOfEntityMarker.split(path)[0]).isEmpty())) {
+        else if (fallbackReceiver != null) {
             if (endEntity) {
                 if (elseNestedEntityStarted) {
                     outputStreamReceiver.endEntity();
@@ -331,17 +332,25 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
                 final String entityName = elseNested ? flattener.getCurrentEntityName() : null;
 
                 if (entityName != null) {
-                    if (!elseNestedEntityStarted) {
-                        outputStreamReceiver.startEntity(entityName);
-                        elseNestedEntityStarted = true;
+                    if (getData(entityName) == null) {
+                        if (!elseNestedEntityStarted) {
+                            outputStreamReceiver.startEntity(entityName);
+                            elseNestedEntityStarted = true;
+                        }
+
+                        send(currentLiteralName, value, fallbackReceiver);
                     }
-                    send(currentLiteralName, value, fallbackReceiver);
                 }
                 else {
                     send(path, value, fallbackReceiver);
                 }
             }
         }
+    }
+
+    private List<NamedValueReceiver> getData(final String path) {
+        final List<NamedValueReceiver> matchingData = dataRegistry.get(path);
+        return matchingData != null && !matchingData.isEmpty() ? matchingData : null;
     }
 
     private void send(final String path, final String value, final List<NamedValueReceiver> dataList) {

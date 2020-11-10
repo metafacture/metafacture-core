@@ -294,8 +294,12 @@ public final class TestMetamorphBasics {
                     i.endRecord();
                 },
                 (o, f) -> {
+                    // Pass-through coordinates with morph whether to start/end an entity
                     final boolean coordinatesWithEntity = false;
+
+                    // Pass-through and morph entities are separated (one ends when the other starts)
                     final boolean separatesFromEntity = false;
+
                     o.get().startRecord("1");
                     o.get().literal("Shikotan", "Aekap");
                     o.get().startEntity("Germany");
@@ -308,8 +312,8 @@ public final class TestMetamorphBasics {
                     o.get().startEntity("USA2");
                     o.get().literal("Hawaii", "Aloha");
                     if (!coordinatesWithEntity) {
-                    o.get().endEntity();
-                    o.get().startEntity("USA2");
+                        o.get().endEntity();
+                        o.get().startEntity("USA2");
                     }
                     o.get().literal("Langeoog", "Moin");
                     o.get().literal("Baltrum", "Moin Moin");
@@ -317,19 +321,19 @@ public final class TestMetamorphBasics {
                     o.get().startEntity("USA3");
                     o.get().literal("Langeoog", "Moin");
                     if (!coordinatesWithEntity) {
-                    o.get().startEntity("USA3");
+                        o.get().startEntity("USA3");
                     }
                     else if (separatesFromEntity) {
-                    o.get().endEntity();
-                    o.get().startEntity("USA3");
+                        o.get().endEntity();
+                        o.get().startEntity("USA3");
                     }
                     o.get().literal("Hawaii", "Aloha");
                     if (!coordinatesWithEntity) {
-                    o.get().endEntity();
+                        o.get().endEntity();
                     }
                     else if (separatesFromEntity) {
-                    o.get().endEntity();
-                    o.get().startEntity("USA3");
+                        o.get().endEntity();
+                        o.get().startEntity("USA3");
                     }
                     o.get().literal("Baltrum", "Moin Moin");
                     o.get().endEntity();
@@ -337,18 +341,18 @@ public final class TestMetamorphBasics {
                     o.get().literal("Langeoog", "Moin");
                     o.get().literal("Baltrum", "Moin Moin");
                     if (!coordinatesWithEntity) {
-                    o.get().startEntity("USA4");
+                        o.get().startEntity("USA4");
                     }
                     else if (separatesFromEntity) {
-                    o.get().endEntity();
-                    o.get().startEntity("USA4");
+                        o.get().endEntity();
+                        o.get().startEntity("USA4");
                     }
                     o.get().literal("Hawaii", "Aloha");
                     if (!coordinatesWithEntity) {
-                    f.apply(2).endEntity();
+                        f.apply(2).endEntity();
                     }
                     else {
-                    o.get().endEntity();
+                        o.get().endEntity();
                     }
                     o.get().endRecord();
                 }
@@ -356,17 +360,17 @@ public final class TestMetamorphBasics {
     }
 
     @Test
-    public void shouldNotHandleDataByElseNestedSourceIfDataBelonginToEntityIsRuledByMorph() {
+    public void shouldNotHandleDataByElseNestedSourceIfDataBelongingToEntityIsRuledByMorph() {
         assertMorph(receiver,
                 "<rules>" +
                 "  <entity name='USA1'>" +
                 "    <data source='USA1.Sylt' name='Hawaii' />" +
                 "  </entity>" +
-                "  <entity name='USA2' sameEntity='true' reset='true' flushWith='USA2' flushIncomplete='true'>" +
+                "  <entity name='USA2' sameEntity='true' flushWith='USA2'>" +
                 "    <data source='USA2.Sylt' name='Hawaii' />" +
                 "    <data source='USA2.Langeoog' name='Langeoog' />" +
                 "  </entity>" +
-                "  <entity name='USA3' sameEntity='true' reset='true' flushWith='USA3' flushIncomplete='true'>" +
+                "  <entity name='USA3' sameEntity='true' flushWith='USA3'>" +
                 "    <data source='USA3.Sylt' name='Hawaii' />" +
                 "  </entity>" +
                 "  <data source='_elseNested' />" +
@@ -395,7 +399,7 @@ public final class TestMetamorphBasics {
                     i.endEntity();
                     i.endRecord();
                 },
-                (o, f) -> {
+                o -> {
                     o.get().startRecord("1");
                     o.get().literal("Shikotan", "Aekap");
                     o.get().startEntity("Germany");
