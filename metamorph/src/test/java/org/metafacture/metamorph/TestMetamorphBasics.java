@@ -356,6 +356,69 @@ public final class TestMetamorphBasics {
     }
 
     @Test
+    public void shouldNotHandleDataByElseNestedSourceIfDataBelonginToEntityIsRuledByMorph() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <entity name='USA1'>" +
+                "    <data source='USA1.Sylt' name='Hawaii' />" +
+                "  </entity>" +
+                "  <entity name='USA2' sameEntity='true' reset='true' flushWith='USA2' flushIncomplete='true'>" +
+                "    <data source='USA2.Sylt' name='Hawaii' />" +
+                "    <data source='USA2.Langeoog' name='Langeoog' />" +
+                "  </entity>" +
+                "  <entity name='USA3' sameEntity='true' reset='true' flushWith='USA3' flushIncomplete='true'>" +
+                "    <data source='USA3.Sylt' name='Hawaii' />" +
+                "  </entity>" +
+                "  <data source='_elseNested' />" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("Shikotan", "Aekap");
+                    i.startEntity("Germany");
+                    i.literal("Langeoog", "Moin");
+                    i.literal("Baltrum", "Moin Moin");
+                    i.endEntity();
+                    i.startEntity("USA1");
+                    i.literal("Sylt", "Aloha");
+                    i.endEntity();
+                    i.startEntity("USA2");
+                    i.literal("Sylt", "Aloha");
+                    i.literal("Langeoog", "Moin");
+                    i.literal("Baltrum", "Moin Moin");
+                    i.endEntity();
+                    i.startEntity("USA2");
+                    i.literal("Langeoog", "Moin");
+                    i.literal("Baltrum", "Moin Moin");
+                    i.endEntity();
+                    i.startEntity("USA3");
+                    i.literal("Baltrum", "Moin Moin");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    o.get().startRecord("1");
+                    o.get().literal("Shikotan", "Aekap");
+                    o.get().startEntity("Germany");
+                    o.get().literal("Langeoog", "Moin");
+                    o.get().literal("Baltrum", "Moin Moin");
+                    o.get().endEntity();
+                    o.get().startEntity("USA1");
+                    o.get().literal("Hawaii", "Aloha");
+                    o.get().endEntity();
+                    o.get().startEntity("USA2");
+                    o.get().literal("Hawaii", "Aloha");
+                    o.get().literal("Langeoog", "Moin");
+                    o.get().endEntity();
+                    o.get().startEntity("USA2");
+                    o.get().literal("Langeoog", "Moin");
+                    o.get().endEntity();
+                    o.get().endRecord();
+                }
+        );
+    }
+
+
+    @Test
     public void shouldMatchCharacterWithQuestionMarkWildcard() {
         assertMorph(receiver,
                 "<rules>" +
