@@ -140,15 +140,14 @@ The project `org.metafacture.fix.vsc` provides an extension for Visual Studio Co
 
 Start extension:
 
-```
-# 1. install Visual Studio Code / alternative: VS Codium
-# 2. install Node.js (including npm)
-# 3. checkout metfacture-fix project
-# 4. in metafacture-fix execute:
- ./gradlew installServer
-# 5. in vscode-extension execute
- npm install
-# 6. open vscode-extension folder in Visaul Studio Code
-# 7. launch vscode extension by pressing F5 (opens new window of Visual Studio Code)
-# 8. open new file (file-ending .fix) or open existing fix-file
-```
+1. Install Visual Studio Code / alternative: VS Codium
+2. Install Node.js (including npm)
+3. Checkout metfacture-fix project
+4. In metafacture-fix execute:
+Unix: `./gradlew installServer`
+Windows: `.\gradlew.bat installServer`
+5. In org.metafacture.fix.vsc execute (tip: if you use windows, install cygwin to execute npm commands):
+`npm install`
+6. Open org.metafacture.fix.vsc in Visaul Studio Code
+7. Launch vscode extension by pressing F5 (opens new window of Visual Studio Code)
+8. Open new file (file-ending .fix) or open existing fix-file
