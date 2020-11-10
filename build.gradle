@@ -9,7 +9,9 @@ editorconfig {
     '**/xtext-gen',
     '**/bin',
     '**/.*',
-    'gradlew*'
+    'gradlew*',
+    '**/out',
+    '**/node_modules'
   ]
 }
 
