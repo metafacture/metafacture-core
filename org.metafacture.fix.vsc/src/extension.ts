@@ -14,9 +14,9 @@ import { workspace, Disposable, ExtensionContext } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient';
 
 export function activate(context: ExtensionContext) {
-	// The server is a locally installed Java application
+    // The server is a locally installed Java application
     const executablExt = process.platform == 'win32' ? '.bat' : '';
-	const executable = 'xtext-server' + executablExt;
+    const executable = 'xtext-server' + executablExt;
     const command = context.asAbsolutePath(path.join('xtext-server', 'bin', executable));
     const serverOptions = { command };
 
@@ -32,10 +32,10 @@ export function activate(context: ExtensionContext) {
         }
     }
 
-	// Create the language client and start the client.
-	const disposable = new LanguageClient('Xtext Server', serverOptions, clientOptions).start();
+    // Create the language client and start the client.
+    const disposable = new LanguageClient('Xtext Server', serverOptions, clientOptions).start();
 
-	// Push the disposable to the context's subscriptions so that the
-	// client can be deactivated on extension deactivation
-	context.subscriptions.push(disposable);
+    // Push the disposable to the context's subscriptions so that the
+    // client can be deactivated on extension deactivation
+    context.subscriptions.push(disposable);
 }
