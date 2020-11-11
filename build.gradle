@@ -9,7 +9,9 @@ editorconfig {
     '**/xtext-gen',
     '**/bin',
     '**/.*',
-    'gradlew*'
+    'gradlew*',
+    '**/out',
+    '**/node_modules'
   ]
 }
 
@@ -67,4 +69,10 @@ subprojects {
 
     options.compilerArgs << '-Werror'
   }
+}
+
+task installServer(type: Copy) {
+	dependsOn(':org.metafacture.fix.ide:installDist')
+    from "org.metafacture.fix.ide/build/install/xtext-server"
+    into "org.metafacture.fix.vsc/xtext-server"
 }

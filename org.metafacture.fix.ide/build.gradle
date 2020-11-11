@@ -13,6 +13,7 @@ apply plugin: 'application'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 mainClassName = 'org.eclipse.xtext.ide.server.ServerLauncher'
+applicationName = 'xtext-server'
 
 shadowJar {
   from(project.convention.getPlugin(JavaPluginConvention).sourceSets.main.output)
