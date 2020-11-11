@@ -5,7 +5,7 @@
 <module name="Checker">
     <module name="SuppressionSingleFilter">
         <property name="checks" value=".*"/>
-        <property name="files" value="/xtext-gen/"/>
+        <property name="files" value="xtext-gen"/>
     </module>
     <module name="TreeWalker">
         <module name="AbstractClassName"/>
