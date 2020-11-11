@@ -25,6 +25,10 @@ This repo contains an Xtext web project with a basic Fix grammar, which generate
 Setup
 -----
 
+If you're using Windows, configure git option core.autocrlf before cloning repository:
+`git config core.autocrlf false`
+Otherwise git will change all line endings to Windows crlf when you check out code (and vice versa) but that will lead to failures with gradle's check task.
+
 Go to the Git repository root:
 
 `cd metafacture-fix/`
