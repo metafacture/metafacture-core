@@ -14,7 +14,45 @@
 			<key>name</key>
 			<string>keyword.control.fix</string>
 			<key>match</key>
-			<string>\b(type|string|int|boolean|do|if|elsif|else)\b</string>
+			<string>\b(do|if|elsif|else|end)\b</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>entity.name.type.fix</string>
+			<key>match</key>
+			<string>\b(type|string|int|boolean)\b</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>comment.line.number-sign</string>
+			<key>begin</key>
+			<string>#</string>
+			<key>end</key>
+			<string>$</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>comment.block</string>
+			<key>begin</key>
+			<string>/\*</string>
+			<key>end</key>
+			<string>\*/</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>string.quoted.single</string>
+			<key>begin</key>
+			<string>'</string>
+			<key>end</key>
+			<string>'</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>string.quoted.double</string>
+			<key>begin</key>
+			<string>"</string>
+			<key>end</key>
+			<string>"</string>
 		</dict>
 	</array>
 	<key>scopeName</key>
