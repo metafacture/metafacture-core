@@ -18,6 +18,12 @@
 		</dict>
 		<dict>
 			<key>name</key>
+			<string>entity.name.function</string>
+			<key>match</key>
+			<string>\b(regexp|substring|compose|lookup|whitelist|blacklist|replace|isbn|equals|not_equals|contains|not_contains|case|htmlanchor|trim|normalize_utf8|urlencode|split|occurrence|constant|count|buffer|switch_name_value|unique|script|setreplace|timestamp|dateformat|map|add_field)\b</string>
+		</dict>
+		<dict>
+			<key>name</key>
 			<string>entity.name.type.fix</string>
 			<key>match</key>
 			<string>\b(type|string|int|boolean)\b</string>
