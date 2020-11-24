@@ -870,6 +870,19 @@ public class MetafixDslTest {
     }
 
     @Test
+    public void shouldNotFeedbackJsonLdKeywords() {
+        final Metafix metafix = fix(
+                "map(_else)"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("@id", LITERAL_HAWAII);
+        metafix.endRecord();
+
+        Mockito.verify(streamReceiver).literal("@id", LITERAL_HAWAII);
+    }
+
+    @Test
     @Disabled("Fix syntax")
     public void shouldReplaceVariables() {
         final Metafix metafix = fix(

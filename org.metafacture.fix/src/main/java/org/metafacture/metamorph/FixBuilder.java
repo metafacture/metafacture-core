@@ -50,6 +50,8 @@ import java.util.regex.Pattern;
  *
  */
 public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
+
+    static final String ARRAY_MARKER = "[]";
     private static final String FLUSH_WITH = "flushWith";
     private static final String RECORD = "record";
     private final Deque<StackFrame> stack = new LinkedList<>();
@@ -91,7 +93,7 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
                 collect = createEntity(firstParam);
                 break;
             case "array":
-                collect = createEntity(firstParam + "[]");
+                collect = createEntity(firstParam + ARRAY_MARKER);
                 break;
             case "map":
                 final NamedValuePipe enterDataMap = enterDataMap(params, false);
