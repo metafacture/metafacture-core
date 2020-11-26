@@ -106,6 +106,7 @@ public final class TestMetamorphBasics {
                 "</rules>",
                 i -> {
                     i.startRecord("1");
+                    i.literal("@id", "123");
                     i.literal("Shikotan", "Aekap");
                     i.startEntity("Germany");
                     i.literal("Langeoog", "Moin");
@@ -113,18 +114,21 @@ public final class TestMetamorphBasics {
                     i.literal("Borkum", "Tach");
                     i.endEntity();
                     i.startEntity("Germany");
+                    i.literal("@foo", "bar");
                     i.literal("Baltrum", "Moin Moin");
                     i.endEntity();
                     i.endRecord();
                 },
                 o -> {
                     o.get().startRecord("1");
+                    o.get().literal("@id", "123");
                     o.get().literal("Shikotan", "Aekap");
                     o.get().literal("Germany.Langeoog", "Moin");
                     o.get().startEntity("Germany");
                     o.get().literal("Hawaii", "Aloha");
                     o.get().literal("Germany.Borkum", "Tach");
                     o.get().endEntity();
+                    o.get().literal("Germany.@foo", "bar");
                     o.get().literal("Germany.Baltrum", "Moin Moin");
                     o.get().endRecord();
                 }
@@ -223,8 +227,10 @@ public final class TestMetamorphBasics {
                 "</rules>",
                 i -> {
                     i.startRecord("1");
+                    i.literal("@id", "123");
                     i.literal("Shikotan", "Aekap");
                     i.startEntity("Germany");
+                    i.literal("@foo", "bar");
                     i.literal("Langeoog", "Moin");
                     i.literal("Baltrum", "Moin Moin");
                     i.endEntity();
@@ -235,8 +241,10 @@ public final class TestMetamorphBasics {
                 },
                 o -> {
                     o.get().startRecord("1");
+                    o.get().literal("@id", "123");
                     o.get().literal("Shikotan", "Aekap");
                     o.get().startEntity("Germany");
+                    o.get().literal("@foo", "bar");
                     o.get().literal("Langeoog", "Moin");
                     o.get().literal("Baltrum", "Moin Moin");
                     o.get().endEntity();

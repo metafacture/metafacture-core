@@ -338,11 +338,11 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
                             elseNestedEntityStarted = true;
                         }
 
-                        send(currentLiteralName, value, fallbackReceiver);
+                        send(escapeFeedbackChar(currentLiteralName), value, fallbackReceiver);
                     }
                 }
                 else {
-                    send(path, value, fallbackReceiver);
+                    send(escapeFeedbackChar(path), value, fallbackReceiver);
                 }
             }
         }
@@ -361,6 +361,14 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
                 errorHandler.error(e);
             }
         }
+    }
+
+    private boolean startsWithFeedbackChar(final String name) {
+        return name.length() != 0 && name.charAt(0) == FEEDBACK_CHAR;
+    }
+
+    private String escapeFeedbackChar(final String name) {
+        return name == null ? null : (startsWithFeedbackChar(name) ? ESCAPE_CHAR : "") + name;
     }
 
     /**
@@ -388,7 +396,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
                     "encountered literal with name='null'. This indicates a bug in a function or a collector.");
         }
 
-        if (name.length() != 0 && name.charAt(0) == FEEDBACK_CHAR) {
+        if (startsWithFeedbackChar(name)) {
             dispatch(name, value, null, false);
             return;
         }
