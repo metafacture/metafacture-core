@@ -56,6 +56,14 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
         resetRecordCount();
     }
 
+    public void setAllowComments(final boolean allowComments) {
+        jsonFactory.configure(JsonParser.Feature.ALLOW_COMMENTS, allowComments);
+    }
+
+    public boolean getAllowComments() {
+        return jsonFactory.isEnabled(JsonParser.Feature.ALLOW_COMMENTS);
+    }
+
     public void setArrayMarker(final String arrayMarker) {
         this.arrayMarker = arrayMarker;
     }
