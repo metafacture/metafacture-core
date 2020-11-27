@@ -19,6 +19,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -194,6 +195,49 @@ public final class JsonDecoderTest {
         exception.expectMessage("Unrecognized token 'XXX'");
 
         jsonDecoder.process("{\"lit\":\"value\"}XXX");
+    }
+
+    @Test
+    public void testShouldNotParseComments() {
+        exception.expect(MetafactureException.class);
+        exception.expectMessage("Unexpected character ('/' (code 47))");
+
+        Assert.assertFalse(jsonDecoder.getAllowComments());
+
+        jsonDecoder.process("//{\"lit\":\"value\"}");
+    }
+
+    @Test
+    public void testShouldParseCommentsIfEnabled() {
+        jsonDecoder.setAllowComments(true);
+        Assert.assertTrue(jsonDecoder.getAllowComments());
+
+        jsonDecoder.process("//{\"lit\":\"value\"}");
+
+        verifyZeroInteractions(receiver);
+    }
+
+    @Test
+    public void testShouldNotParseInlineComments() {
+        exception.expect(MetafactureException.class);
+        exception.expectMessage("Unexpected character ('/' (code 47))");
+
+        Assert.assertFalse(jsonDecoder.getAllowComments());
+
+        jsonDecoder.process("{\"lit\":/*comment*/\"value\"}");
+    }
+
+    @Test
+    public void testShouldParseInlineCommentsIfEnabled() {
+        jsonDecoder.setAllowComments(true);
+        Assert.assertTrue(jsonDecoder.getAllowComments());
+
+        jsonDecoder.process("{\"lit\":/*comment*/\"value\"}");
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("lit", "value");
+        ordered.verify(receiver).endRecord();
     }
 
 }
