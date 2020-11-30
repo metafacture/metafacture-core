@@ -14,7 +14,67 @@
 			<key>name</key>
 			<string>keyword.control.fix</string>
 			<key>match</key>
-			<string>\b(type|string|int|boolean|do|if|elsif|else)\b</string>
+			<string>\b(do|if|elsif|else|end)\b</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>entity.name.function.morph-collectors</string>
+			<key>match</key>
+			<string>\b(all|any|combine|choose|group|concat|none|tuples|square|range|equalsFilter|entity)\b</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>entity.name.function.morph-functions</string>
+			<key>match</key>
+			<string>\b(regexp|substring|compose|lookup|whitelist|blacklist|replace|isbn|equals|not_equals|contains|not_contains|case|htmlanchor|trim|normalize_utf8|urlencode|split|occurence|constant|count|buffer|switch_name_value|unique|script|setreplace|timestamp|dateformat)\b</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>entity.name.function.morph-maps</string>
+			<key>match</key>
+			<string>\b(filemap|restmap|sqlmap|jndisqlmap)\b</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>entity.name.function.fix-functions</string>
+			<key>match</key>
+			<string>\b(map|add_field|lookup|array|replace_all)\b</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>variable.parameter.morph-collector-parameters</string>
+			<key>match</key>
+			<string>\b(flushWith|reset|sameEntity|delimiter|name|prefix|postfix|minN|pattern|in|with):</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>entity.name.type.fix</string>
+			<key>match</key>
+			<string>\b(type|string|int|boolean)\b</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>comment.block</string>
+			<key>begin</key>
+			<string>/\*</string>
+			<key>end</key>
+			<string>\*/</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>string.quoted.single</string>
+			<key>begin</key>
+			<string>'</string>
+			<key>end</key>
+			<string>'</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>string.quoted.double</string>
+			<key>begin</key>
+			<string>"</string>
+			<key>end</key>
+			<string>"</string>
 		</dict>
 	</array>
 	<key>scopeName</key>
