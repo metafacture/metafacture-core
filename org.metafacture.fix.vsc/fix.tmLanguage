@@ -18,12 +18,6 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>entity.name.function.flux-commands</string>
-			<key>match</key>
-			<string>\b(morph|filter)\b</string>
-		</dict>
-		<dict>
-			<key>name</key>
 			<string>entity.name.function.morph-collectors</string>
 			<key>match</key>
 			<string>\b(all|any|combine|choose|group|concat|none|tuples|square|range|equalsFilter|entity)\b</string>
