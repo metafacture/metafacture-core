@@ -50,6 +50,9 @@ public class MetafixDslTest {
     private static final String LITERAL_B = "lit-B";
     private static final String LITERAL_HAWAII = "Hawaii";
     private static final String LITERAL_MOIN = "Moin";
+    private static final String LITERAL_MOIN_MOIN = "Moin Moin";
+    private static final String LITERAL_LANGEOOG = "Langeoog";
+    private static final String LITERAL_BALTRUM = "Baltrum";
 
     @RegisterExtension
     private MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -419,16 +422,16 @@ public class MetafixDslTest {
         );
 
         metafix.startRecord("1");
-        metafix.literal("Langeoog", LITERAL_MOIN);
+        metafix.literal(LITERAL_LANGEOOG, LITERAL_MOIN);
         metafix.literal("Sylt", LITERAL_ALOHA);
-        metafix.literal("Baltrum", "Moin Moin");
+        metafix.literal(LITERAL_BALTRUM, LITERAL_MOIN_MOIN);
         metafix.endRecord();
 
         final InOrder ordered = Mockito.inOrder(streamReceiver);
         ordered.verify(streamReceiver).startRecord("1");
-        ordered.verify(streamReceiver).literal("Langeoog", LITERAL_MOIN);
+        ordered.verify(streamReceiver).literal(LITERAL_LANGEOOG, LITERAL_MOIN);
         ordered.verify(streamReceiver).literal(LITERAL_HAWAII, LITERAL_ALOHA);
-        ordered.verify(streamReceiver).literal("Baltrum", "Moin Moin");
+        ordered.verify(streamReceiver).literal(LITERAL_BALTRUM, LITERAL_MOIN_MOIN);
         ordered.verify(streamReceiver).endRecord();
         ordered.verifyNoMoreInteractions();
     }
@@ -880,6 +883,39 @@ public class MetafixDslTest {
         metafix.endRecord();
 
         Mockito.verify(streamReceiver).literal("@id", LITERAL_HAWAII);
+    }
+
+    @Test
+    public void shouldNotFeedbackJsonLdKeywordsNested() {
+        final Metafix metafix = fix(
+                "do entity('USA')",
+                "  map('USA.Sylt', 'Hawaii')",
+                "end",
+                "map(_elseNested)"
+        );
+
+        metafix.startRecord("1");
+        metafix.literal("Shikotan", "Aekap");
+        metafix.startEntity("Germany");
+        metafix.literal(LITERAL_LANGEOOG, LITERAL_MOIN);
+        metafix.literal(LITERAL_BALTRUM, LITERAL_MOIN_MOIN);
+        metafix.endEntity();
+        metafix.startEntity("USA");
+        metafix.literal("Sylt", LITERAL_ALOHA);
+        metafix.endEntity();
+        metafix.endRecord();
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver).literal("Shikotan", "Aekap");
+        ordered.verify(streamReceiver).startEntity("Germany");
+        ordered.verify(streamReceiver).literal(LITERAL_LANGEOOG, "Moin");
+        ordered.verify(streamReceiver).literal(LITERAL_BALTRUM, LITERAL_MOIN_MOIN);
+        ordered.verify(streamReceiver).endEntity();
+        ordered.verify(streamReceiver).startEntity("USA");
+        ordered.verify(streamReceiver).literal("Hawaii", "Aloha");
+        ordered.verify(streamReceiver).endEntity();
+        ordered.verify(streamReceiver).endRecord();
     }
 
     @Test
