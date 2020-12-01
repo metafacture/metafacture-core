@@ -57,7 +57,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
@@ -90,12 +89,6 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
 
     private static final InterceptorFactory NULL_INTERCEPTOR_FACTORY = new NullInterceptorFactory();
     private static final Map<String, String> NO_VARS = Collections.emptyMap();
-
-    // See https://www.w3.org/TR/json-ld11/#keywords
-    private static final List<String> JSONLD_KEYWORDS = Arrays.asList(
-            "@base", "@container", "@context", "@direction", "@graph", "@id", "@import", "@included", "@index", "@json",
-            "@language", "@list", "@nest", "@none", "@prefix", "@propagate", "@protected", "@reverse", "@set", "@type",
-            "@value", "@version", "@vocab");
 
     // warning: auxiliary class WildcardRegistry in WildcardDataRegistry.java should not be accessed from outside its own source file
     //private final Registry<NamedValueReceiver> dataRegistry = new WildcardRegistry<>();
@@ -372,11 +365,11 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
                             elseNestedEntityStarted = true;
                         }
 
-                        send(currentLiteralName, value, fallback);
+                        send(escapeFeedbackChar(currentLiteralName), value, fallback);
                     }
                 }
                 else {
-                    send(path, value, fallback);
+                    send(escapeFeedbackChar(path), value, fallback);
                 }
             }
         }
@@ -417,9 +410,8 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
             throw new IllegalArgumentException(
                     "encountered literal with name='null'. This indicates a bug in a function or a collector.");
         }
-        final int end = Math.min(name.indexOf(flattener.getEntityMarker()), name.indexOf(FixBuilder.ARRAY_MARKER));
-        final String firstNameSegment = end == -1 ? name : name.substring(0, end);
-        if (name.length() != 0 && name.charAt(0) == FEEDBACK_CHAR && !JSONLD_KEYWORDS.contains(firstNameSegment)) {
+
+        if (startsWithFeedbackChar(name)) {
             dispatch(name, value, null, false);
             return;
         }
@@ -434,6 +426,14 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         }
 
         outputStreamReceiver.literal(unescapedName, value);
+    }
+
+    private boolean startsWithFeedbackChar(final String name) {
+        return name.length() != 0 && name.charAt(0) == FEEDBACK_CHAR;
+    }
+
+    private String escapeFeedbackChar(final String name) {
+        return name == null ? null : (startsWithFeedbackChar(name) ? ESCAPE_CHAR : "") + name;
     }
 
     @Override
