@@ -1,9 +1,9 @@
 {
     "name": "fix",
     "displayName": "fix",
-    "description": "Fix Language Support (Xtext Language Server for Fix)",
+    "description": "Language Support for Metafacture Fix (Xtext Language Server for Metafacture Fix). For more information, visit https://metafacture.org",
     "version": "0.0.1",
-    "publisher": "katauber",
+    "publisher": "metafacture",
     "engines": {
         "vscode": "^1.18.0"
     },
@@ -47,5 +47,9 @@
     },
     "dependencies": {
         "vscode-languageclient": "^3.0.3"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/metafacture/metafacture-fix.git"
     }
 }
