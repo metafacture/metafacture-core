@@ -37,7 +37,7 @@ Run the tests (in `org.metafacture.fix/src/test/java`) and checks (`.editorconfi
 The project `org.metafacture.fix.vsc` provides an extension for Visual Studio Code / Codium for `fix` via the language server protocol (LSP). In the current state the extension supports auto completion, simple syntax highlighting and auto closing brackets and quotes. This project was created using this [tutorial](https://www.typefox.io/blog/building-a-vs-code-extension-with-xtext-and-the-language-server-protocol) and the corresponding [example](https://github.com/TypeFox/languageserver-example).
 
 
-Start extension (in development mode, starting a second code/codium instance):
+Start extension:
 
 1. Install Visual Studio Code / alternative: VS Codium
 2. Install Node.js (including npm)
@@ -47,20 +47,20 @@ Windows: `.\gradlew.bat installServer`
 4. In org.metafacture.fix.vsc execute (tip: if you use windows, install cygwin to execute npm commands):
 `npm install`
 
-To start the extension in development mode, follow A. To create an vsix file to install the extension permanently follow B.
+To start the extension in development mode (starting a second code/codium instance), follow A. To create an vsix file to install the extension permanently follow B.
 
 A:
-5. Open org.metafacture.fix.vsc in Visual Studio Code / Codium
-6. Launch vscode extension by pressing F5 (opens new window of Visual Studio Code)
-7. Open new file (file-ending .fix) or open existing fix-file (see sample below)
+1. Open org.metafacture.fix.vsc in Visual Studio Code / Codium
+2. Launch vscode extension by pressing F5 (opens new window of Visual Studio Code)
+3. Open new file (file-ending .fix) or open existing fix-file (see sample below)
 
 B:
-5. Install vsce: `npm install -g vsce`
-6. In org.metafacture.fix.vsc execute: `vsce package`
+1. Install vsce: `npm install -g vsce`
+2. In org.metafacture.fix.vsc execute: `vsce package`
 vsce will create a vsix file in the vsc directory which can be used for installation:
-7. Open VS Code / Codium
-8. Click 'Extensions' section
-9. Click menu bar and choose 'Install from VSIX...'
+3. Open VS Code / Codium
+4. Click 'Extensions' section
+5. Click menu bar and choose 'Install from VSIX...'
 
 
 
