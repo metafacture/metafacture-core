@@ -41,7 +41,8 @@ public final class SimpleRegexTrieTest {
     public void testWithEmptyCharacterClass() {
         final SimpleRegexTrie<String> trie = new SimpleRegexTrie<String>();
         // Should not be treated as character class (used for JSON arrays):
-        trie.put("a[].1", "value");
-        assertTrue("Expecting to find: a[].1", trie.get("a[].1").size() == 1);
+        final String key = "a[].1.b[].1";
+        trie.put(key, "value");
+        assertTrue("Expecting to find: " + key, trie.get(key).size() == 1);
     }
 }

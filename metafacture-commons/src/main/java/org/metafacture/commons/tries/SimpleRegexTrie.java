@@ -28,8 +28,11 @@ import java.util.List;
  */
 public class SimpleRegexTrie<P> {
 
+    // Non-empty character class, containing non-[] characters, e.g.
+    // matches: `lit-[A]`, `lit-[AB]`, does not match: `a[].1`, `a[].1.b[].1`
+    public static final String SIMPLE_CHARACTER_CLASS = ".*\\[[^\\[\\]]+\\].*";
+
     private final WildcardTrie<P> trie;
-    public static final String SIMPLE_CHARACTER_CLASS = "\\[.+\\]";
 
     public SimpleRegexTrie() {
         trie = new WildcardTrie<P>();
@@ -43,7 +46,7 @@ public class SimpleRegexTrie<P> {
      * @param value value to associate with the key pattern
      */
     public void put(final String keys, final P value) {
-        if (keys.matches(".*" + SIMPLE_CHARACTER_CLASS + ".*")) {
+        if (keys.matches(SIMPLE_CHARACTER_CLASS)) {
             int charClassStart = keys.indexOf('[', 0);
             final int charClassEnd = keys.indexOf(']', 1);
             String begin = keys.substring(0, charClassStart);
