@@ -21,9 +21,12 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.ForwardingStreamPipe;
 
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+
 /**
- * Replaces null values with replacement string, or, if replacement
- * string is null (default), discards null values entirely.
+ * Replaces "null" values with replacement string, or, if replacement
+ * string is null (default), discards them entirely.
  *
  * @author Jens Wille
  *
@@ -33,7 +36,20 @@ import org.metafacture.framework.helpers.ForwardingStreamPipe;
 @Out(StreamReceiver.class)
 public final class NullFilter extends ForwardingStreamPipe {
 
+    private String pattern = null;
+
+    private Predicate<String> predicate = v -> false;
+
     private String replacement = null;
+
+    public void setPattern(final String pattern) {
+        this.pattern = pattern;
+        this.predicate = Pattern.compile(pattern).asPredicate();
+    }
+
+    public String getPattern() {
+        return pattern;
+    }
 
     public void setReplacement(final String replacement) {
         this.replacement = replacement;
@@ -45,7 +61,7 @@ public final class NullFilter extends ForwardingStreamPipe {
 
     @Override
     public void literal(final String name, final String value) {
-        if (value != null) {
+        if (value != null && !predicate.test(value)) {
             getReceiver().literal(name, value);
         } else if (replacement != null) {
             getReceiver().literal(name, replacement);

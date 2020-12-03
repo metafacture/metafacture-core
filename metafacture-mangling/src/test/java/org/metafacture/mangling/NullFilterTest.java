@@ -16,6 +16,7 @@
 package org.metafacture.mangling;
 
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.After;
@@ -37,6 +38,7 @@ public final class NullFilterTest {
     private static final String RECORD_ID = "id";
     private static final String ENTITY_NAME = "entity-name";
     private static final String LITERAL_NAME = "literal-name";
+    private static final String LITERAL_NULL = "literal-NULL";
     private static final String LITERAL_VALUE = "literal-value";
 
     private NullFilter nullFilter;
@@ -79,6 +81,54 @@ public final class NullFilterTest {
         nullFilter.startRecord(RECORD_ID);
         nullFilter.startEntity(ENTITY_NAME);
         nullFilter.literal(LITERAL_NAME, LITERAL_VALUE);
+        nullFilter.literal(LITERAL_NAME, LITERAL_NULL);
+        nullFilter.literal(LITERAL_NAME, null);
+        nullFilter.endEntity();
+        nullFilter.endRecord();
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(RECORD_ID);
+        ordered.verify(receiver).startEntity(ENTITY_NAME);
+        ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
+        ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_NULL);
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+
+        verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
+    public void shouldReplaceNullValues() {
+        nullFilter.setReplacement("replacement");
+
+        nullFilter.startRecord(RECORD_ID);
+        nullFilter.startEntity(ENTITY_NAME);
+        nullFilter.literal(LITERAL_NAME, LITERAL_VALUE);
+        nullFilter.literal(LITERAL_NAME, LITERAL_NULL);
+        nullFilter.literal(LITERAL_NAME, null);
+        nullFilter.endEntity();
+        nullFilter.endRecord();
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord(RECORD_ID);
+        ordered.verify(receiver).startEntity(ENTITY_NAME);
+        ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
+        ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_NULL);
+        ordered.verify(receiver).literal(LITERAL_NAME, "replacement");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+
+        verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
+    public void shouldDiscardNullValuesByPattern() {
+        nullFilter.setPattern("NULL");
+
+        nullFilter.startRecord(RECORD_ID);
+        nullFilter.startEntity(ENTITY_NAME);
+        nullFilter.literal(LITERAL_NAME, LITERAL_VALUE);
+        nullFilter.literal(LITERAL_NAME, LITERAL_NULL);
         nullFilter.literal(LITERAL_NAME, null);
         nullFilter.endEntity();
         nullFilter.endRecord();
@@ -94,12 +144,14 @@ public final class NullFilterTest {
     }
 
     @Test
-    public void shouldReplaceNullValues() {
+    public void shouldReplaceNullValuesByPattern() {
+        nullFilter.setPattern("NULL");
         nullFilter.setReplacement("replacement");
 
         nullFilter.startRecord(RECORD_ID);
         nullFilter.startEntity(ENTITY_NAME);
         nullFilter.literal(LITERAL_NAME, LITERAL_VALUE);
+        nullFilter.literal(LITERAL_NAME, LITERAL_NULL);
         nullFilter.literal(LITERAL_NAME, null);
         nullFilter.endEntity();
         nullFilter.endRecord();
@@ -108,7 +160,7 @@ public final class NullFilterTest {
         ordered.verify(receiver).startRecord(RECORD_ID);
         ordered.verify(receiver).startEntity(ENTITY_NAME);
         ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
-        ordered.verify(receiver).literal(LITERAL_NAME, "replacement");
+        ordered.verify(receiver, times(2)).literal(LITERAL_NAME, "replacement");
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).endRecord();
 
