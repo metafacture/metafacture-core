@@ -37,7 +37,7 @@ Run the tests (in `org.metafacture.fix/src/test/java`) and checks (`.editorconfi
 The project `org.metafacture.fix.vsc` provides an extension for Visual Studio Code / Codium for `fix` via the language server protocol (LSP). In the current state the extension supports auto completion, simple syntax highlighting and auto closing brackets and quotes. This project was created using this [tutorial](https://www.typefox.io/blog/building-a-vs-code-extension-with-xtext-and-the-language-server-protocol) and the corresponding [example](https://github.com/TypeFox/languageserver-example).
 
 
-Start extension:
+Build extension:
 
 1. Install Visual Studio Code / alternative: VS Codium
 2. Install Node.js (including npm)
@@ -49,12 +49,12 @@ Windows: `.\gradlew.bat installServer`
 
 To start the extension in development mode (starting a second code/codium instance), follow A. To create an vsix file to install the extension permanently follow B.
 
-A:
+A) Run in dev mode:
 1. Open org.metafacture.fix.vsc in Visual Studio Code / Codium
 2. Launch vscode extension by pressing F5 (opens new window of Visual Studio Code)
 3. Open new file (file-ending .fix) or open existing fix-file (see sample below)
 
-B:
+B) Install vsix file:
 1. Install vsce: `npm install -g vsce`
 2. In org.metafacture.fix.vsc execute: `vsce package`
 vsce will create a vsix file in the vsc directory which can be used for installation:
