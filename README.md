@@ -1,33 +1,26 @@
-About
------
+# About
 
-This is early work in progress towards an implementation of the Fix language for Metafacture as an alternative to configuring data transformations with [Metamorph](https://github.com/metafacture/metafacture-core/wiki#morph).
+This is early work in progress towards tools and an implementation of the Fix language for Metafacture as an alternative to configuring data transformations with [Metamorph](https://github.com/metafacture/metafacture-core/wiki#morph). The basic idea is to map constructs from Catmandu::Fix like [functions](https://github.com/LibreCat/Catmandu/wiki/Functions), [selectors](https://github.com/LibreCat/Catmandu/wiki/Selectors) and [binds](https://github.com/LibreCat/Catmandu/wiki/Binds) to equivalent constructs from Metafacture like Metamorph [functions](https://github.com/metafacture/metafacture-core/wiki/Metamorph-functions) and collectors ([wiki](https://github.com/metafacture/metafacture-core/wiki/Metamorph-collectors), [commit](https://github.com/metafacture/metafacture-core/commit/0530d6ad72ced992b479bff94d6f56bbef77bb2d)).
 
 See [https://github.com/elag/FIG](https://github.com/elag/FIG)
 
-State
------
+# State
 
 [![Build Status](https://travis-ci.org/metafacture/metafacture-fix.svg?branch=master)](https://travis-ci.org/metafacture/metafacture-fix)
 
-This repo contains an Xtext web project with a basic Fix grammar, which generates a parser and a web editor. The editor UI contains input fields for sample data and a [Flux](https://github.com/metafacture/metafacture-core/wiki#flux) definition to run workflows with the given Fix. A test deployment is available at: [http://test.lobid.org/fix](http://test.lobid.org/fix)
+This repo contains an Xtext web project with a basic Fix grammar, which generates a parser, a web editor, and a language server. The repo also contains an extension for VS code/codium based on that language server. The web editor UI contains input fields for sample data and a [Flux](https://github.com/metafacture/metafacture-core/wiki#flux) definition to run workflows with the given Fix. A test deployment of the web server is available at: [http://test.lobid.org/fix](http://test.lobid.org/fix).
 
-- [x] Grammar, parser, and editor for the [Fix language]((https://github.com/LibreCat/Catmandu/wiki/Fix-language)) ([details](#editor))
-- [x] Run Fix as a module in Flux workflows ([wiki](https://github.com/metafacture/metafacture-core/wiki/Flux-user-guide)) ([details](http://test.lobid.org/fix))
-- [x] Change field names, (nested) field [paths](https://github.com/LibreCat/Catmandu/wiki/Paths) ([details](http://test.lobid.org/fix))
-- [ ] Change field values, use `metamorph.functions` ([wiki](https://github.com/metafacture/metafacture-core/wiki/Metamorph-functions)) as Fix [functions](https://github.com/LibreCat/Catmandu/wiki/Functions) like `replace_all(title,"My (.*) Pony","Our $1 Fish")` [#5](https://github.com/metafacture/metafacture-fix/issues/5)
-- [ ] Data lookup, use `metamorph.maps` ([wiki](https://github.com/metafacture/metafacture-core/wiki/Data-lookup)) like `lookup(title,"dict.csv",default:'NONE')`
-- [ ] Use `metamorph.collectors` and `<if>` ([wiki](https://github.com/metafacture/metafacture-core/wiki/Metamorph-collectors), [commit](https://github.com/metafacture/metafacture-core/commit/0530d6ad72ced992b479bff94d6f56bbef77bb2d)) for Fix [selectors](https://github.com/LibreCat/Catmandu/wiki/Selectors) and [conditionals](https://github.com/LibreCat/Catmandu/wiki/Conditionals) like `if exists(my.deep.field) <function1 function2> end`
-- [ ] Support function grouping ([wiki](https://github.com/metafacture/metafacture-core/wiki/Metamorph-User-Guide#processing-pieces-of-data)) with [binds](https://github.com/LibreCat/Catmandu/wiki/Binds) like `do list(path:colors.*, var:c) <function1(c) function2(c)> end`
-- [ ] [Comments](https://github.com/LibreCat/Catmandu/wiki/Comments) like `# This is a comment` [#4](https://github.com/metafacture/metafacture-fix/issues/4)
-- [ ] Integrated web playground with Fix and Flux editors ([language](https://github.com/culturegraph/metafacture-ide/tree/master/bundles/org.culturegraph.mf.ide/src/org/culturegraph/mf/ide), [setup](https://github.com/metafacture/metafacture-fix#xtext))
-
-Setup
------
+# Setup
 
 If you're using Windows, configure git option core.autocrlf before cloning repository:
 `git config core.autocrlf false`
 Otherwise git will change all line endings to Windows crlf when you check out code (and vice versa) but that will lead to failures with gradle's check task.
+
+## Clone
+
+Clone the Git repository:
+
+`git clone https://github.com/metafacture/metafacture-fix.git`
 
 Go to the Git repository root:
 
@@ -37,10 +30,43 @@ Run the tests (in `org.metafacture.fix/src/test/java`) and checks (`.editorconfi
 
 `./gradlew clean check`
 
-Editor
-------
+(To import the projects in Eclipse, choose File > Import > Existing Gradle Project and select the `metafacture-fix` directory.)
 
-Start the server:
+## Extension
+
+The project `org.metafacture.fix.vsc` provides an extension for Visual Studio Code / Codium for `fix` via the language server protocol (LSP). In the current state the extension supports auto completion, simple syntax highlighting and auto closing brackets and quotes. This project was created using this [tutorial](https://www.typefox.io/blog/building-a-vs-code-extension-with-xtext-and-the-language-server-protocol) and the corresponding [example](https://github.com/TypeFox/languageserver-example).
+
+
+Build extension:
+
+1. Install Visual Studio Code / alternative: VS Codium
+2. Install Node.js (including npm)
+3. In metafacture-fix execute:
+Unix: `./gradlew installServer`
+Windows: `.\gradlew.bat installServer`
+4. In org.metafacture.fix.vsc execute (tip: if you use windows, install cygwin to execute npm commands):
+`npm install`
+
+To start the extension in development mode (starting a second code/codium instance), follow A. To create an vsix file to install the extension permanently follow B.
+
+A) Run in dev mode:
+1. Open org.metafacture.fix.vsc in Visual Studio Code / Codium
+2. Launch vscode extension by pressing F5 (opens new window of Visual Studio Code)
+3. Open new file (file-ending .fix) or open existing fix-file (see sample below)
+
+B) Install vsix file:
+1. Install vsce: `npm install -g vsce`
+2. In org.metafacture.fix.vsc execute: `vsce package`
+vsce will create a vsix file in the vsc directory which can be used for installation:
+3. Open VS Code / Codium
+4. Click 'Extensions' section
+5. Click menu bar and choose 'Install from VSIX...'
+
+
+
+## Web Server
+
+Start the web server:
 
 `./gradlew jettyRun`
 
@@ -82,76 +108,16 @@ do marc_each()
 end
 ```
 
-Content assist is triggered with Ctrl-Space. The input above is also used in `FixParsingTest.xtend`.
+Content assist is triggered with Ctrl-Space. The input above is also used in `FixParsingTest.java`.
 
-Module
-------
-
-The `Metafix` stream module currently supports:
-
-```
-# simple field name mappings
-
-map(a,b)
-
-# nested field name mappings
-
-map(a,my.deep.nested.b)
-
-# pass-through for unmapped fields
-
-map(_else)
-
-# adding simple fields
-
-add_field(hello,"world")
-
-# adding nested fields
-
-add_field(my.deep.nested,"world")
-```
-
-See also `MetafixDslTest.java`.
-
-Workflows
---------
-
-Run workflows, passing `data`, `flux`, and `fix`:
+Run workflows on the web server, passing `data`, `flux`, and `fix`:
 
 [http://localhost:8080/xtext-service/run?data='1'{'a': '5', 'z': 10}&flux=as-lines|decode-formeta|fix|encode-formeta(style="multiline")&fix=map(a,b) map(_else)](http://localhost:8080/xtext-service/run?data=%271%27{%27a%27:%20%275%27,%20%27z%27:%2010}&flux=as-lines|decode-formeta|fix|encode-formeta(style=%22multiline%22)&fix=map(a,c)%20map(_else))
 
-Eclipse IDE
------------
+## Module
 
-To import the projects in Eclipse, choose File > Import > Existing Gradle Project and select the `metafacture-fix` directory.
+The repo contains and uses a new `Metafix` stream module for Metafacture which plays the role of the `Metamorph` module in Fix-based Metafacture workflows. For the current implementation of the `Metafix` stream module see `MetafixDslTest.java`. For a real-world usage sample see [https://gitlab.com/oersi/oersi-etl/-/blob/develop/data/production/edu-sharing.fix](https://gitlab.com/oersi/oersi-etl/-/blob/develop/data/production/edu-sharing.fix).
 
-Xtext
------
+# Xtext
 
-This repo has been originally set up with Xtext 2.17.0 and Eclipse for Java 2019-03, following [https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html](https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html). Below are some details to reproduce the original setup:
-
-In the New > Xtext Project wizard, the language details are specified:
-
-![Language details](docs/xtext-setup-1.png)
-
-As well as the project and build customization:
-
-![Build details](docs/xtext-setup-2.png)
-
-Visual Studio Code Extension
----------------------------
-The project `org.metafacture.fix.vsc` provides an extension for Visual Studio Code for `fix` via the language server protocol (LSP). In the current state the extension supports auto completion, simple syntax highlighting and auto closing brackets and quotes. This project was created using the [tutorial](https://www.typefox.io/blog/building-a-vs-code-extension-with-xtext-and-the-language-server-protocol) and the corresponding [example](https://github.com/TypeFox/languageserver-example).
-
-Start extension:
-
-1. Install Visual Studio Code / alternative: VS Codium
-2. Install Node.js (including npm)
-3. Checkout metafacture-fix project
-4. In metafacture-fix execute:
-Unix: `./gradlew installServer`
-Windows: `.\gradlew.bat installServer`
-5. In org.metafacture.fix.vsc execute (tip: if you use windows, install cygwin to execute npm commands):
-`npm install`
-6. Open org.metafacture.fix.vsc in Visual Studio Code
-7. Launch vscode extension by pressing F5 (opens new window of Visual Studio Code)
-8. Open new file (file-ending .fix) or open existing fix-file
+This repo has been originally set up with Xtext 2.17.0 and Eclipse for Java 2019-03, following [https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html](https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html).
