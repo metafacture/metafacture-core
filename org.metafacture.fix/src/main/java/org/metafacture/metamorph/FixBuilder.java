@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2019 Deutsche Nationalbibliothek and others
+ * Copyright 2013, 2020 Deutsche Nationalbibliothek and others
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,30 @@
 
 package org.metafacture.metamorph;
 
+import org.metafacture.commons.StringUtil;
+import org.metafacture.fix.fix.Do;
 import org.metafacture.fix.fix.Expression;
 import org.metafacture.fix.fix.Fix;
-import org.metafacture.metamorph.api.ConditionAware;
+import org.metafacture.fix.fix.MethodCall;
+import org.metafacture.fix.fix.Options;
+import org.metafacture.metamorph.api.Collect;
+import org.metafacture.metamorph.api.FlushListener;
+import org.metafacture.metamorph.api.Function;
 import org.metafacture.metamorph.api.InterceptorFactory;
 import org.metafacture.metamorph.api.NamedValuePipe;
 import org.metafacture.metamorph.functions.Constant;
+import org.metafacture.metamorph.functions.NotEquals;
+import org.metafacture.metamorph.functions.Replace;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Builds a {@link Metafix} from a Fix DSL description
@@ -38,99 +49,322 @@ import java.util.Map;
  * @author Fabian Steeg (FixBuilder)
  *
  */
-public class FixBuilder {
+public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
 
+    static final String ARRAY_MARKER = "[]";
+    private static final String FLUSH_WITH = "flushWith";
+    private static final String RECORD = "record";
     private final Deque<StackFrame> stack = new LinkedList<>();
     private final InterceptorFactory interceptorFactory;
     private final Metafix metafix;
+
+    private CollectFactory collectFactory;
+    private FunctionFactory functionFactory;
 
     public FixBuilder(final Metafix metafix, final InterceptorFactory interceptorFactory) {
         this.metafix = metafix;
         this.interceptorFactory = interceptorFactory;
 
         stack.push(new StackFrame(metafix));
+
+        collectFactory = new CollectFactory();
+        functionFactory = new FunctionFactory();
+        // morph: not-equals, replace, fix: not_equals, replace_all
+        functionFactory.registerClass("not_equals", NotEquals.class);
+        functionFactory.registerClass("replace_all", Replace.class);
     }
 
-    public void walk(final Fix fix, final Map<String, String> vars) {
-        for (final Expression expression : fix.getElements()) {
-            final EList<String> params = expression.getParams();
-            switch (expression.getName()) {
-                case "map" :
-                    enterDataMap(params);
-                    exitData();
-                    break;
-                case "add_field" :
-                    enterDataAdd(params);
-                    exitData();
-                    break;
-                default: break;
+    Metafix getMetafix() {
+        return metafix;
+    }
+
+    public void walk(final Fix fix) {
+        processSubexpressions(fix.getElements(), null);
+    }
+
+    private void processBind(final Expression expression, final EList<String> params) {
+        final String firstParam = resolvedAttribute(params, 1);
+        final Do theDo = (Do) expression;
+        Collect collect = null;
+
+        // Special bind cases, no generic no-args collectors
+        switch (expression.getName()) {
+            case "entity":
+                collect = createEntity(firstParam);
+                break;
+            case "array":
+                collect = createEntity(firstParam + ARRAY_MARKER);
+                break;
+            case "map":
+                final NamedValuePipe enterDataMap = enterDataMap(params, false);
+                processSubexpressions(theDo.getElements(), firstParam);
+                exitData();
+                if (enterDataMap instanceof Entity) {
+                    exitCollectorAndFlushWith(firstParam);
+                }
+                return;
+            default:
+                break;
+        }
+
+        // try generic no-args collectors, registered in collectFactory
+        if (collect == null) {
+            if (!collectFactory.containsKey(expression.getName())) {
+                throw new IllegalArgumentException("Collector " + expression.getName() +
+                        " not found");
+            }
+            final Map<String, String> attributes = resolvedAttributeMap(params, theDo.getOptions());
+            // flushWith should not be passed to the headPipe object via a
+            // setter (see newInstance):
+            attributes.remove(FLUSH_WITH);
+            collect = collectFactory.newInstance(expression.getName(), attributes);
+        }
+        if (collect != null) {
+            stack.push(new StackFrame(collect));
+            processSubexpressions(theDo.getElements(), firstParam);
+            // must be set after recursive calls to flush descendants before parent
+            final String flushWith = resolvedAttribute(resolvedAttributeMap(params, theDo.getOptions()), FLUSH_WITH);
+            exitCollectorAndFlushWith(flushWith);
+        }
+    }
+
+    protected final String resolveVars(final String string) {
+        return string == null ? null : StringUtil.format(string, Metafix.VAR_START, Metafix.VAR_END, false, metafix.getVars());
+    }
+
+    protected final Map<String, String> resolvedAttributeMap(final List<String> params, final Options options) {
+        final Map<String, String> attributes = new HashMap<String, String>();
+        if (options == null) {
+            return attributes;
+        }
+        final EList<String> keys = options.getKeys();
+        final EList<String> values = options.getValues();
+        for (int i = 0; i < keys.size() && i < values.size(); i = i + 1) {
+            attributes.put(resolveVars(keys.get(i)), resolveVars(values.get(i)));
+        }
+        return attributes;
+    }
+
+    private Collect createEntity(final String name) {
+        final Entity entity = new Entity(() -> metafix.getStreamReceiver());
+        entity.setName(name);
+        return entity;
+    }
+
+    protected void exitCollectorAndFlushWith(final String flushWith) {
+        final StackFrame currentCollect = stack.pop();
+        final NamedValuePipe tailPipe = currentCollect.getPipe();
+
+        final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+        final NamedValuePipe delegate;
+        if (interceptor == null || tailPipe instanceof Entity) {
+            // The result of entity collectors cannot be intercepted
+            // because they only use the receive/emit interface for
+            // signalling while the actual data is transferred using
+            // a custom mechanism. In order for this to work the Entity
+            // class checks whether source and receiver are an
+            // instances of Entity. If an interceptor is inserted between
+            // entity elements this mechanism will break.
+            delegate = tailPipe;
+        }
+        else {
+            delegate = interceptor;
+            delegate.addNamedValueSource(tailPipe);
+        }
+
+        final StackFrame parent = stack.peek();
+
+        if (parent.isInEntity()) {
+            ((Entity) parent.getPipe()).setNameSource(delegate);
+        }
+        // TODO: condition handling, see MorphBuilder
+
+        parent.getPipe().addNamedValueSource(delegate);
+
+        final Collect collector = (Collect) tailPipe;
+        if (null != flushWith) {
+            collector.setWaitForFlush(true);
+            registerFlush(flushWith, collector);
+        }
+    }
+
+    private void registerFlush(final String flushWith, final FlushListener flushListener) {
+        final String[] keysSplit = Pattern.compile("|", Pattern.LITERAL).split(flushWith);
+        for (final String key : keysSplit) {
+            final FlushListener interceptor = interceptorFactory.createFlushInterceptor(flushListener);
+            final FlushListener delegate;
+            if (interceptor == null) {
+                delegate = flushListener;
+            }
+            else {
+                delegate = interceptor;
+            }
+            if (key.equals(RECORD)) {
+                metafix.registerRecordEndFlush(delegate);
+            }
+            else {
+                metafix.registerNamedValueReceiver(key, new Flush(delegate));
             }
         }
     }
 
-    private void exitData() {
-        final NamedValuePipe delegate = getDelegate(stack.pop().getPipe());
-        final StackFrame parent = stack.peek();
-
-        if (parent.isInEntityName()) {
-            // Protected xsd schema and by assertion in enterName:
-            ((Entity) parent.getPipe()).setNameSource(delegate);
-        }
-        else if (parent.isInCondition()) {
-            // Protected xsd schema and by assertion in enterIf:
-            ((ConditionAware) parent.getPipe()).setConditionSource(delegate);
-        }
-        else {
-            parent.getPipe().addNamedValueSource(delegate);
+    private void processSubexpressions(final List<Expression> expressions, final String superSource) {
+        for (final Expression sub : expressions) {
+            final EList<String> p = sub.getParams();
+            String source = resolvedAttribute(p, 1);
+            if (source == null && superSource != null) {
+                source = superSource;
+            }
+            if (sub instanceof Do) {
+                processBind(sub, p);
+            }
+            else {
+                processFunction(sub, p, source);
+            }
         }
     }
 
-    private void enterDataMap(final EList<String> params) {
+    private void processFunction(final Expression expression, final List<String> params, final String source) {
+        final FixFunction functionToRun = findFixFunction(expression);
+        if (functionToRun != null) {
+            functionToRun.apply(this, expression, params, source);
+        }
+        else {
+            runMetamorphFunction(expression, params);
+        }
+    }
+
+    private FixFunction findFixFunction(final Expression expression) {
+        for (final FixFunction exp : FixFunction.values()) {
+            if (exp.name().equalsIgnoreCase(expression.getName())) {
+                return exp;
+            }
+        }
+        return null;
+    }
+
+    private void runMetamorphFunction(final Expression expression, final List<String> params) {
+        final Map<String, String> attributes = resolvedAttributeMap(params, ((MethodCall) expression).getOptions());
+        if (functionFactory.containsKey(expression.getName())) {
+            final String flushWith = attributes.remove(FLUSH_WITH);
+            final Function function = functionFactory.newInstance(expression.getName(), attributes);
+            if (null != flushWith) {
+                registerFlush(flushWith, function);
+            }
+            function.setMaps(metafix);
+            final StackFrame head = stack.peek();
+            final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+            final NamedValuePipe delegate;
+            if (interceptor == null) {
+                delegate = function;
+            }
+            else {
+                delegate = interceptor;
+                function.addNamedValueSource(delegate);
+            }
+            delegate.addNamedValueSource(head.getPipe());
+            head.setPipe(function);
+        }
+        else {
+            throw new IllegalArgumentException(expression.getName() + " not found");
+        }
+    }
+
+    void exitData() {
+        final NamedValuePipe dataPipe = stack.pop().getPipe();
+
+        final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+        final NamedValuePipe delegate;
+        if (interceptor == null) {
+            delegate = dataPipe;
+        }
+        else {
+            delegate = interceptor;
+            delegate.addNamedValueSource(dataPipe);
+        }
+
+        final StackFrame parent = stack.peek();
+
+        if (parent.isInEntity()) {
+            ((Entity) parent.getPipe()).setNameSource(delegate);
+        }
+
+        // TODO: condition handling, see MorphBuilder
+
+        parent.getPipe().addNamedValueSource(delegate);
+    }
+
+    NamedValuePipe enterDataMap(final List<String> params, final boolean standalone) {
+        Entity entity = null;
+        final Data data = new Data();
+        String dataName = resolvedAttribute(params, 2);
         final String resolvedAttribute = resolvedAttribute(params, 2);
         if (resolvedAttribute != null && resolvedAttribute.contains(".")) {
             final String[] keyElements = resolvedAttribute.split("\\.");
             final Pair<Entity, Entity> firstAndLast = createEntities(keyElements);
-            final Data data = new Data();
-            data.setName(keyElements[keyElements.length - 1]);
-            final String source = resolvedAttribute(params, 1);
             firstAndLast.getValue().addNamedValueSource(data);
-            metafix.registerNamedValueReceiver(source, getDelegate(data));
-            stack.push(new StackFrame(firstAndLast.getKey()));
+            entity = firstAndLast.getKey();
+            stack.push(new StackFrame(entity));
+            dataName = keyElements[keyElements.length - 1];
         }
-        else {
-            final Data data = new Data();
-            data.setName(resolvedAttribute(params, 2));
-            final String source = resolvedAttribute(params, 1);
-            metafix.registerNamedValueReceiver(source, getDelegate(data));
-            stack.push(new StackFrame(data));
+        data.setName(dataName);
+        final String source = resolvedAttribute(params, 1);
+        metafix.registerNamedValueReceiver(source, getDelegate(data));
+        final StackFrame frame = new StackFrame(data);
+        if (!standalone) {
+            frame.setInEntity(true);
         }
+        stack.push(frame);
+        return entity != null ? entity : data;
     }
 
-    private void enterDataAdd(final EList<String> params) {
+    void enterDataAdd(final List<String> params) {
         final String resolvedAttribute = resolvedAttribute(params, 1);
         if (resolvedAttribute.contains(".")) {
             addNestedField(params, resolvedAttribute);
         }
         else {
-            final Data data = new Data();
-            data.setName(resolvedAttribute);
+            final Data newDate = new Data();
+            newDate.setName(resolvedAttribute);
             final Constant constant = new Constant();
             constant.setValue(resolvedAttribute(params, 2));
-            data.addNamedValueSource(constant);
+            newDate.addNamedValueSource(constant);
             metafix.registerNamedValueReceiver("_id", constant);
-            stack.push(new StackFrame(data));
+            stack.push(new StackFrame(newDate));
         }
     }
 
-    private void addNestedField(final EList<String> params, final String resolvedAttribute) {
+    void enterDataFunction(final String fieldName, final NamedValuePipe function, final boolean standalone) {
+        if (standalone) {
+            final Data data = new Data();
+            data.setName("@" + fieldName);
+            metafix.registerNamedValueReceiver(fieldName, getDelegate(data, function));
+            stack.push(new StackFrame(data));
+            return;
+        }
+        final StackFrame head = stack.peek();
+        final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+        final NamedValuePipe delegate;
+        if (interceptor == null) {
+            delegate = function;
+        }
+        else {
+            delegate = interceptor;
+            function.addNamedValueSource(delegate);
+        }
+        delegate.addNamedValueSource(head.getPipe());
+        head.setPipe(function);
+    }
+
+    private void addNestedField(final List<String> params, final String resolvedAttribute) {
         final String[] keyElements = resolvedAttribute.split("\\.");
         final Pair<Entity, Entity> firstAndLast = createEntities(keyElements);
         final Constant constant = new Constant();
         constant.setValue(resolvedAttribute(params, 2));
-        final Data data = new Data();
-        data.setName(keyElements[keyElements.length - 1]);
-        data.addNamedValueSource(constant);
-        firstAndLast.getValue().addNamedValueSource(data);
+        final Data newData = new Data();
+        newData.setName(keyElements[keyElements.length - 1]);
+        newData.addNamedValueSource(constant);
+        firstAndLast.getValue().addNamedValueSource(newData);
         metafix.registerNamedValueReceiver("_id", constant);
         stack.push(new StackFrame(firstAndLast.getKey()));
     }
@@ -152,32 +386,37 @@ public class FixBuilder {
         return new Pair<>(firstEntity, lastEntity);
     }
 
-    private NamedValuePipe getDelegate(final NamedValuePipe data) {
-        final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
+    private NamedValuePipe getDelegate(final NamedValuePipe dataForDelegate) {
+        return getDelegate(dataForDelegate, interceptorFactory.createNamedValueInterceptor());
+    }
+
+    private NamedValuePipe getDelegate(final NamedValuePipe dataForDelegate, final NamedValuePipe interceptor) {
         final NamedValuePipe delegate;
 
         if (interceptor == null) {
-            delegate = data;
+            delegate = dataForDelegate;
         }
         else {
             delegate = interceptor;
-            data.addNamedValueSource(delegate);
+            dataForDelegate.addNamedValueSource(delegate);
         }
 
         return delegate;
     }
 
-    private String resolvedAttribute(final EList<String> params, final int i) {
-        // TODO: resolve from vars/map/etc
-        return params.size() < i ? null : params.get(i - 1);
+    private String resolvedAttribute(final List<String> params, final int i) {
+        return params.size() < i ? null : resolveVars(params.get(i - 1));
+    }
+
+    private String resolvedAttribute(final Map<String, String> attributes, final String string) {
+        return resolveVars(attributes.get(string));
     }
 
     private static class StackFrame {
 
-        private final NamedValuePipe pipe;
+        private NamedValuePipe pipe;
 
-        private boolean inCondition;
-        private boolean inEntityName;
+        private boolean inEntity;
 
         private StackFrame(final NamedValuePipe pipe) {
             this.pipe = pipe;
@@ -187,20 +426,16 @@ public class FixBuilder {
             return pipe;
         }
 
-        public void setInEntityName(final boolean inEntityName) {
-            this.inEntityName = inEntityName;
+        public void setPipe(final NamedValuePipe pipe) {
+            this.pipe = pipe;
         }
 
-        public boolean isInEntityName() {
-            return inEntityName;
+        public void setInEntity(final boolean inEntity) {
+            this.inEntity = inEntity;
         }
 
-        public void setInCondition(final boolean inCondition) {
-            this.inCondition = inCondition;
-        }
-
-        public boolean isInCondition() {
-            return inCondition;
+        public boolean isInEntity() {
+            return inEntity;
         }
 
     }

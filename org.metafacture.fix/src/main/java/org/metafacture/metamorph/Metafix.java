@@ -48,6 +48,7 @@ import org.eclipse.xtext.validation.Issue;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -83,6 +84,8 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
     public static final String VAR_END = "]";
 
     private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
+    private static final Object ELSE_NESTED_KEYWORD = "_elseNested";
+    private static final Object ELSE_FLATTENED_KEYWORD = "_elseFlattened";
 
     private static final InterceptorFactory NULL_INTERCEPTOR_FACTORY = new NullInterceptorFactory();
     private static final Map<String, String> NO_VARS = Collections.emptyMap();
@@ -118,25 +121,30 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
     private final List<FlushListener> recordEndListener = new ArrayList<>();
 
     private final List<Expression> expressions = new ArrayList<>();
+    private Map<String, String> vars = NO_VARS;
+
+    private boolean elseNested;
+    private boolean elseNestedEntityStarted;
+    private String currentLiteralName;
 
     public Metafix() {
         init();
     }
 
-    public Metafix(final String fixDef) {
+    public Metafix(final String fixDef) throws FileNotFoundException {
         this(fixDef, NO_VARS);
     }
 
-    public Metafix(final String fixDef, final Map<String, String> vars) {
+    public Metafix(final String fixDef, final Map<String, String> vars) throws FileNotFoundException {
         this(fixDef, vars, NULL_INTERCEPTOR_FACTORY);
     }
 
-    public Metafix(final String fixDef, final InterceptorFactory interceptorFactory) {
+    public Metafix(final String fixDef, final InterceptorFactory interceptorFactory) throws FileNotFoundException {
         this(fixDef, NO_VARS, interceptorFactory);
     }
 
-    public Metafix(final String fixDef, final Map<String, String> vars, final InterceptorFactory interceptorFactory) {
-        this(new StringReader(fixDef), vars, interceptorFactory);
+    public Metafix(final String fixDef, final Map<String, String> vars, final InterceptorFactory interceptorFactory) throws FileNotFoundException {
+        this(fixDef.endsWith(".fix") ? new FileReader(fixDef) : new StringReader(fixDef), vars, interceptorFactory);
     }
 
     public Metafix(final Reader morphDef) {
@@ -172,17 +180,6 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         this(new InputStreamReader(fixDef), vars, interceptorFactory);
     }
 
-    public void setFixFile(final String fixFile) {
-        try {
-            buildPipeline(new FileReader(fixFile), NO_VARS, NULL_INTERCEPTOR_FACTORY);
-        }
-        catch (final IOException e) {
-            e.printStackTrace();
-        }
-
-        init();
-    }
-
     public List<Expression> getExpressions() {
         return expressions;
     }
@@ -191,17 +188,17 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         flattener.setReceiver(new DefaultStreamReceiver() {
             @Override
             public void literal(final String name, final String value) {
-                dispatch(name, value, getElseSources());
+                dispatch(name, value, getElseSources(), false);
             }
         });
     }
 
-    private void buildPipeline(final Reader fixDef, final Map<String, String> vars, final InterceptorFactory interceptorFactory) {
+    private void buildPipeline(final Reader fixDef, final Map<String, String> theVars, final InterceptorFactory interceptorFactory) {
         final Fix fix = parseFix(fixDef);
-
+        this.vars = theVars;
         // TODO: unify FixInterpreter and FixBuilder
         new FixInterpreter().run(this, fix);
-        new FixBuilder(this, interceptorFactory).walk(fix, vars);
+        new FixBuilder(this, interceptorFactory).walk(fix);
     }
 
     private Fix parseFix(final Reader fixDef) {
@@ -251,8 +248,16 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
     }
 
     protected void registerNamedValueReceiver(final String source, final NamedValueReceiver data) {
-        if (ELSE_KEYWORD.equals(source)) {
-            elseSources.add(data);
+        if (ELSE_NESTED_KEYWORD.equals(source)) {
+            elseNested = true;
+        }
+        if (ELSE_KEYWORD.equals(source) || ELSE_FLATTENED_KEYWORD.equals(source) || elseNested) {
+            if (elseSources.isEmpty()) {
+                elseSources.add(data);
+            }
+            else {
+                System.out.println("Only one of '_else', '_elseFlattened' and '_elseNested' is allowed. Ignoring the superflous ones.");
+            }
         }
         else {
             dataRegistry.register(source, data);
@@ -272,7 +277,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         recordCount %= Integer.MAX_VALUE;
 
         outputStreamReceiver.startRecord(identifier);
-        dispatch(StandardEventNames.ID, identifier, null);
+        dispatch(StandardEventNames.ID, identifier, null, false);
     }
 
     @Override
@@ -306,13 +311,14 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
 
     @Override
     public void endEntity() {
-        dispatch(flattener.getCurrentPath(), "", null);
+        dispatch(flattener.getCurrentPath(), "", getElseSources(), true);
         currentEntityCount = entityCountStack.pop().intValue();
         flattener.endEntity();
     }
 
     @Override
     public void literal(final String name, final String value) {
+        currentLiteralName = name;
         flattener.literal(name, value);
     }
 
@@ -336,17 +342,42 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         outputStreamReceiver.closeStream();
     }
 
-    private void dispatch(final String path, final String value, final List<NamedValueReceiver> fallback) {
+    private void dispatch(final String path, final String value, final List<NamedValueReceiver> fallback, final boolean endEntity) {
         final List<NamedValueReceiver> matchingData = findMatchingData(path, fallback);
 
         if (matchingData != null) {
             send(path, value, matchingData);
         }
+        else if (fallback != null) {
+            if (endEntity) {
+                if (elseNestedEntityStarted) {
+                    outputStreamReceiver.endEntity();
+                    elseNestedEntityStarted = false;
+                }
+            }
+            else {
+                final String entityName = elseNested ? flattener.getCurrentEntityName() : null;
+
+                if (entityName != null) {
+                    if (findMatchingData(entityName, fallback) == null) {
+                        if (!elseNestedEntityStarted) {
+                            outputStreamReceiver.startEntity(entityName);
+                            elseNestedEntityStarted = true;
+                        }
+
+                        send(escapeFeedbackChar(currentLiteralName), value, fallback);
+                    }
+                }
+                else {
+                    send(escapeFeedbackChar(path), value, fallback);
+                }
+            }
+        }
     }
 
     private List<NamedValueReceiver> findMatchingData(final String path, final List<NamedValueReceiver> fallback) {
         final List<NamedValueReceiver> matchingData = dataRegistry.get(path);
-        return matchingData == null || matchingData.isEmpty() ? fallback : matchingData;
+        return matchingData != null && !matchingData.isEmpty() ? matchingData : null;
     }
 
     private void send(final String key, final String value, final List<NamedValueReceiver> dataList) {
@@ -380,8 +411,8 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
                     "encountered literal with name='null'. This indicates a bug in a function or a collector.");
         }
 
-        if (name.length() != 0 && name.charAt(0) == FEEDBACK_CHAR) {
-            dispatch(name, value, null);
+        if (startsWithFeedbackChar(name)) {
+            dispatch(name, value, null, false);
             return;
         }
 
@@ -395,6 +426,14 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         }
 
         outputStreamReceiver.literal(unescapedName, value);
+    }
+
+    private boolean startsWithFeedbackChar(final String name) {
+        return name.length() != 0 && name.charAt(0) == FEEDBACK_CHAR;
+    }
+
+    private String escapeFeedbackChar(final String name) {
+        return name == null ? null : (startsWithFeedbackChar(name) ? ESCAPE_CHAR : "") + name;
     }
 
     @Override
@@ -454,6 +493,10 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
     public SourceLocation getSourceLocation() {
         // Metafix does not have a source location
         return null;
+    }
+
+    public Map<String, String> getVars() {
+        return vars;
     }
 
 }
