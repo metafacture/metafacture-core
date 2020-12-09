@@ -28,17 +28,20 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
- * Tests for {@link ScriptExtractor}.
+ * Tests for {@link ElementExtractor}.
  *
  * @author Fabian Steeg
  *
  */
-public final class ScriptExtractorTest {
+public final class ElementExtractorTest {
 
-    private static final StringReader IN = new StringReader("<html><script>{\"code\":\"yo\"}");
+    private static final StringReader IN = new StringReader("<html>"
+            + "<script data-test='site-head-data'>{\"code\":\"hey\"}</script>"
+            + "<script data-test='model-linked-data'>{\"code\":\"yo\"}");
+    
     private static final String OUT = "{\"code\":\"yo\"}";
 
-    private ScriptExtractor scriptExtractor;
+    private ElementExtractor elementExtractor;
 
     @Mock
     private ObjectReceiver<String> receiver;
@@ -46,19 +49,19 @@ public final class ScriptExtractorTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        scriptExtractor = new ScriptExtractor();
-        scriptExtractor.setReceiver(receiver);
+        elementExtractor = new ElementExtractor("script[data-test=model-linked-data]");
+        elementExtractor.setReceiver(receiver);
     }
 
     @Test
     public void testShouldProcessRecordsFollowedbySeparator() {
-        scriptExtractor.process(IN);
+        elementExtractor.process(IN);
         verify(receiver).process(OUT);
         verifyNoMoreInteractions(receiver);
     }
 
     @After
     public void cleanup() {
-        scriptExtractor.closeStream();
+        elementExtractor.closeStream();
     }
 }

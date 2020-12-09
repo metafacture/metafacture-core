@@ -30,21 +30,30 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 /**
- * Extracts the first script from an HTML document
+ * Extracts the the specified element from an HTML document
  *
  * @author Fabian Steeg
  */
-@Description("Extracts the first script from an HTML document")
+@Description("Extracts the specified element from an HTML document")
 @In(Reader.class)
 @Out(String.class)
-@FluxCommand("extract-script")
-public class ScriptExtractor extends DefaultObjectPipe<Reader, ObjectReceiver<String>> {
+@FluxCommand("extract-element")
+public class ElementExtractor extends DefaultObjectPipe<Reader, ObjectReceiver<String>> {
+    private String selector;
+
+    /**
+     * @param selector The CSS-style jsoup selector, see https://jsoup.org/cookbook/extracting-data/selector-syntax
+     */
+    public ElementExtractor(final String selector) {
+        this.selector = selector;
+    }
+
     @Override
     public void process(final Reader reader) {
         try {
             Document document = Jsoup.parse(IOUtils.toString(reader));
-            Element firstScript = document.select("script").first();
-            getReceiver().process(firstScript.data());
+            Element firstElement = document.select(selector).first();
+            getReceiver().process(firstElement.data());
         } catch (IOException e) {
             e.printStackTrace();
         }
