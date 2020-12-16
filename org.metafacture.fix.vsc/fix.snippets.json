@@ -1,0 +1,6 @@
+{
+    "do end": {
+      "prefix": ["do"],
+      "body": ["do ${1:collector}(${2:args})", "\t$0", "end"]
+    }
+  }

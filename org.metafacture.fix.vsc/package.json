@@ -8,7 +8,8 @@
         "vscode": "^1.18.0"
     },
     "categories": [
-        "Programming Languages"
+        "Programming Languages",
+        "Snippets"
     ],
     "activationEvents": [
         "onLanguage:fix"
@@ -33,7 +34,14 @@
                 "scopeName": "text.fix",
                 "path": "./fix.tmLanguage"
             }
+        ],
+        "snippets": [
+            {
+                "language": "fix",
+                "path": "./fix.snippets.json"
+            }
         ]
+
     },
     "scripts": {
         "vscode:prepublish": "tsc -p ./",
