@@ -16,6 +16,8 @@ dependencies {
 
   implementation "org.metafacture:metafacture-commons:${versions.metafacture}"
   implementation "org.metafacture:metafacture-mangling:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-javaintegration:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-flowcontrol:${versions.metafacture}"
   implementation "org.metafacture:metamorph:${versions.metafacture}"
 
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
