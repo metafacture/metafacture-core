@@ -3,6 +3,7 @@
     "displayName": "fix",
     "description": "Language Support for Metafacture Fix (Xtext Language Server for Metafacture Fix). For more information, visit https://metafacture.org",
     "version": "0.1.0",
+
     "publisher": "metafacture",
     "engines": {
         "vscode": "^1.18.0"
