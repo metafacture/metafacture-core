@@ -1,0 +1,7 @@
+{
+    "do bind": {
+      "prefix": ["do"],
+      "body": ["do ${1:collector}(${2:args})", "\t${0:body}", "end"],
+      "description": "A do bind changes the execution context of the body functions. They are executed for each element in the list."
+    }
+  }
