@@ -6,7 +6,7 @@ See [https://github.com/elag/FIG](https://github.com/elag/FIG)
 
 # State
 
-[![Build Status](https://travis-ci.org/metafacture/metafacture-fix.svg?branch=master)](https://travis-ci.org/metafacture/metafacture-fix)
+[![Build and Deploy](https://github.com/metafacture/metafacture-fix/workflows/Build%20and%20Deploy/badge.svg)](https://github.com/metafacture/metafacture-fix/actions?query=workflow%3A%22Build+and+Deploy%22)
 
 This repo contains an Xtext web project with a basic Fix grammar, which generates a parser, a web editor, and a language server. The repo also contains an extension for VS code/codium based on that language server. The web editor UI contains input fields for sample data and a [Flux](https://github.com/metafacture/metafacture-core/wiki#flux) definition to run workflows with the given Fix. A test deployment of the web server is available at: [http://test.lobid.org/fix](http://test.lobid.org/fix).
 
