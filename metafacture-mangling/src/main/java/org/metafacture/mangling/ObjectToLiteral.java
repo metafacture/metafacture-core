@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2021 Deutsche Nationalbibliothek and others
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * Outputs a record containing the input object as literal.
  *
  * @param <T> input object type
- * @author Christoph Böhme
+ * @author Christoph Böhme, Fabian Steeg
  */
 @Description("Outputs a record containing the input object as literal")
 @Out(StreamReceiver.class)
@@ -34,22 +34,40 @@ public final class ObjectToLiteral<T> extends
         DefaultObjectPipe<T, StreamReceiver> {
 
     public static final String DEFAULT_LITERAL_NAME = "obj";
+    public static final String DEFAULT_RECORD_ID = "";
 
-    private String literalName = DEFAULT_LITERAL_NAME;
+    private String literalName;
+    private String recordId;
+    private int recordCount;
+
+    public ObjectToLiteral() {
+        super();
+        setLiteralName(DEFAULT_LITERAL_NAME);
+        setRecordId(DEFAULT_RECORD_ID);
+        recordCount=0;
+    }
 
     public void setLiteralName(final String literalName) {
         this.literalName = literalName;
+    }
+
+    public void setRecordId(final String recordId) {
+        this.recordId = recordId;
     }
 
     public String getLiteralName() {
         return literalName;
     }
 
+    public String getRecordId() {
+        return recordId;
+    }
+
     @Override
     public void process(final T obj) {
         assert obj!=null;
         assert !isClosed();
-        getReceiver().startRecord("");
+        getReceiver().startRecord(String.format(recordId, ++recordCount));
         getReceiver().literal(literalName, obj.toString());
         getReceiver().endRecord();
     }

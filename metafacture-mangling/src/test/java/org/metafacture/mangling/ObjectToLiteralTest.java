@@ -77,4 +77,20 @@ public final class ObjectToLiteralTest {
         ordered.verify(receiver).endRecord();
     }
 
+    @Test
+    public void testShouldSetRecordIds() {
+        objectToLiteral.setRecordId("Record %d");
+
+        objectToLiteral.process(OBJ_DATA);
+        objectToLiteral.process(OBJ_DATA);
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("Record 1");
+        ordered.verify(receiver).literal(ObjectToLiteral.DEFAULT_LITERAL_NAME, OBJ_DATA);
+        ordered.verify(receiver).endRecord();
+        ordered.verify(receiver).startRecord("Record 2");
+        ordered.verify(receiver).literal(ObjectToLiteral.DEFAULT_LITERAL_NAME, OBJ_DATA);
+        ordered.verify(receiver).endRecord();
+    }
+
 }
