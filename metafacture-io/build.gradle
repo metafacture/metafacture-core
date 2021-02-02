@@ -21,7 +21,7 @@ dependencies {
   api project(':metafacture-framework')
   implementation project(':metafacture-commons')
   implementation 'commons-io:commons-io:2.5'
-  implementation 'org.apache.commons:commons-compress:1.12'
+  implementation 'org.apache.commons:commons-compress:1.20'
   runtimeOnly 'org.tukaani:xz:1.6'
   testImplementation 'junit:junit:4.12'
   testImplementation 'org.mockito:mockito-core:2.5.5'

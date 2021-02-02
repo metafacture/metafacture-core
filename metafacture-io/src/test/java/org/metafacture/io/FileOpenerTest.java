@@ -16,16 +16,21 @@
 package org.metafacture.io;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
 import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -77,10 +82,55 @@ public final class FileOpenerTest {
         assertEquals(DATA, ResourceUtil.readAll(processedObject.getValue()));
     }
 
+    @Test
+    public void testNoDecompressConcatenated() throws IOException {
+        testDecompressConcatenated(false);
+    }
+
+    @Test
+    public void testDecompressConcatenated() throws IOException {
+        testDecompressConcatenated(true);
+    }
+
+    private void testDecompressConcatenated(final boolean decompressConcatenated) throws IOException {
+        final int maxBytes = (int) Math.pow(2, 16);  // BGZF max compressed block size
+        final StringBuilder sb = new StringBuilder();
+
+        try (InputStreamReader r = new InputStreamReader(getClass().getResourceAsStream("compressed.txt"))) {
+            final String data = ResourceUtil.readAll(r);
+            for (int i = 0; i < 1525; i++) {
+                sb.append(data).append("\n");
+            }
+        }
+
+        final String data = sb.toString();
+        assertTrue(data.length() + " > " + maxBytes, data.length() > maxBytes);
+
+        final File testFile = copyResourceToTempFile("compressed-large.txt.bgzf");
+
+        final FileOpener opener = new FileOpener();
+        opener.setDecompressConcatenated(decompressConcatenated);
+        opener.setReceiver(receiver);
+        opener.process(testFile.getAbsolutePath());
+        opener.closeStream();
+
+        verify(receiver).process(processedObject.capture());
+        assertEquals(decompressConcatenated ? data : data.substring(0, maxBytes),
+                ResourceUtil.readAll(processedObject.getValue()));
+    }
+
     private File createTestFile() throws IOException {
         final File file = tempFolder.newFile();
         try (OutputStream stream = new FileOutputStream(file)) {
             stream.write(DATA.getBytes(StandardCharsets.UTF_8));
+        }
+        return file;
+    }
+
+    private File copyResourceToTempFile(final String resourcePath) throws IOException {
+        final File file = tempFolder.newFile();
+        try (InputStream in = getClass().getResourceAsStream(resourcePath)) {
+            Files.copy(in, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
         return file;
     }

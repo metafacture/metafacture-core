@@ -1,6 +1,6 @@
 ![Metafacture](https://raw.github.com/wiki/metafacture/metafacture-core/img/metafacture.png)
 
-[![Build status](https://travis-ci.org/metafacture/metafacture-core.svg?branch=master)](https://travis-ci.org/metafacture/metafacture-core) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=org.metafacture:metafacture-core&metric=alert_status)](https://sonarcloud.io/dashboard/index/org.metafacture:metafacture-core)
+[![Build](https://github.com/metafacture/metafacture-core/workflows/Build/badge.svg?branch=master)](https://github.com/metafacture/metafacture-core/actions?query=workflow%3ABuild) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=org.metafacture:metafacture-core&metric=alert_status)](https://sonarcloud.io/dashboard/index/org.metafacture:metafacture-core)
 
 Metafacture is a toolkit for processing semi-structured data with a focus on library metadata. It provides a versatile set of tools for reading, writing and transforming data. Metafacture can be used as a stand-alone application or as a Java library in other applications. The name Metafacture is a portmanteau of the words *meta* data and manu*facture*.
 

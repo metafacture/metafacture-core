@@ -46,6 +46,7 @@ public final class FileOpener
 
     private String encoding = "UTF-8";
     private FileCompression compression = FileCompression.AUTO;
+    private boolean decompressConcatenated = FileCompression.DEFAULT_DECOMPRESS_CONCATENATED;
 
     /**
      * Returns the encoding used to open the resource.
@@ -78,12 +79,20 @@ public final class FileOpener
         setCompression(FileCompression.valueOf(compression.toUpperCase()));
     }
 
+    public boolean getDecompressConcatenated() {
+        return decompressConcatenated;
+    }
+
+    public void setDecompressConcatenated(final boolean decompressConcatenated) {
+        this.decompressConcatenated = decompressConcatenated;
+    }
+
     @Override
     public void process(final String file) {
         try {
             final InputStream fileStream = new FileInputStream(file);
             try {
-                final InputStream decompressor = compression.createDecompressor(fileStream);
+                final InputStream decompressor = compression.createDecompressor(fileStream, decompressConcatenated);
                 try {
 
                     final Reader reader = new InputStreamReader(new BOMInputStream(
