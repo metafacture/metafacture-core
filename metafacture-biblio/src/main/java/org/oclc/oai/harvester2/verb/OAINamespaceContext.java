@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
 
 /**
  *
- * @author Michal Hlavac <michal_hlavac@datalan.sk>
+ * @author Michal Hlavac (michal_hlavac@datalan.sk)
  */
 public class OAINamespaceContext implements NamespaceContext {
 
