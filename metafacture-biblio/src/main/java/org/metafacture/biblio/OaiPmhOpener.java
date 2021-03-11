@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathException;
+import javax.xml.transform.TransformerException;
 
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -18,8 +18,9 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
-import org.oclc.oai.harvester2.app.RawWrite;
 import org.xml.sax.SAXException;
+
+import ORG.oclc.oai.harvester2.app.RawWrite;
 
 /**
  * Opens an OAI-PMH stream and passes a reader to the receiver.
@@ -110,9 +111,9 @@ public final class OaiPmhOpener extends
 			e.printStackTrace();
 		} catch (SAXException e) {
 			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
+		} catch (TransformerException e) {
 			e.printStackTrace();
-		} catch (XPathException e) {
+		} catch (NoSuchFieldException e) {
 			e.printStackTrace();
 		}
 		try {
