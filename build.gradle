@@ -19,8 +19,6 @@ editorconfig {
 check.dependsOn(editorconfigCheck)
 
 subprojects {
-  group = 'org.metafacture.fix'
-  version = '1.0.0-SNAPSHOT'
 
   ext {
     versions = [
@@ -36,6 +34,9 @@ subprojects {
       'xtext':          '2.17.0'
     ]
   }
+
+  group = 'org.metafacture'
+  version = "${versions.metafacture}"
 
   apply plugin: 'checkstyle'
   apply plugin: 'eclipse'

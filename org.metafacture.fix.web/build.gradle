@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-  compile project(':org.metafacture.fix')
+  compile project(':metafacture-fix')
   compile project(':org.metafacture.fix.ide')
 
   compile "org.eclipse.xtend:org.eclipse.xtend.lib:${versions.xtext}"
