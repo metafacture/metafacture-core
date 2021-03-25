@@ -17,6 +17,7 @@ package org.metafacture.html;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 
 import java.io.StringReader;
 
@@ -103,9 +104,11 @@ public final class HtmlDecoderTest {
         final InOrder ordered = inOrder(receiver);
         ordered.verify(receiver).startEntity("meta");
         ordered.verify(receiver).literal("language", "DE");
+        ordered.verify(receiver).literal("name", "language");
+        ordered.verify(receiver).literal("content", "DE");
         ordered.verify(receiver, times(4)).endEntity();
     }
-    
+
     @Test
     public void htmlAttributesAsSubfieldsCustom() {
         htmlDecoder.setAttrValsAsSubfields("mods:url.access");
@@ -113,6 +116,7 @@ public final class HtmlDecoderTest {
         final InOrder ordered = inOrder(receiver);
         ordered.verify(receiver).startEntity("mods:url");
         ordered.verify(receiver).literal("preview", "file:///img.png");
+        ordered.verify(receiver, never()).literal("value", "file:///img.png");
         ordered.verify(receiver, times(3)).endEntity();
     }
 
@@ -126,6 +130,7 @@ public final class HtmlDecoderTest {
         ordered.verify(receiver).literal("language", "DE");
         ordered.verify(receiver).startEntity("mods:url");
         ordered.verify(receiver).literal("preview", "file:///img.png");
+        ordered.verify(receiver, never()).literal("value", "file:///img.png");
         ordered.verify(receiver, times(3)).endEntity();
     }
 }

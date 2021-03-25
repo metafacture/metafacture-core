@@ -82,14 +82,15 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
         for (Element element : parent.children()) {
             receiver.startEntity(element.nodeName());
             Attributes attributes = element.attributes();
+            boolean addedValueAsSubfield = false;
             for (Attribute attribute : attributes) {
-                handleAttributeValuesAsSubfields(receiver, element, attributes, attribute);
+                addedValueAsSubfield = handleAttributeValuesAsSubfields(receiver, element, attributes, attribute);
                 receiver.literal(attribute.getKey(), attribute.getValue());
             }
             if (element.children().isEmpty()) {
                 String text = element.text().trim();
                 String value = text.isEmpty() ? element.data() : text;
-                if (!value.isEmpty()) {
+                if (!value.isEmpty() && !addedValueAsSubfield) {
                     receiver.literal("value", value);
                 }
             }
@@ -98,18 +99,20 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
         }
     }
 
-    private void handleAttributeValuesAsSubfields(StreamReceiver receiver, Element element,
+    private boolean handleAttributeValuesAsSubfields(StreamReceiver receiver, Element element,
             Attributes attributes, Attribute attribute) {
         String fullFieldKey = element.nodeName() + "." + attribute.getKey();
         if (attrValsAsSubfields.containsKey(fullFieldKey)) {
             String configValue = attrValsAsSubfields.get(fullFieldKey);
             if (configValue.trim().isEmpty()) {
                 receiver.literal(attribute.getValue(), element.text().trim());
+                return true;
             } else {
                 String value = attributes.get(configValue);
                 receiver.literal(attribute.getValue(), value);
             }
         }
+        return false;
     }
 
     public void setAttrValsAsSubfields(String mapString) {
@@ -128,4 +131,5 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
             }
         }
     }
+
 }
