@@ -342,6 +342,10 @@ def getSnapshotVersion() {
     logger.lifecycle('Release branch found')
     return "${extractVersionFromBranch(grgit.branch.current().name)}-SNAPSHOT"
   }
+  if (grgit.branch.current().name.contains('-rc')) {
+    logger.lifecycle('Release candidate branch found')
+    return "${grgit.branch.current().name}"
+  }
   logger.lifecycle('Feature branch found')
   return "feature-${grgit.branch.current().name}-SNAPSHOT"
 }
