@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Fabian Steeg, hbz
+ * Copyright 2020, 2021 Fabian Steeg, hbz
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.metafacture.html;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 
 import java.io.StringReader;
 
@@ -97,4 +98,39 @@ public final class HtmlDecoderTest {
         ordered.verify(receiver, times(4)).endEntity();
     }
 
+    @Test
+    public void htmlAttributesAsSubfieldsDefault() {
+        htmlDecoder.process(new StringReader("<meta name=\"language\" content=\"DE\"/>"));
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startEntity("meta");
+        ordered.verify(receiver).literal("language", "DE");
+        ordered.verify(receiver).literal("name", "language");
+        ordered.verify(receiver).literal("content", "DE");
+        ordered.verify(receiver, times(4)).endEntity();
+    }
+
+    @Test
+    public void htmlAttributesAsSubfieldsCustom() {
+        htmlDecoder.setAttrValsAsSubfields("mods:url.access");
+        htmlDecoder.process(new StringReader("<mods:url access=\"preview\">file:///img.png</mods:url>"));
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startEntity("mods:url");
+        ordered.verify(receiver).literal("preview", "file:///img.png");
+        ordered.verify(receiver, never()).literal("value", "file:///img.png");
+        ordered.verify(receiver, times(3)).endEntity();
+    }
+
+    @Test
+    public void htmlAttributesAsSubfieldsDefaultPlusCustom() {
+        htmlDecoder.setAttrValsAsSubfields("&mods:url.access");
+        htmlDecoder.process(new StringReader("<meta name=\"language\" content=\"DE\"/>"
+                + "<mods:url access=\"preview\">file:///img.png</mods:url>"));
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startEntity("meta");
+        ordered.verify(receiver).literal("language", "DE");
+        ordered.verify(receiver).startEntity("mods:url");
+        ordered.verify(receiver).literal("preview", "file:///img.png");
+        ordered.verify(receiver, never()).literal("value", "file:///img.png");
+        ordered.verify(receiver, times(3)).endEntity();
+    }
 }
