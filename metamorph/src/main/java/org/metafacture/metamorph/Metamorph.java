@@ -82,8 +82,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     private static final InterceptorFactory NULL_INTERCEPTOR_FACTORY = new NullInterceptorFactory();
     private static final Map<String, String> NO_VARS = Collections.emptyMap();
 
-    private final Registry<NamedValueReceiver> dataRegistry =
-            new WildcardRegistry<>();
+    private final Registry<NamedValueReceiver> dataRegistry = new WildcardRegistry<>();
     private final List<NamedValueReceiver> elseSources = new ArrayList<>();
 
     private final Map<String, Map<String, String>> maps = new HashMap<>();
@@ -100,7 +99,8 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     private int recordCount;
     private final List<FlushListener> recordEndListener = new ArrayList<>();
     private boolean elseNested;
-    final private Pattern literalPatternOfEntityMarker = Pattern.compile(flattener.getEntityMarker(), Pattern.LITERAL);
+    private boolean elseNestedEntityStarted;
+    private String currentLiteralName;
     private static final Logger LOG = LoggerFactory.getLogger(Metamorph.class);
 
     protected Metamorph() {
@@ -122,7 +122,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
     public Metamorph(final String morphDef, final Map<String, String> vars,
             final InterceptorFactory interceptorFactory) {
-
         this(getInputSource(morphDef), vars, interceptorFactory);
     }
 
@@ -140,7 +139,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
     public Metamorph(final Reader morphDef, final Map<String, String> vars,
             final InterceptorFactory interceptorFactory) {
-
         this(new InputSource(morphDef), vars, interceptorFactory);
     }
 
@@ -158,7 +156,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
     public Metamorph(final InputStream morphDef, final Map<String, String> vars,
             final InterceptorFactory interceptorFactory) {
-
         this(new InputSource(morphDef), vars, interceptorFactory);
     }
 
@@ -205,7 +202,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         flattener.setReceiver(new DefaultStreamReceiver() {
             @Override
             public void literal(final String name, final String value) {
-                dispatch(name, value, getElseSources());
+                dispatch(name, value, getElseSources(), false);
             }
         });
     }
@@ -224,14 +221,16 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
     protected void registerNamedValueReceiver(final String source, final NamedValueReceiver data) {
         if (ELSE_NESTED_KEYWORD.equals(source)) {
-            this.elseNested = true;
+            elseNested = true;
         }
+
         if (ELSE_KEYWORD.equals(source) || ELSE_FLATTENED_KEYWORD.equals(source) || elseNested) {
-            if (elseSources.isEmpty())
+            if (elseSources.isEmpty()) {
                 elseSources.add(data);
-            else
-                LOG.warn(
-                        "Only one of '_else', '_elseFlattened' and '_elseNested' is allowed. Ignoring the superflous ones.");
+            }
+            else {
+                LOG.warn("Only one of '_else', '_elseFlattened' and '_elseNested' is allowed. Ignoring the superflous ones.");
+            }
         } else {
             dataRegistry.register(source, data);
         }
@@ -253,12 +252,11 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         final String identifierFinal = identifier;
 
         outputStreamReceiver.startRecord(identifierFinal);
-        dispatch(StandardEventNames.ID, identifierFinal, null);
+        dispatch(StandardEventNames.ID, identifierFinal, null, false);
     }
 
     @Override
     public void endRecord() {
-
         for(final FlushListener listener: recordEndListener){
             listener.flush(recordCount, currentEntityCount);
         }
@@ -287,17 +285,16 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
     @Override
     public void endEntity() {
-        dispatch(flattener.getCurrentPath(), "", null);
+        dispatch(flattener.getCurrentPath(), "", getElseSources(), true);
         currentEntityCount = entityCountStack.pop().intValue();
         flattener.endEntity();
-
     }
 
 
     @Override
     public void literal(final String name, final String value) {
+        currentLiteralName = name;
         flattener.literal(name, value);
-
     }
 
     @Override
@@ -318,37 +315,50 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         outputStreamReceiver.closeStream();
     }
 
-    protected void dispatch(final String path, final String value, final List<NamedValueReceiver> fallbackReceiver) {
-        List<NamedValueReceiver> matchingData = dataRegistry.get(path);
-        boolean fallback = false;
-        if (matchingData == null || matchingData.isEmpty()) {
-            fallback = true;
-            matchingData = fallbackReceiver;
+    private void dispatch(final String path, final String value, final List<NamedValueReceiver> fallbackReceiver, final boolean endEntity) {
+        final List<NamedValueReceiver> matchingData = getData(path);
+
+        if (matchingData != null) {
+            send(path, value, matchingData);
         }
-        if (null != matchingData) {
-            send(path, value, matchingData, fallback);
+        else if (fallbackReceiver != null) {
+            if (endEntity) {
+                if (elseNestedEntityStarted) {
+                    outputStreamReceiver.endEntity();
+                    elseNestedEntityStarted = false;
+                }
+            }
+            else {
+                final String entityName = elseNested ? flattener.getCurrentEntityName() : null;
+
+                if (entityName != null) {
+                    if (getData(entityName) == null) {
+                        if (!elseNestedEntityStarted) {
+                            outputStreamReceiver.startEntity(entityName);
+                            elseNestedEntityStarted = true;
+                        }
+
+                        send(currentLiteralName, value, fallbackReceiver);
+                    }
+                }
+                else {
+                    send(path, value, fallbackReceiver);
+                }
+            }
         }
     }
 
-    private void send(final String path, final String value, final List<NamedValueReceiver> dataList,
-            final boolean fallback) {
+    private List<NamedValueReceiver> getData(final String path) {
+        final List<NamedValueReceiver> matchingData = dataRegistry.get(path);
+        return matchingData != null && !matchingData.isEmpty() ? matchingData : null;
+    }
+
+    private void send(final String path, final String value, final List<NamedValueReceiver> dataList) {
         for (final NamedValueReceiver data : dataList) {
-            String key = path;
-            if (fallback && elseNested) {
-                if (flattener.getCurrentEntityName() != null) {
-                    outputStreamReceiver.startEntity(flattener.getCurrentEntityName());
-                    key = literalPatternOfEntityMarker.split(path)[1];
-                }
-            }
             try {
-                data.receive(key, value, null, recordCount, currentEntityCount);
+                data.receive(path, value, null, recordCount, currentEntityCount);
             } catch (final RuntimeException e) {
                 errorHandler.error(e);
-            }
-            if (fallback && elseNested) {
-                if (flattener.getCurrentEntityName() != null) {
-                    outputStreamReceiver.endEntity();
-                }
             }
         }
     }
@@ -379,7 +389,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         }
 
         if (name.length() != 0 && name.charAt(0) == FEEDBACK_CHAR) {
-            dispatch(name, value, null);
+            dispatch(name, value, null, false);
             return;
         }
 
