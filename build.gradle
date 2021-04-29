@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Christoph Böhme
+ * Copyright 2017, 2021 Christoph Böhme et al.
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,6 @@ subprojects {
   tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
   }
-
   task sourceJar(type: Jar) {
     dependsOn tasks.classes
     from sourceSets.main.allJava
@@ -99,7 +98,7 @@ gradle.projectsEvaluated {
       if (project.description) {
         description project.description
       }
-      url 'https://github.com/culturegraph/metafacture-core'
+      url 'https://github.com/metafacture/metafacture-core'
       inceptionYear '2011'
       developers {
         developer {
@@ -111,6 +110,10 @@ gradle.projectsEvaluated {
             role 'architect'
             role 'developer'
           }
+          organization {
+            name 'Deutsche Nationalbibliothek'
+            url 'http://dnb.de/'
+          }
         }
         developer {
           id 'cboehme'
@@ -121,11 +124,43 @@ gradle.projectsEvaluated {
             role 'architect'
             role 'developer'
           }
+          organization {
+            name 'Deutsche Nationalbibliothek'
+            url 'http://dnb.de/'
+          }
+        }
+        developer {
+          id 'fsteeg'
+          name 'Fabian Steeg'
+          email 'steeg@hbz-nrw.de'
+          url 'https://github.com/fsteeg'
+          roles {
+            role 'developer'
+            role 'maintainer'
+          }
+          organization {
+            name 'Hochschulbibliothekszentrum des Landes Nordrhein-Westfalen (hbz)'
+            url 'https://www.hbz-nrw.de/'
+          }
+        }
+        developer {
+          id 'dr0i'
+          name 'Pascal Christoph'
+          email 'christoph@hbz-nrw.de'
+          url 'https://github.com/dr0i'
+          roles {
+            role 'developer'
+            role 'maintainer'
+          }
+          organization {
+            name 'Hochschulbibliothekszentrum des Landes Nordrhein-Westfalen (hbz)'
+            url 'https://www.hbz-nrw.de/'
+          }
         }
       }
       organization {
-        name 'Deutsche Nationalbibliothek'
-        url 'http://dnb.de/'
+        name 'Hochschulbibliothekszentrum des Landes Nordrhein-Westfalen (hbz)'
+        url 'https://www.hbz-nrw.de/'
       }
       licenses {
         license {
@@ -153,8 +188,8 @@ gradle.projectsEvaluated {
         url 'https://github.com/metafacture/metafacture-core/issues'
       }
       ciManagement {
-        system 'Travis CI'
-        url 'https://travis-ci.org/metafacture/metafacture-core'
+        system 'Github Actions'
+        url 'https://github.com/metafacture/metafacture-core/actions'
       }
     }
 
