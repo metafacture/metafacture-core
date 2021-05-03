@@ -36,6 +36,8 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Decode HTML to metadata events. Each input document represents one record.
@@ -60,6 +62,8 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
     private static final String DEFAULT_ATTR_VALS_AS_SUBFIELDS = //
             "meta.name=content&meta.property=content&link.rel=href&a.rel=href";
     private Map<String, String> attrValsAsSubfields;
+    private static final Logger LOG =
+            LoggerFactory.getLogger(HtmlDecoder.class);
 
     public HtmlDecoder() {
         setAttrValsAsSubfields(DEFAULT_ATTR_VALS_AS_SUBFIELDS);
@@ -74,7 +78,7 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
             process(document, receiver);
             receiver.endRecord();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -127,7 +131,7 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
                 String val = nameValue.length > 1 ? URLDecoder.decode(nameValue[1], utf8) : "";
                 attrValsAsSubfields.put(key, val);
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                LOG.error(e.getMessage(), e);
             }
         }
     }
