@@ -100,67 +100,9 @@ gradle.projectsEvaluated {
       }
       url 'https://github.com/metafacture/metafacture-core'
       inceptionYear '2011'
-      developers {
-        developer {
-          id 'mgeipel'
-          name 'Markus M. Geipel'
-          email 'm.geipel@dnb.de'
-          url 'https://github.com/mgeipel'
-          roles {
-            role 'architect'
-            role 'developer'
-          }
-          organization {
-            name 'Deutsche Nationalbibliothek'
-            url 'http://dnb.de/'
-          }
-        }
-        developer {
-          id 'cboehme'
-          name 'Christoph Böhme'
-          email 'c.boehme@dnb.de'
-          url 'https://github.com/cboehme'
-          roles {
-            role 'architect'
-            role 'developer'
-          }
-          organization {
-            name 'Deutsche Nationalbibliothek'
-            url 'http://dnb.de/'
-          }
-        }
-        developer {
-          id 'fsteeg'
-          name 'Fabian Steeg'
-          email 'steeg@hbz-nrw.de'
-          url 'https://github.com/fsteeg'
-          roles {
-            role 'developer'
-            role 'maintainer'
-          }
-          organization {
-            name 'Hochschulbibliothekszentrum des Landes Nordrhein-Westfalen (hbz)'
-            url 'https://www.hbz-nrw.de/'
-          }
-        }
-        developer {
-          id 'dr0i'
-          name 'Pascal Christoph'
-          email 'christoph@hbz-nrw.de'
-          url 'https://github.com/dr0i'
-          roles {
-            role 'developer'
-            role 'maintainer'
-          }
-          organization {
-            name 'Hochschulbibliothekszentrum des Landes Nordrhein-Westfalen (hbz)'
-            url 'https://www.hbz-nrw.de/'
-          }
-        }
-      }
       organization {
-        name 'Hochschulbibliothekszentrum des Landes Nordrhein-Westfalen (hbz)'
-        url 'https://www.hbz-nrw.de/'
+        name 'Metafacture'
+        url 'https://github.com/metafacture'
       }
       licenses {
         license {
