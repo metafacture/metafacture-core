@@ -27,7 +27,7 @@ subprojects {
       'jquery':         '3.3.1-1',
       'junit_jupiter':  '5.4.2',
       'junit_platform': '1.4.2',
-      'metafacture':    'master',
+      'metafacture':    '5.2.0',
       'mockito':        '2.27.0',
       'requirejs':      '2.3.6',
       'slf4j':          '1.7.21',
@@ -36,7 +36,7 @@ subprojects {
   }
 
   group = 'org.metafacture'
-  version = "${versions.metafacture}"
+  version = '0.2.0-SNAPSHOT'
 
   apply plugin: 'checkstyle'
   apply plugin: 'eclipse'

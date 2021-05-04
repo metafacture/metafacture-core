@@ -14,9 +14,9 @@ dependencies {
 
   testRuntime "org.junit.jupiter:junit-jupiter-engine:${versions.junit_jupiter}"
 
-  implementation('org.metafacture:metafacture-commons') { version { branch = versions.metafacture } }
-  implementation('org.metafacture:metafacture-mangling') { version { branch = versions.metafacture } }
-  implementation('org.metafacture:metamorph') { version { branch = versions.metafacture } }
+  implementation "org.metafacture:metafacture-commons:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-mangling:${versions.metafacture}"
+  implementation "org.metafacture:metamorph:${versions.metafacture}"
 
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
   testImplementation "org.mockito:mockito-junit-jupiter:${versions.mockito}"

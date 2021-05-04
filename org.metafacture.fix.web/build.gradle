@@ -16,12 +16,12 @@ dependencies {
   providedCompile "org.eclipse.jetty:jetty-annotations:${versions.jetty}"
   providedCompile "org.slf4j:slf4j-simple:${versions.slf4j}"
 
-  implementation('org.metafacture:metafacture-commons') { version { branch = versions.metafacture } }
-  implementation('org.metafacture:metafacture-formeta') { version { branch = versions.metafacture } }
-  implementation('org.metafacture:metafacture-mangling') { version { branch = versions.metafacture } }
-  implementation('org.metafacture:metafacture-runner') { version { branch = versions.metafacture } }
-  implementation('org.metafacture:metafacture-xml') { version { branch = versions.metafacture } }
-  implementation('org.metafacture:metamorph') { version { branch = versions.metafacture } }
+  implementation "org.metafacture:metafacture-commons:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-formeta:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-mangling:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-runner:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-xml:${versions.metafacture}"
+  implementation "org.metafacture:metamorph:${versions.metafacture}"
 }
 
 task jettyRun(type: JavaExec) {

@@ -1,14 +1,3 @@
-sourceControl {
-  gitRepository('https://github.com/metafacture/metafacture-core.git') {
-    producesModule('org.metafacture:metafacture-commons')
-    producesModule('org.metafacture:metafacture-formeta')
-    producesModule('org.metafacture:metafacture-mangling')
-    producesModule('org.metafacture:metafacture-runner')
-    producesModule('org.metafacture:metafacture-xml')
-    producesModule('org.metafacture:metamorph')
-  }
-}
-
 include 'org.metafacture.fix'
 include 'org.metafacture.fix.ide'
 include 'org.metafacture.fix.web'
