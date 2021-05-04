@@ -43,6 +43,7 @@ subprojects {
   apply plugin: 'eclipse'
   apply plugin: 'java'
   apply plugin: 'org.xtext.builder'
+  apply plugin: 'maven-publish'
 
   apply from: "${rootDir}/gradle/source-layout.gradle"
 
@@ -72,6 +73,35 @@ subprojects {
     }
 
     options.compilerArgs << '-Werror'
+  }
+
+  publishing {
+    publications {
+      mavenArtifacts(MavenPublication) {
+        from components.java
+        afterEvaluate {
+          groupId = project.group
+          artifactId = project.name
+        }
+      }
+    }
+    repositories {
+      maven {
+        name = 'LocalEmbedded'
+        // run generated gradle task `./gradlew
+        // publishMavenArtifactsPublicationToLocalEmbeddedRepository`
+        // to publish all subprojects into the same local embedded repo:
+        url = "file://${rootDir}/build/repo"
+      }
+      maven {
+        name = "GitHubPackages"
+        url = "https://maven.pkg.github.com/metafacture/metafacture-fix"
+        credentials {
+          username = System.getenv("GITHUB_ACTOR")
+          password = System.getenv("GITHUB_TOKEN")
+        }
+      }
+    }
   }
 }
 
