@@ -1,6 +1,7 @@
 plugins {
   id 'org.ec4j.editorconfig' version '0.0.3'
   id 'org.xtext.builder' version '2.0.8'
+  id 'io.github.0ffz.github-packages' version '1.2.1'
 }
 
 editorconfig {
@@ -19,8 +20,6 @@ editorconfig {
 check.dependsOn(editorconfigCheck)
 
 subprojects {
-  group = 'org.metafacture.fix'
-  version = '1.0.0-SNAPSHOT'
 
   ext {
     versions = [
@@ -29,7 +28,7 @@ subprojects {
       'jquery':         '3.3.1-1',
       'junit_jupiter':  '5.4.2',
       'junit_platform': '1.4.2',
-      'metafacture':    'master',
+      'metafacture':    '5.2.0',
       'mockito':        '2.27.0',
       'requirejs':      '2.3.6',
       'slf4j':          '1.7.21',
@@ -37,10 +36,14 @@ subprojects {
     ]
   }
 
+  group = 'org.metafacture'
+  version = '0.2.0-SNAPSHOT'
+
   apply plugin: 'checkstyle'
   apply plugin: 'eclipse'
   apply plugin: 'java'
   apply plugin: 'org.xtext.builder'
+  apply plugin: 'maven-publish'
 
   apply from: "${rootDir}/gradle/source-layout.gradle"
 
@@ -49,6 +52,7 @@ subprojects {
 
   repositories {
     jcenter()
+    maven githubPackage.invoke("metafacture")
   }
 
   dependencies {
@@ -69,6 +73,35 @@ subprojects {
     }
 
     options.compilerArgs << '-Werror'
+  }
+
+  publishing {
+    publications {
+      mavenArtifacts(MavenPublication) {
+        from components.java
+        afterEvaluate {
+          groupId = project.group
+          artifactId = project.name
+        }
+      }
+    }
+    repositories {
+      maven {
+        name = 'LocalEmbedded'
+        // run generated gradle task `./gradlew
+        // publishMavenArtifactsPublicationToLocalEmbeddedRepository`
+        // to publish all subprojects into the same local embedded repo:
+        url = "file://${rootDir}/build/repo"
+      }
+      maven {
+        name = "GitHubPackages"
+        url = "https://maven.pkg.github.com/metafacture/metafacture-fix"
+        credentials {
+          username = System.getenv("GITHUB_ACTOR")
+          password = System.getenv("GITHUB_TOKEN")
+        }
+      }
+    }
   }
 }
 
