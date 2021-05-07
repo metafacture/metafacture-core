@@ -381,6 +381,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
     }
 
     private void send(final String key, final String value, final List<NamedValueReceiver> dataList) {
+        System.out.printf("Sending '%s':'%s' to %s\n", key, value, dataList);
         for (final NamedValueReceiver data : dataList) {
             data.receive(key, value, null, recordCount, currentEntityCount);
         }

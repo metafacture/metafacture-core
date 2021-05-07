@@ -18,6 +18,7 @@ package org.metafacture.metamorph;
 
 import org.metafacture.framework.StreamReceiver;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -916,6 +917,38 @@ public class MetafixDslTest {
         ordered.verify(streamReceiver).literal("Hawaii", "Aloha");
         ordered.verify(streamReceiver).endEntity();
         ordered.verify(streamReceiver).endRecord();
+    }
+
+    @Test
+    public void shouldSupportLookingAtOtherFields() {
+        final Metafix metafix = fix(//
+                "if any_match('name', '.*University.*')", //
+                "  add_field('type', 'Organization')", //
+                "end");
+
+        final String name = "name";
+
+        metafix.startRecord("1");
+        metafix.literal(name, "Max Musterman");
+        metafix.endRecord();
+
+        metafix.startRecord("2");
+        metafix.literal(name, "Some University");
+        metafix.endRecord();
+
+        Assert.assertTrue("Some University".matches(".*University.*"));
+
+        final InOrder ordered = Mockito.inOrder(streamReceiver);
+
+        ordered.verify(streamReceiver).startRecord("1");
+        ordered.verify(streamReceiver, Mockito.never()).literal("type", "Organization");
+        ordered.verify(streamReceiver).endRecord();
+
+        ordered.verify(streamReceiver).startRecord("2");
+        ordered.verify(streamReceiver).literal("type", "Organization");
+        ordered.verify(streamReceiver).endRecord();
+
+        ordered.verifyNoMoreInteractions();
     }
 
     @Test

@@ -20,6 +20,7 @@ import org.metafacture.commons.StringUtil;
 import org.metafacture.fix.fix.Do;
 import org.metafacture.fix.fix.Expression;
 import org.metafacture.fix.fix.Fix;
+import org.metafacture.fix.fix.If;
 import org.metafacture.fix.fix.MethodCall;
 import org.metafacture.fix.fix.Options;
 import org.metafacture.metamorph.api.Collect;
@@ -54,6 +55,7 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
     static final String ARRAY_MARKER = "[]";
     private static final String FLUSH_WITH = "flushWith";
     private static final String RECORD = "record";
+
     private final Deque<StackFrame> stack = new LinkedList<>();
     private final InterceptorFactory interceptorFactory;
     private final Metafix metafix;
@@ -218,9 +220,33 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
             if (sub instanceof Do) {
                 processBind(sub, p);
             }
+            else if (sub instanceof If) {
+                processConditional(sub, p);
+            }
             else {
                 processFunction(sub, p, source);
             }
+        }
+    }
+
+    private void processConditional(final Expression expression, final EList<String> p) {
+        final If theIf = (If) expression;
+        if (testConditional(theIf.getName(), p)) {
+            processSubexpressions(theIf.getElements(), resolvedAttribute(p, 1));
+        }
+    }
+
+    private boolean testConditional(final String conditional, final EList<String> p) {
+        System.out.printf("<IF>: %s p: %s\n", conditional, p);
+        switch (conditional) {
+            case "any_match":
+                final String field = resolvedAttribute(p, 1);
+                final String value = resolvedAttribute(p, 2);
+                System.out.printf("<any_match>: field: %s value: %s\n", field, value);
+                // TODO: get all fields named <field>, test if any matches <value>
+                return true;
+            default:
+                return false;
         }
     }
 
