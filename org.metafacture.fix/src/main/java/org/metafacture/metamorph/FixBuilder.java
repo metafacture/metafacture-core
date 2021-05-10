@@ -32,6 +32,7 @@ import org.metafacture.metamorph.functions.Constant;
 import org.metafacture.metamorph.functions.NotEquals;
 import org.metafacture.metamorph.functions.Replace;
 
+import com.google.common.collect.Multimap;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -242,9 +243,9 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
             case "any_match":
                 final String field = resolvedAttribute(p, 1);
                 final String value = resolvedAttribute(p, 2);
-                System.out.printf("<any_match>: field: %s value: %s\n", field, value);
-                // TODO: get all fields named <field>, test if any matches <value>
-                return true;
+                final Multimap<String, String> map = metafix.getCurrentRecord();
+                System.out.printf("<any_match>: field: %s value: %s in: %s\n", field, value, map);
+                return map.containsKey(field) && map.get(field).stream().anyMatch(v -> v.matches(value));
             default:
                 return false;
         }
