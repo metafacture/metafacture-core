@@ -18,18 +18,15 @@ package org.metafacture.metamorph;
 
 import org.metafacture.framework.StreamReceiver;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
+import java.util.Arrays;
 
 /**
  * Tests the non-field-streaming record functionality of Metafix via DSL.
@@ -52,54 +49,59 @@ public class MetafixRecordTest {
 
     @Test
     public void shouldSupportLookingAtOtherFieldsAny() {
-        final Metafix metafix = fix(//
+        final String name = "name";
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "if any_match('name', '.*University.*')", //
                 "  add_field('type', 'Organization')", //
-                "end");
-
-        metafix.setRecordMode(true);
-        final String name = "name";
-
-        metafix.startRecord("1");
-        metafix.literal(name, "Max Musterman");
-        metafix.endRecord();
-
-        metafix.startRecord("2");
-        metafix.literal(name, "Some University");
-        metafix.literal(name, "Filibandrina");
-        metafix.endRecord();
-
-        Assert.assertTrue("Some University".matches(".*University.*"));
-        final InOrder ordered = Mockito.inOrder(streamReceiver);
-        ordered.verify(streamReceiver, Mockito.times(1)).literal("type", "Organization");
+                "end"), //
+            i -> {
+                i.startRecord("1");
+                i.literal(name, "Max Musterman");
+                i.endRecord();
+                //
+                i.startRecord("2");
+                i.literal(name, "Some University");
+                i.literal(name, "Filibandrina");
+                i.endRecord();
+            }, o -> {
+                // TODO: fix event order
+                o.get().startRecord("1");
+                o.get().endRecord();
+                o.get().startRecord("1");
+                o.get().startRecord("2");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("type", "Organization");
+            });
     }
 
     @Test
     public void shouldSupportLookingAtOtherFieldsAll() {
-        final Metafix metafix = fix(//
+        final String name = "name";
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "if all_match('name', '.*University.*')", //
                 "  add_field('type', 'Organization')", //
-                "end");
-
-        metafix.setRecordMode(true);
-        final String name = "name";
-
-        metafix.startRecord("1");
-        metafix.literal(name, "Max Musterman");
-        metafix.literal(name, "A University");
-        metafix.endRecord();
-
-        metafix.startRecord("2");
-        metafix.literal(name, "A University");
-        metafix.literal(name, "University Filibandrina");
-        metafix.endRecord();
-
-        final InOrder ordered = Mockito.inOrder(streamReceiver);
-        ordered.verify(streamReceiver, Mockito.times(1)).literal("type", "Organization");
-    }
-
-    private Metafix fix(final String... fix) {
-        return MetafixDslTest.fix(Collections.emptyMap(), streamReceiver, fix);
+                "end"), //
+            i -> {
+                i.startRecord("1");
+                i.literal(name, "Max Musterman");
+                i.literal(name, "A University");
+                i.endRecord();
+                //
+                i.startRecord("2");
+                i.literal(name, "Some University");
+                i.literal(name, "University Filibandrina");
+                i.endRecord();
+            }, o -> {
+                // TODO: fix event order
+                o.get().startRecord("1");
+                o.get().endRecord();
+                o.get().startRecord("1");
+                o.get().startRecord("2");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("type", "Organization");
+            });
     }
 
 }

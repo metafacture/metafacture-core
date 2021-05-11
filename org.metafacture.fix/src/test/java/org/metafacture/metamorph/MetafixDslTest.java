@@ -380,7 +380,6 @@ public class MetafixDslTest {
     public void prependLiteralWithVarVal() {
         final Metafix metafix = fix(
                 ImmutableMap.of("pre", "eha"),
-                streamReceiver,
                 "do map(a)",
                 "  compose(prefix: '$[pre]')",
                 "end"
@@ -400,7 +399,6 @@ public class MetafixDslTest {
     public void prependLiteralWithVarKey() {
         final Metafix metafix = fix(
                 ImmutableMap.of("composeOperation", "prefix"),
-                streamReceiver,
                 "do map(a)",
                 "  compose('$[composeOperation]': 'eha')",
                 "end"
@@ -936,17 +934,17 @@ public class MetafixDslTest {
     }
 
     private Metafix fix(final String... fix) {
-        return fix(Collections.emptyMap(), streamReceiver, fix);
+        return fix(Collections.emptyMap(), fix);
     }
 
-    static Metafix fix(final Map<String, String> vars, final StreamReceiver receiver, final String... fix) {
+    private Metafix fix(final Map<String, String> vars, final String... fix) {
         final String fixString = String.join("\n", fix);
         System.out.println("\nFix string: " + fixString);
 
         Metafix metafix = null;
         try {
             metafix = new Metafix(fixString, vars);
-            metafix.setReceiver(receiver);
+            metafix.setReceiver(streamReceiver);
         }
         catch (final FileNotFoundException e) {
             e.printStackTrace();
