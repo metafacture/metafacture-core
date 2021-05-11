@@ -64,14 +64,12 @@ public class MetafixRecordTest {
                 i.literal(name, "Filibandrina");
                 i.endRecord();
             }, o -> {
-                // TODO: fix event order
                 o.get().startRecord("1");
                 o.get().endRecord();
-                o.get().startRecord("1");
-                o.get().startRecord("2");
-                o.get().endRecord();
+                //
                 o.get().startRecord("2");
                 o.get().literal("type", "Organization");
+                o.get().endRecord();
             });
     }
 
@@ -93,14 +91,12 @@ public class MetafixRecordTest {
                 i.literal(name, "University Filibandrina");
                 i.endRecord();
             }, o -> {
-                // TODO: fix event order
                 o.get().startRecord("1");
                 o.get().endRecord();
-                o.get().startRecord("1");
-                o.get().startRecord("2");
-                o.get().endRecord();
+                //
                 o.get().startRecord("2");
                 o.get().literal("type", "Organization");
+                o.get().endRecord();
             });
     }
 

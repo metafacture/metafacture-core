@@ -280,10 +280,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
     public void startRecord(final String identifier) {
         buffer.clear();
         buffer.startRecord(identifier);
-        if (!needsReplay) {
-            needsReplay = true;
-            currentRecord = HashMultimap.create();
-        }
+
         System.out.printf("Start record: %s\n", currentRecord);
         flattener.startRecord(identifier);
         entityCountStack.clear();
@@ -295,7 +292,14 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         ++recordCount;
         recordCount %= Integer.MAX_VALUE;
 
-        outputStreamReceiver.startRecord(identifier);
+        if (!recordMode) {
+            outputStreamReceiver.startRecord(identifier);
+        }
+        else if (!needsReplay) {
+            needsReplay = true;
+            currentRecord = HashMultimap.create();
+            outputStreamReceiver.startRecord(identifier);
+        }
         dispatch(StandardEventNames.ID, identifier, null, false);
     }
 
@@ -305,7 +309,6 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
             listener.flush(recordCount, currentEntityCount);
         }
 
-        outputStreamReceiver.endRecord();
         entityCountStack.removeLast();
 
         if (!entityCountStack.isEmpty()) {
@@ -320,6 +323,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
             buffer.replay();
             needsReplay = false;
         }
+        outputStreamReceiver.endRecord();
     }
 
     @Override
