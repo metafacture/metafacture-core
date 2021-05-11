@@ -18,7 +18,6 @@ package org.metafacture.metamorph;
 
 import org.metafacture.framework.StreamReceiver;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -381,6 +380,7 @@ public class MetafixDslTest {
     public void prependLiteralWithVarVal() {
         final Metafix metafix = fix(
                 ImmutableMap.of("pre", "eha"),
+                streamReceiver,
                 "do map(a)",
                 "  compose(prefix: '$[pre]')",
                 "end"
@@ -400,6 +400,7 @@ public class MetafixDslTest {
     public void prependLiteralWithVarKey() {
         final Metafix metafix = fix(
                 ImmutableMap.of("composeOperation", "prefix"),
+                streamReceiver,
                 "do map(a)",
                 "  compose('$[composeOperation]': 'eha')",
                 "end"
@@ -920,30 +921,6 @@ public class MetafixDslTest {
     }
 
     @Test
-    public void shouldSupportLookingAtOtherFields() {
-        final Metafix metafix = fix(//
-                "if any_match('name', '.*University.*')", //
-                "  add_field('type', 'Organization')", //
-                "end");
-
-        metafix.setRecordMode(true);
-        final String name = "name";
-
-        metafix.startRecord("1");
-        metafix.literal(name, "Max Musterman");
-        metafix.endRecord();
-
-        metafix.startRecord("2");
-        metafix.literal(name, "Some University");
-        metafix.literal(name, "Filibandrina");
-        metafix.endRecord();
-
-        Assert.assertTrue("Some University".matches(".*University.*"));
-        final InOrder ordered = Mockito.inOrder(streamReceiver);
-        ordered.verify(streamReceiver, Mockito.times(1)).literal("type", "Organization");
-    }
-
-    @Test
     @Disabled("Fix syntax")
     public void shouldReplaceVariables() {
         final Metafix metafix = fix(
@@ -959,17 +936,17 @@ public class MetafixDslTest {
     }
 
     private Metafix fix(final String... fix) {
-        return fix(Collections.emptyMap(), fix);
+        return fix(Collections.emptyMap(), streamReceiver, fix);
     }
 
-    private Metafix fix(final Map<String, String> vars, final String... fix) {
+    static Metafix fix(final Map<String, String> vars, final StreamReceiver receiver, final String... fix) {
         final String fixString = String.join("\n", fix);
         System.out.println("\nFix string: " + fixString);
 
         Metafix metafix = null;
         try {
             metafix = new Metafix(fixString, vars);
-            metafix.setReceiver(streamReceiver);
+            metafix.setReceiver(receiver);
         }
         catch (final FileNotFoundException e) {
             e.printStackTrace();

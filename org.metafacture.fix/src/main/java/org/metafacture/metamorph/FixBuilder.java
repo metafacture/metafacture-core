@@ -239,16 +239,21 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
 
     private boolean testConditional(final String conditional, final EList<String> p) {
         System.out.printf("<IF>: %s p: %s\n", conditional, p);
+        boolean result = false;
+        final String field = resolvedAttribute(p, 1);
+        final String value = resolvedAttribute(p, 2);
+        final Multimap<String, String> map = metafix.getCurrentRecord();
+        System.out.printf("<%s>: field: %s value: %s in: %s\n", conditional, field, value, map);
         switch (conditional) {
             case "any_match":
-                final String field = resolvedAttribute(p, 1);
-                final String value = resolvedAttribute(p, 2);
-                final Multimap<String, String> map = metafix.getCurrentRecord();
-                System.out.printf("<any_match>: field: %s value: %s in: %s\n", field, value, map);
-                return map.containsKey(field) && map.get(field).stream().anyMatch(v -> v.matches(value));
+                result = map.containsKey(field) && map.get(field).stream().anyMatch(v -> v.matches(value));
+                break;
+            case "all_match":
+                result = map.containsKey(field) && map.get(field).stream().allMatch(v -> v.matches(value));
+                break;
             default:
-                return false;
         }
+        return result;
     }
 
     private void processFunction(final Expression expression, final List<String> params, final String source) {
