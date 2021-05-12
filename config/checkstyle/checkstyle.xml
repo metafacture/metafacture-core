@@ -7,6 +7,7 @@
         <property name="checks" value=".*"/>
         <property name="files" value="xtext-gen"/>
     </module>
+    <module name="SuppressWarningsFilter" />
     <module name="TreeWalker">
         <module name="AbstractClassName"/>
         <module name="AnnotationUseStyle"/>
@@ -145,6 +146,7 @@
             <property name="checkFormat" value="$1"/>
             <property name="commentFormat" value="checkstyle-disable-line (\w+(?:\|\w+)?)"/>
         </module>
+        <module name="SuppressWarningsHolder" />
         <module name="ThrowsCount">
             <property name="max" value="2"/>
         </module>
