@@ -24,6 +24,7 @@ import org.metafacture.fix.fix.If;
 import org.metafacture.fix.fix.MethodCall;
 import org.metafacture.fix.fix.Options;
 import org.metafacture.metamorph.api.Collect;
+import org.metafacture.metamorph.api.ConditionAware;
 import org.metafacture.metamorph.api.FlushListener;
 import org.metafacture.metamorph.api.Function;
 import org.metafacture.metamorph.api.InterceptorFactory;
@@ -180,10 +181,12 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
         if (parent.isInEntity()) {
             ((Entity) parent.getPipe()).setNameSource(delegate);
         }
-        // TODO: condition handling, see MorphBuilder
-
-        parent.getPipe().addNamedValueSource(delegate);
-
+        else if (parent.isInCondition()) {
+            ((ConditionAware) parent.getPipe()).setConditionSource(delegate);
+        }
+        else {
+            parent.getPipe().addNamedValueSource(delegate);
+        }
         final Collect collector = (Collect) tailPipe;
         if (null != flushWith) {
             collector.setWaitForFlush(true);
@@ -231,8 +234,19 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
     }
 
     private void processConditional(final Expression expression, final EList<String> p) {
+        enterIf();
         final If theIf = (If) expression;
-        if (testConditional(theIf.getName(), p)) {
+        enterDataMap(p, false);
+        final Map<String, String> attributes = resolvedAttributeMap(p, null);
+        attributes.put("string", resolvedAttribute(p, 2)); // for contains & equals morph functions
+        // TODO: support morph functions: regexp -> match, morph quantors as prefixes: none_, all_, any_
+        runMetamorphFunction(expression.getName(), attributes);
+        exitData();
+        // The Metamorph IF acts like a guard, executing not nested statements, but following statements:
+        exitIf();
+        processSubexpressions(theIf.getElements(), resolvedAttribute(p, 1));
+        // As a draft for a record mode, we might do something like this instead:
+        if (metafix.isRecordMode() && testConditional(theIf.getName(), p)) {
             processSubexpressions(theIf.getElements(), resolvedAttribute(p, 1));
         }
     }
@@ -259,10 +273,13 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
     private void processFunction(final Expression expression, final List<String> params, final String source) {
         final FixFunction functionToRun = findFixFunction(expression);
         if (functionToRun != null) {
+            System.out.printf("Running Fix function %s, params %s, source %s\n", expression.getName(), params, source);
             functionToRun.apply(this, expression, params, source);
         }
         else {
-            runMetamorphFunction(expression, params);
+            final Options options = ((MethodCall) expression).getOptions();
+            final Map<String, String> attributes = resolvedAttributeMap(params, options);
+            runMetamorphFunction(expression.getName(), attributes);
         }
     }
 
@@ -275,11 +292,10 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
         return null;
     }
 
-    private void runMetamorphFunction(final Expression expression, final List<String> params) {
-        final Map<String, String> attributes = resolvedAttributeMap(params, ((MethodCall) expression).getOptions());
-        if (functionFactory.containsKey(expression.getName())) {
+    private void runMetamorphFunction(final String name, final Map<String, String> attributes) {
+        if (functionFactory.containsKey(name)) {
             final String flushWith = attributes.remove(FLUSH_WITH);
-            final Function function = functionFactory.newInstance(expression.getName(), attributes);
+            final Function function = functionFactory.newInstance(name, attributes);
             if (null != flushWith) {
                 registerFlush(flushWith, function);
             }
@@ -298,7 +314,7 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
             head.setPipe(function);
         }
         else {
-            throw new IllegalArgumentException(expression.getName() + " not found");
+            throw new IllegalArgumentException(name + " not found");
         }
     }
 
@@ -320,10 +336,12 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
         if (parent.isInEntity()) {
             ((Entity) parent.getPipe()).setNameSource(delegate);
         }
-
-        // TODO: condition handling, see MorphBuilder
-
-        parent.getPipe().addNamedValueSource(delegate);
+        else if (parent.isInCondition()) {
+            ((ConditionAware) parent.getPipe()).setConditionSource(delegate);
+        }
+        else {
+            parent.getPipe().addNamedValueSource(delegate);
+        }
     }
 
     NamedValuePipe enterDataMap(final List<String> params, final boolean standalone) {
@@ -388,6 +406,17 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
         head.setPipe(function);
     }
 
+    void enterIf() {
+        assert stack.peek().getPipe() instanceof ConditionAware :
+                "statement `if` is not allowed in the current element";
+
+        stack.peek().setInCondition(true);
+    }
+
+    void exitIf() {
+        stack.peek().setInCondition(false);
+    }
+
     private void addNestedField(final List<String> params, final String resolvedAttribute) {
         final String[] keyElements = resolvedAttribute.split("\\.");
         final Pair<Entity, Entity> firstAndLast = createEntities(keyElements);
@@ -450,8 +479,18 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
 
         private boolean inEntity;
 
+        private boolean inCondition;
+
         private StackFrame(final NamedValuePipe pipe) {
             this.pipe = pipe;
+        }
+
+        public void setInCondition(final boolean inCondition) {
+            this.inCondition = inCondition;
+        }
+
+        public boolean isInCondition() {
+            return inCondition;
         }
 
         public NamedValuePipe getPipe() {

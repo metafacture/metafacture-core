@@ -72,7 +72,6 @@ public final class MetafixTestHelpers {
         catch (final FileNotFoundException e) {
             e.printStackTrace();
         }
-        metafix.setRecordMode(true);
         return metafix;
     }
 

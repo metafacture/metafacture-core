@@ -75,7 +75,7 @@ import java.util.Map;
  * @author Christoph Böhme (Metamorph)
  * @author Fabian Steeg (Metafix)
  */
-
+// TODO: implement ConditionAware to support top-level `if` like in MetafixRecordTest
 public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
 
     public static final String ELSE_KEYWORD = "_else";
@@ -541,6 +541,10 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
 
     public void setRecordMode(final boolean recordMode) {
         this.recordMode = recordMode;
+    }
+
+    public boolean isRecordMode() {
+        return recordMode;
     }
 
 }
