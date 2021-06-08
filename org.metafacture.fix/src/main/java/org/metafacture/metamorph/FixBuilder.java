@@ -234,6 +234,12 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
     }
 
     private void processConditional(final Expression expression, final EList<String> p) {
+        final boolean isTopLevelIf = stack.peek().pipe instanceof Metafix;
+        // If we're at the top level, we wrap the If into a collector:
+        if (isTopLevelIf) {
+            final Collect collect = collectFactory.newInstance("choose");
+            stack.push(new StackFrame(collect));
+        }
         enterIf();
         final If theIf = (If) expression;
         enterDataMap(p, false);
@@ -248,6 +254,10 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
         // As a draft for a record mode, we might do something like this instead:
         if (metafix.isRecordMode() && testConditional(theIf.getName(), p)) {
             processSubexpressions(theIf.getElements(), resolvedAttribute(p, 1));
+        }
+        // If we're at the top level, we close the wrapping collector:
+        if (isTopLevelIf) {
+            exitCollectorAndFlushWith(RECORD);
         }
     }
 
@@ -300,6 +310,7 @@ public class FixBuilder { // checkstyle-disable-line ClassDataAbstractionCouplin
                 registerFlush(flushWith, function);
             }
             function.setMaps(metafix);
+
             final StackFrame head = stack.peek();
             final NamedValuePipe interceptor = interceptorFactory.createNamedValueInterceptor();
             final NamedValuePipe delegate;
