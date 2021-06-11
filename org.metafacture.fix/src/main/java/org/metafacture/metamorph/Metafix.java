@@ -20,7 +20,7 @@ import org.metafacture.commons.tries.SimpleRegexTrie;
 import org.metafacture.fix.FixStandaloneSetup;
 import org.metafacture.fix.fix.Expression;
 import org.metafacture.fix.fix.Fix;
-import org.metafacture.fix.interpreter.FixInterpreter;
+import org.metafacture.flowcontrol.StreamBuffer;
 import org.metafacture.framework.StandardEventNames;
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
@@ -35,6 +35,8 @@ import org.metafacture.metamorph.api.NamedValueReceiver;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.SourceLocation;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.io.CharStreams;
 import com.google.inject.Injector;
 import org.eclipse.emf.common.util.URI;
@@ -73,7 +75,7 @@ import java.util.Map;
  * @author Christoph Böhme (Metamorph)
  * @author Fabian Steeg (Metafix)
  */
-
+// TODO: implement ConditionAware to support top-level `if` like in MetafixRecordTest
 public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
 
     public static final String ELSE_KEYWORD = "_else";
@@ -89,6 +91,8 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
 
     private static final InterceptorFactory NULL_INTERCEPTOR_FACTORY = new NullInterceptorFactory();
     private static final Map<String, String> NO_VARS = Collections.emptyMap();
+
+    private Multimap<String, String> currentRecord = HashMultimap.create();
 
     // warning: auxiliary class WildcardRegistry in WildcardDataRegistry.java should not be accessed from outside its own source file
     //private final Registry<NamedValueReceiver> dataRegistry = new WildcardRegistry<>();
@@ -126,6 +130,12 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
     private boolean elseNested;
     private boolean elseNestedEntityStarted;
     private String currentLiteralName;
+
+    private final StreamBuffer buffer = new StreamBuffer();
+    private boolean needsReplay;
+    private Fix fix;
+    private InterceptorFactory interceptorFactory;
+    private boolean recordMode;
 
     public Metafix() {
         init();
@@ -193,11 +203,13 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         });
     }
 
-    private void buildPipeline(final Reader fixDef, final Map<String, String> theVars, final InterceptorFactory interceptorFactory) {
-        final Fix fix = parseFix(fixDef);
+    private void buildPipeline(final Reader fixDef, final Map<String, String> theVars, final InterceptorFactory interceptorF) {
+        final Fix f = parseFix(fixDef);
+        this.fix = f;
         this.vars = theVars;
-        // TODO: unify FixInterpreter and FixBuilder
-        new FixInterpreter().run(this, fix);
+        this.interceptorFactory = interceptorF;
+        // TODO: FixInterpreter no longer needed?
+        // new FixInterpreter().run(this, fix);
         new FixBuilder(this, interceptorFactory).walk(fix);
     }
 
@@ -266,6 +278,10 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
 
     @Override
     public void startRecord(final String identifier) {
+        buffer.clear();
+        buffer.startRecord(identifier);
+
+        System.out.printf("Start record: %s\n", currentRecord);
         flattener.startRecord(identifier);
         entityCountStack.clear();
 
@@ -276,7 +292,14 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         ++recordCount;
         recordCount %= Integer.MAX_VALUE;
 
-        outputStreamReceiver.startRecord(identifier);
+        if (!recordMode) {
+            outputStreamReceiver.startRecord(identifier);
+        }
+        else if (!needsReplay) {
+            needsReplay = true;
+            currentRecord = HashMultimap.create();
+            outputStreamReceiver.startRecord(identifier);
+        }
         dispatch(StandardEventNames.ID, identifier, null, false);
     }
 
@@ -286,7 +309,6 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
             listener.flush(recordCount, currentEntityCount);
         }
 
-        outputStreamReceiver.endRecord();
         entityCountStack.removeLast();
 
         if (!entityCountStack.isEmpty()) {
@@ -294,6 +316,14 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         }
 
         flattener.endRecord();
+        buffer.endRecord();
+        if (recordMode && needsReplay) {
+            System.out.printf("End record, replay with: %s\n", currentRecord);
+            new FixBuilder(this, interceptorFactory).walk(fix);
+            buffer.replay();
+            needsReplay = false;
+        }
+        outputStreamReceiver.endRecord();
     }
 
     @Override
@@ -307,6 +337,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         entityCountStack.push(Integer.valueOf(entityCount));
 
         flattener.startEntity(name);
+        buffer.startEntity(name);
     }
 
     @Override
@@ -314,18 +345,21 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         dispatch(flattener.getCurrentPath(), "", getElseSources(), true);
         currentEntityCount = entityCountStack.pop().intValue();
         flattener.endEntity();
+        buffer.endEntity();
     }
 
     @Override
     public void literal(final String name, final String value) {
         currentLiteralName = name;
         flattener.literal(name, value);
+        buffer.literal(name, value);
     }
 
     @Override
     public void resetStream() {
         // TODO: Implement proper reset handling
         outputStreamReceiver.resetStream();
+        buffer.clear();
     }
 
     @Override
@@ -340,6 +374,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         }
 
         outputStreamReceiver.closeStream();
+        buffer.clear();
     }
 
     private void dispatch(final String path, final String value, final List<NamedValueReceiver> fallback, final boolean endEntity) {
@@ -381,6 +416,8 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
     }
 
     private void send(final String key, final String value, final List<NamedValueReceiver> dataList) {
+        System.out.printf("Sending '%s':'%s' to %s\n", key, value, dataList);
+        currentRecord.put(key, value);
         for (final NamedValueReceiver data : dataList) {
             data.receive(key, value, null, recordCount, currentEntityCount);
         }
@@ -396,7 +433,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         }
 
         outputStreamReceiver = streamReceiver;
-
+        buffer.setReceiver(this);
         return streamReceiver;
     }
 
@@ -424,7 +461,6 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
         else {
             unescapedName = name;
         }
-
         outputStreamReceiver.literal(unescapedName, value);
     }
 
@@ -497,6 +533,18 @@ public class Metafix implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps
 
     public Map<String, String> getVars() {
         return vars;
+    }
+
+    public Multimap<String, String> getCurrentRecord() {
+        return currentRecord;
+    }
+
+    public void setRecordMode(final boolean recordMode) {
+        this.recordMode = recordMode;
+    }
+
+    public boolean isRecordMode() {
+        return recordMode;
     }
 
 }

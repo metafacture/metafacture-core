@@ -6,6 +6,7 @@ plugins {
 dependencies {
   compile "org.eclipse.xtext:org.eclipse.xtext:${versions.xtext}"
   compile "org.eclipse.xtext:org.eclipse.xtext.xbase:${versions.xtext}"
+  compile "com.google.guava:guava:${versions.guava}"
 
   testCompile "org.junit.jupiter:junit-jupiter-api:${versions.junit_jupiter}"
   testCompile "org.junit.platform:junit-platform-launcher:${versions.junit_platform}"
