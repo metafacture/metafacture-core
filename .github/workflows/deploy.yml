@@ -37,6 +37,6 @@ jobs:
         source_file: 'org.metafacture.fix.vsc/fix.vsix'
         destination_repo: 'metafacture/metafacture.github.io'
         destination_branch: main
-        destination_folder: 'extensions'
+        destination_folder: 'ide-extensions'
         user_email: '${{ github.actor }}@users.noreply.github.com'
         user_name: '${{ github.actor }}'
