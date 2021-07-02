@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 hbz NRW
+ * Copyright 2020, 2021 hbz NRW
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
 
 import java.io.FileNotFoundException;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
@@ -42,13 +42,18 @@ public final class MetafixTestHelpers {
 
     public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Consumer<Metafix> in,
             final Consumer<Supplier<StreamReceiver>> out) {
-        assertFix(receiver, fixDef, in, (s, f) -> out.accept(s));
+        assertFix(receiver, fixDef, in, (s, f) -> out.accept(s), Metafix.NO_VARS);
+    }
+
+    public static void assertFix(final StreamReceiver receiver, final List<String> fixDef,
+            final Map<String, String> vars, final Consumer<Metafix> in, final Consumer<Supplier<StreamReceiver>> out) {
+        assertFix(receiver, fixDef, in, (s, f) -> out.accept(s), vars);
     }
 
     public static void assertFix(final StreamReceiver receiver, final List<String> fixLines, final Consumer<Metafix> in,
-            final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
+            final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out, final Map<String, String> vars) {
         final String fixString = String.join("\n", fixLines);
-        final Metafix metafix = fix(receiver, fixString);
+        final Metafix metafix = fix(receiver, fixString, vars);
         final InOrder ordered = Mockito.inOrder(receiver);
         try {
             in.accept(metafix);
@@ -62,11 +67,11 @@ public final class MetafixTestHelpers {
         }
     }
 
-    static Metafix fix(final StreamReceiver receiver, final String fix) {
+    static Metafix fix(final StreamReceiver receiver, final String fix, final Map<String, String> vars) {
         System.out.println("\nFix string: " + fix);
         Metafix metafix = null;
         try {
-            metafix = new Metafix(fix, Collections.emptyMap());
+            metafix = new Metafix(fix, vars);
             metafix.setReceiver(receiver);
         }
         catch (final FileNotFoundException e) {

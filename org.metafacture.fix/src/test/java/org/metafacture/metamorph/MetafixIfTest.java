@@ -30,9 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 
 /**
- * Tests the `if` Metamorph mechanism adapted for Metafix via DSL.
- *
- * See https://github.com/metafacture/metafacture-fix/issues/10
+ * Test Metafix `if` conditionals.
  *
  * @author Fabian Steeg
  */
@@ -50,31 +48,120 @@ public class MetafixIfTest {
     }
 
     @Test
-    public void ifTopLevel() {
+    public void ifAny() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "map('name')",
-                "if contains('name', 'University')", //
+                "if any_contain('name', 'University')", //
                 "  add_field('type', 'Organization')", //
                 "end"), //
             i -> {
                 i.startRecord("1");
+                i.literal("name", "Mary");
                 i.literal("name", "A University");
+                i.endRecord();
+                //
+                i.startRecord("2");
+                i.literal("name", "Mary");
+                i.literal("name", "Max");
+                i.endRecord();
+                //
+                i.startRecord("3");
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
+                o.get().literal("name", "Mary");
                 o.get().literal("name", "A University");
                 o.get().literal("type", "Organization");
+                o.get().endRecord();
+                //
+                o.get().startRecord("2");
+                o.get().literal("name", "Mary");
+                o.get().literal("name", "Max");
+                o.get().endRecord();
+                //
+                o.get().startRecord("3");
                 o.get().endRecord();
             });
     }
 
     @Test
-    public void ifTopLevelWithEqualsFunction() {
+    public void ifAll() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "if equals('name', 'University')", //
+                "if all_contain('name', 'University')", //
                 "  add_field('type', 'Organization')", //
-                "end", //
-                "map('name')"),
+                "end"), //
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Mary");
+                i.literal("name", "A University");
+                i.endRecord();
+                //
+                i.startRecord("2");
+                i.literal("name", "Great University");
+                i.literal("name", "A University");
+                i.endRecord();
+                //
+                i.startRecord("3");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Mary");
+                o.get().literal("name", "A University");
+                o.get().endRecord();
+                //
+                o.get().startRecord("2");
+                o.get().literal("name", "Great University");
+                o.get().literal("name", "A University");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+                //
+                o.get().startRecord("3");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void ifNone() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "if none_contain('name', 'University')", //
+                "  add_field('type', 'Person')", //
+                "end"), //
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Mary");
+                i.literal("name", "A University");
+                i.endRecord();
+                //
+                i.startRecord("2");
+                i.literal("name", "Max");
+                i.literal("name", "Mary");
+                i.endRecord();
+                //
+                i.startRecord("3");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Mary");
+                o.get().literal("name", "A University");
+                o.get().endRecord();
+                //
+                o.get().startRecord("2");
+                o.get().literal("name", "Max");
+                o.get().literal("name", "Mary");
+                o.get().literal("type", "Person");
+                o.get().endRecord();
+                //
+                o.get().startRecord("3");
+                o.get().literal("type", "Person");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void ifEqual() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "if all_equal('name', 'University')", //
+                "  add_field('type', 'Organization')", //
+                "end"),
             i -> {
                 i.startRecord("1");
                 i.literal("name", "University");
@@ -88,42 +175,20 @@ public class MetafixIfTest {
     }
 
     @Test
-    public void ifInCollector() {
+    public void ifContainMoveField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "do entity('author')",
-                " map('name')",
-                " if contains('name', 'University')", //
-                "  add_field('type', 'Organization')", //
-                " end",
-                "end"), //
-            i -> {
-                i.startRecord("1");
-                i.literal("name", "A University");
-                i.endRecord();
-            }, o -> {
-                o.get().startRecord("1");
-                o.get().startEntity("author");
-                o.get().literal("type", "Organization");
-                o.get().literal("name", "A University");
-                o.get().endEntity();
-                o.get().endRecord();
-            });
-    }
-
-    @Test
-    public void ifTopLevelMultiRecords() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "map('name')",
-                "if contains('name', 'University')", //
-                "  add_field('type', 'Organization')", //
+                "if all_contain('name', 'University')", //
+                "  move_field('name', 'orgName')", //
                 "end"), //
             i -> {
                 i.startRecord("1");
                 i.literal("name", "Max");
                 i.endRecord();
+                //
                 i.startRecord("2");
                 i.literal("name", "A University");
                 i.endRecord();
+                //
                 i.startRecord("3");
                 i.literal("name", "Mary");
                 i.endRecord();
@@ -131,89 +196,22 @@ public class MetafixIfTest {
                 o.get().startRecord("1");
                 o.get().literal("name", "Max");
                 o.get().endRecord();
-                o.get().startRecord("2");
-                o.get().literal("name", "A University");
-                o.get().literal("type", "Organization");
-                o.get().endRecord();
-                o.get().startRecord("3");
-                o.get().literal("name", "Mary");
-                o.get().endRecord();
-            });
-    }
-
-    @Test
-    public void ifTopLevelMultiRecordsMapField() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "if contains('name', 'University')", //
-                "  map('name', 'orgName')", //
-                "end"), //
-            i -> {
-                i.startRecord("1");
-                i.literal("name", "Max");
-                i.endRecord();
-                i.startRecord("2");
-                i.literal("name", "A University");
-                i.endRecord();
-                i.startRecord("3");
-                i.literal("name", "Mary");
-                i.endRecord();
-            }, o -> {
-                o.get().startRecord("1");
-                o.get().endRecord();
+                //
                 o.get().startRecord("2");
                 o.get().literal("orgName", "A University");
                 o.get().endRecord();
+                //
                 o.get().startRecord("3");
-                o.get().endRecord();
-            });
-    }
-
-    @Test
-    @Disabled // TODO: in collector, `map` not firing when `if` fails
-    public void ifInCollectorMultiRecords() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "do entity('author')",
-                " map('name')",
-                " if contains('name', 'University')", //
-                "  add_field('type', 'Organization')", //
-                " end",
-                "end"), //
-            i -> {
-                i.startRecord("1");
-                i.literal("name", "Max");
-                i.endRecord();
-                i.startRecord("2");
-                i.literal("name", "A University");
-                i.endRecord();
-                i.startRecord("3");
-                i.literal("name", "Mary");
-                i.endRecord();
-            }, o -> {
-                o.get().startRecord("1");
-                o.get().startEntity("author");
-                o.get().literal("name", "Max");
-                o.get().endEntity();
-                o.get().endRecord();
-                o.get().startRecord("2");
-                o.get().startEntity("author");
-                o.get().literal("type", "Organization");
-                o.get().literal("name", "A University");
-                o.get().endEntity();
-                o.get().endRecord();
-                o.get().startRecord("3");
-                o.get().startEntity("author");
                 o.get().literal("name", "Mary");
-                o.get().endEntity();
                 o.get().endRecord();
             });
     }
 
     @Test
-    // Without `entity`, but nested.entity.syntax: two entities, same name
-    public void mapAndTestNestedTwoEntities() {
+    public void moveAndAddIfContain() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "map('name', 'author.name')",
-                "if contains('name', 'University')", //
+                "move_field('name', 'author.name')",
+                "if all_contain('author.name', 'University')", //
                 " add_field('author.type', 'Organization')", //
                 "end"), //
             i -> {
@@ -222,82 +220,16 @@ public class MetafixIfTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("author");
-                o.get().literal("type", "Organization");
-                o.get().endEntity();
-                o.get().startEntity("author");
-                o.get().literal("name", "A University");
-                o.get().endEntity();
+                o.get().literal("author.name", "A University");
+                o.get().literal("author.type", "Organization");
                 o.get().endRecord();
             });
     }
 
     @Test
-    // Top-level `if` constructs internally wrap a choose collector:
-    public void ifInCollectorChoose() {
+    public void ifContainMultipleAddField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "do choose(flushWith: 'record')",
-                " if contains('name', 'University')", //
-                "  add_field('type', 'Organization')", //
-                " end", //
-                "end"), //
-            i -> {
-                i.startRecord("1");
-                i.literal("name", "Max University");
-                i.endRecord();
-                //
-                i.startRecord("2");
-                i.literal("name", "Max Musterman");
-                i.endRecord();
-            }, o -> {
-                o.get().startRecord("1");
-                o.get().literal("type", "Organization");
-                o.get().endRecord();
-                //
-                o.get().startRecord("2");
-                o.get().endRecord();
-            });
-    }
-
-    @Test
-    public void ifInCollectorCombine() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "do combine(name: 'fullName', value: '${first} ${last}')", //
-                " if contains('author.type', 'Person')", //
-                "  map('author.first', 'first')", //
-                "  map('author.last', 'last')", //
-                " end", //
-                "end"), //
-            i -> {
-                i.startRecord("1");
-                i.startEntity("author");
-                i.literal("type", "Organization");
-                i.endEntity();
-                i.endRecord();
-                //
-                i.startRecord("2");
-                i.startEntity("author");
-                i.literal("first", "Max");
-                i.literal("last", "Musterman");
-                i.literal("type", "DifferentiatedPerson");
-                i.endEntity();
-                i.endRecord();
-            }, o -> {
-                o.get().startRecord("1");
-                o.get().endRecord();
-                //
-                o.get().startRecord("2");
-                o.get().literal("fullName", "Max Musterman");
-                o.get().endRecord();
-            });
-    }
-
-    @Test
-    @Disabled // TODO: second `add_field` not firing
-    public void ifTopLevelMultipleAddField() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "map('name')",
-                "if contains('name', 'University')", //
+                "if all_contain('name', 'University')", //
                 "  add_field('type', 'Organization')", //
                 "  add_field('comment', 'type was guessed')", //
                 "end"), //
@@ -314,4 +246,213 @@ public class MetafixIfTest {
             });
     }
 
+    @Test
+    public void ifAnyMatch() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "if any_match('name', '.*University.*')", //
+                "  add_field('type', 'Organization')", //
+                "end"), //
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Max");
+                i.endRecord();
+                //
+                i.startRecord("2");
+                i.literal("name", "Some University");
+                i.literal("name", "Filibandrina");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Max");
+                o.get().endRecord();
+                //
+                o.get().startRecord("2");
+                o.get().literal("name", "Some University");
+                o.get().literal("name", "Filibandrina");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void ifAllMatch() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "if all_match('name', '.*University.*')", //
+                "  add_field('type', 'Organization')", //
+                "end"), //
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Max");
+                i.literal("name", "A University");
+                i.endRecord();
+                //
+                i.startRecord("2");
+                i.literal("name", "Some University");
+                i.literal("name", "University Filibandrina");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Max");
+                o.get().literal("name", "A University");
+                o.get().endRecord();
+                //
+                o.get().startRecord("2");
+                o.get().literal("name", "Some University");
+                o.get().literal("name", "University Filibandrina");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void ifAnyMatchNested() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "if any_match('author.name.label', '.*University.*')", //
+                "  add_field('author.type', 'Organization')", //
+                "end"), //
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author");
+                i.startEntity("name");
+                i.literal("label", "Max");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+                //
+                i.startRecord("2");
+                i.startEntity("author");
+                i.startEntity("name");
+                i.literal("label", "Some University");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("author.name.label", "Max");
+                o.get().endRecord();
+                //
+                o.get().startRecord("2");
+                o.get().literal("author.name.label", "Some University");
+                o.get().literal("author.type", "Organization");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void ifAnyMatchFirstRecord() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "if any_match('name', '.*University.*')", //
+                "  add_field('type', 'Organization')", //
+                "end"), //
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Some University");
+                i.endRecord();
+                //
+                i.startRecord("2");
+                i.literal("name", "Max");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Some University");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+                //
+                o.get().startRecord("2");
+                o.get().literal("name", "Max");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void ifAnyMatchLastRecord() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "if any_match('name', '.*University.*')", //
+                "  add_field('type', 'Organization')", //
+                "end"), //
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Max");
+                i.endRecord();
+                //
+                i.startRecord("2");
+                i.literal("name", "Some University");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Max");
+                o.get().endRecord();
+                //
+                o.get().startRecord("2");
+                o.get().literal("name", "Some University");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    @Disabled // TODO: support else block
+    public void ifAnyMatchElse() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "if any_match('name', '.*University.*')", //
+                "  add_field('type', 'Organization')", //
+                "else", //
+                "  add_field('type', 'Person')", //
+                "end"), //
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Max");
+                i.endRecord();
+                //
+                i.startRecord("2");
+                i.literal("name", "Some University");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("type", "Person");
+                o.get().endRecord();
+                //
+                o.get().startRecord("2");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    @Disabled // TODO: support elsif block
+    public void ifAnyMatchElsif() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "if any_match('name', '.*University.*')", //
+                "  add_field('type', 'Organization')", //
+                "elsif any_match('name', '[^ ]* [^ ]*')", //
+                "  add_field('type', 'Person')", //
+                "else", //
+                "  add_field('type', 'Unknown')", //
+                "end"), //
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Max");
+                i.endRecord();
+                //
+                i.startRecord("2");
+                i.literal("name", "Some University");
+                i.endRecord();
+                //
+                i.startRecord("3");
+                i.literal("name", "Filibandrina");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("type", "Person");
+                o.get().endRecord();
+                //
+                o.get().startRecord("2");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+                //
+                o.get().startRecord("3");
+                o.get().literal("type", "Unknown");
+                o.get().endRecord();
+            });
+    }
 }

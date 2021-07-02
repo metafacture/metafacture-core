@@ -1,6 +1,6 @@
 package org.metafacture.fix.web;
 
-import org.metafacture.metamorph.Metafix;
+import org.metafacture.fix.FixStandaloneSetup;
 import org.metafacture.runner.Flux;
 
 import org.antlr.runtime.RecognitionException;
@@ -106,7 +106,7 @@ public class FixServlet extends XtextServlet {
     }
 
     private String absPathToTempFile(final String content, final String suffix) throws IOException {
-        return Metafix.absPathToTempFile(new StringReader(content), suffix);
+        return FixStandaloneSetup.absPathToTempFile(new StringReader(content), suffix);
     }
 
 }
