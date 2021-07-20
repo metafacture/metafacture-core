@@ -2,7 +2,7 @@
 
 Welcome! Thank you for contributing to Metafacture.
 
-The following is a set of guidelines for contributing to Metafacture Core and how to work together in an efficient and goal-oriented way. We use the simple GitHub workflow: the master branch is always the version that is actually deployed to production (??). New features are developed in feature branches which are merged into the master after review in pull requests. See details on the [GitHub flow](https://guides.github.com/introduction/flow/). The agile methods we use are inspired by the [Scrum Guide](https://www.scrum.org/resources/scrum-guide).
+The following is a set of guidelines for contributing to Metafacture Core and how to work together in an efficient and goal-oriented way. We use the simple GitHub workflow: the master branch is always in a working state. New features are developed in feature branches which are merged into the master after review in pull requests. See details on the [GitHub flow](https://guides.github.com/introduction/flow/). The agile methods we use are inspired by the [Scrum Guide](https://www.scrum.org/resources/scrum-guide).
 
 ## Table of Contents
 
@@ -37,8 +37,8 @@ Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/).
 Explain the problem and include additional details to help maintainers reproduce the problem:
 
 * **Use a clear and descriptive title** for the issue to identify the problem.
-* **Describe the exact steps which reproduce the problem** in as many details as possible. For example, start by explaining (??). When listing steps, **don't just say what you did, but explain how you did it**. For example, if you moved the cursor to the end of a line, explain if you used the mouse or a keyboard shortcut (??).
-* **Provide specific examples to demonstrate the steps**. Include links to files or GitHub projects, or copy/pasteable snippets, which you use in those examples. If you're providing snippets in the issue, use [Markdown code blocks](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#code).
+* **Describe the exact steps which reproduce the problem** in as many details as possible. For example, start by explaining how you are running Metafacture (e.g. running flux.sh/flux.bat or as a Java library). When listing steps, **don't just say what you did, but explain how you did it**. For example, if you're describing the behavior of a specific Morph/Fix function, provide the actual workflow (Flux/Java) and the full Morph file you're using (see also next point). 
+* **Provide specific examples to demonstrate the steps**. Include links to files or GitHub projects, or copy/pasteable snippets, which you use in those examples. If you're providing snippets in the issue, use [Markdown code blocks](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#code). The ideal example would be a stripped-down runnable use case using some sample data showing the problematic behavior.
 * **Describe the behavior you observed after following the steps** and point out what exactly is the problem with that behavior.
 * **Explain which behavior you expected to see instead and why.**
 * **If the problem wasn't triggered by a specific action**, describe what you were doing before the problem happened.
@@ -120,7 +120,7 @@ Issues move from left to right. We use the following columns:
 
 #### Backlog
 
-Here are all issues that are planned but not ready, have open questions and/or dependencies on other issues or on an external resource. We don't want to write down every idea about Metafacture so our backlog remains manageable. We are convinced that important issues that can't be implemented now will pop up again so we don't need to write down everything that's important but not feasible now. (??)
+Here are all issues that are planned but not ready, have open questions and/or dependencies on other issues or on an external resource. As an open community project, we don't want to reject suggestions or requests due to missing resources. At the same time, we can't promise to implement all issues in the backlog.
 
 #### Ready
 
