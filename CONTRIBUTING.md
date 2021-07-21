@@ -9,15 +9,15 @@ The following is a set of guidelines for contributing to Metafacture and how to 
 [How can I contribute?](#how-can-i-contribute)
 * [Reporting Bugs](#reporting-bugs)
 * [Suggesting Enhancements](#suggesting-enhancements)
-* [Pull Requests](#pull-requests)
-* [Conventions](#conventions)
+* [Contributing Code](#contributing-code)
+* [Improving Documentation](#improving-documentation)
 
 [Maintainer Guidelines](#maintainer-guidelines)
 * [Board and Issues](#board-and-issues)
 * [From Backlog to Done](#from-backlog-to-done)
 * [Definition of Ready](#definition-of-ready)
 * [Definition of Done](#definition-of-done)
-* [Making a Release](#making-a-release)
+* [Releasing Metafacture](#releasing-metafacture)
 
 
 ## How can I contribute?
@@ -62,7 +62,7 @@ Provide the following information:
 * **Explain why this enhancement would be useful** to most users.
 * **List any other applications where this enhancement exists.**
 
-### Contributing code
+### Contributing Code
 
 The overall code contribution process is:
 
@@ -111,6 +111,10 @@ Please format your code according to [this EditorConfig file](https://github.com
 The [metafacture-fix build](https://github.com/metafacture/metafacture-fix/blob/master/build.gradle) performs automated [EditorConfig](https://github.com/metafacture/metafacture-fix/blob/master/.editorconfig) and [Checkstyle](https://github.com/metafacture/metafacture-fix/blob/master/config/checkstyle/checkstyle.xml) checks.
 
 The code is automatically [quality-checked on sonarcloud.io](https://sonarcloud.io/dashboard?id=org.metafacture%3Ametafacture-core) when pushed to GitHub.
+
+### Improving Documentation
+
+If you notice errors, inconsistencies or missing parts in the documentation, we are very happy about improvements. Please follow the general process for contributing code from above, or open an issue.
 
 ## Maintainer Guidelines
 
