@@ -74,7 +74,7 @@ The overall code contribution process is:
 
 #### Pull Requests
 
-Before submitting your chnages, make sure you can successfully [build from source](https://github.com/metafacture/metafacture-core#building-metafacture-core-from-source).
+Before submitting your changes, make sure you can successfully [build from source](https://github.com/metafacture/metafacture-core#building-metafacture-core-from-source).
 
 Please follow these steps to [propose contributions to the project](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/proposing-changes-to-your-work-with-pull-requests).
 
