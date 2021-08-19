@@ -29,6 +29,7 @@ import org.metafacture.fix.fix.Unless;
 import org.metafacture.metamorph.FixPredicate.Quantifier;
 
 import org.eclipse.emf.common.util.EList;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
@@ -72,7 +73,7 @@ class RecordTransformer {
         for (final Expression sub : expressions) {
             final EList<String> params = sub.getParams();
             if (sub instanceof Do) {
-                processBind(sub, params);
+                processBind((Do) sub, params);
             }
             else if (sub instanceof If) {
                 processIf((If) sub, params);
@@ -86,14 +87,27 @@ class RecordTransformer {
         }
     }
 
-    private void processBind(final Expression expression, final EList<String> params) {
-        // TODO: implement Fix Binds
-        // final String firstParam = resolvedAttribute(params, 1);
-        // final Do theDo = (Do) expression;
-        // TODO, possibly: use morph collectors here
-        // final CollectFactory collectFactory = new CollectFactory();
-        // final Map<String, String> attributes = resolvedAttributeMap(params, theDo.getOptions());
-        // final Collect collect = collectFactory.newInstance(expression.getName(), attributes);
+    private void processBind(final Do theDo, final EList<String> params) {
+        if (theDo.getName().equals("list")) { // TODO impl multiple binds via FixBind enum
+            final Map<String, String> options = options(theDo.getOptions());
+            final Multimap<String, String> fullRecord = LinkedListMultimap.create(record);
+            record.get(options.get("path")).forEach(val -> {
+                // for each val, bind the current record/scope/context to the given var name:
+                record = LinkedListMultimap.create(ImmutableMultimap.of(options.get("var"), val));
+                processSubexpressions(theDo.getElements());
+                record.removeAll(options.get("var"));
+                // and remember the things we added while bound (this probably needs some tweaking):
+                fullRecord.putAll(record);
+            });
+            record = fullRecord;
+        }
+        else {
+            System.out.println("Unprocessed bind: " + theDo);
+            // TODO, possibly: use morph collectors here
+            // final CollectFactory collectFactory = new CollectFactory();
+            // final Map<String, String> attributes = resolvedAttributeMap(params, theDo.getOptions());
+            // final Collect collect = collectFactory.newInstance(expression.getName(), attributes);
+        }
     }
 
     private void processIf(final If ifExp, final EList<String> parameters) {
@@ -144,7 +158,7 @@ class RecordTransformer {
         try {
             final FixMethod method = FixMethod.valueOf(expression.getName());
             final List<String> resolvedParams = params.stream().map(this::resolveVars).collect(Collectors.toList());
-            final Map<String, String> options = options((MethodCall) expression);
+            final Map<String, String> options = options(((MethodCall) expression).getOptions());
             method.apply(record, resolvedParams, options);
         }
         catch (final IllegalArgumentException e) {
@@ -152,8 +166,7 @@ class RecordTransformer {
         }
     }
 
-    private Map<String, String> options(final MethodCall method) {
-        final Options options = method.getOptions();
+    private Map<String, String> options(final Options options) {
         final Map<String, String> map = new HashMap<>();
         if (options != null) {
             for (int i = 0; i < options.getKeys().size(); i += 1) {

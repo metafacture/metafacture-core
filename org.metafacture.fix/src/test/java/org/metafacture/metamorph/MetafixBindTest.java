@@ -36,7 +36,6 @@ import java.util.Arrays;
  */
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("checkstyle:MultipleStringLiterals")
-@Disabled // implement Fix-style binds (with or without collectors)
 public class MetafixBindTest {
 
     @RegisterExtension
@@ -49,6 +48,29 @@ public class MetafixBindTest {
     }
 
     @Test
+    public void doList() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "do list('path': 'name', 'var': 'n')",
+                " upcase('n')",
+                " trim('n')",
+                " copy_field('n', 'author')",
+                "end",
+                "remove_field('name')"), //
+            i -> {
+                i.startRecord("1");
+                i.literal("name", " A University");
+                i.literal("name", "Max ");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("author", "A UNIVERSITY");
+                o.get().literal("author", "MAX");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    @Disabled // implement Fix-style binds with collectors?
     public void ifInCollector() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "do entity('author')",
@@ -72,6 +94,7 @@ public class MetafixBindTest {
     }
 
     @Test
+    @Disabled // implement Fix-style binds with collectors?
     public void ifInCollectorMultiRecords() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "do entity('author')",
@@ -115,6 +138,7 @@ public class MetafixBindTest {
     }
 
     @Test
+    @Disabled // implement Fix-style binds with collectors?
     public void ifInCollectorChoose() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "do choose(flushWith: 'record')",
@@ -141,6 +165,7 @@ public class MetafixBindTest {
     }
 
     @Test
+    @Disabled // implement Fix-style binds with collectors?
     public void ifInCollectorCombine() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "do combine(name: 'fullName', value: '${first} ${last}')", //
