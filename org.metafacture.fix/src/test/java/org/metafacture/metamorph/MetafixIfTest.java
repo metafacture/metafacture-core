@@ -390,6 +390,32 @@ public class MetafixIfTest {
     }
 
     @Test
+    public void unlessAnyMatch() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "unless any_match('name', '.*University.*')", //
+                "  add_field('type', 'Person')", //
+                "end"), //
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Max");
+                i.endRecord();
+                //
+                i.startRecord("2");
+                i.literal("name", "Some University");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Max");
+                o.get().literal("type", "Person");
+                o.get().endRecord();
+                //
+                o.get().startRecord("2");
+                o.get().literal("name", "Some University");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void ifAnyMatchElse() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "if any_match('name', '.*University.*')", //

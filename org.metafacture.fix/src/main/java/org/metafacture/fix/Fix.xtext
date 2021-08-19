@@ -9,9 +9,17 @@ Fix:
 
 Expression:
   Do |
+  Unless |
   If |
   MethodCall |
   {Expression} SL_COMMENT
+;
+
+Unless:
+  'unless' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')' BEGIN
+    elements += Expression*
+  END
+  'end'
 ;
 
 If:

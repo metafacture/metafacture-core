@@ -25,6 +25,7 @@ import org.metafacture.fix.fix.Fix;
 import org.metafacture.fix.fix.If;
 import org.metafacture.fix.fix.MethodCall;
 import org.metafacture.fix.fix.Options;
+import org.metafacture.fix.fix.Unless;
 import org.metafacture.metamorph.FixPredicate.Quantifier;
 
 import org.eclipse.emf.common.util.EList;
@@ -74,7 +75,10 @@ class RecordTransformer {
                 processBind(sub, params);
             }
             else if (sub instanceof If) {
-                processConditional(sub, params);
+                processIf((If) sub, params);
+            }
+            else if (sub instanceof Unless) {
+                processUnless((Unless) sub, params);
             }
             else {
                 processFunction(sub, params);
@@ -92,8 +96,7 @@ class RecordTransformer {
         // final Collect collect = collectFactory.newInstance(expression.getName(), attributes);
     }
 
-    private void processConditional(final Expression exp, final EList<String> parameters) {
-        final If ifExp = (If) exp;
+    private void processIf(final If ifExp, final EList<String> parameters) {
         final ElsIf elsIfExp = ifExp.getElseIf();
         final Else elseExp = ifExp.getElse();
         if (testConditional(ifExp.getName(), parameters)) {
@@ -104,6 +107,12 @@ class RecordTransformer {
         }
         else if (elseExp != null) {
             processSubexpressions(elseExp.getElements());
+        }
+    }
+
+    private void processUnless(final Unless unless, final EList<String> parameters) {
+        if (!testConditional(unless.getName(), parameters)) {
+            processSubexpressions(unless.getElements());
         }
     }
 
