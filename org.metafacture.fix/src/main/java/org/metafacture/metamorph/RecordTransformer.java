@@ -18,6 +18,8 @@ package org.metafacture.metamorph;
 
 import org.metafacture.commons.StringUtil;
 import org.metafacture.fix.fix.Do;
+import org.metafacture.fix.fix.ElsIf;
+import org.metafacture.fix.fix.Else;
 import org.metafacture.fix.fix.Expression;
 import org.metafacture.fix.fix.Fix;
 import org.metafacture.fix.fix.If;
@@ -90,10 +92,18 @@ class RecordTransformer {
         // final Collect collect = collectFactory.newInstance(expression.getName(), attributes);
     }
 
-    private void processConditional(final Expression expression, final EList<String> parameters) {
-        final If theIf = (If) expression;
-        if (testConditional(theIf.getName(), parameters)) {
-            processSubexpressions(theIf.getElements());
+    private void processConditional(final Expression exp, final EList<String> parameters) {
+        final If ifExp = (If) exp;
+        final ElsIf elsIfExp = ifExp.getElseIf();
+        final Else elseExp = ifExp.getElse();
+        if (testConditional(ifExp.getName(), parameters)) {
+            processSubexpressions(ifExp.getElements());
+        }
+        else if (elsIfExp != null && testConditional(elsIfExp.getName(), elsIfExp.getParams())) {
+            processSubexpressions(elsIfExp.getElements());
+        }
+        else if (elseExp != null) {
+            processSubexpressions(elseExp.getElements());
         }
     }
 

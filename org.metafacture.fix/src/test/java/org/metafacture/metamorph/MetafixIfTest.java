@@ -18,7 +18,6 @@ package org.metafacture.metamorph;
 
 import org.metafacture.framework.StreamReceiver;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -391,7 +390,6 @@ public class MetafixIfTest {
     }
 
     @Test
-    @Disabled // TODO: support else block
     public void ifAnyMatchElse() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "if any_match('name', '.*University.*')", //
@@ -409,17 +407,18 @@ public class MetafixIfTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
+                o.get().literal("name", "Max");
                 o.get().literal("type", "Person");
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
+                o.get().literal("name", "Some University");
                 o.get().literal("type", "Organization");
                 o.get().endRecord();
             });
     }
 
     @Test
-    @Disabled // TODO: support elsif block
     public void ifAnyMatchElsif() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "if any_match('name', '.*University.*')", //
@@ -431,7 +430,7 @@ public class MetafixIfTest {
                 "end"), //
             i -> {
                 i.startRecord("1");
-                i.literal("name", "Max");
+                i.literal("name", "Max Power");
                 i.endRecord();
                 //
                 i.startRecord("2");
@@ -443,14 +442,17 @@ public class MetafixIfTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
+                o.get().literal("name", "Max Power");
                 o.get().literal("type", "Person");
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
+                o.get().literal("name", "Some University");
                 o.get().literal("type", "Organization");
                 o.get().endRecord();
                 //
                 o.get().startRecord("3");
+                o.get().literal("name", "Filibandrina");
                 o.get().literal("type", "Unknown");
                 o.get().endRecord();
             });
