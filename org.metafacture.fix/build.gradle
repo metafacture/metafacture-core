@@ -42,10 +42,10 @@ test {
   useJUnitPlatform()
 }
 
-def xtextFile = 'src/main/java/org/metafacture/fix/Fix.xtext'
+def xtextFile = 'src/main/java/org/metafacture/metafix/Fix.xtext'
 
 task validateXtextLanguage(type: JavaExec) {
-  main = 'org.metafacture.fix.validation.XtextValidator'
+  main = 'org.metafacture.metafix.validation.XtextValidator'
   classpath = sourceSets.main.runtimeClasspath
   args += xtextFile
 }
@@ -53,10 +53,10 @@ task validateXtextLanguage(type: JavaExec) {
 task generateXtextLanguage(type: JavaExec) {
   main = 'org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher'
   classpath = configurations.mwe2
-  inputs.file 'src/main/java/org/metafacture/fix/GenerateFix.mwe2'
+  inputs.file 'src/main/java/org/metafacture/metafix/GenerateFix.mwe2'
   inputs.file xtextFile
   outputs.dir 'src/main/xtext-gen'
-  args += 'src/main/java/org/metafacture/fix/GenerateFix.mwe2'
+  args += 'src/main/java/org/metafacture/metafix/GenerateFix.mwe2'
   args += '-p'
   args += "rootPath=/${projectDir}/.."
 }

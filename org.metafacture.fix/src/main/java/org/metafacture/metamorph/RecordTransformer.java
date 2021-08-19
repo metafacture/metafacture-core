@@ -17,15 +17,15 @@
 package org.metafacture.metamorph;
 
 import org.metafacture.commons.StringUtil;
-import org.metafacture.fix.fix.Do;
-import org.metafacture.fix.fix.ElsIf;
-import org.metafacture.fix.fix.Else;
-import org.metafacture.fix.fix.Expression;
-import org.metafacture.fix.fix.Fix;
-import org.metafacture.fix.fix.If;
-import org.metafacture.fix.fix.MethodCall;
-import org.metafacture.fix.fix.Options;
-import org.metafacture.fix.fix.Unless;
+import org.metafacture.metafix.fix.Do;
+import org.metafacture.metafix.fix.ElsIf;
+import org.metafacture.metafix.fix.Else;
+import org.metafacture.metafix.fix.Expression;
+import org.metafacture.metafix.fix.Fix;
+import org.metafacture.metafix.fix.If;
+import org.metafacture.metafix.fix.MethodCall;
+import org.metafacture.metafix.fix.Options;
+import org.metafacture.metafix.fix.Unless;
 import org.metafacture.metamorph.FixPredicate.Quantifier;
 
 import org.eclipse.emf.common.util.EList;

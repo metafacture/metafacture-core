@@ -18,13 +18,13 @@
 
 package org.metafacture.metamorph;
 
-import org.metafacture.fix.FixStandaloneSetup;
-import org.metafacture.fix.fix.Expression;
-import org.metafacture.fix.fix.Fix;
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
 import org.metafacture.mangling.StreamFlattener;
+import org.metafacture.metafix.FixStandaloneSetup;
+import org.metafacture.metafix.fix.Expression;
+import org.metafacture.metafix.fix.Fix;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
