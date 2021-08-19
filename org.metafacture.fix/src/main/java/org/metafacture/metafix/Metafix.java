@@ -16,13 +16,12 @@
 
 //TODO: move all classes here to fix package
 
-package org.metafacture.metamorph;
+package org.metafacture.metafix;
 
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
 import org.metafacture.mangling.StreamFlattener;
-import org.metafacture.metafix.FixStandaloneSetup;
 import org.metafacture.metafix.fix.Expression;
 import org.metafacture.metafix.fix.Fix;
 
@@ -52,7 +51,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
 
     public static final String VAR_START = "$[";
     public static final String VAR_END = "]";
-    static final Map<String, String> NO_VARS = Collections.emptyMap();
+    public static final Map<String, String> NO_VARS = Collections.emptyMap();
     private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
 
     // TODO: Use SimpleRegexTrie / WildcardTrie for wildcard, alternation and character class support

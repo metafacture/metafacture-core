@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package org.metafacture.metamorph;
+package org.metafacture.metafix;
 
 import org.metafacture.commons.StringUtil;
+import org.metafacture.metafix.FixPredicate.Quantifier;
 import org.metafacture.metafix.fix.Do;
 import org.metafacture.metafix.fix.ElsIf;
 import org.metafacture.metafix.fix.Else;
@@ -26,7 +27,6 @@ import org.metafacture.metafix.fix.If;
 import org.metafacture.metafix.fix.MethodCall;
 import org.metafacture.metafix.fix.Options;
 import org.metafacture.metafix.fix.Unless;
-import org.metafacture.metamorph.FixPredicate.Quantifier;
 
 import org.eclipse.emf.common.util.EList;
 import com.google.common.collect.ImmutableMultimap;

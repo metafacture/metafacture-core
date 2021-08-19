@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.metafacture.metamorph;
+package org.metafacture.metafix;
 
 import org.metafacture.framework.StreamReceiver;
 
@@ -81,7 +81,7 @@ public class MetafixLookupTest {
     @Test
     public void csv() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "lookup('title', 'src/test/java/org/metafacture/metamorph/maps/test.csv')"), //
+                "lookup('title', 'src/test/java/org/metafacture/metafix/maps/test.csv')"), //
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -112,7 +112,7 @@ public class MetafixLookupTest {
     @Test
     public void tsv() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "lookup('title', 'src/test/java/org/metafacture/metamorph/maps/test.tsv', sep_char:'\t')"), //
+                "lookup('title', 'src/test/java/org/metafacture/metafix/maps/test.tsv', sep_char:'\t')"), //
             i -> {
                 i.startRecord("1");
                 i.endRecord();

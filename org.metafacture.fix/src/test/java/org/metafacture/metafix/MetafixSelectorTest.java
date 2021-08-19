@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.metafacture.metamorph;
+package org.metafacture.metafix;
 
 import org.metafacture.framework.StreamReceiver;
 

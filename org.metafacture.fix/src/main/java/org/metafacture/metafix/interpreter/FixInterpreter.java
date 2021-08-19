@@ -1,5 +1,6 @@
 package org.metafacture.metafix.interpreter;
 
+import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.fix.Do;
 import org.metafacture.metafix.fix.ElsIf;
 import org.metafacture.metafix.fix.Else;
@@ -7,7 +8,6 @@ import org.metafacture.metafix.fix.Expression;
 import org.metafacture.metafix.fix.Fix;
 import org.metafacture.metafix.fix.If;
 import org.metafacture.metafix.fix.MethodCall;
-import org.metafacture.metamorph.Metafix;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;

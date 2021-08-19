@@ -1,7 +1,7 @@
 package org.metafacture.metafix.jvmmodel;
 
+import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.fix.Fix;
-import org.metafacture.metamorph.Metafix;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.common.types.JvmGenericType;

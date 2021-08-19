@@ -1,6 +1,7 @@
-package org.metafacture.metafix.tests;
+package org.metafacture.metafix;
 
 import org.metafacture.metafix.fix.Fix;
+import org.metafacture.metafix.tests.FixInjectorProvider;
 
 import com.google.inject.Inject;
 import org.eclipse.emf.common.util.EList;
