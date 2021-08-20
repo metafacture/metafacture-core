@@ -20,12 +20,18 @@ import org.metafacture.metamorph.maps.FileMap;
 
 import com.google.common.collect.Multimap;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 enum FixMethod {
 
@@ -54,13 +60,15 @@ enum FixMethod {
     array { // array-from-hash
         public void apply(final Multimap<String, String> record, final List<String> params,
                 final Map<String, String> options) {
-            //if record.get(params.get(0)) instanceof Map, etc. TODO: switch internal record to JSON-equiv
+            // if record.get(params.get(0)) instanceof Map, etc.
+            // TODO: switch internal record to JSON-equiv
         }
     },
     hash { // hash-from-array
         public void apply(final Multimap<String, String> record, final List<String> params,
                 final Map<String, String> options) {
-            //if record.get(params.get(0)) instanceof List, etc. TODO: switch internal record to JSON-equiv
+            // if record.get(params.get(0)) instanceof List, etc.
+            // TODO: switch internal record to JSON-equiv
         }
     },
     add_field {
@@ -89,10 +97,71 @@ enum FixMethod {
     remove_field {
         public void apply(final Multimap<String, String> record, final List<String> params,
                 final Map<String, String> options) {
-            record.removeAll(params.get(0));
+            params.forEach(p -> {
+                record.removeAll(p);
+            });
         }
     },
+    format {
+        public void apply(final Multimap<String, String> record, final List<String> params,
+                final Map<String, String> options) {
+            final Collection<String> oldVals = record.get(params.get(0));
+            final String newVal = String.format(params.get(1), oldVals.toArray(new Object[] {}));
+            record.replaceValues(params.get(0), Arrays.asList(newVal));
+        }
+    },
+    parse_text {
+        public void apply(final Multimap<String, String> record, final List<String> params,
+                final Map<String, String> options) {
+            record.get(params.get(0)).forEach(v -> {
+                final Pattern p = Pattern.compile(params.get(1));
+                final Matcher m = p.matcher(v);
+                if (m.matches()) {
+                    record.removeAll(params.get(0));
+                    final Map<String, Integer> namedGroups = getNamedGroups(p);
+                    if (!namedGroups.isEmpty()) {
+                        namedGroups.keySet().forEach(k -> {
+                            record.put(params.get(0) + "." + k, m.group(namedGroups.get(k)));
+                        });
+                    }
+                    else {
+                        for (int i = 1; i <= m.groupCount(); i = i + 1) {
+                            record.put(params.get(0), m.group(i));
+                        }
+                    }
+                }
+            });
+        }
 
+        @SuppressWarnings("unchecked")
+        private Map<String, Integer> getNamedGroups(final Pattern regex) {
+            try {
+                // Not available as API, see https://stackoverflow.com/a/15596145/18154:
+                final Method namedGroupsMethod = Pattern.class.getDeclaredMethod("namedGroups");
+                namedGroupsMethod.setAccessible(true);
+                Map<String, Integer> namedGroups = null;
+                namedGroups = (Map<String, Integer>) namedGroupsMethod.invoke(regex);
+                if (namedGroups == null) {
+                    throw new InternalError();
+                }
+                return Collections.unmodifiableMap(namedGroups);
+            }
+            catch (final NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            return Collections.emptyMap();
+        }
+    },
+    paste {
+        public void apply(final Multimap<String, String> record, final List<String> params,
+                final Map<String, String> options) {
+            final String joinChar = options.get("join_char");
+            record.put(params.get(0),
+                    params.subList(1, params.size()).stream()
+                            .map(k -> k.startsWith("~") ? k.substring(1) : record.get(k).iterator().next())
+                            .collect(Collectors.joining(joinChar != null ? joinChar : " ")));
+        }
+    },
     // FIELD-LEVEL METHODS:
 
     substring {

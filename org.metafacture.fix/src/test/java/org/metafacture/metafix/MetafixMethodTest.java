@@ -225,6 +225,56 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void format() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "format(number,'%-5s: %s')"), // TODO actual number formatting with JSON-equiv record
+            i -> {
+                i.startRecord("1");
+                i.literal("number", "41");
+                i.literal("number", "15");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("number", "41   : 15");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void parseText() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "parse_text(date, '(\\\\d{4})-(\\\\d{2})-(\\\\d{2})')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("date", "2015-03-07");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("date", "2015");
+                o.get().literal("date", "03");
+                o.get().literal("date", "07");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void parseTextNamedGroups() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "parse_text(date, '(?<year>\\\\d{4})-(?<month>\\\\d{2})-(?<day>\\\\d{2})')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("date", "2015-03-07");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("date.month", "03");
+                o.get().literal("date.year", "2015");
+                o.get().literal("date.day", "07");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     @Disabled // Use SimpleRegexTrie/WildcardTrie
     public void alternation() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//

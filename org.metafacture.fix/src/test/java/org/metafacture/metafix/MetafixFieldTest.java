@@ -238,6 +238,63 @@ public class MetafixFieldTest {
     }
 
     @Test
+    public void paste() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "paste('my.string','a','b','c','d')",
+                "remove_field('a','b','c','d')"), //
+            i -> {
+                i.startRecord("1");
+                i.literal("a", "eeny");
+                i.literal("b", "meeny");
+                i.literal("c", "miny");
+                i.literal("d", "moe");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("my.string", "eeny meeny miny moe");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void pasteWithCustomSep() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "paste('my.string','a','b','c','d','join_char': ', ')",
+                "remove_field('a','b','c','d')"), //
+            i -> {
+                i.startRecord("1");
+                i.literal("a", "eeny");
+                i.literal("b", "meeny");
+                i.literal("c", "miny");
+                i.literal("d", "moe");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("my.string", "eeny, meeny, miny, moe");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void pasteWithLiteralStrings() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "paste('my.string','~Hi','a','~how are you?')",
+                "remove_field('a','b','c','d')"), //
+            i -> {
+                i.startRecord("1");
+                i.literal("a", "eeny");
+                i.literal("b", "meeny");
+                i.literal("c", "miny");
+                i.literal("d", "moe");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("my.string", "Hi eeny how are you?");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     @Disabled // TODO: switch internal record to JSON-equiv
     public void hashFromArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
