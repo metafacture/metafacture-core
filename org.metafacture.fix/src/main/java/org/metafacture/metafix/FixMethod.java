@@ -37,6 +37,32 @@ enum FixMethod {
             record.replaceValues(params.get(0), Arrays.asList(params.get(1)));
         }
     },
+    set_array {
+        public void apply(final Multimap<String, String> record, final List<String> params,
+                final Map<String, String> options) {
+            record.replaceValues(params.get(0), params.subList(1, params.size()));
+        }
+    },
+    set_hash {
+        public void apply(final Multimap<String, String> record, final List<String> params,
+                final Map<String, String> options) {
+            options.keySet().forEach(k -> {
+                record.replaceValues(params.get(0) + "." + k, Arrays.asList(options.get(k)));
+            });
+        }
+    },
+    array { // array-from-hash
+        public void apply(final Multimap<String, String> record, final List<String> params,
+                final Map<String, String> options) {
+            //if record.get(params.get(0)) instanceof Map, etc. TODO: switch internal record to JSON-equiv
+        }
+    },
+    hash { // hash-from-array
+        public void apply(final Multimap<String, String> record, final List<String> params,
+                final Map<String, String> options) {
+            //if record.get(params.get(0)) instanceof List, etc. TODO: switch internal record to JSON-equiv
+        }
+    },
     add_field {
         public void apply(final Multimap<String, String> record, final List<String> params,
                 final Map<String, String> options) {
