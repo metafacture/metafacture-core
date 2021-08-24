@@ -133,6 +133,9 @@ class RecordTransformer {
     private boolean testConditional(final String conditional, final EList<String> params) {
         System.out.printf("<IF>: %s parameters: %s\n", conditional, params);
         boolean result = false;
+        if ("exists".equals(conditional)) {
+            return record.containsKey(params.get(0));
+        }
         if (!conditional.contains("_")) {
             throw new IllegalArgumentException("Missing quantifier prefix (all_, any_, none_) for " + conditional);
         }

@@ -64,6 +64,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
     private final Deque<Integer> entityCountStack = new LinkedList<>();
     private int entityCount;
     private StreamReceiver outputStreamReceiver;
+    private String recordIdentifier;
 
     public Metafix() {
         init();
@@ -115,7 +116,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         entityCountStack.clear();
         entityCount = 0;
         entityCountStack.add(Integer.valueOf(entityCount));
-        outputStreamReceiver.startRecord(identifier);
+        recordIdentifier = identifier;
     }
 
     @Override
@@ -128,11 +129,14 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         System.out.printf("End record, walking fix: %s\n", currentRecord);
         final RecordTransformer transformer = new RecordTransformer(currentRecord, vars, fix);
         currentRecord = transformer.transform();
-        System.out.println("Sending results to " + outputStreamReceiver);
-        currentRecord.entries().forEach(e -> {
-            emit(e);
-        });
-        outputStreamReceiver.endRecord();
+        if (!currentRecord.containsEntry("__reject", true)) {
+            outputStreamReceiver.startRecord(recordIdentifier);
+            System.out.println("Sending results to " + outputStreamReceiver);
+            currentRecord.entries().forEach(e -> {
+                emit(e);
+            });
+            outputStreamReceiver.endRecord();
+        }
     }
 
     private void emit(final Entry<?, ?> entry) {

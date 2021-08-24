@@ -179,6 +179,12 @@ enum FixMethod {
                             .map(Object::toString).collect(Collectors.joining(joinChar != null ? joinChar : " ")));
         }
     },
+    reject {
+        public void apply(final Multimap<String, Object> record, final List<String> params,
+                final Map<String, String> options) {
+            record.put("__reject", true);
+        }
+    },
     // FIELD-LEVEL METHODS:
 
     substring {

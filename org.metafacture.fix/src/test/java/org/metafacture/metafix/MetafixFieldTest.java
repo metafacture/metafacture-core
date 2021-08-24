@@ -330,4 +330,22 @@ public class MetafixFieldTest {
                 o.get().endRecord();
             });
     }
+
+    @Test
+    public void reject() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "if exists ('_metadata.error')", //
+                "  reject()",
+                "end"), //
+            i -> {
+                i.startRecord("1");
+                i.literal("_metadata.error", "details");
+                i.endRecord();
+                i.startRecord("2");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("2");
+                o.get().endRecord();
+            });
+    }
 }
