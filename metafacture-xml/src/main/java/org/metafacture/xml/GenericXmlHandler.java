@@ -18,7 +18,6 @@ package org.metafacture.xml;
 import java.util.regex.Pattern;
 
 import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.XmlReceiver;
 import org.metafacture.framework.annotations.Description;
@@ -48,6 +47,8 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
     private boolean inRecord;
     private StringBuilder valueBuffer = new StringBuilder();
+
+    private boolean emitNamespace = false;
 
     public GenericXmlHandler() {
         super();
@@ -91,13 +92,32 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         return recordTagName;
     }
 
+    /**
+     * On entity level namespaces can be emitted, e.g.: "foo:bar". The default is to
+     * ignore the namespace so that only "bar" is emitted.
+     *
+     * @param emitNamespace set to "true" if namespace should be emitted. Defaults
+     *                      to "false".
+     */
+    public void setEmitNamespace(boolean emitNamespace) {
+        this.emitNamespace = emitNamespace;
+    }
+
+    public boolean getEmitNamespace() {
+        return this.emitNamespace;
+    }
+
     @Override
     public void startElement(final String uri, final String localName,
             final String qName, final Attributes attributes) {
 
         if (inRecord) {
             writeValue();
-            getReceiver().startEntity(localName);
+            if (emitNamespace) {
+                getReceiver().startEntity(qName);
+            } else {
+                getReceiver().startEntity(localName);
+            }
             writeAttributes(attributes);
         } else if (localName.equals(recordTagName)) {
             final String identifier = attributes.getValue("id");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014, 2021 Deutsche Nationalbibliothek et al
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -131,4 +131,13 @@ public final class GenericXMLHandlerTest {
         ordered.verify(receiver).literal("value", "char-data");
     }
 
+    @Test
+    public void shouldEmitNamespaceOnEntityElement() {
+        genericXmlHandler.setEmitNamespace(true);
+        genericXmlHandler.startElement("", "record", "record", attributes);
+        genericXmlHandler.startElement("", "entity", "ns:entity", attributes);
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startEntity("ns:entity");
+    }
 }
