@@ -165,7 +165,11 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         final int length = attributes.getLength();
 
         for (int i = 0; i < length; ++i) {
-            final String name = attributes.getLocalName(i);
+            String name;
+            if (emitNamespace) {
+                name = attributes.getQName(i);
+            } else
+                name = attributes.getLocalName(i);
             final String value = attributes.getValue(i);
             getReceiver().literal(name, value);
         }

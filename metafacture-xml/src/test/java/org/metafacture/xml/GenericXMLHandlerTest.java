@@ -132,12 +132,14 @@ public final class GenericXMLHandlerTest {
     }
 
     @Test
-    public void shouldEmitNamespaceOnEntityElement() {
+    public void shouldEmitNamespaceOnEntityElementAndAttribute() {
         genericXmlHandler.setEmitNamespace(true);
+        attributes.addAttribute("", "attr", "ns:attr", "CDATA", "attr-value");
         genericXmlHandler.startElement("", "record", "record", attributes);
         genericXmlHandler.startElement("", "entity", "ns:entity", attributes);
 
         final InOrder ordered = inOrder(receiver);
         ordered.verify(receiver).startEntity("ns:entity");
+        ordered.verify(receiver).literal("ns:attr","attr-value");
     }
 }
