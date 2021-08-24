@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014, 2021 Deutsche Nationalbibliothek et al
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,8 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private boolean inRecord;
     private StringBuilder valueBuffer = new StringBuilder();
 
-    private boolean emitNamespace = false;
+    public static final boolean EMIT_NAMESPACE = false;
+    private boolean emitNamespace = EMIT_NAMESPACE;
 
     public GenericXmlHandler() {
         super();
@@ -93,8 +94,11 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     /**
-     * On entity level namespaces can be emitted, e.g.: "foo:bar". The default is to
-     * ignore the namespace so that only "bar" is emitted.
+     * Triggers namespace awareness. If set to "true" input data like "foo:bar"
+     * will be passed through as "foo:bar". For backward compatibility the default
+     * is set to "false", thus only "bar" is emitted.
+     * <p>
+     * <strong>Default value: {@value EMIT_NAMESPACE}</strong>
      *
      * @param emitNamespace set to "true" if namespace should be emitted. Defaults
      *                      to "false".
