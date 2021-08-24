@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -52,23 +53,37 @@ enum FixMethod {
     set_hash {
         public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            options.keySet().forEach(k -> {
-                record.replaceValues(params.get(0) + "." + k, Arrays.asList(options.get(k)));
-            });
+            record.removeAll(params.get(0));
+            record.put(params.get(0), options);
         }
     },
     array { // array-from-hash
         public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            // if record.get(params.get(0)) instanceof Map, etc.
-            // TODO: switch internal record to JSON-equiv
+            final String fieldName = params.get(0);
+            record.get(fieldName).forEach(recordEntry -> {
+                if (recordEntry instanceof Map) {
+                    record.removeAll(fieldName);
+                    ((Map<?, ?>) recordEntry).entrySet().forEach(mapEntry -> {
+                        record.put(fieldName, mapEntry.getKey());
+                        record.put(fieldName, mapEntry.getValue());
+                    });
+                }
+            });
         }
     },
     hash { // hash-from-array
         public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            // if record.get(params.get(0)) instanceof List, etc.
-            // TODO: switch internal record to JSON-equiv
+            final List<Object> values = new ArrayList<>(record.get(params.get(0)));
+            final Map<String, Object> result = new HashMap<>();
+            for (int i = 0; i < values.size(); i = i + 1) {
+                if (i % 2 == 1) {
+                    result.put(values.get(i - 1).toString(), values.get(i));
+                }
+            }
+            record.removeAll(params.get(0).toString());
+            record.put(params.get(0), result);
         }
     },
     add_field {
@@ -120,9 +135,11 @@ enum FixMethod {
                     record.removeAll(params.get(0));
                     final Map<String, Integer> namedGroups = getNamedGroups(p);
                     if (!namedGroups.isEmpty()) {
+                        final Map<String, String> result = new HashMap<>();
                         namedGroups.keySet().forEach(k -> {
-                            record.put(params.get(0) + "." + k, m.group(namedGroups.get(k)));
+                            result.put(k, m.group(namedGroups.get(k)));
                         });
+                        record.put(params.get(0), result);
                     }
                     else {
                         for (int i = 1; i <= m.groupCount(); i = i + 1) {

@@ -267,9 +267,11 @@ public class MetafixMethodTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("date.month", "03");
-                o.get().literal("date.year", "2015");
-                o.get().literal("date.day", "07");
+                o.get().startEntity("date");
+                o.get().literal("month", "03");
+                o.get().literal("year", "2015");
+                o.get().literal("day", "07");
+                o.get().endEntity();
                 o.get().endRecord();
             });
     }

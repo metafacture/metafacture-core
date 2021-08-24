@@ -18,7 +18,6 @@ package org.metafacture.metafix;
 
 import org.metafacture.framework.StreamReceiver;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -231,8 +230,10 @@ public class MetafixFieldTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("foo.a", "b");
-                o.get().literal("foo.c", "d");
+                o.get().startEntity("foo");
+                o.get().literal("a", "b");
+                o.get().literal("c", "d");
+                o.get().endEntity();
                 o.get().endRecord();
             });
     }
@@ -295,7 +296,6 @@ public class MetafixFieldTest {
     }
 
     @Test
-    @Disabled // TODO: switch internal record to JSON-equiv
     public void hashFromArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "set_array('foo','a','b','c','d')", //
@@ -305,14 +305,15 @@ public class MetafixFieldTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("foo.a", "b");
-                o.get().literal("foo.c", "d");
+                o.get().startEntity("foo");
+                o.get().literal("a", "b");
+                o.get().literal("c", "d");
+                o.get().endEntity();
                 o.get().endRecord();
             });
     }
 
     @Test
-    @Disabled // TODO: switch internal record to JSON-equiv
     public void arrayFromHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "set_hash('foo','a': 'b','c': 'd')", //

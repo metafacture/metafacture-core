@@ -38,6 +38,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Transforms a data stream sent via the {@link StreamReceiver} interface. Use
@@ -129,10 +130,24 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         currentRecord = transformer.transform();
         System.out.println("Sending results to " + outputStreamReceiver);
         currentRecord.entries().forEach(e -> {
-            outputStreamReceiver.literal(e.getKey(), e.getValue().toString());
-            // TODO: send actual entities for `nested.fields`
+            emit(e);
         });
         outputStreamReceiver.endRecord();
+    }
+
+    private void emit(final Entry<?, ?> entry) {
+        final Object value = entry.getValue();
+        if (value instanceof Map) {
+            final Map<?, ?> nested = (Map<?, ?>) value;
+            outputStreamReceiver.startEntity(entry.getKey().toString());
+            nested.entrySet().forEach(nestedEntry -> {
+                emit(nestedEntry);
+            });
+            outputStreamReceiver.endEntity();
+        }
+        else {
+            outputStreamReceiver.literal(entry.getKey().toString(), value.toString());
+        }
     }
 
     @Override
