@@ -107,8 +107,10 @@ public class MetafixFieldTest {
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().literal("my.name", "max");
-                o.get().literal("my.name", "nicolas");
+                o.get().startEntity("my.name");
+                o.get().literal("", "max");
+                o.get().literal("", "nicolas");
+                o.get().endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("3");
@@ -214,9 +216,11 @@ public class MetafixFieldTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("foo", "a");
-                o.get().literal("foo", "b");
-                o.get().literal("foo", "c");
+                o.get().startEntity("foo");
+                o.get().literal("", "a");
+                o.get().literal("", "b");
+                o.get().literal("", "c");
+                o.get().endEntity();
                 o.get().endRecord();
             });
     }
@@ -323,10 +327,12 @@ public class MetafixFieldTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("foo", "a");
-                o.get().literal("foo", "b");
-                o.get().literal("foo", "c");
-                o.get().literal("foo", "d");
+                o.get().startEntity("foo");
+                o.get().literal("", "a");
+                o.get().literal("", "b");
+                o.get().literal("", "c");
+                o.get().literal("", "d");
+                o.get().endEntity();
                 o.get().endRecord();
             });
     }
@@ -345,6 +351,44 @@ public class MetafixFieldTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("2");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void appendArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "set_array('nums', '1')", //
+                "set_array('nums.$append', '2', '3')"), //
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("nums");
+                o.get().literal("", "1");
+                o.get().literal("", "2");
+                o.get().literal("", "3");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void mixedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "set_array('@context', 'https://w3id.org/kim/lrmi-profile/draft/context.jsonld')", //
+                "set_hash('@context.$append', '@language': 'de')"), //
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("@context");
+                o.get().literal("", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld");
+                o.get().startEntity("");
+                o.get().literal("@language", "de");
+                f.apply(2).endEntity();
                 o.get().endRecord();
             });
     }

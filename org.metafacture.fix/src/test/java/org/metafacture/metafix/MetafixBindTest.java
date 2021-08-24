@@ -63,8 +63,10 @@ public class MetafixBindTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("author", "A UNIVERSITY");
-                o.get().literal("author", "MAX");
+                o.get().startEntity("author");
+                o.get().literal("", "A UNIVERSITY");
+                o.get().literal("", "MAX");
+                o.get().endEntity();
                 o.get().endRecord();
             });
     }

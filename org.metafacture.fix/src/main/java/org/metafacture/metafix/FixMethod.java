@@ -47,14 +47,23 @@ enum FixMethod {
     set_array {
         public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            record.replaceValues(params.get(0), params.subList(1, params.size()));
+            final String fieldName = params.get(0).replace(APPEND, "");
+            if (fieldName.equals(params.get(0))) { // not appending, replace
+                record.removeAll(params.get(0));
+            }
+            params.subList(1, params.size()).forEach(p -> {
+                record.put(fieldName, p);
+            });
         }
     },
     set_hash {
         public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            record.removeAll(params.get(0));
-            record.put(params.get(0), options);
+            final String fieldName = params.get(0).replace(APPEND, "");
+            if (fieldName.equals(params.get(0))) { // not appending, replace
+                record.removeAll(params.get(0));
+            }
+            record.put(fieldName, options);
         }
     },
     array { // array-from-hash
@@ -244,6 +253,8 @@ enum FixMethod {
             return fileMap;
         }
     };
+
+    private static final String APPEND = ".$append";
 
     private static void applyToFields(final Multimap<String, Object> record, final List<String> params,
             final Function<String, String> fun) {

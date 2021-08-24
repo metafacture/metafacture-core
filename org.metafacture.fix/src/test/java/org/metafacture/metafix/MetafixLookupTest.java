@@ -68,9 +68,11 @@ public class MetafixLookupTest {
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().literal("title", "Alohaeha");
-                o.get().literal("title", "Moin zäme");
-                o.get().literal("title", "Tach");
+                o.get().startEntity("title");
+                o.get().literal("", "Alohaeha");
+                o.get().literal("", "Moin zäme");
+                o.get().literal("", "Tach");
+                o.get().endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("3");
@@ -87,6 +89,7 @@ public class MetafixLookupTest {
                 i.endRecord();
                 //
                 i.startRecord("2");
+                //
                 i.literal("title", "Aloha");
                 i.literal("title", "Moin");
                 i.literal("title", "Hey");
@@ -99,9 +102,11 @@ public class MetafixLookupTest {
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().literal("title", "Alohaeha");
-                o.get().literal("title", "Moin zäme");
-                o.get().literal("title", "Tach");
+                o.get().startEntity("title");
+                o.get().literal("", "Alohaeha");
+                o.get().literal("", "Moin zäme");
+                o.get().literal("", "Tach");
+                o.get().endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("3");
@@ -130,9 +135,11 @@ public class MetafixLookupTest {
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().literal("title", "Alohaeha");
-                o.get().literal("title", "Moin zäme");
-                o.get().literal("title", "Tach");
+                o.get().startEntity("title");
+                o.get().literal("", "Alohaeha");
+                o.get().literal("", "Moin zäme");
+                o.get().literal("", "Tach");
+                o.get().endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("3");

@@ -33,12 +33,13 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Transforms a data stream sent via the {@link StreamReceiver} interface. Use
@@ -132,25 +133,33 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         if (!currentRecord.containsEntry("__reject", true)) {
             outputStreamReceiver.startRecord(recordIdentifier);
             System.out.println("Sending results to " + outputStreamReceiver);
-            currentRecord.entries().forEach(e -> {
-                emit(e);
+            currentRecord.keySet().forEach(k -> {
+                emit(k, currentRecord.get(k));
             });
             outputStreamReceiver.endRecord();
         }
     }
 
-    private void emit(final Entry<?, ?> entry) {
-        final Object value = entry.getValue();
-        if (value instanceof Map) {
-            final Map<?, ?> nested = (Map<?, ?>) value;
-            outputStreamReceiver.startEntity(entry.getKey().toString());
-            nested.entrySet().forEach(nestedEntry -> {
-                emit(nestedEntry);
-            });
-            outputStreamReceiver.endEntity();
+    private void emit(final Object key, final Collection<Object> vals) {
+        final boolean isMulti = vals.size() > 1;
+        if (isMulti) {
+            outputStreamReceiver.startEntity(key.toString());
         }
-        else {
-            outputStreamReceiver.literal(entry.getKey().toString(), value.toString());
+        vals.forEach(value -> {
+            if (value instanceof Map) {
+                final Map<?, ?> nested = (Map<?, ?>) value;
+                outputStreamReceiver.startEntity(isMulti ? "" : key.toString());
+                nested.entrySet().forEach(nestedEntry -> {
+                    emit(nestedEntry.getKey(), Arrays.asList(nestedEntry.getValue()));
+                });
+                outputStreamReceiver.endEntity();
+            }
+            else {
+                outputStreamReceiver.literal(isMulti ? "" : key.toString(), value.toString());
+            }
+        });
+        if (isMulti) {
+            outputStreamReceiver.endEntity();
         }
     }
 

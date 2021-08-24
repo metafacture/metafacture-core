@@ -45,12 +45,22 @@ public final class MetafixTestHelpers {
         assertFix(receiver, fixDef, in, (s, f) -> out.accept(s), Metafix.NO_VARS);
     }
 
-    public static void assertFix(final StreamReceiver receiver, final List<String> fixDef,
-            final Map<String, String> vars, final Consumer<Metafix> in, final Consumer<Supplier<StreamReceiver>> out) {
+    public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Consumer<Metafix> in,
+            final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
+        assertFix(receiver, fixDef, in, (s, f) -> out.accept(s, f), Metafix.NO_VARS);
+    }
+
+    public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Map<String, String> vars,
+            final Consumer<Metafix> in, final Consumer<Supplier<StreamReceiver>> out) {
         assertFix(receiver, fixDef, in, (s, f) -> out.accept(s), vars);
     }
 
-    public static void assertFix(final StreamReceiver receiver, final List<String> fixLines, final Consumer<Metafix> in,
+    public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Map<String, String> vars,
+            final Consumer<Metafix> in, final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
+        assertFix(receiver, fixDef, in, (s, f) -> out.accept(s, f), vars);
+    }
+
+    private static void assertFix(final StreamReceiver receiver, final List<String> fixLines, final Consumer<Metafix> in,
             final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out, final Map<String, String> vars) {
         final String fixString = String.join("\n", fixLines);
         final Metafix metafix = fix(receiver, fixString, vars);
@@ -67,7 +77,7 @@ public final class MetafixTestHelpers {
         }
     }
 
-    static Metafix fix(final StreamReceiver receiver, final String fix, final Map<String, String> vars) {
+    private static Metafix fix(final StreamReceiver receiver, final String fix, final Map<String, String> vars) {
         System.out.println("\nFix string: " + fix);
         Metafix metafix = null;
         try {

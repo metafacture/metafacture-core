@@ -67,14 +67,18 @@ public class MetafixIfTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("name", "Mary");
-                o.get().literal("name", "A University");
+                o.get().startEntity("name");
+                o.get().literal("", "Mary");
+                o.get().literal("", "A University");
+                o.get().endEntity();
                 o.get().literal("type", "Organization");
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().literal("name", "Mary");
-                o.get().literal("name", "Max");
+                o.get().startEntity("name");
+                o.get().literal("", "Mary");
+                o.get().literal("", "Max");
+                o.get().endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("3");
@@ -103,13 +107,17 @@ public class MetafixIfTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("name", "Mary");
-                o.get().literal("name", "A University");
+                o.get().startEntity("name");
+                o.get().literal("", "Mary");
+                o.get().literal("", "A University");
+                o.get().endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().literal("name", "Great University");
-                o.get().literal("name", "A University");
+                o.get().startEntity("name");
+                o.get().literal("", "Great University");
+                o.get().literal("", "A University");
+                o.get().endEntity();
                 o.get().literal("type", "Organization");
                 o.get().endRecord();
                 //
@@ -139,13 +147,17 @@ public class MetafixIfTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("name", "Mary");
-                o.get().literal("name", "A University");
+                o.get().startEntity("name");
+                o.get().literal("", "Mary");
+                o.get().literal("", "A University");
+                o.get().endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().literal("name", "Max");
-                o.get().literal("name", "Mary");
+                o.get().startEntity("name");
+                o.get().literal("", "Max");
+                o.get().literal("", "Mary");
+                o.get().endEntity();
                 o.get().literal("type", "Person");
                 o.get().endRecord();
                 //
@@ -266,8 +278,10 @@ public class MetafixIfTest {
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().literal("name", "Some University");
-                o.get().literal("name", "Filibandrina");
+                o.get().startEntity("name");
+                o.get().literal("", "Some University");
+                o.get().literal("", "Filibandrina");
+                o.get().endEntity();
                 o.get().literal("type", "Organization");
                 o.get().endRecord();
             });
@@ -291,13 +305,17 @@ public class MetafixIfTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("name", "Max");
-                o.get().literal("name", "A University");
+                o.get().startEntity("name");
+                o.get().literal("", "Max");
+                o.get().literal("", "A University");
+                o.get().endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().literal("name", "Some University");
-                o.get().literal("name", "University Filibandrina");
+                o.get().startEntity("name");
+                o.get().literal("", "Some University");
+                o.get().literal("", "University Filibandrina");
+                o.get().endEntity();
                 o.get().literal("type", "Organization");
                 o.get().endRecord();
             });
