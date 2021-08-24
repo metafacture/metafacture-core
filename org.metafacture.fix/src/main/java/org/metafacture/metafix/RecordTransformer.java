@@ -47,21 +47,21 @@ import java.util.stream.Collectors;
 class RecordTransformer {
 
     private Fix fix;
-    private Multimap<String, String> record;
+    private Multimap<String, Object> record;
     private Map<String, String> vars;
 
-    RecordTransformer(final Multimap<String, String> record, final Map<String, String> vars, final Fix fix) {
+    RecordTransformer(final Multimap<String, Object> record, final Map<String, String> vars, final Fix fix) {
         this.record = LinkedListMultimap.create(record);
         this.vars = vars;
         this.fix = fix;
     }
 
-    Multimap<String, String> transform() {
+    Multimap<String, Object> transform() {
         processSubexpressions(fix.getElements());
         return record;
     }
 
-    Multimap<String, String> getRecord() {
+    Multimap<String, Object> getRecord() {
         return record;
     }
 
@@ -90,7 +90,7 @@ class RecordTransformer {
     private void processBind(final Do theDo, final EList<String> params) {
         if (theDo.getName().equals("list")) { // TODO impl multiple binds via FixBind enum
             final Map<String, String> options = options(theDo.getOptions());
-            final Multimap<String, String> fullRecord = LinkedListMultimap.create(record);
+            final Multimap<String, Object> fullRecord = LinkedListMultimap.create(record);
             record.get(options.get("path")).forEach(val -> {
                 // for each val, bind the current record/scope/context to the given var name:
                 record = LinkedListMultimap.create(ImmutableMultimap.of(options.get("var"), val));

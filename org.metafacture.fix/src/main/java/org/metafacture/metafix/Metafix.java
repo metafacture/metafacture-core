@@ -55,7 +55,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
     private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
 
     // TODO: Use SimpleRegexTrie / WildcardTrie for wildcard, alternation and character class support
-    private Multimap<String, String> currentRecord = LinkedListMultimap.create();
+    private Multimap<String, Object> currentRecord = LinkedListMultimap.create();
     private Fix fix;
     private final List<Expression> expressions = new ArrayList<>();
     private Map<String, String> vars = NO_VARS;
@@ -129,7 +129,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         currentRecord = transformer.transform();
         System.out.println("Sending results to " + outputStreamReceiver);
         currentRecord.entries().forEach(e -> {
-            outputStreamReceiver.literal(e.getKey(), e.getValue());
+            outputStreamReceiver.literal(e.getKey(), e.getValue().toString());
             // TODO: send actual entities for `nested.fields`
         });
         outputStreamReceiver.endRecord();
@@ -186,7 +186,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         return vars;
     }
 
-    public Multimap<String, String> getCurrentRecord() {
+    public Multimap<String, Object> getCurrentRecord() {
         return currentRecord;
     }
 

@@ -38,19 +38,19 @@ enum FixMethod {
     // RECORD-LEVEL METHODS:
 
     set_field {
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             record.replaceValues(params.get(0), Arrays.asList(params.get(1)));
         }
     },
     set_array {
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             record.replaceValues(params.get(0), params.subList(1, params.size()));
         }
     },
     set_hash {
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             options.keySet().forEach(k -> {
                 record.replaceValues(params.get(0) + "." + k, Arrays.asList(options.get(k)));
@@ -58,27 +58,27 @@ enum FixMethod {
         }
     },
     array { // array-from-hash
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             // if record.get(params.get(0)) instanceof Map, etc.
             // TODO: switch internal record to JSON-equiv
         }
     },
     hash { // hash-from-array
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             // if record.get(params.get(0)) instanceof List, etc.
             // TODO: switch internal record to JSON-equiv
         }
     },
     add_field {
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             record.put(params.get(0), params.get(1));
         }
     },
     move_field {
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             final String oldFieldName = params.get(0);
             final String newFieldName = params.get(1);
@@ -87,7 +87,7 @@ enum FixMethod {
         }
     },
     copy_field {
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             final String oldName = params.get(0);
             final String newName = params.get(1);
@@ -95,7 +95,7 @@ enum FixMethod {
         }
     },
     remove_field {
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             params.forEach(p -> {
                 record.removeAll(p);
@@ -103,19 +103,19 @@ enum FixMethod {
         }
     },
     format {
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            final Collection<String> oldVals = record.get(params.get(0));
+            final Collection<Object> oldVals = record.get(params.get(0));
             final String newVal = String.format(params.get(1), oldVals.toArray(new Object[] {}));
             record.replaceValues(params.get(0), Arrays.asList(newVal));
         }
     },
     parse_text {
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             record.get(params.get(0)).forEach(v -> {
                 final Pattern p = Pattern.compile(params.get(1));
-                final Matcher m = p.matcher(v);
+                final Matcher m = p.matcher(v.toString());
                 if (m.matches()) {
                     record.removeAll(params.get(0));
                     final Map<String, Integer> namedGroups = getNamedGroups(p);
@@ -153,51 +153,51 @@ enum FixMethod {
         }
     },
     paste {
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             final String joinChar = options.get("join_char");
             record.put(params.get(0),
                     params.subList(1, params.size()).stream()
                             .map(k -> k.startsWith("~") ? k.substring(1) : record.get(k).iterator().next())
-                            .collect(Collectors.joining(joinChar != null ? joinChar : " ")));
+                            .map(Object::toString).collect(Collectors.joining(joinChar != null ? joinChar : " ")));
         }
     },
     // FIELD-LEVEL METHODS:
 
     substring {
         @SuppressWarnings("checkstyle:MagicNumber") // TODO: switch to morph-style named params in general?
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             applyToFields(record, params,
                 s -> s.substring(Integer.parseInt(params.get(1)), Integer.parseInt(params.get(2)) - 1));
         }
     },
     trim {
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             applyToFields(record, params, s -> s.trim());
         }
     },
     upcase {
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             applyToFields(record, params, s -> s.toUpperCase());
         }
     },
     downcase {
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             applyToFields(record, params, s -> s.toLowerCase());
         }
     },
     capitalize {
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             applyToFields(record, params, s -> s.substring(0, 1).toUpperCase() + s.substring(1));
         }
     },
     lookup {
-        public void apply(final Multimap<String, String> record, final List<String> params,
+        public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             applyToFields(record, params, s -> {
                 final Map<String, String> map = buildMap(options, params.size() <= 1 ? null : params.get(1));
@@ -222,17 +222,17 @@ enum FixMethod {
         }
     };
 
-    private static void applyToFields(final Multimap<String, String> record, final List<String> params,
+    private static void applyToFields(final Multimap<String, Object> record, final List<String> params,
             final Function<String, String> fun) {
         final String key = params.get(0);
         if (record.containsKey(key)) {
-            final Collection<String> olds = new ArrayList<String>(record.get(key));
+            final Collection<Object> olds = new ArrayList<Object>(record.get(key));
             olds.forEach(old -> {
                 record.remove(key, old);
-                record.put(key, fun.apply(old));
+                record.put(key, fun.apply(old.toString()));
             });
         }
     }
 
-    abstract void apply(Multimap<String, String> record, List<String> params, Map<String, String> options);
+    abstract void apply(Multimap<String, Object> record, List<String> params, Map<String, String> options);
 }

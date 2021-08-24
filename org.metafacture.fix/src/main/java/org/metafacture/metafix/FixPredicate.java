@@ -25,28 +25,28 @@ import java.util.stream.Stream;
 enum FixPredicate {
 
     contain {
-        public Predicate<String> of(final String value) {
-            return v -> v.contains(value);
+        public Predicate<Object> of(final Object value) {
+            return v -> v.toString().contains(value.toString());
         }
     },
     equal {
-        public Predicate<String> of(final String value) {
-            return v -> v.equals(value);
+        public Predicate<Object> of(final Object value) {
+            return v ->  v.toString().equals(value.toString());
         }
     },
     match {
-        public Predicate<String> of(final String value) {
-            return v -> v.matches(value);
+        public Predicate<Object> of(final Object value) {
+            return v -> v.toString().matches(value.toString());
         }
     };
 
-    abstract Predicate<String> of(String value);
+    abstract Predicate<Object> of(Object value);
 
     enum Quantifier {
 
         all {
             @Override
-            public boolean test(final Multimap<String, String> record, final FixPredicate p,
+            public boolean test(final Multimap<String, Object> record, final FixPredicate p,
                     final List<String> params) {
                 return test(record, params.get(0), s -> s.allMatch(p.of(params.get(1))));
             }
@@ -54,14 +54,14 @@ enum FixPredicate {
         },
         any {
             @Override
-            public boolean test(final Multimap<String, String> record, final FixPredicate p,
+            public boolean test(final Multimap<String, Object> record, final FixPredicate p,
                     final List<String> params) {
                 return test(record, params.get(0), s -> s.anyMatch(p.of(params.get(1))));
             }
         },
         none {
             @Override
-            public boolean test(final Multimap<String, String> record, final FixPredicate p,
+            public boolean test(final Multimap<String, Object> record, final FixPredicate p,
                     final List<String> params) {
                 final String fieldName = params.get(0);
                 final String valueToTest = params.get(1);
@@ -69,10 +69,10 @@ enum FixPredicate {
             }
         };
 
-        boolean test(final Multimap<String, String> record, final String fieldName, final Predicate<Stream<String>> f) {
+        boolean test(final Multimap<String, Object> record, final String fieldName, final Predicate<Stream<Object>> f) {
             return record.containsKey(fieldName) && f.test(record.get(fieldName).stream());
         }
 
-        abstract boolean test(Multimap<String, String> record, FixPredicate p, List<String> params);
+        abstract boolean test(Multimap<String, Object> record, FixPredicate p, List<String> params);
     }
 }
