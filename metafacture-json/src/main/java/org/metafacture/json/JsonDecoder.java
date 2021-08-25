@@ -17,12 +17,19 @@ package org.metafacture.json;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
+
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Decodes a record in JSON format.
@@ -38,6 +45,8 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
 
     public static final String DEFAULT_RECORD_ID = "%d";
 
+    public static final String DEFAULT_ROOT_PATH = "";
+
     private final JsonFactory jsonFactory = new JsonFactory();
 
     private JsonParser jsonParser;
@@ -46,12 +55,15 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private String recordId;
     private int recordCount;
 
+    private String recordPath;
+
     public JsonDecoder() {
         super();
 
         setArrayMarker(DEFAULT_ARRAY_MARKER);
         setArrayName(DEFAULT_ARRAY_NAME);
         setRecordId(DEFAULT_RECORD_ID);
+        setRecordPath(DEFAULT_ROOT_PATH);
 
         resetRecordCount();
     }
@@ -96,25 +108,45 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
         return recordCount;
     }
 
+    public void setRecordPath(final String recordPath) {
+        this.recordPath = recordPath;
+    }
+
+    public String getRecordPath() {
+        return recordPath;
+    }
+
     public void resetRecordCount() {
         setRecordCount(0);
     }
 
     @Override
-    public void process(final String string) {
+    public void process(final String json) {
         assert !isClosed();
+        final List<String> records = recordPath.isEmpty() ? Arrays.asList(json)
+                : matches(JsonPath.read(json, recordPath));
+        records.forEach(record -> {
+            createParser(record);
+            try {
+                decode();
+            } catch (final IOException e) {
+                throw new MetafactureException(e);
+            } finally {
+                closeParser();
+            }
+        });
+    }
 
-        createParser(string);
-
-        try {
-            decode();
-        }
-        catch (final IOException e) {
-            throw new MetafactureException(e);
-        }
-        finally {
-            closeParser();
-        }
+    private List<String> matches(Object obj) {
+        final List<?> records = (obj instanceof List<?>) ? ((List<?>) obj) : Arrays.asList(obj);
+        return records.stream().map(doc -> {
+            try {
+                return new ObjectMapper().writeValueAsString(doc);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                return doc.toString();
+            }
+        }).collect(Collectors.toList());
     }
 
     @Override
