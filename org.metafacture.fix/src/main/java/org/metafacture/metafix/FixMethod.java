@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -192,6 +193,16 @@ enum FixMethod {
         public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             record.put("__reject", true);
+        }
+    },
+    retain {
+        public void apply(final Multimap<String, Object> record, final List<String> params,
+                final Map<String, String> options) {
+            new HashSet<>(record.keySet()).forEach(key -> {
+                if (!params.contains(key)) {
+                    record.removeAll(key);
+                }
+            });
         }
     },
     // FIELD-LEVEL METHODS:
