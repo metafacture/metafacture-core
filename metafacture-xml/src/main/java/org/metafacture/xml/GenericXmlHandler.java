@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014, 2021 Deutsche Nationalbibliothek et al
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package org.metafacture.xml;
 import java.util.regex.Pattern;
 
 import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.XmlReceiver;
 import org.metafacture.framework.annotations.Description;
@@ -48,6 +47,9 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
     private boolean inRecord;
     private StringBuilder valueBuffer = new StringBuilder();
+
+    public static final boolean EMIT_NAMESPACE = false;
+    private boolean emitNamespace = EMIT_NAMESPACE;
 
     public GenericXmlHandler() {
         super();
@@ -91,13 +93,35 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         return recordTagName;
     }
 
+    /**
+     * Triggers namespace awareness. If set to "true" input data like "foo:bar"
+     * will be passed through as "foo:bar". For backward compatibility the default
+     * is set to "false", thus only "bar" is emitted.
+     * <p>
+     * <strong>Default value: {@value EMIT_NAMESPACE}</strong>
+     *
+     * @param emitNamespace set to "true" if namespace should be emitted. Defaults
+     *                      to "false".
+     */
+    public void setEmitNamespace(boolean emitNamespace) {
+        this.emitNamespace = emitNamespace;
+    }
+
+    public boolean getEmitNamespace() {
+        return this.emitNamespace;
+    }
+
     @Override
     public void startElement(final String uri, final String localName,
             final String qName, final Attributes attributes) {
 
         if (inRecord) {
             writeValue();
-            getReceiver().startEntity(localName);
+            if (emitNamespace) {
+                getReceiver().startEntity(qName);
+            } else {
+                getReceiver().startEntity(localName);
+            }
             writeAttributes(attributes);
         } else if (localName.equals(recordTagName)) {
             final String identifier = attributes.getValue("id");
@@ -145,7 +169,11 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         final int length = attributes.getLength();
 
         for (int i = 0; i < length; ++i) {
-            final String name = attributes.getLocalName(i);
+            String name;
+            if (emitNamespace) {
+                name = attributes.getQName(i);
+            } else
+                name = attributes.getLocalName(i);
             final String value = attributes.getValue(i);
             getReceiver().literal(name, value);
         }
