@@ -245,7 +245,7 @@ public class MetafixFieldTest {
     @Test
     public void paste() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "paste('my.string','a','b','c','d')",
+                "paste('my.string','a','b','c','d','e')",
                 "remove_field('a','b','c','d')"), //
             i -> {
                 i.startRecord("1");

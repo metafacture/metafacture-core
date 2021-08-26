@@ -185,8 +185,13 @@ enum FixMethod {
             final String joinChar = options.get("join_char");
             record.put(params.get(0),
                     params.subList(1, params.size()).stream()
-                            .map(k -> k.startsWith("~") ? k.substring(1) : record.get(k).iterator().next())
+                            .filter(k -> literalString(k) || record.containsKey(k))
+                            .map(k -> literalString(k) ? k.substring(1) : record.get(k).iterator().next())
                             .map(Object::toString).collect(Collectors.joining(joinChar != null ? joinChar : " ")));
+        }
+
+        private boolean literalString(final String s) {
+            return s.startsWith("~");
         }
     },
     reject {
