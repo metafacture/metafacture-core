@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 hbz
+ * Copyright 2017, 2021 hbz
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,12 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
+import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 import java.io.IOException;
@@ -37,6 +41,11 @@ import java.util.stream.Collectors;
  * @author Jens Wille
  *
  */
+@Description("Decodes JSON to metadata events. The \'setRecordPath\' option can be used to set a JsonPath "
+        + "to extract a path as JSON - or to split the data into multiple JSON documents.")
+@In(String.class)
+@Out(StreamReceiver.class)
+@FluxCommand("decode-json")
 public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver> {
 
     public static final String DEFAULT_ARRAY_MARKER = JsonEncoder.ARRAY_MARKER;
