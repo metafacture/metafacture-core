@@ -48,7 +48,7 @@ enum FixMethod {
     set_array {
         public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            final String fieldName = params.get(0).replace(APPEND, "");
+            final String fieldName = params.get(0).replace(APPEND, EMPTY);
             if (fieldName.equals(params.get(0))) { // not appending, replace
                 record.removeAll(params.get(0));
             }
@@ -60,7 +60,7 @@ enum FixMethod {
     set_hash {
         public void apply(final Multimap<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            final String fieldName = params.get(0).replace(APPEND, "");
+            final String fieldName = params.get(0).replace(APPEND, EMPTY);
             if (fieldName.equals(params.get(0))) { // not appending, replace
                 record.removeAll(params.get(0));
             }
@@ -210,6 +210,16 @@ enum FixMethod {
             });
         }
     },
+    vacuum {
+        public void apply(final Multimap<String, Object> record, final List<String> params,
+                final Map<String, String> options) {
+            new HashSet<>(record.keySet()).forEach(key -> {
+                if (record.containsEntry(key, EMPTY)) {
+                    record.remove(key, EMPTY);
+                }
+            });
+        }
+    },
     // FIELD-LEVEL METHODS:
 
     substring {
@@ -270,6 +280,7 @@ enum FixMethod {
         }
     };
 
+    private static final String EMPTY = "";
     private static final String APPEND = ".$append";
 
     private static void applyToFields(final Multimap<String, Object> record, final List<String> params,

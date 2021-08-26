@@ -411,4 +411,23 @@ public class MetafixFieldTest {
                 o.get().endRecord();
             });
     }
+
+    @Test
+    public void vacuum() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "vacuum()"), //
+            i -> {
+                i.startRecord("1");
+                i.literal("1", "one");
+                i.literal("2", "");
+                i.literal("3", "tre");
+                i.literal("4", "");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("1", "one");
+                o.get().literal("3", "tre");
+                o.get().endRecord();
+            });
+    }
 }
