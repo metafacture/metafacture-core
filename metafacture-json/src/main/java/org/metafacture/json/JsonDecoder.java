@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  * @author Jens Wille
  *
  */
-@Description("Decodes JSON to metadata events. The \'setRecordPath\' option can be used to set a JsonPath "
+@Description("Decodes JSON to metadata events. The \'recordPath\' option can be used to set a JsonPath "
         + "to extract a path as JSON - or to split the data into multiple JSON documents.")
 @In(String.class)
 @Out(StreamReceiver.class)
