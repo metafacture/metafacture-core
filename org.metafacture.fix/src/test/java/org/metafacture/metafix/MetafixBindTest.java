@@ -72,6 +72,69 @@ public class MetafixBindTest {
     }
 
     @Test
+    @Disabled // implement list bind for entities / fix internal entity structure
+    public void doListEntitesToLiterals() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "do list('path': 'creator', 'var': 'c')",
+                " upcase('c.name')",
+                " trim('c.name')",
+                " copy_field('c.name', 'author')",
+                "end",
+                "remove_field('creator')"), //
+            i -> {
+                i.startRecord("1");
+                i.startEntity("creator");
+                i.literal("name", " A University");
+                i.endEntity();
+                i.startEntity("creator");
+                i.literal("name", "Max ");
+                i.endEntity();
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("author", "A UNIVERSITY");
+                o.get().literal("author", "MAX");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    @Disabled // implement list bind for entities / fix internal entity structure
+    public void doListEntitesToEntities() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "do list('path': 'creator', 'var': 'c')",
+                " copy_field('c.name', 'author.$append.name')",
+                " if all_contain('c.name', 'University')", //
+                "  add_field('author.$last.type', 'Organization')", //
+                " else",
+                "  add_field('author.$last.type', 'Person')", //",
+                " end",
+                "end",
+                "remove_field('creator')"), //
+            i -> {
+                i.startRecord("1");
+                i.startEntity("creator");
+                i.literal("name", "A University");
+                i.endEntity();
+                i.startEntity("creator");
+                i.literal("name", "Max");
+                i.endEntity();
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().literal("name", "A University");
+                o.get().literal("type", "Organization");
+                o.get().endEntity();
+                o.get().startEntity("author");
+                o.get().literal("name", "Max");
+                o.get().literal("type", "Person");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     @Disabled // implement Fix-style binds with collectors?
     public void ifInCollector() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
