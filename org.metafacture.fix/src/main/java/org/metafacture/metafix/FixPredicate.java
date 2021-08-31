@@ -16,9 +16,8 @@
 
 package org.metafacture.metafix;
 
-import com.google.common.collect.Multimap;
-
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -46,7 +45,7 @@ enum FixPredicate {
 
         all {
             @Override
-            public boolean test(final Multimap<String, Object> record, final FixPredicate p,
+            public boolean test(final Map<String, Object> record, final FixPredicate p,
                     final List<String> params) {
                 return test(record, params.get(0), s -> s.allMatch(p.of(params.get(1))));
             }
@@ -54,25 +53,25 @@ enum FixPredicate {
         },
         any {
             @Override
-            public boolean test(final Multimap<String, Object> record, final FixPredicate p,
+            public boolean test(final Map<String, Object> record, final FixPredicate p,
                     final List<String> params) {
                 return test(record, params.get(0), s -> s.anyMatch(p.of(params.get(1))));
             }
         },
         none {
             @Override
-            public boolean test(final Multimap<String, Object> record, final FixPredicate p,
+            public boolean test(final Map<String, Object> record, final FixPredicate p,
                     final List<String> params) {
                 final String fieldName = params.get(0);
                 final String valueToTest = params.get(1);
-                return !record.containsKey(fieldName) || record.get(fieldName).stream().noneMatch(p.of(valueToTest));
+                return !record.containsKey(fieldName) || Metafix.asList(record.get(fieldName)).stream().noneMatch(p.of(valueToTest));
             }
         };
 
-        boolean test(final Multimap<String, Object> record, final String fieldName, final Predicate<Stream<Object>> f) {
-            return record.containsKey(fieldName) && f.test(record.get(fieldName).stream());
+        boolean test(final Map<String, Object> record, final String fieldName, final Predicate<Stream<Object>> f) {
+            return record.containsKey(fieldName) && f.test(Metafix.asList(record.get(fieldName)).stream());
         }
 
-        abstract boolean test(Multimap<String, Object> record, FixPredicate p, List<String> params);
+        abstract boolean test(Map<String, Object> record, FixPredicate p, List<String> params);
     }
 }

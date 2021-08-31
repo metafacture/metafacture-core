@@ -29,11 +29,10 @@ import org.metafacture.metafix.fix.Options;
 import org.metafacture.metafix.fix.Unless;
 
 import org.eclipse.emf.common.util.EList;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ImmutableMap;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,21 +46,21 @@ import java.util.stream.Collectors;
 class RecordTransformer {
 
     private Fix fix;
-    private Multimap<String, Object> record;
+    private Map<String, Object> record;
     private Map<String, String> vars;
 
-    RecordTransformer(final Multimap<String, Object> record, final Map<String, String> vars, final Fix fix) {
-        this.record = LinkedListMultimap.create(record);
+    RecordTransformer(final Map<String, Object> record, final Map<String, String> vars, final Fix fix) {
+        this.record = new LinkedHashMap<>(record);
         this.vars = vars;
         this.fix = fix;
     }
 
-    Multimap<String, Object> transform() {
+    Map<String, Object> transform() {
         processSubexpressions(fix.getElements());
         return record;
     }
 
-    Multimap<String, Object> getRecord() {
+    Map<String, Object> getRecord() {
         return record;
     }
 
@@ -90,14 +89,15 @@ class RecordTransformer {
     private void processBind(final Do theDo, final EList<String> params) {
         if (theDo.getName().equals("list")) { // TODO impl multiple binds via FixBind enum
             final Map<String, String> options = options(theDo.getOptions());
-            final Multimap<String, Object> fullRecord = LinkedListMultimap.create(record);
-            record.get(options.get("path")).forEach(val -> {
+            final Map<String, Object> fullRecord = new LinkedHashMap<>(record);
+            final List<Object> values = Metafix.asList(record.get(options.get("path")));
+            values.forEach(val -> {
                 // for each val, bind the current record/scope/context to the given var name:
-                record = LinkedListMultimap.create(ImmutableMultimap.of(options.get("var"), val));
+                record = new LinkedHashMap<>(ImmutableMap.of(options.get("var"), val));
                 processSubexpressions(theDo.getElements());
-                record.removeAll(options.get("var"));
+                record.remove(options.get("var"));
                 // and remember the things we added while bound (this probably needs some tweaking):
-                fullRecord.putAll(record);
+                Metafix.addAll(fullRecord, record);
             });
             record = fullRecord;
         }

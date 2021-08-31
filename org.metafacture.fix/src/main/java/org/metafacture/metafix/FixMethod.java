@@ -18,8 +18,6 @@ package org.metafacture.metafix;
 
 import org.metafacture.metamorph.maps.FileMap;
 
-import com.google.common.collect.Multimap;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -40,120 +38,128 @@ enum FixMethod {
     // RECORD-LEVEL METHODS:
 
     set_field {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            record.replaceValues(params.get(0), Arrays.asList(params.get(1)));
+            record.put(params.get(0), params.get(1));
         }
     },
     set_array {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            final String fieldName = params.get(0).replace(APPEND, EMPTY);
-            if (fieldName.equals(params.get(0))) { // not appending, replace
-                record.removeAll(params.get(0));
+            final String key = params.get(0);
+            final List<String> toAdd = params.subList(1, params.size());
+            if (key.contains(APPEND)) {
+                Metafix.addAll(record, key.replace(APPEND, EMPTY), toAdd);
             }
-            params.subList(1, params.size()).forEach(p -> {
-                record.put(fieldName, p);
-            });
+            else {
+                record.put(key, toAdd);
+            }
         }
     },
     set_hash {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        @SuppressWarnings("unchecked")
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            final String fieldName = params.get(0).replace(APPEND, EMPTY);
-            if (fieldName.equals(params.get(0))) { // not appending, replace
-                record.removeAll(params.get(0));
+            final String key = params.get(0);
+            final Object val = record.get(key.replace(APPEND, EMPTY));
+            if (key.contains(APPEND) && val instanceof List) {
+                ((List<Object>) val).add(options);
             }
-            record.put(fieldName, options);
+            else {
+                record.put(key, options);
+            }
         }
     },
     array { // array-from-hash
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             final String fieldName = params.get(0);
-            record.get(fieldName).forEach(recordEntry -> {
+            Metafix.asList(record.get(fieldName)).forEach(recordEntry -> {
                 if (recordEntry instanceof Map) {
-                    record.removeAll(fieldName);
+                    record.remove(fieldName);
                     ((Map<?, ?>) recordEntry).entrySet().forEach(mapEntry -> {
-                        record.put(fieldName, mapEntry.getKey());
-                        record.put(fieldName, mapEntry.getValue());
+                        Metafix.add(record, fieldName, mapEntry.getKey());
+                        Metafix.add(record, fieldName, mapEntry.getValue());
                     });
                 }
             });
         }
     },
     hash { // hash-from-array
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            final List<Object> values = new ArrayList<>(record.get(params.get(0)));
+            final List<Object> values = Metafix.asList(record.get(params.get(0)));
             final Map<String, Object> result = new HashMap<>();
             for (int i = 0; i < values.size(); i = i + 1) {
                 if (i % 2 == 1) {
                     result.put(values.get(i - 1).toString(), values.get(i));
                 }
             }
-            record.removeAll(params.get(0).toString());
             record.put(params.get(0), result);
         }
     },
     add_field {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            record.put(params.get(0), params.get(1));
+            final String name = params.get(0);
+            final String val = params.get(1);
+            final Object object = record.get(name);
+            record.put(name, object == null ? val : Metafix.asListWith(object, val));
         }
+
     },
     move_field {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             final String oldFieldName = params.get(0);
             final String newFieldName = params.get(1);
-            record.putAll(newFieldName, record.get(oldFieldName));
-            record.removeAll(oldFieldName);
+            record.put(newFieldName, record.get(oldFieldName));
+            record.remove(oldFieldName);
         }
     },
     copy_field {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             final String oldName = params.get(0);
             final String newName = params.get(1);
-            record.putAll(newName, record.get(oldName));
+            Metafix.add(record, newName, record.get(oldName));
         }
     },
     remove_field {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             params.forEach(p -> {
-                record.removeAll(p);
+                record.remove(p);
             });
         }
     },
     format {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            final Collection<Object> oldVals = record.get(params.get(0));
+            final Collection<Object> oldVals = Metafix.asList(record.get(params.get(0)));
             final String newVal = String.format(params.get(1), oldVals.toArray(new Object[] {}));
-            record.replaceValues(params.get(0), Arrays.asList(newVal));
+            record.replace(params.get(0), Arrays.asList(newVal));
         }
     },
     parse_text {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            record.get(params.get(0)).forEach(v -> {
+            Metafix.asList(record.get(params.get(0))).forEach(v -> {
                 final Pattern p = Pattern.compile(params.get(1));
                 final Matcher m = p.matcher(v.toString());
                 if (m.matches()) {
-                    record.removeAll(params.get(0));
+                    record.remove(params.get(0));
                     final Map<String, Integer> namedGroups = getNamedGroups(p);
                     if (!namedGroups.isEmpty()) {
                         final Map<String, String> result = new HashMap<>();
                         namedGroups.keySet().forEach(k -> {
                             result.put(k, m.group(namedGroups.get(k)));
                         });
-                        record.put(params.get(0), result);
+                        Metafix.add(record, params.get(0), result);
                     }
                     else {
                         for (int i = 1; i <= m.groupCount(); i = i + 1) {
-                            record.put(params.get(0), m.group(i));
+                            Metafix.add(record, params.get(0), m.group(i));
                         }
                     }
                 }
@@ -180,13 +186,13 @@ enum FixMethod {
         }
     },
     paste {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             final String joinChar = options.get("join_char");
             record.put(params.get(0),
                     params.subList(1, params.size()).stream()
                             .filter(k -> literalString(k) || record.containsKey(k))
-                            .map(k -> literalString(k) ? k.substring(1) : record.get(k).iterator().next())
+                            .map(k -> literalString(k) ? k.substring(1) : Metafix.asList(record.get(k)).iterator().next())
                             .map(Object::toString).collect(Collectors.joining(joinChar != null ? joinChar : " ")));
         }
 
@@ -195,26 +201,26 @@ enum FixMethod {
         }
     },
     reject {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            record.put("__reject", true);
+            record.put("__reject", null);
         }
     },
     retain {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             new HashSet<>(record.keySet()).forEach(key -> {
                 if (!params.contains(key)) {
-                    record.removeAll(key);
+                    record.remove(key);
                 }
             });
         }
     },
     vacuum {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             new HashSet<>(record.keySet()).forEach(key -> {
-                if (record.containsEntry(key, EMPTY)) {
+                if (EMPTY.equals(record.get(key))) {
                     record.remove(key, EMPTY);
                 }
             });
@@ -224,38 +230,38 @@ enum FixMethod {
 
     substring {
         @SuppressWarnings("checkstyle:MagicNumber") // TODO: switch to morph-style named params in general?
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             applyToFields(record, params,
                 s -> s.substring(Integer.parseInt(params.get(1)), Integer.parseInt(params.get(2)) - 1));
         }
     },
     trim {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             applyToFields(record, params, s -> s.trim());
         }
     },
     upcase {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             applyToFields(record, params, s -> s.toUpperCase());
         }
     },
     downcase {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             applyToFields(record, params, s -> s.toLowerCase());
         }
     },
     capitalize {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             applyToFields(record, params, s -> s.substring(0, 1).toUpperCase() + s.substring(1));
         }
     },
     lookup {
-        public void apply(final Multimap<String, Object> record, final List<String> params,
+        public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             applyToFields(record, params, s -> {
                 final Map<String, String> map = buildMap(options, params.size() <= 1 ? null : params.get(1));
@@ -283,17 +289,21 @@ enum FixMethod {
     private static final String EMPTY = "";
     private static final String APPEND = ".$append";
 
-    private static void applyToFields(final Multimap<String, Object> record, final List<String> params,
+    private static void applyToFields(final Map<String, Object> record, final List<String> params,
             final Function<String, String> fun) {
         final String key = params.get(0);
         if (record.containsKey(key)) {
-            final Collection<Object> olds = new ArrayList<Object>(record.get(key));
-            olds.forEach(old -> {
+            new ArrayList<>(Metafix.asList(record.get(key))).forEach(old -> {
                 record.remove(key, old);
-                record.put(key, fun.apply(old.toString()));
+                final Object object = record.get(key);
+                if (object instanceof List) {
+                    ((List<?>) object).remove(old);
+                }
+                final String val = fun.apply(old.toString());
+                record.put(key, object == null ? val : Metafix.asListWith(object, val));
             });
         }
     }
 
-    abstract void apply(Multimap<String, Object> record, List<String> params, Map<String, String> options);
+    abstract void apply(Map<String, Object> record, List<String> params, Map<String, String> options);
 }

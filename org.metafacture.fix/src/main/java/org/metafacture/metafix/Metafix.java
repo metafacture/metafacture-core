@@ -25,18 +25,15 @@ import org.metafacture.mangling.StreamFlattener;
 import org.metafacture.metafix.fix.Expression;
 import org.metafacture.metafix.fix.Fix;
 
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.Multimap;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +54,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
     private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
 
     // TODO: Use SimpleRegexTrie / WildcardTrie for wildcard, alternation and character class support
-    private Multimap<String, Object> currentRecord = LinkedListMultimap.create();
+    private Map<String, Object> currentRecord = new LinkedHashMap<>();
     private Fix fix;
     private final List<Expression> expressions = new ArrayList<>();
     private Map<String, String> vars = NO_VARS;
@@ -98,7 +95,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
             public void literal(final String name, final String value) {
                 // TODO: set up logging
                 System.out.printf("Putting '%s':'%s'\n", name, value);
-                currentRecord.put(name, value);
+                add(currentRecord, name, value);
             }
         });
     }
@@ -111,7 +108,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
 
     @Override
     public void startRecord(final String identifier) {
-        currentRecord = LinkedListMultimap.create();
+        currentRecord = new LinkedHashMap<>();
         System.out.printf("Start record: %s\n", currentRecord);
         flattener.startRecord(identifier);
         entityCountStack.clear();
@@ -130,7 +127,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         System.out.printf("End record, walking fix: %s\n", currentRecord);
         final RecordTransformer transformer = new RecordTransformer(currentRecord, vars, fix);
         currentRecord = transformer.transform();
-        if (!currentRecord.containsEntry("__reject", true)) {
+        if (!currentRecord.containsKey("__reject")) {
             outputStreamReceiver.startRecord(recordIdentifier);
             System.out.println("Sending results to " + outputStreamReceiver);
             currentRecord.keySet().forEach(k -> {
@@ -140,7 +137,11 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         }
     }
 
-    private void emit(final Object key, final Collection<Object> vals) {
+    private void emit(final Object key, final Object val) {
+        if (val == null) {
+            return;
+        }
+        final List<?> vals = val instanceof List ? (List<?>) val : Arrays.asList(val);
         final boolean isMulti = vals.size() > 1;
         if (isMulti) {
             outputStreamReceiver.startEntity(key.toString());
@@ -214,8 +215,37 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         return vars;
     }
 
-    public Multimap<String, Object> getCurrentRecord() {
+    public Map<String, Object> getCurrentRecord() {
         return currentRecord;
+    }
+
+    static void addAll(final Map<String, Object> record, final String fieldName, final List<String> values) {
+        values.forEach(value -> {
+            add(record, fieldName, value);
+        });
+    }
+
+    static void addAll(final Map<String, Object> record, final Map<String, Object> values) {
+        values.entrySet().forEach(value -> {
+            add(record, value.getKey(), value.getValue());
+        });
+    }
+
+    static void add(final Map<String, Object> record, final String name, final Object val) {
+        final Object object = record.get(name);
+        record.put(name, object == null ? val : asListWith(object, val));
+    }
+
+    static List<Object> asListWith(final Object object, final Object value) {
+        final List<Object> list = asList(object);
+        list.add(value);
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    static List<Object> asList(final Object object) {
+        return new ArrayList<>(
+                object instanceof List ? (List<Object>) object : Arrays.asList(object));
     }
 
 }
