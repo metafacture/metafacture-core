@@ -104,6 +104,7 @@ public class MetafixFieldTest {
     @Test
     public void add() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "add_field('my.name','patrick')",
                 "add_field('my.name','nicolas')"), //
             i -> {
                 i.startRecord("1");
@@ -117,20 +118,24 @@ public class MetafixFieldTest {
                 //
                 i.startRecord("3");
                 i.endRecord();
-            }, o -> {
+            }, (o, f) -> {
                 o.get().startRecord("1");
-                o.get().literal("my.name", "nicolas");
+                o.get().startEntity("my");
+                o.get().literal("name", "[patrick, nicolas]"); // TODO: fix list -> entity
+                o.get().endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().startEntity("my.name");
-                o.get().literal("", "max");
-                o.get().literal("", "nicolas");
+                o.get().literal("my.name", "max"); // TODO: fix entity -> entity
+                o.get().startEntity("my");
+                o.get().literal("name", "[patrick, nicolas]"); // TODO: fix list -> entity
                 o.get().endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("3");
-                o.get().literal("my.name", "nicolas");
+                o.get().startEntity("my");
+                o.get().literal("name", "[patrick, nicolas]"); // TODO: fix list -> entity
+                o.get().endEntity();
                 o.get().endRecord();
             });
     }

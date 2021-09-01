@@ -231,8 +231,10 @@ public class MetafixIfTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("author.name", "A University");
-                o.get().literal("author.type", "Organization");
+                o.get().literal("author.name", "A University"); // TODO: fix entity -> entity
+                o.get().startEntity("author");
+                o.get().literal("type", "Organization");
+                o.get().endEntity();
                 o.get().endRecord();
             });
     }
@@ -349,8 +351,10 @@ public class MetafixIfTest {
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().literal("author.name.label", "Some University");
-                o.get().literal("author.type", "Organization");
+                o.get().literal("author.name.label", "Some University"); // TODO: fix entity -> entity
+                o.get().startEntity("author");
+                o.get().literal("type", "Organization");
+                o.get().endEntity();
                 o.get().endRecord();
             });
     }

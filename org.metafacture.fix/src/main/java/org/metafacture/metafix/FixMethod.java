@@ -42,33 +42,7 @@ enum FixMethod {
         public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             record.remove(params.get(0));
-            setValue(record, params.get(0).split("\\."), params.get(1));
-        }
-
-        public Object setValue(final Map<String, Object> map, final String[] keys, final String value) {
-            final String currentKey = keys[0];
-            if (keys.length == 1) {
-                map.put(currentKey, value);
-                return map;
-            }
-            final String[] remainingKeys = Arrays.copyOfRange(keys, 1, keys.length);
-            final Object nested = setNested(map, value, currentKey, remainingKeys);
-            map.put(currentKey, nested);
-            return map;
-        }
-
-        private Object setNested(final Map<String, Object> map, final String value, final String currentKey,
-                final String[] remainingKeys) {
-            if (!map.containsKey(currentKey)) {
-                map.put(currentKey, new LinkedHashMap<String, Object>());
-            }
-            final Object nested = map.get(currentKey);
-            if (!(nested instanceof Map)) {
-                throw new IllegalStateException("Nested non-map: " + nested);
-            }
-            @SuppressWarnings("unchecked")
-            final Object result = setValue((Map<String, Object>) nested, remainingKeys, value);
-            return result;
+            insert(InsertMode.REPLACE, record, params.get(0).split("\\."), params.get(1));
         }
     },
     set_array {
@@ -129,10 +103,7 @@ enum FixMethod {
     add_field {
         public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            final String name = params.get(0);
-            final String val = params.get(1);
-            final Object object = record.get(name);
-            record.put(name, object == null ? val : Metafix.asListWith(object, val));
+            insert(InsertMode.APPEND, record, params.get(0).split("\\."), params.get(1));
         }
 
     },
@@ -331,6 +302,49 @@ enum FixMethod {
                 record.put(key, object == null ? val : Metafix.asListWith(object, val));
             });
         }
+    }
+
+    private static Object insert(final InsertMode mode, final Map<String, Object> map, final String[] keys, final String value) {
+        final String currentKey = keys[0];
+        if (keys.length == 1) {
+            mode.apply(map, currentKey, value);
+            return map;
+        }
+        final String[] remainingKeys = Arrays.copyOfRange(keys, 1, keys.length);
+        final Object nested = insertNested(mode, map, value, currentKey, remainingKeys);
+        map.put(currentKey, nested);
+        return map;
+    }
+
+    private static Object insertNested(final InsertMode mode, final Map<String, Object> map, final String value, final String currentKey,
+            final String[] remainingKeys) {
+        if (!map.containsKey(currentKey)) {
+            map.put(currentKey, new LinkedHashMap<String, Object>());
+        }
+        final Object nested = map.get(currentKey);
+        if (!(nested instanceof Map)) {
+            throw new IllegalStateException("Nested non-map: " + nested);
+        }
+        @SuppressWarnings("unchecked")
+        final Object result = insert(mode, (Map<String, Object>) nested, remainingKeys, value);
+        return result;
+    }
+
+    private enum InsertMode {
+        REPLACE {
+            @Override
+            void apply(final Map<String, Object> map, final String key, final String value) {
+                map.put(key, value);
+            }
+        },
+        APPEND {
+            @Override
+            void apply(final Map<String, Object> map, final String key, final String value) {
+                final Object object = map.get(key);
+                map.put(key, object == null ? value : Metafix.asListWith(object, value));
+            }
+        };
+        abstract void apply(Map<String, Object> map, String key, String value);
     }
 
     abstract void apply(Map<String, Object> record, List<String> params, Map<String, String> options);
