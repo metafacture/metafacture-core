@@ -18,7 +18,6 @@ package org.metafacture.metafix;
 
 import org.metafacture.framework.StreamReceiver;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -49,91 +48,55 @@ public class MetafixFieldTest {
     }
 
     @Test
-    public void set() {
+    public void setEmpty() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "set_field('my.name','patrick')",
-                "set_field('your.name','nicolas')"), //
+                "set_field('my.nested.name','patrick')",
+                "set_field('your.nested.name','nicolas')"), //
             i -> {
                 i.startRecord("1");
                 i.endRecord();
-                //
-                i.startRecord("2");
-                i.startEntity("my");
-                i.literal("name", "max");
-                i.endEntity();
-                i.startEntity("your");
-                i.literal("name", "mo");
-                i.endEntity();
-                i.endRecord();
-                //
-                i.startRecord("3");
-                i.endRecord();
-            }, o -> {
+            }, (o, f) -> {
                 o.get().startRecord("1");
-                o.get().literal("my.name", "patrick");
-                o.get().literal("your.name", "nicolas");
-                o.get().endRecord();
-                //
-                o.get().startRecord("2");
-                o.get().literal("my.name", "patrick");
-                o.get().literal("your.name", "nicolas");
-                o.get().endRecord();
-                //
-                o.get().startRecord("3");
-                o.get().literal("my.name", "patrick");
-                o.get().literal("your.name", "nicolas");
+                o.get().startEntity("my");
+                o.get().startEntity("nested");
+                o.get().literal("name", "patrick");
+                f.apply(2).endEntity();
+                o.get().startEntity("your");
+                o.get().startEntity("nested");
+                o.get().literal("name", "nicolas");
+                f.apply(2).endEntity();
                 o.get().endRecord();
             });
     }
 
     @Test
-    @Disabled // implement internal entities representation and emit actual entities
-    @SuppressWarnings("checkstyle:ExecutableStatementCount")
-    public void setEntities() {
+    public void setExisting() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "set_field('my.name','patrick')",
-                "set_field('your.name','nicolas')"), //
+                "set_field('my.nested.name','patrick')",
+                "set_field('your.nested.name','nicolas')"), //
             i -> {
                 i.startRecord("1");
-                i.endRecord();
-                //
-                i.startRecord("2");
                 i.startEntity("my");
+                i.startEntity("nested");
                 i.literal("name", "max");
                 i.endEntity();
+                i.endEntity();
                 i.startEntity("your");
+                i.startEntity("nested");
                 i.literal("name", "mo");
                 i.endEntity();
+                i.endEntity();
                 i.endRecord();
-                //
-                i.startRecord("3");
-                i.endRecord();
-            }, o -> {
+            }, (o, f) -> {
                 o.get().startRecord("1");
                 o.get().startEntity("my");
+                o.get().startEntity("nested");
                 o.get().literal("name", "patrick");
-                o.get().endEntity();
+                f.apply(2).endEntity();
                 o.get().startEntity("your");
+                o.get().startEntity("nested");
                 o.get().literal("name", "nicolas");
-                o.get().endEntity();
-                o.get().endRecord();
-                //
-                o.get().startRecord("2");
-                o.get().startEntity("my");
-                o.get().literal("name", "patrick");
-                o.get().endEntity();
-                o.get().startEntity("your");
-                o.get().literal("name", "nicolas");
-                o.get().endEntity();
-                o.get().endRecord();
-                //
-                o.get().startRecord("3");
-                o.get().startEntity("my");
-                o.get().literal("name", "patrick");
-                o.get().endEntity();
-                o.get().startEntity("your");
-                o.get().literal("name", "nicolas");
-                o.get().endEntity();
+                f.apply(2).endEntity();
                 o.get().endRecord();
             });
     }
