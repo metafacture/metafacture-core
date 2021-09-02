@@ -95,8 +95,7 @@ Git commits should be as granular as possible. When working on a fix for issue X
 * Do not end the subject line with a period
 * Wrap lines at 72 characters
 * Use the body to explain *what* and *why* not *how* (which can be seen in the diff)
-* Reference issues at the end of the first line
-* For referencing issues in the same repository use the short form ("#14" not "https://github.com/metafacture/metafacture-core/issues/14")
+* Reference issues in the same repository at the end of the first line using the short form (e.g. #14)
 
 For details, see [these](https://chris.beams.io/posts/git-commit/) [posts](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
 
