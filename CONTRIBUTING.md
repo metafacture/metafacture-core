@@ -136,7 +136,7 @@ An issue is ready if it’s possible to start working on it according to the [De
 
 #### Working
 
-When we start working on an issue, we move it to the working column. Ideally, every person should only work on one issue at a time. That way the working column provides an overview of who is currently working on what. Issues are only moved into or out of the working column by the person who is assigned. Issues in working are only reassigned by the person who is currently assigned. If the assignee thinks the issue is ready for review they add instructions and links for testing the changed behavior on the test system in the issue, move it to the *Review* column, assign the previously announced functional reviewer (see [Definition of Ready](#definition-of-ready)), and open an unassigned pull request for the feature branch. For details, see the above section on [contributing code](#contributing-code).
+When we start working on an issue, we move it to the working column. Ideally, every person should only work on one issue at a time. That way the working column provides an overview of who is currently working on what. Issues are only moved into or out of the working column by the person who is assigned. Issues in working are only reassigned by the person who is currently assigned. If the assignee thinks the issue is ready for review they add instructions and links for testing the changed behavior in the issue, move it to the *Review* column, assign the previously announced functional reviewer (see [Definition of Ready](#definition-of-ready)), and open an unassigned pull request for the feature branch. For details, see the above section on [contributing code](#contributing-code).
 
 #### Review
 
