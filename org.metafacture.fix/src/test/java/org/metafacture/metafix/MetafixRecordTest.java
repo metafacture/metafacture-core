@@ -29,14 +29,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 
 /**
- * Tests Metafix field / record level methods. Following the cheat sheet
+ * Tests Metafix record level methods. Following the cheat sheet
  * examples at https://github.com/LibreCat/Catmandu/wiki/Fixes-Cheat-Sheet
  *
  * @author Fabian Steeg
  */
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("checkstyle:MultipleStringLiterals")
-public class MetafixFieldTest {
+public class MetafixRecordTest {
 
     @RegisterExtension
     private MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -44,7 +44,7 @@ public class MetafixFieldTest {
     @Mock
     private StreamReceiver streamReceiver;
 
-    public MetafixFieldTest() {
+    public MetafixRecordTest() {
     }
 
     @Test
