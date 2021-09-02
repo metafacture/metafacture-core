@@ -120,7 +120,7 @@ If you notice errors, inconsistencies or missing parts in the documentation, we 
 
 ### Board and Issues
 
-We use the [Metafacture Board](https://github.com/orgs/metafacture/projects/1) to track the progress of issues of Metafacture. In the following we describe when issues are ready and what stages to pass to make a issue done.
+We use the [Metafacture Board](https://github.com/orgs/metafacture/projects/1) to track the progress of Metafacture issues. In the following we describe when issues are ready and what stages to pass to make a issue done.
 
 ### From Backlog to Done
 
