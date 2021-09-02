@@ -159,8 +159,8 @@ The creator of the pull request merges the pull request after checking the [Defi
 The *Definition of Ready* describes a list of criteria which issues have to meet to move from column 'Backlog' to 'Ready':
 
 * The person who will implement the issue is assigned and has every information to work on this issue. Only the assignee can move the issue to Ready.
-* The person who will do code review is mentioned in the issue, e.g. in a comment like "code could be reviewed by ..." (functional review will typically be done by the person reporting the issue when they verify the fix)
-* There are no blocking dependencies. Dependencies are expressed through simple referencing of the blocking issue (e.g. depends on #111), see details on [autolinked references and URLs](https://docs.github.com/en/github/writing-on-github/autolinked-references-and-urls)
+* The person who will do code review is mentioned in the issue, e.g. in a comment like "code could be reviewed by ..." (functional review will typically be done by the person reporting the issue when they verify the fix).
+* There are no blocking dependencies. Dependencies are expressed through simple referencing of the blocking issue (e.g. depends on #111), see details on [autolinked references and URLs](https://docs.github.com/en/github/writing-on-github/autolinked-references-and-urls).
 
 ### Definition of Done
 
