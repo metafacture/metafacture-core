@@ -26,13 +26,13 @@ The following is a set of guidelines for contributing to Metafacture and how to 
 
 This section guides you through submitting a bug report for Metafacture. Following these guidelines helps maintainers and the community understand your report, reproduce the behavior and find related reports.
 
-Before creating bug reports, please check if an issue with this bug [already exists](https://github.com/metafacture/metafacture-core/issues). When you are creating a bug report, please [include as many details as possible](#how-do-i-submit-a-bug-report).
+Before creating bug reports, please check if an issue with this bug already exists in the appropriate repository, [e.g. metafacture-core](https://github.com/metafacture/metafacture-core/issues). When you are creating a bug report, please [include as many details as possible](#how-do-i-submit-a-bug-report).
 
 **Note:** If you find a **Closed** issue that seems like it is the same thing that you're experiencing, open a new issue and include a link to the original issue in the body of your new one.
 
 #### How Do I Submit A Bug Report?
 
-Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/). Create a [new issue on the repository](https://github.com/metafacture/metafacture-core/issues/new).
+Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/). Create new issue on the appropriate repository, [e.g. metafacture-core](https://github.com/metafacture/metafacture-core/issues/new).
 
 Explain the problem and include additional details to help maintainers reproduce the problem:
 
@@ -47,11 +47,11 @@ Explain the problem and include additional details to help maintainers reproduce
 
 This section guides you through submitting an enhancement suggestion for Metafacture, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion and find related suggestions.
 
-Before creating enhancement suggestions, please **perform a [cursory search](https://github.com/search?q=is%3Aissue+repo%3Ametafacture%2Fmetafacture-core)** to see if the enhancement has already been suggested. If it has, add a comment to the existing issue instead of opening a new one. When you are creating an enhancement suggestion, please include as many details as possible:
+Before creating enhancement suggestions, please **perform a [cursory search](https://github.com/search?q=is%3Aissue+org%3Ametafacture)** to see if the enhancement has already been suggested. If it has, add a comment to the existing issue instead of opening a new one. When you are creating an enhancement suggestion, please include as many details as possible:
 
 #### How Do I Submit An Enhancement Suggestion?
 
-Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com/features/issues/). Create [new issue on the repository](https://github.com/metafacture/metafacture-core/issues/new).
+Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com/features/issues/). Create new issue on the appropriate repository, [e.g. metafacture-core](https://github.com/metafacture/metafacture-core/issues/new).
 
 Provide the following information:
 
@@ -66,10 +66,10 @@ Provide the following information:
 
 The overall code contribution process is:
 
-1. Fork the metafacture-core repo and clone your fork (members with write access: clone the metafacture-core repo)
+1. Fork the appropriate metafacture repo and clone your fork (members with write access: clone the appropriate metafacture repo)
 1. In your local clone, switch to a new feature branch for the bug fix or feature enhancement you want to implement. The name of the feature branch should start with the corresponding issue number and contain additional info for convenience (using camelCaseFormatting, e.g. '111-featureDesciption')
 1. Implement, test, and build your bug fix or feature enhancement
-1. Commit your changes and push the feature branch to your fork (members with write access: push to the metafacture-core repo)
+1. Commit your changes and push the feature branch to your fork (members with write access: push to the appropriate metafacture repo)
 1. Open a pull request for your feature branch to submit your changes (see details below)
 
 #### Pull Requests
