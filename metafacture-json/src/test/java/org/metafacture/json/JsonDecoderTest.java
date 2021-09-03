@@ -152,7 +152,7 @@ public final class JsonDecoderTest {
     }
 
     @Test
-    public void testShouldProcessRecordsInArray() {
+    public void testShouldProcessRecordsInArrayField() {
         jsonDecoder.setRecordPath("$.data");
         jsonDecoder.process(
                 "{\"data\":[" + "{\"lit\": \"record 1\"}," +
@@ -165,6 +165,29 @@ public final class JsonDecoderTest {
         ordered.verify(receiver).startRecord("2");
         ordered.verify(receiver).literal("lit", "record 2");
         ordered.verify(receiver).endRecord();
+    }
+
+    @Test
+    public void testShouldProcessRecordsInArrayRoot() {
+        jsonDecoder.setRecordPath("$");
+        jsonDecoder.process(
+                "[" + "{\"lit\": \"record 1\"}," +
+                        "{\"lit\": \"record 2\"}" + "]");
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("lit", "record 1");
+        ordered.verify(receiver).endRecord();
+        ordered.verify(receiver).startRecord("2");
+        ordered.verify(receiver).literal("lit", "record 2");
+        ordered.verify(receiver).endRecord();
+    }
+
+    @Test(expected=MetafactureException.class)
+    public void testRootArrayNoRecordPath() {
+        jsonDecoder.process(
+                "[" + "{\"lit\": \"record 1\"}," +
+                        "{\"lit\": \"record 2\"}" + "]");
     }
 
     @Test

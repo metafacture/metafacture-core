@@ -33,7 +33,7 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Decodes a record in JSON format.
@@ -132,21 +132,27 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
     @Override
     public void process(final String json) {
         assert !isClosed();
-        final List<String> records = recordPath.isEmpty() ? Arrays.asList(json)
-                : matches(JsonPath.read(json, recordPath));
-        records.forEach(record -> {
-            createParser(record);
-            try {
-                decode();
-            } catch (final IOException e) {
-                throw new MetafactureException(e);
-            } finally {
-                closeParser();
-            }
-        });
+        if (recordPath.isEmpty()) {
+            processRecord(json);
+        } else {
+            matches(JsonPath.read(json, recordPath)).forEach(record -> {
+                processRecord(record);
+            });
+        }
     }
 
-    private List<String> matches(Object obj) {
+    private void processRecord(String record) {
+        createParser(record);
+        try {
+            decode();
+        } catch (final IOException e) {
+            throw new MetafactureException(e);
+        } finally {
+            closeParser();
+        }
+    }
+
+    private Stream<String> matches(Object obj) {
         final List<?> records = (obj instanceof List<?>) ? ((List<?>) obj) : Arrays.asList(obj);
         return records.stream().map(doc -> {
             try {
@@ -155,7 +161,7 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
                 e.printStackTrace();
                 return doc.toString();
             }
-        }).collect(Collectors.toList());
+        });
     }
 
     @Override
