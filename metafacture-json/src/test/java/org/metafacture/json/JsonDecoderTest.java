@@ -183,6 +183,13 @@ public final class JsonDecoderTest {
         ordered.verify(receiver).endRecord();
     }
 
+    @Test(expected=MetafactureException.class)
+    public void testRootArrayNoRecordPath() {
+        jsonDecoder.process(
+                "[" + "{\"lit\": \"record 1\"}," +
+                        "{\"lit\": \"record 2\"}" + "]");
+    }
+
     @Test
     public void testShouldProcessMultipleRecords() {
         jsonDecoder.process("{\"lit\": \"record 1\"}");
