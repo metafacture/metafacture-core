@@ -32,7 +32,7 @@ Before creating bug reports, please check if an issue with this bug already exis
 
 #### How Do I Submit A Bug Report?
 
-Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/). Create new issue on the appropriate repository, [e.g. metafacture-core](https://github.com/metafacture/metafacture-core/issues/new).
+Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/). Create a new issue on the appropriate repository, [e.g. metafacture-core](https://github.com/metafacture/metafacture-core/issues/new).
 
 Explain the problem and include additional details to help maintainers reproduce the problem:
 
@@ -51,7 +51,7 @@ Before creating enhancement suggestions, please **perform a [cursory search](htt
 
 #### How Do I Submit An Enhancement Suggestion?
 
-Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com/features/issues/). Create new issue on the appropriate repository, [e.g. metafacture-core](https://github.com/metafacture/metafacture-core/issues/new).
+Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com/features/issues/). Create a new issue on the appropriate repository, [e.g. metafacture-core](https://github.com/metafacture/metafacture-core/issues/new).
 
 Provide the following information:
 
