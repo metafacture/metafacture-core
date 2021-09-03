@@ -132,18 +132,24 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
     @Override
     public void process(final String json) {
         assert !isClosed();
-        final List<String> records = recordPath.isEmpty() ? Arrays.asList(json)
-                : matches(JsonPath.read(json, recordPath));
-        records.forEach(record -> {
-            createParser(record);
-            try {
-                decode();
-            } catch (final IOException e) {
-                throw new MetafactureException(e);
-            } finally {
-                closeParser();
-            }
-        });
+        if (recordPath.isEmpty()) {
+            processRecord(json);
+        } else {
+            matches(JsonPath.read(json, recordPath)).forEach(record -> {
+                processRecord(record);
+            });
+        }
+    }
+
+    private void processRecord(String record) {
+        createParser(record);
+        try {
+            decode();
+        } catch (final IOException e) {
+            throw new MetafactureException(e);
+        } finally {
+            closeParser();
+        }
     }
 
     private List<String> matches(Object obj) {
