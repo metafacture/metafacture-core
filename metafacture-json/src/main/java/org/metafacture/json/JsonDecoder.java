@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Decodes a record in JSON format.
@@ -152,7 +153,7 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
         }
     }
 
-    private List<String> matches(Object obj) {
+    private Stream<String> matches(Object obj) {
         final List<?> records = (obj instanceof List<?>) ? ((List<?>) obj) : Arrays.asList(obj);
         return records.stream().map(doc -> {
             try {
@@ -161,7 +162,7 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
                 e.printStackTrace();
                 return doc.toString();
             }
-        }).collect(Collectors.toList());
+        });
     }
 
     @Override
