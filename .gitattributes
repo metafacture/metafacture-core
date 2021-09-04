@@ -28,7 +28,7 @@
 *.js text
 *.fom text
 
-# Platform-specific scripts should always use  
+# Platform-specific scripts should always use
 # their native end-of-line markers:
 *.bat text eol=crlf
 *.sh text eol=lf

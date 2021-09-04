@@ -15,7 +15,7 @@ Originally, Metafacture was developed as part of the [Culturegraph](http://cultu
 You can either use Metafacture as a stand-alone application or include it as a Java library in your own projects.
 
 ## Metafacture as a stand-alone application
- 
+
 If you are only interested in running Flux scripts without doing any Java programming this is the way to go. The instructions assume that you are using a *nix-like shell.
 
 1. Download the latest distribution package from the [metafacture-core/releases](https://github.com/metafacture/metafacture-core/releases) page. Make sure that you do download a distribution package and _not_ a source code package (the file name should include *-dist*).

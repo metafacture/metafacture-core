@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
         targetNamespace="http://www.example.org/test-schema"
-        xmlns:tns="http://www.example.org/test-schema" 
+        xmlns:tns="http://www.example.org/test-schema"
         xmlns:xi="http://www.w3.org/2001/XInclude">
 
     <import namespace="http://www.w3.org/2001/XInclude"

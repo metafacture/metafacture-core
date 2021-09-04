@@ -55,7 +55,6 @@
                     <regexp match="$[type]"/>
                 </postprocess>
             </choose>
-            
         </combine>
 
     </rules>

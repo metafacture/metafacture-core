@@ -8,7 +8,7 @@ file|
 open-file|
 //"1025374754"|
 //id|
-//template("https://portal.dnb.de/opac.htm?method=requestMarcXml&idn=${o}")| 
+//template("https://portal.dnb.de/opac.htm?method=requestMarcXml&idn=${o}")|
 //open-http|
 decode-xml|
 handle-marcxml|

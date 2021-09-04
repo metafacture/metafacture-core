@@ -30,7 +30,7 @@
       <xs:enumeration value="text"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:element name="fallback" type="xi:fallbackType"/>
 
   <xs:complexType name="fallbackType" mixed="true">

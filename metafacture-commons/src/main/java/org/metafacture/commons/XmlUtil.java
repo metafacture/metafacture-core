@@ -104,7 +104,7 @@ public final class XmlUtil {
                 .mapToObj(value -> escapeCodePoint(value, escapeUnicode))
                 .collect(joining());
     }
-    
+
     private static String escapeCodePoint(final int codePoint, final boolean escapeUnicode) {
         final String entity = entityFor(codePoint);
         if (entity != null) {

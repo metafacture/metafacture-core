@@ -38,7 +38,7 @@ public final class ElementExtractorTest {
     private static final StringReader IN = new StringReader("<html>"
             + "<script data-test='site-head-data'>{\"code\":\"hey\"}</script>"
             + "<script data-test='model-linked-data'>{\"code\":\"yo\"}");
-    
+
     private static final String OUT = "{\"code\":\"yo\"}";
 
     private ElementExtractor elementExtractor;
