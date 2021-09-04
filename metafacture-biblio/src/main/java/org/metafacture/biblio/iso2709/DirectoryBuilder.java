@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.biblio.iso2709;
 
-import static org.metafacture.biblio.iso2709.Iso2709Constants.FIELD_SEPARATOR;
-import static org.metafacture.biblio.iso2709.Iso2709Constants.MAX_PAYLOAD_LENGTH;
-import static org.metafacture.biblio.iso2709.Iso2709Constants.TAG_LENGTH;
+package org.metafacture.biblio.iso2709;
 
 import org.metafacture.framework.FormatException;
 
@@ -31,6 +28,8 @@ import org.metafacture.framework.FormatException;
  */
 final class DirectoryBuilder {
 
+    private static final int RADIX = 10;
+
     private final Iso646ByteBuffer buffer;
 
     private final int fieldStartLength;
@@ -41,11 +40,11 @@ final class DirectoryBuilder {
     private final int maxFieldLength;
 
     DirectoryBuilder(final RecordFormat format) {
-        buffer = new Iso646ByteBuffer(MAX_PAYLOAD_LENGTH);
+        buffer = new Iso646ByteBuffer(Iso2709Constants.MAX_PAYLOAD_LENGTH);
         fieldStartLength = format.getFieldStartLength();
         fieldLengthLength = format.getFieldLengthLength();
         implDefinedPartLength = format.getImplDefinedPartLength();
-        entryLength = TAG_LENGTH + fieldStartLength + fieldLengthLength +
+        entryLength = Iso2709Constants.TAG_LENGTH + fieldStartLength + fieldLengthLength +
                 implDefinedPartLength;
         maxFieldStart = calculateMaxValue(fieldStartLength);
         maxFieldLength = calculateMaxValue(fieldLengthLength);
@@ -54,15 +53,15 @@ final class DirectoryBuilder {
     private int calculateMaxValue(final int digits) {
         assert digits >= 0;
         int maxValue = 1;
-        for (int i = 0; i < digits; i++) {
-            maxValue *= 10;
+        for (int i = 0; i < digits; ++i) {
+            maxValue *= RADIX;
         }
         return maxValue - 1;
     }
 
     void addEntries(final char[] tag, final char[] implDefinedPart,
             final int fieldStart, final int fieldEnd) {
-        assert tag.length == TAG_LENGTH;
+        assert tag.length == Iso2709Constants.TAG_LENGTH;
         assert implDefinedPart.length == implDefinedPartLength;
         assert fieldStart >= 0;
         assert fieldEnd >= fieldStart;
@@ -125,7 +124,7 @@ final class DirectoryBuilder {
         System.arraycopy(buffer.getByteArray(), 0, destBuffer, fromIndex,
                 directoryLength);
         final int directoryEnd = fromIndex + directoryLength;
-        destBuffer[directoryEnd] = FIELD_SEPARATOR;
+        destBuffer[directoryEnd] = Iso2709Constants.FIELD_SEPARATOR;
     }
 
     @Override

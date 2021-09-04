@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.biblio.pica;
 
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+package org.metafacture.biblio.pica;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.FormatException;
@@ -30,6 +26,10 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
+import java.text.Normalizer.Form;
+import java.text.Normalizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Encodes an event stream in pica+ format.
@@ -68,6 +68,9 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     private String id;
 
+    public PicaEncoder() {
+    }
+
     @Override
     public void startRecord(final String recordId) {
         // the name is a idn, which should be found in the encoded data under 003@.
@@ -97,7 +100,7 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         if (entityOpen) { //No nested entities are allowed in pica+.
             throw new FormatException(name);
         }
-        builder.append(name.trim()+ " ");
+        builder.append(name.trim() + " ");
 
         idnControlSubField = !ignoreRecordId && FIELD_IDN_INTERN.equals(name.trim());
         //Now literals can be opened but no more entities.
@@ -124,7 +127,7 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         builder.append(SUB_DELIMITER);
         builder.append(name);
         builder.append(valueNew);
-}
+    }
 
     @Override
     public void endEntity() {

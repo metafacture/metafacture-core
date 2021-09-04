@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.biblio.marc21;
 
 import org.metafacture.biblio.iso2709.FieldHandler;
@@ -134,13 +135,15 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(StreamReceiver.class)
 @Description("Decodes MARC 21 records")
 @FluxCommand("decode-marc21")
-public final class Marc21Decoder
-        extends DefaultObjectPipe<String, StreamReceiver> {
+public final class Marc21Decoder extends DefaultObjectPipe<String, StreamReceiver> {
 
     private final FieldHandler fieldHandler = new Marc21Handler();
 
     private boolean ignoreMissingId;
     private boolean emitLeaderAsWhole;
+
+    public Marc21Decoder() {
+    }
 
     /**
      * Controls whether the decoder aborts processing if a record has no
@@ -227,27 +230,28 @@ public final class Marc21Decoder
 
     private void emitLeader(final Record record) {
         getReceiver().startEntity(Marc21EventNames.LEADER_ENTITY);
-        if (emitLeaderAsWhole){
+        if (emitLeaderAsWhole) {
             getReceiver().literal(Marc21EventNames.LEADER_ENTITY, record.getLabel());
-        }else {
-        final char[] implCodes = record.getImplCodes();
-        final char[] systemChars = record.getSystemChars();
-        getReceiver().literal(Marc21EventNames.RECORD_STATUS_LITERAL, String.valueOf(
-                record.getRecordStatus()));
-        getReceiver().literal(Marc21EventNames.RECORD_TYPE_LITERAL, String.valueOf(
-                implCodes[Marc21Constants.RECORD_TYPE_INDEX]));
-        getReceiver().literal(Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL, String.valueOf(
-                implCodes[Marc21Constants.BIBLIOGRAPHIC_LEVEL_INDEX]));
-        getReceiver().literal(Marc21EventNames.TYPE_OF_CONTROL_LITERAL, String.valueOf(
-                implCodes[Marc21Constants.TYPE_OF_CONTROL_INDEX]));
-        getReceiver().literal(Marc21EventNames.CHARACTER_CODING_LITERAL, String.valueOf(
-                implCodes[Marc21Constants.CHARACTER_CODING_INDEX]));
-        getReceiver().literal(Marc21EventNames.ENCODING_LEVEL_LITERAL, String.valueOf(
-                systemChars[Marc21Constants.ENCODING_LEVEL_INDEX]));
-        getReceiver().literal(Marc21EventNames.CATALOGING_FORM_LITERAL, String.valueOf(
-                systemChars[Marc21Constants.CATALOGING_FORM_INDEX]));
-        getReceiver().literal(Marc21EventNames.MULTIPART_LEVEL_LITERAL, String.valueOf(
-                systemChars[Marc21Constants.MULTIPART_LEVEL_INDEX]));
+        }
+        else {
+            final char[] implCodes = record.getImplCodes();
+            final char[] systemChars = record.getSystemChars();
+            getReceiver().literal(Marc21EventNames.RECORD_STATUS_LITERAL, String.valueOf(
+                        record.getRecordStatus()));
+            getReceiver().literal(Marc21EventNames.RECORD_TYPE_LITERAL, String.valueOf(
+                        implCodes[Marc21Constants.RECORD_TYPE_INDEX]));
+            getReceiver().literal(Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL, String.valueOf(
+                        implCodes[Marc21Constants.BIBLIOGRAPHIC_LEVEL_INDEX]));
+            getReceiver().literal(Marc21EventNames.TYPE_OF_CONTROL_LITERAL, String.valueOf(
+                        implCodes[Marc21Constants.TYPE_OF_CONTROL_INDEX]));
+            getReceiver().literal(Marc21EventNames.CHARACTER_CODING_LITERAL, String.valueOf(
+                        implCodes[Marc21Constants.CHARACTER_CODING_INDEX]));
+            getReceiver().literal(Marc21EventNames.ENCODING_LEVEL_LITERAL, String.valueOf(
+                        systemChars[Marc21Constants.ENCODING_LEVEL_INDEX]));
+            getReceiver().literal(Marc21EventNames.CATALOGING_FORM_LITERAL, String.valueOf(
+                        systemChars[Marc21Constants.CATALOGING_FORM_INDEX]));
+            getReceiver().literal(Marc21EventNames.MULTIPART_LEVEL_LITERAL, String.valueOf(
+                        systemChars[Marc21Constants.MULTIPART_LEVEL_INDEX]));
         }
         getReceiver().endEntity();
     }
@@ -256,6 +260,9 @@ public final class Marc21Decoder
      * Emits the fields in a MARC 21 record as stream events.
      */
     private final class Marc21Handler implements FieldHandler {
+
+        Marc21Handler() {
+        }
 
         @Override
         public void referenceField(final char[] tag, final char[] implDefinedPart,

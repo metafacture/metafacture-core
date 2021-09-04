@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.biblio.marc21;
 
 import org.metafacture.framework.FluxCommand;
@@ -22,9 +23,9 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-
 
 /**
  * A marc xml reader.
@@ -48,6 +49,9 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private String namespace = NAMESPACE;
     private StringBuilder builder = new StringBuilder();
 
+    public MarcXmlHandler() {
+    }
+
     public void setNamespace(final String namespace) {
         this.namespace = namespace;
     }
@@ -57,39 +61,46 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void startElement(final String uri, final String localName, final String qName, final Attributes attributes)
-            throws SAXException {
-            if(SUBFIELD.equals(localName)){
-                builder = new StringBuilder();
-                currentTag = attributes.getValue("code");
-            }else if(DATAFIELD.equals(localName)){
-                getReceiver().startEntity(attributes.getValue("tag") + attributes.getValue("ind1") + attributes.getValue("ind2"));
-            }else if(CONTROLFIELD.equals(localName)){
-                builder = new StringBuilder();
-                currentTag = attributes.getValue("tag");
-            }else if(RECORD.equals(localName) && checkNamespace(uri)){
-                getReceiver().startRecord("");
-                getReceiver().literal(TYPE, attributes.getValue(TYPE));
-            }else if(LEADER.equals(localName)){
-                builder = new StringBuilder();
-                currentTag = LEADER;
-            }
+    public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
+        if (SUBFIELD.equals(localName)) {
+            builder = new StringBuilder();
+            currentTag = attributes.getValue("code");
+        }
+        else if (DATAFIELD.equals(localName)) {
+            getReceiver().startEntity(attributes.getValue("tag") + attributes.getValue("ind1") + attributes.getValue("ind2"));
+        }
+        else if (CONTROLFIELD.equals(localName)) {
+            builder = new StringBuilder();
+            currentTag = attributes.getValue("tag");
+        }
+        else if (RECORD.equals(localName) && checkNamespace(uri)) {
+            getReceiver().startRecord("");
+            getReceiver().literal(TYPE, attributes.getValue(TYPE));
+        }
+        else if (LEADER.equals(localName)) {
+            builder = new StringBuilder();
+            currentTag = LEADER;
+        }
     }
 
     @Override
     public void endElement(final String uri, final String localName, final String qName) throws SAXException {
-        if(SUBFIELD.equals(localName)){
+        if (SUBFIELD.equals(localName)) {
             getReceiver().literal(currentTag, builder.toString().trim());
 
-        }else if(DATAFIELD.equals(localName)){
+        }
+        else if (DATAFIELD.equals(localName)) {
             getReceiver().endEntity();
-        }else if(CONTROLFIELD.equals(localName)){
+        }
+        else if (CONTROLFIELD.equals(localName)) {
             getReceiver().literal(currentTag, builder.toString().trim());
 
-        }else if(RECORD.equals(localName) && checkNamespace(uri)){
+        }
+        else if (RECORD.equals(localName) && checkNamespace(uri)) {
             getReceiver().endRecord();
 
-        }else if(LEADER.equals(localName)){
+        }
+        else if (LEADER.equals(localName)) {
             getReceiver().literal(currentTag, builder.toString());
         }
     }

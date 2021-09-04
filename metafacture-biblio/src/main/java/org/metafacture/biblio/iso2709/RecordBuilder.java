@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.biblio.iso2709;
 
-import static org.metafacture.biblio.iso2709.Iso2709Constants.IMPL_CODES_LENGTH;
-import static org.metafacture.biblio.iso2709.Iso2709Constants.MAX_PAYLOAD_LENGTH;
-import static org.metafacture.biblio.iso2709.Iso2709Constants.RECORD_LABEL_LENGTH;
-import static org.metafacture.biblio.iso2709.Iso2709Constants.SYSTEM_CHARS_LENGTH;
-import static org.metafacture.biblio.iso2709.Iso2709Constants.TAG_LENGTH;
+import org.metafacture.commons.Require;
+import org.metafacture.framework.FormatException;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.regex.Pattern;
-
-import org.metafacture.commons.Require;
-import org.metafacture.framework.FormatException;
 
 /**
  * Builds records in ISO2709:2008 format.
@@ -37,7 +32,7 @@ import org.metafacture.framework.FormatException;
 public final class RecordBuilder {
 
     private static final char[] EMPTY_IDENTIFIER = new char[0];
-    private static final char[] ID_FIELD_TAG = { '0', '0', '1' };
+    private static final char[] ID_FIELD_TAG = {'0', '0', '1'};
     private static final Pattern REFERENCE_FIELD_TAG_PATTERN = Pattern.compile(
             "^00[1-9a-zA-Z]$");
     private static final Pattern DATA_FIELD_TAG_PATTERN = Pattern.compile(
@@ -55,7 +50,7 @@ public final class RecordBuilder {
     private final char[] defaultIndicators;
     private final char[] defaultIdentifier;
 
-    private final char[] tag = new char[TAG_LENGTH];
+    private final char[] tag = new char[Iso2709Constants.TAG_LENGTH];
     private final char[] implDefinedPart;
 
     private AppendState appendState;
@@ -65,7 +60,7 @@ public final class RecordBuilder {
         Require.notNull(recordFormat);
         label = new LabelBuilder(recordFormat);
         directory = new DirectoryBuilder(recordFormat);
-        fields = new FieldsBuilder(recordFormat, MAX_PAYLOAD_LENGTH);
+        fields = new FieldsBuilder(recordFormat, Iso2709Constants.MAX_PAYLOAD_LENGTH);
         indicatorLength = recordFormat.getIndicatorLength();
         identifierLength = recordFormat.getIdentifierLength();
         implDefinedPartLength = recordFormat.getImplDefinedPartLength();
@@ -73,7 +68,8 @@ public final class RecordBuilder {
         defaultIndicators = arrayOfNSpaceChars(indicatorLength);
         if (identifierLength > 1) {
             defaultIdentifier = arrayOfNSpaceChars(identifierLength - 1);
-        } else {
+        }
+        else {
             defaultIdentifier = EMPTY_IDENTIFIER;
         }
         implDefinedPart = new char[implDefinedPartLength];
@@ -101,26 +97,26 @@ public final class RecordBuilder {
 
     public void setImplCodes(final char[] implCodes) {
         Require.notNull(implCodes);
-        Require.that(implCodes.length == IMPL_CODES_LENGTH);
+        Require.that(implCodes.length == Iso2709Constants.IMPL_CODES_LENGTH);
         require7BitAscii(implCodes);
         label.setImplCodes(implCodes);
     }
 
     public void setImplCode(final int index, final char implCode) {
-        Require.that(0 <= index && index < IMPL_CODES_LENGTH);
+        Require.that(0 <= index && index < Iso2709Constants.IMPL_CODES_LENGTH);
         require7BitAscii(implCode);
         label.setImplCode(index, implCode);
     }
 
     public void setSystemChars(final char[] systemChars) {
         Require.notNull(systemChars);
-        Require.that(systemChars.length == SYSTEM_CHARS_LENGTH);
+        Require.that(systemChars.length == Iso2709Constants.SYSTEM_CHARS_LENGTH);
         require7BitAscii(systemChars);
         label.setSystemChars(systemChars);
     }
 
     public void setSystemChar(final int index, final char systemChar) {
-        Require.that(0 <= index && index < SYSTEM_CHARS_LENGTH);
+        Require.that(0 <= index && index < Iso2709Constants.SYSTEM_CHARS_LENGTH);
         require7BitAscii(systemChar);
         label.setSystemChar(index, systemChar);
     }
@@ -131,81 +127,79 @@ public final class RecordBuilder {
     }
 
     public void appendIdentifierField(final String value) {
-        appendIdentifierField(defaultImplDefinedPart,value);
+        appendIdentifierField(defaultImplDefinedPart, value);
     }
 
-    public void appendIdentifierField(final char[] implDefinedPart,
-            final String value) {
+    public void appendIdentifierField(final char[] currentImplDefinedPart, final String value) {
         requireNotInDataField();
         requireNotAppendingReferenceFields();
         requireNotAppendingDataFields();
         if (appendState != AppendState.ID_FIELD) {
             throw new IllegalStateException("no id field allowed");
         }
-        appendReferenceField(ID_FIELD_TAG, implDefinedPart, value);
+        appendReferenceField(ID_FIELD_TAG, currentImplDefinedPart, value);
     }
 
-    public void appendReferenceField(final char[] tag, final String value) {
-        appendReferenceField(tag, defaultImplDefinedPart, value);
+    public void appendReferenceField(final char[] currentTag, final String value) {
+        appendReferenceField(currentTag, defaultImplDefinedPart, value);
     }
 
-    public void appendReferenceField(final char[] tag,
-            final char[] implDefinedPart, final String value) {
+    public void appendReferenceField(final char[] currentTag, final char[] currentImplDefinedPart, final String value) {
         requireNotInDataField();
         requireNotAppendingDataFields();
-        Require.notNull(tag);
-        Require.notNull(implDefinedPart);
-        Require.that(implDefinedPart.length == implDefinedPartLength);
-        require7BitAscii(implDefinedPart);
+        Require.notNull(currentTag);
+        Require.notNull(currentImplDefinedPart);
+        Require.that(currentImplDefinedPart.length == implDefinedPartLength);
+        require7BitAscii(currentImplDefinedPart);
         Require.notNull(value);
 
-        checkValidReferenceFieldTag(tag);
-        final int fieldStart = fields.startField();
+        checkValidReferenceFieldTag(currentTag);
+        final int currentFieldStart = fields.startField();
         fields.appendValue(value);
         final int fieldEnd = fields.endField();
         try {
-            directory.addEntries(tag, implDefinedPart, fieldStart, fieldEnd);
-        } catch (final FormatException e) {
+            directory.addEntries(currentTag, currentImplDefinedPart, currentFieldStart, fieldEnd);
+        }
+        catch (final FormatException e) {
             fields.undoLastField();
             throw e;
         }
         appendState = AppendState.REFERENCE_FIELD;
     }
 
-    private void checkValidReferenceFieldTag(final char[] tag) {
-        if (!REFERENCE_FIELD_TAG_PATTERN.matcher(String.valueOf(tag)).matches()) {
+    private void checkValidReferenceFieldTag(final char[] currentTag) {
+        if (!REFERENCE_FIELD_TAG_PATTERN.matcher(String.valueOf(currentTag)).matches()) {
             throw new FormatException("invalid tag format for reference field");
         }
     }
 
-    public void startDataField(final char[] tag) {
-        startDataField(tag, defaultIndicators);
+    public void startDataField(final char[] currentTag) {
+        startDataField(currentTag, defaultIndicators);
     }
 
-    public void startDataField(final char[] tag, final char[] indicators) {
-        startDataField(tag, indicators, defaultImplDefinedPart);
+    public void startDataField(final char[] currentTag, final char[] indicators) {
+        startDataField(currentTag, indicators, defaultImplDefinedPart);
     }
 
-    public void startDataField(final char[] tag, final char[] indicators,
-            final char[] implDefinedPart) {
+    public void startDataField(final char[] currentTag, final char[] indicators, final char[] currentImplDefinedPart) {
         requireNotInDataField();
-        Require.notNull(tag);
+        Require.notNull(currentTag);
         Require.notNull(indicators);
         Require.that(indicators.length == indicatorLength);
         require7BitAscii(indicators);
-        Require.notNull(implDefinedPart);
-        Require.that(implDefinedPart.length == implDefinedPartLength);
-        require7BitAscii(implDefinedPart);
+        Require.notNull(currentImplDefinedPart);
+        Require.that(currentImplDefinedPart.length == implDefinedPartLength);
+        require7BitAscii(currentImplDefinedPart);
 
-        checkValidDataFieldTag(tag);
-        copyArray(tag, this.tag);
-        copyArray(implDefinedPart, this.implDefinedPart);
+        checkValidDataFieldTag(currentTag);
+        copyArray(currentTag, tag);
+        copyArray(currentImplDefinedPart, implDefinedPart);
         fieldStart = fields.startField(indicators);
         appendState = AppendState.IN_DATA_FIELD;
     }
 
-    private void checkValidDataFieldTag(final char[] tag) {
-        if (!DATA_FIELD_TAG_PATTERN.matcher(String.valueOf(tag)).matches()) {
+    private void checkValidDataFieldTag(final char[] currentTag) {
+        if (!DATA_FIELD_TAG_PATTERN.matcher(String.valueOf(currentTag)).matches()) {
             throw new FormatException("invalid tag format for data field");
         }
     }
@@ -220,7 +214,8 @@ public final class RecordBuilder {
         appendState = AppendState.DATA_FIELD;
         try {
             directory.addEntries(tag, implDefinedPart, fieldStart, fieldEnd);
-        } catch (final FormatException e) {
+        }
+        catch (final FormatException e) {
             fields.undoLastField();
             throw e;
         }
@@ -243,13 +238,13 @@ public final class RecordBuilder {
 
     public byte[] build() {
         requireNotInDataField();
-        final int baseAddress = RECORD_LABEL_LENGTH + directory.length();
+        final int baseAddress = Iso2709Constants.RECORD_LABEL_LENGTH + directory.length();
         final int recordLength = baseAddress + fields.length();
         label.setBaseAddress(baseAddress);
         label.setRecordLength(recordLength);
         final byte[] recordBuffer = new byte[recordLength];
         label.copyToBuffer(recordBuffer);
-        directory.copyToBuffer(recordBuffer, RECORD_LABEL_LENGTH);
+        directory.copyToBuffer(recordBuffer, Iso2709Constants.RECORD_LABEL_LENGTH);
         fields.copyToBuffer(recordBuffer, baseAddress);
         return recordBuffer;
     }
@@ -300,9 +295,9 @@ public final class RecordBuilder {
 
     @Override
     public String toString() {
-        return "label: " + label.toString() + "\n"
-                + "directory: " + directory.toString() + "\n"
-                + "fields: " + fields.toString();
+        return "label: " + label.toString() + "\n" +
+            "directory: " + directory.toString() + "\n" +
+            "fields: " + fields.toString();
     }
 
     private enum AppendState {

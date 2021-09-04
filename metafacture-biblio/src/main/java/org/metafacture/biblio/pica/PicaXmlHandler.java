@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.biblio.pica;
 
-import java.text.Normalizer;
+package org.metafacture.biblio.pica;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
@@ -24,8 +23,11 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
+import java.text.Normalizer;
 
 /**
  * A pica xml handler.
@@ -48,18 +50,24 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private String currentTag = "";
     private StringBuilder builder = new StringBuilder();
 
+    public PicaXmlHandler() {
+    }
+
     @Override
     public void startElement(final String uri, final String localName,
             final String qName, final Attributes attributes) throws SAXException {
         if (SUBFIELD.equals(localName)) {
             builder = new StringBuilder();
             currentTag = attributes.getValue("id");
-        } else if (DATAFIELD.equals(localName)) {
+        }
+        else if (DATAFIELD.equals(localName)) {
             getReceiver().startEntity(
                     attributes.getValue("id") + attributes.getValue("occ"));
-        } else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
+        }
+        else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
             getReceiver().startRecord("");
-        } else if (LEADER.equals(localName)) {
+        }
+        else if (LEADER.equals(localName)) {
             builder = new StringBuilder();
             currentTag = LEADER;
         }
@@ -71,9 +79,11 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         if (SUBFIELD.equals(localName)) {
             getReceiver().literal(currentTag,
                     Normalizer.normalize(builder.toString().trim(), Normalizer.Form.NFC));
-        } else if (DATAFIELD.equals(localName)) {
+        }
+        else if (DATAFIELD.equals(localName)) {
             getReceiver().endEntity();
-        } else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
+        }
+        else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
             getReceiver().endRecord();
         }
     }

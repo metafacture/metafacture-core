@@ -26,31 +26,31 @@ package org.metafacture.biblio.pica;
  *
  */
 enum PicaConstants {
-	// We use '\0' for null/empty
-	RECORD_MARKER('\u001d', '\n'), //
-	FIELD_MARKER('\u001e', '\0'), //
-	SUBFIELD_MARKER('\u001f', '$'), //
-	FIELD_END_MARKER('\n', '\n'), //
-	NO_MARKER('\0', '\0');
+    // We use '\0' for null/empty
+    RECORD_MARKER('\u001d', '\n'), //
+    FIELD_MARKER('\u001e', '\0'), //
+    SUBFIELD_MARKER('\u001f', '$'), //
+    FIELD_END_MARKER('\n', '\n'), //
+    NO_MARKER('\0', '\0');
 
-	char normalized;
-	char nonNormalized;
+    private final char normalized;
+    private final char nonNormalized;
 
-	PicaConstants(char normalized, char nonNormalized) {
-		this.normalized = normalized;
-		this.nonNormalized = nonNormalized;
-	}
+    PicaConstants(final char normalized, final char nonNormalized) {
+        this.normalized = normalized;
+        this.nonNormalized = nonNormalized;
+    }
 
-	public char get(boolean isNormalized) {
-		return isNormalized ? normalized : nonNormalized;
-	}
+    public char get(final boolean isNormalized) {
+        return isNormalized ? normalized : nonNormalized;
+    }
 
-	public static PicaConstants from(boolean isNormalized, char ch) {
-		for (PicaConstants value : values()) {
-			if (ch == (isNormalized ? value.normalized : value.nonNormalized)) {
-				return value;
-			}
-		}
-		return NO_MARKER;
-	}
+    public static PicaConstants from(final boolean isNormalized, final char ch) {
+        for (final PicaConstants value : values()) {
+            if (ch == (isNormalized ? value.normalized : value.nonNormalized)) {
+                return value;
+            }
+        }
+        return NO_MARKER;
+    }
 }

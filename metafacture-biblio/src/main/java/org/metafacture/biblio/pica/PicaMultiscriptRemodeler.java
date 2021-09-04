@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.biblio.pica;
 
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+package org.metafacture.biblio.pica;
 
 import org.metafacture.flowcontrol.StreamBuffer;
 import org.metafacture.framework.FluxCommand;
@@ -26,6 +23,10 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * Groups multiscript fields in entities.
@@ -103,8 +104,7 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @Out(StreamReceiver.class)
 @Description("Groups multiscript fields in entities")
 @FluxCommand("remodel-pica-multiscript")
-public final class PicaMultiscriptRemodeler extends
-        DefaultStreamPipe<StreamReceiver> {
+public final class PicaMultiscriptRemodeler extends DefaultStreamPipe<StreamReceiver> {
 
     public static final String ENTITY_NAME_FOR_LATIN = "Latin";
     public static final String ENTITY_NAME_FOR_NON_LATIN_LR = "NonLatinLR";
@@ -123,6 +123,9 @@ public final class PicaMultiscriptRemodeler extends
     private BufferedField lastField;
 
     private final SortedMap<String, BufferedField> bufferedFields = new TreeMap<String, BufferedField>();
+
+    public PicaMultiscriptRemodeler() {
+    }
 
     @Override
     public void startRecord(final String identifier) {
@@ -143,22 +146,24 @@ public final class PicaMultiscriptRemodeler extends
     @Override
     public void startEntity(final String name) {
         currentField = new BufferedField(name);
-        currentField.stream.setReceiver(getReceiver());
+        currentField.getStream().setReceiver(getReceiver());
 
-        if (!lastField.name.equals(currentField.name)) {
+        if (!lastField.getName().equals(currentField.getName())) {
             emitAsSingleMultiscriptFields(bufferedFields);
         }
     }
 
     @Override
     public void endEntity() {
-        if (currentField.group == null || currentField.script == null) {
+        if (currentField.getGroup() == null || currentField.getScript() == null) {
             emitNonMultiscriptField();
-        } else {
-            if (bufferedFields.containsKey(currentField.group)) {
+        }
+        else {
+            if (bufferedFields.containsKey(currentField.getGroup())) {
                 emitAsSingleMultiscriptFields(getSingleMultiscriptFieldsBeforeCurrentField());
-                emitRemodeledMultiscriptField(bufferedFields.remove(currentField.group), currentField);
-            } else {
+                emitRemodeledMultiscriptField(bufferedFields.remove(currentField.getGroup()), currentField);
+            }
+            else {
                 bufferMultiscriptField(currentField);
             }
         }
@@ -169,38 +174,39 @@ public final class PicaMultiscriptRemodeler extends
 
     @Override
     public void literal(final String name, final String value) {
-        currentField.stream.literal(name, value);
+        currentField.getStream().literal(name, value);
 
         if (GROUP_SUBFIELD.equals(name)) {
-            currentField.group = value;
-        } else if (SCRIPT_SUBFIELD.equals(name)) {
-            currentField.script = value;
+            currentField.setGroup(value);
+        }
+        else if (SCRIPT_SUBFIELD.equals(name)) {
+            currentField.setScript(value);
         }
     }
 
     private void bufferMultiscriptField(final BufferedField field) {
-        bufferedFields.put(field.group, field);
+        bufferedFields.put(field.getGroup(), field);
     }
 
     private Map<?, BufferedField> getSingleMultiscriptFieldsBeforeCurrentField() {
-        return bufferedFields.headMap(currentField.group);
+        return bufferedFields.headMap(currentField.getGroup());
     }
 
     private void emitNonMultiscriptField() {
-        getReceiver().startEntity(currentField.name);
-        currentField.stream.replay();
+        getReceiver().startEntity(currentField.getName());
+        currentField.getStream().replay();
         getReceiver().endEntity();
     }
 
     private void emitRemodeledMultiscriptField(final BufferedField firstField, final BufferedField secondField) {
-        getReceiver().startEntity(firstField.name);
+        getReceiver().startEntity(firstField.getName());
 
-        getReceiver().startEntity(mapScriptToEntityName(firstField.script));
-        firstField.stream.replay();
+        getReceiver().startEntity(mapScriptToEntityName(firstField.getScript()));
+        firstField.getStream().replay();
         getReceiver().endEntity();
 
-        getReceiver().startEntity(mapScriptToEntityName(secondField.script));
-        secondField.stream.replay();
+        getReceiver().startEntity(mapScriptToEntityName(secondField.getScript()));
+        secondField.getStream().replay();
         getReceiver().endEntity();
 
         getReceiver().endEntity();
@@ -208,40 +214,60 @@ public final class PicaMultiscriptRemodeler extends
 
     private void emitAsSingleMultiscriptFields(final Map<?, BufferedField> fields) {
         for (final BufferedField field : fields.values()) {
-            getReceiver().startEntity(field.name);
-            field.stream.replay();
+            getReceiver().startEntity(field.getName());
+            field.getStream().replay();
             getReceiver().endEntity();
         }
         fields.clear();
     }
 
     private String mapScriptToEntityName(final String script) {
-        if (LATIN_SCRIPT.equals(script)) {
-            return ENTITY_NAME_FOR_LATIN;
-        } else if (ARABIC_SCRIPT.equals(script)
-                || HEBREW_SCRIPT.equals(script)) {
-            return ENTITY_NAME_FOR_NON_LATIN_RL;
-        }
-        return ENTITY_NAME_FOR_NON_LATIN_LR;
+        return LATIN_SCRIPT.equals(script)                                 ? ENTITY_NAME_FOR_LATIN :
+            (ARABIC_SCRIPT.equals(script) || HEBREW_SCRIPT.equals(script)) ? ENTITY_NAME_FOR_NON_LATIN_RL :
+                                                                             ENTITY_NAME_FOR_NON_LATIN_LR;
     }
 
     private static class BufferedField {
 
-        public String group;
-        public String script;
+        private final String name;
+        private final StreamBuffer stream;
 
-        public final String name;
-        public final StreamBuffer stream;
+        private String group;
+        private String script;
 
-        public BufferedField(final String name) {
+        BufferedField(final String name) {
             this(name, new StreamBuffer());
         }
 
-        public BufferedField(final String name, final StreamBuffer stream) {
+        BufferedField(final String name, final StreamBuffer stream) {
             this.group = null;
             this.script = null;
             this.name = name;
             this.stream = stream;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public StreamBuffer getStream() {
+            return stream;
+        }
+
+        public void setGroup(final String group) {
+            this.group = group;
+        }
+
+        public String getGroup() {
+            return group;
+        }
+
+        public void setScript(final String script) {
+            this.script = script;
+        }
+
+        public String getScript() {
+            return script;
         }
 
     }
