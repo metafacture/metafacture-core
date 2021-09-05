@@ -88,6 +88,7 @@ subprojects {
 
   checkstyle {
     toolVersion '8.30'
+    checkstyleTest.enabled = false
   }
 
   signing {
