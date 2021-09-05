@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta.formatter;
 
 /**
@@ -25,10 +26,10 @@ public interface Formatter {
 
     void reset();
 
-    void startGroup(final String name);
+    void startGroup(String name);
 
     void endGroup();
 
-    void literal(final String name, final String value);
+    void literal(String name, String value);
 
 }

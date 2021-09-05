@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta.parser;
 
 import static org.mockito.Mockito.inOrder;
@@ -141,7 +142,8 @@ public final class FormetaParserTest {
         // Try processing an incomplete record:
         try {
             parser.parse(BROKEN_RECORD);
-        } catch (FormatException e) {
+        }
+        catch (FormatException e) {
             // The decoder should recover automatically
         }
 

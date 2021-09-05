@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta.parser;
 
 import org.metafacture.framework.StreamReceiver;
@@ -25,12 +26,12 @@ import org.metafacture.framework.StreamReceiver;
  */
 public interface Emitter {
 
-    void setReceiver(final StreamReceiver receiver);
+    void setReceiver(StreamReceiver receiver);
 
-    void startGroup(final String name, final int nestingLevel);
+    void startGroup(String name, int nestingLevel);
 
-    void endGroup(final int nestingLevel);
+    void endGroup(int nestingLevel);
 
-    void literal(final String name, final String value, final int nestingLevel);
+    void literal(String name, String value, int nestingLevel);
 
 }

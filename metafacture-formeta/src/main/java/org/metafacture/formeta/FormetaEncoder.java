@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta;
 
 import org.metafacture.formeta.formatter.Formatter;
@@ -35,11 +36,13 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("encode-formeta")
-public final class FormetaEncoder extends
-        DefaultStreamPipe<ObjectReceiver<String>> {
+public final class FormetaEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
     private FormatterStyle style = FormatterStyle.CONCISE;
     private Formatter formatter = style.createFormatter();
+
+    public FormetaEncoder() {
+    }
 
     public FormatterStyle getStyle() {
         return style;
@@ -49,7 +52,6 @@ public final class FormetaEncoder extends
         this.style = formatterStyle;
         formatter = formatterStyle.createFormatter();
     }
-
 
     @Override
     public void startRecord(final String identifier) {
