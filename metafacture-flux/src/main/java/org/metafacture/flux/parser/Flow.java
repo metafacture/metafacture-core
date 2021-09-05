@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.flux.parser;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
+package org.metafacture.flux.parser;
 
 import org.metafacture.flux.FluxParseException;
 import org.metafacture.framework.LifeCycle;
@@ -28,6 +24,10 @@ import org.metafacture.framework.Sender;
 import org.metafacture.framework.Tee;
 import org.metafacture.io.StdInOpener;
 
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Markus Michael Geipel
@@ -42,9 +42,12 @@ final class Flow {
     private ObjectReceiver<? extends Object> start;
     private boolean joinLooseEnds;
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    Flow() {
+    }
+
+    @SuppressWarnings("unchecked")
     public void addElement(final Receiver nextElement) {
-        if(element==null){
+        if (element == null) {
             setStart((ObjectReceiver<? extends Object>) nextElement);
             return;
         }
@@ -55,19 +58,23 @@ final class Flow {
                 for (final LifeCycle looseEnd : looseEndsStack.pop()) {
                     if (looseEnd instanceof Tee) {
                         ((Tee) looseEnd).addReceiver(nextElement);
-                    } else {
+                    }
+                    else {
                         ((Sender) looseEnd).setReceiver(nextElement);
                     }
                 }
                 joinLooseEnds = false;
-            } else {
+            }
+            else {
                 if (sender instanceof Tee) {
                     ((Tee) sender).addReceiver(nextElement);
-                } else {
+                }
+                else {
                     sender.setReceiver(nextElement);
                 }
             }
-        } else {
+        }
+        else {
             throw new FluxParseException(element.getClass().getCanonicalName() + "is not a sender");
         }
         element = nextElement;
@@ -78,7 +85,8 @@ final class Flow {
             final Tee<?> tee = (Tee<?>) element;
             teeStack.push(tee);
             looseEndsStack.push(new ArrayList<LifeCycle>());
-        } else {
+        }
+        else {
             throw new FluxParseException("Flow cannot be split without a tee-element.");
         }
     }
@@ -93,7 +101,7 @@ final class Flow {
         element = teeStack.peek();
     }
 
-    private void setStart(final ObjectReceiver<? extends Object> start){
+    private void setStart(final ObjectReceiver<? extends Object> start) {
         this.start = start;
         element = start;
     }

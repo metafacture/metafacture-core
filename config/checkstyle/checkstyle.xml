@@ -4,6 +4,10 @@
     "https://checkstyle.org/dtds/configuration_1_3.dtd">
 <module name="Checker">
     <module name="SuppressWarningsFilter" />
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value=".*"/>
+        <property name="files" value="generated-src"/>
+    </module>
     <module name="TreeWalker">
         <module name="AbstractClassName"/>
         <module name="AnnotationUseStyle"/>

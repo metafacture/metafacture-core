@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.flux;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
+import org.metafacture.flux.parser.FlowBuilder;
+import org.metafacture.flux.parser.FluxLexer;
+import org.metafacture.flux.parser.FluxParser;
+import org.metafacture.flux.parser.FluxProgramm;
 
 import org.antlr.runtime.ANTLRInputStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
-import org.metafacture.flux.parser.FlowBuilder;
-import org.metafacture.flux.parser.FluxLexer;
-import org.metafacture.flux.parser.FluxParser;
-import org.metafacture.flux.parser.FluxProgramm;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 
 /**
  * Creates a flow based on a flux script.
@@ -38,7 +40,7 @@ public final class FluxCompiler {
         // no instances
     }
 
-    public static FluxProgramm compile(final InputStream flux, final Map<String,String> vars ) throws RecognitionException, IOException{
+    public static FluxProgramm compile(final InputStream flux, final Map<String, String> vars) throws RecognitionException, IOException {
         return compileFlow(compileAst(flux), vars);
     }
 
