@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.flowcontrol;
 
 import org.metafacture.framework.FluxCommand;
@@ -59,9 +60,9 @@ public final class CloseSuppressor<T>
     }
 
     @Override
-    public <R extends ObjectReceiver<T>> R setReceiver(final R receiver) {
-        this.receiver = receiver;
-        return receiver;
+    public <R extends ObjectReceiver<T>> R setReceiver(final R newReceiver) {
+        receiver = newReceiver;
+        return newReceiver;
     }
 
     @Override

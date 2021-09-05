@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.flowcontrol;
 
-import java.util.ArrayList;
-import java.util.List;
+package org.metafacture.flowcontrol;
 
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * {@link StreamPipe} which buffers incoming records and replays them upon
@@ -30,8 +30,7 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
  * @author Markus Michael Geipel
  *
  */
-public final class StreamBuffer
-        extends DefaultStreamPipe<StreamReceiver> {
+public final class StreamBuffer extends DefaultStreamPipe<StreamReceiver> {
 
     /**
      * Defines entity and literal message types.
@@ -43,8 +42,10 @@ public final class StreamBuffer
     private final List<MessageType> typeBuffer = new ArrayList<StreamBuffer.MessageType>();
     private final List<String> valueBuffer = new ArrayList<String>();
 
+    public StreamBuffer() {
+    }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return typeBuffer.isEmpty();
     }
 
@@ -54,27 +55,27 @@ public final class StreamBuffer
     public void replay() {
 
         int index = 0;
-        for (MessageType type : typeBuffer) {
+        for (final MessageType type : typeBuffer) {
             switch (type) {
-            case RECORD_START:
-                getReceiver().startRecord(valueBuffer.get(index));
-                ++index;
-                break;
-            case RECORD_END:
-                getReceiver().endRecord();
-                break;
+                case RECORD_START:
+                    getReceiver().startRecord(valueBuffer.get(index));
+                    ++index;
+                    break;
+                case RECORD_END:
+                    getReceiver().endRecord();
+                    break;
 
-            case ENTITY_START:
-                getReceiver().startEntity(valueBuffer.get(index));
-                ++index;
-                break;
-            case ENTITY_END:
-                getReceiver().endEntity();
-                break;
-            default:
-                getReceiver().literal(valueBuffer.get(index), valueBuffer.get(index+1));
-                index +=2;
-                break;
+                case ENTITY_START:
+                    getReceiver().startEntity(valueBuffer.get(index));
+                    ++index;
+                    break;
+                case ENTITY_END:
+                    getReceiver().endEntity();
+                    break;
+                default:
+                    getReceiver().literal(valueBuffer.get(index), valueBuffer.get(index + 1));
+                    index += 2;
+                    break;
             }
         }
     }

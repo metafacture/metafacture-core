@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.flowcontrol;
 
 import org.metafacture.framework.FluxCommand;
@@ -40,35 +41,38 @@ public final class StreamBatchResetter extends ForwardingStreamPipe {
     private long recordCount;
     private long batchCount;
 
-    public final void setBatchSize(final int batchSize) {
+    public StreamBatchResetter() {
+    }
+
+    public void setBatchSize(final int batchSize) {
         this.batchSize = batchSize;
     }
 
-    public final long getBatchSize() {
+    public long getBatchSize() {
         return batchSize;
     }
 
-    public final long getBatchCount() {
+    public long getBatchCount() {
         return batchCount;
     }
 
-    public final long getRecordCount() {
+    public long getRecordCount() {
         return recordCount;
     }
 
     @Override
-    public final void endRecord() {
+    public void endRecord() {
         getReceiver().endRecord();
-        recordCount++;
+        ++recordCount;
         recordCount %= batchSize;
         if (recordCount == 0) {
-            batchCount++;
+            ++batchCount;
             getReceiver().resetStream();
         }
     }
 
     @Override
-    protected final void onResetStream() {
+    protected void onResetStream() {
         recordCount = 0;
         batchCount = 0;
     }

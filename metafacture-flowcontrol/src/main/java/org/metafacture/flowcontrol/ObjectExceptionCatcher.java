@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.flowcontrol;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+package org.metafacture.flowcontrol;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
@@ -24,9 +22,12 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Wraps the call to the process method of the downstream module
@@ -57,7 +58,6 @@ public final class ObjectExceptionCatcher<T> extends
     }
 
     public ObjectExceptionCatcher(final String logPrefix) {
-        super();
         this.logPrefix = logPrefix;
     }
 
@@ -81,7 +81,8 @@ public final class ObjectExceptionCatcher<T> extends
     public void process(final T obj) {
         try {
             getReceiver().process(obj);
-        } catch(final Exception e) {
+        }
+        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             LOG.error("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
 
             if (logStackTrace) {
