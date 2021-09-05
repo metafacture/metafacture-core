@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.framework.helpers;
 
-import java.io.IOException;
+package org.metafacture.framework.helpers;
 
 import org.metafacture.framework.Receiver;
 import org.metafacture.framework.XmlPipe;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import java.io.IOException;
 
 /**
  * Default implementation for {@link XmlPipe}s which simply
@@ -34,8 +36,10 @@ import org.xml.sax.SAXParseException;
  * @author Christoph Böhme
  *
  */
-public class DefaultXmlPipe <R extends Receiver>
-        extends DefaultSender<R> implements XmlPipe<R> {
+public class DefaultXmlPipe<R extends Receiver> extends DefaultSender<R> implements XmlPipe<R> {
+
+    public DefaultXmlPipe() {
+    }
 
     @Override
     public void setDocumentLocator(final Locator locator) {
