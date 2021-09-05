@@ -4,15 +4,15 @@ import org.metafacture.framework.MetafactureException;
 
 public class IoFailed extends MetafactureException {
 
-    public IoFailed(String message) {
+    public IoFailed(final String message) {
         super(message);
     }
 
-    public IoFailed(Throwable cause) {
+    public IoFailed(final Throwable cause) {
         super(cause);
     }
 
-    public IoFailed(String message, Throwable cause) {
+    public IoFailed(final String message, final Throwable cause) {
         super(message, cause);
     }
 

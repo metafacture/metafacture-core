@@ -2,15 +2,15 @@ package org.metafacture.io;
 
 public class OpenFailed extends IoFailed {
 
-    public OpenFailed(String message) {
+    public OpenFailed(final String message) {
         super(message);
     }
 
-    public OpenFailed(Throwable cause) {
+    public OpenFailed(final Throwable cause) {
         super(cause);
     }
 
-    public OpenFailed(String message, Throwable cause) {
+    public OpenFailed(final String message, final Throwable cause) {
         super(message, cause);
     }
 

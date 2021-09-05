@@ -13,7 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.io;
+
+import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.annotations.In;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,10 +27,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.annotations.In;
 
 /**
  * @param <T>
@@ -52,8 +53,6 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
     private FileCompression compression = FileCompression.AUTO;
 
     public ObjectFileWriter(final String path) {
-        super();
-
         this.path = path;
         startNewFile();
 
@@ -95,11 +94,13 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
             if (firstObject) {
                 writer.write(getHeader());
                 firstObject = false;
-            } else {
+            }
+            else {
                 writer.write(getSeparator());
             }
             writer.write(obj.toString());
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -112,9 +113,11 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
                     writer.write(getFooter());
                 }
                 writer.close();
-            } catch (final IOException e) {
+            }
+            catch (final IOException e) {
                 throw new MetafactureException(e);
-            } finally {
+            }
+            finally {
                 closed = true;
             }
         }
@@ -130,9 +133,11 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
                     writer.write(getFooter());
                 }
                 writer.close();
-            } catch (final IOException e) {
+            }
+            catch (final IOException e) {
                 throw new MetafactureException(e);
-            } finally {
+            }
+            finally {
                 closed = true;
             }
         }
@@ -140,25 +145,28 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
 
     private void startNewFile() {
         final Matcher matcher = VAR_PATTERN.matcher(this.path);
-        final String path = matcher.replaceAll(String.valueOf(count));
+        final String currentPath = matcher.replaceAll(String.valueOf(count));
         try {
-            final OutputStream file = new FileOutputStream(path);
+            final OutputStream file = new FileOutputStream(currentPath);
             try {
-                final OutputStream compressor = compression.createCompressor(file, path);
+                final OutputStream compressor = compression.createCompressor(file, currentPath);
                 try {
                     writer = new OutputStreamWriter(compressor, encoding);
                     firstObject = true;
                     closed = false;
-                } catch (final IOException e) {
+                }
+                catch (final IOException e) {
                     compressor.close();
                     throw e;
                 }
-            } catch (final IOException e) {
+            }
+            catch (final IOException e) {
                 file.close();
                 throw e;
             }
-        } catch (final IOException e) {
-            throw new MetafactureException("Error creating file '" + path + "'.", e);
+        }
+        catch (final IOException e) {
+            throw new MetafactureException("Error creating file '" + currentPath + "'.", e);
         }
     }
 

@@ -2,15 +2,15 @@ package org.metafacture.io;
 
 public class CloseFailed extends IoFailed {
 
-    public CloseFailed(String message) {
+    public CloseFailed(final String message) {
         super(message);
     }
 
-    public CloseFailed(Throwable cause) {
+    public CloseFailed(final Throwable cause) {
         super(cause);
     }
 
-    public CloseFailed(String message, Throwable cause) {
+    public CloseFailed(final String message, final Throwable cause) {
         super(message, cause);
     }
 

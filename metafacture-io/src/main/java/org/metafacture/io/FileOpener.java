@@ -13,15 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.io;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
-import org.apache.commons.io.input.BOMInputStream;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -30,6 +24,13 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
+import org.apache.commons.io.input.BOMInputStream;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 /**
  * Opens a file and passes a reader for it to the receiver.
@@ -41,12 +42,14 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(String.class)
 @Out(java.io.Reader.class)
 @FluxCommand("open-file")
-public final class FileOpener
-        extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
+public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
     private String encoding = "UTF-8";
     private FileCompression compression = FileCompression.AUTO;
     private boolean decompressConcatenated = FileCompression.DEFAULT_DECOMPRESS_CONCATENATED;
+
+    public FileOpener() {
+    }
 
     /**
      * Returns the encoding used to open the resource.
@@ -98,15 +101,18 @@ public final class FileOpener
                     final Reader reader = new InputStreamReader(new BOMInputStream(
                             decompressor), encoding);
                     getReceiver().process(reader);
-                } catch (final IOException | MetafactureException e) {
+                }
+                catch (final IOException | MetafactureException e) {
                     decompressor.close();
                     throw e;
                 }
-            } catch (final IOException | MetafactureException e) {
+            }
+            catch (final IOException | MetafactureException e) {
                 fileStream.close();
                 throw e;
             }
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
