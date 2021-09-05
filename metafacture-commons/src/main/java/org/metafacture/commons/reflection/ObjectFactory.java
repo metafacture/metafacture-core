@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.reflection;
 
 import java.util.Collections;
@@ -36,7 +37,10 @@ public class ObjectFactory<T> {
     private final Map<String, ConfigurableClass<? extends T>> classes =
             new HashMap<>();
 
-    public final void loadClassesFromMap(Map<?, ?> classMap, Class<T> baseType) {
+    public ObjectFactory() {
+    }
+
+    public final void loadClassesFromMap(final Map<?, ?> classMap, final Class<T> baseType) {
         final ClassLoader loader = ReflectionUtil.getContextClassLoader();
         for (final Entry<?, ?> entry : classMap.entrySet()) {
             final String key = entry.getKey().toString();
@@ -45,21 +49,19 @@ public class ObjectFactory<T> {
         }
     }
 
-    public final void registerClass(String key, Class<? extends T> objectClass) {
+    public final void registerClass(final String key, final Class<? extends T> objectClass) {
         registerClass(key, new ConfigurableClass<>(objectClass));
     }
 
-    public final void registerClass(String key,
-            ConfigurableClass<? extends T> objectClass) {
+    public final void registerClass(final String key, final ConfigurableClass<? extends T> objectClass) {
         classes.put(key, objectClass);
     }
 
-    public final T newInstance(String key, Object... constructorArgs) {
+    public final T newInstance(final String key, final Object... constructorArgs) {
         return newInstance(key, Collections.emptyMap(), constructorArgs);
     }
 
-    public final T newInstance(String key, Map<String, String> values,
-            Object... constructorArgs) {
+    public final T newInstance(final String key, final Map<String, String> values, final Object... constructorArgs) {
         if (!classes.containsKey(key)) {
             throw new NoSuchElementException("no registered class for: " + key);
         }
@@ -67,7 +69,7 @@ public class ObjectFactory<T> {
         return instanceClass.newInstance(values, constructorArgs);
     }
 
-    public final boolean containsKey(String key) {
+    public final boolean containsKey(final String key) {
         return classes.containsKey(key);
     }
 
@@ -75,7 +77,7 @@ public class ObjectFactory<T> {
         return Collections.unmodifiableSet(classes.keySet());
     }
 
-    public final ConfigurableClass<? extends T> get(String key) {
+    public final ConfigurableClass<? extends T> get(final String key) {
         return classes.get(key);
     }
 

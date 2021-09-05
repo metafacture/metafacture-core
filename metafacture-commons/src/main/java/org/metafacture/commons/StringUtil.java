@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons;
 
 import java.nio.CharBuffer;
@@ -85,9 +86,10 @@ public final class StringUtil {
             if (varValue == null) {
                 if (ignoreMissingVars) {
                     varValue = "";
-                } else {
-                    throw new IllegalArgumentException("Variable '" + varName
-                            + "' was not assigned!\nAssigned variables:\n" + variables);
+                }
+                else {
+                    throw new IllegalArgumentException("Variable '" + varName +
+                            "' was not assigned!\nAssigned variables:\n" + variables);
                 }
             }
             builder.append(varValue);
@@ -135,7 +137,7 @@ public final class StringUtil {
         char[] buffer = currentBuffer;
         int bufferLen = buffer.length;
 
-        while(strLen > bufferLen) {
+        while (strLen > bufferLen) {
             bufferLen *= 2;
         }
         if (bufferLen > buffer.length) {

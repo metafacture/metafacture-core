@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.tries;
+
+import org.metafacture.commons.tries.SetMatcher.Match;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-
-import org.metafacture.commons.tries.SetMatcher.Match;
+import java.util.Map;
 
 /**
  * @author Markus Michael Geipel
@@ -30,12 +31,15 @@ import org.metafacture.commons.tries.SetMatcher.Match;
 public final class SetReplacer {
     private final SetMatcher<String> matcher = new SetMatcher<String>();
 
+    public SetReplacer() {
+    }
+
     public void addReplacement(final String key, final String with) {
         matcher.put(key, with);
     }
 
     public void addReplacements(final Map<String, String> replacements) {
-        for (Entry<String, String> entry : replacements.entrySet()) {
+        for (final Entry<String, String> entry : replacements.entrySet()) {
             addReplacement(entry.getKey(), entry.getValue());
         }
     }
@@ -49,25 +53,13 @@ public final class SetReplacer {
         Collections.sort(matches, new Comparator<SetMatcher.Match<String>>() {
             @Override
             public int compare(final Match<String> o1, final Match<String> o2) {
-                final int result;
                 final int delta = o1.getStart() - o2.getStart();
-                if (delta < 0) {
-                    result = -1;
-                } else if (delta > 0) {
-                    result = 1;
-                } else {
-                    if (o1.getLength() > o2.getLength()) {
-                        result = -1;
-                    } else {
-                        result = 1;
-                    }
-                }
-                return result;
+                return delta < 0 ? -1 : delta > 0 ? 1 : o1.getLength() > o2.getLength() ? -1 : 1;
             }
 
         });
 
-        for (SetMatcher.Match<String> match : matches) {
+        for (final SetMatcher.Match<String> match : matches) {
 
             if (match.getStart() < lastCut) {
                 continue;

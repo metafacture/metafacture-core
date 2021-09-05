@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.tries;
 
 import java.util.Collection;
@@ -38,7 +39,7 @@ final class CharMap<V> implements Map<Character, V> {
     private int size;
 
     @SuppressWarnings("unchecked")
-    public CharMap() {
+    CharMap() {
         table = new Entry[INITIAL_CAPACITY];
     }
 
@@ -97,14 +98,15 @@ final class CharMap<V> implements Map<Character, V> {
         ++size;
     }
 
-    public void put(final Entry<V>[] table, final char key, final V value) {
+    public void put(final Entry<V>[] currentTable, final char key, final V value) {
         final Entry<V> newEntry = new Entry<V>(key, value);
 
-        Entry<V> entry = table[key % table.length];
+        Entry<V> entry = currentTable[key % currentTable.length];
 
         if (entry == null) {
-            table[key % table.length] = newEntry;
-        } else {
+            currentTable[key % currentTable.length] = newEntry;
+        }
+        else {
             while (entry.getNext() != null) {
                 if (entry.getKeyChar() == key) {
                     throw new IllegalStateException("Key '" + key + "' already used");
@@ -120,7 +122,7 @@ final class CharMap<V> implements Map<Character, V> {
         @SuppressWarnings("unchecked")
         final Entry<V>[] newTable = new Entry[newSize];
 
-        for (Entry<V> entry : table) {
+        for (final Entry<V> entry : table) {
             Entry<V> temp = entry;
             while (temp != null) {
                 put(newTable, temp.getKeyChar(), temp.getValue());
@@ -174,7 +176,7 @@ final class CharMap<V> implements Map<Character, V> {
 
     @Override
     public Set<java.util.Map.Entry<Character, V>> entrySet() {
-        final Set<java.util.Map.Entry<Character, V>>  entries = new HashSet<java.util.Map.Entry<Character, V>> ();
+        final Set<java.util.Map.Entry<Character, V>> entries = new HashSet<java.util.Map.Entry<Character, V>>();
         for (int i = 0; i < table.length; ++i) {
             Entry<V> entry = table[i];
             while (entry != null) {
@@ -223,9 +225,9 @@ final class CharMap<V> implements Map<Character, V> {
         }
 
         @Override
-        public V setValue(final V value) {
-            final V old = this.value;
-            this.value = value;
+        public V setValue(final V newValue) {
+            final V old = value;
+            value = newValue;
             return old;
         }
 
