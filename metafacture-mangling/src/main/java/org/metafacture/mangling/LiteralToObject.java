@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.mangling;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+package org.metafacture.mangling;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
@@ -25,6 +23,9 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Emits the values of literals matching {@literal #setPattern(String)}
@@ -48,6 +49,9 @@ public final class LiteralToObject extends DefaultStreamPipe<ObjectReceiver<Stri
     public static final java.lang.String DEFAULT_PATTERN = ".*";
 
     private Matcher matcher = Pattern.compile(DEFAULT_PATTERN).matcher("");
+
+    public LiteralToObject() {
+    }
 
     /**
      * Sets the pattern against which literal names are matched. Only the
