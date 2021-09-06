@@ -63,6 +63,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
     private int entityCount;
     private StreamReceiver outputStreamReceiver;
     private String recordIdentifier;
+    private List<Map<String, Object>> entities = new ArrayList<>();
 
     public Metafix() {
         init();
@@ -93,9 +94,8 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         flattener.setReceiver(new DefaultStreamReceiver() {
             @Override
             public void literal(final String name, final String value) {
-                // TODO: set up logging
-                System.out.printf("Putting '%s':'%s'\n", name, value);
-                add(currentRecord, name, value);
+                // TODO: keep flattener as option?
+                // add(currentRecord, name, value);
             }
         });
     }
@@ -170,8 +170,14 @@ public class Metafix implements StreamPipe<StreamReceiver> {
             throw new IllegalArgumentException("Entity name must not be null.");
         }
         ++entityCount;
+        final Integer currentEntityIndex = entityCountStack.peek() - 1;
+        final Map<String, Object> previousEntity = currentEntityIndex < 0 ||
+                entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
         entityCountStack.push(Integer.valueOf(entityCount));
         flattener.startEntity(name);
+        final Map<String, Object> currentEntity = new LinkedHashMap<>();
+        entities.add(currentEntity);
+        (previousEntity != null ? previousEntity : currentRecord).put(name, currentEntity);
     }
 
     @Override
@@ -182,7 +188,14 @@ public class Metafix implements StreamPipe<StreamReceiver> {
 
     @Override
     public void literal(final String name, final String value) {
-        flattener.literal(name, value);
+        // TODO: set up logging
+        System.out.printf("Putting '%s':'%s'\n", name, value);
+        final Integer currentEntityIndex = entityCountStack.peek() - 1;
+        final Map<String, Object> currentEntity = currentEntityIndex < 0 ||
+                entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
+        add(currentEntity != null ? currentEntity : currentRecord, name, value);
+        // TODO: keep flattener as option?
+        // flattener.literal(name, value);
     }
 
     @Override

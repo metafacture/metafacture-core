@@ -48,6 +48,28 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void entitiesPassThrough() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "vacuum()"), //
+            i -> {
+                i.startRecord("1");
+                i.startEntity("deep");
+                i.startEntity("nested");
+                i.literal("key", "val");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("deep");
+                o.get().startEntity("nested");
+                o.get().literal("key", "val");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void setEmpty() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "set_field('my.nested.name','patrick')",
@@ -126,9 +148,8 @@ public class MetafixRecordTest {
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().literal("my.name", "max"); // TODO: fix entity -> entity
                 o.get().startEntity("my");
-                o.get().literal("name", "[patrick, nicolas]"); // TODO: fix list -> entity
+                o.get().literal("name", "[max, patrick, nicolas]"); // TODO: fix list -> entity
                 o.get().endEntity();
                 o.get().endRecord();
                 //
@@ -142,7 +163,7 @@ public class MetafixRecordTest {
 
     @Test
     public void move() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(// TODO: dot noation in move_field
                 "move_field('my.name','your.name')",
                 "move_field('missing','whatever')"), //
             i -> {
@@ -162,7 +183,9 @@ public class MetafixRecordTest {
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().literal("your.name", "max");
+                o.get().startEntity("your");
+                o.get().literal("name", "max");
+                o.get().endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("3");
@@ -172,7 +195,7 @@ public class MetafixRecordTest {
 
     @Test
     public void copy() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(// TODO dot notation in copy_field
                 "copy_field('your.name','your.name2')"), //
             i -> {
                 i.startRecord("1");
@@ -191,8 +214,10 @@ public class MetafixRecordTest {
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().literal("your.name", "max");
-                o.get().literal("your.name2", "max");
+                o.get().startEntity("your");
+                o.get().literal("name", "max");
+                o.get().literal("name2", "max");
+                o.get().endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("3");
