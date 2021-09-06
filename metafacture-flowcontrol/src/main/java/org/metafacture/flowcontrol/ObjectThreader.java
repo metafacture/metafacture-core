@@ -1,5 +1,5 @@
 /* Copyright 2019 Pascal Christoph (hbz), and others.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -33,12 +33,12 @@ import org.slf4j.LoggerFactory;
  * receivers are coupled with an
  * {@link org.metafacture.flowcontrol.ObjectPipeDecoupler}, so each added
  * receiver runs in its own thread.
- * 
+ *
  * @param <T> Object type
  *
  * @author Pascal Christoph (dr0i)
  * @author Fabian Steeg (fsteeg)
- * 
+ *
  */
 @In(Object.class)
 @Out(Object.class)

@@ -102,7 +102,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     /**
      * Formats the resulting xml, by indentation.
-     * 
+     *
      * @param formatted
      *            True, if formatting is activated.
      */

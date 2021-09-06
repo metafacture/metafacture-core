@@ -18,6 +18,7 @@ import java.util.regex.Matcher
 
 plugins {
   id 'org.ajoberstar.grgit' version '2.3.0'
+  id 'org.ec4j.editorconfig' version '0.0.3'
   id 'org.sonarqube' version '2.6.2'
   id 'io.codearte.nexus-staging' version '0.11.0'
 }
@@ -38,10 +39,24 @@ project(':metafacture-runner') {
   apply plugin: 'java'
 }
 
+editorconfig {
+  excludes = [
+    '**/*.beacon',
+    '**/*.bgzf',
+    '**/*.bz2',
+    '**/*.bzip2',
+    '**/*.gzip',
+    '**/*.xz',
+    'gradlew*'
+  ]
+}
+
 subprojects {
   apply plugin: 'signing'
   apply plugin: 'maven'
   apply plugin: 'jacoco'
+
+  check.dependsOn(editorconfigCheck)
 
   sourceCompatibility = 1.8
   targetCompatibility = 1.8

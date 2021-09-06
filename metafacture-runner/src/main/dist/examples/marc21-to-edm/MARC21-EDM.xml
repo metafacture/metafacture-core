@@ -41,7 +41,7 @@
         <data name="*edm:dataProvider" source="@isil">
             <compose prefix="http://ld.zdb-services.de/data/organisations/" />
         </data>
-        <!-- hier Datenprovider immer identisch mit Provider des Objekts? derzeit 
+        <!-- hier Datenprovider immer identisch mit Provider des Objekts? derzeit
             auch für BSZ so gehandhabt, obwohl Aggregator -->
         <data name="edm:provider" source="_id">
             <constant value="Deutsche Digitale Bibliothek" />
@@ -85,14 +85,14 @@
                 <lookup in="suffix" />
             </data>
         </combine>
-        <!-- mandatory ELIB, edm:object für Binärcontent, z. B. Thumbnails für 
-            Preview in Europeana, Problem: interner Binärcontent und Frage an Europeana: 
+        <!-- mandatory ELIB, edm:object für Binärcontent, z. B. Thumbnails für
+            Preview in Europeana, Problem: interner Binärcontent und Frage an Europeana:
             Ableitung von PDF zu jpg? <data name="edm:object" source="" /> -->
-        <!-- mandatory ELIB, richtig verortet? in ELIB unter WebResource, in EDM 
-            Mapping Guidelines unter WebRessource (recommended) und unter ore:aggregation 
-            (mandatory) ; values s. http://pro.europeana.eu/documents/900548/0d423921-23e0-45fa-82a4-2ac72b3e6f38 
-            ; value für DNB-Objekte mit "Der Zugriff auf das Objekt ist unbeschränkt 
-            möglich." = zunächst http://www.europeana.eu/portal/rr-f.html gewählt, zu 
+        <!-- mandatory ELIB, richtig verortet? in ELIB unter WebResource, in EDM
+            Mapping Guidelines unter WebRessource (recommended) und unter ore:aggregation
+            (mandatory) ; values s. http://pro.europeana.eu/documents/900548/0d423921-23e0-45fa-82a4-2ac72b3e6f38
+            ; value für DNB-Objekte mit "Der Zugriff auf das Objekt ist unbeschränkt
+            möglich." = zunächst http://www.europeana.eu/portal/rr-f.html gewählt, zu
             prüfen, ob ok! -->
 
 
@@ -135,7 +135,7 @@
                 <lookup in="isils" />
             </data>
         </entity>
-        
+
 <!--         <entity name="skos:Concept"> -->
 <!--             <data source="@sectorID" name="~rdf:about" /> -->
 <!--             <data source="_id" name="skos:Notation"> -->
@@ -263,7 +263,7 @@
         <data name="edm:rights" source="@isil">
             <lookup in="rights" />
         </data>
-        
+
         <data source="_id" name="*dcterms:rights">
             <constant value="http://creativecommons.org/publicdomain/zero/1.0/"/>
         </data>
@@ -375,7 +375,7 @@
             </combine>
         </choose>
         <entity name="edm:WebResource">
-            <!-- mandatory ELIB, if edm:isShownAt is not provided ; nur if subfield 
+            <!-- mandatory ELIB, if edm:isShownAt is not provided ; nur if subfield
                 x = "Langzeitarchivierung" - wie abfragen? -->
             <choose>
                 <combine name="~rdf:about" value="${urn}">

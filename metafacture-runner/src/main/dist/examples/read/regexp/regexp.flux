@@ -1,5 +1,3 @@
-
-
 default fileName = FLUX_DIR + "dates.csv";
 
 fileName|

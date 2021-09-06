@@ -24,9 +24,9 @@ import ORG.oclc.oai.harvester2.app.RawWrite;
 
 /**
  * Opens an OAI-PMH stream and passes a reader to the receiver.
- * 
+ *
  * @author Pascal Christoph (dr0i)
- * 
+ *
  */
 @Description("Opens an OAI-PMH stream and passes a reader to the receiver. Mandatory arguments are: BASE_URL, DATE_FROM, DATE_UNTIL, METADATA_PREFIX, SET_SPEC .")
 @In(String.class)
@@ -55,7 +55,7 @@ public final class OaiPmhOpener extends
 
 	/**
 	 * Sets the encoding to use. The default setting is UTF-8.
-	 * 
+	 *
 	 * @param encoding new default encoding
 	 */
 	public void setEncoding(final String encoding) {
@@ -65,7 +65,7 @@ public final class OaiPmhOpener extends
 	/**
 	 * Sets the beginning of the retrieving of updated data. The form is
 	 * YYYY-MM-DD .
-	 * 
+	 *
 	 * @param dateFrom The form is YYYY-MM-DD .
 	 */
 	public void setDateFrom(final String dateFrom) {
@@ -74,7 +74,7 @@ public final class OaiPmhOpener extends
 
 	/**
 	 * Sets the end of the retrieving of updated data. The form is YYYY-MM-DD .
-	 * 
+	 *
 	 * @param dateUntil The form is YYYY-MM-DD .
 	 */
 	public void setDateUntil(final String dateUntil) {
@@ -83,7 +83,7 @@ public final class OaiPmhOpener extends
 
 	/**
 	 * Sets the OAI-PM metadata prefix .
-	 * 
+	 *
 	 * @param metadataPrefix the OAI-PM metadata prefix
 	 */
 	public void setMetadataPrefix(final String metadataPrefix) {
@@ -92,7 +92,7 @@ public final class OaiPmhOpener extends
 
 	/**
 	 * Sets the OAI-PM set specification .
-	 * 
+	 *
 	 * @param setSpec th OAI-PM set specification
 	 */
 	public void setSetSpec(final String setSpec) {

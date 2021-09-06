@@ -196,7 +196,7 @@
 
         <entity name="gnd">
             <data source="@name" name="name"/>
-        
+
             <data source="002@.0" name="satzart">
                 <substring end="2" />
             </data>

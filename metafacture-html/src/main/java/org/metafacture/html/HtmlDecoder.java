@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Decode HTML to metadata events. Each input document represents one record.
- * 
+ *
  * @author Fabian Steeg (fsteeg)
  *
  */
