@@ -226,9 +226,68 @@ public class MetafixRecordTest {
     }
 
     @Test
-    public void remove() {
+    public void removeLiteral() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "remove_field('your.name')"), //
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+                //
+                i.startRecord("2");
+                i.startEntity("your");
+                i.literal("name", "max");
+                i.endEntity();
+                i.endRecord();
+                //
+                i.startRecord("3");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+                //
+                o.get().startRecord("2");
+                o.get().startEntity("your");
+                o.get().endEntity();
+                o.get().endRecord();
+                //
+                o.get().startRecord("3");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void removeLiteralAndEntity() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "remove_field('your.name')", //
+                "remove_field('your')"), //
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+                //
+                i.startRecord("2");
+                i.startEntity("your");
+                i.literal("name", "max");
+                i.endEntity();
+                i.endRecord();
+                //
+                i.startRecord("3");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+                //
+                o.get().startRecord("2");
+                o.get().endRecord();
+                //
+                o.get().startRecord("3");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void removeEntity() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "remove_field('your')"), //
             i -> {
                 i.startRecord("1");
                 i.endRecord();

@@ -42,7 +42,7 @@ enum FixMethod {
         public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             record.remove(params.get(0));
-            insert(InsertMode.REPLACE, record, params.get(0).split("\\."), params.get(1));
+            insert(InsertMode.REPLACE, record, split(params.get(0)), params.get(1));
         }
     },
     set_array {
@@ -103,7 +103,7 @@ enum FixMethod {
     add_field {
         public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            insert(InsertMode.APPEND, record, params.get(0).split("\\."), params.get(1));
+            insert(InsertMode.APPEND, record, split(params.get(0)), params.get(1));
         }
 
     },
@@ -128,8 +128,31 @@ enum FixMethod {
         public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             params.forEach(p -> {
-                record.remove(p);
+                remove(record, split(p));
             });
+        }
+
+        private Object remove(final Map<String, Object> map, final String[] keys) {
+            final String currentKey = keys[0];
+            if (keys.length == 1) {
+                map.remove(currentKey);
+            }
+            if (!map.containsKey(currentKey)) {
+                return map;
+            }
+            final String[] remainingKeys = Arrays.copyOfRange(keys, 1, keys.length);
+            return removeNested(map, currentKey, remainingKeys);
+        }
+
+        private Object removeNested(final Map<String, Object> map, final String currentKey,
+                final String[] remainingKeys) {
+            final Object nested = map.get(currentKey);
+            if (!(nested instanceof Map)) {
+                throw new IllegalStateException("Nested non-map: " + nested);
+            }
+            @SuppressWarnings("unchecked")
+            final Object result = remove((Map<String, Object>) nested, remainingKeys);
+            return result;
         }
     },
     format {
@@ -328,6 +351,10 @@ enum FixMethod {
         @SuppressWarnings("unchecked")
         final Object result = insert(mode, (Map<String, Object>) nested, remainingKeys, value);
         return result;
+    }
+
+    private static String[] split(final String s) {
+        return s.split("\\.");
     }
 
     private enum InsertMode {
