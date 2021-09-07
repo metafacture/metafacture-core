@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.statistics;
+
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-
 
 /**
  * Counts entity names, literal names, or literal values.
@@ -36,7 +36,6 @@ public final class Histogram extends DefaultStreamReceiver {
     private String countField;
 
     public Histogram() {
-        super();
     }
 
     /**
@@ -45,7 +44,6 @@ public final class Histogram extends DefaultStreamReceiver {
      * @param countField name of the field whose content is counted
      */
     public Histogram(final String countField) {
-        super();
         setCountField(countField);
     }
 
