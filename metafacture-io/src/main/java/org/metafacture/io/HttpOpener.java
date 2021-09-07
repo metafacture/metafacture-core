@@ -20,6 +20,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -45,6 +47,7 @@ public final class HttpOpener
 
     private String encoding = "UTF-8";
     private String accept = "*/*";
+    private String auth = null;
 
     /**
      * Sets the HTTP accept header value. This is a mime-type such as text/plain
@@ -70,6 +73,15 @@ public final class HttpOpener
         this.encoding = encoding;
     }
 
+    /**
+     * Sets the basic authentication credentials
+     *
+     * @param auth The <user:password> string
+     */
+    public void setAuth(final String auth) {
+        this.auth = auth;
+    }
+
     @Override
     public void process(final String urlStr) {
         try {
@@ -77,6 +89,10 @@ public final class HttpOpener
             final URLConnection con = url.openConnection();
             con.addRequestProperty("Accept", accept);
             con.addRequestProperty("Accept-Charset", encoding);
+            if (auth != null) {
+                final byte[] base64EncodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.UTF_8));
+                con.addRequestProperty("Authorization", "Basic " + new String(base64EncodedAuth));
+            }
             String enc = con.getContentEncoding();
             if (enc == null) {
                 enc = encoding;
