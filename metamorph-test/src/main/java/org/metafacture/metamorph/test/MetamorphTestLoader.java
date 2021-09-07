@@ -1,4 +1,4 @@
-    /*
+/*
  * Copyright 2013, 2014 Deutsche Nationalbibliothek
  *
  * Licensed under the Apache License, Version 2.0 the "License";
@@ -13,19 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.test;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 
 import org.junit.runners.model.InitializationError;
 import org.w3c.dom.Document;
@@ -34,6 +23,16 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 
 /**
  * Utility methods for loading Metamorph-Test resources.
@@ -81,17 +80,17 @@ final class MetamorphTestLoader {
 
             final List<MetamorphTestCase> metamorphTestCases = new ArrayList<>();
             final NodeList testCaseNodes = doc.getElementsByTagName(TEST_CASE_TAG);
-            for(int i=0; i < testCaseNodes.getLength(); ++i) {
+            for (int i = 0; i < testCaseNodes.getLength(); ++i) {
                 final Element testCaseElement = (Element) testCaseNodes.item(i);
                 metamorphTestCases.add(new MetamorphTestCase(testCaseElement));
             }
 
             return metamorphTestCases;
 
-        } catch (final ParserConfigurationException|SAXException|IOException e) {
+        }
+        catch (final ParserConfigurationException | SAXException | IOException e) {
             throw new InitializationError(e);
         }
     }
 
 }
-
