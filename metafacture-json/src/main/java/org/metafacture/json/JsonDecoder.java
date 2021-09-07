@@ -13,14 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.json;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
+package org.metafacture.json;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -29,6 +23,13 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -41,8 +42,8 @@ import java.util.stream.Stream;
  * @author Jens Wille
  *
  */
-@Description("Decodes JSON to metadata events. The \'recordPath\' option can be used to set a JsonPath "
-        + "to extract a path as JSON - or to split the data into multiple JSON documents.")
+@Description("Decodes JSON to metadata events. The \'recordPath\' option can be used to set a JsonPath " +
+    "to extract a path as JSON - or to split the data into multiple JSON documents.")
 @In(String.class)
 @Out(StreamReceiver.class)
 @FluxCommand("decode-json")
@@ -67,8 +68,6 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private String recordPath;
 
     public JsonDecoder() {
-        super();
-
         setArrayMarker(DEFAULT_ARRAY_MARKER);
         setArrayName(DEFAULT_ARRAY_NAME);
         setRecordId(DEFAULT_RECORD_ID);
@@ -134,30 +133,34 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
         assert !isClosed();
         if (recordPath.isEmpty()) {
             processRecord(json);
-        } else {
+        }
+        else {
             matches(JsonPath.read(json, recordPath)).forEach(record -> {
                 processRecord(record);
             });
         }
     }
 
-    private void processRecord(String record) {
+    private void processRecord(final String record) {
         createParser(record);
         try {
             decode();
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
-        } finally {
+        }
+        finally {
             closeParser();
         }
     }
 
-    private Stream<String> matches(Object obj) {
+    private Stream<String> matches(final Object obj) {
         final List<?> records = (obj instanceof List<?>) ? ((List<?>) obj) : Arrays.asList(obj);
         return records.stream().map(doc -> {
             try {
                 return new ObjectMapper().writeValueAsString(doc);
-            } catch (JsonProcessingException e) {
+            }
+            catch (final JsonProcessingException e) {
                 e.printStackTrace();
                 return doc.toString();
             }

@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.json;
 
-import java.io.IOException;
-import java.io.StringWriter;
+package org.metafacture.json;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -36,6 +34,9 @@ import com.fasterxml.jackson.core.io.CharacterEscapes;
 import com.fasterxml.jackson.core.io.SerializedString;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 
+import java.io.IOException;
+import java.io.StringWriter;
+
 /**
  * Serialises an object as JSON. Records and entities are represented
  * as objects unless their name ends with []. If the name ends with [],
@@ -54,6 +55,9 @@ public final class JsonEncoder extends
 
     public static final String ARRAY_MARKER = "[]";
 
+    private static final char ESCAPE_CHAR_LOW = 0x20;
+    private static final char ESCAPE_CHAR_HIGH = 0x7f;
+
     private final JsonGenerator jsonGenerator;
     private final StringWriter writer = new StringWriter();
 
@@ -61,7 +65,8 @@ public final class JsonEncoder extends
         try {
             jsonGenerator = new JsonFactory().createGenerator(writer);
             jsonGenerator.setRootValueSeparator(null);
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -126,7 +131,8 @@ public final class JsonEncoder extends
         endGroup();
         try {
             jsonGenerator.flush();
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
         getReceiver().process(writer.toString());
@@ -151,10 +157,12 @@ public final class JsonEncoder extends
             }
             if (value == null) {
                 jsonGenerator.writeNull();
-            } else {
+            }
+            else {
                 jsonGenerator.writeString(value);
             }
-        } catch (final JsonGenerationException e) {
+        }
+        catch (final JsonGenerationException e) {
             throw new MetafactureException(e);
         }
         catch (final IOException e) {
@@ -170,13 +178,15 @@ public final class JsonEncoder extends
                     jsonGenerator.writeFieldName(name.substring(0, name.length() - ARRAY_MARKER.length()));
                 }
                 jsonGenerator.writeStartArray();
-            } else {
+            }
+            else {
                 if (ctx.inObject()) {
                     jsonGenerator.writeFieldName(name);
                 }
                 jsonGenerator.writeStartObject();
             }
-        } catch (final JsonGenerationException e) {
+        }
+        catch (final JsonGenerationException e) {
             throw new MetafactureException(e);
         }
         catch (final IOException e) {
@@ -189,10 +199,12 @@ public final class JsonEncoder extends
             final JsonStreamContext ctx = jsonGenerator.getOutputContext();
             if (ctx.inObject()) {
                 jsonGenerator.writeEndObject();
-            } else if (ctx.inArray()) {
+            }
+            else if (ctx.inArray()) {
                 jsonGenerator.writeEndArray();
             }
-        } catch (final JsonGenerationException e) {
+        }
+        catch (final JsonGenerationException e) {
             throw new MetafactureException(e);
         }
         catch (final IOException e) {
@@ -200,34 +212,50 @@ public final class JsonEncoder extends
         }
     }
 
-    private String escapeChar(char ch) {
+    private String escapeChar(final char ch) {
         final String namedEscape = namedEscape(ch);
-        if (namedEscape != null) {
-            return namedEscape;
-        }
-        if (ch < 0x20 || 0x7f < ch ) {
-            return unicodeEscape(ch);
-        }
-        return Character.toString(ch);
+        return namedEscape != null ? namedEscape : (ch < ESCAPE_CHAR_LOW || ESCAPE_CHAR_HIGH < ch) ? unicodeEscape(ch) : Character.toString(ch);
     }
 
-    private String namedEscape(char ch) {
-        switch(ch) {
-            case '\b': return "\\b";
-            case '\n': return "\\n";
-            case '\t': return "\\t";
-            case '\f': return "\\f";
-            case '\r': return "\\r";
-            case '\'': return "\\'";
-            case '\\': return "\\\\";
-            case '"': return "\\\"";
-            case '/': return "\\/";
+    private String namedEscape(final char ch) {
+        final String result;
+
+        switch (ch) {
+            case '\b':
+                result = "\\b";
+                break;
+            case '\n':
+                result = "\\n";
+                break;
+            case '\t':
+                result = "\\t";
+                break;
+            case '\f':
+                result = "\\f";
+                break;
+            case '\r':
+                result = "\\r";
+                break;
+            case '\'':
+                result = "\\'";
+                break;
+            case '\\':
+                result = "\\\\";
+                break;
+            case '"':
+                result = "\\\"";
+                break;
+            case '/':
+                result = "\\/";
+                break;
             default:
-                return null;
+                result = null;
         }
+
+        return result;
     }
 
-    private String unicodeEscape(char ch) {
+    private String unicodeEscape(final char ch) {
         return String.format("\\u%4H", ch).replace(' ', '0');
     }
 
