@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.monitoring;
 
-import java.util.HashMap;
-import java.util.Map;
+package org.metafacture.monitoring;
 
 import org.metafacture.commons.StringUtil;
 import org.metafacture.framework.FluxCommand;
@@ -25,8 +23,12 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.ForwardingStreamPipe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Writes log info every {@code batchSize} records.
@@ -73,11 +75,11 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
         this.vars.putAll(vars);
     }
 
-    public final void setBatchSize(final int batchSize) {
+    public void setBatchSize(final int batchSize) {
         this.batchSize = batchSize;
     }
 
-    public final long getBatchSize() {
+    public long getBatchSize() {
         return batchSize;
     }
 
@@ -90,12 +92,12 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
     }
 
     @Override
-    public final void endRecord() {
+    public void endRecord() {
         getReceiver().endRecord();
-        recordCount++;
+        ++recordCount;
         recordCount %= batchSize;
         if (recordCount == 0) {
-            batchCount++;
+            ++batchCount;
             writeLog();
         }
     }
@@ -106,7 +108,7 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
     }
 
     @Override
-    protected final void onResetStream() {
+    protected void onResetStream() {
         recordCount = 0;
         batchCount = 0;
     }

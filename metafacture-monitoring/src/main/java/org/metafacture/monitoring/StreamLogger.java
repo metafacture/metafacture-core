@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.monitoring;
 
 import org.metafacture.framework.FluxCommand;
@@ -21,9 +22,9 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Leaves the event stream untouched but logs it to the info log.
@@ -49,7 +50,6 @@ public final class StreamLogger
     }
 
     public StreamLogger(final String logPrefix) {
-        super();
         this.logPrefix = logPrefix;
     }
 
