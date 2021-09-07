@@ -220,7 +220,7 @@ public class MetafixIfTest {
 
     @Test
     public void moveAndAddIfContain() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(// TODO: dot notation in contain etc.
                 "move_field('name', 'author.name')",
                 "if all_contain('author.name', 'University')", //
                 " add_field('author.type', 'Organization')", //
@@ -231,8 +231,8 @@ public class MetafixIfTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("author.name", "A University"); // TODO: fix entity -> entity
                 o.get().startEntity("author");
+                o.get().literal("name", "A University");
                 o.get().literal("type", "Organization");
                 o.get().endEntity();
                 o.get().endRecord();

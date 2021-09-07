@@ -105,23 +105,18 @@ enum FixMethod {
                 final Map<String, String> options) {
             insert(InsertMode.APPEND, record, split(params.get(0)), params.get(1));
         }
-
     },
     move_field {
         public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            final String oldFieldName = params.get(0);
-            final String newFieldName = params.get(1);
-            record.put(newFieldName, record.get(oldFieldName));
-            record.remove(oldFieldName);
+            copy(record, params);
+            remove(record, split(params.get(0)));
         }
     },
     copy_field {
         public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            final String oldName = params.get(0);
-            final String newName = params.get(1);
-            Metafix.add(record, newName, record.get(oldName));
+            copy(record, params);
         }
     },
     remove_field {
@@ -130,29 +125,6 @@ enum FixMethod {
             params.forEach(p -> {
                 remove(record, split(p));
             });
-        }
-
-        private Object remove(final Map<String, Object> map, final String[] keys) {
-            final String currentKey = keys[0];
-            if (keys.length == 1) {
-                map.remove(currentKey);
-            }
-            if (!map.containsKey(currentKey)) {
-                return map;
-            }
-            final String[] remainingKeys = Arrays.copyOfRange(keys, 1, keys.length);
-            return removeNested(map, currentKey, remainingKeys);
-        }
-
-        private Object removeNested(final Map<String, Object> map, final String currentKey,
-                final String[] remainingKeys) {
-            final Object nested = map.get(currentKey);
-            if (!(nested instanceof Map)) {
-                throw new IllegalStateException("Nested non-map: " + nested);
-            }
-            @SuppressWarnings("unchecked")
-            final Object result = remove((Map<String, Object>) nested, remainingKeys);
-            return result;
         }
     },
     format {
@@ -308,6 +280,7 @@ enum FixMethod {
         }
     };
 
+    private static final String NESTED_NON_MAP = "Nested non-map: ";
     private static final String EMPTY = "";
     private static final String APPEND = ".$append";
 
@@ -346,11 +319,67 @@ enum FixMethod {
         }
         final Object nested = map.get(currentKey);
         if (!(nested instanceof Map)) {
-            throw new IllegalStateException("Nested non-map: " + nested);
+            throw new IllegalStateException(NESTED_NON_MAP + nested);
         }
         @SuppressWarnings("unchecked")
         final Object result = insert(mode, (Map<String, Object>) nested, remainingKeys, value);
         return result;
+    }
+
+    @SuppressWarnings("checkstyle:ReturnCount")
+    private static String find(final Map<String, Object> map, final String[] keys) {
+        final String currentKey = keys[0];
+        if (!map.containsKey(currentKey)) {
+            return null;
+        }
+        if (keys.length == 1) {
+            return map.get(currentKey).toString();
+        }
+        final String[] remainingKeys = Arrays.copyOfRange(keys, 1, keys.length);
+        return findNested(map, currentKey, remainingKeys);
+    }
+
+    private static String findNested(final Map<String, Object> map, final String currentKey,
+            final String[] remainingKeys) {
+        final Object nested = map.get(currentKey);
+        if (!(nested instanceof Map)) {
+            throw new IllegalStateException(NESTED_NON_MAP + nested);
+        }
+        @SuppressWarnings("unchecked")
+        final String result = find((Map<String, Object>) nested, remainingKeys);
+        return result;
+    }
+
+    private static Object remove(final Map<String, Object> map, final String[] keys) {
+        final String currentKey = keys[0];
+        if (keys.length == 1) {
+            map.remove(currentKey);
+        }
+        if (!map.containsKey(currentKey)) {
+            return map;
+        }
+        final String[] remainingKeys = Arrays.copyOfRange(keys, 1, keys.length);
+        return removeNested(map, currentKey, remainingKeys);
+    }
+
+    private static Object removeNested(final Map<String, Object> map, final String currentKey,
+            final String[] remainingKeys) {
+        final Object nested = map.get(currentKey);
+        if (!(nested instanceof Map)) {
+            throw new IllegalStateException(NESTED_NON_MAP + nested);
+        }
+        @SuppressWarnings("unchecked")
+        final Object result = remove((Map<String, Object>) nested, remainingKeys);
+        return result;
+    }
+
+    private static void copy(final Map<String, Object> record, final List<String> params) {
+        final String oldName = params.get(0);
+        final String newName = params.get(1);
+        final String value = find(record, split(oldName));
+        if (value != null) {
+            insert(InsertMode.APPEND, record, split(newName), value);
+        }
     }
 
     private static String[] split(final String s) {

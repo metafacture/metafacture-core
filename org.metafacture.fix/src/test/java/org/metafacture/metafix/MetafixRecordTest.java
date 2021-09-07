@@ -183,6 +183,8 @@ public class MetafixRecordTest {
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
+                o.get().startEntity("my");
+                o.get().endEntity();
                 o.get().startEntity("your");
                 o.get().literal("name", "max");
                 o.get().endEntity();
