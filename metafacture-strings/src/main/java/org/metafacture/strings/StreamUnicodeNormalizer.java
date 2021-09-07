@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.strings;
 
-import java.text.Normalizer;
+package org.metafacture.strings;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
@@ -23,6 +22,8 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.text.Normalizer;
 
 /**
  * Normalises Unicode characters in record identifiers, entity and literal
@@ -42,20 +43,21 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("normalize-unicode-stream")
-public final class StreamUnicodeNormalizer
-        extends DefaultStreamPipe<StreamReceiver> {
+public final class StreamUnicodeNormalizer extends DefaultStreamPipe<StreamReceiver> {
 
     /**
      * The default value for {@link #setNormalizationForm(Normalizer.Form)}.
      */
-    public static final Normalizer.Form DEFAULT_NORMALIZATION_FORM =
-            Normalizer.Form.NFC;
+    public static final Normalizer.Form DEFAULT_NORMALIZATION_FORM = Normalizer.Form.NFC;
 
     private boolean normalizeIds;
     private boolean normalizeKeys;
     private boolean normalizeValues = true;
 
     private Normalizer.Form normalizationForm = DEFAULT_NORMALIZATION_FORM;
+
+    public StreamUnicodeNormalizer() {
+    }
 
     /**
      * Controls whether to normalise record identifiers. By default record
@@ -161,10 +163,8 @@ public final class StreamUnicodeNormalizer
 
     @Override
     public void literal(final String name, final String value) {
-        final String normalizedName =
-                normalizeKeys ? normalize(name) : name;
-        final String normalizedValue=
-                normalizeValues ? normalize(value) : value;
+        final String normalizedName = normalizeKeys ? normalize(name) : name;
+        final String normalizedValue = normalizeValues ? normalize(value) : value;
 
         getReceiver().literal(normalizedName, normalizedValue);
     }
