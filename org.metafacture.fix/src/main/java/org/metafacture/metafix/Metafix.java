@@ -115,6 +115,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         entityCount = 0;
         entityCountStack.add(Integer.valueOf(entityCount));
         recordIdentifier = identifier;
+        entities = new ArrayList<>();
     }
 
     @Override

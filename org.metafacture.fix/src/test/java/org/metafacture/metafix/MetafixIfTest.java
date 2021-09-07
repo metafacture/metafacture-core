@@ -129,34 +129,36 @@ public class MetafixIfTest {
     @Test
     public void ifNone() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "if none_contain('name', 'University')", //
+                "if none_contain('author.name', 'University')", //
                 "  add_field('type', 'Person')", //
                 "end"), //
             i -> {
                 i.startRecord("1");
+                i.startEntity("author");
                 i.literal("name", "Mary");
                 i.literal("name", "A University");
+                i.endEntity();
                 i.endRecord();
                 //
                 i.startRecord("2");
+                i.startEntity("author");
                 i.literal("name", "Max");
                 i.literal("name", "Mary");
+                i.endEntity();
                 i.endRecord();
                 //
                 i.startRecord("3");
                 i.endRecord();
-            }, o -> {
+            }, (o, f) -> {
                 o.get().startRecord("1");
-                o.get().startEntity("name");
-                o.get().literal("", "Mary");
-                o.get().literal("", "A University");
+                o.get().startEntity("author");
+                o.get().literal("name", "[Mary, A University]"); // TODO: fix list -> entity
                 o.get().endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().startEntity("name");
-                o.get().literal("", "Max");
-                o.get().literal("", "Mary");
+                o.get().startEntity("author");
+                o.get().literal("name", "[Max, Mary]"); // TODO: fix list -> entity
                 o.get().endEntity();
                 o.get().literal("type", "Person");
                 o.get().endRecord();

@@ -327,26 +327,26 @@ enum FixMethod {
     }
 
     @SuppressWarnings("checkstyle:ReturnCount")
-    private static String find(final Map<String, Object> map, final String[] keys) {
+    static Object find(final Map<String, Object> map, final String[] keys) {
         final String currentKey = keys[0];
         if (!map.containsKey(currentKey)) {
             return null;
         }
         if (keys.length == 1) {
-            return map.get(currentKey).toString();
+            return map.get(currentKey);
         }
         final String[] remainingKeys = Arrays.copyOfRange(keys, 1, keys.length);
         return findNested(map, currentKey, remainingKeys);
     }
 
-    private static String findNested(final Map<String, Object> map, final String currentKey,
+    private static Object findNested(final Map<String, Object> map, final String currentKey,
             final String[] remainingKeys) {
         final Object nested = map.get(currentKey);
         if (!(nested instanceof Map)) {
             throw new IllegalStateException(NESTED_NON_MAP + nested);
         }
         @SuppressWarnings("unchecked")
-        final String result = find((Map<String, Object>) nested, remainingKeys);
+        final Object result = find((Map<String, Object>) nested, remainingKeys);
         return result;
     }
 
@@ -376,13 +376,15 @@ enum FixMethod {
     private static void copy(final Map<String, Object> record, final List<String> params) {
         final String oldName = params.get(0);
         final String newName = params.get(1);
-        final String value = find(record, split(oldName));
+        final Object value = find(record, split(oldName));
         if (value != null) {
-            insert(InsertMode.APPEND, record, split(newName), value);
+            Metafix.asList(value).forEach(v -> {
+                insert(InsertMode.APPEND, record, split(newName), value.toString());
+            });
         }
     }
 
-    private static String[] split(final String s) {
+    static String[] split(final String s) {
         return s.split("\\.");
     }
 

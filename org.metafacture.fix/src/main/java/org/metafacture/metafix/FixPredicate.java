@@ -62,14 +62,15 @@ enum FixPredicate {
             @Override
             public boolean test(final Map<String, Object> record, final FixPredicate p,
                     final List<String> params) {
-                final String fieldName = params.get(0);
+                final Object fieldValue = FixMethod.find(record, FixMethod.split(params.get(0)));
                 final String valueToTest = params.get(1);
-                return !record.containsKey(fieldName) || Metafix.asList(record.get(fieldName)).stream().noneMatch(p.of(valueToTest));
+                return fieldValue == null || Metafix.asList(fieldValue).stream().noneMatch(p.of(valueToTest));
             }
         };
 
         boolean test(final Map<String, Object> record, final String fieldName, final Predicate<Stream<Object>> f) {
-            return record.containsKey(fieldName) && f.test(Metafix.asList(record.get(fieldName)).stream());
+            final Object value = FixMethod.find(record, FixMethod.split(fieldName));
+            return value != null && f.test(Metafix.asList(value).stream());
         }
 
         abstract boolean test(Map<String, Object> record, FixPredicate p, List<String> params);
