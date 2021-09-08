@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.xml;
 
-import java.util.regex.Pattern;
+package org.metafacture.xml;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
@@ -24,8 +23,10 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
+
 import org.xml.sax.Attributes;
 
+import java.util.regex.Pattern;
 
 /**
  * A generic xml reader.
@@ -41,6 +42,8 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
     public static final String DEFAULT_RECORD_TAG = "record";
 
+    public static final boolean EMIT_NAMESPACE = false;
+
     private static final Pattern TABS = Pattern.compile("\t+");
 
     private String recordTagName = DEFAULT_RECORD_TAG;
@@ -48,15 +51,12 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private boolean inRecord;
     private StringBuilder valueBuffer = new StringBuilder();
 
-    public static final boolean EMIT_NAMESPACE = false;
     private boolean emitNamespace = EMIT_NAMESPACE;
 
     public GenericXmlHandler() {
-        super();
-        final String recordTagNameProperty = System.getProperty(
-                "org.culturegraph.metamorph.xml.recordtag");
+        final String recordTagNameProperty = System.getProperty("org.culturegraph.metamorph.xml.recordtag");
         if (recordTagNameProperty != null) {
-           recordTagName = recordTagNameProperty;
+            recordTagName = recordTagNameProperty;
         }
     }
 
@@ -71,7 +71,6 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
      */
     @Deprecated
     public GenericXmlHandler(final String recordTagName) {
-        super();
         this.recordTagName = recordTagName;
     }
 
@@ -85,7 +84,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
      *
      * @param recordTagName the tag name which marks the start of a record.
      */
-    public void setRecordTagName(String recordTagName) {
+    public void setRecordTagName(final String recordTagName) {
         this.recordTagName = recordTagName;
     }
 
@@ -103,7 +102,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
      * @param emitNamespace set to "true" if namespace should be emitted. Defaults
      *                      to "false".
      */
-    public void setEmitNamespace(boolean emitNamespace) {
+    public void setEmitNamespace(final boolean emitNamespace) {
         this.emitNamespace = emitNamespace;
     }
 
@@ -112,22 +111,23 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void startElement(final String uri, final String localName,
-            final String qName, final Attributes attributes) {
-
+    public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) {
         if (inRecord) {
             writeValue();
             if (emitNamespace) {
                 getReceiver().startEntity(qName);
-            } else {
+            }
+            else {
                 getReceiver().startEntity(localName);
             }
             writeAttributes(attributes);
-        } else if (localName.equals(recordTagName)) {
+        }
+        else if (localName.equals(recordTagName)) {
             final String identifier = attributes.getValue("id");
             if (identifier == null) {
                 getReceiver().startRecord("");
-            } else {
+            }
+            else {
                 getReceiver().startRecord(identifier);
             }
             writeAttributes(attributes);
@@ -136,14 +136,14 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void endElement(final String uri, final String localName,
-            final String qName) {
+    public void endElement(final String uri, final String localName, final String qName) {
         if (inRecord) {
             writeValue();
             if (localName.equals(recordTagName)) {
                 inRecord = false;
                 getReceiver().endRecord();
-            } else {
+            }
+            else {
                 getReceiver().endEntity();
             }
         }
@@ -152,8 +152,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     @Override
     public void characters(final char[] chars, final int start, final int length) {
         if (inRecord) {
-            valueBuffer.append(TABS.matcher(new String(chars, start, length))
-                    .replaceAll(""));
+            valueBuffer.append(TABS.matcher(new String(chars, start, length)).replaceAll(""));
         }
     }
 
@@ -169,11 +168,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         final int length = attributes.getLength();
 
         for (int i = 0; i < length; ++i) {
-            String name;
-            if (emitNamespace) {
-                name = attributes.getQName(i);
-            } else
-                name = attributes.getLocalName(i);
+            final String name = emitNamespace ? attributes.getQName(i) : attributes.getLocalName(i);
             final String value = attributes.getValue(i);
             getReceiver().literal(name, value);
         }

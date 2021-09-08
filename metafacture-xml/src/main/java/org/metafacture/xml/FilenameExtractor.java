@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.xml;
 
 import java.io.File;
@@ -24,34 +25,6 @@ import java.io.File;
  *
  */
 public interface FilenameExtractor extends RecordIdentifier {
-
-    /**
-     * Provides functions and fields that all {@link FilenameExtractor}
-     * implementing classes may found useful.
-     *
-     * @author Pascal Christoph (dr0i)
-     *
-     */
-    class FilenameUtil {
-        public String target = "tmp";
-        public String encoding = "UTF-8";
-        public String property = null;
-        public String fileSuffix = null;
-        public int startIndex = 0;
-        public int endIndex = 0;
-        public String filename = "test";
-
-        /**
-         * Ensures that path exists. If not, make it.
-         *
-         * @param path
-         *            the path of the to be stored file.
-         */
-        public void ensurePathExists(final File path) {
-            final File parent = path.getAbsoluteFile().getParentFile();
-            parent.mkdirs();
-        }
-    }
 
     /**
      * Returns the encoding used to open the resource.
@@ -66,7 +39,7 @@ public interface FilenameExtractor extends RecordIdentifier {
      * @param encoding
      *            new encoding
      */
-    void setEncoding(final String encoding);
+    void setEncoding(String encoding);
 
     /**
      * Sets the end of the index in the filename to extract the name of the
@@ -75,7 +48,7 @@ public interface FilenameExtractor extends RecordIdentifier {
      * @param endIndex
      *            This marks the index' end.
      */
-    void setEndIndex(final int endIndex);
+    void setEndIndex(int endIndex);
 
     /**
      * Sets the file's suffix.
@@ -83,7 +56,7 @@ public interface FilenameExtractor extends RecordIdentifier {
      * @param fileSuffix
      *            the suffix used for the to be generated files
      */
-    void setFileSuffix(final String fileSuffix);
+    void setFileSuffix(String fileSuffix);
 
     /**
      * Sets the beginning of the index in the filename to extract the name of
@@ -92,7 +65,7 @@ public interface FilenameExtractor extends RecordIdentifier {
      * @param startIndex
      *            This marks the index' beginning.
      */
-    void setStartIndex(final int startIndex);
+    void setStartIndex(int startIndex);
 
     /**
      * Sets the target path.
@@ -100,6 +73,95 @@ public interface FilenameExtractor extends RecordIdentifier {
      * @param target
      *            the basis directory in which the files are stored
      */
-    void setTarget(final String target);
+    void setTarget(String target);
+
+    /**
+     * Provides functions and fields that all {@link FilenameExtractor}
+     * implementing classes may found useful.
+     *
+     * @author Pascal Christoph (dr0i)
+     *
+     */
+    class FilenameUtil {
+
+        private String encoding = "UTF-8";
+        private String fileSuffix;
+        private String filename = "test";
+        private String property;
+        private String target = "tmp";
+        private int endIndex;
+        private int startIndex;
+
+        FilenameUtil() {
+        }
+
+        /**
+         * Ensures that path exists. If not, make it.
+         *
+         * @param path
+         *            the path of the to be stored file.
+         */
+        public void ensurePathExists(final File path) {
+            final File parent = path.getAbsoluteFile().getParentFile();
+            parent.mkdirs();
+        }
+
+        public void setEncoding(final String encoding) {
+            this.encoding = encoding;
+        }
+
+        public String getEncoding() {
+            return encoding;
+        }
+
+        public void setFileSuffix(final String fileSuffix) {
+            this.fileSuffix = fileSuffix;
+        }
+
+        public String getFileSuffix() {
+            return fileSuffix;
+        }
+
+        public void setFilename(final String filename) {
+            this.filename = filename;
+        }
+
+        public String getFilename() {
+            return filename;
+        }
+
+        public void setProperty(final String property) {
+            this.property = property;
+        }
+
+        public String getProperty() {
+            return property;
+        }
+
+        public void setTarget(final String target) {
+            this.target = target;
+        }
+
+        public String getTarget() {
+            return target;
+        }
+
+        public void setEndIndex(final int endIndex) {
+            this.endIndex = endIndex;
+        }
+
+        public int getEndIndex() {
+            return endIndex;
+        }
+
+        public void setStartIndex(final int startIndex) {
+            this.startIndex = startIndex;
+        }
+
+        public int getStartIndex() {
+            return startIndex;
+        }
+
+    }
 
 }
