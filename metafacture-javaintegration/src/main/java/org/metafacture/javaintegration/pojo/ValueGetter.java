@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration.pojo;
 
 /**
@@ -24,7 +25,7 @@ package org.metafacture.javaintegration.pojo;
  */
 interface ValueGetter {
 
-    Object getValue(final Object object);
+    Object getValue(Object object);
 
     String getName();
 

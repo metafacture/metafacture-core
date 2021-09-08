@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.javaintegration;
 
-import java.util.List;
-import java.util.Map.Entry;
+package org.metafacture.javaintegration;
 
 import org.metafacture.commons.types.ListMap;
 import org.metafacture.framework.FluxCommand;
@@ -25,6 +23,8 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * Reads a {@link ListMap} and sends it to a {@link StreamReceiver}
@@ -35,21 +35,22 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(ListMap.class)
 @Out(StreamReceiver.class)
 @FluxCommand("string-list-map-to-stream")
-public final class StringListMapToStream
-        extends DefaultObjectPipe<ListMap<String, String>, StreamReceiver> {
+public final class StringListMapToStream extends DefaultObjectPipe<ListMap<String, String>, StreamReceiver> {
+
+    public StringListMapToStream() {
+    }
 
     @Override
-    public void process(final ListMap<String, String> listMap){
+    public void process(final ListMap<String, String> listMap) {
         assert !isClosed();
         process(listMap, getReceiver());
     }
 
     public static void process(final ListMap<String, String> listMap, final StreamReceiver receiver) {
-
         receiver.startRecord(listMap.getId());
-        for(Entry<String, List<String>> entry: listMap.entrySet()){
+        for (final Entry<String, List<String>> entry: listMap.entrySet()) {
             final String name = entry.getKey();
-            for(String value:entry.getValue()){
+            for (final String value:entry.getValue()) {
                 receiver.literal(name, value);
             }
         }

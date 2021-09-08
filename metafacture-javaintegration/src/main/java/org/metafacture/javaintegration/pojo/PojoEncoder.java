@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.javaintegration.pojo;
 
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
-import java.util.ArrayDeque;
-import java.util.Deque;
+package org.metafacture.javaintegration.pojo;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
@@ -27,6 +23,11 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorManager;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
  * Creates and fills a new object instance with stream data and sends the result
@@ -44,12 +45,9 @@ public class PojoEncoder<T> extends DefaultStreamPipe<ObjectReceiver<T>> {
     static {
         // Initialize the property manager to map the primitive data types to
         // the corresponding object based types, e.g. int to Integer
-        PropertyEditorManager.registerEditor(Boolean.class,
-                PropertyEditorManager.findEditor(boolean.class).getClass());
-        PropertyEditorManager.registerEditor(Integer.class,
-                PropertyEditorManager.findEditor(int.class).getClass());
-        PropertyEditorManager.registerEditor(Long.class, PropertyEditorManager
-                .findEditor(long.class).getClass());
+        PropertyEditorManager.registerEditor(Boolean.class, PropertyEditorManager.findEditor(boolean.class).getClass());
+        PropertyEditorManager.registerEditor(Integer.class, PropertyEditorManager.findEditor(int.class).getClass());
+        PropertyEditorManager.registerEditor(Long.class, PropertyEditorManager.findEditor(long.class).getClass());
     }
 
     private final TypeEncoderFactory typeEncoderFactory = new TypeEncoderFactory();
@@ -92,16 +90,13 @@ public class PojoEncoder<T> extends DefaultStreamPipe<ObjectReceiver<T>> {
     @Override
     public void literal(final String name, final String value) {
         final TypeEncoder currentTypeEncoder = typeEncoderStack.peek();
-        final Class<?> targetType = currentTypeEncoder.getValueType(name)
-                .getRawClass();
-        currentTypeEncoder.setValue(name,
-                createObjectFromString(value, targetType));
+        final Class<?> targetType = currentTypeEncoder.getValueType(name).getRawClass();
+        currentTypeEncoder.setValue(name, createObjectFromString(value, targetType));
     }
 
     private static Object createObjectFromString(final String value,
             final Class<?> targetType) {
-        final PropertyEditor propertyEditor = PropertyEditorManager
-                .findEditor(targetType);
+        final PropertyEditor propertyEditor = PropertyEditorManager.findEditor(targetType);
         propertyEditor.setAsText(value);
         return propertyEditor.getValue();
     }

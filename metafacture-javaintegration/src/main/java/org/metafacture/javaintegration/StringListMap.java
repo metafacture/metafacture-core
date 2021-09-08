@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration;
+
+import org.metafacture.commons.types.ListMap;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.metafacture.commons.types.ListMap;
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-
 
 /**
  * Collects the received results in a {@link ListMap}.
@@ -30,19 +30,16 @@ import org.metafacture.framework.helpers.DefaultStreamReceiver;
  * @author Markus Michael Geipel
  *
  */
-public final class StringListMap extends DefaultStreamReceiver
-        implements Collector<ListMap<String, String>>, Map<String, List<String>> {
+public final class StringListMap extends DefaultStreamReceiver implements Collector<ListMap<String, String>>, Map<String, List<String>> {
 
     private boolean closed;
     private Collection<ListMap<String, String>> collection;
     private ListMap<String, String> listMap = new ListMap<String, String>();
 
     public StringListMap() {
-        super();
     }
 
     public StringListMap(final Collection<ListMap<String, String>> collection) {
-        super();
         this.collection = collection;
     }
 
@@ -83,6 +80,11 @@ public final class StringListMap extends DefaultStreamReceiver
 
     public void putAll(final String name, final Collection<String> addValues) {
         listMap.putAll(name, addValues);
+    }
+
+    @Override
+    public void putAll(final Map<? extends String, ? extends List<String>> putMap) {
+        listMap.putAll(putMap);
     }
 
     @Override
@@ -144,11 +146,6 @@ public final class StringListMap extends DefaultStreamReceiver
     @Override
     public List<String> remove(final Object key) {
         return listMap.remove(key);
-    }
-
-    @Override
-    public void putAll(final Map<? extends String, ? extends List<String>> putMap) {
-        listMap.putAll(putMap);
     }
 
     @Override

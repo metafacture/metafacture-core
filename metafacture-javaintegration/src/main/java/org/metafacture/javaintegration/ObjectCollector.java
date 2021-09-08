@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration;
+
+import org.metafacture.framework.ObjectReceiver;
 
 import java.util.LinkedList;
 import java.util.Queue;
-
-import org.metafacture.framework.ObjectReceiver;
 
 /**
  * Collects the objects emitted by an upstream module.
@@ -40,7 +41,6 @@ public final class ObjectCollector<T> implements ObjectReceiver<T> {
     }
 
     public ObjectCollector(final int maxCapacity) {
-        super();
         this.maxCapacity = maxCapacity;
     }
 

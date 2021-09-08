@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration.pojo;
 
 /**
@@ -23,7 +24,7 @@ package org.metafacture.javaintegration.pojo;
  */
 interface ValueSetter {
 
-    void setValue(final Object object, final Object value);
+    void setValue(Object object, Object value);
 
     String getName();
 
