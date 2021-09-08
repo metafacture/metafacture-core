@@ -13,7 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.triples;
+
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.helpers.DefaultObjectPipe;
+import org.metafacture.framework.objects.Triple;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,11 +31,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.helpers.DefaultObjectPipe;
-import org.metafacture.framework.objects.Triple;
-
 /**
  * @author markus geipel
  *
@@ -39,7 +40,7 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
      * specifies the comparator
      */
     public enum Compare {
-        SUBJECT, PREDICATE, OBJECT, ALL;
+        SUBJECT, PREDICATE, OBJECT, ALL
     }
 
     /**
@@ -88,8 +89,8 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
         return compare;
     }
 
-    protected final void setSortOrder(final Order order) {
-        this.order = order;
+    protected final void setSortOrder(final Order newOrder) {
+        order = newOrder;
     }
 
     @Override
@@ -99,9 +100,11 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
                 if (!buffer.isEmpty()) {
                     nextBatch();
                 }
-            } catch (final IOException e) {
+            }
+            catch (final IOException e) {
                 throw new MetafactureException("Error writing to temp file after sorting", e);
-            } finally {
+            }
+            finally {
                 memoryLow = false;
             }
         }
@@ -118,7 +121,8 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
             for (final Triple triple : buffer) {
                 triple.write(out);
             }
-        } finally {
+        }
+        finally {
             out.close();
         }
         buffer.clear();
@@ -134,7 +138,8 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
                 sortedTriple(triple);
             }
             onFinished();
-        } else {
+        }
+        else {
             final Comparator<Triple> comparator = createComparator(compare, order);
             final PriorityQueue<SortedTripleFileFacade> queue = new PriorityQueue<SortedTripleFileFacade>(11,
                     new Comparator<SortedTripleFileFacade>() {
@@ -158,14 +163,17 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
                     sortedTriple(triple);
                     if (sortedFileFacade.isEmpty()) {
                         sortedFileFacade.close();
-                    } else {
+                    }
+                    else {
                         queue.add(sortedFileFacade);
                     }
                 }
                 onFinished();
-            } catch (final IOException e) {
+            }
+            catch (final IOException e) {
                 throw new MetafactureException("Error merging temp files", e);
-            } finally {
+            }
+            finally {
                 for (final SortedTripleFileFacade sortedFileFacade : queue) {
                     sortedFileFacade.close();
                 }
@@ -176,7 +184,6 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 
     protected void onFinished() {
         // nothing to do
-
     }
 
     protected abstract void sortedTriple(Triple namedValue);
@@ -188,39 +195,39 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
     public static Comparator<Triple> createComparator(final Compare compareBy, final Order order) {
         final Comparator<Triple> comparator;
         switch (compareBy) {
-        case ALL:
-            comparator = new Comparator<Triple>() {
-                @Override
-                public int compare(final Triple o1, final Triple o2) {
-                    return order.order(o1.compareTo(o2));
-                }
-            };
-            break;
-        case OBJECT:
-            comparator = new Comparator<Triple>() {
-                @Override
-                public int compare(final Triple o1, final Triple o2) {
-                    return order.order(o1.getObject().compareTo(o2.getObject()));
-                }
-            };
-            break;
-        case SUBJECT:
-            comparator = new Comparator<Triple>() {
-                @Override
-                public int compare(final Triple o1, final Triple o2) {
-                    return order.order(o1.getSubject().compareTo(o2.getSubject()));
-                }
-            };
-            break;
-        case PREDICATE:
-        default:
-            comparator = new Comparator<Triple>() {
-                @Override
-                public int compare(final Triple o1, final Triple o2) {
-                    return order.order(o1.getPredicate().compareTo(o2.getPredicate()));
-                }
-            };
-            break;
+            case ALL:
+                comparator = new Comparator<Triple>() {
+                    @Override
+                    public int compare(final Triple o1, final Triple o2) {
+                        return order.order(o1.compareTo(o2));
+                    }
+                };
+                break;
+            case OBJECT:
+                comparator = new Comparator<Triple>() {
+                    @Override
+                    public int compare(final Triple o1, final Triple o2) {
+                        return order.order(o1.getObject().compareTo(o2.getObject()));
+                    }
+                };
+                break;
+            case SUBJECT:
+                comparator = new Comparator<Triple>() {
+                    @Override
+                    public int compare(final Triple o1, final Triple o2) {
+                        return order.order(o1.getSubject().compareTo(o2.getSubject()));
+                    }
+                };
+                break;
+            case PREDICATE:
+            default:
+                comparator = new Comparator<Triple>() {
+                    @Override
+                    public int compare(final Triple o1, final Triple o2) {
+                        return order.order(o1.getPredicate().compareTo(o2.getPredicate()));
+                    }
+                };
+                break;
         }
 
         return comparator;

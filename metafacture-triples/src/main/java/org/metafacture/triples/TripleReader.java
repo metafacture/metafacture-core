@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.triples;
 
-import java.io.BufferedInputStream;
-import java.io.EOFException;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+package org.metafacture.triples;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -27,15 +22,23 @@ import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.metafacture.framework.objects.Triple;
 
+import java.io.BufferedInputStream;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
 /**
  * @author Christoph Böhme
  *
  */
 @FluxCommand("read-triples")
-public final class TripleReader extends
-        DefaultObjectPipe<String, ObjectReceiver<Triple>> {
+public final class TripleReader extends DefaultObjectPipe<String, ObjectReceiver<Triple>> {
 
     public static final int BUFFERSIZE = 2048;
+
+    public TripleReader() {
+    }
 
     @Override
     public void process(final String filename) {
@@ -46,11 +49,14 @@ public final class TripleReader extends
                 while (true) {
                     getReceiver().process(Triple.read(in));
                 }
-            } catch (EOFException e) {
-            } finally {
+            }
+            catch (final EOFException e) {
+            }
+            finally {
                 in.close();
             }
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }

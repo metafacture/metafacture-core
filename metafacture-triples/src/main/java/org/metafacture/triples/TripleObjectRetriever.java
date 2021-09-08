@@ -13,14 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.triples;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+package org.metafacture.triples;
 
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.FluxCommand;
@@ -30,8 +24,15 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
-import org.metafacture.framework.objects.Triple;
 import org.metafacture.framework.objects.Triple.ObjectType;
+import org.metafacture.framework.objects.Triple;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Uses the object value of the triple as a URL and emits a new triple
@@ -40,16 +41,18 @@ import org.metafacture.framework.objects.Triple.ObjectType;
  *
  * @author Christoph Böhme
  */
-@Description("Uses the object value of the triple as a URL and emits a new triple "
-        + "in which the object value is replaced with the contents of the resource "
-        + "identified by the URL.")
+@Description("Uses the object value of the triple as a URL and emits a new triple " +
+    "in which the object value is replaced with the contents of the resource " +
+    "identified by the URL.")
 @In(Triple.class)
 @Out(Triple.class)
 @FluxCommand("retrieve-triple-objects")
-public final class TripleObjectRetriever
-        extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
+public final class TripleObjectRetriever extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
 
     private Charset defaultEncoding = StandardCharsets.UTF_8;
+
+    public TripleObjectRetriever() {
+    }
 
     /**
      * Sets the default encoding to use when no encoding is
@@ -98,13 +101,12 @@ public final class TripleObjectRetriever
             final URLConnection connection = url.openConnection();
             connection.connect();
             final String encodingName = connection.getContentEncoding();
-            final Charset encoding = encodingName != null ?
-                    Charset.forName(encodingName) :
-                    defaultEncoding;
+            final Charset encoding = encodingName != null ? Charset.forName(encodingName) : defaultEncoding;
             try (InputStream inputStream = connection.getInputStream()) {
                 return ResourceUtil.readAll(inputStream, encoding);
             }
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
