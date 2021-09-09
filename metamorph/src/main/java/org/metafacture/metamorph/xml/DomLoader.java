@@ -13,11 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.xml;
+
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.framework.MetafactureException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.XMLReader;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -34,17 +45,6 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.framework.MetafactureException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.XMLReader;
-
-
 /**
  * Helper to load DOM {@link Document}s.
  *
@@ -52,19 +52,17 @@ import org.xml.sax.XMLReader;
  * @author Christoph Böhme
  *
  */
-public final class DomLoader {
+public final class DomLoader { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
 
-    private static final ErrorHandler SAX_ERROR_HANDLER =
-            new SaxErrorHandler();
+    private static final ErrorHandler SAX_ERROR_HANDLER = new SaxErrorHandler();
 
-    private static final ErrorListener TRANSFORMER_ERROR_HANDLER =
-            new TransformerErrorHandler();
+    private static final ErrorListener TRANSFORMER_ERROR_HANDLER = new TransformerErrorHandler();
 
     private DomLoader() {
         throw new AssertionError("No instances allowed");
     }
 
-    public static Document parse(String schemaFile, InputSource input) {
+    public static Document parse(final String schemaFile, final InputSource input) {
         final Document document = createEmptyDocument();
         final XMLReader pipeline = createXmlFilterPipeline(schemaFile, document);
         process(new SAXSource(pipeline, input), new DOMResult(document));
@@ -81,15 +79,14 @@ public final class DomLoader {
 
     private static Document createEmptyDocument() {
         try {
-            return DocumentBuilderFactory.newInstance().newDocumentBuilder()
-                    .newDocument();
-        } catch (ParserConfigurationException e) {
+            return DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        }
+        catch (final ParserConfigurationException e) {
             throw new MetafactureException(e);
         }
     }
 
-    private static XMLReader createXmlFilterPipeline(String schemaFile,
-            Document document) {
+    private static XMLReader createXmlFilterPipeline(final String schemaFile, final Document document) {
         XMLReader pipelineHead = createSaxReader(loadSchema(schemaFile));
         pipelineHead = new LocationAnnotator(pipelineHead, document);
         pipelineHead = new IgnorableWhitespaceFilter(pipelineHead);
@@ -99,51 +96,54 @@ public final class DomLoader {
         return pipelineHead;
     }
 
-    private static Schema loadSchema(String schemaFile) {
+    private static Schema loadSchema(final String schemaFile) {
         try {
-            return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-                    .newSchema(getSchemaUrl(schemaFile));
-        } catch (SAXException e) {
+            return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(getSchemaUrl(schemaFile));
+        }
+        catch (final SAXException e) {
             throw new MetafactureException(e);
         }
     }
 
-    private static URL getSchemaUrl(String schemaFile) {
+    private static URL getSchemaUrl(final String schemaFile) {
         try {
             return ResourceUtil.getUrl(schemaFile);
-        } catch (final MalformedURLException e) {
+        }
+        catch (final MalformedURLException e) {
             throw new MetafactureException("'" + schemaFile + "' not found:", e);
         }
     }
 
-    private static XMLReader createSaxReader(Schema schema) {
+    private static XMLReader createSaxReader(final Schema schema) {
         final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
         parserFactory.setSchema(schema);
         parserFactory.setNamespaceAware(true);
         parserFactory.setXIncludeAware(true);
         try {
             return parserFactory.newSAXParser().getXMLReader();
-        } catch (ParserConfigurationException | SAXException e) {
+        }
+        catch (final ParserConfigurationException | SAXException e) {
             throw new MetafactureException(e);
         }
     }
 
-    private static void process(Source source, Result result) {
+    private static void process(final Source source, final Result result) {
         final Transformer transformer = createTransformer();
         try {
             transformer.transform(source, result);
-        } catch (TransformerException e) {
+        }
+        catch (final TransformerException e) {
             throw new MetafactureException(e);
         }
     }
 
     private static Transformer createTransformer() {
         try {
-            final Transformer transformer = TransformerFactory.newInstance()
-                    .newTransformer();
+            final Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setErrorListener(TRANSFORMER_ERROR_HANDLER);
             return transformer;
-        } catch (TransformerConfigurationException e) {
+        }
+        catch (final TransformerConfigurationException e) {
             throw new MetafactureException(e);
         }
     }
@@ -155,10 +155,11 @@ public final class DomLoader {
                 final Node old = child;
                 child = child.getNextSibling();
 
-                if(old.getNodeValue().trim().isEmpty()) {
+                if (old.getNodeValue().trim().isEmpty()) {
                     node.removeChild(old);
                 }
-            } else {
+            }
+            else {
                 removeEmptyTextNodes(child);
                 child = child.getNextSibling();
             }
@@ -191,8 +192,7 @@ public final class DomLoader {
         }
 
         private void handle(final SAXParseException exception) {
-            throw new MetafactureException("Error parsing xml: " +
-                    exception.getMessage(), exception);
+            throw new MetafactureException("Error parsing xml: " + exception.getMessage(), exception);
         }
 
     }
@@ -208,26 +208,22 @@ public final class DomLoader {
         }
 
         @Override
-        public void warning(final TransformerException exception)
-                throws TransformerException {
+        public void warning(final TransformerException exception) throws TransformerException {
             handle(exception);
         }
 
         @Override
-        public void error(final TransformerException exception)
-                throws TransformerException {
+        public void error(final TransformerException exception) throws TransformerException {
             handle(exception);
         }
 
         @Override
-        public void fatalError(final TransformerException exception)
-                throws TransformerException {
+        public void fatalError(final TransformerException exception) throws TransformerException {
             handle(exception);
         }
 
         private void handle(final TransformerException exception) {
-            throw new MetafactureException("Error during DOM creation: " +
-                    exception.getMessage(), exception);
+            throw new MetafactureException("Error during DOM creation: " + exception.getMessage(), exception);
         }
 
     }

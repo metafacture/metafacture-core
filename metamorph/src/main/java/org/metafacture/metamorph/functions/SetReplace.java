@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 import org.metafacture.commons.tries.SetReplacer;
@@ -25,6 +26,9 @@ public final class SetReplace extends AbstractSimpleStatelessFunction {
 
     private final SetReplacer setReplacer = new SetReplacer();
     private boolean prepared;
+
+    public SetReplace() {
+    }
 
     @Override
     public String process(final String text) {

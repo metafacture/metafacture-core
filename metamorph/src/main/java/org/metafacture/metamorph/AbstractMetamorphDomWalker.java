@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph;
 
-import java.util.HashMap;
-import java.util.Map;
+package org.metafacture.metamorph;
 
 import org.metafacture.commons.StringUtil;
 import org.metafacture.commons.types.ScopedHashMap;
 import org.metafacture.metamorph.api.MorphBuildException;
 import org.metafacture.metamorph.xml.DomLoader;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Builds a {@link Metamorph} from an xml description
@@ -99,13 +100,54 @@ public abstract class AbstractMetamorphDomWalker {
         return mapFactory;
     }
 
-    public final void walk(final InputSource morphScript, final Map<String, String> vars) {
-        this.vars.putAll(vars);
+    public final void walk(final InputSource morphScript, final Map<String, String> newVars) {
+        vars.putAll(newVars);
         walk(morphScript);
     }
 
     public final void walk(final InputSource morphScript) {
         walk(DomLoader.parse(SCHEMA_FILE, morphScript));
+    }
+
+    protected final void walk(final Document doc) {
+        functionFactory = new FunctionFactory();
+        collectFactory = new CollectFactory();
+        collectFactory.registerClass(ENTITY, Entity.class);
+        mapFactory = new MapFactory();
+
+        init();
+
+        final Element root = doc.getDocumentElement();
+        final int version = Integer.parseInt(attribute(root, AttributeName.VERSION));
+        checkVersionCompatibility(version);
+
+        setEntityMarker(attribute(root, AttributeName.ENTITY_MARKER));
+
+        for (Node node = root.getFirstChild(); node != null; node = node.getNextSibling()) {
+            switch (tagOf(node)) {
+                case META:
+                    handleMeta(node);
+                    break;
+                case FUNCTIONS:
+                    handleFunctionDefinitions(node);
+                    break;
+                case RULES:
+                    handleRules(node);
+                    break;
+                case MAPS:
+                    handleMaps(node);
+                    break;
+                case VARS:
+                    handleVars(node);
+                    break;
+                case MACROS:
+                    handleMacros(node);
+                    break;
+                default:
+                    illegalChild(node);
+            }
+        }
+        finish();
     }
 
     private static Tags tagOf(final Node child) {
@@ -131,7 +173,7 @@ public abstract class AbstractMetamorphDomWalker {
         return attributes;
     }
 
-    protected  final String resolveVars(final String string){
+    protected  final String resolveVars(final String string) {
         return StringUtil.format(string, Metamorph.VAR_START, Metamorph.VAR_END, ignoreMissingVars, vars);
     }
 
@@ -141,7 +183,7 @@ public abstract class AbstractMetamorphDomWalker {
 
     protected final String resolvedAttribute(final Node node, final AttributeName attr) {
         final String value = attribute(node, attr);
-        if(null==value){
+        if (null == value) {
             return null;
         }
         return resolveVars(value);
@@ -157,48 +199,6 @@ public abstract class AbstractMetamorphDomWalker {
             attributes.put(itemNode.getLocalName(), resolveVars(itemNode.getNodeValue()));
         }
         return attributes;
-    }
-
-    protected final void walk(final Document doc) {
-        functionFactory = new FunctionFactory();
-        collectFactory = new CollectFactory();
-        collectFactory.registerClass(ENTITY, Entity.class);
-        mapFactory = new MapFactory();
-
-        init();
-
-        final Element root = doc.getDocumentElement();
-        final int version = Integer.parseInt(attribute(root, AttributeName.VERSION));
-        checkVersionCompatibility(version);
-
-        setEntityMarker(attribute(root, AttributeName.ENTITY_MARKER));
-
-        for (Node node = root.getFirstChild(); node != null; node = node.getNextSibling()) {
-
-            switch (tagOf(node)) {
-            case META:
-                handleMeta(node);
-                break;
-            case FUNCTIONS:
-                handleFunctionDefinitions(node);
-                break;
-            case RULES:
-                handleRules(node);
-                break;
-            case MAPS:
-                handleMaps(node);
-                break;
-            case VARS:
-                handleVars(node);
-                break;
-            case MACROS:
-                handleMacros(node);
-                break;
-            default:
-                illegalChild(node);
-            }
-        }
-        finish();
     }
 
     private void handleMeta(final Node node) {
@@ -231,39 +231,44 @@ public abstract class AbstractMetamorphDomWalker {
                     enterIf(child);
                     handleRule(child.getFirstChild());
                     exitIf(child);
-                } else if (POSTPROCESS.equals(child.getLocalName())) {
+                }
+                else if (POSTPROCESS.equals(child.getLocalName())) {
                     handlePostprocess(child);
-                } else if (ENTITY_NAME.equals(child.getLocalName())) {
+                }
+                else if (ENTITY_NAME.equals(child.getLocalName())) {
                     enterName(child);
                     handleRule(child.getFirstChild());
                     exitName(child);
-                } else {
+                }
+                else {
                     handleRule(child);
                 }
             }
             exitCollect(node);
-        } else if (DATA.equals(nodeName)) {
+        }
+        else if (DATA.equals(nodeName)) {
             enterData(node);
             handlePostprocess(node);
             exitData(node);
-        } else if (CALL_MACRO.equals(nodeName)){
+        }
+        else if (CALL_MACRO.equals(nodeName)) {
             final String macroName = attribute(node, AttributeName.NAME);
             final Node macroNode = macros.get(macroName);
-            if (macroNode==null){
+            if (macroNode == null) {
                 throw new MorphBuildException("Macro '" + macroName + "' undefined!");
             }
             vars = new ScopedHashMap<String, String>(vars);
             vars.putAll(resolvedAttributeMap(node));
             handleRules(macroNode);
             vars = vars.getOuterScope();
-        }else {
+        }
+        else {
             illegalChild(node);
         }
     }
 
     private void handlePostprocess(final Node node) {
-        for (Node functionNode = node.getFirstChild(); functionNode != null; functionNode = functionNode
-                .getNextSibling()) {
+        for (Node functionNode = node.getFirstChild(); functionNode != null; functionNode = functionNode.getNextSibling()) {
             handleFunction(functionNode);
         }
     }
@@ -272,7 +277,8 @@ public abstract class AbstractMetamorphDomWalker {
         for (Node mapNode = node.getFirstChild(); mapNode != null; mapNode = mapNode.getNextSibling()) {
             if (MAP.equals(mapNode.getLocalName())) {
                 handleInternalMap(mapNode);
-            } else {
+            }
+            else {
                 handleMapClass(mapNode);
             }
         }
@@ -296,29 +302,27 @@ public abstract class AbstractMetamorphDomWalker {
 
     private void checkVersionCompatibility(final int version) {
         if (version < LOWEST_COMPATIBLE_VERSION || version > CURRENT_VERSION) {
-            throw new MorphBuildException("Version " + version
-                    + " of definition file not supported by metamorph version " + CURRENT_VERSION);
+            throw new MorphBuildException("Version " + version + " of definition file not supported by metamorph version " + CURRENT_VERSION);
         }
     }
 
     protected final void illegalChild(final Node child) {
-        throw new MorphBuildException("Schema mismatch: illegal tag " + child.getLocalName() + " in node "
-                + child.getParentNode().getLocalName());
+        throw new MorphBuildException("Schema mismatch: illegal tag " + child.getLocalName() + " in node " + child.getParentNode().getLocalName());
     }
 
     protected abstract void init();
 
     protected abstract void finish();
 
-    protected abstract void setEntityMarker(final String entityMarker);
+    protected abstract void setEntityMarker(String entityMarker);
 
-    protected abstract void handleInternalMap(final Node mapNode);
+    protected abstract void handleInternalMap(Node mapNode);
 
-    protected abstract void handleMapClass(final Node mapNode);
+    protected abstract void handleMapClass(Node mapNode);
 
-    protected abstract void handleMetaEntry(final String name, final String value);
+    protected abstract void handleMetaEntry(String name, String value);
 
-    protected abstract void handleFunctionDefinition(final Node functionDefNode);
+    protected abstract void handleFunctionDefinition(Node functionDefNode);
 
     protected abstract void enterData(Node node);
 

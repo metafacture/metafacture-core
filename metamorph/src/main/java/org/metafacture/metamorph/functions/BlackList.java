@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
-
-
 
 /**
  * A function which checks whether the received value
@@ -25,10 +24,13 @@ package org.metafacture.metamorph.functions;
  */
 public final class BlackList extends AbstractLookup {
 
+    public BlackList() {
+    }
+
     @Override
     public String process(final String key) {
         final String returnValue = lookup(key);
-        if(returnValue==null){
+        if (returnValue == null) {
             return key;
         }
         return null;

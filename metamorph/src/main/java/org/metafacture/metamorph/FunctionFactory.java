@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph;
-
-
-import java.io.IOException;
 
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.commons.reflection.ObjectFactory;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.metamorph.api.Function;
+
+import java.io.IOException;
 
 /**
  * Creates the functions available in Metamorph.
@@ -33,9 +33,9 @@ final class FunctionFactory extends ObjectFactory<Function> {
 
     FunctionFactory() {
         try {
-            loadClassesFromMap(ResourceUtil.loadProperties(
-                    "morph-functions.properties"), Function.class);
-        } catch (IOException e) {
+            loadClassesFromMap(ResourceUtil.loadProperties("morph-functions.properties"), Function.class);
+        }
+        catch (final IOException e) {
             throw new MetafactureException("Failed to load functions list", e);
         }
     }

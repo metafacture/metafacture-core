@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph;
 
-import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
+package org.metafacture.metamorph;
 
 import org.metafacture.flowcontrol.StreamBuffer;
 import org.metafacture.framework.StreamPipe;
@@ -27,7 +24,9 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.javaintegration.SingleValue;
 
-
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Splits a stream based on a morph definition.
@@ -71,11 +70,11 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
         return receiver;
     }
 
-    private void dispatch(){
+    private void dispatch() {
         final String key = singleValue.getValue();
         final StreamReceiver receiver = receiverMap.get(key);
 
-        if(null != receiver){
+        if (null != receiver) {
             buffer.setReceiver(receiver);
             buffer.replay();
         }

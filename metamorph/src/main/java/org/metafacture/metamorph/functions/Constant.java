@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
@@ -25,6 +26,9 @@ import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 public final class Constant extends AbstractSimpleStatelessFunction {
 
     private String constValue;
+
+    public Constant() {
+    }
 
     @Override
     public String process(final String value) {

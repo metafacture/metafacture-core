@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 import org.metafacture.metamorph.api.NamedValueSource;
@@ -25,14 +26,12 @@ import org.metafacture.metamorph.api.helpers.AbstractFunction;
  */
 public final class SwitchNameValue extends AbstractFunction {
 
+    public SwitchNameValue() {
+    }
+
     @Override
-    public void receive(final String name, final String value,
-            final NamedValueSource source, final int recordCount,
-            final int entityCount) {
-
-        getNamedValueReceiver().receive(value, name, this, recordCount,
-                entityCount);
-
+    public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
+        getNamedValueReceiver().receive(value, name, this, recordCount, entityCount);
     }
 
 }

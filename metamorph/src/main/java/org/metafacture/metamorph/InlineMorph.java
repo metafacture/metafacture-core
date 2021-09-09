@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph;
+
+import org.metafacture.framework.StreamReceiver;
+
+import org.xml.sax.InputSource;
 
 import java.io.StringReader;
 import java.net.URL;
-
-import org.metafacture.framework.StreamReceiver;
-import org.xml.sax.InputSource;
 
 /**
  * Helper for including Metamorph scripts directly in Java code.
@@ -72,7 +74,7 @@ public final class InlineMorph {
      * @param owner the object which contains the morph script
      * @return an instance of {@code InlineMorph} for continuation
      */
-    public static InlineMorph in(Object owner) {
+    public static InlineMorph in(final Object owner) {
         return in(owner.getClass());
     }
 
@@ -86,11 +88,11 @@ public final class InlineMorph {
      * @param owner the class which contains the morph script
      * @return an instance of {@code InlineMorph} for continuation
      */
-    public static InlineMorph in(Class<?> owner) {
+    public static InlineMorph in(final Class<?> owner) {
         return new InlineMorph().setClassAsSystemId(owner);
     }
 
-    private InlineMorph setClassAsSystemId(Class<?> owner) {
+    private InlineMorph setClassAsSystemId(final Class<?> owner) {
         final URL baseUrl = owner.getResource("");
         systemId = baseUrl.toExternalForm();
         return this;
@@ -102,7 +104,7 @@ public final class InlineMorph {
      * @param line the next line of the morph script
      * @return a reference to {@code this} for continuation
      */
-    public InlineMorph with(String line) {
+    public InlineMorph with(final String line) {
         if (scriptBuilder.length() == 0) {
             appendBoilerplate(line);
         }
@@ -112,7 +114,7 @@ public final class InlineMorph {
         return this;
     }
 
-    private void appendBoilerplate(String line) {
+    private void appendBoilerplate(final String line) {
         final String trimmedLine = line.trim();
         if (!trimmedLine.startsWith("<?xml ")) {
             appendXmlBoilerplate();
@@ -128,9 +130,7 @@ public final class InlineMorph {
     }
 
     private void appendMetamorphBoilerplate() {
-        scriptBuilder.append(
-                        "<metamorph version='1'\n" +
-                        "    xmlns='http://www.culturegraph.org/metamorph'>");
+        scriptBuilder.append("<metamorph version='1'\n    xmlns='http://www.culturegraph.org/metamorph'>");
     }
 
     /**
@@ -169,7 +169,7 @@ public final class InlineMorph {
      *                  send its output.
      * @return a Metamorph object initialised with the inline script
      */
-    public Metamorph createConnectedTo(StreamReceiver receiver) {
+    public Metamorph createConnectedTo(final StreamReceiver receiver) {
         final Metamorph metamorph = create();
         metamorph.setReceiver(receiver);
         return metamorph;

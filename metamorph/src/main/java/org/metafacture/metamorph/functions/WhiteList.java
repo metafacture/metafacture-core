@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 /**
@@ -22,14 +23,13 @@ package org.metafacture.metamorph.functions;
  */
 public final class WhiteList extends AbstractLookup {
 
+    public WhiteList() {
+    }
+
     @Override
     public String process(final String key) {
         final String returnValue = lookup(key);
-
-        if (returnValue != null) {
-            return key;
-        }
-        return null;
+        return returnValue != null ? key : null;
     }
 
 }

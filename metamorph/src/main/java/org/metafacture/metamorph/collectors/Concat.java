@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.collectors;
 
 import org.metafacture.metamorph.api.NamedValueSource;
@@ -30,9 +31,11 @@ public final class Concat extends AbstractFlushingCollect {
     private String prefix = "";
     private String postfix = "";
     private String delimiter = "";
-    private boolean reverse = false;
-
     private String currentDelimiter = "";
+    private boolean reverse;
+
+    public Concat() {
+    }
 
     public void setPrefix(final String prefix) {
         this.prefix = prefix;
@@ -71,7 +74,8 @@ public final class Concat extends AbstractFlushingCollect {
         if (reverse) {
             builder.insert(0, currentDelimiter);
             builder.insert(0, value);
-        } else {
+        }
+        else {
             builder.append(currentDelimiter);
             builder.append(value);
         }
