@@ -38,7 +38,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-
 /**
  * Tests for class {@link Metamorph}.
  *
@@ -53,9 +52,6 @@ public final class MetamorphTest {
     @Mock
     private NamedValueReceiver namedValueReceiver;
 
-    @Mock
-    private DefaultStreamReceiver receiver = new DefaultStreamReceiver();
-
     private Metamorph metamorph;
 
     @Before
@@ -63,7 +59,6 @@ public final class MetamorphTest {
         metamorph = new Metamorph();
         metamorph.setReceiver(new DefaultStreamReceiver());
     }
-
 
     @Test
     public void shouldMapMatchingPath() {
