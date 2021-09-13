@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.framework.helpers;
 
 import org.metafacture.framework.ObjectPipe;
@@ -32,6 +33,9 @@ import org.metafacture.framework.ObjectReceiver;
  *
  */
 public class DefaultObjectReceiver<T> extends DefaultLifeCycle implements ObjectReceiver<T> {
+
+    public DefaultObjectReceiver() {
+    }
 
     @Override
     public void process(final T obj) {

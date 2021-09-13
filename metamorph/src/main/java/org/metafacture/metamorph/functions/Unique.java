@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
+
+import org.metafacture.metamorph.api.helpers.AbstractStatefulFunction;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import org.metafacture.metamorph.api.helpers.AbstractStatefulFunction;
 
 /**
  * Checks whether the received value was not received before.
@@ -42,6 +43,9 @@ public final class Unique extends AbstractStatefulFunction {
             return name + "\0" + value;
         }
     };
+
+    public Unique() {
+    }
 
     @Override
     public String process(final String value) {
@@ -75,7 +79,8 @@ public final class Unique extends AbstractStatefulFunction {
                     return name;
                 }
             };
-        } else if (VALUE.equals(part)) {
+        }
+        else if (VALUE.equals(part)) {
             keyGenerator = new KeyGenerator() {
                 @Override
                 public String createKey(final String name, final String value) {

@@ -13,7 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.flux.parser;
+
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.commons.reflection.ConfigurableClass;
+import org.metafacture.commons.reflection.ObjectFactory;
+import org.metafacture.commons.reflection.ReflectionUtil;
+import org.metafacture.flux.FluxParseException;
+import org.metafacture.flux.HelpPrinter;
+import org.metafacture.framework.Receiver;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -26,14 +35,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.commons.reflection.ConfigurableClass;
-import org.metafacture.commons.reflection.ObjectFactory;
-import org.metafacture.commons.reflection.ReflectionUtil;
-import org.metafacture.flux.FluxParseException;
-import org.metafacture.flux.HelpPrinter;
-import org.metafacture.framework.Receiver;
 
 /**
  * @author Markus Michael Geipel
@@ -52,7 +53,8 @@ public final class FluxProgramm {
                 final URL url = enumeration.nextElement();
                 COMMAND_FACTORY.loadClassesFromMap(ResourceUtil.loadProperties(url), Receiver.class);
             }
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new FluxParseException("unable to load properties.", e);
         }
     }
@@ -62,6 +64,9 @@ public final class FluxProgramm {
     private final Map<String, Wormhole> wormholeNameMapping = new HashMap<String, Wormhole>();
     private final Map<Flow, Wormhole> wormholeInFlowMapping = new Hashtable<Flow, Wormhole>();
 
+    public FluxProgramm() {
+    }
+
     private static Receiver createElement(final String name, final Map<String, String> namedArgs,
             final List<Object> cArgs) {
 
@@ -69,7 +74,8 @@ public final class FluxProgramm {
         if (COMMAND_FACTORY.containsKey(name)) {
             newElement = COMMAND_FACTORY.newInstance(name, namedArgs, cArgs.toArray());
 
-        } else {
+        }
+        else {
             final ConfigurableClass<? extends Receiver> elementClass =
                     ReflectionUtil.loadClass(name, Receiver.class);
             newElement = elementClass.newInstance(namedArgs, cArgs.toArray());
@@ -156,7 +162,8 @@ public final class FluxProgramm {
             flow.start();
             if (!wormholeInFlowMapping.containsKey(flow)) {
                 flow.close();
-            } else {
+            }
+            else {
                 wormholeInFlowMapping.get(flow).finished(flow);
             }
         }
@@ -172,7 +179,7 @@ public final class FluxProgramm {
         private Flow out;
         private final String name;
 
-        public Wormhole(final String name) {
+        Wormhole(final String name) {
             this.name = name;
         }
 

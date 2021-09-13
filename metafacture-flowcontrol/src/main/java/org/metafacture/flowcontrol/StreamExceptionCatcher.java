@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-/**
- *
- */
 package org.metafacture.flowcontrol;
 
 import org.metafacture.framework.FluxCommand;
@@ -25,6 +22,7 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +49,6 @@ public final class StreamExceptionCatcher extends
     }
 
     public StreamExceptionCatcher(final String logPrefix) {
-        super();
         this.logPrefix = logPrefix;
     }
 
@@ -59,7 +56,8 @@ public final class StreamExceptionCatcher extends
     public void startRecord(final String identifier) {
         try {
             getReceiver().startRecord(identifier);
-        } catch(final Exception e) {
+        }
+        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             LOG.error(MSG_PATTERN, logPrefix, "StartRecord" + identifier);
             LOG.error(MSG_PATTERN, logPrefix, e);
         }
@@ -69,7 +67,8 @@ public final class StreamExceptionCatcher extends
     public void endRecord() {
         try {
             getReceiver().endRecord();
-        } catch(final Exception e) {
+        }
+        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             LOG.error(MSG_PATTERN, logPrefix, "endRecord");
             LOG.error(MSG_PATTERN, logPrefix, e);
         }
@@ -79,7 +78,8 @@ public final class StreamExceptionCatcher extends
     public void startEntity(final String name) {
         try {
             getReceiver().startEntity(name);
-        } catch(final Exception e) {
+        }
+        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             LOG.error(MSG_PATTERN, logPrefix, "startEntity" + name);
             LOG.error(MSG_PATTERN, logPrefix, e);
         }
@@ -89,7 +89,8 @@ public final class StreamExceptionCatcher extends
     public void endEntity() {
         try {
             getReceiver().endEntity();
-        } catch(final Exception e) {
+        }
+        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             LOG.error(MSG_PATTERN, logPrefix, "endEntity");
             LOG.error(MSG_PATTERN, logPrefix, e);
         }
@@ -99,8 +100,9 @@ public final class StreamExceptionCatcher extends
     public void literal(final String name, final String value) {
         try {
             getReceiver().literal(name, value);
-        } catch(final Exception e) {
-            LOG.error(MSG_PATTERN, logPrefix, "literal " + name +" " + value);
+        }
+        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
+            LOG.error(MSG_PATTERN, logPrefix, "literal " + name + " " + value);
             LOG.error(MSG_PATTERN, logPrefix, e);
         }
     }

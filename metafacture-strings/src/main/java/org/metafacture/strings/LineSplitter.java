@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.strings;
 
-import java.util.regex.Pattern;
+package org.metafacture.strings;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
@@ -23,6 +22,8 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.util.regex.Pattern;
 
 /**
  * Splits a string at new lines and sends each line to the receiver.
@@ -34,12 +35,13 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(String.class)
 @Out(String.class)
 @FluxCommand("split-lines")
-public final class LineSplitter
-        extends DefaultObjectPipe<String, ObjectReceiver<String>> {
+public final class LineSplitter extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
     private static final char NEWLINE = '\n';
-    private static final Pattern LINE_PATTERN = Pattern.compile(
-            String.valueOf(NEWLINE), Pattern.LITERAL);
+    private static final Pattern LINE_PATTERN = Pattern.compile(String.valueOf(NEWLINE), Pattern.LITERAL);
+
+    public LineSplitter() {
+    }
 
     @Override
     public void process(final String lines) {

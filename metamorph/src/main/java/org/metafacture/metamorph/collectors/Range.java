@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph.collectors;
 
-import java.util.Comparator;
-import java.util.SortedSet;
-import java.util.TreeSet;
+package org.metafacture.metamorph.collectors;
 
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
 
+import java.util.Comparator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Corresponds to the <code>&lt;range&gt;</code> tag.
@@ -35,17 +35,7 @@ public final class Range extends AbstractFlushingCollect {
     private int increment;
     private Integer first;
 
-    /**
-     * A comparator which defines the sort order of the values in the range
-     * depending on the increment.
-     */
-    private class IncrementDependingComparator implements Comparator<Integer> {
-
-        @Override
-        public int compare(final Integer o1, final Integer o2) {
-            return Integer.signum(increment) * (o1 - o2);
-        }
-
+    public Range() {
     }
 
     public int getIncrement() {
@@ -72,7 +62,8 @@ public final class Range extends AbstractFlushingCollect {
     protected void receive(final String name, final String value, final NamedValueSource source) {
         if (first == null) {
             first = Integer.valueOf(value);
-        } else {
+        }
+        else {
             final int last = Integer.valueOf(value).intValue();
             for (int i = first.intValue(); (increment > 0 && i <= last) || (increment < 0 && i >= last); i += increment) {
                 values.add(Integer.valueOf(i));
@@ -85,6 +76,22 @@ public final class Range extends AbstractFlushingCollect {
     protected void clear() {
         values.clear();
         first = null;
+    }
+
+    /**
+     * A comparator which defines the sort order of the values in the range
+     * depending on the increment.
+     */
+    private class IncrementDependingComparator implements Comparator<Integer> {
+
+        IncrementDependingComparator() {
+        }
+
+        @Override
+        public int compare(final Integer o1, final Integer o2) {
+            return Integer.signum(increment) * (o1 - o2);
+        }
+
     }
 
 }

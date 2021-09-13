@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.api;
 
 /**
@@ -22,6 +23,6 @@ package org.metafacture.metamorph.api;
  */
 public interface FlushListener {
 
-    void flush(final int recordCount, final int entityCount);
+    void flush(int recordCount, int entityCount);
 
 }

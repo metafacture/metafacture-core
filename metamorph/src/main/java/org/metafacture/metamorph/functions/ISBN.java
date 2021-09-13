@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
+
+import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
  * Offers ISBN conversions.
@@ -45,6 +46,9 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
     private boolean verifyCheckDigit;
     private String errorString;
 
+    public ISBN() {
+    }
+
     public void setErrorString(final String errorString) {
         this.errorString = errorString;
     }
@@ -56,12 +60,15 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
 
         if (verifyCheckDigit && !isValid(result)) {
             result = errorString;
-        } else if (!(size == ISBN10_SIZE || size == ISBN13_SIZE)) {
+        }
+        else if (!(size == ISBN10_SIZE || size == ISBN13_SIZE)) {
             result = errorString;
-        } else {
+        }
+        else {
             if (to10 && ISBN13_SIZE == size) {
                 result = isbn13to10(result);
-            } else if (to13 && ISBN10_SIZE == size) {
+            }
+            else if (to13 && ISBN10_SIZE == size) {
                 result = isbn10to13(result);
             }
         }
@@ -103,7 +110,8 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
             final int digit = charToInt(isbn13Data.charAt(i));
             if ((i % 2) == 0) {
                 accumulator = accumulator + digit;
-            } else {
+            }
+            else {
                 accumulator = accumulator + ISBN13_MAGIC * digit;
             }
         }
@@ -146,7 +154,8 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
         if (isbn.length() == ISBN10_SIZE) {
             result = check10(isbn.substring(0, ISBN10_SIZE - 1)) == isbn
                     .charAt(ISBN10_SIZE - 1);
-        } else if (isbn.length() == ISBN13_SIZE) {
+        }
+        else if (isbn.length() == ISBN13_SIZE) {
             result = check13(isbn.substring(0, ISBN13_SIZE - 1)) == isbn
                     .charAt(ISBN13_SIZE - 1);
         }

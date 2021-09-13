@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.biblio.iso2709;
 
-import static org.metafacture.biblio.iso2709.Iso2709Constants.MAX_BASE_ADDRESS;
-import static org.metafacture.biblio.iso2709.Iso2709Constants.MIN_BASE_ADDRESS;
-import static org.metafacture.biblio.iso2709.Iso2709Constants.RECORD_LABEL_LENGTH;
-import static org.metafacture.biblio.iso2709.Iso2709Constants.TAG_LENGTH;
+package org.metafacture.biblio.iso2709;
 
 /**
  * Provides access to a directory entry. A {@code DirectoryEntry} works like
@@ -43,21 +39,21 @@ class DirectoryEntry {
     DirectoryEntry(final Iso646ByteBuffer buffer, final RecordFormat recordFormat,
             final int baseAddress) {
         assert buffer != null;
-        assert baseAddress >= MIN_BASE_ADDRESS;
-        assert baseAddress <= MAX_BASE_ADDRESS;
+        assert baseAddress >= Iso2709Constants.MIN_BASE_ADDRESS;
+        assert baseAddress <= Iso2709Constants.MAX_BASE_ADDRESS;
 
         this.buffer = buffer;
         directoryEnd = baseAddress - Byte.BYTES;
         fieldLengthLength = recordFormat.getFieldLengthLength();
         fieldStartLength = recordFormat.getFieldStartLength();
         implDefinedPartLength = recordFormat.getImplDefinedPartLength();
-        entryLength = TAG_LENGTH + fieldLengthLength + fieldStartLength +
+        entryLength = Iso2709Constants.TAG_LENGTH + fieldLengthLength + fieldStartLength +
                 implDefinedPartLength;
         rewind();
     }
 
     void rewind() {
-        currentPosition = RECORD_LABEL_LENGTH;
+        currentPosition = Iso2709Constants.RECORD_LABEL_LENGTH;
     }
 
     void gotoNext() {
@@ -71,25 +67,25 @@ class DirectoryEntry {
 
     char[] getTag() {
         assert currentPosition < directoryEnd;
-        return buffer.charsAt(currentPosition, TAG_LENGTH);
+        return buffer.charsAt(currentPosition, Iso2709Constants.TAG_LENGTH);
     }
 
     int getFieldLength() {
         assert currentPosition < directoryEnd;
-        final int fieldLengthStart = currentPosition + TAG_LENGTH;
+        final int fieldLengthStart = currentPosition + Iso2709Constants.TAG_LENGTH;
         return buffer.parseIntAt(fieldLengthStart, fieldLengthLength);
     }
 
     int getFieldStart() {
         assert currentPosition < directoryEnd;
-        final int fieldStartStart = currentPosition + TAG_LENGTH +
+        final int fieldStartStart = currentPosition + Iso2709Constants.TAG_LENGTH +
                 fieldLengthLength;
         return buffer.parseIntAt(fieldStartStart, fieldStartLength);
     }
 
     char[] getImplDefinedPart() {
         assert currentPosition < directoryEnd;
-        final int implDefinedPartStart = currentPosition + TAG_LENGTH +
+        final int implDefinedPartStart = currentPosition + Iso2709Constants.TAG_LENGTH +
                 fieldLengthLength + fieldStartLength;
         return buffer.charsAt(implDefinedPartStart, implDefinedPartLength);
     }

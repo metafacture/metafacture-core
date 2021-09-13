@@ -13,7 +13,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package org.metafacture.runner;
+
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.flux.FluxCompiler;
+import org.metafacture.flux.parser.FluxProgramm;
+import org.metafacture.runner.util.DirectoryClassLoader;
+
+import org.antlr.runtime.RecognitionException;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,12 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.antlr.runtime.RecognitionException;
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.flux.FluxCompiler;
-import org.metafacture.flux.parser.FluxProgramm;
-import org.metafacture.runner.util.DirectoryClassLoader;
 
 /**
  * @author Markus Michael Geipel
@@ -46,25 +48,22 @@ public final class Flux {
     }
 
     public static void main(final String[] args) throws IOException, RecognitionException {
-
         loadCustomJars();
 
-        if (args.length < (1)) {
+        if (args.length < 1) {
             FluxProgramm.printHelp(System.out);
             System.exit(2);
-        } else {
-
+        }
+        else {
             final File fluxFile = new File(args[0]);
             if (!fluxFile.exists()) {
                 System.err.println("File not found: " + args[0]);
                 System.exit(1);
-                return;
             }
 
             // get variable assignments
             final Map<String, String> vars = new HashMap<String, String>();
-            vars.put(SCRIPT_HOME, fluxFile.getAbsoluteFile().getParent()
-                    + System.getProperty("file.separator"));
+            vars.put(SCRIPT_HOME, fluxFile.getAbsoluteFile().getParent() + System.getProperty("file.separator"));
 
             for (int i = 1; i < args.length; ++i) {
                 final Matcher matcher = VAR_PATTERN.matcher(args[i]);

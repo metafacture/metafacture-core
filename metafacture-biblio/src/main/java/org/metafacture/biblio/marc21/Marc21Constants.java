@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.biblio.marc21;
+
+import org.metafacture.biblio.iso2709.RecordFormat;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-
-import org.metafacture.biblio.iso2709.RecordFormat;
 
 /**
  * Useful constants for the MARC 21 format.
@@ -27,43 +28,43 @@ import org.metafacture.biblio.iso2709.RecordFormat;
  */
 final class Marc21Constants {
 
-  static final RecordFormat MARC21_FORMAT = RecordFormat.create()
-      .withIndicatorLength(2)
-      .withIdentifierLength(2)
-      .withFieldLengthLength(4)
-      .withFieldStartLength(5)
-      .withImplDefinedPartLength(0)
-      .build();
+    static final RecordFormat MARC21_FORMAT = RecordFormat.create()
+        .withIndicatorLength(2)
+        .withIdentifierLength(2)
+        .withFieldLengthLength(4) // checkstyle-disable-line MagicNumber
+        .withFieldStartLength(5) // checkstyle-disable-line MagicNumber
+        .withImplDefinedPartLength(0)
+        .build();
 
-  static final Charset MARC21_CHARSET = StandardCharsets.UTF_8;
+    static final Charset MARC21_CHARSET = StandardCharsets.UTF_8;
 
-  static final int RECORD_TYPE_INDEX = 0;
-  static final int BIBLIOGRAPHIC_LEVEL_INDEX = 1;
-  static final int TYPE_OF_CONTROL_INDEX = 2;
-  static final int CHARACTER_CODING_INDEX = 3;
-  static final int ENCODING_LEVEL_INDEX = 0;
-  static final int CATALOGING_FORM_INDEX = 1;
-  static final int MULTIPART_LEVEL_INDEX = 2;
+    static final int RECORD_TYPE_INDEX = 0;
+    static final int BIBLIOGRAPHIC_LEVEL_INDEX = 1;
+    static final int TYPE_OF_CONTROL_INDEX = 2;
+    static final int CHARACTER_CODING_INDEX = 3;
+    static final int ENCODING_LEVEL_INDEX = 0;
+    static final int CATALOGING_FORM_INDEX = 1;
+    static final int MULTIPART_LEVEL_INDEX = 2;
 
-  static final char[] RECORD_STATUS_CODES = { 'a', 'c', 'd', 'n', 'p' };
-  static final char[] RECORD_TYPE_CODES = {
-    'a', 'c', 'd', 'e', 'f', 'g', 'i', 'j', 'k', 'm', 'o', 'p', 'r', 't'
-  };
-  static final char[] BIBLIOGRAPHIC_LEVEL_CODES = {
-    'a', 'b', 'c', 'd', 'i', 'm', 's'
-  };
-  static final char[] TYPE_OF_CONTROL_CODES = { ' ', 'a' };
-  static final char[] CHARACTER_CODING_CODES = { 'a' };
-  static final char[] ENCODING_LEVEL_CODES = {
-    ' ', '1', '2', '3', '4', '5', '7', '8', 'u', 'z'
-  };
-  static final char[] CATALOGING_FORM_CODES = { ' ', 'a', 'c', 'i', 'u' };
-  static final char[] MULTIPART_LEVEL_CODES = { ' ', 'a', 'b', 'c' };
+    static final char[] RECORD_STATUS_CODES = {'a', 'c', 'd', 'n', 'p'};
+    static final char[] RECORD_TYPE_CODES = {
+        'a', 'c', 'd', 'e', 'f', 'g', 'i', 'j', 'k', 'm', 'o', 'p', 'r', 't'
+    };
+    static final char[] BIBLIOGRAPHIC_LEVEL_CODES = {
+        'a', 'b', 'c', 'd', 'i', 'm', 's'
+    };
+    static final char[] TYPE_OF_CONTROL_CODES = {' ', 'a'};
+    static final char[] CHARACTER_CODING_CODES = {'a'};
+    static final char[] ENCODING_LEVEL_CODES = {
+        ' ', '1', '2', '3', '4', '5', '7', '8', 'u', 'z'
+    };
+    static final char[] CATALOGING_FORM_CODES = {' ', 'a', 'c', 'i', 'u'};
+    static final char[] MULTIPART_LEVEL_CODES = {' ', 'a', 'b', 'c'};
 
-  static final char RESERVED_CHAR = '0';
+    static final char RESERVED_CHAR = '0';
 
-  private Marc21Constants() {
-    throw new AssertionError("class should not be instantiated");
-  }
+    private Marc21Constants() {
+        throw new AssertionError("class should not be instantiated");
+    }
 
 }

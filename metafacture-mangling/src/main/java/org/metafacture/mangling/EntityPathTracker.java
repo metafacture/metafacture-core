@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.mangling;
+
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 /**
  * Tracks the <i>path</i> of the current entity. The entity path consists of the
@@ -45,6 +46,9 @@ public class EntityPathTracker extends DefaultStreamReceiver {
     private final StringBuilder currentPath = new StringBuilder();
 
     private String entitySeparator = DEFAULT_ENTITY_SEPARATOR;
+
+    public EntityPathTracker() {
+    }
 
     /**
      * Returns the current entity path.

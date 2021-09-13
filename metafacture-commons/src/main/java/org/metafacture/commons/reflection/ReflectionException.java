@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.reflection;
 
 /**
@@ -20,11 +21,11 @@ package org.metafacture.commons.reflection;
  */
 public class ReflectionException extends RuntimeException {
 
-    ReflectionException(String message, Throwable cause) {
+    ReflectionException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    ReflectionException(String message) {
+    ReflectionException(final String message) {
         super(message);
     }
 

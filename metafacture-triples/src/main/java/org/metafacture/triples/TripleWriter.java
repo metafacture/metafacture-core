@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.triples;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+package org.metafacture.triples;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -27,6 +23,11 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectReceiver;
 import org.metafacture.framework.objects.Triple;
+
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 /**
  * @author Christoph Böhme
@@ -53,7 +54,8 @@ public final class TripleWriter extends DefaultObjectReceiver<Triple> {
     public void process(final Triple obj) {
         try {
             obj.write(outputStream);
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -65,7 +67,8 @@ public final class TripleWriter extends DefaultObjectReceiver<Triple> {
                 outputStream.close();
             }
             outputStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename), BUFFERSIZE));
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -76,7 +79,8 @@ public final class TripleWriter extends DefaultObjectReceiver<Triple> {
             if (outputStream != null) {
                 outputStream.close();
             }
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }

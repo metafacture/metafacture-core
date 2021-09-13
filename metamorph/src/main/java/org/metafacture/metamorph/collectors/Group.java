@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.collectors;
 
 import org.metafacture.commons.StringUtil;
@@ -26,9 +27,11 @@ import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
  */
 public final class Group extends AbstractFlushingCollect {
 
+    public Group() {
+    }
+
     @Override
-    protected void receive(final String recName, final String recValue,
-            final NamedValueSource source) {
+    protected void receive(final String recName, final String recValue, final NamedValueSource source) {
         getNamedValueReceiver().receive(
                 StringUtil.fallback(getName(), recName),
                 StringUtil.fallback(getValue(), recValue), this,

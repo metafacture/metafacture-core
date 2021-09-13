@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 import org.metafacture.metamorph.api.helpers.AbstractFilter;
@@ -24,6 +25,9 @@ import org.metafacture.metamorph.api.helpers.AbstractFilter;
  * @author Hans-Georg Becker
  */
 public final class NotContains extends AbstractFilter {
+
+    public NotContains() {
+    }
 
     @Override
     protected boolean accept(final String value) {

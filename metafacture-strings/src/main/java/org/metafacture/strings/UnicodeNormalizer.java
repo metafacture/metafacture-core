@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.strings;
 
-import java.text.Normalizer;
+package org.metafacture.strings;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
@@ -23,6 +22,8 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.text.Normalizer;
 
 /**
  * Normalises Unicode characters in strings. Unicode normalisation converts
@@ -37,16 +38,17 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(String.class)
 @Out(String.class)
 @FluxCommand("normalize-unicode-string")
-public final class UnicodeNormalizer extends
-        DefaultObjectPipe<String, ObjectReceiver<String>> {
+public final class UnicodeNormalizer extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
     /**
      * The default value for {@link #setNormalizationForm(Normalizer.Form)}.
      */
-    public static final Normalizer.Form DEFAULT_NORMALIZATION_FORM =
-            Normalizer.Form.NFC;
+    public static final Normalizer.Form DEFAULT_NORMALIZATION_FORM = Normalizer.Form.NFC;
 
     private Normalizer.Form normalizationForm = DEFAULT_NORMALIZATION_FORM;
+
+    public UnicodeNormalizer() {
+    }
 
     /**
      * Sets the normalisation form used for normalising strings.

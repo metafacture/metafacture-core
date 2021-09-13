@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.framework.objects;
 
 import java.io.IOException;
@@ -72,7 +73,8 @@ public final class Triple implements Comparable<Triple> {
         try {
             return new Triple(in.readUTF(), in.readUTF(), in.readUTF(),
                     (ObjectType) in.readObject());
-        } catch (final ClassNotFoundException e) {
+        }
+        catch (final ClassNotFoundException e) {
             throw new IOException("Cannot read triple", e);
         }
     }
@@ -98,11 +100,11 @@ public final class Triple implements Comparable<Triple> {
             return false;
         }
         final Triple other = (Triple) obj;
-        return other.preCompHashCode == preCompHashCode
-                && other.predicate.equals(predicate)
-                && other.object.equals(object)
-                && other.subject.equals(subject)
-                && other.objectType == objectType;
+        return other.preCompHashCode == preCompHashCode &&
+                other.predicate.equals(predicate) &&
+                other.object.equals(object) &&
+                other.subject.equals(subject) &&
+                other.objectType == objectType;
     }
 
     @Override
@@ -112,7 +114,7 @@ public final class Triple implements Comparable<Triple> {
             result = predicate.compareTo(triple.predicate);
             if (result == 0) {
                 result = object.compareTo(triple.object);
-                if(result == 0) {
+                if (result == 0) {
                     return objectType.compareTo(triple.objectType);
                 }
             }

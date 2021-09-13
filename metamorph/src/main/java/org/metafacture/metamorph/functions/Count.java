@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 import org.metafacture.metamorph.api.helpers.AbstractStatefulFunction;
@@ -26,6 +27,9 @@ import org.metafacture.metamorph.api.helpers.AbstractStatefulFunction;
 public final class Count extends AbstractStatefulFunction {
 
     private int count;
+
+    public Count() {
+    }
 
     @Override
     public String process(final String value) {

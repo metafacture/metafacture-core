@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.io;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
-import java.net.URLConnection;
+package org.metafacture.io;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -29,6 +24,11 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Opens a {@link URLConnection} and passes a reader to the receiver.
@@ -40,11 +40,13 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(String.class)
 @Out(java.io.Reader.class)
 @FluxCommand("open-http")
-public final class HttpOpener
-        extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
+public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
     private String encoding = "UTF-8";
     private String accept = "*/*";
+
+    public HttpOpener() {
+    }
 
     /**
      * Sets the HTTP accept header value. This is a mime-type such as text/plain
@@ -82,7 +84,8 @@ public final class HttpOpener
                 enc = encoding;
             }
             getReceiver().process(new InputStreamReader(con.getInputStream(), enc));
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }

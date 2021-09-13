@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.linkeddata;
 
 import org.metafacture.framework.FluxCommand;
@@ -34,7 +35,6 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @FluxCommand("rdf-macros")
 public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
 
-
     public static final char REFERENCE_MARKER = '*';
     public static final char LANGUAGE_MARKER = '$';
     public static final String RDF_REFERENCE = "~rdf:resource";
@@ -42,15 +42,17 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
     public static final String XML_LANG = "~xml:lang";
     private String autoAddedSubject = "";
 
+    public RdfMacroPipe() {
+    }
+
     public void setAutoAddedSubject(final String autoAddedSubject) {
         this.autoAddedSubject = autoAddedSubject;
     }
 
-
     @Override
     public void startRecord(final String identifier) {
         getReceiver().startRecord(identifier);
-        if(!autoAddedSubject.isEmpty()){
+        if (!autoAddedSubject.isEmpty()) {
             getReceiver().startEntity(autoAddedSubject);
             getReceiver().literal(RDF_ABOUT, identifier);
         }
@@ -58,7 +60,7 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
 
     @Override
     public void endRecord() {
-        if(!autoAddedSubject.isEmpty()){
+        if (!autoAddedSubject.isEmpty()) {
             getReceiver().endEntity();
         }
         getReceiver().endRecord();
@@ -82,12 +84,14 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
             getReceiver().startEntity(name.substring(1));
             getReceiver().literal(RDF_REFERENCE, value);
             getReceiver().endEntity();
-        } else if (index > 0) {
+        }
+        else if (index > 0) {
             getReceiver().startEntity(name.substring(0, index));
             getReceiver().literal(XML_LANG, name.substring(index + 1));
             getReceiver().literal("", value);
             getReceiver().endEntity();
-        } else {
+        }
+        else {
             getReceiver().literal(name, value);
         }
     }

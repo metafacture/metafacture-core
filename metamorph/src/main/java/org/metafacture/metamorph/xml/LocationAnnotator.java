@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph.xml;
 
-import java.util.Deque;
-import java.util.LinkedList;
+package org.metafacture.metamorph.xml;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -29,6 +27,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.LocatorImpl;
 import org.xml.sax.helpers.XMLFilterImpl;
+
+import java.util.Deque;
+import java.util.LinkedList;
 
 /**
  * Annotates a DOM with information about the location of
@@ -49,7 +50,7 @@ final class LocationAnnotator extends XMLFilterImpl {
 
     private Locator locator;
 
-    public LocationAnnotator(final XMLReader xmlReader, final Document document) {
+    LocationAnnotator(final XMLReader xmlReader, final Document document) {
         super(xmlReader);
 
         final EventListener listener = new EventListener() {
@@ -68,28 +69,22 @@ final class LocationAnnotator extends XMLFilterImpl {
     }
 
     @Override
-    public void setDocumentLocator(final Locator locator) {
-        super.setDocumentLocator(locator);
-        this.locator = locator;
+    public void setDocumentLocator(final Locator newLocator) {
+        super.setDocumentLocator(newLocator);
+        locator = newLocator;
     }
 
     @Override
-    public void startElement(final String uri, final String localName, final String qName,
-            final Attributes atts) throws SAXException {
-
+    public void startElement(final String uri, final String localName, final String qName, final Attributes atts) throws SAXException {
         super.startElement(uri, localName, qName, atts);
-
         locatorsAtElementStart.push(new LocatorImpl(locator));
     }
 
     @Override
-    public void endElement(final String uri, final String localName, final String qName)
-            throws SAXException {
-
+    public void endElement(final String uri, final String localName, final String qName) throws SAXException {
         super.endElement(uri, localName, qName);
 
         final Locator elementStartLocator = locatorsAtElementStart.pop();
-
         final Location location = new Location(elementStartLocator, locator);
 
         final Node domNode = domNodes.pop();

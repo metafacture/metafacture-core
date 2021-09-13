@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.plumbing;
 
 import org.metafacture.framework.FluxCommand;
@@ -32,5 +33,8 @@ import org.metafacture.framework.helpers.ForwardingStreamPipe;
 @Out(StreamReceiver.class)
 @FluxCommand("pass-through")
 public final class IdentityStreamPipe extends ForwardingStreamPipe {
+
+    public IdentityStreamPipe() {
+    }
 
 }

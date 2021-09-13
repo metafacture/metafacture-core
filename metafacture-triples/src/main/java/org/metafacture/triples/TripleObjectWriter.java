@@ -13,15 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.triples;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+package org.metafacture.triples;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -30,6 +23,14 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectReceiver;
 import org.metafacture.framework.objects.Triple;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Writes the object value of the triple into a file. The filename
@@ -42,11 +43,11 @@ import org.metafacture.framework.objects.Triple;
  *
  * @author Christoph Böhme
  */
-@Description("Writes the object value of the triple into a file. The filename is "
-        + "constructed from subject and predicate. Please note: This module does "
-        + "not check if the filename constructed from subject and predicate stays "
-        + "within `baseDir`. THIS MODULE SHOULD NOT BE USED IN ENVIRONMENTS IN WHICH "
-        + "THE VALUES OF SUBJECT AND PREDICATE A PROVIDED BY AN UNTRUSTED SOURCE!")
+@Description("Writes the object value of the triple into a file. The filename is " +
+    "constructed from subject and predicate. Please note: This module does " +
+    "not check if the filename constructed from subject and predicate stays " +
+    "within `baseDir`. THIS MODULE SHOULD NOT BE USED IN ENVIRONMENTS IN WHICH " +
+    "THE VALUES OF SUBJECT AND PREDICATE A PROVIDED BY AN UNTRUSTED SOURCE!")
 @In(Triple.class)
 @Out(Void.class)
 @FluxCommand("write-triple-objects")
@@ -93,9 +94,10 @@ public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
     public void process(final Triple triple) {
         final Path filePath = buildFilePath(triple);
         ensureParentPathExists(filePath);
-        try(final Writer writer = Files.newBufferedWriter(filePath, encoding)) {
+        try (Writer writer = Files.newBufferedWriter(filePath, encoding)) {
             writer.write(triple.getObject());
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
@@ -110,7 +112,8 @@ public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
         if (parentDir != null) {
             try {
                 Files.createDirectories(parentDir);
-            } catch (final IOException e) {
+            }
+            catch (final IOException e) {
                 throw new MetafactureException(e);
             }
         }

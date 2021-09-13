@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta.formatter;
 
 import org.metafacture.formeta.Formeta;
@@ -26,6 +27,9 @@ import org.metafacture.formeta.Formeta;
 public final class ConciseFormatter extends AbstractFormatter {
 
     private boolean appendItemSeparator;
+
+    public ConciseFormatter() {
+    }
 
     @Override
     public void startGroup(final String name) {

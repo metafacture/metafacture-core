@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 /**
@@ -25,8 +26,11 @@ public final class Lookup extends AbstractLookup {
 
     private String defaultValue;
 
-    public void setDefault(final String defaultValue) {
-        this.defaultValue = defaultValue;
+    public Lookup() {
+    }
+
+    public void setDefault(final String newDefaultValue) {
+        defaultValue = newDefaultValue;
     }
 
     @Override

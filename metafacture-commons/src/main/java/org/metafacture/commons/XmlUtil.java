@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons;
 
-import static java.util.stream.Collectors.joining;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.io.StringWriter;
-
+import java.util.stream.Collectors;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 
 /**
  * Utility functions for working with XML data as strings.
@@ -40,6 +38,8 @@ public final class XmlUtil {
     private static final String APPLICATION_XML_MIME_TYPE = "application/xml";
     private static final String TEXT_XML_MIME_TYPE = "text/xml";
     private static final String XML_BASE_MIME_TYPE = "+xml";
+
+    private static final int ESCAPE_CODE_POINT_THRESHOLD = 0x7f;
 
     private XmlUtil() {
         // No instances allowed
@@ -55,20 +55,23 @@ public final class XmlUtil {
         final Transformer transformer;
         try {
             transformer = TransformerFactory.newInstance().newTransformer();
-        } catch (final TransformerException e) {
+        }
+        catch (final TransformerException e) {
             throw new AssertionError(
                     "No errors expected when creating an identity transformer", e);
         }
 
         if (omitXMLDecl) {
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        } else {
+        }
+        else {
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
         }
 
         try {
             transformer.transform(new DOMSource(node), new StreamResult(writer));
-        } catch (final TransformerException e) {
+        }
+        catch (final TransformerException e) {
             throw new AssertionError(
                     "No errors expected during identity transformation", e);
         }
@@ -79,7 +82,7 @@ public final class XmlUtil {
     public static String nodeListToString(final NodeList nodes) {
         final StringBuilder builder = new StringBuilder();
 
-        for (int i=0; i < nodes.getLength(); ++i) {
+        for (int i = 0; i < nodes.getLength(); ++i) {
             builder.append(nodeToString(nodes.item(i), i != 0));
         }
 
@@ -102,7 +105,7 @@ public final class XmlUtil {
     public static String escape(final String unescaped, final boolean escapeUnicode) {
         return unescaped.codePoints()
                 .mapToObj(value -> escapeCodePoint(value, escapeUnicode))
-                .collect(joining());
+                .collect(Collectors.joining());
     }
 
     private static String escapeCodePoint(final int codePoint, final boolean escapeUnicode) {
@@ -110,22 +113,34 @@ public final class XmlUtil {
         if (entity != null) {
             return entity;
         }
-        if (escapeUnicode && codePoint > 0x7f) {
-            return "&#" + Integer.toString(codePoint) + ";";
-        }
-        return Character.toString((char) codePoint);
+        return escapeUnicode && codePoint > ESCAPE_CODE_POINT_THRESHOLD ?
+            "&#" + Integer.toString(codePoint) + ";" : Character.toString((char) codePoint);
     }
 
     private static String entityFor(final int ch) {
+        final String entity;
+
         switch (ch) {
-            case '<': return "&lt;";
-            case '>': return "&gt;";
-            case '&': return "&amp;";
-            case '"': return "&quot;";
-            case '\'': return "&apos;";
+            case '<':
+                entity = "&lt;";
+                break;
+            case '>':
+                entity = "&gt;";
+                break;
+            case '&':
+                entity = "&amp;";
+                break;
+            case '"':
+                entity = "&quot;";
+                break;
+            case '\'':
+                entity = "&apos;";
+                break;
             default:
-                return null;
+                entity = null;
         }
+
+        return entity;
     }
 
 }

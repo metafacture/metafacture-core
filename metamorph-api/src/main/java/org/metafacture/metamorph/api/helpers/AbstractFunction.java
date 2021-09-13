@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph.api.helpers;
 
-import java.util.HashMap;
-import java.util.Map;
+package org.metafacture.metamorph.api.helpers;
 
 import org.metafacture.metamorph.api.Function;
 import org.metafacture.metamorph.api.Maps;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Base class for functions.
@@ -33,8 +34,8 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
     private Map<String, String> localMap;
     private String mapName;
 
-    protected final String getValue(final String mapName, final String key) {
-        return maps.getValue(mapName, key);
+    protected final String getValue(final String currentMapName, final String key) {
+        return maps.getValue(currentMapName, key);
     }
 
     protected final String getLocalValue(final String key) {
@@ -55,8 +56,8 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
         return localMap;
     }
 
-    public final void setMap(final String mapName) {
-        this.mapName = mapName;
+    public final void setMap(final String newMapName) {
+        mapName = newMapName;
     }
 
     @Override

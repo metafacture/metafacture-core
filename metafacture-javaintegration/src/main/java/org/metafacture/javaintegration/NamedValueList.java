@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration;
+
+import org.metafacture.commons.types.NamedValue;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,29 +25,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.metafacture.commons.types.NamedValue;
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-
-
 /**
  * Collects the received results in a {@link List}.
  *
  * @author Markus Michael Geipel
  *
  */
-public final class NamedValueList extends DefaultStreamReceiver
-        implements List<NamedValue>, Collector<List<NamedValue>> {
+public final class NamedValueList extends DefaultStreamReceiver implements List<NamedValue>, Collector<List<NamedValue>> {
 
     private Collection<List<NamedValue>> collection;
     private List<NamedValue> list;
 
     public NamedValueList() {
-        super();
         list = new ArrayList<NamedValue>();
     }
 
     public NamedValueList(final Collection<List<NamedValue>> collection) {
-        super();
         list = new ArrayList<NamedValue>();
         this.collection = collection;
     }
@@ -84,35 +81,43 @@ public final class NamedValueList extends DefaultStreamReceiver
     }
 
     @Override
+    public void add(final int index, final NamedValue element) {
+        list.add(index, element);
+    }
+
+    @Override
     public boolean remove(final Object object) {
         return list.remove(object);
     }
 
     @Override
-    public boolean containsAll(final Collection<?> collection) {
-        return list.containsAll(collection);
+    public NamedValue remove(final int index) {
+        return list.remove(index);
     }
 
     @Override
-    public boolean addAll(final Collection<? extends NamedValue> collection) {
-        return list.addAll(collection);
+    public boolean containsAll(final Collection<?> currentCollection) {
+        return list.containsAll(currentCollection);
     }
 
     @Override
-    public boolean addAll(final int index, final Collection<? extends NamedValue> collection) {
-        return list.addAll(index, collection);
+    public boolean addAll(final Collection<? extends NamedValue> currentCollection) {
+        return list.addAll(currentCollection);
     }
 
     @Override
-    public boolean removeAll(final Collection<?> collection) {
-
-        return list.removeAll(collection);
+    public boolean addAll(final int index, final Collection<? extends NamedValue> currentCollection) {
+        return list.addAll(index, currentCollection);
     }
 
     @Override
-    public boolean retainAll(final Collection<?> collection) {
+    public boolean removeAll(final Collection<?> currentCollection) {
+        return list.removeAll(currentCollection);
+    }
 
-        return list.retainAll(collection);
+    @Override
+    public boolean retainAll(final Collection<?> currentCollection) {
+        return list.retainAll(currentCollection);
     }
 
     @Override
@@ -128,16 +133,6 @@ public final class NamedValueList extends DefaultStreamReceiver
     @Override
     public NamedValue set(final int index, final NamedValue element) {
         return list.set(index, element);
-    }
-
-    @Override
-    public void add(final int index, final NamedValue element) {
-        list.add(index, element);
-    }
-
-    @Override
-    public NamedValue remove(final int index) {
-        return list.remove(index);
     }
 
     @Override
@@ -166,7 +161,7 @@ public final class NamedValueList extends DefaultStreamReceiver
     }
 
     @Override
-    public void startRecord(final String identifier){
+    public void startRecord(final String identifier) {
         list.clear();
     }
 

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration.pojo;
 
 import org.metafacture.framework.StreamReceiver;
@@ -27,6 +28,6 @@ import org.metafacture.framework.StreamReceiver;
  */
 public interface MetafactureSource {
 
-    void sendToStream(final StreamReceiver streamReceiver);
+    void sendToStream(StreamReceiver streamReceiver);
 
 }

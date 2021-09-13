@@ -17,6 +17,7 @@
 /**
  *
  */
+
 package org.metafacture.mangling;
 
 import static org.mockito.Mockito.verify;

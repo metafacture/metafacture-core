@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.plumbing;
 
 import org.metafacture.framework.FluxCommand;
@@ -43,6 +44,9 @@ public final class StreamBatchMerger extends DefaultStreamPipe<StreamReceiver> {
 
     private long batchSize = DEFAULT_BATCH_SIZE;
     private long recordCount;
+
+    public StreamBatchMerger() {
+    }
 
     /**
      * Sets the number of records that should be merged into a batch.

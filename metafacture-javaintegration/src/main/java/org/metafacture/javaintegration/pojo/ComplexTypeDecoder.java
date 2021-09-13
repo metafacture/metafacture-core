@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration.pojo;
+
+import org.metafacture.framework.StreamReceiver;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.metafacture.framework.StreamReceiver;
 
 /**
  * Decodes a POJO to a Metafacture event stream.
@@ -32,15 +33,14 @@ class ComplexTypeDecoder implements TypeDecoder {
     private final TypeDecoderFactory typeDecoderFactory;
     private final List<ValueGetter> valueGetters;
 
-    ComplexTypeDecoder(final Class<?> clazz,
-            final TypeDecoderFactory typeDecoderFactory) {
+    ComplexTypeDecoder(final Class<?> clazz, final TypeDecoderFactory typeDecoderFactory) {
         this.typeDecoderFactory = typeDecoderFactory;
         valueGetters = new ArrayList<>();
         addFieldValueGettersFor(clazz);
         addMethodValueGettersFor(clazz);
     }
 
-    private void addFieldValueGettersFor(Class<?> clazz) {
+    private void addFieldValueGettersFor(final Class<?> clazz) {
         final Field[] fields = clazz.getDeclaredFields();
         for (final Field field : fields) {
             if (FieldValueGetter.supportsField(field)) {
@@ -49,7 +49,7 @@ class ComplexTypeDecoder implements TypeDecoder {
         }
     }
 
-    private void addMethodValueGettersFor(Class<?> clazz) {
+    private void addMethodValueGettersFor(final Class<?> clazz) {
         final Method[] methods = clazz.getDeclaredMethods();
         for (final Method method : methods) {
             if (MethodValueGetter.supportsMethod(method)) {
@@ -59,17 +59,15 @@ class ComplexTypeDecoder implements TypeDecoder {
     }
 
     static boolean supportsType(final Class<?> clazz) {
-        return !SimpleTypeDecoder.supportsType(clazz)
-                && !MetafactureSourceTypeDecoder.supportsType(clazz)
-                && !CollectionTypeDecoder.supportsType(clazz)
-                && !ArrayTypeDecoder.supportsType(clazz)
-                && !MapTypeDecoder.supportsType(clazz);
+        return !SimpleTypeDecoder.supportsType(clazz) && // checkstyle-disable-line BooleanExpressionComplexity
+            !MetafactureSourceTypeDecoder.supportsType(clazz) &&
+            !CollectionTypeDecoder.supportsType(clazz) &&
+            !ArrayTypeDecoder.supportsType(clazz) &&
+            !MapTypeDecoder.supportsType(clazz);
     }
 
     @Override
-    public void decodeToStream(final StreamReceiver streamReceiver,
-            final String name, final Object object) {
-
+    public void decodeToStream(final StreamReceiver streamReceiver, final String name, final Object object) {
         if (name != null) {
             streamReceiver.startEntity(name);
         }

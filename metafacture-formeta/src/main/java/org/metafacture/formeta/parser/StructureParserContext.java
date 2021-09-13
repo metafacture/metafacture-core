@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.formeta.parser;
 
+package org.metafacture.formeta.parser;
 
 /**
  * Context of the record parser. It manages the text parser and the generation of
@@ -30,6 +30,9 @@ class StructureParserContext {
 
     private String literalName;
     private int nestingLevel;
+
+    StructureParserContext() {
+    }
 
     public void setEmitter(final Emitter emitter) {
         this.emitter = emitter;

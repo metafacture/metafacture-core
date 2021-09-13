@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.monitoring;
 
 import org.junit.Before;
@@ -41,7 +42,8 @@ public final class ObjectTimerTest {
         public void process(final String obj) {
             try {
                 Thread.sleep(getDuration());
-            } catch (final InterruptedException e) {
+            }
+            catch (final InterruptedException e) {
                 return;
             }
         }

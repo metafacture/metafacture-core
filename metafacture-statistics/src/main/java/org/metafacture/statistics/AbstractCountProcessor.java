@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.statistics;
 
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.regex.Pattern;
+package org.metafacture.statistics;
 
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.metafacture.framework.objects.Triple;
+
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Base class for operating on count data. The expected inputs are triples
@@ -32,7 +33,6 @@ import org.metafacture.framework.objects.Triple;
  * @author Markus Michael Geipel
  */
 public abstract class AbstractCountProcessor extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
-
 
     private static final Pattern KEY_SPLIT_PATTERN = Pattern.compile("&", Pattern.LITERAL);
 
@@ -67,7 +67,8 @@ public abstract class AbstractCountProcessor extends DefaultObjectPipe<Triple, O
                 marginals.put(triple.getSubject().substring(2), Integer.valueOf(marginal));
             }
 
-        } else {
+        }
+        else {
             inHeader = false;
             if (!triple.getSubject().startsWith(JOINT_PREFIX)) {
                 throw new IllegalArgumentException("Joint counts must start with '2:'");
@@ -84,12 +85,11 @@ public abstract class AbstractCountProcessor extends DefaultObjectPipe<Triple, O
         }
     }
 
-    protected abstract void processCount(final String varA, final String varB, final int countA, final int countB,
-            final int countAandB);
+    protected abstract void processCount(String varA, String varB, int countA, int countB, int countAandB);
 
     private int getMarginal(final String string) {
         final Integer value = marginals.get(string);
-        if(null==value){
+        if (null == value) {
             return 0;
         }
         return value.intValue();
@@ -104,7 +104,6 @@ public abstract class AbstractCountProcessor extends DefaultObjectPipe<Triple, O
 
     protected void reset() {
         // nothing to do
-
     }
 
     @Override
@@ -115,7 +114,6 @@ public abstract class AbstractCountProcessor extends DefaultObjectPipe<Triple, O
 
     protected void close() {
         // nothing to do
-
     }
 
 }

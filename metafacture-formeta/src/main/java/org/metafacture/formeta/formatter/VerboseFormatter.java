@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta.formatter;
 
 import org.metafacture.formeta.Formeta;
@@ -31,6 +32,9 @@ public final class VerboseFormatter extends AbstractFormatter {
     private static final String NAME_VALUE_SEPARATOR = Formeta.NAME_VALUE_SEPARATOR + " ";
 
     private boolean appendItemSeparator;
+
+    public VerboseFormatter() {
+    }
 
     @Override
     public void startGroup(final String name) {

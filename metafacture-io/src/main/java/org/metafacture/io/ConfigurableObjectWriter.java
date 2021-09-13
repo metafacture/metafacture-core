@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.io;
 
 import org.metafacture.framework.ObjectReceiver;
@@ -58,14 +59,14 @@ public interface ConfigurableObjectWriter<T> extends ObjectReceiver<T> {
      *
      * @param compression type of compression
      */
-    void setCompression(final FileCompression compression);
+    void setCompression(FileCompression compression);
 
     /**
      * Sets the compression mode.
      *
      * @param compression type of compression
      */
-    void setCompression(final String compression);
+    void setCompression(String compression);
 
     /**
      * Returns the header which is output before the first object.
@@ -79,7 +80,7 @@ public interface ConfigurableObjectWriter<T> extends ObjectReceiver<T> {
      *
      * @param header new header string
      */
-    void setHeader(final String header);
+    void setHeader(String header);
 
     /**
      * Returns the footer which is output after the last object.
@@ -93,7 +94,7 @@ public interface ConfigurableObjectWriter<T> extends ObjectReceiver<T> {
      *
      * @param footer new footer string
      */
-    void setFooter(final String footer);
+    void setFooter(String footer);
 
     /**
      * Returns the separator which is output between objects.
@@ -107,6 +108,6 @@ public interface ConfigurableObjectWriter<T> extends ObjectReceiver<T> {
      *
      * @param separator new separator string
      */
-    void setSeparator(final String separator);
+    void setSeparator(String separator);
 
 }

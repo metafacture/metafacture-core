@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.mangling;
 
 import org.metafacture.framework.FluxCommand;
@@ -46,6 +47,9 @@ public class RecordToEntity extends ForwardingStreamPipe {
 
     private String entityName = DEFAULT_ENTITY_NAME;
     private String idLiteralName;
+
+    public RecordToEntity() {
+    }
 
     public String getEntityName() {
         return entityName;

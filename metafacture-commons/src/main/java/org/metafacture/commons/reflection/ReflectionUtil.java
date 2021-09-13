@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.reflection;
 
 /**
@@ -35,22 +36,20 @@ public final class ReflectionUtil {
         return loader;
     }
 
-    public static <T> ConfigurableClass<? extends T> loadClass(String className,
-            Class<T> baseType) {
+    public static <T> ConfigurableClass<? extends T> loadClass(final String className, final Class<T> baseType) {
         return loadClass(getContextClassLoader(), className, baseType);
     }
 
-    public static <T> ConfigurableClass<? extends T> loadClass(ClassLoader loader,
-            String className, Class<T> baseType) {
+    public static <T> ConfigurableClass<? extends T> loadClass(final ClassLoader loader, final String className, final Class<T> baseType) {
         final Class<?> clazz;
         try {
             clazz = loader.loadClass(className);
-        } catch (ClassNotFoundException e) {
+        }
+        catch (final ClassNotFoundException e) {
             throw new ReflectionException("Class not found: " + className, e);
         }
         if (!baseType.isAssignableFrom(clazz)) {
-            throw new ReflectionException(className + " must extend or implement " +
-                    baseType.getName());
+            throw new ReflectionException(className + " must extend or implement " + baseType.getName());
         }
         @SuppressWarnings("unchecked")  // protected by isAssignableFrom check
         final Class<? extends T> castedClass = (Class<? extends T>) clazz;

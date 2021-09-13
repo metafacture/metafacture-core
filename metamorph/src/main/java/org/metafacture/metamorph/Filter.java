@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph;
 
+package org.metafacture.metamorph;
 
 import org.metafacture.flowcontrol.StreamBuffer;
 import org.metafacture.framework.FluxCommand;
@@ -45,29 +45,22 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
     private final SingleValue singleValue = new SingleValue();
     private final Metamorph metamorph;
 
-
     public Filter(final String morphDef) {
-        super();
         metamorph = new Metamorph(morphDef);
         metamorph.setReceiver(singleValue);
     }
 
     public Filter(final Metamorph metamorph) {
-        super();
         this.metamorph = metamorph;
         metamorph.setReceiver(singleValue);
     }
 
     public Filter(final String morphDef, final Map<String, String> vars) {
-
-        super();
         metamorph = new Metamorph(morphDef, vars);
         metamorph.setReceiver(singleValue);
     }
 
     public Filter(final String morphDef, final InterceptorFactory interceptorFactory) {
-
-        super();
         metamorph = new Metamorph(morphDef, interceptorFactory);
         metamorph.setReceiver(singleValue);
     }
@@ -77,10 +70,9 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
         buffer.setReceiver(getReceiver());
     }
 
-
-    private void dispatch(){
+    private void dispatch() {
         final String key = singleValue.getValue();
-        if(!key.isEmpty()){
+        if (!key.isEmpty()) {
             buffer.replay();
         }
         buffer.clear();

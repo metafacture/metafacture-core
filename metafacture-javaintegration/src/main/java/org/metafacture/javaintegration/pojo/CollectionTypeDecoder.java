@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration.pojo;
 
-import java.util.Collection;
-
 import org.metafacture.framework.StreamReceiver;
+
+import java.util.Collection;
 
 /**
  * Decodes a {@link Collection} to a Metafacture event stream.
@@ -37,12 +38,10 @@ class CollectionTypeDecoder implements TypeDecoder {
     }
 
     @Override
-    public void decodeToStream(final StreamReceiver streamReceiver,
-            final String name, final Object object) {
+    public void decodeToStream(final StreamReceiver streamReceiver, final String name, final Object object) {
         final Collection<?> collection = (Collection<?>) object;
         for (final Object element : collection) {
-            final TypeDecoder typeDecoder = typeDecoderFactury
-                    .create(element.getClass());
+            final TypeDecoder typeDecoder = typeDecoderFactury.create(element.getClass());
             typeDecoder.decodeToStream(streamReceiver, name, element);
         }
     }

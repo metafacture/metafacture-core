@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.strings;
 
 import org.metafacture.framework.ObjectReceiver;
@@ -28,10 +29,12 @@ public final class StringConcatenator implements ObjectReceiver<String> {
     private StringBuilder builder = new StringBuilder();
     private String separator = "";
 
+    public StringConcatenator() {
+    }
+
     @Override
     public void resetStream() {
         reset();
-
     }
 
     public void setSeparator(final String separator) {
@@ -41,21 +44,19 @@ public final class StringConcatenator implements ObjectReceiver<String> {
     @Override
     public void closeStream() {
         // nothing to do
-
     }
 
     @Override
     public void process(final String obj) {
         builder.append(separator);
         builder.append(obj);
-
     }
 
-    public void reset(){
+    public void reset() {
         builder = new StringBuilder();
     }
 
-    public String getString(){
+    public String getString() {
         return builder.toString();
     }
 

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.mangling;
 
 import org.metafacture.framework.FluxCommand;
@@ -49,7 +50,6 @@ public final class RecordPathFilter extends DefaultStreamPipe<StreamReceiver> {
     }
 
     public RecordPathFilter(final String path) {
-        super();
         resetRecord();
         setPath(path);
         setRecordIdFormat(DEFAULT_RECORD_ID_FORMAT);

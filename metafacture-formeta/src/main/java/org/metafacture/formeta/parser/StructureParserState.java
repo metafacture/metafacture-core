@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta.parser;
 
 import org.metafacture.formeta.Formeta;
@@ -30,29 +31,29 @@ enum StructureParserState {
         protected StructureParserState delimiterReached(final char ch, final StructureParserContext ctx) {
             final StructureParserState newState;
             switch (ch) {
-            case Formeta.GROUP_START:
-                ctx.startGroup();
-                newState = ITEM_NAME;
-                break;
-            case Formeta.NAME_VALUE_SEPARATOR:
-                ctx.startLiteral();
-                newState =  LITERAL_VALUE;
-                break;
-            case Formeta.ITEM_SEPARATOR:
-                if (!ctx.isTextEmpty()) {
+                case Formeta.GROUP_START:
+                    ctx.startGroup();
+                    newState = ITEM_NAME;
+                    break;
+                case Formeta.NAME_VALUE_SEPARATOR:
+                    ctx.startLiteral();
+                    newState =  LITERAL_VALUE;
+                    break;
+                case Formeta.ITEM_SEPARATOR:
+                    if (!ctx.isTextEmpty()) {
+                        throw new FormatException(getUnexpectedCharMsg(NAME_DELIMITER_EXPECTED, ch));
+                    }
+                    newState = ITEM_NAME;
+                    break;
+                case Formeta.GROUP_END:
+                    if (!ctx.isTextEmpty() || !ctx.isNested()) {
+                        throw new FormatException(getUnexpectedCharMsg(NAME_DELIMITER_EXPECTED, ch));
+                    }
+                    ctx.endGroup();
+                    newState = ITEM_NAME;
+                    break;
+                default:
                     throw new FormatException(getUnexpectedCharMsg(NAME_DELIMITER_EXPECTED, ch));
-                }
-                newState = ITEM_NAME;
-                break;
-            case Formeta.GROUP_END:
-                if (!ctx.isTextEmpty() || !ctx.isNested()) {
-                    throw new FormatException(getUnexpectedCharMsg(NAME_DELIMITER_EXPECTED, ch));
-                }
-                ctx.endGroup();
-                newState = ITEM_NAME;
-                break;
-            default:
-                throw new FormatException(getUnexpectedCharMsg(NAME_DELIMITER_EXPECTED, ch));
             }
             return newState;
         }
@@ -68,20 +69,20 @@ enum StructureParserState {
         protected StructureParserState delimiterReached(final char ch, final StructureParserContext ctx) {
             final StructureParserState newState;
             switch (ch) {
-            case Formeta.ITEM_SEPARATOR:
-                ctx.endLiteral();
-                newState = ITEM_NAME;
-                break;
-            case Formeta.GROUP_END:
-                if (!ctx.isNested()) {
-                    throw new FormatException(getUnexpectedCharMsg(ITEM_SEPARATOR_EXPECTED, ch));
-                }
-                ctx.endLiteral();
-                ctx.endGroup();
-                newState = ITEM_NAME;
-                break;
-            default:
-                throw new FormatException(getUnexpectedCharMsg(VALUE_DELIMITER_EXPECTED, ch));
+                case Formeta.ITEM_SEPARATOR:
+                    ctx.endLiteral();
+                    newState = ITEM_NAME;
+                    break;
+                case Formeta.GROUP_END:
+                    if (!ctx.isNested()) {
+                        throw new FormatException(getUnexpectedCharMsg(ITEM_SEPARATOR_EXPECTED, ch));
+                    }
+                    ctx.endLiteral();
+                    ctx.endGroup();
+                    newState = ITEM_NAME;
+                    break;
+                default:
+                    throw new FormatException(getUnexpectedCharMsg(VALUE_DELIMITER_EXPECTED, ch));
             }
             return newState;
         }
@@ -107,9 +108,9 @@ enum StructureParserState {
         return this;
     }
 
-    public abstract void endOfInput(final StructureParserContext ctx);
+    public abstract void endOfInput(StructureParserContext ctx);
 
-    protected abstract StructureParserState delimiterReached(final char ch, final StructureParserContext ctx);
+    protected abstract StructureParserState delimiterReached(char ch, StructureParserContext ctx);
 
     private static String getUnexpectedCharMsg(final String expected, final char actual) {
         return expected + " expected but got '" + actual + "'";

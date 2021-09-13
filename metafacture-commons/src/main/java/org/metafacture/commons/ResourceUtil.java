@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons;
 
 import java.io.BufferedReader;
@@ -30,7 +31,6 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Properties;
 
-
 /**
  * Various utility methods for working with files, resources and streams.
  *
@@ -38,7 +38,7 @@ import java.util.Properties;
  * @author Markus Michael Geipel
  *
  */
-public final class ResourceUtil {
+public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractionCoupling
 
     static final int BUFFER_SIZE = 4096;
 
@@ -67,21 +67,25 @@ public final class ResourceUtil {
 
         InputStream stream = Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream(name);
-        if (stream != null) {
-            return stream;
-        }
-
-        try {
-            stream = new URL(name).openStream();
-        } catch (final IOException e) {
-            throwFileNotFoundException(name, e);
-        }
         if (stream == null) {
-            throwFileNotFoundException(name, null);
+            try {
+                stream = new URL(name).openStream();
+            }
+            catch (final IOException e) {
+                throwFileNotFoundException(name, e);
+            }
+            if (stream == null) {
+                throwFileNotFoundException(name, null);
+            }
         }
 
         return stream;
 
+    }
+
+    public static InputStream getStream(final File file)
+            throws FileNotFoundException {
+        return new FileInputStream(file);
     }
 
     private static void throwFileNotFoundException(final String name,
@@ -92,11 +96,6 @@ public final class ResourceUtil {
             e.initCause(t);
         }
         throw e;
-    }
-
-    public static InputStream getStream(final File file)
-            throws FileNotFoundException {
-        return new FileInputStream(file);
     }
 
     public static Reader getReader(final String name)
@@ -137,11 +136,7 @@ public final class ResourceUtil {
 
         final URL resourceUrl =
                 Thread.currentThread().getContextClassLoader().getResource(name);
-        if (resourceUrl != null) {
-            return resourceUrl;
-        }
-
-        return new URL(name);
+        return resourceUrl != null ? resourceUrl : new URL(name);
     }
 
     public static URL getUrl(final File file) throws MalformedURLException {
@@ -191,14 +186,14 @@ public final class ResourceUtil {
         return list;
     }
 
-    public static String readAll(InputStream inputStream, Charset encoding)
+    public static String readAll(final InputStream inputStream, final Charset encoding)
             throws IOException {
         try (Reader reader = new InputStreamReader(inputStream, encoding)) {
             return readAll(reader);
         }
     }
 
-    public static String readAll(Reader reader) throws IOException {
+    public static String readAll(final Reader reader) throws IOException {
         final StringBuilder loadedText = new StringBuilder();
         try (Reader bufferedReader = new BufferedReader(reader)) {
             final CharBuffer buffer = CharBuffer.allocate(BUFFER_SIZE);

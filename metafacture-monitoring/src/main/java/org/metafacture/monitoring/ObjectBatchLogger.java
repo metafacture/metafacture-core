@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.monitoring;
 
-import java.util.HashMap;
-import java.util.Map;
+package org.metafacture.monitoring;
 
 import org.metafacture.commons.StringUtil;
 import org.metafacture.framework.FluxCommand;
@@ -25,8 +23,12 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Writes log info for every BATCHSIZE records.
@@ -60,18 +62,15 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
     private long batchCount;
 
     public ObjectBatchLogger() {
-        super();
         this.format = DEFAULT_FORMAT;
 
     }
 
     public ObjectBatchLogger(final String format) {
-        super();
         this.format = format;
     }
 
     public ObjectBatchLogger(final String format, final Map<String, String> vars) {
-        super();
         this.format = format;
         this.vars.putAll(vars);
     }

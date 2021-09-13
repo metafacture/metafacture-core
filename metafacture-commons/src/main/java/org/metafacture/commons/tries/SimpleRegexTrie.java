@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.tries;
 
 import java.util.List;
@@ -49,14 +50,16 @@ public class SimpleRegexTrie<P> {
         if (keys.matches(SIMPLE_CHARACTER_CLASS)) {
             int charClassStart = keys.indexOf('[', 0);
             final int charClassEnd = keys.indexOf(']', 1);
-            String begin = keys.substring(0, charClassStart);
-            for (; charClassStart < charClassEnd - 1; charClassStart++) {
-                char middle = keys.charAt(charClassStart + 1);
-                String end = keys.substring(charClassEnd + 1, keys.length());
+            final String begin = keys.substring(0, charClassStart);
+            for (; charClassStart < charClassEnd - 1; ++charClassStart) {
+                final char middle = keys.charAt(charClassStart + 1);
+                final String end = keys.substring(charClassEnd + 1, keys.length());
                 put(begin + middle + end, value);
             }
-        } else
+        }
+        else {
             trie.put(keys, value);
+        }
     }
 
     public List<P> get(final String key) {

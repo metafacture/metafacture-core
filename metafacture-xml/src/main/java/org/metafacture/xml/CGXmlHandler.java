@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.xml;
 
 import org.metafacture.framework.FluxCommand;
@@ -23,6 +24,7 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
+
 import org.xml.sax.Attributes;
 
 /**
@@ -60,8 +62,7 @@ import org.xml.sax.Attributes;
 @FluxCommand("handle-cg-xml")
 public final class CGXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
-    public static final String CGXML_NAMESPACE =
-            "http://www.culturegraph.org/cgxml";
+    public static final String CGXML_NAMESPACE = "http://www.culturegraph.org/cgxml";
 
     private static final String ROOT_TAG = "cgxml";
     private static final String RECORDS_TAG = "records";
@@ -75,6 +76,9 @@ public final class CGXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private static final String VALUE_ATTR = "value";
 
     private static final String VERSION = "1.0";
+
+    public CGXmlHandler() {
+    }
 
     @Override
     public void startElement(final String uri, final String localName,
@@ -114,7 +118,8 @@ public final class CGXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         final String recordId = attributes.getValue("", ID_ATTR);
         if (recordId == null) {
             getReceiver().startRecord("");
-        } else {
+        }
+        else {
             getReceiver().startRecord(recordId);
         }
     }
@@ -144,7 +149,8 @@ public final class CGXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         }
         if (RECORD_TAG.equals(localName)) {
             getReceiver().endRecord();
-        } else if (ENTITY_TAG.equals(localName)) {
+        }
+        else if (ENTITY_TAG.equals(localName)) {
             getReceiver().endEntity();
         }
     }

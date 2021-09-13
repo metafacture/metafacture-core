@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph;
 
 import java.util.ArrayList;
@@ -30,6 +31,9 @@ import java.util.Map;
 final class SimpleDataRegistry<T> implements Registry<T> {
 
     private final Map<String, List<T>> map = new HashMap<String, List<T>>();
+
+    SimpleDataRegistry() {
+    }
 
     @Override
     public void register(final String path, final T value) {

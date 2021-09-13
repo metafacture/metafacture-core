@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta.parser;
 
 import org.metafacture.framework.FormatException;
@@ -28,6 +29,9 @@ public final class FullRecordEmitter implements Emitter {
 
     private StreamReceiver receiver;
 
+    public FullRecordEmitter() {
+    }
+
     @Override
     public void setReceiver(final StreamReceiver receiver) {
         this.receiver = receiver;
@@ -37,7 +41,8 @@ public final class FullRecordEmitter implements Emitter {
     public void startGroup(final String name, final int nestingLevel) {
         if (nestingLevel == 0) {
             receiver.startRecord(name);
-        } else {
+        }
+        else {
             receiver.startEntity(name);
         }
     }
@@ -46,7 +51,8 @@ public final class FullRecordEmitter implements Emitter {
     public void endGroup(final int nestingLevel) {
         if (nestingLevel == 0) {
             receiver.endRecord();
-        } else {
+        }
+        else {
             receiver.endEntity();
         }
     }

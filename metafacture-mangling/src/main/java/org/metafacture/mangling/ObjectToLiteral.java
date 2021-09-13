@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.mangling;
 
 import org.metafacture.framework.FluxCommand;
@@ -41,10 +42,9 @@ public final class ObjectToLiteral<T> extends
     private int recordCount;
 
     public ObjectToLiteral() {
-        super();
         setLiteralName(DEFAULT_LITERAL_NAME);
         setRecordId(DEFAULT_RECORD_ID);
-        recordCount=0;
+        recordCount = 0;
     }
 
     public void setLiteralName(final String literalName) {
@@ -65,7 +65,7 @@ public final class ObjectToLiteral<T> extends
 
     @Override
     public void process(final T obj) {
-        assert obj!=null;
+        assert obj != null;
         assert !isClosed();
         getReceiver().startRecord(String.format(recordId, ++recordCount));
         getReceiver().literal(literalName, obj.toString());

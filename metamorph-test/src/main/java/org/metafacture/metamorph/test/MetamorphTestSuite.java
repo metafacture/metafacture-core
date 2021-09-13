@@ -13,7 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.test;
+
+import org.junit.runner.Description;
+import org.junit.runner.Runner;
+import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.ParentRunner;
+import org.junit.runners.model.InitializationError;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -21,12 +28,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.runner.Description;
-import org.junit.runner.Runner;
-import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.ParentRunner;
-import org.junit.runners.model.InitializationError;
 
 /**
  * Binds a list of Metamorph-Test resources to a class.
@@ -45,8 +46,7 @@ public final class MetamorphTestSuite extends ParentRunner<Runner> {
         runners = loadDefinitions(suiteRoot);
     }
 
-    private static List<Runner> loadDefinitions(final Class<?> suiteRoot)
-            throws InitializationError{
+    private static List<Runner> loadDefinitions(final Class<?> suiteRoot) throws InitializationError {
         final List<Runner> runners = new ArrayList<>();
         for (final String testDef : getTestDefinitionNames(suiteRoot)) {
             runners.add(new MetamorphTestRunner(suiteRoot, testDef));
@@ -54,9 +54,8 @@ public final class MetamorphTestSuite extends ParentRunner<Runner> {
         return runners;
     }
 
-    private static String[] getTestDefinitionNames(final Class<?> suiteRoot){
-        final TestDefinitions testDefs =
-                suiteRoot.getAnnotation(TestDefinitions.class);
+    private static String[] getTestDefinitionNames(final Class<?> suiteRoot) {
+        final TestDefinitions testDefs = suiteRoot.getAnnotation(TestDefinitions.class);
         if (testDefs == null) {
             // if no xmls are given assume an xml with the same name as the class:
             return new String[]{suiteRoot.getSimpleName() + ".xml"};

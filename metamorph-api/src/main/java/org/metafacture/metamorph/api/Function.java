@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph.api;
 
+package org.metafacture.metamorph.api;
 
 /**
  * Interface for functions used in Metamorph.
@@ -25,6 +25,7 @@ package org.metafacture.metamorph.api;
 public interface Function extends NamedValuePipe, FlushListener {
 
     void putValue(String key, String value);
+
     void setMaps(Maps maps);
 
 }

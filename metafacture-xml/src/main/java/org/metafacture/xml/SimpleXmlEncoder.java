@@ -13,17 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.xml;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
+package org.metafacture.xml;
 
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.commons.XmlUtil;
@@ -35,6 +26,16 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  *
@@ -84,6 +85,9 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     private Element element;
     private boolean atStreamStart = true;
 
+    public SimpleXmlEncoder() {
+    }
+
     public void setRootTag(final String rootTag) {
         this.rootTag = rootTag;
     }
@@ -96,7 +100,8 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
         final Properties properties;
         try {
             properties = ResourceUtil.loadProperties(file);
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException("Failed to load namespaces list", e);
         }
         for (final Entry<Object, Object> entry : properties.entrySet()) {
@@ -108,7 +113,8 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
         final Properties properties;
         try {
             properties = ResourceUtil.loadProperties(url);
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException("Failed to load namespaces list", e);
         }
         for (final Entry<Object, Object> entry : properties.entrySet()) {
@@ -120,9 +126,13 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
         this.writeXmlHeader = writeXmlHeader;
     }
 
-    public void setXmlHeaderEncoding(final String xmlHeaderEncoding) { this.xmlHeaderEncoding = xmlHeaderEncoding; }
+    public void setXmlHeaderEncoding(final String xmlHeaderEncoding) {
+        this.xmlHeaderEncoding = xmlHeaderEncoding;
+    }
 
-    public void setXmlHeaderVersion(final String xmlHeaderVersion) { this.xmlHeaderVersion = xmlHeaderVersion; }
+    public void setXmlHeaderVersion(final String xmlHeaderVersion) {
+        this.xmlHeaderVersion = xmlHeaderVersion;
+    }
 
     public void setWriteRootTag(final boolean writeRootTag) {
         this.writeRootTag  = writeRootTag;
@@ -140,7 +150,8 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     public void startRecord(final String identifier) {
         if (separateRoots) {
             writeHeader();
-        } else if (atStreamStart) {
+        }
+        else if (atStreamStart) {
             writeHeader();
             sendAndClearData();
         }
@@ -183,9 +194,11 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     public void literal(final String name, final String value) {
         if (name.isEmpty()) {
             element.setText(value);
-        } else if (name.startsWith(ATTRIBUTE_MARKER)) {
+        }
+        else if (name.startsWith(ATTRIBUTE_MARKER)) {
             element.addAttribute(name.substring(1), value);
-        } else {
+        }
+        else {
             element.createChild(name).setText(value);
         }
     }
@@ -263,7 +276,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
         private String text = "";
         private List<Element> children = NO_CHILDREN;
 
-        public Element(final String name) {
+        Element(final String name) {
             this.name = name;
             this.parent = null;
         }
@@ -273,9 +286,9 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
             this.parent = parent;
         }
 
-        public void addAttribute(final String name, final String value) {
+        public void addAttribute(final String attributeName, final String value) {
             attributes.append(" ");
-            attributes.append(name);
+            attributes.append(attributeName);
             attributes.append(BEGIN_ATTRIBUTE);
             writeEscaped(attributes, value);
             attributes.append(END_ATTRIBUTE);
@@ -285,8 +298,8 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
             this.text = text;
         }
 
-        public Element createChild(final String name) {
-            final Element child = new Element(name, this);
+        public Element createChild(final String attributeName) {
+            final Element child = new Element(attributeName, this);
             if (children == NO_CHILDREN) {
                 children = new ArrayList<SimpleXmlEncoder.Element>();
             }

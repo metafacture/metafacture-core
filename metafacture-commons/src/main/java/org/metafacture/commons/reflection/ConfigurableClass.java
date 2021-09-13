@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.commons.reflection;
 
-import static java.util.Arrays.asList;
+package org.metafacture.commons.reflection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,19 +33,20 @@ import java.util.Set;
  * Instances of this class wrap {@link Class}. The wrapped instance is available
  * via {@link #getPlainClass()}.
  *
+ * @param <T> object type
  * @author Christoph Böhme
  */
 public final class ConfigurableClass<T> {
 
     private static final String SETTER_PREFIX = "set";
     private static final Set<Class<?>> ELIGIBLE_TYPES = new HashSet<>(
-            asList(boolean.class, int.class, String.class));
+            Arrays.asList(boolean.class, int.class, String.class));
 
     private final Class<T> plainClass;
 
     private Map<String, Method> settersCache;
 
-    public ConfigurableClass(Class<T> plainClass) {
+    public ConfigurableClass(final Class<T> plainClass) {
         this.plainClass = plainClass;
     }
 
@@ -62,7 +63,7 @@ public final class ConfigurableClass<T> {
 
     private void initSettersCache() {
         settersCache = new HashMap<>();
-        for (Method method : plainClass.getMethods()) {
+        for (final Method method : plainClass.getMethods()) {
             if (isSetter(method)) {
                 final String setterName = method.getName().substring(
                         SETTER_PREFIX.length()).toLowerCase();
@@ -71,7 +72,7 @@ public final class ConfigurableClass<T> {
         }
     }
 
-    private boolean isSetter(Method method) {
+    private boolean isSetter(final Method method) {
         if (method.getParameterTypes().length == 1) {
             final Class<?> type = method.getParameterTypes()[0];
             if (ELIGIBLE_TYPES.contains(type) || type.isEnum()) {
@@ -81,9 +82,9 @@ public final class ConfigurableClass<T> {
         return false;
     }
 
-    public Map<String,Class<?>> getSetterTypes() {
+    public Map<String, Class<?>> getSetterTypes() {
         final Map<String, Class<?>> setterTypes = new HashMap<>();
-        for(Map.Entry<String, Method> method : getSetters().entrySet()) {
+        for (final Map.Entry<String, Method> method : getSetters().entrySet()) {
             final Class<?> setterType = method.getValue().getParameterTypes()[0];
             setterTypes.put(method.getKey(), setterType);
         }
@@ -94,25 +95,24 @@ public final class ConfigurableClass<T> {
         return newInstance(Collections.emptyMap());
     }
 
-    public T newInstance(Map<String, String> setterValues,
-            Object... constructorArgs) {
+    public T newInstance(final Map<String, String> setterValues, final Object... constructorArgs) {
         try {
             final Constructor<T> constructor = findConstructor(constructorArgs);
             final T instance = constructor.newInstance(constructorArgs);
             applySetters(instance, setterValues);
             return instance;
-        } catch (ReflectiveOperationException e) {
+        }
+        catch (final ReflectiveOperationException e) {
             throw new ReflectionException("class could not be instantiated: " +
                     plainClass, e);
         }
     }
 
-    private Constructor<T> findConstructor(Object... arguments)
-            throws NoSuchMethodException{
+    private Constructor<T> findConstructor(final Object... arguments) throws NoSuchMethodException {
         @SuppressWarnings("unchecked")  // getConstructors() returns correct types
         final Constructor<T>[] constructors =
                 (Constructor<T>[]) plainClass.getConstructors();
-        for (Constructor<T> constructor : constructors) {
+        for (final Constructor<T> constructor : constructors) {
             if (checkArgumentTypes(constructor, arguments)) {
                 return constructor;
             }
@@ -121,8 +121,7 @@ public final class ConfigurableClass<T> {
                 "no appropriate constructor found for class " + plainClass);
     }
 
-    private boolean checkArgumentTypes(Constructor<?> constructor,
-            Object[] constructorArgs) {
+    private boolean checkArgumentTypes(final Constructor<?> constructor, final Object[] constructorArgs) { // checkstyle-disable-line ReturnCount
         final Class<?>[] argTypes = constructor.getParameterTypes();
         if (argTypes.length != constructorArgs.length) {
             return false;
@@ -135,8 +134,8 @@ public final class ConfigurableClass<T> {
         return true;
     }
 
-    private void applySetters(T target, Map<String, String> setterValues) {
-        for (Map.Entry<String, String> setterValue : setterValues.entrySet()) {
+    private void applySetters(final T target, final Map<String, String> setterValues) {
+        for (final Map.Entry<String, String> setterValue : setterValues.entrySet()) {
             final String setterName = setterValue.getKey().toLowerCase();
             final Method setter = getSetters().get(setterName);
             if (setter == null) {
@@ -147,26 +146,33 @@ public final class ConfigurableClass<T> {
             final Object value = convertValue(setterValue.getValue(), valueType);
             try {
                 setter.invoke(target, value);
-            } catch (ReflectiveOperationException e) {
+            }
+            catch (final ReflectiveOperationException e) {
                 throw new ReflectionException("Cannot set " + setterName +
                         " on class " + target.getClass().getSimpleName(), e);
             }
         }
     }
 
-    private Object convertValue(String value, Class<?> type) {
+    private Object convertValue(final String value, final Class<?> type) {
+        final Object result;
+
         if (type == boolean.class) {
-            return Boolean.valueOf(value);
+            result = Boolean.valueOf(value);
         }
-        if (type == int.class) {
-            return Integer.valueOf(value);
+        else if (type == int.class) {
+            result = Integer.valueOf(value);
         }
-        if (type.isEnum()) {
+        else if (type.isEnum()) {
             @SuppressWarnings("unchecked")  // protected by type.isEnum() check
             final Class<Enum> enumType = (Class<Enum>) type;
-            return Enum.valueOf(enumType, value.toUpperCase());
+            result = Enum.valueOf(enumType, value.toUpperCase());
         }
-        return value;
+        else {
+            result = value;
+        }
+
+        return result;
     }
 
 }

@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration;
+
+import org.metafacture.framework.StreamReceiver;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.metafacture.framework.StreamReceiver;
 
 /**
  * Stores the received stream events in a list.
@@ -32,6 +33,9 @@ public final class EventList implements StreamReceiver {
     private final List<Event> events = new ArrayList<Event>();
 
     private boolean closed;
+
+    public EventList() {
+    }
 
     public List<Event> getEvents() {
         return Collections.unmodifiableList(events);
@@ -131,7 +135,7 @@ public final class EventList implements StreamReceiver {
             final StringBuilder builder = new StringBuilder();
             builder.append(type);
             if (name != null) {
-                builder.append("(" );
+                builder.append("(");
                 builder.append(name);
                 if (value != null) {
                     builder.append("=");

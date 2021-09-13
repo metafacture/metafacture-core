@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.html;
 
-import java.io.IOException;
-import java.io.Reader;
-
-import org.apache.commons.io.IOUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import org.apache.commons.io.IOUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  * Extracts the the specified element from an HTML document
@@ -51,10 +53,11 @@ public class ElementExtractor extends DefaultObjectPipe<Reader, ObjectReceiver<S
     @Override
     public void process(final Reader reader) {
         try {
-            Document document = Jsoup.parse(IOUtils.toString(reader));
-            Element firstElement = document.select(selector).first();
+            final Document document = Jsoup.parse(IOUtils.toString(reader));
+            final Element firstElement = document.select(selector).first();
             getReceiver().process(firstElement.data());
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             e.printStackTrace();
         }
     }

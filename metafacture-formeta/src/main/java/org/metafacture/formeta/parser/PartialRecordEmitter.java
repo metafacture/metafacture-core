@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta.parser;
 
 import org.metafacture.framework.StreamReceiver;
@@ -25,7 +26,8 @@ public final class PartialRecordEmitter implements Emitter {
     private StreamReceiver receiver;
     private String defaultName;
 
-
+    public PartialRecordEmitter() {
+    }
 
     public void setDefaultName(final String defaultName) {
         this.defaultName = defaultName;
@@ -44,7 +46,8 @@ public final class PartialRecordEmitter implements Emitter {
     public void startGroup(final String name, final int nestingLevel) {
         if (nestingLevel == 0 && defaultName != null && name.isEmpty()) {
             receiver.startEntity(defaultName);
-        } else {
+        }
+        else {
             receiver.startEntity(name);
         }
     }
@@ -58,7 +61,8 @@ public final class PartialRecordEmitter implements Emitter {
     public void literal(final String name, final String value, final int nestingLevel) {
         if (nestingLevel == 0 && defaultName != null && name.isEmpty()) {
             receiver.literal(defaultName, value);
-        } else {
+        }
+        else {
             receiver.literal(name, value);
         }
     }

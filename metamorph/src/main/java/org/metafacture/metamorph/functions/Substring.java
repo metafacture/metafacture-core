@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
@@ -27,6 +28,9 @@ public final class Substring extends AbstractSimpleStatelessFunction {
     private int start;
     private int end;
 
+    public Substring() {
+    }
+
     @Override
     public String process(final String value) {
         final int length = value.length();
@@ -37,7 +41,8 @@ public final class Substring extends AbstractSimpleStatelessFunction {
         final int adjEnd;
         if (end == 0  || end > length) {
             adjEnd = length;
-        } else {
+        }
+        else {
             adjEnd = end;
         }
 

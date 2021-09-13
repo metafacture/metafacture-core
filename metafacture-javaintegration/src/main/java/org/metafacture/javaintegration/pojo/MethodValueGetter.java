@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration.pojo;
+
+import org.metafacture.framework.MetafactureException;
 
 import java.beans.Introspector;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
-import org.metafacture.framework.MetafactureException;
 
 /**
  * Retrieves a property of an object by calling a getter method.
@@ -38,30 +39,28 @@ class MethodValueGetter implements ValueGetter {
         assert supportsMethod(method);
         this.method = method;
         // remove prefix then lower case first character
-        name = Introspector.decapitalize(method.getName().substring(
-                METHOD_PREFIX.length()));
+        name = Introspector.decapitalize(method.getName().substring(METHOD_PREFIX.length()));
     }
 
     static boolean supportsMethod(final Method m) {
-        return Modifier.isPublic(m.getModifiers())
-                && m.getName().length() > METHOD_PREFIX.length()
-                && m.getName().startsWith(METHOD_PREFIX);
+        return Modifier.isPublic(m.getModifiers()) &&
+            m.getName().length() > METHOD_PREFIX.length() &&
+            m.getName().startsWith(METHOD_PREFIX);
     }
 
     @Override
     public Object getValue(final Object object) {
         try {
             return method.invoke(object);
-        } catch (final IllegalArgumentException e) {
-            throw new MetafactureException(
-                    "The given object don't have a method named "
-                            + method.getName(), e);
-        } catch (final IllegalAccessException e) {
-            throw new MetafactureException("Can't access the method named "
-                    + method.getName(), e);
-        } catch (final InvocationTargetException e) {
-            throw new MetafactureException("Invoking the method named "
-                    + method.getName() + " throws an excpetion", e);
+        }
+        catch (final IllegalArgumentException e) {
+            throw new MetafactureException("The given object don't have a method named " + method.getName(), e);
+        }
+        catch (final IllegalAccessException e) {
+            throw new MetafactureException("Can't access the method named " + method.getName(), e);
+        }
+        catch (final InvocationTargetException e) {
+            throw new MetafactureException("Invoking the method named " + method.getName() + " throws an excpetion", e);
         }
     }
 

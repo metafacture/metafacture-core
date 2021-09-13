@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.triples;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+package org.metafacture.triples;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
@@ -25,6 +23,9 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.metafacture.framework.objects.Triple;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Filters triples. The patterns for subject, predicate and object are disjunctive.
@@ -36,8 +37,7 @@ import org.metafacture.framework.objects.Triple;
 @In(Triple.class)
 @Out(Triple.class)
 @FluxCommand("filter-triples")
-public final class TripleFilter extends
-        DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
+public final class TripleFilter extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
 
     // A regexp that is guaranteed to never match ( an `a` after the end
     // of the string, see http://stackoverflow.com/a/1723225 for details):
@@ -47,6 +47,9 @@ public final class TripleFilter extends
     private Matcher predicateMatcher = MATCH_NOTHING;
     private Matcher objectMatcher = MATCH_NOTHING;
     private boolean passMatches = true;
+
+    public TripleFilter() {
+    }
 
     public String getSubjectPattern() {
         return subjectMatcher.pattern().pattern();

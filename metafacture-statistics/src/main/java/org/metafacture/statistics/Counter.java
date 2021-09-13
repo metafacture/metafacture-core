@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.statistics;
 
 import org.metafacture.framework.FluxCommand;
@@ -42,6 +43,9 @@ public final class Counter extends DefaultStreamPipe<StreamReceiver> {
     private int numEntities;
     private int numLiterals;
 
+    public Counter() {
+    }
+
     /**
      * @return the numRecords
      */
@@ -67,7 +71,7 @@ public final class Counter extends DefaultStreamPipe<StreamReceiver> {
     public void startRecord(final String identifier) {
         assert !isClosed();
         ++numRecords;
-        if(getReceiver() != null) {
+        if (getReceiver() != null) {
             getReceiver().startRecord(identifier);
         }
     }
@@ -76,7 +80,7 @@ public final class Counter extends DefaultStreamPipe<StreamReceiver> {
     public void startEntity(final String name) {
         assert !isClosed();
         ++numEntities;
-        if(getReceiver() != null) {
+        if (getReceiver() != null) {
             getReceiver().startEntity(name);
         }
     }
@@ -85,21 +89,21 @@ public final class Counter extends DefaultStreamPipe<StreamReceiver> {
     public void literal(final String name, final String value) {
         assert !isClosed();
         ++numLiterals;
-        if(getReceiver() != null) {
+        if (getReceiver() != null) {
             getReceiver().literal(name, value);
         }
     }
 
     @Override
     public void endRecord() {
-        if(getReceiver() != null) {
+        if (getReceiver() != null) {
             getReceiver().endRecord();
         }
     }
 
     @Override
     public void endEntity() {
-        if(getReceiver() != null) {
+        if (getReceiver() != null) {
             getReceiver().endEntity();
         }
     }
@@ -113,11 +117,7 @@ public final class Counter extends DefaultStreamPipe<StreamReceiver> {
 
     @Override
     public String toString() {
-        String streamClosed = "";
-        if (isClosed()) {
-            streamClosed =" Stream has been closed.";
-        }
-
+        final String streamClosed = isClosed() ? " Stream has been closed." : "";
         return "counted " + numRecords + " records, " + numEntities + " entities, " + numLiterals + " literals." + streamClosed;
     }
 }

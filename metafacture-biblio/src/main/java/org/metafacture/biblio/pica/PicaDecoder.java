@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.biblio.pica;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+package org.metafacture.biblio.pica;
 
 import org.metafacture.commons.StringUtil;
 import org.metafacture.framework.FluxCommand;
@@ -26,6 +24,9 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Parses pica+ records. The parser only parses single records. A string
@@ -153,11 +154,8 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(String.class)
 @Out(StreamReceiver.class)
 @FluxCommand("decode-pica")
-public final class PicaDecoder
-        extends DefaultObjectPipe<String, StreamReceiver> {
+public final class PicaDecoder extends DefaultObjectPipe<String, StreamReceiver> {
 
-    private static String START_MARKERS;
-    private static Pattern ID_FIELDS_PATTERN;
     private static final int BUFFER_SIZE = 1024 * 1024;
 
     private Matcher idFieldMatcher;
@@ -174,7 +172,7 @@ public final class PicaDecoder
         this(true);
     }
 
-    public PicaDecoder(boolean normalized) {
+    public PicaDecoder(final boolean normalized) {
         setNormalizedSerialization(normalized);
     }
 
@@ -185,21 +183,19 @@ public final class PicaDecoder
      * @param normalized if true, the input is treated as normalized pica+ ;
      *                   if false, it's treated as non-normalized.
      */
-    public void setNormalizedSerialization(boolean normalized) {
+    public void setNormalizedSerialization(final boolean normalized) {
         this.isNormalized = normalized;
-        makeConstants();
+
+        final String startMarkers = "(?:^|" + PicaConstants.FIELD_MARKER.get(isNormalized) + "|" +
+                PicaConstants.FIELD_END_MARKER.get(isNormalized) + "|" +
+                PicaConstants.RECORD_MARKER.get(isNormalized) + "|.*\n" + ")";
+        final Pattern idFieldsPattern = Pattern
+                .compile(startMarkers + "(?:003@|203@(?:/..+)?|107F) " +
+                        " ?(\\" + PicaConstants.SUBFIELD_MARKER.get(isNormalized) + "|" +
+                        PicaConstants.SUBFIELD_MARKER.get(isNormalized) + ")0");
+        idFieldMatcher = idFieldsPattern.matcher("");
     }
 
-    private void makeConstants() {
-        START_MARKERS = "(?:^|" + PicaConstants.FIELD_MARKER.get(isNormalized) + "|"
-                + PicaConstants.FIELD_END_MARKER.get(isNormalized) + "|"
-                + PicaConstants.RECORD_MARKER.get(isNormalized) + "|.*\n" + ")";
-        ID_FIELDS_PATTERN = Pattern
-                .compile(START_MARKERS + "(?:003@|203@(?:/..+)?|107F) "
-                        + " ?(\\" + PicaConstants.SUBFIELD_MARKER.get(isNormalized) + "|"
-                        + PicaConstants.SUBFIELD_MARKER.get(isNormalized) + ")0");
-        idFieldMatcher = ID_FIELDS_PATTERN.matcher("");
-    }
     /**
      * Controls whether records having no record id are reported as faulty. By
      * default such records are reported by the {@code PicaDecoder} by throwing
@@ -281,6 +277,7 @@ public final class PicaDecoder
     public boolean getTrimFieldNames() {
         return parserContext.getTrimFieldNames();
     }
+
     @Override
     public void process(final String record) {
         assert !isClosed();

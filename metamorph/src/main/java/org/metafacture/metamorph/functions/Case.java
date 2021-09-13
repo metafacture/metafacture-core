@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
+
+import org.metafacture.metamorph.api.MorphBuildException;
+import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-
-import org.metafacture.metamorph.api.MorphBuildException;
-import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
  * Changes the the received value from upper to lower case
@@ -42,6 +43,9 @@ public final class Case extends AbstractSimpleStatelessFunction {
         LANGUAGES = Collections.unmodifiableSet(set);
     }
 
+    public Case() {
+    }
+
     @Override
     public String process(final String value) {
         if (toUpper) {
@@ -56,8 +60,7 @@ public final class Case extends AbstractSimpleStatelessFunction {
 
     public void setLanguage(final String language) {
         if (!LANGUAGES.contains(language)) {
-            throw new MorphBuildException("Language " + language
-                    + " not supported.");
+            throw new MorphBuildException("Language " + language + " not supported.");
         }
         this.locale = new Locale(language);
     }

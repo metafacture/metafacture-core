@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.framework.helpers;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+package org.metafacture.framework.helpers;
 
 import org.metafacture.framework.Receiver;
 import org.metafacture.framework.Tee;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Default implementation for tee modules.
@@ -33,6 +33,9 @@ import org.metafacture.framework.Tee;
 public class DefaultTee<T extends Receiver> implements Tee<T> {
 
     private final List<T> receivers = new ArrayList<T>();
+
+    public DefaultTee() {
+    }
 
     @Override
     public final <R extends T> R setReceiver(final R receiver) {

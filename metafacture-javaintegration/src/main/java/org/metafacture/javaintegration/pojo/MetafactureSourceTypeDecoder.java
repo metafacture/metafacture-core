@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration.pojo;
 
 import org.metafacture.framework.StreamReceiver;
@@ -24,13 +25,15 @@ import org.metafacture.framework.StreamReceiver;
  */
 class MetafactureSourceTypeDecoder implements TypeDecoder {
 
+    MetafactureSourceTypeDecoder() {
+    }
+
     public static boolean supportsType(final Class<?> clazz) {
         return MetafactureSource.class.isAssignableFrom(clazz);
     }
 
     @Override
-    public void decodeToStream(final StreamReceiver streamReceiver,
-            final String name, final Object object) {
+    public void decodeToStream(final StreamReceiver streamReceiver, final String name, final Object object) {
         final MetafactureSource metafactureSource = (MetafactureSource) object;
         streamReceiver.startEntity(name);
         metafactureSource.sendToStream(streamReceiver);

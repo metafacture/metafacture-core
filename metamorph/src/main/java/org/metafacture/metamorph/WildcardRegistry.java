@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph;
 
-import java.util.List;
+package org.metafacture.metamorph;
 
 import org.metafacture.commons.tries.SimpleRegexTrie;
 import org.metafacture.commons.tries.WildcardTrie;
+
+import java.util.List;
 
 /**
  * Implements {@link Registry} with a {@link WildcardTrie}.
@@ -29,6 +30,9 @@ import org.metafacture.commons.tries.WildcardTrie;
 final class WildcardRegistry<T> implements Registry<T> {
 
     private final SimpleRegexTrie<T> trie = new SimpleRegexTrie<T>();
+
+    WildcardRegistry() {
+    }
 
     @Override
     public void register(final String path, final T value) {

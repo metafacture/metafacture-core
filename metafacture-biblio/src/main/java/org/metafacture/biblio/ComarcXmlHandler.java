@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.biblio;
 
-import java.util.ArrayList;
-import java.util.List;
+package org.metafacture.biblio;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
@@ -25,8 +23,12 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A class handling ComarcXML. Comarc is the MARC version used by the National
@@ -61,14 +63,7 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private String currentTag = "";
     private StringBuilder builder = new StringBuilder();
 
-    private class Entry {
-        String key;
-        String value;
-
-        Entry(final String key, final String value) {
-            this.key = key;
-            this.value = value;
-        }
+    public ComarcXmlHandler() {
     }
 
     @Override
@@ -78,12 +73,14 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         if (SUBFIELD.equals(localName)) {
             this.builder = new StringBuilder();
             this.currentTag = attributes.getValue("code");
-        } else if (DATAFIELD.equals(localName)
-                && this.state == RECORD_INITIALISED) {
+        }
+        else if (DATAFIELD.equals(localName) && this.state == RECORD_INITIALISED) {
             getReceiver().startEntity(
-                    attributes.getValue("tag") + attributes.getValue("ind1")
-                            + attributes.getValue("ind2"));
-        } else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
+                    attributes.getValue("tag") +
+                    attributes.getValue("ind1") +
+                    attributes.getValue("ind2"));
+        }
+        else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
             this.state = RECORD_NOT_INITIALISED;
         }
     }
@@ -94,26 +91,27 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         if (SUBFIELD.equals(localName)) {
             this.subfieldValues.add(new Entry(this.currentTag, this.builder
                     .toString().trim()));
-        } else if (DATAFIELD.equals(localName)) {
+        }
+        else if (DATAFIELD.equals(localName)) {
             switch (this.state) {
-            case RECORD_NOT_INITIALISED:
-                super.getReceiver().startRecord(getFirstSubfield("x"));
-                super.getReceiver().startEntity("000  ");
-                this.state = RECORD_INITIALISED;
-                // this should fall through so that the entity 000 is properly
-                // ended
-            case RECORD_INITIALISED:
-                for (final Entry entry : this.subfieldValues) {
-                    super.getReceiver().literal(entry.key, entry.value);
-                }
-                super.getReceiver().endEntity();
-                this.subfieldValues.clear();
-                break;
-            default:
-                throw new SAXException(
-                        "State was not one of initialised or not initialised");
+                case RECORD_NOT_INITIALISED:
+                    super.getReceiver().startRecord(getFirstSubfield("x"));
+                    super.getReceiver().startEntity("000  ");
+                    this.state = RECORD_INITIALISED;
+                    // fall through so that the entity 000 is properly ended
+                case RECORD_INITIALISED:
+                    for (final Entry entry : this.subfieldValues) {
+                        super.getReceiver().literal(entry.getKey(), entry.getValue());
+                    }
+                    super.getReceiver().endEntity();
+                    this.subfieldValues.clear();
+                    break;
+                default:
+                    throw new SAXException(
+                            "State was not one of initialised or not initialised");
             }
-        } else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
+        }
+        else if (RECORD.equals(localName) && NAMESPACE.equals(uri)) {
             getReceiver().endRecord();
         }
     }
@@ -127,12 +125,30 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private String getFirstSubfield(final String subfieldCode) {
         String ret = null;
         for (final Entry entry : this.subfieldValues) {
-            if (subfieldCode.equals(entry.key)) {
-                ret = entry.value;
+            if (subfieldCode.equals(entry.getKey())) {
+                ret = entry.getValue();
                 break;
             }
         }
         return ret;
+    }
+
+    private class Entry {
+        private final String key;
+        private final String value;
+
+        Entry(final String key, final String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        private String getKey() {
+            return key;
+        }
+
+        private String getValue() {
+            return value;
+        }
     }
 
 }

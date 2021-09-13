@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
+
+import org.metafacture.metamorph.api.MorphBuildException;
+import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,9 +27,6 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
-
-import org.metafacture.metamorph.api.MorphBuildException;
-import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
  * This function creates a timestamp. By default it returns a unix
@@ -61,6 +62,9 @@ public final class Timestamp extends AbstractSimpleStatelessFunction {
         SUPPORTED_LANGUAGES = Collections.unmodifiableSet(set);
     }
 
+    public Timestamp() {
+    }
+
     @Override
     public String process(final String value) {
         if (FORMAT_TIMESTAMP.equals(format)) {
@@ -69,7 +73,8 @@ public final class Timestamp extends AbstractSimpleStatelessFunction {
         final DateFormat dateFormat;
         try {
             dateFormat = new SimpleDateFormat(format, locale);
-        } catch (final IllegalArgumentException e) {
+        }
+        catch (final IllegalArgumentException e) {
             throw new MorphBuildException("The date/time format '" + format + "' is not supported. ", e);
         }
         dateFormat.setTimeZone(TimeZone.getTimeZone(timezone));

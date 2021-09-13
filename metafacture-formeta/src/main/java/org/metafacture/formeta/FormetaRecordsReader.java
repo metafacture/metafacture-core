@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.formeta;
 
-import java.io.IOException;
-import java.io.Reader;
+package org.metafacture.formeta;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -25,6 +23,9 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  * Reads a stream of formeta data and splits between each top-level element.
@@ -36,15 +37,17 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(String.class)
 @Description("Reads a stream of formeta data and splits between each top-level element")
 @FluxCommand("as-formeta-records")
-public final class FormetaRecordsReader extends
-        DefaultObjectPipe<Reader, ObjectReceiver<String>> {
+public final class FormetaRecordsReader extends DefaultObjectPipe<Reader, ObjectReceiver<String>> {
 
     private static final int BUFFER_SIZE = 1024 * 1024 * 16;
 
     private final StringBuilder builder = new StringBuilder();
     private final char[] buffer = new char[BUFFER_SIZE];
 
-    @Override
+    public FormetaRecordsReader() {
+    }
+
+    @Override // checkstyle-disable-line CyclomaticComplexity
     public void process(final Reader reader) {
         assert !isClosed();
 
@@ -58,29 +61,32 @@ public final class FormetaRecordsReader extends
                 int offset = 0;
                 for (int i = 0; i < size; ++i) {
                     switch (buffer[i]) {
-                    case Formeta.ESCAPE_CHAR:
-                        i += 1; // Skip next character
-                        break;
-                    case Formeta.GROUP_START:
-                        if (!inQuotedText) {
-                            groupLevel += 1;
-                        }
-                        break;
-                    case Formeta.GROUP_END:
-                        if (!inQuotedText) {
-                            groupLevel -= 1;
-                        }
-                        // Fall through
-                    case Formeta.ITEM_SEPARATOR:
-                        if (!inQuotedText && groupLevel == 0) {
-                            builder.append(buffer, offset, i - offset + 1);
-                            offset = i + 1;
-                            emitRecord();
-                        }
-                        break;
-                    case Formeta.QUOT_CHAR:
-                        inQuotedText = !inQuotedText;
-                        break;
+                        case Formeta.ESCAPE_CHAR:
+                            // Skip next character
+                            i += 1; // checkstyle-disable-line ModifiedControlVariable
+                            break;
+                        case Formeta.GROUP_START:
+                            if (!inQuotedText) {
+                                groupLevel += 1;
+                            }
+                            break;
+                        case Formeta.GROUP_END:
+                            if (!inQuotedText) {
+                                groupLevel -= 1;
+                            }
+                            // fall through
+                        case Formeta.ITEM_SEPARATOR:
+                            if (!inQuotedText && groupLevel == 0) {
+                                builder.append(buffer, offset, i - offset + 1);
+                                offset = i + 1;
+                                emitRecord();
+                            }
+                            break;
+                        case Formeta.QUOT_CHAR:
+                            inQuotedText = !inQuotedText;
+                            break;
+                        default:
+                            // ignore
                     }
                 }
                 builder.append(buffer, offset, size - offset);
@@ -89,7 +95,8 @@ public final class FormetaRecordsReader extends
                 emitRecord();
             }
 
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }

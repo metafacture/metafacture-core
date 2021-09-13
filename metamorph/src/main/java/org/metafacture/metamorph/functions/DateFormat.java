@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
+
+import org.metafacture.metamorph.api.MorphBuildException;
+import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -22,9 +26,6 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-
-import org.metafacture.metamorph.api.MorphBuildException;
-import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
  * Format date/time strings in Metamorph. By default the input format is
@@ -121,6 +122,9 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
         SUPPORTED_LANGUAGES = Collections.unmodifiableSet(set);
     }
 
+    public DateFormat() {
+    }
+
     @Override
     public final String process(final String value) {
         String result;
@@ -130,7 +134,8 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
             c.setTime(sdf.parse(value));
             if (era == Era.BC) {
                 c.set(Calendar.ERA, GregorianCalendar.BC);
-            } else if (era == Era.AD) {
+            }
+            else if (era == Era.AD) {
                 c.set(Calendar.ERA, GregorianCalendar.AD);
             }
 
@@ -147,9 +152,11 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
                 result = result.replaceAll("([0]{1,})([0-9]{1,})", "$2");
             }
 
-        } catch (final IllegalArgumentException e) {
+        }
+        catch (final IllegalArgumentException e) {
             throw new MorphBuildException("The date/time format is not supported.", e);
-        } catch (final Exception e) {
+        }
+        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             result = value;
         }
         return result;

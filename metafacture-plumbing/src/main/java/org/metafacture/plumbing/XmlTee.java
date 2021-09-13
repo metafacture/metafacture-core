@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.plumbing;
 
-import java.io.IOException;
+package org.metafacture.plumbing;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.XmlPipe;
@@ -24,11 +23,14 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultTee;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import java.io.IOException;
 
 /**
  * Sends one {@link XmlReceiver} to two {@link XmlReceiver}s.
@@ -40,7 +42,10 @@ import org.xml.sax.SAXParseException;
 @In(XmlReceiver.class)
 @Out(XmlReceiver.class)
 @FluxCommand("xml-tee")
-public final class XmlTee extends DefaultTee<XmlReceiver>implements XmlPipe<XmlReceiver> {
+public final class XmlTee extends DefaultTee<XmlReceiver> implements XmlPipe<XmlReceiver> {
+
+    public XmlTee() {
+    }
 
     @Override
     public void characters(final char[] ch, final int start, final int length) throws SAXException {

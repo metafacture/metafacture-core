@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.triples;
+
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.objects.Triple;
 
 import java.io.BufferedInputStream;
 import java.io.EOFException;
@@ -21,10 +25,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.objects.Triple;
-
 
 /**
  * @author markus geipel
@@ -51,18 +51,18 @@ public final class SortedTripleFileFacade {
         try {
             triple = Triple.read(in);
             empty = false;
-
-        } catch (EOFException e) {
+        }
+        catch (final EOFException e) {
             empty = true;
             triple = null;
         }
     }
 
     public void close() {
-
         try {
             in.close();
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException("Error closing input stream", e);
         }
         if (file.exists()) {
@@ -78,10 +78,9 @@ public final class SortedTripleFileFacade {
     }
 
     public Triple pop() throws IOException {
-        final Triple triple = peek();
+        final Triple nextTriple = peek();
         next();
-        return triple;
+        return nextTriple;
     }
-
 
 }

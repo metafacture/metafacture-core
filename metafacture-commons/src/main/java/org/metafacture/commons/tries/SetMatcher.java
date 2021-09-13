@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.tries;
 
 import java.io.PrintStream;
@@ -32,6 +33,9 @@ public final class SetMatcher<T> {
     private final ACNode<T> root = new ACNode<>(null, 0);
     private boolean isPrepared;
 
+    public SetMatcher() {
+    }
+
     public void put(final String key, final T value) {
         if (isPrepared) {
             throw new IllegalStateException("keys cannot be added during matching.");
@@ -50,9 +54,11 @@ public final class SetMatcher<T> {
         next = node.getNext(key.charAt(length - 1));
         if (next == null) {
             next = node.addNext(key.charAt(length - 1), value);
-        } else if (next.getValue() == null) {
+        }
+        else if (next.getValue() == null) {
             next.setValue(value);
-        } else {
+        }
+        else {
             throw new IllegalStateException("Key '" + key + "' already in trie");
         }
     }
@@ -72,7 +78,8 @@ public final class SetMatcher<T> {
             final ACNode<T> next = node.getNext(text.charAt(index));
             if (next != null) {
                 node = next;
-            } else if (node != root) {
+            }
+            else if (node != root) {
                 node = node.getFailure();
                 continue;
             }
@@ -85,12 +92,12 @@ public final class SetMatcher<T> {
     private void collectMatches(final ACNode<T> node, final int index, final List<Match<T>> matches) {
         //direct hit or hit in chain of failure links?
         ACNode<T> tempNode = node;
-        do{
+        do {
             if (tempNode.getValue() != null) {
                 matches.add(new Match<T>(tempNode.getValue(), index - tempNode.getDepth(), tempNode.getDepth()));
             }
             tempNode = tempNode.getFailure();
-        }while (tempNode != root);
+        } while (tempNode != root);
     }
 
     private void prepare() {
@@ -98,7 +105,7 @@ public final class SetMatcher<T> {
 
         // prepare root
         root.setFailure(root);
-        for (ACNode<T> child : root.getNext()) {
+        for (final ACNode<T> child : root.getNext()) {
             child.setFailure(root);
             queue.add(child);
         }
@@ -107,7 +114,7 @@ public final class SetMatcher<T> {
             final ACNode<T> parent = queue.poll();
             final ACNode<T> parentFailure = parent.getFailure();
 
-            for (Entry<Character, ACNode<T>> link : parent.getLinks()) {
+            for (final Entry<Character, ACNode<T>> link : parent.getLinks()) {
                 final char key = link.getKey().charValue();
                 final ACNode<T> child = link.getValue();
                 ACNode<T> node = parentFailure;
@@ -118,7 +125,8 @@ public final class SetMatcher<T> {
 
                 if (node.getNext(key) == null) {
                     child.setFailure(root);
-                } else {
+                }
+                else {
                     child.setFailure(node.getNext(key));
                 }
                 queue.add(child);
@@ -141,14 +149,15 @@ public final class SetMatcher<T> {
     private void printDebug(final PrintStream out, final ACNode<T> node) {
         if (node.getValue() == null) {
             out.println(node.hashCode() + " [shape=point label=\"\"]");
-        } else {
+        }
+        else {
             out.println(node.hashCode() + " [shape=circle style=filled label=\"\"]");
         }
 
         if (node.getFailure() != root) {
             out.println(node.hashCode() + " -> " + node.getFailure().hashCode() + "[color=gray]");
         }
-        for (Entry<Character, ACNode<T>> link : node.getLinks()) {
+        for (final Entry<Character, ACNode<T>> link : node.getLinks()) {
             out.println(node.hashCode() + "  -> " + link.getValue().hashCode() + " [label=\"" + link.getKey() + "\"]");
             printDebug(out, link.getValue());
         }
@@ -165,7 +174,6 @@ public final class SetMatcher<T> {
         private final int length;
 
         public Match(final T value, final int start, final int length) {
-            super();
             this.value = value;
             this.start = start;
             this.length = length;

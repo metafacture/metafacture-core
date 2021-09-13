@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.triples;
 
 import org.metafacture.framework.FluxCommand;
@@ -32,18 +33,20 @@ import org.metafacture.framework.objects.Triple;
 @FluxCommand("sort-triples")
 public final class TripleSort extends AbstractTripleSort {
 
+    public TripleSort() {
+    }
+
     @Override
     protected void sortedTriple(final Triple triple) {
         getReceiver().process(triple);
     }
 
-    public void setBy(final Compare compare){
+    public void setBy(final Compare compare) {
         setCompare(compare);
     }
 
-    public void setOrder(final Order order){
+    public void setOrder(final Order order) {
         setSortOrder(order);
     }
-
 
 }

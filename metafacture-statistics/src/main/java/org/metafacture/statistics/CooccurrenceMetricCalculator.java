@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.statistics;
 
-import java.util.ArrayList;
-import java.util.List;
+package org.metafacture.statistics;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.objects.Triple;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Calculates values for various co-occurrence metrics. The expected inputs are
@@ -32,8 +33,8 @@ import org.metafacture.framework.objects.Triple;
  *
  * @author Markus Michael Geipel
  */
-@Description("Calculates values for various cooccurrence metrics. The expected inputs are triples containing as subject the var name and as object the count. "
-        + "Marginal counts must appear first, joint counts second. Marinal counts must be written as 1:A, Joint counts as 2:A&B")
+@Description("Calculates values for various cooccurrence metrics. The expected inputs are triples containing as subject the var name and as object the count. " +
+    "Marginal counts must appear first, joint counts second. Marinal counts must be written as 1:A, Joint counts as 2:A&B")
 @In(Triple.class)
 @Out(Triple.class)
 @FluxCommand("calculate-metrics")
@@ -51,8 +52,7 @@ public final class CooccurrenceMetricCalculator extends AbstractCountProcessor {
                 final double o22 = total - countAandB;
                 final double d = (countAandB * o22) - (o12 * o21);
 
-                final double x2 = total * Math.pow(d, 2)
-                        / ((countAandB + o12) * (countAandB + o21) * (o12 + o22) * (o21 + o22));
+                final double x2 = total * Math.pow(d, 2) / ((countAandB + o12) * (countAandB + o21) * (o12 + o22) * (o21 + o22));
                 return x2 * Math.signum(d);
             }
         },
@@ -87,11 +87,11 @@ public final class CooccurrenceMetricCalculator extends AbstractCountProcessor {
         JACCARD {
             @Override
             double calculate(final int countA, final int countB, final int countAandB, final int total) {
-                return countAandB / (double)(countA + countB - countAandB);
+                return countAandB / (double) (countA + countB - countAandB);
             }
         };
 
-        abstract double calculate(final int countA, final int countB, final int countAandB, final int total);
+        abstract double calculate(int countA, int countB, int countAandB, int total);
     }
 
     private static final int MIN_COUNT = 5;
@@ -99,24 +99,22 @@ public final class CooccurrenceMetricCalculator extends AbstractCountProcessor {
     private final List<Metric> metrics = new ArrayList<Metric>();
 
     public CooccurrenceMetricCalculator(final String allMetrics) {
-        final String[] metrics = allMetrics.split("\\s*,\\s*");
         setMinCount(MIN_COUNT);
-        for (String metric : metrics) {
-            this.metrics.add(Metric.valueOf(metric));
+        for (final String metric : allMetrics.split("\\s*,\\s*")) {
+            metrics.add(Metric.valueOf(metric));
         }
     }
 
     public CooccurrenceMetricCalculator(final Metric... metrics) {
         setMinCount(MIN_COUNT);
-        for (Metric metric : metrics) {
+        for (final Metric metric : metrics) {
             this.metrics.add(metric);
         }
     }
 
     @Override
-    protected void processCount(final String varA, final String varB, final int countA, final int countB,
-            final int countAandB) {
-        for (Metric metric : metrics) {
+    protected void processCount(final String varA, final String varB, final int countA, final int countB, final int countAandB) {
+        for (final Metric metric : metrics) {
             final double value = metric.calculate(countA, countB, countAandB, getTotal());
             getReceiver().process(new Triple(varA + "&" + varB, metric.toString(), String.valueOf(value)));
         }

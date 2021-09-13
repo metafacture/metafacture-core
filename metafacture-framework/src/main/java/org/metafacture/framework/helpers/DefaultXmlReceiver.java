@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.framework.helpers;
 
-import java.io.IOException;
+package org.metafacture.framework.helpers;
 
 import org.metafacture.framework.XmlPipe;
 import org.metafacture.framework.XmlReceiver;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import java.io.IOException;
 
 /**
  * Default implementation of {@link XmlReceiver} which
@@ -37,6 +39,9 @@ import org.xml.sax.SAXParseException;
  *
  */
 public class DefaultXmlReceiver extends DefaultLifeCycle implements XmlReceiver {
+
+    public DefaultXmlReceiver() {
+    }
 
     @Override
     public void setDocumentLocator(final Locator locator) {

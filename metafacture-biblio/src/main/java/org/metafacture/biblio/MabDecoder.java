@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.biblio;
 
-import java.util.regex.Pattern;
+package org.metafacture.biblio;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.FormatException;
@@ -26,6 +25,7 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
+import java.util.regex.Pattern;
 
 /**
  * Parses a raw Mab2 stream (utf-8 encoding assumed). Events are handled by a
@@ -40,8 +40,7 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(String.class)
 @Out(StreamReceiver.class)
 @FluxCommand("decode-mab")
-public final class MabDecoder
-        extends DefaultObjectPipe<String, StreamReceiver> {
+public final class MabDecoder extends DefaultObjectPipe<String, StreamReceiver> {
 
     private static final String FIELD_END = "\u001e";
     private static final Pattern FIELD_PATTERN =
@@ -58,6 +57,9 @@ public final class MabDecoder
     private static final String ID_TAG = "001 ";
     private static final int TAG_LENGTH = 4;
 
+    public MabDecoder() {
+    }
+
     @Override
     public void process(final String record) {
         assert !isClosed();
@@ -70,7 +72,7 @@ public final class MabDecoder
 
         try {
             getReceiver().literal(LEADER, record.substring(0, HEADER_SIZE));
-            getReceiver().literal(TYPE, String.valueOf(record.charAt(HEADER_SIZE-1)));
+            getReceiver().literal(TYPE, String.valueOf(record.charAt(HEADER_SIZE - 1)));
             final String content = record.substring(HEADER_SIZE);
             for (final String part : FIELD_PATTERN.split(content)) {
                 if (!part.startsWith(RECORD_END)) {
@@ -80,7 +82,8 @@ public final class MabDecoder
 
                     if (subFields.length == 1) {
                         getReceiver().literal(fieldName, subFields[0]);
-                    } else {
+                    }
+                    else {
                         getReceiver().startEntity(fieldName);
 
                         for (int i = 1; i < subFields.length; ++i) {
@@ -92,7 +95,8 @@ public final class MabDecoder
                     }
                 }
             }
-        } catch (final IndexOutOfBoundsException e) {
+        }
+        catch (final IndexOutOfBoundsException e) {
             throw new FormatException("[" + record + "]", e);
         }
 
@@ -100,13 +104,14 @@ public final class MabDecoder
     }
 
     private String extractIdFromRecord(final String record) {
-        try{
+        try {
             final int fieldEnd = record.indexOf(FIELD_END, HEADER_SIZE);
-            if(record.substring(HEADER_SIZE, HEADER_SIZE + TAG_LENGTH).equals(ID_TAG)){
+            if (record.substring(HEADER_SIZE, HEADER_SIZE + TAG_LENGTH).equals(ID_TAG)) {
                 return record.substring(HEADER_SIZE + TAG_LENGTH, fieldEnd);
             }
             throw new MissingIdException(record);
-        } catch (IndexOutOfBoundsException e) {
+        }
+        catch (final IndexOutOfBoundsException e) {
             throw new FormatException(INVALID_FORMAT + record, e);
         }
     }

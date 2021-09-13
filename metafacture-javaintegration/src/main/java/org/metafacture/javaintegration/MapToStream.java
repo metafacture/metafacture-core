@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.javaintegration;
 
-import java.util.Map;
+package org.metafacture.javaintegration;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StandardEventNames;
@@ -23,6 +22,8 @@ import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.util.Map;
 
 /**
  * Emits a {@link Map} as a record with a literal for each entry in the map.
@@ -59,10 +60,12 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(Map.class)
 @Out(StreamReceiver.class)
 @FluxCommand("map-to-stream")
-public final class MapToStream extends
-        DefaultObjectPipe<Map<?, ?>, StreamReceiver> {
+public final class MapToStream extends DefaultObjectPipe<Map<?, ?>, StreamReceiver> {
 
     private Object idKey = StandardEventNames.ID;
+
+    public MapToStream() {
+    }
 
     /**
      * Sets the key of the map entry that is used for the record id.
@@ -88,7 +91,8 @@ public final class MapToStream extends
         final Object id = map.get(idKey);
         if (id == null) {
             getReceiver().startRecord("");
-        } else {
+        }
+        else {
             getReceiver().startRecord(id.toString());
         }
         for (final Map.Entry<?, ?> entry: map.entrySet()) {

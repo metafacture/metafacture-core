@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.tries;
 
 import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Set;
-
 
 /**
  * Node representing a character in a trie.
@@ -38,12 +38,12 @@ final class ACNode<P> {
         this.depth = depth;
     }
 
-    ACNode<P> addNext(final char key){
+    ACNode<P> addNext(final char key) {
         return addNext(key, null);
     }
 
-    ACNode<P> addNext(final char key, final P value){
-        final ACNode<P> next = new ACNode<P>(value, depth+1);
+    ACNode<P> addNext(final char key, final P currentValue) {
+        final ACNode<P> next = new ACNode<P>(currentValue, depth + 1);
         links.put(key, next);
         return next;
     }
@@ -52,12 +52,16 @@ final class ACNode<P> {
         this.value = value;
     }
 
-    P getValue(){
+    P getValue() {
         return value;
     }
 
-    ACNode<P> getNext(final char key){
+    ACNode<P> getNext(final char key) {
         return links.get(key);
+    }
+
+    Collection<ACNode<P>> getNext() {
+        return links.values();
     }
 
     ACNode<P> getFailure() {
@@ -70,10 +74,6 @@ final class ACNode<P> {
 
     int getDepth() {
         return depth;
-    }
-
-    Collection<ACNode<P>> getNext(){
-        return links.values();
     }
 
     Set<Entry<Character, ACNode<P>>> getLinks() {

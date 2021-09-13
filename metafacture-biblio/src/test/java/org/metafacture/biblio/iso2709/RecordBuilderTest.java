@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.biblio.iso2709;
 
 import static org.junit.Assert.assertEquals;
@@ -544,7 +545,8 @@ public final class RecordBuilderTest {
         builder.appendSubfield(asChars("B"), "Value");
         try {
             builder.endDataField();
-        } catch (final FormatException e) {
+        }
+        catch (final FormatException e) {
             exceptionThrown = true;
         }
 

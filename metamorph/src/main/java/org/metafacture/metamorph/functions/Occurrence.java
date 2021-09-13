@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph.functions;
 
-import java.util.HashMap;
-import java.util.Map;
+package org.metafacture.metamorph.functions;
 
 import org.metafacture.commons.StringUtil;
 import org.metafacture.metamorph.api.MorphBuildException;
 import org.metafacture.metamorph.api.helpers.AbstractStatefulFunction;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Only outputs the received values in a certain range.
@@ -46,6 +47,9 @@ public final class Occurrence extends AbstractStatefulFunction {
 
     private final Map<String, String> variables = new HashMap<String, String>();
     private boolean sameEntity;
+
+    public Occurrence() {
+    }
 
     @Override
     public String process(final String value) {
@@ -92,9 +96,11 @@ public final class Occurrence extends AbstractStatefulFunction {
 
         if (only.startsWith(LESS_THAN)) {
             filter = createLessThanFilter(extractNumberFrom(only));
-        } else if (only.startsWith(MORE_THAN)) {
+        }
+        else if (only.startsWith(MORE_THAN)) {
             filter = createGreaterThanFilter(extractNumberFrom(only));
-        } else {
+        }
+        else {
             final int number = Integer.parseInt(only);
             filter = createEqualsFilter(number);
         }

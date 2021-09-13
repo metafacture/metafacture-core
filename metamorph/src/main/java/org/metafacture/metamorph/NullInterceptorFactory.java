@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph;
 
 import org.metafacture.metamorph.api.FlushListener;
@@ -28,6 +29,9 @@ import org.metafacture.metamorph.api.NamedValuePipe;
  *
  */
 final class NullInterceptorFactory implements InterceptorFactory {
+
+    NullInterceptorFactory() {
+    }
 
     @Override
     public NamedValuePipe createNamedValueInterceptor() {

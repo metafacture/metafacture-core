@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.triples;
 
 import org.metafacture.formeta.parser.FormetaParser;
@@ -57,7 +58,8 @@ public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceive
 
         if (currentSubject.equals(triple.getSubject())) {
             decodeTriple(triple);
-        } else {
+        }
+        else {
             getReceiver().endRecord();
             currentSubject = triple.getSubject();
             getReceiver().startRecord(currentSubject);
@@ -66,12 +68,14 @@ public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceive
     }
 
     public void decodeTriple(final Triple triple) {
-        if(triple.getObjectType() == ObjectType.STRING){
+        if (triple.getObjectType() == ObjectType.STRING) {
             getReceiver().literal(triple.getPredicate(), triple.getObject());
-        }else if (triple.getObjectType() == ObjectType.ENTITY){
+        }
+        else if (triple.getObjectType() == ObjectType.ENTITY) {
             emitter.setDefaultName(triple.getPredicate());
             parser.parse(triple.getObject());
-        }else{
+        }
+        else {
             throw new UnsupportedOperationException(triple.getObjectType() + " can not yet be decoded");
         }
     }

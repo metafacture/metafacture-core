@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph.test;
 
-import java.net.URL;
-import java.util.List;
+package org.metafacture.metamorph.test;
 
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
+
+import java.net.URL;
+import java.util.List;
 
 /**
  * Executes test cases defined in a metamorph-test file.
@@ -71,7 +72,8 @@ final class MetamorphTestRunner extends ParentRunner<MetamorphTestCase> {
         final Description description = describeChild(child);
         if (child.isIgnore()) {
             notifier.fireTestIgnored(description);
-        } else {
+        }
+        else {
             runLeaf(child, description, notifier);
         }
     }

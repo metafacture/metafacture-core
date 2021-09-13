@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.mangling;
 
 import org.metafacture.flowcontrol.StreamBuffer;
@@ -77,6 +78,9 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
     private String originalIdentifier;
     private boolean keepRecordsWithoutIdLiteral = true;
     private boolean keepIdLiteral;
+
+    public RecordIdChanger() {
+    }
 
     /**
      * Sets the name of the literal that contains the new record id. This must be
@@ -158,7 +162,8 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
         if (currentIdentifier != null || keepRecordsWithoutIdLiteral) {
             if (currentIdentifier == null) {
                 getReceiver().startRecord(originalIdentifier);
-            } else {
+            }
+            else {
                 getReceiver().startRecord(currentIdentifier);
             }
             streamBuffer.replay();

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta.parser;
 
 import org.metafacture.formeta.Formeta;
@@ -28,30 +29,31 @@ enum TextParserState {
     LEADING_WHITESPACE {
         public TextParserState processChar(final char ch, final TextParserContext ctx) {
             final TextParserState newState;
-            switch(ch) {
-            case Formeta.ESCAPE_CHAR:
-                ctx.setQuoted(false);
-                newState = ESCAPE_SEQ;
-                break;
-            case Formeta.QUOT_CHAR:
-                ctx.setQuoted(true);
-                newState = QUOTED_TEXT;
-                break;
-            case Formeta.GROUP_START:
-            case Formeta.GROUP_END:
-            case Formeta.ITEM_SEPARATOR:
-            case Formeta.NAME_VALUE_SEPARATOR:
-                ctx.setQuoted(false);
-                newState = DELIMITER_REACHED;
-                break;
-            default:
-                if (Formeta.isWhitespace(ch)) {
-                    newState = LEADING_WHITESPACE;
-                } else {
+            switch (ch) {
+                case Formeta.ESCAPE_CHAR:
                     ctx.setQuoted(false);
-                    ctx.appendChar(ch);
-                    newState = TEXT;
-                }
+                    newState = ESCAPE_SEQ;
+                    break;
+                case Formeta.QUOT_CHAR:
+                    ctx.setQuoted(true);
+                    newState = QUOTED_TEXT;
+                    break;
+                case Formeta.GROUP_START:
+                case Formeta.GROUP_END:
+                case Formeta.ITEM_SEPARATOR:
+                case Formeta.NAME_VALUE_SEPARATOR:
+                    ctx.setQuoted(false);
+                    newState = DELIMITER_REACHED;
+                    break;
+                default:
+                    if (Formeta.isWhitespace(ch)) {
+                        newState = LEADING_WHITESPACE;
+                    }
+                    else {
+                        ctx.setQuoted(false);
+                        ctx.appendChar(ch);
+                        newState = TEXT;
+                    }
             }
             return newState;
         }
@@ -59,19 +61,19 @@ enum TextParserState {
     TEXT {
         public TextParserState processChar(final char ch, final TextParserContext ctx) {
             final TextParserState newState;
-            switch(ch) {
-            case Formeta.ESCAPE_CHAR:
-                newState = ESCAPE_SEQ;
-                break;
-            case Formeta.GROUP_START:
-            case Formeta.GROUP_END:
-            case Formeta.ITEM_SEPARATOR:
-            case Formeta.NAME_VALUE_SEPARATOR:
-                newState = DELIMITER_REACHED;
-                break;
-            default:
-                ctx.appendChar(ch);
-                newState = TEXT;
+            switch (ch) {
+                case Formeta.ESCAPE_CHAR:
+                    newState = ESCAPE_SEQ;
+                    break;
+                case Formeta.GROUP_START:
+                case Formeta.GROUP_END:
+                case Formeta.ITEM_SEPARATOR:
+                case Formeta.NAME_VALUE_SEPARATOR:
+                    newState = DELIMITER_REACHED;
+                    break;
+                default:
+                    ctx.appendChar(ch);
+                    newState = TEXT;
             }
             return newState;
         }
@@ -89,16 +91,16 @@ enum TextParserState {
     QUOTED_TEXT {
         public TextParserState processChar(final char ch, final TextParserContext ctx) {
             final TextParserState newState;
-            switch(ch) {
-            case Formeta.ESCAPE_CHAR:
-                newState = QUOTED_ESCAPE_SEQ;
-                break;
-            case Formeta.QUOT_CHAR:
-                newState = TRAILING_WHITESPACE;
-                break;
-            default:
-                ctx.appendChar(ch);
-                newState = QUOTED_TEXT;
+            switch (ch) {
+                case Formeta.ESCAPE_CHAR:
+                    newState = QUOTED_ESCAPE_SEQ;
+                    break;
+                case Formeta.QUOT_CHAR:
+                    newState = TRAILING_WHITESPACE;
+                    break;
+                default:
+                    ctx.appendChar(ch);
+                    newState = QUOTED_TEXT;
             }
             return newState;
         }
@@ -120,25 +122,26 @@ enum TextParserState {
     TRAILING_WHITESPACE {
         public TextParserState processChar(final char ch, final TextParserContext ctx) {
             final TextParserState newState;
-            switch(ch) {
-            case Formeta.GROUP_START:
-            case Formeta.GROUP_END:
-            case Formeta.ITEM_SEPARATOR:
-            case Formeta.NAME_VALUE_SEPARATOR:
-                newState = DELIMITER_REACHED;
-                break;
-            default:
-                if (Formeta.isWhitespace(ch)) {
-                    newState = TRAILING_WHITESPACE;
-                } else {
-                    final String sep = "', '";
-                    final String expected = "whitespace or one of '"
-                            + Formeta.GROUP_START + sep
-                            + Formeta.GROUP_END + sep
-                            + Formeta.ITEM_SEPARATOR + sep
-                            + Formeta.NAME_VALUE_SEPARATOR + "'";
-                    throw new FormatException(getUnexpectedCharMsg(expected, ch));
-                }
+            switch (ch) {
+                case Formeta.GROUP_START:
+                case Formeta.GROUP_END:
+                case Formeta.ITEM_SEPARATOR:
+                case Formeta.NAME_VALUE_SEPARATOR:
+                    newState = DELIMITER_REACHED;
+                    break;
+                default:
+                    if (Formeta.isWhitespace(ch)) {
+                        newState = TRAILING_WHITESPACE;
+                    }
+                    else {
+                        final String sep = "', '";
+                        final String expected = "whitespace or one of '" +
+                            Formeta.GROUP_START + sep +
+                            Formeta.GROUP_END + sep +
+                            Formeta.ITEM_SEPARATOR + sep +
+                            Formeta.NAME_VALUE_SEPARATOR + "'";
+                        throw new FormatException(getUnexpectedCharMsg(expected, ch));
+                    }
             }
             return newState;
         }
@@ -149,7 +152,7 @@ enum TextParserState {
         }
     };
 
-    public abstract TextParserState processChar(final char ch, final TextParserContext ctx);
+    public abstract TextParserState processChar(char ch, TextParserContext ctx);
 
     public void endOfInput(final TextParserContext ctx) {
         // Default implementation does nothing

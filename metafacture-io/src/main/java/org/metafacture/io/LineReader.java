@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.io;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
+package org.metafacture.io;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -26,6 +23,10 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  * Processes input from a reader line by line.
@@ -37,14 +38,17 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(Reader.class)
 @Out(String.class)
 @FluxCommand("as-lines")
-public final class LineReader
-        extends DefaultObjectPipe<Reader, ObjectReceiver<String>> {
+public final class LineReader extends DefaultObjectPipe<Reader, ObjectReceiver<String>> {
+
     private static final int BUFFER_SIZE = 1024 * 1024 * 16;
+
+    public LineReader() {
+    }
 
     @Override
     public void process(final Reader reader) {
         assert !isClosed();
-        assert null!=reader;
+        assert null != reader;
         process(reader, getReceiver());
     }
 
@@ -56,7 +60,8 @@ public final class LineReader
                 receiver.process(line);
                 line = lineReader.readLine();
             }
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }

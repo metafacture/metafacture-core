@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.framework.helpers;
 
 import org.metafacture.framework.StreamPipe;
@@ -27,6 +28,9 @@ import org.metafacture.framework.StreamReceiver;
  * @see DefaultStreamPipe
  */
 public class ForwardingStreamPipe extends DefaultStreamPipe<StreamReceiver> {
+
+    public ForwardingStreamPipe() {
+    }
 
     @Override
     public void startRecord(final String identifier) {

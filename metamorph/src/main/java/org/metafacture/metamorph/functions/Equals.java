@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 import org.metafacture.metamorph.api.helpers.AbstractFilter;
@@ -23,6 +24,9 @@ import org.metafacture.metamorph.api.helpers.AbstractFilter;
  * @author Markus Michael Geipel
  */
 public final class Equals extends AbstractFilter {
+
+    public Equals() {
+    }
 
     @Override
     protected boolean accept(final String value) {

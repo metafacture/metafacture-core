@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.io;
 
-import java.nio.charset.Charset;
+package org.metafacture.io;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
+
+import java.nio.charset.Charset;
 
 /**
  * @param <T> object type
@@ -37,6 +38,9 @@ public final class ObjectStdoutWriter<T> extends AbstractObjectWriter<T>  {
 
     private boolean firstObject = true;
     private boolean closed;
+
+    public ObjectStdoutWriter() {
+    }
 
     @Override
     public String getEncoding() {
@@ -70,7 +74,8 @@ public final class ObjectStdoutWriter<T> extends AbstractObjectWriter<T>  {
         if (firstObject) {
             System.out.print(getHeader());
             firstObject = false;
-        } else {
+        }
+        else {
             System.out.print(getSeparator());
         }
         System.out.print(obj);

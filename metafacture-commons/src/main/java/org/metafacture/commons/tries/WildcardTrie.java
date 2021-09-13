@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.tries;
 
 import java.util.ArrayList;
@@ -41,6 +42,9 @@ public final class WildcardTrie<P> {
     private Set<Node<P>> nodes = new HashSet<Node<P>>();
     private Set<Node<P>> nextNodes = new HashSet<Node<P>>();
 
+    public WildcardTrie() {
+    }
+
     /**
      * Inserts keys into the try. Use '|' to concatenate. Use '*' (0,inf) and
      * '?' (1,1) to express wildcards.
@@ -51,10 +55,11 @@ public final class WildcardTrie<P> {
     public void put(final String keys, final P value) {
         if (keys.contains(OR_STRING)) {
             final String[] keysSplit = OR_PATTERN.split(keys);
-            for (String string : keysSplit) {
+            for (final String string : keysSplit) {
                 simplyPut(string, value);
             }
-        } else {
+        }
+        else {
             simplyPut(keys, value);
         }
     }
@@ -76,13 +81,11 @@ public final class WildcardTrie<P> {
     }
 
     public List<P> get(final String key) {
-
         nodes.add(root);
         final int length = key.length();
         for (int i = 0; i < length; ++i) {
-            for (Node<P> node : nodes) {
-                Node<P> temp;
-                temp = node.getNext(key.charAt(i));
+            for (final Node<P> node : nodes) {
+                Node<P> temp = node.getNext(key.charAt(i));
                 if (temp != null) {
                     nextNodes.add(temp);
                 }
@@ -108,8 +111,12 @@ public final class WildcardTrie<P> {
             nextNodes = temp;
         }
 
+        return matches();
+    }
+
+    private List<P> matches() {
         List<P> matches = Collections.emptyList();
-        for (Node<P> node : nodes) {
+        for (final Node<P> node : nodes) {
             final Set<P> values = node.getValues();
             if (!values.isEmpty()) {
                 if (matches == Collections.emptyList()) {

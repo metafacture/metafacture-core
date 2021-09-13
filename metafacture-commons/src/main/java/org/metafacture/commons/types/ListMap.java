@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.types;
 
 import java.util.ArrayList;
@@ -39,12 +40,10 @@ public class ListMap<K, V> implements Map<K, List<V>> {
     private final Map<K, List<V>> map;
 
     public ListMap() {
-        super();
         map = new HashMap<K, List<V>>();
     }
 
     public ListMap(final Map<K, List<V>> map) {
-        super();
         this.map = map;
     }
 
@@ -62,7 +61,6 @@ public class ListMap<K, V> implements Map<K, List<V>> {
         return map.remove(key);
     }
 
-
     public final void clearKey(final K key) {
         final List<V> values = map.get(key);
         if (values != null) {
@@ -71,7 +69,7 @@ public class ListMap<K, V> implements Map<K, List<V>> {
     }
 
     public final void clearAllKeys() {
-        for (Entry<K, List<V>> entry: map.entrySet()) {
+        for (final Entry<K, List<V>> entry: map.entrySet()) {
             entry.getValue().clear();
         }
     }
@@ -86,7 +84,6 @@ public class ListMap<K, V> implements Map<K, List<V>> {
         return map.keySet();
     }
 
-
     public final void add(final K name, final V value) {
 
         List<V> values = map.get(name);
@@ -96,18 +93,6 @@ public class ListMap<K, V> implements Map<K, List<V>> {
         }
 
         values.add(value);
-    }
-
-    //@Override
-    public final void putAll(final K name, final Collection<V> addValues) {
-
-        List<V> values = map.get(name);
-        if (values == null) {
-            values = new ArrayList<V>();
-            map.put(name, values);
-        }
-
-        values.addAll(addValues);
     }
 
     @Override
@@ -136,8 +121,8 @@ public class ListMap<K, V> implements Map<K, List<V>> {
         return map.toString();
     }
 
-    public final void setId(final String identifier) {
-        this.identifier = identifier;
+    public final void setId(final String newIdentifier) {
+        identifier = newIdentifier;
     }
 
     public final String getId() {
@@ -174,10 +159,20 @@ public class ListMap<K, V> implements Map<K, List<V>> {
         return map.remove(key);
     }
 
+    //@Override
+    public final void putAll(final K name, final Collection<V> addValues) {
+        List<V> values = map.get(name);
+        if (values == null) {
+            values = new ArrayList<V>();
+            map.put(name, values);
+        }
+
+        values.addAll(addValues);
+    }
+
     @Override
     public final void putAll(final Map<? extends K, ? extends List<V>> putMap) {
         map.putAll(putMap);
-
     }
 
     @Override

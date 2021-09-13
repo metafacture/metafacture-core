@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.collectors;
 
 import org.metafacture.commons.StringUtil;
@@ -31,6 +32,9 @@ public final class Any extends AbstractCollect {
 
     private boolean receivedInput;
     private boolean emittedResult;
+
+    public Any() {
+    }
 
     @Override
     protected void receive(final String name, final String value, final NamedValueSource source) {

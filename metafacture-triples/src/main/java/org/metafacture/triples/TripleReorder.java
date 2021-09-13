@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.triples;
 
 import org.metafacture.framework.FluxCommand;
@@ -33,19 +34,21 @@ import org.metafacture.framework.objects.Triple;
 @In(Triple.class)
 @Out(Triple.class)
 @FluxCommand("reorder-triple")
-public final class TripleReorder extends
-        DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
+public final class TripleReorder extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
 
     /**
      * Names of the elements in the triple
      */
-    public enum TripleElement { SUBJECT, PREDICATE, OBJECT };
+    public enum TripleElement { SUBJECT, PREDICATE, OBJECT }
     // Do not change the item order because the process method
     // uses ordinal().
 
     private TripleElement subjectFrom = TripleElement.SUBJECT;
     private TripleElement predicateFrom = TripleElement.PREDICATE;
     private TripleElement objectFrom =  TripleElement.OBJECT;
+
+    public TripleReorder() {
+    }
 
     public TripleElement getSubjectFrom() {
         return subjectFrom;
@@ -76,7 +79,7 @@ public final class TripleReorder extends
         final String[] elements = {
                 triple.getSubject(),
                 triple.getPredicate(),
-                triple.getObject(),
+                triple.getObject()
         };
 
         getReceiver().process(new Triple(

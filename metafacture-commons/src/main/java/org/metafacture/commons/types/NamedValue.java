@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.types;
 
 /**
@@ -61,9 +62,9 @@ public final class NamedValue  implements Comparable<NamedValue> {
     public boolean equals(final Object obj) {
         if (obj instanceof NamedValue) {
             final NamedValue namedValue = (NamedValue) obj;
-            return namedValue.preCompHashCode == preCompHashCode
-                    && namedValue.name.equals(name)
-                    && namedValue.value.equals(value);
+            return namedValue.preCompHashCode == preCompHashCode &&
+                    namedValue.name.equals(name) &&
+                    namedValue.value.equals(value);
         }
         return false;
     }

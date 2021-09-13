@@ -41,7 +41,10 @@ public final class LineRecorder implements ObjectPipe<String, ObjectReceiver<Str
     private String recordMarkerRegexp = "^\\s*$";
     private StringBuilder record = new StringBuilder(SB_CAPACITY);
     private ObjectReceiver<String> receiver;
-    private boolean isClosed = false;
+    private boolean isClosed;
+
+    public LineRecorder() {
+    }
 
     public void setRecordMarkerRegexp(final String regexp) {
         recordMarkerRegexp = regexp;
@@ -53,8 +56,10 @@ public final class LineRecorder implements ObjectPipe<String, ObjectReceiver<Str
         if (line.matches(recordMarkerRegexp)) {
             getReceiver().process(record.toString());
             record = new StringBuilder(SB_CAPACITY);
-        } else
+        }
+        else {
             record.append(line + "\n");
+        }
     }
 
     private boolean isClosed() {
@@ -73,9 +78,9 @@ public final class LineRecorder implements ObjectPipe<String, ObjectReceiver<Str
     }
 
     @Override
-    public <R extends ObjectReceiver<String>> R setReceiver(R receiver) {
-        this.receiver = receiver;
-        return receiver;
+    public <R extends ObjectReceiver<String>> R setReceiver(final R newReceiver) {
+        receiver = newReceiver;
+        return newReceiver;
     }
 
     /**
@@ -83,7 +88,7 @@ public final class LineRecorder implements ObjectPipe<String, ObjectReceiver<Str
      *
      * @return reference to the downstream module
      */
-    protected final ObjectReceiver<String> getReceiver() {
+    protected ObjectReceiver<String> getReceiver() {
         return receiver;
     }
 

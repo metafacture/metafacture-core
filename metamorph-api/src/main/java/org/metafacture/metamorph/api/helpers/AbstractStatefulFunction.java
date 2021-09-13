@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.api.helpers;
 
 import org.metafacture.metamorph.api.NamedValueSource;
@@ -46,36 +47,35 @@ public abstract class AbstractStatefulFunction extends AbstractFunction {
     }
 
     @Override
-    public final void receive(final String name, final String value,
-            final NamedValueSource source, final int recordCount,
-            final int entityCount) {
+    public final void receive(final String currentName, final String value,
+            final NamedValueSource currentSource, final int currentRecordCount,
+            final int currentEntityCount) {
 
-        if (!sameRecord(recordCount)) {
+        if (!sameRecord(currentRecordCount)) {
             reset();
-            this.recordCount = recordCount;
+            recordCount = currentRecordCount;
         }
-        if (entityClearNeeded(entityCount)) {
+        if (entityClearNeeded(currentEntityCount)) {
             reset();
         }
-        this.entityCount = entityCount;
-        this.source = source;
-        this.lastName = name;
+        entityCount = currentEntityCount;
+        source = currentSource;
+        lastName = currentName;
 
         final String processedValue = process(value);
         if (processedValue == null) {
             return;
         }
 
-        getNamedValueReceiver().receive(name, processedValue, this,
-                recordCount, entityCount);
+        getNamedValueReceiver().receive(currentName, processedValue, this, currentRecordCount, currentEntityCount);
     }
 
-    private boolean entityClearNeeded(final int entityCount) {
-        return doResetOnEntityChange() && this.entityCount != entityCount;
+    private boolean entityClearNeeded(final int currentEntityCount) {
+        return doResetOnEntityChange() && entityCount != currentEntityCount;
     }
 
-    private boolean sameRecord(final int recordCount) {
-        return this.recordCount == recordCount;
+    private boolean sameRecord(final int currentRecordCount) {
+        return recordCount == currentRecordCount;
     }
 
     protected abstract String process(String value);

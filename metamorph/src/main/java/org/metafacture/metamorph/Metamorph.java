@@ -13,22 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
+package org.metafacture.metamorph;
 
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.FluxCommand;
@@ -49,32 +35,48 @@ import org.metafacture.metamorph.api.NamedValuePipe;
 import org.metafacture.metamorph.api.NamedValueReceiver;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.SourceLocation;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 /**
- * Transforms a data stream send via the {@link StreamReceiver} interface. Use
- * {@link MorphBuilder} to create an instance based on an xml description
+ * Transforms a data stream sent via the {@link StreamReceiver} interface. Use
+ * {@link MorphBuilder} to create an instance based on an XML description.
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme
  */
-@Description("applies a metamorph transformation to the event stream. Metamorph "
-        + "definition is given in brackets.")
+@Description("Applies a metamorph transformation to the event stream. Metamorph definition is given in brackets.") // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("morph")
 public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps {
 
-    private static final String ELSE_NESTED_KEYWORD = "_elseNested";
     public static final String ELSE_KEYWORD = "_else";
+    public static final String ELSE_NESTED_KEYWORD = "_elseNested";
     public static final String ELSE_FLATTENED_KEYWORD = "_elseFlattened";
     public static final char FEEDBACK_CHAR = '@';
     public static final char ESCAPE_CHAR = '\\';
     public static final String METADATA = "__meta";
     public static final String VAR_START = "$[";
     public static final String VAR_END = "]";
+
+    private static final Logger LOG = LoggerFactory.getLogger(Metamorph.class);
 
     private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
     private static final String COULD_NOT_LOAD_MORPH_FILE = "Could not load morph file";
@@ -101,7 +103,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     private boolean elseNested;
     private boolean elseNestedEntityStarted;
     private String currentLiteralName;
-    private static final Logger LOG = LoggerFactory.getLogger(Metamorph.class);
 
     protected Metamorph() {
         // package private
@@ -177,23 +178,21 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         init();
     }
 
-    private void buildPipeline(InputSource inputSource, Map<String, String> vars,
-            InterceptorFactory interceptorFactory) {
+    private void buildPipeline(final InputSource inputSource, final Map<String, String> vars, final InterceptorFactory interceptorFactory) {
         try {
             final MorphBuilder builder = new MorphBuilder(this, interceptorFactory);
             builder.walk(inputSource, vars);
-        } catch (RuntimeException e) {
-            throw new MetamorphException(
-                    "Error while building the Metamorph transformation pipeline: " +
-                            e.getMessage(), e);
+        }
+        catch (final RuntimeException e) { // checkstyle-disable-line IllegalCatch
+            throw new MetamorphException("Error while building the Metamorph transformation pipeline: " + e.getMessage(), e);
         }
     }
 
     private static InputSource getInputSource(final String morphDef) {
         try {
-            return new InputSource(
-                    ResourceUtil.getUrl(morphDef).toExternalForm());
-        } catch (final MalformedURLException e) {
+            return new InputSource(ResourceUtil.getUrl(morphDef).toExternalForm());
+        }
+        catch (final MalformedURLException e) {
             throw new MorphBuildException(COULD_NOT_LOAD_MORPH_FILE, e);
         }
     }
@@ -231,7 +230,8 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
             else {
                 LOG.warn("Only one of '_else', '_elseFlattened' and '_elseNested' is allowed. Ignoring the superflous ones.");
             }
-        } else {
+        }
+        else {
             dataRegistry.register(source, data);
         }
     }
@@ -257,7 +257,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
     @Override
     public void endRecord() {
-        for(final FlushListener listener: recordEndListener){
+        for (final FlushListener listener : recordEndListener) {
             listener.flush(recordCount, currentEntityCount);
         }
 
@@ -290,7 +290,6 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         flattener.endEntity();
     }
 
-
     @Override
     public void literal(final String name, final String value) {
         currentLiteralName = name;
@@ -308,7 +307,8 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         for (final Closeable closeable : resources) {
             try {
                 closeable.close();
-            } catch (final IOException e) {
+            }
+            catch (final IOException e) {
                 errorHandler.error(e);
             }
         }
@@ -357,7 +357,8 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         for (final NamedValueReceiver data : dataList) {
             try {
                 data.receive(path, value, null, recordCount, currentEntityCount);
-            } catch (final RuntimeException e) {
+            }
+            catch (final RuntimeException e) { // checkstyle-disable-line IllegalCatch
                 errorHandler.error(e);
             }
         }
@@ -389,11 +390,9 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     }
 
     @Override
-    public void receive(final String name, final String value, final NamedValueSource source, final int recordCount,
-            final int entityCount) {
+    public void receive(final String name, final String value, final NamedValueSource source, final int unusedRecordCount, final int unusedEntityCount) {
         if (null == name) {
-            throw new IllegalArgumentException(
-                    "encountered literal with name='null'. This indicates a bug in a function or a collector.");
+            throw new IllegalArgumentException("encountered literal with name='null'. This indicates a bug in a function or a collector.");
         }
 
         if (startsWithFeedbackChar(name)) {
@@ -402,8 +401,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         }
 
         String unescapedName = name;
-        if(name.length() > 1 && name.charAt(0) == ESCAPE_CHAR
-                && (name.charAt(1) == FEEDBACK_CHAR || name.charAt(1) == ESCAPE_CHAR)) {
+        if (name.length() > 1 && name.charAt(0) == ESCAPE_CHAR && (name.charAt(1) == FEEDBACK_CHAR || name.charAt(1) == ESCAPE_CHAR)) {
             unescapedName = name.substring(1);
         }
         outputStreamReceiver.literal(unescapedName, value);
