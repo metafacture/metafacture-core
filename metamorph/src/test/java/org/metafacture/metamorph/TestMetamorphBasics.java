@@ -218,6 +218,174 @@ public final class TestMetamorphBasics {
     }
 
     @Test
+    public void issue378_shouldOutputMoreThanTwoLevelsInElseNestedSource() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='_elseNested' />" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("mods");
+                    i.literal("ID", "duepublico_mods_00074526");
+                    i.startEntity("name");
+                    i.literal("type", "personal");
+                    i.literal("type", "simple");
+                    i.startEntity("displayForm");
+                    i.literal("value", "Armbruster, André");
+                    i.endEntity();
+                    i.startEntity("role");
+                    i.startEntity("roleTerm");
+                    i.literal("authority", "marcrelator");
+                    i.literal("type", "code");
+                    i.literal("value", "aut");
+                    i.endEntity();
+                    i.startEntity("roleTerm");
+                    i.literal("authority", "marcrelator");
+                    i.literal("type", "text");
+                    i.literal("value", "Author");
+                    i.endEntity();
+                    i.endEntity();
+                    i.startEntity("nameIdentifier");
+                    i.literal("type", "gnd");
+                    i.literal("value", "1081830107");
+                    i.endEntity();
+                    i.startEntity("namePart");
+                    i.literal("type", "family");
+                    i.literal("value", "Armbruster");
+                    i.endEntity();
+                    i.startEntity("namePart");
+                    i.literal("type", "given");
+                    i.literal("value", "André");
+                    i.endEntity();
+                    i.endEntity();
+                    i.endEntity();
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    o.get().startRecord("1");
+                    o.get().startEntity("mods");
+                    o.get().literal("ID", "duepublico_mods_00074526");
+                    o.get().startEntity("name");
+                    o.get().literal("type", "personal");
+                    o.get().literal("type", "simple");
+                    o.get().startEntity("displayForm");
+                    o.get().literal("value", "Armbruster, André");
+                    o.get().endEntity();
+                    o.get().startEntity("role");
+                    o.get().startEntity("roleTerm");
+                    o.get().literal("authority", "marcrelator");
+                    o.get().literal("type", "code");
+                    o.get().literal("value", "aut");
+                    o.get().endEntity();
+                    o.get().startEntity("roleTerm");
+                    o.get().literal("authority", "marcrelator");
+                    o.get().literal("type", "text");
+                    o.get().literal("value", "Author");
+                    f.apply(2).endEntity();
+                    o.get().startEntity("nameIdentifier");
+                    o.get().literal("type", "gnd");
+                    o.get().literal("value", "1081830107");
+                    o.get().endEntity();
+                    o.get().startEntity("namePart");
+                    o.get().literal("type", "family");
+                    o.get().literal("value", "Armbruster");
+                    o.get().endEntity();
+                    o.get().startEntity("namePart");
+                    o.get().literal("type", "given");
+                    o.get().literal("value", "André");
+                    f.apply(3).endEntity();
+                    o.get().endRecord();
+                }
+        );
+    }
+
+    @Test
+    public void shouldOutputMoreThanTwoLevelsInElseNestedSourceWithModifications() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <entity name='name' flushWith='record'>" +
+                "    <data source='mods.name.displayForm.value' name='displayForm' />" +
+                "    <data source='mods.name.namePart.value' />" +
+                "  </entity>" +
+                "  <data source='_elseNested' />" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("mods");
+                    i.literal("ID", "duepublico_mods_00074526");
+                    i.startEntity("name");
+                    i.literal("type", "personal");
+                    i.literal("type", "simple");
+                    i.startEntity("displayForm");
+                    i.literal("value", "Armbruster, André");
+                    i.endEntity();
+                    i.startEntity("role");
+                    i.startEntity("roleTerm");
+                    i.literal("authority", "marcrelator");
+                    i.literal("type", "code");
+                    i.literal("value", "aut");
+                    i.endEntity();
+                    i.startEntity("roleTerm");
+                    i.literal("authority", "marcrelator");
+                    i.literal("type", "text");
+                    i.literal("value", "Author");
+                    i.endEntity();
+                    i.endEntity();
+                    i.startEntity("nameIdentifier");
+                    i.literal("type", "gnd");
+                    i.literal("value", "1081830107");
+                    i.endEntity();
+                    i.startEntity("namePart");
+                    i.literal("type", "family");
+                    i.literal("value", "Armbruster");
+                    i.endEntity();
+                    i.startEntity("namePart");
+                    i.literal("type", "given");
+                    i.literal("value", "André");
+                    i.endEntity();
+                    i.endEntity();
+                    i.endEntity();
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    o.get().startRecord("1");
+                    o.get().startEntity("mods");
+                    o.get().literal("ID", "duepublico_mods_00074526");
+                    o.get().startEntity("name");
+                    o.get().literal("type", "personal");
+                    o.get().literal("type", "simple");
+                    o.get().startEntity("role");
+                    o.get().startEntity("roleTerm");
+                    o.get().literal("authority", "marcrelator");
+                    o.get().literal("type", "code");
+                    o.get().literal("value", "aut");
+                    o.get().endEntity();
+                    o.get().startEntity("roleTerm");
+                    o.get().literal("authority", "marcrelator");
+                    o.get().literal("type", "text");
+                    o.get().literal("value", "Author");
+                    f.apply(2).endEntity();
+                    o.get().startEntity("nameIdentifier");
+                    o.get().literal("type", "gnd");
+                    o.get().literal("value", "1081830107");
+                    o.get().endEntity();
+                    o.get().startEntity("namePart");
+                    o.get().literal("type", "family");
+                    o.get().endEntity();
+                    o.get().startEntity("namePart");
+                    o.get().literal("type", "given");
+                    f.apply(3).endEntity();
+                    o.get().startEntity("name");
+                    o.get().literal("displayForm", "Armbruster, André");
+                    o.get().literal("mods.name.namePart.value", "Armbruster");
+                    o.get().literal("mods.name.namePart.value", "André");
+                    o.get().endEntity();
+                    o.get().endRecord();
+                }
+        );
+    }
+
+    @Test
     public void shouldHandleUnmatchedLiteralsAndEntitiesInElseNestedSource() {
         assertMorph(receiver,
                 "<rules>" +
