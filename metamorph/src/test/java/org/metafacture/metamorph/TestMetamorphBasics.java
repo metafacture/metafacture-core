@@ -218,6 +218,58 @@ public final class TestMetamorphBasics {
     }
 
     @Test
+    public void issue374_shouldPropagateArrayMarkersInElseNestedSource() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='_elseNested' />" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("author[]");
+                    i.startEntity("");
+                    i.literal("@type", "Person");
+                    i.literal("name", "Katja Königstein-Lüdersdorff");
+                    i.endEntity();
+                    i.startEntity("");
+                    i.literal("@type", "Person");
+                    i.literal("name", "Corinna Peters");
+                    i.endEntity();
+                    i.startEntity("");
+                    i.literal("@type", "Person");
+                    i.literal("name", "Oleg Tjulenev");
+                    i.endEntity();
+                    i.startEntity("");
+                    i.literal("@type", "Person");
+                    i.literal("name", "Claudia Vogeler");
+                    i.endEntity();
+                    i.endEntity();
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    o.get().startRecord("1");
+                    o.get().startEntity("author[]");
+                    o.get().startEntity("");
+                    o.get().literal("@type", "Person");
+                    o.get().literal("name", "Katja Königstein-Lüdersdorff");
+                    o.get().endEntity();
+                    o.get().startEntity("");
+                    o.get().literal("@type", "Person");
+                    o.get().literal("name", "Corinna Peters");
+                    o.get().endEntity();
+                    o.get().startEntity("");
+                    o.get().literal("@type", "Person");
+                    o.get().literal("name", "Oleg Tjulenev");
+                    o.get().endEntity();
+                    o.get().startEntity("");
+                    o.get().literal("@type", "Person");
+                    o.get().literal("name", "Claudia Vogeler");
+                    f.apply(2).endEntity();
+                    o.get().endRecord();
+                }
+        );
+    }
+
+    @Test
     public void issue378_shouldOutputMoreThanTwoLevelsInElseNestedSource() {
         assertMorph(receiver,
                 "<rules>" +
