@@ -183,10 +183,10 @@ enum FixMethod {
         public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             final String joinChar = options.get("join_char");
-            record.put(params.get(0),
+            insert(InsertMode.REPLACE, record, split(params.get(0)),
                     params.subList(1, params.size()).stream()
-                            .filter(k -> literalString(k) || record.containsKey(k))
-                            .map(k -> literalString(k) ? k.substring(1) : Metafix.asList(record.get(k)).iterator().next())
+                            .filter(k -> literalString(k) || find(record, split(k)) != null)
+                            .map(k -> literalString(k) ? k.substring(1) : Metafix.asList(find(record, split(k))).iterator().next())
                             .map(Object::toString).collect(Collectors.joining(joinChar != null ? joinChar : " ")));
         }
 

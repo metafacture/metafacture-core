@@ -352,18 +352,24 @@ public class MetafixRecordTest {
     @Test
     public void paste() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "paste('my.string','a','b','c','d','e')",
-                "remove_field('a','b','c','d')"), //
+                "paste('my.string','m.n.z','m.n.a','m.n.b','m.n.c','m.n.d','m.n.e')",
+                "remove_field('m')"), //
             i -> {
                 i.startRecord("1");
+                i.startEntity("m");
+                i.startEntity("n");
                 i.literal("a", "eeny");
                 i.literal("b", "meeny");
                 i.literal("c", "miny");
                 i.literal("d", "moe");
+                i.endEntity();
+                i.endEntity();
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("my.string", "eeny meeny miny moe");
+                o.get().startEntity("my");
+                o.get().literal("string", "eeny meeny miny moe");
+                o.get().endEntity();
                 o.get().endRecord();
             });
     }
@@ -382,7 +388,9 @@ public class MetafixRecordTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("my.string", "eeny, meeny, miny, moe");
+                o.get().startEntity("my");
+                o.get().literal("string", "eeny, meeny, miny, moe");
+                o.get().endEntity();
                 o.get().endRecord();
             });
     }
@@ -401,7 +409,9 @@ public class MetafixRecordTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("my.string", "Hi eeny how are you?");
+                o.get().startEntity("my");
+                o.get().literal("string", "Hi eeny how are you?");
+                o.get().endEntity();
                 o.get().endRecord();
             });
     }
