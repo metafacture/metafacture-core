@@ -90,8 +90,8 @@ class RecordTransformer {
         if (theDo.getName().equals("list")) { // TODO impl multiple binds via FixBind enum
             final Map<String, String> options = options(theDo.getOptions());
             final Map<String, Object> fullRecord = new LinkedHashMap<>(record);
-            final List<Object> values = Metafix.asList(record.get(options.get("path")));
-            values.forEach(val -> {
+            final Object values = FixMethod.find(record, FixMethod.split(options.get("path")));
+            Metafix.asList(values).stream().filter(val -> val != null).forEach(val -> {
                 // for each val, bind the current record/scope/context to the given var name:
                 record = new LinkedHashMap<>(ImmutableMap.of(options.get("var"), val));
                 processSubexpressions(theDo.getElements());

@@ -72,6 +72,32 @@ public class MetafixBindTest {
     }
 
     @Test
+    public void doListPathWithDots() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "do list('path': 'some.name', 'var': 'n')",
+                " upcase('n')",
+                " trim('n')",
+                " copy_field('n', 'author')",
+                "end",
+                "remove_field('some')"), //
+            i -> {
+                i.startRecord("1");
+                i.startEntity("some");
+                i.literal("name", " A University");
+                i.literal("name", "Max ");
+                i.endEntity();
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().literal("", "A UNIVERSITY");
+                o.get().literal("", "MAX");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     @Disabled // implement list bind for entities / fix internal entity structure
     public void doListEntitesToLiterals() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
