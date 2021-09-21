@@ -50,8 +50,7 @@ import java.io.StringWriter;
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("encode-json")
-public final class JsonEncoder extends
-        DefaultStreamPipe<ObjectReceiver<String>> {
+public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
     public static final String ARRAY_MARKER = "[]";
 
@@ -61,6 +60,8 @@ public final class JsonEncoder extends
     private final JsonGenerator jsonGenerator;
     private final StringWriter writer = new StringWriter();
 
+    private String arrayMarker = ARRAY_MARKER;
+
     public JsonEncoder() {
         try {
             jsonGenerator = new JsonFactory().createGenerator(writer);
@@ -69,6 +70,14 @@ public final class JsonEncoder extends
         catch (final IOException e) {
             throw new MetafactureException(e);
         }
+    }
+
+    public void setArrayMarker(final String arrayMarker) {
+        this.arrayMarker = arrayMarker;
+    }
+
+    public String getArrayMarker() {
+        return arrayMarker;
     }
 
     public void setPrettyPrinting(final boolean prettyPrinting) {
@@ -173,9 +182,9 @@ public final class JsonEncoder extends
     private void startGroup(final String name) {
         try {
             final JsonStreamContext ctx = jsonGenerator.getOutputContext();
-            if (name.endsWith(ARRAY_MARKER)) {
+            if (name.endsWith(arrayMarker)) {
                 if (ctx.inObject()) {
-                    jsonGenerator.writeFieldName(name.substring(0, name.length() - ARRAY_MARKER.length()));
+                    jsonGenerator.writeFieldName(name.substring(0, name.length() - arrayMarker.length()));
                 }
                 jsonGenerator.writeStartArray();
             }
