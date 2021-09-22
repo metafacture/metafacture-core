@@ -295,7 +295,7 @@ enum FixMethod {
                     ((List<?>) object).remove(old);
                 }
                 final String val = fun.apply(old.toString());
-                record.put(key, object == null ? val : Metafix.asListWith(object, val));
+                record.put(key, object == null ? val : Metafix.merged(object, val));
             });
         }
     }
@@ -399,7 +399,7 @@ enum FixMethod {
             @Override
             void apply(final Map<String, Object> map, final String key, final String value) {
                 final Object object = map.get(key);
-                map.put(key, object == null ? value : Metafix.asListWith(object, value));
+                map.put(key, object == null ? value : Metafix.merged(object, value));
             }
         };
         abstract void apply(Map<String, Object> map, String key, String value);

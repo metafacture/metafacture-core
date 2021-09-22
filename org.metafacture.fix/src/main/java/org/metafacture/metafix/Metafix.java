@@ -176,9 +176,22 @@ public class Metafix implements StreamPipe<StreamReceiver> {
                 entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
         entityCountStack.push(Integer.valueOf(entityCount));
         flattener.startEntity(name);
-        final Map<String, Object> currentEntity = new LinkedHashMap<>();
-        entities.add(currentEntity);
-        (previousEntity != null ? previousEntity : currentRecord).put(name, currentEntity);
+        entities.add(currentEntity(name, previousEntity));
+    }
+
+    private Map<String, Object> currentEntity(final String name, final Map<String, Object> previousEntity) {
+        final Object existingValue = previousEntity != null ? previousEntity.get(name) : null;
+        final Map<String, Object> currentEntity;
+        if (existingValue != null && existingValue instanceof Map) {
+            @SuppressWarnings("unchecked")
+            final Map<String, Object> existingEntity = (Map<String, Object>) previousEntity.get(name);
+            currentEntity = existingEntity;
+        }
+        else {
+            currentEntity = new LinkedHashMap<>();
+            add(previousEntity != null ? previousEntity : currentRecord, name, currentEntity);
+        }
+        return currentEntity;
     }
 
     @Override
@@ -245,14 +258,19 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         });
     }
 
-    static void add(final Map<String, Object> record, final String name, final Object val) {
-        final Object object = record.get(name);
-        record.put(name, object == null ? val : asListWith(object, val));
+    static void add(final Map<String, Object> record, final String name, final Object newValue) {
+        final Object oldValue = record.get(name);
+        record.put(name, oldValue == null ? newValue : merged(oldValue, newValue));
     }
 
-    static List<Object> asListWith(final Object object, final Object value) {
-        final List<Object> list = asList(object);
-        list.add(value);
+    @SuppressWarnings("unchecked")
+    static Object merged(final Object object1, final Object object2) {
+        if (object1 instanceof Map && object2 instanceof Map) {
+            ((Map<String, Object>) object1).putAll((Map<String, Object>) object2);
+            return object1;
+        }
+        final List<Object> list = asList(object1);
+        list.add(object2);
         return list;
     }
 

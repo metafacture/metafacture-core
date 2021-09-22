@@ -70,6 +70,31 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void entitiesPassThroughRepeatEntity() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "vacuum()"), //
+            i -> {
+                i.startRecord("1");
+                i.startEntity("deep");
+                i.startEntity("nested");
+                i.literal("key", "val1");
+                i.endEntity();
+                i.startEntity("nested");
+                i.literal("key", "val2");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("deep");
+                o.get().startEntity("nested");
+                o.get().literal("key", "[val1, val2]");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void setEmpty() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "set_field('my.nested.name','patrick')",
