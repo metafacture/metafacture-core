@@ -53,6 +53,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Transforms a data stream sent via the {@link StreamReceiver} interface. Use
@@ -100,8 +101,9 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     private MorphErrorHandler errorHandler = new DefaultErrorHandler();
     private int recordCount;
     private final List<FlushListener> recordEndListener = new ArrayList<>();
+
+    private final Deque<EntityEntry> elseNestedEntities = new LinkedList<>();
     private boolean elseNested;
-    private boolean elseNestedEntityStarted;
     private String currentLiteralName;
 
     protected Metamorph() {
@@ -239,15 +241,15 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     @Override
     public void startRecord(final String identifier) {
         flattener.startRecord(identifier);
+        elseNestedEntities.clear();
         entityCountStack.clear();
 
         entityCount = 0;
         currentEntityCount = 0;
+        entityCountStack.push(Integer.valueOf(entityCount));
 
         ++recordCount;
         recordCount %= Integer.MAX_VALUE;
-
-        entityCountStack.add(Integer.valueOf(entityCount));
 
         final String identifierFinal = identifier;
 
@@ -262,12 +264,13 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         }
 
         outputStreamReceiver.endRecord();
-        entityCountStack.removeLast();
-        if (!entityCountStack.isEmpty()) {
+        flattener.endRecord();
+
+        entityCountStack.pop();
+
+        if (!elseNestedEntities.isEmpty() || !entityCountStack.isEmpty()) {
             throw new IllegalStateException(ENTITIES_NOT_BALANCED);
         }
-
-        flattener.endRecord();
     }
 
     @Override
@@ -281,13 +284,16 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         entityCountStack.push(Integer.valueOf(entityCount));
 
         flattener.startEntity(name);
+        elseNestedEntities.push(new EntityEntry(flattener));
     }
 
     @Override
     public void endEntity() {
         dispatch(flattener.getCurrentPath(), "", getElseSources(), true);
-        currentEntityCount = entityCountStack.pop().intValue();
         flattener.endEntity();
+
+        elseNestedEntities.pop();
+        currentEntityCount = entityCountStack.pop().intValue();
     }
 
     @Override
@@ -322,29 +328,37 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
             send(path, value, matchingData);
         }
         else if (fallbackReceiver != null) {
-            if (endEntity) {
-                if (elseNestedEntityStarted) {
-                    outputStreamReceiver.endEntity();
-                    elseNestedEntityStarted = false;
-                }
+            dispatchFallback(path, endEntity, k -> send(escapeFeedbackChar(k), value, fallbackReceiver));
+        }
+    }
+
+    private void dispatchFallback(final String path, final boolean endEntity, final Consumer<String> consumer) {
+        final EntityEntry entityEntry = elseNested ? elseNestedEntities.peek() : null;
+
+        if (endEntity) {
+            if (entityEntry != null && entityEntry.getStarted()) {
+                outputStreamReceiver.endEntity();
             }
-            else {
-                final String entityName = elseNested ? flattener.getCurrentEntityName() : null;
+        }
+        else if (entityEntry != null) {
+            if (getData(entityEntry.getPath()) == null) {
+                final Deque<String> entities = new LinkedList<>();
 
-                if (entityName != null) {
-                    if (getData(entityName) == null) {
-                        if (!elseNestedEntityStarted) {
-                            outputStreamReceiver.startEntity(entityName);
-                            elseNestedEntityStarted = true;
-                        }
-
-                        send(escapeFeedbackChar(currentLiteralName), value, fallbackReceiver);
+                for (final EntityEntry e : elseNestedEntities) {
+                    if (e.getStarted()) {
+                        break;
                     }
+
+                    e.setStarted(true);
+                    entities.push(e.getName());
                 }
-                else {
-                    send(escapeFeedbackChar(path), value, fallbackReceiver);
-                }
+
+                entities.forEach(outputStreamReceiver::startEntity);
+                consumer.accept(currentLiteralName);
             }
+        }
+        else {
+            consumer.accept(path);
         }
     }
 
@@ -466,6 +480,36 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     public SourceLocation getSourceLocation() {
         // Metamorph does not have a source location
         return null;
+    }
+
+    private static class EntityEntry {
+
+        private final String name;
+        private final String path;
+
+        private boolean started;
+
+        EntityEntry(final StreamFlattener flattener) {
+            name = flattener.getCurrentEntityName();
+            path = flattener.getCurrentPath();
+        }
+
+        private String getName() {
+            return name;
+        }
+
+        private String getPath() {
+            return path;
+        }
+
+        private void setStarted(final boolean started) {
+            this.started = started;
+        }
+
+        private boolean getStarted() {
+            return started;
+        }
+
     }
 
 }
