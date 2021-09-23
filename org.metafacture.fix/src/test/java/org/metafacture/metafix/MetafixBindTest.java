@@ -63,9 +63,9 @@ public class MetafixBindTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("author");
-                o.get().literal("", "A UNIVERSITY");
-                o.get().literal("", "MAX");
+                o.get().startEntity("author[]");
+                o.get().literal("1", "A UNIVERSITY");
+                o.get().literal("2", "MAX");
                 o.get().endEntity();
                 o.get().endRecord();
             });
@@ -89,9 +89,9 @@ public class MetafixBindTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("author");
-                o.get().literal("", "A UNIVERSITY");
-                o.get().literal("", "MAX");
+                o.get().startEntity("author[]");
+                o.get().literal("1", "A UNIVERSITY");
+                o.get().literal("2", "MAX");
                 o.get().endEntity();
                 o.get().endRecord();
             });

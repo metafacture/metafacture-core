@@ -142,24 +142,25 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         if (val == null) {
             return;
         }
-        final List<?> vals = val instanceof List ? (List<?>) val : Arrays.asList(val);
+        final List<?> vals = asList(val);
         final boolean isMulti = vals.size() > 1;
         if (isMulti) {
-            outputStreamReceiver.startEntity(key.toString());
+            outputStreamReceiver.startEntity(key.toString() + "[]");
         }
-        vals.forEach(value -> {
+        for (int i = 0; i < vals.size(); ++i) {
+            final Object value = vals.get(i);
             if (value instanceof Map) {
                 final Map<?, ?> nested = (Map<?, ?>) value;
                 outputStreamReceiver.startEntity(isMulti ? "" : key.toString());
                 nested.entrySet().forEach(nestedEntry -> {
-                    emit(nestedEntry.getKey(), Arrays.asList(nestedEntry.getValue()));
+                    emit(nestedEntry.getKey(), asList(nestedEntry.getValue()));
                 });
                 outputStreamReceiver.endEntity();
             }
             else {
-                outputStreamReceiver.literal(isMulti ? "" : key.toString(), value.toString());
+                outputStreamReceiver.literal(isMulti ? (i + 1) + "" : key.toString(), value.toString());
             }
-        });
+        }
         if (isMulti) {
             outputStreamReceiver.endEntity();
         }

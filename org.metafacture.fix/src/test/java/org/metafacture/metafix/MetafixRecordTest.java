@@ -70,6 +70,7 @@ public class MetafixRecordTest {
     }
 
     @Test
+    @SuppressWarnings("checkstyle:MagicNumber")
     public void entitiesPassThroughRepeatEntity() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "vacuum()"), //
@@ -88,8 +89,10 @@ public class MetafixRecordTest {
                 o.get().startRecord("1");
                 o.get().startEntity("deep");
                 o.get().startEntity("nested");
-                o.get().literal("key", "[val1, val2]");
-                f.apply(2).endEntity();
+                o.get().startEntity("key[]");
+                o.get().literal("1", "val1");
+                o.get().literal("2", "val2");
+                f.apply(3).endEntity();
                 o.get().endRecord();
             });
     }
@@ -149,6 +152,7 @@ public class MetafixRecordTest {
     }
 
     @Test
+    @SuppressWarnings("checkstyle:ExecutableStatementCount")
     public void add() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "add_field('my.name','patrick')",
@@ -168,20 +172,27 @@ public class MetafixRecordTest {
             }, (o, f) -> {
                 o.get().startRecord("1");
                 o.get().startEntity("my");
-                o.get().literal("name", "[patrick, nicolas]"); // TODO: fix list -> entity
-                o.get().endEntity();
+                o.get().startEntity("name[]");
+                o.get().literal("1", "patrick");
+                o.get().literal("2", "nicolas");
+                f.apply(2).endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
                 o.get().startEntity("my");
-                o.get().literal("name", "[max, patrick, nicolas]"); // TODO: fix list -> entity
-                o.get().endEntity();
+                o.get().startEntity("name[]");
+                o.get().literal("1", "max");
+                o.get().literal("2", "patrick");
+                o.get().literal("3", "nicolas");
+                f.apply(2).endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("3");
                 o.get().startEntity("my");
-                o.get().literal("name", "[patrick, nicolas]"); // TODO: fix list -> entity
-                o.get().endEntity();
+                o.get().startEntity("name[]");
+                o.get().literal("1", "patrick");
+                o.get().literal("2", "nicolas");
+                f.apply(2).endEntity();
                 o.get().endRecord();
             });
     }
@@ -348,10 +359,10 @@ public class MetafixRecordTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("foo");
-                o.get().literal("", "a");
-                o.get().literal("", "b");
-                o.get().literal("", "c");
+                o.get().startEntity("foo[]");
+                o.get().literal("1", "a");
+                o.get().literal("2", "b");
+                o.get().literal("3", "c");
                 o.get().endEntity();
                 o.get().endRecord();
             });
@@ -469,11 +480,11 @@ public class MetafixRecordTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("foo");
-                o.get().literal("", "a");
-                o.get().literal("", "b");
-                o.get().literal("", "c");
-                o.get().literal("", "d");
+                o.get().startEntity("foo[]");
+                o.get().literal("1", "a");
+                o.get().literal("2", "b");
+                o.get().literal("3", "c");
+                o.get().literal("4", "d");
                 o.get().endEntity();
                 o.get().endRecord();
             });
@@ -507,10 +518,10 @@ public class MetafixRecordTest {
                 i.endRecord();
             }, (o, f) -> {
                 o.get().startRecord("1");
-                o.get().startEntity("nums");
-                o.get().literal("", "1");
-                o.get().literal("", "2");
-                o.get().literal("", "3");
+                o.get().startEntity("nums[]");
+                o.get().literal("1", "1");
+                o.get().literal("2", "2");
+                o.get().literal("3", "3");
                 o.get().endEntity();
                 o.get().endRecord();
             });
@@ -526,8 +537,8 @@ public class MetafixRecordTest {
                 i.endRecord();
             }, (o, f) -> {
                 o.get().startRecord("1");
-                o.get().startEntity("@context");
-                o.get().literal("", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld");
+                o.get().startEntity("@context[]");
+                o.get().literal("1", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld");
                 o.get().startEntity("");
                 o.get().literal("@language", "de");
                 f.apply(2).endEntity();

@@ -67,17 +67,17 @@ public class MetafixIfTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("name");
-                o.get().literal("", "Mary");
-                o.get().literal("", "A University");
+                o.get().startEntity("name[]");
+                o.get().literal("1", "Mary");
+                o.get().literal("2", "A University");
                 o.get().endEntity();
                 o.get().literal("type", "Organization");
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().startEntity("name");
-                o.get().literal("", "Mary");
-                o.get().literal("", "Max");
+                o.get().startEntity("name[]");
+                o.get().literal("1", "Mary");
+                o.get().literal("2", "Max");
                 o.get().endEntity();
                 o.get().endRecord();
                 //
@@ -107,16 +107,16 @@ public class MetafixIfTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("name");
-                o.get().literal("", "Mary");
-                o.get().literal("", "A University");
+                o.get().startEntity("name[]");
+                o.get().literal("1", "Mary");
+                o.get().literal("2", "A University");
                 o.get().endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().startEntity("name");
-                o.get().literal("", "Great University");
-                o.get().literal("", "A University");
+                o.get().startEntity("name[]");
+                o.get().literal("1", "Great University");
+                o.get().literal("2", "A University");
                 o.get().endEntity();
                 o.get().literal("type", "Organization");
                 o.get().endRecord();
@@ -127,6 +127,7 @@ public class MetafixIfTest {
     }
 
     @Test
+    @SuppressWarnings("checkstyle:ExecutableStatementCount")
     public void ifNone() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "if none_contain('author.name', 'University')", //
@@ -152,14 +153,18 @@ public class MetafixIfTest {
             }, (o, f) -> {
                 o.get().startRecord("1");
                 o.get().startEntity("author");
-                o.get().literal("name", "[Mary, A University]"); // TODO: fix list -> entity
-                o.get().endEntity();
+                o.get().startEntity("name[]");
+                o.get().literal("1", "Mary");
+                o.get().literal("2", "A University");
+                f.apply(2).endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
                 o.get().startEntity("author");
-                o.get().literal("name", "[Max, Mary]"); // TODO: fix list -> entity
-                o.get().endEntity();
+                o.get().startEntity("name[]");
+                o.get().literal("1", "Max");
+                o.get().literal("2", "Mary");
+                f.apply(2).endEntity();
                 o.get().literal("type", "Person");
                 o.get().endRecord();
                 //
@@ -282,9 +287,9 @@ public class MetafixIfTest {
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().startEntity("name");
-                o.get().literal("", "Some University");
-                o.get().literal("", "Filibandrina");
+                o.get().startEntity("name[]");
+                o.get().literal("1", "Some University");
+                o.get().literal("2", "Filibandrina");
                 o.get().endEntity();
                 o.get().literal("type", "Organization");
                 o.get().endRecord();
@@ -309,16 +314,16 @@ public class MetafixIfTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("name");
-                o.get().literal("", "Max");
-                o.get().literal("", "A University");
+                o.get().startEntity("name[]");
+                o.get().literal("1", "Max");
+                o.get().literal("2", "A University");
                 o.get().endEntity();
                 o.get().endRecord();
                 //
                 o.get().startRecord("2");
-                o.get().startEntity("name");
-                o.get().literal("", "Some University");
-                o.get().literal("", "University Filibandrina");
+                o.get().startEntity("name[]");
+                o.get().literal("1", "Some University");
+                o.get().literal("2", "University Filibandrina");
                 o.get().endEntity();
                 o.get().literal("type", "Organization");
                 o.get().endRecord();
