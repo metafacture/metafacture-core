@@ -134,6 +134,28 @@ public final class GenericXMLHandlerTest {
     }
 
     @Test
+    public void shouldEmitPCDataAsALiteralWithConfiguredValueTagName() {
+        final String name = "data";
+        genericXmlHandler.setValueTagName(name);
+
+        final char[] charData = "char-data".toCharArray();
+        genericXmlHandler.startElement("", "record", "record", attributes);
+        genericXmlHandler.startElement("", "entity", "entity", attributes);
+        genericXmlHandler.characters(charData, 0, charData.length);
+        genericXmlHandler.endElement("", "entity", "entity");
+        genericXmlHandler.endElement("", "record", "record");
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
+        ordered.verify(receiver).startEntity("entity");
+        ordered.verify(receiver).literal(name, "char-data");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+        Mockito.verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
     public void shouldEmitNamespaceOnEntityElementAndAttribute() {
         genericXmlHandler.setEmitNamespace(true);
         attributes.addAttribute("", "attr", "ns:attr", "CDATA", "attr-value");

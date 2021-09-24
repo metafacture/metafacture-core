@@ -44,12 +44,15 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
     public static final String DEFAULT_RECORD_TAG = "record";
 
+    public static final String DEFAULT_VALUE_TAG = "value";
+
     public static final boolean EMIT_NAMESPACE = false;
 
     private static final Pattern TABS = Pattern.compile("\t+");
 
     private String attributeMarker = DEFAULT_ATTRIBUTE_MARKER;
     private String recordTagName = DEFAULT_RECORD_TAG;
+    private String valueTagName = DEFAULT_VALUE_TAG;
 
     private boolean inRecord;
     private StringBuilder valueBuffer = new StringBuilder();
@@ -93,6 +96,14 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
     public String getRecordTagName() {
         return recordTagName;
+    }
+
+    public void setValueTagName(final String valueTagName) {
+        this.valueTagName = valueTagName;
+    }
+
+    public String getValueTagName() {
+        return valueTagName;
     }
 
     /**
@@ -170,7 +181,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private void writeValue() {
         final String value = valueBuffer.toString();
         if (!value.trim().isEmpty()) {
-            getReceiver().literal("value", value.replace('\n', ' '));
+            getReceiver().literal(valueTagName, value.replace('\n', ' '));
         }
         valueBuffer = new StringBuilder();
     }
