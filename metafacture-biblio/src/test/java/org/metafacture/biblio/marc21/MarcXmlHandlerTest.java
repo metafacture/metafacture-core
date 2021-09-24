@@ -23,7 +23,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
+import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -127,6 +129,41 @@ public final class MarcXmlHandlerTest {
         verify(receiver).literal(TYPE, null);
         verify(receiver).endRecord();
 
+        verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
+    public void shouldNotEncodeTypeAttributeAsMarkedLiteral() throws SAXException {
+        final AttributesImpl attributes = new AttributesImpl();
+        attributes.addAttribute(NAMESPACE, "type", "type", "CDATA", "bibliographic");
+
+        marcXmlHandler.startElement(NAMESPACE, RECORD, "", attributes);
+        marcXmlHandler.endElement(NAMESPACE, RECORD, "");
+
+        final InOrder ordered = Mockito.inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
+        ordered.verify(receiver).literal(TYPE, "bibliographic");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+        verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
+    public void issue336_shouldEncodeTypeAttributeAsLiteralWithConfiguredMarker() throws SAXException {
+        final String marker = "~";
+        marcXmlHandler.setAttributeMarker(marker);
+
+        final AttributesImpl attributes = new AttributesImpl();
+        attributes.addAttribute(NAMESPACE, "type", "type", "CDATA", "bibliographic");
+
+        marcXmlHandler.startElement(NAMESPACE, RECORD, "", attributes);
+        marcXmlHandler.endElement(NAMESPACE, RECORD, "");
+
+        final InOrder ordered = Mockito.inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
+        ordered.verify(receiver).literal(marker + TYPE, "bibliographic");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
         verifyNoMoreInteractions(receiver);
     }
 

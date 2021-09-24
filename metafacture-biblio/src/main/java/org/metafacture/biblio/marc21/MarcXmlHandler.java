@@ -38,6 +38,8 @@ import org.xml.sax.SAXException;
 @FluxCommand("handle-marcxml")
 public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
+    public static final String DEFAULT_ATTRIBUTE_MARKER = "";
+
     private static final String SUBFIELD = "subfield";
     private static final String DATAFIELD = "datafield";
     private static final String CONTROLFIELD = "controlfield";
@@ -45,6 +47,8 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private static final String NAMESPACE = "http://www.loc.gov/MARC21/slim";
     private static final String LEADER = "leader";
     private static final String TYPE = "type";
+
+    private String attributeMarker = DEFAULT_ATTRIBUTE_MARKER;
     private String currentTag = "";
     private String namespace = NAMESPACE;
     private StringBuilder builder = new StringBuilder();
@@ -58,6 +62,14 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
     private boolean checkNamespace(final String uri) {
         return namespace == null || namespace.equals(uri);
+    }
+
+    public void setAttributeMarker(final String attributeMarker) {
+        this.attributeMarker = attributeMarker;
+    }
+
+    public String getAttributeMarker() {
+        return attributeMarker;
     }
 
     @Override
@@ -75,7 +87,7 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         }
         else if (RECORD.equals(localName) && checkNamespace(uri)) {
             getReceiver().startRecord("");
-            getReceiver().literal(TYPE, attributes.getValue(TYPE));
+            getReceiver().literal(attributeMarker + TYPE, attributes.getValue(TYPE));
         }
         else if (LEADER.equals(localName)) {
             builder = new StringBuilder();
@@ -87,18 +99,15 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     public void endElement(final String uri, final String localName, final String qName) throws SAXException {
         if (SUBFIELD.equals(localName)) {
             getReceiver().literal(currentTag, builder.toString().trim());
-
         }
         else if (DATAFIELD.equals(localName)) {
             getReceiver().endEntity();
         }
         else if (CONTROLFIELD.equals(localName)) {
             getReceiver().literal(currentTag, builder.toString().trim());
-
         }
         else if (RECORD.equals(localName) && checkNamespace(uri)) {
             getReceiver().endRecord();
-
         }
         else if (LEADER.equals(localName)) {
             getReceiver().literal(currentTag, builder.toString());
