@@ -40,12 +40,15 @@ import java.util.regex.Pattern;
 @FluxCommand("handle-generic-xml")
 public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
+    public static final String DEFAULT_ATTRIBUTE_MARKER = "";
+
     public static final String DEFAULT_RECORD_TAG = "record";
 
     public static final boolean EMIT_NAMESPACE = false;
 
     private static final Pattern TABS = Pattern.compile("\t+");
 
+    private String attributeMarker = DEFAULT_ATTRIBUTE_MARKER;
     private String recordTagName = DEFAULT_RECORD_TAG;
 
     private boolean inRecord;
@@ -110,6 +113,14 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         return this.emitNamespace;
     }
 
+    public void setAttributeMarker(final String attributeMarker) {
+        this.attributeMarker = attributeMarker;
+    }
+
+    public String getAttributeMarker() {
+        return attributeMarker;
+    }
+
     @Override
     public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) {
         if (inRecord) {
@@ -170,7 +181,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         for (int i = 0; i < length; ++i) {
             final String name = emitNamespace ? attributes.getQName(i) : attributes.getLocalName(i);
             final String value = attributes.getValue(i);
-            getReceiver().literal(name, value);
+            getReceiver().literal(attributeMarker + name, value);
         }
     }
 
