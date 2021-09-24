@@ -72,6 +72,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
     private final StringBuilder builder = new StringBuilder();
 
+    private String attributeMarker = ATTRIBUTE_MARKER;
     private String rootTag = DEFAULT_ROOT_TAG;
     private String recordTag = DEFAULT_RECORD_TAG;
     private Map<String, String> namespaces = new HashMap<String, String>();
@@ -146,6 +147,14 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
         this.namespaces = namespaces;
     }
 
+    public void setAttributeMarker(final String attributeMarker) {
+        this.attributeMarker = attributeMarker;
+    }
+
+    public String getAttributeMarker() {
+        return attributeMarker;
+    }
+
     @Override
     public void startRecord(final String identifier) {
         if (separateRoots) {
@@ -195,8 +204,8 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
         if (name.isEmpty()) {
             element.setText(value);
         }
-        else if (name.startsWith(ATTRIBUTE_MARKER)) {
-            element.addAttribute(name.substring(1), value);
+        else if (name.startsWith(attributeMarker)) {
+            element.addAttribute(name.substring(attributeMarker.length()), value);
         }
         else {
             element.createChild(name).setText(value);
