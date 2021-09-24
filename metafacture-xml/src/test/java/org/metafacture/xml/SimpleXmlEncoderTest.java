@@ -180,6 +180,59 @@ public final class SimpleXmlEncoderTest {
     }
 
     @Test
+    public void testShouldEncodeEmptyLiteralsAsText() {
+        simpleXmlEncoder.startRecord("");
+        simpleXmlEncoder.literal("", VALUE);
+        simpleXmlEncoder.endRecord();
+        simpleXmlEncoder.closeStream();
+
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                "<records>" +
+                "<record>" +
+                "value" +
+                "</record>" +
+                "</records>",
+                getResultXml());
+    }
+
+    @Test
+    public void testShouldNotEncodeLiteralsWithDifferentValueTagNameAsText() {
+        simpleXmlEncoder.setValueTag("data");
+
+        simpleXmlEncoder.startRecord("");
+        simpleXmlEncoder.literal(TAG, VALUE);
+        simpleXmlEncoder.endRecord();
+        simpleXmlEncoder.closeStream();
+
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                "<records>" +
+                "<record>" +
+                "<tag>value</tag>" +
+                "</record>" +
+                "</records>",
+                getResultXml());
+    }
+
+    @Test
+    public void issue379_testShouldEncodeConfiguredValueLiteralsAsText() {
+        final String name = "data";
+        simpleXmlEncoder.setValueTag(name);
+
+        simpleXmlEncoder.startRecord("");
+        simpleXmlEncoder.literal(name, VALUE);
+        simpleXmlEncoder.endRecord();
+        simpleXmlEncoder.closeStream();
+
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                "<records>" +
+                "<record>" +
+                "value" +
+                "</record>" +
+                "</records>",
+                getResultXml());
+    }
+
+    @Test
     public void testShouldEncodeMarkedLiteralsAsAttributes() {
         simpleXmlEncoder.startRecord("");
         simpleXmlEncoder.literal(TAG, VALUE);

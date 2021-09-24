@@ -55,6 +55,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
     public static final String DEFAULT_ROOT_TAG = "records";
     public static final String DEFAULT_RECORD_TAG = "record";
+    public static final String DEFAULT_VALUE_TAG = null;
 
     private static final String NEW_LINE = "\n";
     private static final String INDENT = "\t";
@@ -75,6 +76,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     private String attributeMarker = ATTRIBUTE_MARKER;
     private String rootTag = DEFAULT_ROOT_TAG;
     private String recordTag = DEFAULT_RECORD_TAG;
+    private String valueTag = DEFAULT_VALUE_TAG;
     private Map<String, String> namespaces = new HashMap<String, String>();
     private boolean writeRootTag = true;
     private boolean writeXmlHeader = true;
@@ -95,6 +97,14 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
     public void setRecordTag(final String tag) {
         recordTag = tag;
+    }
+
+    public void setValueTag(final String valueTag) {
+        this.valueTag = valueTag;
+    }
+
+    public String getValueTag() {
+        return valueTag;
     }
 
     public void setNamespaceFile(final String file) {
@@ -201,7 +211,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
     @Override
     public void literal(final String name, final String value) {
-        if (name.isEmpty()) {
+        if (name.isEmpty() || name.equals(valueTag)) {
             element.setText(value);
         }
         else if (name.startsWith(attributeMarker)) {
