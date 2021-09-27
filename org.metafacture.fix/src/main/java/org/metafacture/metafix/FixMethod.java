@@ -280,7 +280,7 @@ enum FixMethod {
         }
     };
 
-    private static final String NESTED_NON_MAP = "Nested non-map: ";
+    private static final String NESTED = "Nested non-map / non-list: ";
     private static final String EMPTY = "";
     private static final String APPEND = ".$append";
 
@@ -312,18 +312,51 @@ enum FixMethod {
         return map;
     }
 
+    @SuppressWarnings("unchecked")
     private static Object insertNested(final InsertMode mode, final Map<String, Object> map, final String value, final String currentKey,
             final String[] remainingKeys) {
         if (!map.containsKey(currentKey)) {
             map.put(currentKey, new LinkedHashMap<String, Object>());
         }
         final Object nested = map.get(currentKey);
-        if (!(nested instanceof Map)) {
-            throw new IllegalStateException(NESTED_NON_MAP + nested);
+        final Object result;
+        if (nested instanceof Map) {
+            result = insert(mode, (Map<String, Object>) nested, remainingKeys, value);
         }
-        @SuppressWarnings("unchecked")
-        final Object result = insert(mode, (Map<String, Object>) nested, remainingKeys, value);
+        else if (nested instanceof List) {
+            processList(mode, value, remainingKeys, nested);
+            result = map.get(currentKey);
+        }
+        else {
+            throw new IllegalStateException(NESTED + nested);
+        }
         return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void processList(final InsertMode mode, final String value, final String[] remainingKeys,
+            final Object nested) {
+        final List<Object> nestedList = (List<Object>) nested;
+        final Map<String, Object> nestedMap;
+        switch (remainingKeys[0]) {
+            case "$append":
+                nestedMap = new LinkedHashMap<>();
+                nestedList.add(nestedMap);
+                insert(mode, nestedMap, Arrays.copyOfRange(remainingKeys, 1, remainingKeys.length), value);
+                break;
+            case "$last":
+                final Object last = nestedList.get(nestedList.size() - 1);
+                if (last instanceof Map) {
+                    nestedMap = (Map<String, Object>) last;
+                    insert(mode, nestedMap, Arrays.copyOfRange(remainingKeys, 1, remainingKeys.length), value);
+                }
+                break;
+            default:
+                nestedMap = new LinkedHashMap<>();
+                nestedList.add(nestedMap);
+                insert(mode, nestedMap, remainingKeys, value);
+                break;
+        }
     }
 
     @SuppressWarnings("checkstyle:ReturnCount")
@@ -342,12 +375,17 @@ enum FixMethod {
     private static Object findNested(final Map<String, Object> map, final String currentKey,
             final String[] remainingKeys) {
         final Object nested = map.get(currentKey);
-        if (!(nested instanceof Map)) {
-            throw new IllegalStateException(NESTED_NON_MAP + nested);
+        // TODO: array of maps, like in insertNested
+        if (nested instanceof List) {
+            return ((List<?>) nested).stream().map(o -> findNested(map, currentKey, remainingKeys))
+                    .collect(Collectors.toList());
         }
-        @SuppressWarnings("unchecked")
-        final Object result = find((Map<String, Object>) nested, remainingKeys);
-        return result;
+        if (nested instanceof Map) {
+            @SuppressWarnings("unchecked")
+            final Object result = find((Map<String, Object>) nested, remainingKeys);
+            return result;
+        }
+        throw new IllegalStateException(NESTED + nested);
     }
 
     private static Object remove(final Map<String, Object> map, final String[] keys) {
@@ -366,7 +404,7 @@ enum FixMethod {
             final String[] remainingKeys) {
         final Object nested = map.get(currentKey);
         if (!(nested instanceof Map)) {
-            throw new IllegalStateException(NESTED_NON_MAP + nested);
+            throw new IllegalStateException(NESTED + nested);
         }
         @SuppressWarnings("unchecked")
         final Object result = remove((Map<String, Object>) nested, remainingKeys);
@@ -378,9 +416,10 @@ enum FixMethod {
         final String newName = params.get(1);
         final Object value = find(record, split(oldName));
         if (value != null) {
-            Metafix.asList(value).forEach(v -> {
-                insert(InsertMode.APPEND, record, split(newName), value.toString());
-            });
+            final List<Object> vs = Metafix.asList(value);
+            for (int i = 0; i < vs.size(); ++i) {
+                insert(InsertMode.APPEND, record, split(newName), vs.get(i).toString());
+            }
         }
     }
 

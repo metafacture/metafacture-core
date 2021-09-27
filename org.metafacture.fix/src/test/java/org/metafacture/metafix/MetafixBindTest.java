@@ -98,6 +98,39 @@ public class MetafixBindTest {
     }
 
     @Test
+    public void doListWithAppendAndLast() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "do list('path': 'creator', 'var': 'c')",
+                " set_array('author')",
+                " copy_field('c.name', 'author.$append.name')",
+                " add_field('author.$last.type', 'Default')",
+                "end",
+                "remove_field('creator')"), //
+            i -> {
+                i.startRecord("1");
+                i.startEntity("creator");
+                i.literal("name", "A University");
+                i.endEntity();
+                i.startEntity("creator");
+                i.literal("name", "Max");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author[]");
+                o.get().startEntity("");
+                o.get().literal("name", "A University");
+                // o.get().literal("type", "Default"); // FIXME: bind scope broken
+                o.get().endEntity();
+                o.get().startEntity("");
+                o.get().literal("name", "Max");
+                o.get().literal("type", "Default");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     @Disabled // implement list bind for entities / fix internal entity structure
     public void doListEntitesToLiterals() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
@@ -118,8 +151,10 @@ public class MetafixBindTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("author", "A UNIVERSITY");
-                o.get().literal("author", "MAX");
+                o.get().startEntity("author[]");
+                o.get().literal("1", "A UNIVERSITY");
+                o.get().literal("2", "MAX");
+                o.get().endEntity();
                 o.get().endRecord();
             });
     }

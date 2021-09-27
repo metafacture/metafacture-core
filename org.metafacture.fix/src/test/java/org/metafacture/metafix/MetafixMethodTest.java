@@ -81,6 +81,29 @@ public class MetafixMethodTest {
     }
 
     @Test
+    @Disabled // TODO: All field-level FixMethods don't support dot notation for nested entities yet
+    public void upcaseDotNotationNested() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "upcase('data.title')"), //
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                i.literal("title", "marc");
+                i.literal("title", "json");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().startEntity("title[]");
+                o.get().literal("1", "MARC");
+                o.get().literal("2", "JSON");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void downcase() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "downcase('title')"), //
@@ -247,7 +270,9 @@ public class MetafixMethodTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().literal("number", "41   : 15");
+                o.get().startEntity("number[]");
+                o.get().literal("1", "41   : 15");
+                o.get().endEntity();
                 o.get().endRecord();
             });
     }

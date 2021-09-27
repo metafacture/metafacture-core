@@ -264,6 +264,81 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void copyIntoArrayOfStrings() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                // "set_array('author')", <- results in separate objects/entities here
+                "copy_field('your.name','author.name')",
+                "remove_field('your')"), //
+            i -> {
+                i.startRecord("1");
+                i.startEntity("your");
+                i.literal("name", "maxi-mi");
+                i.literal("name", "maxi-ma");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().startEntity("name[]");
+                o.get().literal("1", "maxi-mi");
+                o.get().literal("2", "maxi-ma");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void copyIntoArrayOfObjects() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('author')",
+                "copy_field('your.name','author.name')",
+                "remove_field('your')"), //
+            i -> {
+                i.startRecord("1");
+                i.startEntity("your");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("your");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author[]");
+                o.get().startEntity("");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().startEntity("");
+                o.get().literal("name", "mo");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void copyIntoArrayTopLevel() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('author')",
+                "copy_field('your.name', 'author')",
+                "remove_field('your')"), //
+            i -> {
+                i.startRecord("1");
+                i.startEntity("your");
+                i.literal("name", "maxi-mi");
+                i.literal("name", "maxi-ma");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author[]");
+                o.get().literal("1", "maxi-mi");
+                o.get().literal("2", "maxi-ma");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void removeLiteral() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "remove_field('your.name')"), //

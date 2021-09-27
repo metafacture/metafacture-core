@@ -143,7 +143,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
             return;
         }
         final List<?> vals = asList(val);
-        final boolean isMulti = vals.size() > 1;
+        final boolean isMulti = vals.size() > 1 || val instanceof List;
         if (isMulti) {
             outputStreamReceiver.startEntity(key.toString() + "[]");
         }
@@ -153,7 +153,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
                 final Map<?, ?> nested = (Map<?, ?>) value;
                 outputStreamReceiver.startEntity(isMulti ? "" : key.toString());
                 nested.entrySet().forEach(nestedEntry -> {
-                    emit(nestedEntry.getKey(), asList(nestedEntry.getValue()));
+                    emit(nestedEntry.getKey(), nestedEntry.getValue());
                 });
                 outputStreamReceiver.endEntity();
             }
@@ -177,7 +177,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
                 entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
         entityCountStack.push(Integer.valueOf(entityCount));
         flattener.startEntity(name);
-        entities.add(currentEntity(name, previousEntity));
+        entities.add(currentEntity(name, previousEntity == null && entities.size() >= 0 ? currentRecord : previousEntity));
     }
 
     private Map<String, Object> currentEntity(final String name, final Map<String, Object> previousEntity) {
