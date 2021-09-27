@@ -55,7 +55,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
     public static final String DEFAULT_ROOT_TAG = "records";
     public static final String DEFAULT_RECORD_TAG = "record";
-    public static final String DEFAULT_VALUE_TAG = null;
+    public static final String DEFAULT_VALUE_TAG = "";
 
     private static final String NEW_LINE = "\n";
     private static final String INDENT = "\t";
@@ -211,7 +211,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
     @Override
     public void literal(final String name, final String value) {
-        if (name.isEmpty() || name.equals(valueTag)) {
+        if (name.equals(valueTag)) {
             element.setText(value);
         }
         else if (name.startsWith(attributeMarker)) {

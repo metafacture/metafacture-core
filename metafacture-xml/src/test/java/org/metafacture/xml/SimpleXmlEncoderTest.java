@@ -180,12 +180,31 @@ public final class SimpleXmlEncoderTest {
     }
 
     @Test
-    public void testShouldEncodeEmptyLiteralsAsText() {
+    public void testShouldEncodeUnnamedLiteralsAsText() {
         simpleXmlEncoder.startRecord("");
         simpleXmlEncoder.literal("", VALUE);
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                "<records>" +
+                "<record>" +
+                "value" +
+                "</record>" +
+                "</records>",
+                getResultXml());
+    }
+
+    @Test
+    public void testShouldStillEncodeUnnamedLiteralsAsTextWithConfiguredValueTagName() {
+        simpleXmlEncoder.setValueTag("data");
+
+        simpleXmlEncoder.startRecord("");
+        simpleXmlEncoder.literal("", VALUE);
+        simpleXmlEncoder.endRecord();
+        simpleXmlEncoder.closeStream();
+
+        // SimpleXmlEncoder.Element.writeElement() does not write child elements with empty name
         assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record>" +
