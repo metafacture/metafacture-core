@@ -40,12 +40,6 @@ import java.util.regex.Pattern;
 @FluxCommand("handle-generic-xml")
 public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
-    public static final String DEFAULT_ATTRIBUTE_MARKER = "";
-
-    public static final String DEFAULT_RECORD_TAG = "record";
-
-    public static final String DEFAULT_VALUE_TAG = "value";
-
     public static final boolean EMIT_NAMESPACE = false;
 
     private static final Pattern TABS = Pattern.compile("\t+");

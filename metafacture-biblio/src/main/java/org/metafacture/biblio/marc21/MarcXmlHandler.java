@@ -38,8 +38,6 @@ import org.xml.sax.SAXException;
 @FluxCommand("handle-marcxml")
 public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
-    public static final String DEFAULT_ATTRIBUTE_MARKER = "";
-
     private static final String SUBFIELD = "subfield";
     private static final String DATAFIELD = "datafield";
     private static final String CONTROLFIELD = "controlfield";

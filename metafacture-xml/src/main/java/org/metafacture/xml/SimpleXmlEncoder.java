@@ -26,6 +26,7 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+import org.metafacture.framework.helpers.DefaultXmlPipe;
 
 import java.io.IOException;
 import java.net.URL;
@@ -53,10 +54,6 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
     public static final String ATTRIBUTE_MARKER = "~";
 
-    public static final String DEFAULT_ROOT_TAG = "records";
-    public static final String DEFAULT_RECORD_TAG = "record";
-    public static final String DEFAULT_VALUE_TAG = "";
-
     private static final String NEW_LINE = "\n";
     private static final String INDENT = "\t";
 
@@ -74,9 +71,9 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     private final StringBuilder builder = new StringBuilder();
 
     private String attributeMarker = ATTRIBUTE_MARKER;
-    private String rootTag = DEFAULT_ROOT_TAG;
-    private String recordTag = DEFAULT_RECORD_TAG;
-    private String valueTag = DEFAULT_VALUE_TAG;
+    private String rootTag = DefaultXmlPipe.DEFAULT_ROOT_TAG;
+    private String recordTag = DefaultXmlPipe.DEFAULT_RECORD_TAG;
+    private String valueTag = DefaultXmlPipe.DEFAULT_VALUE_TAG;
     private Map<String, String> namespaces = new HashMap<String, String>();
     private boolean writeRootTag = true;
     private boolean writeXmlHeader = true;
