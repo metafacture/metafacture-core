@@ -26,6 +26,7 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+import org.metafacture.framework.helpers.DefaultXmlPipe;
 
 import java.io.IOException;
 import java.net.URL;
@@ -53,9 +54,6 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
     public static final String ATTRIBUTE_MARKER = "~";
 
-    public static final String DEFAULT_ROOT_TAG = "records";
-    public static final String DEFAULT_RECORD_TAG = "record";
-
     private static final String NEW_LINE = "\n";
     private static final String INDENT = "\t";
 
@@ -72,8 +70,10 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
     private final StringBuilder builder = new StringBuilder();
 
-    private String rootTag = DEFAULT_ROOT_TAG;
-    private String recordTag = DEFAULT_RECORD_TAG;
+    private String attributeMarker = ATTRIBUTE_MARKER;
+    private String rootTag = DefaultXmlPipe.DEFAULT_ROOT_TAG;
+    private String recordTag = DefaultXmlPipe.DEFAULT_RECORD_TAG;
+    private String valueTag = DefaultXmlPipe.DEFAULT_VALUE_TAG;
     private Map<String, String> namespaces = new HashMap<String, String>();
     private boolean writeRootTag = true;
     private boolean writeXmlHeader = true;
@@ -94,6 +94,14 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
     public void setRecordTag(final String tag) {
         recordTag = tag;
+    }
+
+    public void setValueTag(final String valueTag) {
+        this.valueTag = valueTag;
+    }
+
+    public String getValueTag() {
+        return valueTag;
     }
 
     public void setNamespaceFile(final String file) {
@@ -146,6 +154,14 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
         this.namespaces = namespaces;
     }
 
+    public void setAttributeMarker(final String attributeMarker) {
+        this.attributeMarker = attributeMarker;
+    }
+
+    public String getAttributeMarker() {
+        return attributeMarker;
+    }
+
     @Override
     public void startRecord(final String identifier) {
         if (separateRoots) {
@@ -192,11 +208,11 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
     @Override
     public void literal(final String name, final String value) {
-        if (name.isEmpty()) {
+        if (name.equals(valueTag)) {
             element.setText(value);
         }
-        else if (name.startsWith(ATTRIBUTE_MARKER)) {
-            element.addAttribute(name.substring(1), value);
+        else if (name.startsWith(attributeMarker)) {
+            element.addAttribute(name.substring(attributeMarker.length()), value);
         }
         else {
             element.createChild(name).setText(value);

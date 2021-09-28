@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -133,6 +134,28 @@ public final class GenericXMLHandlerTest {
     }
 
     @Test
+    public void shouldEmitPCDataAsALiteralWithConfiguredValueTagName() {
+        final String name = "data";
+        genericXmlHandler.setValueTagName(name);
+
+        final char[] charData = "char-data".toCharArray();
+        genericXmlHandler.startElement("", "record", "record", attributes);
+        genericXmlHandler.startElement("", "entity", "entity", attributes);
+        genericXmlHandler.characters(charData, 0, charData.length);
+        genericXmlHandler.endElement("", "entity", "entity");
+        genericXmlHandler.endElement("", "record", "record");
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
+        ordered.verify(receiver).startEntity("entity");
+        ordered.verify(receiver).literal(name, "char-data");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+        Mockito.verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
     public void shouldEmitNamespaceOnEntityElementAndAttribute() {
         genericXmlHandler.setEmitNamespace(true);
         attributes.addAttribute("", "attr", "ns:attr", "CDATA", "attr-value");
@@ -141,6 +164,47 @@ public final class GenericXMLHandlerTest {
 
         final InOrder ordered = inOrder(receiver);
         ordered.verify(receiver).startEntity("ns:entity");
-        ordered.verify(receiver).literal("ns:attr","attr-value");
+        ordered.verify(receiver).literal("ns:attr", "attr-value");
     }
+
+    @Test
+    public void shouldNotEncodeAttributesAsMarkedLiterals() {
+        attributes.addAttribute("", "attr", "attr", "CDATA", "attr-value");
+        genericXmlHandler.startElement("", "record", "record", attributes);
+        genericXmlHandler.endElement("", "record", "record");
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
+        ordered.verify(receiver).literal("attr", "attr-value");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+        Mockito.verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
+    public void issue379_shouldEncodeAttributesAsLiteralsWithConfiguredMarker() {
+        final String marker = "~";
+        genericXmlHandler.setAttributeMarker(marker);
+
+        genericXmlHandler.startElement("", "record", "record", attributes);
+        attributes.addAttribute("", "authority", "authority", "CDATA", "marcrelator");
+        attributes.addAttribute("", "type", "type", "CDATA", "text");
+        genericXmlHandler.startElement("", "roleTerm", "roleTerm", attributes);
+        final char[] charData = "Author".toCharArray();
+        genericXmlHandler.characters(charData, 0, charData.length);
+        genericXmlHandler.endElement("", "roleTerm", "roleTerm");
+        genericXmlHandler.endElement("", "record", "record");
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("");
+        ordered.verify(receiver).startEntity("roleTerm");
+        ordered.verify(receiver).literal(marker + "authority", "marcrelator");
+        ordered.verify(receiver).literal(marker + "type", "text");
+        ordered.verify(receiver).literal("value", "Author");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+        Mockito.verifyNoMoreInteractions(receiver);
+    }
+
 }
