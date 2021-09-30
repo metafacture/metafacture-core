@@ -159,6 +159,37 @@ public final class JsonEncoderTest {
     }
 
     @Test
+    public void testShouldNotEncodeEntitiesWithDifferentMarkerAsList() {
+        encoder.setArrayMarker("*");
+
+        encoder.startRecord("");
+        encoder.startEntity(LIST1);
+        encoder.literal(LITERAL1, VALUE1);
+        encoder.literal(LITERAL2, VALUE2);
+        encoder.literal(LITERAL3, VALUE3);
+        encoder.endEntity();
+        encoder.endRecord();
+
+        verify(receiver).process(fixQuotes("{'Li1[]':{'L1':'V1','L2':'V2','L3':'V3'}}"));
+    }
+
+    @Test
+    public void testShouldEncodeMarkedEntitiesWithConfiguredMarkerAsList() {
+        final String marker = "*";
+        encoder.setArrayMarker(marker);
+
+        encoder.startRecord("");
+        encoder.startEntity(LIST1.replace(JsonEncoder.ARRAY_MARKER, marker));
+        encoder.literal(LITERAL1, VALUE1);
+        encoder.literal(LITERAL2, VALUE2);
+        encoder.literal(LITERAL3, VALUE3);
+        encoder.endEntity();
+        encoder.endRecord();
+
+        verify(receiver).process(fixQuotes("{'Li1':['V1','V2','V3']}"));
+    }
+
+    @Test
     public void testShouldOutputDuplicateNames() {
         encoder.startRecord("");
         encoder.literal(LITERAL1, VALUE1);
