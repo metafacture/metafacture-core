@@ -242,12 +242,18 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         writeRaw(ROOT_CLOSE);
     }
 
-    /** Writes a unescaped sequence */
+    /** Writes a unescaped sequence
+    *   @param str
+    *             the unescaped sequence to be written
+    */
     private void writeRaw(final String str) {
         builder.append(str);
     }
 
-    /** Writes a escaped sequence */
+    /** Writes a escaped sequence
+    *   @param str
+    *             the unescaped sequence to be written
+    */
     private void writeEscaped(final String str) {
         builder.append(XmlUtil.escape(str, false));
     }

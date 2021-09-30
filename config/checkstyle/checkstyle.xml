@@ -68,6 +68,7 @@
         <module name="InterfaceIsType"/>
         <module name="InterfaceTypeParameterName"/>
         <module name="JavaNCSS"/>
+        <module name="JavadocMethod"/>
         <module name="JavadocType"/>
         <module name="LambdaParameterName"/>
         <module name="LeftCurly"/>
