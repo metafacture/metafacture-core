@@ -81,6 +81,30 @@ public class MetafixLookupTest {
     }
 
     @Test
+    public void inlineDotNotationNested() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "lookup('data.title', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"), //
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Hey");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().startEntity("title[]");
+                o.get().literal("1", "Alohaeha");
+                o.get().literal("2", "Moin zäme");
+                o.get().literal("3", "Tach");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void csv() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "lookup('title', 'src/test/java/org/metafacture/metafix/maps/test.csv')"), //

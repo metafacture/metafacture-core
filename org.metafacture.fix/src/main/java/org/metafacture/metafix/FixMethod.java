@@ -287,15 +287,15 @@ enum FixMethod {
     private static void applyToFields(final Map<String, Object> record, final List<String> params,
             final Function<String, String> fun) {
         final String key = params.get(0);
-        if (record.containsKey(key)) {
-            new ArrayList<>(Metafix.asList(record.get(key))).forEach(old -> {
-                record.remove(key, old);
-                final Object object = record.get(key);
-                if (object instanceof List) {
-                    ((List<?>) object).remove(old);
+        final Object found = find(record, split(key));
+        final boolean containsKey = found != null;
+        if (containsKey) {
+            remove(record, split(key));
+            new ArrayList<>(Metafix.asList(found)).forEach(old -> {
+                if (fun != null && old != null) {
+                    final String val = fun.apply(old.toString());
+                    insert(InsertMode.APPEND, record, split(key), val);
                 }
-                final String val = fun.apply(old.toString());
-                record.put(key, object == null ? val : Metafix.merged(object, val));
             });
         }
     }
@@ -417,8 +417,8 @@ enum FixMethod {
         final Object value = find(record, split(oldName));
         if (value != null) {
             final List<Object> vs = Metafix.asList(value);
-            for (int i = 0; i < vs.size(); ++i) {
-                insert(InsertMode.APPEND, record, split(newName), vs.get(i).toString());
+            for (final Object v : vs.stream().filter(v -> v != null).collect(Collectors.toList())) {
+                insert(InsertMode.APPEND, record, split(newName), v.toString());
             }
         }
     }

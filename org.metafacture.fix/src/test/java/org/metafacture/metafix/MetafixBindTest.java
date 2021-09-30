@@ -131,7 +131,6 @@ public class MetafixBindTest {
     }
 
     @Test
-    @Disabled // implement list bind for entities / fix internal entity structure
     public void doListEntitesToLiterals() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "do list('path': 'creator', 'var': 'c')",

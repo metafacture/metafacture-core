@@ -81,7 +81,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled // TODO: All field-level FixMethods don't support dot notation for nested entities yet
     public void upcaseDotNotationNested() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "upcase('data.title')"), //
