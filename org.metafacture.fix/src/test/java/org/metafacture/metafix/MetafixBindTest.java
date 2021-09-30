@@ -196,6 +196,47 @@ public class MetafixBindTest {
     }
 
     @Test
+    @Disabled // TODO: how to handle repeated entities: turn to array vs. merge because it's the same?
+    public void doListEntitesWithFieldsToEntities() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "do list('path': 'creator', 'var': 'c')",
+                " set_array('author')",
+                " copy_field('c.name', 'author.$append.name')",
+                " if all_contain('c.type', 'corporate')", //
+                "  add_field('author.$last.type', 'Organization')", //
+                " end",
+                " if all_contain('c.type', 'personal')",
+                "  add_field('author.$last.type', 'Person')", //",
+                " end",
+                "end",
+                "remove_field('creator')"), //
+            i -> {
+                i.startRecord("1");
+                i.startEntity("creator");
+                i.literal("name", "A University");
+                i.literal("type", "corporate");
+                i.endEntity();
+                i.startEntity("creator");
+                i.literal("name", "Max");
+                i.literal("type", "personal");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author[]");
+                o.get().startEntity("");
+                o.get().literal("name", "A University");
+                o.get().literal("type", "Organization");
+                o.get().endEntity();
+                o.get().startEntity("");
+                o.get().literal("name", "Max");
+                o.get().literal("type", "Person");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     @Disabled // implement Fix-style binds with collectors?
     public void ifInCollector() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//

@@ -18,6 +18,7 @@ package org.metafacture.metafix;
 
 import org.metafacture.framework.StreamReceiver;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -70,8 +71,35 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @SuppressWarnings("checkstyle:MagicNumber")
+    @Disabled // TODO: how to handle repeated entities: turn to array vs. merge because it's the same?
     public void entitiesPassThroughRepeatEntity() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "vacuum()"), //
+            i -> {
+                i.startRecord("1");
+                i.startEntity("some");
+                i.literal("key", "val1");
+                i.endEntity();
+                i.startEntity("some");
+                i.literal("key", "val2");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("some[]");
+                o.get().startEntity("");
+                o.get().literal("key", "val1");
+                o.get().endEntity();
+                o.get().startEntity("");
+                o.get().literal("key", "val2");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    @SuppressWarnings("checkstyle:MagicNumber")
+    public void entitiesPassThroughRepeatNestedEntity() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
                 "vacuum()"), //
             i -> {
