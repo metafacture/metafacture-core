@@ -271,7 +271,9 @@ public class Metafix implements StreamPipe<StreamReceiver> {
             return object1;
         }
         final List<Object> list = asList(object1);
-        list.add(object2);
+        asList(object2).forEach(e -> {
+            list.add(e);
+        });
         return list;
     }
 

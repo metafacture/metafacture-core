@@ -159,12 +159,12 @@ public class MetafixBindTest {
     }
 
     @Test
-    @Disabled // implement list bind for entities / fix internal entity structure
     public void doListEntitesToEntities() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "do list('path': 'creator', 'var': 'c')",
-                " copy_field('c.name', 'author.$append.name')",
-                " if all_contain('c.name', 'University')", //
+                "do list('path': 'creator.name', 'var': 'c')",
+                " set_array('author')",
+                " copy_field('c', 'author.$append.name')",
+                " if all_contain('c', 'University')", //
                 "  add_field('author.$last.type', 'Organization')", //
                 " else",
                 "  add_field('author.$last.type', 'Person')", //",
@@ -180,16 +180,17 @@ public class MetafixBindTest {
                 i.literal("name", "Max");
                 i.endEntity();
                 i.endRecord();
-            }, o -> {
+            }, (o, f) -> {
                 o.get().startRecord("1");
-                o.get().startEntity("author");
+                o.get().startEntity("author[]");
+                o.get().startEntity("");
                 o.get().literal("name", "A University");
                 o.get().literal("type", "Organization");
                 o.get().endEntity();
-                o.get().startEntity("author");
+                o.get().startEntity("");
                 o.get().literal("name", "Max");
                 o.get().literal("type", "Person");
-                o.get().endEntity();
+                f.apply(2).endEntity();
                 o.get().endRecord();
             });
     }
