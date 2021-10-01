@@ -56,6 +56,12 @@ public final class RecordBuilder {
     private AppendState appendState;
     private int fieldStart;
 
+    /**
+     * Initializes the RecordBuilder based on a RecordFormat.
+     *
+     * @param recordFormat RecordFormat as base to configure the RecordBuilder
+     * @see RecordFormat
+     */
     public RecordBuilder(final RecordFormat recordFormat) {
         Require.notNull(recordFormat);
         label = new LabelBuilder(recordFormat);
@@ -82,6 +88,13 @@ public final class RecordBuilder {
         return chars;
     }
 
+    /**
+     * Sets the charset of the FieldsBuilder.
+     *
+     * @param charset Charset used by the FieldsBuilder
+     * @see FieldsBuilder
+     * @see Charset
+     */
     public void setCharset(final Charset charset) {
         fields.setCharset(Require.notNull(charset));
     }
@@ -90,11 +103,25 @@ public final class RecordBuilder {
         return fields.getCharset();
     }
 
+    /**
+     * Sets the record status of the LabelBuilder.
+     *
+     * @param recordStatus 7 bit char record status
+     * @see Iso2709Constants.RECORD_STATUS_POS
+     * @see LabelBuilder
+     */
     public void setRecordStatus(final char recordStatus) {
         require7BitAscii(recordStatus);
         label.setRecordStatus(recordStatus);
     }
 
+    /**
+     * Sets the impl codes in the LabelBuilder.
+     *
+     * @param implCodes char array of 7 bit impl codes
+     * @see Iso2709Constants
+     * @see LabelBuilder
+     */
     public void setImplCodes(final char[] implCodes) {
         Require.notNull(implCodes);
         Require.that(implCodes.length == Iso2709Constants.IMPL_CODES_LENGTH);
@@ -102,12 +129,27 @@ public final class RecordBuilder {
         label.setImplCodes(implCodes);
     }
 
+    /**
+     * Sets an impl code at a given position in the LabelBuilder.
+     *
+     * @param index    index of the 7 bit impl code
+     * @param implCode char of a 7 bit impl code
+     * @see Iso2709Constants
+     * @see LabelBuilder
+     */
     public void setImplCode(final int index, final char implCode) {
         Require.that(0 <= index && index < Iso2709Constants.IMPL_CODES_LENGTH);
         require7BitAscii(implCode);
         label.setImplCode(index, implCode);
     }
 
+    /**
+     * Sets the system chars in the LabelBuilder.
+     *
+     * @param systemChars 7-bit char array to be set as system chars
+     * @see Iso2709Constants
+     * @see LabelBuilder
+     */
     public void setSystemChars(final char[] systemChars) {
         Require.notNull(systemChars);
         Require.that(systemChars.length == Iso2709Constants.SYSTEM_CHARS_LENGTH);
@@ -115,21 +157,47 @@ public final class RecordBuilder {
         label.setSystemChars(systemChars);
     }
 
+    /**
+     * Sets a system char at the given position in the LabelBuilder.
+     *
+     * @param systemChar 7-bit char to be set as the system char
+     * @param index      position of the system char
+     * @see Iso2709Constants
+     * @see LabelBuilder
+     */
     public void setSystemChar(final int index, final char systemChar) {
         Require.that(0 <= index && index < Iso2709Constants.SYSTEM_CHARS_LENGTH);
         require7BitAscii(systemChar);
         label.setSystemChar(index, systemChar);
     }
 
+    /**
+     * Sets a reserved char in the LabelBuilder.
+     *
+     * @param reservedChar 7-bit char to be set as reserved char
+     * @see Iso2709Constants
+     * @see LabelBuilder
+     */
     public void setReservedChar(final char reservedChar) {
         require7BitAscii(reservedChar);
         label.setReservedChar(reservedChar);
     }
 
+    /**
+     * Appends an identifier field.
+     *
+     * @param value String that is appended as an identfier field
+     */
     public void appendIdentifierField(final String value) {
         appendIdentifierField(defaultImplDefinedPart, value);
     }
 
+    /**
+     * Appends an identifier field in dependency of the current impl defined part.
+     *
+     * @param currentImplDefinedPart char array of the current impl defined part
+     * @param value                  String that is appended as an identfier field
+     */
     public void appendIdentifierField(final char[] currentImplDefinedPart, final String value) {
         requireNotInDataField();
         requireNotAppendingReferenceFields();
@@ -144,6 +212,14 @@ public final class RecordBuilder {
         appendReferenceField(currentTag, defaultImplDefinedPart, value);
     }
 
+    /**
+     * Appends a reference field in dependency of the current tag and of the
+     * current impl defined part.
+     *
+     * @param currentTag             char array of the current tag
+     * @param currentImplDefinedPart char array of the current impl defined part
+     * @param value                  String that is appended as a reference field
+     */
     public void appendReferenceField(final char[] currentTag, final char[] currentImplDefinedPart, final String value) {
         requireNotInDataField();
         requireNotAppendingDataFields();
@@ -181,6 +257,14 @@ public final class RecordBuilder {
         startDataField(currentTag, indicators, defaultImplDefinedPart);
     }
 
+    /**
+     * Starts a data field in dependency of the current tag, indicators and of the
+     * current impl defined part.
+     *
+     * @param currentTag             char array of the current tag
+     * @param indicators             char array of the current indicators
+     * @param currentImplDefinedPart char array of the current impl defined part
+     */
     public void startDataField(final char[] currentTag, final char[] indicators, final char[] currentImplDefinedPart) {
         requireNotInDataField();
         Require.notNull(currentTag);
@@ -208,6 +292,9 @@ public final class RecordBuilder {
         System.arraycopy(source, 0, destination, 0, destination.length);
     }
 
+    /**
+     * Ends a data field.
+     */
     public void endDataField() {
         requireInDataField();
         final int fieldEnd = fields.endField();
@@ -221,12 +308,23 @@ public final class RecordBuilder {
         }
     }
 
+    /**
+     * Appends a subfield.
+     *
+     * @param value String of the to be appended subfield
+     */
     public void appendSubfield(final String value) {
         requireInDataField();
         Require.notNull(value);
         fields.appendSubfield(defaultIdentifier, value);
     }
 
+    /**
+     * Appends a subfield in dependency of an identifier.
+     *
+     * @param identifier char array of an identifier
+     * @param value      String of the to be appended subfield
+     */
     public void appendSubfield(final char[] identifier, final String value) {
         requireInDataField();
         Require.notNull(identifier);
@@ -236,6 +334,11 @@ public final class RecordBuilder {
         fields.appendSubfield(identifier, value);
     }
 
+    /**
+     * Builds the record.
+     *
+     * @return byte array of the record
+     */
     public byte[] build() {
         requireNotInDataField();
         final int baseAddress = Iso2709Constants.RECORD_LABEL_LENGTH + directory.length();
@@ -286,6 +389,12 @@ public final class RecordBuilder {
         Require.that(charCode != Iso646Constants.INFORMATION_SEPARATOR_3);
     }
 
+    /**
+     * Resets the label, directory and the fields. Sets the "append state" to "id
+     * field".
+     *
+     * @see AppendState.ID_FIELD
+     */
     public void reset() {
         label.reset();
         directory.reset();

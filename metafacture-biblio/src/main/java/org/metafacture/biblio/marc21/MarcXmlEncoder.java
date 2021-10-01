@@ -71,30 +71,20 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     private static final int TAG_BEGIN = 0;
     private static final int TAG_END = 3;
 
-    private final StringBuilder builder;
+    private final StringBuilder builder = new StringBuilder();
 
-    private boolean atStreamStart;
+    private boolean atStreamStart = true;
 
     private boolean omitXmlDeclaration;
-    private String xmlVersion;
-    private String xmlEncoding;
+    private String xmlVersion = "1.0";
+    private String xmlEncoding = "UTF-8";
 
-    private String currentEntity;
+    private String currentEntity = "";
+
     private int indentationLevel;
-    private boolean formatted;
+    private boolean formatted = true;
 
     public MarcXmlEncoder() {
-        this.builder = new StringBuilder();
-        this.atStreamStart = true;
-
-        this.omitXmlDeclaration = false;
-        this.xmlVersion = "1.0";
-        this.xmlEncoding = "UTF-8";
-
-        this.currentEntity = "";
-
-        this.indentationLevel = 0;
-        this.formatted = true;
     }
 
     public void omitXmlDeclaration(final boolean currentOmitXmlDeclaration) {

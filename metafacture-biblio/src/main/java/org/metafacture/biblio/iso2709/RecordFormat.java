@@ -51,6 +51,15 @@ public final class RecordFormat {
     private final int fieldStartLength;
     private final int implDefinedPartLength;
 
+    /**
+     * Initializes the RecordFormat.
+     *
+     * @param indicatorLength       the length of the indicator
+     * @param identifierLength      the length of the identifier
+     * @param fieldLengthLength     the length of the field
+     * @param fieldStartLength      the length of the indicator
+     * @param implDefinedPartLength the length of the part
+     */
     public RecordFormat(final int indicatorLength, final int identifierLength,
             final int fieldLengthLength, final int fieldStartLength,
             final int implDefinedPartLength) {
@@ -61,6 +70,11 @@ public final class RecordFormat {
         this.implDefinedPartLength = implDefinedPartLength;
     }
 
+    /**
+     * Initializes a RecordFormat defined by a RecordFormat.
+     *
+     * @param source the RecordFormat
+     */
     public RecordFormat(final RecordFormat source) {
         Require.notNull(source);
 
@@ -71,10 +85,21 @@ public final class RecordFormat {
         implDefinedPartLength = source.implDefinedPartLength;
     }
 
+    /**
+     * Returns a new default Builder.
+     *
+     * @return Builder
+     */
     public static Builder create() {
         return new Builder();
     }
 
+    /**
+     * Returns a new Builder created from a RecordFormat.
+     *
+     * @param source the RecordFormat
+     * @return Builder
+     */
     public static Builder createFrom(final RecordFormat source) {
         return create()
                 .withIndicatorLength(source.indicatorLength)
@@ -149,6 +174,12 @@ public final class RecordFormat {
         Builder() {
         }
 
+        /**
+         * Returns a new Builder with defined indicator length.
+         *
+         * @param currentIndicatorLength the length of the indicator
+         * @return Builder
+         */
         public Builder withIndicatorLength(final int currentIndicatorLength) {
             Require.notNegative(currentIndicatorLength);
             Require.that(currentIndicatorLength < RADIX);
@@ -156,6 +187,12 @@ public final class RecordFormat {
             return this;
         }
 
+        /**
+         * Returns a new Builder with defined identifier length.
+         *
+         * @param currentIdentifierLength the length of the identifier
+         * @return Builder
+         */
         public Builder withIdentifierLength(final int currentIdentifierLength) {
             Require.notNegative(currentIdentifierLength);
             Require.that(currentIdentifierLength < RADIX);
@@ -163,6 +200,12 @@ public final class RecordFormat {
             return this;
         }
 
+        /**
+         * Returns a new Builder with defined field length.
+         *
+         * @param currentFieldLengthLength the length of the field
+         * @return Builder
+         */
         public Builder withFieldLengthLength(final int currentFieldLengthLength) {
             Require.that(currentFieldLengthLength > 0);
             Require.that(currentFieldLengthLength < RADIX);
@@ -170,6 +213,12 @@ public final class RecordFormat {
             return this;
         }
 
+        /**
+         * Returns a new Builder with defined field start length.
+         *
+         * @param currentFieldStartLength the length of the field start
+         * @return Builder
+         */
         public Builder withFieldStartLength(final int currentFieldStartLength) {
             Require.that(currentFieldStartLength > 0);
             Require.that(currentFieldStartLength < RADIX);
@@ -177,6 +226,12 @@ public final class RecordFormat {
             return this;
         }
 
+        /**
+         * Returns a new Builder with defined part length.
+         *
+         * @param currentImplDefinedPartLength the length of the part
+         * @return Builder
+         */
         public Builder withImplDefinedPartLength(final int currentImplDefinedPartLength) {
             Require.notNegative(currentImplDefinedPartLength);
             Require.that(currentImplDefinedPartLength < RADIX);
@@ -184,6 +239,11 @@ public final class RecordFormat {
             return this;
         }
 
+        /**
+         * Returns a new RecordFormat.
+         *
+         * @return RecordFormat
+         */
         public RecordFormat build() {
             return new RecordFormat(indicatorLength, identifierLength,
                     fieldLengthLength, fieldStartLength, implDefinedPartLength);

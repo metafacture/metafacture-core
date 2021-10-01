@@ -82,6 +82,9 @@
         <module name="MethodTypeParameterName"/>
         <module name="MissingCtor"/>
         <module name="MissingDeprecated"/>
+        <module name="MissingJavadocMethod">
+            <property name="minLineCount" value="1"/>
+        </module>
         <module name="MissingOverride"/>
         <module name="MissingSwitchDefault"/>
         <module name="ModifiedControlVariable"/>
