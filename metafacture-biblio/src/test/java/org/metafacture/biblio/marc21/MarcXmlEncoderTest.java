@@ -187,6 +187,18 @@ public class MarcXmlEncoderTest {
     }
 
     @Test
+    public void issue336_createRecordWithTopLevelLeader() {
+        encoder.startRecord("1");
+        encoder.literal(Marc21EventNames.LEADER_ENTITY, "dummy");
+        encoder.endRecord();
+        encoder.closeStream();
+        String expected = XML_DECLARATION + XML_ROOT_OPEN
+                + "<marc:record><marc:leader>dummy</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void sendDataAndClearWhenRecordStartedAndStreamResets() {
         encoder.startRecord("1");
         encoder.onResetStream();

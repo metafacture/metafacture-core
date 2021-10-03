@@ -182,27 +182,22 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     @Override
     public void literal(final String name, final String value) {
         if ("".equals(currentEntity)) {
-            prettyPrintIndentation();
-            writeRaw(String.format(CONTROLFIELD_OPEN_TEMPLATE, name));
-            if (value != null) {
-                writeEscaped(value.trim());
+            if (!writeLeader(name, value)) {
+                prettyPrintIndentation();
+                writeRaw(String.format(CONTROLFIELD_OPEN_TEMPLATE, name));
+                if (value != null) {
+                    writeEscaped(value.trim());
+                }
+                writeRaw(CONTROLFIELD_CLOSE);
+                prettyPrintNewLine();
             }
-            writeRaw(CONTROLFIELD_CLOSE);
-            prettyPrintNewLine();
         }
-        else if (!currentEntity.equals(Marc21EventNames.LEADER_ENTITY)) {
+        else if (!writeLeader(currentEntity, value)) {
             prettyPrintIndentation();
             writeRaw(String.format(SUBFIELD_OPEN_TEMPLATE, name));
             writeEscaped(value.trim());
             writeRaw(SUBFIELD_CLOSE);
             prettyPrintNewLine();
-        }
-        else {
-            if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
-                prettyPrintIndentation();
-                writeRaw(LEADER_OPEN_TEMPLATE + value + LEADER_CLOSE_TEMPLATE);
-                prettyPrintNewLine();
-            }
         }
 
     }
@@ -250,6 +245,19 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     /** Writes a escaped sequence */
     private void writeEscaped(final String str) {
         builder.append(XmlUtil.escape(str, false));
+    }
+
+    private boolean writeLeader(final String name, final String value) {
+        if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
+            prettyPrintIndentation();
+            writeRaw(LEADER_OPEN_TEMPLATE + value + LEADER_CLOSE_TEMPLATE);
+            prettyPrintNewLine();
+
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     private void prettyPrintIndentation() {
