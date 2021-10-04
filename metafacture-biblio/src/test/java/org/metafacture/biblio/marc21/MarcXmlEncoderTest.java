@@ -34,8 +34,10 @@ import org.metafacture.framework.helpers.DefaultObjectReceiver;
  */
 
 public class MarcXmlEncoderTest {
-    private static StringBuilder resultCollector;
-    private static MarcXmlEncoder encoder;
+
+    private static final String TAG = "tag";
+    private static final String VALUE = "value";
+
     private static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     private static final String XML_1_DECLARATION = "<?xml version=\"1.1\" encoding=\"UTF-8\"?>";
     private static final String XML_16_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-16\"?>";
@@ -47,6 +49,9 @@ public class MarcXmlEncoderTest {
             + "</marc:datafield></marc:record>";
     private static final String XML_MARC_COLLECTION_END_TAG = "</marc:collection>";
     private static final String RECORD_ID = "92005291";
+
+    private static MarcXmlEncoder encoder;
+    private static StringBuilder resultCollector;
 
     @Before
     public void setUp() {
@@ -199,6 +204,112 @@ public class MarcXmlEncoderTest {
     }
 
     @Test
+    public void shouldNotEncodeMarkedLiteralsAsAttributes() {
+        encoder.startRecord("");
+        encoder.literal(TAG, VALUE);
+        encoder.literal("~attr", VALUE);
+        encoder.endRecord();
+        encoder.closeStream();
+
+        assertEquals(XML_DECLARATION +
+                XML_ROOT_OPEN +
+                "<marc:record>" +
+                "<marc:controlfield tag=\"tag\">value</marc:controlfield>" +
+                "<marc:controlfield tag=\"~attr\">value</marc:controlfield>" +
+                "</marc:record>" +
+                XML_MARC_COLLECTION_END_TAG,
+                resultCollector.toString());
+    }
+
+    @Test
+    public void issue402_shouldEncodeMarkedLiteralsWithConfiguredMarkerAsAttributes() {
+        final String marker = "~";
+        encoder.setAttributeMarker(marker);
+
+        encoder.startRecord("");
+        encoder.literal(TAG, VALUE);
+        encoder.literal(marker + "attr", VALUE);
+        encoder.endRecord();
+        encoder.closeStream();
+
+        assertEquals(XML_DECLARATION +
+                XML_ROOT_OPEN +
+                "<marc:record attr=\"value\">" +
+                "<marc:controlfield tag=\"tag\">value</marc:controlfield>" +
+                "</marc:record>" +
+                XML_MARC_COLLECTION_END_TAG,
+                resultCollector.toString());
+    }
+
+    @Test
+    public void shouldNotEncodeNestedMarkedLiteralsAsAttributes() {
+        final String marker = "~";
+        encoder.setAttributeMarker(marker);
+
+        encoder.startRecord("");
+        encoder.startEntity("tag12");
+        encoder.literal(TAG, VALUE);
+        encoder.literal(marker + "attr", VALUE);
+        encoder.endEntity();
+        encoder.endRecord();
+        encoder.closeStream();
+
+        assertEquals(XML_DECLARATION +
+                XML_ROOT_OPEN +
+                "<marc:record>" +
+                "<marc:datafield tag=\"tag\" ind1=\"1\" ind2=\"2\">" +
+                "<marc:subfield code=\"tag\">value</marc:subfield>" +
+                "<marc:subfield code=\"~attr\">value</marc:subfield>" +
+                "</marc:datafield>" +
+                "</marc:record>" +
+                XML_MARC_COLLECTION_END_TAG,
+                resultCollector.toString());
+    }
+
+    @Test
+    public void shouldNotEncodeMarkedEntitiesWithConfiguredMarkerAsAttributes() {
+        final String marker = "~";
+        encoder.setAttributeMarker(marker);
+
+        encoder.startRecord("");
+        encoder.startEntity(marker + "data");
+        encoder.literal(TAG, VALUE);
+        encoder.endEntity();
+        encoder.endRecord();
+        encoder.closeStream();
+
+        assertEquals(XML_DECLARATION +
+                XML_ROOT_OPEN +
+                "<marc:record>" +
+                "<marc:datafield tag=\"~da\" ind1=\"t\" ind2=\"a\">" +
+                "<marc:subfield code=\"tag\">value</marc:subfield>" +
+                "</marc:datafield>" +
+                "</marc:record>" +
+                XML_MARC_COLLECTION_END_TAG,
+                resultCollector.toString());
+    }
+
+    @Test
+    public void shouldNotEncodeLiteralsWithDifferentMarkerAsAttributes() {
+        encoder.setAttributeMarker("*");
+
+        encoder.startRecord("");
+        encoder.literal(TAG, VALUE);
+        encoder.literal("~attr", VALUE);
+        encoder.endRecord();
+        encoder.closeStream();
+
+        assertEquals(XML_DECLARATION +
+                XML_ROOT_OPEN +
+                "<marc:record>" +
+                "<marc:controlfield tag=\"tag\">value</marc:controlfield>" +
+                "<marc:controlfield tag=\"~attr\">value</marc:controlfield>" +
+                "</marc:record>" +
+                XML_MARC_COLLECTION_END_TAG,
+                resultCollector.toString());
+    }
+
+    @Test
     public void sendDataAndClearWhenRecordStartedAndStreamResets() {
         encoder.startRecord("1");
         encoder.onResetStream();
@@ -229,4 +340,5 @@ public class MarcXmlEncoderTest {
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
     }
+
 }

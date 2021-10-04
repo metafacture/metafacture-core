@@ -39,6 +39,10 @@ import java.util.Collections;
 @Out(String.class)
 @FluxCommand("encode-marcxml")
 public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
+
+    public static final String DEFAULT_ATTRIBUTE_MARKER = null;
+    private static final String ATTRIBUTE_TEMPLATE = " %s=\"%s\"";
+
     private static final String ROOT_OPEN = "<marc:collection xmlns:marc=\"http://www.loc.gov/MARC21/slim\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\">";
     private static final String ROOT_CLOSE = "</marc:collection>";
 
@@ -83,6 +87,9 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     private int indentationLevel;
     private boolean formatted;
 
+    private String attributeMarker = DEFAULT_ATTRIBUTE_MARKER;
+    private int recordAttributeOffset;
+
     public MarcXmlEncoder() {
         this.builder = new StringBuilder();
         this.atStreamStart = true;
@@ -119,6 +126,14 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         this.formatted = formatted;
     }
 
+    public void setAttributeMarker(final String attributeMarker) {
+        this.attributeMarker = attributeMarker;
+    }
+
+    public String getAttributeMarker() {
+        return attributeMarker;
+    }
+
     @Override
     public void startRecord(final String identifier) {
         if (atStreamStart) {
@@ -134,6 +149,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
         prettyPrintIndentation();
         writeRaw(RECORD_OPEN);
+        recordAttributeOffset = builder.length() - 1;
         prettyPrintNewLine();
 
         incrementIndentationLevel();
@@ -182,7 +198,10 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     @Override
     public void literal(final String name, final String value) {
         if ("".equals(currentEntity)) {
-            if (!writeLeader(name, value)) {
+            if (attributeMarker != null && name.startsWith(attributeMarker)) {
+                builder.insert(recordAttributeOffset, String.format(ATTRIBUTE_TEMPLATE, name.substring(attributeMarker.length()), value));
+            }
+            else if (!writeLeader(name, value)) {
                 prettyPrintIndentation();
                 writeRaw(String.format(CONTROLFIELD_OPEN_TEMPLATE, name));
                 if (value != null) {
@@ -199,7 +218,6 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
             writeRaw(SUBFIELD_CLOSE);
             prettyPrintNewLine();
         }
-
     }
 
     @Override
@@ -276,5 +294,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     private void sendAndClearData() {
         getReceiver().process(builder.toString());
         builder.delete(0, builder.length());
+        recordAttributeOffset = 0;
     }
+
 }
