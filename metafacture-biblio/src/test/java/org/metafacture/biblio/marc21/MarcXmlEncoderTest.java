@@ -34,8 +34,7 @@ import org.metafacture.framework.helpers.DefaultObjectReceiver;
  */
 
 public class MarcXmlEncoderTest {
-    private static StringBuilder resultCollector;
-    private static MarcXmlEncoder encoder;
+
     private static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     private static final String XML_1_DECLARATION = "<?xml version=\"1.1\" encoding=\"UTF-8\"?>";
     private static final String XML_16_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-16\"?>";
@@ -47,6 +46,9 @@ public class MarcXmlEncoderTest {
             + "</marc:datafield></marc:record>";
     private static final String XML_MARC_COLLECTION_END_TAG = "</marc:collection>";
     private static final String RECORD_ID = "92005291";
+
+    private static StringBuilder resultCollector;
+    private static MarcXmlEncoder encoder;
 
     @Before
     public void setUp() {
@@ -220,13 +222,40 @@ public class MarcXmlEncoderTest {
     @Test
     public void shouldIgnoreNullValueOfLiteral() {
         encoder.startRecord(RECORD_ID);
-        encoder.literal("type", null);
+        encoder.literal("data", null);
         encoder.endRecord();
         encoder.closeStream();
         String expected = XML_DECLARATION + XML_ROOT_OPEN
-                + "<marc:record><marc:controlfield tag=\"type\"></marc:controlfield></marc:record>"
+                + "<marc:record><marc:controlfield tag=\"data\"></marc:controlfield></marc:record>"
                 + XML_MARC_COLLECTION_END_TAG;
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void shouldIgnoreNullValueOfTypeLiteral() {
+        encoder.startRecord(RECORD_ID);
+        encoder.literal("type", null);
+        encoder.endRecord();
+        encoder.closeStream();
+        String expected = XML_DECLARATION + XML_ROOT_OPEN
+                + "<marc:record></marc:record>"
+                + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldEncodeTypeLiteralAsAttribute() {
+        encoder.startRecord(RECORD_ID);
+        encoder.literal("type", "value");
+        encoder.endRecord();
+        encoder.closeStream();
+        String expected = XML_DECLARATION + XML_ROOT_OPEN
+                + "<marc:record type=\"value\"></marc:record>"
+                + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertEquals(expected, actual);
+    }
+
 }
