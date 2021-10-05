@@ -17,7 +17,7 @@ applicationName = 'xtext-server'
 
 shadowJar {
   from(project.convention.getPlugin(JavaPluginConvention).sourceSets.main.output)
-  configurations = [project.configurations.runtimeOnly]
+  configurations = [project.configurations.runtimeClasspath]
 
   exclude(
     '*.html',
