@@ -246,13 +246,32 @@ public class MarcXmlEncoderTest {
     }
 
     @Test
-    public void shouldEncodeTypeLiteralAsAttribute() {
+    public void issue402_shouldEncodeTypeLiteralAsAttribute() {
         encoder.startRecord(RECORD_ID);
         encoder.literal("type", "value");
         encoder.endRecord();
         encoder.closeStream();
         String expected = XML_DECLARATION + XML_ROOT_OPEN
                 + "<marc:record type=\"value\"></marc:record>"
+                + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldNotEncodeNestedTypeLiteralAsAttribute() {
+        encoder.startRecord(RECORD_ID);
+        encoder.startEntity("tag12");
+        encoder.literal("type", "value");
+        encoder.endEntity();
+        encoder.endRecord();
+        encoder.closeStream();
+        String expected = XML_DECLARATION + XML_ROOT_OPEN
+                + "<marc:record>"
+                + "<marc:datafield tag=\"tag\" ind1=\"1\" ind2=\"2\">"
+                + "<marc:subfield code=\"type\">value</marc:subfield>"
+                + "</marc:datafield>"
+                + "</marc:record>"
                 + XML_MARC_COLLECTION_END_TAG;
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
