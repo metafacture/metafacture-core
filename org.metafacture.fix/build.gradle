@@ -7,6 +7,7 @@ dependencies {
   compile "org.eclipse.xtext:org.eclipse.xtext:${versions.xtext}"
   compile "org.eclipse.xtext:org.eclipse.xtext.xbase:${versions.xtext}"
   compile "com.google.guava:guava:${versions.guava}"
+  compile "org.slf4j:slf4j-api:${versions.slf4j}"
 
   testCompile "org.junit.jupiter:junit-jupiter-api:${versions.junit_jupiter}"
   testCompile "org.junit.platform:junit-platform-launcher:${versions.junit_platform}"
@@ -14,6 +15,7 @@ dependencies {
   testCompile "org.eclipse.xtext:org.eclipse.xtext.xbase.testing:${versions.xtext}"
 
   testRuntime "org.junit.jupiter:junit-jupiter-engine:${versions.junit_jupiter}"
+  testRuntime "org.slf4j:slf4j-simple:${versions.slf4j}"
 
   implementation "org.metafacture:metafacture-commons:${versions.metafacture}"
   implementation "org.metafacture:metafacture-mangling:${versions.metafacture}"
