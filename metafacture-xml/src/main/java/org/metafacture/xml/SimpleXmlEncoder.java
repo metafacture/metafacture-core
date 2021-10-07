@@ -53,6 +53,7 @@ import java.util.Properties;
 public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
     public static final String ATTRIBUTE_MARKER = "~";
+    public static final String DEFAULT_VALUE_TAG = "";
 
     private static final String NEW_LINE = "\n";
     private static final String INDENT = "\t";
@@ -73,7 +74,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     private String attributeMarker = ATTRIBUTE_MARKER;
     private String rootTag = DefaultXmlPipe.DEFAULT_ROOT_TAG;
     private String recordTag = DefaultXmlPipe.DEFAULT_RECORD_TAG;
-    private String valueTag = DefaultXmlPipe.DEFAULT_VALUE_TAG;
+    private String valueTag = DEFAULT_VALUE_TAG;
     private Map<String, String> namespaces = new HashMap<String, String>();
     private boolean writeRootTag = true;
     private boolean writeXmlHeader = true;
