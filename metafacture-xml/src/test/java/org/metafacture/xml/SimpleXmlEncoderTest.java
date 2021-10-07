@@ -19,12 +19,14 @@ package org.metafacture.xml;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.metafacture.framework.helpers.DefaultObjectReceiver;
+import org.metafacture.framework.helpers.DefaultXmlPipe;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.helpers.DefaultObjectReceiver;
 
 /**
  * Tests for class {@link SimpleXmlEncoder}.
@@ -246,6 +248,22 @@ public final class SimpleXmlEncoderTest {
                 "<records>" +
                 "<record>" +
                 "value" +
+                "</record>" +
+                "</records>",
+                getResultXml());
+    }
+
+    @Test
+    public void issue379_testShouldNotEncodeUnconfiguredValueLiteralsAsText() {
+        simpleXmlEncoder.startRecord("");
+        simpleXmlEncoder.literal(DefaultXmlPipe.DEFAULT_VALUE_TAG, VALUE);
+        simpleXmlEncoder.endRecord();
+        simpleXmlEncoder.closeStream();
+
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                "<records>" +
+                "<record>" +
+                "<value>value</value>" +
                 "</record>" +
                 "</records>",
                 getResultXml());
