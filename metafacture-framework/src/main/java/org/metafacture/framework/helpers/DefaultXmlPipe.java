@@ -38,6 +38,11 @@ import java.io.IOException;
  */
 public class DefaultXmlPipe<R extends Receiver> extends DefaultSender<R> implements XmlPipe<R> {
 
+    public static final String DEFAULT_ATTRIBUTE_MARKER = "";
+    public static final String DEFAULT_RECORD_TAG = "record";
+    public static final String DEFAULT_ROOT_TAG = "records";
+    public static final String DEFAULT_VALUE_TAG = "value";
+
     public DefaultXmlPipe() {
     }
 

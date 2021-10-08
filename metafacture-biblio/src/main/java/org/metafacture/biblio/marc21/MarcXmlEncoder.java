@@ -39,11 +39,14 @@ import java.util.Collections;
 @Out(String.class)
 @FluxCommand("encode-marcxml")
 public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
+
     private static final String ROOT_OPEN = "<marc:collection xmlns:marc=\"http://www.loc.gov/MARC21/slim\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\">";
     private static final String ROOT_CLOSE = "</marc:collection>";
 
     private static final String RECORD_OPEN = "<marc:record>";
     private static final String RECORD_CLOSE = "</marc:record>";
+
+    private static final String ATTRIBUTE_TEMPLATE = " %s=\"%s\"";
 
     private static final String CONTROLFIELD_OPEN_TEMPLATE = "<marc:controlfield tag=\"%s\">";
     private static final String CONTROLFIELD_CLOSE = "</marc:controlfield>";
@@ -83,6 +86,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     private int indentationLevel;
     private boolean formatted = true;
+    private int recordAttributeOffset;
 
     public MarcXmlEncoder() {
     }
@@ -124,6 +128,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
         prettyPrintIndentation();
         writeRaw(RECORD_OPEN);
+        recordAttributeOffset = builder.length() - 1;
         prettyPrintNewLine();
 
         incrementIndentationLevel();
@@ -172,29 +177,28 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     @Override
     public void literal(final String name, final String value) {
         if ("".equals(currentEntity)) {
-            prettyPrintIndentation();
-            writeRaw(String.format(CONTROLFIELD_OPEN_TEMPLATE, name));
-            if (value != null) {
-                writeEscaped(value.trim());
+            if (name.equals(Marc21EventNames.MARCXML_TYPE_LITERAL)) {
+                if (value != null) {
+                    builder.insert(recordAttributeOffset, String.format(ATTRIBUTE_TEMPLATE, name, value));
+                }
             }
-            writeRaw(CONTROLFIELD_CLOSE);
-            prettyPrintNewLine();
+            else if (!writeLeader(name, value)) {
+                prettyPrintIndentation();
+                writeRaw(String.format(CONTROLFIELD_OPEN_TEMPLATE, name));
+                if (value != null) {
+                    writeEscaped(value.trim());
+                }
+                writeRaw(CONTROLFIELD_CLOSE);
+                prettyPrintNewLine();
+            }
         }
-        else if (!currentEntity.equals(Marc21EventNames.LEADER_ENTITY)) {
+        else if (!writeLeader(currentEntity, value)) {
             prettyPrintIndentation();
             writeRaw(String.format(SUBFIELD_OPEN_TEMPLATE, name));
             writeEscaped(value.trim());
             writeRaw(SUBFIELD_CLOSE);
             prettyPrintNewLine();
         }
-        else {
-            if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
-                prettyPrintIndentation();
-                writeRaw(LEADER_OPEN_TEMPLATE + value + LEADER_CLOSE_TEMPLATE);
-                prettyPrintNewLine();
-            }
-        }
-
     }
 
     @Override
@@ -248,6 +252,19 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         builder.append(XmlUtil.escape(str, false));
     }
 
+    private boolean writeLeader(final String name, final String value) {
+        if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
+            prettyPrintIndentation();
+            writeRaw(LEADER_OPEN_TEMPLATE + value + LEADER_CLOSE_TEMPLATE);
+            prettyPrintNewLine();
+
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     private void prettyPrintIndentation() {
         if (formatted) {
             final String prefix = String.join("", Collections.nCopies(indentationLevel, INDENT));
@@ -264,5 +281,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     private void sendAndClearData() {
         getReceiver().process(builder.toString());
         builder.delete(0, builder.length());
+        recordAttributeOffset = 0;
     }
+
 }

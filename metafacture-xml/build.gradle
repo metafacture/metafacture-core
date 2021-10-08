@@ -26,3 +26,10 @@ dependencies {
   testImplementation 'org.mockito:mockito-core:2.5.5'
   testRuntimeOnly 'org.slf4j:slf4j-simple:1.7.21'
 }
+
+test {
+  testLogging {
+    showStandardStreams = true
+    exceptionFormat = 'full'
+  }
+}

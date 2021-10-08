@@ -40,13 +40,13 @@ import java.util.regex.Pattern;
 @FluxCommand("handle-generic-xml")
 public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
-    public static final String DEFAULT_RECORD_TAG = "record";
-
     public static final boolean EMIT_NAMESPACE = false;
 
     private static final Pattern TABS = Pattern.compile("\t+");
 
+    private String attributeMarker = DEFAULT_ATTRIBUTE_MARKER;
     private String recordTagName = DEFAULT_RECORD_TAG;
+    private String valueTagName = DEFAULT_VALUE_TAG;
 
     private boolean inRecord;
     private StringBuilder valueBuffer = new StringBuilder();
@@ -92,6 +92,14 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         return recordTagName;
     }
 
+    public void setValueTagName(final String valueTagName) {
+        this.valueTagName = valueTagName;
+    }
+
+    public String getValueTagName() {
+        return valueTagName;
+    }
+
     /**
      * Triggers namespace awareness. If set to "true" input data like "foo:bar"
      * will be passed through as "foo:bar". For backward compatibility the default
@@ -108,6 +116,14 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
     public boolean getEmitNamespace() {
         return this.emitNamespace;
+    }
+
+    public void setAttributeMarker(final String attributeMarker) {
+        this.attributeMarker = attributeMarker;
+    }
+
+    public String getAttributeMarker() {
+        return attributeMarker;
     }
 
     @Override
@@ -159,7 +175,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private void writeValue() {
         final String value = valueBuffer.toString();
         if (!value.trim().isEmpty()) {
-            getReceiver().literal("value", value.replace('\n', ' '));
+            getReceiver().literal(valueTagName, value.replace('\n', ' '));
         }
         valueBuffer = new StringBuilder();
     }
@@ -170,7 +186,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         for (int i = 0; i < length; ++i) {
             final String name = emitNamespace ? attributes.getQName(i) : attributes.getLocalName(i);
             final String value = attributes.getValue(i);
-            getReceiver().literal(name, value);
+            getReceiver().literal(attributeMarker + name, value);
         }
     }
 
