@@ -28,8 +28,8 @@ import org.metafacture.metafix.fix.MethodCall;
 import org.metafacture.metafix.fix.Options;
 import org.metafacture.metafix.fix.Unless;
 
-import org.eclipse.emf.common.util.EList;
 import com.google.common.collect.ImmutableMap;
+import org.eclipse.emf.common.util.EList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

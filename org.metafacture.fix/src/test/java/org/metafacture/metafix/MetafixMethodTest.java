@@ -18,6 +18,7 @@ package org.metafacture.metafix;
 
 import org.metafacture.framework.StreamReceiver;
 
+import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +27,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.google.common.collect.ImmutableMap;
 
 import java.util.Arrays;
 

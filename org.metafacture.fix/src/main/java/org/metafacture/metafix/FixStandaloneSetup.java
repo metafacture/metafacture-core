@@ -2,6 +2,8 @@ package org.metafacture.metafix;
 
 import org.metafacture.metafix.fix.Fix;
 
+import com.google.common.io.CharStreams;
+import com.google.inject.Injector;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.resource.XtextResource;
@@ -10,8 +12,6 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
-import com.google.common.io.CharStreams;
-import com.google.inject.Injector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
