@@ -56,11 +56,21 @@ public final class FileDigestCalculator extends
     private final DigestAlgorithm algorithm;
     private final MessageDigest messageDigest;
 
+    /**
+     * Uses the given DigestAlgorithm to define the MessageDigest.
+     *
+     * @param algorithm the DigestAlgorithm
+     */
     public FileDigestCalculator(final DigestAlgorithm algorithm) {
         this.algorithm = algorithm;
         this.messageDigest = this.algorithm.getInstance();
     }
 
+    /**
+     * Uses the given name of the algorithm to define the MessageDigest.
+     *
+     * @param algorithm the name of the algorithm
+     */
     public FileDigestCalculator(final String algorithm) {
         this.algorithm = DigestAlgorithm.valueOf(algorithm.toUpperCase());
         this.messageDigest = this.algorithm.getInstance();
@@ -129,6 +139,12 @@ public final class FileDigestCalculator extends
             this.identifier = identifier;
         }
 
+        /**
+         * Returns a MessageDigest object that implements the specified digest
+         * algorithm.
+         *
+         * @return the MessageDigest
+         */
         public MessageDigest getInstance() {
             try {
                 return MessageDigest.getInstance(identifier);
