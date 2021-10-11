@@ -22,14 +22,19 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 /**
+ * Metadata for pipe elements.
+ *
  * @author Markus Michael Geipel
- * Metadata for pipe elements
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Out {
+    /**
+     * Returns the class used as output when using this class in a pipe.
+     *
+     * @return the Class
+     */
     Class<?> value();
 }

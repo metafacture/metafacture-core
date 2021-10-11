@@ -40,6 +40,14 @@ public final class Triple implements Comparable<Triple> {
         this(subject, predicate, object, ObjectType.STRING);
     }
 
+    /**
+     * Constructs a Triple.
+     *
+     * @param subject    the subject
+     * @param predicate  the predicate
+     * @param object     the object
+     * @param objectType the ObjectType
+     */
     public Triple(final String subject, final String predicate,
             final String object, final ObjectType objectType) {
         this.subject = subject;
@@ -69,6 +77,13 @@ public final class Triple implements Comparable<Triple> {
         return objectType;
     }
 
+    /**
+     * Reads an ObjectInputStream as Triple and returns it.
+     *
+     * @param in the ObjectInputStream
+     * @return the Triple
+     * @throws IOException
+     */
     public static Triple read(final ObjectInputStream in) throws IOException {
         try {
             return new Triple(in.readUTF(), in.readUTF(), in.readUTF(),
@@ -79,6 +94,12 @@ public final class Triple implements Comparable<Triple> {
         }
     }
 
+    /**
+     * Writes the Triple to an ObjectOutputStream.
+     *
+     * @param out the ObjectOutputStream.
+     * @throws IOException
+     */
     public void write(final ObjectOutputStream out) throws IOException {
         out.writeUTF(subject);
         out.writeUTF(predicate);
