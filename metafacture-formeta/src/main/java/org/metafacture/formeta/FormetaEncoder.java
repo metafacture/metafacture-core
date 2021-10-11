@@ -48,6 +48,11 @@ public final class FormetaEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         return style;
     }
 
+    /**
+     * Sets the style of the Formatter.
+     *
+     * @param formatterStyle the FormatterStyle
+     */
     public void setStyle(final FormatterStyle formatterStyle) {
         this.style = formatterStyle;
         formatter = formatterStyle.createFormatter();

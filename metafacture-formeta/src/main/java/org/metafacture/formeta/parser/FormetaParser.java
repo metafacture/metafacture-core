@@ -48,6 +48,11 @@ public final class FormetaParser {
         return structureParserContext.getEmitter();
     }
 
+    /**
+     * Parses the data.
+     *
+     * @param data the data
+     */
     public void parse(final String data) {
         assert structureParserContext.getEmitter() != null : "No emitter set";
 
