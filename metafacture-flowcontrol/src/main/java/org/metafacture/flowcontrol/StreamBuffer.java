@@ -80,6 +80,9 @@ public final class StreamBuffer extends DefaultStreamPipe<StreamReceiver> {
         }
     }
 
+    /**
+     * Clears the buffer.
+     */
     public void clear() {
         typeBuffer.clear();
         valueBuffer.clear();
