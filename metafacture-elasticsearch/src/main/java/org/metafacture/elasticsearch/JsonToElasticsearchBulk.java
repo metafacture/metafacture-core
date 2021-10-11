@@ -46,14 +46,11 @@ import java.util.regex.Pattern;
 public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
     private ObjectMapper mapper = new ObjectMapper();
-    private String[] idPath;
+    private String[] idPath = new String[] {};
     private String type;
     private String index;
 
     public JsonToElasticsearchBulk() {
-        this.idPath = new String[]{};
-        this.type = null;
-        this.index = null;
     }
 
     /**
