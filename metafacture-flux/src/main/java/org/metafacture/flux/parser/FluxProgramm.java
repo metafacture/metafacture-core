@@ -157,6 +157,9 @@ public final class FluxProgramm {
         }
     }
 
+    /**
+     * Starts all flows.
+     */
     public void start() {
         for (final Flow flow : initialFlows) {
             flow.start();
