@@ -36,6 +36,12 @@ public final class SetMatcher<T> {
     public SetMatcher() {
     }
 
+    /**
+     * Puts a value to a key.
+     *
+     * @param key   the key
+     * @param value the value
+     */
     public void put(final String key, final T value) {
         if (isPrepared) {
             throw new IllegalStateException("keys cannot be added during matching.");
@@ -63,6 +69,12 @@ public final class SetMatcher<T> {
         }
     }
 
+    /**
+     * Gets the List of Matches of a text.
+     *
+     * @param text the text
+     * @return List of Matches
+     */
     public List<Match<T>> match(final String text) {
         if (!isPrepared) {
             prepare();
@@ -173,6 +185,13 @@ public final class SetMatcher<T> {
         private final int start;
         private final int length;
 
+        /**
+         * Constructs a Match.
+         *
+         * @param value the value
+         * @param start the position
+         * @param length the length
+         */
         public Match(final T value, final int start, final int length) {
             this.value = value;
             this.start = start;

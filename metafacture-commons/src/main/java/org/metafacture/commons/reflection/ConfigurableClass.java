@@ -54,6 +54,11 @@ public final class ConfigurableClass<T> {
         return plainClass;
     }
 
+    /**
+     * Gets all "public set" methods of this class.
+     *
+     * @return the Map of all setter methods of this class
+     */
     public Map<String, Method> getSetters() {
         if (settersCache == null) {
             initSettersCache();
@@ -82,6 +87,11 @@ public final class ConfigurableClass<T> {
         return false;
     }
 
+    /**
+     * Gets the class types of the setter methods.
+     *
+     * @return a Map of the setter methods name and their types
+     */
     public Map<String, Class<?>> getSetterTypes() {
         final Map<String, Class<?>> setterTypes = new HashMap<>();
         for (final Map.Entry<String, Method> method : getSetters().entrySet()) {
@@ -95,6 +105,14 @@ public final class ConfigurableClass<T> {
         return newInstance(Collections.emptyMap());
     }
 
+    /**
+     * Creates an instance of the class using the first constructor that matches the
+     * varargs argument of the methods.
+     *
+     * @param setterValues
+     * @param constructorArgs
+     * @return the new instance
+     */
     public T newInstance(final Map<String, String> setterValues, final Object... constructorArgs) {
         try {
             final Constructor<T> constructor = findConstructor(constructorArgs);

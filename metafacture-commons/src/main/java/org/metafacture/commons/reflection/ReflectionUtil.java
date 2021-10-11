@@ -28,6 +28,10 @@ public final class ReflectionUtil {
         throw new AssertionError("No instances allowed");
     }
 
+    /**
+     * @return the context ClassLoader for this thread, or null indicating the
+     *         system class loader (or, failing that, the bootstrap class loader)
+     */
     public static ClassLoader getContextClassLoader() {
         final ClassLoader loader = Thread.currentThread().getContextClassLoader();
         if (loader == null) {
@@ -40,6 +44,15 @@ public final class ReflectionUtil {
         return loadClass(getContextClassLoader(), className, baseType);
     }
 
+    /**
+     * Wraps a Class to a ConfigurableClass.
+     *
+     * @param <T>       the object type of the ConfigurableClass
+     * @param loader    the ClassLoader
+     * @param className the name of the class
+     * @param baseType  the object typed class to be wrapped
+     * @return the ConfigurableClass
+     */
     public static <T> ConfigurableClass<? extends T> loadClass(final ClassLoader loader, final String className, final Class<T> baseType) {
         final Class<?> clazz;
         try {

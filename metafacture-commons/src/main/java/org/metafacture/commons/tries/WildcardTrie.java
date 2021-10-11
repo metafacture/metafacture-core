@@ -46,10 +46,10 @@ public final class WildcardTrie<P> {
     }
 
     /**
-     * Inserts keys into the try. Use '|' to concatenate. Use '*' (0,inf) and
-     * '?' (1,1) to express wildcards.
+     * Inserts keys into the trie. Use '|' to concatenate. Use '*' (0,inf) and '?'
+     * (1,1) to express wildcards.
      *
-     * @param keys pattern of keys to register
+     * @param keys  pattern of keys to register
      * @param value value to associate with the key pattern.
      */
     public void put(final String keys, final P value) {
@@ -80,6 +80,12 @@ public final class WildcardTrie<P> {
         node.addValue(value);
     }
 
+    /**
+     * Gets the List of values identified by a key.
+     *
+     * @param key the key
+     * @return the List of
+     */
     public List<P> get(final String key) {
         nodes.add(root);
         final int length = key.length();

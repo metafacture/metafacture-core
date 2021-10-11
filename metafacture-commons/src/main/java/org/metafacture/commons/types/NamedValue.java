@@ -30,6 +30,12 @@ public final class NamedValue  implements Comparable<NamedValue> {
     private final String value;
     private final int preCompHashCode;
 
+    /**
+     * Constructs an immutable name-value-pair by computing a hash code.
+     *
+     * @param name  the name of the pair
+     * @param value the value of the pair
+     */
     public NamedValue(final String name, final String value) {
         this.name = name;
         this.value = value;

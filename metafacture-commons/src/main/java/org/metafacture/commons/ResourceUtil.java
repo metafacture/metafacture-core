@@ -148,6 +148,13 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
         return loadProperties(getStream(location));
     }
 
+    /**
+     * Loads properties from an InputStream.
+     *
+     * @param stream properties as InputStream
+     * @return Properties
+     * @throws IOException
+     */
     public static Properties loadProperties(final InputStream stream)
             throws IOException {
         final Properties properties;
@@ -156,10 +163,24 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
         return properties;
     }
 
+    /**
+     * Loads properties from an URL.
+     *
+     * @param url properties as URL
+     * @return Properties
+     * @throws IOException
+     */
     public static Properties loadProperties(final URL url) throws IOException {
         return loadProperties(url.openStream());
     }
 
+    /**
+     * Loads a text file.
+     *
+     * @param location filename
+     * @return the content of the file
+     * @throws IOException
+     */
     public static String loadTextFile(final String location) throws IOException {
         final StringBuilder builder = new StringBuilder();
         final BufferedReader reader = new BufferedReader(getReader(location));
@@ -173,6 +194,14 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
         return builder.toString();
     }
 
+    /**
+     * * Loads a text file.
+     *
+     * @param location the filename
+     * @param list a List of Strings
+     * @return a List of Strings of the content of the filename, line-by-line
+     * @throws IOException
+     */
     public static List<String> loadTextFile(final String location,
             final List<String> list) throws IOException {
         final BufferedReader reader = new BufferedReader(getReader(location));
@@ -186,6 +215,14 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
         return list;
     }
 
+    /**
+     * Reads an InputStream with the given Charset.
+     *
+     * @param inputStream the InputStream
+     * @param encoding    the Charset
+     * @return a String of the content of the InputStream
+     * @throws IOException
+     */
     public static String readAll(final InputStream inputStream, final Charset encoding)
             throws IOException {
         try (Reader reader = new InputStreamReader(inputStream, encoding)) {
@@ -193,6 +230,13 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
         }
     }
 
+    /**
+     * Reads a Reader.
+     *
+     * @param reader the Reader
+     * @return a String of the content of the Reader
+     * @throws IOException
+     */
     public static String readAll(final Reader reader) throws IOException {
         final StringBuilder loadedText = new StringBuilder();
         try (Reader bufferedReader = new BufferedReader(reader)) {

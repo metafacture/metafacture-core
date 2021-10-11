@@ -57,10 +57,21 @@ public class ListMap<K, V> implements Map<K, List<V>> {
         identifier = null;
     }
 
+    /**
+     * Removes a key of the map.
+     *
+     * @param key the key
+     * @return the List of values or null if the map didn't contain the key
+     */
     public final List<V> removeKey(final K key) {
         return map.remove(key);
     }
 
+    /**
+     * Clears all values of a key of the map.
+     *
+     * @param key the key of the map
+     */
     public final void clearKey(final K key) {
         final List<V> values = map.get(key);
         if (values != null) {
@@ -68,6 +79,9 @@ public class ListMap<K, V> implements Map<K, List<V>> {
         }
     }
 
+    /**
+     * Clears all values of all keys of the map.
+     */
     public final void clearAllKeys() {
         for (final Entry<K, List<V>> entry: map.entrySet()) {
             entry.getValue().clear();
@@ -84,14 +98,18 @@ public class ListMap<K, V> implements Map<K, List<V>> {
         return map.keySet();
     }
 
+    /**
+     * Adds a value to the List of values of the key of the map.
+     *
+     * @param name  the key
+     * @param value the value
+     */
     public final void add(final K name, final V value) {
-
         List<V> values = map.get(name);
         if (values == null) {
             values = new ArrayList<V>();
             map.put(name, values);
         }
-
         values.add(value);
     }
 
@@ -108,6 +126,12 @@ public class ListMap<K, V> implements Map<K, List<V>> {
         return getFirst(name) != null;
     }
 
+    /**
+     * Gets the first element of the List of values of the key of the map.
+     *
+     * @param name the key
+     * @return first element of the values of the key
+     */
     public final V getFirst(final K name) {
         final List<V> values = map.get(name);
         if (values == null || values.isEmpty()) {
@@ -159,7 +183,12 @@ public class ListMap<K, V> implements Map<K, List<V>> {
         return map.remove(key);
     }
 
-    //@Override
+    /**
+     * Adds a List of values to a key of the map.
+     *
+     * @param name      the key
+     * @param addValues the List of values
+     */
     public final void putAll(final K name, final Collection<V> addValues) {
         List<V> values = map.get(name);
         if (values == null) {

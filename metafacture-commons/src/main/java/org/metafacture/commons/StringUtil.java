@@ -34,6 +34,14 @@ public final class StringUtil {
         // no instances allowed
     }
 
+    /**
+     * Sets a fallback of an Object if the the Object is null.
+     *
+     * @param <O>           a class
+     * @param value         the Object
+     * @param fallbackValue the default Object
+     * @return an Object
+     */
     public static <O> O fallback(final O value, final O fallbackValue) {
         if (value == null) {
             return fallbackValue;
@@ -55,6 +63,17 @@ public final class StringUtil {
         return format(format, DEFAULT_VARSTART, DEFAULT_VAREND, ignoreMissingVars, variables);
     }
 
+    /**
+     * Formats a String. If a String has a variable it will be replaced based on a
+     * Map. The start and the end of indicating this variable must be defined.
+     *
+     * @param format            the String to be formatted
+     * @param varStartIndicator a String indicating the start of a variable
+     * @param varEndIndicator   a String indicating the end of a variable
+     * @param ignoreMissingVars boolean if an unassigned variable should be ignored
+     * @param variables         a Map of variable names and their values
+     * @return a formatted String
+     */
     public static String format(final String format, final String varStartIndicator, final String varEndIndicator,
             final boolean ignoreMissingVars, final Map<String, String> variables) {
         if (format.indexOf(varStartIndicator) < 0) { // shortcut if there is

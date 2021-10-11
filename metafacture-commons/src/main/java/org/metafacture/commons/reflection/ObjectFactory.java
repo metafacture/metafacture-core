@@ -40,6 +40,12 @@ public class ObjectFactory<T> {
     public ObjectFactory() {
     }
 
+    /**
+     * Loads classes from a map.
+     *
+     * @param classMap the map of classes
+     * @param baseType the object type of the classes
+     */
     public final void loadClassesFromMap(final Map<?, ?> classMap, final Class<T> baseType) {
         final ClassLoader loader = ReflectionUtil.getContextClassLoader();
         for (final Entry<?, ?> entry : classMap.entrySet()) {
@@ -61,6 +67,14 @@ public class ObjectFactory<T> {
         return newInstance(key, Collections.emptyMap(), constructorArgs);
     }
 
+    /**
+     * Returns a new instance of a ConfigurableClass.
+     *
+     * @param key             the name of the class
+     * @param values          the Map of Strings of the setters
+     * @param constructorArgs the args of the constructor
+     * @return a new instance
+     */
     public final T newInstance(final String key, final Map<String, String> values, final Object... constructorArgs) {
         if (!classes.containsKey(key)) {
             throw new NoSuchElementException("no registered class for: " + key);
