@@ -18,6 +18,7 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.framework.StandardEventNames;
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
@@ -116,6 +117,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         entityCountStack.add(Integer.valueOf(entityCount));
         recordIdentifier = identifier;
         entities = new ArrayList<>();
+        literal(StandardEventNames.ID, identifier);
     }
 
     @Override
@@ -131,7 +133,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         if (!currentRecord.containsKey("__reject")) {
             outputStreamReceiver.startRecord(recordIdentifier);
             System.out.println("Sending results to " + outputStreamReceiver);
-            currentRecord.keySet().forEach(k -> {
+            currentRecord.keySet().stream().filter(k -> !k.startsWith("_")).forEach(k -> {
                 emit(k, currentRecord.get(k));
             });
             outputStreamReceiver.endRecord();
