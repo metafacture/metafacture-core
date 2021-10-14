@@ -28,8 +28,10 @@ import org.metafacture.metafix.fix.MethodCall;
 import org.metafacture.metafix.fix.Options;
 import org.metafacture.metafix.fix.Unless;
 
-import org.eclipse.emf.common.util.EList;
 import com.google.common.collect.ImmutableMap;
+import org.eclipse.emf.common.util.EList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -44,6 +46,8 @@ import java.util.stream.Collectors;
  *
  */
 class RecordTransformer {
+
+    private static final Logger LOG = LoggerFactory.getLogger(RecordTransformer.class);
 
     private Fix fix;
     private Map<String, Object> record;
@@ -102,7 +106,7 @@ class RecordTransformer {
             record = fullRecord;
         }
         else {
-            System.out.println("Unprocessed bind: " + theDo);
+            LOG.warn("Unprocessed bind: {}", theDo);
             // TODO, possibly: use morph collectors here
             // final CollectFactory collectFactory = new CollectFactory();
             // final Map<String, String> attributes = resolvedAttributeMap(params, theDo.getOptions());
@@ -131,7 +135,7 @@ class RecordTransformer {
     }
 
     private boolean testConditional(final String conditional, final EList<String> params) {
-        System.out.printf("<IF>: %s parameters: %s\n", conditional, params);
+        LOG.debug("<IF>: {} parameters: {}", conditional, params);
         boolean result = false;
         if ("exists".equals(conditional)) {
             return record.containsKey(params.get(0));

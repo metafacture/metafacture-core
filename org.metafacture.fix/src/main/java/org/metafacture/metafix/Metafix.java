@@ -26,6 +26,9 @@ import org.metafacture.mangling.StreamFlattener;
 import org.metafacture.metafix.fix.Expression;
 import org.metafacture.metafix.fix.Fix;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
@@ -53,6 +56,8 @@ public class Metafix implements StreamPipe<StreamReceiver> {
     public static final String VAR_END = "]";
     public static final Map<String, String> NO_VARS = Collections.emptyMap();
     private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
+
+    private static final Logger LOG = LoggerFactory.getLogger(Metafix.class);
 
     // TODO: Use SimpleRegexTrie / WildcardTrie for wildcard, alternation and character class support
     private Map<String, Object> currentRecord = new LinkedHashMap<>();
@@ -110,7 +115,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
     @Override
     public void startRecord(final String identifier) {
         currentRecord = new LinkedHashMap<>();
-        System.out.printf("Start record: %s\n", currentRecord);
+        LOG.debug("Start record: {}", identifier);
         flattener.startRecord(identifier);
         entityCountStack.clear();
         entityCount = 0;
@@ -127,12 +132,12 @@ public class Metafix implements StreamPipe<StreamReceiver> {
             throw new IllegalStateException(ENTITIES_NOT_BALANCED);
         }
         flattener.endRecord();
-        System.out.printf("End record, walking fix: %s\n", currentRecord);
+        LOG.debug("End record, walking fix: {}", currentRecord);
         final RecordTransformer transformer = new RecordTransformer(currentRecord, vars, fix);
         currentRecord = transformer.transform();
         if (!currentRecord.containsKey("__reject")) {
             outputStreamReceiver.startRecord(recordIdentifier);
-            System.out.println("Sending results to " + outputStreamReceiver);
+            LOG.debug("Sending results to {}", outputStreamReceiver);
             currentRecord.keySet().stream().filter(k -> !k.startsWith("_")).forEach(k -> {
                 emit(k, currentRecord.get(k));
             });
@@ -205,8 +210,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
 
     @Override
     public void literal(final String name, final String value) {
-        // TODO: set up logging
-        System.out.printf("Putting '%s':'%s'\n", name, value);
+        LOG.debug("Putting '{}': '{}'", name, value);
         final Integer currentEntityIndex = entityCountStack.peek() - 1;
         final Map<String, Object> currentEntity = currentEntityIndex < 0 ||
                 entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);

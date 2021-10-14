@@ -2,6 +2,8 @@ package org.metafacture.metafix;
 
 import org.metafacture.metafix.fix.Fix;
 
+import com.google.common.io.CharStreams;
+import com.google.inject.Injector;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.resource.XtextResource;
@@ -10,8 +12,8 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
-import com.google.common.io.CharStreams;
-import com.google.inject.Injector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -22,6 +24,8 @@ import java.io.Reader;
  * Initialization support for running Xtext languages without Equinox extension registry.
  */
 public class FixStandaloneSetup extends FixStandaloneSetupGenerated {
+
+    private static final Logger LOG = LoggerFactory.getLogger(FixStandaloneSetup.class);
 
     public FixStandaloneSetup() {
     }
@@ -41,7 +45,7 @@ public class FixStandaloneSetup extends FixStandaloneSetupGenerated {
             final IResourceValidator validator = ((XtextResource) resource).getResourceServiceProvider().getResourceValidator();
 
             for (final Issue issue : validator.validate(resource, CheckMode.ALL, CancelIndicator.NullImpl)) {
-                System.err.println(issue.getMessage());
+                LOG.warn(issue.getMessage());
             }
 
             return (Fix) resource.getContents().get(0);
