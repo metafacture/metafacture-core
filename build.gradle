@@ -52,12 +52,12 @@ subprojects {
   targetCompatibility = '1.8'
 
   repositories {
-    jcenter()
+    mavenCentral()
     maven githubPackage.invoke("metafacture")
   }
 
   dependencies {
-    compile platform("org.eclipse.xtext:xtext-dev-bom:${versions.xtext}")
+    implementation platform("org.eclipse.xtext:xtext-dev-bom:${versions.xtext}")
   }
 
   configurations.all {

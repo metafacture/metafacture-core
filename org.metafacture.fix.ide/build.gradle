@@ -3,10 +3,10 @@ plugins {
 }
 
 dependencies {
-  compile project(':metafacture-fix')
+  implementation project(':metafacture-fix')
 
-  compile "org.eclipse.xtext:org.eclipse.xtext.ide:${versions.xtext}"
-  compile "org.eclipse.xtext:org.eclipse.xtext.xbase.ide:${versions.xtext}"
+  implementation "org.eclipse.xtext:org.eclipse.xtext.ide:${versions.xtext}"
+  implementation "org.eclipse.xtext:org.eclipse.xtext.xbase.ide:${versions.xtext}"
 }
 
 apply plugin: 'application'
@@ -17,7 +17,7 @@ applicationName = 'xtext-server'
 
 shadowJar {
   from(project.convention.getPlugin(JavaPluginConvention).sourceSets.main.output)
-  configurations = [project.configurations.runtime]
+  configurations = [project.configurations.runtimeClasspath]
 
   exclude(
     '*.html',
