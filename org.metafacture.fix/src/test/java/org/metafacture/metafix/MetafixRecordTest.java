@@ -71,6 +71,20 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void internalIdUsage() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+                "copy_field('_id', id)"),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("id", "1");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     @Disabled // TODO: how to handle repeated entities: turn to array vs. merge because it's the same?
     public void entitiesPassThroughRepeatEntity() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
