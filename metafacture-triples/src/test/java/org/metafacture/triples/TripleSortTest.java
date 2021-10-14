@@ -221,6 +221,88 @@ public final class TripleSortTest {
         );
     }
 
+    @Test
+    public void issue380_shouldOptionallySortNumericallyByIncreasingSubject() {
+        assertSort(
+                t -> {
+                    t.setNumeric(true);
+                },
+                "10  p1 o2",
+                "2   p1 o0",
+                "0   p1 o1",
+                "101 p0 o2",
+                "11  p2 o1",
+                //
+                "0   p1 o1",
+                "2   p1 o0",
+                "10  p1 o2",
+                "11  p2 o1",
+                "101 p0 o2"
+        );
+    }
+
+    @Test
+    public void issue380_shouldOptionallySortNumericallyByDecreasingSubject() {
+        assertSort(
+                t -> {
+                    t.setNumeric(true);
+                    t.setOrder(AbstractTripleSort.Order.DECREASING);
+                },
+                "10  p1 o2",
+                "2   p1 o0",
+                "0   p1 o1",
+                "101 p0 o2",
+                "11  p2 o1",
+                //
+                "101 p0 o2",
+                "11  p2 o1",
+                "10  p1 o2",
+                "2   p1 o0",
+                "0   p1 o1"
+        );
+    }
+
+    @Test(expected=NumberFormatException.class)
+    public void shouldFailToSortNumericallyWithInvalidNumber() {
+        assertSort(
+                t -> {
+                    t.setNumeric(true);
+                },
+                "10  p1 o2",
+                "2   p1 o0",
+                "0   p1 o1",
+                "1x1 p0 o2",
+                "11  p2 o1",
+                //
+                "",
+                "",
+                "",
+                "",
+                ""
+        );
+    }
+
+    @Test
+    public void shouldNotSortNumericallyByTriple() {
+        assertSort(
+                t -> {
+                    t.setNumeric(true);
+                    t.setBy(AbstractTripleSort.Compare.ALL);
+                },
+                "10  p1 o2",
+                "2   p1 o0",
+                "0   p1 o1",
+                "101 p0 o2",
+                "11  p2 o1",
+                //
+                "0   p1 o1",
+                "10  p1 o2",
+                "101 p0 o2",
+                "11  p2 o1",
+                "2   p1 o0"
+        );
+    }
+
     public void assertSort(final Consumer<TripleSort> consumer, final String... triples) {
         final BiConsumer<Integer, Consumer<Triple>> processor = (i, c) -> {
             final int j = triples.length / 2;

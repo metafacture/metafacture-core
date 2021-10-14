@@ -49,4 +49,8 @@ public final class TripleSort extends AbstractTripleSort {
         setSortOrder(order);
     }
 
+    public void setNumeric(final boolean numeric) {
+        setSortNumeric(numeric);
+    }
+
 }
