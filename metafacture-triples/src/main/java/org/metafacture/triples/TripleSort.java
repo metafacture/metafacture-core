@@ -27,7 +27,7 @@ import org.metafacture.framework.objects.Triple;
  * @author markus geipel
  *
  */
-@Description("Sorts triples")
+@Description("Sorts triples. Several options can be combined, e.g. `by=\"object\",numeric=\"true\",order=\"decreasing\"` will numerically sort the Object of the triples in decreasing order (given that all Objects are indeed of numeric type).")
 @In(Triple.class)
 @Out(Triple.class)
 @FluxCommand("sort-triples")
