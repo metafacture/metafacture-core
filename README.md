@@ -83,7 +83,8 @@ $ cd metafacture-core
 $ ./gradlew install
 ```
 
-The resulting distribution can be found in `metafacture-core/metafacture-runner/build/distributions/`.
+Besides the resulting distribution in `metafacture-core/metafacture-runner/build/distributions/` this also provides builds in your local maven repository.
+
 
 See [Code Quality and Style](https://github.com/metafacture/metafacture-core/wiki/Code-Quality-and-Style) on the wiki for further information on the sources.
 
