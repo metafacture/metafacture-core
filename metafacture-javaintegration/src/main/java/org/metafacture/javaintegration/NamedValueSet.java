@@ -33,12 +33,9 @@ import java.util.Set;
 public final class NamedValueSet extends DefaultStreamReceiver implements Set<NamedValue>, Collector<Set<NamedValue>> {
 
     private Collection<Set<NamedValue>> collection;
-    private Set<NamedValue> set;
+    private Set<NamedValue> set = new HashSet<>();
 
     public NamedValueSet() {
-        set = new HashSet<>();
-        this.collection = null;
-
     }
 
     /**
@@ -48,7 +45,6 @@ public final class NamedValueSet extends DefaultStreamReceiver implements Set<Na
      * @param collection is filled with the received results.
      */
     public NamedValueSet(final Collection<Set<NamedValue>> collection) {
-        set = new HashSet<>();
         this.collection = collection;
     }
 

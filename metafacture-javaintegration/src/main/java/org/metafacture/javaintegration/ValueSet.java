@@ -31,13 +31,10 @@ import java.util.Set;
  */
 public final class ValueSet extends DefaultStreamReceiver implements Set<String>, Collector<Set<String>> {
 
-    private Collection<Set<String>> collection;
+    private Collection<Set<String>> collection = new HashSet<>();
     private Set<String> set;
 
     public ValueSet() {
-        set = new HashSet<>();
-        this.collection = null;
-
     }
 
     /**
@@ -47,7 +44,6 @@ public final class ValueSet extends DefaultStreamReceiver implements Set<String>
      * @param collection is filled with the received results.
      */
     public ValueSet(final Collection<Set<String>> collection) {
-        set = new HashSet<>();
         this.collection = collection;
     }
 

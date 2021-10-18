@@ -46,6 +46,12 @@ public final class StringListMapToStream extends DefaultObjectPipe<ListMap<Strin
         process(listMap, getReceiver());
     }
 
+    /**
+     * Reads a {@link ListMap} and sends it to a {@link StreamReceiver}.
+     *
+     * @param listMap  the ListMap to be read
+     * @param receiver the StreamReceiver to send to
+     */
     public static void process(final ListMap<String, String> listMap, final StreamReceiver receiver) {
         receiver.startRecord(listMap.getId());
         for (final Entry<String, List<String>> entry: listMap.entrySet()) {

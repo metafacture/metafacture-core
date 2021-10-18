@@ -34,14 +34,17 @@ import java.util.ListIterator;
 public final class NamedValueList extends DefaultStreamReceiver implements List<NamedValue>, Collector<List<NamedValue>> {
 
     private Collection<List<NamedValue>> collection;
-    private List<NamedValue> list;
+    private List<NamedValue> list = new ArrayList<NamedValue>();
 
     public NamedValueList() {
-        list = new ArrayList<NamedValue>();
     }
 
+    /**
+     * Constructs a NamedValueList with a given Collection.
+     *
+     * @param collection the Collection
+     */
     public NamedValueList(final Collection<List<NamedValue>> collection) {
-        list = new ArrayList<NamedValue>();
         this.collection = collection;
     }
 
