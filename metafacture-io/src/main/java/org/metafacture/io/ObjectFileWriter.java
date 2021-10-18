@@ -52,6 +52,11 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
     private String encoding = "UTF-8";
     private FileCompression compression = FileCompression.AUTO;
 
+    /**
+     * Sets the destination of a file to write objects to.
+     *
+     * @param path the path to be written to
+     */
     public ObjectFileWriter(final String path) {
         this.path = path;
         startNewFile();

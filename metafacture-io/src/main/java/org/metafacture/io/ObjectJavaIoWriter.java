@@ -36,11 +36,20 @@ public final class ObjectJavaIoWriter<T> implements ObjectReceiver<T> {
     private boolean closed;
     private final IoWriterFactory writerFactory;
 
+    /**
+     * Deprecated.
+     * @param writer the Writer
+     */
     public ObjectJavaIoWriter(final Writer writer) {
         this.writer = writer;
         writerFactory = null;
     }
 
+    /**
+     * Deprecated.
+     *
+     * @param writerFactory the IoWriterFactory
+     */
     public ObjectJavaIoWriter(final IoWriterFactory writerFactory) {
         this.writerFactory = writerFactory;
         this.writer = writerFactory.createWriter();

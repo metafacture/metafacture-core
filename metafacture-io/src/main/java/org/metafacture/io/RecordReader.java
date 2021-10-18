@@ -56,6 +56,11 @@ public final class RecordReader extends DefaultObjectPipe<Reader, ObjectReceiver
     public RecordReader() {
     }
 
+    /**
+     * Sets the separator. The default is the global separator character (0x001d).
+     *
+     * @param separator the separator
+     */
     public void setSeparator(final String separator) {
         if (separator.length() >= 1) {
             this.separator = separator.charAt(0);

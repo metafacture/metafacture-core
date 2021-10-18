@@ -45,6 +45,14 @@ public final class ObjectWriter<T> implements ConfigurableObjectWriter<T> {
 
     private final ConfigurableObjectWriter<T> objectWriter;
 
+    /**
+     * Sets the destination to write objects to. If destination is set to
+     * {@value #STDOUT} the object is written to standard out. Else it's written to
+     * a file.
+     *
+     * @param destination the path to be written to or standard out if it's
+     *                    {@value #STDOUT}
+     */
     public ObjectWriter(final String destination) {
         if (STDOUT.equals(destination)) {
             objectWriter = new ObjectStdoutWriter<T>();
