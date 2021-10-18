@@ -58,6 +58,13 @@ public final class StreamToJDomDocument
     private final String rootTagName;
     private final Map<String, Namespace> namespaces = new HashMap<String, Namespace>();
 
+    /**
+     * Constructs a StreamToJDomDocument initialized with a given root tag name and
+     * a location of a file with named properties.
+     *
+     * @param rootTagName         the root tag name
+     * @param namespaceProperties the location of the file of the named properties
+     */
     public StreamToJDomDocument(final String rootTagName, final String namespaceProperties) {
         this.rootTagName = rootTagName;
         namespaces.put(XML, Namespace.getNamespace(XML, "http://www.w3.org/XML/1998/namespace"));
