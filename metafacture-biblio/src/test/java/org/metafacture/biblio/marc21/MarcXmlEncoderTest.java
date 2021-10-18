@@ -174,9 +174,10 @@ public class MarcXmlEncoderTest {
         addOneRecord(encoder);
         addOneRecord(encoder);
         encoder.closeStream();
-        String expected = XML_DECLARATION + String.format(MarcXmlEncoder.ROOT_OPEN_TEMPLATE, "", "", "") + XML_RECORD + XML_RECORD + XML_MARC_COLLECTION_END_TAG;
+        String expected = XML_DECLARATION + "<collection xmlns=\"http://www.loc.gov/MARC21/slim\">"
+            + XML_RECORD + XML_RECORD + XML_MARC_COLLECTION_END_TAG;
         String actual = resultCollector.toString();
-        assertEquals(expected.replace(MarcXmlEncoder.NAMESPACE_PREFIX, ""), actual);
+        assertEquals(expected.replace("marc:", ""), actual);
     }
 
     @Test(expected = MetafactureException.class)
