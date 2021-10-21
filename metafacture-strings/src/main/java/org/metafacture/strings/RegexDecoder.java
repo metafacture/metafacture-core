@@ -93,6 +93,11 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 
     private String rawInputLiteral;
 
+    /**
+     * Constructs a RegexDecoder with a given regex.
+     *
+     * @param regex the regex
+     */
     public RegexDecoder(final String regex) {
         matcher = Pattern.compile(regex).matcher("");
         captureGroupNames = collectCaptureGroupNames(regex);
