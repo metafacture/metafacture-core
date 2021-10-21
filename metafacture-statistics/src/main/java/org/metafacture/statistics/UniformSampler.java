@@ -49,6 +49,11 @@ public final class UniformSampler<T> extends
 
     private long count;
 
+    /**
+     * Constructs a UniformSampler with a given sample size.
+     *
+     * @param sampleSize the size of the sample
+     */
     public UniformSampler(final int sampleSize) {
         this.sampleSize = sampleSize;
         sample = new ArrayList<T>(sampleSize);
