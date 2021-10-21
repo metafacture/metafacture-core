@@ -45,6 +45,11 @@ public final class TripleWriter extends DefaultObjectReceiver<Triple> {
 
     private ObjectOutputStream outputStream;
 
+    /**
+     * Constructs a TripleWriter with a given file name as output path.
+     *
+     * @param filename the name of the file to write to
+     */
     public TripleWriter(final String filename) {
         this.filename = filename;
         resetStream();

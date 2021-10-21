@@ -67,6 +67,11 @@ public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceive
         }
     }
 
+    /**
+     * Decodes a Triple. Passes the Predicate and the Object to the receiver.
+     *
+     * @param triple the Triple
+     */
     public void decodeTriple(final Triple triple) {
         if (triple.getObjectType() == ObjectType.STRING) {
             getReceiver().literal(triple.getPredicate(), triple.getObject());

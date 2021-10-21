@@ -37,6 +37,13 @@ public final class SortedTripleFileFacade {
     private Triple triple;
     private boolean empty;
 
+    /**
+     * Constructs a SortedTripleFileFacade with a file. Reads a Triple from the
+     * file.
+     *
+     * @param file the File to load a Triple from
+     * @throws IOException
+     */
     public SortedTripleFileFacade(final File file) throws IOException {
         this.file = file;
         in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file), BUFFERSIZE));
@@ -58,6 +65,10 @@ public final class SortedTripleFileFacade {
         }
     }
 
+    /**
+     * Closes the {@link #ObjectInputStream} and deletes the {@value #file} it if it
+     * exists.
+     */
     public void close() {
         try {
             in.close();
@@ -70,6 +81,11 @@ public final class SortedTripleFileFacade {
         }
     }
 
+    /**
+     * Peeks at a Triple at the top of the stack.
+     *
+     * @return the Triple on top of the stack
+     */
     public Triple peek() {
         if (isEmpty()) {
             return null;
@@ -77,6 +93,12 @@ public final class SortedTripleFileFacade {
         return triple;
     }
 
+    /**
+     * Pops a Triple from the stack.
+     *
+     * @return the Triple at the top of the stack.
+     * @throws IOException
+     */
     public Triple pop() throws IOException {
         final Triple nextTriple = peek();
         next();

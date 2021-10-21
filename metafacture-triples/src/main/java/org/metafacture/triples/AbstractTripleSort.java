@@ -35,17 +35,20 @@ import java.util.PriorityQueue;
  * @author markus geipel
  *
  */
-public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> implements MemoryWarningSystem.Listener {
+public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>>
+        implements MemoryWarningSystem.Listener {
+
     /**
-     * specifies the comparator
+     * Specifies the comparator. Can be one of {@link #SUBJECT}, {@link #PREDICATE},
+     * {@link #OBJECT}, {@link #ALL}.
      */
     public enum Compare {
         SUBJECT, PREDICATE, OBJECT, ALL
     }
 
     /**
-     * sort order
-     *
+     * Specifies the sort order.Can be one of {@link #INCREASING},
+     * {@link #DECREASING}.
      */
     public enum Order {
         INCREASING {
@@ -63,17 +66,17 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
         public abstract int order(int indicator);
     }
 
-    private final List<Triple> buffer = new ArrayList<Triple>();
-    private final List<File> tempFiles;
+    private final List<Triple> buffer = new ArrayList<>();
+    private final List<File> tempFiles = new ArrayList<>();
     private Compare compare = Compare.SUBJECT;
     private Order order = Order.INCREASING;
     private volatile boolean memoryLow;
 
-    public AbstractTripleSort() {
+    /**
+     * Constructs an AbstractTripleSort. Calls {@link #MemoryWarningSystem}.
+     */
+    protected AbstractTripleSort() {
         MemoryWarningSystem.addListener(this);
-        tempFiles = new ArrayList<File>(); // Initialized here to let the
-                                            // compiler enforce the call to
-                                            // super() in subclasses.
     }
 
     @Override
@@ -192,6 +195,13 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
         return createComparator(compare, order);
     }
 
+    /**
+     * Creates a Comparator.
+     *
+     * @param compareBy one of {@link #Compare}
+     * @param order     the {@link #Order}
+     * @return a Comparator of type Triple
+     */
     public static Comparator<Triple> createComparator(final Compare compareBy, final Order order) {
         final Comparator<Triple> comparator;
         switch (compareBy) {
