@@ -44,6 +44,8 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
     private static final Pattern TABS = Pattern.compile("\t+");
 
+    private static final String METAMORPH_RECORD_TAG = "org.culturegraph.metamorph.xml.recordtag";
+
     private String attributeMarker = DEFAULT_ATTRIBUTE_MARKER;
     private String recordTagName = DEFAULT_RECORD_TAG;
     private String valueTagName = DEFAULT_VALUE_TAG;
@@ -53,8 +55,12 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
     private boolean emitNamespace = EMIT_NAMESPACE;
 
+    /**
+     * Constructs a GenericXmlHandler by loading the system property
+     * {@value #METAMORPH_RECORD_TAG} if that system property was set.
+     */
     public GenericXmlHandler() {
-        final String recordTagNameProperty = System.getProperty("org.culturegraph.metamorph.xml.recordtag");
+        final String recordTagNameProperty = System.getProperty(METAMORPH_RECORD_TAG);
         if (recordTagNameProperty != null) {
             recordTagName = recordTagNameProperty;
         }

@@ -105,6 +105,11 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
         return valueTag;
     }
 
+    /**
+     * Loads namespaces from a file.
+     *
+     * @param file the name of the file to load the namespace properties from
+     */
     public void setNamespaceFile(final String file) {
         final Properties properties;
         try {
@@ -118,6 +123,11 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
         }
     }
 
+    /**
+     * Loads namespaces from a URL.
+     *
+     * @param url the URL to load the namespace properties from.
+     */
     public void setNamespaceFile(final URL url) {
         final Properties properties;
         try {
