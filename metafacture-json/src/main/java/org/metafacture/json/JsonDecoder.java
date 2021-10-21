@@ -60,20 +60,14 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private final JsonFactory jsonFactory = new JsonFactory();
 
     private JsonParser jsonParser;
-    private String arrayMarker;
-    private String arrayName;
-    private String recordId;
+    private String arrayMarker = DEFAULT_ARRAY_MARKER;
+    private String arrayName = DEFAULT_ARRAY_NAME;
+    private String recordId = DEFAULT_RECORD_ID;
+    private String recordPath = DEFAULT_ROOT_PATH;
+
     private int recordCount;
 
-    private String recordPath;
-
     public JsonDecoder() {
-        setArrayMarker(DEFAULT_ARRAY_MARKER);
-        setArrayName(DEFAULT_ARRAY_NAME);
-        setRecordId(DEFAULT_RECORD_ID);
-        setRecordPath(DEFAULT_ROOT_PATH);
-
-        resetRecordCount();
     }
 
     public void setAllowComments(final boolean allowComments) {

@@ -62,6 +62,10 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     private String arrayMarker = ARRAY_MARKER;
 
+    /**
+     * Default constructor initializes the JsonGenerator. The root value separator
+     * of the JsonGenerator is set to null.
+     */
     public JsonEncoder() {
         try {
             jsonGenerator = new JsonFactory().createGenerator(writer);
