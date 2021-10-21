@@ -38,21 +38,23 @@ public final class RecordPathFilter extends DefaultStreamPipe<StreamReceiver> {
 
     private final EntityPathTracker entityPathTracker = new EntityPathTracker();
 
-    private String path;
-    private String recordIdFormat;
+    private String path = ROOT_PATH;
+    private String recordIdFormat = DEFAULT_RECORD_ID_FORMAT;
     private String recordIdentifier;
     private boolean inMatch;
     private boolean recordStarted;
     private int recordCount;
 
     public RecordPathFilter() {
-        this(ROOT_PATH);
     }
 
+    /**
+     * Constructs a RecordPathFilter with a given path.
+     *
+     * @param path the name of the path
+     */
     public RecordPathFilter(final String path) {
-        resetRecord();
         setPath(path);
-        setRecordIdFormat(DEFAULT_RECORD_ID_FORMAT);
     }
 
     public void setEntitySeparator(final String entitySeparator) {

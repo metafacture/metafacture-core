@@ -37,14 +37,11 @@ public final class ObjectToLiteral<T> extends
     public static final String DEFAULT_LITERAL_NAME = "obj";
     public static final String DEFAULT_RECORD_ID = "";
 
-    private String literalName;
-    private String recordId;
+    private String literalName = DEFAULT_LITERAL_NAME;
+    private String recordId = DEFAULT_RECORD_ID;
     private int recordCount;
 
     public ObjectToLiteral() {
-        setLiteralName(DEFAULT_LITERAL_NAME);
-        setRecordId(DEFAULT_RECORD_ID);
-        recordCount = 0;
     }
 
     public void setLiteralName(final String literalName) {
