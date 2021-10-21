@@ -47,6 +47,13 @@ public final class Flux {
         // No instances allowed
     }
 
+    /**
+     * Runs the Flux.
+     *
+     * @param args the pathname of the flux file to run
+     * @throws IOException
+     * @throws RecognitionException
+     */
     public static void main(final String[] args) throws IOException, RecognitionException {
         loadCustomJars();
 
