@@ -61,6 +61,10 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
     private long recordCount;
     private long batchCount;
 
+    /**
+     * Constructs a ObjectBatchLogger with the not changeable default format of
+     * {@value #DEFAULT_FORMAT}.
+     */
     public ObjectBatchLogger() {
         this.format = DEFAULT_FORMAT;
 
@@ -70,7 +74,14 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
         this.format = format;
     }
 
-    public ObjectBatchLogger(final String format, final Map<String, String> vars) {
+    /**
+     * Constructs an ObjectBatchLogger with a not changeable format and a map of
+     * variables.
+     *
+     * @param format a not changeable format
+     * @param vars   a map of not changeable variables
+     */
+    ObjectBatchLogger(final String format, final Map<String, String> vars) {
         this.format = format;
         this.vars.putAll(vars);
     }
