@@ -70,6 +70,14 @@ public final class StreamValidator implements StreamReceiver {
 
     private final WellformednessChecker wellformednessChecker = new WellformednessChecker();
 
+    /**
+     * Constructs a StreamValidator with a List of {@link Event}s. Validates this
+     * stream of events using that list of expected stream events. If the stream is
+     * invalid, the error handler set via {@link #setErrorHandler(Consumer)} is
+     * called. Checks for wellformedness and resets the stream.
+     *
+     * @param expectedStream the List of expected stream events
+     */
     public StreamValidator(final List<Event> expectedStream) {
         this.eventStream = new EventNode(null, null);
         foldEventStream(this.eventStream, expectedStream.iterator());
@@ -100,6 +108,12 @@ public final class StreamValidator implements StreamReceiver {
         return strictRecordOrder;
     }
 
+    /**
+     * Sets strict record order.
+     *
+     * @param strictRecordOrder "true" if the record order shall be strict or
+     *                          "false" otherwise
+     */
     public void setStrictRecordOrder(final boolean strictRecordOrder) {
         if (validating) {
             throw new IllegalStateException(CANNOT_CHANGE_OPTIONS);
@@ -112,6 +126,11 @@ public final class StreamValidator implements StreamReceiver {
         return strictKeyOrder;
     }
 
+    /**
+     * Sets strict key order.
+     *
+     * @param strictKeyOrder "true" if key order should be strict, otherwise "false"
+     */
     public void setStrictKeyOrder(final boolean strictKeyOrder) {
         if (validating) {
             throw new IllegalStateException(CANNOT_CHANGE_OPTIONS);
@@ -124,6 +143,12 @@ public final class StreamValidator implements StreamReceiver {
         return strictValueOrder;
     }
 
+    /**
+     * Sets strict value order.
+     *
+     * @param strictValueOrder "true" if value order should be strict, otherwise
+     *                         "false"
+     */
     public void setStrictValueOrder(final boolean strictValueOrder) {
         if (validating) {
             throw new IllegalStateException(CANNOT_CHANGE_OPTIONS);

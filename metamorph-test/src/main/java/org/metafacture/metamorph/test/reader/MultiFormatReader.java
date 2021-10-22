@@ -35,6 +35,12 @@ public final class MultiFormatReader implements Reader {
         setFormat(format);
     }
 
+    /**
+     * Sets the format of {@value #currentReader} if the {@value #READER_FACTORY}
+     * contains that format.
+     *
+     * @param format the format
+     */
     public void setFormat(final String format) {
         if (!READER_FACTORY.containsKey(format)) {
             throw new IllegalArgumentException("Format '" + format + "' not regognized");

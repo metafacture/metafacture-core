@@ -40,6 +40,13 @@ public final class MetamorphTestSuite extends ParentRunner<Runner> {
 
     private final List<Runner> runners;
 
+    /**
+     * Constructs a MetamorphTestSuite by binding a list of Metamorph-Test resources
+     * to a class.
+     *
+     * @param suiteRoot the {@code @TestClass}
+     * @throws InitializationError
+     */
     public MetamorphTestSuite(final Class<?> suiteRoot)
             throws InitializationError {
         super(suiteRoot);
