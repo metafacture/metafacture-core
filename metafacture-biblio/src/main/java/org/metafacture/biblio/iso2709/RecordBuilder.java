@@ -107,7 +107,7 @@ public final class RecordBuilder {
      * Sets the record status of the LabelBuilder.
      *
      * @param recordStatus 7 bit char record status
-     * @see Iso2709Constants.RECORD_STATUS_POS
+     * @see Iso2709Constants#RECORD_STATUS_POS
      * @see LabelBuilder
      */
     public void setRecordStatus(final char recordStatus) {
@@ -393,7 +393,7 @@ public final class RecordBuilder {
      * Resets the label, directory and the fields. Sets the "append state" to "id
      * field".
      *
-     * @see AppendState.ID_FIELD
+     * @see AppendState#ID_FIELD
      */
     public void reset() {
         label.reset();
