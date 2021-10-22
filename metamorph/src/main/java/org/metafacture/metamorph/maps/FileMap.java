@@ -50,6 +50,12 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
     public FileMap() {
     }
 
+    /**
+     * Sets a comma separated list of files which are then passed to
+     * {@link #setFile}.
+     *
+     * @param files a comma separated list of files
+     */
     public void setFiles(final String files) {
         final String[] parts = files.split("\\s*,\\s*");
         for (final String part : parts) {
@@ -57,6 +63,13 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
         }
     }
 
+    /**
+     * Provides a {@link Map} based on a file. The file is supposed to be UTF-8
+     * encoded. The separator is by default \t. <strong>Important:</strong> Lines
+     * that are not split in two parts by the separator are ignored!
+     *
+     * @param file the file
+     */
     public void setFile(final String file) {
         try (
                 InputStream stream = openStream(file);

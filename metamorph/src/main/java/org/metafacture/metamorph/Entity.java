@@ -53,6 +53,11 @@ public final class Entity extends AbstractFlushingCollect {
         this.receiver = receiver;
     }
 
+    /**
+     * Sets the NamedValueSource the entity will act on.
+     *
+     * @param source the NamedValueSource
+     */
     public void setNameSource(final NamedValueSource source) {
         nameSource = source;
         nameSource.setNamedValueReceiver(this);

@@ -50,11 +50,23 @@ public final class Location {
     private final Locator elementStart;
     private final Locator elementEnd;
 
+    /**
+     * Constructs a Location from a Locator as start element and a Locator as end
+     * element.
+     *
+     * @param elementStart the Locator as start element
+     * @param elementEnd   the Locator as end element
+     */
     public Location(final Locator elementStart, final Locator elementEnd) {
         this.elementStart = new LocatorImpl(elementStart);
         this.elementEnd = new LocatorImpl(elementEnd);
     }
 
+    /**
+     * Constructs a Location from an other Location.
+     *
+     * @param src the Location
+     */
     public Location(final Location src) {
         elementStart = new LocatorImpl(src.elementStart);
         elementEnd = new LocatorImpl(src.elementEnd);

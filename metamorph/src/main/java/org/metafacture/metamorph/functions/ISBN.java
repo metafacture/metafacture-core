@@ -75,6 +75,14 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
         return result;
     }
 
+    /**
+     * Cleanse the ISBN free of semantic sugar and uppercase a possible "x"
+     * character.
+     *
+     * @param isbn the ISBN
+     * @return the normalized ISBN or an empty string if normalization is not
+     *         succesful
+     */
     public static String cleanse(final String isbn) {
         String normValue = isbn.replace('x', 'X');
         normValue = DIRT_PATTERN.matcher(normValue).replaceAll("");
@@ -85,6 +93,11 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
         return "";
     }
 
+    /**
+     * Sets the ISBN to ISBN-10 or ISBN-13.
+     *
+     * @param toString {@value #ISBN10} or {@value #ISBN13}
+     */
     public void setTo(final String toString) {
         to13 = toString.equalsIgnoreCase(ISBN13);
         to10 = toString.equalsIgnoreCase(ISBN10);
@@ -127,6 +140,12 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
         return (byte) cha - (byte) '0';
     }
 
+    /**
+     * Converts a ISBN-13 to ISBN-10.
+     *
+     * @param isbn the ISBN-13
+     * @return the ISBN-10
+     */
     public static String isbn13to10(final String isbn) {
         if (isbn.length() != ISBN13_SIZE) {
             throw new IllegalArgumentException(
@@ -137,6 +156,12 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
         return isbn10Data + check10(isbn10Data);
     }
 
+    /**
+     * Converts a ISBN-10 to ISBN-13.
+     *
+     * @param isbn the ISBN-10
+     * @return the ISBN-13
+     */
     public static String isbn10to13(final String isbn) {
         if (isbn.length() != ISBN10_SIZE) {
             throw new IllegalArgumentException(
@@ -148,6 +173,12 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
         return isbn13Data + check13(isbn13Data);
     }
 
+    /**
+     * Checks if a ISBN is valid.
+     *
+     * @param isbn the ISBN
+     * @return true if it's valid and false if not
+     */
     public static boolean isValid(final String isbn) {
         boolean result = false;
 

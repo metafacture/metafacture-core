@@ -174,6 +174,14 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         this(inputSource, NO_VARS, interceptorFactory);
     }
 
+    /**
+     * Constructs a Metamorph by setting an InputSource, a Map of variables and an
+     * InterceptorFactory.
+     *
+     * @param inputSource        the InputSource
+     * @param vars               the Map of variables
+     * @param interceptorFactory the InterceptorFactory
+     */
     public Metamorph(final InputSource inputSource, final Map<String, String> vars,
             final InterceptorFactory interceptorFactory) {
         buildPipeline(inputSource, vars, interceptorFactory);

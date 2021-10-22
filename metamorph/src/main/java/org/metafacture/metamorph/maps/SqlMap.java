@@ -51,6 +51,9 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
     public SqlMap() {
     }
 
+    /**
+     * Initializes the prepared statement using the {@value #query}.
+     */
     public void init() {
         try {
             preparedStatement = getMySqlConnection().prepareStatement(query);

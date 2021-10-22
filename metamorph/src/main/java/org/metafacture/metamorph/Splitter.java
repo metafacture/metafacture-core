@@ -44,16 +44,31 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
     private final Map<String, StreamReceiver> receiverMap = new HashMap<String, StreamReceiver>();
     private final Metamorph metamorph;
 
+    /**
+     * Constructs a Splitter by setting a the path to a metamorph definition file.
+     *
+     * @param morphDef the name of the file of the metamorph definition
+     */
     public Splitter(final String morphDef) {
         metamorph = new Metamorph(morphDef);
         metamorph.setReceiver(singleValue);
     }
 
+    /**
+     * Constructs a Splitter by setting a Reader of a metamorph definition.
+     *
+     * @param morphDef the Reader of the metamorph definition
+     */
     public Splitter(final Reader morphDef) {
         metamorph = new Metamorph(morphDef);
         metamorph.setReceiver(singleValue);
     }
 
+    /**
+     * Constructs a Splitter by setting the Metamorph.
+     *
+     * @param metamorph the Metamoprh
+     */
     public Splitter(final Metamorph metamorph) {
         this.metamorph = metamorph;
         metamorph.setReceiver(singleValue);
@@ -65,6 +80,14 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
         return receiver;
     }
 
+    /**
+     * Sets the receiver.
+     *
+     * @param <R>      the type of the receiver
+     * @param key      the name of the receiver
+     * @param receiver the receiver
+     * @return the receiver
+     */
     public <R extends StreamReceiver> R setReceiver(final String key, final R receiver) {
         receiverMap.put(key, receiver);
         return receiver;

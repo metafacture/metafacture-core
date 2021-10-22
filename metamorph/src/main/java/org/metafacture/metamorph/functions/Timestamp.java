@@ -89,6 +89,11 @@ public final class Timestamp extends AbstractSimpleStatelessFunction {
         this.timezone = timezone;
     }
 
+    /**
+     * Sets the language if supported in {@link #SUPPORTED_LANGUAGES}.
+     *
+     * @param language the language
+     */
     public void setLanguage(final String language) {
         if (!SUPPORTED_LANGUAGES.contains(language)) {
             throw new MorphBuildException("Language '" + language + "' not supported.");

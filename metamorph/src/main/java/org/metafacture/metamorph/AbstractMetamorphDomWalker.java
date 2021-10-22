@@ -100,6 +100,13 @@ public abstract class AbstractMetamorphDomWalker {
         return mapFactory;
     }
 
+    /**
+     * Walks through the metamorph definition file. Respects the metamorph
+     * variables.
+     *
+     * @param morphScript the InputSource of the metamorph definition file
+     * @param newVars     the Map of Metamorph variables
+     */
     public final void walk(final InputSource morphScript, final Map<String, String> newVars) {
         vars.putAll(newVars);
         walk(morphScript);

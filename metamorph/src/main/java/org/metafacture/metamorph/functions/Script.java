@@ -44,6 +44,11 @@ public final class Script extends AbstractSimpleStatelessFunction {
         this.invoke = invoke;
     }
 
+    /**
+     * Sets the filename of a JavaScript and loads it.
+     *
+     * @param file the file
+     */
     public void setFile(final String file) {
 
         final ScriptEngineManager manager = new ScriptEngineManager();

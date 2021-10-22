@@ -71,6 +71,12 @@ public final class Unique extends AbstractStatefulFunction {
         uniqueInEntity = ENTITY.equals(scope);
     }
 
+    /**
+     * Sets the Unique part to be processed. Possible values are {@value #ENTITY},
+     * {@value #NAME} and {@value #VALUE}.
+     *
+     * @param part the part
+     */
     public void setPart(final String part) {
         if (NAME.equals(part)) {
             keyGenerator = new KeyGenerator() {

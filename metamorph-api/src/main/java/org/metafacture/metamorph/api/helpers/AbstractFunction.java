@@ -49,6 +49,11 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
         return mapName;
     }
 
+    /**
+     * Gets the {@value #localMap} or a Map with the name of {@value #mapName}.
+     *
+     * @return the Map
+     */
     public final Map<String, String> getMap() {
         if (localMap == null) {
             return maps.getMap(mapName);

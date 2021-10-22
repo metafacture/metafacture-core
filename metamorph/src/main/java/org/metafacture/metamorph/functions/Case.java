@@ -58,6 +58,11 @@ public final class Case extends AbstractSimpleStatelessFunction {
         this.toUpper = UPPER.equals(string);
     }
 
+    /**
+     * Sets the language if it's present in {@value #SUPPORTED_LANGUAGES}.
+     *
+     * @param language the language
+     */
     public void setLanguage(final String language) {
         if (!LANGUAGES.contains(language)) {
             throw new MorphBuildException("Language " + language + " not supported.");

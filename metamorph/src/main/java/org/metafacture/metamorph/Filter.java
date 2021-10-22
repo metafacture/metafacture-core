@@ -45,21 +45,45 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
     private final SingleValue singleValue = new SingleValue();
     private final Metamorph metamorph;
 
+    /**
+     * Constructs a Filter by a path to the metamorph definition.
+     *
+     * @param morphDef the path to the metamorph definition
+     */
     public Filter(final String morphDef) {
         metamorph = new Metamorph(morphDef);
         metamorph.setReceiver(singleValue);
     }
 
+    /**
+     * Constructs a Filter by a Metamorph.
+     *
+     * @param metamorph the Metamorph
+     */
     public Filter(final Metamorph metamorph) {
         this.metamorph = metamorph;
         metamorph.setReceiver(singleValue);
     }
 
+    /**
+     * Constructs a Filter by a path to the metamorph definition and a Map of
+     * Metamorph variables.
+     *
+     * @param morphDef the path to the metamorph definition
+     * @param vars     the Map of the metamorph variables
+     */
     public Filter(final String morphDef, final Map<String, String> vars) {
         metamorph = new Metamorph(morphDef, vars);
         metamorph.setReceiver(singleValue);
     }
 
+    /**
+     * Constructs a Filter by a path to the metamorph definition and an
+     * InterceptorFactory.
+     *
+     * @param morphDef           the path to the metamorph definition
+     * @param interceptorFactory the InterceptorFactory
+     */
     public Filter(final String morphDef, final InterceptorFactory interceptorFactory) {
         metamorph = new Metamorph(morphDef, interceptorFactory);
         metamorph.setReceiver(singleValue);
