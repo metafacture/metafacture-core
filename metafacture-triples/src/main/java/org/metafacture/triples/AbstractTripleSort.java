@@ -30,13 +30,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.function.Function;
 
 /**
  * @author markus geipel
  *
  */
-public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>>
-        implements MemoryWarningSystem.Listener {
+public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> implements MemoryWarningSystem.Listener {
 
     /**
      * Specifies the comparator. Can be one of {@link #SUBJECT}, {@link #PREDICATE},
@@ -70,10 +70,11 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
     private final List<File> tempFiles = new ArrayList<>();
     private Compare compare = Compare.SUBJECT;
     private Order order = Order.INCREASING;
+    private boolean numeric;
     private volatile boolean memoryLow;
 
     /**
-     * Constructs an AbstractTripleSort. Calls {@link #MemoryWarningSystem}.
+     * Constructs an AbstractTripleSort. Calls {@link MemoryWarningSystem}.
      */
     protected AbstractTripleSort() {
         MemoryWarningSystem.addListener(this);
@@ -96,6 +97,10 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
         order = newOrder;
     }
 
+    protected final void setSortNumeric(final boolean newNumeric) {
+        numeric = newNumeric;
+    }
+
     @Override
     public final void process(final Triple namedValue) {
         if (memoryLow) {
@@ -115,47 +120,38 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
     }
 
     private void nextBatch() throws IOException {
-        Collections.sort(buffer, createComparator(compare, order));
+        Collections.sort(buffer, createComparator());
         final File tempFile = File.createTempFile("sort", "namedValues", null);
         tempFile.deleteOnExit();
-        final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));
 
-        try {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile))) {
             for (final Triple triple : buffer) {
                 triple.write(out);
             }
         }
-        finally {
-            out.close();
-        }
+
         buffer.clear();
         tempFiles.add(tempFile);
     }
 
     @Override
     public final void onCloseStream() {
-
         if (tempFiles.isEmpty()) {
-            Collections.sort(buffer, createComparator(compare, order));
+            Collections.sort(buffer, createComparator());
+
             for (final Triple triple : buffer) {
                 sortedTriple(triple);
             }
+
             onFinished();
         }
         else {
-            final Comparator<Triple> comparator = createComparator(compare, order);
-            final PriorityQueue<SortedTripleFileFacade> queue = new PriorityQueue<SortedTripleFileFacade>(11,
-                    new Comparator<SortedTripleFileFacade>() {
-                        // private final Comparator<Triple> comparator =
-                        // getComparator();
+            final Comparator<Triple> comparator = createComparator();
+            final PriorityQueue<SortedTripleFileFacade> queue = new PriorityQueue<>(11, (o1, o2) -> comparator.compare(o1.peek(), o2.peek()));
 
-                        @Override
-                        public int compare(final SortedTripleFileFacade o1, final SortedTripleFileFacade o2) {
-                            return comparator.compare(o1.peek(), o2.peek());
-                        }
-                    });
             try {
                 nextBatch();
+
                 for (final File file : tempFiles) {
                     queue.add(new SortedTripleFileFacade(file));
                 }
@@ -171,6 +167,7 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
                         queue.add(sortedFileFacade);
                     }
                 }
+
                 onFinished();
             }
             catch (final IOException e) {
@@ -182,6 +179,7 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
                 }
             }
         }
+
         MemoryWarningSystem.removeListener(this);
     }
 
@@ -192,65 +190,56 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
     protected abstract void sortedTriple(Triple namedValue);
 
     public final Comparator<Triple> createComparator() {
-        return createComparator(compare, order);
+        return createComparator(compare, order, numeric);
+    }
+
+    public static Comparator<Triple> createComparator(final Compare compare, final Order order) {
+        return createComparator(compare, order, false);
     }
 
     /**
      * Creates a Comparator.
      *
-     * @param compareBy one of {@link #Compare}
-     * @param order     the {@link #Order}
+     * @param compare one of {@link #Compare}
+     * @param order   the {@link #Order}
+     * @param numeric "true" if comparison should be numeric. "false" if comparison
+     *                should be alphanumeric. Defaults to "false".
      * @return a Comparator of type Triple
      */
-    public static Comparator<Triple> createComparator(final Compare compareBy, final Order order) {
-        final Comparator<Triple> comparator;
-        switch (compareBy) {
+    private static Comparator<Triple> createComparator(final Compare compare, final Order order, final boolean numeric) {
+        final Function<Triple, String> tripleFunction;
+        switch (compare) {
             case ALL:
-                comparator = new Comparator<Triple>() {
-                    @Override
-                    public int compare(final Triple o1, final Triple o2) {
-                        return order.order(o1.compareTo(o2));
-                    }
-                };
-                break;
+                return (o1, o2) -> order.order(o1.compareTo(o2));
             case OBJECT:
-                comparator = new Comparator<Triple>() {
-                    @Override
-                    public int compare(final Triple o1, final Triple o2) {
-                        return order.order(o1.getObject().compareTo(o2.getObject()));
-                    }
-                };
+                tripleFunction = Triple::getObject;
                 break;
             case SUBJECT:
-                comparator = new Comparator<Triple>() {
-                    @Override
-                    public int compare(final Triple o1, final Triple o2) {
-                        return order.order(o1.getSubject().compareTo(o2.getSubject()));
-                    }
-                };
+                tripleFunction = Triple::getSubject;
                 break;
             case PREDICATE:
             default:
-                comparator = new Comparator<Triple>() {
-                    @Override
-                    public int compare(final Triple o1, final Triple o2) {
-                        return order.order(o1.getPredicate().compareTo(o2.getPredicate()));
-                    }
-                };
+                tripleFunction = Triple::getPredicate;
                 break;
         }
 
-        return comparator;
+        final Function<Triple, Integer> numericFunction = tripleFunction.andThen(Integer::valueOf);
+        return numeric ?
+            (o1, o2) -> order.order(numericFunction.apply(o1).compareTo(numericFunction.apply(o2))) :
+            (o1, o2) -> order.order(tripleFunction.apply(o1).compareTo(tripleFunction.apply(o2)));
     }
 
     @Override
     public final void onResetStream() {
         buffer.clear();
+
         for (final File file : tempFiles) {
             if (file.exists()) {
                 file.delete();
             }
         }
+
         tempFiles.clear();
     }
+
 }

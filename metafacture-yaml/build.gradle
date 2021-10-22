@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-ext.mavenName = 'Metafacture Triple'
-description = 'Modules for working with triples'
+ext.mavenName = 'Metafacture YAML'
+description = 'Modules for processing YAML data in Metafacture'
 
 dependencies {
   api project(':metafacture-framework')
-  implementation project(':metafacture-commons')
-  implementation project(':metafacture-formeta')
+  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.0'
   testImplementation 'junit:junit:4.12'
   testImplementation 'org.mockito:mockito-core:2.5.5'
 }
