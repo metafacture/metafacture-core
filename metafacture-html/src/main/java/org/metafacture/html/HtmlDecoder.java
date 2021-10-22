@@ -124,7 +124,7 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
     }
 
     /**
-     * Sets attribute values as subfields. If the value(s) start with an `&` they
+     * Sets attribute values as subfields. If the value(s) start with an `&amp;` they
      * are appended to {@link #DEFAULT_ATTR_VALS_AS_SUBFIELDS}.
      *
      * @param mapString the attributes to be added as subfields

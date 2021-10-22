@@ -63,6 +63,9 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     private String arrayMarker = ARRAY_MARKER;
 
+    /**
+     * Constructs a YamlEncoder if no IOException occurs.
+     */
     public YamlEncoder() {
         try {
             yamlGenerator = new YAMLFactory().createGenerator(writer);

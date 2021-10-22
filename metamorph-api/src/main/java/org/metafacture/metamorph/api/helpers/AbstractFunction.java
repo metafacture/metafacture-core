@@ -50,7 +50,7 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
     }
 
     /**
-     * Gets the {@value #localMap} or a Map with the name of {@value #mapName}.
+     * Gets the {@link #localMap} or a Map with the name of {@link #mapName}.
      *
      * @return the Map
      */

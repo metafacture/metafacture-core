@@ -56,17 +56,12 @@ public final class YamlDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private final YAMLFactory yamlFactory = new YAMLFactory();
 
     private YAMLParser yamlParser;
-    private String arrayMarker;
-    private String arrayName;
-    private String recordId;
+    private String arrayMarker = DEFAULT_ARRAY_MARKER;
+    private String arrayName = DEFAULT_ARRAY_NAME;
+    private String recordId = DEFAULT_RECORD_ID;
     private int recordCount;
 
     public YamlDecoder() {
-        setArrayMarker(DEFAULT_ARRAY_MARKER);
-        setArrayName(DEFAULT_ARRAY_NAME);
-        setRecordId(DEFAULT_RECORD_ID);
-
-        resetRecordCount();
     }
 
     public void setArrayMarker(final String arrayMarker) {

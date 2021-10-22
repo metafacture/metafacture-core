@@ -36,7 +36,7 @@ public final class MultiFormatReader implements Reader {
     }
 
     /**
-     * Sets the format of {@value #currentReader} if the {@value #READER_FACTORY}
+     * Sets the format of {@link #currentReader} if the {@link #READER_FACTORY}
      * contains that format.
      *
      * @param format the format

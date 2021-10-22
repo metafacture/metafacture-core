@@ -40,8 +40,7 @@ public final class TimeUtil {
     }
 
     /**
-     * Formats a duration to human readable abbrevations. See {@link TimeUtilTest}
-     * how to use it.
+     * Formats a duration to human readable abbrevations.
      *
      * @param duration a long value of the duration
      * @return a human readable format of the duration

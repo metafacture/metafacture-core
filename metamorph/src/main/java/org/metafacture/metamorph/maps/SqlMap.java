@@ -52,7 +52,7 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
     }
 
     /**
-     * Initializes the prepared statement using the {@value #query}.
+     * Initializes the prepared statement using the {@link #query}.
      */
     public void init() {
         try {

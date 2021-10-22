@@ -45,7 +45,7 @@ public final class MetamorphTestSuite extends ParentRunner<Runner> {
      * to a class.
      *
      * @param suiteRoot the {@code @TestClass}
-     * @throws InitializationError
+     * @throws InitializationError if definitions couldn't be loaded
      */
     public MetamorphTestSuite(final Class<?> suiteRoot)
             throws InitializationError {
