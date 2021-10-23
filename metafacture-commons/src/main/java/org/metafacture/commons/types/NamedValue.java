@@ -17,7 +17,7 @@
 package org.metafacture.commons.types;
 
 /**
- * Stores an immutable name-value-pair. The hash code is
+ * Stores an immutable name-value pair. The hash code is
  * precomputed during instantiation.
  *
  * @author Markus Michael Geipel
@@ -31,7 +31,7 @@ public final class NamedValue  implements Comparable<NamedValue> {
     private final int preCompHashCode;
 
     /**
-     * Constructs an immutable name-value-pair by computing a hash code.
+     * Constructs an immutable name-value pair by computing a hash code.
      *
      * @param name  the name of the pair
      * @param value the value of the pair

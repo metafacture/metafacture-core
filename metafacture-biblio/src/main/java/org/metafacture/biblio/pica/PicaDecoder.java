@@ -219,7 +219,7 @@ public final class PicaDecoder extends DefaultObjectPipe<String, StreamReceiver>
     }
 
     /**
-     * Controls whether decomposed unicode characters in field values are
+     * Controls whether decomposed Unicode characters in field values are
      * normalised to their precomposed version. By default no normalisation is
      * applied. The normalisation is only applied to values not to field or
      * subfield names.
@@ -229,7 +229,7 @@ public final class PicaDecoder extends DefaultObjectPipe<String, StreamReceiver>
      * <p>
      * <strong>Default value: {@code false}</strong>
      *
-     * @param normalizeUTF8 if true, decomposed unicode characters in values are
+     * @param normalizeUTF8 if true, decomposed Unicode characters in values are
      *                      normalised to their precomposed version.
      */
     public void setNormalizeUTF8(final boolean normalizeUTF8) {

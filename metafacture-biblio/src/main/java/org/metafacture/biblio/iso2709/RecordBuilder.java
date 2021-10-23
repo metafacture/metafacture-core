@@ -311,7 +311,7 @@ public final class RecordBuilder {
     /**
      * Appends a subfield.
      *
-     * @param value String of the to be appended subfield
+     * @param value String of the subfield to be appended
      */
     public void appendSubfield(final String value) {
         requireInDataField();
@@ -323,7 +323,7 @@ public final class RecordBuilder {
      * Appends a subfield in dependency of an identifier.
      *
      * @param identifier char array of an identifier
-     * @param value      String of the to be appended subfield
+     * @param value      String of the subfield to be appended
      */
     public void appendSubfield(final char[] identifier, final String value) {
         requireInDataField();

@@ -45,12 +45,12 @@ public final class ReflectionUtil {
     }
 
     /**
-     * Wraps a Class to a ConfigurableClass.
+     * Wraps a Class in a ConfigurableClass.
      *
      * @param <T>       the object type of the ConfigurableClass
      * @param loader    the ClassLoader
      * @param className the name of the class
-     * @param baseType  the object typed class to be wrapped
+     * @param baseType  the object type of the class to be wrapped
      * @return the ConfigurableClass
      */
     public static <T> ConfigurableClass<? extends T> loadClass(final ClassLoader loader, final String className, final Class<T> baseType) {

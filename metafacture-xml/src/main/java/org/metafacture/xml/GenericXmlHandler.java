@@ -44,7 +44,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
     private static final Pattern TABS = Pattern.compile("\t+");
 
-    private static final String METAMORPH_RECORD_TAG = "org.culturegraph.metamorph.xml.recordtag";
+    private static final String RECORD_TAG_PROPERTY = "org.culturegraph.metamorph.xml.recordtag";
 
     private String attributeMarker = DEFAULT_ATTRIBUTE_MARKER;
     private String recordTagName = DEFAULT_RECORD_TAG;
@@ -56,11 +56,11 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private boolean emitNamespace = EMIT_NAMESPACE;
 
     /**
-     * Constructs a GenericXmlHandler by loading the system property
-     * {@value #METAMORPH_RECORD_TAG} if that system property was set.
+     * Constructs a GenericXmlHandler. Sets the record tag name to the value of
+     * the system property {@value #RECORD_TAG_PROPERTY} if it's present.
      */
     public GenericXmlHandler() {
-        final String recordTagNameProperty = System.getProperty(METAMORPH_RECORD_TAG);
+        final String recordTagNameProperty = System.getProperty(RECORD_TAG_PROPERTY);
         if (recordTagNameProperty != null) {
             recordTagName = recordTagNameProperty;
         }
@@ -70,7 +70,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
      * Creates a new {@code GenericXmlReader} with the given tag name as
      * marker for records.
      *
-     * @deprecated Use default constructor and set the tag name latter
+     * @deprecated Use default constructor and set the tag name later
      * with {@link #setRecordTagName(String)}.
      *
      * @param recordTagName tag name marking the start of a record.

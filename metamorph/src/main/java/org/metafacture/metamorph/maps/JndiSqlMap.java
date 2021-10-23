@@ -49,7 +49,7 @@ public final class JndiSqlMap extends AbstractReadOnlyMap<String, String> implem
      *
      * See {@link InitialContext}
      *
-     * @param name the name to be lookuped in the InitialContext.
+     * @param name the name to be looked up in the InitialContext.
      */
     public void setDatasource(final String name) {
         try {

@@ -51,8 +51,8 @@ public final class XmlDecoder extends DefaultObjectPipe<Reader, XmlReceiver> {
     private final XMLReader saxReader;
 
     /**
-     * Constructs an XmlDecoder by obtaining a new instance of a {@link
-     * org.xml.sax.XMLReader}.
+     * Constructs an XmlDecoder by obtaining a new instance of an
+     * {@link org.xml.sax.XMLReader}.
      */
     public XmlDecoder() {
         try {

@@ -36,8 +36,8 @@ import java.util.regex.Pattern;
 
 /**
  * Provides a {@link Map} based on a file. The file is supposed to be UTF-8
- * encoded. The separator is by default \t. <strong>Important:</strong> Lines
- * that are not split in two parts by the separator are ignored!
+ * encoded. The default separator is {@code \t}. <strong>Important:</strong>
+ * Lines that are not split in two parts by the separator are ignored!
  *
  * @author Markus Michael Geipel
  */
@@ -65,8 +65,8 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
 
     /**
      * Provides a {@link Map} based on a file. The file is supposed to be UTF-8
-     * encoded. The separator is by default \t. <strong>Important:</strong> Lines
-     * that are not split in two parts by the separator are ignored!
+     * encoded. The default separator is {@code \t}. <strong>Important:</strong>
+     * Lines that are not split in two parts by the separator are ignored!
      *
      * @param file the file
      */

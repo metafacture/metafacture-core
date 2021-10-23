@@ -46,9 +46,9 @@ public final class ObjectWriter<T> implements ConfigurableObjectWriter<T> {
     private final ConfigurableObjectWriter<T> objectWriter;
 
     /**
-     * Sets the destination to write objects to. If destination is set to
-     * {@value #STDOUT} the object is written to standard out. Else it's written to
-     * a file.
+     * Sets the destination to write objects to. If the destination is set to
+     * {@value #STDOUT} the object is written to the standard output. Otherwise
+     * it's written to a file of that name.
      *
      * @param destination the path to be written to or standard out if it's
      *                    {@value #STDOUT}

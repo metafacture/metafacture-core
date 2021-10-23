@@ -83,8 +83,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     /**
      * Sets the top-level XML document element.
      *
-     * @param newRoot the top level element. Don't set it to omit setting top level
-     *             element.
+     * @param newRoot the top level element. Leave at default to omit the
+     *                top-level element.
      */
     public void setTopLevelElement(final String newRoot) {
         root = newRoot;

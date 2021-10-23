@@ -141,7 +141,7 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
     }
 
     /**
-     * Converts a ISBN-13 to ISBN-10.
+     * Converts an ISBN-13 to ISBN-10.
      *
      * @param isbn the ISBN-13
      * @return the ISBN-10
@@ -157,7 +157,7 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
     }
 
     /**
-     * Converts a ISBN-10 to ISBN-13.
+     * Converts an ISBN-10 to ISBN-13.
      *
      * @param isbn the ISBN-10
      * @return the ISBN-13
@@ -174,7 +174,7 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
     }
 
     /**
-     * Checks if a ISBN is valid.
+     * Checks if an ISBN is valid.
      *
      * @param isbn the ISBN
      * @return true if it's valid and false if not

@@ -17,7 +17,7 @@
 package org.metafacture.biblio.iso2709;
 
 /**
- * Provides read access to the record label of a ISO 2709:2008 formatted
+ * Provides read access to the record label of an ISO 2709:2008 formatted
  * record. The record label consists of the first 24 octets of the record.
  * <p>
  * Use {@link LabelBuilder} if write access to the label is required.

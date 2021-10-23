@@ -82,7 +82,6 @@ public final class Marc21Encoder extends
 
     /**
      * Initializes the encoder with MARC 21 constants and charset.
-     *
      */
     public Marc21Encoder() {
         builder = new RecordBuilder(Marc21Constants.MARC21_FORMAT);

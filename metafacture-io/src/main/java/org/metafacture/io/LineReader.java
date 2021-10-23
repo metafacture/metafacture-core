@@ -53,8 +53,7 @@ public final class LineReader extends DefaultObjectPipe<Reader, ObjectReceiver<S
     }
 
     /**
-     * Processes input from a reader line by line and pass them line by line to a
-     * receiver.
+     * Processes input from a reader and passes it line by line to a receiver.
      *
      * @param reader   the Reader
      * @param receiver the ObjectReceiver

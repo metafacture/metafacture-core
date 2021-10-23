@@ -29,10 +29,8 @@ import java.util.Set;
  *
  * @author Markus Michael Geipel
  *
- * @param <K>
- *            key
- * @param <V>
- *            value
+ * @param <K> key
+ * @param <V> value
  */
 public class ListMap<K, V> implements Map<K, List<V>> {
 
@@ -58,7 +56,7 @@ public class ListMap<K, V> implements Map<K, List<V>> {
     }
 
     /**
-     * Removes a key of the map.
+     * Removes a key from the map.
      *
      * @param key the key
      * @return the List of values or null if the map didn't contain the key
@@ -68,7 +66,7 @@ public class ListMap<K, V> implements Map<K, List<V>> {
     }
 
     /**
-     * Clears all values of a key of the map.
+     * Clears all values of a key in the map.
      *
      * @param key the key of the map
      */
@@ -80,7 +78,7 @@ public class ListMap<K, V> implements Map<K, List<V>> {
     }
 
     /**
-     * Clears all values of all keys of the map.
+     * Clears all values of all keys in the map.
      */
     public final void clearAllKeys() {
         for (final Entry<K, List<V>> entry: map.entrySet()) {
@@ -99,7 +97,7 @@ public class ListMap<K, V> implements Map<K, List<V>> {
     }
 
     /**
-     * Adds a value to the List of values of the key of the map.
+     * Adds a value to the List of values of the key in the map.
      *
      * @param name  the key
      * @param value the value
@@ -127,7 +125,7 @@ public class ListMap<K, V> implements Map<K, List<V>> {
     }
 
     /**
-     * Gets the first element of the List of values of the key of the map.
+     * Gets the first element of the List of values of the key in the map.
      *
      * @param name the key
      * @return first element of the values of the key
@@ -184,7 +182,7 @@ public class ListMap<K, V> implements Map<K, List<V>> {
     }
 
     /**
-     * Adds a List of values to a key of the map.
+     * Adds a List of values to a key in the map.
      *
      * @param name      the key
      * @param addValues the List of values
@@ -208,4 +206,5 @@ public class ListMap<K, V> implements Map<K, List<V>> {
     public final Collection<List<V>> values() {
         return map.values();
     }
+
 }

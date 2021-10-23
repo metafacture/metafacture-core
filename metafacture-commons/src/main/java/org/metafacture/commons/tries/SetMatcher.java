@@ -37,7 +37,7 @@ public final class SetMatcher<T> {
     }
 
     /**
-     * Puts a value to a key.
+     * Adds a value for a key.
      *
      * @param key   the key
      * @param value the value
@@ -147,10 +147,10 @@ public final class SetMatcher<T> {
     }
 
     /**
-     * Prints dot description of the automaton to out for visualization in
-     * GraphViz. Used for debugging and education.
+     * Prints dot description of the automaton to the PrintStream for
+     * visualization in GraphViz. Used for debugging and education.
      *
-     * @param out the stream t which the description is written
+     * @param out the stream to which the description is written
      */
     public void printAutomaton(final PrintStream out) {
         out.println("digraph ahocorasick {");

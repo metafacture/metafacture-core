@@ -111,7 +111,7 @@ public final class StreamValidator implements StreamReceiver {
     /**
      * Sets strict record order.
      *
-     * @param strictRecordOrder "true" if the record order shall be strict or
+     * @param strictRecordOrder "true" if the record order should be strict, or
      *                          "false" otherwise
      */
     public void setStrictRecordOrder(final boolean strictRecordOrder) {
@@ -129,7 +129,8 @@ public final class StreamValidator implements StreamReceiver {
     /**
      * Sets strict key order.
      *
-     * @param strictKeyOrder "true" if key order should be strict, otherwise "false"
+     * @param strictKeyOrder "true" if key order should be strict, or
+     *                       "false" otherwise
      */
     public void setStrictKeyOrder(final boolean strictKeyOrder) {
         if (validating) {
@@ -146,8 +147,8 @@ public final class StreamValidator implements StreamReceiver {
     /**
      * Sets strict value order.
      *
-     * @param strictValueOrder "true" if value order should be strict, otherwise
-     *                         "false"
+     * @param strictValueOrder "true" if value order should be strict, or
+     *                         "false" otherwise
      */
     public void setStrictValueOrder(final boolean strictValueOrder) {
         if (validating) {

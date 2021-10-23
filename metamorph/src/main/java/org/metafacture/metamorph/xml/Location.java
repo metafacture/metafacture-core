@@ -63,7 +63,7 @@ public final class Location {
     }
 
     /**
-     * Constructs a Location from an other Location.
+     * Constructs a Location from another Location.
      *
      * @param src the Location
      */

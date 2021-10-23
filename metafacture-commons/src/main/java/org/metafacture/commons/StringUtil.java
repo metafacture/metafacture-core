@@ -35,12 +35,12 @@ public final class StringUtil {
     }
 
     /**
-     * Sets a fallback of an Object if the the Object is null.
+     * Returns a fallback of an object if the object is null.
      *
-     * @param <O>           a class
-     * @param value         the Object
-     * @param fallbackValue the default Object
-     * @return an Object
+     * @param <O>           the type of the object
+     * @param value         the object
+     * @param fallbackValue the default object
+     * @return an object
      */
     public static <O> O fallback(final O value, final O fallbackValue) {
         if (value == null) {

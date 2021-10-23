@@ -68,7 +68,7 @@ public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceive
     }
 
     /**
-     * Decodes a Triple. Passes the Predicate and the Object to the receiver.
+     * Decodes a Triple. Passes the predicate and the object to the receiver.
      *
      * @param triple the Triple
      */

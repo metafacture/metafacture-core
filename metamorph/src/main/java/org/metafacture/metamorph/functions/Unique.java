@@ -72,8 +72,8 @@ public final class Unique extends AbstractStatefulFunction {
     }
 
     /**
-     * Sets the Unique part to be processed. Possible values are {@value #ENTITY},
-     * {@value #NAME} and {@value #VALUE}.
+     * Sets the Unique part to be processed. Possible values are {@value #NAME}
+     * or {@value #VALUE}.
      *
      * @param part the part
      */

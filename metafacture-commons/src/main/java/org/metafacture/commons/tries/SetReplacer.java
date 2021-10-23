@@ -28,7 +28,6 @@ import java.util.Map;
  * Replaces Strings by other Strings.
  *
  * @author Markus Michael Geipel
- *
  */
 public final class SetReplacer {
     private final SetMatcher<String> matcher = new SetMatcher<String>();
@@ -37,7 +36,7 @@ public final class SetReplacer {
     }
 
     /**
-     * Adds a replacement of a String by an other String.
+     * Adds a replacement of a String by another String.
      *
      * @param toReplace   String to replace
      * @param replacement String of replacement

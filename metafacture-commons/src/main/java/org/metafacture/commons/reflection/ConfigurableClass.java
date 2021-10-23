@@ -55,9 +55,9 @@ public final class ConfigurableClass<T> {
     }
 
     /**
-     * Gets all "public set" methods of this class.
+     * Gets all public "set" methods of this class.
      *
-     * @return the Map of all setter methods of this class
+     * @return the Map of the setter methods of this class
      */
     public Map<String, Method> getSetters() {
         if (settersCache == null) {
@@ -88,9 +88,9 @@ public final class ConfigurableClass<T> {
     }
 
     /**
-     * Gets the class types of the setter methods.
+     * Gets the parameter types of the setter methods.
      *
-     * @return a Map of the setter methods name and their types
+     * @return a Map of the setter method names and their types
      */
     public Map<String, Class<?>> getSetterTypes() {
         final Map<String, Class<?>> setterTypes = new HashMap<>();

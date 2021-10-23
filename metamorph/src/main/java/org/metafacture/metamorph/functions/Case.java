@@ -59,7 +59,7 @@ public final class Case extends AbstractSimpleStatelessFunction {
     }
 
     /**
-     * Sets the language if it's present in {@link #LANGUAGES}.
+     * Sets the language if it's included in {@link #LANGUAGES}.
      *
      * @param language the language
      */

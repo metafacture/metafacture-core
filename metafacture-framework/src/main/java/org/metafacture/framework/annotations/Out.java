@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Out {
     /**
-     * Returns the class used as output when using this class in a pipe.
+     * Returns the class produced as output when using this class in a pipe.
      *
      * @return the Class
      */

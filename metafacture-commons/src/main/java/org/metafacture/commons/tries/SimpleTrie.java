@@ -29,13 +29,12 @@ public final class SimpleTrie<P> {
     }
 
     /**
-     * Puts a value to the key.
+     * Adds a value for the key.
      *
      * @param key   the name of the key
      * @param value the value
      */
     public void put(final String key, final P value) {
-
         Node<P> node = root;
         Node<P> next;
         final int length = key.length();

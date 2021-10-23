@@ -46,9 +46,9 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
     private final Metamorph metamorph;
 
     /**
-     * Constructs a Filter by a path to the metamorph definition.
+     * Constructs a Filter from the path to a Metamorph definition.
      *
-     * @param morphDef the path to the metamorph definition
+     * @param morphDef the path to the Metamorph definition
      */
     public Filter(final String morphDef) {
         metamorph = new Metamorph(morphDef);
@@ -56,7 +56,7 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
     }
 
     /**
-     * Constructs a Filter by a Metamorph.
+     * Constructs a Filter from a Metamorph.
      *
      * @param metamorph the Metamorph
      */
@@ -66,11 +66,11 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
     }
 
     /**
-     * Constructs a Filter by a path to the metamorph definition and a Map of
+     * Constructs a Filter from the path to a Metamorph definition and a Map of
      * Metamorph variables.
      *
-     * @param morphDef the path to the metamorph definition
-     * @param vars     the Map of the metamorph variables
+     * @param morphDef the path to the Metamorph definition
+     * @param vars     the Map of the Metamorph variables
      */
     public Filter(final String morphDef, final Map<String, String> vars) {
         metamorph = new Metamorph(morphDef, vars);
@@ -78,10 +78,10 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
     }
 
     /**
-     * Constructs a Filter by a path to the metamorph definition and an
+     * Constructs a Filter from the path to a Metamorph definition and an
      * InterceptorFactory.
      *
-     * @param morphDef           the path to the metamorph definition
+     * @param morphDef           the path to the Metamorph definition
      * @param interceptorFactory the InterceptorFactory
      */
     public Filter(final String morphDef, final InterceptorFactory interceptorFactory) {
@@ -144,4 +144,5 @@ public final class Filter extends DefaultStreamPipe<StreamReceiver> {
         buffer.clear();
         metamorph.closeStream();
     }
+
 }

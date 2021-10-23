@@ -50,15 +50,13 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
     }
 
     /**
-     * Gets the {@link #localMap} or a Map with the name of {@link #mapName}.
+     * Gets the {@link #localMap} or, if unset, a Map with the name of {@link
+     * #mapName}.
      *
      * @return the Map
      */
     public final Map<String, String> getMap() {
-        if (localMap == null) {
-            return maps.getMap(mapName);
-        }
-        return localMap;
+        return localMap != null ? localMap : maps.getMap(mapName);
     }
 
     public final void setMap(final String newMapName) {

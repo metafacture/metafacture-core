@@ -33,7 +33,7 @@ public final class StringMap extends DefaultStreamReceiver implements Map<String
 
     private boolean closed;
     private Collection<Map<String, String>> collection;
-    private Map<String, String> map = new HashMap<String, String>();
+    private Map<String, String> map = new HashMap<>();
 
     public StringMap() {
     }

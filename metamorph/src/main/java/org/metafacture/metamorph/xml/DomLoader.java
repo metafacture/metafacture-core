@@ -63,7 +63,7 @@ public final class DomLoader { // checkstyle-disable-line ClassDataAbstractionCo
     }
 
     /**
-     * Returns a Document build from an InputSpurce and a schema file. Removes all
+     * Returns a Document built from an InputSpurce and a schema file. Removes all
      * ignorable whitespace and all text nodes containing only whitespace.
      *
      * @param schemaFile the name of the file of the schema

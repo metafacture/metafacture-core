@@ -56,9 +56,9 @@ public final class RecordFormat {
      *
      * @param indicatorLength       the length of the indicator
      * @param identifierLength      the length of the identifier
-     * @param fieldLengthLength     the length of the field
-     * @param fieldStartLength      the length of the indicator
-     * @param implDefinedPartLength the length of the part
+     * @param fieldLengthLength     the length of the field length
+     * @param fieldStartLength      the length of the field start
+     * @param implDefinedPartLength the length of the defined part
      */
     public RecordFormat(final int indicatorLength, final int identifierLength,
             final int fieldLengthLength, final int fieldStartLength,
@@ -201,9 +201,9 @@ public final class RecordFormat {
         }
 
         /**
-         * Returns a new Builder with defined field length.
+         * Returns a new Builder with defined field length length.
          *
-         * @param currentFieldLengthLength the length of the field
+         * @param currentFieldLengthLength the length of the field length
          * @return Builder
          */
         public Builder withFieldLengthLength(final int currentFieldLengthLength) {
@@ -229,7 +229,7 @@ public final class RecordFormat {
         /**
          * Returns a new Builder with defined part length.
          *
-         * @param currentImplDefinedPartLength the length of the part
+         * @param currentImplDefinedPartLength the length of the defined part
          * @return Builder
          */
         public Builder withImplDefinedPartLength(final int currentImplDefinedPartLength) {

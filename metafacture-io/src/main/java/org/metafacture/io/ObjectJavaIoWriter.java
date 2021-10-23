@@ -23,8 +23,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * @param <T>
- *            object type
+ * @param <T> object type
  *
  * @author Christoph Böhme, Markus Geipel
  * @deprecated Use {@link ObjectWriter} or {@link ObjectFileWriter} instead.
@@ -38,6 +37,7 @@ public final class ObjectJavaIoWriter<T> implements ObjectReceiver<T> {
 
     /**
      * Deprecated.
+     *
      * @param writer the Writer
      */
     public ObjectJavaIoWriter(final Writer writer) {

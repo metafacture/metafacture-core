@@ -45,9 +45,9 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
     private final Metamorph metamorph;
 
     /**
-     * Constructs a Splitter by setting a the path to a metamorph definition file.
+     * Constructs a Splitter from the path to a Metamorph definition file.
      *
-     * @param morphDef the name of the file of the metamorph definition
+     * @param morphDef the name of the file of the Metamorph definition
      */
     public Splitter(final String morphDef) {
         metamorph = new Metamorph(morphDef);
@@ -55,7 +55,7 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
     }
 
     /**
-     * Constructs a Splitter by setting a Reader of a metamorph definition.
+     * Constructs a Splitter from the Reader of a Metamorph definition.
      *
      * @param morphDef the Reader of the metamorph definition
      */
@@ -65,7 +65,7 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
     }
 
     /**
-     * Constructs a Splitter by setting the Metamorph.
+     * Constructs a Splitter from the Metamorph.
      *
      * @param metamorph the Metamoprh
      */

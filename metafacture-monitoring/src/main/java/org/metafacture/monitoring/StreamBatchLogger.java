@@ -71,10 +71,9 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
     }
 
     /**
-     * Constructs a StreamBatchLogger with a not changeable format and a map of
-     * variables.
+     * Constructs a StreamBatchLogger with a format and a map of variables.
      *
-     * @param format a not changeable format
+     * @param format a format
      * @param vars   a map of variables
      */
     public StreamBatchLogger(final String format, final Map<String, String> vars) {

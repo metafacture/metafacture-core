@@ -48,7 +48,7 @@ public final class HelpPrinter {
 
     /**
      * Prints Flux help for a given ObjectFactory. Excerpts setters and their
-     * arguments, @in annotations and @out annotations.
+     * arguments, {@code @in} annotations and {@code @out} annotations.
      *
      * @param factory the ObjectFactory
      * @param out     the PrintStream to print to

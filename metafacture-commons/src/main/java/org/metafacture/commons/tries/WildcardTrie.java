@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
  * @author Pascal Christoph
  */
 public final class WildcardTrie<P> {
+
     public static final char STAR_WILDCARD = '*';
     public static final char Q_WILDCARD = '?';
     public static final String OR_STRING = "|";
@@ -50,7 +51,7 @@ public final class WildcardTrie<P> {
      * (1,1) to express wildcards.
      *
      * @param keys  pattern of keys to register
-     * @param value value to associate with the key pattern.
+     * @param value value to associate with the key pattern
      */
     public void put(final String keys, final P value) {
         if (keys.contains(OR_STRING)) {
@@ -65,7 +66,6 @@ public final class WildcardTrie<P> {
     }
 
     private void simplyPut(final String key, final P value) {
-
         final int length = key.length();
 
         Node<P> node = root;
@@ -174,4 +174,5 @@ public final class WildcardTrie<P> {
             return links.get(key);
         }
     }
+
 }

@@ -90,7 +90,7 @@ public final class Timestamp extends AbstractSimpleStatelessFunction {
     }
 
     /**
-     * Sets the language if supported in {@link #SUPPORTED_LANGUAGES}.
+     * Sets the language if it's included in {@link #SUPPORTED_LANGUAGES}.
      *
      * @param language the language
      */

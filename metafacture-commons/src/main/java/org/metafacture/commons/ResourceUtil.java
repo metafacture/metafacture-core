@@ -164,7 +164,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
     }
 
     /**
-     * Loads properties from an URL.
+     * Loads properties from a URL.
      *
      * @param url properties as URL
      * @return Properties
@@ -177,7 +177,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
     /**
      * Loads a text file.
      *
-     * @param location filename
+     * @param location the filename
      * @return the content of the file
      * @throws IOException
      */
@@ -198,8 +198,8 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      * * Loads a text file.
      *
      * @param location the filename
-     * @param list a List of Strings
-     * @return a List of Strings of the content of the filename, line-by-line
+     * @param list a List of Strings to append the lines of the file to
+     * @return the List of Strings with the lines of the file appended
      * @throws IOException
      */
     public static List<String> loadTextFile(final String location,
