@@ -93,12 +93,11 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     }
 
     /**
-     * Sets the XML declaration.
+     * Sets the XML declaration. The default is
+     * {@code <?xml version = "1.0" encoding = "UTF-8"?>}. If an empty value is
+     * given, the XML declaration is skipped.
      *
-     * @param xmlDeclaration the xml declaration. Default is
-     *                       '{@code<?xml version = "1.0" encoding = "UTF-8"?>}'.
-     *                       If empty value is given, the xml declaration is
-     *                       skipped.
+     * @param xmlDeclaration the XML declaration
      */
     public void setXmlDeclaration(final String xmlDeclaration) {
         this.xmlDeclaration = xmlDeclaration;
