@@ -49,10 +49,10 @@ import java.util.regex.Pattern;
  * The regular expression may contain unnamed capture groups. These are
  * ignored.
  * <p>
- * If the pattern contains a capture group named &quot;{@value
- * #ID_CAPTURE_GROUP}&quot;, the first match of this group will be used as
- * record identifier. If there is no such capture group or if it does not
- * match, the empty string is used as record identifier.
+ * If the pattern contains a capture group named {@value #ID_CAPTURE_GROUP},
+ * the first match of this group will be used as record identifier. If there
+ * is no such capture group or if it does not match, the empty string is used
+ * as record identifier.
  * <p>
  * Example: The regex
  * <pre>{@literal

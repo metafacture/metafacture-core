@@ -57,7 +57,7 @@ public class RecordToEntity extends ForwardingStreamPipe {
 
     /**
      * Sets the name of the entity which replaces the record. The default name is
-     * &quot;{@value DEFAULT_ENTITY_NAME}&quot;.
+     * {@value DEFAULT_ENTITY_NAME}.
      *
      * <p>The entity name may be changed while processing an event stream. It
      * becomes effective with the next record.

@@ -90,7 +90,7 @@ public class EntityPathTracker extends DefaultStreamReceiver {
 
     /**
      * Sets the separator between entity names in the path. The default separator
-     * is &quot;{@value DEFAULT_ENTITY_SEPARATOR}&quot;.
+     * is {@value DEFAULT_ENTITY_SEPARATOR}.
      *
      * <p>The separator must not be changed while processing a stream.
      *
