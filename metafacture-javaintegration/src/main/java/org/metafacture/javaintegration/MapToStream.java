@@ -31,7 +31,7 @@ import java.util.Map;
  * event is emitted.
  * <p>
  * If the map contains an entry whose key value matches the one set as
- * {@link #setIdKey(Object)}, this entry's value is used as the record id.
+ * {@link #setIdKey(Object)}, this entry's value is used as the record ID.
  * <p>
  * The keys and values in the map can be of any type. They will be converted to
  * strings using their {@link Object#toString()} method. Neither key nor value
@@ -68,14 +68,15 @@ public final class MapToStream extends DefaultObjectPipe<Map<?, ?>, StreamReceiv
     }
 
     /**
-     * Sets the key of the map entry that is used for the record id.
+     * Sets the key of the map entry that is used for the record ID.
      * <p>
-     * The default id key is &quot;{@value StandardEventNames#ID}&quot;.
+     * The default ID key is
+     * {@value org.metafacture.framework.StandardEventNames#ID}.
      * <p>
      * This parameter can be changed anytime during processing. The new value
      * becomes effective with the next record being processed.
      *
-     * @param idKey the id key. The object passed here is used in a call to
+     * @param idKey the ID key. The object passed here is used in a call to
      * {@link Map#get(Object)} to get the identifier value.
      */
     public void setIdKey(final Object idKey) {
