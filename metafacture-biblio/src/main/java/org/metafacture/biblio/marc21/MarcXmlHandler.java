@@ -38,11 +38,12 @@ import org.xml.sax.SAXException;
 @FluxCommand("handle-marcxml")
 public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
+    public static final String NAMESPACE = "http://www.loc.gov/MARC21/slim";
+
     private static final String SUBFIELD = "subfield";
     private static final String DATAFIELD = "datafield";
     private static final String CONTROLFIELD = "controlfield";
     private static final String RECORD = "record";
-    private static final String NAMESPACE = "http://www.loc.gov/MARC21/slim";
     private static final String LEADER = "leader";
     private static final String TYPE = "type";
 
@@ -51,9 +52,19 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private String namespace = NAMESPACE;
     private StringBuilder builder = new StringBuilder();
 
+    /**
+     * Creates an instance of {@link MarcXmlHandler}.
+     */
     public MarcXmlHandler() {
     }
 
+    /**
+     * Sets the namespace.
+     *
+     * <strong>Default value: {@value #NAMESPACE}</strong>
+     *
+     * @param namespace the namespace
+     */
     public void setNamespace(final String namespace) {
         this.namespace = namespace;
     }
@@ -62,10 +73,23 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         return namespace == null || namespace.equals(uri);
     }
 
+    /**
+     * Sets the attribute marker.
+     *
+     * <strong>Default value:
+     * {@value org.metafacture.framework.helpers.DefaultXmlPipe#DEFAULT_ATTRIBUTE_MARKER}</strong>
+     *
+     * @param attributeMarker the attribute marker
+     */
     public void setAttributeMarker(final String attributeMarker) {
         this.attributeMarker = attributeMarker;
     }
 
+    /**
+     * Gets the attribute marker.
+     *
+     * @return the attribute marker
+     */
     public String getAttributeMarker() {
         return attributeMarker;
     }

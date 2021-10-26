@@ -108,14 +108,14 @@ import java.util.regex.Pattern;
  * is removed). This can be changed by setting
  * {@link #setTrimFieldNames(boolean)} to false.
  * <p>
- * The record id emitted with the <i>start-record</i> event is extracted from
+ * The record ID emitted with the <i>start-record</i> event is extracted from
  * one of the following non-normalized pica+ fields:
  * <ul>
  *   <li><i>003&#64; $0</i>
  *   <li><i>107F $0</i>
  *   <li><i>203&#64; $0</i> (this field may have an optional occurrence marker)
  * </ul>
- * The value of the first matching field is used as the record id. The <i>$0</i>
+ * The value of the first matching field is used as the record ID. The <i>$0</i>
  * subfield must be the first subfield in the field. If
  * {@link #setIgnoreMissingIdn(boolean)} is false and no matching field is not
  * found in the record a {@link MissingIdException} is thrown otherwise the
@@ -168,10 +168,20 @@ public final class PicaDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private boolean ignoreMissingIdn;
     private boolean isNormalized;
 
+    /**
+     * Creates an instance of {@link PicaDecoder}. Sets the input to read as
+     * normalized pica+.
+     */
     public PicaDecoder() {
         this(true);
     }
 
+    /**
+     * Creates an instance of {@link PicaDecoder}. Sets the input to read as
+     * normalized or non-normalized pica+.
+     *
+     * @param normalized true if input is read as normalized pica+, otherwiese false
+     */
     public PicaDecoder(final boolean normalized) {
         setNormalizedSerialization(normalized);
     }
@@ -197,7 +207,7 @@ public final class PicaDecoder extends DefaultObjectPipe<String, StreamReceiver>
     }
 
     /**
-     * Controls whether records having no record id are reported as faulty. By
+     * Controls whether records having no record ID are reported as faulty. By
      * default such records are reported by the {@code PicaDecoder} by throwing
      * a {@link MissingIdException}.
      * <p>
@@ -206,7 +216,7 @@ public final class PicaDecoder extends DefaultObjectPipe<String, StreamReceiver>
      * <p>
      * <strong>Default value: {@code false}</strong>
      *
-     * @param ignoreMissingIdn if true, missing record ids do not trigger a
+     * @param ignoreMissingIdn if true, missing record IDs do not trigger a
      *                         {@link MissingIdException} but an empty string is
      *                         used as record identifier instead.
      */
@@ -214,6 +224,11 @@ public final class PicaDecoder extends DefaultObjectPipe<String, StreamReceiver>
         this.ignoreMissingIdn = ignoreMissingIdn;
     }
 
+    /**
+     * Gets the flag to decide whether records without a record ID are processed.
+     *
+     * @return true if the ID of a record can be absent, otherwise false
+     */
     public boolean getIgnoreMissingIdn() {
         return ignoreMissingIdn;
     }
@@ -236,6 +251,11 @@ public final class PicaDecoder extends DefaultObjectPipe<String, StreamReceiver>
         parserContext.setNormalizeUTF8(normalizeUTF8);
     }
 
+    /**
+     * Gets the flag to decide whether the record is UTF-8 normalized.
+     *
+     * @return true if the record is UTF-8 normalized, otherwise false
+     */
     public boolean getNormalizeUTF8() {
         return parserContext.getNormalizeUTF8();
     }
@@ -255,6 +275,11 @@ public final class PicaDecoder extends DefaultObjectPipe<String, StreamReceiver>
         parserContext.setSkipEmptyFields(skipEmptyFields);
     }
 
+    /**
+     * Gets the flag to decide whether to skip empty fields.
+     *
+     * @return true if empty fields are ignored, otherwise false
+     */
     public boolean getSkipEmptyFields() {
         return parserContext.getSkipEmptyFields();
     }
@@ -274,6 +299,11 @@ public final class PicaDecoder extends DefaultObjectPipe<String, StreamReceiver>
         parserContext.setTrimFieldNames(trimFieldNames);
     }
 
+    /**
+     * Gets the flag to decide whether the field names are trimmed.
+     *
+     * @return true if the field names are trimmed, otherwise false
+     */
     public boolean getTrimFieldNames() {
         return parserContext.getTrimFieldNames();
     }

@@ -99,6 +99,11 @@ public final class RecordBuilder {
         fields.setCharset(Require.notNull(charset));
     }
 
+    /**
+     * Gets the Charset of the FieldsBuilder.
+     *
+     * @return the Charset
+     */
     public Charset getCharset() {
         return fields.getCharset();
     }
@@ -208,6 +213,13 @@ public final class RecordBuilder {
         appendReferenceField(ID_FIELD_TAG, currentImplDefinedPart, value);
     }
 
+    /**
+     * Appends a reference field in dependency of the current tag and of the default
+     * impl defined part.
+     *
+     * @param currentTag char array of the current tag
+     * @param value      String that is appended as a reference field
+     */
     public void appendReferenceField(final char[] currentTag, final String value) {
         appendReferenceField(currentTag, defaultImplDefinedPart, value);
     }
@@ -249,10 +261,22 @@ public final class RecordBuilder {
         }
     }
 
+    /**
+     * Starts a data field in dependency of the current tag and default indicators.
+     *
+     * @param currentTag char array of the current tag
+     */
     public void startDataField(final char[] currentTag) {
         startDataField(currentTag, defaultIndicators);
     }
 
+    /**
+     * Starts a data field in dependency of the current tag, indicators and of the
+     * default impl defined part.
+     *
+     * @param currentTag char array of the current tag
+     * @param indicators char array of the current indicators
+     */
     public void startDataField(final char[] currentTag, final char[] indicators) {
         startDataField(currentTag, indicators, defaultImplDefinedPart);
     }

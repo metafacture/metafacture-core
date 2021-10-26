@@ -63,6 +63,9 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private String currentTag = "";
     private StringBuilder builder = new StringBuilder();
 
+    /**
+     * Creates an instance of {@link ComarcXmlHandler}.
+     */
     public ComarcXmlHandler() {
     }
 

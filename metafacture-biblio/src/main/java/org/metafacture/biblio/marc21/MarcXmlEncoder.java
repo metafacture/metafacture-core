@@ -40,6 +40,11 @@ import java.util.Collections;
 @FluxCommand("encode-marcxml")
 public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
+    public static final String XML_ENCODING = "UTF-8";
+    public static final String XML_VERSION =  "1.0";
+    public static final boolean PRETTY_PRINTED = true;
+    public static final boolean OMIT_XML_DECLARATION = false;
+
     private static final String ROOT_OPEN = "<marc:collection xmlns:marc=\"http://www.loc.gov/MARC21/slim\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\">";
     private static final String ROOT_CLOSE = "</marc:collection>";
 
@@ -78,36 +83,62 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     private boolean atStreamStart = true;
 
-    private boolean omitXmlDeclaration;
-    private String xmlVersion = "1.0";
-    private String xmlEncoding = "UTF-8";
+    private boolean omitXmlDeclaration = OMIT_XML_DECLARATION;
+    private String xmlVersion = XML_VERSION;
+    private String xmlEncoding = XML_ENCODING;
 
     private String currentEntity = "";
 
     private int indentationLevel;
-    private boolean formatted = true;
+    private boolean formatted = PRETTY_PRINTED;
     private int recordAttributeOffset;
 
+    /**
+     * Creates an instance of {@link MarcXmlEncoder}.
+     */
     public MarcXmlEncoder() {
     }
 
+    /**
+     * Sets the flag to decide whether to omit the XML declaration.
+     *
+     * <strong>Default value: {@value #OMIT_XML_DECLARATION}</strong>
+     *
+     * @param currentOmitXmlDeclaration true if the XML declaration is omitted, otherwise
+     *                           false
+     */
     public void omitXmlDeclaration(final boolean currentOmitXmlDeclaration) {
         omitXmlDeclaration = currentOmitXmlDeclaration;
     }
 
+    /**
+     * Sets the XML version.
+     *
+     * <strong>Default value: {@value #XML_VERSION}</strong>
+     *
+     * @param xmlVersion the XML version
+     */
     public void setXmlVersion(final String xmlVersion) {
         this.xmlVersion = xmlVersion;
     }
 
+    /**
+     * Sets the XML encoding.
+     *
+     * <strong>Default value: {@value #XML_ENCODING}</strong>
+     *
+     * @param xmlEncoding the XML encoding
+     */
     public void setXmlEncoding(final String xmlEncoding) {
         this.xmlEncoding = xmlEncoding;
     }
 
     /**
-     * Formats the resulting xml, by indentation.
+     * Formats the resulting xml by indentation. Aka "pretty printing".
      *
-     * @param formatted
-     *            True, if formatting is activated.
+     * <strong>Default value: {@value #PRETTY_PRINTED}</strong>
+     *
+     * @param formatted true if formatting is activated, otherwise false
      */
     public void setFormatted(final boolean formatted) {
         this.formatted = formatted;

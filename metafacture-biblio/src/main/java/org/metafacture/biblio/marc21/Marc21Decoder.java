@@ -139,33 +139,45 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @FluxCommand("decode-marc21")
 public final class Marc21Decoder extends DefaultObjectPipe<String, StreamReceiver> {
 
+    public static final boolean EMIT_LEADER_AS_WHOLE = false;
+    public static final boolean IGNORE_MISSING_ID = false;
+
     private final FieldHandler fieldHandler = new Marc21Handler();
 
-    private boolean ignoreMissingId;
-    private boolean emitLeaderAsWhole;
+    private boolean ignoreMissingId = IGNORE_MISSING_ID;
+    private boolean emitLeaderAsWhole = EMIT_LEADER_AS_WHOLE;
 
+    /**
+     * Creates an instance of {@link Marc21Decoder}.
+     */
     public Marc21Decoder() {
     }
 
     /**
-     * Controls whether the decoder aborts processing if a record has no
-     * identifier. A {@link MissingIdException} is thrown in these cases.
-     * If this parameter is set to true then the identifier emitted with the
-     * <i>start-record</i> event of records without field &quot;001&quot; will
-     * be an empty string.
+     * Controls whether the decoder aborts processing if a record has no identifier.
+     * A {@link MissingIdException} is thrown in these cases. If this parameter is
+     * set to true then the identifier emitted with the <i>start-record</i> event of
+     * records without field &quot;001&quot; will be an empty string.
      * <p>
-     * The default value of {@code ignoreMissingId} is false.
+     * <strong>Default value: {@value #IGNORE_MISSING_ID}</strong>
      * <p>
      * This parameter can be changed anytime during processing. The new value
      * becomes effective with the next record being processed.
      *
-     * @param ignoreMissingId
-     *            true if missing identifiers should be silently ignored.
+     * @param ignoreMissingId true if missing identifiers should be silently
+     *                        ignored.
      */
     public void setIgnoreMissingId(final boolean ignoreMissingId) {
         this.ignoreMissingId = ignoreMissingId;
     }
 
+    /**
+     * Gets the flag to decide whether to abort the processing of a record if it has
+     * no identifier.
+     *
+     * @return true if a missing identifier shouldn't abort processing, otherwise
+     *         false
+     */
     public boolean getIgnoreMissingId() {
         return ignoreMissingId;
     }
@@ -174,16 +186,22 @@ public final class Marc21Decoder extends DefaultObjectPipe<String, StreamReceive
      * Controls whether the Record Leader should be emitted as a whole instead of
      * extracting the bibliographic information in the record leader.
      *
-     * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-     * Standard: Record Leader</a>
+     * <strong>Default value: {@value #EMIT_LEADER_AS_WHOLE}</strong>
      *
-     * @param emitLeaderAsWhole
-     *             true if the leader should be emitted as a whole.
+     * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
+     *      Standard: Record Leader</a>
+     * @param emitLeaderAsWhole true if the leader should be emitted as a whole.
      */
     public void setEmitLeaderAsWhole(final boolean emitLeaderAsWhole) {
         this.emitLeaderAsWhole = emitLeaderAsWhole;
     }
 
+    /**
+     * Gets the flag to decide whether the Record Leader is emitted as whole instead
+     * of extracting the bibliographic information in the record leader.
+     *
+     * @return true if the Record Leader is emitted as whole, otherwise false
+     */
     public boolean getEmitLeaderAsWhole() {
         return emitLeaderAsWhole;
     }

@@ -106,6 +106,11 @@ public final class Marc21Encoder extends
         this.generateIdField = generateIdField;
     }
 
+    /**
+     * Gets the flag to decide whether the ID field is generated.
+     *
+     * @return true if the record ID is generated, otherwise false
+     */
     public boolean getGenerateIdField() {
         return generateIdField;
     }

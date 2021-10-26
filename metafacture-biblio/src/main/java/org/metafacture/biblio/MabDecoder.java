@@ -57,6 +57,9 @@ public final class MabDecoder extends DefaultObjectPipe<String, StreamReceiver> 
     private static final String ID_TAG = "001 ";
     private static final int TAG_LENGTH = 4;
 
+    /**
+     * Creates an instance of {@link MabDecoder}.
+     */
     public MabDecoder() {
     }
 

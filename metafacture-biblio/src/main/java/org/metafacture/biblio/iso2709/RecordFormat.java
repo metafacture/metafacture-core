@@ -109,22 +109,47 @@ public final class RecordFormat {
                 .withImplDefinedPartLength(source.implDefinedPartLength);
     }
 
+    /**
+     * Gets the length of the indicator.
+     *
+     * @return the length of the indicator
+     */
     public int getIndicatorLength() {
         return indicatorLength;
     }
 
+    /**
+     * Gets the length of the identifier.
+     *
+     * @return the length of the identifier
+     */
     public int getIdentifierLength() {
         return identifierLength;
     }
 
+    /**
+     * Gets the length of the field length.
+     *
+     * @return the length of the field length
+     */
     public int getFieldLengthLength() {
         return fieldLengthLength;
     }
 
+    /**
+     * Gets the length of the field start.
+     *
+     * @return length of the field start
+     */
     public int getFieldStartLength() {
         return fieldStartLength;
     }
 
+    /**
+     * Gets the the length of the defined part.
+     *
+     * @return the length of the defined part
+     */
     public int getImplDefinedPartLength() {
         return implDefinedPartLength;
     }
