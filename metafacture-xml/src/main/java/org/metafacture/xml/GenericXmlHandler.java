@@ -40,11 +40,11 @@ import java.util.regex.Pattern;
 @FluxCommand("handle-generic-xml")
 public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
+    public static final String RECORD_TAG_PROPERTY = "org.culturegraph.metamorph.xml.recordtag";
+
     public static final boolean EMIT_NAMESPACE = false;
 
     private static final Pattern TABS = Pattern.compile("\t+");
-
-    private static final String RECORD_TAG_PROPERTY = "org.culturegraph.metamorph.xml.recordtag";
 
     private String attributeMarker = DEFAULT_ATTRIBUTE_MARKER;
     private String recordTagName = DEFAULT_RECORD_TAG;
@@ -86,7 +86,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
      * This value may only be changed between records. If it is changed
      * while processing a record the behaviour of this module is undefined.
      * <p>
-     * <strong>Default value: {@value DEFAULT_RECORD_TAG}</strong>
+     * <strong>Default value: {@value org.metafacture.framework.helpers.DefaultXmlPipe#DEFAULT_RECORD_TAG}</strong>
      *
      * @param recordTagName the tag name which marks the start of a record.
      */

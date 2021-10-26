@@ -392,8 +392,6 @@ public final class RecordBuilder {
     /**
      * Resets the label, directory and the fields. Sets the "append state" to "id
      * field".
-     *
-     * @see AppendState#ID_FIELD
      */
     public void reset() {
         label.reset();

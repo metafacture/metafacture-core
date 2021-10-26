@@ -29,9 +29,9 @@ import java.util.Set;
  */
 public final class Unique extends AbstractStatefulFunction {
 
-    private static final String ENTITY = "entity";
-    private static final String NAME = "name";
-    private static final String VALUE = "value";
+    public static final String ENTITY = "entity";
+    public static final String NAME = "name";
+    public static final String VALUE = "value";
 
     private final Set<String> set = new HashSet<String>();
 

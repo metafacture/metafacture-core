@@ -50,9 +50,9 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
     public static final long DEFAULT_BATCH_SIZE = 1000;
     public static final String BATCH_COUNT_VAR = "batches";
     public static final String BATCH_SIZE_VAR = "batchSize";
+    public static final String DEFAULT_FORMAT = "records processed: ${totalRecords}";
 
     private static final Logger LOG = LoggerFactory.getLogger(ObjectBatchLogger.class);
-    private static final String DEFAULT_FORMAT = "records processed: ${totalRecords}";
 
     private final Map<String, String> vars = new HashMap<String, String>();
     private final String format;
@@ -67,7 +67,6 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
      */
     public ObjectBatchLogger() {
         this.format = DEFAULT_FORMAT;
-
     }
 
     public ObjectBatchLogger(final String format) {

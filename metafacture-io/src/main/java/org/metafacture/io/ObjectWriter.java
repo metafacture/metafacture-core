@@ -40,7 +40,8 @@ import java.util.List;
 @FluxCommand("write")
 public final class ObjectWriter<T> implements ConfigurableObjectWriter<T> {
 
-    private static final String STDOUT = "stdout";
+    public static final String STDOUT = "stdout";
+
     private static final List<String> ARGUMENTS = Collections.unmodifiableList(Arrays.asList(STDOUT, "PATH"));
 
     private final ConfigurableObjectWriter<T> objectWriter;

@@ -28,10 +28,11 @@ import java.util.regex.Pattern;
  */
 public final class ISBN extends AbstractSimpleStatelessFunction {
 
+    public static final String ISBN10 = "isbn10";
+    public static final String ISBN13 = "isbn13";
+
     private static final String CHECK = "0123456789X0";
 
-    private static final String ISBN10 = "isbn10";
-    private static final String ISBN13 = "isbn13";
     private static final Pattern ISBN_PATTERN = Pattern.compile("[\\dX]+");
     private static final Pattern DIRT_PATTERN = Pattern.compile("[\\.\\-]");
     private static final int ISBN10_SIZE = 10;
