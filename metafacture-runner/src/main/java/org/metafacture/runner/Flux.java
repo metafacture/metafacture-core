@@ -51,8 +51,8 @@ public final class Flux {
      * Runs the Flux.
      *
      * @param args the pathname of the flux file to run
-     * @throws IOException
-     * @throws RecognitionException
+     * @throws IOException if an I/O error occurs
+     * @throws RecognitionException if an ANTLR error occurs
      */
     public static void main(final String[] args) throws IOException, RecognitionException {
         loadCustomJars();

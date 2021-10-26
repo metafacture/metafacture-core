@@ -153,7 +153,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      *
      * @param stream properties as InputStream
      * @return Properties
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      */
     public static Properties loadProperties(final InputStream stream)
             throws IOException {
@@ -168,7 +168,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      *
      * @param url properties as URL
      * @return Properties
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      */
     public static Properties loadProperties(final URL url) throws IOException {
         return loadProperties(url.openStream());
@@ -179,7 +179,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      *
      * @param location the filename
      * @return the content of the file
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      */
     public static String loadTextFile(final String location) throws IOException {
         final StringBuilder builder = new StringBuilder();
@@ -200,7 +200,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      * @param location the filename
      * @param list a List of Strings to append the lines of the file to
      * @return the List of Strings with the lines of the file appended
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      */
     public static List<String> loadTextFile(final String location,
             final List<String> list) throws IOException {
@@ -221,7 +221,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      * @param inputStream the InputStream
      * @param encoding    the Charset
      * @return a String of the content of the InputStream
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      */
     public static String readAll(final InputStream inputStream, final Charset encoding)
             throws IOException {
@@ -235,7 +235,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      *
      * @param reader the Reader
      * @return a String of the content of the Reader
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      */
     public static String readAll(final Reader reader) throws IOException {
         final StringBuilder loadedText = new StringBuilder();

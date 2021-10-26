@@ -109,8 +109,8 @@ public final class ConfigurableClass<T> {
      * Creates an instance of the class using the first constructor that matches the
      * varargs argument of the methods.
      *
-     * @param setterValues
-     * @param constructorArgs
+     * @param setterValues    the Map of setter values
+     * @param constructorArgs the Object of args of the constructor
      * @return the new instance
      */
     public T newInstance(final Map<String, String> setterValues, final Object... constructorArgs) {

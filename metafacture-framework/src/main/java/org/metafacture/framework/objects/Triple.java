@@ -82,7 +82,7 @@ public final class Triple implements Comparable<Triple> {
      *
      * @param in the ObjectInputStream
      * @return the Triple
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      */
     public static Triple read(final ObjectInputStream in) throws IOException {
         try {
@@ -98,7 +98,7 @@ public final class Triple implements Comparable<Triple> {
      * Writes the Triple to an ObjectOutputStream.
      *
      * @param out the ObjectOutputStream.
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      */
     public void write(final ObjectOutputStream out) throws IOException {
         out.writeUTF(subject);

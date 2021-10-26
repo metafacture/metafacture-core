@@ -60,7 +60,7 @@ public final class SetReplacer {
      * Replaces the Strings defined with {@link #addReplacement(String, String)} in
      * the text.
      *
-     * @param text
+     * @param text the text
      * @return the text with the replacements
      */
     public String replaceIn(final String text) {

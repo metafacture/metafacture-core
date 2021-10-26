@@ -44,7 +44,7 @@ public final class JDomDocumentToStream
     /**
      * Contructs a JDomDocumentToStream with a given XmlPipe.
      *
-     * @param xmlPipe
+     * @param xmlPipe the XmlPipe of type StreamReceiver
      */
     public JDomDocumentToStream(final XmlPipe<StreamReceiver> xmlPipe) {
         this.xmlPipe = xmlPipe;
