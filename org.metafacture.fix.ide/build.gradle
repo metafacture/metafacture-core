@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-  implementation project(':metafacture-fix')
+  implementation project(':metafix')
 
   implementation "org.eclipse.xtext:org.eclipse.xtext.ide:${versions.xtext}"
   implementation "org.eclipse.xtext:org.eclipse.xtext.xbase.ide:${versions.xtext}"
