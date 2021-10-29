@@ -99,19 +99,19 @@ public final class LookupTest {
     @Test
     public void shouldLookupValuesInLocalMap() {
         final Metamorph metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <data source='1'>")
-                .with("    <lookup>")
-                .with("      <entry name='a' value='A' />")
-                .with("    </lookup>")
-                .with("  </data>")
-                .with("  <data source='2'>")
-                .with("    <lookup default='B'>")
-                .with("      <entry name='a' value='A' />")
-                .with("    </lookup>")
-                .with("  </data>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
+            .with("<rules>")
+            .with("  <data source='1'>")
+            .with("    <lookup>")
+            .with("      <entry name='a' value='A' />")
+            .with("    </lookup>")
+            .with("  </data>")
+            .with("  <data source='2'>")
+            .with("    <lookup default='B'>")
+            .with("      <entry name='a' value='A' />")
+            .with("    </lookup>")
+            .with("  </data>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
         metamorph.startRecord("1");
         metamorph.literal("1", "a");
@@ -132,23 +132,23 @@ public final class LookupTest {
     @Test
     public void shouldLookupValuesInReferencedMap() {
         final Metamorph metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <data source='1'>")
-                .with("    <lookup in='map1' />")
-                .with("  </data>")
-                .with("  <data source='2'>")
-                .with("    <lookup in='map2' />")
-                .with("  </data>")
-                .with("</rules>")
-                .with("<maps>")
-                .with("  <map name='map1'>")
-                .with("    <entry name='a' value='A' />")
-                .with("  </map>")
-                .with("  <map name='map2' default='B'>")
-                .with("    <entry name='a' value='A' />")
-                .with("  </map>")
-                .with("</maps>")
-                .createConnectedTo(receiver);
+            .with("<rules>")
+            .with("  <data source='1'>")
+            .with("    <lookup in='map1' />")
+            .with("  </data>")
+            .with("  <data source='2'>")
+            .with("    <lookup in='map2' />")
+            .with("  </data>")
+            .with("</rules>")
+            .with("<maps>")
+            .with("  <map name='map1'>")
+            .with("    <entry name='a' value='A' />")
+            .with("  </map>")
+            .with("  <map name='map2' default='B'>")
+            .with("    <entry name='a' value='A' />")
+            .with("  </map>")
+            .with("</maps>")
+            .createConnectedTo(receiver);
 
         metamorph.startRecord("1");
         metamorph.literal("1", "a");
@@ -169,15 +169,15 @@ public final class LookupTest {
     @Test
     public void shouldLookupValuesInMetadata() {
         final Metamorph metamorph = InlineMorph.in(this)
-                .with("<meta>")
-                .with("  <name>Hawaii</name>")
-                .with("</meta>")
-                .with("<rules>")
-                .with("  <data source='data'>")
-                .with("    <lookup in='__meta' />")
-                .with("  </data>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
+            .with("<meta>")
+            .with("  <name>Hawaii</name>")
+            .with("</meta>")
+            .with("<rules>")
+            .with("  <data source='data'>")
+            .with("    <lookup in='__meta' />")
+            .with("  </data>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
         metamorph.startRecord("1");
         metamorph.literal("data", "name");

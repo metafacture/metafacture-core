@@ -36,38 +36,38 @@ import org.mockito.junit.MockitoRule;
  */
 public final class ScriptTest {
 
-  @Rule
-  public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-  @Mock
-  private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-  private Metamorph metamorph;
+    private Metamorph metamorph;
 
-  @Test
-  public void shouldExecuteJavascriptFunctions() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='data1'>")
-        .with("    <script file='org/metafacture/metamorph/functions/script-test.js' invoke='process' />")
-        .with("  </data>")
-        .with("  <data source='data2'>")
-        .with("    <script file='org/metafacture/metamorph/functions/script-test.js' invoke='process2' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldExecuteJavascriptFunctions() {
+        metamorph = InlineMorph.in(this)
+            .with("<rules>")
+            .with("  <data source='data1'>")
+            .with("    <script file='org/metafacture/metamorph/functions/script-test.js' invoke='process' />")
+            .with("  </data>")
+            .with("  <data source='data2'>")
+            .with("    <script file='org/metafacture/metamorph/functions/script-test.js' invoke='process2' />")
+            .with("  </data>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.literal("data1", "ABC");
-    metamorph.literal("data2", "ABC");
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("data1", "ABC");
+        metamorph.literal("data2", "ABC");
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("data1", "ABC!");
-    ordered.verify(receiver).literal("data2", "ABCABC");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("data1", "ABC!");
+        ordered.verify(receiver).literal("data2", "ABCABC");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
 }

@@ -45,14 +45,14 @@ public final class SwitchNameValueTest {
     @Test
     public void issue265_shouldWorkIfLastFunctionInCombineStatement() {
         metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <combine name='out' value='val'>")
-                .with("    <data source='in'>")
-                .with("      <switch-name-value />")
-                .with("    </data>")
-                .with("  </combine>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
+            .with("<rules>")
+            .with("  <combine name='out' value='val'>")
+            .with("    <data source='in'>")
+            .with("      <switch-name-value />")
+            .with("    </data>")
+            .with("  </combine>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
         metamorph.startRecord("1");
         metamorph.literal("in", "val");

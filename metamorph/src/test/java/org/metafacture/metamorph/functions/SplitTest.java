@@ -45,14 +45,14 @@ public final class SplitTest {
     @Test
     public void issue265_shouldWorkIfLastFunctionInCombineStatement() {
         metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <combine name='out' value='${v}'>")
-                .with("    <data source='in' name='v'>")
-                .with("      <split delimiter=' ' />")
-                .with("    </data>")
-                .with("  </combine>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
+            .with("<rules>")
+            .with("  <combine name='out' value='${v}'>")
+            .with("    <data source='in' name='v'>")
+            .with("      <split delimiter=' ' />")
+            .with("    </data>")
+            .with("  </combine>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
         metamorph.startRecord("1");
         metamorph.literal("in", "1 2");

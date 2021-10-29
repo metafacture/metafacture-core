@@ -36,33 +36,33 @@ import org.mockito.junit.MockitoRule;
  */
 public final class DateFormatTest {
 
-  @Rule
-  public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-  @Mock
-  private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-  private Metamorph metamorph;
+    private Metamorph metamorph;
 
-  @Test
-  public void shouldMakeOutputFormatConfigurable() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='date'>")
-        .with("    <dateformat outputformat='LONG' language='en' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldMakeOutputFormatConfigurable() {
+        metamorph = InlineMorph.in(this)
+            .with("<rules>")
+            .with("  <data source='date'>")
+            .with("    <dateformat outputformat='LONG' language='en' />")
+            .with("  </data>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.literal("date", "23.04.1564");
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("date", "23.04.1564");
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("date", "April 23, 1564");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("date", "April 23, 1564");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
 }
