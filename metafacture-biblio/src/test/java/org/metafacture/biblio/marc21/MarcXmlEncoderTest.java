@@ -168,6 +168,18 @@ public class MarcXmlEncoderTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    public void issue403_shouldNotEmitNamespaceIfDisabled() {
+        encoder.setEmitNamespace(false);
+        addOneRecord(encoder);
+        addOneRecord(encoder);
+        encoder.closeStream();
+        String expected = XML_DECLARATION + "<collection xmlns=\"http://www.loc.gov/MARC21/slim\">"
+            + XML_RECORD + XML_RECORD + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertEquals(expected.replace("marc:", ""), actual);
+    }
+
     @Test(expected = MetafactureException.class)
     public void emitExceptionWhenEntityLengthNot5() {
         encoder.startRecord(RECORD_ID);
