@@ -1,19 +1,9 @@
 package org.metafacture.metafix;
 
 import org.metafacture.metafix.fix.Fix;
+import org.metafacture.metafix.validation.XtextValidator;
 
 import com.google.common.io.CharStreams;
-import com.google.inject.Injector;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.validation.CheckMode;
-import org.eclipse.xtext.validation.IResourceValidator;
-import org.eclipse.xtext.validation.Issue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -25,35 +15,29 @@ import java.io.Reader;
  */
 public class FixStandaloneSetup extends FixStandaloneSetupGenerated {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FixStandaloneSetup.class);
-
     public FixStandaloneSetup() {
     }
 
-    public static void doSetup() {
-        new FixStandaloneSetup().createInjectorAndDoEMFRegistration();
+    public static void main(final String[] args) {
+        if (args != null && args.length == 1) {
+            System.exit(XtextValidator.validate(args[0], new FixStandaloneSetup()) ? 0 : 1);
+        }
+
+        throw new IllegalArgumentException(String.format("Usage: %s <fix-file>", FixStandaloneSetup.class.getName()));
     }
 
     public static Fix parseFix(final Reader fixDef) {
-        // TODO: do this only once per application
-        final Injector injector = new FixStandaloneSetup().createInjectorAndDoEMFRegistration();
-        FixStandaloneSetup.doSetup();
+        final String path;
 
         try {
-            final URI uri = URI.createFileURI(absPathToTempFile(fixDef, ".fix"));
-            final Resource resource = injector.getInstance(XtextResourceSet.class).getResource(uri, true);
-            final IResourceValidator validator = ((XtextResource) resource).getResourceServiceProvider().getResourceValidator();
-
-            for (final Issue issue : validator.validate(resource, CheckMode.ALL, CancelIndicator.NullImpl)) {
-                LOG.warn(issue.getMessage());
-            }
-
-            return (Fix) resource.getContents().get(0);
+            path = absPathToTempFile(fixDef, ".fix");
         }
         catch (final IOException e) {
             e.printStackTrace();
             return null;
         }
+
+        return (Fix) XtextValidator.getValidatedResource(path, new FixStandaloneSetup()).getContents().get(0);
     }
 
     public static String absPathToTempFile(final Reader fixDef, final String suffix) throws IOException {
