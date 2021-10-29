@@ -16,14 +16,11 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.mockito.Mockito.inOrder;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
-import org.metafacture.metamorph.Metamorph;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -42,32 +39,30 @@ public final class ScriptTest {
     @Mock
     private StreamReceiver receiver;
 
-    private Metamorph metamorph;
-
     @Test
     public void shouldExecuteJavascriptFunctions() {
-        metamorph = InlineMorph.in(this)
-            .with("<rules>")
-            .with("  <data source='data1'>")
-            .with("    <script file='org/metafacture/metamorph/functions/script-test.js' invoke='process' />")
-            .with("  </data>")
-            .with("  <data source='data2'>")
-            .with("    <script file='org/metafacture/metamorph/functions/script-test.js' invoke='process2' />")
-            .with("  </data>")
-            .with("</rules>")
-            .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("data1", "ABC");
-        metamorph.literal("data2", "ABC");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("data1", "ABC!");
-        ordered.verify(receiver).literal("data2", "ABCABC");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='data1'>" +
+                "    <script file='org/metafacture/metamorph/functions/script-test.js' invoke='process' />" +
+                "  </data>" +
+                "  <data source='data2'>" +
+                "    <script file='org/metafacture/metamorph/functions/script-test.js' invoke='process2' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data1", "ABC");
+                    i.literal("data2", "ABC");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("data1", "ABC!");
+                    o.get().literal("data2", "ABCABC");
+                    o.get().endRecord();
+                }
+        );
     }
 
 }
