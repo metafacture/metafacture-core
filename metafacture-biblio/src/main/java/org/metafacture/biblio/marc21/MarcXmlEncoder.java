@@ -127,6 +127,12 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     public MarcXmlEncoder() {
     }
 
+    /**
+     * Sets the flag to decide whether to emit the {@value #NAMESPACE_NAME}
+     * namespace
+     *
+     * @param emitNamespace true if the namespace is emitted, otherwise false
+     */
     public void setEmitNamespace(final boolean emitNamespace) {
         this.emitNamespace = emitNamespace;
         namespacePrefix = new Object[]{emitNamespace ? NAMESPACE_PREFIX : EMPTY};
