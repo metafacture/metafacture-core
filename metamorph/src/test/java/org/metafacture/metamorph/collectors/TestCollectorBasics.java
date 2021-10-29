@@ -16,14 +16,12 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.mockito.Mockito.inOrder;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
 import org.metafacture.metamorph.Metamorph;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -44,133 +42,132 @@ public final class TestCollectorBasics {
     @Mock
     private StreamReceiver receiver;
 
-    private Metamorph metamorph;
-
     @Test
     public void shouldSupportNestedCollectors() {
-        metamorph = InlineMorph.in(this)
-            .with("<rules>")
-            .with("  <combine name='d' value='${1}${c}'>")
-            .with("    <data source='d1' name='1' />")
-            .with("    <combine name='c' value='${2}${3}'>")
-            .with("      <data source='d2' name='2' />")
-            .with("      <data source='d3' name='3' />")
-            .with("      <postprocess>")
-            .with("        <trim />")
-            .with("      </postprocess>")
-            .with("    </combine>")
-            .with("  </combine>")
-            .with("</rules>")
-            .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("d1", "a");
-        metamorph.literal("d2", "b");
-        metamorph.literal("d3", "c ");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("d", "abc");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();  }
+        assertMorph(receiver,
+                "<rules>" +
+                "  <combine name='d' value='${1}${c}'>" +
+                "    <data source='d1' name='1' />" +
+                "    <combine name='c' value='${2}${3}'>" +
+                "      <data source='d2' name='2' />" +
+                "      <data source='d3' name='3' />" +
+                "      <postprocess>" +
+                "        <trim />" +
+                "      </postprocess>" +
+                "    </combine>" +
+                "  </combine>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("d1", "a");
+                    i.literal("d2", "b");
+                    i.literal("d3", "c ");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("d", "abc");
+                    o.get().endRecord();
+                }
+        );
+    }
 
     @Test
     public void shouldSupportNestedSameEntity() {
-        metamorph = InlineMorph.in(this)
-            .with("<rules>")
-            .with("  <combine name='result' value='${value}${ch}' sameEntity='true'>")
-            .with("    <data source='rel.value' name='value' />")
-            .with("    <choose name='ch' flushWith='rel'>")
-            .with("      <data source='rel.ch' />")
-            .with("      <data source='rel'>")
-            .with("        <constant value='M' />")
-            .with("      </data>")
-            .with("    </choose>")
-            .with("  </combine>")
-            .with("</rules>")
-            .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.startEntity("rel");
-        metamorph.literal("ch", "b");
-        metamorph.literal("value", "a");
-        metamorph.endEntity();
-        metamorph.startEntity("rel");
-        metamorph.literal("value", "B");
-        metamorph.endEntity();
-        metamorph.startEntity("rel");
-        metamorph.literal("ch", "e");
-        metamorph.literal("value", "d");
-        metamorph.endEntity();
-        metamorph.startEntity("rel");
-        metamorph.literal("ch", "X");
-        metamorph.endEntity();
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("result", "ab");
-        ordered.verify(receiver).literal("result", "BM");
-        ordered.verify(receiver).literal("result", "de");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <combine name='result' value='${value}${ch}' sameEntity='true'>" +
+                "    <data source='rel.value' name='value' />" +
+                "    <choose name='ch' flushWith='rel'>" +
+                "      <data source='rel.ch' />" +
+                "      <data source='rel'>" +
+                "        <constant value='M' />" +
+                "      </data>" +
+                "    </choose>" +
+                "  </combine>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("rel");
+                    i.literal("ch", "b");
+                    i.literal("value", "a");
+                    i.endEntity();
+                    i.startEntity("rel");
+                    i.literal("value", "B");
+                    i.endEntity();
+                    i.startEntity("rel");
+                    i.literal("ch", "e");
+                    i.literal("value", "d");
+                    i.endEntity();
+                    i.startEntity("rel");
+                    i.literal("ch", "X");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("result", "ab");
+                    o.get().literal("result", "BM");
+                    o.get().literal("result", "de");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldAllowUsingAnArbitraryLiteralForFlush() {
-        metamorph = InlineMorph.in(this)
-            .with("<rules>")
-            .with("  <concat delimiter='' name='d' flushWith='f'>")
-            .with("    <data source='d' />")
-            .with("  </concat>")
-            .with("</rules>")
-            .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("d", "1");
-        metamorph.literal("d", "2");
-        metamorph.literal("f", "");
-        metamorph.literal("d", "3");
-        metamorph.literal("d", "4");
-        metamorph.literal("d", "5");
-        metamorph.literal("f", "");
-        metamorph.literal("d", "6");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("d", "12");
-        ordered.verify(receiver).literal("d", "345");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <concat delimiter='' name='d' flushWith='f'>" +
+                "    <data source='d' />" +
+                "  </concat>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("d", "1");
+                    i.literal("d", "2");
+                    i.literal("f", "");
+                    i.literal("d", "3");
+                    i.literal("d", "4");
+                    i.literal("d", "5");
+                    i.literal("f", "");
+                    i.literal("d", "6");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("d", "12");
+                    o.get().literal("d", "345");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldReceiveFlushingLiteralBeforeFlushEvent() {
-        metamorph = InlineMorph.in(this)
-            .with("<rules>")
-            .with("  <concat delimiter='' name='d' flushWith='f'>")
-            .with("    <data source='d' />")
-            .with("    <data source='f' />")
-            .with("  </concat>")
-            .with("</rules>")
-            .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("f", "1");
-        metamorph.literal("f", "2");
-        metamorph.literal("d", "a");
-        metamorph.literal("f", "3");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("d", "1");
-        ordered.verify(receiver).literal("d", "2");
-        ordered.verify(receiver).literal("d", "a3");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <concat delimiter='' name='d' flushWith='f'>" +
+                "    <data source='d' />" +
+                "    <data source='f' />" +
+                "  </concat>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("f", "1");
+                    i.literal("f", "2");
+                    i.literal("d", "a");
+                    i.literal("f", "3");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("d", "1");
+                    o.get().literal("d", "2");
+                    o.get().literal("d", "a3");
+                    o.get().endRecord();
+                }
+        );
     }
 
 }

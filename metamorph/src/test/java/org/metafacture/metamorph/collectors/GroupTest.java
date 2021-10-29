@@ -16,15 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.times;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
-import org.metafacture.metamorph.Metamorph;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -43,32 +39,30 @@ public final class GroupTest {
     @Mock
     private StreamReceiver receiver;
 
-    private Metamorph metamorph;
-
     @Test
     public void shouldGroupToOverwriteNameAndValueOfContaintStatements() {
-        metamorph = InlineMorph.in(this)
-            .with("<rules>")
-            .with("  <group name='group' value='constant'>")
-            .with("    <data source='data1' />")
-            .with("    <data source='data2' />")
-            .with("  </group>")
-            .with("  <data source='data3' />")
-            .with("</rules>")
-            .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("data1", "skjdfh");
-        metamorph.literal("data2", "slkdjf");
-        metamorph.literal("data3", "A");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver, times(2)).literal("group", "constant");
-        ordered.verify(receiver).literal("data3", "A");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <group name='group' value='constant'>" +
+                "    <data source='data1' />" +
+                "    <data source='data2' />" +
+                "  </group>" +
+                "  <data source='data3' />" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data1", "skjdfh");
+                    i.literal("data2", "slkdjf");
+                    i.literal("data3", "A");
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    o.get().startRecord("1");
+                    f.apply(2).literal("group", "constant");
+                    o.get().literal("data3", "A");
+                    o.get().endRecord();
+                }
+        );
     }
 
 }

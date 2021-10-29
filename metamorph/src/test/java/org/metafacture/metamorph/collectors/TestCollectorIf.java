@@ -16,14 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.mockito.Mockito.inOrder;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
-import org.metafacture.metamorph.Metamorph;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -43,248 +40,246 @@ public final class TestCollectorIf {
     @Mock
     private StreamReceiver receiver;
 
-    private Metamorph metamorph;
-
     @Test
     public void shouldOnlyFireIfConditionIsMet() {
-        metamorph = InlineMorph.in(this)
-            .with("<rules>")
-            .with("  <combine name='combined' value='${data1}-${data2}'>")
-            .with("    <if>")
-            .with("      <data source='data3' />")
-            .with("    </if>")
-            .with("    <data source='data1' />")
-            .with("    <data source='data2' />")
-            .with("  </combine>")
-            .with("</rules>")
-            .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("data1", "a");
-        metamorph.literal("data2", "b");
-        metamorph.literal("data3", "c");
-        metamorph.endRecord();
-        metamorph.startRecord("2");
-        metamorph.literal("data1", "a");
-        metamorph.literal("data2", "b");
-        metamorph.literal("data4", "c");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("combined", "a-b");
-        ordered.verify(receiver).endRecord();
-        ordered.verify(receiver).startRecord("2");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <combine name='combined' value='${data1}-${data2}'>" +
+                "    <if>" +
+                "      <data source='data3' />" +
+                "    </if>" +
+                "    <data source='data1' />" +
+                "    <data source='data2' />" +
+                "  </combine>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data1", "a");
+                    i.literal("data2", "b");
+                    i.literal("data3", "c");
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.literal("data1", "a");
+                    i.literal("data2", "b");
+                    i.literal("data4", "c");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("combined", "a-b");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldAllowToUseSameSourceInbodyAndCondition() {
-        metamorph = InlineMorph.in(this)
-            .with("<rules>")
-            .with("  <combine name='combined' value='${data1}-${data2}'>")
-            .with("    <if>")
-            .with("      <data source='data2'>")
-            .with("        <equals string='b' />")
-            .with("      </data>")
-            .with("    </if>")
-            .with("    <data source='data1' />")
-            .with("    <data source='data2' />")
-            .with("  </combine>")
-            .with("</rules>")
-            .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("data1", "a");
-        metamorph.literal("data2", "b");
-        metamorph.endRecord();
-        metamorph.startRecord("2");
-        metamorph.literal("data1", "a");
-        metamorph.literal("data2", "c");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("combined", "a-b");
-        ordered.verify(receiver).endRecord();
-        ordered.verify(receiver).startRecord("2");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <combine name='combined' value='${data1}-${data2}'>" +
+                "    <if>" +
+                "      <data source='data2'>" +
+                "        <equals string='b' />" +
+                "      </data>" +
+                "    </if>" +
+                "    <data source='data1' />" +
+                "    <data source='data2' />" +
+                "  </combine>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data1", "a");
+                    i.literal("data2", "b");
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.literal("data1", "a");
+                    i.literal("data2", "c");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("combined", "a-b");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldAllowQuantorsInIfStatements() {
-        metamorph = InlineMorph.in(this)
-            .with("<rules>")
-            .with("  <combine name='combined' value='${data1}-${data2}'>")
-            .with("    <if>")
-            .with("      <any>")
-            .with("        <data source='data3' />")
-            .with("        <data source='data4' />")
-            .with("      </any>")
-            .with("    </if>")
-            .with("    <data source='data1' />")
-            .with("    <data source='data2' />")
-            .with("  </combine>")
-            .with("</rules>")
-            .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("data1", "a");
-        metamorph.literal("data2", "b");
-        metamorph.literal("data3", "c");
-        metamorph.endRecord();
-        metamorph.startRecord("2");
-        metamorph.literal("data1", "a");
-        metamorph.literal("data2", "d");
-        metamorph.literal("data4", "c");
-        metamorph.endRecord();
-        metamorph.startRecord("3");
-        metamorph.literal("data1", "a");
-        metamorph.literal("data2", "b");
-        metamorph.literal("data5", "c");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("combined", "a-b");
-        ordered.verify(receiver).endRecord();
-        ordered.verify(receiver).startRecord("2");
-        ordered.verify(receiver).literal("combined", "a-d");
-        ordered.verify(receiver).endRecord();
-        ordered.verify(receiver).startRecord("3");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <combine name='combined' value='${data1}-${data2}'>" +
+                "    <if>" +
+                "      <any>" +
+                "        <data source='data3' />" +
+                "        <data source='data4' />" +
+                "      </any>" +
+                "    </if>" +
+                "    <data source='data1' />" +
+                "    <data source='data2' />" +
+                "  </combine>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data1", "a");
+                    i.literal("data2", "b");
+                    i.literal("data3", "c");
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.literal("data1", "a");
+                    i.literal("data2", "d");
+                    i.literal("data4", "c");
+                    i.endRecord();
+                    i.startRecord("3");
+                    i.literal("data1", "a");
+                    i.literal("data2", "b");
+                    i.literal("data5", "c");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("combined", "a-b");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().literal("combined", "a-d");
+                    o.get().endRecord();
+                    o.get().startRecord("3");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldResetConditionWithCollector() {
-        metamorph = InlineMorph.in(this)
-            .with("<rules>")
-            .with("  <combine name='result' value='${VAL}' reset='true'>")
-            .with("    <if>")
-            .with("      <data source='entity.data2' />")
-            .with("    </if>")
-            .with("    <data source='entity.data1' name='VAL' />")
-            .with("  </combine>")
-            .with("</rules>")
-            .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.startEntity("entity");
-        metamorph.literal("data1", "output");
-        metamorph.literal("data2", "X");
-        metamorph.endEntity();
-        metamorph.startEntity("entity");
-        metamorph.literal("data1", "no-output");
-        metamorph.literal("data3", "X");
-        metamorph.endEntity();
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("result", "output");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <combine name='result' value='${VAL}' reset='true'>" +
+                "    <if>" +
+                "      <data source='entity.data2' />" +
+                "    </if>" +
+                "    <data source='entity.data1' name='VAL' />" +
+                "  </combine>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("entity");
+                    i.literal("data1", "output");
+                    i.literal("data2", "X");
+                    i.endEntity();
+                    i.startEntity("entity");
+                    i.literal("data1", "no-output");
+                    i.literal("data3", "X");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("result", "output");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldResetConditionWithCollectorOnFlushWith() {
-        metamorph = InlineMorph.in(this)
-            .with("<rules>")
-            .with("  <combine name='result' value='${VAL1}${VAL2}' reset='true' flushWith='entity'>")
-            .with("    <if>")
-            .with("      <data source='entity.data2' />")
-            .with("    </if>")
-            .with("    <data source='entity.data1' name='VAL1' />")
-            .with("    <data source='entity.data4' name='VAL2' />")
-            .with("  </combine>")
-            .with("</rules>")
-            .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.startEntity("entity");
-        metamorph.literal("data1", "output");
-        metamorph.literal("data2", "X");
-        metamorph.endEntity();
-        metamorph.startEntity("entity");
-        metamorph.literal("data1", "no-output");
-        metamorph.literal("data3", "X");
-        metamorph.endEntity();
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("result", "output");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <combine name='result' value='${VAL1}${VAL2}' reset='true' flushWith='entity'>" +
+                "    <if>" +
+                "      <data source='entity.data2' />" +
+                "    </if>" +
+                "    <data source='entity.data1' name='VAL1' />" +
+                "    <data source='entity.data4' name='VAL2' />" +
+                "  </combine>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("entity");
+                    i.literal("data1", "output");
+                    i.literal("data2", "X");
+                    i.endEntity();
+                    i.startEntity("entity");
+                    i.literal("data1", "no-output");
+                    i.literal("data3", "X");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("result", "output");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldResetConditionWithCollectorOnSameEntity() {
-        metamorph = InlineMorph.in(this)
-            .with("<rules>")
-            .with("  <combine name='result' value='${VAL1}+${VAL2}' sameEntity='true'>")
-            .with("    <if>")
-            .with("      <data source='entity.data2' />")
-            .with("    </if>")
-            .with("    <data source='entity.data1' name='VAL1' />")
-            .with("    <data source='entity.data4' name='VAL2' />")
-            .with("  </combine>")
-            .with("</rules>")
-            .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.startEntity("entity");
-        metamorph.literal("data1", "output");
-        metamorph.literal("data2", "X");
-        metamorph.endEntity();
-        metamorph.startEntity("entity");
-        metamorph.literal("data1", "no-output");
-        metamorph.literal("data3", "X");
-        metamorph.literal("data4", "extra-output");
-        metamorph.endEntity();
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <combine name='result' value='${VAL1}+${VAL2}' sameEntity='true'>" +
+                "    <if>" +
+                "      <data source='entity.data2' />" +
+                "    </if>" +
+                "    <data source='entity.data1' name='VAL1' />" +
+                "    <data source='entity.data4' name='VAL2' />" +
+                "  </combine>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("entity");
+                    i.literal("data1", "output");
+                    i.literal("data2", "X");
+                    i.endEntity();
+                    i.startEntity("entity");
+                    i.literal("data1", "no-output");
+                    i.literal("data3", "X");
+                    i.literal("data4", "extra-output");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldResetOnFlushWithIfConditionWasNotMet() {
-        metamorph = InlineMorph.in(this)
-            .with("<rules>")
-            .with("  <combine name='result' value='${V1}${V2}' flushWith='entity' reset='true'>")
-            .with("    <if>")
-            .with("      <data source='entity.condition'>")
-            .with("        <equals string='true' />")
-            .with("      </data>")
-            .with("    </if>")
-            .with("    <data source='entity.literal1' name='V1' />")
-            .with("    <data source='entity.literal2' name='V2' />")
-            .with("  </combine>")
-            .with("</rules>")
-            .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.startEntity("entity");
-        metamorph.literal("condition", "false");
-        metamorph.literal("literal1", "value1");
-        metamorph.endEntity();
-        metamorph.startEntity("entity");
-        metamorph.literal("condition", "true");
-        metamorph.literal("literal2", "value2");
-        metamorph.endEntity();
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("result", "value2");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <combine name='result' value='${V1}${V2}' flushWith='entity' reset='true'>" +
+                "    <if>" +
+                "      <data source='entity.condition'>" +
+                "        <equals string='true' />" +
+                "      </data>" +
+                "    </if>" +
+                "    <data source='entity.literal1' name='V1' />" +
+                "    <data source='entity.literal2' name='V2' />" +
+                "  </combine>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("entity");
+                    i.literal("condition", "false");
+                    i.literal("literal1", "value1");
+                    i.endEntity();
+                    i.startEntity("entity");
+                    i.literal("condition", "true");
+                    i.literal("literal2", "value2");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("result", "value2");
+                    o.get().endRecord();
+                }
+        );
     }
 
 }
