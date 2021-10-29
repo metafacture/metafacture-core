@@ -36,165 +36,165 @@ import org.mockito.junit.MockitoRule;
  */
 public final class AnyTest {
 
-  @Rule
-  public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-  @Mock
-  private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-  private Metamorph metamorph;
+    private Metamorph metamorph;
 
-  @Test
-  public void shouldFireOnlyIfAtLeastOneElementFires() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <any>")
-        .with("    <data source='data1' />")
-        .with("    <data source='data2' />")
-        .with("  </any>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldFireOnlyIfAtLeastOneElementFires() {
+        metamorph = InlineMorph.in(this)
+            .with("<rules>")
+            .with("  <any>")
+            .with("    <data source='data1' />")
+            .with("    <data source='data2' />")
+            .with("  </any>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.literal("data1", "A");
-    metamorph.endRecord();
-    metamorph.startRecord("2");
-    metamorph.literal("data2", "C");
-    metamorph.endRecord();
-    metamorph.startRecord("3");
-    metamorph.literal("data3", "C");
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("data1", "A");
+        metamorph.endRecord();
+        metamorph.startRecord("2");
+        metamorph.literal("data2", "C");
+        metamorph.endRecord();
+        metamorph.startRecord("3");
+        metamorph.literal("data3", "C");
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("", "true");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("2");
-    ordered.verify(receiver).literal("", "true");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("3");
-    ordered.verify(receiver).endRecord();
-      ordered.verifyNoMoreInteractions();
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("", "true");
+        ordered.verify(receiver).endRecord();
+        ordered.verify(receiver).startRecord("2");
+        ordered.verify(receiver).literal("", "true");
+        ordered.verify(receiver).endRecord();
+        ordered.verify(receiver).startRecord("3");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
-  @Test
-  public void shouldSupportUserdefinedNameAndValue() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <any name='ANY' value='found one'>")
-        .with("    <data source='data1' />")
-        .with("    <data source='data2' />")
-        .with("  </any>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldSupportUserdefinedNameAndValue() {
+        metamorph = InlineMorph.in(this)
+            .with("<rules>")
+            .with("  <any name='ANY' value='found one'>")
+            .with("    <data source='data1' />")
+            .with("    <data source='data2' />")
+            .with("  </any>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.literal("data1", "A");
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("data1", "A");
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("ANY", "found one");
-    ordered.verify(receiver).endRecord();
-      ordered.verifyNoMoreInteractions();
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("ANY", "found one");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
-  @Test
-  public void shouldNotFireAgainIfAdditionalValueIsReceivedAndResetIsFalse() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <any>")
-        .with("    <data source='data1' />")
-        .with("    <data source='data2' />")
-        .with("  </any>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldNotFireAgainIfAdditionalValueIsReceivedAndResetIsFalse() {
+        metamorph = InlineMorph.in(this)
+            .with("<rules>")
+            .with("  <any>")
+            .with("    <data source='data1' />")
+            .with("    <data source='data2' />")
+            .with("  </any>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.literal("data1", "A");
-    metamorph.literal("data2", "B");
-    metamorph.literal("data2", "C");
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("data1", "A");
+        metamorph.literal("data2", "B");
+        metamorph.literal("data2", "C");
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("", "true");
-    ordered.verify(receiver).endRecord();
-      ordered.verifyNoMoreInteractions();
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("", "true");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
-  @Test
-  public void shouldFireAgainIfAdditionalValueIsReceivedAndResetIsTrue() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <any reset='true'>")
-        .with("    <data source='data1' />")
-        .with("    <data source='data2' />")
-        .with("  </any>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldFireAgainIfAdditionalValueIsReceivedAndResetIsTrue() {
+        metamorph = InlineMorph.in(this)
+            .with("<rules>")
+            .with("  <any reset='true'>")
+            .with("    <data source='data1' />")
+            .with("    <data source='data2' />")
+            .with("  </any>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.literal("data1", "A");
-    metamorph.literal("data2", "B");
-    metamorph.literal("data2", "C");
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("data1", "A");
+        metamorph.literal("data2", "B");
+        metamorph.literal("data2", "C");
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver, times(3)).literal("", "true");
-    ordered.verify(receiver).endRecord();
-      ordered.verifyNoMoreInteractions();
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver, times(3)).literal("", "true");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
-  @Test
-  public void shouldFireAgainAfterFlushing() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <any flushWith='entity'>")
-        .with("    <data source='entity.data1' />")
-        .with("    <data source='entity.data2' />")
-        .with("  </any>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldFireAgainAfterFlushing() {
+        metamorph = InlineMorph.in(this)
+            .with("<rules>")
+            .with("  <any flushWith='entity'>")
+            .with("    <data source='entity.data1' />")
+            .with("    <data source='entity.data2' />")
+            .with("  </any>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.startEntity("entity");
-    metamorph.literal("data1", "A");
-    metamorph.endEntity();
-    metamorph.startEntity("entity");
-    metamorph.literal("data2", "B");
-    metamorph.endEntity();
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.startEntity("entity");
+        metamorph.literal("data1", "A");
+        metamorph.endEntity();
+        metamorph.startEntity("entity");
+        metamorph.literal("data2", "B");
+        metamorph.endEntity();
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver, times(2)).literal("", "true");
-    ordered.verify(receiver).endRecord();
-      ordered.verifyNoMoreInteractions();
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver, times(2)).literal("", "true");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
-  @Test
-  public void shouldNotFireIfFlushingAnUntriggeredCollection() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <any flushWith='entity'>")
-        .with("    <data source='entity.data1' />")
-        .with("    <data source='entity.data2' />")
-        .with("  </any>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldNotFireIfFlushingAnUntriggeredCollection() {
+        metamorph = InlineMorph.in(this)
+            .with("<rules>")
+            .with("  <any flushWith='entity'>")
+            .with("    <data source='entity.data1' />")
+            .with("    <data source='entity.data2' />")
+            .with("  </any>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.startEntity("entity");
-    metamorph.literal("data3", "A");
-    metamorph.endEntity();
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.startEntity("entity");
+        metamorph.literal("data3", "A");
+        metamorph.endEntity();
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).endRecord();
-      ordered.verifyNoMoreInteractions();
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
 }

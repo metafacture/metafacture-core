@@ -37,38 +37,38 @@ import org.mockito.junit.MockitoRule;
  */
 public final class GroupTest {
 
-  @Rule
-  public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-  @Mock
-  private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-  private Metamorph metamorph;
+    private Metamorph metamorph;
 
-  @Test
-  public void shouldGroupToOverwriteNameAndValueOfContaintStatements() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <group name='group' value='constant'>")
-        .with("    <data source='data1' />")
-        .with("    <data source='data2' />")
-        .with("  </group>")
-        .with("  <data source='data3' />")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldGroupToOverwriteNameAndValueOfContaintStatements() {
+        metamorph = InlineMorph.in(this)
+            .with("<rules>")
+            .with("  <group name='group' value='constant'>")
+            .with("    <data source='data1' />")
+            .with("    <data source='data2' />")
+            .with("  </group>")
+            .with("  <data source='data3' />")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.literal("data1", "skjdfh");
-    metamorph.literal("data2", "slkdjf");
-    metamorph.literal("data3", "A");
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("data1", "skjdfh");
+        metamorph.literal("data2", "slkdjf");
+        metamorph.literal("data3", "A");
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver, times(2)).literal("group", "constant");
-    ordered.verify(receiver).literal("data3", "A");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver, times(2)).literal("group", "constant");
+        ordered.verify(receiver).literal("data3", "A");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
 }

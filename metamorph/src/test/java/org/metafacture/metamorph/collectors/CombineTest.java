@@ -37,190 +37,190 @@ import org.mockito.junit.MockitoRule;
  */
 public final class CombineTest {
 
-  @Rule
-  public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-  @Mock
-  private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-  private Metamorph metamorph;
+    private Metamorph metamorph;
 
-  @Test
-  public void shouldCombineTwoValues() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <combine name='combination' value='${one}${two}'>")
-        .with("    <data source='data2' name='one' />")
-        .with("    <data source='data1' name='two' />")
-        .with("  </combine>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldCombineTwoValues() {
+        metamorph = InlineMorph.in(this)
+            .with("<rules>")
+            .with("  <combine name='combination' value='${one}${two}'>")
+            .with("    <data source='data2' name='one' />")
+            .with("    <data source='data1' name='two' />")
+            .with("  </combine>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.literal("data1", "a");
-    metamorph.literal("data2", "b");
-    metamorph.literal("data2", "c");
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("data1", "a");
+        metamorph.literal("data2", "b");
+        metamorph.literal("data2", "c");
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("combination", "ba");
-    ordered.verify(receiver).literal("combination", "ca");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("combination", "ba");
+        ordered.verify(receiver).literal("combination", "ca");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
-  @Test
-  public void shouldOnlyCombineValuesFromTheSameEntityIfSet() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <combine name='combination' value='${A}${B}' sameEntity='true'>")
-        .with("    <data source='entity.data1' name='B' />")
-        .with("    <data source='entity.data2' name='A' />")
-        .with("  </combine>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldOnlyCombineValuesFromTheSameEntityIfSet() {
+        metamorph = InlineMorph.in(this)
+            .with("<rules>")
+            .with("  <combine name='combination' value='${A}${B}' sameEntity='true'>")
+            .with("    <data source='entity.data1' name='B' />")
+            .with("    <data source='entity.data2' name='A' />")
+            .with("  </combine>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.startEntity("entity");
-    metamorph.literal("data1", "b");
-    metamorph.literal("data2", "a");
-    metamorph.endEntity();
-    metamorph.startEntity("entity");
-    metamorph.literal("data2", "c");
-    metamorph.literal("data2", "d");
-    metamorph.endEntity();
-    metamorph.startEntity("entity");
-    metamorph.literal("data1", "e");
-    metamorph.endEntity();
-    metamorph.startEntity("entity");
-    metamorph.literal("data2", "f");
-    metamorph.literal("data1", "g");
-    metamorph.endEntity();
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.startEntity("entity");
+        metamorph.literal("data1", "b");
+        metamorph.literal("data2", "a");
+        metamorph.endEntity();
+        metamorph.startEntity("entity");
+        metamorph.literal("data2", "c");
+        metamorph.literal("data2", "d");
+        metamorph.endEntity();
+        metamorph.startEntity("entity");
+        metamorph.literal("data1", "e");
+        metamorph.endEntity();
+        metamorph.startEntity("entity");
+        metamorph.literal("data2", "f");
+        metamorph.literal("data1", "g");
+        metamorph.endEntity();
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("combination", "ab");
-    ordered.verify(receiver).literal("combination", "fg");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("combination", "ab");
+        ordered.verify(receiver).literal("combination", "fg");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
-  @Test
-  public void shouldResetCombinedValueIfResetIsTrue() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <combine name='combination' value='${A}${B}' reset='true'>")
-        .with("    <data source='data1' name='B' />")
-        .with("    <data source='data2' name='A' />")
-        .with("  </combine>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldResetCombinedValueIfResetIsTrue() {
+        metamorph = InlineMorph.in(this)
+            .with("<rules>")
+            .with("  <combine name='combination' value='${A}${B}' reset='true'>")
+            .with("    <data source='data1' name='B' />")
+            .with("    <data source='data2' name='A' />")
+            .with("  </combine>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.literal("data1", "b");
-    metamorph.literal("data2", "a");
-    metamorph.literal("data2", "c");
-    metamorph.literal("data2", "d");
-    metamorph.literal("data1", "e");
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("data1", "b");
+        metamorph.literal("data2", "a");
+        metamorph.literal("data2", "c");
+        metamorph.literal("data2", "d");
+        metamorph.literal("data1", "e");
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("combination", "ab");
-    ordered.verify(receiver).literal("combination", "de");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("combination", "ab");
+        ordered.verify(receiver).literal("combination", "de");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
-  @Test
-  public void shouldEmitCurrentValueOnFlushEvent() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <combine name='combi' value='${one}${two}' flushWith='e' reset='true'>")
-        .with("    <data source='e.l' name='one' />")
-        .with("    <data source='e.m' name='two' />")
-        .with("  </combine>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldEmitCurrentValueOnFlushEvent() {
+        metamorph = InlineMorph.in(this)
+            .with("<rules>")
+            .with("  <combine name='combi' value='${one}${two}' flushWith='e' reset='true'>")
+            .with("    <data source='e.l' name='one' />")
+            .with("    <data source='e.m' name='two' />")
+            .with("  </combine>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.startEntity("e");
-    metamorph.literal("l", "1");
-    metamorph.endEntity();
-    metamorph.startEntity("e");
-    metamorph.literal("l", "2");
-    metamorph.literal("m", "2");
-    metamorph.endEntity();
-    metamorph.startEntity("e");
-    metamorph.literal("l", "3");
-    metamorph.endEntity();
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.startEntity("e");
+        metamorph.literal("l", "1");
+        metamorph.endEntity();
+        metamorph.startEntity("e");
+        metamorph.literal("l", "2");
+        metamorph.literal("m", "2");
+        metamorph.endEntity();
+        metamorph.startEntity("e");
+        metamorph.literal("l", "3");
+        metamorph.endEntity();
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("combi", "1");
-    ordered.verify(receiver).literal("combi", "22");
-    ordered.verify(receiver).literal("combi", "3");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("combi", "1");
+        ordered.verify(receiver).literal("combi", "22");
+        ordered.verify(receiver).literal("combi", "3");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
-  @Test
-  public void shouldNotEmitCurrentValueOnFlushEventIfIncomplete() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <combine name='combi' value='${one}${two}' flushWith='e' flushIncomplete='false' reset='true'>")
-        .with("    <data source='e.l' name='one' />")
-        .with("    <data source='e.m' name='two' />")
-        .with("  </combine>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldNotEmitCurrentValueOnFlushEventIfIncomplete() {
+        metamorph = InlineMorph.in(this)
+            .with("<rules>")
+            .with("  <combine name='combi' value='${one}${two}' flushWith='e' flushIncomplete='false' reset='true'>")
+            .with("    <data source='e.l' name='one' />")
+            .with("    <data source='e.m' name='two' />")
+            .with("  </combine>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.startEntity("e");
-    metamorph.literal("l", "1");
-    metamorph.endEntity();
-    metamorph.startEntity("e");
-    metamorph.literal("l", "2");
-    metamorph.literal("m", "2");
-    metamorph.endEntity();
-    metamorph.startEntity("e");
-    metamorph.literal("l", "3");
-    metamorph.endEntity();
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.startEntity("e");
+        metamorph.literal("l", "1");
+        metamorph.endEntity();
+        metamorph.startEntity("e");
+        metamorph.literal("l", "2");
+        metamorph.literal("m", "2");
+        metamorph.endEntity();
+        metamorph.startEntity("e");
+        metamorph.literal("l", "3");
+        metamorph.endEntity();
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("combi", "22");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-    verifyNoMoreInteractions(receiver);
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("combi", "22");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+        verifyNoMoreInteractions(receiver);
+    }
 
-  @Test
-  public void shouldPostprocessCombinedValue() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <combine name='outLit' value='${V}' flushWith='record'>")
-        .with("    <data name='V' source='inLit' />")
-        .with("    <postprocess>")
-        .with("      <case to='upper' />")
-        .with("    </postprocess>")
-        .with("  </combine>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldPostprocessCombinedValue() {
+        metamorph = InlineMorph.in(this)
+            .with("<rules>")
+            .with("  <combine name='outLit' value='${V}' flushWith='record'>")
+            .with("    <data name='V' source='inLit' />")
+            .with("    <postprocess>")
+            .with("      <case to='upper' />")
+            .with("    </postprocess>")
+            .with("  </combine>")
+            .with("</rules>")
+            .createConnectedTo(receiver);
 
-    metamorph.startRecord("1");
-    metamorph.literal("inLit", "value");
-    metamorph.endRecord();
+        metamorph.startRecord("1");
+        metamorph.literal("inLit", "value");
+        metamorph.endRecord();
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("outLit", "VALUE");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("outLit", "VALUE");
+        ordered.verify(receiver).endRecord();
+        ordered.verifyNoMoreInteractions();
+    }
 
 }
