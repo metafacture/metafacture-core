@@ -27,8 +27,8 @@ import java.util.Map;
  */
 public final class StringUtil {
 
-    private static final String DEFAULT_VARSTART = "${";
-    private static final String DEFAULT_VAREND = "}";
+    public static final String DEFAULT_VARSTART = "${";
+    public static final String DEFAULT_VAREND = "}";
 
     private StringUtil() {
         // no instances allowed

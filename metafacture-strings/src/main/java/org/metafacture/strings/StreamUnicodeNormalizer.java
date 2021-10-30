@@ -152,7 +152,7 @@ public final class StreamUnicodeNormalizer extends DefaultStreamPipe<StreamRecei
     /**
      * Gets the normalization form.
      *
-     * @return the {@link Normalizer.Form}
+     * @return the {@link java.text.Normalizer.Form}
      */
     public Normalizer.Form getNormalizationForm() {
         return normalizationForm;

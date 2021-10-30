@@ -42,6 +42,7 @@ import java.util.function.Function;
 @FluxCommand("encode-marcxml")
 public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
+    public static final String NAMESPACE_NAME = "marc";
     public static final String XML_ENCODING = "UTF-8";
     public static final String XML_VERSION =  "1.0";
     public static final boolean PRETTY_PRINTED = true;
@@ -81,7 +82,6 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     }
 
     private static final String NAMESPACE = "http://www.loc.gov/MARC21/slim";
-    private static final String NAMESPACE_NAME = "marc";
     private static final String NAMESPACE_PREFIX = NAMESPACE_NAME + ":";
     private static final String NAMESPACE_SUFFIX = ":" + NAMESPACE_NAME;
 

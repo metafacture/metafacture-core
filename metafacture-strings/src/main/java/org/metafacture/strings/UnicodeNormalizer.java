@@ -71,7 +71,7 @@ public final class UnicodeNormalizer extends DefaultObjectPipe<String, ObjectRec
     /**
      * Gets the normalization form.
      *
-     * @return the {@link Normalizer.Form}
+     * @return the {@link java.text.Normalizer.Form}
      */
     public Normalizer.Form getNormalizationForm() {
         return normalizationForm;
