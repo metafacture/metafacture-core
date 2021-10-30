@@ -40,6 +40,14 @@ public final class ReflectionUtil {
         return loader;
     }
 
+    /**
+     * Loads a Class.
+     *
+     * @param <T>       the object type
+     * @param className the name of the class
+     * @param baseType  the object type of the class to be wrapped
+     * @return the ConfigurableClass
+     */
     public static <T> ConfigurableClass<? extends T> loadClass(final String className, final Class<T> baseType) {
         return loadClass(getContextClassLoader(), className, baseType);
     }

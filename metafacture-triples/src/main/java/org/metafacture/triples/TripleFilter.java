@@ -48,37 +48,80 @@ public final class TripleFilter extends DefaultObjectPipe<Triple, ObjectReceiver
     private Matcher objectMatcher = MATCH_NOTHING;
     private boolean passMatches = true;
 
+    /**
+     * Creates an instance of {@link TripleFilter}.
+     */
     public TripleFilter() {
     }
 
+    /**
+     * Gets the pattern of the subject filter.
+     *
+     * @return the pattern of the subject filter
+     */
     public String getSubjectPattern() {
         return subjectMatcher.pattern().pattern();
     }
 
+    /**
+     * Gets the pattern of the subject filter.
+     *
+     * @param pattern the pattern of the subject filter
+     */
     public void setSubjectPattern(final String pattern) {
         subjectMatcher = Pattern.compile(pattern).matcher("");
     }
 
+    /**
+     * Gets the pattern of the predicate filter.
+     *
+     * @return the pattern of the predicate filter
+     */
     public String getPredicatePattern() {
         return predicateMatcher.pattern().pattern();
     }
 
+    /**
+     * Gets the pattern of the predicate filter.
+     *
+     * @param pattern the pattern of the predicate filter
+     */
     public void setPredicatePattern(final String pattern) {
         predicateMatcher = Pattern.compile(pattern).matcher("");
     }
 
+    /**
+     * Gets the pattern of the object filter.
+     *
+     * @return the pattern of the object filter
+     */
     public String getObjectPattern() {
         return objectMatcher.pattern().pattern();
     }
 
+    /**
+     * Sets a pattern to filter objects.
+     *
+     * @param pattern the pattern
+     */
     public void setObjectPattern(final String pattern) {
         objectMatcher = Pattern.compile(pattern).matcher("");
     }
 
+    /**
+     * Checks wether matches passes.
+     *
+     * @return true if matches should pass
+     */
     public boolean isPassMatches() {
         return passMatches;
     }
 
+    /**
+     * Flags wether matches should pass.
+     *
+     * @param passMatches true if matches should pass, otherwise matches don't pass
+     */
     public void setPassMatches(final boolean passMatches) {
         this.passMatches = passMatches;
     }

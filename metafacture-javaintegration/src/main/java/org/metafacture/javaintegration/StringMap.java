@@ -35,6 +35,9 @@ public final class StringMap extends DefaultStreamReceiver implements Map<String
     private Collection<Map<String, String>> collection;
     private Map<String, String> map = new HashMap<>();
 
+    /**
+     * Creates an instance of {@link StringMap}.
+     */
     public StringMap() {
     }
 
@@ -58,6 +61,11 @@ public final class StringMap extends DefaultStreamReceiver implements Map<String
         this.map = map;
     }
 
+    /**
+     * Checks if the StringMap is closed.
+     *
+     * @return true if StringMap is closed.
+     */
     public boolean isClosed() {
         return closed;
     }

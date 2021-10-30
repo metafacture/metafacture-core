@@ -63,6 +63,11 @@ public final class ObjectWriter<T> implements ConfigurableObjectWriter<T> {
         }
     }
 
+    /**
+     * Returns the available arguments.
+     *
+     * @return arguments
+     */
     @ReturnsAvailableArguments
     public static Collection<String> getArguments() {
         return ARGUMENTS;

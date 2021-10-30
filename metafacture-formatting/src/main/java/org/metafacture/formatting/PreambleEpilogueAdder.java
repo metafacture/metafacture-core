@@ -46,6 +46,9 @@ public final class PreambleEpilogueAdder extends DefaultObjectPipe<String, Objec
 
     private boolean objectsReceived;
 
+    /**
+     * Creates an instance of {@link PreambleEpilogueAdder}.
+     */
     public PreambleEpilogueAdder() {
     }
 
@@ -64,6 +67,11 @@ public final class PreambleEpilogueAdder extends DefaultObjectPipe<String, Objec
         this.preamble = preamble;
     }
 
+    /**
+     * Gets the preamble.
+     *
+     * @return the preamble
+     */
     public String getPreamble() {
         return preamble;
     }
@@ -83,6 +91,11 @@ public final class PreambleEpilogueAdder extends DefaultObjectPipe<String, Objec
         this.epilogue = epilogue;
     }
 
+    /**
+     * Gets the epilogue.
+     *
+     * @return the epilogue
+     */
     public String getEpilogue() {
         return epilogue;
     }

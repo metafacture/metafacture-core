@@ -38,10 +38,18 @@ import org.metafacture.framework.annotations.Out;
 public final class ObjectTimer<T> extends TimerBase<ObjectReceiver<T>>
         implements ObjectPipe<T, ObjectReceiver<T>> {
 
+    /**
+     * Creates an instance of {@link ObjectTimer}.
+     */
     public ObjectTimer() {
         this("");
     }
 
+    /**
+     * Creates an instance of {@link ObjectTimer} by a given log messages prefix.
+     *
+     * @param logPrefix the prefix of the log messages
+     */
     public ObjectTimer(final String logPrefix) {
         super(logPrefix);
     }

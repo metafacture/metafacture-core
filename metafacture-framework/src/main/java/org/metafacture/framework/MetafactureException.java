@@ -25,14 +25,31 @@ public class MetafactureException extends RuntimeException {
 
     private static final long serialVersionUID = 0L;
 
+    /**
+     * Creates an instance of {@link MetafactureException} by given message.
+     *
+     * @param message the {@link Throwable}
+     */
     public MetafactureException(final String message) {
         super(message);
     }
 
+    /**
+     * Creates an instance of {@link MetafactureException} by given cause.
+     *
+     * @param cause the {@link Throwable}
+     */
     public MetafactureException(final Throwable cause) {
         super(cause);
     }
 
+    /**
+     * Creates an instance of {@link MetafactureException} by given message and
+     * cause.
+     *
+     * @param message the message
+     * @param cause   the {@link Throwable}
+     */
     public MetafactureException(final String message, final Throwable cause) {
         super(message, cause);
     }

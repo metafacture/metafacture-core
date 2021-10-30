@@ -38,6 +38,9 @@ public final class EqualsFilter extends AbstractFlushingCollect {
     private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
     private boolean isEqual = true;
 
+    /**
+     * Creates an instance of {@link EqualsFilter}.
+     */
     public EqualsFilter() {
     }
 

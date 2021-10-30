@@ -37,6 +37,9 @@ import java.io.Reader;
 @FluxCommand("read-string")
 public final class StringReader extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
+    /**
+     * Creates an instance of {@link StringReader}.
+     */
     public StringReader() {
     }
 

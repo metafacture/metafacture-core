@@ -31,6 +31,11 @@ public final class MultiFormatReader implements Reader {
     private StreamReceiver downstreamReceiver;
     private Reader currentReader;
 
+    /**
+     * Creates an instance of {@link MultiFormatReader} by a given format.
+     *
+     * @param format the format
+     */
     public MultiFormatReader(final String format) {
         setFormat(format);
     }

@@ -45,6 +45,12 @@ public final class XmlUtil {
         // No instances allowed
     }
 
+    /**
+     * Converts a Node to a String.
+     *
+     * @param node the Node
+     * @return the String represantation of the Node
+     */
     public static String nodeToString(final Node node) {
         return nodeToString(node, false);
     }
@@ -117,6 +123,12 @@ public final class XmlUtil {
                 mimeType.endsWith(XML_BASE_MIME_TYPE);
     }
 
+    /**
+     * Escapes an unescaped String.
+     *
+     * @param unescaped the unescaped String
+     * @return the escaped String
+     */
     public static String escape(final String unescaped) {
         return escape(unescaped, true);
     }

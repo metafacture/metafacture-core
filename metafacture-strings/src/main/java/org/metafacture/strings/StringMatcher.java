@@ -41,21 +41,44 @@ public final class StringMatcher extends DefaultObjectPipe<String, ObjectReceive
     private Matcher matcher;
     private String replacement;
 
+    /**
+     * Creates an instance of {@link StringMatcher}.
+     */
     public StringMatcher() {
     }
 
+    /**
+     * Gets the pattern.
+     *
+     * @return the pattern
+     */
     public String getPattern() {
         return matcher.pattern().pattern();
     }
 
+    /**
+     * Sets the pattern.
+     *
+     * @param pattern the pattern
+     */
     public void setPattern(final String pattern) {
         this.matcher = Pattern.compile(pattern).matcher("");
     }
 
+    /**
+     * Gets the replacement.
+     *
+     * @return the replacement
+     */
     public String getReplacement() {
         return replacement;
     }
 
+    /**
+     * Sets the replacement.
+     *
+     * @param replacement the replacement
+     */
     public void setReplacement(final String replacement) {
         this.replacement = replacement;
     }

@@ -55,6 +55,9 @@ public final class StreamLiteralFormatter extends DefaultStreamPipe<ObjectReceiv
 
     private String separator = DEFAULT_SEPARATOR;
 
+    /**
+     * Creates an instance of {@link StreamLiteralFormatter}.
+     */
     public StreamLiteralFormatter() {
     }
 
@@ -73,6 +76,11 @@ public final class StreamLiteralFormatter extends DefaultStreamPipe<ObjectReceiv
         this.separator = separator;
     }
 
+    /**
+     * Gets the separator.
+     *
+     * @return the separator
+     */
     public String getSeparator() {
         return separator;
     }

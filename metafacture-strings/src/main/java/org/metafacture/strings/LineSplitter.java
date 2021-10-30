@@ -40,6 +40,9 @@ public final class LineSplitter extends DefaultObjectPipe<String, ObjectReceiver
     private static final char NEWLINE = '\n';
     private static final Pattern LINE_PATTERN = Pattern.compile(String.valueOf(NEWLINE), Pattern.LITERAL);
 
+    /**
+     * Creates an instance of {@link LineSplitter}.
+     */
     public LineSplitter() {
     }
 

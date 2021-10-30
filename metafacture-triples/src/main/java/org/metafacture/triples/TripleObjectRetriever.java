@@ -51,6 +51,9 @@ public final class TripleObjectRetriever extends DefaultObjectPipe<Triple, Objec
 
     private Charset defaultEncoding = StandardCharsets.UTF_8;
 
+    /**
+     * Creates an instance of {@link TripleObjectRetriever}.
+     */
     public TripleObjectRetriever() {
     }
 

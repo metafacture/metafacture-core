@@ -40,6 +40,12 @@ public final class Formeta {
         // No instances allowed
     }
 
+    /**
+     * Checks wether a character is a whitespace.
+     *
+     * @param ch the character
+     * @return true if the character is a whitespace
+     */
     public static boolean isWhitespace(final char ch) {
         return WHITESPACE.indexOf(ch) > -1;
     }

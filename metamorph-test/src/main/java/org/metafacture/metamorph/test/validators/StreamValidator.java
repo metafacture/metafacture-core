@@ -100,10 +100,20 @@ public final class StreamValidator implements StreamReceiver {
         wellformednessChecker.setErrorHandler(errorHandler);
     }
 
+    /**
+     * Gets the error handler.
+     *
+     * @return the error handler as a {@link Consumer}
+     */
     public Consumer<String> getErrorHandler() {
         return errorHandler;
     }
 
+    /**
+     * Checks wether the record order is strict.
+     *
+     * @return true if the record order is strict
+     */
     public boolean isStrictRecordOrder() {
         return strictRecordOrder;
     }
@@ -122,6 +132,11 @@ public final class StreamValidator implements StreamReceiver {
         this.strictRecordOrder = strictRecordOrder;
     }
 
+    /**
+     * Checks wether the key order is strict.
+     *
+     * @return true if the key order is strict
+     */
     public boolean isStrictKeyOrder() {
         return strictKeyOrder;
     }
@@ -140,6 +155,11 @@ public final class StreamValidator implements StreamReceiver {
         this.strictKeyOrder = strictKeyOrder;
     }
 
+    /**
+     * Checks wether the value order is strict.
+     *
+     * @return true if the value order is strict
+     */
     public boolean isStrictValueOrder() {
         return strictValueOrder;
     }

@@ -35,6 +35,13 @@ public final class Triple implements Comparable<Triple> {
 
     private final int preCompHashCode;
 
+    /**
+     * Creates an instance of {@link Triple}.
+     *
+     * @param subject   the subject
+     * @param predicate the predicate
+     * @param object    the object
+     */
     public Triple(final String subject, final String predicate,
             final String object) {
         this(subject, predicate, object, ObjectType.STRING);
@@ -61,18 +68,38 @@ public final class Triple implements Comparable<Triple> {
         return Objects.hash(subject, predicate, object, objectType);
     }
 
+    /**
+     * Gets the subject.
+     *
+     * @return the subject
+     */
     public String getSubject() {
         return subject;
     }
 
+    /**
+     * Gets the predicate
+     *
+     * @return the predicate
+     */
     public String getPredicate() {
         return predicate;
     }
 
+    /**
+     * Gets the object.
+     *
+     * @return the object
+     */
     public String getObject() {
         return object;
     }
 
+    /**
+     * Gets the object type.
+     *
+     * @return the {@link ObjectType}
+     */
     public ObjectType getObjectType() {
         return objectType;
     }

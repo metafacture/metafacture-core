@@ -25,6 +25,9 @@ package org.metafacture.commons.tries;
 public final class SimpleTrie<P> {
     private final Node<P> root = new Node<>(null);
 
+    /**
+     * Creates an instance of {@link SimpleTrie}.
+     */
     public SimpleTrie() {
     }
 

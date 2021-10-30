@@ -33,7 +33,7 @@ public final class Unique extends AbstractStatefulFunction {
     public static final String NAME = "name";
     public static final String VALUE = "value";
 
-    private final Set<String> set = new HashSet<String>();
+    private final Set<String> set = new HashSet<>();
 
     private boolean uniqueInEntity;
 
@@ -44,6 +44,9 @@ public final class Unique extends AbstractStatefulFunction {
         }
     };
 
+    /**
+     * Creates an instance of {@link Unique}.
+     */
     public Unique() {
     }
 
@@ -67,6 +70,11 @@ public final class Unique extends AbstractStatefulFunction {
         return uniqueInEntity;
     }
 
+    /**
+     * Flags wether the scope is {@link #ENTITY}.
+     *
+     * @param scope the scope
+     */
     public void setIn(final String scope) {
         uniqueInEntity = ENTITY.equals(scope);
     }

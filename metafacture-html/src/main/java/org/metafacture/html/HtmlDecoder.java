@@ -68,6 +68,9 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
 
     private Map<String, String> attrValsAsSubfields;
 
+    /**
+     * Creates an instance of {@link HtmlDecoder}.
+     */
     public HtmlDecoder() {
         setAttrValsAsSubfields(DEFAULT_ATTR_VALS_AS_SUBFIELDS);
     }

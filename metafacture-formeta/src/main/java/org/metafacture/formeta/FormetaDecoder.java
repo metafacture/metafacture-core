@@ -42,6 +42,9 @@ public final class FormetaDecoder extends
     private final FormetaParser parser = new FormetaParser();
     private final Emitter emitter = new FullRecordEmitter();
 
+    /**
+     * Creates an instance of {@link FormetaDecoder}.
+     */
     public FormetaDecoder() {
         parser.setEmitter(emitter);
     }

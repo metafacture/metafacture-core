@@ -48,9 +48,17 @@ public class RecordToEntity extends ForwardingStreamPipe {
     private String entityName = DEFAULT_ENTITY_NAME;
     private String idLiteralName;
 
+    /**
+     * Creates an instance of {@link RecordToEntity}.
+     */
     public RecordToEntity() {
     }
 
+    /**
+     * Gets the entity name.
+     *
+     * @return the entity name
+     */
     public String getEntityName() {
         return entityName;
     }

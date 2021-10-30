@@ -43,10 +43,13 @@ import java.util.regex.Pattern;
  */
 public final class FileMap extends AbstractReadOnlyMap<String, String> {
 
-    private final Map<String, String> map = new HashMap<String, String>();
+    private final Map<String, String> map = new HashMap<>();
 
     private Pattern split = Pattern.compile("\t", Pattern.LITERAL);
 
+    /**
+     * Creates an instance of {@link FileMap}.
+     */
     public FileMap() {
     }
 
@@ -129,6 +132,13 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
         }
     }
 
+    /**
+     * Sets the separator.
+     *
+     * <strong>Default value: {@code \t} </strong>
+     *
+     * @param delimiter the separator
+     */
     public void setSeparator(final String delimiter) {
         split = Pattern.compile(delimiter, Pattern.LITERAL);
     }

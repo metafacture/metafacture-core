@@ -23,15 +23,39 @@ package org.metafacture.metamorph.api;
  *
  */
 public interface Collect extends FlushListener, ConditionAware, NamedValuePipe {
-
+    /**
+     * Flags wether to wait for a flush.
+     *
+     * @param waitForFlush true if to wait for a flush
+     */
     void setWaitForFlush(boolean waitForFlush);
 
+    /**
+     * Flags wether the collector acts on the same entity.
+     *
+     * @param sameEntity true if the collector should acts on the same entity
+     */
     void setSameEntity(boolean sameEntity);
 
+    /**
+     * Flags wether a reset should be done.
+     *
+     * @param reset true if a reset should be done.
+     */
     void setReset(boolean reset);
 
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     String getName();
 
+    /**
+     * Sets the name.
+     *
+     * @param name the name
+     */
     void setName(String name);
 
 }

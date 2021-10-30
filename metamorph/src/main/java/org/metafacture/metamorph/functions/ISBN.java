@@ -47,9 +47,17 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
     private boolean verifyCheckDigit;
     private String errorString;
 
+    /**
+     * Creates an instance of {@link ISBN}.
+     */
     public ISBN() {
     }
 
+    /**
+     * Sets the error message as a placeholder if the ISBN couln't be validated.
+     *
+     * @param errorString the error message as a placeholder
+     */
     public void setErrorString(final String errorString) {
         this.errorString = errorString;
     }
@@ -194,6 +202,11 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
         return result;
     }
 
+    /**
+     * Flags wether the check digit should be verified.
+     *
+     * @param verifyCheckDigit "true" if the check digit should be verified
+     */
     public void setVerifyCheckDigit(final String verifyCheckDigit) {
         this.verifyCheckDigit = "true".equals(verifyCheckDigit);
     }

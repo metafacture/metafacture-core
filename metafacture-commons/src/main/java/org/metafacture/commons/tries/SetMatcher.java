@@ -33,6 +33,9 @@ public final class SetMatcher<T> {
     private final ACNode<T> root = new ACNode<>(null, 0);
     private boolean isPrepared;
 
+    /**
+     * Creates an instance of {@link SetMatcher}.
+     */
     public SetMatcher() {
     }
 
@@ -198,14 +201,29 @@ public final class SetMatcher<T> {
             this.length = length;
         }
 
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
         public T getValue() {
             return value;
         }
 
+        /**
+         * Gets the start position.
+         *
+         * @return the start position
+         */
         public int getStart() {
             return start;
         }
 
+        /**
+         * Gets the length.
+         *
+         * @return the length
+         */
         public int getLength() {
             return length;
         }

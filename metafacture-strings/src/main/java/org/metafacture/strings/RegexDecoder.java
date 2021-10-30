@@ -131,6 +131,11 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
         this.rawInputLiteral = rawInputLiteral;
     }
 
+    /**
+     * Gest the raw input literal.
+     *
+     * @return the raw input literal
+     */
     public String getRawInputLiteral() {
         return this.rawInputLiteral;
     }

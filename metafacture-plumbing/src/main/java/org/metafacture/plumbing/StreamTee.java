@@ -36,6 +36,9 @@ import org.metafacture.framework.helpers.DefaultTee;
 @FluxCommand("stream-tee")
 public final class StreamTee extends DefaultTee<StreamReceiver> implements StreamPipe<StreamReceiver> {
 
+    /**
+     * Creates an instance of {@link StreamTee}.
+     */
     public StreamTee() {
     }
 

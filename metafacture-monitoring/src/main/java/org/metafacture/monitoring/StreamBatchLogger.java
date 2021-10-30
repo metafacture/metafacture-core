@@ -46,14 +46,12 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
     public static final String BATCH_COUNT_VAR = "batches";
     public static final String BATCH_SIZE_VAR = "batchSize";
     public static final String TOTAL_RECORD_COUNT_VAR = "totalRecords";
+    public static final String DEFAULT_FORMAT = "records processed: ${totalRecords}";
 
     public static final long DEFAULT_BATCH_SIZE = 1000;
 
     private static final Logger LOG =
             LoggerFactory.getLogger(StreamBatchLogger.class);
-
-    private static final String DEFAULT_FORMAT =
-            "records processed: ${totalRecords}";
 
     private final Map<String, String> vars = new HashMap<>();
     private final String format;
@@ -62,10 +60,19 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
     private long recordCount;
     private long batchCount;
 
+    /**
+     * Creates an instance of {@link StreamBatchLogger} by a given format. The
+     * default format: {@value #DEFAULT_FORMAT}
+     */
     public StreamBatchLogger() {
         this.format = DEFAULT_FORMAT;
     }
 
+    /**
+     * Creates an instance of {@link StreamBatchLogger} by a given format.
+     *
+     * @param format the format
+     */
     public StreamBatchLogger(final String format) {
         this.format = format;
     }
@@ -81,18 +88,38 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
         this.vars.putAll(vars);
     }
 
+    /**
+     * Sets the batch size.
+     *
+     * @param batchSize the batch size
+     */
     public void setBatchSize(final int batchSize) {
         this.batchSize = batchSize;
     }
 
+    /**
+     * Gets the batch size.
+     *
+     * @return the batch size
+     */
     public long getBatchSize() {
         return batchSize;
     }
 
+    /**
+     * Gets the batch count.
+     *
+     * @return the batch count
+     */
     public long getBatchCount() {
         return batchCount;
     }
 
+    /**
+     * Gets the record count.
+     *
+     * @return the record count
+     */
     public long getRecordCount() {
         return recordCount;
     }

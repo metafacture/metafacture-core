@@ -29,14 +29,47 @@ public interface Maps {
 
     String DEFAULT_MAP_KEY = "__default";
 
+    /**
+     * Gets all map names.
+     *
+     * @return the {@link Collection} of all map names
+     */
     Collection<String> getMapNames();
 
+    /**
+     * Gest a map.
+     *
+     * @param mapName the name of the map
+     * @return the Map
+     */
     Map<String, String> getMap(String mapName);
 
+    /**
+     * Gets a value from the map.
+     *
+     * @param mapName the name of the map
+     * @param key     the key of the map
+     * @return the value
+     */
     String getValue(String mapName, String key);
 
+    /**
+     * Returns a Map with a map name.
+     *
+     * @param mapName the name of the map
+     * @param map     the map
+     * @return the Map
+     */
     Map<String, String> putMap(String mapName, Map<String, String> map);
 
+    /**
+     * Puts a value into a map.
+     *
+     * @param mapName the name of the map
+     * @param key     the key
+     * @param value   the value
+     * @return the value
+     */
     String putValue(String mapName, String key, String value);
 
 }

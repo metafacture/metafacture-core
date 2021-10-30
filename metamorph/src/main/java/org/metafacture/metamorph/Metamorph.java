@@ -111,72 +111,179 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         init();
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link String}.
+     *
+     * @param morphDef the {@link String}
+     */
     public Metamorph(final String morphDef) {
         this(morphDef, NO_VARS);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link String} and morph variables as a Map.
+     *
+     * @param morphDef the {@link String}
+     * @param vars     the morph variables as a Map
+     */
     public Metamorph(final String morphDef, final Map<String, String> vars) {
         this(morphDef, vars, NULL_INTERCEPTOR_FACTORY);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link String} and an {@link InterceptorFactory}.
+     *
+     * @param morphDef           the {@link String}
+     * @param interceptorFactory the {@link InterceptorFactory}
+     */
     public Metamorph(final String morphDef, final InterceptorFactory interceptorFactory) {
         this(morphDef, NO_VARS, interceptorFactory);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link String} and morph variables as a Map and an
+     * {@link InterceptorFactory}.
+     *
+     * @param morphDef           the {@link String}
+     * @param vars               the morph variables as a Map
+     * @param interceptorFactory the {@link InterceptorFactory}
+     */
     public Metamorph(final String morphDef, final Map<String, String> vars,
             final InterceptorFactory interceptorFactory) {
         this(getInputSource(morphDef), vars, interceptorFactory);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link Reader}.
+     *
+     * @param morphDef the {@link Reader}
+     */
     public Metamorph(final Reader morphDef) {
         this(morphDef, NO_VARS);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link Reader} and the morph variables as a Map.
+     *
+     * @param morphDef the {@link Reader}
+     * @param vars     the morph variables as a Map
+     */
     public Metamorph(final Reader morphDef, final Map<String, String> vars) {
         this(morphDef, vars, NULL_INTERCEPTOR_FACTORY);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link Reader} and an {@link InterceptorFactory}.
+     *
+     * @param morphDef           the {@link Reader}
+     * @param interceptorFactory the {@link InterceptorFactory}
+     */
     public Metamorph(final Reader morphDef, final InterceptorFactory interceptorFactory) {
         this(morphDef, NO_VARS, interceptorFactory);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link Reader} and morph variables as a Map and an
+     * {@link InterceptorFactory}.
+     *
+     * @param morphDef           the {@link Reader}
+     * @param vars               the morph variables as a Map
+     * @param interceptorFactory the {@link InterceptorFactory}
+     */
     public Metamorph(final Reader morphDef, final Map<String, String> vars,
             final InterceptorFactory interceptorFactory) {
         this(new InputSource(morphDef), vars, interceptorFactory);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link InputStream}.
+     *
+     * @param morphDef the {@link InputStream}
+     */
     public Metamorph(final InputStream morphDef) {
         this(morphDef, NO_VARS);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link InputStream} and morph variables as a Map.
+     *
+     * @param morphDef the {@link InputStream}
+     * @param vars     the morph variables as a Map
+     */
     public Metamorph(final InputStream morphDef, final Map<String, String> vars) {
         this(morphDef, vars, NULL_INTERCEPTOR_FACTORY);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link InputStream} and an {@link InterceptorFactory}.
+     *
+     * @param morphDef           the {@link InputStream}
+     * @param interceptorFactory the {@link InterceptorFactory}
+     */
     public Metamorph(final InputStream morphDef, final InterceptorFactory interceptorFactory) {
         this(morphDef, NO_VARS, interceptorFactory);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link InputStream}, morph variables as a Map and an
+     * {@link InterceptorFactory}.
+     *
+     * @param morphDef           the {@link InputStream}
+     * @param vars               the morph variables as a Map
+     * @param interceptorFactory the {@link InterceptorFactory}
+     */
     public Metamorph(final InputStream morphDef, final Map<String, String> vars,
             final InterceptorFactory interceptorFactory) {
         this(new InputSource(morphDef), vars, interceptorFactory);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link InputSource}.
+     *
+     * @param inputSource the {@link InputSource}
+     */
     public Metamorph(final InputSource inputSource) {
         this(inputSource, NO_VARS);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link InputSource} and morph variables as a Map.
+     *
+     * @param inputSource the {@link InputSource}
+     * @param vars        the morph variables as a Map
+     */
     public Metamorph(final InputSource inputSource, final Map<String, String> vars) {
         this(inputSource, vars, NULL_INTERCEPTOR_FACTORY);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link InputSource} and an {@link InterceptorFactory}.
+     *
+     * @param inputSource        the {@link InputSource}
+     * @param interceptorFactory the {@link InterceptorFactory}
+     */
     public Metamorph(final InputSource inputSource, final InterceptorFactory interceptorFactory) {
         this(inputSource, NO_VARS, interceptorFactory);
     }
 
     /**
-     * Constructs a Metamorph by setting an InputSource, a Map of variables and an
-     * InterceptorFactory.
+     * Constructs a Metamorph by setting a morph definition as {@link InputSource},
+     * a Map of variables and an {@link InterceptorFactory}.
      *
      * @param inputSource        the InputSource
      * @param vars               the Map of variables
@@ -224,6 +331,11 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         flattener.setEntityMarker(entityMarker);
     }
 
+    /**
+     * Sett the {@link MorphErrorHandler}.
+     *
+     * @param errorHandler the {@link MorphErrorHandler}
+     */
     public void setErrorHandler(final MorphErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
     }
@@ -407,6 +519,11 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         return streamReceiver;
     }
 
+    /**
+     * Gets the {@link StreamReceiver}.
+     *
+     * @return the output {@link StreamReceiver}
+     */
     public StreamReceiver getStreamReceiver() {
         return outputStreamReceiver;
     }
@@ -462,6 +579,11 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         return Collections.unmodifiableSet(maps.keySet());
     }
 
+    /**
+     * Adds a {@link FlushListener} to the record end.
+     *
+     * @param flushListener the {@link FlushListener}
+     */
     public void registerRecordEndFlush(final FlushListener flushListener) {
         recordEndListener.add(flushListener);
     }

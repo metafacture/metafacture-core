@@ -43,13 +43,27 @@ public final class DirReader extends DefaultObjectPipe<String, ObjectReceiver<St
 
     private String filenameFilterPattern;
 
+    /**
+     * Creates an instance of {@link DirReader}.
+     */
     public DirReader() {
     }
 
+    /**
+     * Flags wether the directory should be traversered recursively.
+     *
+     * @param recursive true if the directory should be traversered recursively,
+     *                  otherwise false
+     */
     public void setRecursive(final boolean recursive) {
         this.recursive = recursive;
     }
 
+    /**
+     * Sets a filename pattern.
+     *
+     * @param newFilenameFilterPattern the pattern of the filename
+     */
     public void setFilenamePattern(final String newFilenameFilterPattern) {
         filenameFilterPattern = newFilenameFilterPattern;
     }

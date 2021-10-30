@@ -43,6 +43,9 @@ public final class WildcardTrie<P> {
     private Set<Node<P>> nodes = new HashSet<Node<P>>();
     private Set<Node<P>> nextNodes = new HashSet<Node<P>>();
 
+    /**
+     * Creates an instance of {@link WildcardTrie}.
+     */
     public WildcardTrie() {
     }
 

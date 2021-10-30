@@ -46,10 +46,21 @@ public final class ConfigurableClass<T> {
 
     private Map<String, Method> settersCache;
 
+    /**
+     *
+     * Creates an instance of {@link ConfigurableClass} defined by a Class.
+     *
+     * @param plainClass the plain class of object type T
+     */
     public ConfigurableClass(final Class<T> plainClass) {
         this.plainClass = plainClass;
     }
 
+    /**
+     * Gets the plain class of the ConfigurableClass.
+     *
+     * @return the Class
+     */
     public Class<T> getPlainClass() {
         return plainClass;
     }
@@ -101,6 +112,11 @@ public final class ConfigurableClass<T> {
         return setterTypes;
     }
 
+    /**
+     * Creates an empty instance of the class.
+     *
+     * @return a new instance
+     */
     public T newInstance() {
         return newInstance(Collections.emptyMap());
     }

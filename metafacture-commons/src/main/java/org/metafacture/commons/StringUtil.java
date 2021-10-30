@@ -49,15 +49,48 @@ public final class StringUtil {
         return value;
     }
 
+    /**
+     * Formats a String. If a String has a variable it will be replaced based on a
+     * Map. The start and the end of indicating this variable must be defined.
+     * {@value #DEFAULT_VARSTART} indicates the start of a variable and
+     * {@value #DEFAULT_VAREND} the end of the variable . Unassigned variables are
+     * ignored.
+     *
+     * @param format            the String to be formatted
+     * @param variables         a Map of variable names and their values
+     * @return the formatted String
+     */
     public static String format(final String format, final Map<String, String> variables) {
         return format(format, DEFAULT_VARSTART, DEFAULT_VAREND, true, variables);
     }
 
+    /**
+     * Formats a String. If a String has a variable it will be replaced based on a
+     * Map. The start and the end of indicating this variable must be defined.
+     * Unassigned variables are ignored.
+     *
+     * @param format            the String to be formatted
+     * @param varStartIndicator a String indicating the start of a variable
+     * @param varEndIndicator   a String indicating the end of a variable
+     * @param variables         a Map of variable names and their values
+     * @return the formatted String
+     */
     public static String format(final String format, final String varStartIndicator, final String varEndIndicator,
             final Map<String, String> variables) {
         return format(format, varStartIndicator, varEndIndicator, true, variables);
     }
 
+    /**
+     * Formats a String. If a String has a variable it will be replaced based on a
+     * Map. The start and the end of indicating this variable must be defined.
+     * {@value #DEFAULT_VARSTART} indicates the start of a variable and
+     * {@value #DEFAULT_VAREND} the end of the variable .
+     *
+     * @param format            the String to be formatted
+     * @param ignoreMissingVars boolean if an unassigned variable should be ignored
+     * @param variables         a Map of variable names and their values
+     * @return the formatted String
+     */
     public static String format(final String format, final boolean ignoreMissingVars,
             final Map<String, String> variables) {
         return format(format, DEFAULT_VARSTART, DEFAULT_VAREND, ignoreMissingVars, variables);
@@ -72,7 +105,7 @@ public final class StringUtil {
      * @param varEndIndicator   a String indicating the end of a variable
      * @param ignoreMissingVars boolean if an unassigned variable should be ignored
      * @param variables         a Map of variable names and their values
-     * @return a formatted String
+     * @return the formatted String
      */
     public static String format(final String format, final String varStartIndicator, final String varEndIndicator,
             final boolean ignoreMissingVars, final Map<String, String> variables) {

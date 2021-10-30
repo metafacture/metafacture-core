@@ -27,6 +27,9 @@ public class ByteStreamFileWriter extends DefaultObjectReceiver<byte[]> {
 
     private OutputStream outputStream;
 
+    /**
+     * Creates an instance of {@link ByteStreamFileWriter}.
+     */
     public ByteStreamFileWriter() {
     }
 

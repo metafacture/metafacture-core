@@ -35,13 +35,26 @@ public final class Range extends AbstractFlushingCollect {
     private int increment;
     private Integer first;
 
+    /**
+     * Creates an instance of {@link Range}.
+     */
     public Range() {
     }
 
+    /**
+     * Gets the incrment.
+     *
+     * @return the increment
+     */
     public int getIncrement() {
         return increment;
     }
 
+    /**
+     * Sets the incremenet.
+     *
+     * @param increment the increment
+     */
     public void setIncrement(final int increment) {
         this.increment = increment;
     }

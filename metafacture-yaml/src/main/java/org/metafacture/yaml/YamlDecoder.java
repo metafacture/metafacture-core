@@ -61,41 +61,90 @@ public final class YamlDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private String recordId = DEFAULT_RECORD_ID;
     private int recordCount;
 
+    /**
+     * Creates an instance of {@link YamlDecoder}.
+     */
     public YamlDecoder() {
     }
 
+    /**
+     * Sets the array marker. <strong>Default value:
+     * {@value #DEFAULT_ARRAY_MARKER}</strong>
+     *
+     * @param arrayMarker the marker of the array
+     */
     public void setArrayMarker(final String arrayMarker) {
         this.arrayMarker = arrayMarker;
     }
 
+    /**
+     * Gets the array marker.
+     *
+     * @return the array marker
+     */
     public String getArrayMarker() {
         return arrayMarker;
     }
 
+    /**
+     * Sets the name of the array. <strong>Default value:
+     * {@value #DEFAULT_ARRAY_NAME}</strong>
+     *
+     * @param arrayName the name of the array
+     */
     public void setArrayName(final String arrayName) {
         this.arrayName = arrayName;
     }
 
+    /**
+     * Gets the name of the array.
+     *
+     * @return the name of the array
+     */
     public String getArrayName() {
         return arrayName;
     }
 
+    /**
+     * Sets the record ID. <strong>Default value:
+     * {@value #DEFAULT_RECORD_ID}</strong>
+     *
+     * @param recordId the record ID
+     */
     public void setRecordId(final String recordId) {
         this.recordId = recordId;
     }
 
+    /**
+     * Get the record ID.
+     *
+     * @return the record ID
+     */
     public String getRecordId() {
         return recordId;
     }
 
+    /**
+     * Sets the record count.
+     *
+     * @param recordCount the record count.
+     */
     public void setRecordCount(final int recordCount) {
         this.recordCount = recordCount;
     }
 
+    /**
+     * Gets the record count.
+     *
+     * @return the record count
+     */
     public int getRecordCount() {
         return recordCount;
     }
 
+    /**
+     * Resets the record count.
+     */
     public void resetRecordCount() {
         setRecordCount(0);
     }

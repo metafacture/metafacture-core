@@ -29,6 +29,9 @@ public final class FullRecordEmitter implements Emitter {
 
     private StreamReceiver receiver;
 
+    /**
+     * Creates an instance of {@link FullRecordEmitter}.
+     */
     public FullRecordEmitter() {
     }
 

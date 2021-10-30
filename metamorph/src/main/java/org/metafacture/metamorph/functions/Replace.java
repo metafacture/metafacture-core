@@ -30,6 +30,9 @@ public final class Replace extends AbstractSimpleStatelessFunction {
     private Pattern pattern;
     private String with;
 
+    /**
+     * Creates an instance of {@link Replace}.
+     */
     public Replace() {
     }
 
@@ -38,10 +41,20 @@ public final class Replace extends AbstractSimpleStatelessFunction {
         return pattern.matcher(value).replaceAll(with);
     }
 
+    /**
+     * Sets the pattern.
+     *
+     * @param string the pattern
+     */
     public void setPattern(final String string) {
         pattern = Pattern.compile(string);
     }
 
+    /**
+     * Sets the replacement.
+     *
+     * @param with the replacement
+     */
     public void setWith(final String with) {
         this.with = with;
     }

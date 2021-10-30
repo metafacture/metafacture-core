@@ -75,6 +75,9 @@ public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver>
         }
     }
 
+    /**
+     * Creates an instance of {@link OreAggregationAdder}.
+     */
     public OreAggregationAdder() {
     }
 

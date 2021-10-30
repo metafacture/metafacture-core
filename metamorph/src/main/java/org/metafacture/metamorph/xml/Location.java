@@ -72,18 +72,38 @@ public final class Location {
         elementEnd = new LocatorImpl(src.elementEnd);
     }
 
+    /**
+     * Gets the start of the element.
+     *
+     * @return the start of the element
+     */
     public Locator getElementStart() {
         return elementStart;
     }
 
+    /**
+     * Gets the end of the element.
+     *
+     * @return the end of the element
+     */
     public Locator getElementEnd() {
         return elementEnd;
     }
 
+    /**
+     * Gets the system ID.
+     *
+     * @return the system ID
+     */
     public String getSystemId() {
         return elementStart.getSystemId();
     }
 
+    /**
+     * Gets the public ID
+     *
+     * @return the public ID
+     */
     public String getPublicId() {
         return elementStart.getPublicId();
     }

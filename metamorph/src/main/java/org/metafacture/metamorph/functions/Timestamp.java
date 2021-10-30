@@ -62,6 +62,9 @@ public final class Timestamp extends AbstractSimpleStatelessFunction {
         SUPPORTED_LANGUAGES = Collections.unmodifiableSet(set);
     }
 
+    /**
+     * Creates an instance of {@link Timestamp}.
+     */
     public Timestamp() {
     }
 
@@ -81,10 +84,20 @@ public final class Timestamp extends AbstractSimpleStatelessFunction {
         return dateFormat.format(new Date());
     }
 
+    /**
+     * Sets the format. <strong>Default value: {@value #DEFAULT_FORMAT}</strong>
+     *
+     * @param format the format
+     */
     public void setFormat(final String format) {
         this.format = format;
     }
 
+    /**
+     * Sets the timezone. <strong>Default value: {@value #DEFAULT_TIMEZONE}</strong>
+     *
+     * @param timezone the timezone
+     */
     public void setTimezone(final String timezone) {
         this.timezone = timezone;
     }

@@ -79,6 +79,9 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
     private boolean keepRecordsWithoutIdLiteral = true;
     private boolean keepIdLiteral;
 
+    /**
+     * Creates an instance of {@link RecordIdChanger}.
+     */
     public RecordIdChanger() {
     }
 
@@ -103,6 +106,11 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
         this.idLiteral = idLiteral;
     }
 
+    /**
+     * Gets the ID literal.
+     *
+     * @return the ID literal.
+     */
     public String getIdLiteral() {
         return idLiteral;
     }
@@ -124,6 +132,11 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
         this.keepRecordsWithoutIdLiteral = keepRecordsWithoutIdLiteral;
     }
 
+    /**
+     * Checks wether to keep records without ID literal.
+     *
+     * @return true if records without ID literal should be kept
+     */
     public boolean getKeepRecordsWithoutIdLiteral() {
         return keepRecordsWithoutIdLiteral;
     }
@@ -145,6 +158,11 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
         this.keepIdLiteral = keepIdLiteral;
     }
 
+    /**
+     * Checks wether the ID literal should be kept.
+     *
+     * @return true if the ID literal should be kept
+     */
     public boolean getKeepIdLiteral() {
         return keepIdLiteral;
     }

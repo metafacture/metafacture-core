@@ -38,13 +38,26 @@ public final class NullFilter extends ForwardingStreamPipe {
 
     private String replacement;
 
+    /**
+     * Creates an instance of {@link NullFilter}.
+     */
     public NullFilter() {
     }
 
+    /**
+     * Sets the replacement.
+     *
+     * @param replacement the replacement
+     */
     public void setReplacement(final String replacement) {
         this.replacement = replacement;
     }
 
+    /**
+     * Gets the replacement or null.
+     *
+     * @return the replacement or null
+     */
     public String getReplacement() {
         return replacement;
     }

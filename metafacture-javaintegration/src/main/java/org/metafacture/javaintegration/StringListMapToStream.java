@@ -37,6 +37,9 @@ import java.util.Map.Entry;
 @FluxCommand("string-list-map-to-stream")
 public final class StringListMapToStream extends DefaultObjectPipe<ListMap<String, String>, StreamReceiver> {
 
+    /**
+     * Creates an instance of {@link StringListMapToStream}.
+     */
     public StringListMapToStream() {
     }
 

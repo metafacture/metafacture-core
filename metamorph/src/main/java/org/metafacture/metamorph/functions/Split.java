@@ -30,6 +30,9 @@ public final class Split extends AbstractFunction {
 
     private Pattern delimiterPattern;
 
+    /**
+     * Creates an instance of {@link Split}.
+     */
     public Split() {
     }
 
@@ -42,6 +45,11 @@ public final class Split extends AbstractFunction {
         }
     }
 
+    /**
+     * Sets the delimiter.
+     *
+     * @param delimiter the delimiter
+     */
     public void setDelimiter(final String delimiter) {
         this.delimiterPattern = Pattern.compile(delimiter);
     }

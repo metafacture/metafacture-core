@@ -47,6 +47,9 @@ public class EntityPathTracker extends DefaultStreamReceiver {
 
     private String entitySeparator = DEFAULT_ENTITY_SEPARATOR;
 
+    /**
+     * Creates an instance of {@link EntityPathTracker}.
+     */
     public EntityPathTracker() {
     }
 
@@ -84,6 +87,11 @@ public class EntityPathTracker extends DefaultStreamReceiver {
         return entityStack.peek();
     }
 
+    /**
+     * Gets entity separator.
+     *
+     * @return the entity separator
+     */
     public String getEntitySeparator() {
         return entitySeparator;
     }

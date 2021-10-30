@@ -71,6 +71,11 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
         this.sameEntity = sameEntity;
     }
 
+    /**
+     * Checks wether a reset should be done after emitting.
+     *
+     * @return true if a reset should be done after emitting
+     */
     public final boolean getReset() {
         return resetAfterEmit;
     }
@@ -97,6 +102,11 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
         resetCondition();
     }
 
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
     public final String getValue() {
         return value;
     }

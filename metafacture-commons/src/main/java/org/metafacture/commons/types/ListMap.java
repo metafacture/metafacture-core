@@ -37,10 +37,18 @@ public class ListMap<K, V> implements Map<K, List<V>> {
     private String identifier;
     private final Map<K, List<V>> map;
 
+    /**
+     * Creates an empty instance of an empty ListMap.
+     */
     public ListMap() {
         map = new HashMap<K, List<V>>();
     }
 
+    /**
+     * Creates an instance of a ListMap with the given Map.
+     *
+     * @param map the Map
+     */
     public ListMap(final Map<K, List<V>> map) {
         this.map = map;
     }
@@ -120,15 +128,21 @@ public class ListMap<K, V> implements Map<K, List<V>> {
         return values;
     }
 
+    /**
+     * Checks is a key exists in ListMap.
+     *
+     * @param name the name of the key
+     * @return true if the key exists, otherwise false
+     */
     public final boolean existsKey(final K name) {
         return getFirst(name) != null;
     }
 
     /**
-     * Gets the first element of the List of values of the key in the map.
+     * Gets the first element of the List of values of the key in the map or null.
      *
      * @param name the key
-     * @return first element of the values of the key
+     * @return first element of the values of the key or null
      */
     public final V getFirst(final K name) {
         final List<V> values = map.get(name);
@@ -143,10 +157,20 @@ public class ListMap<K, V> implements Map<K, List<V>> {
         return map.toString();
     }
 
+    /**
+     * Sets the ID of the ListMap.
+     *
+     * @param newIdentifier the ID of the ListMap
+     */
     public final void setId(final String newIdentifier) {
         identifier = newIdentifier;
     }
 
+    /**
+     * Gets the ID of the ListMap.
+     *
+     * @return the ID of the ListMap
+     */
     public final String getId() {
         return identifier;
     }

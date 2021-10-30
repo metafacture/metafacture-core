@@ -61,6 +61,14 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
                 return -indicator;
             }
         };
+
+        /**
+         * Gets the indicator. If order is decreasing the the indicator is negativ, if
+         * order is increasing it's positive.
+         *
+         * @param indicator the indicator
+         * @return the indicator dependent of the order
+         */
         public abstract int order(int indicator);
     }
 
@@ -187,10 +195,22 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 
     protected abstract void sortedTriple(Triple namedValue);
 
+    /**
+     * Creates the Comparator.
+     *
+     * @return a Comparator of type Triple
+     */
     public final Comparator<Triple> createComparator() {
         return createComparator(compare, order, numeric);
     }
 
+    /**
+     * Creates an alphanumeric Comparator.
+     *
+     * @param compare one of {@link Compare}
+     * @param order   the {@link Order}
+     * @return a Comparator of type Triple
+     */
     public static Comparator<Triple> createComparator(final Compare compare, final Order order) {
         return createComparator(compare, order, false);
     }

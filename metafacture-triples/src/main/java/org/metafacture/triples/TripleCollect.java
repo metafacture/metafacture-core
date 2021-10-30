@@ -45,6 +45,9 @@ public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceive
 
     private String currentSubject;
 
+    /**
+     * Creates an instance of {@link TripleCollect}.
+     */
     public TripleCollect() {
         parser.setEmitter(emitter);
     }

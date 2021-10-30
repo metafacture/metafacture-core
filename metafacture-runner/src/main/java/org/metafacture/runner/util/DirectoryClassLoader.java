@@ -45,6 +45,12 @@ public final class DirectoryClassLoader extends URLClassLoader {
             }
         };
 
+    /**
+     * Creates an instance of {@link DirectoryClassLoader} by a given parent
+     * ClassLoader.
+     *
+     * @param parent the {@link ClassLoader}
+     */
     public DirectoryClassLoader(final ClassLoader parent) {
         super(new URL[0], parent);
     }

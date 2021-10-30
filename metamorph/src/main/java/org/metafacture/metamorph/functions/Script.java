@@ -37,9 +37,17 @@ public final class Script extends AbstractSimpleStatelessFunction {
     private Invocable invocable;
     private String invoke;
 
+    /**
+     * Creates an instance of {@link Script}.
+     */
     public Script() {
     }
 
+    /**
+     * Flags wether to invoke the script.
+     *
+     * @param invoke true if script should be invoked
+     */
     public void setInvoke(final String invoke) {
         this.invoke = invoke;
     }

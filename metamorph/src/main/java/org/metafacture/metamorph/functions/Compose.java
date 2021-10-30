@@ -23,6 +23,9 @@ package org.metafacture.metamorph.functions;
  */
 public final class Compose extends AbstractCompose {
 
+    /**
+     * Creates an instance of {@link Compose}.
+     */
     public Compose() {
     }
 

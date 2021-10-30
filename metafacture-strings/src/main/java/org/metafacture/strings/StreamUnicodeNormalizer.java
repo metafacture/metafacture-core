@@ -56,60 +56,78 @@ public final class StreamUnicodeNormalizer extends DefaultStreamPipe<StreamRecei
 
     private Normalizer.Form normalizationForm = DEFAULT_NORMALIZATION_FORM;
 
+    /**
+     * Creates an instance of {@link StreamUnicodeNormalizer}.
+     */
     public StreamUnicodeNormalizer() {
     }
 
     /**
-     * Controls whether to normalise record identifiers. By default record
-     * identifiers are not normalised.
+     * Controls whether to normalize record identifiers. By default record
+     * identifiers are not normalized.
      * <p>
      * This parameter may be changed at any time. It becomes immediately
      * effective and affects all subsequently received <i>start-record</i>
      * events.
      *
-     * @param normalizeIds if true identifiers are normalised, otherwise not.
+     * @param normalizeIds if true identifiers are normalized, otherwise not.
      */
     public void setNormalizeIds(final boolean normalizeIds) {
         this.normalizeIds = normalizeIds;
     }
 
+    /**
+     * Checks wether IDs should be normalized.
+     *
+     * @return true if IDs should be normalized
+     */
     public boolean getNormalizeIds() {
         return normalizeIds;
     }
 
     /**
-     * Controls whether to normalise literal and entity names. By default these
-     * are not normalised.
+     * Controls whether to normalize literal and entity names. By default these
+     * are not normalized.
      * <p>
      * This parameter may be changed at any time. It becomes immediately
      * effective and affects all subsequently received <i>start-entity</i> and
      * <i>literal</i> events.
      *
-     * @param normalizeKeys if true literal and entity names are normalised,
+     * @param normalizeKeys if true literal and entity names are normalized,
      * otherwise not.
      */
     public void setNormalizeKeys(final boolean normalizeKeys) {
         this.normalizeKeys = normalizeKeys;
     }
 
+    /**
+     * Checks wether keys should be normalized.
+     *
+     * @return true if the keys should be normalized
+     */
     public boolean getNormalizeKeys() {
         return normalizeKeys;
     }
 
     /**
      * Controls whether to normalise literal values. By default these are
-     * normalised.
+     * normalized.
      * <p>
      * This parameter may be changed at any time. It becomes immediately
      * effective and affects all subsequently received <i>literal</i> events.
      *
-     * @param normalizeValues if true literal values are normalised, otherwise
+     * @param normalizeValues if true literal values are normalized, otherwise
      * not.
      */
     public void setNormalizeValues(final boolean normalizeValues) {
         this.normalizeValues = normalizeValues;
     }
 
+    /**
+     * Checks wether values should be normalized.
+     *
+     * @return true if values should be normalized
+     */
     public boolean getNormalizeValues() {
         return normalizeValues;
     }
@@ -131,6 +149,11 @@ public final class StreamUnicodeNormalizer extends DefaultStreamPipe<StreamRecei
         this.normalizationForm = normalizationForm;
     }
 
+    /**
+     * Gets the normalization form.
+     *
+     * @return the {@link Normalizer.Form}
+     */
     public Normalizer.Form getNormalizationForm() {
         return normalizationForm;
     }

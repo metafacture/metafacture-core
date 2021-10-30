@@ -50,7 +50,7 @@ public final class UniformSampler<T> extends
     private long count;
 
     /**
-     * Constructs a UniformSampler with a given sample size.
+     * Creates an instance of {@link UniformSampler} with a given sample size.
      *
      * @param sampleSize the size of the sample
      */
@@ -59,14 +59,29 @@ public final class UniformSampler<T> extends
         sample = new ArrayList<T>(sampleSize);
     }
 
+    /**
+     * Creates an instance of {@link UniformSampler} with a given sample size.
+     *
+     * @param sampleSize the sample size
+     */
     public UniformSampler(final String sampleSize) {
         this(Integer.parseInt(sampleSize));
     }
 
+    /**
+     * Gets the sample size.
+     *
+     * @return the sample size.
+     */
     public int getSampleSize() {
         return sampleSize;
     }
 
+    /**
+     * Sets the seed.
+     *
+     * @param seed the seed.
+     */
     public void setSeed(final long seed) {
         random.setSeed(seed);
     }

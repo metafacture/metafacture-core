@@ -45,6 +45,9 @@ public final class RecordPathFilter extends DefaultStreamPipe<StreamReceiver> {
     private boolean recordStarted;
     private int recordCount;
 
+    /**
+     * Creates an instance of {@link RecordPathFilter}.
+     */
     public RecordPathFilter() {
     }
 
@@ -57,26 +60,56 @@ public final class RecordPathFilter extends DefaultStreamPipe<StreamReceiver> {
         setPath(path);
     }
 
+    /**
+     * Sets the entity separator.
+     *
+     * @param entitySeparator the entity separator
+     */
     public void setEntitySeparator(final String entitySeparator) {
         entityPathTracker.setEntitySeparator(entitySeparator);
     }
 
+    /**
+     * Get the entity separator.
+     *
+     * @return the entity separator
+     */
     public String getEntitySeparator() {
         return entityPathTracker.getEntitySeparator();
     }
 
+    /**
+     * Sets the path.
+     *
+     * @param path the path
+     */
     public void setPath(final String path) {
         this.path = path;
     }
 
+    /**
+     * Gets the path.
+     *
+     * @return the path
+     */
     public String getPath() {
         return path;
     }
 
+    /**
+     * Sets the record ID format.
+     *
+     * @param recordIdFormat the record ID format
+     */
     public void setRecordIdFormat(final String recordIdFormat) {
         this.recordIdFormat = recordIdFormat;
     }
 
+    /**
+     * Gets the record ID format.
+     *
+     * @return the record ID format
+     */
     public String getRecordIdFormat() {
         return recordIdFormat;
     }

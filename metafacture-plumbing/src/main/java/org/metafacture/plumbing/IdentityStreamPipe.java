@@ -34,6 +34,9 @@ import org.metafacture.framework.helpers.ForwardingStreamPipe;
 @FluxCommand("pass-through")
 public final class IdentityStreamPipe extends ForwardingStreamPipe {
 
+    /**
+     * Creates an instance of {@link IdentityStreamPipe}.
+     */
     public IdentityStreamPipe() {
     }
 

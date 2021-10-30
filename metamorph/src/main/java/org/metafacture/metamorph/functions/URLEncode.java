@@ -30,6 +30,9 @@ import java.net.URLEncoder;
  */
 public final class URLEncode extends AbstractSimpleStatelessFunction {
 
+    /**
+     * Creates an instance of {@link URLEncode}.
+     */
     public URLEncode() {
     }
 

@@ -51,6 +51,9 @@ public class ObjectThreader<T> implements Tee<ObjectReceiver<T>>, ObjectPipe<T, 
     private final List<ObjectReceiver<T>> receivers = new ArrayList<ObjectReceiver<T>>();
     private int objectNumber;
 
+    /**
+     * Creates an instance of {@link ObjectThreader}.
+     */
     public ObjectThreader() {
     }
 

@@ -43,6 +43,9 @@ public class DefaultXmlPipe<R extends Receiver> extends DefaultSender<R> impleme
     public static final String DEFAULT_ROOT_TAG = "records";
     public static final String DEFAULT_VALUE_TAG = "value";
 
+    /**
+     * Creates an instance of {@link DefaultXmlPipe}.
+     */
     public DefaultXmlPipe() {
     }
 

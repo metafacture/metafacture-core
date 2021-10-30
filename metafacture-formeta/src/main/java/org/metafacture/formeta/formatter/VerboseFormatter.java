@@ -33,6 +33,9 @@ public final class VerboseFormatter extends AbstractFormatter {
 
     private boolean appendItemSeparator;
 
+    /**
+     * Creates an instance of {@link VerboseFormatter}.
+     */
     public VerboseFormatter() {
     }
 

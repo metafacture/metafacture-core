@@ -63,6 +63,11 @@ public abstract class AbstractMetamorphDomWalker {
             this.string = string;
         }
 
+        /**
+         * Gests the string.
+         *
+         * @return the string
+         */
         public String getString() {
             return string;
         }
@@ -112,6 +117,11 @@ public abstract class AbstractMetamorphDomWalker {
         walk(morphScript);
     }
 
+    /**
+     * Walks the DOM of the morph definition.
+     *
+     * @param morphScript the morph definition as {@link InputSource}.
+     */
     public final void walk(final InputSource morphScript) {
         walk(DomLoader.parse(SCHEMA_FILE, morphScript));
     }

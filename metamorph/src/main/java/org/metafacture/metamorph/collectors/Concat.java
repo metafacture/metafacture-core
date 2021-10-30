@@ -34,21 +34,44 @@ public final class Concat extends AbstractFlushingCollect {
     private String currentDelimiter = "";
     private boolean reverse;
 
+    /**
+     * Creates an instance of {@link Concat}.
+     */
     public Concat() {
     }
 
+    /**
+     * Sets the prefix.
+     *
+     * @param prefix the prefix
+     */
     public void setPrefix(final String prefix) {
         this.prefix = prefix;
     }
 
+    /**
+     * Sets the postfix.
+     *
+     * @param postfix the postfix
+     */
     public void setPostfix(final String postfix) {
         this.postfix = postfix;
     }
 
+    /**
+     * Sets the delimiter.
+     *
+     * @param delimiter the delimiter
+     */
     public void setDelimiter(final String delimiter) {
         this.delimiter = delimiter;
     }
 
+    /**
+     * Flasg wether the concatenation should be reversely done.
+     *
+     * @param reverse true if concatenation should be done reversely
+     */
     public void setReverse(final boolean reverse) {
         this.reverse = reverse;
     }

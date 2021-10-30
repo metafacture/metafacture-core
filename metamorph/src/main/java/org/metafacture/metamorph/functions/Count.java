@@ -28,6 +28,9 @@ public final class Count extends AbstractStatefulFunction {
 
     private int count;
 
+    /**
+     * Creates an instance of {@link Count}.
+     */
     public Count() {
     }
 

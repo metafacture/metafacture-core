@@ -37,6 +37,9 @@ public class ObjectFactory<T> {
     private final Map<String, ConfigurableClass<? extends T>> classes =
             new HashMap<>();
 
+    /**
+     * Creates an instance of {@link ObjectFactory}.
+     */
     public ObjectFactory() {
     }
 
@@ -55,14 +58,33 @@ public class ObjectFactory<T> {
         }
     }
 
+    /**
+     * Registers a Class as a ConfigurableClass.
+     *
+     * @param key         the key associcated with the Class
+     * @param objectClass the Class
+     */
     public final void registerClass(final String key, final Class<? extends T> objectClass) {
         registerClass(key, new ConfigurableClass<>(objectClass));
     }
 
+    /**
+     * Registers a ConfigurableClass.
+     *
+     * @param key         the key associcated with the ConfigurableClass
+     * @param objectClass the ConfigurableClass
+     */
     public final void registerClass(final String key, final ConfigurableClass<? extends T> objectClass) {
         classes.put(key, objectClass);
     }
 
+    /**
+     * Returns a new instance of a ConfigurableClass with no setters.
+     *
+     * @param key             the name of the class
+     * @param constructorArgs the args of the constructor
+     * @return a new instance
+     */
     public final T newInstance(final String key, final Object... constructorArgs) {
         return newInstance(key, Collections.emptyMap(), constructorArgs);
     }
@@ -83,14 +105,31 @@ public class ObjectFactory<T> {
         return instanceClass.newInstance(values, constructorArgs);
     }
 
+    /**
+     * Checks wether a ConfigurableClass is asscociated with a key.
+     *
+     * @param key the key
+     * @return true if the key is associcated with a ConfigurableClass
+     */
     public final boolean containsKey(final String key) {
         return classes.containsKey(key);
     }
 
+    /**
+     * Gets the key set of all {ConfigurableClass}es.
+     *
+     * @return all keys that identify the {ConfigurableClass}es
+     */
     public final Set<String> keySet() {
         return Collections.unmodifiableSet(classes.keySet());
     }
 
+    /**
+     * Gets a ConfigurableClass.
+     *
+     * @param key the key that identifies the ConfigurableClass
+     * @return the ConfigurableClass
+     */
     public final ConfigurableClass<? extends T> get(final String key) {
         return classes.get(key);
     }

@@ -122,6 +122,9 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
         SUPPORTED_LANGUAGES = Collections.unmodifiableSet(set);
     }
 
+    /**
+     * Creates an instance of {@link DateFormat}.
+     */
     public DateFormat() {
     }
 
@@ -162,18 +165,40 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
         return result;
     }
 
+    /**
+     * Sets the input format. <strong>Default value:
+     * {@code #DEFAULT_INPUT_FORMAT}</strong>
+     *
+     * @param inputFormat the input format
+     */
     public final void setInputFormat(final String inputFormat) {
         this.inputFormat = inputFormat;
     }
 
+    /**
+     * Sets the output format. <strong>Default value:
+     * {@link #DEFAULT_OUTPUT_FORMAT}</strong>
+     *
+     * @param outputFormat the output format
+     */
     public final void setOutputFormat(final DateFormats outputFormat) {
         this.outputFormat = outputFormat;
     }
 
+    /**
+     * Sets the output format. <strong>Default value: {@link #DEFAULT_ERA}</strong>
+     *
+     * @param era the {@link Era}
+     */
     public final void setEra(final Era era) {
         this.era = era;
     }
 
+    /**
+     * Flags wether to remove leading zeros.
+     *
+     * @param removeLeadingZeros true if leading zeros should be removed
+     */
     public final void setRemoveLeadingZeros(final boolean removeLeadingZeros) {
         this.removeLeadingZeros = removeLeadingZeros;
     }

@@ -202,10 +202,31 @@ public enum FileCompression {
 
     private static final int BUFFER_SIZE = 8 * 1024 * 1024;
 
+    /**
+     * Creates a compressor.
+     *
+     * @param writeTo  the {@link OutputStream} to write to
+     * @param fileName the filename
+     * @return the {@link OutputStream}
+     */
     public abstract OutputStream createCompressor(OutputStream writeTo, String fileName);
 
+    /**
+     * Creates a decompressor.
+     *
+     * @param readFrom               {the @link InputStream} to read from.
+     * @param decompressConcatenated true if decompress concatenated, otherwise
+     *                               false
+     * @return the {@link InputStream}
+     */
     public abstract InputStream createDecompressor(InputStream readFrom, boolean decompressConcatenated);
 
+    /**
+     * Creates a decompressor.
+     *
+     * @param readFrom {the @link InputStream} to read from.
+     * @return the {@link InputStream}
+     */
     public InputStream createDecompressor(final InputStream readFrom) {
         return createDecompressor(readFrom, DEFAULT_DECOMPRESS_CONCATENATED);
     }

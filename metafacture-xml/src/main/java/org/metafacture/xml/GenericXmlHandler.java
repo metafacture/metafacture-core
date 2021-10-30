@@ -94,14 +94,29 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         this.recordTagName = recordTagName;
     }
 
+    /**
+     * Gets the record tag name.
+     *
+     * @return the record tag name.
+     */
     public String getRecordTagName() {
         return recordTagName;
     }
 
+    /**
+     * Sets the value tag name.
+     *
+     * @param valueTagName the value tag name
+     */
     public void setValueTagName(final String valueTagName) {
         this.valueTagName = valueTagName;
     }
 
+    /**
+     * Gets the value tag name.
+     *
+     * @return the value tag name
+     */
     public String getValueTagName() {
         return valueTagName;
     }
@@ -111,7 +126,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
      * will be passed through as "foo:bar". For backward compatibility the default
      * is set to "false", thus only "bar" is emitted.
      * <p>
-     * <strong>Default value: {@value EMIT_NAMESPACE}</strong>
+     * <strong>Default value: {@value #EMIT_NAMESPACE}</strong>
      *
      * @param emitNamespace set to "true" if namespace should be emitted. Defaults
      *                      to "false".
@@ -120,14 +135,29 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         this.emitNamespace = emitNamespace;
     }
 
+    /**
+     * Checks wether the namespace should be emitted.
+     *
+     * @return true if the namespace should be emitted
+     */
     public boolean getEmitNamespace() {
         return this.emitNamespace;
     }
 
+    /**
+     * Sets the attribute marker.
+     *
+     * @param attributeMarker the attribute marker
+     */
     public void setAttributeMarker(final String attributeMarker) {
         this.attributeMarker = attributeMarker;
     }
 
+    /**
+     * Gets the attribute marker.
+     *
+     * @return the attribute marker
+     */
     public String getAttributeMarker() {
         return attributeMarker;
     }

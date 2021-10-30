@@ -42,6 +42,9 @@ public final class LineReader extends DefaultObjectPipe<Reader, ObjectReceiver<S
 
     private static final int BUFFER_SIZE = 1024 * 1024 * 16;
 
+    /**
+     * Creates an instance of {@link LineReader}.
+     */
     public LineReader() {
     }
 

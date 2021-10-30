@@ -39,6 +39,9 @@ public final class DuplicateObjectFilter<T> extends DefaultObjectPipe<T, ObjectR
 
     private T lastObj;
 
+    /**
+     * Creates an instance of {@link DuplicateObjectFilter}.
+     */
     public DuplicateObjectFilter() {
     }
 

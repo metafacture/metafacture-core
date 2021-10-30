@@ -27,9 +27,19 @@ import java.util.Collection;
  *
  */
 public interface Collector<V> {
-
+    /**
+     *
+     * Gets the Collection.
+     *
+     * @return the Collection of collected data
+     */
     Collection<V> getCollection();
 
+    /**
+     * Sets collection.
+     *
+     * @param collection the collection
+     */
     void setCollection(Collection<V> collection);
 
 }

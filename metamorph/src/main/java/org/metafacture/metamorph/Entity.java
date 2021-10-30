@@ -45,10 +45,21 @@ public final class Entity extends AbstractFlushingCollect {
     private NamedValueSource nameSource;
     private String currentName;
 
+    /**
+     * Creates an instance of {@link Entity} by a given {@link Metamorph}.
+     *
+     * @param metamorph the {@link Metamorph}
+     */
     public Entity(final Metamorph metamorph) {
         this.receiver = () -> metamorph.getStreamReceiver();
     }
 
+    /**
+     * Creates an instance of {@link Entity} by a given {@link Supplier} of object
+     * type {@link StreamReceiver}.
+     *
+     * @param receiver the {@link Supplier} of object type {@link StreamReceiver}
+     */
     public Entity(final Supplier<StreamReceiver> receiver) {
         this.receiver = receiver;
     }

@@ -36,14 +36,27 @@ public final class ObjectCollector<T> implements ObjectReceiver<T> {
 
     private boolean closed;
 
+    /**
+     * Creates an instance of {@link ObjectCollector}.
+     */
     public ObjectCollector() {
         this(-1);
     }
 
+    /**
+     * Creates an instance of {@link ObjectCollector} by a given capacity.
+     *
+     * @param maxCapacity the maximal capacity
+     */
     public ObjectCollector(final int maxCapacity) {
         this.maxCapacity = maxCapacity;
     }
 
+    /**
+     * Check wether ObjectCollector is closed.
+     *
+     * @return true if ObjectCollector is closed.
+     */
     public boolean isClosed() {
         return closed;
     }

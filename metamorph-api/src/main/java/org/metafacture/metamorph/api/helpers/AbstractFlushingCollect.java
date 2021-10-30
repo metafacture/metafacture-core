@@ -27,6 +27,11 @@ public abstract class AbstractFlushingCollect extends AbstractCollect {
 
     private boolean flushIncomplete = true;
 
+    /**
+     * Flags if to flush when incomplete.
+     *
+     * @param flushIncomplete true if it should be flushed when incomplete
+     */
     public final void setFlushIncomplete(final boolean flushIncomplete) {
         this.flushIncomplete = flushIncomplete;
     }

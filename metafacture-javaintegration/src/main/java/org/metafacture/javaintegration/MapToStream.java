@@ -64,6 +64,9 @@ public final class MapToStream extends DefaultObjectPipe<Map<?, ?>, StreamReceiv
 
     private Object idKey = StandardEventNames.ID;
 
+    /**
+     * Creates an instance of {@link MapToStream}.
+     */
     public MapToStream() {
     }
 
@@ -83,6 +86,11 @@ public final class MapToStream extends DefaultObjectPipe<Map<?, ?>, StreamReceiv
         this.idKey = idKey;
     }
 
+    /**
+     * Gets the ID.
+     *
+     * @return the ID
+     */
     public Object getIdKey() {
         return idKey;
     }

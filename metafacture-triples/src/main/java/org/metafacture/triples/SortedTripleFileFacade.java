@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 /**
+ * A SortedTripleFileFacade created with a file. Reads a Triple from the file.
+ *
  * @author markus geipel
  *
  */
@@ -50,6 +52,11 @@ public final class SortedTripleFileFacade {
         next();
     }
 
+    /**
+     * Checks wether SortedTripleFileFacade is empty.
+     *
+     * @return true if SortedTripleFileFacade is empty.
+     */
     public boolean isEmpty() {
         return empty;
     }

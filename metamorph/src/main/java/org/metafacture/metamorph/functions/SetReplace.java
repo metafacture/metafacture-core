@@ -27,6 +27,9 @@ public final class SetReplace extends AbstractSimpleStatelessFunction {
     private final SetReplacer setReplacer = new SetReplacer();
     private boolean prepared;
 
+    /**
+     * Creates an instance of {@link SetReplace}.
+     */
     public SetReplace() {
     }
 

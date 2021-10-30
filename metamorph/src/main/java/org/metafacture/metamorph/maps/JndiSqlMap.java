@@ -41,6 +41,9 @@ public final class JndiSqlMap extends AbstractReadOnlyMap<String, String> implem
     private DataSource datasource;
     private String query;
 
+    /**
+     * Creates an instance of {@link JndiSqlMap}.
+     */
     public JndiSqlMap() {
     }
 

@@ -45,10 +45,19 @@ public final class StreamLogger
 
     private final String logPrefix;
 
+    /**
+     * Creates an instance of {@link StreamLogger}.
+     */
     public StreamLogger() {
         this("");
     }
 
+    /**
+     * Creates an instance of {@link StreamLogger} by a given prefix used when log
+     * messages.
+     *
+     * @param logPrefix the prefix of the log messages
+     */
     public StreamLogger(final String logPrefix) {
         this.logPrefix = logPrefix;
     }

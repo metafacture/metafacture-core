@@ -26,6 +26,9 @@ import org.metafacture.metamorph.api.helpers.AbstractFilter;
  */
 public final class NotEquals extends AbstractFilter {
 
+    /**
+     * Creates an instance of {@link NotEquals}.
+     */
     public NotEquals() {
     }
 

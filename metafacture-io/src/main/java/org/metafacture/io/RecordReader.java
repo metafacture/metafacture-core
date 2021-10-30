@@ -53,6 +53,9 @@ public final class RecordReader extends DefaultObjectPipe<Reader, ObjectReceiver
     private char separator = DEFAULT_SEPARATOR;
     private boolean skipEmptyRecords = true;
 
+    /**
+     * Creates an instance of {@link RecordReader}.
+     */
     public RecordReader() {
     }
 
@@ -70,18 +73,38 @@ public final class RecordReader extends DefaultObjectPipe<Reader, ObjectReceiver
         }
     }
 
+    /**
+     * Sets the separator.
+     *
+     * @param separator the separator
+     */
     public void setSeparator(final char separator) {
         this.separator = separator;
     }
 
+    /**
+     * Gets the separator
+     *
+     * @return the separator
+     */
     public char getSeparator() {
         return separator;
     }
 
+    /**
+     * Flags to skip empty records.
+     *
+     * @param skipEmptyRecords true if empty records should be skipped
+     */
     public void setSkipEmptyRecords(final boolean skipEmptyRecords) {
         this.skipEmptyRecords = skipEmptyRecords;
     }
 
+    /**
+     * Checks wether to skip empty records.
+     *
+     * @return true if empty records should be skipped
+     */
     public boolean getSkipEmptyRecords() {
         return skipEmptyRecords;
     }

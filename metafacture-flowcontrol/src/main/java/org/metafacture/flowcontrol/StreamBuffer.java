@@ -42,9 +42,17 @@ public final class StreamBuffer extends DefaultStreamPipe<StreamReceiver> {
     private final List<MessageType> typeBuffer = new ArrayList<StreamBuffer.MessageType>();
     private final List<String> valueBuffer = new ArrayList<String>();
 
+    /**
+     * Creates an instance of {@link StreamBuffer}.
+     */
     public StreamBuffer() {
     }
 
+    /**
+     * Checks wether there are messages stored.
+     *
+     * @return true if messages are empty, otherwise false
+     */
     public boolean isEmpty() {
         return typeBuffer.isEmpty();
     }

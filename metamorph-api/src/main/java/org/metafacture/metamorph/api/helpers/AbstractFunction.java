@@ -45,6 +45,11 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
         return null;
     }
 
+    /**
+     * Gets the name of the map.
+     *
+     * @return the name of the map
+     */
     public final String getMapName() {
         return mapName;
     }
@@ -59,6 +64,11 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
         return localMap != null ? localMap : maps.getMap(mapName);
     }
 
+    /**
+     * Sets the name of the map.
+     *
+     * @param newMapName the name of the map
+     */
     public final void setMap(final String newMapName) {
         mapName = newMapName;
     }
@@ -71,6 +81,11 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
         localMap.put(key, value);
     }
 
+    /**
+     * Sets the maps.
+     *
+     * @param maps the {@link Maps}
+     */
     public final void setMaps(final Maps maps) {
         this.maps = maps;
     }

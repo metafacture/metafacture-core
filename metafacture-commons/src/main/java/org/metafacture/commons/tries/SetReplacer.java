@@ -32,6 +32,9 @@ import java.util.Map;
 public final class SetReplacer {
     private final SetMatcher<String> matcher = new SetMatcher<String>();
 
+    /**
+     * Creates an instance of {@link SetReplacer}.
+     */
     public SetReplacer() {
     }
 

@@ -34,6 +34,9 @@ public final class ValueSet extends DefaultStreamReceiver implements Set<String>
     private Collection<Set<String>> collection = new HashSet<>();
     private Set<String> set;
 
+    /**
+     * Creates an instance of {@link ValueSet}.
+     */
     public ValueSet() {
     }
 

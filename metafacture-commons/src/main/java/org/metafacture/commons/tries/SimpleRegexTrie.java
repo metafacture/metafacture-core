@@ -33,10 +33,12 @@ public class SimpleRegexTrie<P> {
     // matches: `lit-[A]`, `lit-[AB]`, does not match: `a[].1`, `a[].1.b[].1`
     public static final String SIMPLE_CHARACTER_CLASS = ".*\\[[^\\[\\]]+\\].*";
 
-    private final WildcardTrie<P> trie;
+    private final WildcardTrie<P> trie = new WildcardTrie<P>();
 
+    /**
+     * Creates an instance of {@link SimpleRegexTrie}.
+     */
     public SimpleRegexTrie() {
-        trie = new WildcardTrie<P>();
     }
 
     /**
@@ -62,6 +64,13 @@ public class SimpleRegexTrie<P> {
         }
     }
 
+    /**
+     * Gets the List of values identified by a key.
+     *
+     * @see WildcardTrie
+     * @param key the key
+     * @return the List of the key if the key exists, otherwise an empty List
+     */
     public List<P> get(final String key) {
         return trie.get(key);
     }

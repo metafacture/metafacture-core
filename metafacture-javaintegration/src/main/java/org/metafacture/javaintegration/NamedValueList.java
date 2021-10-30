@@ -36,6 +36,9 @@ public final class NamedValueList extends DefaultStreamReceiver implements List<
     private Collection<List<NamedValue>> collection;
     private List<NamedValue> list = new ArrayList<>();
 
+    /**
+     * Creates an instance of {@link NamedValueList}.
+     */
     public NamedValueList() {
     }
 

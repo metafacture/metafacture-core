@@ -43,6 +43,9 @@ public final class StreamMerger extends DefaultStreamPipe<StreamReceiver> {
     private boolean hasRecordsReceived;
     private String currentId = "";
 
+    /**
+     * Creates an instance of {@link StreamMerger}.
+     */
     public StreamMerger() {
     }
 

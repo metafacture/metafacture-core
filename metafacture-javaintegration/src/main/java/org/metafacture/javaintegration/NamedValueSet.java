@@ -35,6 +35,9 @@ public final class NamedValueSet extends DefaultStreamReceiver implements Set<Na
     private Collection<Set<NamedValue>> collection;
     private Set<NamedValue> set = new HashSet<>();
 
+    /**
+     * Creates an instance of {@link NamedValueSet}.
+     */
     public NamedValueSet() {
     }
 

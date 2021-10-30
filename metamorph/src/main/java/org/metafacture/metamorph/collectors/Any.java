@@ -33,6 +33,9 @@ public final class Any extends AbstractCollect {
     private boolean receivedInput;
     private boolean emittedResult;
 
+    /**
+     * Creates an instance of {@link Any}.
+     */
     public Any() {
     }
 

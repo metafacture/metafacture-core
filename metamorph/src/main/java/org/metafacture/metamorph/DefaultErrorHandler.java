@@ -26,6 +26,9 @@ import org.metafacture.metamorph.api.MorphErrorHandler;
  */
 public final class DefaultErrorHandler implements MorphErrorHandler {
 
+    /**
+     * Creates an instance of {@link DefaultErrorHandler}.
+     */
     public DefaultErrorHandler() {
     }
 

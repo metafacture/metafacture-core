@@ -62,13 +62,18 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
     private long batchCount;
 
     /**
-     * Constructs an ObjectBatchLogger with the default format of
+     * Creates an instance of {@link ObjectBatchLogger} with the default format of
      * {@value #DEFAULT_FORMAT}.
      */
     public ObjectBatchLogger() {
         this.format = DEFAULT_FORMAT;
     }
 
+    /**
+     * Creates an instance of {@link ObjectBatchLogger} with a given format.
+     *
+     * @param format the format
+     */
     public ObjectBatchLogger(final String format) {
         this.format = format;
     }
@@ -84,6 +89,11 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
         this.vars.putAll(vars);
     }
 
+    /**
+     * Sets the batch size.
+     *
+     * @param batchSize the batch size
+     */
     public void setBatchSize(final int batchSize) {
         this.batchSize = batchSize;
     }
