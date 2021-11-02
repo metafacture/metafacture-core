@@ -39,14 +39,14 @@ import java.util.function.Function;
 public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> implements MemoryWarningSystem.Listener {
 
     /**
-     * The comparator.
+     * The comparators.
      */
     public enum Compare {
         SUBJECT, PREDICATE, OBJECT, ALL
     }
 
     /**
-     * The sort order.
+     * The sort orders.
      */
     public enum Order {
         INCREASING {
