@@ -17,6 +17,7 @@
 package org.metafacture.metafix;
 
 import org.metafacture.commons.StringUtil;
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.metafix.FixPredicate.Quantifier;
 import org.metafacture.metafix.fix.Do;
 import org.metafacture.metafix.fix.ElsIf;
@@ -150,7 +151,7 @@ class RecordTransformer {
             result = quantifier.test(record, predicate, params);
         }
         catch (final IllegalArgumentException e) {
-            e.printStackTrace();
+            throw new MetafactureException(e);
         }
         // TODO, possibly: use morph functions here (& in processFunction):
         // final FunctionFactory functionFactory = new FunctionFactory();
@@ -169,7 +170,7 @@ class RecordTransformer {
             method.apply(record, resolvedParams, options);
         }
         catch (final IllegalArgumentException e) {
-            e.printStackTrace();
+            throw new MetafactureException(e);
         }
     }
 

@@ -1,5 +1,6 @@
 package org.metafacture.metafix;
 
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.metafix.fix.Fix;
 
 import com.google.common.io.CharStreams;
@@ -51,8 +52,7 @@ public class FixStandaloneSetup extends FixStandaloneSetupGenerated {
             return (Fix) resource.getContents().get(0);
         }
         catch (final IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new MetafactureException(e);
         }
     }
 

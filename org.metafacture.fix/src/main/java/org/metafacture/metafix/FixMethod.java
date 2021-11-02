@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.metamorph.maps.FileMap;
 
 import java.lang.reflect.InvocationTargetException;
@@ -174,9 +175,8 @@ enum FixMethod {
                 return Collections.unmodifiableMap(namedGroups);
             }
             catch (final NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                e.printStackTrace();
+                throw new MetafactureException(e);
             }
-            return Collections.emptyMap();
         }
     },
     paste {
