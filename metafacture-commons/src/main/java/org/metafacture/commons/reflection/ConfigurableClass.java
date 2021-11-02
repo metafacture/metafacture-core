@@ -46,14 +46,30 @@ public final class ConfigurableClass<T> {
 
     private Map<String, Method> settersCache;
 
+    /**
+     *
+     * Creates an instance of {@link ConfigurableClass} defined by a Class.
+     *
+     * @param plainClass the plain class of object type T
+     */
     public ConfigurableClass(final Class<T> plainClass) {
         this.plainClass = plainClass;
     }
 
+    /**
+     * Gets the plain class of the ConfigurableClass.
+     *
+     * @return the Class
+     */
     public Class<T> getPlainClass() {
         return plainClass;
     }
 
+    /**
+     * Gets all public "set" methods of this class.
+     *
+     * @return the Map of the setter methods of this class
+     */
     public Map<String, Method> getSetters() {
         if (settersCache == null) {
             initSettersCache();
@@ -82,6 +98,11 @@ public final class ConfigurableClass<T> {
         return false;
     }
 
+    /**
+     * Gets the parameter types of the setter methods.
+     *
+     * @return a Map of the setter method names and their types
+     */
     public Map<String, Class<?>> getSetterTypes() {
         final Map<String, Class<?>> setterTypes = new HashMap<>();
         for (final Map.Entry<String, Method> method : getSetters().entrySet()) {
@@ -91,10 +112,23 @@ public final class ConfigurableClass<T> {
         return setterTypes;
     }
 
+    /**
+     * Creates an empty instance of the class.
+     *
+     * @return a new instance
+     */
     public T newInstance() {
         return newInstance(Collections.emptyMap());
     }
 
+    /**
+     * Creates an instance of the class using the first constructor that matches the
+     * varargs argument of the methods.
+     *
+     * @param setterValues    the Map of setter values
+     * @param constructorArgs the Object of args of the constructor
+     * @return the new instance
+     */
     public T newInstance(final Map<String, String> setterValues, final Object... constructorArgs) {
         try {
             final Constructor<T> constructor = findConstructor(constructorArgs);

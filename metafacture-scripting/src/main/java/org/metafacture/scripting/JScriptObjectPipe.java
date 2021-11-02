@@ -47,10 +47,21 @@ public final class JScriptObjectPipe extends DefaultObjectPipe<Object, ObjectRec
     private String invoke = PROCESS;
     private Invocable invocable;
 
+    /**
+     * Creates an instance of {@link JScriptObjectPipe} by the given script.
+     *
+     * @param script the script
+     */
     public JScriptObjectPipe(final String script) {
         setScript(script);
     }
 
+    /**
+     * Sets the name of the procedure or function to call by
+     * {@code javax.script.Invocable#invokeFunction(String, Object...)}
+     *
+     * @param invoke the name of the procedure or function to call
+     */
     public void setInvoke(final String invoke) {
         this.invoke = invoke;
     }

@@ -47,6 +47,9 @@ public final class TriplesToStream extends
     private final FormetaParser parser = new FormetaParser();
     private final PartialRecordEmitter emitter = new PartialRecordEmitter();
 
+    /**
+     * Creates an instance of {@link TriplesToStream}.
+     */
     public TriplesToStream() {
         parser.setEmitter(emitter);
     }

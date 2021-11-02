@@ -28,6 +28,9 @@ import java.text.Normalizer;
  */
 public final class NormalizeUTF8 extends AbstractSimpleStatelessFunction {
 
+    /**
+     * Creates an instance of {@link NormalizeUTF8}.
+     */
     public NormalizeUTF8() {
     }
 

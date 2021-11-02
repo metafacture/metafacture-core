@@ -58,6 +58,7 @@ subprojects {
   apply plugin: 'checkstyle'
 
   check.dependsOn(editorconfigCheck)
+  check.dependsOn(javadoc)
 
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
@@ -79,6 +80,12 @@ subprojects {
     classifier 'javadoc'
     description 'Creates a jar containing the javadoc of this project.'
     group 'build'
+  }
+
+  javadoc {
+    options {
+      addBooleanOption 'Xwerror', true
+    }
   }
 
   artifacts {

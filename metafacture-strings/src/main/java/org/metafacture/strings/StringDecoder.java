@@ -39,9 +39,8 @@ import java.util.regex.Pattern;
 public final class StringDecoder extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
     /**
-     * determines whether string is split by the regexp or parts matching the
-     * regexp are extracted
-     *
+     * Determines whether the string is split by the regexp or parts matching the
+     * regexp are extracted.
      */
     public enum Mode {
         SPLIT, EXTRACT
@@ -51,10 +50,20 @@ public final class StringDecoder extends DefaultObjectPipe<String, ObjectReceive
 
     private final Pattern pattern;
 
+    /**
+     * Creates an instance of {@link StringDecoder} by a given pattern.
+     *
+     * @param pattern the pattern
+     */
     public StringDecoder(final String pattern) {
         this.pattern = Pattern.compile(pattern);
     }
 
+    /**
+     * Sets the Mode.
+     *
+     * @param mode the {@link Mode}
+     */
     public void setMode(final Mode mode) {
         this.mode = mode;
     }

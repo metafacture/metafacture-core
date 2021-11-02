@@ -32,7 +32,7 @@ import java.util.Set;
  */
 public final class Case extends AbstractSimpleStatelessFunction {
 
-    private static final String UPPER = "upper";
+    public static final String UPPER = "upper";
     private static final Set<String> LANGUAGES;
     private Locale locale = Locale.getDefault();
     private boolean toUpper;
@@ -43,6 +43,9 @@ public final class Case extends AbstractSimpleStatelessFunction {
         LANGUAGES = Collections.unmodifiableSet(set);
     }
 
+    /**
+     * Creates an instance of {@link Case}.
+     */
     public Case() {
     }
 
@@ -54,10 +57,20 @@ public final class Case extends AbstractSimpleStatelessFunction {
         return value.toLowerCase(locale);
     }
 
+    /**
+     * Flags wether the case should be upper.
+     *
+     * @param string the case is set to upper when set to {@value #UPPER}
+     */
     public void setTo(final String string) {
         this.toUpper = UPPER.equals(string);
     }
 
+    /**
+     * Sets the language if it's included in {@link #LANGUAGES}.
+     *
+     * @param language the language
+     */
     public void setLanguage(final String language) {
         if (!LANGUAGES.contains(language)) {
             throw new MorphBuildException("Language " + language + " not supported.");

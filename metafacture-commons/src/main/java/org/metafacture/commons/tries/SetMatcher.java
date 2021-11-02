@@ -33,9 +33,18 @@ public final class SetMatcher<T> {
     private final ACNode<T> root = new ACNode<>(null, 0);
     private boolean isPrepared;
 
+    /**
+     * Creates an instance of {@link SetMatcher}.
+     */
     public SetMatcher() {
     }
 
+    /**
+     * Adds a value for a key.
+     *
+     * @param key   the key
+     * @param value the value
+     */
     public void put(final String key, final T value) {
         if (isPrepared) {
             throw new IllegalStateException("keys cannot be added during matching.");
@@ -63,6 +72,12 @@ public final class SetMatcher<T> {
         }
     }
 
+    /**
+     * Gets the List of Matches of a text.
+     *
+     * @param text the text
+     * @return List of Matches
+     */
     public List<Match<T>> match(final String text) {
         if (!isPrepared) {
             prepare();
@@ -135,10 +150,10 @@ public final class SetMatcher<T> {
     }
 
     /**
-     * Prints dot description of the automaton to out for visualization in
-     * GraphViz. Used for debugging and education.
+     * Prints dot description of the automaton to the PrintStream for
+     * visualization in GraphViz. Used for debugging and education.
      *
-     * @param out the stream t which the description is written
+     * @param out the stream to which the description is written
      */
     public void printAutomaton(final PrintStream out) {
         out.println("digraph ahocorasick {");
@@ -173,20 +188,42 @@ public final class SetMatcher<T> {
         private final int start;
         private final int length;
 
+        /**
+         * Constructs a Match.
+         *
+         * @param value the value
+         * @param start the position
+         * @param length the length
+         */
         public Match(final T value, final int start, final int length) {
             this.value = value;
             this.start = start;
             this.length = length;
         }
 
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
         public T getValue() {
             return value;
         }
 
+        /**
+         * Gets the start position.
+         *
+         * @return the start position
+         */
         public int getStart() {
             return start;
         }
 
+        /**
+         * Gets the length.
+         *
+         * @return the length
+         */
         public int getLength() {
             return length;
         }

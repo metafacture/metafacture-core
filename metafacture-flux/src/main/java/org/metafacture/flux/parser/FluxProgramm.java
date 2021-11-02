@@ -64,6 +64,9 @@ public final class FluxProgramm {
     private final Map<String, Wormhole> wormholeNameMapping = new HashMap<String, Wormhole>();
     private final Map<Flow, Wormhole> wormholeInFlowMapping = new Hashtable<Flow, Wormhole>();
 
+    /**
+     * Creates an instance of {@link FluxProgramm}.
+     */
     public FluxProgramm() {
     }
 
@@ -157,6 +160,9 @@ public final class FluxProgramm {
         }
     }
 
+    /**
+     * Starts all flows.
+     */
     public void start() {
         for (final Flow flow : initialFlows) {
             flow.start();
@@ -169,6 +175,11 @@ public final class FluxProgramm {
         }
     }
 
+    /**
+     * Prints the help to the given PrintStream.
+     *
+     * @param out the PrintStream to orint to
+     */
     public static void printHelp(final PrintStream out) {
         HelpPrinter.print(COMMAND_FACTORY, out);
     }

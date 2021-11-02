@@ -50,9 +50,9 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
     public static final long DEFAULT_BATCH_SIZE = 1000;
     public static final String BATCH_COUNT_VAR = "batches";
     public static final String BATCH_SIZE_VAR = "batchSize";
+    public static final String DEFAULT_FORMAT = "records processed: ${totalRecords}";
 
     private static final Logger LOG = LoggerFactory.getLogger(ObjectBatchLogger.class);
-    private static final String DEFAULT_FORMAT = "records processed: ${totalRecords}";
 
     private final Map<String, String> vars = new HashMap<String, String>();
     private final String format;
@@ -61,20 +61,39 @@ public final class ObjectBatchLogger<T> extends DefaultObjectPipe<T, ObjectRecei
     private long recordCount;
     private long batchCount;
 
+    /**
+     * Creates an instance of {@link ObjectBatchLogger} with the default format of
+     * {@value #DEFAULT_FORMAT}.
+     */
     public ObjectBatchLogger() {
         this.format = DEFAULT_FORMAT;
-
     }
 
+    /**
+     * Creates an instance of {@link ObjectBatchLogger} with a given format.
+     *
+     * @param format the format
+     */
     public ObjectBatchLogger(final String format) {
         this.format = format;
     }
 
-    public ObjectBatchLogger(final String format, final Map<String, String> vars) {
+    /**
+     * Constructs an ObjectBatchLogger with a format and a map of variables.
+     *
+     * @param format a format
+     * @param vars   a map of variables
+     */
+    ObjectBatchLogger(final String format, final Map<String, String> vars) {
         this.format = format;
         this.vars.putAll(vars);
     }
 
+    /**
+     * Sets the batch size.
+     *
+     * @param batchSize the batch size
+     */
     public void setBatchSize(final int batchSize) {
         this.batchSize = batchSize;
     }

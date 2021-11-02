@@ -24,12 +24,29 @@ package org.metafacture.formeta.formatter;
  */
 public interface Formatter {
 
+    /**
+     * The reset event.
+     */
     void reset();
 
+    /**
+     * The startGroup event.
+     *
+     * @param name the name of the startGroup
+     */
     void startGroup(String name);
 
+    /**
+     * The literal endGroup event.
+     */
     void endGroup();
 
+    /**
+     * The literal event.
+     *
+     * @param name  the name of the literal
+     * @param value the value of the literal
+     */
     void literal(String name, String value);
 
 }

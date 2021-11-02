@@ -45,10 +45,23 @@ public final class XmlUtil {
         // No instances allowed
     }
 
+    /**
+     * Converts a Node to a String.
+     *
+     * @param node the Node
+     * @return the String represantation of the Node
+     */
     public static String nodeToString(final Node node) {
         return nodeToString(node, false);
     }
 
+    /**
+     * Converts a Node to a String, with or without an XML declaration
+     *
+     * @param node        the Node
+     * @param omitXMLDecl boolean if an XML declaration is omitted or not
+     * @return a String representation of the Node
+     */
     public static String nodeToString(final Node node,
             final boolean omitXMLDecl) {
         final StringWriter writer = new StringWriter();
@@ -79,6 +92,12 @@ public final class XmlUtil {
         return writer.toString();
     }
 
+    /**
+     * Converts a NodeList to a String.
+     *
+     * @param nodes the NodeList
+     * @return a String representation of the NodeList
+     */
     public static String nodeListToString(final NodeList nodes) {
         final StringBuilder builder = new StringBuilder();
 
@@ -89,6 +108,12 @@ public final class XmlUtil {
         return builder.toString();
     }
 
+    /**
+     * Checks if a String is an XML MIME type.
+     *
+     * @param mimeType the MIME type
+     * @return boolean if a String is an XML MIME type
+     */
     public static boolean isXmlMimeType(final String mimeType) {
         if (mimeType == null) {
             return false;
@@ -98,10 +123,24 @@ public final class XmlUtil {
                 mimeType.endsWith(XML_BASE_MIME_TYPE);
     }
 
+    /**
+     * Escapes an unescaped String.
+     *
+     * @param unescaped the unescaped String
+     * @return the escaped String
+     */
     public static String escape(final String unescaped) {
         return escape(unescaped, true);
     }
 
+    /**
+     * Escapes XML special characters. May also escape non-ASCII characters (aka
+     * Unicode).
+     *
+     * @param unescaped     the String to be unescaped
+     * @param escapeUnicode boolean if Unicode should be also escaped
+     * @return the escaped String
+     */
     public static String escape(final String unescaped, final boolean escapeUnicode) {
         return unescaped.codePoints()
                 .mapToObj(value -> escapeCodePoint(value, escapeUnicode))

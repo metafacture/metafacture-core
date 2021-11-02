@@ -36,6 +36,9 @@ public final class Regexp extends AbstractFunction {
     private String format;
     private final Map<String, String> tempVars = new HashMap<String, String>();
 
+    /**
+     * Creates an instance of {@link Regexp}.
+     */
     public Regexp() {
     }
 
@@ -76,10 +79,20 @@ public final class Regexp extends AbstractFunction {
         }
     }
 
+    /**
+     * Sets the matcher.
+     *
+     * @param match the matcher
+     */
     public void setMatch(final String match) {
         matcher = Pattern.compile(match).matcher("");
     }
 
+    /**
+     * Sets the format.
+     *
+     * @param format the format
+     */
     public void setFormat(final String format) {
         this.format = format;
     }

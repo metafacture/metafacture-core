@@ -44,10 +44,23 @@ public final class CloseSuppressor<T>
     private final int numCloses;
     private int count;
 
+    /**
+     * Creates an instance of {@link CloseSuppressor} with a number defining the
+     * number of events to block before closing the stream.
+     *
+     * @param numCloses the number of events to block before closing the stream. The
+     *                  String is parsed to an integer.
+     */
     public CloseSuppressor(final String numCloses) {
         this(Integer.parseInt(numCloses));
     }
 
+    /**
+     * Creates an instance of {@link CloseSuppressor} with a number defining the
+     * number of events to block before closing the stream.
+     *
+     * @param numCloses the number of events to block before closing the stream
+     */
     public CloseSuppressor(final int numCloses) {
         this.numCloses = numCloses;
     }

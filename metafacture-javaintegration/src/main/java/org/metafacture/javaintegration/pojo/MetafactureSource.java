@@ -27,7 +27,11 @@ import org.metafacture.framework.StreamReceiver;
  *
  */
 public interface MetafactureSource {
-
+    /**
+     * Sends received events to this stream.
+     *
+     * @param streamReceiver the {@link StreamReceiver}
+     */
     void sendToStream(StreamReceiver streamReceiver);
 
 }

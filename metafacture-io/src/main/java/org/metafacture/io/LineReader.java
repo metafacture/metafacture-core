@@ -42,6 +42,9 @@ public final class LineReader extends DefaultObjectPipe<Reader, ObjectReceiver<S
 
     private static final int BUFFER_SIZE = 1024 * 1024 * 16;
 
+    /**
+     * Creates an instance of {@link LineReader}.
+     */
     public LineReader() {
     }
 
@@ -52,6 +55,12 @@ public final class LineReader extends DefaultObjectPipe<Reader, ObjectReceiver<S
         process(reader, getReceiver());
     }
 
+    /**
+     * Processes input from a reader and passes it line by line to a receiver.
+     *
+     * @param reader   the Reader
+     * @param receiver the ObjectReceiver
+     */
     public static void process(final Reader reader, final ObjectReceiver<String> receiver) {
         final BufferedReader lineReader = new BufferedReader(reader, BUFFER_SIZE);
         try {

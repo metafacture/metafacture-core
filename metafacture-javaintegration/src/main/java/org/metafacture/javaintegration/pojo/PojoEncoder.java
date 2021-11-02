@@ -54,6 +54,11 @@ public class PojoEncoder<T> extends DefaultStreamPipe<ObjectReceiver<T>> {
     private final Deque<TypeEncoder> typeEncoderStack = new ArrayDeque<>();
     private final Class<T> pojoClass;
 
+    /**
+     * Creates an instance of {@link PojoEncoder} by a given Class.
+     *
+     * @param pojoClass the Class
+     */
     public PojoEncoder(final Class<T> pojoClass) {
         this.pojoClass = pojoClass;
     }

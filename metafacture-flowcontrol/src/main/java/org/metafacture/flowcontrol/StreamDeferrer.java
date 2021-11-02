@@ -45,6 +45,9 @@ public class StreamDeferrer extends DefaultStreamPipe<StreamReceiver> {
 
     private final StreamBuffer buffer = new StreamBuffer();
 
+    /**
+     * Creates an instance of {@link StreamDeferrer}.
+     */
     public StreamDeferrer() {
     }
 

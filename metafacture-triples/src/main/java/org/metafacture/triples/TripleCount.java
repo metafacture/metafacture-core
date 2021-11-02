@@ -45,6 +45,9 @@ public final class TripleCount extends AbstractTripleSort {
     private String countPredicate = DEFAULT_COUNTP_REDICATE;
     private Comparator<Triple> comparator;
 
+    /**
+     * Creates an instance of {@link TripleCount}.
+     */
     public TripleCount() {
     }
 
@@ -65,6 +68,11 @@ public final class TripleCount extends AbstractTripleSort {
         }
     }
 
+    /**
+     * Flags wether predicates should be counted.
+     *
+     * @param countPredicate true if predicates should be counted
+     */
     public void setCountPredicate(final String countPredicate) {
         this.countPredicate = countPredicate;
     }
@@ -93,6 +101,11 @@ public final class TripleCount extends AbstractTripleSort {
         }
     }
 
+    /**
+     * Compare triples by subject, predicate or object.
+     *
+     * @param countBy the {@link AbstractTripleSort.Compare} to sort by
+     */
     public void setCountBy(final Compare countBy) {
         setCompare(countBy);
     }

@@ -62,8 +62,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     /**
      * Enriched constructor setting the top level element and the Element name
      *
-     * @param aTopLevelElement the name of the top level XML tag
-     * @param aElementName the name of the tag defining a new Element to be split
+     * @param topLevelElement the name of the top level XML tag
+     * @param elementName the name of the tag defining a new Element to be split
      */
     public XmlElementSplitter(final String topLevelElement, final String elementName) {
         setTopLevelElement(topLevelElement);
@@ -83,8 +83,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     /**
      * Sets the top-level XML document element.
      *
-     * @param root the top level element. Don't set it to omit setting top level
-     *             element.
+     * @param newRoot the top level element. Leave at default to omit the
+     *                top-level element.
      */
     public void setTopLevelElement(final String newRoot) {
         root = newRoot;
@@ -93,12 +93,11 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     }
 
     /**
-     * Sets the XML declaration.
+     * Sets the XML declaration. The default is
+     * {@code <?xml version = "1.0" encoding = "UTF-8"?>}. If an empty value is
+     * given, the XML declaration is skipped.
      *
-     * @param xmlDeclaration the xml declaration. Default is
-     *                       '{@code<?xml version = "1.0" encoding = "UTF-8"?>}'.
-     *                       If empty value is given, the xml declaration is
-     *                       skipped.
+     * @param xmlDeclaration the XML declaration
      */
     public void setXmlDeclaration(final String xmlDeclaration) {
         this.xmlDeclaration = xmlDeclaration;

@@ -25,6 +25,9 @@ import org.metafacture.metamorph.api.helpers.AbstractFilter;
  */
 public final class Equals extends AbstractFilter {
 
+    /**
+     * Creates an instance of {@link Equals}.
+     */
     public Equals() {
     }
 

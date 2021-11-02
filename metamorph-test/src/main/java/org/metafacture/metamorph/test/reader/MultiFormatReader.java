@@ -31,10 +31,21 @@ public final class MultiFormatReader implements Reader {
     private StreamReceiver downstreamReceiver;
     private Reader currentReader;
 
+    /**
+     * Creates an instance of {@link MultiFormatReader} by a given format.
+     *
+     * @param format the format
+     */
     public MultiFormatReader(final String format) {
         setFormat(format);
     }
 
+    /**
+     * Sets the format of {@link #currentReader} if the {@link #READER_FACTORY}
+     * contains that format.
+     *
+     * @param format the format
+     */
     public void setFormat(final String format) {
         if (!READER_FACTORY.containsKey(format)) {
             throw new IllegalArgumentException("Format '" + format + "' not regognized");

@@ -50,6 +50,9 @@ public final class LiteralToObject extends DefaultStreamPipe<ObjectReceiver<Stri
 
     private Matcher matcher = Pattern.compile(DEFAULT_PATTERN).matcher("");
 
+    /**
+     * Creates an instance of {@link LiteralToObject}.
+     */
     public LiteralToObject() {
     }
 
@@ -68,6 +71,11 @@ public final class LiteralToObject extends DefaultStreamPipe<ObjectReceiver<Stri
         this.matcher = Pattern.compile(pattern).matcher("");
     }
 
+    /**
+     * Gets the pattern against which literal names are matched.
+     *
+     * @return the pattern
+     */
     public String getPattern() {
         return matcher.pattern().pattern();
     }

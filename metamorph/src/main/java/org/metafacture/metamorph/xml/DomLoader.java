@@ -62,6 +62,14 @@ public final class DomLoader { // checkstyle-disable-line ClassDataAbstractionCo
         throw new AssertionError("No instances allowed");
     }
 
+    /**
+     * Returns a Document built from an InputSpurce and a schema file. Removes all
+     * ignorable whitespace and all text nodes containing only whitespace.
+     *
+     * @param schemaFile the name of the file of the schema
+     * @param input      the InputSource
+     * @return the Document
+     */
     public static Document parse(final String schemaFile, final InputSource input) {
         final Document document = createEmptyDocument();
         final XMLReader pipeline = createXmlFilterPipeline(schemaFile, document);

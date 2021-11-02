@@ -29,6 +29,9 @@ import org.metafacture.framework.StreamReceiver;
  */
 public class ForwardingStreamPipe extends DefaultStreamPipe<StreamReceiver> {
 
+    /**
+     * Creates an instance of {@link ForwardingStreamPipe}.
+     */
     public ForwardingStreamPipe() {
     }
 

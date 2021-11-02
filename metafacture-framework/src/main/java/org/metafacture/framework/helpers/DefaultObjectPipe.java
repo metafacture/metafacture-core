@@ -31,6 +31,9 @@ import org.metafacture.framework.Receiver;
  */
 public class DefaultObjectPipe<T, R extends Receiver> extends DefaultSender<R> implements ObjectPipe<T, R> {
 
+    /**
+     * Creates an instance of {@link DefaultObjectPipe}.
+     */
     public DefaultObjectPipe() {
     }
 

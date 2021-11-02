@@ -47,6 +47,9 @@ import java.nio.charset.Charset;
 @FluxCommand("open-tar")
 public class TarReader extends DefaultObjectPipe<Reader, ObjectReceiver<Reader>> {
 
+    /**
+     * Creates an instance of {@link TarReader}.
+     */
     public TarReader() {
     }
 

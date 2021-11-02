@@ -34,6 +34,9 @@ public class DefaultTee<T extends Receiver> implements Tee<T> {
 
     private final List<T> receivers = new ArrayList<T>();
 
+    /**
+     * Creates an instance of {@link DefaultTee}.
+     */
     public DefaultTee() {
     }
 

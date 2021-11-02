@@ -39,6 +39,11 @@ public abstract class AbstractFilter extends AbstractSimpleStatelessFunction {
         return string;
     }
 
+    /**
+     * Sets the string.
+     *
+     * @param string the string
+     */
     public final void setString(final String string) {
         this.string = string;
     }

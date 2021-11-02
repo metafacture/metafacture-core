@@ -38,13 +38,23 @@ import java.util.regex.Pattern;
  */
 public final class RestMap extends AbstractReadOnlyMap<String, String> {
 
+    public static final String CHARSET_NAME = "UTF-8";
+
     private static final Pattern VAR_PATTERN = Pattern.compile("${key}", Pattern.LITERAL);
-    private String charsetName = "UTF-8";
+    private String charsetName = CHARSET_NAME;
     private String url;
 
+    /**
+     * Creates an instance of {@link RestMap}.
+     */
     public RestMap() {
     }
 
+    /**
+     * Creates an instance of {@link RestMap} by the given URL.
+     *
+     * @param url the URL
+     */
     public RestMap(final String url) {
         this.url = url;
     }
@@ -79,10 +89,20 @@ public final class RestMap extends AbstractReadOnlyMap<String, String> {
         }
     }
 
+    /**
+     * Sets the URL.
+     *
+     * @param url the URL
+     */
     public void setUrl(final String url) {
         this.url = url;
     }
 
+    /**
+     * Sets the charset name. <strong>Default value: {@value #CHARSET_NAME}</strong>
+     *
+     * @param name the charset name
+     */
     public void setCharsetName(final String name) {
         charsetName = name;
     }

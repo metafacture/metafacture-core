@@ -42,6 +42,9 @@ public final class AseqDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private static final int RECORD_IDENTIFIER_BEGIN = 0;
     private static final int RECORD_IDENTIFIER_END = 9;
 
+    /**
+     * Creates an instance of {@link AseqDecoder}.
+     */
     public AseqDecoder() {
     }
 

@@ -26,9 +26,17 @@ public final class HtmlAnchor extends AbstractCompose {
 
     private String title;
 
+    /**
+     * Creates an instance of {@link HtmlAnchor}.
+     */
     public HtmlAnchor() {
     }
 
+    /**
+     * Sets the title.
+     *
+     * @param title the title.
+     */
     public void setTitle(final String title) {
         this.title = title;
     }

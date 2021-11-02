@@ -42,6 +42,15 @@ import java.util.function.Function;
 @FluxCommand("encode-marcxml")
 public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
+    public static final String NAMESPACE_NAME = "marc";
+    public static final String XML_ENCODING = "UTF-8";
+    public static final String XML_VERSION =  "1.0";
+    public static final boolean PRETTY_PRINTED = true;
+    public static final boolean OMIT_XML_DECLARATION = false;
+
+    private static final String ROOT_OPEN = "<marc:collection xmlns:marc=\"http://www.loc.gov/MARC21/slim\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\">";
+    private static final String ROOT_CLOSE = "</marc:collection>";
+
     private enum Tag {
 
         collection(" xmlns%s=\"" + NAMESPACE + "\"%s"),
@@ -73,7 +82,6 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     }
 
     private static final String NAMESPACE = "http://www.loc.gov/MARC21/slim";
-    private static final String NAMESPACE_NAME = "marc";
     private static final String NAMESPACE_PREFIX = NAMESPACE_NAME + ":";
     private static final String NAMESPACE_SUFFIX = ":" + NAMESPACE_NAME;
 
@@ -96,60 +104,80 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     private static final int TAG_BEGIN = 0;
     private static final int TAG_END = 3;
 
-    private final StringBuilder builder;
+    private final StringBuilder builder = new StringBuilder();
 
-    private boolean atStreamStart;
+    private boolean atStreamStart = true;
 
-    private boolean omitXmlDeclaration;
-    private String xmlVersion;
-    private String xmlEncoding;
+    private boolean omitXmlDeclaration = OMIT_XML_DECLARATION;
+    private String xmlVersion = XML_VERSION;
+    private String xmlEncoding = XML_ENCODING;
 
-    private boolean emitNamespace;
-    private Object[] namespacePrefix;
+    private String currentEntity = "";
 
-    private String currentEntity;
+    private boolean emitNamespace = true;
+    private Object[] namespacePrefix = new Object[]{emitNamespace ? NAMESPACE_PREFIX : EMPTY};
+
     private int indentationLevel;
+    private boolean formatted = PRETTY_PRINTED;
     private int recordAttributeOffset;
-    private boolean formatted;
 
+    /**
+     * Creates an instance of {@link MarcXmlEncoder}.
+     */
     public MarcXmlEncoder() {
-        this.builder = new StringBuilder();
-        this.atStreamStart = true;
-
-        this.omitXmlDeclaration = false;
-        this.xmlVersion = "1.0";
-        this.xmlEncoding = "UTF-8";
-
-        this.currentEntity = "";
-
-        this.indentationLevel = 0;
-        this.formatted = true;
-
-        setEmitNamespace(true);
     }
 
+    /**
+     * Sets the flag to decide whether to emit the {@value #NAMESPACE_NAME}
+     * namespace
+     *
+     * @param emitNamespace true if the namespace is emitted, otherwise false
+     */
     public void setEmitNamespace(final boolean emitNamespace) {
         this.emitNamespace = emitNamespace;
         namespacePrefix = new Object[]{emitNamespace ? NAMESPACE_PREFIX : EMPTY};
     }
 
+    /**
+     * Sets the flag to decide whether to omit the XML declaration.
+     *
+     * <strong>Default value: {@value #OMIT_XML_DECLARATION}</strong>
+     *
+     * @param currentOmitXmlDeclaration true if the XML declaration is omitted, otherwise
+     *                           false
+     */
     public void omitXmlDeclaration(final boolean currentOmitXmlDeclaration) {
         omitXmlDeclaration = currentOmitXmlDeclaration;
     }
 
+    /**
+     * Sets the XML version.
+     *
+     * <strong>Default value: {@value #XML_VERSION}</strong>
+     *
+     * @param xmlVersion the XML version
+     */
     public void setXmlVersion(final String xmlVersion) {
         this.xmlVersion = xmlVersion;
     }
 
+    /**
+     * Sets the XML encoding.
+     *
+     * <strong>Default value: {@value #XML_ENCODING}</strong>
+     *
+     * @param xmlEncoding the XML encoding
+     */
     public void setXmlEncoding(final String xmlEncoding) {
         this.xmlEncoding = xmlEncoding;
     }
 
     /**
-     * Formats the resulting xml, by indentation.
+     * Formats the resulting xml by indentation. Aka "pretty printing".
      *
-     * @param formatted
-     *            True, if formatting is activated.
+     * <strong>Default value: {@value #PRETTY_PRINTED}</strong>
+     *
+     * @param formatted true if formatting is activated, otherwise false
      */
     public void setFormatted(final boolean formatted) {
         this.formatted = formatted;
@@ -278,12 +306,20 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         writeTag(Tag.collection::close);
     }
 
-    /** Writes a unescaped sequence */
+    /**
+    * Writes an unescaped sequence.
+    *
+    * @param str the unescaped sequence to be written
+    */
     private void writeRaw(final String str) {
         builder.append(str);
     }
 
-    /** Writes a escaped sequence */
+    /**
+    * Writes an escaped sequence.
+    *
+    * @param str the unescaped sequence to be written
+    */
     private void writeEscaped(final String str) {
         builder.append(XmlUtil.escape(str, false));
     }

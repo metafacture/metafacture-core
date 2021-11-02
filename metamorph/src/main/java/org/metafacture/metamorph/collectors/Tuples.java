@@ -32,18 +32,32 @@ import java.util.List;
  */
 public final class Tuples extends AbstractFlushingCollect {
 
-    private final ListMap<String, String> listMap = new ListMap<String, String>();
+    public static final int MIN_N = 1;
+    private final ListMap<String, String> listMap = new ListMap<>();
 
-    private int minN = 1;
+    private int minN = MIN_N;
     private String separator = "";
 
+    /**
+     * Creates an instance of {@link Tuples}.
+     */
     public Tuples() {
     }
 
+    /**
+     * Sets min N. <strong>Default value: {@value #MIN_N}</strong>
+     *
+     * @param minN the min N
+     */
     public void setMinN(final int minN) {
         this.minN = minN;
     }
 
+    /**
+     * Sets the separator.
+     *
+     * @param separator the separator
+     */
     public void setSeparator(final String separator) {
         this.separator = separator;
     }

@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
  * @author Pascal Christoph
  */
 public final class WildcardTrie<P> {
+
     public static final char STAR_WILDCARD = '*';
     public static final char Q_WILDCARD = '?';
     public static final String OR_STRING = "|";
@@ -42,15 +43,18 @@ public final class WildcardTrie<P> {
     private Set<Node<P>> nodes = new HashSet<Node<P>>();
     private Set<Node<P>> nextNodes = new HashSet<Node<P>>();
 
+    /**
+     * Creates an instance of {@link WildcardTrie}.
+     */
     public WildcardTrie() {
     }
 
     /**
-     * Inserts keys into the try. Use '|' to concatenate. Use '*' (0,inf) and
-     * '?' (1,1) to express wildcards.
+     * Inserts keys into the trie. Use '|' to concatenate. Use '*' (0,inf) and '?'
+     * (1,1) to express wildcards.
      *
-     * @param keys pattern of keys to register
-     * @param value value to associate with the key pattern.
+     * @param keys  pattern of keys to register
+     * @param value value to associate with the key pattern
      */
     public void put(final String keys, final P value) {
         if (keys.contains(OR_STRING)) {
@@ -65,7 +69,6 @@ public final class WildcardTrie<P> {
     }
 
     private void simplyPut(final String key, final P value) {
-
         final int length = key.length();
 
         Node<P> node = root;
@@ -80,6 +83,12 @@ public final class WildcardTrie<P> {
         node.addValue(value);
     }
 
+    /**
+     * Gets the List of values identified by a key.
+     *
+     * @param key the key
+     * @return the List of
+     */
     public List<P> get(final String key) {
         nodes.add(root);
         final int length = key.length();
@@ -168,4 +177,5 @@ public final class WildcardTrie<P> {
             return links.get(key);
         }
     }
+
 }

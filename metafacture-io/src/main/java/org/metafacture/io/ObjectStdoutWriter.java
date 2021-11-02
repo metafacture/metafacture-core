@@ -39,6 +39,9 @@ public final class ObjectStdoutWriter<T> extends AbstractObjectWriter<T>  {
     private boolean firstObject = true;
     private boolean closed;
 
+    /**
+     * Creates an instance of {@link ObjectStdoutWriter}.
+     */
     public ObjectStdoutWriter() {
     }
 

@@ -34,13 +34,26 @@ public final class EventList implements StreamReceiver {
 
     private boolean closed;
 
+    /**
+     * Creates an instance of {@link EventList}.
+     */
     public EventList() {
     }
 
+    /**
+     * Get events.
+     *
+     * @return the List of {@link Event}
+     */
     public List<Event> getEvents() {
         return Collections.unmodifiableList(events);
     }
 
+    /**
+     * Check wether EventList is closed.
+     *
+     * @return true if EventList is closed.
+     */
     public boolean isClosed() {
         return closed;
     }
@@ -118,14 +131,29 @@ public final class EventList implements StreamReceiver {
             this.value = value;
         }
 
+        /**
+         * Gets the type.
+         *
+         * @return the type
+         */
         public Type getType() {
             return type;
         }
 
+        /**
+         * Gets the name.
+         *
+         * @return the name
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
         public String getValue() {
             return value;
         }

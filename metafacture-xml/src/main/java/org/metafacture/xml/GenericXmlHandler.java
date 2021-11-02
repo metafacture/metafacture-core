@@ -40,6 +40,8 @@ import java.util.regex.Pattern;
 @FluxCommand("handle-generic-xml")
 public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
+    public static final String RECORD_TAG_PROPERTY = "org.culturegraph.metamorph.xml.recordtag";
+
     public static final boolean EMIT_NAMESPACE = false;
 
     private static final Pattern TABS = Pattern.compile("\t+");
@@ -53,8 +55,12 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
     private boolean emitNamespace = EMIT_NAMESPACE;
 
+    /**
+     * Constructs a GenericXmlHandler. Sets the record tag name to the value of
+     * the system property {@value #RECORD_TAG_PROPERTY} if it's present.
+     */
     public GenericXmlHandler() {
-        final String recordTagNameProperty = System.getProperty("org.culturegraph.metamorph.xml.recordtag");
+        final String recordTagNameProperty = System.getProperty(RECORD_TAG_PROPERTY);
         if (recordTagNameProperty != null) {
             recordTagName = recordTagNameProperty;
         }
@@ -64,7 +70,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
      * Creates a new {@code GenericXmlReader} with the given tag name as
      * marker for records.
      *
-     * @deprecated Use default constructor and set the tag name latter
+     * @deprecated Use default constructor and set the tag name later
      * with {@link #setRecordTagName(String)}.
      *
      * @param recordTagName tag name marking the start of a record.
@@ -80,7 +86,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
      * This value may only be changed between records. If it is changed
      * while processing a record the behaviour of this module is undefined.
      * <p>
-     * <strong>Default value: {@value DEFAULT_RECORD_TAG}</strong>
+     * <strong>Default value: {@value org.metafacture.framework.helpers.DefaultXmlPipe#DEFAULT_RECORD_TAG}</strong>
      *
      * @param recordTagName the tag name which marks the start of a record.
      */
@@ -88,14 +94,29 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         this.recordTagName = recordTagName;
     }
 
+    /**
+     * Gets the record tag name.
+     *
+     * @return the record tag name.
+     */
     public String getRecordTagName() {
         return recordTagName;
     }
 
+    /**
+     * Sets the value tag name.
+     *
+     * @param valueTagName the value tag name
+     */
     public void setValueTagName(final String valueTagName) {
         this.valueTagName = valueTagName;
     }
 
+    /**
+     * Gets the value tag name.
+     *
+     * @return the value tag name
+     */
     public String getValueTagName() {
         return valueTagName;
     }
@@ -105,7 +126,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
      * will be passed through as "foo:bar". For backward compatibility the default
      * is set to "false", thus only "bar" is emitted.
      * <p>
-     * <strong>Default value: {@value EMIT_NAMESPACE}</strong>
+     * <strong>Default value: {@value #EMIT_NAMESPACE}</strong>
      *
      * @param emitNamespace set to "true" if namespace should be emitted. Defaults
      *                      to "false".
@@ -114,14 +135,29 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         this.emitNamespace = emitNamespace;
     }
 
+    /**
+     * Checks wether the namespace should be emitted.
+     *
+     * @return true if the namespace should be emitted
+     */
     public boolean getEmitNamespace() {
         return this.emitNamespace;
     }
 
+    /**
+     * Sets the attribute marker.
+     *
+     * @param attributeMarker the attribute marker
+     */
     public void setAttributeMarker(final String attributeMarker) {
         this.attributeMarker = attributeMarker;
     }
 
+    /**
+     * Gets the attribute marker.
+     *
+     * @return the attribute marker
+     */
     public String getAttributeMarker() {
         return attributeMarker;
     }

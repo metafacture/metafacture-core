@@ -45,10 +45,22 @@ public final class DirectoryClassLoader extends URLClassLoader {
             }
         };
 
+    /**
+     * Creates an instance of {@link DirectoryClassLoader} by a given parent
+     * ClassLoader.
+     *
+     * @param parent the {@link ClassLoader}
+     */
     public DirectoryClassLoader(final ClassLoader parent) {
         super(new URL[0], parent);
     }
 
+    /**
+     * Adds a directory and appends all jars and classes of that directory to the
+     * list of URLs to search for classes and resources.
+     *
+     * @param dir the directory as File to be added
+     */
     public void addDirectory(final File dir) {
         for (final File file : dir.listFiles(JAR_AND_CLASS_FILTER)) {
             try {

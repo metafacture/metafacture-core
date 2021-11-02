@@ -26,13 +26,26 @@ public final class PartialRecordEmitter implements Emitter {
     private StreamReceiver receiver;
     private String defaultName;
 
+    /**
+     * Creates an instance of {@link PartialRecordEmitter}.
+     */
     public PartialRecordEmitter() {
     }
 
+    /**
+     * Sets the default name.
+     *
+     * @param defaultName the default name
+     */
     public void setDefaultName(final String defaultName) {
         this.defaultName = defaultName;
     }
 
+    /**
+     * Gets the default name.
+     *
+     * @return the default name
+     */
     public String getDefaultName() {
         return defaultName;
     }

@@ -35,10 +35,19 @@ import org.metafacture.framework.annotations.Out;
 public final class StreamTimer extends TimerBase<StreamReceiver> implements
         StreamPipe<StreamReceiver> {
 
+    /**
+     * Creates an instance of {@link StreamTimer}.
+     */
     public StreamTimer() {
         this("");
     }
 
+    /**
+     * Creates an instance of {@link StreamTimer} by a given prefix used when log
+     * messages.
+     *
+     * @param logPrefix the prefix of the log messages
+     */
     public StreamTimer(final String logPrefix) {
         super(logPrefix);
     }

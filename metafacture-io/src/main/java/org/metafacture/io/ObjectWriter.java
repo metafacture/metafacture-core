@@ -40,11 +40,20 @@ import java.util.List;
 @FluxCommand("write")
 public final class ObjectWriter<T> implements ConfigurableObjectWriter<T> {
 
-    private static final String STDOUT = "stdout";
+    public static final String STDOUT = "stdout";
+
     private static final List<String> ARGUMENTS = Collections.unmodifiableList(Arrays.asList(STDOUT, "PATH"));
 
     private final ConfigurableObjectWriter<T> objectWriter;
 
+    /**
+     * Sets the destination to write objects to. If the destination is set to
+     * {@value #STDOUT} the object is written to the standard output. Otherwise
+     * it's written to a file of that name.
+     *
+     * @param destination the path to be written to or standard out if it's
+     *                    {@value #STDOUT}
+     */
     public ObjectWriter(final String destination) {
         if (STDOUT.equals(destination)) {
             objectWriter = new ObjectStdoutWriter<T>();
@@ -54,6 +63,11 @@ public final class ObjectWriter<T> implements ConfigurableObjectWriter<T> {
         }
     }
 
+    /**
+     * Returns the available arguments.
+     *
+     * @return arguments
+     */
     @ReturnsAvailableArguments
     public static Collection<String> getArguments() {
         return ARGUMENTS;

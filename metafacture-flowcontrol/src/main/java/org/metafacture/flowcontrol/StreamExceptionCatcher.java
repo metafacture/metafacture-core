@@ -44,10 +44,19 @@ public final class StreamExceptionCatcher extends
 
     private final String logPrefix;
 
+    /**
+     * Creates an instance of {@link StreamExceptionCatcher}.
+     */
     public StreamExceptionCatcher() {
         this("");
     }
 
+    /**
+     * Creates an instance of {@link StreamExceptionCatcher} setting a prefix for
+     * the logs messages.
+     *
+     * @param logPrefix the prefix of the log messages
+     */
     public StreamExceptionCatcher(final String logPrefix) {
         this.logPrefix = logPrefix;
     }

@@ -27,6 +27,9 @@ public final class Constant extends AbstractSimpleStatelessFunction {
 
     private String constValue;
 
+    /**
+     * Creates an instance of {@link Constant}.
+     */
     public Constant() {
     }
 
@@ -35,6 +38,11 @@ public final class Constant extends AbstractSimpleStatelessFunction {
         return constValue;
     }
 
+    /**
+     * Sets the constant.
+     *
+     * @param string the constant
+     */
     public void setValue(final String string) {
         this.constValue = string;
     }

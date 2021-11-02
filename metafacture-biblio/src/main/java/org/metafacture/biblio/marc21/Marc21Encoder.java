@@ -80,6 +80,9 @@ public final class Marc21Encoder extends
 
     private boolean generateIdField;
 
+    /**
+     * Initializes the encoder with MARC 21 constants and charset.
+     */
     public Marc21Encoder() {
         builder = new RecordBuilder(Marc21Constants.MARC21_FORMAT);
         builder.setCharset(Marc21Constants.MARC21_CHARSET);
@@ -103,6 +106,11 @@ public final class Marc21Encoder extends
         this.generateIdField = generateIdField;
     }
 
+    /**
+     * Gets the flag to decide whether the ID field is generated.
+     *
+     * @return true if the record ID is generated, otherwise false
+     */
     public boolean getGenerateIdField() {
         return generateIdField;
     }

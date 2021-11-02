@@ -45,6 +45,9 @@ public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceive
 
     private String currentSubject;
 
+    /**
+     * Creates an instance of {@link TripleCollect}.
+     */
     public TripleCollect() {
         parser.setEmitter(emitter);
     }
@@ -67,6 +70,11 @@ public final class TripleCollect extends DefaultObjectPipe<Triple, StreamReceive
         }
     }
 
+    /**
+     * Decodes a Triple. Passes the predicate and the object to the receiver.
+     *
+     * @param triple the Triple
+     */
     public void decodeTriple(final Triple triple) {
         if (triple.getObjectType() == ObjectType.STRING) {
             getReceiver().literal(triple.getPredicate(), triple.getObject());

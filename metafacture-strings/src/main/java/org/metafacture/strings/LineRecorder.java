@@ -43,9 +43,17 @@ public final class LineRecorder implements ObjectPipe<String, ObjectReceiver<Str
     private ObjectReceiver<String> receiver;
     private boolean isClosed;
 
+    /**
+     * Creates an instance of {@link LineRecorder}.
+     */
     public LineRecorder() {
     }
 
+    /**
+     * Sets the record marker regexp.
+     *
+     * @param regexp the regexp
+     */
     public void setRecordMarkerRegexp(final String regexp) {
         recordMarkerRegexp = regexp;
     }

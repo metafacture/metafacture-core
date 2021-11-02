@@ -45,6 +45,9 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     private String encoding = "UTF-8";
     private String accept = "*/*";
 
+    /**
+     * Creates an instance of {@link HttpOpener}.
+     */
     public HttpOpener() {
     }
 

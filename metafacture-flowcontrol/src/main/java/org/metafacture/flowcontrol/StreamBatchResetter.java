@@ -41,21 +41,44 @@ public final class StreamBatchResetter extends ForwardingStreamPipe {
     private long recordCount;
     private long batchCount;
 
+    /**
+     * Creates an instance of {@link StreamBatchResetter}.
+     */
     public StreamBatchResetter() {
     }
 
+    /**
+     * Sets the size of the batch.
+     *
+     * @param batchSize the size of the batch
+     */
     public void setBatchSize(final int batchSize) {
         this.batchSize = batchSize;
     }
 
+    /**
+     * Gets the size of the batch.
+     *
+     * @return the size of the batch
+     */
     public long getBatchSize() {
         return batchSize;
     }
 
+    /**
+     * Gets the batch count.
+     *
+     * @return the number of counted batches.
+     */
     public long getBatchCount() {
         return batchCount;
     }
 
+    /**
+     * Gets the record count.
+     *
+     * @return the number of counted records
+     */
     public long getRecordCount() {
         return recordCount;
     }

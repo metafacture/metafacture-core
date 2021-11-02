@@ -45,10 +45,19 @@ public final class ObjectLogger<T>
 
     private final String logPrefix;
 
+    /**
+     * Creates an instance of {@link ObjectLogger}.
+     */
     public ObjectLogger() {
         this("");
     }
 
+    /**
+     * Creates an instance of {@link ObjectLogger} by a given prefix of the log
+     * messages.
+     *
+     * @param logPrefix the prefix of the log messages
+     */
     public ObjectLogger(final String logPrefix) {
         this.logPrefix = logPrefix;
     }

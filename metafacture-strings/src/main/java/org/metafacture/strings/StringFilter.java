@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  * @author Christoph Böhme
  *
  */
-@Description("Only forwards records which match (or do not match) a regular expression given in the constructor")
+@Description("Only forwards records which match (or do not match) a regular expression.")
 @In(String.class)
 @Out(String.class)
 @FluxCommand("filter-strings")
@@ -43,18 +43,38 @@ public final class StringFilter extends
     private final Matcher matcher;
     private boolean passMatches = true;
 
+    /**
+     * Creates an instance of {@link StringFilter} by a given pattern.
+     *
+     * @param pattern the pattern
+     */
     public StringFilter(final String pattern) {
         this.matcher = Pattern.compile(pattern).matcher("");
     }
 
+    /**
+     * Gets the pattern.
+     *
+     * @return the pattern
+     */
     public String getPattern() {
         return matcher.pattern().pattern();
     }
 
+    /**
+     * Checks wether matches are passed.
+     *
+     * @return true if matches should pass
+     */
     public boolean isPassMatches() {
         return passMatches;
     }
 
+    /**
+     * Flags wether to pass matches or, inversely, pass everything but the matches.
+     *
+     * @param passMatches true if matches should pass, otherwise false
+     */
     public void setPassMatches(final boolean passMatches) {
         this.passMatches = passMatches;
     }

@@ -31,7 +31,9 @@ import org.metafacture.framework.StreamReceiver;
  *
  */
 public class DefaultStreamReceiver extends DefaultLifeCycle implements StreamReceiver {
-
+    /**
+     * Creates an instance of {@link DefaultStreamReceiver}.
+     */
     public DefaultStreamReceiver() {
     }
 

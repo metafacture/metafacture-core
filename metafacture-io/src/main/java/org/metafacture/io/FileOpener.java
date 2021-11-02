@@ -48,6 +48,9 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     private FileCompression compression = FileCompression.AUTO;
     private boolean decompressConcatenated = FileCompression.DEFAULT_DECOMPRESS_CONCATENATED;
 
+    /**
+     * Creates an instance of {@link FileOpener}.
+     */
     public FileOpener() {
     }
 
@@ -70,22 +73,48 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         this.encoding = encoding;
     }
 
+    /**
+     * Gets the file compression.
+     *
+     * @return the {@link FileCompression}
+     */
     public FileCompression getCompression() {
         return compression;
     }
 
+    /**
+     * * Sets the compression of the file.
+     *
+     * @param compression the {@link FileCompression}
+     */
     public void setCompression(final FileCompression compression) {
         this.compression = compression;
     }
 
+    /**
+     * Sets the compression of the file.
+     *
+     * @param compression the name of the compression.
+     */
     public void setCompression(final String compression) {
         setCompression(FileCompression.valueOf(compression.toUpperCase()));
     }
 
+    /**
+     * Checks wether the file compression is set to decompress concatenated.
+     *
+     * @return true if file compression should be decompresses concatenated
+     */
     public boolean getDecompressConcatenated() {
         return decompressConcatenated;
     }
 
+    /**
+     * Flags wether to use decompress concatenated file compression.
+     *
+     * @param decompressConcatenated true if file compression should be decompresses
+     *                               concatenated
+     */
     public void setDecompressConcatenated(final boolean decompressConcatenated) {
         this.decompressConcatenated = decompressConcatenated;
     }

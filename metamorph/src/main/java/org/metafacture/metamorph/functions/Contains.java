@@ -25,6 +25,9 @@ import org.metafacture.metamorph.api.helpers.AbstractFilter;
  */
 public final class Contains extends AbstractFilter {
 
+    /**
+     * Creates an instance of {@link Contains}.
+     */
     public Contains() {
     }
 

@@ -91,22 +91,47 @@ public final class Record {
         return RECORD_ID_MISSING;
     }
 
+    /**
+     * Gets the record format of the Label.
+     *
+     * @return the record format of the Label
+     */
     public RecordFormat getRecordFormat() {
         return label.getRecordFormat();
     }
 
+    /**
+     * Gets the record status of the Label.
+     *
+     * @return the record status of the Label
+     */
     public char getRecordStatus() {
         return label.getRecordStatus();
     }
 
+    /**
+     * Gets the impl codes.
+     *
+     * @return the impl codes
+     */
     public char[] getImplCodes() {
         return label.getImplCodes();
     }
 
+    /**
+     * Gets the systems chars of the Label.
+     *
+     * @return the system chars
+     */
     public char[] getSystemChars() {
         return label.getSystemChars();
     }
 
+    /**
+     * Gets the reserved char of the Label.
+     *
+     * @return the reserved char
+     */
     public char getReservedChar() {
         return label.getReservedChar();
     }

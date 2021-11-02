@@ -50,6 +50,9 @@ public final class PicaXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private String currentTag = "";
     private StringBuilder builder = new StringBuilder();
 
+    /**
+     * Creates an instance of {@link PicaXmlHandler}.
+     */
     public PicaXmlHandler() {
     }
 

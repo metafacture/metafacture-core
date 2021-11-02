@@ -37,7 +37,7 @@ import java.util.Map.Entry;
 import java.util.Map;
 
 /**
- * prints Flux help for a given {@link ObjectFactory}
+ * Prints Flux help for a given {@link ObjectFactory}
  *
  * @author Markus Michael Geipel
  */
@@ -46,6 +46,13 @@ public final class HelpPrinter {
         // no instances
     }
 
+    /**
+     * Prints Flux help for a given ObjectFactory. Excerpts setters and their
+     * arguments, {@code @in} annotations and {@code @out} annotations.
+     *
+     * @param factory the ObjectFactory
+     * @param out     the PrintStream to print to
+     */
     public static void print(final ObjectFactory<?> factory,
             final PrintStream out) {
         out.println("Welcome to Metafacture");

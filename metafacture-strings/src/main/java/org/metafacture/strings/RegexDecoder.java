@@ -49,10 +49,10 @@ import java.util.regex.Pattern;
  * The regular expression may contain unnamed capture groups. These are
  * ignored.
  * <p>
- * If the pattern contains a capture group named &quot;{@value
- * #ID_CAPTURE_GROUP}&quot;, the first match of this group will be used as
- * record identifier. If there is no such capture group or if it does not
- * match, the empty string is used as record identifier.
+ * If the pattern contains a capture group named {@value #ID_CAPTURE_GROUP},
+ * the first match of this group will be used as record identifier. If there
+ * is no such capture group or if it does not match, the empty string is used
+ * as record identifier.
  * <p>
  * Example: The regex
  * <pre>{@literal
@@ -93,6 +93,11 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 
     private String rawInputLiteral;
 
+    /**
+     * Constructs a RegexDecoder with a given regex.
+     *
+     * @param regex the regex
+     */
     public RegexDecoder(final String regex) {
         matcher = Pattern.compile(regex).matcher("");
         captureGroupNames = collectCaptureGroupNames(regex);
@@ -126,6 +131,11 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
         this.rawInputLiteral = rawInputLiteral;
     }
 
+    /**
+     * Gest the raw input literal.
+     *
+     * @return the raw input literal
+     */
     public String getRawInputLiteral() {
         return this.rawInputLiteral;
     }

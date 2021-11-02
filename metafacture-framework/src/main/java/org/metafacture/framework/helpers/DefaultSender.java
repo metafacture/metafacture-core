@@ -39,9 +39,17 @@ public class DefaultSender<T extends Receiver> implements Sender<T> {
     private T receiver;
     private boolean isClosed;
 
+    /**
+     * Creates an instance of {@link DefaultSender}.
+     */
     public DefaultSender() {
     }
 
+    /**
+     * Checks wether the DefaultSender is closed.
+     *
+     * @return true if the DefaultSender is closed
+     */
     public final boolean isClosed() {
         return isClosed;
     }

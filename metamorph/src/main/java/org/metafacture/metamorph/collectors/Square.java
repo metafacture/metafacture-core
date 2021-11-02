@@ -36,17 +36,35 @@ public final class Square extends AbstractFlushingCollect {
     private String postfix = "";
     private String delimiter = "";
 
+    /**
+     * Creates an instance of {@link Square}.
+     */
     public Square() {
     }
 
+    /**
+     * Sets the prefix.
+     *
+     * @param prefix the prefix
+     */
     public void setPrefix(final String prefix) {
         this.prefix = prefix;
     }
 
+    /**
+     * Sets the postfix.
+     *
+     * @param postfix the postfix
+     */
     public void setPostfix(final String postfix) {
         this.postfix = postfix;
     }
 
+    /**
+     * Sets the delimiter.
+     *
+     * @param delimiter the delimiter
+     */
     public void setDelimiter(final String delimiter) {
         this.delimiter = delimiter;
     }

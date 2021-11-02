@@ -34,9 +34,12 @@ public final class Choose extends AbstractFlushingCollect {
     private String value;
     private String name;
     private int priority = Integer.MAX_VALUE;
-    private final Map<NamedValueSource, Integer> priorities = new HashMap<NamedValueSource, Integer>();
+    private final Map<NamedValueSource, Integer> priorities = new HashMap<>();
     private int nextPriority;
 
+    /**
+     * Creates an instance of {@link Choose}.
+     */
     public Choose() {
     }
 

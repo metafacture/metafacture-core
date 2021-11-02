@@ -33,15 +33,20 @@ public final class StringMap extends DefaultStreamReceiver implements Map<String
 
     private boolean closed;
     private Collection<Map<String, String>> collection;
-    private Map<String, String> map;
+    private Map<String, String> map = new HashMap<>();
 
+    /**
+     * Creates an instance of {@link StringMap}.
+     */
     public StringMap() {
-        map = new HashMap<String, String>();
-        collection = null;
     }
 
+    /**
+     * Constructs a StringMap with a given Collection.
+     *
+     * @param collection the Collection
+     */
     public StringMap(final Collection<Map<String, String>> collection) {
-        map = new HashMap<String, String>();
         this.collection = collection;
     }
 
@@ -56,6 +61,11 @@ public final class StringMap extends DefaultStreamReceiver implements Map<String
         this.map = map;
     }
 
+    /**
+     * Checks if the StringMap is closed.
+     *
+     * @return true if StringMap is closed.
+     */
     public boolean isClosed() {
         return closed;
     }

@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 /**
+ * Reads triples.
+ *
  * @author Christoph Böhme
  *
  */
@@ -37,6 +39,9 @@ public final class TripleReader extends DefaultObjectPipe<String, ObjectReceiver
 
     public static final int BUFFERSIZE = 2048;
 
+    /**
+     * Creates an instance of {@link TripleReader}.
+     */
     public TripleReader() {
     }
 

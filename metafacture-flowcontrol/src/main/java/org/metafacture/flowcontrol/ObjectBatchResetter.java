@@ -42,16 +42,19 @@ public class ObjectBatchResetter<T> extends DefaultObjectPipe<T, ObjectReceiver<
     private long batchCount;
     private int objectCount;
 
+    /**
+     * Creates an instance of {@link ObjectBatchResetter}.
+     */
     public ObjectBatchResetter() {
     }
 
     /**
      * Number of objects after which a <i>reset-stream</i> event is triggered.
      * <p>
-     * The default value is {@value DEFAULT_BATCH_SIZE}.
+     * The default value is {@value #DEFAULT_BATCH_SIZE}.
      * <p>
-     * This parameter can be changed anytime during processing. If the new value
-     * is less than the number of received objects a <i>reset-stream</i> event is
+     * This parameter can be changed anytime during processing. If the new value is
+     * less than the number of received objects a <i>reset-stream</i> event is
      * emitted when the next object is received.
      *
      * @param batchSize number of objects before a <i>reset-stream</i> event is
@@ -61,6 +64,11 @@ public class ObjectBatchResetter<T> extends DefaultObjectPipe<T, ObjectReceiver<
         this.batchSize = batchSize;
     }
 
+    /**
+     * Gets the size of the batch.
+     *
+     * @return the size of the batch
+     */
     public int getBatchSize() {
         return batchSize;
     }

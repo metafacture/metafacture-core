@@ -41,7 +41,7 @@ public final class Marc21EventNames {
     /**
      * Name of the <i>literal</i> event emitted for the record status field.
      * <p>
-     * The name of the literal is &quot;{@value #RECORD_STATUS_LITERAL}&quot;.
+     * The name of the literal is {@value #RECORD_STATUS_LITERAL}.
      * <p>
      * The record status is specified at position 5 in the record leader.
      *
@@ -54,8 +54,7 @@ public final class Marc21EventNames {
      * Name of the <i>literal</i> event emitted for the bibliographic level
      * field.
      * <p>
-     * The name of the literal is
-     * &quot;{@value #BIBLIOGRAPHIC_LEVEL_LITERAL}&quot;.
+     * The name of the literal is {@value #BIBLIOGRAPHIC_LEVEL_LITERAL}.
      * <p>
      * The bibliographic level is specified at position 7 in the record leader.
      *
@@ -67,7 +66,7 @@ public final class Marc21EventNames {
     /**
      * Name of the <i>literal</i> event emitted for the type of control field.
      * <p>
-     * The name of the literal is &quot;{@value #TYPE_OF_CONTROL_LITERAL}&quot;.
+     * The name of the literal is {@value #TYPE_OF_CONTROL_LITERAL}.
      * <p>
      * The type of control is specified at position 8 in the record leader.
      *
@@ -80,7 +79,7 @@ public final class Marc21EventNames {
      * Name of the <i>literal</i> event emitted for the character coding scheme
      * field.
      * <p>
-     * The name of the literal is &quot;{@value #CHARACTER_CODING_LITERAL}&quot;.
+     * The name of the literal is {@value #CHARACTER_CODING_LITERAL}.
      * <p>
      * The character coding scheme is specified at position 9 in the record
      * leader.
@@ -93,7 +92,7 @@ public final class Marc21EventNames {
     /**
      * Name of the <i>literal</i> event emitted for the encoding level field.
      * <p>
-     * The name of the literal is &quot;{@value #ENCODING_LEVEL_LITERAL}&quot;.
+     * The name of the literal is {@value #ENCODING_LEVEL_LITERAL}.
      * <p>
      * The encoding level is specified at position 17 in the record leader.
      *
@@ -106,7 +105,7 @@ public final class Marc21EventNames {
      * Name of the <i>literal</i> event emitted for the descriptive cataloging
      * form field.
      * <p>
-     * The name of the literal is &quot;{@value #CATALOGING_FORM_LITERAL}&quot;.
+     * The name of the literal is {@value #CATALOGING_FORM_LITERAL}.
      * <p>
      * The descriptive cataloging form is specified at position 18 in the record
      * leader.
@@ -120,7 +119,7 @@ public final class Marc21EventNames {
      * Name of the <i>literal</i> event emitted for the multipart resource
      * record level field.
      * <p>
-     * The name of the literal is &quot;{@value #MULTIPART_LEVEL_LITERAL}&quot;.
+     * The name of the literal is {@value #MULTIPART_LEVEL_LITERAL}.
      * <p>
      * The multipart resource record level is specified at position 19 in the
      * record leader.
@@ -133,7 +132,7 @@ public final class Marc21EventNames {
     /**
      * Name of the <i>literal</i> event emitted for the type of record field.
      * <p>
-     * The name of the literal is &quot;{@value #RECORD_TYPE_LITERAL}&quot;.
+     * The name of the literal is {@value #RECORD_TYPE_LITERAL}.
      * <p>
      * The type of record is specified at position 6 in the record leader.
      *

@@ -63,6 +63,9 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     private String arrayMarker = ARRAY_MARKER;
 
+    /**
+     * Creates an instance of {@link YamlEncoder} if no IOException occurs.
+     */
     public YamlEncoder() {
         try {
             yamlGenerator = new YAMLFactory().createGenerator(writer);
@@ -72,18 +75,38 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         }
     }
 
+    /**
+     * Sets the array marker.
+     *
+     * @param arrayMarker the array marker
+     */
     public void setArrayMarker(final String arrayMarker) {
         this.arrayMarker = arrayMarker;
     }
 
+    /**
+     * Gets the array marker.
+     *
+     * @return the array marker
+     */
     public String getArrayMarker() {
         return arrayMarker;
     }
 
+    /**
+     * Flags wether the data should be pretty printed.
+     *
+     * @param prettyPrinting true if the data should be pretty printed
+     */
     public void setPrettyPrinting(final boolean prettyPrinting) {
         yamlGenerator.setPrettyPrinter(prettyPrinting ? new DefaultPrettyPrinter((SerializableString) null) : null);
     }
 
+    /**
+     * Checks wether to pretty print.
+     *
+     * @return true if the data should be pretty printed
+     */
     public boolean getPrettyPrinting() {
         return yamlGenerator.getPrettyPrinter() != null;
     }

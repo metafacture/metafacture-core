@@ -26,10 +26,22 @@ public class MorphExecutionException extends RuntimeException {
 
     private static final long serialVersionUID = 0L;
 
+    /**
+     * Creates an instance of {@link MorphExecutionException} by a given message.
+     *
+     * @param message the message
+     */
     public MorphExecutionException(final String message) {
         super(message);
     }
 
+    /**
+     * Creates an instance of {@link MorphExecutionException} by a given message and
+     * cause.
+     *
+     * @param message the message
+     * @param cause   the @{link Throwable}
+     */
     public MorphExecutionException(final String message, final Throwable cause) {
         super(message, cause);
     }
