@@ -66,7 +66,7 @@ Our integration server automatically publishes successful builds of all branches
 TODO: Link to getting started tutorial
 -->
 
-# Building metafacture-core from source
+## Building metafacture-core from source
 
 Building metafacture-core from source is easy. All you need is git and JDK 8:
 
