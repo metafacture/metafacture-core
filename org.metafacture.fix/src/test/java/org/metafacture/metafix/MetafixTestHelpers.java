@@ -47,7 +47,7 @@ public final class MetafixTestHelpers {
 
     public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Consumer<Metafix> in,
             final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
-        assertFix(receiver, fixDef, in, (s, f) -> out.accept(s, f), Metafix.NO_VARS);
+        assertFix(receiver, fixDef, in, out, Metafix.NO_VARS);
     }
 
     public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Map<String, String> vars,
@@ -57,7 +57,7 @@ public final class MetafixTestHelpers {
 
     public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Map<String, String> vars,
             final Consumer<Metafix> in, final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
-        assertFix(receiver, fixDef, in, (s, f) -> out.accept(s, f), vars);
+        assertFix(receiver, fixDef, in, out, vars);
     }
 
     private static void assertFix(final StreamReceiver receiver, final List<String> fixLines, final Consumer<Metafix> in,
