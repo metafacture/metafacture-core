@@ -50,8 +50,8 @@ enum FixMethod {
                 final Map<String, String> options) {
             final String key = params.get(0);
             final List<String> toAdd = params.subList(1, params.size());
-            if (key.endsWith(APPEND)) {
-                Metafix.addAll(record, key.replace(APPEND, EMPTY), toAdd);
+            if (key.endsWith(DOT_APPEND)) {
+                Metafix.addAll(record, key.replace(DOT_APPEND, EMPTY), toAdd);
             }
             else {
                 record.put(key, toAdd);
@@ -63,8 +63,8 @@ enum FixMethod {
         public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
             final String key = params.get(0);
-            final Object val = record.get(key.replace(APPEND, EMPTY));
-            if (key.endsWith(APPEND) && val instanceof List) {
+            final Object val = record.get(key.replace(DOT_APPEND, EMPTY));
+            if (key.endsWith(DOT_APPEND) && val instanceof List) {
                 ((List<Object>) val).add(options);
             }
             else {
@@ -273,7 +273,9 @@ enum FixMethod {
 
     private static final String NESTED = "Nested non-map / non-list: ";
     private static final String EMPTY = "";
-    private static final String APPEND = ".$append";
+    private static final String APPEND = "$append";
+    private static final String DOT_APPEND = "." + APPEND;
+    private static final String LAST = "$last";
 
     private static void applyToFields(final Map<String, Object> record, final List<String> params,
             final Function<String, String> fun) {
@@ -330,12 +332,12 @@ enum FixMethod {
         final List<Object> nestedList = (List<Object>) nested;
         final Map<String, Object> nestedMap;
         switch (remainingKeys[0]) {
-            case "$append":
+            case APPEND:
                 nestedMap = new LinkedHashMap<>();
                 nestedList.add(nestedMap);
                 insert(mode, nestedMap, Arrays.copyOfRange(remainingKeys, 1, remainingKeys.length), value);
                 break;
-            case "$last":
+            case LAST:
                 final Object last = nestedList.get(nestedList.size() - 1);
                 if (last instanceof Map) {
                     nestedMap = (Map<String, Object>) last;
