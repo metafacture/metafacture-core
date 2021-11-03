@@ -37,8 +37,9 @@ public class InterpreterTest {
     }
 
     @Test
+    @SuppressWarnings("checkstyle:MagicNumber")
     public void shouldInterpretNested() throws Exception {
-        interpret(3, // checkstyle-disable-line MagicNumber
+        interpret(3,
                 "do marc_each()",
                 "\tif marc_has(f700)",
                 "\t\tmarc_map(f700a,authors.$append)",
