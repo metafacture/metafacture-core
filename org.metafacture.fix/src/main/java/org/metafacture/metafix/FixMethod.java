@@ -203,21 +203,13 @@ enum FixMethod {
     retain {
         public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            new HashSet<>(record.keySet()).forEach(key -> {
-                if (!params.contains(key)) {
-                    record.remove(key);
-                }
-            });
+            record.keySet().retainAll(params);
         }
     },
     vacuum {
         public void apply(final Map<String, Object> record, final List<String> params,
                 final Map<String, String> options) {
-            new HashSet<>(record.keySet()).forEach(key -> {
-                if (EMPTY.equals(record.get(key))) {
-                    record.remove(key, EMPTY);
-                }
-            });
+            record.values().removeIf(EMPTY::equals);
         }
     },
     // FIELD-LEVEL METHODS:
