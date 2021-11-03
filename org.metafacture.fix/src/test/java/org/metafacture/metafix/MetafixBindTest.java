@@ -196,7 +196,7 @@ public class MetafixBindTest {
     }
 
     @Test
-    @Disabled // TODO: how to handle repeated entities: turn to array vs. merge because it's the same?
+    @Disabled("TODO: how to handle repeated entities: turn to array vs. merge because it's the same?")
     public void doListEntitesWithFieldsToEntities() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list('path': 'creator', 'var': 'c')",
@@ -237,7 +237,7 @@ public class MetafixBindTest {
     }
 
     @Test
-    @Disabled // implement Fix-style binds with collectors?
+    @Disabled("implement Fix-style binds with collectors?")
     public void ifInCollector() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do entity('author')",
@@ -261,7 +261,7 @@ public class MetafixBindTest {
     }
 
     @Test
-    @Disabled // implement Fix-style binds with collectors?
+    @Disabled("implement Fix-style binds with collectors?")
     public void ifInCollectorMultiRecords() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do entity('author')",
@@ -305,7 +305,7 @@ public class MetafixBindTest {
     }
 
     @Test
-    @Disabled // implement Fix-style binds with collectors?
+    @Disabled("implement Fix-style binds with collectors?")
     public void ifInCollectorChoose() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do choose(flushWith: 'record')",
@@ -332,7 +332,7 @@ public class MetafixBindTest {
     }
 
     @Test
-    @Disabled // implement Fix-style binds with collectors?
+    @Disabled("implement Fix-style binds with collectors?")
     public void ifInCollectorCombine() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do combine(name: 'fullName', value: '${first} ${last}')",

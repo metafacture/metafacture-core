@@ -36,7 +36,7 @@ import java.util.Arrays;
  *
  */
 @ExtendWith(MockitoExtension.class)
-@Disabled // TODO: support Fix-style selectors https://github.com/LibreCat/Catmandu/wiki/Selectors
+@Disabled("TODO: support Fix-style selectors https://github.com/LibreCat/Catmandu/wiki/Selectors")
 public final class MetafixSelectorTest {
 
     @RegisterExtension

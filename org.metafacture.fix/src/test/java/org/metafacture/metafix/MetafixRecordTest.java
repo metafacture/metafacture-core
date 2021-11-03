@@ -85,7 +85,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled // TODO: how to handle repeated entities: turn to array vs. merge because it's the same?
+    @Disabled("TODO: how to handle repeated entities: turn to array vs. merge because it's the same?")
     public void entitiesPassThroughRepeatEntity() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "vacuum()"),

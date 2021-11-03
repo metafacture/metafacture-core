@@ -315,7 +315,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled // Use SimpleRegexTrie/WildcardTrie
+    @Disabled("Use SimpleRegexTrie/WildcardTrie")
     public void alternation() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "trim('title-1|title-2')"),
@@ -345,7 +345,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled // Use SimpleRegexTrie/WildcardTrie
+    @Disabled("Use SimpleRegexTrie/WildcardTrie")
     public void wildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "trim('title-?')"),
@@ -375,7 +375,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled // Use SimpleRegexTrie
+    @Disabled("Use SimpleRegexTrie")
     public void characterClass() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "trim('title-[12]')"),
