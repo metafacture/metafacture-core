@@ -50,7 +50,7 @@ enum FixMethod {
                 final Map<String, String> options) {
             final String key = params.get(0);
             final List<String> toAdd = params.subList(1, params.size());
-            if (key.contains(APPEND)) {
+            if (key.endsWith(APPEND)) {
                 Metafix.addAll(record, key.replace(APPEND, EMPTY), toAdd);
             }
             else {
@@ -64,7 +64,7 @@ enum FixMethod {
                 final Map<String, String> options) {
             final String key = params.get(0);
             final Object val = record.get(key.replace(APPEND, EMPTY));
-            if (key.contains(APPEND) && val instanceof List) {
+            if (key.endsWith(APPEND) && val instanceof List) {
                 ((List<Object>) val).add(options);
             }
             else {
