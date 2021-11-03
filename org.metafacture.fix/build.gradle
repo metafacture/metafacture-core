@@ -50,6 +50,11 @@ task install(dependsOn: publishToMavenLocal,
   doFirst { println "This task is deprecated; use 'publishToMavenLocal' instead." }
 }
 
+task validateFixFile(type: JavaExec) {
+  mainClass = 'org.metafacture.metafix.FixStandaloneSetup'
+  classpath = sourceSets.main.runtimeClasspath
+}
+
 def xtextFile = 'src/main/java/org/metafacture/metafix/Fix.xtext'
 
 task validateXtextLanguage(type: JavaExec) {

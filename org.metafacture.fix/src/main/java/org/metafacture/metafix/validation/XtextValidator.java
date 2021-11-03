@@ -1,17 +1,17 @@
 package org.metafacture.metafix.validation;
 
-import com.google.inject.Injector;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.xtext.ISetup;
 import org.eclipse.xtext.XtextStandaloneSetup;
+import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
-import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -23,21 +23,18 @@ public class XtextValidator {
         throw new IllegalAccessError("Utility class");
     }
 
-    public static boolean validate(final URI uri) throws IOException {
-        final Injector injector = new XtextStandaloneSetup().createInjectorAndDoEMFRegistration();
-        final Resource resource = injector.getInstance(ResourceSet.class).getResource(uri, true);
-        resource.load(null);
+    private static boolean validate(final XtextResource resource, final ISetup setup) {
+        final List<Issue> issues = resource.getResourceServiceProvider()
+            .getResourceValidator().validate(resource, CheckMode.ALL, CancelIndicator.NullImpl);
 
-        final List<Issue> issues = injector.getInstance(IResourceValidator.class)
-            .validate(resource, CheckMode.ALL, CancelIndicator.NullImpl);
         final int count = issues.size();
 
         if (count > 0) {
-            LOG.warn("The Xtext file '{}' has {} issue{}:", resource.getURI(), count, count > 1 ? "s" : "");
+            LOG.warn("The {} file '{}' has {} issue{}:",
+                    setup.getClass().getSimpleName(), resource.getURI().toFileString(), count, count > 1 ? "s" : "");
 
-            for (final Issue issue : issues) {
-                LOG.warn("- {}: {} ({}:{})", issue.getSeverity(), issue.getMessage(), issue.getLineNumber(), issue.getColumn());
-            }
+            issues.forEach(i -> LOG.warn("- {}: {} ({}:{})",
+                        i.getSeverity(), i.getMessage(), i.getLineNumber(), i.getColumn()));
 
             return false;
         }
@@ -45,13 +42,37 @@ public class XtextValidator {
         return true;
     }
 
-    public static void main(final String[] args) throws IOException {
-        if (args == null || args.length != 1) {
-            throw new IllegalArgumentException(String.format("Usage: %s <xtext-file>",
-                        XtextValidator.class.getName()));
+    public static boolean validate(final String path, final ISetup setup) {
+        return validate(getResource(path, setup), setup);
+    }
+
+    private static XtextResource getResource(final String path, final ISetup setup) {
+        final File file = new File(path);
+        String absolutePath;
+
+        try {
+            absolutePath = file.getCanonicalPath();
+        }
+        catch (final IOException e) {
+            absolutePath = file.getAbsolutePath();
         }
 
-        System.exit(validate(URI.createURI(args[0])) ? 0 : 1);
+        return (XtextResource) setup.createInjectorAndDoEMFRegistration()
+            .getInstance(XtextResourceSet.class).getResource(URI.createFileURI(absolutePath), true);
+    }
+
+    public static XtextResource getValidatedResource(final String path, final ISetup setup) {
+        final XtextResource resource = getResource(path, setup);
+        validate(resource, setup);
+        return resource;
+    }
+
+    public static void main(final String[] args) {
+        if (args != null && args.length == 1) {
+            System.exit(validate(args[0], new XtextStandaloneSetup()) ? 0 : 1);
+        }
+
+        throw new IllegalArgumentException(String.format("Usage: %s <xtext-file>", XtextValidator.class.getName()));
     }
 
 }
