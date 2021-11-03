@@ -50,8 +50,8 @@ public class MetafixRecordTest {
 
     @Test
     public void entitiesPassThrough() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "vacuum()"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "vacuum()"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("deep");
@@ -72,7 +72,7 @@ public class MetafixRecordTest {
 
     @Test
     public void internalIdUsage() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "copy_field('_id', id)"),
             i -> {
                 i.startRecord("1");
@@ -87,8 +87,8 @@ public class MetafixRecordTest {
     @Test
     @Disabled // TODO: how to handle repeated entities: turn to array vs. merge because it's the same?
     public void entitiesPassThroughRepeatEntity() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "vacuum()"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "vacuum()"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("some");
@@ -114,8 +114,8 @@ public class MetafixRecordTest {
     @Test
     @SuppressWarnings("checkstyle:MagicNumber")
     public void entitiesPassThroughRepeatNestedEntity() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "vacuum()"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "vacuum()"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("deep");
@@ -141,9 +141,9 @@ public class MetafixRecordTest {
 
     @Test
     public void setEmpty() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_field('my.nested.name','patrick')",
-                "set_field('your.nested.name','nicolas')"), //
+                "set_field('your.nested.name','nicolas')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -163,9 +163,9 @@ public class MetafixRecordTest {
 
     @Test
     public void setExisting() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_field('my.nested.name','patrick')",
-                "set_field('your.nested.name','nicolas')"), //
+                "set_field('your.nested.name','nicolas')"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("my");
@@ -196,19 +196,19 @@ public class MetafixRecordTest {
     @Test
     @SuppressWarnings("checkstyle:ExecutableStatementCount")
     public void add() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "add_field('my.name','patrick')",
-                "add_field('my.name','nicolas')"), //
+                "add_field('my.name','nicolas')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
-                //
+
                 i.startRecord("2");
                 i.startEntity("my");
                 i.literal("name", "max");
                 i.endEntity();
                 i.endRecord();
-                //
+
                 i.startRecord("3");
                 i.endRecord();
             }, (o, f) -> {
@@ -219,7 +219,7 @@ public class MetafixRecordTest {
                 o.get().literal("2", "nicolas");
                 f.apply(2).endEntity();
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("2");
                 o.get().startEntity("my");
                 o.get().startEntity("name[]");
@@ -228,7 +228,7 @@ public class MetafixRecordTest {
                 o.get().literal("3", "nicolas");
                 f.apply(2).endEntity();
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("3");
                 o.get().startEntity("my");
                 o.get().startEntity("name[]");
@@ -243,23 +243,23 @@ public class MetafixRecordTest {
     public void move() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(// TODO: dot noation in move_field
                 "move_field('my.name','your.name')",
-                "move_field('missing','whatever')"), //
+                "move_field('missing','whatever')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
-                //
+
                 i.startRecord("2");
                 i.startEntity("my");
                 i.literal("name", "max");
                 i.endEntity();
                 i.endRecord();
-                //
+
                 i.startRecord("3");
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("2");
                 o.get().startEntity("my");
                 o.get().endEntity();
@@ -267,7 +267,7 @@ public class MetafixRecordTest {
                 o.get().literal("name", "max");
                 o.get().endEntity();
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("3");
                 o.get().endRecord();
             });
@@ -276,30 +276,30 @@ public class MetafixRecordTest {
     @Test
     public void copy() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(// TODO dot notation in copy_field
-                "copy_field('your.name','your.name2')"), //
+                "copy_field('your.name','your.name2')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
-                //
+
                 i.startRecord("2");
                 i.startEntity("your");
                 i.literal("name", "max");
                 i.endEntity();
                 i.endRecord();
-                //
+
                 i.startRecord("3");
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("2");
                 o.get().startEntity("your");
                 o.get().literal("name", "max");
                 o.get().literal("name2", "max");
                 o.get().endEntity();
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("3");
                 o.get().endRecord();
             });
@@ -310,7 +310,7 @@ public class MetafixRecordTest {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 // "set_array('author')", <- results in separate objects/entities here
                 "copy_field('your.name','author.name')",
-                "remove_field('your')"), //
+                "remove_field('your')"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("your");
@@ -334,7 +334,7 @@ public class MetafixRecordTest {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('author')",
                 "copy_field('your.name','author.name')",
-                "remove_field('your')"), //
+                "remove_field('your')"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("your");
@@ -362,7 +362,7 @@ public class MetafixRecordTest {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('author')",
                 "copy_field('your.name', 'author')",
-                "remove_field('your')"), //
+                "remove_field('your')"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("your");
@@ -382,29 +382,29 @@ public class MetafixRecordTest {
 
     @Test
     public void removeLiteral() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "remove_field('your.name')"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "remove_field('your.name')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
-                //
+
                 i.startRecord("2");
                 i.startEntity("your");
                 i.literal("name", "max");
                 i.endEntity();
                 i.endRecord();
-                //
+
                 i.startRecord("3");
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("2");
                 o.get().startEntity("your");
                 o.get().endEntity();
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("3");
                 o.get().endRecord();
             });
@@ -412,28 +412,28 @@ public class MetafixRecordTest {
 
     @Test
     public void removeLiteralAndEntity() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "remove_field('your.name')", //
-                "remove_field('your')"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "remove_field('your.name')",
+                "remove_field('your')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
-                //
+
                 i.startRecord("2");
                 i.startEntity("your");
                 i.literal("name", "max");
                 i.endEntity();
                 i.endRecord();
-                //
+
                 i.startRecord("3");
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("2");
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("3");
                 o.get().endRecord();
             });
@@ -441,27 +441,27 @@ public class MetafixRecordTest {
 
     @Test
     public void removeEntity() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "remove_field('your')"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "remove_field('your')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
-                //
+
                 i.startRecord("2");
                 i.startEntity("your");
                 i.literal("name", "max");
                 i.endEntity();
                 i.endRecord();
-                //
+
                 i.startRecord("3");
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("2");
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("3");
                 o.get().endRecord();
             });
@@ -469,8 +469,8 @@ public class MetafixRecordTest {
 
     @Test
     public void setArray() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "set_array('foo','a','b','c')"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('foo','a','b','c')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -487,8 +487,8 @@ public class MetafixRecordTest {
 
     @Test
     public void setHash() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "set_hash('foo','a': 'b','c': 'd')"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_hash('foo','a': 'b','c': 'd')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -504,9 +504,9 @@ public class MetafixRecordTest {
 
     @Test
     public void paste() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "paste('my.string','m.n.z','m.n.a','m.n.b','m.n.c','m.n.d','m.n.e')",
-                "remove_field('m')"), //
+                "remove_field('m')"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("m");
@@ -529,9 +529,9 @@ public class MetafixRecordTest {
 
     @Test
     public void pasteWithCustomSep() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "paste('my.string','a','b','c','d','join_char': ', ')",
-                "remove_field('a','b','c','d')"), //
+                "remove_field('a','b','c','d')"),
             i -> {
                 i.startRecord("1");
                 i.literal("a", "eeny");
@@ -550,9 +550,9 @@ public class MetafixRecordTest {
 
     @Test
     public void pasteWithLiteralStrings() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "paste('my.string','~Hi','a','~how are you?')",
-                "remove_field('a','b','c','d')"), //
+                "remove_field('a','b','c','d')"),
             i -> {
                 i.startRecord("1");
                 i.literal("a", "eeny");
@@ -571,9 +571,9 @@ public class MetafixRecordTest {
 
     @Test
     public void hashFromArray() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "set_array('foo','a','b','c','d')", //
-                "hash('foo')"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('foo','a','b','c','d')",
+                "hash('foo')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -589,9 +589,9 @@ public class MetafixRecordTest {
 
     @Test
     public void arrayFromHash() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "set_hash('foo','a': 'b','c': 'd')", //
-                "array('foo')"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_hash('foo','a': 'b','c': 'd')",
+                "array('foo')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -609,10 +609,10 @@ public class MetafixRecordTest {
 
     @Test
     public void reject() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "if exists ('_metadata.error')", //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if exists ('_metadata.error')",
                 "  reject()",
-                "end"), //
+                "end"),
             i -> {
                 i.startRecord("1");
                 i.literal("_metadata.error", "details");
@@ -627,9 +627,9 @@ public class MetafixRecordTest {
 
     @Test
     public void appendArray() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "set_array('nums', '1')", //
-                "set_array('nums.$append', '2', '3')"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('nums', '1')",
+                "set_array('nums.$append', '2', '3')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -646,9 +646,9 @@ public class MetafixRecordTest {
 
     @Test
     public void mixedArray() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "set_array('@context', 'https://w3id.org/kim/lrmi-profile/draft/context.jsonld')", //
-                "set_hash('@context.$append', '@language': 'de')"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('@context', 'https://w3id.org/kim/lrmi-profile/draft/context.jsonld')",
+                "set_hash('@context.$append', '@language': 'de')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -665,8 +665,8 @@ public class MetafixRecordTest {
 
     @Test
     public void retain() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "retain('1','3')"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "retain('1','3')"),
             i -> {
                 i.startRecord("1");
                 i.literal("1", "one");
@@ -684,8 +684,8 @@ public class MetafixRecordTest {
 
     @Test
     public void vacuum() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "vacuum()"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "vacuum()"),
             i -> {
                 i.startRecord("1");
                 i.literal("1", "one");

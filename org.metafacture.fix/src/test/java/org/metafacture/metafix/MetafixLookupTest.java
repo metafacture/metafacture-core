@@ -49,24 +49,24 @@ public class MetafixLookupTest {
 
     @Test
     public void inline() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "lookup('title', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('title', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
-                //
+
                 i.startRecord("2");
                 i.literal("title", "Aloha");
                 i.literal("title", "Moin");
                 i.literal("title", "Hey");
                 i.endRecord();
-                //
+
                 i.startRecord("3");
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("2");
                 o.get().startEntity("title[]");
                 o.get().literal("1", "Alohaeha");
@@ -74,7 +74,7 @@ public class MetafixLookupTest {
                 o.get().literal("3", "Tach");
                 o.get().endEntity();
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("3");
                 o.get().endRecord();
             });
@@ -82,8 +82,8 @@ public class MetafixLookupTest {
 
     @Test
     public void inlineDotNotationNested() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "lookup('data.title', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('data.title', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("data");
@@ -106,25 +106,25 @@ public class MetafixLookupTest {
 
     @Test
     public void csv() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "lookup('title', 'src/test/java/org/metafacture/metafix/maps/test.csv')"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('title', 'src/test/java/org/metafacture/metafix/maps/test.csv')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
-                //
+
                 i.startRecord("2");
-                //
+
                 i.literal("title", "Aloha");
                 i.literal("title", "Moin");
                 i.literal("title", "Hey");
                 i.endRecord();
-                //
+
                 i.startRecord("3");
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("2");
                 o.get().startEntity("title[]");
                 o.get().literal("1", "Alohaeha");
@@ -132,7 +132,7 @@ public class MetafixLookupTest {
                 o.get().literal("3", "Tach");
                 o.get().endEntity();
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("3");
                 o.get().endRecord();
             });
@@ -140,24 +140,24 @@ public class MetafixLookupTest {
 
     @Test
     public void tsv() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "lookup('title', 'src/test/java/org/metafacture/metafix/maps/test.tsv', sep_char:'\t')"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('title', 'src/test/java/org/metafacture/metafix/maps/test.tsv', sep_char:'\t')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
-                //
+
                 i.startRecord("2");
                 i.literal("title", "Aloha");
                 i.literal("title", "Moin");
                 i.literal("title", "Hey");
                 i.endRecord();
-                //
+
                 i.startRecord("3");
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("2");
                 o.get().startEntity("title[]");
                 o.get().literal("1", "Alohaeha");
@@ -165,7 +165,7 @@ public class MetafixLookupTest {
                 o.get().literal("3", "Tach");
                 o.get().endEntity();
                 o.get().endRecord();
-                //
+
                 o.get().startRecord("3");
                 o.get().endRecord();
             });

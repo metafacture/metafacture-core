@@ -49,13 +49,13 @@ public final class MetafixSelectorTest {
 
     @Test
     public void reject() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "reject exists(error)"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "reject exists(error)"),
             i -> {
                 i.startRecord("1");
                 i.literal("error", "details");
                 i.endRecord();
-                //
+
                 i.startRecord("2");
                 i.endRecord();
             }, o -> {
@@ -67,15 +67,15 @@ public final class MetafixSelectorTest {
 
     @Test
     public void rejectWithExplicitConditional() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(//
-                "if exists(error)", //
-                "  reject()", //
-                "end"), //
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if exists(error)",
+                "  reject()",
+                "end"),
             i -> {
                 i.startRecord("1");
                 i.literal("error", "details");
                 i.endRecord();
-                //
+
                 i.startRecord("2");
                 i.endRecord();
             }, o -> {
