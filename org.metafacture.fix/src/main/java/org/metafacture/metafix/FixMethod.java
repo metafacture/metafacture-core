@@ -16,15 +16,11 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.framework.MetafactureException;
 import org.metafacture.metamorph.maps.FileMap;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -143,12 +139,23 @@ enum FixMethod {
                 final Matcher m = p.matcher(v.toString());
                 if (m.matches()) {
                     record.remove(params.get(0));
-                    final Map<String, Integer> namedGroups = getNamedGroups(p);
-                    if (!namedGroups.isEmpty()) {
-                        final Map<String, String> result = new HashMap<>();
-                        namedGroups.keySet().forEach(k -> {
-                            result.put(k, m.group(namedGroups.get(k)));
-                        });
+
+                    /**
+                     * {@code Pattern.namedGroups()} not available as API,
+                     * see https://stackoverflow.com/a/65012527.
+                     *
+                     * Assumptions: 1. Named groups are not escaped/quoted;
+                     * 2. Named groups are not mixed with unnamed groups.
+                     */
+                    final Matcher groupMatcher = NAMED_GROUP_PATTERN.matcher(p.pattern());
+                    final Map<String, String> result = new LinkedHashMap<>();
+                    int count = 0;
+
+                    while (groupMatcher.find()) {
+                        result.put(groupMatcher.group(1), m.group(++count));
+                    }
+
+                    if (count > 0) {
                         Metafix.add(record, params.get(0), result);
                     }
                     else {
@@ -158,24 +165,6 @@ enum FixMethod {
                     }
                 }
             });
-        }
-
-        @SuppressWarnings("unchecked")
-        private Map<String, Integer> getNamedGroups(final Pattern regex) {
-            try {
-                // Not available as API, see https://stackoverflow.com/a/15596145/18154:
-                final Method namedGroupsMethod = Pattern.class.getDeclaredMethod("namedGroups");
-                namedGroupsMethod.setAccessible(true);
-                Map<String, Integer> namedGroups = null;
-                namedGroups = (Map<String, Integer>) namedGroupsMethod.invoke(regex);
-                if (namedGroups == null) {
-                    throw new InternalError();
-                }
-                return Collections.unmodifiableMap(namedGroups);
-            }
-            catch (final NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                throw new MetafactureException(e);
-            }
         }
     },
     paste {
@@ -270,6 +259,8 @@ enum FixMethod {
             return fileMap;
         }
     };
+
+    private static final Pattern NAMED_GROUP_PATTERN = Pattern.compile("\\(\\?<(.+?)>");
 
     private static final String NESTED = "Nested non-map / non-list: ";
     private static final String EMPTY = "";

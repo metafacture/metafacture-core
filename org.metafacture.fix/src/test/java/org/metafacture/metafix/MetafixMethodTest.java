@@ -306,9 +306,29 @@ public class MetafixMethodTest {
             }, o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("date");
-                o.get().literal("month", "03");
                 o.get().literal("year", "2015");
+                o.get().literal("month", "03");
                 o.get().literal("day", "07");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void parseTextNestedNamedGroups() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "parse_text(data, '.(?<outer1>.(?<inner1>.).(?<inner2>.).).(?<outer2>.).')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("data", "abcdefghi");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().literal("outer1", "bcdef");
+                o.get().literal("inner1", "c");
+                o.get().literal("inner2", "e");
+                o.get().literal("outer2", "h");
                 o.get().endEntity();
                 o.get().endRecord();
             });
