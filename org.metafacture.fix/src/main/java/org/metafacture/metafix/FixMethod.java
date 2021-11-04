@@ -149,13 +149,13 @@ enum FixMethod {
                      */
                     final Matcher groupMatcher = NAMED_GROUP_PATTERN.matcher(p.pattern());
                     final Map<String, String> result = new LinkedHashMap<>();
-                    int count = 0;
 
                     while (groupMatcher.find()) {
-                        result.put(groupMatcher.group(1), m.group(++count));
+                        final String group = groupMatcher.group(1);
+                        result.put(group, m.group(group));
                     }
 
-                    if (count > 0) {
+                    if (!result.isEmpty()) {
                         Metafix.add(record, params.get(0), result);
                     }
                     else {
