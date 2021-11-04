@@ -339,57 +339,57 @@ public class MetafixMethodTest {
     @Test
     public void parseTextMixedGroups() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "parse_text(data, '(?<a>.)(.)(?<c>.)')"
-                ),
-                i -> {
-                    i.startRecord("1");
-                    i.literal("data", "abc");
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1");
-                    o.get().startEntity("data");
-                    o.get().literal("a", "a");
-                    o.get().literal("c", "c");
-                    o.get().endEntity();
-                    o.get().endRecord();
-                }
+                "parse_text(data, '(?<a>.)(.)(?<c>.)')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("data", "abc");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().literal("a", "a");
+                o.get().literal("c", "c");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
         );
     }
 
     @Test
     public void parseTextEscapedGroups() {
         Assertions.assertThrows(MetafactureException.class, () ->
-                MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                        "parse_text(data, '(?<a>.)(.)\\\\(?<c>.\\\\)')"
-                    ),
-                    i -> {
-                        i.startRecord("1");
-                        i.literal("data", "ab(<c>c)");
-                        i.endRecord();
-                    },
-                    o -> {
-                    }
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "parse_text(data, '(?<a>.)(.)\\\\(?<c>.\\\\)')"
                 ),
-                "No group with name <c>"
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", "ab(<c>c)");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            ),
+            "No group with name <c>"
         );
     }
 
     @Test
     public void parseTextQuotedGroups() {
         Assertions.assertThrows(MetafactureException.class, () ->
-                MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                        "parse_text(data, '(?<a>.)(.)\\\\Q(?<c>.)\\\\E')"
-                    ),
-                    i -> {
-                        i.startRecord("1");
-                        i.literal("data", "ab(?<c>.)");
-                        i.endRecord();
-                    },
-                    o -> {
-                    }
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "parse_text(data, '(?<a>.)(.)\\\\Q(?<c>.)\\\\E')"
                 ),
-                "No group with name <c>"
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", "ab(?<c>.)");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            ),
+            "No group with name <c>"
         );
     }
 
