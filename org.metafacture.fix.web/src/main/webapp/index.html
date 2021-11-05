@@ -34,7 +34,7 @@
     <script>
         function loadContent() {
             var editor = ace.edit("xtext-editor");
-            editor.setValue('map(_id, id)\nmap(a,title)\nmap(b.n,author)\n/*map(_else)*/\n');
+            editor.setValue('move_field(_id, id)\nmove_field(a,title)\nmove_field(b.n,author)\nretain(id,title,author)\n');
             document.getElementById("data").value = "1{a: Faust, b {n: Goethe, v: JW}, c: Weimar}\n 2{a: Räuber, b {n: Schiller, v: F}, c: Weimar}";
             document.getElementById("flux").value = "as-lines|decode-formeta|fix|stream-to-xml(rootTag=\"collection\")";
             return true;
