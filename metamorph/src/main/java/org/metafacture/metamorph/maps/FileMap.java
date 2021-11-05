@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.Set;
 
 /**
  * Provides a {@link Map} based on a file. The file is supposed to be UTF-8
@@ -146,6 +147,11 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
     @Override
     public String get(final Object key) {
         return map.get(key);
+    }
+
+    @Override
+    public Set<Entry<String, String>> entrySet() {
+        return map.entrySet();
     }
 
 }

@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Base class for maps which are read only and do not allow access to their
- * full contents.
+ * Base class for maps which are read only and by default doesn't give access to
+ * their full contents.
  *
  * @param <K> type of keys
  * @param <V> type of values
@@ -31,12 +31,12 @@ import java.util.Set;
 public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
 
     @Override
-    public final int size() {
+    public int size() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public final boolean isEmpty() {
+    public boolean isEmpty() {
         throw new UnsupportedOperationException();
     }
 
@@ -46,7 +46,7 @@ public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
     }
 
     @Override
-    public final boolean containsValue(final Object value) {
+    public boolean containsValue(final Object value) {
         throw new UnsupportedOperationException();
     }
 
@@ -63,7 +63,6 @@ public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
     @Override
     public final void putAll(final Map<? extends K, ? extends V> m) {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
@@ -72,17 +71,17 @@ public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
     }
 
     @Override
-    public final Set<K> keySet() {
+    public Set<K> keySet() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public final Collection<V> values() {
+    public Collection<V> values() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public final Set<java.util.Map.Entry<K, V>> entrySet() {
+    public Set<java.util.Map.Entry<K, V>> entrySet() {
         throw new UnsupportedOperationException();
     }
 

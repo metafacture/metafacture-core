@@ -39,17 +39,20 @@ public final class FileMapTest {
     @Mock
     private StreamReceiver receiver;
 
+    private static String MORPH =
+        "<rules>" +
+        "  <data source='1'>" +
+        "    <%s='map1' />" +
+        "  </data>" +
+        "</rules>" +
+        "<maps>" +
+        "  <filemap name='map1' files='org/metafacture/metamorph/maps/" +
+        "file-map-test.txt' />" +
+        "</maps>";
+
     @Test
     public void shouldLookupValuesInFileBasedMap() {
-        assertMorph(receiver,
-                "<rules>" +
-                "  <data source='1'>" +
-                "    <lookup in='map1' />" +
-                "  </data>" +
-                "</rules>" +
-                "<maps>" +
-                "  <filemap name='map1' files='org/metafacture/metamorph/maps/file-map-test.txt' />" +
-                "</maps>",
+        assertMorph(receiver, String.format(MORPH, "lookup in"),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -67,15 +70,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldWhitelistValuesInFileBasedMap() {
-        assertMorph(receiver,
-                "<rules>" +
-                "  <data source='1'>" +
-                "    <whitelist map='map1' />" +
-                "  </data>" +
-                "</rules>" +
-                "<maps>" +
-                "  <filemap name='map1' files='org/metafacture/metamorph/maps/file-map-test.txt' />" +
-                "</maps>",
+        assertMorph(receiver, String.format(MORPH, "whitelist map"),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -87,6 +82,24 @@ public final class FileMapTest {
                     o.get().startRecord("1");
                     o.get().literal("1", "gw");
                     o.get().literal("1", "fj");
+                    o.get().endRecord();
+                }
+        );
+    }
+
+    @Test
+    public void shouldReplaceValuesUsingFileBasedMap() {
+        assertMorph(receiver, String.format(MORPH, "setreplace map"),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("1", "gw-fj: 1:2");
+                    i.literal("1", "fj-gw: 4:0");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("1", "Germany-Fiji: 1:2");
+                    o.get().literal("1", "Fiji-Germany: 4:0");
                     o.get().endRecord();
                 }
         );
