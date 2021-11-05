@@ -17,7 +17,6 @@
 package org.metafacture.metamorph.maps;
 
 import org.metafacture.metamorph.api.MorphExecutionException;
-import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -29,21 +28,24 @@ import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.Set;
 
 /**
- * Provides a {@link Map} based on a file. The file is supposed to be UTF-8
- * encoded. The default separator is {@code \t}. <strong>Important:</strong>
- * Lines that are not split in two parts by the separator are ignored!
+ * Provides an unmodifiable {@link Map} based on a file. The file is supposed to
+ * be UTF-8 encoded. The default separator is {@code \t}.
+ * <strong>Important:</strong> Lines that are not split in two parts by the
+ * separator are ignored!
  *
  * @author Markus Michael Geipel
  */
-public final class FileMap extends AbstractReadOnlyMap<String, String> {
+public final class FileMap extends HashMap<String, String> {
 
-    private final Map<String, String> map = new HashMap<>();
+    private  Map<String, String> unmodifiableMap;
 
     private Pattern split = Pattern.compile("\t", Pattern.LITERAL);
 
@@ -74,6 +76,7 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
      * @param file the file
      */
     public void setFile(final String file) {
+        final Map<String, String> modifiableMap = new HashMap<>();
         try (
                 InputStream stream = openStream(file);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))
@@ -85,13 +88,14 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
                 }
                 final String[] parts = split.split(line);
                 if (parts.length == 2) {
-                    map.put(parts[0], parts[1]);
+                    modifiableMap.put(parts[0], parts[1]);
                 }
             }
         }
         catch (final IOException | UncheckedIOException e) {
             throw new MorphExecutionException("filemap: cannot read map file", e);
         }
+        unmodifiableMap = Collections.unmodifiableMap(modifiableMap);
     }
 
     private InputStream openStream(final String file) {
@@ -145,7 +149,14 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
 
     @Override
     public String get(final Object key) {
-        return map.get(key);
+        return unmodifiableMap.get(key);
+    }
+
+    @Override
+    public Set<Entry<String, String>> entrySet() {
+        Set<Entry<String, String>> s = unmodifiableMap.entrySet();
+        s.clear();
+        return unmodifiableMap.entrySet();
     }
 
 }
