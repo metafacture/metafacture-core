@@ -26,8 +26,8 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
-import org.metafacture.framework.objects.Triple.ObjectType;
 import org.metafacture.framework.objects.Triple;
+import org.metafacture.framework.objects.Triple.ObjectType;
 
 import java.util.ArrayList;
 import java.util.List;
