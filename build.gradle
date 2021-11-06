@@ -64,8 +64,14 @@ subprojects {
   targetCompatibility = 1.8
 
   tasks.withType(JavaCompile) {
+    'all -processing -rawtypes -serial'.split().each {
+        options.compilerArgs << "-Xlint:${it}"
+    }
+
+    options.compilerArgs << '-Werror'
     options.encoding = 'UTF-8'
   }
+
   task sourceJar(type: Jar) {
     dependsOn tasks.classes
     from sourceSets.main.allJava

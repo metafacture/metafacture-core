@@ -51,6 +51,7 @@ public final class FormetaRecordsReader extends DefaultObjectPipe<Reader, Object
     }
 
     @Override // checkstyle-disable-line CyclomaticComplexity
+    @SuppressWarnings("fallthrough")
     public void process(final Reader reader) {
         assert !isClosed();
 

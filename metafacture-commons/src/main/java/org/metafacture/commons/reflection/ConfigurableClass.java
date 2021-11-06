@@ -188,7 +188,7 @@ public final class ConfigurableClass<T> {
         }
     }
 
-    private Object convertValue(final String value, final Class<?> type) {
+    private <T extends Enum<T>> Object convertValue(final String value, final Class<?> type) {
         final Object result;
 
         if (type == boolean.class) {
@@ -199,7 +199,7 @@ public final class ConfigurableClass<T> {
         }
         else if (type.isEnum()) {
             @SuppressWarnings("unchecked")  // protected by type.isEnum() check
-            final Class<Enum> enumType = (Class<Enum>) type;
+            final Class<T> enumType = (Class<T>) type;
             result = Enum.valueOf(enumType, value.toUpperCase());
         }
         else {

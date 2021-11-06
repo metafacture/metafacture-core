@@ -89,6 +89,7 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     public void endElement(final String uri, final String localName,
             final String qName) throws SAXException {
         if (SUBFIELD.equals(localName)) {

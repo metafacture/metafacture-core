@@ -17,6 +17,7 @@
 package org.metafacture.biblio.marc21;
 
 import org.metafacture.biblio.iso2709.RecordBuilder;
+import org.metafacture.biblio.iso2709.RecordFormat;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.FormatException;
 import org.metafacture.framework.ObjectReceiver;
@@ -71,7 +72,7 @@ import java.util.Arrays;
 public final class Marc21Encoder extends
         DefaultStreamPipe<ObjectReceiver<String>> {
 
-    private static final int NAME_LENGTH = Marc21Constants.MARC21_FORMAT.TAG_LENGTH +
+    private static final int NAME_LENGTH = RecordFormat.TAG_LENGTH +
             Marc21Constants.MARC21_FORMAT.getIndicatorLength();
 
     private final RecordBuilder builder;
@@ -157,7 +158,7 @@ public final class Marc21Encoder extends
         if (name.length() != NAME_LENGTH) {
             throw new FormatException("invalid entity name: " + name);
         }
-        final char[] tag = new char[Marc21Constants.MARC21_FORMAT.TAG_LENGTH];
+        final char[] tag = new char[RecordFormat.TAG_LENGTH];
         final char[] indicators = new char[Marc21Constants.MARC21_FORMAT.getIndicatorLength()];
         name.getChars(0, tag.length, tag, 0);
         name.getChars(tag.length, name.length(), indicators, 0);

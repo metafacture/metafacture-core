@@ -47,7 +47,8 @@ public final class GenericXMLHandlerTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        genericXmlHandler = new GenericXmlHandler("record");
+        genericXmlHandler = new GenericXmlHandler();
+        genericXmlHandler.setRecordTagName("record");
         genericXmlHandler.setReceiver(receiver);
     }
 
