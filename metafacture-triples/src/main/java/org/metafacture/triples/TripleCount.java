@@ -36,13 +36,16 @@ import java.util.Comparator;
 @FluxCommand("count-triples")
 public final class TripleCount extends AbstractTripleSort {
 
-    public static final String DEFAULT_COUNTP_REDICATE = "count";
+    public static final String DEFAULT_COUNT_PREDICATE = "count";
+
+    @Deprecated/*(since="5.3", forRemoval=true)*/
+    public static final String DEFAULT_COUNTP_REDICATE = DEFAULT_COUNT_PREDICATE;
 
     private static final Triple INIT = new Triple("", "", "");
 
     private Triple current = INIT;
     private int count;
-    private String countPredicate = DEFAULT_COUNTP_REDICATE;
+    private String countPredicate = DEFAULT_COUNT_PREDICATE;
     private Comparator<Triple> comparator;
 
     /**
