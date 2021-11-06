@@ -55,6 +55,10 @@ import java.net.URL;
  */
 public final class InlineMorph {
 
+    private static final String XML_BOILERPLATE = "<?xml version='1.1' encoding='UTF-8'?>\n";
+    private static final String METAMORPH_BOILERPLATE = "<metamorph version='1'\n    xmlns='http://www.culturegraph.org/metamorph'>";
+    private static final String FINISH_METAMORPH_BOILERPLATE = "</metamorph>\n";
+
     private final StringBuilder scriptBuilder = new StringBuilder();
 
     private String systemId;
@@ -126,11 +130,11 @@ public final class InlineMorph {
     }
 
     private void appendXmlBoilerplate() {
-        scriptBuilder.append("<?xml version='1.1' encoding='UTF-8'?>\n");
+        scriptBuilder.append(XML_BOILERPLATE);
     }
 
     private void appendMetamorphBoilerplate() {
-        scriptBuilder.append("<metamorph version='1'\n    xmlns='http://www.culturegraph.org/metamorph'>");
+        scriptBuilder.append(METAMORPH_BOILERPLATE);
     }
 
     /**
@@ -145,7 +149,7 @@ public final class InlineMorph {
 
     private void finishBoilerplate() {
         if (needFinishMetamorphBoilerplate) {
-            scriptBuilder.append("</metamorph>\n");
+            scriptBuilder.append(FINISH_METAMORPH_BOILERPLATE);
             needFinishMetamorphBoilerplate = false;
         }
     }
@@ -153,8 +157,18 @@ public final class InlineMorph {
     private InputSource createScriptSource() {
         final InputSource scriptSource = new InputSource();
         scriptSource.setSystemId(systemId);
-        scriptSource.setCharacterStream(new StringReader(scriptBuilder.toString()));
+        scriptSource.setCharacterStream(new StringReader(toString()));
         return scriptSource;
+    }
+
+    /**
+     * Returns the string representation of this Morph script.
+     *
+     * @return the Morph script
+     */
+    @Override
+    public String toString() {
+        return scriptBuilder.toString() + (needFinishMetamorphBoilerplate ? FINISH_METAMORPH_BOILERPLATE : "");
     }
 
     /**
