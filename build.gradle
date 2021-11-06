@@ -104,6 +104,15 @@ subprojects {
     checkstyleTest.enabled = false
   }
 
+  test {
+    systemProperties['org.slf4j.simpleLogger.defaultLogLevel'] = 'warn'
+
+    testLogging {
+      showStandardStreams = true
+      exceptionFormat = 'full'
+    }
+  }
+
   signing {
     required {
       scmInfo.isRelease() && gradle.taskGraph.hasTask(tasks.uploadArchives)

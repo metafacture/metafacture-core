@@ -24,4 +24,5 @@ dependencies {
   implementation 'com.jayway.jsonpath:json-path:2.6.0'
   testImplementation 'junit:junit:4.12'
   testImplementation 'org.mockito:mockito-core:2.5.5'
+  testRuntimeOnly 'org.slf4j:slf4j-simple:1.7.21'
 }
