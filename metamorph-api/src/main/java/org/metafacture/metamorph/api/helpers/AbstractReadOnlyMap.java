@@ -42,7 +42,7 @@ public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
     }
 
     @Override
-    public final boolean containsKey(final Object key) {
+    public boolean containsKey(final Object key) {
         return get(key) != null;
     }
 
