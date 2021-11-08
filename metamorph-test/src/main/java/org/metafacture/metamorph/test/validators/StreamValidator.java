@@ -17,8 +17,8 @@
 package org.metafacture.metamorph.test.validators;
 
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.javaintegration.EventList.Event;
 import org.metafacture.javaintegration.EventList;
+import org.metafacture.javaintegration.EventList.Event;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

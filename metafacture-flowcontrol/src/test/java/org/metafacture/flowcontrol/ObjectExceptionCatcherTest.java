@@ -45,6 +45,7 @@ public final class ObjectExceptionCatcherTest {
                 .when(exceptionThrowingModule).process(anyString());
         exceptionCatcher = new ObjectExceptionCatcher<>();
         exceptionCatcher.setReceiver(exceptionThrowingModule);
+        exceptionCatcher.setLogExceptionMessage(false);
     }
 
     @Test

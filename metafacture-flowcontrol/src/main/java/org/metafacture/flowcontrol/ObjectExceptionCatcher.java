@@ -52,6 +52,7 @@ public final class ObjectExceptionCatcher<T> extends
 
     private String logPrefix;
     private boolean logStackTrace;
+    private boolean logExceptionMessage = true;
 
     /**
      * Creates an instance of {@link ObjectExceptionCatcher} without a log message
@@ -108,13 +109,19 @@ public final class ObjectExceptionCatcher<T> extends
         return logStackTrace;
     }
 
+    /*package-private*/ void setLogExceptionMessage(final boolean logExceptionMessage) {
+        this.logExceptionMessage = logExceptionMessage;
+    }
+
     @Override
     public void process(final T obj) {
         try {
             getReceiver().process(obj);
         }
         catch (final Exception e) { // checkstyle-disable-line IllegalCatch
-            LOG.error("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
+            if (logExceptionMessage) {
+                LOG.error("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
+            }
 
             if (logStackTrace) {
                 final StringWriter stackTraceWriter = new StringWriter();

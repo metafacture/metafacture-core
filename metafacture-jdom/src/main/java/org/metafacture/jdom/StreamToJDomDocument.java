@@ -32,8 +32,8 @@ import org.jdom2.Namespace;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
