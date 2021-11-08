@@ -29,9 +29,11 @@ import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -146,6 +148,11 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
     @Override
     public String get(final Object key) {
         return map.get(key);
+    }
+
+    @Override
+    public Set<String> keySet() {
+        return Collections.unmodifiableSet(map.keySet());
     }
 
 }

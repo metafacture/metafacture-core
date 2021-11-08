@@ -54,8 +54,8 @@ public final class SetReplacer {
      * @param replacements the Map of Strings to be replaced
      */
     public void addReplacements(final Map<String, String> replacements) {
-        for (final Entry<String, String> entry : replacements.entrySet()) {
-            addReplacement(entry.getKey(), entry.getValue());
+        for (final String k : replacements.keySet()) {
+            addReplacement(k, replacements.get(k));
         }
     }
 
