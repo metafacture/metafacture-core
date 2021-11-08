@@ -21,7 +21,6 @@ import org.metafacture.commons.tries.SetMatcher.Match;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Map;
 
 /**
@@ -54,8 +53,8 @@ public final class SetReplacer {
      * @param replacements the Map of Strings to be replaced
      */
     public void addReplacements(final Map<String, String> replacements) {
-        for (final Entry<String, String> entry : replacements.entrySet()) {
-            addReplacement(entry.getKey(), entry.getValue());
+        for (final String k : replacements.keySet()) {
+            addReplacement(k, replacements.get(k));
         }
     }
 
