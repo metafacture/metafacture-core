@@ -68,6 +68,9 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
 
     private Map<String, String> attrValsAsSubfields;
 
+    /**
+     * Creates an instance of {@link HtmlDecoder}.
+     */
     public HtmlDecoder() {
         setAttrValsAsSubfields(DEFAULT_ATTR_VALS_AS_SUBFIELDS);
     }
@@ -123,6 +126,12 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
         return false;
     }
 
+    /**
+     * Sets attribute values as subfields. If the value(s) start with an `&amp;` they
+     * are appended to {@link #DEFAULT_ATTR_VALS_AS_SUBFIELDS}.
+     *
+     * @param mapString the attributes to be added as subfields
+     */
     public void setAttrValsAsSubfields(final String mapString) {
         this.attrValsAsSubfields = new HashMap<String, String>();
         final String input = mapString.startsWith("&") ? DEFAULT_ATTR_VALS_AS_SUBFIELDS + mapString : mapString;

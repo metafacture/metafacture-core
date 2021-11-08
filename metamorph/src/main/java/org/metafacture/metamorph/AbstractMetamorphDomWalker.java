@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Builds a {@link Metamorph} from an xml description
+ * Builds a {@link Metamorph} from an XML description
  *
  * @author Markus Michael Geipel
  */
@@ -63,6 +63,11 @@ public abstract class AbstractMetamorphDomWalker {
             this.string = string;
         }
 
+        /**
+         * Gests the string.
+         *
+         * @return the string
+         */
         public String getString() {
             return string;
         }
@@ -100,11 +105,23 @@ public abstract class AbstractMetamorphDomWalker {
         return mapFactory;
     }
 
+    /**
+     * Walks through the Metamorph definition file. Respects the Metamorph
+     * variables.
+     *
+     * @param morphScript the InputSource of the Metamorph definition file
+     * @param newVars     the Map of Metamorph variables
+     */
     public final void walk(final InputSource morphScript, final Map<String, String> newVars) {
         vars.putAll(newVars);
         walk(morphScript);
     }
 
+    /**
+     * Walks the DOM of the morph definition.
+     *
+     * @param morphScript the morph definition as {@link InputSource}.
+     */
     public final void walk(final InputSource morphScript) {
         walk(DomLoader.parse(SCHEMA_FILE, morphScript));
     }

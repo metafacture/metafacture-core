@@ -34,6 +34,9 @@ import org.metafacture.framework.ObjectReceiver;
  */
 public class DefaultObjectReceiver<T> extends DefaultLifeCycle implements ObjectReceiver<T> {
 
+    /**
+     * Creates an instance of {@link DefaultObjectReceiver}.
+     */
     public DefaultObjectReceiver() {
     }
 

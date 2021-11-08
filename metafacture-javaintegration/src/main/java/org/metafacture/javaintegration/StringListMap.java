@@ -36,13 +36,26 @@ public final class StringListMap extends DefaultStreamReceiver implements Collec
     private Collection<ListMap<String, String>> collection;
     private ListMap<String, String> listMap = new ListMap<String, String>();
 
+    /**
+     * Creates an instance of {@link StringListMap}.
+     */
     public StringListMap() {
     }
 
+    /**
+     * Creates an instance of {@link StringListMap} by a given Collection.
+     *
+     * @param collection the Collection
+     */
     public StringListMap(final Collection<ListMap<String, String>> collection) {
         this.collection = collection;
     }
 
+    /**
+     * Checks if StringListMap is closed.
+     *
+     * @return true if it is closed
+     */
     public boolean isClosed() {
         return closed;
     }
@@ -52,14 +65,27 @@ public final class StringListMap extends DefaultStreamReceiver implements Collec
         listMap.clear();
     }
 
+    /**
+     * Removes a key in the map.
+     *
+     * @param key the key
+     */
     public void removeKey(final String key) {
         listMap.removeKey(key);
     }
 
+    /**
+     * Clears a key in the map.
+     *
+     * @param key the key
+     */
     public void clearKey(final String key) {
         listMap.clearKey(key);
     }
 
+    /**
+     * Clears all keys in the map.
+     */
     public void clearAllKeys() {
         listMap.clearAllKeys();
     }
@@ -74,10 +100,22 @@ public final class StringListMap extends DefaultStreamReceiver implements Collec
         return listMap.keySet();
     }
 
+    /**
+     * Adds a value to the List of values of the key in the map.
+     *
+     * @param name  the key
+     * @param value the value
+     */
     public void add(final String name, final String value) {
         listMap.add(name, value);
     }
 
+    /**
+     * Adds a List of values to a key in the map
+     *
+     * @param name      the key
+     * @param addValues the {@link Collection} of values
+     */
     public void putAll(final String name, final Collection<String> addValues) {
         listMap.putAll(name, addValues);
     }
@@ -97,10 +135,23 @@ public final class StringListMap extends DefaultStreamReceiver implements Collec
         return listMap.get(name);
     }
 
+    /**
+     * Checks wether a key exists.
+     *
+     * @param name the key
+     * @return true if the key exists, otherwise false
+     */
     public boolean existsKey(final String name) {
         return listMap.existsKey(name);
     }
 
+    /**
+     * Gets the first element of the List of values of the key in the map or null
+     *
+     * @param name the name
+     * @return the first element of the List of values of the key in the map or
+     *         null.
+     */
     public String getFirst(final String name) {
         return listMap.getFirst(name);
     }
@@ -110,10 +161,20 @@ public final class StringListMap extends DefaultStreamReceiver implements Collec
         return listMap.toString();
     }
 
+    /**
+     * Sets the ID.
+     *
+     * @param identifier the ID
+     */
     public void setId(final String identifier) {
         listMap.setId(identifier);
     }
 
+    /**
+     * Gets the ID.
+     *
+     * @return the ID
+     */
     public String getId() {
         return listMap.getId();
     }

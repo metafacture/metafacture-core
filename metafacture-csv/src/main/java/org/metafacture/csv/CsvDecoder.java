@@ -30,26 +30,28 @@ import java.io.StringReader;
 import java.util.List;
 
 /**
- * Decodes lines of CSV files. First line is interpreted as header.
+ * Decodes lines of CSV files. First line may be interpreted as header.
  *
  * @author Markus Michael Geipel
  * @author Fabian Steeg (fsteeg)
  *
  */
-@Description("Decodes lines of CSV files. First line is interpreted as header.")
+@Description("Decodes lines of CSV files. First line may be interpreted as header.")
 @In(String.class)
 @Out(StreamReceiver.class)
 @FluxCommand("decode-csv")
 public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver>  {
 
-    private static final char DEFAULT_SEP = ',';
-    private char separator;
+    public static final char DEFAULT_SEP = ',';
+    private char separator = DEFAULT_SEP;
 
     private String[] header = new String[0];
     private int count;
     private boolean hasHeader;
 
     /**
+     * Creates an instance of {@link CsvDecoder} with a given separator.
+     *
      * @param separator to split lines
      */
     public CsvDecoder(final String separator) {
@@ -57,14 +59,19 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
     }
 
     /**
+     * Creates an instance of {@link CsvDecoder} with a given separator.
+     *
      * @param separator to split lines
      */
     public CsvDecoder(final char separator) {
         this.separator = separator;
     }
 
+    /**
+     * Creates an instance of {@link CsvDecoder}. The default separator is
+     * {@value #DEFAULT_SEP}.
+     */
     public CsvDecoder() {
-        this.separator = DEFAULT_SEP;
     }
 
     @Override
@@ -115,10 +122,21 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
         return parts;
     }
 
+    /**
+     * Flags if the CSV has a header or comes without a header.
+     *
+     * @param hasHeader true if the CSV has a header, otherwise false
+     */
     public void setHasHeader(final boolean hasHeader) {
         this.hasHeader = hasHeader;
     }
 
+    /**
+     * Sets the separator.
+     *
+     * @param separator the separator as a String. The first character is used as
+     *                  the separator.
+     */
     public void setSeparator(final String separator) {
         this.separator = separator.charAt(0);
     }

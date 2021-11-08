@@ -37,6 +37,9 @@ import java.io.UnsupportedEncodingException;
 @Out(java.io.Reader.class)
 public final class StdInOpener extends DefaultObjectPipe<Object, ObjectReceiver<java.io.Reader>> {
 
+    /**
+     * Creates an instance of {@link StdInOpener}.
+     */
     public StdInOpener() {
     }
 

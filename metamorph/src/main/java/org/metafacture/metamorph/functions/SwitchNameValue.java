@@ -26,6 +26,9 @@ import org.metafacture.metamorph.api.helpers.AbstractFunction;
  */
 public final class SwitchNameValue extends AbstractFunction {
 
+    /**
+     * Creates an instance of {@link SwitchNameValue}.
+     */
     public SwitchNameValue() {
     }
 

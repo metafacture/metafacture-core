@@ -34,6 +34,9 @@ public final class Buffer extends AbstractFunction {
     private final List<Receipt> receipts = new ArrayList<Receipt>();
     private int currentRecord;
 
+    /**
+     * Creates an instance of {@link Buffer}.
+     */
     public Buffer() {
     }
 

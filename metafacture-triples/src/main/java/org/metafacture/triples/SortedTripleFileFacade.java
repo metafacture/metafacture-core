@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 /**
+ * A SortedTripleFileFacade created with a file. Reads a Triple from the file.
+ *
  * @author markus geipel
  *
  */
@@ -37,12 +39,24 @@ public final class SortedTripleFileFacade {
     private Triple triple;
     private boolean empty;
 
+    /**
+     * Constructs a SortedTripleFileFacade with a file. Reads a Triple from the
+     * file.
+     *
+     * @param file the File to load Triples from
+     * @throws IOException if Triple can't be loaded
+     */
     public SortedTripleFileFacade(final File file) throws IOException {
         this.file = file;
         in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file), BUFFERSIZE));
         next();
     }
 
+    /**
+     * Checks wether SortedTripleFileFacade is empty.
+     *
+     * @return true if SortedTripleFileFacade is empty.
+     */
     public boolean isEmpty() {
         return empty;
     }
@@ -58,6 +72,10 @@ public final class SortedTripleFileFacade {
         }
     }
 
+    /**
+     * Closes the {@link ObjectInputStream} and deletes the {@link #file} if it
+     * exists.
+     */
     public void close() {
         try {
             in.close();
@@ -70,6 +88,11 @@ public final class SortedTripleFileFacade {
         }
     }
 
+    /**
+     * Peeks at a Triple at the top of the stack.
+     *
+     * @return the Triple at the top of the stack
+     */
     public Triple peek() {
         if (isEmpty()) {
             return null;
@@ -77,6 +100,12 @@ public final class SortedTripleFileFacade {
         return triple;
     }
 
+    /**
+     * Pops a Triple from the stack.
+     *
+     * @return the Triple at the top of the stack.
+     * @throws IOException if the Triple can't be loaded
+     */
     public Triple pop() throws IOException {
         final Triple nextTriple = peek();
         next();

@@ -51,18 +51,37 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
     private ObjectReceiver<T> receiver;
     private boolean debug;
 
+    /**
+     * Creates an instance of {@link ObjectPipeDecoupler} by setting a default
+     * capacity of {@value #DEFAULT_CAPACITY}.
+     */
     public ObjectPipeDecoupler() {
         queue = new LinkedBlockingQueue<>(DEFAULT_CAPACITY);
     }
 
+    /**
+     * Creates an instance of {@link ObjectPipeDecoupler} by setting a capacity.
+     *
+     * @param capacity the capacity
+     */
     public ObjectPipeDecoupler(final int capacity) {
         queue = new LinkedBlockingQueue<>(capacity);
     }
 
+    /**
+     * Creates an instance of {@link ObjectPipeDecoupler} by setting a capacity.
+     *
+     * @param capacity the capacity as String. Will be parsed as integer.
+     */
     public ObjectPipeDecoupler(final String capacity) {
         queue = new LinkedBlockingQueue<>(Integer.parseInt(capacity));
     }
 
+    /**
+     * Sets the log messages to be more verbose.
+     *
+     * @param debug true if the log messages should be more verbose
+     */
     public void setDebug(final boolean debug) {
         this.debug = debug;
     }

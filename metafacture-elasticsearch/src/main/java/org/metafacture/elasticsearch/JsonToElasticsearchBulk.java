@@ -46,20 +46,21 @@ import java.util.regex.Pattern;
 public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
     private ObjectMapper mapper = new ObjectMapper();
-    private String[] idPath;
+    private String[] idPath = new String[] {};
     private String type;
     private String index;
 
+    /**
+     * Creates an instance of {@link JsonToElasticsearchBulk}.
+     */
     public JsonToElasticsearchBulk() {
-        this.idPath = new String[]{};
-        this.type = null;
-        this.index = null;
     }
 
     /**
-     * As an id is not required it can be omitted.
+     * Creates an instance of {@link JsonToElasticsearchBulk}. As an id is not
+     * required it can be omitted.
      *
-     * @param type The Elasticsearch index type
+     * @param type  The Elasticsearch index type
      * @param index The Elasticsearch index name
      */
     public JsonToElasticsearchBulk(final String type, final String index) {
@@ -67,9 +68,12 @@ public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectRec
     }
 
     /**
-     * @param idPath The key path of the JSON value to be used as the ID for the record
-     * @param type The Elasticsearch index type
-     * @param index The Elasticsearch index name
+     * Creates an instance of {@link JsonToElasticsearchBulk}.
+     *
+     * @param idPath the key path of the JSON value to be used as the ID for the
+     *               record
+     * @param type   the Elasticsearch index type
+     * @param index  the Elasticsearch index name
      */
     public JsonToElasticsearchBulk(final String[] idPath, final String type, final String index) {
         this.idPath = idPath;
@@ -78,32 +82,53 @@ public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectRec
     }
 
     /**
-     * @param idKey The key of the JSON value to be used as the ID for the record
-     * @param type The Elasticsearch index type
-     * @param index The Elasticsearch index name
+     * Creates an instance of {@link JsonToElasticsearchBulk}.
+     *
+     * @param idKey the key of the JSON value to be used as the ID for the record
+     * @param type  the Elasticsearch index type
+     * @param index the Elasticsearch index name
      */
     public JsonToElasticsearchBulk(final String idKey, final String type, final String index) {
         this(new String[]{idKey}, type, index);
     }
 
     /**
-     * @param idKey The key of the JSON value to be used as the ID for the record
-     * @param type The Elasticsearch index type
-     * @param index The Elasticsearch index name
-     * @param entitySeparator The separator between entity names in idKey
+     *
+     * Creates an instance of {@link JsonToElasticsearchBulk}.
+     *
+     * @param idKey           the key of the JSON value to be used as the ID for the
+     *                        record
+     * @param type            the Elasticsearch index type
+     * @param index           the Elasticsearch index name
+     * @param entitySeparator the separator between entity names in idKey
      */
     public JsonToElasticsearchBulk(final String idKey, final String type, final String index, final String entitySeparator) {
         this(idKey.split(Pattern.quote(entitySeparator)), type, index);
     }
 
+    /**
+     * Sets the key path of the JSON value to be used as the ID for the record.
+     *
+     * @param idKey the key path of the JSON value
+     */
     public void setIdKey(final String idKey) {
         this.idPath = new String[]{idKey};
     }
 
+    /**
+     * Sets the name of the type of the index.
+     *
+     * @param type the name of the type of the index.
+     */
     public void setType(final String type) {
         this.type = type;
     }
 
+    /**
+     * Sets the name of the index.
+     *
+     * @param index the name of the index
+     */
     public void setIndex(final String index) {
         this.index = index;
     }

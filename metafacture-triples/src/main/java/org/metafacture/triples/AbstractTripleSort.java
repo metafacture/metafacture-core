@@ -39,15 +39,14 @@ import java.util.function.Function;
 public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> implements MemoryWarningSystem.Listener {
 
     /**
-     * specifies the comparator
+     * The comparators.
      */
     public enum Compare {
         SUBJECT, PREDICATE, OBJECT, ALL
     }
 
     /**
-     * sort order
-     *
+     * The sort orders.
      */
     public enum Order {
         INCREASING {
@@ -62,19 +61,29 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
                 return -indicator;
             }
         };
+
+        /**
+         * Gets the indicator. If order is decreasing the the indicator is negativ, if
+         * order is increasing it's positive.
+         *
+         * @param indicator the indicator
+         * @return the indicator dependent of the order
+         */
         public abstract int order(int indicator);
     }
 
     private final List<Triple> buffer = new ArrayList<>();
-    private final List<File> tempFiles;
+    private final List<File> tempFiles = new ArrayList<>();
     private Compare compare = Compare.SUBJECT;
     private Order order = Order.INCREASING;
     private boolean numeric;
     private volatile boolean memoryLow;
 
-    public AbstractTripleSort() {
+    /**
+     * Constructs an AbstractTripleSort. Calls {@link MemoryWarningSystem}.
+     */
+    protected AbstractTripleSort() {
         MemoryWarningSystem.addListener(this);
-        tempFiles = new ArrayList<>(); // Initialized here to let the compiler enforce the call to super() in subclasses.
     }
 
     @Override
@@ -186,14 +195,35 @@ public abstract class AbstractTripleSort extends DefaultObjectPipe<Triple, Objec
 
     protected abstract void sortedTriple(Triple namedValue);
 
+    /**
+     * Creates the Comparator.
+     *
+     * @return a Comparator of type Triple
+     */
     public final Comparator<Triple> createComparator() {
         return createComparator(compare, order, numeric);
     }
 
+    /**
+     * Creates an alphanumeric Comparator.
+     *
+     * @param compare one of {@link Compare}
+     * @param order   the {@link Order}
+     * @return a Comparator of type Triple
+     */
     public static Comparator<Triple> createComparator(final Compare compare, final Order order) {
         return createComparator(compare, order, false);
     }
 
+    /**
+     * Creates a Comparator.
+     *
+     * @param compare one of {@link #Compare}
+     * @param order   the {@link #Order}
+     * @param numeric "true" if comparison should be numeric. "false" if comparison
+     *                should be alphanumeric. Defaults to "false".
+     * @return a Comparator of type Triple
+     */
     private static Comparator<Triple> createComparator(final Compare compare, final Order order, final boolean numeric) {
         final Function<Triple, String> tripleFunction;
         switch (compare) {

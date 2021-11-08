@@ -32,10 +32,18 @@ public final class ScopedHashMap<K, V> extends HashMap<K, V> { // checkstyle-dis
     private static final long serialVersionUID = -7184066609960144713L;
     private final ScopedHashMap<K, V> outerScope;
 
+    /**
+     * Creates an instance of {@link ScopedHashMap} and sets the outer scope.
+     *
+     * @param outerScope outer scope
+     */
     public ScopedHashMap(final ScopedHashMap<K, V> outerScope) {
         this.outerScope = outerScope;
     }
 
+    /**
+     * Creates an empty instance of {@link ScopedHashMap}.
+     */
     public ScopedHashMap() {
         outerScope = null;
     }
@@ -65,6 +73,11 @@ public final class ScopedHashMap<K, V> extends HashMap<K, V> { // checkstyle-dis
         return ret;
     }
 
+    /**
+     * Gets the outer scope.
+     *
+     * @return the outer scope
+     */
     public ScopedHashMap<K, V> getOuterScope() {
         return outerScope;
     }

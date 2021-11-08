@@ -32,9 +32,9 @@ import java.util.Map;
  */
 public final class Occurrence extends AbstractStatefulFunction {
 
-    private static final String LESS_THAN = "lessThan ";
-    private static final String MORE_THAN = "moreThan ";
-
+    public static final String LESS_THAN = "lessThan ";
+    public static final String MORE_THAN = "moreThan ";
+    public static final boolean SAME_ENTITY = false;
     private int count;
     private String format;
 
@@ -45,9 +45,12 @@ public final class Occurrence extends AbstractStatefulFunction {
         }
     };
 
-    private final Map<String, String> variables = new HashMap<String, String>();
-    private boolean sameEntity;
+    private final Map<String, String> variables = new HashMap<>();
+    private boolean sameEntity = SAME_ENTITY;
 
+    /**
+     * Creates an instance of {@link Occurrence}.
+     */
     public Occurrence() {
     }
 
@@ -69,6 +72,11 @@ public final class Occurrence extends AbstractStatefulFunction {
         return StringUtil.format(format, variables);
     }
 
+    /**
+     * Sets the format.
+     *
+     * @param format the format
+     */
     public void setFormat(final String format) {
         this.format = format;
     }
@@ -83,10 +91,23 @@ public final class Occurrence extends AbstractStatefulFunction {
         return sameEntity;
     }
 
+    /**
+     * Sets the inequality. Use values starting with {@value #LESS_THAN} or
+     * {@value #MORE_THAN}. If the value is an integer it an equal filter will be
+     * set.
+     *
+     * @param only set the inequality, otherwise an equal filter will be used
+     */
     public void setOnly(final String only) {
         filter = parse(only);
     }
 
+    /**
+     * Sets if the occurrence must be in the same entity. <strong>Default value:
+     * {@value #SAME_ENTITY}</strong>
+     *
+     * @param sameEntity true if the occurrence must be in the same entity
+     */
     public void setSameEntity(final boolean sameEntity) {
         this.sameEntity = sameEntity;
     }

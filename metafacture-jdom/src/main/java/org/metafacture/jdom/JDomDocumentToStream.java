@@ -41,6 +41,11 @@ public final class JDomDocumentToStream
     private final SAXOutputter saxOutputer;
     private final XmlPipe<StreamReceiver> xmlPipe;
 
+    /**
+     * Contructs a JDomDocumentToStream with a given XmlPipe.
+     *
+     * @param xmlPipe the XmlPipe of type StreamReceiver
+     */
     public JDomDocumentToStream(final XmlPipe<StreamReceiver> xmlPipe) {
         this.xmlPipe = xmlPipe;
         saxOutputer = new SAXOutputter(xmlPipe);

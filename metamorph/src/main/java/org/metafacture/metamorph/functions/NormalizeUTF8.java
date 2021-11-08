@@ -18,8 +18,8 @@ package org.metafacture.metamorph.functions;
 
 import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
-import java.text.Normalizer.Form;
 import java.text.Normalizer;
+import java.text.Normalizer.Form;
 
 /**
  * Performs normalization of diacritics in utf-8 encoded strings.
@@ -28,6 +28,9 @@ import java.text.Normalizer;
  */
 public final class NormalizeUTF8 extends AbstractSimpleStatelessFunction {
 
+    /**
+     * Creates an instance of {@link NormalizeUTF8}.
+     */
     public NormalizeUTF8() {
     }
 

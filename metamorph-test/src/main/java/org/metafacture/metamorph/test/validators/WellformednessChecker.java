@@ -58,6 +58,9 @@ public final class WellformednessChecker implements StreamReceiver {
 
     private int nestingLevel;
 
+    /**
+     * Creates an instance of {@link WellformednessChecker}.
+     */
     public WellformednessChecker() {
     }
 
@@ -73,6 +76,11 @@ public final class WellformednessChecker implements StreamReceiver {
         this.errorHandler = errorHandler;
     }
 
+    /**
+     * Gets the error handler.
+     *
+     * @return the error handler as {@link Consumer}
+     */
     public Consumer<String> getErrorHandler() {
         return errorHandler;
     }

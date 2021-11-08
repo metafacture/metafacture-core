@@ -47,6 +47,9 @@ public final class UnicodeNormalizer extends DefaultObjectPipe<String, ObjectRec
 
     private Normalizer.Form normalizationForm = DEFAULT_NORMALIZATION_FORM;
 
+    /**
+     * Creates an instance of {@link UnicodeNormalizer}.
+     */
     public UnicodeNormalizer() {
     }
 
@@ -65,6 +68,11 @@ public final class UnicodeNormalizer extends DefaultObjectPipe<String, ObjectRec
         this.normalizationForm = normalizationForm;
     }
 
+    /**
+     * Gets the normalization form.
+     *
+     * @return the {@link java.text.Normalizer.Form}
+     */
     public Normalizer.Form getNormalizationForm() {
         return normalizationForm;
     }

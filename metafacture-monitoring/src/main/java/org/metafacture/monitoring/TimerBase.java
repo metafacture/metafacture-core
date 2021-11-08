@@ -51,6 +51,11 @@ public class TimerBase<R extends Receiver> implements Sender<R> {
         return newReceiver;
     }
 
+    /**
+     * Gets the receiver.
+     *
+     * @return the receiver
+     */
     public final R getReceiver() {
         return receiver;
     }

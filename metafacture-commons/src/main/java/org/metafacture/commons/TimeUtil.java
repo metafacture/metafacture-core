@@ -39,6 +39,12 @@ public final class TimeUtil {
         // No instances allowed
     }
 
+    /**
+     * Formats a duration to human readable abbrevations.
+     *
+     * @param duration a long value of the duration
+     * @return a human readable format of the duration
+     */
     public static String formatDuration(final long duration) {
         long major = duration;
         long minor = 0;

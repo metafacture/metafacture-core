@@ -28,7 +28,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 /**
- * A function which executes a javascript function.
+ * A function which executes a JavaScript function.
  *
  * @author Markus Michael Geipel
  */
@@ -37,15 +37,27 @@ public final class Script extends AbstractSimpleStatelessFunction {
     private Invocable invocable;
     private String invoke;
 
+    /**
+     * Creates an instance of {@link Script}.
+     */
     public Script() {
     }
 
+    /**
+     * Flags wether to invoke the script.
+     *
+     * @param invoke true if script should be invoked
+     */
     public void setInvoke(final String invoke) {
         this.invoke = invoke;
     }
 
+    /**
+     * Loads a JavaScript file.
+     *
+     * @param file the filename
+     */
     public void setFile(final String file) {
-
         final ScriptEngineManager manager = new ScriptEngineManager();
         final ScriptEngine engine = manager.getEngineByName("JavaScript");
         try {
@@ -56,8 +68,7 @@ public final class Script extends AbstractSimpleStatelessFunction {
             throw new MorphBuildException("Error in script", e);
         }
         catch (final FileNotFoundException e) {
-            throw new MorphBuildException("Error loading script '" + file + "'",
-                    e);
+            throw new MorphBuildException("Error loading script '" + file + "'", e);
         }
         invocable = (Invocable) engine;
     }

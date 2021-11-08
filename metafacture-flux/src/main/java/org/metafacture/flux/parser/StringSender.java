@@ -28,6 +28,11 @@ public final class StringSender extends DefaultObjectPipe<Object, ObjectReceiver
 
     private final String string;
 
+    /**
+     * Creates an instance of {@link StringSender} with the given string.
+     *
+     * @param string the string
+     */
     public StringSender(final String string) {
         this.string = string;
     }

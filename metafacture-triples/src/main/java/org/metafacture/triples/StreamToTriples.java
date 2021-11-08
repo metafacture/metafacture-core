@@ -26,8 +26,8 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
-import org.metafacture.framework.objects.Triple.ObjectType;
 import org.metafacture.framework.objects.Triple;
+import org.metafacture.framework.objects.Triple.ObjectType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,21 +83,44 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
     private String predicateName;
     private String currentId;
 
+    /**
+     * Creates an instance of {@link StreamToTriples}.
+     */
     public StreamToTriples() {
     }
 
+    /**
+     * Checks wether redirection is enabled.
+     *
+     * @return true if redirection is enabled.
+     */
     public boolean isRedirect() {
         return redirect;
     }
 
+    /**
+     * Flags wether to set redirect.
+     *
+     * @param redirect true if to redirect
+     */
     public void setRedirect(final boolean redirect) {
         this.redirect = redirect;
     }
 
+    /**
+     * Gest the record predicate.
+     *
+     * @return the record predicate
+     */
     public String getRecordPredicate() {
         return recordPredicate;
     }
 
+    /**
+     * Sets the record predicate to encode a complete record in one triple.
+     *
+     * @param recordPredicate the record predicate
+     */
     public void setRecordPredicate(final String recordPredicate) {
         this.recordPredicate = recordPredicate;
     }

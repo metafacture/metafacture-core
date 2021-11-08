@@ -23,11 +23,25 @@ package org.metafacture.metamorph.api;
  * @author Christoph Böhme
  */
 public interface SourceLocation {
-
+    /**
+     * Gets the filename.
+     *
+     * @return the filename
+     */
     String getFileName();
 
+    /**
+     * Gest the start position.
+     *
+     * @return the start position as {@link Position}
+     */
     Position getStartPosition();
 
+    /**
+     * Gets the end position.
+     *
+     * @return the end position as {@link Position}
+     */
     Position getEndPosition();
 
     /**
@@ -36,9 +50,18 @@ public interface SourceLocation {
      * @author Christoph Böhme
      */
     interface Position {
-
+        /**
+         * Gest the line number.
+         *
+         * @return the line number
+         */
         int getLineNumber();
 
+        /**
+         * Gest the column number.
+         *
+         * @return the column number.
+         */
         int getColumnNumber();
 
     }

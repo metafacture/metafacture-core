@@ -63,6 +63,9 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private String currentTag = "";
     private StringBuilder builder = new StringBuilder();
 
+    /**
+     * Creates an instance of {@link ComarcXmlHandler}.
+     */
     public ComarcXmlHandler() {
     }
 
@@ -86,6 +89,7 @@ public class ComarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     public void endElement(final String uri, final String localName,
             final String qName) throws SAXException {
         if (SUBFIELD.equals(localName)) {

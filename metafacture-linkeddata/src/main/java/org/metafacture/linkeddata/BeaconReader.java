@@ -43,6 +43,7 @@ import java.util.regex.Pattern;
 @Out(StreamReceiver.class)
 @FluxCommand("read-beacon")
 public final class BeaconReader extends DefaultObjectPipe<java.io.Reader, StreamReceiver> {
+    public static final String DEFAULT_RELATION = "seeAlso";
 
     private static final int MB = 1024 * 1024;
     private static final int BUFFER_SIZE = MB * 2;
@@ -51,27 +52,40 @@ public final class BeaconReader extends DefaultObjectPipe<java.io.Reader, Stream
 
     private static final String TARGET = "target";
     private static final Pattern ID_PATTERN = Pattern.compile("(\\{ID\\})|\\$PND");
-    private static final String DEFAULT_RELATION = "seeAlso";
 
     private int bufferSize = BUFFER_SIZE;
     private Pattern metaDataFilter = Pattern.compile(".*");
     private String relation = DEFAULT_RELATION;
 
+    /**
+     * Creates an instance of {@link BeaconReader}.
+     */
     public BeaconReader() {
     }
 
     /**
-     * @param bufferSize
-     *            in MB
+     * Sets the buffer size.
+     *
+     * @param bufferSize in MB
      */
     public void setBufferSize(final int bufferSize) {
         this.bufferSize = MB * bufferSize;
     }
 
+    /**
+     * Sets the relation. Default value: {@value #DEFAULT_RELATION}.
+     *
+     * @param relation the relation
+     */
     public void setRelation(final String relation) {
         this.relation = relation;
     }
 
+    /**
+     * Sets a metadata data filter. This is useful to filter out metadata.
+     *
+     * @param metaDataFilter the metadata data filter.
+     */
     public void setMetaDataFilter(final String metaDataFilter) {
         this.metaDataFilter = Pattern.compile(metaDataFilter);
     }

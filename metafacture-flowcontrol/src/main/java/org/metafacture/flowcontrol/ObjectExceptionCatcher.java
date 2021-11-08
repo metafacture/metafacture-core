@@ -52,29 +52,65 @@ public final class ObjectExceptionCatcher<T> extends
 
     private String logPrefix;
     private boolean logStackTrace;
+    private boolean logExceptionMessage = true;
 
+    /**
+     * Creates an instance of {@link ObjectExceptionCatcher} without a log message
+     * prefix.
+     */
     public ObjectExceptionCatcher() {
         this("");
     }
 
+    /**
+     * Creates an instance of {@link ObjectExceptionCatcher} with a given prefix of
+     * the log messages.
+     *
+     * @param logPrefix the prefix of the log messages
+     */
     public ObjectExceptionCatcher(final String logPrefix) {
         this.logPrefix = logPrefix;
     }
 
+    /**
+     * Sets the log prefix.
+     *
+     * @param logPrefix the log message prefix
+     */
     public void setLogPrefix(final String logPrefix) {
         this.logPrefix = logPrefix;
     }
 
+    /**
+     * Gets the log messages prefix.
+     *
+     * @return the log message prefix
+     */
     public String getLogPrefix() {
         return logPrefix;
     }
 
+    /**
+     * Sets the log messages to stack trace level.
+     *
+     * @param logStackTrace true if the log messages should be set to stack trace
+     *                      level.
+     */
     public void setLogStackTrace(final boolean logStackTrace) {
         this.logStackTrace = logStackTrace;
     }
 
+    /**
+     * Checks wether the log messages should be in stack trace level.
+     *
+     * @return true if the log messages are in stack trace level
+     */
     public boolean isLogStackTrace() {
         return logStackTrace;
+    }
+
+    /*package-private*/ void setLogExceptionMessage(final boolean logExceptionMessage) {
+        this.logExceptionMessage = logExceptionMessage;
     }
 
     @Override
@@ -83,7 +119,9 @@ public final class ObjectExceptionCatcher<T> extends
             getReceiver().process(obj);
         }
         catch (final Exception e) { // checkstyle-disable-line IllegalCatch
-            LOG.error("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
+            if (logExceptionMessage) {
+                LOG.error("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
+            }
 
             if (logStackTrace) {
                 final StringWriter stackTraceWriter = new StringWriter();

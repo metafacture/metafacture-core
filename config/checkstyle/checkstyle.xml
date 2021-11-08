@@ -29,6 +29,7 @@
         <module name="CustomImportOrder">
             <property name="customImportOrderRules" value="SAME_PACKAGE(2)###THIRD_PARTY_PACKAGE###STANDARD_JAVA_PACKAGE###SPECIAL_IMPORTS###STATIC"/>
             <property name="separateLineBetweenGroups" value="true"/>
+            <property name="sortImportsInGroupAlphabetically" value="true"/>
         </module>
         <module name="CyclomaticComplexity"/>
         <module name="DeclarationOrder"/>
@@ -68,6 +69,7 @@
         <module name="InterfaceIsType"/>
         <module name="InterfaceTypeParameterName"/>
         <module name="JavaNCSS"/>
+        <module name="JavadocMethod"/>
         <module name="JavadocType"/>
         <module name="LambdaParameterName"/>
         <module name="LeftCurly"/>
@@ -81,6 +83,7 @@
         <module name="MethodTypeParameterName"/>
         <module name="MissingCtor"/>
         <module name="MissingDeprecated"/>
+        <module name="MissingJavadocMethod"/>
         <module name="MissingOverride"/>
         <module name="MissingSwitchDefault"/>
         <module name="ModifiedControlVariable"/>
@@ -97,6 +100,7 @@
         <module name="NoClone"/>
         <module name="NoEnumTrailingComma"/>
         <module name="NoFinalizer"/>
+        <module name="NonEmptyAtclauseDescription"/>
         <module name="NoWhitespaceAfter"/>
         <module name="NoWhitespaceBefore"/>
         <module name="OneStatementPerLine">

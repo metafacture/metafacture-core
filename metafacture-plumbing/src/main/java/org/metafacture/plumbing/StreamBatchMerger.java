@@ -45,6 +45,9 @@ public final class StreamBatchMerger extends DefaultStreamPipe<StreamReceiver> {
     private long batchSize = DEFAULT_BATCH_SIZE;
     private long recordCount;
 
+    /**
+     * Creates an instance of {@link StreamBatchMerger}.
+     */
     public StreamBatchMerger() {
     }
 
@@ -61,6 +64,11 @@ public final class StreamBatchMerger extends DefaultStreamPipe<StreamReceiver> {
         this.batchSize = batchSize;
     }
 
+    /**
+     * Gets the batch size.
+     *
+     * @return the batch size.
+     */
     public long getBatchSize() {
         return batchSize;
     }

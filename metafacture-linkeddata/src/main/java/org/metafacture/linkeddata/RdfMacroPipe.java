@@ -42,9 +42,17 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
     public static final String XML_LANG = "~xml:lang";
     private String autoAddedSubject = "";
 
+    /**
+     * Creates an instance of {@link RdfMacroPipe}.
+     */
     public RdfMacroPipe() {
     }
 
+    /**
+     * Flas wether to auto add the subject.
+     *
+     * @param autoAddedSubject true if subject shoudl be auto added
+     */
     public void setAutoAddedSubject(final String autoAddedSubject) {
         this.autoAddedSubject = autoAddedSubject;
     }

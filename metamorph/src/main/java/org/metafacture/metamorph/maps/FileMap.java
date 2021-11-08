@@ -29,27 +29,38 @@ import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
  * Provides a {@link Map} based on a file. The file is supposed to be UTF-8
- * encoded. The separator is by default \t. <strong>Important:</strong> Lines
- * that are not split in two parts by the separator are ignored!
+ * encoded. The default separator is {@code \t}. <strong>Important:</strong>
+ * Lines that are not split in two parts by the separator are ignored!
  *
  * @author Markus Michael Geipel
  */
 public final class FileMap extends AbstractReadOnlyMap<String, String> {
 
-    private final Map<String, String> map = new HashMap<String, String>();
+    private final Map<String, String> map = new HashMap<>();
 
     private Pattern split = Pattern.compile("\t", Pattern.LITERAL);
 
+    /**
+     * Creates an instance of {@link FileMap}.
+     */
     public FileMap() {
     }
 
+    /**
+     * Sets a comma separated list of files which are then passed to
+     * {@link #setFile}.
+     *
+     * @param files a comma separated list of files
+     */
     public void setFiles(final String files) {
         final String[] parts = files.split("\\s*,\\s*");
         for (final String part : parts) {
@@ -57,6 +68,13 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
         }
     }
 
+    /**
+     * Provides a {@link Map} based on a file. The file is supposed to be UTF-8
+     * encoded. The default separator is {@code \t}. <strong>Important:</strong>
+     * Lines that are not split in two parts by the separator are ignored!
+     *
+     * @param file the file
+     */
     public void setFile(final String file) {
         try (
                 InputStream stream = openStream(file);
@@ -116,6 +134,13 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
         }
     }
 
+    /**
+     * Sets the separator.
+     *
+     * <strong>Default value: {@code \t} </strong>
+     *
+     * @param delimiter the separator
+     */
     public void setSeparator(final String delimiter) {
         split = Pattern.compile(delimiter, Pattern.LITERAL);
     }
@@ -123,6 +148,11 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
     @Override
     public String get(final Object key) {
         return map.get(key);
+    }
+
+    @Override
+    public Set<String> keySet() {
+        return Collections.unmodifiableSet(map.keySet());
     }
 
 }

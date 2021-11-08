@@ -41,9 +41,19 @@ public final class JndiSqlMap extends AbstractReadOnlyMap<String, String> implem
     private DataSource datasource;
     private String query;
 
+    /**
+     * Creates an instance of {@link JndiSqlMap}.
+     */
     public JndiSqlMap() {
     }
 
+    /**
+     * Sets the {@link DataSource}.
+     *
+     * @see InitialContext
+     *
+     * @param name the name to be looked up in the InitialContext.
+     */
     public void setDatasource(final String name) {
         try {
             datasource = (DataSource) new InitialContext().lookup(name);
@@ -53,6 +63,11 @@ public final class JndiSqlMap extends AbstractReadOnlyMap<String, String> implem
         }
     }
 
+    /**
+     * Sets the query.
+     *
+     * @param query the query
+     */
     public void setQuery(final String query) {
         this.query = query;
     }

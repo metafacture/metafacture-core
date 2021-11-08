@@ -21,7 +21,7 @@ import org.metafacture.framework.helpers.DefaultStreamReceiver;
 import java.util.Collection;
 
 /**
- * just records the value of the last received literal.
+ * Just records the value of the last received literal.
  * @author Markus Michael Geipel
  *
  */
@@ -31,14 +31,26 @@ public final class SingleValue extends DefaultStreamReceiver implements Collecto
     private String value = "";
     private Collection<String> collection;
 
+    /**
+     * Creates an instance of {@link SingleValue}.
+     */
     public SingleValue() {
-        collection = null;
     }
 
+    /**
+     * Creates an instance of {@link SingleValue} by a given Collection.
+     *
+     * @param collection the Collection
+     */
     public SingleValue(final Collection<String> collection) {
         this.collection = collection;
     }
 
+    /**
+     * Check wether SingleValue is closed.
+     *
+     * @return true if SingleValue is closed.
+     */
     public boolean isClosed() {
         return closed;
     }

@@ -42,6 +42,9 @@ public final class ResourceOpener extends DefaultObjectPipe<String, ObjectReceiv
 
     private String encoding = "UTF-8";
 
+    /**
+     * Creates an instance of {@link ResourceOpener}.
+     */
     public ResourceOpener() {
     }
 

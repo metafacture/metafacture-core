@@ -33,6 +33,9 @@ public final class None extends AbstractCollect {
     private boolean receivedInput;
     private boolean emittedResult;
 
+    /**
+     * Creates an instance of {@link None}.
+     */
     public None() {
     }
 

@@ -48,9 +48,15 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
 
     private PreparedStatement preparedStatement;
 
+    /**
+     * Creates an instance of {@link SqlMap}.
+     */
     public SqlMap() {
     }
 
+    /**
+     * Initializes the prepared statement using the {@link #query}.
+     */
     public void init() {
         try {
             preparedStatement = getMySqlConnection().prepareStatement(query);
@@ -107,26 +113,56 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
         return resultString;
     }
 
+    /**
+     * Sets the driver.
+     *
+     * @param driver the driver
+     */
     public void setDriver(final String driver) {
         this.driver = driver;
     }
 
+    /**
+     * Sets the host.
+     *
+     * @param host the host
+     */
     public void setHost(final String host) {
         this.host = host;
     }
 
+    /**
+     * Sets the login.
+     *
+     * @param login the login
+     */
     public void setLogin(final String login) {
         this.login = login;
     }
 
+    /**
+     * Sets the password.
+     *
+     * @param password the password
+     */
     public void setPassword(final String password) {
         this.password = password;
     }
 
+    /**
+     * Sets the database.
+     *
+     * @param database the database
+     */
     public void setDatabase(final String database) {
         this.database = database;
     }
 
+    /**
+     * Sets the query.
+     *
+     * @param query the query
+     */
     public void setQuery(final String query) {
         this.query = query;
     }

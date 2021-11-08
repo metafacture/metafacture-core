@@ -50,6 +50,9 @@ public final class AlephMabXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private String currentTag = "";
     private StringBuilder builder = new StringBuilder();
 
+    /**
+     * Creates instance of {@link AlephMabXmlHandler}.
+     */
     public AlephMabXmlHandler() {
     }
 

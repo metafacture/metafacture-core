@@ -60,70 +60,130 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private final JsonFactory jsonFactory = new JsonFactory();
 
     private JsonParser jsonParser;
-    private String arrayMarker;
-    private String arrayName;
-    private String recordId;
+    private String arrayMarker = DEFAULT_ARRAY_MARKER;
+    private String arrayName = DEFAULT_ARRAY_NAME;
+    private String recordId = DEFAULT_RECORD_ID;
+    private String recordPath = DEFAULT_ROOT_PATH;
+
     private int recordCount;
 
-    private String recordPath;
-
+    /**
+     * Creates an instance of {@link JsonDecoder}.
+     */
     public JsonDecoder() {
-        setArrayMarker(DEFAULT_ARRAY_MARKER);
-        setArrayName(DEFAULT_ARRAY_NAME);
-        setRecordId(DEFAULT_RECORD_ID);
-        setRecordPath(DEFAULT_ROOT_PATH);
-
-        resetRecordCount();
     }
 
+    /**
+     * Flags wether to allow comments.
+     *
+     * @param allowComments true if comments should be allowed
+     */
     public void setAllowComments(final boolean allowComments) {
         jsonFactory.configure(JsonParser.Feature.ALLOW_COMMENTS, allowComments);
     }
 
+    /**
+     * Checks if comments are allowed.
+     *
+     * @return true if comments are allowed
+     */
     public boolean getAllowComments() {
         return jsonFactory.isEnabled(JsonParser.Feature.ALLOW_COMMENTS);
     }
 
+    /**
+     * Sets the array marker.
+     *
+     * @param arrayMarker the array marker
+     */
     public void setArrayMarker(final String arrayMarker) {
         this.arrayMarker = arrayMarker;
     }
 
+    /**
+     * Gets the array marker.
+     *
+     * @return the array marker
+     */
     public String getArrayMarker() {
         return arrayMarker;
     }
 
+    /**
+     * Sets the name of the array.
+     *
+     * @param arrayName the name of the array
+     */
     public void setArrayName(final String arrayName) {
         this.arrayName = arrayName;
     }
 
+    /**
+     * Gets the name of the array.
+     *
+     * @return the name of the array
+     */
     public String getArrayName() {
         return arrayName;
     }
 
+    /**
+     * Sets the ID of the record.
+     *
+     * @param recordId the ID of the record
+     */
     public void setRecordId(final String recordId) {
         this.recordId = recordId;
     }
 
+    /**
+     * Gets the ID of the record.
+     *
+     * @return the ID of the record
+     */
     public String getRecordId() {
         return recordId;
     }
 
+    /**
+     * Sets the record count.
+     *
+     * @param recordCount the record count
+     */
     public void setRecordCount(final int recordCount) {
         this.recordCount = recordCount;
     }
 
+    /**
+     * Gets the record count.
+     *
+     * @return the record count
+     */
     public int getRecordCount() {
         return recordCount;
     }
 
+    /**
+     * Sets the record path.
+     *
+     * @param recordPath the record path
+     */
     public void setRecordPath(final String recordPath) {
         this.recordPath = recordPath;
     }
 
+    /**
+     * Gets the record path.
+     *
+     * @return the record path
+     */
     public String getRecordPath() {
         return recordPath;
     }
 
+    /**
+     * Resets the record count.
+     */
     public void resetRecordCount() {
         setRecordCount(0);
     }

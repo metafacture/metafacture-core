@@ -33,6 +33,9 @@ import org.metafacture.framework.objects.Triple;
 @FluxCommand("sort-triples")
 public final class TripleSort extends AbstractTripleSort {
 
+    /**
+     * Creates an instance of {@link TripleSort}.
+     */
     public TripleSort() {
     }
 
@@ -41,14 +44,29 @@ public final class TripleSort extends AbstractTripleSort {
         getReceiver().process(triple);
     }
 
+    /**
+     * Sets if the order should be done by subject, predicate or object.
+     *
+     * @param compare the {@link AbstractTripleSort.Compare}
+     */
     public void setBy(final Compare compare) {
         setCompare(compare);
     }
 
+    /**
+     * Sets increasing or decreasing order.
+     *
+     * @param order the {@link AbstractTripleSort.Order}.
+     */
     public void setOrder(final Order order) {
         setSortOrder(order);
     }
 
+    /**
+     * Flags if sort should be numeric.
+     *
+     * @param numeric true if sort should be numeric
+     */
     public void setNumeric(final boolean numeric) {
         setSortNumeric(numeric);
     }

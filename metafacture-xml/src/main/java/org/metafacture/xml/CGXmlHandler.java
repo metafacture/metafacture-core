@@ -77,6 +77,9 @@ public final class CGXmlHandler extends DefaultXmlPipe<StreamReceiver> {
 
     private static final String VERSION = "1.0";
 
+    /**
+     * Creates an instance of {@link CGXmlHandler}.
+     */
     public CGXmlHandler() {
     }
 

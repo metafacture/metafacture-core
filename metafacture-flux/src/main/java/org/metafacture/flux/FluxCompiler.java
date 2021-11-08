@@ -40,6 +40,16 @@ public final class FluxCompiler {
         // no instances
     }
 
+    /**
+     * Compiles the flux to a flow.
+     *
+     * @see FluxProgramm
+     * @param flux the flux
+     * @param vars the variables of the flux
+     * @return the flow
+     * @throws RecognitionException if an ANTLR exception occurs
+     * @throws IOException          if an I/O error occurs
+     */
     public static FluxProgramm compile(final InputStream flux, final Map<String, String> vars) throws RecognitionException, IOException {
         return compileFlow(compileAst(flux), vars);
     }

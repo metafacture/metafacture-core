@@ -23,7 +23,11 @@ package org.metafacture.metamorph.api;
  *
  */
 public interface ConditionAware {
-
+    /**
+     * makes statements conditional.
+     *
+     * @param receiver the {@link NamedValueSource}
+     */
     void setConditionSource(NamedValueSource receiver);
 
 }

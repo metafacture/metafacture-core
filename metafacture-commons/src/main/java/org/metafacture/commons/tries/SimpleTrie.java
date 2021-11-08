@@ -25,11 +25,19 @@ package org.metafacture.commons.tries;
 public final class SimpleTrie<P> {
     private final Node<P> root = new Node<>(null);
 
+    /**
+     * Creates an instance of {@link SimpleTrie}.
+     */
     public SimpleTrie() {
     }
 
+    /**
+     * Adds a value for the key.
+     *
+     * @param key   the name of the key
+     * @param value the value
+     */
     public void put(final String key, final P value) {
-
         Node<P> node = root;
         Node<P> next;
         final int length = key.length();
@@ -49,6 +57,12 @@ public final class SimpleTrie<P> {
         }
     }
 
+    /**
+     * Gets the value of a key.
+     *
+     * @param key the name of the key
+     * @return the value
+     */
     public P get(final String key) {
         Node<P> node = root;
         final int length = key.length();

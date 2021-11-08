@@ -27,6 +27,9 @@ import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
  */
 public final class Group extends AbstractFlushingCollect {
 
+    /**
+     * Creates an instance of {@link Group}.
+     */
     public Group() {
     }
 

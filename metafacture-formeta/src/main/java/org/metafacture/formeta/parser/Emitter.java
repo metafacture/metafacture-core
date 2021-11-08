@@ -26,12 +26,35 @@ import org.metafacture.framework.StreamReceiver;
  */
 public interface Emitter {
 
+    /**
+     * Sets the receiver.
+     *
+     * @param receiver the receiver
+     */
     void setReceiver(StreamReceiver receiver);
 
+    /**
+     * The startGroup event.
+     *
+     * @param name         the name of the startGroup event
+     * @param nestingLevel the nesting level of the startGroup event
+     */
     void startGroup(String name, int nestingLevel);
 
+    /**
+     * The endGroup event.
+     *
+     * @param nestingLevel the nesting level
+     */
     void endGroup(int nestingLevel);
 
+    /**
+     * The literal event.
+     *
+     * @param name         the name of the literal event
+     * @param value        the value of the literal event
+     * @param nestingLevel the nesting level of the literal event
+     */
     void literal(String name, String value, int nestingLevel);
 
 }

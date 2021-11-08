@@ -43,6 +43,9 @@ public final class Counter extends DefaultStreamPipe<StreamReceiver> {
     private int numEntities;
     private int numLiterals;
 
+    /**
+     * Creates an instance of {@link Counter}.
+     */
     public Counter() {
     }
 

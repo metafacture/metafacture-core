@@ -44,6 +44,9 @@ import java.io.IOException;
 @FluxCommand("xml-tee")
 public final class XmlTee extends DefaultTee<XmlReceiver> implements XmlPipe<XmlReceiver> {
 
+    /**
+     * Creates an instance of {@link XmlTee}.
+     */
     public XmlTee() {
     }
 

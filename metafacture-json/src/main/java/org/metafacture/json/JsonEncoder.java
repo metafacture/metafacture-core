@@ -62,6 +62,10 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     private String arrayMarker = ARRAY_MARKER;
 
+    /**
+     * Constructs a JsonEncoder if no IOException occurs. The root value
+     * separator of the JsonGenerator is set to null.
+     */
     public JsonEncoder() {
         try {
             jsonGenerator = new JsonFactory().createGenerator(writer);
@@ -72,18 +76,38 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         }
     }
 
+    /**
+     * Sets the array marker.
+     *
+     * @param arrayMarker the array marker
+     */
     public void setArrayMarker(final String arrayMarker) {
         this.arrayMarker = arrayMarker;
     }
 
+    /**
+     * Gets the array marker.
+     *
+     * @return the array marker
+     */
     public String getArrayMarker() {
         return arrayMarker;
     }
 
+    /**
+     * Flags wether to use pretty printing.
+     *
+     * @param prettyPrinting true if pretty printing should be used
+     */
     public void setPrettyPrinting(final boolean prettyPrinting) {
         jsonGenerator.setPrettyPrinter(prettyPrinting ? new DefaultPrettyPrinter((SerializableString) null) : null);
     }
 
+    /**
+     * Checks if the {@link JsonGenerator} has a pretty printer.
+     *
+     * @return true if {@link JsonGenerator} has a pretty printer.
+     */
     public boolean getPrettyPrinting() {
         return jsonGenerator.getPrettyPrinter() != null;
     }

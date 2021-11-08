@@ -24,7 +24,11 @@ package org.metafacture.metamorph.api;
  *
  */
 public interface MorphErrorHandler {
-
+    /**
+     * Provides custom error handling.
+     *
+     * @param exception the {@link Exception}
+     */
     void error(Exception exception);
 
 }

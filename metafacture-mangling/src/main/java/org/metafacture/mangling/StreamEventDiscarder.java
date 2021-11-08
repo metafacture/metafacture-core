@@ -49,6 +49,9 @@ public class StreamEventDiscarder implements StreamPipe<StreamReceiver> {
 
     private EnumSet<EventType> discardedEvents = EnumSet.noneOf(EventType.class);
 
+    /**
+     * Creates an instance of {@link StreamEventDiscarder}.
+     */
     public StreamEventDiscarder() {
     }
 

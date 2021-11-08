@@ -36,6 +36,9 @@ public final class MultilineFormatter extends AbstractFormatter {
     private boolean appendItemSeparator;
     private boolean firstItem;
 
+    /**
+     * Creates an instance of {@link MultilineFormatter}.
+     */
     public MultilineFormatter() {
         onReset();
     }

@@ -178,4 +178,30 @@ public final class LookupTest {
         );
     }
 
+    @Test
+    public void issue372_shouldFilterMissingValue() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='litA'>" +
+                "    <lookup>" +
+                "      <entry name='cat' value='mammal' />" +
+                "      <entry name='dog' value='mammal' />" +
+                "    </lookup>" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("litA", "cat");
+                    i.literal("litA", "dog");
+                    i.literal("litA", "dragon");
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    o.get().startRecord("1");
+                    f.apply(2).literal("litA", "mammal");
+                    o.get().endRecord();
+                }
+        );
+    }
+
 }

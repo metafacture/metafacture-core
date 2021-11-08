@@ -254,6 +254,7 @@ public class PojoEncoderTest {
                 .stringField2);
     }
 
+    @SuppressWarnings("unchecked")
     private <T> ObjectReceiver<T> createObjectReceiverMock() {
         // There is no type safe to create a mock with Mockito#mock(Class).
         // Hence, we have to use an unchecked cast here:

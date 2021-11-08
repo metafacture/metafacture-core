@@ -124,6 +124,9 @@ public final class PicaMultiscriptRemodeler extends DefaultStreamPipe<StreamRece
 
     private final SortedMap<String, BufferedField> bufferedFields = new TreeMap<String, BufferedField>();
 
+    /**
+     * Creates an instance of {@link PicaMultiscriptRemodeler}.
+     */
     public PicaMultiscriptRemodeler() {
     }
 

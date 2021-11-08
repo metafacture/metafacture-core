@@ -26,6 +26,9 @@ import org.metafacture.io.LineReader;
  */
 public class PicaReader extends ReaderBase {
 
+    /**
+     * Creates an instance of {@link PicaReader}.
+     */
     public PicaReader() {
         super(new LineReader(), new PicaDecoder());
     }

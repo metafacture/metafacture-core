@@ -28,6 +28,9 @@ public final class ConciseFormatter extends AbstractFormatter {
 
     private boolean appendItemSeparator;
 
+    /**
+     * Creates an instance of {@link ConciseFormatter}.
+     */
     public ConciseFormatter() {
     }
 

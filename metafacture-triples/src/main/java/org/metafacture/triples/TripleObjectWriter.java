@@ -57,6 +57,12 @@ public final class TripleObjectWriter extends DefaultObjectReceiver<Triple> {
 
     private Charset encoding = StandardCharsets.UTF_8;
 
+    /**
+     * Creates an instance of {@link TripleObjectWriter} with a given directory to
+     * write to.
+     *
+     * @param baseDir the path to the base directory
+     */
     public TripleObjectWriter(final String baseDir) {
         this.baseDir = Paths.get(baseDir);
     }

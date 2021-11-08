@@ -62,14 +62,27 @@ public final class StreamFlattener extends DefaultStreamPipe<StreamReceiver> {
 
     private final EntityPathTracker pathTracker = new EntityPathTracker();
 
+    /**
+     * Creates an instance of {@link StreamFlattener}.
+     */
     public StreamFlattener() {
         setEntityMarker(DEFAULT_ENTITY_MARKER);
     }
 
+    /**
+     * Gets the entity marker.
+     *
+     * @return the entity marker
+     */
     public String getEntityMarker() {
         return pathTracker.getEntitySeparator();
     }
 
+    /**
+     * Sets the entity marker.
+     *
+     * @param entityMarker the entity marker
+     */
     public void setEntityMarker(final String entityMarker) {
         pathTracker.setEntitySeparator(entityMarker);
     }
@@ -106,10 +119,20 @@ public final class StreamFlattener extends DefaultStreamPipe<StreamReceiver> {
         getReceiver().literal(pathTracker.getCurrentPathWith(name), value);
     }
 
+    /**
+     * Gets the current entity name.
+     *
+     * @return the current entity name
+     */
     public String getCurrentEntityName() {
         return pathTracker.getCurrentEntityName();
     }
 
+    /**
+     * Gets the current path.
+     *
+     * @return the current path
+     */
     public String getCurrentPath() {
         return pathTracker.getCurrentPath();
     }

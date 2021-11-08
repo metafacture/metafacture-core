@@ -28,6 +28,13 @@ public class MetamorphException extends MetafactureException {
 
     private static final long serialVersionUID = 0L;
 
+    /**
+     * Creates an instance of {@link MetamorphException} by a given message and
+     * cause.
+     *
+     * @param message the message
+     * @param cause   the {@link Throwable}
+     */
     public MetamorphException(final String message, final Throwable cause) {
         super(message, cause);
     }

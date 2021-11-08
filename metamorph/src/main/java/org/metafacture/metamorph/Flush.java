@@ -22,7 +22,7 @@ import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.SourceLocation;
 
 /**
- * Flushes a {@link FlushListener}
+ * Flushes a {@link FlushListener}.
  *
  * @author Markus Geipel
  * @author Christoph Böhme
@@ -34,6 +34,11 @@ public final class Flush implements NamedValueReceiver {
 
     private SourceLocation sourceLocation;
 
+    /**
+     * Creates an instance of {@link Flush} by a given {@link FlushListener}.
+     *
+     * @param listener the {@link FlushListener}
+     */
     public Flush(final FlushListener listener) {
         this.listener = listener;
     }

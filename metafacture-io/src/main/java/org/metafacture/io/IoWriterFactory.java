@@ -19,12 +19,18 @@ package org.metafacture.io;
 import java.io.Writer;
 
 /**
- * Interface for classes creating {@link Writer}s. Used in {@link ObjectJavaIoWriter}.
+ * Interface for classes creating {@link Writer}s. Used in
+ * {@link ObjectJavaIoWriter}.
  *
  * @author markus geipel
- * @deprecated Use the new writer components based on {@link ObjectWriter} instead.
+ * @deprecated since = "5.0.1". Use the new writer components based on
+ *             {@link ObjectWriter} instead.
  */
 @Deprecated
 public interface IoWriterFactory {
+    /**
+     *
+     * @return a {@link Writer}
+     */
     Writer createWriter();
 }

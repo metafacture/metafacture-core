@@ -26,6 +26,9 @@ import org.metafacture.xml.CGXmlHandler;
  */
 public final class CGXmlReader extends XmlReaderBase {
 
+    /**
+     * Creates an instance of {@link CGXmlReader}.
+     */
     public CGXmlReader() {
         super(new CGXmlHandler());
     }

@@ -27,6 +27,9 @@ import org.metafacture.framework.LifeCycle;
  */
 public class DefaultLifeCycle implements LifeCycle {
 
+    /**
+     * Creates an instance of {@link DefaultLifeCycle}.
+     */
     public DefaultLifeCycle() {
     }
 

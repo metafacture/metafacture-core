@@ -24,8 +24,8 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
-import org.metafacture.framework.objects.Triple.ObjectType;
 import org.metafacture.framework.objects.Triple;
+import org.metafacture.framework.objects.Triple.ObjectType;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,6 +51,9 @@ public final class TripleObjectRetriever extends DefaultObjectPipe<Triple, Objec
 
     private Charset defaultEncoding = StandardCharsets.UTF_8;
 
+    /**
+     * Creates an instance of {@link TripleObjectRetriever}.
+     */
     public TripleObjectRetriever() {
     }
 

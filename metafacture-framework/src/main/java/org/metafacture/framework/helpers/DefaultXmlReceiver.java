@@ -40,6 +40,9 @@ import java.io.IOException;
  */
 public class DefaultXmlReceiver extends DefaultLifeCycle implements XmlReceiver {
 
+    /**
+     * Creates an instance of {@link DefaultXmlReceiver}.
+     */
     public DefaultXmlReceiver() {
     }
 

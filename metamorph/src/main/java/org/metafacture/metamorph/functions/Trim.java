@@ -25,6 +25,9 @@ import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
  */
 public final class Trim extends AbstractSimpleStatelessFunction {
 
+    /**
+     * Creates an instance of {@link Trim}.
+     */
     public Trim() {
     }
 

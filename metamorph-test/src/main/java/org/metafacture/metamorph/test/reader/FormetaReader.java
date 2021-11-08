@@ -27,6 +27,9 @@ import org.metafacture.formeta.FormetaRecordsReader;
  */
 public class FormetaReader extends ReaderBase {
 
+    /**
+     * Creates an instance of {@link FormetaReader}.
+     */
     public FormetaReader() {
         super(new FormetaRecordsReader(), new FormetaDecoder());
     }

@@ -44,10 +44,14 @@ public final class FormetaRecordsReader extends DefaultObjectPipe<Reader, Object
     private final StringBuilder builder = new StringBuilder();
     private final char[] buffer = new char[BUFFER_SIZE];
 
+    /**
+     * Creates an instance of {@link FormetaRecordsReader}.
+     */
     public FormetaRecordsReader() {
     }
 
     @Override // checkstyle-disable-line CyclomaticComplexity
+    @SuppressWarnings("fallthrough")
     public void process(final Reader reader) {
         assert !isClosed();
 

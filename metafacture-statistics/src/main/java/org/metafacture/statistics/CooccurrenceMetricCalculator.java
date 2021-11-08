@@ -98,6 +98,11 @@ public final class CooccurrenceMetricCalculator extends AbstractCountProcessor {
 
     private final List<Metric> metrics = new ArrayList<Metric>();
 
+    /**
+     * Constructs a CooccurrenceMetricCalculator with given metrics.
+     *
+     * @param allMetrics the Metrics as a comma separated String
+     */
     public CooccurrenceMetricCalculator(final String allMetrics) {
         setMinCount(MIN_COUNT);
         for (final String metric : allMetrics.split("\\s*,\\s*")) {
@@ -105,6 +110,11 @@ public final class CooccurrenceMetricCalculator extends AbstractCountProcessor {
         }
     }
 
+    /**
+     * Constructs a CooccurrenceMetricCalculator with given metrics.
+     *
+     * @param metrics the Metrics as an array
+     */
     public CooccurrenceMetricCalculator(final Metric... metrics) {
         setMinCount(MIN_COUNT);
         for (final Metric metric : metrics) {

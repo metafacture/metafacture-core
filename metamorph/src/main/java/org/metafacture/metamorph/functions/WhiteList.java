@@ -23,6 +23,9 @@ package org.metafacture.metamorph.functions;
  */
 public final class WhiteList extends AbstractLookup {
 
+    /**
+     * Creates an instance of {@link WhiteList}.
+     */
     public WhiteList() {
     }
 

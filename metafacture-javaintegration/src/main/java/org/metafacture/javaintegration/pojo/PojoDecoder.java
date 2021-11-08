@@ -80,6 +80,9 @@ public class PojoDecoder<T> extends DefaultObjectPipe<T, StreamReceiver> {
 
     private final TypeDecoderFactory typeDecoderFactory = new TypeDecoderFactory();
 
+    /**
+     * Creates an instance of {@link PojoDecoder}.
+     */
     public PojoDecoder() {
     }
 

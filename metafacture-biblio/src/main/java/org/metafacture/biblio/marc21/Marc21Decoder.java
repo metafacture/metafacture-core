@@ -41,8 +41,9 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  *   <li>data fields.
  * </ul>
  * This decoder only supports MARC 21 records with UTF-8 encoding. Other
- * character coding schemes are not supported. A {@link FormatException} is
- * thrown if a record with an unsupported coding scheme is encountered.
+ * character coding schemes are not supported. A
+ * {@link org.metafacture.framework.FormatException} is thrown if a record
+ * with an unsupported coding scheme is encountered.
  * <p>
  * The bibliographic information in the record leader is
  * <ul>
@@ -56,18 +57,18 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  *   <li>multipart resource record level.
  * </ul>
  * This information is emitted as an entity named
- * &quot;{@value Marc21EventNames#LEADER_ENTITY}&quot;. It is emitted directly
- * after the <i>start-record</i> event. The entity contains the following
- * literals:
+ * {@value org.metafacture.biblio.marc21.Marc21EventNames#LEADER_ENTITY}. It is
+ * emitted directly after the <i>start-record</i> event. The entity contains
+ * the following literals:
  * <ol>
- *   <li>{@value Marc21EventNames#RECORD_STATUS_LITERAL}
- *   <li>{@value Marc21EventNames#RECORD_TYPE_LITERAL}
- *   <li>{@value Marc21EventNames#BIBLIOGRAPHIC_LEVEL_LITERAL}
- *   <li>{@value Marc21EventNames#TYPE_OF_CONTROL_LITERAL}
- *   <li>{@value Marc21EventNames#CHARACTER_CODING_LITERAL}
- *   <li>{@value Marc21EventNames#ENCODING_LEVEL_LITERAL}
- *   <li>{@value Marc21EventNames#CATALOGING_FORM_LITERAL}
- *   <li>{@value Marc21EventNames#MULTIPART_LEVEL_LITERAL}
+ *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#RECORD_STATUS_LITERAL}
+ *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#RECORD_TYPE_LITERAL}
+ *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#BIBLIOGRAPHIC_LEVEL_LITERAL}
+ *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#TYPE_OF_CONTROL_LITERAL}
+ *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#CHARACTER_CODING_LITERAL}
+ *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#ENCODING_LEVEL_LITERAL}
+ *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#CATALOGING_FORM_LITERAL}
+ *   <li>{@value org.metafacture.biblio.marc21.Marc21EventNames#MULTIPART_LEVEL_LITERAL}
  * </ol>
  * The literals are emitted in the order in which they are listed here. The
  * values of these literals are the characters at the corresponding
@@ -75,9 +76,9 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
  * Standard: Record Leader</a> for a description of the allowed values). The
  * literal values are always only single characters. As this decoder only
- * supports MARC 21 records with UTF-8 encoding, the value of the <i>literal
- * &quot;{@value Marc21EventNames#CHARACTER_CODING_LITERAL}&quot;</i> will
- * always be &quot;a&quot;.
+ * supports MARC 21 records with UTF-8 encoding, the value of the literal
+ * {@value org.metafacture.biblio.marc21.Marc21EventNames#CHARACTER_CODING_LITERAL}
+ * will always be &quot;a&quot;.
  * <p>
  * For example, given a record with the leader
  * <pre>
@@ -86,15 +87,15 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * the following event stream will be emitted:
  * <pre>
  * start-record &quot;1&quot;
- * start-entity &quot;{@value Marc21EventNames#LEADER_ENTITY}&quot;
- * literal &quot;{@value Marc21EventNames#RECORD_STATUS_LITERAL}&quot;: n
- * literal &quot;{@value Marc21EventNames#RECORD_TYPE_LITERAL}&quot;: o
- * literal &quot;{@value Marc21EventNames#BIBLIOGRAPHIC_LEVEL_LITERAL}&quot;: a
- * literal &quot;{@value Marc21EventNames#TYPE_OF_CONTROL_LITERAL}&quot;: " "
- * literal &quot;{@value Marc21EventNames#CHARACTER_CODING_LITERAL}&quot;: a
- * literal &quot;{@value Marc21EventNames#ENCODING_LEVEL_LITERAL}&quot;: z
- * literal &quot;{@value Marc21EventNames#CATALOGING_FORM_LITERAL}&quot;: u
- * literal &quot;{@value Marc21EventNames#MULTIPART_LEVEL_LITERAL}&quot;: " "
+ * start-entity {@value org.metafacture.biblio.marc21.Marc21EventNames#LEADER_ENTITY}
+ * literal {@value org.metafacture.biblio.marc21.Marc21EventNames#RECORD_STATUS_LITERAL}: n
+ * literal {@value org.metafacture.biblio.marc21.Marc21EventNames#RECORD_TYPE_LITERAL}: o
+ * literal {@value org.metafacture.biblio.marc21.Marc21EventNames#BIBLIOGRAPHIC_LEVEL_LITERAL}: a
+ * literal {@value org.metafacture.biblio.marc21.Marc21EventNames#TYPE_OF_CONTROL_LITERAL}: " "
+ * literal {@value org.metafacture.biblio.marc21.Marc21EventNames#CHARACTER_CODING_LITERAL}: a
+ * literal {@value org.metafacture.biblio.marc21.Marc21EventNames#ENCODING_LEVEL_LITERAL}: z
+ * literal {@value org.metafacture.biblio.marc21.Marc21EventNames#CATALOGING_FORM_LITERAL}: u
+ * literal {@value org.metafacture.biblio.marc21.Marc21EventNames#MULTIPART_LEVEL_LITERAL}: " "
  * end-entity
  * &hellip;
  * </pre>
@@ -124,7 +125,8 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * If the decoder receives an empty input string it is ignored and no stream
  * events are emitted.
  * <p>
- * If an error occurs during decoding, a {@link FormatException} is thrown.
+ * If an error occurs during decoding, a
+ * {@link org.metafacture.framework.FormatException} is thrown.
  *
  * @author Christoph Böhme
  * @see "ISO 2709:2008 Standard"
@@ -137,33 +139,45 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @FluxCommand("decode-marc21")
 public final class Marc21Decoder extends DefaultObjectPipe<String, StreamReceiver> {
 
+    public static final boolean EMIT_LEADER_AS_WHOLE = false;
+    public static final boolean IGNORE_MISSING_ID = false;
+
     private final FieldHandler fieldHandler = new Marc21Handler();
 
-    private boolean ignoreMissingId;
-    private boolean emitLeaderAsWhole;
+    private boolean ignoreMissingId = IGNORE_MISSING_ID;
+    private boolean emitLeaderAsWhole = EMIT_LEADER_AS_WHOLE;
 
+    /**
+     * Creates an instance of {@link Marc21Decoder}.
+     */
     public Marc21Decoder() {
     }
 
     /**
-     * Controls whether the decoder aborts processing if a record has no
-     * identifier. A {@link MissingIdException} is thrown in these cases.
-     * If this parameter is set to true then the identifier emitted with the
-     * <i>start-record</i> event of records without field &quot;001&quot; will
-     * be an empty string.
+     * Controls whether the decoder aborts processing if a record has no identifier.
+     * A {@link MissingIdException} is thrown in these cases. If this parameter is
+     * set to true then the identifier emitted with the <i>start-record</i> event of
+     * records without field &quot;001&quot; will be an empty string.
      * <p>
-     * The default value of {@code ignoreMissingId} is false.
+     * <strong>Default value: {@value #IGNORE_MISSING_ID}</strong>
      * <p>
      * This parameter can be changed anytime during processing. The new value
      * becomes effective with the next record being processed.
      *
-     * @param ignoreMissingId
-     *            true if missing identifiers should be silently ignored.
+     * @param ignoreMissingId true if missing identifiers should be silently
+     *                        ignored.
      */
     public void setIgnoreMissingId(final boolean ignoreMissingId) {
         this.ignoreMissingId = ignoreMissingId;
     }
 
+    /**
+     * Gets the flag to decide whether to abort the processing of a record if it has
+     * no identifier.
+     *
+     * @return true if a missing identifier shouldn't abort processing, otherwise
+     *         false
+     */
     public boolean getIgnoreMissingId() {
         return ignoreMissingId;
     }
@@ -172,16 +186,22 @@ public final class Marc21Decoder extends DefaultObjectPipe<String, StreamReceive
      * Controls whether the Record Leader should be emitted as a whole instead of
      * extracting the bibliographic information in the record leader.
      *
-     * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
-     * Standard: Record Leader</a>
+     * <strong>Default value: {@value #EMIT_LEADER_AS_WHOLE}</strong>
      *
-     * @param emitLeaderAsWhole
-     *             true if the leader should be emitted as a whole.
+     * @see <a href="http://www.loc.gov/marc/bibliographic/bdleader.html">MARC 21
+     *      Standard: Record Leader</a>
+     * @param emitLeaderAsWhole true if the leader should be emitted as a whole.
      */
     public void setEmitLeaderAsWhole(final boolean emitLeaderAsWhole) {
         this.emitLeaderAsWhole = emitLeaderAsWhole;
     }
 
+    /**
+     * Gets the flag to decide whether the Record Leader is emitted as whole instead
+     * of extracting the bibliographic information in the record leader.
+     *
+     * @return true if the Record Leader is emitted as whole, otherwise false
+     */
     public boolean getEmitLeaderAsWhole() {
         return emitLeaderAsWhole;
     }

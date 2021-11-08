@@ -37,17 +37,35 @@ public final class FormetaParser {
     private char[] buffer = new char[BUFFER_SIZE];
     private final StructureParserContext structureParserContext = new StructureParserContext();
 
+    /**
+     * Creates an instance of {@link FormetaParser}.
+     */
     public FormetaParser() {
     }
 
+    /**
+     * Sets the Emitter.
+     *
+     * @param emitter the Emitter
+     */
     public void setEmitter(final Emitter emitter) {
         structureParserContext.setEmitter(emitter);
     }
 
+    /**
+     * Gets the Emitter.
+     *
+     * @return the Emitter
+     */
     public Emitter getEmitter() {
         return structureParserContext.getEmitter();
     }
 
+    /**
+     * Parses the data.
+     *
+     * @param data the data
+     */
     public void parse(final String data) {
         assert structureParserContext.getEmitter() != null : "No emitter set";
 

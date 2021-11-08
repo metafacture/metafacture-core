@@ -24,6 +24,9 @@ package org.metafacture.metamorph.functions;
  */
 public final class BlackList extends AbstractLookup {
 
+    /**
+     * Creates an instance of {@link BlackList}.
+     */
     public BlackList() {
     }
 

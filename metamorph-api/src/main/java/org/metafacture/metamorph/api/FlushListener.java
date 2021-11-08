@@ -22,7 +22,12 @@ package org.metafacture.metamorph.api;
  * @author Markus Michael Geipel
  */
 public interface FlushListener {
-
+    /**
+     * Flush collected data.
+     *
+     * @param recordCount the record count
+     * @param entityCount the entity count
+     */
     void flush(int recordCount, int entityCount);
 
 }

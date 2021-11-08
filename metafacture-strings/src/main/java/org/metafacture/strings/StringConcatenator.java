@@ -19,16 +19,18 @@ package org.metafacture.strings;
 import org.metafacture.framework.ObjectReceiver;
 
 /**
- * concatenetes all recieved Strings
+ * Concatenates all received Strings.
  *
  * @author markus geipel
- *
  */
 public final class StringConcatenator implements ObjectReceiver<String> {
 
     private StringBuilder builder = new StringBuilder();
     private String separator = "";
 
+    /**
+     * Creates an instance of {@link StringConcatenator}.
+     */
     public StringConcatenator() {
     }
 
@@ -37,6 +39,11 @@ public final class StringConcatenator implements ObjectReceiver<String> {
         reset();
     }
 
+    /**
+     * Sets a separator.
+     *
+     * @param separator the separator
+     */
     public void setSeparator(final String separator) {
         this.separator = separator;
     }
@@ -52,10 +59,18 @@ public final class StringConcatenator implements ObjectReceiver<String> {
         builder.append(obj);
     }
 
+    /**
+     * Resets the content.
+     */
     public void reset() {
         builder = new StringBuilder();
     }
 
+    /**
+     * Gets the string.
+     *
+     * @return the string
+     */
     public String getString() {
         return builder.toString();
     }
