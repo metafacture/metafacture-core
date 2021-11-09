@@ -8,7 +8,7 @@ use "strict"
 
 add_field(hello, world) # end-of-line comment
 remove_field(my.deep.*.junk.$last)
-copy_field(stats.*, output.$appender)
+copy_field(stats.*, output.$append)
 
 # Conditionals
 
@@ -36,5 +36,13 @@ do marc_each()
     marc_map(f700a, authors.$append.bla, 'bla')
   end
 end
+
+// single-line comment
+copy_field(foo, /* in-line comment */ bar)
+
+/*
+multi-line comment
+with a twist \*/
+*/
 
 reject exists(error.field)
