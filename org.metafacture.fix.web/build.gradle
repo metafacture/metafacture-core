@@ -3,15 +3,15 @@ plugins {
 }
 
 dependencies {
-  compile project(':metafacture-fix')
-  compile project(':org.metafacture.fix.ide')
+  implementation project(':metafix')
+  implementation project(':org.metafacture.fix.ide')
 
-  compile "org.eclipse.xtend:org.eclipse.xtend.lib:${versions.xtext}"
-  compile "org.eclipse.xtext:org.eclipse.xtext.web.servlet:${versions.xtext}"
-  compile "org.eclipse.xtext:org.eclipse.xtext.xbase.web:${versions.xtext}"
-  compile "org.webjars:ace:${versions.ace}"
-  compile "org.webjars:jquery:${versions.jquery}"
-  compile "org.webjars:requirejs:${versions.requirejs}"
+  implementation "org.eclipse.xtend:org.eclipse.xtend.lib:${versions.xtext}"
+  implementation "org.eclipse.xtext:org.eclipse.xtext.web.servlet:${versions.xtext}"
+  implementation "org.eclipse.xtext:org.eclipse.xtext.xbase.web:${versions.xtext}"
+  implementation "org.webjars:ace:${versions.ace}"
+  implementation "org.webjars:jquery:${versions.jquery}"
+  implementation "org.webjars:requirejs:${versions.requirejs}"
 
   providedCompile "org.eclipse.jetty:jetty-annotations:${versions.jetty}"
   providedCompile "org.slf4j:slf4j-simple:${versions.slf4j}"
@@ -27,7 +27,7 @@ dependencies {
 task jettyRun(type: JavaExec) {
   dependsOn(sourceSets.main.runtimeClasspath)
   classpath = sourceSets.main.runtimeClasspath.filter { it.exists() }
-  main = 'org.metafacture.fix.web.ServerLauncher'
+  mainClass = 'org.metafacture.metafix.web.ServerLauncher'
   standardInput = System.in
   group = 'run'
   description = 'Starts an example Jetty server with your language'

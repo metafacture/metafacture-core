@@ -1,19 +1,22 @@
 plugins {
   id 'com.adarshr.test-logger' version '1.7.0'
-  id 'maven'
+  id 'maven-publish'
 }
 
 dependencies {
-  compile "org.eclipse.xtext:org.eclipse.xtext:${versions.xtext}"
-  compile "org.eclipse.xtext:org.eclipse.xtext.xbase:${versions.xtext}"
-  compile "com.google.guava:guava:${versions.guava}"
+  implementation "org.eclipse.xtext:org.eclipse.xtext:${versions.xtext}"
+  implementation "org.eclipse.xtext:org.eclipse.xtext.xbase:${versions.xtext}"
+  implementation "com.google.guava:guava:${versions.guava}"
+  implementation "org.slf4j:slf4j-api:${versions.slf4j}"
 
-  testCompile "org.junit.jupiter:junit-jupiter-api:${versions.junit_jupiter}"
-  testCompile "org.junit.platform:junit-platform-launcher:${versions.junit_platform}"
-  testCompile "org.eclipse.xtext:org.eclipse.xtext.testing:${versions.xtext}"
-  testCompile "org.eclipse.xtext:org.eclipse.xtext.xbase.testing:${versions.xtext}"
+  testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit_jupiter}"
+  testImplementation "org.junit.platform:junit-platform-launcher:${versions.junit_platform}"
+  testImplementation "org.eclipse.xtext:org.eclipse.xtext.testing:${versions.xtext}"
+  testImplementation "org.eclipse.xtext:org.eclipse.xtext.xbase.testing:${versions.xtext}"
 
-  testRuntime "org.junit.jupiter:junit-jupiter-engine:${versions.junit_jupiter}"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit_jupiter}"
+
+  runtimeOnly "org.slf4j:slf4j-simple:${versions.slf4j}"
 
   implementation "org.metafacture:metafacture-commons:${versions.metafacture}"
   implementation "org.metafacture:metafacture-mangling:${versions.metafacture}"
@@ -27,7 +30,7 @@ dependencies {
 
 configurations {
   mwe2 {
-    extendsFrom compile
+    extendsFrom implementation
   }
 }
 
@@ -42,25 +45,36 @@ test {
   useJUnitPlatform()
 }
 
-def xtextFile = 'src/main/java/org/metafacture/fix/Fix.xtext'
+task install(dependsOn: publishToMavenLocal,
+    description: "Installs the 'archives' artifacts into the local Maven repository. [deprecated]") {
+  doFirst { println "This task is deprecated; use 'publishToMavenLocal' instead." }
+}
+
+task validateFixFile(type: JavaExec) {
+  mainClass = 'org.metafacture.metafix.FixStandaloneSetup'
+  classpath = sourceSets.main.runtimeClasspath
+}
+
+def xtextFile = 'src/main/java/org/metafacture/metafix/Fix.xtext'
 
 task validateXtextLanguage(type: JavaExec) {
-  main = 'org.metafacture.fix.validation.XtextValidator'
+  mainClass = 'org.metafacture.metafix.validation.XtextValidator'
   classpath = sourceSets.main.runtimeClasspath
   args += xtextFile
 }
 
 task generateXtextLanguage(type: JavaExec) {
-  main = 'org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher'
+  mainClass = 'org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher'
   classpath = configurations.mwe2
-  inputs.file 'src/main/java/org/metafacture/fix/GenerateFix.mwe2'
+  inputs.file 'src/main/java/org/metafacture/metafix/GenerateFix.mwe2'
   inputs.file xtextFile
   outputs.dir 'src/main/xtext-gen'
-  args += 'src/main/java/org/metafacture/fix/GenerateFix.mwe2'
+  args += 'src/main/java/org/metafacture/metafix/GenerateFix.mwe2'
   args += '-p'
   args += "rootPath=/${projectDir}/.."
 }
 
+processResources.dependsOn(generateXtextLanguage)
 generateXtext.dependsOn(generateXtextLanguage)
 compileJava.dependsOn(generateXtextLanguage)
 clean.dependsOn(cleanGenerateXtextLanguage)
