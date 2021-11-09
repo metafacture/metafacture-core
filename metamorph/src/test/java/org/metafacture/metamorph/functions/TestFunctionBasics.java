@@ -16,14 +16,12 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.mockito.Mockito.inOrder;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
 import org.metafacture.metamorph.Metamorph;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -36,95 +34,93 @@ import org.mockito.junit.MockitoRule;
  */
 public final class TestFunctionBasics {
 
-  @Rule
-  public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-  @Mock
-  private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-  private Metamorph metamorph;
+    @Test
+    public void shouldSupportFunctionChainingInDataStatements() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='data'>" +
+                "    <trim />" +
+                "    <replace pattern=' ' with='X' />" +
+                "    <replace pattern='a' with='A' />" +
+                "    <regexp match='Abc' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", " abc ");
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.literal("data", " abc ");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("data", "Abc");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().literal("data", "Abc");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-  @Test
-  public void shouldSupportFunctionChainingInDataStatements() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='data'>")
-        .with("    <trim />")
-        .with("    <replace pattern=' ' with='X' />")
-        .with("    <replace pattern='a' with='A' />")
-        .with("    <regexp match='Abc' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldSupportFunctionChainingInEntities() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <choose>" +
+                "    <data source='data'>" +
+                "      <trim />" +
+                "      <replace pattern=' ' with='X' />" +
+                "      <replace pattern='a' with='A' />" +
+                "      <regexp match='Abc' />" +
+                "    </data>" +
+                "  </choose>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", " abc ");
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.literal("data", " abc ");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("data", "Abc");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().literal("data", "Abc");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    metamorph.startRecord("1");
-    metamorph.literal("data", " abc ");
-    metamorph.endRecord();
-    metamorph.startRecord("2");
-    metamorph.literal("data", " abc ");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("data", "Abc");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("2");
-    ordered.verify(receiver).literal("data", "Abc");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void shouldSupportFunctionChainingInEntities() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <choose>")
-        .with("    <data source='data'>")
-        .with("      <trim />")
-        .with("      <replace pattern=' ' with='X' />")
-        .with("      <replace pattern='a' with='A' />")
-        .with("      <regexp match='Abc' />")
-        .with("    </data>")
-        .with("  </choose>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("data", " abc ");
-    metamorph.endRecord();
-    metamorph.startRecord("2");
-    metamorph.literal("data", " abc ");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("data", "Abc");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("2");
-    ordered.verify(receiver).literal("data", "Abc");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void shouldUseJavaClassesAsFunctions() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='data'>")
-        .with("    <java class='org.metafacture.metamorph.functions.Compose' prefix='Hula ' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("data", "Aloha");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("data", "Hula Aloha");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+    @Test
+    public void shouldUseJavaClassesAsFunctions() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='data'>" +
+                "    <java class='org.metafacture.metamorph.functions.Compose' prefix='Hula ' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", "Aloha");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("data", "Hula Aloha");
+                    o.get().endRecord();
+                }
+        );
+    }
 
 }

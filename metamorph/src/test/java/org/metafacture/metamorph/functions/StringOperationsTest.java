@@ -21,7 +21,6 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-
 /**
  * tests {@link Regexp}, {@link Substring}, {@link Compose}, {@link Replace}
  *
@@ -30,11 +29,9 @@ import org.junit.Test;
 
 public final class StringOperationsTest {
 
-
     private static final String VALUE1 = "Franz";
     private static final String VALUE2 = "Kafka";
     private static final String VALUE3 = "Josef";
-
 
     @Test
     public void testSubstring() {
@@ -55,14 +52,14 @@ public final class StringOperationsTest {
 
     }
 
-// TODO: Can we remove this test?
-//    @Test(expected=Regexp.PatternNotFoundException.class)
-//    public void testRegexpExceptionOnFail() {
-//        final Regexp regexp = new Regexp();
-//        regexp.setMatch(VALUE2);
-//        regexp.setExceptionOnFail("true");
-//        regexp.process(VALUE3);
-//    }
+    // TODO: Can we remove this test?
+    //    @Test(expected=Regexp.PatternNotFoundException.class)
+    //    public void testRegexpExceptionOnFail() {
+    //        final Regexp regexp = new Regexp();
+    //        regexp.setMatch(VALUE2);
+    //        regexp.setExceptionOnFail("true");
+    //        regexp.process(VALUE3);
+    //    }
 
     @Test
     public void testCompose() {
@@ -72,7 +69,6 @@ public final class StringOperationsTest {
         compose.setPrefix("");
         compose.setPostfix(VALUE1);
         assertEquals(VALUE2+VALUE1, compose.process(VALUE2));
-
     }
 
     @Test

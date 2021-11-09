@@ -16,13 +16,11 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.mockito.Mockito.verify;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
-import org.metafacture.metamorph.Metamorph;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -40,25 +38,27 @@ public final class SwitchNameValueTest {
     @Mock
     private StreamReceiver receiver;
 
-    private Metamorph metamorph;
-
     @Test
     public void issue265_shouldWorkIfLastFunctionInCombineStatement() {
-        metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <combine name='out' value='val'>")
-                .with("    <data source='in'>")
-                .with("      <switch-name-value />")
-                .with("    </data>")
-                .with("  </combine>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("in", "val");
-        metamorph.endRecord();
-
-        verify(receiver).literal("out", "val");
+        assertMorph(receiver,
+                "<rules>" +
+                "  <combine name='out' value='val'>" +
+                "    <data source='in'>" +
+                "      <switch-name-value />" +
+                "    </data>" +
+                "  </combine>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("in", "val");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("out", "val");
+                    o.get().endRecord();
+                }
+        );
     }
 
 }

@@ -22,7 +22,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-
 /**
  * tests {@link ISBN}
  *
@@ -43,13 +42,10 @@ public final class ISBNTest {
     private static final String ISBN_INCORRECT_CHECK13 = "9781933988314";
     private static final String ISBN_INCORRECT_CHECK10 = "1933988311";
 
-
     private static final String ISBN_INCORRECT_SIZE1 = "12345678901234";
     private static final String ISBN_INCORRECT_SIZE2 = "123456789012";
     private static final String ISBN_INCORRECT_SIZE3 = "123456789";
     private static final String ERROR = "invalid";
-
-
 
     @Test
     public void testProcess(){
@@ -70,12 +66,12 @@ public final class ISBNTest {
 
     @Test
     public void testTo10() {
-        assertEquals(ISBN10A,ISBN.isbn13to10(ISBN13A));
+        assertEquals(ISBN10A, ISBN.isbn13to10(ISBN13A));
     }
 
     @Test
     public void testCleanse() {
-        assertEquals(ISBN10A,ISBN.cleanse(ISBN10A_DIRTY));
+        assertEquals(ISBN10A, ISBN.cleanse(ISBN10A_DIRTY));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -104,13 +100,11 @@ public final class ISBNTest {
         assertTrue(ISBN.isValid(ISBN.cleanse(ISBN10F_DIRTY)));
     }
 
-
     public void testCleanseException1(){
         final ISBN isbn = new ISBN();
         isbn.setErrorString(ERROR);
         assertTrue(isbn.process(ISBN_INCORRECT_SIZE3).startsWith(ERROR));
     }
-
 
     public void testCleanseException2(){
         final ISBN isbn = new ISBN();

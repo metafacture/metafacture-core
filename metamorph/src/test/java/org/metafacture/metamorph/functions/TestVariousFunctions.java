@@ -16,22 +16,15 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.mockito.Mockito.inOrder;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
 import org.metafacture.metamorph.Metamorph;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 
 /**
  * Tests for various Metamorph functions.
@@ -41,492 +34,490 @@ import java.io.OutputStream;
  */
 public final class TestVariousFunctions {
 
-  // TODO: This class need to be split into separate classes for each function!
+    // TODO: This class need to be split into separate classes for each function!
 
-  @Rule
-  public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-  @Mock
-  private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-  private Metamorph metamorph;
+    @Test
+    public void testRegexpFunction() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='data' name='island'>" +
+                "    <regexp match='(\\w*) island' format='${1}' />" +
+                "  </data>" +
+                "  <data source='data' name='year'>" +
+                "    <regexp match='\\d\\d\\d\\d' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", "Aloha!");
+                    i.literal("data", "Oahu island, Hawaii island, Maui island");
+                    i.literal("data", "year 1960!");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("island", "Oahu");
+                    o.get().literal("island", "Hawaii");
+                    o.get().literal("island", "Maui");
+                    o.get().literal("year", "1960");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-  @Test
-  public void testRegexpFunction() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='data' name='island'>")
-        .with("    <regexp match='(\\w*) island' format='${1}' />")
-        .with("  </data>")
-        .with("  <data source='data' name='year'>")
-        .with("    <regexp match='\\d\\d\\d\\d' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void testIsbnFunction() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='isbn' name='withError'>" +
+                "    <isbn to='isbn13' errorString='error' />" +
+                "  </data>" +
+                "  <data source='isbn' name='withoutError'>" +
+                "    <isbn to='isbn13' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("isbn", "123 invalid");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("withError", "error");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    metamorph.startRecord("1");
-    metamorph.literal("data", "Aloha!");
-    metamorph.literal("data", "Oahu island, Hawaii island, Maui island");
-    metamorph.literal("data", "year 1960!");
-    metamorph.endRecord();
+    @Test
+    public void testSplitFunction() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='data' name='island'>" +
+                "    <split delimiter=',' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", "Oahu,Hawaii,Maui");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("island", "Oahu");
+                    o.get().literal("island", "Hawaii");
+                    o.get().literal("island", "Maui");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("island", "Oahu");
-    ordered.verify(receiver).literal("island", "Hawaii");
-    ordered.verify(receiver).literal("island", "Maui");
-    ordered.verify(receiver).literal("year", "1960");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+    @Test
+    public void testSubstringFunction() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='a'>" +
+                "    <substring start='3' end='5' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("a", "012345");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("a", "34");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-  @Test
-  public void testIsbnFunction() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='isbn' name='withError'>")
-        .with("    <isbn to='isbn13' errorString='error' />")
-        .with("  </data>")
-        .with("  <data source='isbn' name='withoutError'>")
-        .with("    <isbn to='isbn13' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void testConstantFunction() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='data'>" +
+                "    <constant value='Hawaii' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", "Aloha");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("data", "Hawaii");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    metamorph.startRecord("1");
-    metamorph.literal("isbn", "123 invalid");
-    metamorph.endRecord();
+    @Test
+    public void testSetReplaceFunction() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='data'>" +
+                "    <setreplace>" +
+                "      <entry name='dt.' value='deutsch' />" +
+                "      <entry name='frz.' value='französich' />" +
+                "      <entry name='eng.' value='englisch' />" +
+                "    </setreplace>" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", "dt., frz. und eng.");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("data", "deutsch, französich und englisch");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("withError", "error");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void testSplitFunction() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='data' name='island'>")
-        .with("    <split delimiter=',' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("data", "Oahu,Hawaii,Maui");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("island", "Oahu");
-    ordered.verify(receiver).literal("island", "Hawaii");
-    ordered.verify(receiver).literal("island", "Maui");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void testSubstringFunction() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='a'>")
-        .with("    <substring start='3' end='5' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("a", "012345");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("a", "34");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void testConstantFunction() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='data'>")
-        .with("    <constant value='Hawaii' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("data", "Aloha");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("data", "Hawaii");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void testSetReplaceFunction() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='data'>")
-        .with("    <setreplace>")
-        .with("      <entry name='dt.' value='deutsch' />")
-        .with("      <entry name='frz.' value='französich' />")
-        .with("      <entry name='eng.' value='englisch' />")
-        .with("    </setreplace>")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("data", "dt., frz. und eng.");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("data", "deutsch, französich und englisch");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void testCaseFunction() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='data'>")
-        .with("    <case to='upper' />")
-        .with("  </data>")
-        .with("  <data source='data'>")
-        .with("    <case to='lower' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("data", "Aloha");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("data", "ALOHA");
-    ordered.verify(receiver).literal("data", "aloha");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+    @Test
+    public void testCaseFunction() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='data'>" +
+                "    <case to='upper' />" +
+                "  </data>" +
+                "  <data source='data'>" +
+                "    <case to='lower' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", "Aloha");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("data", "ALOHA");
+                    o.get().literal("data", "aloha");
+                    o.get().endRecord();
+                }
+        );
+    }
 
     @Test
     public void testEqualsFunction() {
-        metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <data source='data' name='data1'>")
-                .with("    <equals string='Aloha' />")
-                .with("  </data>")
-                .with("  <data source='data' name='data2'>")
-                .with("    <not-equals string='Aloha' />")
-                .with("  </data>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("data", "Aloha");
-        metamorph.literal("data", "Hawaii");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("data1", "Aloha");
-        ordered.verify(receiver).literal("data2", "Hawaii");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='data' name='data1'>" +
+                "    <equals string='Aloha' />" +
+                "  </data>" +
+                "  <data source='data' name='data2'>" +
+                "    <not-equals string='Aloha' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", "Aloha");
+                    i.literal("data", "Hawaii");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("data1", "Aloha");
+                    o.get().literal("data2", "Hawaii");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void testContainsFunction() {
-        metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <data source='data' name='data1'>")
-                .with("    <contains string='Periodical' />")
-                .with("  </data>")
-                .with("  <data source='data' name='data2'>")
-                .with("    <not-contains string='Periodical' />")
-                .with("  </data>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("data", "1990 Periodical MultiVolumeBook");
-        metamorph.literal("data", "2013 BibliographicResource Book Series");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("data1", "1990 Periodical MultiVolumeBook");
-        ordered.verify(receiver).literal("data2", "2013 BibliographicResource Book Series");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='data' name='data1'>" +
+                "    <contains string='Periodical' />" +
+                "  </data>" +
+                "  <data source='data' name='data2'>" +
+                "    <not-contains string='Periodical' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", "1990 Periodical MultiVolumeBook");
+                    i.literal("data", "2013 BibliographicResource Book Series");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("data1", "1990 Periodical MultiVolumeBook");
+                    o.get().literal("data2", "2013 BibliographicResource Book Series");
+                    o.get().endRecord();
+                }
+        );
     }
 
-  @Test
-  public void testBufferFunction() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <combine name='greeting' value='${greet} ${island}' reset='false'>")
-        .with("    <data source='d1' name='greet' />")
-        .with("    <data source='d2' name='island'>")
-        .with("      <buffer />")
-        .with("    </data>")
-        .with("  </combine>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("0");
-    metamorph.literal("d1", "Aloha");
-    metamorph.endRecord();
-    metamorph.startRecord("1");
-    metamorph.literal("d2", "Hawaii");
-    metamorph.literal("d2", "Oahu");
-    metamorph.literal("d1", "Aloha");
-    metamorph.endRecord();
-    metamorph.startRecord("2");
-    metamorph.endRecord();
-    metamorph.startRecord("3");
-    metamorph.literal("d1", "Aloha");
-    metamorph.endRecord();
-    metamorph.startRecord("4");
-    metamorph.literal("d2", "to all");
-    metamorph.literal("d1", "Aloha");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("0");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("greeting", "Aloha Hawaii");
-    ordered.verify(receiver).literal("greeting", "Aloha Oahu");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("2");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("3");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("4");
-    ordered.verify(receiver).literal("greeting", "Aloha to all");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+    @Test
+    public void testBufferFunction() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <combine name='greeting' value='${greet} ${island}' reset='false'>" +
+                "    <data source='d1' name='greet' />" +
+                "    <data source='d2' name='island'>" +
+                "      <buffer />" +
+                "    </data>" +
+                "  </combine>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("0");
+                    i.literal("d1", "Aloha");
+                    i.endRecord();
+                    i.startRecord("1");
+                    i.literal("d2", "Hawaii");
+                    i.literal("d2", "Oahu");
+                    i.literal("d1", "Aloha");
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.endRecord();
+                    i.startRecord("3");
+                    i.literal("d1", "Aloha");
+                    i.endRecord();
+                    i.startRecord("4");
+                    i.literal("d2", "to all");
+                    i.literal("d1", "Aloha");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("0");
+                    o.get().endRecord();
+                    o.get().startRecord("1");
+                    o.get().literal("greeting", "Aloha Hawaii");
+                    o.get().literal("greeting", "Aloha Oahu");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().endRecord();
+                    o.get().startRecord("3");
+                    o.get().endRecord();
+                    o.get().startRecord("4");
+                    o.get().literal("greeting", "Aloha to all");
+                    o.get().endRecord();
+                }
+        );
+    }
 
     @Test
     public void testOccurrenceFunction() {
-        metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <data source='data' name='l2'>")
-                .with("    <occurrence only='lessThan 2' />")
-                .with("  </data>")
-                .with("  <data source='data' name='2'>")
-                .with("    <occurrence only='2' />")
-                .with("  </data>")
-                .with("  <data source='data' name='g2'>")
-                .with("    <occurrence only='moreThan 2' />")
-                .with("  </data>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("data", "1");
-        metamorph.literal("data", "2");
-        metamorph.literal("data", "3");
-        metamorph.endRecord();
-        metamorph.startRecord("2");
-        metamorph.literal("data", "1");
-        metamorph.literal("data", "2");
-        metamorph.literal("data", "3");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("l2", "1");
-        ordered.verify(receiver).literal("2", "2");
-        ordered.verify(receiver).literal("g2", "3");
-        ordered.verify(receiver).endRecord();
-        ordered.verify(receiver).startRecord("2");
-        ordered.verify(receiver).literal("l2", "1");
-        ordered.verify(receiver).literal("2", "2");
-        ordered.verify(receiver).literal("g2", "3");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='data' name='l2'>" +
+                "    <occurrence only='lessThan 2' />" +
+                "  </data>" +
+                "  <data source='data' name='2'>" +
+                "    <occurrence only='2' />" +
+                "  </data>" +
+                "  <data source='data' name='g2'>" +
+                "    <occurrence only='moreThan 2' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", "1");
+                    i.literal("data", "2");
+                    i.literal("data", "3");
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.literal("data", "1");
+                    i.literal("data", "2");
+                    i.literal("data", "3");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("l2", "1");
+                    o.get().literal("2", "2");
+                    o.get().literal("g2", "3");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().literal("l2", "1");
+                    o.get().literal("2", "2");
+                    o.get().literal("g2", "3");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void testOccurrenceFunctionWithSameEntity() {
-        metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <data source='e.data' name='l2'>")
-                .with("    <occurrence only='lessThan 2' sameEntity='true' />")
-                .with("  </data>")
-                .with("  <data source='e.data' name='2'>")
-                .with("    <occurrence only='2' sameEntity='true' />")
-                .with("  </data>")
-                .with("  <data source='e.data' name='g2'>")
-                .with("    <occurrence only='moreThan 2' sameEntity='true' />")
-                .with("  </data>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.startEntity("e");
-        metamorph.literal("data", "1");
-        metamorph.literal("data", "2");
-        metamorph.literal("data", "3");
-        metamorph.endEntity();
-        metamorph.startEntity("e");
-        metamorph.literal("data", "1");
-        metamorph.literal("data", "2");
-        metamorph.literal("data", "3");
-        metamorph.endEntity();
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("l2", "1");
-        ordered.verify(receiver).literal("2", "2");
-        ordered.verify(receiver).literal("g2", "3");
-        ordered.verify(receiver).literal("l2", "1");
-        ordered.verify(receiver).literal("2", "2");
-        ordered.verify(receiver).literal("g2", "3");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='e.data' name='l2'>" +
+                "    <occurrence only='lessThan 2' sameEntity='true' />" +
+                "  </data>" +
+                "  <data source='e.data' name='2'>" +
+                "    <occurrence only='2' sameEntity='true' />" +
+                "  </data>" +
+                "  <data source='e.data' name='g2'>" +
+                "    <occurrence only='moreThan 2' sameEntity='true' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("e");
+                    i.literal("data", "1");
+                    i.literal("data", "2");
+                    i.literal("data", "3");
+                    i.endEntity();
+                    i.startEntity("e");
+                    i.literal("data", "1");
+                    i.literal("data", "2");
+                    i.literal("data", "3");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("l2", "1");
+                    o.get().literal("2", "2");
+                    o.get().literal("g2", "3");
+                    o.get().literal("l2", "1");
+                    o.get().literal("2", "2");
+                    o.get().literal("g2", "3");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void testOccurrenceFunctionWithSameEntityInNestedEntitiesShouldChangeWithInnerEntities() {
-        metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <data source='o.i.data' name='l2'>")
-                .with("    <occurrence only='lessThan 2' sameEntity='true' />")
-                .with("  </data>")
-                .with("  <data source='o.i.data' name='2'>")
-                .with("    <occurrence only='2' sameEntity='true' />")
-                .with("  </data>")
-                .with("  <data source='o.i.data' name='g2'>")
-                .with("    <occurrence only='moreThan 2' sameEntity='true' />")
-                .with("  </data>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.startEntity("o");
-        metamorph.startEntity("i");
-        metamorph.literal("data", "1");
-        metamorph.literal("data", "2");
-        metamorph.literal("data", "3");
-        metamorph.endEntity();
-        metamorph.startEntity("i");
-        metamorph.literal("data", "1");
-        metamorph.literal("data", "2");
-        metamorph.literal("data", "3");
-        metamorph.endEntity();
-        metamorph.endEntity();
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("l2", "1");
-        ordered.verify(receiver).literal("2", "2");
-        ordered.verify(receiver).literal("g2", "3");
-        ordered.verify(receiver).literal("l2", "1");
-        ordered.verify(receiver).literal("2", "2");
-        ordered.verify(receiver).literal("g2", "3");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='o.i.data' name='l2'>" +
+                "    <occurrence only='lessThan 2' sameEntity='true' />" +
+                "  </data>" +
+                "  <data source='o.i.data' name='2'>" +
+                "    <occurrence only='2' sameEntity='true' />" +
+                "  </data>" +
+                "  <data source='o.i.data' name='g2'>" +
+                "    <occurrence only='moreThan 2' sameEntity='true' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("o");
+                    i.startEntity("i");
+                    i.literal("data", "1");
+                    i.literal("data", "2");
+                    i.literal("data", "3");
+                    i.endEntity();
+                    i.startEntity("i");
+                    i.literal("data", "1");
+                    i.literal("data", "2");
+                    i.literal("data", "3");
+                    i.endEntity();
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("l2", "1");
+                    o.get().literal("2", "2");
+                    o.get().literal("g2", "3");
+                    o.get().literal("l2", "1");
+                    o.get().literal("2", "2");
+                    o.get().literal("g2", "3");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void testCountFunction() {
-        metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <data source='data' name='count'>")
-                .with("    <count />")
-                .with("  </data>")
-                .with("  <choose flushWith='record'>")
-                .with("    <data source='datax' name='count'>")
-                .with("      <count />")
-                .with("    </data>")
-                .with("  </choose>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("0");
-        metamorph.literal("datax", "1");
-        metamorph.literal("datax", "2");
-        metamorph.endRecord();
-        metamorph.startRecord("1");
-        metamorph.literal("data", "1");
-        metamorph.literal("data", "2");
-        metamorph.literal("data", "3");
-        metamorph.endRecord();
-        metamorph.startRecord("2");
-        metamorph.literal("data", "1");
-        metamorph.literal("data", "2");
-        metamorph.endRecord();
-        metamorph.startRecord("3");
-        metamorph.literal("datax", "1");
-        metamorph.literal("datax", "2");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("0");
-        ordered.verify(receiver).literal("count", "2");
-        ordered.verify(receiver).endRecord();
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("count", "1");
-        ordered.verify(receiver).literal("count", "2");
-        ordered.verify(receiver).literal("count", "3");
-        ordered.verify(receiver).endRecord();
-        ordered.verify(receiver).startRecord("2");
-        ordered.verify(receiver).literal("count", "1");
-        ordered.verify(receiver).literal("count", "2");
-        ordered.verify(receiver).endRecord();
-        ordered.verify(receiver).startRecord("3");
-        ordered.verify(receiver).literal("count", "2");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='data' name='count'>" +
+                "    <count />" +
+                "  </data>" +
+                "  <choose flushWith='record'>" +
+                "    <data source='datax' name='count'>" +
+                "      <count />" +
+                "    </data>" +
+                "  </choose>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("0");
+                    i.literal("datax", "1");
+                    i.literal("datax", "2");
+                    i.endRecord();
+                    i.startRecord("1");
+                    i.literal("data", "1");
+                    i.literal("data", "2");
+                    i.literal("data", "3");
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.literal("data", "1");
+                    i.literal("data", "2");
+                    i.endRecord();
+                    i.startRecord("3");
+                    i.literal("datax", "1");
+                    i.literal("datax", "2");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("0");
+                    o.get().literal("count", "2");
+                    o.get().endRecord();
+                    o.get().startRecord("1");
+                    o.get().literal("count", "1");
+                    o.get().literal("count", "2");
+                    o.get().literal("count", "3");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().literal("count", "1");
+                    o.get().literal("count", "2");
+                    o.get().endRecord();
+                    o.get().startRecord("3");
+                    o.get().literal("count", "2");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void testNestedCountFunction() {
-        metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <combine name='count' value='${count}' flushWith='record'>")
-                .with("    <data source='data' name='count'>")
-                .with("      <count />")
-                .with("    </data>")
-                .with("    <data source='fantasy' />")
-                .with("  </combine>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("data", "1");
-        metamorph.literal("data", "2");
-        metamorph.literal("data", "3");
-        metamorph.endRecord();
-        metamorph.startRecord("2");
-        metamorph.literal("data", "1");
-        metamorph.literal("data", "2");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("count", "3");
-        ordered.verify(receiver).endRecord();
-        ordered.verify(receiver).startRecord("2");
-        ordered.verify(receiver).literal("count", "2");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <combine name='count' value='${count}' flushWith='record'>" +
+                "    <data source='data' name='count'>" +
+                "      <count />" +
+                "    </data>" +
+                "    <data source='fantasy' />" +
+                "  </combine>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", "1");
+                    i.literal("data", "2");
+                    i.literal("data", "3");
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.literal("data", "1");
+                    i.literal("data", "2");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("count", "3");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().literal("count", "2");
+                    o.get().endRecord();
+                }
+        );
     }
 
 }

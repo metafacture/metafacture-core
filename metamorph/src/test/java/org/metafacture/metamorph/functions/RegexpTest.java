@@ -16,14 +16,11 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.mockito.Mockito.inOrder;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
-import org.metafacture.metamorph.Metamorph;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -36,87 +33,85 @@ import org.mockito.junit.MockitoRule;
  */
 public final class RegexpTest {
 
-  @Rule
-  public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-  @Mock
-  private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-  private Metamorph metamorph;
+    @Test
+    public void shouldMatchAndReplaceUsingRegularExpressions() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='001.' name='subject'>" +
+                "    <regexp match='.*' format='resource:P${0}' />" +
+                "  </data>" +
+                "  <data source='001.' name='subject'>" +
+                "    <regexp match='.*' format='${1}' />" +
+                "  </data>" +
+                "  <data source='001.' name='subject'>" +
+                "    <regexp match='.*' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("001");
+                    i.literal("", "184000");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("subject", "resource:P184000");
+                    o.get().literal("subject", "");
+                    o.get().literal("subject", "184000");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-  @Test
-  public void shouldMatchAndReplaceUsingRegularExpressions() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='001.' name='subject'>")
-        .with("    <regexp match='.*' format='resource:P${0}' />")
-        .with("  </data>")
-        .with("  <data source='001.' name='subject'>")
-        .with("    <regexp match='.*' format='${1}' />")
-        .with("  </data>")
-        .with("  <data source='001.' name='subject'>")
-        .with("    <regexp match='.*' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldIgnoreEmptyMatchGroups() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='s'>" +
+                "    <regexp match='aa(bb*)?(cc*)(dd*)' format='${1}${2}${3}' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("s", "aaccdd");
+                    i.literal("s", "ax");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("s", "ccdd");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    metamorph.startRecord("1");
-    metamorph.startEntity("001");
-    metamorph.literal("", "184000");
-    metamorph.endEntity();
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("subject", "resource:P184000");
-    ordered.verify(receiver).literal("subject", "");
-    ordered.verify(receiver).literal("subject", "184000");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void shouldIgnoreEmptyMatchGroups() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='s'>")
-        .with("    <regexp match='aa(bb*)?(cc*)(dd*)' format='${1}${2}${3}' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("s", "aaccdd");
-    metamorph.literal("s", "ax");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("s", "ccdd");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void shouldIgnoreNullValues() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='s'>")
-        .with("    <regexp match='a.*' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("s", "aaccdd");
-    metamorph.literal("s", null);
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("s", "aaccdd");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+    @Test
+    public void shouldIgnoreNullValues() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='s'>" +
+                "    <regexp match='a.*' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("s", "aaccdd");
+                    i.literal("s", null);
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("s", "aaccdd");
+                    o.get().endRecord();
+                }
+        );
+    }
 
 }

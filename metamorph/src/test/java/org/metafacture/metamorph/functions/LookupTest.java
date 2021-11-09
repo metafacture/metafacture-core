@@ -18,20 +18,14 @@ package org.metafacture.metamorph.functions;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
-import org.metafacture.metamorph.Metamorph;
 import org.metafacture.metamorph.api.Maps;
-import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
@@ -51,7 +45,7 @@ public final class LookupTest {
     private static final String VALUE = "Kafka";
 
     @Rule
-    public MockitoRule mockito = MockitoJUnit.rule().silent();
+    public MockitoRule mockito = MockitoJUnit.rule();
 
     @Mock
     private Maps maps;
@@ -59,16 +53,8 @@ public final class LookupTest {
     @Mock
     private StreamReceiver receiver;
 
-    @Before
-    public void initMaps() {
-        when(maps.getValue(MAP_NAME, KEY)).thenReturn(VALUE);
-        when(maps.getValue(MAP_NAME, KEY_WRONG)).thenReturn(null);
-        when(maps.getValue(MAP_NAME_WRONG, KEY)).thenReturn(null);
-        when(maps.getValue(MAP_NAME_WRONG, KEY_WRONG)).thenReturn(null);
-    }
-
     @Test
-    public void shouldReturnNullIfMapNameIsDoesNotExist() {
+    public void shouldReturnNullIfMapNameDoesNotExist() {
         final Lookup lookup = new Lookup();
         lookup.setMaps(maps);
 
@@ -83,6 +69,7 @@ public final class LookupTest {
         lookup.setMaps(maps);
 
         lookup.setIn(MAP_NAME);
+        Mockito.when(maps.getValue(MAP_NAME, KEY)).thenReturn(VALUE);
 
         assertEquals(VALUE, lookup.process(KEY));
     }
@@ -99,124 +86,122 @@ public final class LookupTest {
 
     @Test
     public void shouldLookupValuesInLocalMap() {
-        final Metamorph metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <data source='1'>")
-                .with("    <lookup>")
-                .with("      <entry name='a' value='A' />")
-                .with("    </lookup>")
-                .with("  </data>")
-                .with("  <data source='2'>")
-                .with("    <lookup default='B'>")
-                .with("      <entry name='a' value='A' />")
-                .with("    </lookup>")
-                .with("  </data>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("1", "a");
-        metamorph.literal("1", "b");
-        metamorph.literal("2", "a");
-        metamorph.literal("2", "b");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("1", "A");
-        ordered.verify(receiver).literal("2", "A");
-        ordered.verify(receiver).literal("2", "B");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
-        verifyNoMoreInteractions(receiver);
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='1'>" +
+                "    <lookup>" +
+                "      <entry name='a' value='A' />" +
+                "    </lookup>" +
+                "  </data>" +
+                "  <data source='2'>" +
+                "    <lookup default='B'>" +
+                "      <entry name='a' value='A' />" +
+                "    </lookup>" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("1", "a");
+                    i.literal("1", "b");
+                    i.literal("2", "a");
+                    i.literal("2", "b");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("1", "A");
+                    o.get().literal("2", "A");
+                    o.get().literal("2", "B");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldLookupValuesInReferencedMap() {
-        final Metamorph metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <data source='1'>")
-                .with("    <lookup in='map1' />")
-                .with("  </data>")
-                .with("  <data source='2'>")
-                .with("    <lookup in='map2' />")
-                .with("  </data>")
-                .with("</rules>")
-                .with("<maps>")
-                .with("  <map name='map1'>")
-                .with("    <entry name='a' value='A' />")
-                .with("  </map>")
-                .with("  <map name='map2' default='B'>")
-                .with("    <entry name='a' value='A' />")
-                .with("  </map>")
-                .with("</maps>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("1", "a");
-        metamorph.literal("1", "b");
-        metamorph.literal("2", "a");
-        metamorph.literal("2", "b");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("1", "A");
-        ordered.verify(receiver).literal("2", "A");
-        ordered.verify(receiver).literal("2", "B");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='1'>" +
+                "    <lookup in='map1' />" +
+                "  </data>" +
+                "  <data source='2'>" +
+                "    <lookup in='map2' />" +
+                "  </data>" +
+                "</rules>" +
+                "<maps>" +
+                "  <map name='map1'>" +
+                "    <entry name='a' value='A' />" +
+                "  </map>" +
+                "  <map name='map2' default='B'>" +
+                "    <entry name='a' value='A' />" +
+                "  </map>" +
+                "</maps>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("1", "a");
+                    i.literal("1", "b");
+                    i.literal("2", "a");
+                    i.literal("2", "b");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("1", "A");
+                    o.get().literal("2", "A");
+                    o.get().literal("2", "B");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldLookupValuesInMetadata() {
-        final Metamorph metamorph = InlineMorph.in(this)
-                .with("<meta>")
-                .with("  <name>Hawaii</name>")
-                .with("</meta>")
-                .with("<rules>")
-                .with("  <data source='data'>")
-                .with("    <lookup in='__meta' />")
-                .with("  </data>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("data", "name");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver).literal("data", "Hawaii");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertMorph(receiver,
+                "<meta>" +
+                "  <name>Hawaii</name>" +
+                "</meta>" +
+                "<rules>" +
+                "  <data source='data'>" +
+                "    <lookup in='__meta' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", "name");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("data", "Hawaii");
+                    o.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void issue372_shouldFilterMissingValue() {
-        final Metamorph metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <data source='litA'>")
-                .with("    <lookup>")
-                .with("      <entry name='cat' value='mammal' />")
-                .with("      <entry name='dog' value='mammal' />")
-                .with("    </lookup>")
-                .with("  </data>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("litA", "cat");
-        metamorph.literal("litA", "dog");
-        metamorph.literal("litA", "dragon");
-        metamorph.endRecord();
-
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord("1");
-        ordered.verify(receiver, times(2)).literal("litA", "mammal");
-        ordered.verify(receiver).endRecord();
-        ordered.verifyNoMoreInteractions();
-        verifyNoMoreInteractions(receiver);
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='litA'>" +
+                "    <lookup>" +
+                "      <entry name='cat' value='mammal' />" +
+                "      <entry name='dog' value='mammal' />" +
+                "    </lookup>" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("litA", "cat");
+                    i.literal("litA", "dog");
+                    i.literal("litA", "dragon");
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    o.get().startRecord("1");
+                    f.apply(2).literal("litA", "mammal");
+                    o.get().endRecord();
+                }
+        );
     }
 
 }

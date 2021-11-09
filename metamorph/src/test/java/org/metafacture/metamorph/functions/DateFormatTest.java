@@ -16,14 +16,11 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.mockito.Mockito.inOrder;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
-import org.metafacture.metamorph.Metamorph;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -36,33 +33,31 @@ import org.mockito.junit.MockitoRule;
  */
 public final class DateFormatTest {
 
-  @Rule
-  public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-  @Mock
-  private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-  private Metamorph metamorph;
-
-  @Test
-  public void shouldMakeOutputFormatConfigurable() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <data source='date'>")
-        .with("    <dateformat outputformat='LONG' language='en' />")
-        .with("  </data>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("date", "23.04.1564");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("date", "April 23, 1564");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+    @Test
+    public void shouldMakeOutputFormatConfigurable() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <data source='date'>" +
+                "    <dateformat outputformat='LONG' language='en' />" +
+                "  </data>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("date", "23.04.1564");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("date", "April 23, 1564");
+                    o.get().endRecord();
+                }
+        );
+    }
 
 }

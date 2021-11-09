@@ -16,14 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.mockito.Mockito.inOrder;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
-import org.metafacture.metamorph.Metamorph;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -36,170 +33,168 @@ import org.mockito.junit.MockitoRule;
  */
 public final class ConcatTest {
 
-  @Rule
-  public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-  @Mock
-  private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-  private Metamorph metamorph;
+    @Test
+    public void shouldConcatenateValues() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <concat delimiter=', ' name='concat' prefix='{' postfix='}'>" +
+                "    <data source='data1' />" +
+                "    <data source='data2' />" +
+                "  </concat>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data1", "a");
+                    i.literal("data1", "b");
+                    i.literal("data2", "c");
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.literal("data1", "d");
+                    i.literal("data1", "e");
+                    i.literal("data2", "f");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("concat", "{a, b, c}");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().literal("concat", "{d, e, f}");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-  @Test
-  public void shouldConcatenateValues() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <concat delimiter=', ' name='concat' prefix='{' postfix='}'>")
-        .with("    <data source='data1' />")
-        .with("    <data source='data2' />")
-        .with("  </concat>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldEmitConcatenatedValueOnFlushEvent() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <concat delimiter=', ' name='concat' prefix='{' postfix='}' flushWith='d' reset='true'>" +
+                "    <data source='d.1' />" +
+                "  </concat>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("d");
+                    i.literal("1", "a");
+                    i.literal("1", "b");
+                    i.endEntity();
+                    i.startEntity("d");
+                    i.literal("1", "e");
+                    i.literal("1", "f");
+                    i.endEntity();
+                    i.startEntity("d");
+                    i.literal("2", "e");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("concat", "{a, b}");
+                    o.get().literal("concat", "{e, f}");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    metamorph.startRecord("1");
-    metamorph.literal("data1", "a");
-    metamorph.literal("data1", "b");
-    metamorph.literal("data2", "c");
-    metamorph.endRecord();
-    metamorph.startRecord("2");
-    metamorph.literal("data1", "d");
-    metamorph.literal("data1", "e");
-    metamorph.literal("data2", "f");
-    metamorph.endRecord();
+    @Test
+    public void shouldEmitEmptyValues() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <concat name='concat' delimiter=', '>" +
+                "    <data source='litA' />" +
+                "    <data source='litB' />" +
+                "  </concat>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("litA", "");
+                    i.literal("litB", "a");
+                    i.literal("litA", "b");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("concat", ", a, b");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("concat", "{a, b, c}");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("2");
-    ordered.verify(receiver).literal("concat", "{d, e, f}");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+    @Test
+    public void shouldReverseConcatenationIfReverseIsTrue() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <concat name='concat' delimiter=', ' reverse='true'>" +
+                "    <data source='litA' />" +
+                "    <data source='litB' />" +
+                "  </concat>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("litA", "1");
+                    i.literal("litB", "2");
+                    i.literal("litA", "3");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("concat", "3, 2, 1");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-  @Test
-  public void shouldEmitConcatenatedValueOnFlushEvent() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <concat delimiter=', ' name='concat' prefix='{' postfix='}' flushWith='d' reset='true'>")
-        .with("    <data source='d.1' />")
-        .with("  </concat>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void prefixAndPostfixShouldWorkAsNormalIfReverseIsTrue() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <concat name='concat' delimiter=', ' prefix='(' postfix=')' reverse='true'>" +
+                "    <data source='litA' />" +
+                "    <data source='litB' />" +
+                "  </concat>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("litA", "1");
+                    i.literal("litB", "2");
+                    i.literal("litA", "3");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("concat", "(3, 2, 1)");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    metamorph.startRecord("1");
-    metamorph.startEntity("d");
-    metamorph.literal("1", "a");
-    metamorph.literal("1", "b");
-    metamorph.endEntity();
-    metamorph.startEntity("d");
-    metamorph.literal("1", "e");
-    metamorph.literal("1", "f");
-    metamorph.endEntity();
-    metamorph.startEntity("d");
-    metamorph.literal("2", "e");
-    metamorph.endEntity();
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("concat", "{a, b}");
-    ordered.verify(receiver).literal("concat", "{e, f}");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void shouldEmitEmptyValues() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <concat name='concat' delimiter=', '>")
-        .with("    <data source='litA' />")
-        .with("    <data source='litB' />")
-        .with("  </concat>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("litA", "");
-    metamorph.literal("litB", "a");
-    metamorph.literal("litA", "b");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("concat", ", a, b");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void shouldReverseConcatenationIfReverseIsTrue() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <concat name='concat' delimiter=', ' reverse='true'>")
-        .with("    <data source='litA' />")
-        .with("    <data source='litB' />")
-        .with("  </concat>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("litA", "1");
-    metamorph.literal("litB", "2");
-    metamorph.literal("litA", "3");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("concat", "3, 2, 1");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void prefixAndPostfixShouldWorkAsNormalIfReverseIsTrue() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <concat name='concat' delimiter=', ' prefix='(' postfix=')' reverse='true'>")
-        .with("    <data source='litA' />")
-        .with("    <data source='litB' />")
-        .with("  </concat>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("litA", "1");
-    metamorph.literal("litB", "2");
-    metamorph.literal("litA", "3");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("concat", "(3, 2, 1)");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void issue187_shouldUseEmptyDelimiterAsDefault() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <concat name='concat'>")
-        .with("    <data source='lit' />")
-        .with("  </concat>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("lit", "data1");
-    metamorph.literal("lit", "data2");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("concat", "data1data2");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+    @Test
+    public void issue187_shouldUseEmptyDelimiterAsDefault() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <concat name='concat'>" +
+                "    <data source='lit' />" +
+                "  </concat>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("lit", "data1");
+                    i.literal("lit", "data2");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("concat", "data1data2");
+                    o.get().endRecord();
+                }
+        );
+    }
 
 }

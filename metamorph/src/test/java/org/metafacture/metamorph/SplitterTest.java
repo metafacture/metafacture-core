@@ -16,16 +16,19 @@
 
 package org.metafacture.metamorph;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
+import org.mockito.exceptions.base.MockitoAssertionError;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Tests for class {@link Splitter}.
@@ -36,68 +39,101 @@ import org.mockito.MockitoAnnotations;
  */
 public final class SplitterTest {
 
+    @Rule
+    public MockitoRule mockito = MockitoJUnit.rule();
+
     @Mock
     private StreamReceiver receiver1;
 
     @Mock
     private StreamReceiver receiver2;
 
-    private Splitter splitter;
-
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        splitter = new Splitter("org/metafacture/metamorph/splitter-test.xml");
-        splitter.setReceiver("receiver-1", receiver1);
-        splitter.setReceiver("receiver-2", receiver2);
-    }
-
     @Test
     public void shouldPassRecordToReceiverWithMatchingKey() {
-        splitter.startRecord("1");
-        splitter.startEntity("data");
-        splitter.literal("forward-to", "receiver-1");
-        splitter.endEntity();
-        splitter.endRecord();
-        splitter.startRecord("2");
-        splitter.literal("forward-to", "receiver-2");
-        splitter.endRecord();
-
-        final InOrder ordered = inOrder(receiver1, receiver2);
-        ordered.verify(receiver1).startRecord("1");
-        ordered.verify(receiver1).startEntity("data");
-        ordered.verify(receiver1).literal("forward-to", "receiver-1");
-        ordered.verify(receiver1).endEntity();
-        ordered.verify(receiver1).endRecord();
-        ordered.verify(receiver2).startRecord("2");
-        ordered.verify(receiver2).literal("forward-to", "receiver-2");
-        ordered.verify(receiver2).endRecord();
-        ordered.verifyNoMoreInteractions();
+        assertSplitter(
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("data");
+                    i.literal("forward-to", "receiver-1");
+                    i.endEntity();
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.literal("forward-to", "receiver-2");
+                    i.endRecord();
+                },
+                (o1, o2) -> {
+                    o1.get().startRecord("1");
+                    o1.get().startEntity("data");
+                    o1.get().literal("forward-to", "receiver-1");
+                    o1.get().endEntity();
+                    o1.get().endRecord();
+                    o2.get().startRecord("2");
+                    o2.get().literal("forward-to", "receiver-2");
+                    o2.get().endRecord();
+                }
+        );
     }
 
     @Test
     public void shouldDiscardNonMatchingRecords() {
-        splitter.startRecord("1");
-        splitter.literal("forward-to", "none");
-        splitter.endRecord();
-
-        verifyZeroInteractions(receiver1, receiver2);
+        assertSplitter(
+                i -> {
+                    i.startRecord("1");
+                    i.literal("forward-to", "none");
+                    i.endRecord();
+                },
+                (o1, o2) -> {
+                }
+        );
     }
 
     @Test
     public void shouldPassResetStreamToAllReceivers() {
-        splitter.resetStream();
-
-        verify(receiver1).resetStream();
-        verify(receiver2).resetStream();
+        assertSplitter(
+                i -> {
+                    i.resetStream();
+                },
+                (o1, o2) -> {
+                    o1.get().resetStream();
+                    o2.get().resetStream();
+                }
+        );
     }
 
     @Test
     public void shouldPassCloseStreamToAllReceivers() {
-        splitter.closeStream();
+        assertSplitter(
+                i -> {
+                    i.closeStream();
+                },
+                (o1, o2) -> {
+                    o1.get().closeStream();
+                    o2.get().closeStream();
+                }
+        );
+    }
 
-        verify(receiver1).closeStream();
-        verify(receiver2).closeStream();
+    private void assertSplitter(final Consumer<Splitter> in, final BiConsumer<Supplier<StreamReceiver>, Supplier<StreamReceiver>> out) {
+        final InOrder ordered = Mockito.inOrder(receiver1, receiver2);
+
+        final Splitter splitter = new Splitter("org/metafacture/metamorph/splitter-test.xml");
+        splitter.setReceiver("receiver-1", receiver1);
+        splitter.setReceiver("receiver-2", receiver2);
+
+        in.accept(splitter);
+
+        try {
+            out.accept(() -> ordered.verify(receiver1), () -> ordered.verify(receiver2));
+
+            ordered.verifyNoMoreInteractions();
+            Mockito.verifyNoMoreInteractions(receiver1);
+            Mockito.verifyNoMoreInteractions(receiver2);
+        }
+        catch (final MockitoAssertionError e) {
+            System.out.println(Mockito.mockingDetails(receiver1).printInvocations());
+            System.out.println(Mockito.mockingDetails(receiver2).printInvocations());
+            throw e;
+        }
     }
 
 }
