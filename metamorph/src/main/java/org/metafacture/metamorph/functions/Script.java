@@ -44,7 +44,7 @@ public final class Script extends AbstractSimpleStatelessFunction {
     }
 
     /**
-     * Flags wether to invoke the script.
+     * Flags whether to invoke the script.
      *
      * @param invoke true if script should be invoked
      */

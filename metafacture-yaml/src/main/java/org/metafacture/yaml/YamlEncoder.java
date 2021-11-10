@@ -94,7 +94,7 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     }
 
     /**
-     * Flags wether the data should be pretty printed.
+     * Flags whether the data should be pretty printed.
      *
      * @param prettyPrinting true if the data should be pretty printed
      */
@@ -103,7 +103,7 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     }
 
     /**
-     * Checks wether to pretty print.
+     * Checks whether to pretty print.
      *
      * @return true if the data should be pretty printed
      */

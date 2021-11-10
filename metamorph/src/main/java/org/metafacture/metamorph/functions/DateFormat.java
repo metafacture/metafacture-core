@@ -195,7 +195,7 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
     }
 
     /**
-     * Flags wether to remove leading zeros.
+     * Flags whether to remove leading zeros.
      *
      * @param removeLeadingZeros true if leading zeros should be removed
      */

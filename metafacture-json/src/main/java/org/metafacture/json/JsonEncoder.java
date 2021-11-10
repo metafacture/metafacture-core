@@ -95,7 +95,7 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     }
 
     /**
-     * Flags wether to use pretty printing.
+     * Flags whether to use pretty printing.
      *
      * @param prettyPrinting true if pretty printing should be used
      */

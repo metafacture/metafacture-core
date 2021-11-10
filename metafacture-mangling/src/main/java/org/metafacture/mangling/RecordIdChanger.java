@@ -133,7 +133,7 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
     }
 
     /**
-     * Checks wether to keep records without ID literal.
+     * Checks whether to keep records without ID literal.
      *
      * @return true if records without ID literal should be kept
      */
@@ -159,7 +159,7 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
     }
 
     /**
-     * Checks wether the ID literal should be kept.
+     * Checks whether the ID literal should be kept.
      *
      * @return true if the ID literal should be kept
      */

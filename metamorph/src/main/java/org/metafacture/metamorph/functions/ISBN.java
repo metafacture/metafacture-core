@@ -203,7 +203,7 @@ public final class ISBN extends AbstractSimpleStatelessFunction {
     }
 
     /**
-     * Flags wether the check digit should be verified.
+     * Flags whether the check digit should be verified.
      *
      * @param verifyCheckDigit "true" if the check digit should be verified
      */

@@ -46,7 +46,7 @@ public class DefaultSender<T extends Receiver> implements Sender<T> {
     }
 
     /**
-     * Checks wether the DefaultSender is closed.
+     * Checks whether the DefaultSender is closed.
      *
      * @return true if the DefaultSender is closed
      */

@@ -72,7 +72,7 @@ public final class TripleCount extends AbstractTripleSort {
     }
 
     /**
-     * Flags wether predicates should be counted.
+     * Flags whether predicates should be counted.
      *
      * @param countPredicate true if predicates should be counted
      */

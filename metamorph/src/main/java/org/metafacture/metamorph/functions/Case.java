@@ -58,7 +58,7 @@ public final class Case extends AbstractSimpleStatelessFunction {
     }
 
     /**
-     * Flags wether the case should be upper.
+     * Flags whether the case should be upper.
      *
      * @param string the case is set to upper when set to {@value #UPPER}
      */

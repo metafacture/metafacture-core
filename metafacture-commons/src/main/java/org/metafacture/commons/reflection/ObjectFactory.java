@@ -106,7 +106,7 @@ public class ObjectFactory<T> {
     }
 
     /**
-     * Checks wether a ConfigurableClass is asscociated with a key.
+     * Checks whether a ConfigurableClass is asscociated with a key.
      *
      * @param key the key
      * @return true if the key is associcated with a ConfigurableClass

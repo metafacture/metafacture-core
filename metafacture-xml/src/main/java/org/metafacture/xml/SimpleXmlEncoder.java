@@ -165,7 +165,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     }
 
     /**
-     * Flags wether to write the XML header.
+     * Flags whether to write the XML header.
      *
      * @param writeXmlHeader true if the XML header should be written
      */
@@ -192,7 +192,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     }
 
     /**
-     * Flags wether to write the root tag.
+     * Flags whether to write the root tag.
      *
      * @param writeRootTag true if the root tag should be written
      */
@@ -201,7 +201,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     }
 
     /**
-     * Flags wether to separate roots.
+     * Flags whether to separate roots.
      *
      * @param separateRoots true if roots should be separated
      */

@@ -136,7 +136,7 @@ public final class GenericXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     }
 
     /**
-     * Checks wether the namespace should be emitted.
+     * Checks whether the namespace should be emitted.
      *
      * @return true if the namespace should be emitted
      */

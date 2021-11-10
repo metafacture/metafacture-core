@@ -77,7 +77,7 @@ public final class StreamUnicodeNormalizer extends DefaultStreamPipe<StreamRecei
     }
 
     /**
-     * Checks wether IDs should be normalized.
+     * Checks whether IDs should be normalized.
      *
      * @return true if IDs should be normalized
      */
@@ -101,7 +101,7 @@ public final class StreamUnicodeNormalizer extends DefaultStreamPipe<StreamRecei
     }
 
     /**
-     * Checks wether keys should be normalized.
+     * Checks whether keys should be normalized.
      *
      * @return true if the keys should be normalized
      */
@@ -124,7 +124,7 @@ public final class StreamUnicodeNormalizer extends DefaultStreamPipe<StreamRecei
     }
 
     /**
-     * Checks wether values should be normalized.
+     * Checks whether values should be normalized.
      *
      * @return true if values should be normalized
      */

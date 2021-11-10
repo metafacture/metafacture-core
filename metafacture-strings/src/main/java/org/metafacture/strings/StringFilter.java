@@ -62,7 +62,7 @@ public final class StringFilter extends
     }
 
     /**
-     * Checks wether matches are passed.
+     * Checks whether matches are passed.
      *
      * @return true if matches should pass
      */
@@ -71,7 +71,7 @@ public final class StringFilter extends
     }
 
     /**
-     * Flags wether to pass matches or, inversely, pass everything but the matches.
+     * Flags whether to pass matches or, inversely, pass everything but the matches.
      *
      * @param passMatches true if matches should pass, otherwise false
      */

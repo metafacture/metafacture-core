@@ -72,7 +72,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
     }
 
     /**
-     * Checks wether a reset should be done after emitting.
+     * Checks whether a reset should be done after emitting.
      *
      * @return true if a reset should be done after emitting
      */

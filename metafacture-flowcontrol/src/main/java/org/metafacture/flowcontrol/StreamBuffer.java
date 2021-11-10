@@ -49,7 +49,7 @@ public final class StreamBuffer extends DefaultStreamPipe<StreamReceiver> {
     }
 
     /**
-     * Checks wether there are messages stored.
+     * Checks whether there are messages stored.
      *
      * @return true if messages are empty, otherwise false
      */

@@ -53,7 +53,7 @@ public final class SortedTripleFileFacade {
     }
 
     /**
-     * Checks wether SortedTripleFileFacade is empty.
+     * Checks whether SortedTripleFileFacade is empty.
      *
      * @return true if SortedTripleFileFacade is empty.
      */

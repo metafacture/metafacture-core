@@ -101,7 +101,7 @@ public final class ObjectExceptionCatcher<T> extends
     }
 
     /**
-     * Checks wether the log messages should be in stack trace level.
+     * Checks whether the log messages should be in stack trace level.
      *
      * @return true if the log messages are in stack trace level
      */

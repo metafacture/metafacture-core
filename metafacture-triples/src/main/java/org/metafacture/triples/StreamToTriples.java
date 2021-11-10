@@ -90,7 +90,7 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
     }
 
     /**
-     * Checks wether redirection is enabled.
+     * Checks whether redirection is enabled.
      *
      * @return true if redirection is enabled.
      */
@@ -99,7 +99,7 @@ public final class StreamToTriples extends DefaultStreamPipe<ObjectReceiver<Trip
     }
 
     /**
-     * Flags wether to set redirect.
+     * Flags whether to set redirect.
      *
      * @param redirect true if to redirect
      */

@@ -49,7 +49,7 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
     }
 
     /**
-     * Flas wether to auto add the subject.
+     * Flas whether to auto add the subject.
      *
      * @param autoAddedSubject true if subject shoudl be auto added
      */

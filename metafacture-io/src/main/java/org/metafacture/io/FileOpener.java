@@ -101,7 +101,7 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Checks wether the file compression is set to decompress concatenated.
+     * Checks whether the file compression is set to decompress concatenated.
      *
      * @return true if file compression should be decompresses concatenated
      */
@@ -110,7 +110,7 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Flags wether to use decompress concatenated file compression.
+     * Flags whether to use decompress concatenated file compression.
      *
      * @param decompressConcatenated true if file compression should be decompresses
      *                               concatenated

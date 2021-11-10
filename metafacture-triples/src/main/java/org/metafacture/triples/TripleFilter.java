@@ -109,7 +109,7 @@ public final class TripleFilter extends DefaultObjectPipe<Triple, ObjectReceiver
     }
 
     /**
-     * Checks wether matches passes.
+     * Checks whether matches passes.
      *
      * @return true if matches should pass
      */
@@ -118,7 +118,7 @@ public final class TripleFilter extends DefaultObjectPipe<Triple, ObjectReceiver
     }
 
     /**
-     * Flags wether matches should pass.
+     * Flags whether matches should pass.
      *
      * @param passMatches true if matches should pass, otherwise matches don't pass
      */

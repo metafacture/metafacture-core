@@ -61,7 +61,7 @@ public final class Histogram extends DefaultStreamReceiver {
     }
 
     /**
-     * Checks wether entities are counted.
+     * Checks whether entities are counted.
      *
      * @return true if entities are counted.
      */
@@ -70,7 +70,7 @@ public final class Histogram extends DefaultStreamReceiver {
     }
 
     /**
-     * Flags wether entities should be counted.
+     * Flags whether entities should be counted.
      *
      * @param countEntities true if entities should be counted.
      */
@@ -79,7 +79,7 @@ public final class Histogram extends DefaultStreamReceiver {
     }
 
     /**
-     * Checks wether literals are counted.
+     * Checks whether literals are counted.
      *
      * @return true if literals are counted
      */
@@ -88,7 +88,7 @@ public final class Histogram extends DefaultStreamReceiver {
     }
 
     /**
-     * Flags wether to count literals.
+     * Flags whether to count literals.
      *
      * @param countLiterals true if literals should be counted
      */

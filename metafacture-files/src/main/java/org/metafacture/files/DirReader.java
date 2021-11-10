@@ -50,7 +50,7 @@ public final class DirReader extends DefaultObjectPipe<String, ObjectReceiver<St
     }
 
     /**
-     * Flags wether the directory should be traversered recursively.
+     * Flags whether the directory should be traversered recursively.
      *
      * @param recursive true if the directory should be traversered recursively,
      *                  otherwise false

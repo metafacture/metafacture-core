@@ -68,7 +68,7 @@ public final class Concat extends AbstractFlushingCollect {
     }
 
     /**
-     * Flasg wether the concatenation should be reversely done.
+     * Flasg whether the concatenation should be reversely done.
      *
      * @param reverse true if concatenation should be done reversely
      */

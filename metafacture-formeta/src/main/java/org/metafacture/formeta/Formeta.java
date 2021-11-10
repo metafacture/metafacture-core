@@ -41,7 +41,7 @@ public final class Formeta {
     }
 
     /**
-     * Checks wether a character is a whitespace.
+     * Checks whether a character is a whitespace.
      *
      * @param ch the character
      * @return true if the character is a whitespace

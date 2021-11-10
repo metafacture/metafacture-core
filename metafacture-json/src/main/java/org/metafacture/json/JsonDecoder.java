@@ -74,7 +74,7 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
     }
 
     /**
-     * Flags wether to allow comments.
+     * Flags whether to allow comments.
      *
      * @param allowComments true if comments should be allowed
      */

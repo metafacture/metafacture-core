@@ -110,7 +110,7 @@ public final class StreamValidator implements StreamReceiver {
     }
 
     /**
-     * Checks wether the record order is strict.
+     * Checks whether the record order is strict.
      *
      * @return true if the record order is strict
      */
@@ -133,7 +133,7 @@ public final class StreamValidator implements StreamReceiver {
     }
 
     /**
-     * Checks wether the key order is strict.
+     * Checks whether the key order is strict.
      *
      * @return true if the key order is strict
      */
@@ -156,7 +156,7 @@ public final class StreamValidator implements StreamReceiver {
     }
 
     /**
-     * Checks wether the value order is strict.
+     * Checks whether the value order is strict.
      *
      * @return true if the value order is strict
      */

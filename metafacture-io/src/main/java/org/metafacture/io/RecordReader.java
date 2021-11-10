@@ -101,7 +101,7 @@ public final class RecordReader extends DefaultObjectPipe<Reader, ObjectReceiver
     }
 
     /**
-     * Checks wether to skip empty records.
+     * Checks whether to skip empty records.
      *
      * @return true if empty records should be skipped
      */

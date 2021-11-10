@@ -136,7 +136,7 @@ public final class StringListMap extends DefaultStreamReceiver implements Collec
     }
 
     /**
-     * Checks wether a key exists.
+     * Checks whether a key exists.
      *
      * @param name the key
      * @return true if the key exists, otherwise false

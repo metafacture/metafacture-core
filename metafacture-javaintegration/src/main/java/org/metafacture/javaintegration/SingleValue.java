@@ -47,7 +47,7 @@ public final class SingleValue extends DefaultStreamReceiver implements Collecto
     }
 
     /**
-     * Check wether SingleValue is closed.
+     * Check whether SingleValue is closed.
      *
      * @return true if SingleValue is closed.
      */

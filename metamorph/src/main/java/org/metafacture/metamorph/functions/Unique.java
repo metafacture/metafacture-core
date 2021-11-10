@@ -71,7 +71,7 @@ public final class Unique extends AbstractStatefulFunction {
     }
 
     /**
-     * Flags wether the scope is {@link #ENTITY}.
+     * Flags whether the scope is {@link #ENTITY}.
      *
      * @param scope the scope
      */

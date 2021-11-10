@@ -50,7 +50,7 @@ public final class EventList implements StreamReceiver {
     }
 
     /**
-     * Check wether EventList is closed.
+     * Check whether EventList is closed.
      *
      * @return true if EventList is closed.
      */

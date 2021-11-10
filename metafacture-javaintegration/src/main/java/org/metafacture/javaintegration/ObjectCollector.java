@@ -53,7 +53,7 @@ public final class ObjectCollector<T> implements ObjectReceiver<T> {
     }
 
     /**
-     * Check wether ObjectCollector is closed.
+     * Check whether ObjectCollector is closed.
      *
      * @return true if ObjectCollector is closed.
      */
