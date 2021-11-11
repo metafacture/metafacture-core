@@ -16,37 +16,32 @@ Expression:
 ;
 
 Unless:
-  'unless' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')' BEGIN
+  'unless' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')'
     elements += Expression*
-  END
   'end'
 ;
 
 If:
-  'if' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')' BEGIN
+  'if' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')'
     elements += Expression*
-  END
   elseIf = ElsIf?
   else = Else?
   'end'
 ;
 
 ElsIf:
-  'elsif' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')' BEGIN
+  'elsif' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')'
     elements += Expression*
-  END
 ;
 
 Else:
-  {Else} 'else' BEGIN
+  {Else} 'else'
     elements += Expression*
-  END
 ;
 
 Do:
-  'do' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* ','? )? ( options = Options )? ')' BEGIN
+  'do' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* ','? )? ( options = Options )? ')'
     elements += Expression*
-  END
   'end'
 ;
 
@@ -60,18 +55,11 @@ Options:
 
 terminal fragment ESCAPED_CHAR:
     '\\' ('n'|'t'|'r'|'\\');
+
 @Override
 terminal STRING:
     '"' ( ESCAPED_CHAR | !('\\'|'"') )* '"' |
     "'" ( ESCAPED_CHAR | !('\\'|"'") )* "'";
-
-terminal BEGIN:
-  'synthetic:BEGIN'
-;
-
-terminal END:
-  'synthetic:END'
-;
 
 @Override
 terminal SL_COMMENT:

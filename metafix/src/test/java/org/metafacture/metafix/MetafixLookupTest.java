@@ -81,6 +81,27 @@ public class MetafixLookupTest {
     }
 
     @Test
+    public void inlineMultilineIndent() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('title',",
+                "  Aloha: Alohaeha,",
+                "  Moin: 'Moin zäme')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("title[]");
+                o.get().literal("1", "Alohaeha");
+                o.get().literal("2", "Moin zäme");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void inlineDotNotationNested() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "lookup('data.title', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"),
