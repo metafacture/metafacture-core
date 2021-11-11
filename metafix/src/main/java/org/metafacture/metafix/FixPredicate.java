@@ -17,7 +17,6 @@
 package org.metafacture.metafix;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -45,34 +44,31 @@ enum FixPredicate {
 
         all {
             @Override
-            public boolean test(final Map<String, Object> record, final FixPredicate p,
-                    final List<String> params) {
+            public boolean test(final Record record, final FixPredicate p, final List<String> params) {
                 return test(record, params.get(0), s -> s.allMatch(p.of(params.get(1))));
             }
 
         },
         any {
             @Override
-            public boolean test(final Map<String, Object> record, final FixPredicate p,
-                    final List<String> params) {
+            public boolean test(final Record record, final FixPredicate p, final List<String> params) {
                 return test(record, params.get(0), s -> s.anyMatch(p.of(params.get(1))));
             }
         },
         none {
             @Override
-            public boolean test(final Map<String, Object> record, final FixPredicate p,
-                    final List<String> params) {
-                final Object fieldValue = FixMethod.find(record, FixMethod.split(params.get(0)));
+            public boolean test(final Record record, final FixPredicate p, final List<String> params) {
+                final Object fieldValue = FixMethod.find(record.temporarilyGetMap(), FixMethod.split(params.get(0)));
                 final String valueToTest = params.get(1);
                 return fieldValue == null || Metafix.asList(fieldValue).stream().noneMatch(p.of(valueToTest));
             }
         };
 
-        boolean test(final Map<String, Object> record, final String fieldName, final Predicate<Stream<Object>> f) {
-            final Object value = FixMethod.find(record, FixMethod.split(fieldName));
+        boolean test(final Record record, final String fieldName, final Predicate<Stream<Object>> f) {
+            final Object value = FixMethod.find(record.temporarilyGetMap(), FixMethod.split(fieldName));
             return value != null && f.test(Metafix.asList(value).stream());
         }
 
-        abstract boolean test(Map<String, Object> record, FixPredicate p, List<String> params);
+        abstract boolean test(Record record, FixPredicate p, List<String> params);
     }
 }

@@ -60,7 +60,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
     private static final Logger LOG = LoggerFactory.getLogger(Metafix.class);
 
     // TODO: Use SimpleRegexTrie / WildcardTrie for wildcard, alternation and character class support
-    private Map<String, Object> currentRecord = new LinkedHashMap<>();
+    private Record currentRecord = new Record();
     private Fix fix;
     private final List<Expression> expressions = new ArrayList<>();
     private Map<String, String> vars = NO_VARS;
@@ -114,7 +114,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
 
     @Override
     public void startRecord(final String identifier) {
-        currentRecord = new LinkedHashMap<>();
+        currentRecord = new Record();
         LOG.debug("Start record: {}", identifier);
         flattener.startRecord(identifier);
         entityCountStack.clear();
@@ -135,11 +135,13 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         LOG.debug("End record, walking fix: {}", currentRecord);
         final RecordTransformer transformer = new RecordTransformer(currentRecord, vars, fix);
         currentRecord = transformer.transform();
-        if (!currentRecord.containsKey("__reject")) {
+        if (!currentRecord.getReject()) {
             outputStreamReceiver.startRecord(recordIdentifier);
             LOG.debug("Sending results to {}", outputStreamReceiver);
-            currentRecord.keySet().stream().filter(k -> !k.startsWith("_")).forEach(k -> {
-                emit(k, currentRecord.get(k));
+            currentRecord.forEach((k, v) -> {
+                if (!k.startsWith("_")) {
+                    emit(k, v);
+                }
             });
             outputStreamReceiver.endRecord();
         }
@@ -184,7 +186,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
                 entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
         entityCountStack.push(Integer.valueOf(entityCount));
         flattener.startEntity(name);
-        entities.add(currentEntity(name, previousEntity == null && entities.size() >= 0 ? currentRecord : previousEntity));
+        entities.add(currentEntity(name, previousEntity != null ? previousEntity : currentRecord.temporarilyGetMap()));
     }
 
     private Map<String, Object> currentEntity(final String name, final Map<String, Object> previousEntity) {
@@ -197,7 +199,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         }
         else {
             currentEntity = new LinkedHashMap<>();
-            add(previousEntity != null ? previousEntity : currentRecord, name, currentEntity);
+            add(previousEntity != null ? previousEntity : currentRecord.temporarilyGetMap(), name, currentEntity);
         }
         return currentEntity;
     }
@@ -214,7 +216,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         final Integer currentEntityIndex = entityCountStack.peek() - 1;
         final Map<String, Object> currentEntity = currentEntityIndex < 0 ||
                 entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
-        add(currentEntity != null ? currentEntity : currentRecord, name, value);
+        add(currentEntity != null ? currentEntity : currentRecord.temporarilyGetMap(), name, value);
         // TODO: keep flattener as option?
         // flattener.literal(name, value);
     }
@@ -249,20 +251,16 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         return vars;
     }
 
-    public Map<String, Object> getCurrentRecord() {
+    public Record getCurrentRecord() {
         return currentRecord;
     }
 
     static void addAll(final Map<String, Object> record, final String fieldName, final List<String> values) {
-        values.forEach(value -> {
-            add(record, fieldName, value);
-        });
+        values.forEach(value -> add(record, fieldName, value));
     }
 
     static void addAll(final Map<String, Object> record, final Map<String, Object> values) {
-        values.entrySet().forEach(value -> {
-            add(record, value.getKey(), value.getValue());
-        });
+        values.entrySet().forEach(value -> add(record, value.getKey(), value.getValue()));
     }
 
     static void add(final Map<String, Object> record, final String name, final Object newValue) {
