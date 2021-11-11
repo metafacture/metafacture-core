@@ -700,4 +700,22 @@ public class MetafixRecordTest {
                 o.get().endRecord();
             });
     }
+
+    @Test
+    public void nulls() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "retain('1','2','3')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("1", "one");
+                i.literal("2", "");
+                i.literal("3", null);
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("1", "one");
+                o.get().literal("2", "");
+                o.get().endRecord();
+            });
+    }
 }
