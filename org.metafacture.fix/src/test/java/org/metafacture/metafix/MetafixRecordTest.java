@@ -77,7 +77,7 @@ public class MetafixRecordTest {
             i -> {
                 i.startRecord("1");
                 i.endRecord();
-            }, (o, f) -> {
+            }, o -> {
                 o.get().startRecord("1");
                 o.get().literal("id", "1");
                 o.get().endRecord();
@@ -370,7 +370,7 @@ public class MetafixRecordTest {
                 i.literal("name", "maxi-ma");
                 i.endEntity();
                 i.endRecord();
-            }, (o, f) -> {
+            }, o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("author[]");
                 o.get().literal("1", "maxi-mi");
@@ -633,7 +633,7 @@ public class MetafixRecordTest {
             i -> {
                 i.startRecord("1");
                 i.endRecord();
-            }, (o, f) -> {
+            }, o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("nums[]");
                 o.get().literal("1", "1");
@@ -674,7 +674,7 @@ public class MetafixRecordTest {
                 i.literal("3", "tre");
                 i.literal("4", "for");
                 i.endRecord();
-            }, (o, f) -> {
+            }, o -> {
                 o.get().startRecord("1");
                 o.get().literal("1", "one");
                 o.get().literal("3", "tre");
@@ -693,7 +693,7 @@ public class MetafixRecordTest {
                 i.literal("3", "tre");
                 i.literal("4", "");
                 i.endRecord();
-            }, (o, f) -> {
+            }, o -> {
                 o.get().startRecord("1");
                 o.get().literal("1", "one");
                 o.get().literal("3", "tre");
@@ -711,7 +711,7 @@ public class MetafixRecordTest {
                 i.literal("2", "");
                 i.literal("3", null);
                 i.endRecord();
-            }, (o, f) -> {
+            }, o -> {
                 o.get().startRecord("1");
                 o.get().literal("1", "one");
                 o.get().literal("2", "");
