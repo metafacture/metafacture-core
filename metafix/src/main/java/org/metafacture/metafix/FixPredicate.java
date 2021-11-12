@@ -58,14 +58,14 @@ enum FixPredicate {
         none {
             @Override
             public boolean test(final Record record, final FixPredicate p, final List<String> params) {
-                final Object fieldValue = FixMethod.find(record.temporarilyGetMap(), FixMethod.split(params.get(0)));
+                final Object fieldValue = FixMethod.find(record, FixMethod.split(params.get(0)));
                 final String valueToTest = params.get(1);
                 return fieldValue == null || Metafix.asList(fieldValue).stream().noneMatch(p.of(valueToTest));
             }
         };
 
         boolean test(final Record record, final String fieldName, final Predicate<Stream<Object>> f) {
-            final Object value = FixMethod.find(record.temporarilyGetMap(), FixMethod.split(fieldName));
+            final Object value = FixMethod.find(record, FixMethod.split(fieldName));
             return value != null && f.test(Metafix.asList(value).stream());
         }
 

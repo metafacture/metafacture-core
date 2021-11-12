@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +68,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
     private int entityCount;
     private StreamReceiver outputStreamReceiver;
     private String recordIdentifier;
-    private List<Map<String, Object>> entities = new ArrayList<>();
+    private List<Mapping> entities = new ArrayList<>();
 
     public Metafix() {
         init();
@@ -158,12 +157,10 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         }
         for (int i = 0; i < vals.size(); ++i) {
             final Object value = vals.get(i);
-            if (value instanceof Map) {
-                final Map<?, ?> nested = (Map<?, ?>) value;
+            if (value instanceof Mapping) {
+                final Mapping nested = (Mapping) value;
                 outputStreamReceiver.startEntity(isMulti ? "" : key.toString());
-                nested.entrySet().forEach(nestedEntry -> {
-                    emit(nestedEntry.getKey(), nestedEntry.getValue());
-                });
+                nested.forEach(this::emit);
                 outputStreamReceiver.endEntity();
             }
             else {
@@ -182,24 +179,24 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         }
         ++entityCount;
         final Integer currentEntityIndex = entityCountStack.peek() - 1;
-        final Map<String, Object> previousEntity = currentEntityIndex < 0 ||
+        final Mapping previousEntity = currentEntityIndex < 0 ||
                 entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
         entityCountStack.push(Integer.valueOf(entityCount));
         flattener.startEntity(name);
-        entities.add(currentEntity(name, previousEntity != null ? previousEntity : currentRecord.temporarilyGetMap()));
+        entities.add(currentEntity(name, previousEntity != null ? previousEntity : currentRecord));
     }
 
-    private Map<String, Object> currentEntity(final String name, final Map<String, Object> previousEntity) {
+    private Mapping currentEntity(final String name, final Mapping previousEntity) {
         final Object existingValue = previousEntity != null ? previousEntity.get(name) : null;
-        final Map<String, Object> currentEntity;
-        if (existingValue != null && existingValue instanceof Map) {
+        final Mapping currentEntity;
+        if (existingValue instanceof Mapping) {
             @SuppressWarnings("unchecked")
-            final Map<String, Object> existingEntity = (Map<String, Object>) previousEntity.get(name);
+            final Mapping existingEntity = (Mapping) previousEntity.get(name);
             currentEntity = existingEntity;
         }
         else {
-            currentEntity = new LinkedHashMap<>();
-            add(previousEntity != null ? previousEntity : currentRecord.temporarilyGetMap(), name, currentEntity);
+            currentEntity = new Mapping();
+            add(previousEntity != null ? previousEntity : currentRecord, name, currentEntity);
         }
         return currentEntity;
     }
@@ -214,9 +211,9 @@ public class Metafix implements StreamPipe<StreamReceiver> {
     public void literal(final String name, final String value) {
         LOG.debug("Putting '{}': '{}'", name, value);
         final Integer currentEntityIndex = entityCountStack.peek() - 1;
-        final Map<String, Object> currentEntity = currentEntityIndex < 0 ||
+        final Mapping currentEntity = currentEntityIndex < 0 ||
                 entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
-        add(currentEntity != null ? currentEntity : currentRecord.temporarilyGetMap(), name, value);
+        add(currentEntity != null ? currentEntity : currentRecord, name, value);
         // TODO: keep flattener as option?
         // flattener.literal(name, value);
     }
@@ -255,36 +252,34 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         return currentRecord;
     }
 
-    static void addAll(final Map<String, Object> record, final String fieldName, final List<String> values) {
+    static void addAll(final Mapping record, final String fieldName, final List<String> values) {
         values.forEach(value -> add(record, fieldName, value));
     }
 
-    static void addAll(final Map<String, Object> record, final Map<String, Object> values) {
-        values.entrySet().forEach(value -> add(record, value.getKey(), value.getValue()));
+    static void addAll(final Mapping record, final Mapping values) {
+        values.forEach((fieldName, value) -> add(record, fieldName, value));
     }
 
-    static void add(final Map<String, Object> record, final String name, final Object newValue) {
+    static void add(final Mapping record, final String name, final Object newValue) {
         final Object oldValue = record.get(name);
         record.put(name, oldValue == null ? newValue : merged(oldValue, newValue));
     }
 
     @SuppressWarnings("unchecked")
     static Object merged(final Object object1, final Object object2) {
-        if (object1 instanceof Map && object2 instanceof Map) {
-            ((Map<String, Object>) object1).putAll((Map<String, Object>) object2);
-            return object1;
+        if (object1 instanceof Mapping && object2 instanceof Mapping) {
+            final Mapping result = (Mapping) object1;
+            ((Mapping) object2).forEach(result::put);
+            return result;
         }
         final List<Object> list = asList(object1);
-        asList(object2).forEach(e -> {
-            list.add(e);
-        });
+        asList(object2).forEach(list::add);
         return list;
     }
 
     @SuppressWarnings("unchecked")
     static List<Object> asList(final Object object) {
-        return new ArrayList<>(
-                object instanceof List ? (List<Object>) object : Arrays.asList(object));
+        return new ArrayList<>(object instanceof List ? (List<Object>) object : Arrays.asList(object));
     }
 
 }

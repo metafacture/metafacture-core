@@ -21,8 +21,6 @@ import org.metafacture.metamorph.maps.FileMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -37,7 +35,7 @@ enum FixMethod {
     set_field {
         public void apply(final Record record, final List<String> params, final Map<String, String> options) {
             record.remove(params.get(0));
-            insert(InsertMode.REPLACE, record.temporarilyGetMap(), split(params.get(0)), params.get(1));
+            insert(InsertMode.REPLACE, record, split(params.get(0)), params.get(1));
         }
     },
     set_array {
@@ -45,7 +43,7 @@ enum FixMethod {
             final String key = params.get(0);
             final List<String> toAdd = params.subList(1, params.size());
             if (key.endsWith(DOT_APPEND)) {
-                Metafix.addAll(record.temporarilyGetMap(), key.replace(DOT_APPEND, EMPTY), toAdd);
+                Metafix.addAll(record, key.replace(DOT_APPEND, EMPTY), toAdd);
             }
             else {
                 record.put(key, toAdd);
@@ -57,11 +55,15 @@ enum FixMethod {
         public void apply(final Record record, final List<String> params, final Map<String, String> options) {
             final String key = params.get(0);
             final Object val = record.get(key.replace(DOT_APPEND, EMPTY));
+
+            final Mapping result = new Mapping();
+            options.forEach(result::put);
+
             if (key.endsWith(DOT_APPEND) && val instanceof List) {
-                ((List<Object>) val).add(options);
+                ((List<Object>) val).add(result);
             }
             else {
-                record.put(key, options);
+                record.put(key, result);
             }
         }
     },
@@ -69,11 +71,11 @@ enum FixMethod {
         public void apply(final Record record, final List<String> params, final Map<String, String> options) {
             final String fieldName = params.get(0);
             Metafix.asList(record.get(fieldName)).forEach(recordEntry -> {
-                if (recordEntry instanceof Map) {
+                if (recordEntry instanceof Mapping) {
                     record.remove(fieldName);
-                    ((Map<?, ?>) recordEntry).entrySet().forEach(mapEntry -> {
-                        Metafix.add(record.temporarilyGetMap(), fieldName, mapEntry.getKey());
-                        Metafix.add(record.temporarilyGetMap(), fieldName, mapEntry.getValue());
+                    ((Mapping) recordEntry).forEach((subFieldName, value) -> {
+                        Metafix.add(record, fieldName, subFieldName);
+                        Metafix.add(record, fieldName, value);
                     });
                 }
             });
@@ -82,24 +84,22 @@ enum FixMethod {
     hash { // hash-from-array
         public void apply(final Record record, final List<String> params, final Map<String, String> options) {
             final List<Object> values = Metafix.asList(record.get(params.get(0)));
-            final Map<String, Object> result = new HashMap<>();
-            for (int i = 0; i < values.size(); i = i + 1) {
-                if (i % 2 == 1) {
-                    result.put(values.get(i - 1).toString(), values.get(i));
-                }
+            final Mapping result = new Mapping();
+            for (int i = 1; i < values.size(); i = i + 2) {
+                result.put(values.get(i - 1).toString(), values.get(i));
             }
             record.put(params.get(0), result);
         }
     },
     add_field {
         public void apply(final Record record, final List<String> params, final Map<String, String> options) {
-            insert(InsertMode.APPEND, record.temporarilyGetMap(), split(params.get(0)), params.get(1));
+            insert(InsertMode.APPEND, record, split(params.get(0)), params.get(1));
         }
     },
     move_field {
         public void apply(final Record record, final List<String> params, final Map<String, String> options) {
             copy(record, params);
-            remove(record.temporarilyGetMap(), split(params.get(0)));
+            remove(record, split(params.get(0)));
         }
     },
     copy_field {
@@ -109,7 +109,7 @@ enum FixMethod {
     },
     remove_field {
         public void apply(final Record record, final List<String> params, final Map<String, String> options) {
-            params.forEach(p -> remove(record.temporarilyGetMap(), split(p)));
+            params.forEach(p -> remove(record, split(p)));
         }
     },
     format {
@@ -135,7 +135,7 @@ enum FixMethod {
                      * 2. Named groups are not mixed with unnamed groups.
                      */
                     final Matcher groupMatcher = NAMED_GROUP_PATTERN.matcher(p.pattern());
-                    final Map<String, String> result = new LinkedHashMap<>();
+                    final Mapping result = new Mapping();
 
                     while (groupMatcher.find()) {
                         final String group = groupMatcher.group(1);
@@ -143,11 +143,11 @@ enum FixMethod {
                     }
 
                     if (!result.isEmpty()) {
-                        Metafix.add(record.temporarilyGetMap(), params.get(0), result);
+                        Metafix.add(record, params.get(0), result);
                     }
                     else {
                         for (int i = 1; i <= m.groupCount(); i = i + 1) {
-                            Metafix.add(record.temporarilyGetMap(), params.get(0), m.group(i));
+                            Metafix.add(record, params.get(0), m.group(i));
                         }
                     }
                 }
@@ -157,11 +157,10 @@ enum FixMethod {
     paste {
         public void apply(final Record record, final List<String> params, final Map<String, String> options) {
             final String joinChar = options.get("join_char");
-            insert(InsertMode.REPLACE, record.temporarilyGetMap(), split(params.get(0)),
-                    params.subList(1, params.size()).stream()
-                            .filter(k -> literalString(k) || find(record.temporarilyGetMap(), split(k)) != null)
-                            .map(k -> literalString(k) ? k.substring(1) : Metafix.asList(find(record.temporarilyGetMap(), split(k))).iterator().next())
-                            .map(Object::toString).collect(Collectors.joining(joinChar != null ? joinChar : " ")));
+            insert(InsertMode.REPLACE, record, split(params.get(0)), params.subList(1, params.size()).stream()
+                    .filter(k -> literalString(k) || find(record, split(k)) != null)
+                    .map(k -> literalString(k) ? k.substring(1) : Metafix.asList(find(record, split(k))).iterator().next())
+                    .map(Object::toString).collect(Collectors.joining(joinChar != null ? joinChar : " ")));
         }
 
         private boolean literalString(final String s) {
@@ -247,20 +246,19 @@ enum FixMethod {
 
     private static void applyToFields(final Record record, final List<String> params, final Function<String, String> fun) {
         final String key = params.get(0);
-        final Object found = find(record.temporarilyGetMap(), split(key));
-        final boolean containsKey = found != null;
-        if (containsKey) {
-            remove(record.temporarilyGetMap(), split(key));
+        final Object found = find(record, split(key));
+        if (found != null) {
+            remove(record, split(key));
             new ArrayList<>(Metafix.asList(found)).forEach(old -> {
                 if (fun != null && old != null) {
                     final String val = fun.apply(old.toString());
-                    insert(InsertMode.APPEND, record.temporarilyGetMap(), split(key), val);
+                    insert(InsertMode.APPEND, record, split(key), val);
                 }
             });
         }
     }
 
-    private static Object insert(final InsertMode mode, final Map<String, Object> record, final String[] keys, final String value) {
+    private static Object insert(final InsertMode mode, final Mapping record, final String[] keys, final String value) {
         final String currentKey = keys[0];
         if (keys.length == 1) {
             mode.apply(record, currentKey, value);
@@ -273,14 +271,14 @@ enum FixMethod {
     }
 
     @SuppressWarnings("unchecked")
-    private static Object insertNested(final InsertMode mode, final Map<String, Object> record, final String value, final String currentKey, final String[] remainingKeys) {
-        if (!record.containsKey(currentKey)) {
-            record.put(currentKey, new LinkedHashMap<String, Object>());
+    private static Object insertNested(final InsertMode mode, final Mapping record, final String value, final String currentKey, final String[] remainingKeys) {
+        if (!record.containsField(currentKey)) {
+            record.put(currentKey, new Mapping());
         }
         final Object nested = record.get(currentKey);
         final Object result;
-        if (nested instanceof Map) {
-            result = insert(mode, (Map<String, Object>) nested, remainingKeys, value);
+        if (nested instanceof Mapping) {
+            result = insert(mode, (Mapping) nested, remainingKeys, value);
         }
         else if (nested instanceof List) {
             processList(mode, value, remainingKeys, nested);
@@ -293,85 +291,84 @@ enum FixMethod {
     }
 
     @SuppressWarnings("unchecked")
-    private static void processList(final InsertMode mode, final String value, final String[] remainingKeys,
-            final Object nested) {
+    private static void processList(final InsertMode mode, final String value, final String[] remainingKeys, final Object nested) {
         final List<Object> nestedList = (List<Object>) nested;
-        final Map<String, Object> nestedMap;
+        final Mapping nestedMap;
         switch (remainingKeys[0]) {
             case APPEND:
-                nestedMap = new LinkedHashMap<>();
+                nestedMap = new Mapping();
                 nestedList.add(nestedMap);
                 insert(mode, nestedMap, Arrays.copyOfRange(remainingKeys, 1, remainingKeys.length), value);
                 break;
             case LAST:
                 final Object last = nestedList.get(nestedList.size() - 1);
-                if (last instanceof Map) {
-                    nestedMap = (Map<String, Object>) last;
+                if (last instanceof Mapping) {
+                    nestedMap = (Mapping) last;
                     insert(mode, nestedMap, Arrays.copyOfRange(remainingKeys, 1, remainingKeys.length), value);
                 }
                 break;
             default:
-                nestedMap = new LinkedHashMap<>();
+                nestedMap = new Mapping();
                 nestedList.add(nestedMap);
                 insert(mode, nestedMap, remainingKeys, value);
                 break;
         }
     }
 
-    static Object find(final Map<String, Object> record, final String[] keys) {
+    static Object find(final Mapping record, final String[] keys) {
         final String currentKey = keys[0];
-        if (!record.containsKey(currentKey) || keys.length == 1) {
+        if (!record.containsField(currentKey) || keys.length == 1) {
             return record.get(currentKey);
         }
         final String[] remainingKeys = Arrays.copyOfRange(keys, 1, keys.length);
         return findNested(record, currentKey, remainingKeys);
     }
 
-    private static Object findNested(final Map<String, Object> record, final String currentKey, final String[] remainingKeys) {
+    private static Object findNested(final Mapping record, final String currentKey, final String[] remainingKeys) {
         final Object nested = record.get(currentKey);
         // TODO: array of maps, like in insertNested
         if (nested instanceof List) {
             return ((List<?>) nested).stream().map(o -> findNested(record, currentKey, remainingKeys))
                     .collect(Collectors.toList());
         }
-        if (nested instanceof Map) {
+        if (nested instanceof Mapping) {
             @SuppressWarnings("unchecked")
-            final Object result = find((Map<String, Object>) nested, remainingKeys);
+            final Object result = find((Mapping) nested, remainingKeys);
             return result;
         }
         throw new IllegalStateException(NESTED + nested);
     }
 
-    private static Object remove(final Map<String, Object> record, final String[] keys) {
+    private static Object remove(final Mapping record, final String[] keys) {
         final String currentKey = keys[0];
         if (keys.length == 1) {
             record.remove(currentKey);
         }
-        if (!record.containsKey(currentKey)) {
+        if (!record.containsField(currentKey)) {
             return record;
         }
         final String[] remainingKeys = Arrays.copyOfRange(keys, 1, keys.length);
         return removeNested(record, currentKey, remainingKeys);
     }
 
-    private static Object removeNested(final Map<String, Object> record, final String currentKey, final String[] remainingKeys) {
+    private static Object removeNested(final Mapping record, final String currentKey, final String[] remainingKeys) {
         final Object nested = record.get(currentKey);
-        if (!(nested instanceof Map)) {
-            throw new IllegalStateException(NESTED + nested);
+        if (nested instanceof Mapping) {
+            @SuppressWarnings("unchecked")
+            final Object result = remove((Mapping) nested, remainingKeys);
+            return result;
         }
-        @SuppressWarnings("unchecked")
-        final Object result = remove((Map<String, Object>) nested, remainingKeys);
-        return result;
+        throw new IllegalStateException(NESTED + nested);
     }
 
     private static void copy(final Record record, final List<String> params) {
         final String oldName = params.get(0);
         final String newName = params.get(1);
-        final Object value = find(record.temporarilyGetMap(), split(oldName));
+        final Object value = find(record, split(oldName));
         if (value != null) {
             final List<Object> vs = Metafix.asList(value);
             for (final Object v : vs.stream().filter(v -> v != null).collect(Collectors.toList())) {
-                insert(InsertMode.APPEND, record.temporarilyGetMap(), split(newName), v.toString());
+                insert(InsertMode.APPEND, record, split(newName), v.toString());
             }
         }
     }
@@ -383,18 +380,18 @@ enum FixMethod {
     private enum InsertMode {
         REPLACE {
             @Override
-            void apply(final Map<String, Object> record, final String key, final String value) {
+            void apply(final Mapping record, final String key, final String value) {
                 record.put(key, value);
             }
         },
         APPEND {
             @Override
-            void apply(final Map<String, Object> record, final String key, final String value) {
+            void apply(final Mapping record, final String key, final String value) {
                 final Object object = record.get(key);
                 record.put(key, object == null ? value : Metafix.merged(object, value));
             }
         };
-        abstract void apply(Map<String, Object> record, String key, String value);
+        abstract void apply(Mapping record, String key, String value);
     }
 
     abstract void apply(Record record, List<String> params, Map<String, String> options);

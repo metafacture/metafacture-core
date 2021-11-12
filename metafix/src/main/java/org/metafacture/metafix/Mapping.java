@@ -138,9 +138,4 @@ public class Mapping {
         return map.toString();
     }
 
-    // TODO: Replace map accesses with record operations!
-    public Map<String, Object> temporarilyGetMap() {
-        return map;
-    }
-
 }
