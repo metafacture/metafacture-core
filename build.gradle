@@ -20,7 +20,6 @@ editorconfig {
 check.dependsOn(editorconfigCheck)
 
 subprojects {
-
   ext {
     versions = [
       'ace':            '1.3.3',
@@ -48,6 +47,8 @@ subprojects {
 
   apply from: "${rootDir}/gradle/source-layout.gradle"
 
+  check.dependsOn(javadoc)
+
   sourceCompatibility = '1.8'
   targetCompatibility = '1.8'
 
@@ -74,6 +75,17 @@ subprojects {
     }
 
     options.compilerArgs << '-Werror'
+  }
+
+  javadoc {
+    // Can't exclude generated files based on source path
+    // (cf. https://stackoverflow.com/a/47711311).
+    //exclude '**/xtext-gen'
+    source = source.filter(f -> !f.getPath().contains('xtext-gen'))
+
+    options {
+      addBooleanOption 'Xwerror', true
+    }
   }
 
   publishing {
