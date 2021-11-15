@@ -93,9 +93,9 @@ class RecordTransformer {
         if (theDo.getName().equals("list")) { // TODO impl multiple binds via FixBind enum
             final Map<String, String> options = options(theDo.getOptions());
             final Record fullRecord = record.shallowClone();
-            final Object values = FixMethod.find(record, FixMethod.split(options.get("path")));
+            final Value values = FixMethod.find(record, FixMethod.split(options.get("path")));
 
-            Metafix.asList(values).stream().filter(val -> val != null).forEach(val -> {
+            Metafix.asList(values, a -> a.forEach(val -> {
                 // for each val, bind the current record/scope/context to the given var name:
                 record = new Record();
                 record.put(options.get("var"), val);
@@ -105,7 +105,7 @@ class RecordTransformer {
 
                 // and remember the things we added while bound (this probably needs some tweaking):
                 Metafix.addAll(fullRecord, record);
-            });
+            }));
 
             record = fullRecord;
         }

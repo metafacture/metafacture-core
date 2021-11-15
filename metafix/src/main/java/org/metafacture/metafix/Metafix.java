@@ -34,12 +34,12 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Transforms a data stream sent via the {@link StreamReceiver} interface. Use
@@ -146,30 +146,30 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         }
     }
 
-    private void emit(final Object key, final Object val) {
-        if (val == null) {
-            return;
-        }
-        final List<?> vals = asList(val);
-        final boolean isMulti = vals.size() > 1 || val instanceof List;
-        if (isMulti) {
-            outputStreamReceiver.startEntity(key.toString() + "[]");
-        }
-        for (int i = 0; i < vals.size(); ++i) {
-            final Object value = vals.get(i);
-            if (value instanceof Value.Hash) {
-                final Value.Hash nested = (Value.Hash) value;
-                outputStreamReceiver.startEntity(isMulti ? "" : key.toString());
-                nested.forEach(this::emit);
+    private void emit(final String key, final Value val) {
+        asList(val, vals -> {
+            final boolean isMulti = vals.size() > 1 || val.isArray();
+            if (isMulti) {
+                outputStreamReceiver.startEntity(key + "[]");
+            }
+
+            for (int i = 0; i < vals.size(); ++i) {
+                final Value value = vals.get(i);
+
+                if (value.isHash()) {
+                    outputStreamReceiver.startEntity(isMulti ? "" : key);
+                    value.asHash().forEach(this::emit);
+                    outputStreamReceiver.endEntity();
+                }
+                else {
+                    outputStreamReceiver.literal(isMulti ? (i + 1) + "" : key, value.toString());
+                }
+            }
+
+            if (isMulti) {
                 outputStreamReceiver.endEntity();
             }
-            else {
-                outputStreamReceiver.literal(isMulti ? (i + 1) + "" : key.toString(), value.toString());
-            }
-        }
-        if (isMulti) {
-            outputStreamReceiver.endEntity();
-        }
+        });
     }
 
     @Override
@@ -187,16 +187,15 @@ public class Metafix implements StreamPipe<StreamReceiver> {
     }
 
     private Value.Hash currentEntity(final String name, final Value.Hash previousEntity) {
-        final Object existingValue = previousEntity != null ? previousEntity.get(name) : null;
+        final Value existingValue = previousEntity != null ? previousEntity.get(name) : null;
         final Value.Hash currentEntity;
-        if (existingValue instanceof Value.Hash) {
-            @SuppressWarnings("unchecked")
-            final Value.Hash existingEntity = (Value.Hash) previousEntity.get(name);
-            currentEntity = existingEntity;
+        if (existingValue != null && existingValue.isHash()) {
+            currentEntity = previousEntity.get(name).asHash();
         }
         else {
-            currentEntity = new Value.Hash();
-            add(previousEntity != null ? previousEntity : currentRecord, name, currentEntity);
+            final Value value = Value.newHash();
+            currentEntity = value.asHash();
+            add(previousEntity != null ? previousEntity : currentRecord, name, value);
         }
         return currentEntity;
     }
@@ -213,7 +212,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         final Integer currentEntityIndex = entityCountStack.peek() - 1;
         final Value.Hash currentEntity = currentEntityIndex < 0 ||
                 entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
-        add(currentEntity != null ? currentEntity : currentRecord, name, value);
+        add(currentEntity != null ? currentEntity : currentRecord, name, new Value(value));
         // TODO: keep flattener as option?
         // flattener.literal(name, value);
     }
@@ -253,33 +252,53 @@ public class Metafix implements StreamPipe<StreamReceiver> {
     }
 
     static void addAll(final Value.Hash record, final String fieldName, final List<String> values) {
-        values.forEach(value -> add(record, fieldName, value));
+        values.forEach(value -> add(record, fieldName, new Value(value)));
     }
 
     static void addAll(final Value.Hash record, final Value.Hash values) {
         values.forEach((fieldName, value) -> add(record, fieldName, value));
     }
 
-    static void add(final Value.Hash record, final String name, final Object newValue) {
-        final Object oldValue = record.get(name);
+    static void add(final Value.Hash record, final String name, final Value newValue) {
+        final Value oldValue = record.get(name);
         record.put(name, oldValue == null ? newValue : merged(oldValue, newValue));
     }
 
-    @SuppressWarnings("unchecked")
-    static Object merged(final Object object1, final Object object2) {
-        if (object1 instanceof Value.Hash && object2 instanceof Value.Hash) {
-            final Value.Hash result = (Value.Hash) object1;
-            ((Value.Hash) object2).forEach(result::put);
-            return result;
+    static Value merged(final Value value1, final Value value2) {
+        if (value1.isHash() && value2.isHash()) {
+            final Value.Hash hash = value1.asHash();
+            value2.asHash().forEach(hash::put);
+            return value1;
         }
-        final List<Object> list = asList(object1);
-        asList(object2).forEach(list::add);
-        return list;
+        else {
+            return asList(value1, a1 -> asList(value2, a2 -> a2.forEach(a1::add)));
+        }
     }
 
-    @SuppressWarnings("unchecked")
-    static List<Object> asList(final Object object) {
-        return new ArrayList<>(object instanceof List ? (List<Object>) object : Arrays.asList(object));
+    static Value asList(final Value value, final Consumer<Value.Array> consumer) {
+        final Value result;
+
+        if (Value.isNull(value)) {
+            result = null;
+        }
+        else if (value.isArray()) {
+            if (consumer != null) {
+                consumer.accept(value.asArray());
+            }
+
+            result = value;
+        }
+        else {
+            result = Value.newArray(a -> {
+                a.add(value);
+
+                if (consumer != null) {
+                    consumer.accept(a);
+                }
+            });
+        }
+
+        return result;
     }
 
 }

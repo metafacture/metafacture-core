@@ -16,33 +16,259 @@
 
 package org.metafacture.metafix;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
- * Represents a record value, i.e., either a {@link Value.Hash Hash},
- * a List, or a String.
+ * Represents a record value, i.e., either an {@link Value.Array Array},
+ * a {@link Value.Hash Hash}, or a {@link java.lang.String String}.
  */
 public class Value {
 
-    private Value() {
+    private final Value.Array array;
+    private final Value.Hash hash;
+    private final String string;
+
+    private final Type type;
+
+    public Value(final Value.Array array) {
+        type = array != null ? Type.Array : null;
+
+        this.array = array;
+        this.hash = null;
+        this.string = null;
+    }
+
+    public Value(final List<Value> array) {
+        this(array != null ? new Value.Array() : null);
+
+        if (array != null) {
+            array.forEach(this.array::add);
+        }
+    }
+
+    public Value(final Value.Hash hash) {
+        type = hash != null ? Type.Hash : null;
+
+        this.array = null;
+        this.hash = hash;
+        this.string = null;
+    }
+
+    public Value(final Map<String, Value> hash) {
+        this(hash != null ? new Value.Hash() : null);
+
+        if (hash != null) {
+            hash.forEach(this.hash::put);
+        }
+    }
+
+    public Value(final String string) {
+        type = string != null ? Type.String : null;
+
+        this.array = null;
+        this.hash = null;
+        this.string = string;
+    }
+
+    public static Value newArray() {
+        return newArray(null);
+    }
+
+    public static Value newArray(final Consumer<Value.Array> consumer) {
+        final Value.Array array = new Value.Array();
+
+        if (consumer != null) {
+            consumer.accept(array);
+        }
+
+        return new Value(array);
+    }
+
+    public static Value newHash() {
+        return newHash(null);
+    }
+
+    public static Value newHash(final Consumer<Value.Hash> consumer) {
+        final Value.Hash hash = new Value.Hash();
+
+        if (consumer != null) {
+            consumer.accept(hash);
+        }
+
+        return new Value(hash);
+    }
+
+    public boolean isArray() {
+        return type == Type.Array;
+    }
+
+    public boolean isHash() {
+        return type == Type.Hash;
+    }
+
+    public boolean isString() {
+        return type == Type.String;
+    }
+
+    public boolean isNull() {
+        final boolean result;
+
+        if (type != null) {
+            switch (type) {
+                case Array:
+                    result = array == null;
+                    break;
+                case Hash:
+                    result = hash == null;
+                    break;
+                case String:
+                    result = string == null;
+                    break;
+                default:
+                    result = true;
+            }
+        }
+        else {
+            result = true;
+        }
+
+        return result;
+    }
+
+    public static boolean isNull(final Value value) {
+        return value == null || value.isNull();
+    }
+
+    public Value.Array asArray() {
+        if (isArray()) {
+            return array;
+        }
+        else {
+            throw new IllegalStateException("expected array, got " + type);
+        }
+    }
+
+    public Value.Hash asHash() {
+        if (isHash()) {
+            return hash;
+        }
+        else {
+            throw new IllegalStateException("expected hash, got " + type);
+        }
+    }
+
+    public String asString() {
+        if (isString()) {
+            return string;
+        }
+        else {
+            throw new IllegalStateException("expected string, got " + type);
+        }
+    }
+
+    @Override
+    public String toString() {
+        final String result;
+
+        if (!isNull()) {
+            switch (type) {
+                case Array:
+                    result = array.asString();
+                    break;
+                case Hash:
+                    result = hash.asString();
+                    break;
+                case String:
+                    result = string;
+                    break;
+                default:
+                    result = null;
+            }
+        }
+        else {
+            result = null;
+        }
+
+        return result;
+    }
+
+    enum Type {
+        Array,
+        Hash,
+        String
+    }
+
+    private abstract static class AbstractValueType {
+
+        @Override
+        public String toString() {
+            return asString();
+        }
+
+        public abstract String asString();
+
+    }
+
+    /**
+     * Represents an array of metadata values.
+     */
+    public static class Array extends AbstractValueType {
+
+        private final List<Value> list = new ArrayList<>();
+
+        /**
+         * Creates an empty instance of {@link Value.Array Array}.
+         */
+        private Array() {
+        }
+
+        public void add(final Value value) {
+            if (!isNull(value)) {
+                list.add(value);
+            }
+        }
+
+        public int size() {
+            return list.size();
+        }
+
+        public Value get(final int index) {
+            return list.get(index);
+        }
+
+        public Stream<Value> stream() {
+            return list.stream();
+        }
+
+        public void forEach(final Consumer<Value> consumer) {
+            list.forEach(consumer);
+        }
+
+        @Override
+        public String asString() {
+            return list.toString();
+        }
+
     }
 
     /**
      * Represents a hash of metadata fields and values.
      */
-    public static class Hash {
+    public static class Hash extends AbstractValueType {
 
-        private static final String EMPTY = "";
-
-        private final Map<String, Object> map = new LinkedHashMap<>();
+        private final Map<String, Value> map = new LinkedHashMap<>();
 
         /**
          * Creates an empty instance of {@link Value.Hash Hash}.
          */
-        public Hash() {
+        protected Hash() {
         }
 
         /**
@@ -79,20 +305,20 @@ public class Value {
          * @param field the field name
          * @param value the metadata value
          */
-        public void put(final String field, final Object value) {
-            if (value != null) {
+        public void put(final String field, final Value value) {
+            if (!isNull(value)) {
                 map.put(field, value);
             }
         }
 
         /**
-         * {@link #put(String, Object) Replaces} a field/value pair in this hash,
+         * {@link #put(String, Value) Replaces} a field/value pair in this hash,
          * provided the field name is already {@link #containsField(String) present}.
          *
          * @param field the field name
          * @param value the metadata value
          */
-        public void replace(final String field, final Object value) {
+        public void replace(final String field, final Value value) {
             if (containsField(field)) {
                 put(field, value);
             }
@@ -104,7 +330,7 @@ public class Value {
          * @param field the field name
          * @return the metadata value
          */
-        public Object get(final String field) {
+        public Value get(final String field) {
             return map.get(field);
         }
 
@@ -130,7 +356,13 @@ public class Value {
          * Removes all field/value pairs from this hash whose value is empty.
          */
         public void removeEmptyValues() {
-            map.values().removeIf(EMPTY::equals);
+            // TODO:
+            //
+            // - Remove empty arrays/hashes?
+            // - Remove empty strings(/arrays/hashes) recursively?
+            //
+            // => Compare Catmandu behaviour
+            map.values().removeIf(v -> v.isString() && v.asString().isEmpty());
         }
 
         /**
@@ -138,12 +370,12 @@ public class Value {
          *
          * @param consumer the action to be performed for each field/value pair
          */
-        public void forEach(final BiConsumer<String, Object> consumer) {
+        public void forEach(final BiConsumer<String, Value> consumer) {
             map.forEach(consumer);
         }
 
         @Override
-        public String toString() {
+        public String asString() {
             return map.toString();
         }
 

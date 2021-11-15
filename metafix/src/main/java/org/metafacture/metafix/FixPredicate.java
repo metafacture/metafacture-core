@@ -23,52 +23,58 @@ import java.util.stream.Stream;
 enum FixPredicate {
 
     contain {
-        public Predicate<Object> of(final Object value) {
-            return v -> v.toString().contains(value.toString());
+        @Override
+        public Predicate<Value> of(final String string) {
+            return v -> v.toString().contains(string);
         }
     },
     equal {
-        public Predicate<Object> of(final Object value) {
-            return v ->  v.toString().equals(value.toString());
+        @Override
+        public Predicate<Value> of(final String string) {
+            return v ->  v.toString().equals(string);
         }
     },
     match {
-        public Predicate<Object> of(final Object value) {
-            return v -> v.toString().matches(value.toString());
+        @Override
+        public Predicate<Value> of(final String string) {
+            return v -> v.toString().matches(string);
         }
     };
 
-    abstract Predicate<Object> of(Object value);
+    abstract Predicate<Value> of(String string);
 
     enum Quantifier {
 
         all {
             @Override
-            public boolean test(final Record record, final FixPredicate p, final List<String> params) {
-                return test(record, params.get(0), s -> s.allMatch(p.of(params.get(1))));
+            protected boolean test(final Record record, final String fieldName, final Predicate<Value> p) {
+                return testStream(record, fieldName, s -> s.allMatch(p));
             }
 
         },
         any {
             @Override
-            public boolean test(final Record record, final FixPredicate p, final List<String> params) {
-                return test(record, params.get(0), s -> s.anyMatch(p.of(params.get(1))));
+            protected boolean test(final Record record, final String fieldName, final Predicate<Value> p) {
+                return testStream(record, fieldName, s -> s.anyMatch(p));
             }
         },
         none {
             @Override
-            public boolean test(final Record record, final FixPredicate p, final List<String> params) {
-                final Object fieldValue = FixMethod.find(record, FixMethod.split(params.get(0)));
-                final String valueToTest = params.get(1);
-                return fieldValue == null || Metafix.asList(fieldValue).stream().noneMatch(p.of(valueToTest));
+            protected boolean test(final Record record, final String fieldName, final Predicate<Value> p) {
+                return !any.test(record, fieldName, p);
             }
         };
 
-        boolean test(final Record record, final String fieldName, final Predicate<Stream<Object>> f) {
-            final Object value = FixMethod.find(record, FixMethod.split(fieldName));
-            return value != null && f.test(Metafix.asList(value).stream());
+        boolean testStream(final Record record, final String fieldName, final Predicate<Stream<Value>> p) {
+            final Value value = FixMethod.find(record, FixMethod.split(fieldName));
+            return value != null && p.test(Metafix.asList(value, null).asArray().stream());
         }
 
-        abstract boolean test(Record record, FixPredicate p, List<String> params);
+        public boolean test(final Record record, final FixPredicate p, final List<String> params) {
+            return test(record, params.get(0), p.of(params.get(1)));
+        }
+
+        protected abstract boolean test(Record record, String fieldName, Predicate<Value> p);
     }
+
 }

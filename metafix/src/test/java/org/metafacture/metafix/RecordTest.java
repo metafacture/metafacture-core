@@ -19,14 +19,12 @@ package org.metafacture.metafix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RecordTest {
 
     private static final String FIELD = "field";
-    private static final String VALUE = "value";
-    private static final String OTHER_VALUE = "other value";
+
+    private static final Value VALUE = new Value("value");
+    private static final Value OTHER_VALUE = new Value("other value");
 
     public RecordTest() {
     }
@@ -78,23 +76,16 @@ public class RecordTest {
     @Test
     public void shouldModifySubLevelFromShallowClone() {
         final Record record = new Record();
-
-        final List<String> list1 = new ArrayList<>();
-        list1.add(VALUE);
-        record.put(FIELD, list1);
+        record.put(FIELD, Value.newArray(a -> a.add(VALUE)));
 
         final Record clone = record.shallowClone();
-
-        @SuppressWarnings("unchecked")
-        final List<String> list2 = (List<String>) clone.get(FIELD);
-        list2.add(OTHER_VALUE);
+        clone.get(FIELD).asArray().add(OTHER_VALUE);
 
         Assertions.assertNotSame(record, clone);
         Assertions.assertSame(record.get(FIELD), clone.get(FIELD));
 
-        @SuppressWarnings("unchecked")
-        final List<String> list3 = (List<String>) clone.get(FIELD);
-        Assertions.assertEquals(OTHER_VALUE, list3.get(1));
+        final Value.Array array = clone.get(FIELD).asArray();
+        Assertions.assertEquals(OTHER_VALUE, array.get(1));
     }
 
     @Test

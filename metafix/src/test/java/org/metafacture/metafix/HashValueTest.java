@@ -27,21 +27,22 @@ public class HashValueTest {
 
     private static final String FIELD = "field";
     private static final String OTHER_FIELD = "other field";
-    private static final String VALUE = "value";
-    private static final String OTHER_VALUE = "other value";
+
+    private static final Value VALUE = new Value("value");
+    private static final Value OTHER_VALUE = new Value("other value");
 
     public HashValueTest() {
     }
 
     @Test
     public void shouldNotContainMissingField() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         Assertions.assertFalse(hash.containsField(FIELD));
     }
 
     @Test
     public void shouldContainExistingField() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.put(FIELD, VALUE);
 
         Assertions.assertTrue(hash.containsField(FIELD));
@@ -49,7 +50,7 @@ public class HashValueTest {
 
     @Test
     public void shouldNotContainNullValue() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.put(FIELD, null);
 
         Assertions.assertFalse(hash.containsField(FIELD));
@@ -57,13 +58,13 @@ public class HashValueTest {
 
     @Test
     public void shouldBeEmptyByDefault() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         Assertions.assertTrue(hash.isEmpty());
     }
 
     @Test
     public void shouldNotBeEmptyAfterAddingValue() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.put(FIELD, VALUE);
 
         Assertions.assertFalse(hash.isEmpty());
@@ -71,7 +72,7 @@ public class HashValueTest {
 
     @Test
     public void shouldNotAddNullValue() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.put(FIELD, null);
 
         Assertions.assertTrue(hash.isEmpty());
@@ -79,13 +80,13 @@ public class HashValueTest {
 
     @Test
     public void shouldGetSizeOfDefaultMapping() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         Assertions.assertEquals(0, hash.size());
     }
 
     @Test
     public void shouldGetSizeAfterAddingValues() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.put(FIELD, VALUE);
         hash.put(OTHER_FIELD, OTHER_VALUE);
 
@@ -94,13 +95,13 @@ public class HashValueTest {
 
     @Test
     public void shouldNotGetMissingField() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         Assertions.assertNull(hash.get(FIELD));
     }
 
     @Test
     public void shouldGetExistingField() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.put(FIELD, VALUE);
 
         Assertions.assertEquals(VALUE, hash.get(FIELD));
@@ -108,7 +109,7 @@ public class HashValueTest {
 
     @Test
     public void shouldNotReplaceMissingField() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.replace(FIELD, VALUE);
 
         Assertions.assertNull(hash.get(FIELD));
@@ -117,7 +118,7 @@ public class HashValueTest {
 
     @Test
     public void shouldReplaceExistingField() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.put(FIELD, VALUE);
         hash.replace(FIELD, OTHER_VALUE);
 
@@ -126,7 +127,7 @@ public class HashValueTest {
 
     @Test
     public void shouldNotReplaceExistingFieldWithNullValue() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.put(FIELD, VALUE);
         hash.replace(FIELD, null);
 
@@ -135,7 +136,7 @@ public class HashValueTest {
 
     @Test
     public void shouldRemoveMissingField() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.remove(FIELD);
 
         Assertions.assertNull(hash.get(FIELD));
@@ -144,7 +145,7 @@ public class HashValueTest {
 
     @Test
     public void shouldRemoveExistingField() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.put(FIELD, VALUE);
         hash.remove(FIELD);
 
@@ -154,7 +155,7 @@ public class HashValueTest {
 
     @Test
     public void shouldRetainFields() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.put(FIELD, VALUE);
         hash.put(OTHER_FIELD, OTHER_VALUE);
 
@@ -166,7 +167,7 @@ public class HashValueTest {
 
     @Test
     public void shouldRetainNoFields() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.put(FIELD, VALUE);
 
         hash.retainFields(Arrays.asList());
@@ -176,7 +177,7 @@ public class HashValueTest {
 
     @Test
     public void shouldNotRetainMissingFields() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.put(FIELD, VALUE);
 
         hash.retainFields(Arrays.asList(FIELD, OTHER_FIELD));
@@ -187,9 +188,9 @@ public class HashValueTest {
 
     @Test
     public void shouldRemoveEmptyValues() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.put(FIELD, VALUE);
-        hash.put(OTHER_FIELD, "");
+        hash.put(OTHER_FIELD, new Value(""));
 
         hash.removeEmptyValues();
 
@@ -199,21 +200,25 @@ public class HashValueTest {
 
     @Test
     public void shouldIterateOverFieldValuePairs() {
-        final Value.Hash hash = new Value.Hash();
+        final Value.Hash hash = newHash();
         hash.put(FIELD, VALUE);
         hash.put(OTHER_FIELD, OTHER_VALUE);
-        hash.put("empty field", "");
-        hash.put("_special field", 1);
+        hash.put("empty field", new Value(""));
+        hash.put("_special field", new Value("1"));
 
         final List<String> fields = new ArrayList<>();
-        final List<Object> values = new ArrayList<>();
+        final List<String> values = new ArrayList<>();
         hash.forEach((k, v) -> {
             fields.add(k);
-            values.add(v);
+            values.add(v.asString());
         });
 
         Assertions.assertEquals(Arrays.asList(FIELD, OTHER_FIELD, "empty field", "_special field"), fields);
-        Assertions.assertEquals(Arrays.asList(VALUE, OTHER_VALUE, "", 1), values);
+        Assertions.assertEquals(Arrays.asList(VALUE.asString(), OTHER_VALUE.asString(), "", "1"), values);
+    }
+
+    private Value.Hash newHash() {
+        return Value.newHash().asHash();
     }
 
 }
