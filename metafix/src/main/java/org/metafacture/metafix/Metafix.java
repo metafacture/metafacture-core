@@ -68,7 +68,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
     private int entityCount;
     private StreamReceiver outputStreamReceiver;
     private String recordIdentifier;
-    private List<Mapping> entities = new ArrayList<>();
+    private List<Value.Hash> entities = new ArrayList<>();
 
     public Metafix() {
         init();
@@ -157,8 +157,8 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         }
         for (int i = 0; i < vals.size(); ++i) {
             final Object value = vals.get(i);
-            if (value instanceof Mapping) {
-                final Mapping nested = (Mapping) value;
+            if (value instanceof Value.Hash) {
+                final Value.Hash nested = (Value.Hash) value;
                 outputStreamReceiver.startEntity(isMulti ? "" : key.toString());
                 nested.forEach(this::emit);
                 outputStreamReceiver.endEntity();
@@ -179,23 +179,23 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         }
         ++entityCount;
         final Integer currentEntityIndex = entityCountStack.peek() - 1;
-        final Mapping previousEntity = currentEntityIndex < 0 ||
+        final Value.Hash previousEntity = currentEntityIndex < 0 ||
                 entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
         entityCountStack.push(Integer.valueOf(entityCount));
         flattener.startEntity(name);
         entities.add(currentEntity(name, previousEntity != null ? previousEntity : currentRecord));
     }
 
-    private Mapping currentEntity(final String name, final Mapping previousEntity) {
+    private Value.Hash currentEntity(final String name, final Value.Hash previousEntity) {
         final Object existingValue = previousEntity != null ? previousEntity.get(name) : null;
-        final Mapping currentEntity;
-        if (existingValue instanceof Mapping) {
+        final Value.Hash currentEntity;
+        if (existingValue instanceof Value.Hash) {
             @SuppressWarnings("unchecked")
-            final Mapping existingEntity = (Mapping) previousEntity.get(name);
+            final Value.Hash existingEntity = (Value.Hash) previousEntity.get(name);
             currentEntity = existingEntity;
         }
         else {
-            currentEntity = new Mapping();
+            currentEntity = new Value.Hash();
             add(previousEntity != null ? previousEntity : currentRecord, name, currentEntity);
         }
         return currentEntity;
@@ -211,7 +211,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
     public void literal(final String name, final String value) {
         LOG.debug("Putting '{}': '{}'", name, value);
         final Integer currentEntityIndex = entityCountStack.peek() - 1;
-        final Mapping currentEntity = currentEntityIndex < 0 ||
+        final Value.Hash currentEntity = currentEntityIndex < 0 ||
                 entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
         add(currentEntity != null ? currentEntity : currentRecord, name, value);
         // TODO: keep flattener as option?
@@ -252,24 +252,24 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         return currentRecord;
     }
 
-    static void addAll(final Mapping record, final String fieldName, final List<String> values) {
+    static void addAll(final Value.Hash record, final String fieldName, final List<String> values) {
         values.forEach(value -> add(record, fieldName, value));
     }
 
-    static void addAll(final Mapping record, final Mapping values) {
+    static void addAll(final Value.Hash record, final Value.Hash values) {
         values.forEach((fieldName, value) -> add(record, fieldName, value));
     }
 
-    static void add(final Mapping record, final String name, final Object newValue) {
+    static void add(final Value.Hash record, final String name, final Object newValue) {
         final Object oldValue = record.get(name);
         record.put(name, oldValue == null ? newValue : merged(oldValue, newValue));
     }
 
     @SuppressWarnings("unchecked")
     static Object merged(final Object object1, final Object object2) {
-        if (object1 instanceof Mapping && object2 instanceof Mapping) {
-            final Mapping result = (Mapping) object1;
-            ((Mapping) object2).forEach(result::put);
+        if (object1 instanceof Value.Hash && object2 instanceof Value.Hash) {
+            final Value.Hash result = (Value.Hash) object1;
+            ((Value.Hash) object2).forEach(result::put);
             return result;
         }
         final List<Object> list = asList(object1);

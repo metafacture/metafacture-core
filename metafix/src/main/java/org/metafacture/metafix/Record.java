@@ -17,9 +17,10 @@
 package org.metafacture.metafix;
 
 /**
- * Represents a metadata record, i.e., a {@link Mapping} of fields and values.
+ * Represents a metadata record, i.e., a {@link Value.Hash Hash} of fields
+ * and values.
  */
-public class Record extends Mapping {
+public class Record extends Value.Hash {
 
     private boolean reject;
 

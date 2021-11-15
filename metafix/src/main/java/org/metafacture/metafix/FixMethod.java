@@ -56,7 +56,7 @@ enum FixMethod {
             final String key = params.get(0);
             final Object val = record.get(key.replace(DOT_APPEND, EMPTY));
 
-            final Mapping result = new Mapping();
+            final Value.Hash result = new Value.Hash();
             options.forEach(result::put);
 
             if (key.endsWith(DOT_APPEND) && val instanceof List) {
@@ -71,9 +71,9 @@ enum FixMethod {
         public void apply(final Record record, final List<String> params, final Map<String, String> options) {
             final String fieldName = params.get(0);
             Metafix.asList(record.get(fieldName)).forEach(recordEntry -> {
-                if (recordEntry instanceof Mapping) {
+                if (recordEntry instanceof Value.Hash) {
                     record.remove(fieldName);
-                    ((Mapping) recordEntry).forEach((subFieldName, value) -> {
+                    ((Value.Hash) recordEntry).forEach((subFieldName, value) -> {
                         Metafix.add(record, fieldName, subFieldName);
                         Metafix.add(record, fieldName, value);
                     });
@@ -84,7 +84,7 @@ enum FixMethod {
     hash { // hash-from-array
         public void apply(final Record record, final List<String> params, final Map<String, String> options) {
             final List<Object> values = Metafix.asList(record.get(params.get(0)));
-            final Mapping result = new Mapping();
+            final Value.Hash result = new Value.Hash();
             for (int i = 1; i < values.size(); i = i + 2) {
                 result.put(values.get(i - 1).toString(), values.get(i));
             }
@@ -135,7 +135,7 @@ enum FixMethod {
                      * 2. Named groups are not mixed with unnamed groups.
                      */
                     final Matcher groupMatcher = NAMED_GROUP_PATTERN.matcher(p.pattern());
-                    final Mapping result = new Mapping();
+                    final Value.Hash result = new Value.Hash();
 
                     while (groupMatcher.find()) {
                         final String group = groupMatcher.group(1);
@@ -258,7 +258,7 @@ enum FixMethod {
         }
     }
 
-    private static Object insert(final InsertMode mode, final Mapping record, final String[] keys, final String value) {
+    private static Object insert(final InsertMode mode, final Value.Hash record, final String[] keys, final String value) {
         final String currentKey = keys[0];
         if (keys.length == 1) {
             mode.apply(record, currentKey, value);
@@ -271,14 +271,14 @@ enum FixMethod {
     }
 
     @SuppressWarnings("unchecked")
-    private static Object insertNested(final InsertMode mode, final Mapping record, final String value, final String currentKey, final String[] remainingKeys) {
+    private static Object insertNested(final InsertMode mode, final Value.Hash record, final String value, final String currentKey, final String[] remainingKeys) {
         if (!record.containsField(currentKey)) {
-            record.put(currentKey, new Mapping());
+            record.put(currentKey, new Value.Hash());
         }
         final Object nested = record.get(currentKey);
         final Object result;
-        if (nested instanceof Mapping) {
-            result = insert(mode, (Mapping) nested, remainingKeys, value);
+        if (nested instanceof Value.Hash) {
+            result = insert(mode, (Value.Hash) nested, remainingKeys, value);
         }
         else if (nested instanceof List) {
             processList(mode, value, remainingKeys, nested);
@@ -293,29 +293,29 @@ enum FixMethod {
     @SuppressWarnings("unchecked")
     private static void processList(final InsertMode mode, final String value, final String[] remainingKeys, final Object nested) {
         final List<Object> nestedList = (List<Object>) nested;
-        final Mapping nestedMap;
+        final Value.Hash nestedMap;
         switch (remainingKeys[0]) {
             case APPEND:
-                nestedMap = new Mapping();
+                nestedMap = new Value.Hash();
                 nestedList.add(nestedMap);
                 insert(mode, nestedMap, Arrays.copyOfRange(remainingKeys, 1, remainingKeys.length), value);
                 break;
             case LAST:
                 final Object last = nestedList.get(nestedList.size() - 1);
-                if (last instanceof Mapping) {
-                    nestedMap = (Mapping) last;
+                if (last instanceof Value.Hash) {
+                    nestedMap = (Value.Hash) last;
                     insert(mode, nestedMap, Arrays.copyOfRange(remainingKeys, 1, remainingKeys.length), value);
                 }
                 break;
             default:
-                nestedMap = new Mapping();
+                nestedMap = new Value.Hash();
                 nestedList.add(nestedMap);
                 insert(mode, nestedMap, remainingKeys, value);
                 break;
         }
     }
 
-    static Object find(final Mapping record, final String[] keys) {
+    static Object find(final Value.Hash record, final String[] keys) {
         final String currentKey = keys[0];
         if (!record.containsField(currentKey) || keys.length == 1) {
             return record.get(currentKey);
@@ -324,22 +324,22 @@ enum FixMethod {
         return findNested(record, currentKey, remainingKeys);
     }
 
-    private static Object findNested(final Mapping record, final String currentKey, final String[] remainingKeys) {
+    private static Object findNested(final Value.Hash record, final String currentKey, final String[] remainingKeys) {
         final Object nested = record.get(currentKey);
         // TODO: array of maps, like in insertNested
         if (nested instanceof List) {
             return ((List<?>) nested).stream().map(o -> findNested(record, currentKey, remainingKeys))
                     .collect(Collectors.toList());
         }
-        if (nested instanceof Mapping) {
+        if (nested instanceof Value.Hash) {
             @SuppressWarnings("unchecked")
-            final Object result = find((Mapping) nested, remainingKeys);
+            final Object result = find((Value.Hash) nested, remainingKeys);
             return result;
         }
         throw new IllegalStateException(NESTED + nested);
     }
 
-    private static Object remove(final Mapping record, final String[] keys) {
+    private static Object remove(final Value.Hash record, final String[] keys) {
         final String currentKey = keys[0];
         if (keys.length == 1) {
             record.remove(currentKey);
@@ -351,11 +351,11 @@ enum FixMethod {
         return removeNested(record, currentKey, remainingKeys);
     }
 
-    private static Object removeNested(final Mapping record, final String currentKey, final String[] remainingKeys) {
+    private static Object removeNested(final Value.Hash record, final String currentKey, final String[] remainingKeys) {
         final Object nested = record.get(currentKey);
-        if (nested instanceof Mapping) {
+        if (nested instanceof Value.Hash) {
             @SuppressWarnings("unchecked")
-            final Object result = remove((Mapping) nested, remainingKeys);
+            final Object result = remove((Value.Hash) nested, remainingKeys);
             return result;
         }
         throw new IllegalStateException(NESTED + nested);
@@ -380,18 +380,18 @@ enum FixMethod {
     private enum InsertMode {
         REPLACE {
             @Override
-            void apply(final Mapping record, final String key, final String value) {
+            void apply(final Value.Hash record, final String key, final String value) {
                 record.put(key, value);
             }
         },
         APPEND {
             @Override
-            void apply(final Mapping record, final String key, final String value) {
+            void apply(final Value.Hash record, final String key, final String value) {
                 final Object object = record.get(key);
                 record.put(key, object == null ? value : Metafix.merged(object, value));
             }
         };
-        abstract void apply(Mapping record, String key, String value);
+        abstract void apply(Value.Hash record, String key, String value);
     }
 
     abstract void apply(Record record, List<String> params, Map<String, String> options);
