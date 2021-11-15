@@ -1,6 +1,3 @@
-include 'org.metafacture.fix'
-include 'org.metafacture.fix.ide'
-include 'org.metafacture.fix.web'
-
-// change subproject name
-project(":org.metafacture.fix").name = "metafix"
+include 'metafix'
+include 'metafix-ide'
+include 'metafix-web'

@@ -107,7 +107,7 @@ subprojects {
 }
 
 task installServer(type: Copy) {
-	dependsOn(':org.metafacture.fix.ide:installDist')
-    from "org.metafacture.fix.ide/build/install/xtext-server"
-    into "org.metafacture.fix.vsc/xtext-server"
+  dependsOn(':metafix-ide:installDist')
+  from "metafix-ide/build/install/xtext-server"
+  into "metafix-vsc/xtext-server"
 }

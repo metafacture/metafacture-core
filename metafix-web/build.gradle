@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
   implementation project(':metafix')
-  implementation project(':org.metafacture.fix.ide')
+  implementation project(':metafix-ide')
 
   implementation "org.eclipse.xtend:org.eclipse.xtend.lib:${versions.xtext}"
   implementation "org.eclipse.xtext:org.eclipse.xtext.web.servlet:${versions.xtext}"

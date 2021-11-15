@@ -7,12 +7,16 @@ Workflow {
   component = XtextGenerator {
     configuration = {
       project = StandardProjectConfig {
-        baseName = "org.metafacture.fix"
+        baseName = "metafix"
         rootPath = ".."
         runtimeTest = {
           enabled = true
         }
+        genericIde = {
+          name = "metafix-ide"
+        }
         web = {
+          name = "metafix-web"
           enabled = true
         }
         mavenLayout = true
