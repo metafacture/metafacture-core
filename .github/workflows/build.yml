@@ -18,6 +18,6 @@ jobs:
     - name: Install language server
       run: ./gradlew installServer
     - name: Change directory
-      run: cd org.metafacture.fix.vsc/
+      run: cd metafix-vsc/
     - name: Install fix extension
       run: npm install

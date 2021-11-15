@@ -25,7 +25,7 @@ jobs:
         ./gradlew build
         ./gradlew installServer
     - name: Create fix extension
-      working-directory: org.metafacture.fix.vsc/
+      working-directory: metafix-vsc/
       run: |
         npm install
         vsce package -o fix.vsix
@@ -34,7 +34,7 @@ jobs:
       env:
         API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
       with:
-        source_file: 'org.metafacture.fix.vsc/fix.vsix'
+        source_file: 'metafix-vsc/fix.vsix'
         destination_repo: 'metafacture/metafacture.github.io'
         destination_branch: main
         destination_folder: 'ide-extensions'
