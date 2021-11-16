@@ -317,9 +317,6 @@ enum FixMethod {
         final Value nested = hash.get(currentField);
 
         // TODO: array of maps, like in insertNested
-        if (nested.isArray()) {
-            return Value.newArray(a -> nested.asArray().forEach(v -> a.add(findNested(hash, currentField, remainingFields))));
-        }
 
         if (nested.isHash()) {
             return find(nested.asHash(), remainingFields);
