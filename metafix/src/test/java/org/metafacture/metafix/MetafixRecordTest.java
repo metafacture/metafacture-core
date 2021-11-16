@@ -56,7 +56,7 @@ public class MetafixRecordTest {
                 i.startRecord("1");
                 i.startEntity("deep");
                 i.startEntity("nested");
-                i.literal("key", "val");
+                i.literal("field", "value");
                 i.endEntity();
                 i.endEntity();
                 i.endRecord();
@@ -64,7 +64,7 @@ public class MetafixRecordTest {
                 o.get().startRecord("1");
                 o.get().startEntity("deep");
                 o.get().startEntity("nested");
-                o.get().literal("key", "val");
+                o.get().literal("field", "value");
                 f.apply(2).endEntity();
                 o.get().endRecord();
             });
@@ -92,20 +92,20 @@ public class MetafixRecordTest {
             i -> {
                 i.startRecord("1");
                 i.startEntity("some");
-                i.literal("key", "val1");
+                i.literal("field", "value1");
                 i.endEntity();
                 i.startEntity("some");
-                i.literal("key", "val2");
+                i.literal("field", "value2");
                 i.endEntity();
                 i.endRecord();
             }, (o, f) -> {
                 o.get().startRecord("1");
                 o.get().startEntity("some[]");
                 o.get().startEntity("");
-                o.get().literal("key", "val1");
+                o.get().literal("field", "value1");
                 o.get().endEntity();
                 o.get().startEntity("");
-                o.get().literal("key", "val2");
+                o.get().literal("field", "value2");
                 f.apply(2).endEntity();
                 o.get().endRecord();
             });
@@ -120,10 +120,10 @@ public class MetafixRecordTest {
                 i.startRecord("1");
                 i.startEntity("deep");
                 i.startEntity("nested");
-                i.literal("key", "val1");
+                i.literal("field", "value1");
                 i.endEntity();
                 i.startEntity("nested");
-                i.literal("key", "val2");
+                i.literal("field", "value2");
                 i.endEntity();
                 i.endEntity();
                 i.endRecord();
@@ -131,9 +131,9 @@ public class MetafixRecordTest {
                 o.get().startRecord("1");
                 o.get().startEntity("deep");
                 o.get().startEntity("nested");
-                o.get().startEntity("key[]");
-                o.get().literal("1", "val1");
-                o.get().literal("2", "val2");
+                o.get().startEntity("field[]");
+                o.get().literal("1", "value1");
+                o.get().literal("2", "value2");
                 f.apply(3).endEntity();
                 o.get().endRecord();
             });

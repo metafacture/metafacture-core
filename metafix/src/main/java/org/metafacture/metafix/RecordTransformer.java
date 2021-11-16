@@ -95,10 +95,10 @@ class RecordTransformer {
             final Record fullRecord = record.shallowClone();
             final Value values = FixMethod.find(record, FixMethod.split(options.get("path")));
 
-            Metafix.asList(values, a -> a.forEach(val -> {
-                // for each val, bind the current record/scope/context to the given var name:
+            Metafix.asList(values, a -> a.forEach(value -> {
+                // for each value, bind the current record/scope/context to the given var name:
                 record = new Record();
-                record.put(options.get("var"), val);
+                record.put(options.get("var"), value);
 
                 processSubexpressions(theDo.getElements());
                 record.remove(options.get("var"));

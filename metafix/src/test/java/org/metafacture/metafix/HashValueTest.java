@@ -208,8 +208,8 @@ public class HashValueTest {
 
         final List<String> fields = new ArrayList<>();
         final List<String> values = new ArrayList<>();
-        hash.forEach((k, v) -> {
-            fields.add(k);
+        hash.forEach((f, v) -> {
+            fields.add(f);
             values.add(v.asString());
         });
 

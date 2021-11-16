@@ -38,28 +38,28 @@ enum FixMethod {
     },
     set_array {
         public void apply(final Record record, final List<String> params, final Map<String, String> options) {
-            final String key = params.get(0);
+            final String field = params.get(0);
             final List<String> toAdd = params.subList(1, params.size());
-            if (key.endsWith(DOT_APPEND)) {
-                Metafix.addAll(record, key.replace(DOT_APPEND, EMPTY), toAdd);
+            if (field.endsWith(DOT_APPEND)) {
+                Metafix.addAll(record, field.replace(DOT_APPEND, EMPTY), toAdd);
             }
             else {
-                record.put(key, Value.newArray(a -> toAdd.forEach(s -> a.add(new Value(s)))));
+                record.put(field, Value.newArray(a -> toAdd.forEach(s -> a.add(new Value(s)))));
             }
         }
     },
     set_hash {
         public void apply(final Record record, final List<String> params, final Map<String, String> options) {
-            final String key = params.get(0);
-            final Value val = record.get(key.replace(DOT_APPEND, EMPTY));
+            final String field = params.get(0);
 
-            final Value value = Value.newHash(h -> options.forEach((k, v) -> h.put(k, new Value(v))));
+            final Value value = record.get(field.replace(DOT_APPEND, EMPTY));
+            final Value newValue = Value.newHash(h -> options.forEach((f, v) -> h.put(f, new Value(v))));
 
-            if (key.endsWith(DOT_APPEND) && val.isArray()) {
-                val.asArray().add(value);
+            if (field.endsWith(DOT_APPEND) && value.isArray()) {
+                value.asArray().add(newValue);
             }
             else {
-                record.put(key, value);
+                record.put(field, newValue);
             }
         }
     },
@@ -109,9 +109,9 @@ enum FixMethod {
     },
     format {
         public void apply(final Record record, final List<String> params, final Map<String, String> options) {
-            Metafix.asList(record.get(params.get(0)), oldVals -> {
-                final String newVal = String.format(params.get(1), oldVals.stream().toArray());
-                record.replace(params.get(0), new Value(Arrays.asList(new Value(newVal))));
+            Metafix.asList(record.get(params.get(0)), oldValues -> {
+                final String newValue = String.format(params.get(1), oldValues.stream().toArray());
+                record.replace(params.get(0), new Value(Arrays.asList(new Value(newValue))));
             });
         }
     },
@@ -154,8 +154,8 @@ enum FixMethod {
         public void apply(final Record record, final List<String> params, final Map<String, String> options) {
             final String joinChar = options.get("join_char");
             insert(InsertMode.REPLACE, record, split(params.get(0)), params.subList(1, params.size()).stream()
-                    .filter(k -> literalString(k) || find(record, split(k)) != null)
-                    .map(k -> literalString(k) ? new Value(k.substring(1)) : Metafix.asList(find(record, split(k)), null).asArray().get(0))
+                    .filter(f -> literalString(f) || find(record, split(f)) != null)
+                    .map(f -> literalString(f) ? new Value(f.substring(1)) : Metafix.asList(find(record, split(f)), null).asArray().get(0))
                     .map(Value::toString).collect(Collectors.joining(joinChar != null ? joinChar : " ")));
         }
 
@@ -241,44 +241,44 @@ enum FixMethod {
     private static final String LAST = "$last";
 
     private static void applyToFields(final Record record, final List<String> params, final Function<String, String> fun) {
-        final String key = params.get(0);
-        final Value found = find(record, split(key));
+        final String field = params.get(0);
+        final Value found = find(record, split(field));
         if (found != null) {
-            remove(record, split(key));
+            remove(record, split(field));
 
             if (fun != null) {
-                Metafix.asList(found, a -> a.forEach(old -> insert(InsertMode.APPEND, record, split(key), fun.apply(old.toString()))));
+                Metafix.asList(found, a -> a.forEach(old -> insert(InsertMode.APPEND, record, split(field), fun.apply(old.toString()))));
             }
         }
     }
 
-    private static Value insert(final InsertMode mode, final Value.Hash record, final String[] keys, final String value) {
-        final String currentKey = keys[0];
+    private static Value insert(final InsertMode mode, final Value.Hash hash, final String[] fields, final String value) {
+        final String currentField = fields[0];
 
-        if (keys.length == 1) {
-            mode.apply(record, currentKey, value);
+        if (fields.length == 1) {
+            mode.apply(hash, currentField, value);
         }
         else {
-            final String[] remainingKeys = Arrays.copyOfRange(keys, 1, keys.length);
-            final Value nested = insertNested(mode, record, value, currentKey, remainingKeys);
-            record.put(currentKey, nested);
+            final String[] remainingFields = Arrays.copyOfRange(fields, 1, fields.length);
+            final Value nested = insertNested(mode, hash, value, currentField, remainingFields);
+            hash.put(currentField, nested);
         }
 
-        return new Value(record);
+        return new Value(hash);
     }
 
-    private static Value insertNested(final InsertMode mode, final Value.Hash record, final String value, final String currentKey, final String[] remainingKeys) {
-        if (!record.containsField(currentKey)) {
-            record.put(currentKey, Value.newHash());
+    private static Value insertNested(final InsertMode mode, final Value.Hash hash, final String value, final String currentField, final String[] remainingFields) {
+        if (!hash.containsField(currentField)) {
+            hash.put(currentField, Value.newHash());
         }
-        final Value nested = record.get(currentKey);
+        final Value nested = hash.get(currentField);
         final Value result;
         if (nested.isHash()) {
-            result = insert(mode, nested.asHash(), remainingKeys, value);
+            result = insert(mode, nested.asHash(), remainingFields, value);
         }
         else if (nested.isArray()) {
-            processList(mode, value, remainingKeys, nested.asArray());
-            result = record.get(currentKey);
+            processList(mode, value, remainingFields, nested.asArray());
+            result = hash.get(currentField);
         }
         else {
             throw new IllegalStateException(NESTED + nested);
@@ -286,64 +286,64 @@ enum FixMethod {
         return result;
     }
 
-    private static void processList(final InsertMode mode, final String value, final String[] remainingKeys, final Value.Array nestedList) {
+    private static void processList(final InsertMode mode, final String value, final String[] remainingFields, final Value.Array nestedList) {
         final Value nestedMap;
-        switch (remainingKeys[0]) {
+        switch (remainingFields[0]) {
             case APPEND:
-                nestedList.add(Value.newHash(h -> insert(mode, h, Arrays.copyOfRange(remainingKeys, 1, remainingKeys.length), value)));
+                nestedList.add(Value.newHash(h -> insert(mode, h, Arrays.copyOfRange(remainingFields, 1, remainingFields.length), value)));
                 break;
             case LAST:
                 final Value last = nestedList.get(nestedList.size() - 1);
                 if (last.isHash()) {
-                    insert(mode, last.asHash(), Arrays.copyOfRange(remainingKeys, 1, remainingKeys.length), value);
+                    insert(mode, last.asHash(), Arrays.copyOfRange(remainingFields, 1, remainingFields.length), value);
                 }
                 break;
             default:
-                nestedList.add(Value.newHash(h -> insert(mode, h, remainingKeys, value)));
+                nestedList.add(Value.newHash(h -> insert(mode, h, remainingFields, value)));
                 break;
         }
     }
 
-    static Value find(final Value.Hash record, final String[] keys) {
-        final String currentKey = keys[0];
-        if (!record.containsField(currentKey) || keys.length == 1) {
-            return record.get(currentKey);
+    static Value find(final Value.Hash hash, final String[] fields) {
+        final String currentField = fields[0];
+        if (!hash.containsField(currentField) || fields.length == 1) {
+            return hash.get(currentField);
         }
-        final String[] remainingKeys = Arrays.copyOfRange(keys, 1, keys.length);
-        return findNested(record, currentKey, remainingKeys);
+        final String[] remainingFields = Arrays.copyOfRange(fields, 1, fields.length);
+        return findNested(hash, currentField, remainingFields);
     }
 
-    private static Value findNested(final Value.Hash record, final String currentKey, final String[] remainingKeys) {
-        final Value nested = record.get(currentKey);
+    private static Value findNested(final Value.Hash hash, final String currentField, final String[] remainingFields) {
+        final Value nested = hash.get(currentField);
 
         // TODO: array of maps, like in insertNested
         if (nested.isArray()) {
-            return Value.newArray(a -> nested.asArray().forEach(v -> a.add(findNested(record, currentKey, remainingKeys))));
+            return Value.newArray(a -> nested.asArray().forEach(v -> a.add(findNested(hash, currentField, remainingFields))));
         }
 
         if (nested.isHash()) {
-            return find(nested.asHash(), remainingKeys);
+            return find(nested.asHash(), remainingFields);
         }
 
         throw new IllegalStateException(NESTED + nested);
     }
 
-    private static Value remove(final Value.Hash record, final String[] keys) {
-        final String currentKey = keys[0];
-        if (keys.length == 1) {
-            record.remove(currentKey);
+    private static Value remove(final Value.Hash hash, final String[] fields) {
+        final String currentField = fields[0];
+        if (fields.length == 1) {
+            hash.remove(currentField);
         }
-        if (!record.containsField(currentKey)) {
-            return new Value(record);
+        if (!hash.containsField(currentField)) {
+            return new Value(hash);
         }
-        final String[] remainingKeys = Arrays.copyOfRange(keys, 1, keys.length);
-        return removeNested(record, currentKey, remainingKeys);
+        final String[] remainingFields = Arrays.copyOfRange(fields, 1, fields.length);
+        return removeNested(hash, currentField, remainingFields);
     }
 
-    private static Value removeNested(final Value.Hash record, final String currentKey, final String[] remainingKeys) {
-        final Value nested = record.get(currentKey);
+    private static Value removeNested(final Value.Hash hash, final String currentField, final String[] remainingFields) {
+        final Value nested = hash.get(currentField);
         if (nested.isHash()) {
-            return remove(nested.asHash(), remainingKeys);
+            return remove(nested.asHash(), remainingFields);
         }
         throw new IllegalStateException(NESTED + nested);
     }
@@ -362,19 +362,19 @@ enum FixMethod {
     private enum InsertMode {
         REPLACE {
             @Override
-            void apply(final Value.Hash record, final String key, final String value) {
-                record.put(key, new Value(value));
+            void apply(final Value.Hash hash, final String field, final String value) {
+                hash.put(field, new Value(value));
             }
         },
         APPEND {
             @Override
-            void apply(final Value.Hash record, final String key, final String value) {
-                final Value oldValue = record.get(key);
+            void apply(final Value.Hash hash, final String field, final String value) {
+                final Value oldValue = hash.get(field);
                 final Value newValue = new Value(value);
-                record.put(key, oldValue == null ? newValue : Metafix.merged(oldValue, newValue));
+                hash.put(field, oldValue == null ? newValue : Metafix.merged(oldValue, newValue));
             }
         };
-        abstract void apply(Value.Hash record, String key, String value);
+        abstract void apply(Value.Hash hash, String field, String value);
     }
 
     abstract void apply(Record record, List<String> params, Map<String, String> options);

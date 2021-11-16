@@ -137,32 +137,32 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         if (!currentRecord.getReject()) {
             outputStreamReceiver.startRecord(recordIdentifier);
             LOG.debug("Sending results to {}", outputStreamReceiver);
-            currentRecord.forEach((k, v) -> {
-                if (!k.startsWith("_")) {
-                    emit(k, v);
+            currentRecord.forEach((f, v) -> {
+                if (!f.startsWith("_")) {
+                    emit(f, v);
                 }
             });
             outputStreamReceiver.endRecord();
         }
     }
 
-    private void emit(final String key, final Value val) {
-        asList(val, vals -> {
-            final boolean isMulti = vals.size() > 1 || val.isArray();
+    private void emit(final String field, final Value value) {
+        asList(value, array -> {
+            final boolean isMulti = array.size() > 1 || value.isArray();
             if (isMulti) {
-                outputStreamReceiver.startEntity(key + "[]");
+                outputStreamReceiver.startEntity(field + "[]");
             }
 
-            for (int i = 0; i < vals.size(); ++i) {
-                final Value value = vals.get(i);
+            for (int i = 0; i < array.size(); ++i) {
+                final Value arrayValue = array.get(i);
 
-                if (value.isHash()) {
-                    outputStreamReceiver.startEntity(isMulti ? "" : key);
-                    value.asHash().forEach(this::emit);
+                if (arrayValue.isHash()) {
+                    outputStreamReceiver.startEntity(isMulti ? "" : field);
+                    arrayValue.asHash().forEach(this::emit);
                     outputStreamReceiver.endEntity();
                 }
                 else {
-                    outputStreamReceiver.literal(isMulti ? (i + 1) + "" : key, value.toString());
+                    outputStreamReceiver.literal(isMulti ? (i + 1) + "" : field, arrayValue.toString());
                 }
             }
 
@@ -251,17 +251,17 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         return currentRecord;
     }
 
-    static void addAll(final Value.Hash record, final String fieldName, final List<String> values) {
-        values.forEach(value -> add(record, fieldName, new Value(value)));
+    static void addAll(final Value.Hash hash, final String fieldName, final List<String> values) {
+        values.forEach(value -> add(hash, fieldName, new Value(value)));
     }
 
-    static void addAll(final Value.Hash record, final Value.Hash values) {
-        values.forEach((fieldName, value) -> add(record, fieldName, value));
+    static void addAll(final Value.Hash hash, final Value.Hash values) {
+        values.forEach((fieldName, value) -> add(hash, fieldName, value));
     }
 
-    static void add(final Value.Hash record, final String name, final Value newValue) {
-        final Value oldValue = record.get(name);
-        record.put(name, oldValue == null ? newValue : merged(oldValue, newValue));
+    static void add(final Value.Hash hash, final String name, final Value newValue) {
+        final Value oldValue = hash.get(name);
+        hash.put(name, oldValue == null ? newValue : merged(oldValue, newValue));
     }
 
     static Value merged(final Value value1, final Value value2) {
