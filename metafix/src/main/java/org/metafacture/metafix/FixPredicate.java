@@ -66,8 +66,8 @@ enum FixPredicate {
         };
 
         boolean testStream(final Record record, final String fieldName, final Predicate<Stream<Value>> p) {
-            final Value value = FixMethod.find(record, FixMethod.split(fieldName));
-            return value != null && p.test(Metafix.asList(value, null).asArray().stream());
+            final Value value = record.find(fieldName);
+            return value != null && p.test(value.asList(null).asArray().stream());
         }
 
         public boolean test(final Record record, final FixPredicate p, final List<String> params) {

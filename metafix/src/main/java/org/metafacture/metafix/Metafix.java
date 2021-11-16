@@ -39,7 +39,6 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * Transforms a data stream sent via the {@link StreamReceiver} interface. Use
@@ -147,7 +146,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
     }
 
     private void emit(final String field, final Value value) {
-        asList(value, array -> {
+        Value.asList(value, array -> {
             final boolean isMulti = array.size() > 1 || value.isArray();
             if (isMulti) {
                 outputStreamReceiver.startEntity(field + "[]");
@@ -195,7 +194,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         else {
             final Value value = Value.newHash();
             currentEntity = value.asHash();
-            add(previousEntity != null ? previousEntity : currentRecord, name, value);
+            (previousEntity != null ? previousEntity : currentRecord).add(name, value);
         }
         return currentEntity;
     }
@@ -212,7 +211,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         final Integer currentEntityIndex = entityCountStack.peek() - 1;
         final Value.Hash currentEntity = currentEntityIndex < 0 ||
                 entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
-        add(currentEntity != null ? currentEntity : currentRecord, name, new Value(value));
+        (currentEntity != null ? currentEntity : currentRecord).add(name, new Value(value));
         // TODO: keep flattener as option?
         // flattener.literal(name, value);
     }
@@ -249,56 +248,6 @@ public class Metafix implements StreamPipe<StreamReceiver> {
 
     public Record getCurrentRecord() {
         return currentRecord;
-    }
-
-    static void addAll(final Value.Hash hash, final String fieldName, final List<String> values) {
-        values.forEach(value -> add(hash, fieldName, new Value(value)));
-    }
-
-    static void addAll(final Value.Hash hash, final Value.Hash values) {
-        values.forEach((fieldName, value) -> add(hash, fieldName, value));
-    }
-
-    static void add(final Value.Hash hash, final String name, final Value newValue) {
-        final Value oldValue = hash.get(name);
-        hash.put(name, oldValue == null ? newValue : merged(oldValue, newValue));
-    }
-
-    static Value merged(final Value value1, final Value value2) {
-        if (value1.isHash() && value2.isHash()) {
-            final Value.Hash hash = value1.asHash();
-            value2.asHash().forEach(hash::put);
-            return value1;
-        }
-        else {
-            return asList(value1, a1 -> asList(value2, a2 -> a2.forEach(a1::add)));
-        }
-    }
-
-    static Value asList(final Value value, final Consumer<Value.Array> consumer) {
-        final Value result;
-
-        if (Value.isNull(value)) {
-            result = null;
-        }
-        else if (value.isArray()) {
-            if (consumer != null) {
-                consumer.accept(value.asArray());
-            }
-
-            result = value;
-        }
-        else {
-            result = Value.newArray(a -> {
-                a.add(value);
-
-                if (consumer != null) {
-                    consumer.accept(a);
-                }
-            });
-        }
-
-        return result;
     }
 
 }

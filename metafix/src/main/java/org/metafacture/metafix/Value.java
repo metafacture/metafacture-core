@@ -17,12 +17,14 @@
 package org.metafacture.metafix;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 /**
@@ -173,6 +175,40 @@ public class Value {
         }
     }
 
+    public static Value asList(final Value value, final Consumer<Value.Array> consumer) {
+        return isNull(value) ? null : value.asList(consumer);
+    }
+
+    public Value asList(final Consumer<Value.Array> consumer) {
+        if (isArray()) {
+            if (consumer != null) {
+                consumer.accept(asArray());
+            }
+
+            return this;
+        }
+        else {
+            return Value.newArray(a -> {
+                a.add(this);
+
+                if (consumer != null) {
+                    consumer.accept(a);
+                }
+            });
+        }
+    }
+
+    public Value merge(final Value value) {
+        if (isHash() && value.isHash()) {
+            final Value.Hash asHash = asHash();
+            value.asHash().forEach(asHash::put);
+            return this;
+        }
+        else {
+            return asList(a1 -> value.asList(a2 -> a2.forEach(a1::add)));
+        }
+    }
+
     @Override
     public String toString() {
         final String result;
@@ -263,6 +299,11 @@ public class Value {
      */
     public static class Hash extends AbstractValueType {
 
+        /*package-private*/ static final String APPEND_FIELD = "$append";
+        private static final String LAST_FIELD = "$last";
+
+        private static final String FIELD_PATH_SEPARATOR = "\\.";
+
         private final Map<String, Value> map = new LinkedHashMap<>();
 
         /**
@@ -324,6 +365,14 @@ public class Value {
             }
         }
 
+        public Value replace(final String fieldPath, final String newValue) {
+            return insert(InsertMode.REPLACE, fieldPath, newValue);
+        }
+
+        public Value append(final String fieldPath, final String newValue) {
+            return insert(InsertMode.APPEND, fieldPath, newValue);
+        }
+
         /**
          * Retrieves the field value from this hash.
          *
@@ -334,6 +383,102 @@ public class Value {
             return map.get(field);
         }
 
+        public Value find(final String fieldPath) {
+            return find(split(fieldPath));
+        }
+
+        private Value find(final String[] fields) {
+            final String field = fields[0];
+
+            return fields.length == 1 || !containsField(field) ? get(field) :
+                findNested(field, Arrays.copyOfRange(fields, 1, fields.length));
+        }
+
+        private Value findNested(final String field, final String[] remainingFields) {
+            final Value value = get(field);
+
+            // TODO: array of maps, like in insert nested
+
+            if (value.isHash()) {
+                return value.asHash().find(remainingFields);
+            }
+
+            throw new IllegalStateException("expected hash, got " + value.type);
+        }
+
+        public Value findList(final String fieldPath, final Consumer<Value.Array> consumer) {
+            return Value.asList(find(fieldPath), consumer);
+        }
+
+        public Value getList(final String field, final Consumer<Value.Array> consumer) {
+            return Value.asList(get(field), consumer);
+        }
+
+        private String[] split(final String fieldPath) {
+            return fieldPath.split(FIELD_PATH_SEPARATOR);
+        }
+
+        public void addAll(final String field, final List<String> values) {
+            values.forEach(value -> add(field, new Value(value)));
+        }
+
+        public void addAll(final Value.Hash hash) {
+            hash.forEach(this::add);
+        }
+
+        public void add(final String field, final Value newValue) {
+            final Value oldValue = get(field);
+            put(field, oldValue == null ? newValue : oldValue.merge(newValue));
+        }
+
+        public Value insert(final InsertMode mode, final String fieldPath, final String newValue) {
+            return insert(mode, split(fieldPath), newValue);
+        }
+
+        private Value insert(final InsertMode mode, final String[] fields, final String newValue) {
+            final String field = fields[0];
+
+            if (fields.length == 1) {
+                mode.apply(this, field, newValue);
+            }
+            else {
+                if (!containsField(field)) {
+                    put(field, Value.newHash());
+                }
+
+                final String[] remainingFields = Arrays.copyOfRange(fields, 1, fields.length);
+                final String[] nestedFields = Arrays.copyOfRange(remainingFields, 1, remainingFields.length);
+                final Value value = get(field);
+
+                if (value.isHash()) {
+                    value.asHash().insert(mode, remainingFields, newValue);
+                }
+                else if (value.isArray()) {
+                    final Value.Array array = value.asArray();
+
+                    switch (remainingFields[0]) {
+                        case APPEND_FIELD:
+                            array.add(Value.newHash(h -> h.insert(mode, nestedFields, newValue)));
+                            break;
+                        case LAST_FIELD:
+                            final Value last = array.get(array.size() - 1);
+                            if (last.isHash()) {
+                                last.asHash().insert(mode, nestedFields, newValue);
+                            }
+                            break;
+                        default:
+                            array.add(Value.newHash(h -> h.insert(mode, remainingFields, newValue)));
+                            break;
+                    }
+                }
+                else {
+                    throw new IllegalStateException("expected array or hash, got " + value.type);
+                }
+            }
+
+            return new Value(this);
+        }
+
         /**
          * Removes the given field/value pair from this hash.
          *
@@ -341,6 +486,40 @@ public class Value {
          */
         public void remove(final String field) {
             map.remove(field);
+        }
+
+        public void removeNested(final String fieldPath) {
+            removeNested(split(fieldPath));
+        }
+
+        private void removeNested(final String[] fields) {
+            final String field = fields[0];
+
+            if (fields.length == 1) {
+                remove(field);
+            }
+            else if (containsField(field)) {
+                get(field).asHash().removeNested(Arrays.copyOfRange(fields, 1, fields.length));
+            }
+        }
+
+        public void copy(final List<String> params) {
+            final String oldName = params.get(0);
+            final String newName = params.get(1);
+            findList(oldName, a -> a.forEach(v -> append(newName, v.toString())));
+        }
+
+        public void transformFields(final List<String> params, final UnaryOperator<String> operator) {
+            final String field = params.get(0);
+            final Value value = find(field);
+
+            if (value != null) {
+                removeNested(field);
+
+                if (operator != null) {
+                    value.asList(a -> a.forEach(v -> append(field, operator.apply(v.toString()))));
+                }
+            }
         }
 
         /**
@@ -377,6 +556,27 @@ public class Value {
         @Override
         public String asString() {
             return map.toString();
+        }
+
+        private enum InsertMode {
+
+            REPLACE {
+                @Override
+                void apply(final Value.Hash hash, final String field, final String value) {
+                    hash.put(field, new Value(value));
+                }
+            },
+            APPEND {
+                @Override
+                void apply(final Value.Hash hash, final String field, final String value) {
+                    final Value oldValue = hash.get(field);
+                    final Value newValue = new Value(value);
+                    hash.put(field, oldValue == null ? newValue : oldValue.merge(newValue));
+                }
+            };
+
+            abstract void apply(Value.Hash hash, String field, String value);
+
         }
 
     }

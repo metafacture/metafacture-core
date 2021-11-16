@@ -129,7 +129,7 @@ public class HashValueTest {
     public void shouldNotReplaceExistingFieldWithNullValue() {
         final Value.Hash hash = newHash();
         hash.put(FIELD, VALUE);
-        hash.replace(FIELD, null);
+        hash.replace(FIELD, (Value) null);
 
         Assertions.assertEquals(VALUE, hash.get(FIELD));
     }
