@@ -28,18 +28,18 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 /**
- * Represents a record value, i.e., either an {@link Value.Array Array},
- * a {@link Value.Hash Hash}, or a {@link java.lang.String String}.
+ * Represents a record value, i.e., either an {@link Array}, a {@link Hash},
+ * or a {@link java.lang.String String}.
  */
 public class Value {
 
-    private final Value.Array array;
-    private final Value.Hash hash;
+    private final Array array;
+    private final Hash hash;
     private final String string;
 
     private final Type type;
 
-    public Value(final Value.Array array) {
+    public Value(final Array array) {
         type = array != null ? Type.Array : null;
 
         this.array = array;
@@ -48,14 +48,14 @@ public class Value {
     }
 
     public Value(final List<Value> array) {
-        this(array != null ? new Value.Array() : null);
+        this(array != null ? new Array() : null);
 
         if (array != null) {
             array.forEach(this.array::add);
         }
     }
 
-    public Value(final Value.Hash hash) {
+    public Value(final Hash hash) {
         type = hash != null ? Type.Hash : null;
 
         this.array = null;
@@ -64,7 +64,7 @@ public class Value {
     }
 
     public Value(final Map<String, Value> hash) {
-        this(hash != null ? new Value.Hash() : null);
+        this(hash != null ? new Hash() : null);
 
         if (hash != null) {
             hash.forEach(this.hash::put);
@@ -83,8 +83,8 @@ public class Value {
         return newArray(null);
     }
 
-    public static Value newArray(final Consumer<Value.Array> consumer) {
-        final Value.Array array = new Value.Array();
+    public static Value newArray(final Consumer<Array> consumer) {
+        final Array array = new Array();
 
         if (consumer != null) {
             consumer.accept(array);
@@ -97,8 +97,8 @@ public class Value {
         return newHash(null);
     }
 
-    public static Value newHash(final Consumer<Value.Hash> consumer) {
-        final Value.Hash hash = new Value.Hash();
+    public static Value newHash(final Consumer<Hash> consumer) {
+        final Hash hash = new Hash();
 
         if (consumer != null) {
             consumer.accept(hash);
@@ -148,7 +148,7 @@ public class Value {
         return value == null || value.isNull();
     }
 
-    public Value.Array asArray() {
+    public Array asArray() {
         if (isArray()) {
             return array;
         }
@@ -157,7 +157,7 @@ public class Value {
         }
     }
 
-    public Value.Hash asHash() {
+    public Hash asHash() {
         if (isHash()) {
             return hash;
         }
@@ -175,11 +175,11 @@ public class Value {
         }
     }
 
-    public static Value asList(final Value value, final Consumer<Value.Array> consumer) {
+    public static Value asList(final Value value, final Consumer<Array> consumer) {
         return isNull(value) ? null : value.asList(consumer);
     }
 
-    public Value asList(final Consumer<Value.Array> consumer) {
+    public Value asList(final Consumer<Array> consumer) {
         if (isArray()) {
             if (consumer != null) {
                 consumer.accept(asArray());
@@ -188,7 +188,7 @@ public class Value {
             return this;
         }
         else {
-            return Value.newArray(a -> {
+            return newArray(a -> {
                 a.add(this);
 
                 if (consumer != null) {
@@ -200,7 +200,7 @@ public class Value {
 
     public Value merge(final Value value) {
         if (isHash() && value.isHash()) {
-            final Value.Hash asHash = asHash();
+            final Hash asHash = asHash();
             value.asHash().forEach(asHash::put);
             return this;
         }
@@ -260,7 +260,7 @@ public class Value {
         private final List<Value> list = new ArrayList<>();
 
         /**
-         * Creates an empty instance of {@link Value.Array Array}.
+         * Creates an empty instance of {@link Array}.
          */
         private Array() {
         }
@@ -307,7 +307,7 @@ public class Value {
         private final Map<String, Value> map = new LinkedHashMap<>();
 
         /**
-         * Creates an empty instance of {@link Value.Hash Hash}.
+         * Creates an empty instance of {@link Hash}.
          */
         protected Hash() {
         }
@@ -406,12 +406,12 @@ public class Value {
             throw new IllegalStateException("expected hash, got " + value.type);
         }
 
-        public Value findList(final String fieldPath, final Consumer<Value.Array> consumer) {
-            return Value.asList(find(fieldPath), consumer);
+        public Value findList(final String fieldPath, final Consumer<Array> consumer) {
+            return asList(find(fieldPath), consumer);
         }
 
-        public Value getList(final String field, final Consumer<Value.Array> consumer) {
-            return Value.asList(get(field), consumer);
+        public Value getList(final String field, final Consumer<Array> consumer) {
+            return asList(get(field), consumer);
         }
 
         private String[] split(final String fieldPath) {
@@ -422,7 +422,7 @@ public class Value {
             values.forEach(value -> add(field, new Value(value)));
         }
 
-        public void addAll(final Value.Hash hash) {
+        public void addAll(final Hash hash) {
             hash.forEach(this::add);
         }
 
@@ -443,7 +443,7 @@ public class Value {
             }
             else {
                 if (!containsField(field)) {
-                    put(field, Value.newHash());
+                    put(field, newHash());
                 }
 
                 final String[] remainingFields = Arrays.copyOfRange(fields, 1, fields.length);
@@ -454,11 +454,11 @@ public class Value {
                     value.asHash().insert(mode, remainingFields, newValue);
                 }
                 else if (value.isArray()) {
-                    final Value.Array array = value.asArray();
+                    final Array array = value.asArray();
 
                     switch (remainingFields[0]) {
                         case APPEND_FIELD:
-                            array.add(Value.newHash(h -> h.insert(mode, nestedFields, newValue)));
+                            array.add(newHash(h -> h.insert(mode, nestedFields, newValue)));
                             break;
                         case LAST_FIELD:
                             final Value last = array.get(array.size() - 1);
@@ -467,7 +467,7 @@ public class Value {
                             }
                             break;
                         default:
-                            array.add(Value.newHash(h -> h.insert(mode, remainingFields, newValue)));
+                            array.add(newHash(h -> h.insert(mode, remainingFields, newValue)));
                             break;
                     }
                 }
@@ -562,20 +562,20 @@ public class Value {
 
             REPLACE {
                 @Override
-                void apply(final Value.Hash hash, final String field, final String value) {
+                void apply(final Hash hash, final String field, final String value) {
                     hash.put(field, new Value(value));
                 }
             },
             APPEND {
                 @Override
-                void apply(final Value.Hash hash, final String field, final String value) {
+                void apply(final Hash hash, final String field, final String value) {
                     final Value oldValue = hash.get(field);
                     final Value newValue = new Value(value);
                     hash.put(field, oldValue == null ? newValue : oldValue.merge(newValue));
                 }
             };
 
-            abstract void apply(Value.Hash hash, String field, String value);
+            abstract void apply(Hash hash, String field, String value);
 
         }
 
