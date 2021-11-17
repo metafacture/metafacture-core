@@ -43,6 +43,10 @@ dependencies {
 
 test {
   useJUnitPlatform()
+
+  testlogger {
+    showFullStackTraces true
+  }
 }
 
 task install(dependsOn: publishToMavenLocal,

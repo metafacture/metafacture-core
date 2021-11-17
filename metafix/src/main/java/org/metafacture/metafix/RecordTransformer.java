@@ -29,13 +29,11 @@ import org.metafacture.metafix.fix.MethodCall;
 import org.metafacture.metafix.fix.Options;
 import org.metafacture.metafix.fix.Unless;
 
-import com.google.common.collect.ImmutableMap;
 import org.eclipse.emf.common.util.EList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,21 +49,21 @@ class RecordTransformer {
     private static final Logger LOG = LoggerFactory.getLogger(RecordTransformer.class);
 
     private Fix fix;
-    private Map<String, Object> record;
+    private Record record;
     private Map<String, String> vars;
 
-    RecordTransformer(final Map<String, Object> record, final Map<String, String> vars, final Fix fix) {
-        this.record = new LinkedHashMap<>(record);
+    RecordTransformer(final Record record, final Map<String, String> vars, final Fix fix) {
+        this.record = record.shallowClone();
         this.vars = vars;
         this.fix = fix;
     }
 
-    Map<String, Object> transform() {
+    Record transform() {
         processSubexpressions(fix.getElements());
         return record;
     }
 
-    Map<String, Object> getRecord() {
+    Record getRecord() {
         return record;
     }
 
@@ -94,16 +92,20 @@ class RecordTransformer {
     private void processBind(final Do theDo, final EList<String> params) {
         if (theDo.getName().equals("list")) { // TODO impl multiple binds via FixBind enum
             final Map<String, String> options = options(theDo.getOptions());
-            final Map<String, Object> fullRecord = new LinkedHashMap<>(record);
-            final Object values = FixMethod.find(record, FixMethod.split(options.get("path")));
-            Metafix.asList(values).stream().filter(val -> val != null).forEach(val -> {
-                // for each val, bind the current record/scope/context to the given var name:
-                record = new LinkedHashMap<>(ImmutableMap.of(options.get("var"), val));
+            final Record fullRecord = record.shallowClone();
+
+            record.findList(options.get("path"), a -> a.forEach(value -> {
+                // for each value, bind the current record/scope/context to the given var name:
+                record = new Record();
+                record.put(options.get("var"), value);
+
                 processSubexpressions(theDo.getElements());
                 record.remove(options.get("var"));
+
                 // and remember the things we added while bound (this probably needs some tweaking):
-                Metafix.addAll(fullRecord, record);
-            });
+                fullRecord.addAll(record);
+            }));
+
             record = fullRecord;
         }
         else {
@@ -139,7 +141,7 @@ class RecordTransformer {
         LOG.debug("<IF>: {} parameters: {}", conditional, params);
         boolean result = false;
         if ("exists".equals(conditional)) {
-            return record.containsKey(params.get(0));
+            return record.containsField(params.get(0));
         }
         if (!conditional.contains("_")) {
             throw new IllegalArgumentException("Missing quantifier prefix (all_, any_, none_) for " + conditional);

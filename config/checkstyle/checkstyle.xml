@@ -69,6 +69,7 @@
         <module name="InterfaceIsType"/>
         <module name="InterfaceTypeParameterName"/>
         <module name="JavaNCSS"/>
+        <module name="JavadocMethod"/>
         <module name="JavadocType"/>
         <module name="LambdaParameterName"/>
         <module name="LeftCurly"/>
@@ -92,14 +93,15 @@
         </module>
         <module name="MultipleVariableDeclarations"/>
         <module name="MutableException"/>
-        <module name="NeedBraces"/>
         <module name="NPathComplexity"/>
+        <module name="NeedBraces"/>
         <module name="NoArrayTrailingComma"/>
         <module name="NoClone"/>
         <module name="NoEnumTrailingComma"/>
         <module name="NoFinalizer"/>
         <module name="NoWhitespaceAfter"/>
         <module name="NoWhitespaceBefore"/>
+        <module name="NonEmptyAtclauseDescription"/>
         <module name="OneStatementPerLine">
             <property name="treatTryResourcesAsStatement" value="true"/>
         </module>
@@ -151,8 +153,8 @@
         <module name="ThrowsCount">
             <property name="max" value="2"/>
         </module>
-        <module name="TypecastParenPad"/>
         <module name="TypeName"/>
+        <module name="TypecastParenPad"/>
         <module name="UnnecessaryParentheses"/>
         <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
         <module name="UnnecessarySemicolonInEnumeration"/>
