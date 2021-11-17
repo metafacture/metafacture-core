@@ -37,7 +37,6 @@ public class InterpreterTest {
     }
 
     @Test
-    @SuppressWarnings("checkstyle:MagicNumber")
     public void shouldInterpretNested() throws Exception {
         interpret(3,
                 "do marc_each()",

@@ -189,8 +189,9 @@ enum FixMethod {
     },
     // FIELD-LEVEL METHODS:
 
+    // TODO SPEC: switch to morph-style named params in general?
+
     substring {
-        @SuppressWarnings("checkstyle:MagicNumber") // TODO: switch to morph-style named params in general?
         public void apply(final Record record, final List<String> params, final Map<String, String> options) {
             record.transformFields(params, s -> s.substring(Integer.parseInt(params.get(1)), Integer.parseInt(params.get(2)) - 1));
         }

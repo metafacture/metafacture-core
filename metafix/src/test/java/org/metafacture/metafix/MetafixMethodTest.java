@@ -39,7 +39,6 @@ import java.util.Arrays;
  * @author Fabian Steeg
  */
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("checkstyle:MultipleStringLiterals")
 public class MetafixMethodTest {
 
     @RegisterExtension
