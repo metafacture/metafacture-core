@@ -16,8 +16,7 @@ import java.net.InetSocketAddress;
  * This program starts an HTTP server for testing the web integration of your DSL.
  * Just execute it and point a web browser to http://localhost:8080/
  */
-@SuppressWarnings({"checkstyle:ClassDataAbstractionCoupling", "checkstyle:IllegalCatch"})
-public class ServerLauncher {
+public class ServerLauncher { // checkstyle-disable-line ClassDataAbstractionCoupling
 
     private ServerLauncher() {
         throw new IllegalAccessError("Utility class");
@@ -53,14 +52,14 @@ public class ServerLauncher {
                         log.warn("Console input is not available. In order to stop the server, you need to cancel the process manually.");
                     }
                 }
-                catch (final Exception e) {
+                catch (final Exception e) { // checkstyle-disable-line IllegalCatch
                     throw Exceptions.sneakyThrow(e);
                 }
             }).start();
 
             server.join();
         }
-        catch (final Throwable e) {
+        catch (final Throwable e) { // checkstyle-disable-line IllegalCatch
             if (e instanceof Exception) {
                 log.warn(((Exception) e).getMessage());
                 System.exit(1);

@@ -36,7 +36,6 @@ import java.util.Arrays;
  * @author Fabian Steeg
  */
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("checkstyle:MultipleStringLiterals")
 public class MetafixRecordTest {
 
     @RegisterExtension
@@ -112,7 +111,6 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @SuppressWarnings("checkstyle:MagicNumber")
     public void entitiesPassThroughRepeatNestedEntity() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "vacuum()"),
@@ -194,7 +192,6 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @SuppressWarnings("checkstyle:ExecutableStatementCount")
     public void add() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "add_field('my.name','patrick')",

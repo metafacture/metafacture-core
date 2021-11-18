@@ -34,7 +34,6 @@ import java.util.Arrays;
  * @author Fabian Steeg
  */
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("checkstyle:MultipleStringLiterals")
 public class MetafixIfTest {
 
     @RegisterExtension
@@ -127,7 +126,6 @@ public class MetafixIfTest {
     }
 
     @Test
-    @SuppressWarnings("checkstyle:ExecutableStatementCount")
     public void ifNone() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if none_contain('author.name', 'University')",
