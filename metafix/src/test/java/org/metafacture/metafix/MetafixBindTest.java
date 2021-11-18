@@ -62,7 +62,7 @@ public class MetafixBindTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("author[]");
+                o.get().startEntity("author");
                 o.get().literal("1", "A UNIVERSITY");
                 o.get().literal("2", "MAX");
                 o.get().endEntity();
@@ -88,7 +88,7 @@ public class MetafixBindTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("author[]");
+                o.get().startEntity("author");
                 o.get().literal("1", "A UNIVERSITY");
                 o.get().literal("2", "MAX");
                 o.get().endEntity();
@@ -100,9 +100,9 @@ public class MetafixBindTest {
     public void doListWithAppendAndLast() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list('path': 'creator', 'var': 'c')",
-                " set_array('author')",
-                " copy_field('c.name', 'author.$append.name')",
-                " add_field('author.$last.type', 'Default')",
+                " set_array('author[]')",
+                " copy_field('c.name', 'author[].$append.name')",
+                " add_field('author[].$last.type', 'Default')",
                 "end",
                 "remove_field('creator')"),
             i -> {
@@ -149,7 +149,7 @@ public class MetafixBindTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("author[]");
+                o.get().startEntity("author");
                 o.get().literal("1", "A UNIVERSITY");
                 o.get().literal("2", "MAX");
                 o.get().endEntity();
@@ -161,12 +161,12 @@ public class MetafixBindTest {
     public void doListEntitesToEntities() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list('path': 'creator.name', 'var': 'c')",
-                " set_array('author')",
-                " copy_field('c', 'author.$append.name')",
+                " set_array('author[]')",
+                " copy_field('c', 'author[].$append.name')",
                 " if all_contain('c', 'University')",
-                "  add_field('author.$last.type', 'Organization')",
+                "  add_field('author[].$last.type', 'Organization')",
                 " else",
-                "  add_field('author.$last.type', 'Person')", //",
+                "  add_field('author[].$last.type', 'Person')", //",
                 " end",
                 "end",
                 "remove_field('creator')"),

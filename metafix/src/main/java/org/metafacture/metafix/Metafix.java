@@ -149,7 +149,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         Value.asList(value, array -> {
             final boolean isMulti = array.size() > 1 || value.isArray();
             if (isMulti) {
-                outputStreamReceiver.startEntity(field + "[]");
+                outputStreamReceiver.startEntity(field);
             }
 
             for (int i = 0; i < array.size(); ++i) {
