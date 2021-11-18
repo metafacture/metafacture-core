@@ -5,7 +5,11 @@
 <module name="Checker">
     <module name="SuppressionSingleFilter">
         <property name="checks" value=".*"/>
-        <property name="files" value="xtext-gen|test"/>
+        <property name="files" value="xtext-gen"/>
+    </module>
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="MultipleStringLiterals|ExecutableStatementCount|MagicNumber"/>
+        <property name="files" value="test"/>
     </module>
     <module name="TreeWalker">
         <module name="AbstractClassName"/>
