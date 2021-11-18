@@ -32,8 +32,7 @@ public class FixInterpreter extends XbaseInterpreter {
         }
     }
 
-    @SuppressWarnings({"checkstyle:CyclomaticComplexity", "checkstyle:NPathComplexity"})
-    private void process(final Expression expression) {
+    private void process(final Expression expression) { // checkstyle-disable-line CyclomaticComplexity|NPathComplexity
         metafix.getExpressions().add(expression);
 
         boolean matched = false;
