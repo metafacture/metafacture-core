@@ -344,10 +344,10 @@ public class MetafixRecordTest {
             }, (o, f) -> {
                 o.get().startRecord("1");
                 o.get().startEntity("author[]");
-                o.get().startEntity("");
+                o.get().startEntity("1");
                 o.get().literal("name", "max");
                 o.get().endEntity();
-                o.get().startEntity("");
+                o.get().startEntity("2");
                 o.get().literal("name", "mo");
                 f.apply(2).endEntity();
                 o.get().endRecord();
@@ -653,7 +653,7 @@ public class MetafixRecordTest {
                 o.get().startRecord("1");
                 o.get().startEntity("@context[]");
                 o.get().literal("1", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld");
-                o.get().startEntity("");
+                o.get().startEntity("2");
                 o.get().literal("@language", "de");
                 f.apply(2).endEntity();
                 o.get().endRecord();

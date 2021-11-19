@@ -156,7 +156,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
                 final Value arrayValue = array.get(i);
 
                 if (arrayValue.isHash()) {
-                    outputStreamReceiver.startEntity(isMulti ? "" : field);
+                    outputStreamReceiver.startEntity(isMulti ? (i + 1) + "" : field);
                     arrayValue.asHash().forEach(this::emit);
                     outputStreamReceiver.endEntity();
                 }

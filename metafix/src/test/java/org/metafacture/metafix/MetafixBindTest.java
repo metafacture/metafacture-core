@@ -117,11 +117,11 @@ public class MetafixBindTest {
             }, (o, f) -> {
                 o.get().startRecord("1");
                 o.get().startEntity("author[]");
-                o.get().startEntity("");
+                o.get().startEntity("1");
                 o.get().literal("name", "A University");
                 // o.get().literal("type", "Default"); // FIXME: bind scope broken
                 o.get().endEntity();
-                o.get().startEntity("");
+                o.get().startEntity("2");
                 o.get().literal("name", "Max");
                 o.get().literal("type", "Default");
                 f.apply(2).endEntity();
@@ -182,11 +182,11 @@ public class MetafixBindTest {
             }, (o, f) -> {
                 o.get().startRecord("1");
                 o.get().startEntity("author[]");
-                o.get().startEntity("");
+                o.get().startEntity("1");
                 o.get().literal("name", "A University");
                 o.get().literal("type", "Organization");
                 o.get().endEntity();
-                o.get().startEntity("");
+                o.get().startEntity("2");
                 o.get().literal("name", "Max");
                 o.get().literal("type", "Person");
                 f.apply(2).endEntity();
