@@ -148,6 +148,10 @@ public class Value {
         return value == null || value.isNull();
     }
 
+    private static boolean isNumber(final String s) {
+        return s.matches("\\d+");
+    }
+
     public Array asArray() {
         if (isArray()) {
             return array;
@@ -292,6 +296,21 @@ public class Value {
             return list.toString();
         }
 
+        public void remove(final int index) {
+            list.remove(index);
+        }
+
+        private void removeNested(final String[] fields, final Value value) {
+            if (fields.length > 1 && isNumber(fields[1])) {
+                final int index = Integer.parseInt(fields[1]) - 1;
+                if (index >= 0 && index < value.asArray().size()) {
+                    if (value.asArray().get(index).isString()) {
+                        value.asArray().remove(index);
+                    }
+                }
+            }
+        }
+
     }
 
     /**
@@ -397,7 +416,18 @@ public class Value {
         private Value findNested(final String field, final String[] remainingFields) {
             final Value value = get(field);
 
-            // TODO: array of maps, like in insert nested
+            if (value.isArray()) {
+                if (remainingFields.length > 0 && isNumber(remainingFields[0])) {
+                    final int index = Integer.parseInt(remainingFields[0]) - 1;
+                    if (index >= 0 && index < value.asArray().size()) {
+                        final Value nestedValue = value.asArray().get(index);
+                        if (nestedValue.isString()) {
+                            return nestedValue;
+                        }
+                        // TODO: array of maps, like in insert nested
+                    }
+                }
+            }
 
             if (value.isHash()) {
                 return value.asHash().find(remainingFields);
@@ -467,7 +497,12 @@ public class Value {
                             }
                             break;
                         default:
-                            array.add(newHash(h -> h.insert(mode, remainingFields, newValue)));
+                            if (isNumber(remainingFields[0])) {
+                                array.add(new Value(newValue));
+                            }
+                            else {
+                                array.add(newHash(h -> h.insert(mode, remainingFields, newValue)));
+                            }
                             break;
                     }
                 }
@@ -499,7 +534,13 @@ public class Value {
                 remove(field);
             }
             else if (containsField(field)) {
-                get(field).asHash().removeNested(Arrays.copyOfRange(fields, 1, fields.length));
+                final Value value = get(field);
+                if (value.isArray()) {
+                    value.asArray().removeNested(fields, value);
+                }
+                if (value.isHash()) {
+                    value.asHash().removeNested(Arrays.copyOfRange(fields, 1, fields.length));
+                }
             }
         }
 
@@ -510,7 +551,7 @@ public class Value {
         }
 
         public void transformFields(final List<String> params, final UnaryOperator<String> operator) {
-            final String field = params.get(0);
+            final String field = params.get(0).replace(".*", "");
             final Value value = find(field);
 
             if (value != null) {

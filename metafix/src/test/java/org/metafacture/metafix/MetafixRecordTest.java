@@ -84,33 +84,6 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled("TODO: how to handle repeated entities: turn to array vs. merge because it's the same?")
-    public void entitiesPassThroughRepeatEntity() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "vacuum()"),
-            i -> {
-                i.startRecord("1");
-                i.startEntity("some");
-                i.literal("field", "value1");
-                i.endEntity();
-                i.startEntity("some");
-                i.literal("field", "value2");
-                i.endEntity();
-                i.endRecord();
-            }, (o, f) -> {
-                o.get().startRecord("1");
-                o.get().startEntity("some[]");
-                o.get().startEntity("");
-                o.get().literal("field", "value1");
-                o.get().endEntity();
-                o.get().startEntity("");
-                o.get().literal("field", "value2");
-                f.apply(2).endEntity();
-                o.get().endRecord();
-            });
-    }
-
-    @Test
     public void entitiesPassThroughRepeatNestedEntity() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "vacuum()"),
@@ -712,6 +685,144 @@ public class MetafixRecordTest {
                 o.get().startRecord("1");
                 o.get().literal("1", "one");
                 o.get().literal("2", "");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void repeatToArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "vacuum()"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.literal("name", "mo");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("name");
+                o.get().literal("1", "max");
+                o.get().literal("2", "mo");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void accessArrayByIndex() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "upcase('name.2')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.literal("name", "mo");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("name");
+                o.get().literal("1", "max");
+                o.get().literal("2", "MO");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void accessArrayByWildcard() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "upcase('name.*')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.literal("name", "mo");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("name");
+                o.get().literal("1", "MAX");
+                o.get().literal("2", "MO");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    @Disabled("TODO: Repeated entities should become arrays, see #65")
+    public void repeatToArrayOfObjects() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "vacuum()"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("author");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().startEntity("1");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "mo");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    @Disabled("TODO: Access arrays of objects by index, see #65")
+    public void accessArrayOfObjectsByIndex() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "upcase('author.2.name')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("author");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().startEntity("1");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "MO");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    @Disabled("TODO: Access arrays of objects by wildcard, see #65")
+    public void accessArrayOfObjectsByWildcard() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "upcase('author.*.name')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("author");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().startEntity("1");
+                o.get().literal("name", "MAX");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "MO");
+                f.apply(2).endEntity();
                 o.get().endRecord();
             });
     }
