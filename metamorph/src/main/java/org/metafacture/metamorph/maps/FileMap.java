@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2014, 2021 Deutsche Nationalbibliothek et al
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,9 +38,16 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Provides a {@link Map} based on a file. The file is supposed to be UTF-8
- * encoded. The default separator is {@code \t}. <strong>Important:</strong>
- * Lines that are not split in two parts by the separator are ignored!
+ * Provides a {@link Map} based on files. Can be one file or a comma separated list of files.
+ * The files are supposed to be UTF-8 encoded. The default separator is {@code \t}.
+ *
+ * By setting {@link #allowEmptyValues} to {@code true} the values in the
+ * {@link Map} can be empty thus enabling e.g.
+ * {@link org.metafacture.metamorph.functions.SetReplace} to remove matching
+ * keys.
+ *
+ * <strong>Important:</strong> All other lines that are not split in two parts
+ * by the separator are ignored!
  *
  * @author Markus Michael Geipel
  */
@@ -48,6 +56,9 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
     private final Map<String, String> map = new HashMap<>();
 
     private Pattern split = Pattern.compile("\t", Pattern.LITERAL);
+    private boolean allowEmptyValues;
+    private boolean isUninitialized = true;
+    private ArrayList<String> filenames = new ArrayList<>();
 
     /**
      * Creates an instance of {@link FileMap}.
@@ -55,27 +66,45 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
     public FileMap() {
     }
 
+    private void init() {
+        loadFiles();
+        isUninitialized = false;
+    }
+
     /**
-     * Sets a comma separated list of files which are then passed to
-     * {@link #setFile}.
+     * Sets whether to allow empty values in the {@link Map} or ignore these
+     * entries.
+     *
+     * <strong>Default value: false </strong>
+     *
+     * @param allowEmptyValues true if empty values in the Map are allowed
+     */
+    public void setAllowEmptyValues(final boolean allowEmptyValues) {
+        this.allowEmptyValues = allowEmptyValues;
+    }
+
+    /**
+     * Sets a comma separated list of files which provides the {@link Map}.
      *
      * @param files a comma separated list of files
      */
     public void setFiles(final String files) {
-        final String[] parts = files.split("\\s*,\\s*");
-        for (final String part : parts) {
-            setFile(part);
-        }
+        Collections.addAll(filenames, files.split("\\s*,\\s*"));
     }
 
     /**
-     * Provides a {@link Map} based on a file. The file is supposed to be UTF-8
-     * encoded. The default separator is {@code \t}. <strong>Important:</strong>
-     * Lines that are not split in two parts by the separator are ignored!
-     *
+     * Sets a file which provides the {@link Map}.
      * @param file the file
      */
     public void setFile(final String file) {
+        Collections.addAll(filenames, file);
+    }
+
+    private void loadFiles() {
+        filenames.forEach(this::loadFile);
+    }
+
+    private void loadFile(final String file) {
         try (
                 InputStream stream = openStream(file);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))
@@ -85,7 +114,7 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
                 if (line.isEmpty()) {
                     continue;
                 }
-                final String[] parts = split.split(line);
+                final String[] parts = allowEmptyValues ? split.split(line, -1) : split.split(line);
                 if (parts.length == 2) {
                     map.put(parts[0], parts[1]);
                 }
@@ -147,11 +176,17 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
 
     @Override
     public String get(final Object key) {
+        if (isUninitialized) {
+            init();
+        }
         return map.get(key);
     }
 
     @Override
     public Set<String> keySet() {
+        if (isUninitialized) {
+            init();
+        }
         return Collections.unmodifiableSet(map.keySet());
     }
 
