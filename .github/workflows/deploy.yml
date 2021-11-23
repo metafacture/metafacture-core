@@ -1,7 +1,10 @@
 
 name: Build and Deploy
 
-on: push
+on:
+  push:
+    branches:
+      - deploy
 
 jobs:
   build-and-deploy:
