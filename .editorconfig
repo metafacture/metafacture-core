@@ -34,5 +34,8 @@ indent_size = 2
 [metafacture-io/src/test/resources/org/metafacture/io/compressed.txt]
 insert_final_newline = false
 
+[metamorph/src/test/resources/org/metafacture/metamorph/maps/file-map-test.txt]
+trim_trailing_whitespace = false
+
 [metafacture-runner/src/main/dist/config/java-options.conf]
 end_of_line = crlf

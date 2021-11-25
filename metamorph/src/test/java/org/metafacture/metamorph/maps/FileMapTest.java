@@ -47,12 +47,12 @@ public final class FileMapTest {
         "</rules>" +
         "<maps>" +
         "  <filemap name='map1' files='org/metafacture/metamorph/maps/" +
-        "file-map-test.txt' />" +
+        "file-map-test.txt' %s/>" +
         "</maps>";
 
     @Test
     public void shouldLookupValuesInFileBasedMap() {
-        assertMorph(receiver, String.format(MORPH, "lookup in"),
+        assertMorph(receiver, String.format(MORPH, "lookup in", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -70,7 +70,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldWhitelistValuesInFileBasedMap() {
-        assertMorph(receiver, String.format(MORPH, "whitelist map"),
+        assertMorph(receiver, String.format(MORPH, "whitelist map", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -89,7 +89,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldReplaceValuesUsingFileBasedMap() {
-        assertMorph(receiver, String.format(MORPH, "setreplace map"),
+        assertMorph(receiver, String.format(MORPH, "setreplace map", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw-fj: 1:1");
@@ -105,4 +105,53 @@ public final class FileMapTest {
         );
     }
 
+    @Test
+    public void shouldReplaceCommaSeparatedValuesUsingFileBasedMapSetting() {
+        assertMorph(receiver, String.format(MORPH, "setreplace map", "separator=\",\""),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("1", "gw");
+                    i.literal("1", "ry\tRyukyuIslands");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("1", "gw");
+                    o.get().literal("1", "Southern");
+                    o.get().endRecord();
+                }
+        );
+    }
+
+    @Test
+    public void shouldReplaceEmptyValuesUsingFileBasedMapSetting() {
+        assertMorph(receiver, String.format(MORPH, "setreplace map", "allowEmptyValues=\"true\""),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("1", "zz");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("1", "");
+                    o.get().endRecord();
+                }
+        );
+    }
+
+    @Test
+    public void shouldNotReplaceEmptyValuesUsingFileBasedMapSetting() {
+        assertMorph(receiver, String.format(MORPH, "setreplace map", ""),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("1", "zz");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("1", "zz");
+                    o.get().endRecord();
+                }
+        );
+    }
 }
