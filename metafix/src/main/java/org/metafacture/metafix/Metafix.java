@@ -182,21 +182,9 @@ public class Metafix implements StreamPipe<StreamReceiver> {
                 entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
         entityCountStack.push(Integer.valueOf(entityCount));
         flattener.startEntity(name);
-        entities.add(currentEntity(name, previousEntity != null ? previousEntity : currentRecord));
-    }
-
-    private Value.Hash currentEntity(final String name, final Value.Hash previousEntity) {
-        final Value existingValue = previousEntity != null ? previousEntity.get(name) : null;
-        final Value.Hash currentEntity;
-        if (existingValue != null && existingValue.isHash()) {
-            currentEntity = previousEntity.get(name).asHash();
-        }
-        else {
-            final Value value = Value.newHash();
-            currentEntity = value.asHash();
-            (previousEntity != null ? previousEntity : currentRecord).add(name, value);
-        }
-        return currentEntity;
+        final Value value = Value.newHash();
+        (previousEntity != null ? previousEntity : currentRecord).add(name, value);
+        entities.add(value.asHash());
     }
 
     @Override

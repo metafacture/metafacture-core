@@ -119,7 +119,7 @@ public class MetafixBindTest {
                 o.get().startEntity("author[]");
                 o.get().startEntity("1");
                 o.get().literal("name", "A University");
-                // o.get().literal("type", "Default"); // FIXME: bind scope broken
+                o.get().literal("type", "Default");
                 o.get().endEntity();
                 o.get().startEntity("2");
                 o.get().literal("name", "Max");
@@ -160,10 +160,10 @@ public class MetafixBindTest {
     @Test
     public void doListEntitesToEntities() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "do list('path': 'creator.name', 'var': 'c')",
-                " set_array('author[]')",
-                " copy_field('c', 'author[].$append.name')",
-                " if all_contain('c', 'University')",
+                "set_array('author[]')",
+                "do list('path': 'creator', 'var': 'c')",
+                " copy_field('c.name', 'author[].$append.name')",
+                " if all_contain('c.name', 'University')",
                 "  add_field('author[].$last.type', 'Organization')",
                 " else",
                 "  add_field('author[].$last.type', 'Person')", //",
@@ -195,17 +195,12 @@ public class MetafixBindTest {
     }
 
     @Test
-    @Disabled("TODO: how to handle repeated entities: turn to array vs. merge because it's the same?")
-    public void doListEntitesWithFieldsToEntities() {
+    public void wildcardForNestedEntities() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('author[]')",
                 "do list('path': 'creator', 'var': 'c')",
-                " set_array('author')",
-                " copy_field('c.name', 'author.$append.name')",
-                " if all_contain('c.type', 'corporate')",
-                "  add_field('author.$last.type', 'Organization')",
-                " end",
-                " if all_contain('c.type', 'personal')",
-                "  add_field('author.$last.type', 'Person')", //",
+                " if any_match('c.role.*.roleTerm.*.value','aut|cre')",
+                "  copy_field('c.name', 'author[].$append.name')",
                 " end",
                 "end",
                 "remove_field('creator')"),
@@ -213,23 +208,35 @@ public class MetafixBindTest {
                 i.startRecord("1");
                 i.startEntity("creator");
                 i.literal("name", "A University");
-                i.literal("type", "corporate");
+                i.startEntity("role");
+                i.startEntity("roleTerm");
+                i.literal("value", "aut");
+                i.endEntity();
+                i.startEntity("roleTerm");
+                i.literal("value", "tau");
+                i.endEntity();
+                i.endEntity();
                 i.endEntity();
                 i.startEntity("creator");
                 i.literal("name", "Max");
-                i.literal("type", "personal");
+                i.startEntity("role");
+                i.startEntity("roleTerm");
+                i.literal("value", "cre");
+                i.endEntity();
+                i.startEntity("roleTerm");
+                i.literal("value", "rec");
+                i.endEntity();
+                i.endEntity();
                 i.endEntity();
                 i.endRecord();
             }, (o, f) -> {
                 o.get().startRecord("1");
                 o.get().startEntity("author[]");
-                o.get().startEntity("");
+                o.get().startEntity("1");
                 o.get().literal("name", "A University");
-                o.get().literal("type", "Organization");
                 o.get().endEntity();
-                o.get().startEntity("");
+                o.get().startEntity("2");
                 o.get().literal("name", "Max");
-                o.get().literal("type", "Person");
                 f.apply(2).endEntity();
                 o.get().endRecord();
             });
