@@ -19,6 +19,9 @@ package org.metafacture.triples;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.metafacture.framework.objects.Triple;
 
@@ -34,6 +37,9 @@ import java.io.ObjectInputStream;
  * @author Christoph Böhme
  *
  */
+@Description("Reads triples")
+@In(String.class)
+@Out(Triple.class)
 @FluxCommand("read-triples")
 public final class TripleReader extends DefaultObjectPipe<String, ObjectReceiver<Triple>> {
 
