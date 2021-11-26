@@ -88,6 +88,8 @@ subprojects {
     group 'build'
   }
 
+  task allDeps(type: DependencyReportTask) {}
+
   javadoc {
     options {
       addBooleanOption 'Xwerror', true
