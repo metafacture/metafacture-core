@@ -48,3 +48,5 @@ buildbot.keyring
 # Ignore VS code/codium config files
 .vscode
 
+# Ignore files with sensitive data
+gradle.properties

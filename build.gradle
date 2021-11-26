@@ -143,6 +143,28 @@ gradle.projectsEvaluated {
       }
       url 'https://github.com/metafacture/metafacture-core'
       inceptionYear '2011'
+      developers {
+        developer {
+          id 'mgeipel'
+          name 'Markus M. Geipel'
+          email 'm.geipel@dnb.de'
+          url 'https://github.com/mgeipel'
+          roles {
+            role 'architect'
+            role 'developer'
+          }
+        }
+        developer {
+          id 'cboehme'
+          name 'Christoph Böhme'
+          email 'c.boehme@dnb.de'
+          url 'https://github.com/cboehme'
+          roles {
+            role 'architect'
+            role 'developer'
+          }
+        }
+      }
       organization {
         name 'Metafacture'
         url 'https://github.com/metafacture'
