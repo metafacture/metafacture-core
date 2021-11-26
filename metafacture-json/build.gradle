@@ -19,8 +19,8 @@ description = 'Modules for processing JSON data in Metafacture'
 
 dependencies {
   api project(':metafacture-framework')
-  implementation 'com.fasterxml.jackson.core:jackson-core:2.8.5'
-  implementation 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
+  implementation 'com.fasterxml.jackson.core:jackson-core:2.13.0'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
   implementation 'com.jayway.jsonpath:json-path:2.6.0'
   testImplementation 'junit:junit:4.12'
   testImplementation 'org.mockito:mockito-core:2.5.5'
