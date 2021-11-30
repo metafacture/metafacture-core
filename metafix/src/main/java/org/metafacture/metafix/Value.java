@@ -33,6 +33,8 @@ import java.util.stream.Stream;
  */
 public class Value {
 
+    /*package-private*/ static final String APPEND_FIELD = "$append";
+    private static final String LAST_FIELD = "$last";
     private static final String ASTERISK = "*";
 
     private final Array array;
@@ -361,15 +363,47 @@ public class Value {
             }
             return result;
         }
+
+        private void insert(final InsertMode mode, final String[] fields, final String newValue) {
+            switch (fields[0]) {
+                case ASTERISK:
+                    // TODO: WDCD? descend into the array?
+                    break;
+                case APPEND_FIELD:
+                    add(newHash(h -> h.insert(mode, tail(fields), newValue)));
+                    break;
+                case LAST_FIELD:
+                    if (size() > 0) {
+                        final Value last = get(size() - 1);
+                        if (last.isHash()) {
+                            last.asHash().insert(mode, tail(fields), newValue);
+                        }
+                    }
+                    break;
+                default:
+                    if (isNumber(fields[0])) {
+                        // TODO: WDCD? insert at the given index? also descend into the array?
+                        if (fields.length == 1) {
+                            add(new Value(newValue));
+                        }
+                        if (fields.length > 1) {
+                            final Value newHash = Value.newHash();
+                            mode.apply(newHash.asHash(), fields[1], newValue);
+                            add(newHash);
+                        }
+                    }
+                    else {
+                        add(newHash(h -> h.insert(mode, fields, newValue)));
+                    }
+                    break;
+            }
+        }
     }
 
     /**
      * Represents a hash of metadata fields and values.
      */
     public static class Hash extends AbstractValueType {
-
-        /*package-private*/ static final String APPEND_FIELD = "$append";
-        private static final String LAST_FIELD = "$last";
 
         private static final String FIELD_PATH_SEPARATOR = "\\.";
 
@@ -542,7 +576,7 @@ public class Value {
                             value.asHash().insert(mode, tail(fields), newValue);
                             break;
                         case Array:
-                            insertArray(mode, newValue, tail(fields), value.asArray());
+                            value.asArray().insert(mode, tail(fields), newValue);
                             break;
                         default:
                             throw new IllegalStateException(UNEXPECTED + value.type);
@@ -551,42 +585,6 @@ public class Value {
             }
 
             return new Value(this);
-        }
-
-        private void insertArray(final InsertMode mode, final String newValue, final String[] fields,
-                final Array array) {
-            switch (fields[0]) {
-                case ASTERISK:
-                    // TODO: WDCD? descend into the array?
-                    break;
-                case APPEND_FIELD:
-                    array.add(newHash(h -> h.insert(mode, tail(fields), newValue)));
-                    break;
-                case LAST_FIELD:
-                    if (size() > 0) {
-                        final Value last = array.get(array.size() - 1);
-                        if (last.isHash()) {
-                            last.asHash().insert(mode, tail(fields), newValue);
-                        }
-                    }
-                    break;
-                default:
-                    if (isNumber(fields[0])) {
-                        // TODO: WDCD? insert at the given index? also descend into the array?
-                        if (fields.length == 1) {
-                            array.add(new Value(newValue));
-                        }
-                        if (fields.length > 1) {
-                            final Value newHash = Value.newHash();
-                            mode.apply(newHash.asHash(), fields[1], newValue);
-                            array.add(newHash);
-                        }
-                    }
-                    else {
-                        array.add(newHash(h -> h.insert(mode, fields, newValue)));
-                    }
-                    break;
-            }
         }
 
         /**
@@ -700,26 +698,26 @@ public class Value {
             return map.toString();
         }
 
-        private enum InsertMode {
+    }
 
-            REPLACE {
-                @Override
-                void apply(final Hash hash, final String field, final String value) {
-                    hash.put(field, new Value(value));
-                }
-            },
-            APPEND {
-                @Override
-                void apply(final Hash hash, final String field, final String value) {
-                    final Value oldValue = hash.get(field);
-                    final Value newValue = new Value(value);
-                    hash.put(field, oldValue == null ? newValue : oldValue.merge(newValue));
-                }
-            };
+    private enum InsertMode {
 
-            abstract void apply(Hash hash, String field, String value);
+        REPLACE {
+            @Override
+            void apply(final Hash h, final String field, final String value) {
+                h.put(field, new Value(value));
+            }
+        },
+        APPEND {
+            @Override
+            void apply(final Hash h, final String field, final String value) {
+                final Value oldValue = h.get(field);
+                final Value newValue = new Value(value);
+                h.put(field, oldValue == null ? newValue : oldValue.merge(newValue));
+            }
+        };
 
-        }
+        abstract void apply(Hash h, String field, String value);
 
     }
 }

@@ -244,7 +244,7 @@ enum FixMethod {
     private static final Pattern NAMED_GROUP_PATTERN = Pattern.compile("\\(\\?<(.+?)>");
 
     private static final String EMPTY = "";
-    private static final String DOT_APPEND = "." + Value.Hash.APPEND_FIELD;
+    private static final String DOT_APPEND = "." + Value.APPEND_FIELD;
 
     abstract void apply(Record record, List<String> params, Map<String, String> options);
 
