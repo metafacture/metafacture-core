@@ -440,6 +440,38 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void removeArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "remove_field('name')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.literal("name", "mo");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void removeArrayElementsByWildcard() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "remove_field('name.*')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.literal("name", "mo");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("name");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void setArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('foo[]','a','b','c')"),
@@ -730,6 +762,26 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void accessArrayImplicit() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "upcase('name')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.literal("name", "mo");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("name");
+                o.get().literal("1", "MAX");
+                o.get().literal("2", "MO");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    @Disabled("TODO: WDCD? explicit * for array fields?")
     public void accessArrayByWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "upcase('name.*')"),
@@ -856,4 +908,5 @@ public class MetafixRecordTest {
                 o.get().endRecord();
             });
     }
+
 }
