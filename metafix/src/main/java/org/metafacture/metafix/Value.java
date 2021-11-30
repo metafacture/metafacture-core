@@ -255,7 +255,7 @@ public class Value {
 
         public abstract String asString();
 
-        private enum InsertMode {
+        protected enum InsertMode {
 
             REPLACE {
                 @Override
@@ -385,7 +385,7 @@ public class Value {
             return result;
         }
 
-        private void insert(final AbstractValueType.InsertMode mode, final String[] fields, final String newValue) {
+        private void insert(final InsertMode mode, final String[] fields, final String newValue) {
             switch (fields[0]) {
                 case ASTERISK:
                     // TODO: WDCD? descend into the array?
@@ -492,11 +492,11 @@ public class Value {
         }
 
         public Value replace(final String fieldPath, final String newValue) {
-            return insert(AbstractValueType.InsertMode.REPLACE, fieldPath, newValue);
+            return insert(InsertMode.REPLACE, fieldPath, newValue);
         }
 
         public Value append(final String fieldPath, final String newValue) {
-            return insert(AbstractValueType.InsertMode.APPEND, fieldPath, newValue);
+            return insert(InsertMode.APPEND, fieldPath, newValue);
         }
 
         /**
@@ -566,11 +566,11 @@ public class Value {
             put(field, oldValue == null ? newValue : oldValue.merge(newValue));
         }
 
-        public Value insert(final AbstractValueType.InsertMode mode, final String fieldPath, final String newValue) {
+        public Value insert(final InsertMode mode, final String fieldPath, final String newValue) {
             return insert(mode, split(fieldPath), newValue);
         }
 
-        private Value insert(final AbstractValueType.InsertMode mode, final String[] fields, final String newValue) {
+        private Value insert(final InsertMode mode, final String[] fields, final String newValue) {
             final String field = fields[0];
             if (field.equals(APPEND_FIELD) || field.equals(LAST_FIELD)) {
                 // TODO: WDCD? $last, $append skipped for hashes here:
