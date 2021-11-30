@@ -33,6 +33,10 @@ import java.util.stream.Stream;
  */
 public class Value {
 
+    /*package-private*/ static final String APPEND_FIELD = "$append";
+    private static final String LAST_FIELD = "$last";
+    private static final String ASTERISK = "*";
+
     private final Array array;
     private final Hash hash;
     private final String string;
@@ -148,6 +152,10 @@ public class Value {
         return value == null || value.isNull();
     }
 
+    private static boolean isNumber(final String s) {
+        return s.matches("\\d+");
+    }
+
     public Array asArray() {
         if (isArray()) {
             return array;
@@ -199,14 +207,7 @@ public class Value {
     }
 
     public Value merge(final Value value) {
-        if (isHash() && value.isHash()) {
-            final Hash asHash = asHash();
-            value.asHash().forEach(asHash::put);
-            return this;
-        }
-        else {
-            return asList(a1 -> value.asList(a2 -> a2.forEach(a1::add)));
-        }
+        return asList(a1 -> value.asList(a2 -> a2.forEach(a1::add)));
     }
 
     @Override
@@ -235,6 +236,10 @@ public class Value {
         return result;
     }
 
+    private static String[] tail(final String[] fields) {
+        return Arrays.copyOfRange(fields, 1, fields.length);
+    }
+
     enum Type {
         Array,
         Hash,
@@ -249,6 +254,27 @@ public class Value {
         }
 
         public abstract String asString();
+
+        private enum InsertMode {
+
+            REPLACE {
+                @Override
+                void apply(final Hash hash, final String field, final String value) {
+                    hash.put(field, new Value(value));
+                }
+            },
+            APPEND {
+                @Override
+                void apply(final Hash hash, final String field, final String value) {
+                    final Value oldValue = hash.get(field);
+                    final Value newValue = new Value(value);
+                    hash.put(field, oldValue == null ? newValue : oldValue.merge(newValue));
+                }
+            };
+
+            abstract void apply(Hash hash, String field, String value);
+
+        }
 
     }
 
@@ -292,6 +318,107 @@ public class Value {
             return list.toString();
         }
 
+        public void remove(final int index) {
+            list.remove(index);
+        }
+
+        private void removeNested(final String[] fields) {
+            if (fields.length >= 1 && fields[0].equals(ASTERISK)) {
+                list.clear();
+            }
+            else if (fields.length >= 1 && isNumber(fields[0])) {
+                final int index = Integer.parseInt(fields[0]) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
+                if (index >= 0 && index < size()) {
+                    remove(index);
+                }
+            }
+        }
+
+        private Value find(final String[] path) {
+            final Value result;
+            if (path.length > 0) {
+                if (path[0].equals(ASTERISK)) {
+                    result = newArray(a -> forEach(v -> a.add(findInValue(tail(path), v))));
+                }
+                else if (isNumber(path[0])) {
+                    final int index = Integer.parseInt(path[0]) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
+                    if (index >= 0 && index < size()) {
+                        result = findInValue(tail(path), get(index));
+                    }
+                    else {
+                        result = null;
+                    }
+                }
+                // TODO: WDCD? copy_field('your.name','author[].name'), where name is an array
+                else {
+                    result = newArray(a -> forEach(v -> a.add(findInValue(path, v))));
+                }
+            }
+            else {
+                result = new Value(this);
+            }
+            return result;
+        }
+
+        private Value findInValue(final String[] path, final Value value) {
+            final Value result;
+            // TODO: move impl into enum elements, here call only value.find
+            if (value != null) {
+                switch (value.type) {
+                    case Hash:
+                        result = value.asHash().find(path);
+                        break;
+                    case Array:
+                        result = value.asArray().find(path);
+                        break;
+                    case String:
+                        result = value;
+                        break;
+                    default:
+                        result = null;
+                        break;
+                }
+            }
+            else {
+                result = null;
+            }
+            return result;
+        }
+
+        private void insert(final AbstractValueType.InsertMode mode, final String[] fields, final String newValue) {
+            switch (fields[0]) {
+                case ASTERISK:
+                    // TODO: WDCD? descend into the array?
+                    break;
+                case APPEND_FIELD:
+                    add(newHash(h -> h.insert(mode, tail(fields), newValue)));
+                    break;
+                case LAST_FIELD:
+                    if (size() > 0) {
+                        final Value last = get(size() - 1);
+                        if (last.isHash()) {
+                            last.asHash().insert(mode, tail(fields), newValue);
+                        }
+                    }
+                    break;
+                default:
+                    if (isNumber(fields[0])) {
+                        // TODO: WDCD? insert at the given index? also descend into the array?
+                        if (fields.length == 1) {
+                            add(new Value(newValue));
+                        }
+                        if (fields.length > 1) {
+                            final Value newHash = Value.newHash();
+                            mode.apply(newHash.asHash(), fields[1], newValue);
+                            add(newHash);
+                        }
+                    }
+                    else {
+                        add(newHash(h -> h.insert(mode, fields, newValue)));
+                    }
+                    break;
+            }
+        }
     }
 
     /**
@@ -299,10 +426,9 @@ public class Value {
      */
     public static class Hash extends AbstractValueType {
 
-        /*package-private*/ static final String APPEND_FIELD = "$append";
-        private static final String LAST_FIELD = "$last";
-
         private static final String FIELD_PATH_SEPARATOR = "\\.";
+
+        private static final String UNEXPECTED = "expected array or hash, got ";
 
         private final Map<String, Value> map = new LinkedHashMap<>();
 
@@ -366,11 +492,11 @@ public class Value {
         }
 
         public Value replace(final String fieldPath, final String newValue) {
-            return insert(InsertMode.REPLACE, fieldPath, newValue);
+            return insert(AbstractValueType.InsertMode.REPLACE, fieldPath, newValue);
         }
 
         public Value append(final String fieldPath, final String newValue) {
-            return insert(InsertMode.APPEND, fieldPath, newValue);
+            return insert(AbstractValueType.InsertMode.APPEND, fieldPath, newValue);
         }
 
         /**
@@ -389,21 +515,30 @@ public class Value {
 
         private Value find(final String[] fields) {
             final String field = fields[0];
-
+            if (field.equals(ASTERISK)) {
+                // TODO: search in all elements of value.asHash()?
+                return find(tail(fields));
+            }
             return fields.length == 1 || !containsField(field) ? get(field) :
-                findNested(field, Arrays.copyOfRange(fields, 1, fields.length));
+                findNested(field, tail(fields));
         }
 
         private Value findNested(final String field, final String[] remainingFields) {
             final Value value = get(field);
-
-            // TODO: array of maps, like in insert nested
-
-            if (value.isHash()) {
-                return value.asHash().find(remainingFields);
+            Value result = null;
+            if (value != null) {
+                switch (value.type) {
+                    case Array:
+                        result = value.asArray().find(remainingFields);
+                        break;
+                    case Hash:
+                        result = value.asHash().find(remainingFields);
+                        break;
+                    default:
+                        throw new IllegalStateException(UNEXPECTED + value.type);
+                }
             }
-
-            throw new IllegalStateException("expected hash, got " + value.type);
+            return result;
         }
 
         public Value findList(final String fieldPath, final Consumer<Array> consumer) {
@@ -431,48 +566,42 @@ public class Value {
             put(field, oldValue == null ? newValue : oldValue.merge(newValue));
         }
 
-        public Value insert(final InsertMode mode, final String fieldPath, final String newValue) {
+        public Value insert(final AbstractValueType.InsertMode mode, final String fieldPath, final String newValue) {
             return insert(mode, split(fieldPath), newValue);
         }
 
-        private Value insert(final InsertMode mode, final String[] fields, final String newValue) {
+        private Value insert(final AbstractValueType.InsertMode mode, final String[] fields, final String newValue) {
             final String field = fields[0];
-
+            if (field.equals(APPEND_FIELD) || field.equals(LAST_FIELD)) {
+                // TODO: WDCD? $last, $append skipped for hashes here:
+                return insert(mode, tail(fields), newValue);
+            }
             if (fields.length == 1) {
-                mode.apply(this, field, newValue);
+                if (fields[0].equals(ASTERISK)) {
+                    //TODO: WDCD? insert into each element?
+                }
+                else {
+                    mode.apply(this, field, newValue);
+                }
             }
             else {
                 if (!containsField(field)) {
                     put(field, newHash());
                 }
 
-                final String[] remainingFields = Arrays.copyOfRange(fields, 1, fields.length);
-                final String[] nestedFields = Arrays.copyOfRange(remainingFields, 1, remainingFields.length);
                 final Value value = get(field);
-
-                if (value.isHash()) {
-                    value.asHash().insert(mode, remainingFields, newValue);
-                }
-                else if (value.isArray()) {
-                    final Array array = value.asArray();
-
-                    switch (remainingFields[0]) {
-                        case APPEND_FIELD:
-                            array.add(newHash(h -> h.insert(mode, nestedFields, newValue)));
+                if (value != null) {
+                    switch (value.type) {
+                        // TODO: move impl into enum elements, here call only value.insert
+                        case Hash:
+                            value.asHash().insert(mode, tail(fields), newValue);
                             break;
-                        case LAST_FIELD:
-                            final Value last = array.get(array.size() - 1);
-                            if (last.isHash()) {
-                                last.asHash().insert(mode, nestedFields, newValue);
-                            }
+                        case Array:
+                            value.asArray().insert(mode, tail(fields), newValue);
                             break;
                         default:
-                            array.add(newHash(h -> h.insert(mode, remainingFields, newValue)));
-                            break;
+                            throw new IllegalStateException(UNEXPECTED + value.type);
                     }
-                }
-                else {
-                    throw new IllegalStateException("expected array or hash, got " + value.type);
                 }
             }
 
@@ -499,23 +628,55 @@ public class Value {
                 remove(field);
             }
             else if (containsField(field)) {
-                get(field).asHash().removeNested(Arrays.copyOfRange(fields, 1, fields.length));
+                final Value value = get(field);
+                // TODO: impl and call just value.remove
+                if (value != null) {
+                    switch (value.type) {
+                        case String:
+                            throw new IllegalStateException(UNEXPECTED + value.type);
+                        case Array:
+                            value.asArray().removeNested(tail(fields));
+                            break;
+                        case Hash:
+                            value.asHash().removeNested(tail(fields));
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
         }
 
         public void copy(final List<String> params) {
             final String oldName = params.get(0);
             final String newName = params.get(1);
-            findList(oldName, a -> a.forEach(v -> append(newName, v.toString())));
+            findList(oldName, a -> a.forEach(v -> appendValue(split(newName), v)));
+        }
+
+        private void appendValue(final String[] newName, final Value v) {
+            // TODO: impl and call just value.append
+            if (v != null) {
+                switch (v.type) {
+                    case String:
+                        append(String.join(".", newName), v.asString());
+                        break;
+                    case Array:
+                        // TODO: do something here?
+                        break;
+                    case Hash:
+                        appendValue(newName, v.asHash().find(tail(newName)));
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         public void transformFields(final List<String> params, final UnaryOperator<String> operator) {
             final String field = params.get(0);
             final Value value = find(field);
-
             if (value != null) {
                 removeNested(field);
-
                 if (operator != null) {
                     value.asList(a -> a.forEach(v -> append(field, operator.apply(v.toString()))));
                 }
@@ -556,27 +717,6 @@ public class Value {
         @Override
         public String asString() {
             return map.toString();
-        }
-
-        private enum InsertMode {
-
-            REPLACE {
-                @Override
-                void apply(final Hash hash, final String field, final String value) {
-                    hash.put(field, new Value(value));
-                }
-            },
-            APPEND {
-                @Override
-                void apply(final Hash hash, final String field, final String value) {
-                    final Value oldValue = hash.get(field);
-                    final Value newValue = new Value(value);
-                    hash.put(field, oldValue == null ? newValue : oldValue.merge(newValue));
-                }
-            };
-
-            abstract void apply(Hash hash, String field, String value);
-
         }
 
     }

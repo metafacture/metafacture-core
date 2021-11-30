@@ -31,7 +31,7 @@ enum FixPredicate {
     equal {
         @Override
         public Predicate<Value> of(final String string) {
-            return v ->  v.toString().equals(string);
+            return v -> v.toString().equals(string);
         }
     },
     match {

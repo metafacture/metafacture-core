@@ -149,14 +149,14 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         Value.asList(value, array -> {
             final boolean isMulti = array.size() > 1 || value.isArray();
             if (isMulti) {
-                outputStreamReceiver.startEntity(field + "[]");
+                outputStreamReceiver.startEntity(field);
             }
 
             for (int i = 0; i < array.size(); ++i) {
                 final Value arrayValue = array.get(i);
 
                 if (arrayValue.isHash()) {
-                    outputStreamReceiver.startEntity(isMulti ? "" : field);
+                    outputStreamReceiver.startEntity(isMulti ? (i + 1) + "" : field);
                     arrayValue.asHash().forEach(this::emit);
                     outputStreamReceiver.endEntity();
                 }
@@ -182,21 +182,9 @@ public class Metafix implements StreamPipe<StreamReceiver> {
                 entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
         entityCountStack.push(Integer.valueOf(entityCount));
         flattener.startEntity(name);
-        entities.add(currentEntity(name, previousEntity != null ? previousEntity : currentRecord));
-    }
-
-    private Value.Hash currentEntity(final String name, final Value.Hash previousEntity) {
-        final Value existingValue = previousEntity != null ? previousEntity.get(name) : null;
-        final Value.Hash currentEntity;
-        if (existingValue != null && existingValue.isHash()) {
-            currentEntity = previousEntity.get(name).asHash();
-        }
-        else {
-            final Value value = Value.newHash();
-            currentEntity = value.asHash();
-            (previousEntity != null ? previousEntity : currentRecord).add(name, value);
-        }
-        return currentEntity;
+        final Value value = Value.newHash();
+        (previousEntity != null ? previousEntity : currentRecord).add(name, value);
+        entities.add(value.asHash());
     }
 
     @Override

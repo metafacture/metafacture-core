@@ -66,7 +66,7 @@ public class MetafixIfTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("name[]");
+                o.get().startEntity("name");
                 o.get().literal("1", "Mary");
                 o.get().literal("2", "A University");
                 o.get().endEntity();
@@ -74,7 +74,7 @@ public class MetafixIfTest {
                 o.get().endRecord();
 
                 o.get().startRecord("2");
-                o.get().startEntity("name[]");
+                o.get().startEntity("name");
                 o.get().literal("1", "Mary");
                 o.get().literal("2", "Max");
                 o.get().endEntity();
@@ -106,14 +106,14 @@ public class MetafixIfTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("name[]");
+                o.get().startEntity("name");
                 o.get().literal("1", "Mary");
                 o.get().literal("2", "A University");
                 o.get().endEntity();
                 o.get().endRecord();
 
                 o.get().startRecord("2");
-                o.get().startEntity("name[]");
+                o.get().startEntity("name");
                 o.get().literal("1", "Great University");
                 o.get().literal("2", "A University");
                 o.get().endEntity();
@@ -151,7 +151,7 @@ public class MetafixIfTest {
             }, (o, f) -> {
                 o.get().startRecord("1");
                 o.get().startEntity("author");
-                o.get().startEntity("name[]");
+                o.get().startEntity("name");
                 o.get().literal("1", "Mary");
                 o.get().literal("2", "A University");
                 f.apply(2).endEntity();
@@ -159,7 +159,7 @@ public class MetafixIfTest {
 
                 o.get().startRecord("2");
                 o.get().startEntity("author");
-                o.get().startEntity("name[]");
+                o.get().startEntity("name");
                 o.get().literal("1", "Max");
                 o.get().literal("2", "Mary");
                 f.apply(2).endEntity();
@@ -285,7 +285,7 @@ public class MetafixIfTest {
                 o.get().endRecord();
 
                 o.get().startRecord("2");
-                o.get().startEntity("name[]");
+                o.get().startEntity("name");
                 o.get().literal("1", "Some University");
                 o.get().literal("2", "Filibandrina");
                 o.get().endEntity();
@@ -312,14 +312,14 @@ public class MetafixIfTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("name[]");
+                o.get().startEntity("name");
                 o.get().literal("1", "Max");
                 o.get().literal("2", "A University");
                 o.get().endEntity();
                 o.get().endRecord();
 
                 o.get().startRecord("2");
-                o.get().startEntity("name[]");
+                o.get().startEntity("name");
                 o.get().literal("1", "Some University");
                 o.get().literal("2", "University Filibandrina");
                 o.get().endEntity();

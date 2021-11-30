@@ -84,33 +84,6 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled("TODO: how to handle repeated entities: turn to array vs. merge because it's the same?")
-    public void entitiesPassThroughRepeatEntity() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "vacuum()"),
-            i -> {
-                i.startRecord("1");
-                i.startEntity("some");
-                i.literal("field", "value1");
-                i.endEntity();
-                i.startEntity("some");
-                i.literal("field", "value2");
-                i.endEntity();
-                i.endRecord();
-            }, (o, f) -> {
-                o.get().startRecord("1");
-                o.get().startEntity("some[]");
-                o.get().startEntity("");
-                o.get().literal("field", "value1");
-                o.get().endEntity();
-                o.get().startEntity("");
-                o.get().literal("field", "value2");
-                f.apply(2).endEntity();
-                o.get().endRecord();
-            });
-    }
-
-    @Test
     public void entitiesPassThroughRepeatNestedEntity() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "vacuum()"),
@@ -129,9 +102,11 @@ public class MetafixRecordTest {
                 o.get().startRecord("1");
                 o.get().startEntity("deep");
                 o.get().startEntity("nested");
-                o.get().startEntity("field[]");
-                o.get().literal("1", "value1");
-                o.get().literal("2", "value2");
+                o.get().startEntity("1");
+                o.get().literal("field", "value1");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("field", "value2");
                 f.apply(3).endEntity();
                 o.get().endRecord();
             });
@@ -211,7 +186,7 @@ public class MetafixRecordTest {
             }, (o, f) -> {
                 o.get().startRecord("1");
                 o.get().startEntity("my");
-                o.get().startEntity("name[]");
+                o.get().startEntity("name");
                 o.get().literal("1", "patrick");
                 o.get().literal("2", "nicolas");
                 f.apply(2).endEntity();
@@ -219,7 +194,7 @@ public class MetafixRecordTest {
 
                 o.get().startRecord("2");
                 o.get().startEntity("my");
-                o.get().startEntity("name[]");
+                o.get().startEntity("name");
                 o.get().literal("1", "max");
                 o.get().literal("2", "patrick");
                 o.get().literal("3", "nicolas");
@@ -228,7 +203,7 @@ public class MetafixRecordTest {
 
                 o.get().startRecord("3");
                 o.get().startEntity("my");
-                o.get().startEntity("name[]");
+                o.get().startEntity("name");
                 o.get().literal("1", "patrick");
                 o.get().literal("2", "nicolas");
                 f.apply(2).endEntity();
@@ -306,7 +281,7 @@ public class MetafixRecordTest {
     public void copyIntoArrayOfStrings() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 // "set_array('author')", <- results in separate objects/entities here
-                "copy_field('your.name','author.name')",
+                "copy_field('your.name','author.name[]')",
                 "remove_field('your')"),
             i -> {
                 i.startRecord("1");
@@ -329,8 +304,8 @@ public class MetafixRecordTest {
     @Test
     public void copyIntoArrayOfObjects() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('author')",
-                "copy_field('your.name','author.name')",
+                "set_array('author[]')",
+                "copy_field('your.name','author[].name')",
                 "remove_field('your')"),
             i -> {
                 i.startRecord("1");
@@ -344,10 +319,10 @@ public class MetafixRecordTest {
             }, (o, f) -> {
                 o.get().startRecord("1");
                 o.get().startEntity("author[]");
-                o.get().startEntity("");
+                o.get().startEntity("1");
                 o.get().literal("name", "max");
                 o.get().endEntity();
-                o.get().startEntity("");
+                o.get().startEntity("2");
                 o.get().literal("name", "mo");
                 f.apply(2).endEntity();
                 o.get().endRecord();
@@ -357,8 +332,8 @@ public class MetafixRecordTest {
     @Test
     public void copyIntoArrayTopLevel() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('author')",
-                "copy_field('your.name', 'author')",
+                "set_array('author[]')",
+                "copy_field('your.name', 'author[]')",
                 "remove_field('your')"),
             i -> {
                 i.startRecord("1");
@@ -465,9 +440,41 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void removeArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "remove_field('name')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.literal("name", "mo");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void removeArrayElementsByWildcard() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "remove_field('name.*')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.literal("name", "mo");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("name");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void setArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('foo','a','b','c')"),
+                "set_array('foo[]','a','b','c')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -594,7 +601,7 @@ public class MetafixRecordTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("foo[]");
+                o.get().startEntity("foo");
                 o.get().literal("1", "a");
                 o.get().literal("2", "b");
                 o.get().literal("3", "c");
@@ -625,8 +632,8 @@ public class MetafixRecordTest {
     @Test
     public void appendArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('nums', '1')",
-                "set_array('nums.$append', '2', '3')"),
+                "set_array('nums[]', '1')",
+                "set_array('nums[].$append', '2', '3')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -644,8 +651,8 @@ public class MetafixRecordTest {
     @Test
     public void mixedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('@context', 'https://w3id.org/kim/lrmi-profile/draft/context.jsonld')",
-                "set_hash('@context.$append', '@language': 'de')"),
+                "set_array('@context[]', 'https://w3id.org/kim/lrmi-profile/draft/context.jsonld')",
+                "set_hash('@context[].$append', '@language': 'de')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -653,7 +660,7 @@ public class MetafixRecordTest {
                 o.get().startRecord("1");
                 o.get().startEntity("@context[]");
                 o.get().literal("1", "https://w3id.org/kim/lrmi-profile/draft/context.jsonld");
-                o.get().startEntity("");
+                o.get().startEntity("2");
                 o.get().literal("@language", "de");
                 f.apply(2).endEntity();
                 o.get().endRecord();
@@ -715,4 +722,191 @@ public class MetafixRecordTest {
                 o.get().endRecord();
             });
     }
+
+    @Test
+    public void repeatToArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "vacuum()"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.literal("name", "mo");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("name");
+                o.get().literal("1", "max");
+                o.get().literal("2", "mo");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void accessArrayByIndex() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "upcase('name.2')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.literal("name", "mo");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("name");
+                o.get().literal("1", "max");
+                o.get().literal("2", "MO");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void accessArrayImplicit() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "upcase('name')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.literal("name", "mo");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("name");
+                o.get().literal("1", "MAX");
+                o.get().literal("2", "MO");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    @Disabled("TODO: WDCD? explicit * for array fields?")
+    public void accessArrayByWildcard() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "upcase('name.*')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.literal("name", "mo");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("name");
+                o.get().literal("1", "MAX");
+                o.get().literal("2", "MO");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void repeatToArrayOfObjects() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "vacuum()"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("author");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().startEntity("1");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "mo");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void accessArrayOfObjectsByIndex() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "upcase('author.2.name')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("author");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().startEntity("1");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "MO");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    @Disabled("TODO: implement implicit iteration?")
+    public void accessArrayOfObjectsByWildcard() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "upcase('author.*.name')",
+                "vacuum()"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("author");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().startEntity("1");
+                o.get().literal("name", "MAX");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "MO");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void accessArrayOfObjectsByDoListBind() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list('path':'author','var':'a')",
+                "  upcase('a.name')",
+                "end",
+                "vacuum()"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("author");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().startEntity("1");
+                o.get().literal("name", "MAX");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "MO");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
 }

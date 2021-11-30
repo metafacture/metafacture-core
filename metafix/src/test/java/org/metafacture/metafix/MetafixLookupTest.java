@@ -67,7 +67,7 @@ public class MetafixLookupTest {
                 o.get().endRecord();
 
                 o.get().startRecord("2");
-                o.get().startEntity("title[]");
+                o.get().startEntity("title");
                 o.get().literal("1", "Alohaeha");
                 o.get().literal("2", "Moin zäme");
                 o.get().literal("3", "Tach");
@@ -92,7 +92,7 @@ public class MetafixLookupTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("title[]");
+                o.get().startEntity("title");
                 o.get().literal("1", "Alohaeha");
                 o.get().literal("2", "Moin zäme");
                 o.get().endEntity();
@@ -115,7 +115,7 @@ public class MetafixLookupTest {
             }, (o, f) -> {
                 o.get().startRecord("1");
                 o.get().startEntity("data");
-                o.get().startEntity("title[]");
+                o.get().startEntity("title");
                 o.get().literal("1", "Alohaeha");
                 o.get().literal("2", "Moin zäme");
                 o.get().literal("3", "Tach");
@@ -146,7 +146,7 @@ public class MetafixLookupTest {
                 o.get().endRecord();
 
                 o.get().startRecord("2");
-                o.get().startEntity("title[]");
+                o.get().startEntity("title");
                 o.get().literal("1", "Alohaeha");
                 o.get().literal("2", "Moin zäme");
                 o.get().literal("3", "Tach");
@@ -179,7 +179,7 @@ public class MetafixLookupTest {
                 o.get().endRecord();
 
                 o.get().startRecord("2");
-                o.get().startEntity("title[]");
+                o.get().startEntity("title");
                 o.get().literal("1", "Alohaeha");
                 o.get().literal("2", "Moin zäme");
                 o.get().literal("3", "Tach");
