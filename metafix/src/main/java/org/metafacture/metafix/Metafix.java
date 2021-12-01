@@ -113,6 +113,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
     @Override
     public void startRecord(final String identifier) {
         currentRecord = new Record();
+        currentRecord.putVirtualField(StandardEventNames.ID, new Value(identifier));
         LOG.debug("Start record: {}", identifier);
         flattener.startRecord(identifier);
         entityCountStack.clear();
@@ -120,7 +121,6 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         entityCountStack.add(Integer.valueOf(entityCount));
         recordIdentifier = identifier;
         entities = new ArrayList<>();
-        literal(StandardEventNames.ID, identifier);
     }
 
     @Override
@@ -136,11 +136,7 @@ public class Metafix implements StreamPipe<StreamReceiver> {
         if (!currentRecord.getReject()) {
             outputStreamReceiver.startRecord(recordIdentifier);
             LOG.debug("Sending results to {}", outputStreamReceiver);
-            currentRecord.forEach((f, v) -> {
-                if (!f.startsWith("_")) {
-                    emit(f, v);
-                }
-            });
+            currentRecord.forEach(this::emit);
             outputStreamReceiver.endRecord();
         }
     }

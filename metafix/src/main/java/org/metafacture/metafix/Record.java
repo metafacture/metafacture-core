@@ -116,6 +116,24 @@ public class Record extends Value.Hash {
     }
 
     /**
+     * {@link #put(String, Value) Adds} a field/value pair to this record. Turns
+     * <i>virtual</i> fields into regular metadata fields if they're not already
+     * {@link #containsField(String) present}.
+     *
+     * @param field the field name
+     * @param newValue the new metadata value
+     */
+    @Override
+    public void add(final String field, final Value newValue) {
+        if (containsField(field)) {
+            super.add(field, newValue);
+        }
+        else {
+            put(field, newValue);
+        }
+    }
+
+    /**
      * Retains only the given field/value pairs in this record. Turns
      * <i>virtual</i> fields into regular metadata fields if they're not already
      * {@link #containsField(String) present}.
