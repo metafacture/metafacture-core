@@ -92,21 +92,11 @@ class RecordTransformer {
     private void processBind(final Do theDo, final EList<String> params) {
         if (theDo.getName().equals("list")) { // TODO impl multiple binds via FixBind enum
             final Map<String, String> options = options(theDo.getOptions());
-            final Record fullRecord = record.shallowClone();
-
             record.findList(options.get("path"), a -> a.forEach(value -> {
-                // for each value, bind the current record/scope/context to the given var name:
-                record = new Record();
                 record.put(options.get("var"), value);
-
                 processSubexpressions(theDo.getElements());
                 record.remove(options.get("var"));
-
-                // and remember the things we added while bound (this probably needs some tweaking):
-                fullRecord.addAll(record);
             }));
-
-            record = fullRecord;
         }
         else {
             LOG.warn("Unprocessed bind: {}", theDo);

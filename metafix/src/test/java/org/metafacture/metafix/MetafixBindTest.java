@@ -71,6 +71,36 @@ public class MetafixBindTest {
     }
 
     @Test
+    public void doListFullRecordInScope() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list('path': 'name', 'var': 'n')",
+                " if any_equal('type','book')",
+                "  paste('title','~Book:','n')",
+                " else",
+                "  paste('title','~Journal:','n')",
+                " end",
+                "end",
+                "retain('title')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("type", "book");
+                i.literal("name", "A book");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("type", "journal");
+                i.literal("name", "A journal");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Book: A book");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("title", "Journal: A journal");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void doListPathWithDots() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list('path': 'some.name', 'var': 'n')",
@@ -99,8 +129,8 @@ public class MetafixBindTest {
     @Test
     public void doListWithAppendAndLast() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('author[]')",
                 "do list('path': 'creator', 'var': 'c')",
-                " set_array('author[]')",
                 " copy_field('c.name', 'author[].$append.name')",
                 " add_field('author[].$last.type', 'Default')",
                 "end",
