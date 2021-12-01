@@ -472,7 +472,7 @@ public class Value {
         }
 
         /**
-         * Adds a field/value pair to this hash, provided it's not {@code null}.
+         * Adds a field/value pair to this hash, provided it's not {@link #isNull(Value) null}.
          *
          * @param field the field name
          * @param value the metadata value
