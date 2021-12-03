@@ -419,6 +419,11 @@ public class Value {
                     break;
             }
         }
+
+        /*package-private*/ void set(final int index, final Value value) {
+            list.set(index, value);
+        }
+
     }
 
     /**

@@ -71,6 +71,104 @@ public class MetafixBindTest {
     }
 
     @Test
+    public void doListFullRecordInScope() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list('path': 'name', 'var': 'n')",
+                " if any_equal('type','book')",
+                "  paste('title','~Book:','n')",
+                " else",
+                "  paste('title','~Journal:','n')",
+                " end",
+                "end",
+                "retain('title')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("type", "book");
+                i.literal("name", "A book");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("type", "journal");
+                i.literal("name", "A journal");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Book: A book");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("title", "Journal: A journal");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void bindingScopeWithVar() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list('path':'foo','var':'loop')",
+                " copy_field('test','loop.baz')",
+                " copy_field('loop.bar','loop.qux')",
+                "end"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("foo");
+                i.literal("bar", "1");
+                i.endEntity();
+                i.startEntity("foo");
+                i.literal("bar", "2");
+                i.endEntity();
+                i.literal("test", "42");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("foo");
+                o.get().startEntity("1");
+                o.get().literal("bar", "1");
+                o.get().literal("baz", "42");
+                o.get().literal("qux", "1");
+                f.apply(1).endEntity();
+                o.get().startEntity("2");
+                o.get().literal("bar", "2");
+                o.get().literal("baz", "42");
+                o.get().literal("qux", "2");
+                f.apply(2).endEntity();
+                o.get().literal("test", "42");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void bindingScopeWithoutVar() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list('path':'foo')",
+                " copy_field('test','baz')",
+                " copy_field('bar','qux')",
+                "end"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("foo");
+                i.literal("bar", "1");
+                i.endEntity();
+                i.startEntity("foo");
+                i.literal("bar", "2");
+                i.endEntity();
+                i.literal("test", "42");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("foo");
+                o.get().startEntity("1");
+                o.get().literal("bar", "1");
+                o.get().literal("qux", "1");
+                f.apply(1).endEntity();
+                o.get().startEntity("2");
+                o.get().literal("bar", "2");
+                o.get().literal("qux", "2");
+                f.apply(2).endEntity();
+                o.get().literal("test", "42");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void doListPathWithDots() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list('path': 'some.name', 'var': 'n')",
@@ -99,8 +197,8 @@ public class MetafixBindTest {
     @Test
     public void doListWithAppendAndLast() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('author[]')",
                 "do list('path': 'creator', 'var': 'c')",
-                " set_array('author[]')",
                 " copy_field('c.name', 'author[].$append.name')",
                 " add_field('author[].$last.type', 'Default')",
                 "end",
