@@ -17,7 +17,6 @@ jobs:
       run: ./gradlew build
     - name: Install language server
       run: ./gradlew installServer
-    - name: Change directory
-      run: cd metafix-vsc/
     - name: Install fix extension
+      working-directory: metafix-vsc/
       run: npm install
