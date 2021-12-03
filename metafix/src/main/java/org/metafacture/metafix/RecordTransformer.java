@@ -105,7 +105,7 @@ class RecordTransformer {
                     // w/o var -> use the currently bound value as the record:
                     else {
                         if (value.isHash()) {
-                            final Record fullRecord = record.shallowClone();
+                            final Record fullRecord = record;
                             record = new Record();
                             record.addAll(value.asHash());
                             processSubexpressions(theDo.getElements());
@@ -114,7 +114,7 @@ class RecordTransformer {
                         }
                         else {
                             // TODO: bind to arrays (if that makes sense) and strings (access with '.')
-                            throw new IllegalStateException(Value.UNEXPECTED + value);
+                            throw new IllegalStateException("expected hash, got " + value);
                         }
                     }
                 }
