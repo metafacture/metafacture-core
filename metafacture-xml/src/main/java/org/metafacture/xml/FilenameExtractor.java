@@ -92,72 +92,158 @@ public interface FilenameExtractor extends RecordIdentifier {
         private int endIndex;
         private int startIndex;
 
-        FilenameUtil() {
+        /**
+         * Default constructor
+         */
+        public FilenameUtil() {
         }
 
         /**
          * Ensures that path exists. If not, make it.
          *
          * @param path
-         *            the path of the to be stored file.
+         *            the path of the to be stored file
          */
         public void ensurePathExists(final File path) {
             final File parent = path.getAbsoluteFile().getParentFile();
             parent.mkdirs();
         }
 
+        /**
+         * Sets the encoding used to open the resource.
+         *
+         * @param encoding
+         *            new encoding
+         */
         public void setEncoding(final String encoding) {
             this.encoding = encoding;
         }
 
+        /**
+         * Returns the encoding used to open the resource.
+         *
+         * @return current default setting
+         */
         public String getEncoding() {
             return encoding;
         }
 
+        /**
+         * Sets the suffix of the files.
+         *
+         * @param fileSuffix
+         *              the suffix of the files
+         */
         public void setFileSuffix(final String fileSuffix) {
             this.fileSuffix = fileSuffix;
         }
 
+        /**
+         * Gets the suffix of the file.
+         *
+         * @return the suffix of the file
+         */
         public String getFileSuffix() {
             return fileSuffix;
         }
 
+        /**
+         * Sets the filename.
+         *
+         * @param filename
+         *              the name of the file
+         */
         public void setFilename(final String filename) {
             this.filename = filename;
         }
 
+        /**
+         * Gets the filename.
+         *
+         * @return the name of the file
+         *
+         */
         public String getFilename() {
             return filename;
         }
 
+        /**
+         * Sets the property which is used as the base of the filename.
+         * Recommended properties are identifiers.
+         *
+         * @param property
+         *              the property which will be used for the base name of the file
+         */
         public void setProperty(final String property) {
             this.property = property;
         }
 
+        /**
+         * Gets the property which is the base of the filename.
+         *
+         * @return the property which is the base name of the file
+         */
         public String getProperty() {
             return property;
         }
 
+        /**
+         * Sets the target path.
+         *
+         * @param target
+         *            the basis directory in which the files are stored
+         */
         public void setTarget(final String target) {
             this.target = target;
         }
 
+        /**
+         * Gets the target path.
+         *
+         * @return the basis directory in which the files are stored
+         */
         public String getTarget() {
             return target;
         }
 
+        /**
+         * Sets the end of the index in the filename to extract the name of a
+         * subfolder.
+         *
+         * @param endIndex
+         *            this marks the index' end
+         */
         public void setEndIndex(final int endIndex) {
             this.endIndex = endIndex;
         }
 
+        /**
+         * Gets the end of the index in the filename to extract the name of a
+         * subfolder.
+         *
+         * @return the marker of the index' end
+         */
         public int getEndIndex() {
             return endIndex;
         }
 
+        /**
+         * Sets the beginning of the index in the filename to extract the name of
+         * the subfolder.
+         *
+         * @param startIndex
+         *            This marks the index' beginning
+         */
         public void setStartIndex(final int startIndex) {
             this.startIndex = startIndex;
         }
 
+        /**
+         * Gets the beginning of the index in the filename to extract the name of
+         * the subfolder.
+         *
+         * @return the marker of the index' beginning
+         */
         public int getStartIndex() {
             return startIndex;
         }
