@@ -32,7 +32,7 @@ import java.util.stream.Stream;
  * or a {@link java.lang.String String}.
  */
 public class Value {
-
+    /*package-private*/ static final String UNEXPECTED = "expected array or hash, got ";
     /*package-private*/ static final String APPEND_FIELD = "$append";
     private static final String LAST_FIELD = "$last";
     private static final String ASTERISK = "*";
@@ -419,6 +419,11 @@ public class Value {
                     break;
             }
         }
+
+        /*package-private*/ void set(final int i, final Value value) {
+            list.set(i, value);
+        }
+
     }
 
     /**
@@ -427,8 +432,6 @@ public class Value {
     public static class Hash extends AbstractValueType {
 
         private static final String FIELD_PATH_SEPARATOR = "\\.";
-
-        private static final String UNEXPECTED = "expected array or hash, got ";
 
         private final Map<String, Value> map = new LinkedHashMap<>();
 

@@ -92,11 +92,33 @@ class RecordTransformer {
     private void processBind(final Do theDo, final EList<String> params) {
         if (theDo.getName().equals("list")) { // TODO impl multiple binds via FixBind enum
             final Map<String, String> options = options(theDo.getOptions());
-            record.findList(options.get("path"), a -> a.forEach(value -> {
-                record.put(options.get("var"), value);
-                processSubexpressions(theDo.getElements());
-                record.remove(options.get("var"));
-            }));
+            record.findList(options.get("path"), a -> {
+                for (int i = 0; i < a.size(); ++i) {
+                    final Value value = a.get(i);
+                    final String var = options.get("var");
+                    // with var -> keep full record in scope, add the var:
+                    if (var != null) {
+                        record.put(var, value);
+                        processSubexpressions(theDo.getElements());
+                        record.remove(var);
+                    }
+                    // w/o var -> use the currently bound value as the record:
+                    else {
+                        if (value.isHash()) {
+                            final Record fullRecord = record.shallowClone();
+                            record = new Record();
+                            record.addAll(value.asHash());
+                            processSubexpressions(theDo.getElements());
+                            a.set(i, new Value(record));
+                            record = fullRecord;
+                        }
+                        else {
+                            // TODO: bind to arrays (if that makes sense) and strings (access with '.')
+                            throw new IllegalStateException(Value.UNEXPECTED + value);
+                        }
+                    }
+                }
+            });
         }
         else {
             LOG.warn("Unprocessed bind: {}", theDo);

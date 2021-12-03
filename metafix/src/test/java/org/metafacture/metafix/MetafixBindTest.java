@@ -101,6 +101,74 @@ public class MetafixBindTest {
     }
 
     @Test
+    public void bindingScopeWithVar() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list('path':'foo','var':'loop')",
+                " copy_field('test','loop.baz')",
+                " copy_field('loop.bar','loop.qux')",
+                "end"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("foo");
+                i.literal("bar", "1");
+                i.endEntity();
+                i.startEntity("foo");
+                i.literal("bar", "2");
+                i.endEntity();
+                i.literal("test", "42");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("foo");
+                o.get().startEntity("1");
+                o.get().literal("bar", "1");
+                o.get().literal("baz", "42");
+                o.get().literal("qux", "1");
+                f.apply(1).endEntity();
+                o.get().startEntity("2");
+                o.get().literal("bar", "2");
+                o.get().literal("baz", "42");
+                o.get().literal("qux", "2");
+                f.apply(2).endEntity();
+                o.get().literal("test", "42");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void bindingScopeWithoutVar() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list('path':'foo')",
+                " copy_field('test','baz')",
+                " copy_field('bar','qux')",
+                "end"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("foo");
+                i.literal("bar", "1");
+                i.endEntity();
+                i.startEntity("foo");
+                i.literal("bar", "2");
+                i.endEntity();
+                i.literal("test", "42");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("foo");
+                o.get().startEntity("1");
+                o.get().literal("bar", "1");
+                o.get().literal("qux", "1");
+                f.apply(1).endEntity();
+                o.get().startEntity("2");
+                o.get().literal("bar", "2");
+                o.get().literal("qux", "2");
+                f.apply(2).endEntity();
+                o.get().literal("test", "42");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void doListPathWithDots() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list('path': 'some.name', 'var': 'n')",
