@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Transform a record using a Fix
+ * Transform a record using a {@link Fix}.
  *
  * @author Fabian Steeg
  *
@@ -48,14 +48,16 @@ class RecordTransformer {
 
     private static final Logger LOG = LoggerFactory.getLogger(RecordTransformer.class);
 
-    private Fix fix;
-    private Record record;
-    private Map<String, String> vars;
+    private final Metafix metafix;
+    private final Fix fix;
 
-    RecordTransformer(final Record record, final Map<String, String> vars, final Fix fix) {
-        this.record = record.shallowClone();
-        this.vars = vars;
+    private Record record;
+
+    RecordTransformer(final Metafix metafix, final Fix fix) {
+        this.metafix = metafix;
         this.fix = fix;
+
+        record = metafix.getCurrentRecord().shallowClone();
     }
 
     Record transform() {
@@ -68,7 +70,7 @@ class RecordTransformer {
     }
 
     private String resolveVars(final String string) {
-        return string == null ? null : StringUtil.format(string, Metafix.VAR_START, Metafix.VAR_END, false, vars);
+        return string == null ? null : StringUtil.format(string, Metafix.VAR_START, Metafix.VAR_END, false, metafix.getVars());
     }
 
     private void processSubexpressions(final List<Expression> expressions) {
@@ -181,7 +183,7 @@ class RecordTransformer {
             final FixMethod method = FixMethod.valueOf(expression.getName());
             final List<String> resolvedParams = params.stream().map(this::resolveVars).collect(Collectors.toList());
             final Map<String, String> options = options(((MethodCall) expression).getOptions());
-            method.apply(record, resolvedParams, options);
+            method.apply(metafix, record, resolvedParams, options);
         }
         catch (final IllegalArgumentException e) {
             throw new MetafactureException(e);
