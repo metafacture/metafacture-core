@@ -18,11 +18,13 @@ package org.metafacture.metafix;
 
 import org.metafacture.framework.StreamReceiver;
 
+import org.junit.jupiter.api.Assertions;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -38,7 +40,8 @@ import java.util.function.Supplier;
  */
 public final class MetafixTestHelpers {
 
-    private MetafixTestHelpers() { }
+    private MetafixTestHelpers() {
+    }
 
     public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Consumer<Metafix> in,
             final Consumer<Supplier<StreamReceiver>> out) {
@@ -88,6 +91,19 @@ public final class MetafixTestHelpers {
             e.printStackTrace();
         }
         return metafix;
+    }
+
+    public static void assertEmittedFields(final Value.Hash hash, final List<String> expectedFields, final List<Value> expectedValues) {
+        final List<String> actualFields = new ArrayList<>();
+        final List<Value> actualValues = new ArrayList<>();
+
+        hash.forEach((f, v) -> {
+            actualFields.add(f);
+            actualValues.add(v);
+        });
+
+        Assertions.assertEquals(expectedFields, actualFields);
+        Assertions.assertEquals(expectedValues, actualValues);
     }
 
 }

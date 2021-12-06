@@ -19,9 +19,7 @@ package org.metafacture.metafix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class HashValueTest {
 
@@ -200,21 +198,19 @@ public class HashValueTest {
 
     @Test
     public void shouldIterateOverFieldValuePairs() {
+        final Value emptyValue = new Value("");
+        final Value specialValue = new Value("1");
+
         final Value.Hash hash = newHash();
         hash.put(FIELD, VALUE);
         hash.put(OTHER_FIELD, OTHER_VALUE);
-        hash.put("empty field", new Value(""));
-        hash.put("_special field", new Value("1"));
+        hash.put("empty field", emptyValue);
+        hash.put("_special field", specialValue);
 
-        final List<String> fields = new ArrayList<>();
-        final List<String> values = new ArrayList<>();
-        hash.forEach((f, v) -> {
-            fields.add(f);
-            values.add(v.asString());
-        });
-
-        Assertions.assertEquals(Arrays.asList(FIELD, OTHER_FIELD, "empty field", "_special field"), fields);
-        Assertions.assertEquals(Arrays.asList(VALUE.asString(), OTHER_VALUE.asString(), "", "1"), values);
+        MetafixTestHelpers.assertEmittedFields(hash,
+                Arrays.asList(FIELD, OTHER_FIELD, "empty field", "_special field"),
+                Arrays.asList(VALUE, OTHER_VALUE, emptyValue, specialValue)
+        );
     }
 
     private Value.Hash newHash() {

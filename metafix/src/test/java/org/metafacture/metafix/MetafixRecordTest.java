@@ -70,17 +70,70 @@ public class MetafixRecordTest {
     }
 
     @Test
-    public void internalIdUsage() {
+    public void shouldNotEmitVirtualFieldsByDefault() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "copy_field('_id', id)"),
+                "vacuum()"
+            ),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
-            }, o -> {
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldEmitVirtualFieldsWhenRetained() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "retain('_id')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("_id", "1");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldEmitVirtualFieldsWhenCopied() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('_id', id)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
                 o.get().startRecord("1");
                 o.get().literal("id", "1");
                 o.get().endRecord();
-            });
+            }
+        );
+    }
+
+    @Test
+    public void shouldEmitVirtualFieldsWhenAdded() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('_id', 'id')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("_id", "id");
+                o.get().endRecord();
+            }
+        );
     }
 
     @Test

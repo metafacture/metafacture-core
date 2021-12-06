@@ -206,10 +206,6 @@ public class Value {
         }
     }
 
-    public Value merge(final Value value) {
-        return asList(a1 -> value.asList(a2 -> a2.forEach(a1::add)));
-    }
-
     @Override
     public String toString() {
         final String result;
@@ -266,9 +262,7 @@ public class Value {
             APPEND {
                 @Override
                 void apply(final Hash hash, final String field, final String value) {
-                    final Value oldValue = hash.get(field);
-                    final Value newValue = new Value(value);
-                    hash.put(field, oldValue == null ? newValue : oldValue.merge(newValue));
+                    hash.add(field, new Value(value));
                 }
             };
 
@@ -472,7 +466,7 @@ public class Value {
         }
 
         /**
-         * Adds a field/value pair to this hash, provided it's not {@code null}.
+         * Adds a field/value pair to this hash, provided it's not {@link #isNull(Value) null}.
          *
          * @param field the field name
          * @param value the metadata value
@@ -566,9 +560,16 @@ public class Value {
             hash.forEach(this::add);
         }
 
+        /**
+         * {@link #put(String, Value) Adds} a field/value pair to this hash,
+         * potentially merging with an existing value.
+         *
+         * @param field the field name
+         * @param newValue the new metadata value
+         */
         public void add(final String field, final Value newValue) {
             final Value oldValue = get(field);
-            put(field, oldValue == null ? newValue : oldValue.merge(newValue));
+            put(field, oldValue == null ? newValue : oldValue.asList(a1 -> newValue.asList(a2 -> a2.forEach(a1::add))));
         }
 
         public Value insert(final InsertMode mode, final String fieldPath, final String newValue) {

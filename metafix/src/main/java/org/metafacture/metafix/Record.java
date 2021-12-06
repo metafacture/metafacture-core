@@ -16,11 +16,17 @@
 
 package org.metafacture.metafix;
 
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * Represents a metadata record, i.e., a {@link Value.Hash Hash} of fields
  * and values.
  */
 public class Record extends Value.Hash {
+
+    private final Map<String, Value> virtualFields = new LinkedHashMap<>();
 
     private boolean reject;
 
@@ -40,6 +46,7 @@ public class Record extends Value.Hash {
 
         clone.setReject(reject);
         forEach(clone::put);
+        virtualFields.forEach(clone::putVirtualField);
 
         return clone;
     }
@@ -62,10 +69,88 @@ public class Record extends Value.Hash {
         return reject;
     }
 
+    /**
+     * Checks whether this record contains the <i>virtual</i> field.
+     *
+     * @param field the field name
+     * @return true if this record contains the <i>virtual</i> field, false otherwise
+     */
+    public boolean containsVirtualField(final String field) {
+        return virtualFields.containsKey(field);
+    }
+
+    /**
+     * Adds a <i>virtual</i> field/value pair to this record, provided it's not
+     * {@link Value#isNull(Value) null}. Virtual fields can be
+     * {@link #get(String) accessed} like regular metadata fields, but aren't
+     * {@link #forEach(BiConsumer) emitted} by default.
+     *
+     * @param field the field name
+     * @param value the metadata value
+     *
+     * @see #retainFields(Collection)
+     */
+    public void putVirtualField(final String field, final Value value) {
+        if (!Value.isNull(value)) {
+            virtualFields.put(field, value);
+        }
+    }
+
     @Override
     public String toString() {
-        // TODO: Improve string representation? Include reject status, etc.?
+        // TODO: Improve string representation? Include reject status, virtual fields, etc.?
         return super.toString();
+    }
+
+    /**
+     * Retrieves the field value from this record. Falls back to retrieving the
+     * <i>virtual</i> field if the field name is not already
+     * {@link #containsField(String) present}.
+     *
+     * @param field the field name
+     * @return the metadata value
+     */
+    @Override
+    public Value get(final String field) {
+        return containsField(field) ? super.get(field) : virtualFields.get(field);
+    }
+
+    /**
+     * {@link #put(String, Value) Adds} a field/value pair to this record. Turns
+     * <i>virtual</i> fields into regular metadata fields if they're not already
+     * {@link #containsField(String) present}.
+     *
+     * @param field the field name
+     * @param newValue the new metadata value
+     */
+    @Override
+    public void add(final String field, final Value newValue) {
+        if (containsField(field)) {
+            super.add(field, newValue);
+        }
+        else {
+            put(field, newValue);
+        }
+    }
+
+    /**
+     * Retains only the given field/value pairs in this record. Turns
+     * <i>virtual</i> fields into regular metadata fields if they're not already
+     * {@link #containsField(String) present}.
+     *
+     * @param fields the field names
+     */
+    @Override
+    public void retainFields(final Collection<String> fields) {
+        virtualFields.keySet().retainAll(fields);
+
+        virtualFields.forEach((f, v) -> {
+            if (!containsField(f)) {
+                put(f, v);
+            }
+        });
+
+        super.retainFields(fields);
     }
 
 }
