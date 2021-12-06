@@ -385,6 +385,10 @@ public class Value {
                     // TODO: WDCD? descend into the array?
                     break;
                 case APPEND_FIELD:
+                    if (fields.length == 1) {
+                        add(new Value(newValue));
+                        return;
+                    }
                     add(newHash(h -> h.insert(mode, tail(fields), newValue)));
                     break;
                 case LAST_FIELD:
@@ -578,7 +582,7 @@ public class Value {
 
         private Value insert(final InsertMode mode, final String[] fields, final String newValue) {
             final String field = fields[0];
-            if (field.equals(APPEND_FIELD) || field.equals(LAST_FIELD)) {
+            if (fields.length != 1 && (field.equals(APPEND_FIELD) || field.equals(LAST_FIELD))) {
                 // TODO: WDCD? $last, $append skipped for hashes here:
                 return insert(mode, tail(fields), newValue);
             }

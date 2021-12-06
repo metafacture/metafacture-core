@@ -265,6 +265,51 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void addWithAppendInArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('names.$append','patrick')",
+                "vacuum()"),
+            i -> {
+                i.startRecord("1");
+                i.literal("names", "max");
+                i.literal("names", "mo");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("names");
+                o.get().literal("1", "max");
+                o.get().literal("2", "mo");
+                o.get().literal("3", "patrick");
+                f.apply(1).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void addWithAppendInHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('author.names.$append','patrick')",
+                "vacuum()"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author");
+                i.literal("names", "max");
+                i.literal("names", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().startEntity("names");
+                o.get().literal("1", "max");
+                o.get().literal("2", "mo");
+                o.get().literal("3", "patrick");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void move() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(// TODO: dot noation in move_field
                 "move_field('my.name','your.name')",
