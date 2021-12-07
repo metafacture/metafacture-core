@@ -400,10 +400,38 @@ public class MetafixRecordTest {
     }
 
     @Test
-    public void copyIntoArrayOfObjects() {
+    public void copyIntoArrayOfHashesImplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('author[]')",
                 "copy_field('your.name','author[].name')",
+                "remove_field('your')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("your");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("your");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "mo");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void copyIntoArrayOfHashesExplicitAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('author[]')",
+                "copy_field('your.name','author[].$append.name')",
                 "remove_field('your')"),
             i -> {
                 i.startRecord("1");
