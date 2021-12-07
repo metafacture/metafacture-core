@@ -674,7 +674,12 @@ public class Value {
                         // TODO: do something here?
                         break;
                     case Hash:
-                        appendValue(newName, v.asHash().find(tail(newName)));
+                        if (newName.length == 1) {
+                            put(newName[0], v);
+                        }
+                        else {
+                            appendValue(newName, v.asHash().find(tail(newName)));
+                        }
                         break;
                     default:
                         break;

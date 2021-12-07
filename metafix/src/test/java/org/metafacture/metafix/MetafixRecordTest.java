@@ -400,6 +400,51 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void copyArrayOfStrings() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('your','author')",
+                "remove_field('your')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("your");
+                i.literal("name", "maxi-mi");
+                i.literal("name", "maxi-ma");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().startEntity("name");
+                o.get().literal("1", "maxi-mi");
+                o.get().literal("2", "maxi-ma");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void renameArrayOfStrings() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "move_field('your','author')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("your");
+                i.literal("name", "maxi-mi");
+                i.literal("name", "maxi-ma");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().startEntity("name");
+                o.get().literal("1", "maxi-mi");
+                o.get().literal("2", "maxi-ma");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void copyIntoArrayOfHashesImplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('author[]')",
