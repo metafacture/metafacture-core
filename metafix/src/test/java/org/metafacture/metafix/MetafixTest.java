@@ -39,6 +39,14 @@ public class MetafixTest {
     }
 
     @Test
+    public void shouldPutVar() {
+        final Metafix metafix = new Metafix();
+        metafix.putVar(KEY, VALUE);
+
+        Assertions.assertEquals(VALUE, metafix.getVars().get(KEY));
+    }
+
+    @Test
     public void shouldGetMapNames() {
         final Metafix metafix = new Metafix();
         metafix.putMap(MAP_NAME, new HashMap<>());

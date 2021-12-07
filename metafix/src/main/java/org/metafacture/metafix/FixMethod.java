@@ -30,6 +30,16 @@ enum FixMethod {
 
     // SCRIPT-LEVEL METHODS:
 
+    put_var {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            metafix.putVar(params.get(0), params.get(1));
+        }
+    },
+    put_vars {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            options.forEach(metafix::putVar);
+        }
+    },
     put_map {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             metafix.putMap(params.get(0), options);

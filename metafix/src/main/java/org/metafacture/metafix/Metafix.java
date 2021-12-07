@@ -96,7 +96,8 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     }
 
     public Metafix(final Reader fixDef, final Map<String, String> vars) {
-        buildPipeline(fixDef, vars);
+        fix = FixStandaloneSetup.parseFix(fixDef);
+        this.vars = vars;
         init();
     }
 
@@ -112,11 +113,6 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
                 // add(currentRecord, name, value);
             }
         });
-    }
-
-    private void buildPipeline(final Reader fixDef, final Map<String, String> theVars) {
-        this.fix = FixStandaloneSetup.parseFix(fixDef);
-        this.vars = theVars;
     }
 
     @Override
@@ -245,6 +241,14 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
 
     public Map<String, String> getVars() {
         return vars;
+    }
+
+    public void putVar(final String key, final String value) {
+        if (vars == NO_VARS) {
+            vars = new HashMap<>();
+        }
+
+        vars.put(key, value);
     }
 
     public Record getCurrentRecord() {

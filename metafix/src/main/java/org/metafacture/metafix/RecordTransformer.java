@@ -29,7 +29,6 @@ import org.metafacture.metafix.fix.MethodCall;
 import org.metafacture.metafix.fix.Options;
 import org.metafacture.metafix.fix.Unless;
 
-import org.eclipse.emf.common.util.EList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,9 +72,13 @@ class RecordTransformer {
         return string == null ? null : StringUtil.format(string, Metafix.VAR_START, Metafix.VAR_END, false, metafix.getVars());
     }
 
+    private List<String> resolveParams(final List<String> params) {
+        return params.stream().map(this::resolveVars).collect(Collectors.toList());
+    }
+
     private void processSubexpressions(final List<Expression> expressions) {
         for (final Expression sub : expressions) {
-            final EList<String> params = sub.getParams();
+            final List<String> params = resolveParams(sub.getParams());
             if (sub instanceof Do) {
                 processBind((Do) sub, params);
             }
@@ -91,7 +94,7 @@ class RecordTransformer {
         }
     }
 
-    private void processBind(final Do theDo, final EList<String> params) {
+    private void processBind(final Do theDo, final List<String> params) {
         if (theDo.getName().equals("list")) { // TODO impl multiple binds via FixBind enum
             final Map<String, String> options = options(theDo.getOptions());
             record.findList(options.get("path"), a -> {
@@ -131,13 +134,13 @@ class RecordTransformer {
         }
     }
 
-    private void processIf(final If ifExp, final EList<String> parameters) {
+    private void processIf(final If ifExp, final List<String> params) {
         final ElsIf elsIfExp = ifExp.getElseIf();
         final Else elseExp = ifExp.getElse();
-        if (testConditional(ifExp.getName(), parameters)) {
+        if (testConditional(ifExp.getName(), params)) {
             processSubexpressions(ifExp.getElements());
         }
-        else if (elsIfExp != null && testConditional(elsIfExp.getName(), elsIfExp.getParams())) {
+        else if (elsIfExp != null && testConditional(elsIfExp.getName(), resolveParams(elsIfExp.getParams()))) {
             processSubexpressions(elsIfExp.getElements());
         }
         else if (elseExp != null) {
@@ -145,13 +148,13 @@ class RecordTransformer {
         }
     }
 
-    private void processUnless(final Unless unless, final EList<String> parameters) {
-        if (!testConditional(unless.getName(), parameters)) {
+    private void processUnless(final Unless unless, final List<String> params) {
+        if (!testConditional(unless.getName(), params)) {
             processSubexpressions(unless.getElements());
         }
     }
 
-    private boolean testConditional(final String conditional, final EList<String> params) {
+    private boolean testConditional(final String conditional, final List<String> params) {
         LOG.debug("<IF>: {} parameters: {}", conditional, params);
         boolean result = false;
         if ("exists".equals(conditional)) {
@@ -174,16 +177,15 @@ class RecordTransformer {
         // functionFactory.registerClass("not_equals", NotEquals.class);
         // functionFactory.registerClass("replace_all", Replace.class);
         // final Function function = functionFactory.newInstance(conditional,
-        // resolvedAttributeMap(parameters, theIf.getOptions()));
+        // resolvedAttributeMap(params, theIf.getOptions()));
         return result;
     }
 
     private void processFunction(final Expression expression, final List<String> params) {
         try {
             final FixMethod method = FixMethod.valueOf(expression.getName());
-            final List<String> resolvedParams = params.stream().map(this::resolveVars).collect(Collectors.toList());
             final Map<String, String> options = options(((MethodCall) expression).getOptions());
-            method.apply(metafix, record, resolvedParams, options);
+            method.apply(metafix, record, params, options);
         }
         catch (final IllegalArgumentException e) {
             throw new MetafactureException(e);
