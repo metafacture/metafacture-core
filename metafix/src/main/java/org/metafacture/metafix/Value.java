@@ -675,7 +675,7 @@ public class Value {
                         break;
                     case Hash:
                         if (newName.length == 1) {
-                            put(newName[0], v);
+                            add(newName[0], v);
                         }
                         else {
                             appendValue(newName, v.asHash().find(tail(newName)));

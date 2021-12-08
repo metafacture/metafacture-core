@@ -445,6 +445,59 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void copyArrayOfHashes() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('author', 'authors[]')",
+                "remove_field('author')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("author");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("authors[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "mo");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void renameArrayOfHashes() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "move_field('author', 'authors[]')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("author");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("authors[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "mo");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void copyIntoArrayOfHashesImplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('author[]')",
