@@ -310,6 +310,68 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void addWithAppendInArrayWithSubfieldFromRepeatedField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('authors.$append.name','patrick')",
+                "vacuum()"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("authors");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("authors");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("authors");
+                o.get().startEntity("1");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "mo");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("name", "patrick");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void addWithAppendInArrayWithSubfieldFromIndexedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('authors[].$append.name','patrick')",
+                "vacuum()"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("authors[]");
+                i.startEntity("1");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("authors[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "mo");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("name", "patrick");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void move() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(// TODO: dot noation in move_field
                 "move_field('my.name','your.name')",
