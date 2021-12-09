@@ -17,7 +17,9 @@
 package org.metafacture.metafix;
 
 import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.api.MorphExecutionException;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -37,6 +39,9 @@ import java.util.Arrays;
 @ExtendWith(MockitoExtension.class)
 public class MetafixLookupTest {
 
+    private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
+    private static final String TSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.tsv";
+
     @RegisterExtension
     private MockitoRule mockitoRule = MockitoJUnit.rule();
 
@@ -48,62 +53,26 @@ public class MetafixLookupTest {
 
     @Test
     public void inline() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "lookup('title', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"),
-            i -> {
-                i.startRecord("1");
-                i.endRecord();
-
-                i.startRecord("2");
-                i.literal("title", "Aloha");
-                i.literal("title", "Moin");
-                i.literal("title", "Hey");
-                i.endRecord();
-
-                i.startRecord("3");
-                i.endRecord();
-            }, o -> {
-                o.get().startRecord("1");
-                o.get().endRecord();
-
-                o.get().startRecord("2");
-                o.get().startEntity("title");
-                o.get().literal("1", "Alohaeha");
-                o.get().literal("2", "Moin zäme");
-                o.get().literal("3", "Tach");
-                o.get().endEntity();
-                o.get().endRecord();
-
-                o.get().startRecord("3");
-                o.get().endRecord();
-            });
+        assertMap(
+                "lookup('title', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"
+        );
     }
 
     @Test
     public void inlineMultilineIndent() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+        assertMap(
                 "lookup('title',",
                 "  Aloha: Alohaeha,",
-                "  Moin: 'Moin zäme')"),
-            i -> {
-                i.startRecord("1");
-                i.literal("title", "Aloha");
-                i.literal("title", "Moin");
-                i.endRecord();
-            }, o -> {
-                o.get().startRecord("1");
-                o.get().startEntity("title");
-                o.get().literal("1", "Alohaeha");
-                o.get().literal("2", "Moin zäme");
-                o.get().endEntity();
-                o.get().endRecord();
-            });
+                "  Moin: 'Moin zäme',",
+                "  __default: Tach)"
+        );
     }
 
     @Test
     public void inlineDotNotationNested() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "lookup('data.title', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"),
+                "lookup('data.title', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"
+            ),
             i -> {
                 i.startRecord("1");
                 i.startEntity("data");
@@ -112,7 +81,8 @@ public class MetafixLookupTest {
                 i.literal("title", "Hey");
                 i.endEntity();
                 i.endRecord();
-            }, (o, f) -> {
+            },
+            (o, f) -> {
                 o.get().startRecord("1");
                 o.get().startEntity("data");
                 o.get().startEntity("title");
@@ -121,73 +91,181 @@ public class MetafixLookupTest {
                 o.get().literal("3", "Tach");
                 f.apply(2).endEntity();
                 o.get().endRecord();
-            });
+            }
+        );
     }
 
     @Test
     public void csv() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "lookup('title', 'src/test/java/org/metafacture/metafix/maps/test.csv')"),
-            i -> {
-                i.startRecord("1");
-                i.endRecord();
-
-                i.startRecord("2");
-
-                i.literal("title", "Aloha");
-                i.literal("title", "Moin");
-                i.literal("title", "Hey");
-                i.endRecord();
-
-                i.startRecord("3");
-                i.endRecord();
-            }, o -> {
-                o.get().startRecord("1");
-                o.get().endRecord();
-
-                o.get().startRecord("2");
-                o.get().startEntity("title");
-                o.get().literal("1", "Alohaeha");
-                o.get().literal("2", "Moin zäme");
-                o.get().literal("3", "Tach");
-                o.get().endEntity();
-                o.get().endRecord();
-
-                o.get().startRecord("3");
-                o.get().endRecord();
-            });
+        assertMap(
+                "lookup('title', '" + CSV_MAP + "')"
+        );
     }
 
     @Test
     public void tsv() {
+        assertMap(
+                "lookup('title', '" + TSV_MAP + "', sep_char:'\t')"
+        );
+    }
+
+    @Test
+    public void shouldLookupInSeparateInternalMap() {
+        assertMap(
+                "put_map('testMap', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)",
+                "lookup('title', 'testMap')"
+        );
+    }
+
+    @Test
+    public void shouldLookupInSeparateExternalFileMap() {
+        assertMap(
+                "put_filemap('" + CSV_MAP + "')",
+                "lookup('title', '" + CSV_MAP + "')"
+        );
+    }
+
+    @Test
+    public void shouldLookupInSeparateExternalFileMapWithName() {
+        assertMap(
+                "put_filemap('" + CSV_MAP + "', 'testMap')",
+                "lookup('title', 'testMap')"
+        );
+    }
+
+    @Test
+    public void shouldLookupInSeparateExternalFileMapWithOptions() {
+        assertMap(
+                "put_filemap('" + TSV_MAP + "', sep_char: '\t')",
+                "lookup('title', '" + TSV_MAP + "')"
+        );
+    }
+
+    @Test
+    public void shouldLookupInSeparateExternalFileMapWithNameAndOptions() {
+        assertMap(
+                "put_filemap('" + TSV_MAP + "', 'testMap', sep_char: '\t')",
+                "lookup('title', 'testMap')"
+        );
+    }
+
+    @Test
+    public void shouldDefineMultipleSeparateMaps() {
+        assertMap(
+                "put_map('testMap', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)",
+                "put_map('testMap2', __default: Hi)",
+                "lookup('title', 'testMap')"
+        );
+    }
+
+    @Test
+    public void shouldOverwriteExistingSeparateMap() {
+        assertMap(
+                "put_map('testMap', __default: Hi)",
+                "put_filemap('" + CSV_MAP + "', 'testMap')",
+                "lookup('title', 'testMap')"
+        );
+    }
+
+    @Test
+    public void shouldIgnoreOptionsOnLookupInSeparateInternalMap() {
+        assertMap(
+                "put_map('testMap', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)",
+                "lookup('title', 'testMap', __default: Hi)"
+        );
+    }
+
+    @Test
+    public void shouldIgnoreOptionsOnLookupInSeparateExternalFileMap() {
+        assertMap(
+                "put_filemap('" + CSV_MAP + "')",
+                "lookup('title', '" + CSV_MAP + "', sep_char: '\t')"
+        );
+    }
+
+    @Test
+    public void shouldNotLookupInExternalFileMapWithWrongOptions() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "lookup('title', 'src/test/java/org/metafacture/metafix/maps/test.tsv', sep_char:'\t')"),
+                "lookup('title', '" + CSV_MAP + "', sep_char: '\t')"
+            ),
             i -> {
                 i.startRecord("1");
-                i.endRecord();
-
-                i.startRecord("2");
                 i.literal("title", "Aloha");
                 i.literal("title", "Moin");
                 i.literal("title", "Hey");
                 i.endRecord();
-
-                i.startRecord("3");
-                i.endRecord();
-            }, o -> {
+            },
+            o -> {
                 o.get().startRecord("1");
                 o.get().endRecord();
+            }
+        );
+    }
 
-                o.get().startRecord("2");
+    @Test
+    public void shouldIgnoreOptionsOnSubsequentLookupInExternalFileMap() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('title', '" + CSV_MAP + "')",
+                "lookup('title', '" + CSV_MAP + "', sep_char: '\t')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Hey");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("title");
+                o.get().literal("1", "Tach");
+                o.get().literal("2", "Tach");
+                o.get().literal("3", "Tach");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldFailLookupInUnknownNamedMap() {
+        Assertions.assertThrows(MorphExecutionException.class, () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "lookup('title', 'testMap')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("title", "Aloha");
+                    i.literal("title", "Moin");
+                    i.literal("title", "Hey");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            ),
+            "File not found: testMap"
+        );
+    }
+
+    private void assertMap(final String... fixDef) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(fixDef),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Hey");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
                 o.get().startEntity("title");
                 o.get().literal("1", "Alohaeha");
                 o.get().literal("2", "Moin zäme");
                 o.get().literal("3", "Tach");
                 o.get().endEntity();
                 o.get().endRecord();
-
-                o.get().startRecord("3");
-                o.get().endRecord();
-            });
+            }
+        );
     }
+
 }
