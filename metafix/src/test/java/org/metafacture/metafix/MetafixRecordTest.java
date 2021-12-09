@@ -267,8 +267,7 @@ public class MetafixRecordTest {
     @Test
     public void addWithAppendInArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_field('names.$append','patrick')",
-                "vacuum()"),
+                "add_field('names.$append','patrick')"),
             i -> {
                 i.startRecord("1");
                 i.literal("names", "max");
@@ -288,8 +287,7 @@ public class MetafixRecordTest {
     @Test
     public void addWithAppendInHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_field('author.names.$append','patrick')",
-                "vacuum()"),
+                "add_field('author.names.$append','patrick')"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("author");
@@ -312,8 +310,7 @@ public class MetafixRecordTest {
     @Test
     public void addWithAppendInArrayWithSubfieldFromRepeatedField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_field('authors.$append.name','patrick')",
-                "vacuum()"),
+                "add_field('authors.$append.name','patrick')"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("authors");
@@ -342,8 +339,7 @@ public class MetafixRecordTest {
     @Test
     public void addWithAppendInArrayWithSubfieldFromIndexedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_field('authors[].$append.name','patrick')",
-                "vacuum()"),
+                "add_field('authors[].$append.name','patrick')"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("authors[]");

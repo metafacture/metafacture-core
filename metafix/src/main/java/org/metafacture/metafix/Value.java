@@ -273,9 +273,7 @@ public class Value {
             INDEXED {
                 @Override
                 void apply(final Hash hash, final String field, final String value) {
-                    final Value newHash = newHash();
-                    newHash.asHash().put(field, new Value(value));
-                    hash.add(nextIndex(hash), newHash);
+                    hash.add(nextIndex(hash), newHash(h -> h.put(field, new Value(value))));
                 }
 
                 private String nextIndex(final Hash hash) {
