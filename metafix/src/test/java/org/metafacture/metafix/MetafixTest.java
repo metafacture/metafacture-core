@@ -21,8 +21,10 @@ import org.metafacture.metamorph.api.Maps;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +46,40 @@ public class MetafixTest {
         metafix.putVar(KEY, VALUE);
 
         Assertions.assertEquals(VALUE, metafix.getVars().get(KEY));
+    }
+
+    @Test
+    public void shouldPutVarWithMutableMap() {
+        final Map<String, String> map = new HashMap<>();
+        map.put(KEY, VALUE);
+
+        try {
+            final Metafix metafix = new Metafix("vacuum()", map);
+            metafix.putVar(KEY + "2", VALUE + "2");
+
+            Assertions.assertEquals(VALUE, metafix.getVars().get(KEY));
+            Assertions.assertEquals(VALUE + "2", metafix.getVars().get(KEY + "2"));
+        }
+        catch (final FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void shouldPutVarWithImmutableMap() {
+        final Map<String, String> map = new HashMap<>();
+        map.put(KEY, VALUE);
+
+        try {
+            final Metafix metafix = new Metafix("vacuum()", Collections.unmodifiableMap(map));
+            metafix.putVar(KEY + "2", VALUE + "2");
+
+            Assertions.assertEquals(VALUE, metafix.getVars().get(KEY));
+            Assertions.assertEquals(VALUE + "2", metafix.getVars().get(KEY + "2"));
+        }
+        catch (final FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test

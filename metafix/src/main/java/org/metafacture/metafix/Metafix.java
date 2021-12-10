@@ -244,11 +244,13 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     }
 
     public void putVar(final String key, final String value) {
-        if (vars == NO_VARS) {
-            vars = new HashMap<>();
+        try {
+            vars.put(key, value);
         }
-
-        vars.put(key, value);
+        catch (final UnsupportedOperationException e) {
+            vars = new HashMap<>(vars);
+            vars.put(key, value);
+        }
     }
 
     public Record getCurrentRecord() {
