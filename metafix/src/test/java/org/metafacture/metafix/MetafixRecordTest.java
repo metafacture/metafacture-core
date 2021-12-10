@@ -368,6 +368,116 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void simpleAppendWithArrayOfStrings() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('animals[].$append', 'duck')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "cat");
+                i.literal("2", "dog");
+                i.literal("3", "fox");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "cat");
+                o.get().literal("2", "dog");
+                o.get().literal("3", "fox");
+                o.get().literal("4", "duck");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void complexAppendWithArrayOfStrings() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('others', 'animals[].$append')",
+                "move_field('fictional', 'animals[].$append')",
+                "add_field('animals[].$append', 'earthworm')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.endEntity();
+                i.literal("others", "human");
+                i.literal("fictional", "unicorn");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "cat");
+                o.get().literal("3", "human");
+                o.get().literal("4", "unicorn");
+                o.get().literal("5", "earthworm");
+                o.get().endEntity();
+                o.get().literal("others", "human");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void complexAppendWithArrayOfObjects() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('others', 'animals[].$append')",
+                "move_field('fictional', 'animals[].$append')",
+                "add_field('animals[].$append.animal', 'earthworm')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.startEntity("1");
+                i.literal("animal", "dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("animal", "cat");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("others");
+                i.literal("animal", "human");
+                i.endEntity();
+                i.startEntity("fictional");
+                i.literal("animal", "unicorn");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().startEntity("1");
+                o.get().literal("animal", "dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("animal", "cat");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("animal", "human");
+                o.get().endEntity();
+                o.get().startEntity("4");
+                o.get().literal("animal", "unicorn");
+                o.get().endEntity();
+                o.get().startEntity("5");
+                o.get().literal("animal", "earthworm");
+                f.apply(2).endEntity();
+                o.get().startEntity("others");
+                o.get().literal("animal", "human");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void move() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(// TODO: dot noation in move_field
                 "move_field('my.name','your.name')",
