@@ -32,12 +32,12 @@ enum FixMethod {
 
     put_var {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            metafix.putVar(params.get(0), params.get(1));
+            metafix.getVars().put(params.get(0), params.get(1));
         }
     },
     put_vars {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            options.forEach(metafix::putVar);
+            metafix.getVars().putAll(options);
         }
     },
     put_map {

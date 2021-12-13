@@ -21,7 +21,6 @@ import org.metafacture.metamorph.api.Maps;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -43,7 +42,7 @@ public class MetafixTest {
     @Test
     public void shouldPutVar() {
         final Metafix metafix = new Metafix();
-        metafix.putVar(KEY, VALUE);
+        metafix.getVars().put(KEY, VALUE);
 
         Assertions.assertEquals(VALUE, metafix.getVars().get(KEY));
     }
@@ -53,16 +52,11 @@ public class MetafixTest {
         final Map<String, String> map = new HashMap<>();
         map.put(KEY, VALUE);
 
-        try {
-            final Metafix metafix = new Metafix("vacuum()", map);
-            metafix.putVar(KEY + "2", VALUE + "2");
+        final Metafix metafix = new Metafix(map);
+        metafix.getVars().put(KEY + "2", VALUE + "2");
 
-            Assertions.assertEquals(VALUE, metafix.getVars().get(KEY));
-            Assertions.assertEquals(VALUE + "2", metafix.getVars().get(KEY + "2"));
-        }
-        catch (final FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        Assertions.assertEquals(VALUE, metafix.getVars().get(KEY));
+        Assertions.assertEquals(VALUE + "2", metafix.getVars().get(KEY + "2"));
     }
 
     @Test
@@ -70,16 +64,11 @@ public class MetafixTest {
         final Map<String, String> map = new HashMap<>();
         map.put(KEY, VALUE);
 
-        try {
-            final Metafix metafix = new Metafix("vacuum()", Collections.unmodifiableMap(map));
-            metafix.putVar(KEY + "2", VALUE + "2");
+        final Metafix metafix = new Metafix(Collections.unmodifiableMap(map));
+        metafix.getVars().put(KEY + "2", VALUE + "2");
 
-            Assertions.assertEquals(VALUE, metafix.getVars().get(KEY));
-            Assertions.assertEquals(VALUE + "2", metafix.getVars().get(KEY + "2"));
-        }
-        catch (final FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        Assertions.assertEquals(VALUE, metafix.getVars().get(KEY));
+        Assertions.assertEquals(VALUE + "2", metafix.getVars().get(KEY + "2"));
     }
 
     @Test

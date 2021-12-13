@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -147,7 +146,7 @@ public class MetafixScriptTest {
 
     private void assertFix(final String fixDef, final Map<String, String> vars, final Consumer<Metafix> consumer) {
         try {
-            final Metafix metafix = vars == null ? new Metafix(fixDef) : new Metafix(fixDef, new HashMap<>(vars));
+            final Metafix metafix = vars == null ? new Metafix(fixDef) : new Metafix(fixDef, vars);
 
             // Prepare and trigger script execution
             metafix.setReceiver(new DefaultStreamReceiver());
