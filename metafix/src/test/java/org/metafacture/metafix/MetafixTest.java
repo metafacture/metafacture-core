@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +37,38 @@ public class MetafixTest {
     private static final String VALUE = "testValue";
 
     public MetafixTest() {
+    }
+
+    @Test
+    public void shouldPutVar() {
+        final Metafix metafix = new Metafix();
+        metafix.getVars().put(KEY, VALUE);
+
+        Assertions.assertEquals(VALUE, metafix.getVars().get(KEY));
+    }
+
+    @Test
+    public void shouldPutVarWithMutableMap() {
+        final Map<String, String> map = new HashMap<>();
+        map.put(KEY, VALUE);
+
+        final Metafix metafix = new Metafix(map);
+        metafix.getVars().put(KEY + "2", VALUE + "2");
+
+        Assertions.assertEquals(VALUE, metafix.getVars().get(KEY));
+        Assertions.assertEquals(VALUE + "2", metafix.getVars().get(KEY + "2"));
+    }
+
+    @Test
+    public void shouldPutVarWithImmutableMap() {
+        final Map<String, String> map = new HashMap<>();
+        map.put(KEY, VALUE);
+
+        final Metafix metafix = new Metafix(Collections.unmodifiableMap(map));
+        metafix.getVars().put(KEY + "2", VALUE + "2");
+
+        Assertions.assertEquals(VALUE, metafix.getVars().get(KEY));
+        Assertions.assertEquals(VALUE + "2", metafix.getVars().get(KEY + "2"));
     }
 
     @Test

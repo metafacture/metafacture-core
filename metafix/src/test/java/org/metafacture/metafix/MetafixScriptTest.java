@@ -18,10 +18,12 @@ package org.metafacture.metafix;
 
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
+import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -35,6 +37,48 @@ public class MetafixScriptTest {
     private static final String TSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.tsv";
 
     public MetafixScriptTest() {
+    }
+
+    @Test
+    public void shouldPutSingleVariable() {
+        assertVar("put_var('varName', 'value')",
+                null,
+                ImmutableMap.of("varName", "value"));
+    }
+
+    @Test
+    public void shouldPutMultipleVariables() {
+        assertVar("put_var('varName', 'value')\nput_var('varName2', 'value2')",
+                null,
+                ImmutableMap.of("varName", "value", "varName2", "value2"));
+    }
+
+    @Test
+    public void shouldPutMultipleVariablesFromMap() {
+        assertVar("put_vars(varName: 'value', varName2: 'value2')",
+                null,
+                ImmutableMap.of("varName", "value", "varName2", "value2"));
+    }
+
+    @Test
+    public void shouldResolveVariablesInSingleVariable() {
+        assertVar("put_var('varName', 'value$[var]')",
+                ImmutableMap.of("var", "1"),
+                ImmutableMap.of("varName", "value1"));
+    }
+
+    @Test
+    public void shouldResolveVariablesInMultipleVariables() {
+        assertVar("put_var('varName', 'value$[var]')\nput_var('$[varName]Var', 'value2')",
+                ImmutableMap.of("var", "1"),
+                ImmutableMap.of("varName", "value1", "value1Var", "value2"));
+    }
+
+    @Test
+    public void shouldNotResolveVariablesInMultipleVariablesFromMap() {
+        assertVar("put_vars(varName: 'value$[var]', '$[varName]Var': 'value2')",
+                ImmutableMap.of("var", "1"),
+                ImmutableMap.of("varName", "value$[var]", "$[varName]Var", "value2"));
     }
 
     @Test
@@ -83,6 +127,10 @@ public class MetafixScriptTest {
         assertMap("put_filemap('" + TSV_MAP + "', '" + MAP_NAME + "', sep_char: '\t')", MAP_NAME);
     }
 
+    private void assertVar(final String fixDef, final Map<String, String> vars, final Map<String, String> result) {
+        assertFix(fixDef, vars, f -> result.forEach((k, v) -> Assertions.assertEquals(v, f.getVars().get(k))));
+    }
+
     private void assertMap(final String fixDef, final String mapName) {
         assertFix(fixDef, f -> assertMap(f, mapName));
     }
@@ -93,8 +141,12 @@ public class MetafixScriptTest {
     }
 
     private void assertFix(final String fixDef, final Consumer<Metafix> consumer) {
+        assertFix(fixDef, null, consumer);
+    }
+
+    private void assertFix(final String fixDef, final Map<String, String> vars, final Consumer<Metafix> consumer) {
         try {
-            final Metafix metafix = new Metafix(fixDef);
+            final Metafix metafix = vars == null ? new Metafix(fixDef) : new Metafix(fixDef, vars);
 
             // Prepare and trigger script execution
             metafix.setReceiver(new DefaultStreamReceiver());

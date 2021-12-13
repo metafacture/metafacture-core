@@ -73,14 +73,25 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     // TODO: Use SimpleRegexTrie / WildcardTrie for wildcard, alternation and character class support
     private Record currentRecord = new Record();
     private Fix fix;
-    private Map<String, String> vars = NO_VARS;
+    private Map<String, String> vars = new HashMap<>();
     private int entityCount;
     private StreamReceiver outputStreamReceiver;
     private String recordIdentifier;
     private List<Value.Hash> entities = new ArrayList<>();
 
     public Metafix() {
-        init();
+        flattener.setReceiver(new DefaultStreamReceiver() {
+            @Override
+            public void literal(final String name, final String value) {
+                // TODO: keep flattener as option?
+                // add(currentRecord, name, value);
+            }
+        });
+    }
+
+    public Metafix(final Map<String, String> newVars) {
+        this();
+        vars.putAll(newVars);
     }
 
     public Metafix(final String fixDef) throws FileNotFoundException {
@@ -91,32 +102,17 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
         this(fixDef.endsWith(".fix") ? new FileReader(fixDef) : new StringReader(fixDef), vars);
     }
 
-    public Metafix(final Reader morphDef) {
-        this(morphDef, NO_VARS);
+    public Metafix(final Reader fixDef) {
+        this(fixDef, NO_VARS);
     }
 
     public Metafix(final Reader fixDef, final Map<String, String> vars) {
-        buildPipeline(fixDef, vars);
-        init();
+        this(vars);
+        fix = FixStandaloneSetup.parseFix(fixDef);
     }
 
     public List<Expression> getExpressions() {
         return expressions;
-    }
-
-    private void init() {
-        flattener.setReceiver(new DefaultStreamReceiver() {
-            @Override
-            public void literal(final String name, final String value) {
-                // TODO: keep flattener as option?
-                // add(currentRecord, name, value);
-            }
-        });
-    }
-
-    private void buildPipeline(final Reader fixDef, final Map<String, String> theVars) {
-        this.fix = FixStandaloneSetup.parseFix(fixDef);
-        this.vars = theVars;
     }
 
     @Override
