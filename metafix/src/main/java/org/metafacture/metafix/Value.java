@@ -273,7 +273,9 @@ public class Value {
             INDEXED {
                 @Override
                 void apply(final Hash hash, final String field, final String value) {
-                    hash.add(nextIndex(hash), newHash(h -> h.put(field, new Value(value))));
+                    final Value newValue = field.equals(APPEND_FIELD) ? new Value(value) :
+                        newHash(h -> h.put(field, new Value(value)));
+                    hash.add(nextIndex(hash), newValue);
                 }
 
                 private String nextIndex(final Hash hash) {
