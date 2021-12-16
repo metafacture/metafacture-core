@@ -59,6 +59,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     public static final String VAR_START = "$[";
     public static final String VAR_END = "]";
     public static final Map<String, String> NO_VARS = Collections.emptyMap();
+    public static final String ARRAY_MARKER = "[]";
 
     private static final Logger LOG = LoggerFactory.getLogger(Metafix.class);
 

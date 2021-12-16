@@ -265,6 +265,220 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void addWithAppendInArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('names.$append','patrick')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("names", "max");
+                i.literal("names", "mo");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("names");
+                o.get().literal("1", "max");
+                o.get().literal("2", "mo");
+                o.get().literal("3", "patrick");
+                f.apply(1).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void addWithAppendInHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('author.names.$append','patrick')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author");
+                i.literal("names", "max");
+                i.literal("names", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().startEntity("names");
+                o.get().literal("1", "max");
+                o.get().literal("2", "mo");
+                o.get().literal("3", "patrick");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void addWithAppendInArrayWithSubfieldFromRepeatedField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('authors.$append.name','patrick')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("authors");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("authors");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("authors");
+                o.get().startEntity("1");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "mo");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("name", "patrick");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void addWithAppendInArrayWithSubfieldFromIndexedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('authors[].$append.name','patrick')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("authors[]");
+                i.startEntity("1");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("authors[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "mo");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("name", "patrick");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void simpleAppendWithArrayOfStrings() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('animals[].$append', 'duck')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "cat");
+                i.literal("2", "dog");
+                i.literal("3", "fox");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "cat");
+                o.get().literal("2", "dog");
+                o.get().literal("3", "fox");
+                o.get().literal("4", "duck");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void complexAppendWithArrayOfStrings() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('others', 'animals[].$append')",
+                "move_field('fictional', 'animals[].$append')",
+                "add_field('animals[].$append', 'earthworm')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.endEntity();
+                i.literal("others", "human");
+                i.literal("fictional", "unicorn");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "cat");
+                o.get().literal("3", "human");
+                o.get().literal("4", "unicorn");
+                o.get().literal("5", "earthworm");
+                o.get().endEntity();
+                o.get().literal("others", "human");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/92")
+    public void complexAppendWithArrayOfObjects() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('others', 'animals[].$append')",
+                "move_field('fictional', 'animals[].$append')",
+                "add_field('animals[].$append.animal', 'earthworm')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.startEntity("1");
+                i.literal("animal", "dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("animal", "cat");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("others");
+                i.literal("animal", "human");
+                i.endEntity();
+                i.startEntity("fictional");
+                i.literal("animal", "unicorn");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().startEntity("1");
+                o.get().literal("animal", "dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("animal", "cat");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("animal", "human");
+                o.get().endEntity();
+                o.get().startEntity("4");
+                o.get().literal("animal", "unicorn");
+                o.get().endEntity();
+                o.get().startEntity("5");
+                o.get().literal("animal", "earthworm");
+                f.apply(2).endEntity();
+                o.get().startEntity("others");
+                o.get().literal("animal", "human");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void move() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(// TODO: dot noation in move_field
                 "move_field('my.name','your.name')",
@@ -355,10 +569,136 @@ public class MetafixRecordTest {
     }
 
     @Test
-    public void copyIntoArrayOfObjects() {
+    public void copyArrayOfStrings() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('your','author')",
+                "remove_field('your')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("your");
+                i.literal("name", "maxi-mi");
+                i.literal("name", "maxi-ma");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().startEntity("name");
+                o.get().literal("1", "maxi-mi");
+                o.get().literal("2", "maxi-ma");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void renameArrayOfStrings() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "move_field('your','author')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("your");
+                i.literal("name", "maxi-mi");
+                i.literal("name", "maxi-ma");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().startEntity("name");
+                o.get().literal("1", "maxi-mi");
+                o.get().literal("2", "maxi-ma");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void copyArrayOfHashes() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('author', 'authors[]')",
+                "remove_field('author')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("author");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("authors[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "mo");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void renameArrayOfHashes() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "move_field('author', 'authors[]')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("author");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("authors[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "mo");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void copyIntoArrayOfHashesImplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('author[]')",
                 "copy_field('your.name','author[].name')",
+                "remove_field('your')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("your");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("your");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "mo");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void copyIntoArrayOfHashesExplicitAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('author[]')",
+                "copy_field('your.name','author[].$append.name')",
                 "remove_field('your')"),
             i -> {
                 i.startRecord("1");

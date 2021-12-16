@@ -264,6 +264,23 @@ public class Value {
                 void apply(final Hash hash, final String field, final String value) {
                     hash.add(field, new Value(value));
                 }
+            },
+            /* For an indexed representation of arrays as hashes with 1, 2, 3 etc. keys.
+             * i.e. ["a", "b", "c"] as { "1":"a", "2":"b", "3": "c" }
+             * This is what is produced by JsonDecoder and Metafix itself for arrays.
+             * TODO? maybe this would be a good general internal representation, resulting
+             * in every value being either a hash or a string, no more separate array type.*/
+            INDEXED {
+                @Override
+                void apply(final Hash hash, final String field, final String value) {
+                    final Value newValue = field.equals(APPEND_FIELD) ? new Value(value) :
+                        newHash(h -> h.put(field, new Value(value)));
+                    hash.add(nextIndex(hash), newValue);
+                }
+
+                private String nextIndex(final Hash hash) {
+                    return "" + (hash.size() + 1) /* TODO? check if keys are actually all ints? */;
+                }
             };
 
             abstract void apply(Hash hash, String field, String value);
@@ -385,6 +402,10 @@ public class Value {
                     // TODO: WDCD? descend into the array?
                     break;
                 case APPEND_FIELD:
+                    if (fields.length == 1) {
+                        add(new Value(newValue));
+                        return;
+                    }
                     add(newHash(h -> h.insert(mode, tail(fields), newValue)));
                     break;
                 case LAST_FIELD:
@@ -578,12 +599,8 @@ public class Value {
 
         private Value insert(final InsertMode mode, final String[] fields, final String newValue) {
             final String field = fields[0];
-            if (field.equals(APPEND_FIELD) || field.equals(LAST_FIELD)) {
-                // TODO: WDCD? $last, $append skipped for hashes here:
-                return insert(mode, tail(fields), newValue);
-            }
             if (fields.length == 1) {
-                if (fields[0].equals(ASTERISK)) {
+                if (field.equals(ASTERISK)) {
                     //TODO: WDCD? insert into each element?
                 }
                 else {
@@ -591,16 +608,21 @@ public class Value {
                 }
             }
             else {
+                if (field.equals(APPEND_FIELD) || field.equals(LAST_FIELD)) {
+                    // TODO: WDCD? $last, $append skipped for hashes here:
+                    return insert(mode, tail(fields), newValue);
+                }
                 if (!containsField(field)) {
                     put(field, newHash());
                 }
-
                 final Value value = get(field);
                 if (value != null) {
                     switch (value.type) {
                         // TODO: move impl into enum elements, here call only value.insert
                         case Hash:
-                            value.asHash().insert(mode, tail(fields), newValue);
+                            // if the field is marked as array, this hash should be smth. like { 1=a, 2=b }
+                            final boolean isIndexedArray = field.endsWith(Metafix.ARRAY_MARKER);
+                            value.asHash().insert(isIndexedArray ? InsertMode.INDEXED : mode, tail(fields), newValue);
                             break;
                         case Array:
                             value.asArray().insert(mode, tail(fields), newValue);
@@ -670,7 +692,12 @@ public class Value {
                         // TODO: do something here?
                         break;
                     case Hash:
-                        appendValue(newName, v.asHash().find(tail(newName)));
+                        if (newName.length == 1) {
+                            add(newName[0], v);
+                        }
+                        else {
+                            appendValue(newName, v.asHash().find(tail(newName)));
+                        }
                         break;
                     default:
                         break;
