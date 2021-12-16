@@ -27,7 +27,7 @@ subprojects {
       'jquery':         '3.3.1-1',
       'junit_jupiter':  '5.4.2',
       'junit_platform': '1.4.2',
-      'metafacture':    '5.2.0',
+      'metafacture':    '5.3.1',
       'mockito':        '2.27.0',
       'requirejs':      '2.3.6',
       'slf4j':          '1.7.21',
