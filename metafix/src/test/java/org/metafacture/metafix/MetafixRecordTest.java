@@ -427,6 +427,7 @@ public class MetafixRecordTest {
     }
 
     @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/92")
     public void complexAppendWithArrayOfObjects() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "copy_field('others', 'animals[].$append')",
