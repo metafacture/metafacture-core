@@ -1174,7 +1174,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled("TODO: WDCD? explicit * for array fields?")
+    // TODO: WDCD? explicit * for array fields?
     public void accessArrayByWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "upcase('name.*')"),
@@ -1246,7 +1246,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled("TODO: implement implicit iteration?")
+    // TODO: implement implicit iteration?
     public void accessArrayOfObjectsByWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "upcase('author.*.name')",

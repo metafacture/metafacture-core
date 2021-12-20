@@ -71,7 +71,6 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     private final Map<String, Map<String, String>> maps = new HashMap<>();
     private final StreamFlattener flattener = new StreamFlattener();
 
-    // TODO: Use SimpleRegexTrie / WildcardTrie for wildcard, alternation and character class support
     private Record currentRecord = new Record();
     private Fix fix;
     private Map<String, String> vars = new HashMap<>();

@@ -16,6 +16,8 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.commons.tries.SimpleRegexTrie;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -24,7 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -36,6 +40,8 @@ public class Value {
     /*package-private*/ static final String APPEND_FIELD = "$append";
     private static final String LAST_FIELD = "$last";
     private static final String ASTERISK = "*";
+
+    private static final String UNEXPECTED = "expected array or hash, got ";
 
     private final Array array;
     private final Hash hash;
@@ -236,6 +242,19 @@ public class Value {
         return Arrays.copyOfRange(fields, 1, fields.length);
     }
 
+    private void transformFields(final String[] fields, final UnaryOperator<String> operator) {
+        switch (type) {
+            case Array:
+                asArray().transformFields(fields, operator);
+                break;
+            case Hash:
+                asHash().transformFields(fields, operator);
+                break;
+            default:
+                throw new IllegalStateException(UNEXPECTED + type);
+        }
+    }
+
     enum Type {
         Array,
         Hash,
@@ -396,6 +415,45 @@ public class Value {
             return result;
         }
 
+        private void transformFields(final String[] fields, final UnaryOperator<String> operator) {
+            final String field = fields[0];
+            final String[] remainingFields = tail(fields);
+            final int size = size();
+
+            if (fields.length == 0 || field.equals(ASTERISK)) {
+                for (int i = 0; i < size; ++i) {
+                    transformFields(i, remainingFields, operator);
+                }
+            }
+            else if (isNumber(field)) {
+                final int index = Integer.parseInt(field) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
+                if (index >= 0 && index < size) {
+                    transformFields(index, remainingFields, operator);
+                }
+            }
+            // TODO: WDCD? copy_field('your.name','author[].name'), where name is an array
+            else {
+                for (int i = 0; i < size; ++i) {
+                    transformFields(i, fields, operator);
+                }
+            }
+
+            list.removeIf(v -> v == null);
+        }
+
+        private void transformFields(final int index, final String[] fields, final UnaryOperator<String> operator) {
+            final Value value = get(index);
+
+            if (value != null) {
+                if (value.isString()) {
+                    set(index, operator != null ? new Value(operator.apply(value.asString())) : null);
+                }
+                else {
+                    value.transformFields(fields, operator);
+                }
+            }
+        }
+
         private void insert(final InsertMode mode, final String[] fields, final String newValue) {
             switch (fields[0]) {
                 case ASTERISK:
@@ -448,8 +506,6 @@ public class Value {
 
         private static final String FIELD_PATH_SEPARATOR = "\\.";
 
-        private static final String UNEXPECTED = "expected array or hash, got ";
-
         private final Map<String, Value> map = new LinkedHashMap<>();
 
         /**
@@ -465,7 +521,7 @@ public class Value {
          * @return true if this hash contains the metadata field, false otherwise
          */
         public boolean containsField(final String field) {
-            return map.containsKey(field);
+            return map.keySet().stream().anyMatch(fieldMatcher(field));
         }
 
         /**
@@ -526,7 +582,9 @@ public class Value {
          * @return the metadata value
          */
         public Value get(final String field) {
-            return map.get(field);
+            // TODO: special treatment (only) for exact matches?
+            final List<Value> list = findFields(field).map(map::get).collect(Collectors.toList());
+            return list.isEmpty() ? null : list.size() == 1 ? list.get(0) : new Value(list);
         }
 
         public Value find(final String fieldPath) {
@@ -642,7 +700,7 @@ public class Value {
          * @param field the field name
          */
         public void remove(final String field) {
-            map.remove(field);
+            modifyFields(field, map::remove);
         }
 
         public void removeNested(final String fieldPath) {
@@ -706,14 +764,35 @@ public class Value {
         }
 
         public void transformFields(final List<String> params, final UnaryOperator<String> operator) {
-            final String field = params.get(0);
-            final Value value = find(field);
-            if (value != null) {
-                removeNested(field);
-                if (operator != null) {
-                    value.asList(a -> a.forEach(v -> append(field, operator.apply(v.toString()))));
-                }
+            transformFields(split(params.get(0)), operator);
+        }
+
+        private void transformFields(final String[] fields, final UnaryOperator<String> operator) {
+            final String field = fields[0];
+            final String[] remainingFields = tail(fields);
+
+            if (field.equals(ASTERISK)) {
+                // TODO: search in all elements of value.asHash()?
+                transformFields(remainingFields, operator);
+                return;
             }
+
+            modifyFields(field, f -> {
+                final Value value = map.get(f);
+
+                if (value != null) {
+                    if (remainingFields.length == 0) {
+                        map.remove(f);
+
+                        if (operator != null) {
+                            value.asList(a -> a.forEach(v -> append(f, operator.apply(v.toString()))));
+                        }
+                    }
+                    else {
+                        value.transformFields(remainingFields, operator);
+                    }
+                }
+            });
         }
 
         /**
@@ -722,7 +801,7 @@ public class Value {
          * @param fields the field names
          */
         public void retainFields(final Collection<String> fields) {
-            map.keySet().retainAll(fields);
+            map.keySet().retainAll(fields.stream().flatMap(this::findFields).collect(Collectors.toSet()));
         }
 
         /**
@@ -750,6 +829,21 @@ public class Value {
         @Override
         public String asString() {
             return map.toString();
+        }
+
+        private void modifyFields(final String pattern, final Consumer<String> consumer) {
+            findFields(pattern).collect(Collectors.toSet()).forEach(consumer);
+        }
+
+        private Stream<String> findFields(final String pattern) {
+            return map.keySet().stream().filter(fieldMatcher(pattern));
+        }
+
+        private Predicate<String> fieldMatcher(final String pattern) {
+            final SimpleRegexTrie<String> trie = new SimpleRegexTrie<>();
+            trie.put(pattern, pattern);
+
+            return field -> trie.get(field).contains(pattern);
         }
 
     }

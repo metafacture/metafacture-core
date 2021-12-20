@@ -21,7 +21,6 @@ import org.metafacture.framework.StreamReceiver;
 
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -393,7 +392,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("Use SimpleRegexTrie/WildcardTrie")
     public void alternation() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "trim('title-1|title-2')"),
@@ -413,8 +411,8 @@ public class MetafixMethodTest {
                 o.get().endRecord();
 
                 o.get().startRecord("2");
-                o.get().literal("title-2", "marc");
-                o.get().literal("title-1", "json");
+                o.get().literal("title-1", "marc");
+                o.get().literal("title-2", "json");
                 o.get().endRecord();
 
                 o.get().startRecord("3");
@@ -423,7 +421,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("Use SimpleRegexTrie/WildcardTrie")
     public void wildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "trim('title-?')"),
@@ -443,8 +440,8 @@ public class MetafixMethodTest {
                 o.get().endRecord();
 
                 o.get().startRecord("2");
-                o.get().literal("title-2", "marc");
-                o.get().literal("title-1", "json");
+                o.get().literal("title-1", "marc");
+                o.get().literal("title-2", "json");
                 o.get().endRecord();
 
                 o.get().startRecord("3");
@@ -453,7 +450,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("Use SimpleRegexTrie")
     public void characterClass() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "trim('title-[12]')"),
@@ -473,8 +469,8 @@ public class MetafixMethodTest {
                 o.get().endRecord();
 
                 o.get().startRecord("2");
-                o.get().literal("title-2", "marc");
-                o.get().literal("title-1", "json");
+                o.get().literal("title-1", "marc");
+                o.get().literal("title-2", "json");
                 o.get().endRecord();
 
                 o.get().startRecord("3");
