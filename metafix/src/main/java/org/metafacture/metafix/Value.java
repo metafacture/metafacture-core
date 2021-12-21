@@ -507,6 +507,7 @@ public class Value {
         private static final String FIELD_PATH_SEPARATOR = "\\.";
 
         private final Map<String, Value> map = new LinkedHashMap<>();
+        private final SimpleRegexTrie<String> trie = new SimpleRegexTrie<>();
 
         /**
          * Creates an empty instance of {@link Hash}.
@@ -840,9 +841,7 @@ public class Value {
         }
 
         private Predicate<String> fieldMatcher(final String pattern) {
-            final SimpleRegexTrie<String> trie = new SimpleRegexTrie<>();
             trie.put(pattern, pattern);
-
             return field -> trie.get(field).contains(pattern);
         }
 
