@@ -30,21 +30,6 @@ enum FixMethod {
 
     // SCRIPT-LEVEL METHODS:
 
-    put_var {
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            metafix.getVars().put(params.get(0), params.get(1));
-        }
-    },
-    put_vars {
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            metafix.getVars().putAll(options);
-        }
-    },
-    put_map {
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            metafix.putMap(params.get(0), options);
-        }
-    },
     put_filemap {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String fileName = params.get(0);
@@ -56,42 +41,27 @@ enum FixMethod {
             metafix.putMap(params.size() <= 1 ? fileName : params.get(1), fileMap);
         }
     },
+    put_map {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            metafix.putMap(params.get(0), options);
+        }
+    },
+    put_var {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            metafix.getVars().put(params.get(0), params.get(1));
+        }
+    },
+    put_vars {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            metafix.getVars().putAll(options);
+        }
+    },
 
     // RECORD-LEVEL METHODS:
 
-    set_field {
+    add_field {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final String field = params.get(0);
-
-            record.remove(field);
-            record.replace(field, params.get(1));
-        }
-    },
-    set_array {
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final String field = params.get(0);
-            final List<String> toAdd = params.subList(1, params.size());
-            if (field.endsWith(DOT_APPEND)) {
-                record.addAll(field.replace(DOT_APPEND, EMPTY), toAdd);
-            }
-            else {
-                record.put(field, Value.newArray(a -> toAdd.forEach(s -> a.add(new Value(s)))));
-            }
-        }
-    },
-    set_hash {
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final String field = params.get(0);
-
-            final Value value = record.get(field.replace(DOT_APPEND, EMPTY));
-            final Value newValue = Value.newHash(h -> options.forEach((f, v) -> h.put(f, new Value(v))));
-
-            if (field.endsWith(DOT_APPEND) && value.isArray()) {
-                value.asArray().add(newValue);
-            }
-            else {
-                record.put(field, newValue);
-            }
+            record.append(params.get(0), params.get(1));
         }
     },
     array { // array-from-hash
@@ -108,6 +78,21 @@ enum FixMethod {
             })));
         }
     },
+    copy_field {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.copy(params);
+        }
+    },
+    format {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String field = params.get(0);
+
+            record.getList(field, oldValues -> {
+                final String newValue = String.format(params.get(1), oldValues.stream().toArray());
+                record.replace(field, new Value(Arrays.asList(new Value(newValue))));
+            });
+        }
+    },
     hash { // hash-from-array
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String field = params.get(0);
@@ -119,35 +104,10 @@ enum FixMethod {
             })));
         }
     },
-    add_field {
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.append(params.get(0), params.get(1));
-        }
-    },
     move_field {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.copy(params);
             record.removeNested(params.get(0));
-        }
-    },
-    copy_field {
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.copy(params);
-        }
-    },
-    remove_field {
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            params.forEach(record::removeNested);
-        }
-    },
-    format {
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final String field = params.get(0);
-
-            record.getList(field, oldValues -> {
-                final String newValue = String.format(params.get(1), oldValues.stream().toArray());
-                record.replace(field, new Value(Arrays.asList(new Value(newValue))));
-            });
         }
     },
     parse_text {
@@ -205,9 +165,49 @@ enum FixMethod {
             record.setReject(true);
         }
     },
+    remove_field {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            params.forEach(record::removeNested);
+        }
+    },
     retain {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.retainFields(params);
+        }
+    },
+    set_array {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String field = params.get(0);
+            final List<String> toAdd = params.subList(1, params.size());
+            if (field.endsWith(DOT_APPEND)) {
+                record.addAll(field.replace(DOT_APPEND, EMPTY), toAdd);
+            }
+            else {
+                record.put(field, Value.newArray(a -> toAdd.forEach(s -> a.add(new Value(s)))));
+            }
+        }
+    },
+    set_field {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String field = params.get(0);
+
+            record.remove(field);
+            record.replace(field, params.get(1));
+        }
+    },
+    set_hash {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String field = params.get(0);
+
+            final Value value = record.get(field.replace(DOT_APPEND, EMPTY));
+            final Value newValue = Value.newHash(h -> options.forEach((f, v) -> h.put(f, new Value(v))));
+
+            if (field.endsWith(DOT_APPEND) && value.isArray()) {
+                value.asArray().add(newValue);
+            }
+            else {
+                record.put(field, newValue);
+            }
         }
     },
     vacuum {
@@ -220,29 +220,14 @@ enum FixMethod {
 
     // TODO SPEC: switch to morph-style named params in general?
 
-    substring {
+    capitalize {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformFields(params, s -> s.substring(Integer.parseInt(params.get(1)), Integer.parseInt(params.get(2)) - 1));
-        }
-    },
-    trim {
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformFields(params, String::trim);
-        }
-    },
-    upcase {
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformFields(params, String::toUpperCase);
+            record.transformFields(params, s -> s.substring(0, 1).toUpperCase() + s.substring(1));
         }
     },
     downcase {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformFields(params, String::toLowerCase);
-        }
-    },
-    capitalize {
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformFields(params, s -> s.substring(0, 1).toUpperCase() + s.substring(1));
         }
     },
     lookup {
@@ -264,6 +249,21 @@ enum FixMethod {
 
             final String defaultValue = map.get(Maps.DEFAULT_MAP_KEY); // TODO: Catmandu uses 'default'
             record.transformFields(params, k -> map.getOrDefault(k, defaultValue));
+        }
+    },
+    substring {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.transformFields(params, s -> s.substring(Integer.parseInt(params.get(1)), Integer.parseInt(params.get(2)) - 1));
+        }
+    },
+    trim {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.transformFields(params, String::trim);
+        }
+    },
+    upcase {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.transformFields(params, String::toUpperCase);
         }
     };
 
