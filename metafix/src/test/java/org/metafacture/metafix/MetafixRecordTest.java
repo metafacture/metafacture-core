@@ -16,8 +16,10 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -668,6 +670,148 @@ public class MetafixRecordTest {
                 o.get().endRecord();
             }
         );
+    }
+
+    @Test
+    public void addFieldToFirstObjectInIndexedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('animals[].$first.kind','nice')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.startEntity("1");
+                i.literal("name", "dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "cat");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("name", "fox");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "dog");
+                o.get().literal("kind", "nice");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "cat");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("name", "fox");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void addFieldToLastObjectInIndexedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('animals[].$last.kind','nice')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.startEntity("1");
+                i.literal("name", "dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "cat");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("name", "fox");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "cat");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("name", "fox");
+                o.get().literal("kind", "nice");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void addFieldToObjectByIndexInIndexedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('animals[].2.kind','nice')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.startEntity("1");
+                i.literal("name", "dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "cat");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("name", "fox");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "cat");
+                o.get().literal("kind", "nice");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("name", "fox");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void addFieldToFirstObjectMissing() {
+        assertThrowsOnEmptyRecord("add_field('animals[].$first.kind','nice')");
+    }
+
+    @Test
+    public void addFieldToLastObjectMissing() {
+        assertThrowsOnEmptyRecord("add_field('animals[].$last.kind','nice')");
+    }
+
+    @Test
+    public void addFieldToObjectByIndexMissing() {
+        assertThrowsOnEmptyRecord("add_field('animals[].2.kind','nice')");
+    }
+
+    private void assertThrowsOnEmptyRecord(final String fix) {
+        Assertions.assertThrows(MetafactureException.class, () -> {
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(fix),
+                i -> {
+                    i.startRecord("1");
+                    i.endRecord();
+                }, o -> {
+                    o.get().startRecord("1");
+                    o.get().endRecord();
+                });
+        });
     }
 
     @Test
