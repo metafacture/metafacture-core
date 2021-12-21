@@ -673,6 +673,114 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void addFieldToFirstObjectInRepeatedFields() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('animals.$first.kind','nice')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals");
+                i.literal("name", "dog");
+                i.endEntity();
+                i.startEntity("animals");
+                i.literal("name", "cat");
+                i.endEntity();
+                i.startEntity("animals");
+                i.literal("name", "fox");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals");
+                o.get().startEntity("1");
+                o.get().literal("name", "dog");
+                o.get().literal("kind", "nice");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "cat");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("name", "fox");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void addFieldToLastObjectInRepeatedFields() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('animals.$last.kind','nice')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals");
+                i.literal("name", "dog");
+                i.endEntity();
+                i.startEntity("animals");
+                i.literal("name", "cat");
+                i.endEntity();
+                i.startEntity("animals");
+                i.literal("name", "fox");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals");
+                o.get().startEntity("1");
+                o.get().literal("name", "dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "cat");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("name", "fox");
+                o.get().literal("kind", "nice");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void addFieldToObjectByIndexInRepeatedFields() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('animals.2.kind','nice')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals");
+                i.literal("name", "dog");
+                i.endEntity();
+                i.startEntity("animals");
+                i.literal("name", "cat");
+                i.endEntity();
+                i.startEntity("animals");
+                i.literal("name", "fox");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals");
+                o.get().startEntity("1");
+                o.get().literal("name", "dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "cat");
+                o.get().literal("kind", "nice");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("name", "fox");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void addFieldToFirstObjectInIndexedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "add_field('animals[].$first.kind','nice')"

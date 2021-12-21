@@ -476,22 +476,41 @@ public class Value {
                         }
                     }
                     break;
-                default:
-                    if (isNumber(fields[0])) {
-                        // TODO: WDCD? insert at the given index? also descend into the array?
-                        if (fields.length == 1) {
-                            add(new Value(newValue));
+                case FIRST_FIELD:
+                    if (size() > 0) {
+                        final Value first = get(0);
+                        if (first.isHash()) {
+                            first.asHash().insert(mode, tail(fields), newValue);
                         }
-                        if (fields.length > 1) {
-                            final Value newHash = Value.newHash();
-                            mode.apply(newHash.asHash(), fields[1], newValue);
-                            add(newHash);
-                        }
-                    }
-                    else {
-                        add(newHash(h -> h.insert(mode, fields, newValue)));
                     }
                     break;
+                default:
+                    processDefault(mode, fields, newValue);
+                    break;
+            }
+        }
+
+        private void processDefault(final InsertMode mode, final String[] fields, final String newValue) {
+            if (isNumber(fields[0])) {
+                // TODO: WDCD? insert at the given index? also descend into the array?
+                if (fields.length == 1) {
+                    add(new Value(newValue));
+                }
+                if (fields.length > 1) {
+                    final Value newHash;
+                    final int index = Integer.parseInt(fields[0]);
+                    if (index <= size()) {
+                        newHash = get(index - 1);
+                    }
+                    else {
+                        newHash = Value.newHash();
+                        add(newHash);
+                    }
+                    mode.apply(newHash.asHash(), fields[1], newValue);
+                }
+            }
+            else {
+                add(newHash(h -> h.insert(mode, fields, newValue)));
             }
         }
 
