@@ -25,6 +25,11 @@ public class HashValueTest {
 
     private static final String FIELD = "field";
     private static final String OTHER_FIELD = "other field";
+    private static final String ALTERNATE_FIELD = FIELD.replace("e", "i");
+
+    private static final String FIELD_CHARACTER_CLASS = FIELD.replace("e", "[aeiou]");
+    private static final String FIELD_ALTERNATION = FIELD + "|" + ALTERNATE_FIELD;
+    private static final String FIELD_WILDCARD = FIELD.replace("e", "?");
 
     private static final Value VALUE = new Value("value");
     private static final Value OTHER_VALUE = new Value("other value");
@@ -52,6 +57,30 @@ public class HashValueTest {
         hash.put(FIELD, null);
 
         Assertions.assertFalse(hash.containsField(FIELD));
+    }
+
+    @Test
+    public void shouldContainCharacterClassField() {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, VALUE);
+
+        Assertions.assertTrue(hash.containsField(FIELD_CHARACTER_CLASS));
+    }
+
+    @Test
+    public void shouldContainAlternationField() {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, VALUE);
+
+        Assertions.assertTrue(hash.containsField(FIELD_ALTERNATION));
+    }
+
+    @Test
+    public void shouldContainWildcardField() {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, VALUE);
+
+        Assertions.assertTrue(hash.containsField(FIELD_WILDCARD));
     }
 
     @Test
@@ -106,6 +135,57 @@ public class HashValueTest {
     }
 
     @Test
+    public void shouldGetSingleCharacterClassField() {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, VALUE);
+
+        Assertions.assertEquals(VALUE, hash.get(FIELD_CHARACTER_CLASS));
+    }
+
+    @Test
+    public void shouldGetSingleAlternationField() {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, VALUE);
+
+        Assertions.assertEquals(VALUE, hash.get(FIELD_ALTERNATION));
+    }
+
+    @Test
+    public void shouldGetSingleWildcardField() {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, VALUE);
+
+        Assertions.assertEquals(VALUE, hash.get(FIELD_WILDCARD));
+    }
+
+    @Test
+    public void shouldGetMultipleCharacterClassFields() {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, VALUE);
+        hash.put(ALTERNATE_FIELD, OTHER_VALUE);
+
+        assertArray(hash.get(FIELD_CHARACTER_CLASS));
+    }
+
+    @Test
+    public void shouldGetMultipleAlternationFields() {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, VALUE);
+        hash.put(ALTERNATE_FIELD, OTHER_VALUE);
+
+        assertArray(hash.get(FIELD_ALTERNATION));
+    }
+
+    @Test
+    public void shouldGetMultipleWildcardFields() {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, VALUE);
+        hash.put(ALTERNATE_FIELD, OTHER_VALUE);
+
+        assertArray(hash.get(FIELD_WILDCARD));
+    }
+
+    @Test
     public void shouldNotReplaceMissingField() {
         final Value.Hash hash = newHash();
         hash.replace(FIELD, VALUE);
@@ -152,6 +232,48 @@ public class HashValueTest {
     }
 
     @Test
+    public void shouldRemoveCharacterClassFields() {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, VALUE);
+        hash.put(ALTERNATE_FIELD, VALUE);
+        hash.remove(FIELD_CHARACTER_CLASS);
+
+        Assertions.assertTrue(hash.isEmpty());
+    }
+
+    @Test
+    public void shouldRemoveAlternationFields() {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, VALUE);
+        hash.put(ALTERNATE_FIELD, VALUE);
+        hash.remove(FIELD_ALTERNATION);
+
+        Assertions.assertTrue(hash.isEmpty());
+    }
+
+    @Test
+    public void shouldRemoveWildcardFields() {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, VALUE);
+        hash.put(ALTERNATE_FIELD, VALUE);
+        hash.remove(FIELD_WILDCARD);
+
+        Assertions.assertTrue(hash.isEmpty());
+    }
+
+    @Test
+    public void shouldNotContainRemovedField() {
+        final Value.Hash hash = newHash();
+        Assertions.assertFalse(hash.containsField(FIELD));
+
+        hash.put(FIELD, VALUE);
+        Assertions.assertTrue(hash.containsField(FIELD));
+
+        hash.remove(FIELD);
+        Assertions.assertFalse(hash.containsField(FIELD));
+    }
+
+    @Test
     public void shouldRetainFields() {
         final Value.Hash hash = newHash();
         hash.put(FIELD, VALUE);
@@ -179,6 +301,42 @@ public class HashValueTest {
         hash.put(FIELD, VALUE);
 
         hash.retainFields(Arrays.asList(FIELD, OTHER_FIELD));
+
+        Assertions.assertTrue(hash.containsField(FIELD));
+        Assertions.assertFalse(hash.containsField(OTHER_FIELD));
+    }
+
+    @Test
+    public void shouldRetainCharacterClassFields() {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, VALUE);
+        hash.put(OTHER_FIELD, OTHER_VALUE);
+
+        hash.retainFields(Arrays.asList(FIELD_CHARACTER_CLASS));
+
+        Assertions.assertTrue(hash.containsField(FIELD));
+        Assertions.assertFalse(hash.containsField(OTHER_FIELD));
+    }
+
+    @Test
+    public void shouldRetainAlternationFields() {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, VALUE);
+        hash.put(OTHER_FIELD, OTHER_VALUE);
+
+        hash.retainFields(Arrays.asList(FIELD_ALTERNATION));
+
+        Assertions.assertTrue(hash.containsField(FIELD));
+        Assertions.assertFalse(hash.containsField(OTHER_FIELD));
+    }
+
+    @Test
+    public void shouldRetainWildcardFields() {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, VALUE);
+        hash.put(OTHER_FIELD, OTHER_VALUE);
+
+        hash.retainFields(Arrays.asList(FIELD_WILDCARD));
 
         Assertions.assertTrue(hash.containsField(FIELD));
         Assertions.assertFalse(hash.containsField(OTHER_FIELD));
@@ -215,6 +373,15 @@ public class HashValueTest {
 
     private Value.Hash newHash() {
         return Value.newHash().asHash();
+    }
+
+    private void assertArray(final Value result) {
+        Assertions.assertTrue(result.isArray());
+
+        final Value.Array array = result.asArray();
+        Assertions.assertEquals(2, array.size());
+        Assertions.assertEquals(VALUE, array.get(0));
+        Assertions.assertEquals(OTHER_VALUE, array.get(1));
     }
 
 }

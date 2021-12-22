@@ -479,6 +479,198 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void appendWithWildcard() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('?nimal', 'stringimals[].$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("animal", "dog");
+                i.literal("bnimal", "cat");
+                i.literal("cnimal", "zebra");
+                i.literal("dnimol", "bunny");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("animal", "dog");
+                o.get().literal("bnimal", "cat");
+                o.get().literal("cnimal", "zebra");
+                o.get().literal("dnimol", "bunny");
+                o.get().startEntity("stringimals[]");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "cat");
+                o.get().literal("3", "zebra");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/99
+    public void simpleCopyWithWildcard() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('?nimal', 'animal')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("animal", "dog");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("bnimal", "cat");
+                i.endRecord();
+                i.startRecord("3");
+                i.literal("cnimal", "zebra");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animal");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "dog");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("bnimal", "cat");
+                o.get().literal("animal", "cat");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().literal("cnimal", "zebra");
+                o.get().literal("animal", "zebra");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void appendWithMultipleWildcards() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('?ni??l', 'stringimals[].$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("animal", "dog");
+                i.literal("bnimal", "cat");
+                i.literal("cnimal", "zebra");
+                i.literal("dnimol", "bunny");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("animal", "dog");
+                o.get().literal("bnimal", "cat");
+                o.get().literal("cnimal", "zebra");
+                o.get().literal("dnimol", "bunny");
+                o.get().startEntity("stringimals[]");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "cat");
+                o.get().literal("3", "zebra");
+                o.get().literal("4", "bunny");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void appendWithAsteriksWildcard() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('*al', 'stringimals[].$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("animal", "dog");
+                i.literal("bnimal", "cat");
+                i.literal("cnimal", "zebra");
+                i.literal("dnimol", "bunny");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("animal", "dog");
+                o.get().literal("bnimal", "cat");
+                o.get().literal("cnimal", "zebra");
+                o.get().literal("dnimol", "bunny");
+                o.get().startEntity("stringimals[]");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "cat");
+                o.get().literal("3", "zebra");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void appendWithBracketWildcard() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('[ac]nimal', 'stringimals[].$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("animal", "dog");
+                i.literal("bnimal", "cat");
+                i.literal("cnimal", "zebra");
+                i.literal("dnimol", "bunny");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("animal", "dog");
+                o.get().literal("bnimal", "cat");
+                o.get().literal("cnimal", "zebra");
+                o.get().literal("dnimol", "bunny");
+                o.get().startEntity("stringimals[]");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "zebra");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/89
+    public void appendWithAsteriksWildcardAtTheEnd() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('ani*', 'stringimals[].$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("animals", "dog");
+                i.literal("animals", "cat");
+                i.literal("animals", "zebra");
+                i.literal("animal", "bunny");
+                i.startEntity("animols");
+                i.literal("name", "bird");
+                i.literal("type", "TEST");
+                i.endEntity();
+                i.literal("ANIMALS", "dragon and unicorn");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "cat");
+                o.get().literal("3", "zebra");
+                o.get().endEntity();
+                o.get().literal("animal", "bunny");
+                o.get().startEntity("animols");
+                o.get().literal("name", "bird");
+                o.get().literal("type", "TEST");
+                o.get().endEntity();
+                o.get().literal("ANIMALS", "dragon and unicorn");
+                o.get().startEntity("stringimals[]");
+                o.get().literal("1", "bunny");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void move() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(// TODO: dot noation in move_field
                 "move_field('my.name','your.name')",
@@ -1174,7 +1366,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled("TODO: WDCD? explicit * for array fields?")
+    // TODO: WDCD? explicit * for array fields?
     public void accessArrayByWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "upcase('name.*')"),
@@ -1246,7 +1438,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled("TODO: implement implicit iteration?")
+    // TODO: implement implicit iteration?
     public void accessArrayOfObjectsByWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "upcase('author.*.name')",
