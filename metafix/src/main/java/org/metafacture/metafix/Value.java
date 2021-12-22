@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
@@ -522,7 +523,7 @@ public class Value {
          * @return true if this hash contains the metadata field, false otherwise
          */
         public boolean containsField(final String field) {
-            return map.keySet().stream().anyMatch(fieldMatcher(field));
+            return matchFields(field, Stream::anyMatch);
         }
 
         /**
@@ -837,12 +838,12 @@ public class Value {
         }
 
         private Stream<String> findFields(final String pattern) {
-            return map.keySet().stream().filter(fieldMatcher(pattern));
+            return matchFields(pattern, Stream::filter);
         }
 
-        private Predicate<String> fieldMatcher(final String pattern) {
+        private <T> T matchFields(final String pattern, final BiFunction<Stream<String>, Predicate<String>, T> function) {
             trie.put(pattern, pattern);
-            return field -> trie.get(field).contains(pattern);
+            return function.apply(map.keySet().stream(), f -> trie.get(f).contains(pattern));
         }
 
     }
