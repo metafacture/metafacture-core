@@ -21,9 +21,12 @@ import org.metafacture.commons.tries.SimpleRegexTrie;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -42,8 +45,6 @@ public class Value {
     private static final String FIRST_FIELD = "$first";
     private static final String LAST_FIELD = "$last";
     private static final String ASTERISK = "*";
-
-    private static final String UNEXPECTED = "expected array or hash, got ";
 
     private final Array array;
     private final Hash hash;
@@ -120,40 +121,31 @@ public class Value {
     }
 
     public boolean isArray() {
-        return type == Type.Array;
+        return isType(Type.Array);
     }
 
     public boolean isHash() {
-        return type == Type.Hash;
+        return isType(Type.Hash);
     }
 
     public boolean isString() {
-        return type == Type.String;
+        return isType(Type.String);
+    }
+
+    private boolean isType(final Type targetType) {
+        return type == targetType;
     }
 
     public boolean isNull() {
-        final boolean result;
-
-        if (type != null) {
-            switch (type) {
-                case Array:
-                    result = array == null;
-                    break;
-                case Hash:
-                    result = hash == null;
-                    break;
-                case String:
-                    result = string == null;
-                    break;
-                default:
-                    result = true;
+        return extractType(Boolean.TRUE, c -> {
+            if (type != null) {
+                matchType()
+                    .ifArray(a -> c.accept(a == null))
+                    .ifHash(h -> c.accept(h == null))
+                    .ifString(s -> c.accept(s == null))
+                    .orElseThrow();
             }
-        }
-        else {
-            result = true;
-        }
-
-        return result;
+        });
     }
 
     public static boolean isNull(final Value value) {
@@ -165,30 +157,15 @@ public class Value {
     }
 
     public Array asArray() {
-        if (isArray()) {
-            return array;
-        }
-        else {
-            throw new IllegalStateException("expected array, got " + type);
-        }
+        return extractType(null, c -> matchType().ifArray(c).orElseThrow());
     }
 
     public Hash asHash() {
-        if (isHash()) {
-            return hash;
-        }
-        else {
-            throw new IllegalStateException("expected hash, got " + type);
-        }
+        return extractType(null, c -> matchType().ifHash(c).orElseThrow());
     }
 
     public String asString() {
-        if (isString()) {
-            return string;
-        }
-        else {
-            throw new IllegalStateException("expected string, got " + type);
-        }
+        return extractType(null, c -> matchType().ifString(c).orElseThrow());
     }
 
     public static Value asList(final Value value, final Consumer<Array> consumer) {
@@ -214,30 +191,27 @@ public class Value {
         }
     }
 
+    public TypeMatcher matchType() {
+        return new TypeMatcher(this);
+    }
+
+    private static <T> T extractType(final T defaultValue, final Consumer<Consumer<T>> consumer) {
+        final AtomicReference<T> result = new AtomicReference<>(defaultValue);
+        consumer.accept(result::set);
+        return result.get();
+    }
+
     @Override
     public String toString() {
-        final String result;
-
-        if (!isNull()) {
-            switch (type) {
-                case Array:
-                    result = array.toString();
-                    break;
-                case Hash:
-                    result = hash.toString();
-                    break;
-                case String:
-                    result = string;
-                    break;
-                default:
-                    result = null;
+        return extractType(null, c -> {
+            if (!isNull()) {
+                matchType()
+                    .ifArray(a -> c.accept(a.toString()))
+                    .ifHash(h -> c.accept(h.toString()))
+                    .ifString(c)
+                    .orElseThrow();
             }
-        }
-        else {
-            result = null;
-        }
-
-        return result;
+        });
     }
 
     private static String[] tail(final String[] fields) {
@@ -245,22 +219,65 @@ public class Value {
     }
 
     private void transformFields(final String[] fields, final UnaryOperator<String> operator) {
-        switch (type) {
-            case Array:
-                asArray().transformFields(fields, operator);
-                break;
-            case Hash:
-                asHash().transformFields(fields, operator);
-                break;
-            default:
-                throw new IllegalStateException(UNEXPECTED + type);
-        }
+        matchType()
+            .ifArray(a -> a.transformFields(fields, operator))
+            .ifHash(h -> h.transformFields(fields, operator))
+            .orElseThrow();
     }
 
     enum Type {
         Array,
         Hash,
         String
+    }
+
+    /*private-private*/ static class TypeMatcher {
+
+        private final Set<Type> expected = new HashSet<>();
+        private final Value value;
+
+        private TypeMatcher(final Value value) {
+            this.value = value;
+        }
+
+        public TypeMatcher ifArray(final Consumer<Array> consumer) {
+            return match(Type.Array, consumer, value.array);
+        }
+
+        public TypeMatcher ifHash(final Consumer<Hash> consumer) {
+            return match(Type.Hash, consumer, value.hash);
+        }
+
+        public TypeMatcher ifString(final Consumer<String> consumer) {
+            return match(Type.String, consumer, value.string);
+        }
+
+        public void orElse(final Consumer<Value> consumer) {
+            if (!expected.contains(value.type)) {
+                consumer.accept(value);
+            }
+        }
+
+        public void orElseThrow() {
+            orElse(v -> {
+                final String types = expected.stream().map(Type::name).collect(Collectors.joining(" or "));
+                throw new IllegalStateException("expected " + types + ", got " + value.type);
+            });
+        }
+
+        private <T> TypeMatcher match(final Type type, final Consumer<T> consumer, final T rawValue) {
+            if (expected.add(type)) {
+                if (value.isType(type)) {
+                    consumer.accept(rawValue);
+                }
+
+                return this;
+            }
+            else {
+                throw new IllegalStateException("already expecting " + type);
+            }
+        }
+
     }
 
     private abstract static class AbstractValueType {
@@ -389,28 +406,15 @@ public class Value {
         }
 
         private Value findInValue(final String[] path, final Value value) {
-            final Value result;
-            // TODO: move impl into enum elements, here call only value.find
-            if (value != null) {
-                switch (value.type) {
-                    case Hash:
-                        result = value.asHash().find(path);
-                        break;
-                    case Array:
-                        result = value.asArray().find(path);
-                        break;
-                    case String:
-                        result = value;
-                        break;
-                    default:
-                        result = null;
-                        break;
+            return extractType(null, c -> {
+                // TODO: move impl into enum elements, here call only value.find
+                if (value != null) {
+                    value.matchType()
+                        .ifArray(a -> c.accept(a.find(path)))
+                        .ifHash(h -> c.accept(h.find(path)))
+                        .orElse(c);
                 }
-            }
-            else {
-                result = null;
-            }
-            return result;
+            });
         }
 
         private void transformFields(final String[] fields, final UnaryOperator<String> operator) {
@@ -443,12 +447,9 @@ public class Value {
             final Value value = get(index);
 
             if (value != null) {
-                if (value.isString()) {
-                    set(index, operator != null ? new Value(operator.apply(value.asString())) : null);
-                }
-                else {
-                    value.transformFields(fields, operator);
-                }
+                value.matchType()
+                    .ifString(s -> set(index, operator != null ? new Value(operator.apply(s)) : null))
+                    .orElse(v -> v.transformFields(fields, operator));
             }
         }
 
@@ -466,10 +467,7 @@ public class Value {
                     break;
                 case LAST_FIELD:
                     if (size() > 0) {
-                        final Value last = get(size() - 1);
-                        if (last.isHash()) {
-                            last.asHash().insert(mode, tail(fields), newValue);
-                        }
+                        get(size() - 1).matchType().ifHash(h -> h.insert(mode, tail(fields), newValue));
                     }
                     break;
                 case FIRST_FIELD:
@@ -621,20 +619,12 @@ public class Value {
 
         private Value findNested(final String field, final String[] remainingFields) {
             final Value value = get(field);
-            Value result = null;
-            if (value != null) {
-                switch (value.type) {
-                    case Array:
-                        result = value.asArray().find(remainingFields);
-                        break;
-                    case Hash:
-                        result = value.asHash().find(remainingFields);
-                        break;
-                    default:
-                        throw new IllegalStateException(UNEXPECTED + value.type);
-                }
-            }
-            return result;
+            return value == null ? null : extractType(null, c -> {
+                value.matchType()
+                    .ifArray(a -> c.accept(a.find(remainingFields)))
+                    .ifHash(h -> c.accept(h.find(remainingFields)))
+                    .orElseThrow();
+            });
         }
 
         public Value findList(final String fieldPath, final Consumer<Array> consumer) {
@@ -693,17 +683,11 @@ public class Value {
                 }
                 final Value value = get(field);
                 if (value != null) {
-                    switch (value.type) {
-                        // TODO: move impl into enum elements, here call only value.insert
-                        case Hash:
-                            value.asHash().insert(insertMode(mode, field, tail), tail, newValue);
-                            break;
-                        case Array:
-                            value.asArray().insert(mode, tail, newValue);
-                            break;
-                        default:
-                            throw new IllegalStateException(UNEXPECTED + value.type);
-                    }
+                    // TODO: move impl into enum elements, here call only value.insert
+                    value.matchType()
+                        .ifArray(a -> a.insert(mode, tail, newValue))
+                        .ifHash(h -> h.insert(insertMode(mode, field, tail), tail, newValue))
+                        .orElseThrow();
                 }
             }
 
@@ -769,18 +753,10 @@ public class Value {
                 final Value value = get(field);
                 // TODO: impl and call just value.remove
                 if (value != null) {
-                    switch (value.type) {
-                        case String:
-                            throw new IllegalStateException(UNEXPECTED + value.type);
-                        case Array:
-                            value.asArray().removeNested(tail(fields));
-                            break;
-                        case Hash:
-                            value.asHash().removeNested(tail(fields));
-                            break;
-                        default:
-                            break;
-                    }
+                    value.matchType()
+                        .ifArray(a -> a.removeNested(tail(fields)))
+                        .ifHash(h -> h.removeNested(tail(fields)))
+                        .orElseThrow();
                 }
             }
         }
