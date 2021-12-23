@@ -1,5 +1,4 @@
 plugins {
-  id 'com.adarshr.test-logger' version '1.7.0'
   id 'maven-publish'
 }
 
@@ -44,8 +43,10 @@ dependencies {
 test {
   useJUnitPlatform()
 
-  testlogger {
-    showFullStackTraces true
+  testLogging {
+    showStandardStreams = true
+    exceptionFormat = 'full'
+    events 'SKIPPED'
   }
 }
 
