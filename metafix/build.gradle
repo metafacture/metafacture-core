@@ -48,6 +48,8 @@ test {
     exceptionFormat = 'full'
     events 'SKIPPED'
   }
+
+  maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 }
 
 task install(dependsOn: publishToMavenLocal,
