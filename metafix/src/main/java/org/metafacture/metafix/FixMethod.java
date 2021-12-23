@@ -270,7 +270,7 @@ enum FixMethod {
     private static final Pattern NAMED_GROUP_PATTERN = Pattern.compile("\\(\\?<(.+?)>");
 
     private static final String EMPTY = "";
-    private static final String DOT_APPEND = "." + Value.APPEND_FIELD;
+    private static final String DOT_APPEND = "." + Value.ReservedField.$append.name();
 
     private static final String FILEMAP_SEPARATOR_OPTION = "sep_char";
     private static final String FILEMAP_DEFAULT_SEPARATOR = ",";

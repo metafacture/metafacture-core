@@ -21,6 +21,7 @@ import org.metafacture.commons.tries.SimpleRegexTrie;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,9 +42,21 @@ import java.util.stream.Stream;
  */
 public class Value {
 
-    /*package-private*/ static final String APPEND_FIELD = "$append";
-    private static final String FIRST_FIELD = "$first";
-    private static final String LAST_FIELD = "$last";
+    /*package-private*/ enum ReservedField {
+        $append, $first, $last;
+
+        private static final Map<String, ReservedField> STRING_TO_ENUM = new HashMap<>();
+        static {
+            for (final ReservedField f : values()) {
+                STRING_TO_ENUM.put(f.toString(), f);
+            }
+        }
+
+        static ReservedField fromString(final String string) {
+            return STRING_TO_ENUM.get(string);
+        }
+    }
+
     private static final String ASTERISK = "*";
 
     private final Array array;
@@ -307,7 +320,7 @@ public class Value {
             INDEXED {
                 @Override
                 void apply(final Hash hash, final String field, final String value) {
-                    final Value newValue = field.equals(APPEND_FIELD) ? new Value(value) :
+                    final Value newValue = field.equals(ReservedField.$append.name()) ? new Value(value) :
                         newHash(h -> h.put(field, new Value(value)));
                     hash.add(nextIndex(hash), newValue);
                 }
@@ -454,23 +467,34 @@ public class Value {
         }
 
         private void insert(final InsertMode mode, final String[] fields, final String newValue) {
-            switch (fields[0]) {
-                case ASTERISK:
-                    // TODO: WDCD? descend into the array?
-                    break;
-                case APPEND_FIELD:
+            if (fields[0].equals(ASTERISK)) {
+                return; // TODO: WDCD? descend into the array?
+            }
+            if (ReservedField.fromString(fields[0]) == null) {
+                processDefault(mode, fields, newValue);
+            }
+            else {
+                insertIntoReferencedObject(mode, fields, newValue);
+            }
+        }
+
+        private void insertIntoReferencedObject(final InsertMode mode, final String[] fields, final String newValue) {
+            // TODO replace switch, extract to enum behavior like reservedField.insertIntoReferencedObject(this)?
+            switch (ReservedField.fromString(fields[0])) {
+                case $append:
                     if (fields.length == 1) {
                         add(new Value(newValue));
-                        return;
                     }
-                    add(newHash(h -> h.insert(mode, tail(fields), newValue)));
+                    else {
+                        add(newHash(h -> h.insert(mode, tail(fields), newValue)));
+                    }
                     break;
-                case LAST_FIELD:
+                case $last:
                     if (size() > 0) {
                         get(size() - 1).matchType().ifHash(h -> h.insert(mode, tail(fields), newValue));
                     }
                     break;
-                case FIRST_FIELD:
+                case $first:
                     if (size() > 0) {
                         final Value first = get(0);
                         if (first.isHash()) {
@@ -479,7 +503,6 @@ public class Value {
                     }
                     break;
                 default:
-                    processDefault(mode, fields, newValue);
                     break;
             }
         }
@@ -675,7 +698,7 @@ public class Value {
             }
             else {
                 final String[] tail = tail(fields);
-                if (isRef(field)) {
+                if (ReservedField.fromString(field) != null || isNumber(field)) {
                     return processRef(mode, newValue, field, tail);
                 }
                 if (!containsField(field)) {
@@ -695,39 +718,46 @@ public class Value {
         }
 
         private Value processRef(final InsertMode mode, final String newValue, final String field, final String[] tail) {
-            Value ref = null;
-            switch (field) {
-                case FIRST_FIELD:
-                    ref = get("1");
-                    break;
-                case LAST_FIELD:
-                    ref = get(String.valueOf(size()));
-                    break;
-                case APPEND_FIELD:
-                    ref = new Value(this);
-                    break;
-                default:
-                    ref = get(field);
-                    break;
-            }
-            if (ref != null) {
-                return ref.asHash().insert(insertMode(mode, field, tail), tail, newValue);
+            final Value referencedValue = getReferencedValue(field);
+            if (referencedValue != null) {
+                return referencedValue.asHash().insert(insertMode(mode, field, tail), tail, newValue);
             }
             else {
                 throw new IllegalArgumentException("Using ref, but can't find: " + field + " in: " + this);
             }
         }
 
+        private Value getReferencedValue(final String field) {
+            Value referencedValue = null;
+            final ReservedField reservedField = ReservedField.fromString(field);
+            if (reservedField == null) {
+                return get(field);
+            }
+            // TODO replace switch, extract to enum behavior like reservedField.getReferencedValueInHash(this)?
+            switch (reservedField) {
+                case $first:
+                    referencedValue = get("1");
+                    break;
+                case $last:
+                    referencedValue = get(String.valueOf(size()));
+                    break;
+                case $append:
+                    referencedValue = new Value(this);
+                    break;
+                default:
+                    break;
+            }
+            return referencedValue;
+        }
+
         private InsertMode insertMode(final InsertMode mode, final String field, final String[] tail) {
             // if the field is marked as array, this hash should be smth. like { 1=a, 2=b }
             final boolean isIndexedArray = field.endsWith(Metafix.ARRAY_MARKER);
-            final boolean nextIsRef = tail.length > 0 && (tail[0].startsWith(FIRST_FIELD) || tail[0].startsWith(LAST_FIELD) || isNumber(tail[0]));
+            final boolean nextIsRef = tail.length > 0 && (
+                    tail[0].startsWith(ReservedField.$first.name()) ||
+                    tail[0].startsWith(ReservedField.$last.name()) ||
+                    isNumber(tail[0]));
             return isIndexedArray && !nextIsRef ? InsertMode.INDEXED : mode;
-        }
-
-        private boolean isRef(final String field) {
-            // TODO: move our reserved field names into an enum
-            return APPEND_FIELD.equals(field) || FIRST_FIELD.equals(field) || LAST_FIELD.equals(field) || isNumber(field);
         }
 
         /**
