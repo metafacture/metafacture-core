@@ -9,7 +9,6 @@ import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.eclipse.xtext.testing.util.ParseHelper;
 import org.eclipse.xtext.xbase.lib.Extension;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,8 +52,7 @@ public class InterpreterTest {
         Assert.assertTrue(metafix.getExpressions().isEmpty());
 
         fixInterpreter.run(metafix, parseHelper.parse(String.join("\n", fix)));
-        InputOutput.println("metafix expressions: " + metafix.getExpressions());
-        Assert.assertEquals(expressions, metafix.getExpressions().size());
+        Assert.assertEquals("metafix expressions: " + metafix.getExpressions(), expressions, metafix.getExpressions().size());
     }
 
 }
