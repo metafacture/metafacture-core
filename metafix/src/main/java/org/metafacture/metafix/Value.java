@@ -39,6 +39,7 @@ import java.util.stream.Stream;
 public class Value {
 
     /*package-private*/ static final String APPEND_FIELD = "$append";
+    private static final String FIRST_FIELD = "$first";
     private static final String LAST_FIELD = "$last";
     private static final String ASTERISK = "*";
 
@@ -471,22 +472,41 @@ public class Value {
                         }
                     }
                     break;
-                default:
-                    if (isNumber(fields[0])) {
-                        // TODO: WDCD? insert at the given index? also descend into the array?
-                        if (fields.length == 1) {
-                            add(new Value(newValue));
+                case FIRST_FIELD:
+                    if (size() > 0) {
+                        final Value first = get(0);
+                        if (first.isHash()) {
+                            first.asHash().insert(mode, tail(fields), newValue);
                         }
-                        if (fields.length > 1) {
-                            final Value newHash = Value.newHash();
-                            mode.apply(newHash.asHash(), fields[1], newValue);
-                            add(newHash);
-                        }
-                    }
-                    else {
-                        add(newHash(h -> h.insert(mode, fields, newValue)));
                     }
                     break;
+                default:
+                    processDefault(mode, fields, newValue);
+                    break;
+            }
+        }
+
+        private void processDefault(final InsertMode mode, final String[] fields, final String newValue) {
+            if (isNumber(fields[0])) {
+                // TODO: WDCD? insert at the given index? also descend into the array?
+                if (fields.length == 1) {
+                    add(new Value(newValue));
+                }
+                else if (fields.length > 1) {
+                    final Value newHash;
+                    final int index = Integer.parseInt(fields[0]);
+                    if (index <= size()) {
+                        newHash = get(index - 1);
+                    }
+                    else {
+                        newHash = Value.newHash();
+                        add(newHash);
+                    }
+                    mode.apply(newHash.asHash(), fields[1], newValue);
+                }
+            }
+            else {
+                add(newHash(h -> h.insert(mode, fields, newValue)));
             }
         }
 
@@ -664,9 +684,9 @@ public class Value {
                 }
             }
             else {
-                if (field.equals(APPEND_FIELD) || field.equals(LAST_FIELD)) {
-                    // TODO: WDCD? $last, $append skipped for hashes here:
-                    return insert(mode, tail(fields), newValue);
+                final String[] tail = tail(fields);
+                if (isRef(field)) {
+                    return processRef(mode, newValue, field, tail);
                 }
                 if (!containsField(field)) {
                     put(field, newHash());
@@ -676,12 +696,10 @@ public class Value {
                     switch (value.type) {
                         // TODO: move impl into enum elements, here call only value.insert
                         case Hash:
-                            // if the field is marked as array, this hash should be smth. like { 1=a, 2=b }
-                            final boolean isIndexedArray = field.endsWith(Metafix.ARRAY_MARKER);
-                            value.asHash().insert(isIndexedArray ? InsertMode.INDEXED : mode, tail(fields), newValue);
+                            value.asHash().insert(insertMode(mode, field, tail), tail, newValue);
                             break;
                         case Array:
-                            value.asArray().insert(mode, tail(fields), newValue);
+                            value.asArray().insert(mode, tail, newValue);
                             break;
                         default:
                             throw new IllegalStateException(UNEXPECTED + value.type);
@@ -690,6 +708,42 @@ public class Value {
             }
 
             return new Value(this);
+        }
+
+        private Value processRef(final InsertMode mode, final String newValue, final String field, final String[] tail) {
+            Value ref = null;
+            switch (field) {
+                case FIRST_FIELD:
+                    ref = get("1");
+                    break;
+                case LAST_FIELD:
+                    ref = get(String.valueOf(size()));
+                    break;
+                case APPEND_FIELD:
+                    ref = new Value(this);
+                    break;
+                default:
+                    ref = get(field);
+                    break;
+            }
+            if (ref != null) {
+                return ref.asHash().insert(insertMode(mode, field, tail), tail, newValue);
+            }
+            else {
+                throw new IllegalArgumentException("Using ref, but can't find: " + field + " in: " + this);
+            }
+        }
+
+        private InsertMode insertMode(final InsertMode mode, final String field, final String[] tail) {
+            // if the field is marked as array, this hash should be smth. like { 1=a, 2=b }
+            final boolean isIndexedArray = field.endsWith(Metafix.ARRAY_MARKER);
+            final boolean nextIsRef = tail.length > 0 && (tail[0].startsWith(FIRST_FIELD) || tail[0].startsWith(LAST_FIELD) || isNumber(tail[0]));
+            return isIndexedArray && !nextIsRef ? InsertMode.INDEXED : mode;
+        }
+
+        private boolean isRef(final String field) {
+            // TODO: move our reserved field names into an enum
+            return APPEND_FIELD.equals(field) || FIRST_FIELD.equals(field) || LAST_FIELD.equals(field) || isNumber(field);
         }
 
         /**
