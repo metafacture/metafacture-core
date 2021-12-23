@@ -9,7 +9,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.eclipse.xtext.testing.util.ParseHelper;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -108,7 +107,6 @@ public class FixParsingTest {
 
     private void parse(final String... fix) throws Exception {
         final Fix result = parseHelper.parse(String.join("\n", fix));
-        InputOutput.println("Result: " + result);
         Assertions.assertNotNull(result);
 
         final EList<Resource.Diagnostic> errors = result.eResource().getErrors();
