@@ -150,15 +150,12 @@ public class Value {
     }
 
     public boolean isNull() {
-        return extractType(Boolean.TRUE, c -> {
-            if (type != null) {
-                matchType()
-                    .ifArray(a -> c.accept(a == null))
-                    .ifHash(h -> c.accept(h == null))
-                    .ifString(s -> c.accept(s == null))
-                    .orElseThrow();
-            }
-        });
+        return type == null || this.<Boolean>extractType((m, c) -> m
+                .ifArray(a -> c.accept(a == null))
+                .ifHash(h -> c.accept(h == null))
+                .ifString(s -> c.accept(s == null))
+                .orElseThrow()
+        );
     }
 
     public static boolean isNull(final Value value) {
@@ -170,15 +167,15 @@ public class Value {
     }
 
     public Array asArray() {
-        return extractType(null, c -> matchType().ifArray(c).orElseThrow());
+        return extractType((m, c) -> m.ifArray(c).orElseThrow());
     }
 
     public Hash asHash() {
-        return extractType(null, c -> matchType().ifHash(c).orElseThrow());
+        return extractType((m, c) -> m.ifHash(c).orElseThrow());
     }
 
     public String asString() {
-        return extractType(null, c -> matchType().ifString(c).orElseThrow());
+        return extractType((m, c) -> m.ifString(c).orElseThrow());
     }
 
     public static Value asList(final Value value, final Consumer<Array> consumer) {
@@ -208,23 +205,20 @@ public class Value {
         return new TypeMatcher(this);
     }
 
-    private static <T> T extractType(final T defaultValue, final Consumer<Consumer<T>> consumer) {
-        final AtomicReference<T> result = new AtomicReference<>(defaultValue);
-        consumer.accept(result::set);
+    private <T> T extractType(final BiConsumer<TypeMatcher, Consumer<T>> consumer) {
+        final AtomicReference<T> result = new AtomicReference<>();
+        consumer.accept(matchType(), result::set);
         return result.get();
     }
 
     @Override
     public String toString() {
-        return extractType(null, c -> {
-            if (!isNull()) {
-                matchType()
-                    .ifArray(a -> c.accept(a.toString()))
-                    .ifHash(h -> c.accept(h.toString()))
-                    .ifString(c)
-                    .orElseThrow();
-            }
-        });
+        return isNull() ? null : extractType((m, c) -> m
+                .ifArray(a -> c.accept(a.toString()))
+                .ifHash(h -> c.accept(h.toString()))
+                .ifString(c)
+                .orElseThrow()
+        );
     }
 
     private static String[] tail(final String[] fields) {
@@ -417,15 +411,12 @@ public class Value {
         }
 
         private Value findInValue(final String[] path, final Value value) {
-            return extractType(null, c -> {
-                // TODO: move impl into enum elements, here call only value.find
-                if (value != null) {
-                    value.matchType()
-                        .ifArray(a -> c.accept(a.find(path)))
-                        .ifHash(h -> c.accept(h.find(path)))
-                        .orElse(c);
-                }
-            });
+            // TODO: move impl into enum elements, here call only value.find
+            return value == null ? null : value.extractType((m, c) -> m
+                    .ifArray(a -> c.accept(a.find(path)))
+                    .ifHash(h -> c.accept(h.find(path)))
+                    .orElse(c)
+            );
         }
 
         private void transformFields(final String[] fields, final UnaryOperator<String> operator) {
@@ -640,12 +631,11 @@ public class Value {
 
         private Value findNested(final String field, final String[] remainingFields) {
             final Value value = get(field);
-            return value == null ? null : extractType(null, c -> {
-                value.matchType()
+            return value == null ? null : value.extractType((m, c) -> m
                     .ifArray(a -> c.accept(a.find(remainingFields)))
                     .ifHash(h -> c.accept(h.find(remainingFields)))
-                    .orElseThrow();
-            });
+                    .orElseThrow()
+            );
         }
 
         public Value findList(final String fieldPath, final Consumer<Array> consumer) {
