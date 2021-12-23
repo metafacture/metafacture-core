@@ -302,14 +302,14 @@ public class Value {
 
             REPLACE {
                 @Override
-                void apply(final Hash hash, final String field, final String value) {
-                    hash.put(field, new Value(value));
+                void apply(final Hash hash, final String field, final Value value) {
+                    hash.put(field, value);
                 }
             },
             APPEND {
                 @Override
-                void apply(final Hash hash, final String field, final String value) {
-                    hash.add(field, new Value(value));
+                void apply(final Hash hash, final String field, final Value value) {
+                    hash.add(field, value);
                 }
             },
             /* For an indexed representation of arrays as hashes with 1, 2, 3 etc. keys.
@@ -319,10 +319,8 @@ public class Value {
              * in every value being either a hash or a string, no more separate array type.*/
             INDEXED {
                 @Override
-                void apply(final Hash hash, final String field, final String value) {
-                    final Value newValue = field.equals(ReservedField.$append.name()) ? new Value(value) :
-                        newHash(h -> h.put(field, new Value(value)));
-                    hash.add(nextIndex(hash), newValue);
+                void apply(final Hash hash, final String field, final Value value) {
+                    hash.add(nextIndex(hash), field.equals(ReservedField.$append.name()) ? value : newHash(h -> h.put(field, value)));
                 }
 
                 private String nextIndex(final Hash hash) {
@@ -330,7 +328,7 @@ public class Value {
                 }
             };
 
-            abstract void apply(Hash hash, String field, String value);
+            abstract void apply(Hash hash, String field, Value value);
 
         }
 
@@ -466,7 +464,7 @@ public class Value {
             }
         }
 
-        private void insert(final InsertMode mode, final String[] fields, final String newValue) {
+        private void insert(final InsertMode mode, final String[] fields, final Value newValue) {
             if (fields[0].equals(ASTERISK)) {
                 return; // TODO: WDCD? descend into the array?
             }
@@ -478,12 +476,12 @@ public class Value {
             }
         }
 
-        private void insertIntoReferencedObject(final InsertMode mode, final String[] fields, final String newValue) {
+        private void insertIntoReferencedObject(final InsertMode mode, final String[] fields, final Value newValue) {
             // TODO replace switch, extract to enum behavior like reservedField.insertIntoReferencedObject(this)?
             switch (ReservedField.fromString(fields[0])) {
                 case $append:
                     if (fields.length == 1) {
-                        add(new Value(newValue));
+                        add(newValue);
                     }
                     else {
                         add(newHash(h -> h.insert(mode, tail(fields), newValue)));
@@ -507,11 +505,11 @@ public class Value {
             }
         }
 
-        private void processDefault(final InsertMode mode, final String[] fields, final String newValue) {
+        private void processDefault(final InsertMode mode, final String[] fields, final Value newValue) {
             if (isNumber(fields[0])) {
                 // TODO: WDCD? insert at the given index? also descend into the array?
                 if (fields.length == 1) {
-                    add(new Value(newValue));
+                    add(newValue);
                 }
                 else if (fields.length > 1) {
                     final Value newHash;
@@ -683,10 +681,10 @@ public class Value {
         }
 
         public Value insert(final InsertMode mode, final String fieldPath, final String newValue) {
-            return insert(mode, split(fieldPath), newValue);
+            return insert(mode, split(fieldPath), new Value(newValue));
         }
 
-        private Value insert(final InsertMode mode, final String[] fields, final String newValue) {
+        private Value insert(final InsertMode mode, final String[] fields, final Value newValue) {
             final String field = fields[0];
             if (fields.length == 1) {
                 if (field.equals(ASTERISK)) {
@@ -717,7 +715,7 @@ public class Value {
             return new Value(this);
         }
 
-        private Value processRef(final InsertMode mode, final String newValue, final String field, final String[] tail) {
+        private Value processRef(final InsertMode mode, final Value newValue, final String field, final String[] tail) {
             final Value referencedValue = getReferencedValue(field);
             if (referencedValue != null) {
                 return referencedValue.asHash().insert(insertMode(mode, field, tail), tail, newValue);
