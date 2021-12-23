@@ -496,7 +496,7 @@ public class Value {
                 if (fields.length == 1) {
                     add(new Value(newValue));
                 }
-                if (fields.length > 1) {
+                else if (fields.length > 1) {
                     final Value newHash;
                     final int index = Integer.parseInt(fields[0]);
                     if (index <= size()) {
@@ -721,7 +721,7 @@ public class Value {
                     ref = get("1");
                     break;
                 case LAST_FIELD:
-                    ref = get(map.keySet().size() + "");
+                    ref = get(String.valueOf(size()));
                     break;
                 case APPEND_FIELD:
                     ref = new Value(this);
@@ -746,7 +746,8 @@ public class Value {
         }
 
         private boolean isRef(final String field) {
-            return field.startsWith("$") || isNumber(field);
+            // TODO: move our reserved field names into an enum
+            return APPEND_FIELD.equals(field) || FIRST_FIELD.equals(field) || LAST_FIELD.equals(field) || isNumber(field);
         }
 
         /**

@@ -915,10 +915,7 @@ public class MetafixRecordTest {
                 i -> {
                     i.startRecord("1");
                     i.endRecord();
-                }, o -> {
-                    o.get().startRecord("1");
-                    o.get().endRecord();
-                });
+                }, o -> { });
         });
     }
 
