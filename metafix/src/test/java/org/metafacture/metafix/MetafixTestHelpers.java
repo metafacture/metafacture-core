@@ -75,13 +75,13 @@ public final class MetafixTestHelpers {
             Mockito.verifyNoMoreInteractions(receiver);
         }
         catch (final MockitoAssertionError e) {
+            System.out.println("\nFix string: " + fixString);
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());
             throw e;
         }
     }
 
     private static Metafix fix(final StreamReceiver receiver, final String fix, final Map<String, String> vars) {
-        System.out.println("\nFix string: " + fix);
         Metafix metafix = null;
         try {
             metafix = new Metafix(fix, vars);
