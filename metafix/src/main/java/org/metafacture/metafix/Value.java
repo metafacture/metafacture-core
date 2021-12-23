@@ -220,10 +220,10 @@ public class Value {
         if (!isNull()) {
             switch (type) {
                 case Array:
-                    result = array.asString();
+                    result = array.toString();
                     break;
                 case Hash:
-                    result = hash.asString();
+                    result = hash.toString();
                     break;
                 case String:
                     result = string;
@@ -265,11 +265,7 @@ public class Value {
     private abstract static class AbstractValueType {
 
         @Override
-        public String toString() {
-            return asString();
-        }
-
-        public abstract String asString();
+        public abstract String toString();
 
         protected enum InsertMode {
 
@@ -345,7 +341,7 @@ public class Value {
         }
 
         @Override
-        public String asString() {
+        public String toString() {
             return list.toString();
         }
 
@@ -829,7 +825,7 @@ public class Value {
         }
 
         @Override
-        public String asString() {
+        public String toString() {
             return map.toString();
         }
 
