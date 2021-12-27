@@ -81,7 +81,9 @@ public final class LineRecorder implements ObjectPipe<String, ObjectReceiver<Str
 
     @Override
     public void closeStream() {
+        assert !isClosed();
         getReceiver().process(record.toString());
+        getReceiver().closeStream();
         isClosed = true;
     }
 

@@ -111,6 +111,7 @@ public final class LineRecorderTest {
                 LINE_SEPARATOR +
                 RECORD3_PART2 +
                 LINE_SEPARATOR);
+        ordered.verify(receiver).closeStream();
         ordered.verifyNoMoreInteractions();
     }
 
