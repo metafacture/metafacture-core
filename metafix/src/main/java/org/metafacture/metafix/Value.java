@@ -210,7 +210,7 @@ public class Value {
         return new TypeMatcher(this);
     }
 
-    public <T> T extractType(final BiConsumer<TypeMatcher, Consumer<T>> consumer) {
+    private <T> T extractType(final BiConsumer<TypeMatcher, Consumer<T>> consumer) {
         final AtomicReference<T> result = new AtomicReference<>();
         consumer.accept(matchType(), result::set);
         return result.get();
@@ -839,11 +839,11 @@ public class Value {
             }
         }
 
-        public void transformField(final String field, final UnaryOperator<Value> operator) {
+        public void transformField(final String field, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
             final Value oldValue = find(field);
 
             if (oldValue != null) {
-                final Value newValue = operator.apply(oldValue);
+                final Value newValue = oldValue.extractType(consumer);
 
                 if (newValue != null) {
                     insert(InsertMode.REPLACE, split(field), newValue);

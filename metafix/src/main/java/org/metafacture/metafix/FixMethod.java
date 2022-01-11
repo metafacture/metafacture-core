@@ -29,7 +29,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -194,15 +193,13 @@ enum FixMethod {
     },
     rename {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), v -> {
-                final String search = params.get(1);
-                final String replace = params.get(2);
+            final String search = params.get(1);
+            final String replace = params.get(2);
 
-                // TODO: recurse into arrays/values
-                return v.extractType((m, c) -> m
-                        .ifHash(h -> c.accept(Value.newHash(n -> h.forEach((f, w) -> n.put(f.replaceAll(search, replace), w)))))
-                );
-            });
+            // TODO: recurse into arrays/values
+            record.transformField(params.get(0), (m, c) -> m
+                    .ifHash(h -> c.accept(Value.newHash(n -> h.forEach((f, w) -> n.put(f.replaceAll(search, replace), w)))))
+            );
         }
     },
     retain {
@@ -268,10 +265,10 @@ enum FixMethod {
     },
     count {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), v -> v.extractType((m, c) -> m
+            record.transformField(params.get(0), (m, c) -> m
                     .ifArray(a -> c.accept(new Value(a.size())))
                     .ifHash(h -> c.accept(new Value(h.size())))
-            ));
+            );
         }
     },
     downcase {
@@ -281,15 +278,14 @@ enum FixMethod {
     },
     filter {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), v -> {
-                final Pattern search = Pattern.compile(params.get(1));
-                final boolean invert = getBoolean(options, "invert");
+            final Pattern search = Pattern.compile(params.get(1));
+            final boolean invert = getBoolean(options, "invert");
 
-                final Predicate<Value> predicate = s -> search.matcher(s.asString()).find();
-                return v.extractType((m, c) -> m
-                        .ifArray(a -> c.accept(newArray(a.stream().filter(invert ? predicate.negate() : predicate))))
-                );
-            });
+            final Predicate<Value> predicate = s -> search.matcher(s.asString()).find();
+
+            record.transformField(params.get(0), (m, c) -> m
+                    .ifArray(a -> c.accept(newArray(a.stream().filter(invert ? predicate.negate() : predicate))))
+            );
         }
     },
     index {
@@ -300,12 +296,10 @@ enum FixMethod {
     },
     join_field {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), v -> {
-                final String joinChar = params.size() > 1 ? params.get(1) : "";
-                return v.extractType((m, c) -> m
-                        .ifArray(a -> c.accept(new Value(a.stream().map(Value::toString).collect(Collectors.joining(joinChar)))))
-                );
-            });
+            final String joinChar = params.size() > 1 ? params.get(1) : "";
+            record.transformField(params.get(0), (m, c) -> m
+                    .ifArray(a -> c.accept(new Value(a.stream().map(Value::toString).collect(Collectors.joining(joinChar)))))
+            );
         }
     },
     lookup {
@@ -345,53 +339,45 @@ enum FixMethod {
     },
     reverse {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), v -> v.extractType((m, c) -> m
+            record.transformField(params.get(0), (m, c) -> m
                     .ifArray(a -> {
-                        final List<Value> list = v.asArray().stream().collect(Collectors.toList());
+                        final List<Value> list = a.stream().collect(Collectors.toList());
                         Collections.reverse(list);
                         c.accept(new Value(list));
                     })
-                    .ifString(s -> c.accept(new Value(new StringBuilder(v.asString()).reverse().toString())))
-            ));
+                    .ifString(s -> c.accept(new Value(new StringBuilder(s).reverse().toString())))
+            );
         }
     },
     sort_field {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), v -> {
-                final boolean numeric = getBoolean(options, "numeric");
-                final boolean reverse = getBoolean(options, "reverse");
-                final boolean uniq = getBoolean(options, "uniq");
+            final boolean numeric = getBoolean(options, "numeric");
+            final boolean reverse = getBoolean(options, "reverse");
+            final boolean uniq = getBoolean(options, "uniq");
 
-                final Function<Value, String> function = Value::asString;
-                final Comparator<Value> comparator = numeric ?
-                    Comparator.comparing(function.andThen(Integer::parseInt)) : Comparator.comparing(function);
+            final Function<Value, String> function = Value::asString;
+            final Comparator<Value> comparator = numeric ?
+                Comparator.comparing(function.andThen(Integer::parseInt)) : Comparator.comparing(function);
 
-                return v.extractType((m, c) -> m
-                        .ifArray(a -> {
-                            final Stream<Value> stream = a.stream();
-                            c.accept(new Value((uniq ? unique(stream) : stream)
-                                        .sorted(reverse ? comparator.reversed() : comparator).collect(Collectors.toList()))
-                            );
-                        })
-                );
-            });
+            record.transformField(params.get(0), (m, c) -> m
+                    .ifArray(a -> c.accept(new Value((uniq ? unique(a.stream()) : a.stream())
+                                .sorted(reverse ? comparator.reversed() : comparator).collect(Collectors.toList()))))
+            );
         }
     },
     split_field {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), v -> {
-                final String splitChar = params.size() > 1 ? params.get(1) : "\\s+";
-                final Pattern splitPattern = Pattern.compile(splitChar);
+            final String splitChar = params.size() > 1 ? params.get(1) : "\\s+";
+            final Pattern splitPattern = Pattern.compile(splitChar);
 
-                final UnaryOperator<Value> splitOperator = s ->
-                    newArray(Arrays.stream(splitPattern.split(s.asString())).map(Value::new));
+            final Function<String, Value> splitFunction = s ->
+                newArray(Arrays.stream(splitPattern.split(s)).map(Value::new));
 
-                return v.extractType((m, c) -> m
-                        .ifArray(a -> c.accept(newArray(a.stream().map(splitOperator))))
-                        .ifHash(h -> c.accept(Value.newHash(n -> h.forEach((f, w) -> n.put(f, splitOperator.apply(w))))))
-                        .ifString(s -> c.accept(splitOperator.apply(v)))
-                );
-            });
+            record.transformField(params.get(0), (m, c) -> m
+                    .ifArray(a -> c.accept(newArray(a.stream().map(Value::asString).map(splitFunction))))
+                    .ifHash(h -> c.accept(Value.newHash(n -> h.forEach((f, w) -> n.put(f, splitFunction.apply(w.asString()))))))
+                    .ifString(s -> c.accept(splitFunction.apply(s)))
+            );
         }
     },
     substring {
@@ -401,9 +387,9 @@ enum FixMethod {
     },
     sum {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), v -> v.extractType((m, c) -> m
+            record.transformField(params.get(0), (m, c) -> m
                     .ifArray(a -> c.accept(new Value(a.stream().map(Value::asString).mapToInt(Integer::parseInt).sum())))
-            ));
+            );
         }
     },
     trim {
@@ -413,9 +399,9 @@ enum FixMethod {
     },
     uniq {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), v -> v.extractType((m, c) -> m
+            record.transformField(params.get(0), (m, c) -> m
                     .ifArray(a -> c.accept(newArray(unique(a.stream()))))
-            ));
+            );
         }
     },
     upcase {
