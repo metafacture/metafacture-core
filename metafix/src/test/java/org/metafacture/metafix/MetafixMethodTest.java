@@ -477,6 +477,28 @@ public class MetafixMethodTest {
             });
     }
 
+    @Test
+    public void shouldDoNothing() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "nothing()"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "marc");
+                i.literal("title", "json");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("title");
+                o.get().literal("1", "marc");
+                o.get().literal("2", "json");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
     private void assertThrows(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
         final Throwable exception = Assertions.assertThrows(MetafactureException.class, executable).getCause();
         Assertions.assertSame(expectedClass, exception.getClass());

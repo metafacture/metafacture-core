@@ -30,6 +30,11 @@ enum FixMethod {
 
     // SCRIPT-LEVEL METHODS:
 
+    nothing {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            // do nothing
+        }
+    },
     put_filemap {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String fileName = params.get(0);

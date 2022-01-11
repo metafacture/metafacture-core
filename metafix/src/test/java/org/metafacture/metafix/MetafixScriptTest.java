@@ -127,6 +127,11 @@ public class MetafixScriptTest {
         assertMap("put_filemap('" + TSV_MAP + "', '" + MAP_NAME + "', sep_char: '\t')", MAP_NAME);
     }
 
+    @Test
+    public void shouldDoNothing() {
+        assertFix("nothing()", f -> { });
+    }
+
     private void assertVar(final String fixDef, final Map<String, String> vars, final Map<String, String> result) {
         assertFix(fixDef, vars, f -> result.forEach((k, v) -> Assertions.assertEquals(v, f.getVars().get(k))));
     }
