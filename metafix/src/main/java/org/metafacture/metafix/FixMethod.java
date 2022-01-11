@@ -397,6 +397,11 @@ enum FixMethod {
             record.transformFields(params, String::trim);
         }
     },
+    uniq {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.transformField(params.get(0), v -> v.isArray() ? newArray(unique(v.asArray().stream())) : null);
+        }
+    },
     upcase {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformFields(params, String::toUpperCase);
