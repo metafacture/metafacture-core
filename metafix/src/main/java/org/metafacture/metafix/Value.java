@@ -835,6 +835,18 @@ public class Value {
             }
         }
 
+        public void transformField(final String field, final UnaryOperator<Value> operator) {
+            final Value oldValue = find(field);
+
+            if (oldValue != null) {
+                final Value newValue = operator.apply(oldValue);
+
+                if (newValue != null) {
+                    insert(InsertMode.REPLACE, split(field), newValue);
+                }
+            }
+        }
+
         public void transformFields(final List<String> params, final UnaryOperator<String> operator) {
             transformFields(split(params.get(0)), operator);
         }

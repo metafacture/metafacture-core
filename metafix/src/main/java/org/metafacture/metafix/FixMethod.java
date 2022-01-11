@@ -184,6 +184,18 @@ enum FixMethod {
             params.forEach(record::removeNested);
         }
     },
+    rename {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.transformField(params.get(0), v -> {
+                final String search = params.get(1);
+                final String replace = params.get(2);
+
+                // TODO: recurse into arrays/values
+                return v.isHash() ? Value.newHash(h ->
+                        v.asHash().forEach((f, w) -> h.put(f.replaceAll(search, replace), w))) : null;
+            });
+        }
+    },
     retain {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.retainFields(params);

@@ -1767,4 +1767,26 @@ public class MetafixRecordTest {
         );
     }
 
+    @Test
+    public void shouldRenameFieldsInHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "rename(your, '[ae]', X)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("your");
+                i.literal("name", "nicolas");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("your");
+                o.get().literal("nXmX", "nicolas");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
 }
