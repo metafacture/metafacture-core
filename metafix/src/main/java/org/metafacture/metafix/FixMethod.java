@@ -314,6 +314,14 @@ enum FixMethod {
             record.transformFields(params, s -> value + s);
         }
     },
+    replace_all {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String search = params.get(1);
+            final String replace = params.get(2);
+
+            record.transformFields(params, s -> s.replaceAll(search, replace));
+        }
+    },
     substring {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformFields(params, s -> s.substring(getInteger(params, 1), getInteger(params, 2) - 1));
