@@ -246,6 +246,12 @@ enum FixMethod {
 
     // TODO SPEC: switch to morph-style named params in general?
 
+    append {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String value = params.get(1);
+            record.transformFields(params, s -> s + value);
+        }
+    },
     capitalize {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformFields(params, s -> s.substring(0, 1).toUpperCase() + s.substring(1));
