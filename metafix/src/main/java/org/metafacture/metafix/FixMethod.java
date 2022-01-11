@@ -22,6 +22,7 @@ import org.metafacture.metamorph.maps.FileMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -165,6 +166,14 @@ enum FixMethod {
             return s.startsWith("~");
         }
     },
+    random {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String field = params.get(0);
+            final int max = getInteger(params, 1);
+
+            record.append(field, String.valueOf(RANDOM.nextInt(max)));
+        }
+    },
     reject {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.setReject(true);
@@ -258,7 +267,7 @@ enum FixMethod {
     },
     substring {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformFields(params, s -> s.substring(Integer.parseInt(params.get(1)), Integer.parseInt(params.get(2)) - 1));
+            record.transformFields(params, s -> s.substring(getInteger(params, 1), getInteger(params, 2) - 1));
         }
     },
     trim {
@@ -279,6 +288,12 @@ enum FixMethod {
 
     private static final String FILEMAP_SEPARATOR_OPTION = "sep_char";
     private static final String FILEMAP_DEFAULT_SEPARATOR = ",";
+
+    private static final Random RANDOM = new Random();
+
+    private static int getInteger(final List<String> params, final int index) {
+        return Integer.parseInt(params.get(index));
+    }
 
     abstract void apply(Metafix metafix, Record record, List<String> params, Map<String, String> options);
 

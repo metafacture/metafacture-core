@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -1741,6 +1742,29 @@ public class MetafixRecordTest {
                 f.apply(2).endEntity();
                 o.get().endRecord();
             });
+    }
+
+    @Test
+    public void shouldAddRandomNumber() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "random(test, '100')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "marc");
+                i.literal("title", "json");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("title");
+                o.get().literal("1", "marc");
+                o.get().literal("2", "json");
+                o.get().endEntity();
+                o.get().literal(ArgumentMatchers.eq("test"), ArgumentMatchers.argThat(i -> Integer.parseInt(i) < 100));
+                o.get().endRecord();
+            }
+        );
     }
 
 }
