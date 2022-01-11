@@ -78,7 +78,7 @@ public final class LineRecorder extends DefaultObjectPipe<String, ObjectReceiver
     }
 
     @Override
-    public void onResetStream() {
+    protected void onResetStream() {
         record = new StringBuilder(SB_CAPACITY);
     }
 

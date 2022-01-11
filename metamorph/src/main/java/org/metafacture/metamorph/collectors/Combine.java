@@ -61,7 +61,7 @@ public final class Combine extends AbstractFlushingCollect {
     }
 
     @Override
-    public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
+    protected void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
         sources.add(namedValueSource);
         sourcesLeft.add(namedValueSource);
     }

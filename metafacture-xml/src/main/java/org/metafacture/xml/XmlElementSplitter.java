@@ -192,7 +192,7 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void onResetStream() {
+    protected void onResetStream() {
         reset();
     }
 

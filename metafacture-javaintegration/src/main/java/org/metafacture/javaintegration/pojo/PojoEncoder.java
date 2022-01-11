@@ -107,12 +107,12 @@ public class PojoEncoder<T> extends DefaultStreamPipe<ObjectReceiver<T>> {
     }
 
     @Override
-    public void onCloseStream() {
+    protected void onCloseStream() {
         typeEncoderStack.clear();
     }
 
     @Override
-    public void onResetStream() {
+    protected void onResetStream() {
         typeEncoderStack.clear();
     }
 

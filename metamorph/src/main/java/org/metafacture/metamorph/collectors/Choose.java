@@ -79,7 +79,7 @@ public final class Choose extends AbstractFlushingCollect {
     }
 
     @Override
-    public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
+    protected void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
         priorities.put(namedValueSource, Integer.valueOf(nextPriority));
         nextPriority += 1;
     }

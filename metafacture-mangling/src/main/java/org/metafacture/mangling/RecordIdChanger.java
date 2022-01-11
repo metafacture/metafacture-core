@@ -217,18 +217,18 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
     }
 
     @Override
-    public void onSetReceiver() {
+    protected void onSetReceiver() {
         streamBuffer.setReceiver(getReceiver());
     }
 
     @Override
-    public void onResetStream() {
+    protected void onResetStream() {
         streamBuffer.clear();
         entityPathTracker.resetStream();
     }
 
     @Override
-    public void onCloseStream() {
+    protected void onCloseStream() {
         streamBuffer.clear();
         entityPathTracker.closeStream();
     }
