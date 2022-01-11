@@ -257,6 +257,12 @@ enum FixMethod {
             record.transformFields(params, s -> s.substring(0, 1).toUpperCase() + s.substring(1));
         }
     },
+    count {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.transformField(params.get(0), v ->
+                    v.isArray() ? new Value(v.asArray().size()) : v.isHash() ? new Value(v.asHash().size()) : null);
+        }
+    },
     downcase {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformFields(params, String::toLowerCase);

@@ -517,6 +517,48 @@ public class MetafixMethodTest {
         );
     }
 
+    @Test
+    public void shouldCountNumberOfValuesInArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "count(numbers)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("numbers", "41");
+                i.literal("numbers", "42");
+                i.literal("numbers", "6");
+                i.literal("numbers", "6");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("numbers", "4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldCountNumberOfValuesInHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "count(person)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("person");
+                i.literal("name", "François");
+                i.literal("age", "12");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("person", "2");
+                o.get().endRecord();
+            }
+        );
+    }
+
     private void assertThrows(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
         final Throwable exception = Assertions.assertThrows(MetafactureException.class, executable).getCause();
         Assertions.assertSame(expectedClass, exception.getClass());

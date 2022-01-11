@@ -106,6 +106,10 @@ public class Value {
         this.string = string;
     }
 
+    public Value(final int integer) {
+        this(String.valueOf(integer));
+    }
+
     public static Value newArray() {
         return newArray(null);
     }
