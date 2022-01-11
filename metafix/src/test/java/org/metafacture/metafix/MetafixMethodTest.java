@@ -625,6 +625,24 @@ public class MetafixMethodTest {
         );
     }
 
+    @Test
+    public void shouldPrependValue() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "prepend(title, 'I love ')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "metafix");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "I love metafix");
+                o.get().endRecord();
+            }
+        );
+    }
+
     private void assertThrows(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
         final Throwable exception = Assertions.assertThrows(MetafactureException.class, executable).getCause();
         Assertions.assertSame(expectedClass, exception.getClass());

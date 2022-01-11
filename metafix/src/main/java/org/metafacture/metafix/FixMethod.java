@@ -308,6 +308,12 @@ enum FixMethod {
             record.transformFields(params, k -> map.getOrDefault(k, defaultValue));
         }
     },
+    prepend {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String value = params.get(1);
+            record.transformFields(params, s -> value + s);
+        }
+    },
     substring {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformFields(params, s -> s.substring(getInteger(params, 1), getInteger(params, 2) - 1));
