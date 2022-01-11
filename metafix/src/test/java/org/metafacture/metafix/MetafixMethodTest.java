@@ -850,6 +850,88 @@ public class MetafixMethodTest {
         );
     }
 
+    @Test
+    public void shouldSplitStringField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "split_field(date, '-')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("date", "1918-17-16");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("date");
+                o.get().literal("1", "1918");
+                o.get().literal("2", "17");
+                o.get().literal("3", "16");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldSplitArrayField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "split_field(date, '-')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("date", "1918-17-16");
+                i.literal("date", "2021-22-23");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("date");
+                o.get().startEntity("1");
+                o.get().literal("1", "1918");
+                o.get().literal("2", "17");
+                o.get().literal("3", "16");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("1", "2021");
+                o.get().literal("2", "22");
+                o.get().literal("3", "23");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldSplitHashField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "split_field(date, '-')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("date");
+                i.literal("a", "1918-17-16");
+                i.literal("b", "2021-22-23");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("date");
+                o.get().startEntity("a");
+                o.get().literal("1", "1918");
+                o.get().literal("2", "17");
+                o.get().literal("3", "16");
+                o.get().endEntity();
+                o.get().startEntity("b");
+                o.get().literal("1", "2021");
+                o.get().literal("2", "22");
+                o.get().literal("3", "23");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
     private void assertThrows(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
         final Throwable exception = Assertions.assertThrows(MetafactureException.class, executable).getCause();
         Assertions.assertSame(expectedClass, exception.getClass());

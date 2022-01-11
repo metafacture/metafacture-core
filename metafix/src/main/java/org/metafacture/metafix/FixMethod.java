@@ -29,6 +29,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -362,6 +363,21 @@ enum FixMethod {
 
                 return v.isArray() ? new Value((uniq ? unique(stream) : stream)
                         .sorted(reverse ? comparator.reversed() : comparator).collect(Collectors.toList())) : null;
+            });
+        }
+    },
+    split_field {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.transformField(params.get(0), v -> {
+                final String splitChar = params.size() > 1 ? params.get(1) : "\\s+";
+                final Pattern splitPattern = Pattern.compile(splitChar);
+
+                final UnaryOperator<Value> splitOperator = s ->
+                    newArray(Arrays.stream(splitPattern.split(s.asString())).map(Value::new));
+
+                return v.isString() ? splitOperator.apply(v) : v.isArray() ?
+                    newArray(v.asArray().stream().map(splitOperator)) : v.isHash() ?
+                    Value.newHash(h -> v.asHash().forEach((f, s) -> h.put(f, splitOperator.apply(s)))) : null;
             });
         }
     },
