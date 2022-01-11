@@ -21,9 +21,13 @@ import org.metafacture.metamorph.maps.FileMap;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -344,6 +348,23 @@ enum FixMethod {
             });
         }
     },
+    sort_field {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.transformField(params.get(0), v -> {
+                final boolean numeric = getBoolean(options, "numeric");
+                final boolean reverse = getBoolean(options, "reverse");
+                final boolean uniq = getBoolean(options, "uniq");
+
+                final Stream<Value> stream = v.asArray().stream();
+                final Function<Value, String> function = Value::asString;
+                final Comparator<Value> comparator = numeric ?
+                    Comparator.comparing(function.andThen(Integer::parseInt)) : Comparator.comparing(function);
+
+                return v.isArray() ? new Value((uniq ? unique(stream) : stream)
+                        .sorted(reverse ? comparator.reversed() : comparator).collect(Collectors.toList())) : null;
+            });
+        }
+    },
     substring {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformFields(params, s -> s.substring(getInteger(params, 1), getInteger(params, 2) - 1));
@@ -380,6 +401,11 @@ enum FixMethod {
 
     private static Value newArray(final Stream<Value> stream) {
         return Value.newArray(a -> stream.forEach(a::add));
+    }
+
+    private static Stream<Value> unique(final Stream<Value> stream) {
+        final Set<Value> set = new HashSet<>();
+        return stream.filter(set::add);
     }
 
     abstract void apply(Metafix metafix, Record record, List<String> params, Map<String, String> options);

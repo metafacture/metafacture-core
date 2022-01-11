@@ -701,6 +701,155 @@ public class MetafixMethodTest {
         );
     }
 
+    @Test
+    public void shouldSortField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "sort_field(numbers)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("numbers", "6");
+                i.literal("numbers", "42");
+                i.literal("numbers", "41");
+                i.literal("numbers", "6");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("numbers");
+                o.get().literal("1", "41");
+                o.get().literal("2", "42");
+                o.get().literal("3", "6");
+                o.get().literal("4", "6");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldSortFieldNumerically() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "sort_field(numbers, numeric: 'true')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("numbers", "6");
+                i.literal("numbers", "42");
+                i.literal("numbers", "41");
+                i.literal("numbers", "6");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("numbers");
+                o.get().literal("1", "6");
+                o.get().literal("2", "6");
+                o.get().literal("3", "41");
+                o.get().literal("4", "42");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldFailToSortNumericallyWithInvalidNumber() {
+        assertThrows(NumberFormatException.class, "For input string: \"x\"", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "sort_field(numbers, numeric: 'true')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("numbers", "6");
+                    i.literal("numbers", "42");
+                    i.literal("numbers", "x");
+                    i.literal("numbers", "6");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldSortFieldInReverse() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "sort_field(numbers, reverse: 'true')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("numbers", "6");
+                i.literal("numbers", "42");
+                i.literal("numbers", "41");
+                i.literal("numbers", "6");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("numbers");
+                o.get().literal("1", "6");
+                o.get().literal("2", "6");
+                o.get().literal("3", "42");
+                o.get().literal("4", "41");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldSortFieldNumericallyInReverse() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "sort_field(numbers, numeric: 'true', reverse: 'true')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("numbers", "6");
+                i.literal("numbers", "42");
+                i.literal("numbers", "41");
+                i.literal("numbers", "6");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("numbers");
+                o.get().literal("1", "42");
+                o.get().literal("2", "41");
+                o.get().literal("3", "6");
+                o.get().literal("4", "6");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldSortFieldAndRemoveDuplicates() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "sort_field(numbers, uniq: 'true')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("numbers", "6");
+                i.literal("numbers", "42");
+                i.literal("numbers", "41");
+                i.literal("numbers", "6");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("numbers");
+                o.get().literal("1", "41");
+                o.get().literal("2", "42");
+                o.get().literal("3", "6");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
     private void assertThrows(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
         final Throwable exception = Assertions.assertThrows(MetafactureException.class, executable).getCause();
         Assertions.assertSame(expectedClass, exception.getClass());
