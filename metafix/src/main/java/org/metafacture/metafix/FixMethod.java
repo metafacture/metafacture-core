@@ -20,6 +20,7 @@ import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.maps.FileMap;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -320,6 +321,27 @@ enum FixMethod {
             final String replace = params.get(2);
 
             record.transformFields(params, s -> s.replaceAll(search, replace));
+        }
+    },
+    reverse {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.transformField(params.get(0), v -> {
+                final Value result;
+
+                if (v.isString()) {
+                    result = new Value(new StringBuilder(v.asString()).reverse().toString());
+                }
+                else if (v.isArray()) {
+                    final List<Value> list = v.asArray().stream().collect(Collectors.toList());
+                    Collections.reverse(list);
+                    result = new Value(list);
+                }
+                else {
+                    result = null;
+                }
+
+                return result;
+            });
         }
     },
     substring {

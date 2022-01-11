@@ -661,6 +661,46 @@ public class MetafixMethodTest {
         );
     }
 
+    @Test
+    public void shouldReverseString() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "reverse(title)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "metafix");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "xifatem");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReverseArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "reverse(title)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "marc");
+                i.literal("title", "json");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("title");
+                o.get().literal("1", "json");
+                o.get().literal("2", "marc");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
     private void assertThrows(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
         final Throwable exception = Assertions.assertThrows(MetafactureException.class, executable).getCause();
         Assertions.assertSame(expectedClass, exception.getClass());
