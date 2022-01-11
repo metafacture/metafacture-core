@@ -559,6 +559,54 @@ public class MetafixMethodTest {
         );
     }
 
+    @Test
+    public void shouldFilterArrayValues() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "filter(animals, '[Cc]at')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("animals", "Lion");
+                i.literal("animals", "Cat");
+                i.literal("animals", "Tiger");
+                i.literal("animals", "Bobcat");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals");
+                o.get().literal("1", "Cat");
+                o.get().literal("2", "Bobcat");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldFilterArrayValuesInverted() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "filter(animals, '[Cc]at', invert: 'true')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("animals", "Lion");
+                i.literal("animals", "Cat");
+                i.literal("animals", "Tiger");
+                i.literal("animals", "Bobcat");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals");
+                o.get().literal("1", "Lion");
+                o.get().literal("2", "Tiger");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
     private void assertThrows(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
         final Throwable exception = Assertions.assertThrows(MetafactureException.class, executable).getCause();
         Assertions.assertSame(expectedClass, exception.getClass());

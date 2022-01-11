@@ -23,9 +23,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 enum FixMethod {
 
@@ -209,7 +211,7 @@ enum FixMethod {
                 record.addAll(field.replace(DOT_APPEND, EMPTY), toAdd);
             }
             else {
-                record.put(field, Value.newArray(a -> toAdd.forEach(s -> a.add(new Value(s)))));
+                record.put(field, newArray(toAdd.stream().map(Value::new)));
             }
         }
     },
@@ -268,6 +270,17 @@ enum FixMethod {
             record.transformFields(params, String::toLowerCase);
         }
     },
+    filter {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.transformField(params.get(0), v -> {
+                final Pattern search = Pattern.compile(params.get(1));
+                final boolean invert = getBoolean(options, "invert");
+
+                final Predicate<Value> predicate = s -> search.matcher(s.asString()).find();
+                return v.isArray() ? newArray(v.asArray().stream().filter(invert ? predicate.negate() : predicate)) : null;
+            });
+        }
+    },
     lookup {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final Map<String, String> map;
@@ -315,8 +328,16 @@ enum FixMethod {
 
     private static final Random RANDOM = new Random();
 
+    private static boolean getBoolean(final Map<String, String> options, final String key) {
+        return Boolean.parseBoolean(options.get(key));
+    }
+
     private static int getInteger(final List<String> params, final int index) {
         return Integer.parseInt(params.get(index));
+    }
+
+    private static Value newArray(final Stream<Value> stream) {
+        return Value.newArray(a -> stream.forEach(a::add));
     }
 
     abstract void apply(Metafix metafix, Record record, List<String> params, Map<String, String> options);
