@@ -293,6 +293,14 @@ enum FixMethod {
             record.transformFields(params, s -> String.valueOf(s.indexOf(search))); // TODO: multiple
         }
     },
+    join_field {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.transformField(params.get(0), v -> {
+                final String joinChar = params.size() > 1 ? params.get(1) : "";
+                return v.isArray() ? new Value(v.asArray().stream().map(Value::toString).collect(Collectors.joining(joinChar))) : null;
+            });
+        }
+    },
     lookup {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final Map<String, String> map;

@@ -626,6 +626,27 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void shouldJoinArrayField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "join_field(numbers, '/')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("numbers", "6");
+                i.literal("numbers", "42");
+                i.literal("numbers", "41");
+                i.literal("numbers", "6");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("numbers", "6/42/41/6");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldPrependValue() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "prepend(title, 'I love ')"
