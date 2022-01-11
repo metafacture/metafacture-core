@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
@@ -209,6 +210,31 @@ public class Value {
         final AtomicReference<T> result = new AtomicReference<>();
         consumer.accept(matchType(), result::set);
         return result.get();
+    }
+
+    @Override
+    public final boolean equals(final Object object) {
+        if (object == this) {
+            return true;
+        }
+
+        if (!(object instanceof Value)) {
+            return false;
+        }
+
+        final Value other = (Value) object;
+        return Objects.equals(type, other.type) &&
+            Objects.equals(array, other.array) &&
+            Objects.equals(hash, other.hash) &&
+            Objects.equals(string, other.string);
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hashCode(type) +
+            Objects.hashCode(array) +
+            Objects.hashCode(hash) +
+            Objects.hashCode(string);
     }
 
     @Override
