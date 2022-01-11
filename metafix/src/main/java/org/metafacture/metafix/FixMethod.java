@@ -281,6 +281,12 @@ enum FixMethod {
             });
         }
     },
+    index {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String search = params.get(1);
+            record.transformFields(params, s -> String.valueOf(s.indexOf(search))); // TODO: multiple
+        }
+    },
     lookup {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final Map<String, String> map;
