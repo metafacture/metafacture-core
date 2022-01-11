@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -357,7 +358,7 @@ public class MetafixMethodTest {
 
     @Test
     public void parseTextEscapedGroups() {
-        Assertions.assertThrows(MetafactureException.class, () ->
+        assertThrows(IllegalArgumentException.class, "No group with name <c>", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "parse_text(data, '(?<a>.)(.)\\\\(?<c>.\\\\)')"
                 ),
@@ -368,14 +369,13 @@ public class MetafixMethodTest {
                 },
                 o -> {
                 }
-            ),
-            "No group with name <c>"
+            )
         );
     }
 
     @Test
     public void parseTextQuotedGroups() {
-        Assertions.assertThrows(MetafactureException.class, () ->
+        assertThrows(IllegalArgumentException.class, "No group with name <c>", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "parse_text(data, '(?<a>.)(.)\\\\Q(?<c>.)\\\\E')"
                 ),
@@ -386,8 +386,7 @@ public class MetafixMethodTest {
                 },
                 o -> {
                 }
-            ),
-            "No group with name <c>"
+            )
         );
     }
 
@@ -477,4 +476,11 @@ public class MetafixMethodTest {
                 o.get().endRecord();
             });
     }
+
+    private void assertThrows(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
+        final Throwable exception = Assertions.assertThrows(MetafactureException.class, executable).getCause();
+        Assertions.assertSame(expectedClass, exception.getClass());
+        Assertions.assertEquals(expectedMessage, exception.getMessage());
+    }
+
 }
