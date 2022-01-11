@@ -386,6 +386,12 @@ enum FixMethod {
             record.transformFields(params, s -> s.substring(getInteger(params, 1), getInteger(params, 2) - 1));
         }
     },
+    sum {
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.transformField(params.get(0), v ->
+                    v.isArray() ? new Value(v.asArray().stream().map(Value::asString).mapToInt(Integer::parseInt).sum()) : null);
+        }
+    },
     trim {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformFields(params, String::trim);
