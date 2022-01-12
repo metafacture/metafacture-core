@@ -10,7 +10,7 @@ syn keyword fixPreProc use
 syn keyword fixSelector reject select
 syn match fixBareString /\v[^[:space:]\\,;:=>()"'\$*]+/
 syn match fixComment /\v(#|\/\/).*$/
-syn match fixFunction /\v([a-z][_0-9a-zA-Z]*\.)*[a-z][_0-9a-zA-Z]*\s*\(/me=e-1,he=e-1
+syn match fixFunction /\v([a-z][_0-9a-zA-Z]*\.)*[a-zA-Z][_0-9a-zA-Z]*\s*\(/me=e-1,he=e-1
 syn match fixOperator /\v(\&\&|\|\|)/
 syn match fixWildcard /\v\$(append|first|last|prepend)>/
 syn match fixWildcard /\v\*/

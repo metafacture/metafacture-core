@@ -999,6 +999,27 @@ public class MetafixMethodTest {
         );
     }
 
+    @Test
+    public void shouldApplyCustomJavaFunction() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "org.metafacture.metafix.util.TestFunction(data, foo: '42', bar: 'baz')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "marc");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "marc");
+                o.get().literal("test", "DATA");
+                o.get().literal("foo", "42");
+                o.get().literal("bar", "baz");
+                o.get().endRecord();
+            }
+        );
+    }
+
     private void assertThrows(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
         final Throwable exception = Assertions.assertThrows(MetafactureException.class, executable).getCause();
         Assertions.assertSame(expectedClass, exception.getClass());
