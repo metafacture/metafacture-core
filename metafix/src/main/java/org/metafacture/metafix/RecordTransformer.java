@@ -19,7 +19,6 @@ package org.metafacture.metafix;
 import org.metafacture.commons.StringUtil;
 import org.metafacture.commons.reflection.ReflectionUtil;
 import org.metafacture.framework.MetafactureException;
-import org.metafacture.metafix.FixPredicate.Quantifier;
 import org.metafacture.metafix.api.FixFunction;
 import org.metafacture.metafix.fix.Do;
 import org.metafacture.metafix.fix.ElsIf;
@@ -160,29 +159,21 @@ class RecordTransformer {
 
     private boolean testConditional(final String conditional, final List<String> params) {
         LOG.debug("<IF>: {} parameters: {}", conditional, params);
-        boolean result = false;
-        if ("exists".equals(conditional)) {
-            return record.containsField(params.get(0));
-        }
-        if (!conditional.contains("_")) {
-            throw new IllegalArgumentException("Missing quantifier prefix (all_, any_, none_) for " + conditional);
-        }
-        final String[] quantifierAndPredicate = conditional.split("_");
+
         try {
-            final Quantifier quantifier = FixPredicate.Quantifier.valueOf(quantifierAndPredicate[0]);
-            final FixPredicate predicate = FixPredicate.valueOf(quantifierAndPredicate[1]);
-            result = quantifier.test(record, predicate, params);
+            final FixConditional predicate = FixConditional.valueOf(conditional);
+            return predicate.test(metafix, record, params, options(null)); // TODO: options
         }
         catch (final IllegalArgumentException e) {
             throw new MetafactureException(e);
         }
+
         // TODO, possibly: use morph functions here (& in processFunction):
         // final FunctionFactory functionFactory = new FunctionFactory();
         // functionFactory.registerClass("not_equals", NotEquals.class);
         // functionFactory.registerClass("replace_all", Replace.class);
         // final Function function = functionFactory.newInstance(conditional,
         // resolvedAttributeMap(params, theIf.getOptions()));
-        return result;
     }
 
     private void processFunction(final Expression expression, final List<String> params) {
