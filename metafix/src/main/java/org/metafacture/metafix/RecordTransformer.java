@@ -20,6 +20,7 @@ import org.metafacture.commons.StringUtil;
 import org.metafacture.commons.reflection.ReflectionUtil;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.metafix.api.FixFunction;
+import org.metafacture.metafix.api.FixPredicate;
 import org.metafacture.metafix.fix.Do;
 import org.metafacture.metafix.fix.ElsIf;
 import org.metafacture.metafix.fix.Else;
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -161,7 +163,7 @@ class RecordTransformer {
         LOG.debug("<IF>: {} parameters: {}", conditional, params);
 
         try {
-            final FixConditional predicate = FixConditional.valueOf(conditional);
+            final FixPredicate predicate = getInstance(conditional, FixPredicate.class, FixConditional::valueOf);
             return predicate.test(metafix, record, params, options(null)); // TODO: options
         }
         catch (final IllegalArgumentException e) {
@@ -177,16 +179,17 @@ class RecordTransformer {
     }
 
     private void processFunction(final Expression expression, final List<String> params) {
-        final String name = expression.getName();
-
         try {
-            final FixFunction function = name.contains(".") ?
-                ReflectionUtil.loadClass(name, FixFunction.class).newInstance() : FixMethod.valueOf(name);
+            final FixFunction function = getInstance(expression.getName(), FixFunction.class, FixMethod::valueOf);
             function.apply(metafix, record, params, options(((MethodCall) expression).getOptions()));
         }
         catch (final IllegalArgumentException e) {
             throw new MetafactureException(e);
         }
+    }
+
+    private <T> T getInstance(final String name, final Class<T> baseType, final Function<String, ? extends T> enumFunction) {
+        return name.contains(".") ? ReflectionUtil.loadClass(name, baseType).newInstance() : enumFunction.apply(name);
     }
 
     private Map<String, String> options(final Options options) {

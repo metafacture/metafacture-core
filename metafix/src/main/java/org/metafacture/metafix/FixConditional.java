@@ -16,13 +16,12 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.metafix.api.FixPredicate;
+
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
-enum FixConditional {
+public enum FixConditional implements FixPredicate {
 
     all_contain {
         @Override
@@ -86,23 +85,6 @@ enum FixConditional {
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             return !any_match.test(metafix, record, params, options);
         }
-    };
-
-    public static final BiPredicate<Stream<Value>, Predicate<Value>> ALL = (s, p) -> s.allMatch(p);
-    public static final BiPredicate<Stream<Value>, Predicate<Value>> ANY = (s, p) -> s.anyMatch(p);
-
-    public static final BiPredicate<Value, String> CONTAINS = (v, s) -> v.toString().contains(s);
-    public static final BiPredicate<Value, String> EQUALS = (v, s) -> v.toString().equals(s);
-    public static final BiPredicate<Value, String> MATCHES = (v, s) -> v.toString().matches(s);
-
-    private static boolean testConditional(final Record record, final List<String> params, final BiPredicate<Stream<Value>, Predicate<Value>> qualifier, final BiPredicate<Value, String> conditional) {
-        final String field = params.get(0);
-        final String string = params.get(1);
-
-        final Value value = record.find(field);
-        return value != null && qualifier.test(value.asList(null).asArray().stream(), v -> conditional.test(v, string));
     }
-
-    abstract boolean test(Metafix metafix, Record record, List<String> params, Map<String, String> options);
 
 }
