@@ -112,7 +112,7 @@ public final class Counter extends DefaultStreamPipe<StreamReceiver> {
     }
 
     @Override
-    public void onResetStream() {
+    protected void onResetStream() {
         numRecords = 0;
         numEntities = 0;
         numLiterals = 0;

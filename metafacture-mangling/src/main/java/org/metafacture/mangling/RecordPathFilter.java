@@ -166,13 +166,13 @@ public final class RecordPathFilter extends DefaultStreamPipe<StreamReceiver> {
     }
 
     @Override
-    public void onResetStream() {
+    protected void onResetStream() {
         entityPathTracker.resetStream();
         resetRecord();
     }
 
     @Override
-    public void onCloseStream() {
+    protected void onCloseStream() {
         entityPathTracker.closeStream();
     }
 
