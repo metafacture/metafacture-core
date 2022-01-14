@@ -43,6 +43,13 @@ flux
   :
   varDef* flow*
   ;
+catch [RecognitionException re] {
+    reportError(re);
+    recover(input,re);
+    retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+    String msg = getErrorMessage(re, this.getTokenNames()) + " in Flux";
+    throw new RuntimeException(msg, re);
+}
 
 varDef
   :
@@ -63,6 +70,12 @@ flow
   )
   '|'! flowtail ('|'! Wormhole)? ';'!
   ;
+catch [RecognitionException re] {
+    reportError(re);
+    recover(input,re);
+    retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+    throw re;
+}
 
 tee
   :
