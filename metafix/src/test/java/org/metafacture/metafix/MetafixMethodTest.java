@@ -715,6 +715,33 @@ public class MetafixMethodTest {
     }
 
     @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldFilterArrayObjectValues() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "filter('animals[]', '[Cc]at')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "Lion");
+                i.literal("2", "Cat");
+                i.literal("3", "Tiger");
+                i.literal("4", "Bobcat");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "Cat");
+                o.get().literal("2", "Bobcat");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldGetIndexOfSubstring() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "index(title, 't')"
