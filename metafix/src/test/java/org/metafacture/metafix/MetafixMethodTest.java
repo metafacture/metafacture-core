@@ -781,6 +781,29 @@ public class MetafixMethodTest {
     }
 
     @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldJoinArrayObjectField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "join_field('animals[]', ',')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("animals[]", "dog,cat,zebra");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldPrependValue() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "prepend(title, 'I love ')"
