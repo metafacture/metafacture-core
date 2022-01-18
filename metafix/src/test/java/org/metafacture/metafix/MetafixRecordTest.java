@@ -23,10 +23,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -39,9 +36,6 @@ import java.util.Arrays;
  */
 @ExtendWith(MockitoExtension.class)
 public class MetafixRecordTest {
-
-    @RegisterExtension
-    private MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Mock
     private StreamReceiver streamReceiver;

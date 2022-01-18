@@ -21,10 +21,7 @@ import org.metafacture.framework.StreamReceiver;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -38,9 +35,6 @@ import java.util.Arrays;
 @ExtendWith(MockitoExtension.class)
 @Disabled("TODO: support Fix-style selectors https://github.com/LibreCat/Catmandu/wiki/Selectors")
 public final class MetafixSelectorTest {
-
-    @RegisterExtension
-    private MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Mock
     private StreamReceiver streamReceiver;
