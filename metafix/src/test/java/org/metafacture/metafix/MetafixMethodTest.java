@@ -21,6 +21,7 @@ import org.metafacture.framework.StreamReceiver;
 
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -512,6 +513,112 @@ public class MetafixMethodTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().literal("title", "metafix ?!");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // TODO: Fix order (`animols.name` should stay before `animols.type`)
+    public void shouldAppendValueInHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "append(animols.name, ' boss')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animols");
+                i.literal("name", "bird");
+                i.literal("type", "TEST");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animols");
+                o.get().literal("type", "TEST");
+                o.get().literal("name", "bird boss");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // TODO: Fix order (`animals[].1` should stay before `animals[].2`)
+    public void shouldAppendValueInArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "append('animals[].1', ' is cool')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("2", "cat");
+                o.get().literal("3", "zebra");
+                o.get().literal("1", "dog is cool");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldAppendValueInEntireArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "append('animals[].*', ' is cool')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "dog is cool");
+                o.get().literal("2", "cat is cool");
+                o.get().literal("3", "zebra is cool");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldNotAppendValueToArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "append('animals[]', ' is cool')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "cat");
+                o.get().literal("3", "zebra");
+                o.get().endEntity();
                 o.get().endRecord();
             }
         );
