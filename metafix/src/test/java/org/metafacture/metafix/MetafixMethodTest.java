@@ -946,6 +946,33 @@ public class MetafixMethodTest {
     }
 
     @Test
+    @Disabled("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldReplaceAllRegexesInArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all('animals[].*', a, QR)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "cQRt");
+                o.get().literal("3", "zebrQR");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldReverseString() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "reverse(title)"
