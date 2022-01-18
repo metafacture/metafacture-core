@@ -1876,4 +1876,111 @@ public class MetafixRecordTest {
         );
     }
 
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldRecursivelyRenameFieldsInHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "rename(others, ani, QR)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("others");
+                i.literal("animal", "human");
+                i.literal("canister", "metall");
+                i.startEntity("area");
+                i.literal("ani", "test");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("others");
+                o.get().literal("QRmal", "human");
+                o.get().literal("cQRster", "metall");
+                o.get().startEntity("area");
+                o.get().literal("QR", "test");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldRecursivelyRenameFieldsInArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "rename('animals[]', ani, XY)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.startEntity("1");
+                i.literal("animal", "dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("animal", "cat");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().startEntity("1");
+                o.get().literal("XYmal", "dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("XYmal", "cat");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldRenameAllFieldsInHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "rename('.', ani, XY)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals");
+                i.literal("animal", "dog");
+                i.literal("animal", "cat");
+                i.endEntity();
+                i.startEntity("others");
+                i.literal("animal", "human");
+                i.literal("canister", "metall");
+                i.startEntity("area");
+                i.literal("ani", "test");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("fictional");
+                i.literal("animal", "unicorn");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("XYmals");
+                o.get().startEntity("XYmal");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "cat");
+                f.apply(2).endEntity();
+                o.get().startEntity("others");
+                o.get().literal("XYmal", "human");
+                o.get().literal("cXYster", "metall");
+                o.get().startEntity("area");
+                o.get().literal("XY", "test");
+                f.apply(2).endEntity();
+                o.get().startEntity("fictional");
+                o.get().literal("XYmal", "unicorn");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
 }
