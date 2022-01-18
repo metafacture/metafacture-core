@@ -1855,6 +1855,32 @@ public class MetafixRecordTest {
     }
 
     @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldAddRandomNumberToUnmarkedArrayObject() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "random('animals.$append', '100')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals");
+                i.literal("1", "cat");
+                i.literal("2", "dog");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals");
+                o.get().literal("1", "cat");
+                o.get().literal("2", "dog");
+                o.get().literal(ArgumentMatchers.eq("3"), ArgumentMatchers.argThat(i -> Integer.parseInt(i) < 100));
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldRenameFieldsInHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "rename(your, '[ae]', X)"
