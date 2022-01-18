@@ -822,6 +822,112 @@ public class MetafixMethodTest {
     }
 
     @Test
+    // TODO: Fix order (`animols.name` should stay before `animols.type`)
+    public void shouldPrependValueInHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "prepend(animols.name, 'nice ')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animols");
+                i.literal("name", "bird");
+                i.literal("type", "TEST");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animols");
+                o.get().literal("type", "TEST");
+                o.get().literal("name", "nice bird");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // TODO: Fix order (`animals[].1` should stay before `animals[].2`)
+    public void shouldPrependValueInArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "prepend('animals[].1', 'cool ')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("2", "cat");
+                o.get().literal("3", "zebra");
+                o.get().literal("1", "cool dog");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldPrependValueInEntireArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "prepend('animals[].*', 'cool ')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "cool dog");
+                o.get().literal("2", "cool cat");
+                o.get().literal("3", "cool zebra");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldNotPrependValueToArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "prepend('animals[]', 'cool ')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "cat");
+                o.get().literal("3", "zebra");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldReplaceAllRegexes() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "replace_all(title, '[aei]', 'X')"
