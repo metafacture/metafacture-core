@@ -1262,6 +1262,35 @@ public class MetafixMethodTest {
     }
 
     @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldSplitNestedField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "split_field('others[].*.tools', '--')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("others[]");
+                i.startEntity("1");
+                i.literal("tools", "hammer--saw--bow");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("others[]");
+                o.get().startEntity("1");
+                o.get().startEntity("tools");
+                o.get().literal("1", "hammer");
+                o.get().literal("2", "saw");
+                o.get().literal("3", "bow");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldSumNumbers() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "sum(numbers)"
