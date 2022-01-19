@@ -189,7 +189,9 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
             throw new IllegalArgumentException("Entity name must not be null.");
         }
 
-        final Value value = Value.newHash();
+        final Value value = name.endsWith(ARRAY_MARKER) ? Value.newArray() : Value.newHash();
+        // TODO: Remove array marker? => name.substring(0, name.length() - ARRAY_MARKER.length());
+
         addValue(name, value);
         entities.add(value);
 
