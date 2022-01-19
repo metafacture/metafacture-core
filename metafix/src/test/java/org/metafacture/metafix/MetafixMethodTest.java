@@ -742,6 +742,24 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void shouldGetFirstIndexOfSubstring() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "index(animal, 'n')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("animal", "bunny");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("animal", "2");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldGetIndexOfSubstring() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "index(title, 't')"
