@@ -178,7 +178,7 @@ enum FixMethod {
             final String field = params.get(0);
             final int max = getInteger(params, 1);
 
-            record.append(field, String.valueOf(RANDOM.nextInt(max)));
+            record.replace(field, String.valueOf(RANDOM.nextInt(max)));
         }
     },
     reject {
@@ -221,10 +221,7 @@ enum FixMethod {
     },
     set_field {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final String field = params.get(0);
-
-            record.remove(field);
-            record.replace(field, params.get(1));
+            record.replace(params.get(0), params.get(1));
         }
     },
     set_hash {

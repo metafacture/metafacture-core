@@ -1768,7 +1768,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldReplaceExistingValueWithRandomNumber() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "random(others, '100')"
