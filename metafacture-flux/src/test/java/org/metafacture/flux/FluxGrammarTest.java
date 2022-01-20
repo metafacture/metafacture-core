@@ -89,6 +89,18 @@ public final class FluxGrammarTest {
                 stdoutBuffer.toString());
     }
 
+    @Test(expected = RuntimeException.class)
+    public void issue421_shouldThrowRuntimeExceptionWhenSemicolonIsMissing()
+        throws RecognitionException, IOException {
+        final String script = "\"test\"|print";
+        try {
+            FluxCompiler.compile(createInputStream(script), emptyMap());
+        } catch (RuntimeException re) {
+            assertEquals("mismatched input '<EOF>' expecting ';' in Flux", re.getMessage());
+            throw re;
+        }
+    }
+
     private ByteArrayInputStream createInputStream(String script) {
         return new ByteArrayInputStream(script.getBytes(StandardCharsets.UTF_8));
     }
