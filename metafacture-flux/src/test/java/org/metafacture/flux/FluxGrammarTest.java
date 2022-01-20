@@ -54,7 +54,7 @@ public final class FluxGrammarTest {
     @Test
     public void shouldAllowEmptyCommentInLastLineOfFile()
             throws RecognitionException, IOException {
-        final String script = "\"test\"|write(\"stdout\"); //";
+        final String script = "\"test\"|print; //";
 
         FluxCompiler.compile(createInputStream(script), emptyMap());
 
@@ -65,7 +65,7 @@ public final class FluxGrammarTest {
     @Test
     public void shouldAllowEmptyCommentInFile()
             throws RecognitionException, IOException {
-        final String script = "\"test\"|write(\"stdout\"); //\n";
+        final String script = "\"test\"|print; //\n";
 
         FluxCompiler.compile(createInputStream(script), emptyMap());
 
@@ -78,7 +78,7 @@ public final class FluxGrammarTest {
             throws IOException, RecognitionException {
         final String script =
                 "\"quot=\\\" octal1=\\7 octal2=\\60 octal3=\\103 unicode=\\u00f8 tab=[\\t]\"" +
-                        "|write(\"stdout\");";
+                        "|print;";
 
         final FluxProgramm program = FluxCompiler.compile(
                 createInputStream(script), emptyMap());
