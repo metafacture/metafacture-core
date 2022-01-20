@@ -335,21 +335,6 @@ public class Value {
                 void apply(final Hash hash, final String field, final Value value) {
                     hash.add(field, value);
                 }
-            },
-            /* For an indexed representation of arrays as hashes with 1, 2, 3 etc. keys.
-             * i.e. ["a", "b", "c"] as { "1":"a", "2":"b", "3": "c" }
-             * This is what is produced by JsonDecoder and Metafix itself for arrays.
-             * TODO? maybe this would be a good general internal representation, resulting
-             * in every value being either a hash or a string, no more separate array type.*/
-            INDEXED {
-                @Override
-                void apply(final Hash hash, final String field, final Value value) {
-                    hash.add(nextIndex(hash), field.equals(ReservedField.$append.name()) ? value : newHash(h -> h.put(field, value)));
-                }
-
-                private String nextIndex(final Hash hash) {
-                    return "" + (hash.size() + 1) /* TODO? check if keys are actually all ints? */;
-                }
             };
 
             abstract void apply(Hash hash, String field, Value value);
@@ -727,7 +712,7 @@ public class Value {
                     // TODO: move impl into enum elements, here call only value.insert
                     value.matchType()
                         .ifArray(a -> a.insert(mode, tail, newValue))
-                        .ifHash(h -> h.insert(insertMode(mode, field, tail), tail, newValue))
+                        .ifHash(h -> h.insert(mode, tail, newValue))
                         .orElseThrow();
                 }
             }
@@ -738,7 +723,7 @@ public class Value {
         private Value processRef(final InsertMode mode, final Value newValue, final String field, final String[] tail) {
             final Value referencedValue = getReferencedValue(field);
             if (referencedValue != null) {
-                return referencedValue.asHash().insert(insertMode(mode, field, tail), tail, newValue);
+                return referencedValue.asHash().insert(mode, tail, newValue);
             }
             else {
                 throw new IllegalArgumentException("Using ref, but can't find: " + field + " in: " + this);
@@ -766,16 +751,6 @@ public class Value {
                     break;
             }
             return referencedValue;
-        }
-
-        private InsertMode insertMode(final InsertMode mode, final String field, final String[] tail) {
-            // if the field is marked as array, this hash should be smth. like { 1=a, 2=b }
-            final boolean isIndexedArray = field.endsWith(Metafix.ARRAY_MARKER);
-            final boolean nextIsRef = tail.length > 0 && (
-                    tail[0].startsWith(ReservedField.$first.name()) ||
-                    tail[0].startsWith(ReservedField.$last.name()) ||
-                    isNumber(tail[0]));
-            return isIndexedArray && !nextIsRef ? InsertMode.INDEXED : mode;
         }
 
         /**

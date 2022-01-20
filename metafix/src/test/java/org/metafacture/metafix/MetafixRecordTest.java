@@ -23,11 +23,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -40,9 +37,6 @@ import java.util.Arrays;
  */
 @ExtendWith(MockitoExtension.class)
 public class MetafixRecordTest {
-
-    @RegisterExtension
-    private MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Mock
     private StreamReceiver streamReceiver;
@@ -484,6 +478,7 @@ public class MetafixRecordTest {
     @Test
     public void appendWithWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('stringimals[]')",
                 "copy_field('?nimal', 'stringimals[].$append')"
             ),
             i -> {
@@ -549,6 +544,7 @@ public class MetafixRecordTest {
     @Test
     public void appendWithMultipleWildcards() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('stringimals[]')",
                 "copy_field('?ni??l', 'stringimals[].$append')"
             ),
             i -> {
@@ -579,6 +575,7 @@ public class MetafixRecordTest {
     @Test
     public void appendWithAsteriksWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('stringimals[]')",
                 "copy_field('*al', 'stringimals[].$append')"
             ),
             i -> {
@@ -608,6 +605,7 @@ public class MetafixRecordTest {
     @Test
     public void appendWithBracketWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('stringimals[]')",
                 "copy_field('[ac]nimal', 'stringimals[].$append')"
             ),
             i -> {
@@ -637,6 +635,7 @@ public class MetafixRecordTest {
     // See https://github.com/metafacture/metafacture-fix/issues/89
     public void appendWithAsteriksWildcardAtTheEnd() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('stringimals[]')",
                 "copy_field('ani*', 'stringimals[].$append')"
             ),
             i -> {
