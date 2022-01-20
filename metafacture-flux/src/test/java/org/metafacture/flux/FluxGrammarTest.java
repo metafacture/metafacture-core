@@ -90,9 +90,21 @@ public final class FluxGrammarTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void issue421_shouldThrowRuntimeExceptionWhenSemicolonIsMissing()
+    public void issue421_shouldThrowRuntimeExceptionWhenSemicolonInFlowIsMissing()
         throws RecognitionException, IOException {
         final String script = "\"test\"|print";
+        try {
+            FluxCompiler.compile(createInputStream(script), emptyMap());
+        } catch (RuntimeException re) {
+            assertEquals("mismatched input '<EOF>' expecting ';' in Flux", re.getMessage());
+            throw re;
+        }
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void issue421_shouldThrowRuntimeExceptionWhenSemicolonInVarDefIsMissing()
+        throws RecognitionException, IOException {
+        final String script = "foo=42";
         try {
             FluxCompiler.compile(createInputStream(script), emptyMap());
         } catch (RuntimeException re) {

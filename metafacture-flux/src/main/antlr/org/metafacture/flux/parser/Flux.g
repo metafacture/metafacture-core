@@ -60,6 +60,12 @@ varDef
     ->
       ^(ASSIGN Identifier exp)
   ;
+catch [RecognitionException re] {
+    reportError(re);
+    recover(input,re);
+    retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+    throw re;
+}
 
 flow
   :
