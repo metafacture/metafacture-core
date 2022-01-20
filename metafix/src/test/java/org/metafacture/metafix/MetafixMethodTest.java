@@ -538,7 +538,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // TODO: Fix order (`animals[].1` should stay before `animals[].2`)
     public void shouldAppendValueInArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "append('animals[].1', ' is cool')"
@@ -555,9 +554,9 @@ public class MetafixMethodTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("animals[]");
+                o.get().literal("1", "dog is cool");
                 o.get().literal("2", "cat");
                 o.get().literal("3", "zebra");
-                o.get().literal("1", "dog is cool");
                 o.get().endEntity();
                 o.get().endRecord();
             }
@@ -565,7 +564,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/100")
+    // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldAppendValueInEntireArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "append('animals[].*', ' is cool')"
@@ -709,7 +708,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldFilterArrayObjectValues() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "filter('animals[]', '[Cc]at')"
@@ -793,7 +792,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldJoinArrayObjectField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "join_field('animals[]', ',')"
@@ -859,7 +858,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // TODO: Fix order (`animals[].1` should stay before `animals[].2`)
     public void shouldPrependValueInArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "prepend('animals[].1', 'cool ')"
@@ -876,9 +874,9 @@ public class MetafixMethodTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("animals[]");
+                o.get().literal("1", "cool dog");
                 o.get().literal("2", "cat");
                 o.get().literal("3", "zebra");
-                o.get().literal("1", "cool dog");
                 o.get().endEntity();
                 o.get().endRecord();
             }
@@ -886,7 +884,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/100")
+    // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldPrependValueInEntireArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "prepend('animals[].*', 'cool ')"
@@ -958,7 +956,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/100")
+    // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldReplaceAllRegexesInArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "replace_all('animals[].*', a, QR)"

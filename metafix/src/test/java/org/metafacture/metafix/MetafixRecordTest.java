@@ -1813,6 +1813,7 @@ public class MetafixRecordTest {
     @Test
     public void shouldAddObjectWithRandomNumberToMarkedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('bnimals[]')",
                 "random('bnimals[].$append.number', '100')"
             ),
             i -> {
