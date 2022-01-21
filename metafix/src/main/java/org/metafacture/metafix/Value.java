@@ -17,6 +17,7 @@
 package org.metafacture.metafix;
 
 import org.metafacture.commons.tries.SimpleRegexTrie;
+import org.metafacture.framework.MetafactureException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -298,7 +299,7 @@ public class Value {
         public void orElseThrow() {
             orElse(v -> {
                 final String types = expected.stream().map(Type::name).collect(Collectors.joining(" or "));
-                throw new IllegalStateException("expected " + types + ", got " + value.type);
+                throw new MetafactureException(new IllegalStateException("expected " + types + ", got " + value.type));
             });
         }
 
@@ -311,7 +312,7 @@ public class Value {
                 return this;
             }
             else {
-                throw new IllegalStateException("already expecting " + type);
+                throw new MetafactureException(new IllegalStateException("already expecting " + type));
             }
         }
 
@@ -848,7 +849,7 @@ public class Value {
                         map.remove(f);
 
                         if (operator != null) {
-                            value.asList(a -> a.forEach(v -> append(f, operator.apply(v.toString()))));
+                            value.asList(a -> a.forEach(v -> append(f, operator.apply(v.asString()))));
                         }
                     }
                     else {

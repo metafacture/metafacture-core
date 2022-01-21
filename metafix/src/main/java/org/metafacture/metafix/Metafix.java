@@ -132,7 +132,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     public void endRecord() {
         entityCountStack.removeLast();
         if (!entityCountStack.isEmpty()) {
-            throw new IllegalStateException(ENTITIES_NOT_BALANCED);
+            throw new MetafactureException(new IllegalStateException(ENTITIES_NOT_BALANCED));
         }
         flattener.endRecord();
         LOG.debug("End record, walking fix: {}", currentRecord);

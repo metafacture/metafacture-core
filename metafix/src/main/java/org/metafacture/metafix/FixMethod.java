@@ -112,7 +112,7 @@ enum FixMethod {
 
             record.getList(field, a -> record.put(field, Value.newHash(h -> {
                 for (int i = 1; i < a.size(); i = i + 2) {
-                    h.put(a.get(i - 1).toString(), a.get(i));
+                    h.put(a.get(i - 1).asString(), a.get(i));
                 }
             })));
         }
@@ -129,7 +129,7 @@ enum FixMethod {
 
             record.getList(field, a -> a.forEach(v -> {
                 final Pattern p = Pattern.compile(params.get(1));
-                final Matcher m = p.matcher(v.toString());
+                final Matcher m = p.matcher(v.asString());
                 if (m.matches()) {
                     record.remove(field);
 
@@ -166,7 +166,7 @@ enum FixMethod {
             record.replace(params.get(0), params.subList(1, params.size()).stream()
                     .filter(f -> literalString(f) || record.find(f) != null)
                     .map(f -> literalString(f) ? new Value(f.substring(1)) : record.findList(f, null).asArray().get(0))
-                    .map(Value::toString).collect(Collectors.joining(joinChar != null ? joinChar : " ")));
+                    .map(Value::asString).collect(Collectors.joining(joinChar != null ? joinChar : " ")));
         }
 
         private boolean literalString(final String s) {
@@ -295,7 +295,7 @@ enum FixMethod {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String joinChar = params.size() > 1 ? params.get(1) : "";
             record.transformField(params.get(0), (m, c) -> m
-                    .ifArray(a -> c.accept(new Value(a.stream().map(Value::toString).collect(Collectors.joining(joinChar)))))
+                    .ifArray(a -> c.accept(new Value(a.stream().map(Value::asString).collect(Collectors.joining(joinChar)))))
             );
         }
     },

@@ -618,6 +618,28 @@ public class MetafixMethodTest {
     }
 
     @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/100
+    public void shouldNotAppendValueToHash() {
+        assertThrows(IllegalStateException.class, "expected String, got Hash", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "append('animals', ' is cool')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("animals");
+                    i.literal("1", "dog");
+                    i.literal("2", "cat");
+                    i.literal("3", "zebra");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
     public void shouldCountNumberOfValuesInArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "count(numbers)"
