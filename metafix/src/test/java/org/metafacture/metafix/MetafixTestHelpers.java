@@ -16,9 +16,11 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
@@ -41,6 +43,12 @@ import java.util.function.Supplier;
 public final class MetafixTestHelpers {
 
     private MetafixTestHelpers() {
+    }
+
+    public static void assertThrows(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
+        final Throwable exception = Assertions.assertThrows(MetafactureException.class, executable).getCause();
+        Assertions.assertSame(expectedClass, exception.getClass());
+        Assertions.assertEquals(expectedMessage, exception.getMessage());
     }
 
     public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Consumer<Metafix> in,

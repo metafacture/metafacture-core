@@ -16,10 +16,8 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -896,26 +894,31 @@ public class MetafixRecordTest {
 
     @Test
     public void addFieldToFirstObjectMissing() {
-        assertThrowsOnEmptyRecord("add_field('animals[].$first.kind','nice')");
+        assertThrowsOnEmptyRecord("$first");
     }
 
     @Test
     public void addFieldToLastObjectMissing() {
-        assertThrowsOnEmptyRecord("add_field('animals[].$last.kind','nice')");
+        assertThrowsOnEmptyRecord("$last");
     }
 
     @Test
     public void addFieldToObjectByIndexMissing() {
-        assertThrowsOnEmptyRecord("add_field('animals[].2.kind','nice')");
+        assertThrowsOnEmptyRecord("2");
     }
 
-    private void assertThrowsOnEmptyRecord(final String fix) {
-        Assertions.assertThrows(MetafactureException.class, () -> {
-            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(fix),
+    private void assertThrowsOnEmptyRecord(final String index) {
+        MetafixTestHelpers.assertThrows(IllegalArgumentException.class, "Using ref, but can't find: " + index + " in: {}", () -> {
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "add_field('animals[]." + index + ".kind','nice')"
+                ),
                 i -> {
                     i.startRecord("1");
                     i.endRecord();
-                }, o -> { });
+                },
+                o -> {
+                }
+            );
         });
     }
 
@@ -1596,42 +1599,43 @@ public class MetafixRecordTest {
     }
 
     @Test
-    public void accessArrayImplicit() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "upcase('name')"),
-            i -> {
-                i.startRecord("1");
-                i.literal("name", "max");
-                i.literal("name", "mo");
-                i.endRecord();
-            }, (o, f) -> {
-                o.get().startRecord("1");
-                o.get().startEntity("name");
-                o.get().literal("1", "MAX");
-                o.get().literal("2", "MO");
-                o.get().endEntity();
-                o.get().endRecord();
-            });
+    public void shouldNotAccessArrayImplicitly() {
+        MetafixTestHelpers.assertThrows(IllegalStateException.class, "expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "upcase('name')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("name", "max");
+                    i.literal("name", "mo");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
     }
 
     @Test
-    // TODO: WDCD? explicit * for array fields?
-    public void accessArrayByWildcard() {
+    public void shouldAccessArrayByWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "upcase('name.*')"),
+                "upcase('name.*')"
+            ),
             i -> {
                 i.startRecord("1");
                 i.literal("name", "max");
                 i.literal("name", "mo");
                 i.endRecord();
-            }, (o, f) -> {
+            },
+            o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("name");
                 o.get().literal("1", "MAX");
                 o.get().literal("2", "MO");
                 o.get().endEntity();
                 o.get().endRecord();
-            });
+            }
+        );
     }
 
     @Test

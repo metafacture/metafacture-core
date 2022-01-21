@@ -458,7 +458,7 @@ public class Value {
                 }
             }
 
-            list.removeIf(v -> v == null);
+            list.removeIf(v -> Value.isNull(v));
         }
 
         private void transformFields(final int index, final String[] fields, final UnaryOperator<String> operator) {
@@ -849,7 +849,9 @@ public class Value {
                         map.remove(f);
 
                         if (operator != null) {
-                            value.asList(a -> a.forEach(v -> append(f, operator.apply(v.asString()))));
+                            value.matchType()
+                                .ifString(s -> append(f, operator.apply(s)))
+                                .orElseThrow();
                         }
                     }
                     else {
