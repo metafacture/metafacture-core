@@ -29,6 +29,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -196,9 +197,28 @@ enum FixMethod {
             final String search = params.get(1);
             final String replace = params.get(2);
 
-            // TODO: recurse into arrays/values
+            final UnaryOperator<String> operator = s -> s.replaceAll(search, replace);
+
             record.transformField(params.get(0), (m, c) -> m
-                    .ifHash(h -> c.accept(Value.newHash(n -> h.forEach((f, w) -> n.put(f.replaceAll(search, replace), w)))))
+                    .ifArray(a -> c.accept(renameArray(a, operator)))
+                    .ifHash(h -> c.accept(renameHash(h, operator)))
+                    .orElseThrow()
+            );
+        }
+
+        private Value renameArray(final Value.Array array, final UnaryOperator<String> operator) {
+            return Value.newArray(a -> array.forEach(v -> a.add(renameValue(v, operator))));
+        }
+
+        private Value renameHash(final Value.Hash hash, final UnaryOperator<String> operator) {
+            return Value.newHash(h -> hash.forEach((f, v) -> h.put(operator.apply(f), renameValue(v, operator))));
+        }
+
+        private Value renameValue(final Value value, final UnaryOperator<String> operator) {
+            return value.extractType((m, c) -> m
+                    .ifArray(a -> c.accept(renameArray(a, operator)))
+                    .ifHash(h -> c.accept(renameHash(h, operator)))
+                    .orElse(c)
             );
         }
     },

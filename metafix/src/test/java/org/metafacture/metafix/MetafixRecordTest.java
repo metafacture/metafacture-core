@@ -1907,7 +1907,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldRecursivelyRenameFieldsInHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "rename(others, ani, QR)"
@@ -1937,7 +1937,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldRecursivelyRenameFieldsInArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "rename('animals[]', ani, XY)"

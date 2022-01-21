@@ -211,7 +211,7 @@ public class Value {
         return new TypeMatcher(this);
     }
 
-    private <T> T extractType(final BiConsumer<TypeMatcher, Consumer<T>> consumer) {
+    public <T> T extractType(final BiConsumer<TypeMatcher, Consumer<T>> consumer) {
         final AtomicReference<T> result = new AtomicReference<>();
         consumer.accept(matchType(), result::set);
         return result.get();
