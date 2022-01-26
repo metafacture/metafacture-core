@@ -17,6 +17,7 @@
 package org.metafacture.metafix;
 
 import org.metafacture.commons.tries.SimpleRegexTrie;
+import org.metafacture.framework.MetafactureException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
@@ -103,6 +105,10 @@ public class Value {
         this.array = null;
         this.hash = null;
         this.string = string;
+    }
+
+    public Value(final int integer) {
+        this(String.valueOf(integer));
     }
 
     public static Value newArray() {
@@ -205,10 +211,35 @@ public class Value {
         return new TypeMatcher(this);
     }
 
-    private <T> T extractType(final BiConsumer<TypeMatcher, Consumer<T>> consumer) {
+    public <T> T extractType(final BiConsumer<TypeMatcher, Consumer<T>> consumer) {
         final AtomicReference<T> result = new AtomicReference<>();
         consumer.accept(matchType(), result::set);
         return result.get();
+    }
+
+    @Override
+    public final boolean equals(final Object object) {
+        if (object == this) {
+            return true;
+        }
+
+        if (!(object instanceof Value)) {
+            return false;
+        }
+
+        final Value other = (Value) object;
+        return Objects.equals(type, other.type) &&
+            Objects.equals(array, other.array) &&
+            Objects.equals(hash, other.hash) &&
+            Objects.equals(string, other.string);
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hashCode(type) +
+            Objects.hashCode(array) +
+            Objects.hashCode(hash) +
+            Objects.hashCode(string);
     }
 
     @Override
@@ -268,7 +299,7 @@ public class Value {
         public void orElseThrow() {
             orElse(v -> {
                 final String types = expected.stream().map(Type::name).collect(Collectors.joining(" or "));
-                throw new IllegalStateException("expected " + types + ", got " + value.type);
+                throw new MetafactureException(new IllegalStateException("expected " + types + ", got " + value.type));
             });
         }
 
@@ -281,7 +312,7 @@ public class Value {
                 return this;
             }
             else {
-                throw new IllegalStateException("already expecting " + type);
+                throw new MetafactureException(new IllegalStateException("already expecting " + type));
             }
         }
 
@@ -427,7 +458,7 @@ public class Value {
                 }
             }
 
-            list.removeIf(v -> v == null);
+            list.removeIf(v -> Value.isNull(v));
         }
 
         private void transformFields(final int index, final String[] fields, final UnaryOperator<String> operator) {
@@ -784,6 +815,18 @@ public class Value {
             }
         }
 
+        public void transformField(final String field, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
+            final Value oldValue = find(field);
+
+            if (oldValue != null) {
+                final Value newValue = oldValue.extractType(consumer);
+
+                if (newValue != null) {
+                    insert(InsertMode.REPLACE, split(field), newValue);
+                }
+            }
+        }
+
         public void transformFields(final List<String> params, final UnaryOperator<String> operator) {
             transformFields(split(params.get(0)), operator);
         }
@@ -806,7 +849,9 @@ public class Value {
                         map.remove(f);
 
                         if (operator != null) {
-                            value.asList(a -> a.forEach(v -> append(f, operator.apply(v.toString()))));
+                            value.matchType()
+                                .ifString(s -> append(f, operator.apply(s)))
+                                .orElseThrow();
                         }
                     }
                     else {

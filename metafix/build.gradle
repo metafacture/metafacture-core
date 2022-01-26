@@ -23,6 +23,7 @@ dependencies {
   implementation "org.metafacture:metafacture-flowcontrol:${versions.metafacture}"
   implementation "org.metafacture:metamorph:${versions.metafacture}"
 
+  testImplementation "nl.jqno.equalsverifier:equalsverifier:${versions.equalsverifier}"
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
   testImplementation "org.mockito:mockito-junit-jupiter:${versions.mockito}"
 }

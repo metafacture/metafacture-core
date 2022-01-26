@@ -16,13 +16,12 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -895,26 +894,31 @@ public class MetafixRecordTest {
 
     @Test
     public void addFieldToFirstObjectMissing() {
-        assertThrowsOnEmptyRecord("add_field('animals[].$first.kind','nice')");
+        assertThrowsOnEmptyRecord("$first");
     }
 
     @Test
     public void addFieldToLastObjectMissing() {
-        assertThrowsOnEmptyRecord("add_field('animals[].$last.kind','nice')");
+        assertThrowsOnEmptyRecord("$last");
     }
 
     @Test
     public void addFieldToObjectByIndexMissing() {
-        assertThrowsOnEmptyRecord("add_field('animals[].2.kind','nice')");
+        assertThrowsOnEmptyRecord("2");
     }
 
-    private void assertThrowsOnEmptyRecord(final String fix) {
-        Assertions.assertThrows(MetafactureException.class, () -> {
-            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(fix),
+    private void assertThrowsOnEmptyRecord(final String index) {
+        MetafixTestHelpers.assertThrows(IllegalArgumentException.class, "Using ref, but can't find: " + index + " in: {}", () -> {
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "add_field('animals[]." + index + ".kind','nice')"
+                ),
                 i -> {
                     i.startRecord("1");
                     i.endRecord();
-                }, o -> { });
+                },
+                o -> {
+                }
+            );
         });
     }
 
@@ -1595,42 +1599,43 @@ public class MetafixRecordTest {
     }
 
     @Test
-    public void accessArrayImplicit() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "upcase('name')"),
-            i -> {
-                i.startRecord("1");
-                i.literal("name", "max");
-                i.literal("name", "mo");
-                i.endRecord();
-            }, (o, f) -> {
-                o.get().startRecord("1");
-                o.get().startEntity("name");
-                o.get().literal("1", "MAX");
-                o.get().literal("2", "MO");
-                o.get().endEntity();
-                o.get().endRecord();
-            });
+    public void shouldNotAccessArrayImplicitly() {
+        MetafixTestHelpers.assertThrows(IllegalStateException.class, "expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "upcase('name')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("name", "max");
+                    i.literal("name", "mo");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
     }
 
     @Test
-    // TODO: WDCD? explicit * for array fields?
-    public void accessArrayByWildcard() {
+    public void shouldAccessArrayByWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "upcase('name.*')"),
+                "upcase('name.*')"
+            ),
             i -> {
                 i.startRecord("1");
                 i.literal("name", "max");
                 i.literal("name", "mo");
                 i.endRecord();
-            }, (o, f) -> {
+            },
+            o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("name");
                 o.get().literal("1", "MAX");
                 o.get().literal("2", "MO");
                 o.get().endEntity();
                 o.get().endRecord();
-            });
+            }
+        );
     }
 
     @Test
@@ -1740,6 +1745,272 @@ public class MetafixRecordTest {
                 f.apply(2).endEntity();
                 o.get().endRecord();
             });
+    }
+
+    @Test
+    public void shouldAddRandomNumber() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "random(test, '100')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "marc");
+                i.literal("title", "json");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("title");
+                o.get().literal("1", "marc");
+                o.get().literal("2", "json");
+                o.get().endEntity();
+                o.get().literal(ArgumentMatchers.eq("test"), ArgumentMatchers.argThat(i -> Integer.parseInt(i) < 100));
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/100
+    public void shouldReplaceExistingValueWithRandomNumber() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "random(others, '100')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("others", "human");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal(ArgumentMatchers.eq("others"), ArgumentMatchers.argThat(i -> Integer.parseInt(i) < 100));
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldAddRandomNumberToMarkedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "random('animals[].$append', '100')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "cat");
+                i.literal("2", "dog");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "cat");
+                o.get().literal("2", "dog");
+                o.get().literal(ArgumentMatchers.eq("3"), ArgumentMatchers.argThat(i -> Integer.parseInt(i) < 100));
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldAddObjectWithRandomNumberToMarkedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('bnimals[]')",
+                "random('bnimals[].$append.number', '100')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("bnimals[]");
+                o.get().startEntity("1");
+                o.get().literal(ArgumentMatchers.eq("number"), ArgumentMatchers.argThat(i -> Integer.parseInt(i) < 100));
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldAddRandomNumberToUnmarkedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "random('animals.$append', '100')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("animals", "cat");
+                i.literal("animals", "dog");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals");
+                o.get().literal("1", "cat");
+                o.get().literal("2", "dog");
+                o.get().literal(ArgumentMatchers.eq("3"), ArgumentMatchers.argThat(i -> Integer.parseInt(i) < 100));
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldAddRandomNumberToUnmarkedArrayObject() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "random('animals.$append', '100')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals");
+                i.literal("1", "cat");
+                i.literal("2", "dog");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals");
+                o.get().literal("1", "cat");
+                o.get().literal("2", "dog");
+                o.get().literal(ArgumentMatchers.eq("3"), ArgumentMatchers.argThat(i -> Integer.parseInt(i) < 100));
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldRenameFieldsInHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "rename(your, '[ae]', X)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("your");
+                i.literal("name", "nicolas");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("your");
+                o.get().literal("nXmX", "nicolas");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/100
+    public void shouldRecursivelyRenameFieldsInHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "rename(others, ani, QR)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("others");
+                i.literal("animal", "human");
+                i.literal("canister", "metall");
+                i.startEntity("area");
+                i.literal("ani", "test");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("others");
+                o.get().literal("QRmal", "human");
+                o.get().literal("cQRster", "metall");
+                o.get().startEntity("area");
+                o.get().literal("QR", "test");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/100
+    public void shouldRecursivelyRenameFieldsInArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "rename('animals[]', ani, XY)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.startEntity("1");
+                i.literal("animal", "dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("animal", "cat");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().startEntity("1");
+                o.get().literal("XYmal", "dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("XYmal", "cat");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldRenameAllFieldsInHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "rename('.', ani, XY)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals");
+                i.literal("animal", "dog");
+                i.literal("animal", "cat");
+                i.endEntity();
+                i.startEntity("others");
+                i.literal("animal", "human");
+                i.literal("canister", "metall");
+                i.startEntity("area");
+                i.literal("ani", "test");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("fictional");
+                i.literal("animal", "unicorn");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("XYmals");
+                o.get().startEntity("XYmal");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "cat");
+                f.apply(2).endEntity();
+                o.get().startEntity("others");
+                o.get().literal("XYmal", "human");
+                o.get().literal("cXYster", "metall");
+                o.get().startEntity("area");
+                o.get().literal("XY", "test");
+                f.apply(2).endEntity();
+                o.get().startEntity("fictional");
+                o.get().literal("XYmal", "unicorn");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
     }
 
 }
