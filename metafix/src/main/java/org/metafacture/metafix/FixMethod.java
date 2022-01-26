@@ -16,35 +16,35 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.metafix.api.FixFunction;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.maps.FileMap;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-enum FixMethod {
+public enum FixMethod implements FixFunction {
 
     // SCRIPT-LEVEL METHODS:
 
     nothing {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             // do nothing
         }
     },
     put_filemap {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String fileName = params.get(0);
             final FileMap fileMap = new FileMap();
@@ -56,16 +56,19 @@ enum FixMethod {
         }
     },
     put_map {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             metafix.putMap(params.get(0), options);
         }
     },
     put_var {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             metafix.getVars().put(params.get(0), params.get(1));
         }
     },
     put_vars {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             metafix.getVars().putAll(options);
         }
@@ -74,11 +77,13 @@ enum FixMethod {
     // RECORD-LEVEL METHODS:
 
     add_field {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.append(params.get(0), params.get(1));
         }
     },
     array { // array-from-hash
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String field = params.get(0);
 
@@ -93,11 +98,13 @@ enum FixMethod {
         }
     },
     copy_field {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.copy(params);
         }
     },
     format {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String field = params.get(0);
 
@@ -108,6 +115,7 @@ enum FixMethod {
         }
     },
     hash { // hash-from-array
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String field = params.get(0);
 
@@ -119,12 +127,14 @@ enum FixMethod {
         }
     },
     move_field {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.copy(params);
             record.removeNested(params.get(0));
         }
     },
     parse_text {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String field = params.get(0);
 
@@ -162,6 +172,7 @@ enum FixMethod {
         }
     },
     paste {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String joinChar = options.get("join_char");
             record.replace(params.get(0), params.subList(1, params.size()).stream()
@@ -175,6 +186,7 @@ enum FixMethod {
         }
     },
     random {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String field = params.get(0);
             final int max = getInteger(params, 1);
@@ -183,16 +195,19 @@ enum FixMethod {
         }
     },
     reject {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.setReject(true);
         }
     },
     remove_field {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             params.forEach(record::removeNested);
         }
     },
     rename {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String search = params.get(1);
             final String replace = params.get(2);
@@ -223,11 +238,13 @@ enum FixMethod {
         }
     },
     retain {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.retainFields(params);
         }
     },
     set_array {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String field = params.get(0);
             final List<String> toAdd = params.subList(1, params.size());
@@ -240,11 +257,13 @@ enum FixMethod {
         }
     },
     set_field {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.replace(params.get(0), params.get(1));
         }
     },
     set_hash {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String field = params.get(0);
 
@@ -260,6 +279,7 @@ enum FixMethod {
         }
     },
     vacuum {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.removeEmptyValues();
         }
@@ -270,17 +290,20 @@ enum FixMethod {
     // TODO SPEC: switch to morph-style named params in general?
 
     append {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String value = params.get(1);
             record.transformFields(params, s -> s + value);
         }
     },
     capitalize {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformFields(params, s -> s.substring(0, 1).toUpperCase() + s.substring(1));
         }
     },
     count {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformField(params.get(0), (m, c) -> m
                     .ifArray(a -> c.accept(new Value(a.size())))
@@ -289,11 +312,13 @@ enum FixMethod {
         }
     },
     downcase {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformFields(params, String::toLowerCase);
         }
     },
     filter {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final Pattern search = Pattern.compile(params.get(1));
             final boolean invert = getBoolean(options, "invert");
@@ -306,12 +331,14 @@ enum FixMethod {
         }
     },
     index {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String search = params.get(1);
             record.transformFields(params, s -> String.valueOf(s.indexOf(search))); // TODO: multiple
         }
     },
     join_field {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String joinChar = params.size() > 1 ? params.get(1) : "";
             record.transformField(params.get(0), (m, c) -> m
@@ -320,6 +347,7 @@ enum FixMethod {
         }
     },
     lookup {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final Map<String, String> map;
 
@@ -341,12 +369,14 @@ enum FixMethod {
         }
     },
     prepend {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String value = params.get(1);
             record.transformFields(params, s -> value + s);
         }
     },
     replace_all {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String search = params.get(1);
             final String replace = params.get(2);
@@ -355,6 +385,7 @@ enum FixMethod {
         }
     },
     reverse {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformField(params.get(0), (m, c) -> m
                     .ifArray(a -> {
@@ -367,6 +398,7 @@ enum FixMethod {
         }
     },
     sort_field {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final boolean numeric = getBoolean(options, "numeric");
             final boolean reverse = getBoolean(options, "reverse");
@@ -383,6 +415,7 @@ enum FixMethod {
         }
     },
     split_field {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String splitChar = params.size() > 1 ? params.get(1) : "\\s+";
             final Pattern splitPattern = Pattern.compile(splitChar);
@@ -398,11 +431,13 @@ enum FixMethod {
         }
     },
     substring {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformFields(params, s -> s.substring(getInteger(params, 1), getInteger(params, 2) - 1));
         }
     },
     sum {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformField(params.get(0), (m, c) -> m
                     .ifArray(a -> c.accept(new Value(a.stream().map(Value::asString).mapToInt(Integer::parseInt).sum())))
@@ -410,11 +445,13 @@ enum FixMethod {
         }
     },
     trim {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformFields(params, String::trim);
         }
     },
     uniq {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformField(params.get(0), (m, c) -> m
                     .ifArray(a -> c.accept(newArray(unique(a.stream()))))
@@ -422,6 +459,7 @@ enum FixMethod {
         }
     },
     upcase {
+        @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transformFields(params, String::toUpperCase);
         }
@@ -436,24 +474,5 @@ enum FixMethod {
     private static final String FILEMAP_DEFAULT_SEPARATOR = ",";
 
     private static final Random RANDOM = new Random();
-
-    private static boolean getBoolean(final Map<String, String> options, final String key) {
-        return Boolean.parseBoolean(options.get(key));
-    }
-
-    private static int getInteger(final List<String> params, final int index) {
-        return Integer.parseInt(params.get(index));
-    }
-
-    private static Value newArray(final Stream<Value> stream) {
-        return Value.newArray(a -> stream.forEach(a::add));
-    }
-
-    private static Stream<Value> unique(final Stream<Value> stream) {
-        final Set<Value> set = new HashSet<>();
-        return stream.filter(set::add);
-    }
-
-    abstract void apply(Metafix metafix, Record record, List<String> params, Map<String, String> options);
 
 }

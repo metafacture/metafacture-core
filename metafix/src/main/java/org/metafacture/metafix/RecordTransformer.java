@@ -17,8 +17,10 @@
 package org.metafacture.metafix;
 
 import org.metafacture.commons.StringUtil;
+import org.metafacture.commons.reflection.ReflectionUtil;
 import org.metafacture.framework.MetafactureException;
-import org.metafacture.metafix.FixPredicate.Quantifier;
+import org.metafacture.metafix.api.FixFunction;
+import org.metafacture.metafix.api.FixPredicate;
 import org.metafacture.metafix.fix.Do;
 import org.metafacture.metafix.fix.ElsIf;
 import org.metafacture.metafix.fix.Else;
@@ -32,9 +34,10 @@ import org.metafacture.metafix.fix.Unless;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -158,44 +161,39 @@ class RecordTransformer {
 
     private boolean testConditional(final String conditional, final List<String> params) {
         LOG.debug("<IF>: {} parameters: {}", conditional, params);
-        boolean result = false;
-        if ("exists".equals(conditional)) {
-            return record.containsField(params.get(0));
-        }
-        if (!conditional.contains("_")) {
-            throw new IllegalArgumentException("Missing quantifier prefix (all_, any_, none_) for " + conditional);
-        }
-        final String[] quantifierAndPredicate = conditional.split("_");
+
         try {
-            final Quantifier quantifier = FixPredicate.Quantifier.valueOf(quantifierAndPredicate[0]);
-            final FixPredicate predicate = FixPredicate.valueOf(quantifierAndPredicate[1]);
-            result = quantifier.test(record, predicate, params);
+            final FixPredicate predicate = getInstance(conditional, FixPredicate.class, FixConditional::valueOf);
+            return predicate.test(metafix, record, params, options(null)); // TODO: options
         }
         catch (final IllegalArgumentException e) {
             throw new MetafactureException(e);
         }
+
         // TODO, possibly: use morph functions here (& in processFunction):
         // final FunctionFactory functionFactory = new FunctionFactory();
         // functionFactory.registerClass("not_equals", NotEquals.class);
         // functionFactory.registerClass("replace_all", Replace.class);
         // final Function function = functionFactory.newInstance(conditional,
         // resolvedAttributeMap(params, theIf.getOptions()));
-        return result;
     }
 
     private void processFunction(final Expression expression, final List<String> params) {
         try {
-            final FixMethod method = FixMethod.valueOf(expression.getName());
-            final Map<String, String> options = options(((MethodCall) expression).getOptions());
-            method.apply(metafix, record, params, options);
+            final FixFunction function = getInstance(expression.getName(), FixFunction.class, FixMethod::valueOf);
+            function.apply(metafix, record, params, options(((MethodCall) expression).getOptions()));
         }
         catch (final IllegalArgumentException e) {
             throw new MetafactureException(e);
         }
     }
 
+    private <T> T getInstance(final String name, final Class<T> baseType, final Function<String, ? extends T> enumFunction) {
+        return name.contains(".") ? ReflectionUtil.loadClass(name, baseType).newInstance() : enumFunction.apply(name);
+    }
+
     private Map<String, String> options(final Options options) {
-        final Map<String, String> map = new HashMap<>();
+        final Map<String, String> map = new LinkedHashMap<>();
         if (options != null) {
             for (int i = 0; i < options.getKeys().size(); i += 1) {
                 map.put(options.getKeys().get(i), options.getValues().get(i));

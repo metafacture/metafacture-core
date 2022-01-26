@@ -16,13 +16,13 @@ Expression:
 ;
 
 Unless:
-  'unless' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')'
+  'unless' name = QualifiedName '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')'
     elements += Expression*
   'end'
 ;
 
 If:
-  'if' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')'
+  'if' name = QualifiedName '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')'
     elements += Expression*
   elseIf = ElsIf?
   else = Else?
@@ -30,7 +30,7 @@ If:
 ;
 
 ElsIf:
-  'elsif' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')'
+  'elsif' name = QualifiedName '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* )? ')'
     elements += Expression*
 ;
 
@@ -46,7 +46,7 @@ Do:
 ;
 
 MethodCall:
-  name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* ','? )? ( options = Options )? ')'
+  name = QualifiedName '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* ','? )? ( options = Options )? ')'
 ;
 
 Options:

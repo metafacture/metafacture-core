@@ -629,4 +629,42 @@ public class MetafixIfTest {
         );
     }
 
+    @Test
+    public void shouldApplyCustomJavaPredicate() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if org.metafacture.metafix.util.TestPredicate(name, Test)",
+                "  add_field('type', 'TEST')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Max");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.literal("name", "Test");
+                i.endRecord();
+
+                i.startRecord("3");
+                i.literal("test", "Some University");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Max");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().literal("name", "Test");
+                o.get().literal("type", "TEST");
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().literal("test", "Some University");
+                o.get().literal("type", "TEST");
+                o.get().endRecord();
+            }
+        );
+    }
+
 }
