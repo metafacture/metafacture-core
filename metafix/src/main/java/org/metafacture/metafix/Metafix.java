@@ -77,7 +77,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     private int entityCount;
     private StreamReceiver outputStreamReceiver;
     private String recordIdentifier;
-    private List<Value.Hash> entities = new ArrayList<>();
+    private List<Value> entities = new ArrayList<>();
 
     public Metafix() {
         flattener.setReceiver(new DefaultStreamReceiver() {
@@ -132,7 +132,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     public void endRecord() {
         entityCountStack.removeLast();
         if (!entityCountStack.isEmpty()) {
-            throw new IllegalStateException(ENTITIES_NOT_BALANCED);
+            throw new MetafactureException(new IllegalStateException(ENTITIES_NOT_BALANCED));
         }
         flattener.endRecord();
         LOG.debug("End record, walking fix: {}", currentRecord);
@@ -172,20 +172,33 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
         });
     }
 
+    private void addValue(final String name, final Value value) {
+        final int index = entityCountStack.peek() - 1;
+        if (index < 0 || entities.size() <= index) {
+            currentRecord.add(name, value);
+        }
+        else {
+            entities.get(index).matchType()
+                .ifArray(a -> a.add(value))
+                .ifHash(h -> h.add(name, value))
+                .orElseThrow();
+        }
+    }
+
     @Override
     public void startEntity(final String name) {
         if (name == null) {
             throw new IllegalArgumentException("Entity name must not be null.");
         }
-        ++entityCount;
-        final Integer currentEntityIndex = entityCountStack.peek() - 1;
-        final Value.Hash previousEntity = currentEntityIndex < 0 ||
-                entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
-        entityCountStack.push(Integer.valueOf(entityCount));
+
+        final Value value = name.endsWith(ARRAY_MARKER) ? Value.newArray() : Value.newHash();
+        // TODO: Remove array marker? => name.substring(0, name.length() - ARRAY_MARKER.length());
+
+        addValue(name, value);
+        entities.add(value);
+
+        entityCountStack.push(Integer.valueOf(++entityCount));
         flattener.startEntity(name);
-        final Value value = Value.newHash();
-        (previousEntity != null ? previousEntity : currentRecord).add(name, value);
-        entities.add(value.asHash());
     }
 
     @Override
@@ -197,10 +210,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     @Override
     public void literal(final String name, final String value) {
         LOG.debug("Putting '{}': '{}'", name, value);
-        final Integer currentEntityIndex = entityCountStack.peek() - 1;
-        final Value.Hash currentEntity = currentEntityIndex < 0 ||
-                entities.size() <= currentEntityIndex ? null : entities.get(currentEntityIndex);
-        (currentEntity != null ? currentEntity : currentRecord).add(name, new Value(value));
+        addValue(name, new Value(value));
         // TODO: keep flattener as option?
         // flattener.literal(name, value);
     }

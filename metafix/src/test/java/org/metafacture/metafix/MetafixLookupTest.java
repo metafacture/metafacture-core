@@ -22,10 +22,7 @@ import org.metafacture.metamorph.api.MorphExecutionException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -42,8 +39,7 @@ public class MetafixLookupTest {
     private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
     private static final String TSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.tsv";
 
-    @RegisterExtension
-    private MockitoRule mockitoRule = MockitoJUnit.rule();
+    private static final String LOOKUP = "lookup('title.*',";
 
     @Mock
     private StreamReceiver streamReceiver;
@@ -54,14 +50,14 @@ public class MetafixLookupTest {
     @Test
     public void inline() {
         assertMap(
-                "lookup('title', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"
+                LOOKUP + " Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"
         );
     }
 
     @Test
     public void inlineMultilineIndent() {
         assertMap(
-                "lookup('title',",
+                LOOKUP,
                 "  Aloha: Alohaeha,",
                 "  Moin: 'Moin zäme',",
                 "  __default: Tach)"
@@ -71,7 +67,7 @@ public class MetafixLookupTest {
     @Test
     public void inlineDotNotationNested() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "lookup('data.title', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"
+                "lookup('data.title.*', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)"
             ),
             i -> {
                 i.startRecord("1");
@@ -98,14 +94,14 @@ public class MetafixLookupTest {
     @Test
     public void csv() {
         assertMap(
-                "lookup('title', '" + CSV_MAP + "')"
+                LOOKUP + " '" + CSV_MAP + "')"
         );
     }
 
     @Test
     public void tsv() {
         assertMap(
-                "lookup('title', '" + TSV_MAP + "', sep_char:'\t')"
+                LOOKUP + " '" + TSV_MAP + "', sep_char:'\t')"
         );
     }
 
@@ -113,7 +109,7 @@ public class MetafixLookupTest {
     public void shouldLookupInSeparateInternalMap() {
         assertMap(
                 "put_map('testMap', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)",
-                "lookup('title', 'testMap')"
+                LOOKUP + " 'testMap')"
         );
     }
 
@@ -121,7 +117,7 @@ public class MetafixLookupTest {
     public void shouldLookupInSeparateExternalFileMap() {
         assertMap(
                 "put_filemap('" + CSV_MAP + "')",
-                "lookup('title', '" + CSV_MAP + "')"
+                LOOKUP + " '" + CSV_MAP + "')"
         );
     }
 
@@ -129,7 +125,7 @@ public class MetafixLookupTest {
     public void shouldLookupInSeparateExternalFileMapWithName() {
         assertMap(
                 "put_filemap('" + CSV_MAP + "', 'testMap')",
-                "lookup('title', 'testMap')"
+                LOOKUP + " 'testMap')"
         );
     }
 
@@ -137,7 +133,7 @@ public class MetafixLookupTest {
     public void shouldLookupInSeparateExternalFileMapWithOptions() {
         assertMap(
                 "put_filemap('" + TSV_MAP + "', sep_char: '\t')",
-                "lookup('title', '" + TSV_MAP + "')"
+                LOOKUP + " '" + TSV_MAP + "')"
         );
     }
 
@@ -145,7 +141,7 @@ public class MetafixLookupTest {
     public void shouldLookupInSeparateExternalFileMapWithNameAndOptions() {
         assertMap(
                 "put_filemap('" + TSV_MAP + "', 'testMap', sep_char: '\t')",
-                "lookup('title', 'testMap')"
+                LOOKUP + " 'testMap')"
         );
     }
 
@@ -154,7 +150,7 @@ public class MetafixLookupTest {
         assertMap(
                 "put_map('testMap', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)",
                 "put_map('testMap2', __default: Hi)",
-                "lookup('title', 'testMap')"
+                LOOKUP + " 'testMap')"
         );
     }
 
@@ -163,7 +159,7 @@ public class MetafixLookupTest {
         assertMap(
                 "put_map('testMap', __default: Hi)",
                 "put_filemap('" + CSV_MAP + "', 'testMap')",
-                "lookup('title', 'testMap')"
+                LOOKUP + " 'testMap')"
         );
     }
 
@@ -171,7 +167,7 @@ public class MetafixLookupTest {
     public void shouldIgnoreOptionsOnLookupInSeparateInternalMap() {
         assertMap(
                 "put_map('testMap', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)",
-                "lookup('title', 'testMap', __default: Hi)"
+                LOOKUP + " 'testMap', __default: Hi)"
         );
     }
 
@@ -179,14 +175,14 @@ public class MetafixLookupTest {
     public void shouldIgnoreOptionsOnLookupInSeparateExternalFileMap() {
         assertMap(
                 "put_filemap('" + CSV_MAP + "')",
-                "lookup('title', '" + CSV_MAP + "', sep_char: '\t')"
+                LOOKUP + " '" + CSV_MAP + "', sep_char: '\t')"
         );
     }
 
     @Test
     public void shouldNotLookupInExternalFileMapWithWrongOptions() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "lookup('title', '" + CSV_MAP + "', sep_char: '\t')"
+                LOOKUP + " '" + CSV_MAP + "', sep_char: '\t')"
             ),
             i -> {
                 i.startRecord("1");
@@ -197,6 +193,8 @@ public class MetafixLookupTest {
             },
             o -> {
                 o.get().startRecord("1");
+                o.get().startEntity("title");
+                o.get().endEntity();
                 o.get().endRecord();
             }
         );
@@ -205,8 +203,8 @@ public class MetafixLookupTest {
     @Test
     public void shouldIgnoreOptionsOnSubsequentLookupInExternalFileMap() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "lookup('title', '" + CSV_MAP + "')",
-                "lookup('title', '" + CSV_MAP + "', sep_char: '\t')"
+                LOOKUP + " '" + CSV_MAP + "')",
+                LOOKUP + " '" + CSV_MAP + "', sep_char: '\t')"
             ),
             i -> {
                 i.startRecord("1");
@@ -231,7 +229,7 @@ public class MetafixLookupTest {
     public void shouldFailLookupInUnknownNamedMap() {
         final Throwable exception = Assertions.assertThrows(MorphExecutionException.class, () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "lookup('title', 'testMap')"
+                    LOOKUP + " 'testMap')"
                 ),
                 i -> {
                     i.startRecord("1");

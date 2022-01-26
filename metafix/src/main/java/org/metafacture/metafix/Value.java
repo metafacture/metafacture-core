@@ -17,6 +17,7 @@
 package org.metafacture.metafix;
 
 import org.metafacture.commons.tries.SimpleRegexTrie;
+import org.metafacture.framework.MetafactureException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -210,7 +211,7 @@ public class Value {
         return new TypeMatcher(this);
     }
 
-    private <T> T extractType(final BiConsumer<TypeMatcher, Consumer<T>> consumer) {
+    public <T> T extractType(final BiConsumer<TypeMatcher, Consumer<T>> consumer) {
         final AtomicReference<T> result = new AtomicReference<>();
         consumer.accept(matchType(), result::set);
         return result.get();
@@ -298,7 +299,7 @@ public class Value {
         public void orElseThrow() {
             orElse(v -> {
                 final String types = expected.stream().map(Type::name).collect(Collectors.joining(" or "));
-                throw new IllegalStateException("expected " + types + ", got " + value.type);
+                throw new MetafactureException(new IllegalStateException("expected " + types + ", got " + value.type));
             });
         }
 
@@ -311,7 +312,7 @@ public class Value {
                 return this;
             }
             else {
-                throw new IllegalStateException("already expecting " + type);
+                throw new MetafactureException(new IllegalStateException("already expecting " + type));
             }
         }
 
@@ -334,21 +335,6 @@ public class Value {
                 @Override
                 void apply(final Hash hash, final String field, final Value value) {
                     hash.add(field, value);
-                }
-            },
-            /* For an indexed representation of arrays as hashes with 1, 2, 3 etc. keys.
-             * i.e. ["a", "b", "c"] as { "1":"a", "2":"b", "3": "c" }
-             * This is what is produced by JsonDecoder and Metafix itself for arrays.
-             * TODO? maybe this would be a good general internal representation, resulting
-             * in every value being either a hash or a string, no more separate array type.*/
-            INDEXED {
-                @Override
-                void apply(final Hash hash, final String field, final Value value) {
-                    hash.add(nextIndex(hash), field.equals(ReservedField.$append.name()) ? value : newHash(h -> h.put(field, value)));
-                }
-
-                private String nextIndex(final Hash hash) {
-                    return "" + (hash.size() + 1) /* TODO? check if keys are actually all ints? */;
                 }
             };
 
@@ -472,7 +458,7 @@ public class Value {
                 }
             }
 
-            list.removeIf(v -> v == null);
+            list.removeIf(v -> Value.isNull(v));
         }
 
         private void transformFields(final int index, final String[] fields, final UnaryOperator<String> operator) {
@@ -727,7 +713,7 @@ public class Value {
                     // TODO: move impl into enum elements, here call only value.insert
                     value.matchType()
                         .ifArray(a -> a.insert(mode, tail, newValue))
-                        .ifHash(h -> h.insert(insertMode(mode, field, tail), tail, newValue))
+                        .ifHash(h -> h.insert(mode, tail, newValue))
                         .orElseThrow();
                 }
             }
@@ -738,7 +724,7 @@ public class Value {
         private Value processRef(final InsertMode mode, final Value newValue, final String field, final String[] tail) {
             final Value referencedValue = getReferencedValue(field);
             if (referencedValue != null) {
-                return referencedValue.asHash().insert(insertMode(mode, field, tail), tail, newValue);
+                return referencedValue.asHash().insert(mode, tail, newValue);
             }
             else {
                 throw new IllegalArgumentException("Using ref, but can't find: " + field + " in: " + this);
@@ -766,16 +752,6 @@ public class Value {
                     break;
             }
             return referencedValue;
-        }
-
-        private InsertMode insertMode(final InsertMode mode, final String field, final String[] tail) {
-            // if the field is marked as array, this hash should be smth. like { 1=a, 2=b }
-            final boolean isIndexedArray = field.endsWith(Metafix.ARRAY_MARKER);
-            final boolean nextIsRef = tail.length > 0 && (
-                    tail[0].startsWith(ReservedField.$first.name()) ||
-                    tail[0].startsWith(ReservedField.$last.name()) ||
-                    isNumber(tail[0]));
-            return isIndexedArray && !nextIsRef ? InsertMode.INDEXED : mode;
         }
 
         /**
@@ -839,11 +815,11 @@ public class Value {
             }
         }
 
-        public void transformField(final String field, final UnaryOperator<Value> operator) {
+        public void transformField(final String field, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
             final Value oldValue = find(field);
 
             if (oldValue != null) {
-                final Value newValue = operator.apply(oldValue);
+                final Value newValue = oldValue.extractType(consumer);
 
                 if (newValue != null) {
                     insert(InsertMode.REPLACE, split(field), newValue);
@@ -873,7 +849,9 @@ public class Value {
                         map.remove(f);
 
                         if (operator != null) {
-                            value.asList(a -> a.forEach(v -> append(f, operator.apply(v.toString()))));
+                            value.matchType()
+                                .ifString(s -> append(f, operator.apply(s)))
+                                .orElseThrow();
                         }
                     }
                     else {

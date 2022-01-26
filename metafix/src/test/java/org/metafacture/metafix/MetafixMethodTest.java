@@ -16,18 +16,13 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 
 import com.google.common.collect.ImmutableMap;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.RegisterExtension;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -41,9 +36,6 @@ import java.util.Arrays;
 @ExtendWith(MockitoExtension.class)
 public class MetafixMethodTest {
 
-    @RegisterExtension
-    private MockitoRule mockitoRule = MockitoJUnit.rule();
-
     @Mock
     private StreamReceiver streamReceiver;
 
@@ -51,212 +43,196 @@ public class MetafixMethodTest {
     }
 
     @Test
-    public void upcase() {
+    public void shouldUpcaseString() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "upcase('title')"),
+                "upcase('title')"
+            ),
             i -> {
                 i.startRecord("1");
-                i.endRecord();
-
-                i.startRecord("2");
                 i.literal("title", "marc");
-                i.literal("title", "json");
                 i.endRecord();
-
-                i.startRecord("3");
-                i.endRecord();
-            }, o -> {
+            },
+            o -> {
                 o.get().startRecord("1");
+                o.get().literal("title", "MARC");
                 o.get().endRecord();
-
-                o.get().startRecord("2");
-                o.get().startEntity("title");
-                o.get().literal("1", "MARC");
-                o.get().literal("2", "JSON");
-                o.get().endEntity();
-                o.get().endRecord();
-
-                o.get().startRecord("3");
-                o.get().endRecord();
-            });
+            }
+        );
     }
 
     @Test
-    public void upcaseDotNotationNested() {
+    public void shouldUpcaseDotNotationNested() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "upcase('data.title')"),
+                "upcase('data.title')"
+            ),
             i -> {
                 i.startRecord("1");
                 i.startEntity("data");
                 i.literal("title", "marc");
-                i.literal("title", "json");
                 i.endEntity();
                 i.endRecord();
-            }, (o, f) -> {
+            },
+            o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("data");
-                o.get().startEntity("title");
-                o.get().literal("1", "MARC");
-                o.get().literal("2", "JSON");
-                f.apply(2).endEntity();
+                o.get().literal("title", "MARC");
+                o.get().endEntity();
                 o.get().endRecord();
-            });
+            }
+        );
     }
 
     @Test
-    public void downcase() {
+    public void shouldDowncaseString() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "downcase('title')"),
+                "downcase('title')"
+            ),
             i -> {
                 i.startRecord("1");
+                i.literal("title", "MARC");
                 i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "marc");
+                o.get().endRecord();
+            }
+        );
+    }
 
-                i.startRecord("2");
+    @Test
+    public void shouldDowncaseStringsInArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "downcase('title.*')"
+            ),
+            i -> {
+                i.startRecord("1");
                 i.literal("title", "MARC");
                 i.literal("title", "Json");
                 i.endRecord();
-
-                i.startRecord("3");
-                i.endRecord();
-            }, o -> {
+            },
+            o -> {
                 o.get().startRecord("1");
-                o.get().endRecord();
-
-                o.get().startRecord("2");
                 o.get().startEntity("title");
                 o.get().literal("1", "marc");
                 o.get().literal("2", "json");
                 o.get().endEntity();
                 o.get().endRecord();
-
-                o.get().startRecord("3");
-                o.get().endRecord();
-            });
+            }
+        );
     }
 
     @Test
-    public void capitalize() {
+    public void shouldCapitalizeString() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "capitalize('title')"),
+                "capitalize('title')"
+            ),
             i -> {
                 i.startRecord("1");
+                i.literal("title", "marc");
                 i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Marc");
+                o.get().endRecord();
+            }
+        );
+    }
 
-                i.startRecord("2");
+    @Test
+    public void shouldCapitalizeStringsInArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "capitalize('title.*')"
+            ),
+            i -> {
+                i.startRecord("1");
                 i.literal("title", "marc");
                 i.literal("title", "json");
                 i.endRecord();
-
-                i.startRecord("3");
-                i.endRecord();
-            }, o -> {
+            },
+            o -> {
                 o.get().startRecord("1");
-                o.get().endRecord();
-
-                o.get().startRecord("2");
                 o.get().startEntity("title");
                 o.get().literal("1", "Marc");
                 o.get().literal("2", "Json");
                 o.get().endEntity();
                 o.get().endRecord();
-
-                o.get().startRecord("3");
-                o.get().endRecord();
-            });
+            }
+        );
     }
 
     @Test
-    public void substring() {
+    public void shouldNotCapitalizeArray() {
+        MetafixTestHelpers.assertThrows(IllegalStateException.class, "expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "capitalize('title')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("title", "marc");
+                    i.literal("title", "json");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldGetSubstringOfString() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "substring('title', '0', '2')"),
+                "substring('title', '0', '2')"
+            ),
             i -> {
                 i.startRecord("1");
-                i.endRecord();
-
-                i.startRecord("2");
                 i.literal("title", "marc");
-                i.literal("title", "json");
                 i.endRecord();
-
-                i.startRecord("3");
-                i.endRecord();
-            }, o -> {
+            },
+            o -> {
                 o.get().startRecord("1");
+                o.get().literal("title", "m");
                 o.get().endRecord();
-
-                o.get().startRecord("2");
-                o.get().startEntity("title");
-                o.get().literal("1", "m");
-                o.get().literal("2", "j");
-                o.get().endEntity();
-                o.get().endRecord();
-
-                o.get().startRecord("3");
-                o.get().endRecord();
-            });
+            }
+        );
     }
 
     @Test
-    public void substringWithVar() {
+    public void shouldGetSubstringWithVar() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "substring('title', '0', '$[end]')"),
-                ImmutableMap.of("end", "3"),
+                "substring('title', '0', '$[end]')"
+            ),
+            ImmutableMap.of("end", "3"),
             i -> {
                 i.startRecord("1");
-                i.endRecord();
-
-                i.startRecord("2");
                 i.literal("title", "marc");
-                i.literal("title", "json");
                 i.endRecord();
-
-                i.startRecord("3");
-                i.endRecord();
-            }, o -> {
+            },
+            o -> {
                 o.get().startRecord("1");
+                o.get().literal("title", "ma");
                 o.get().endRecord();
-
-                o.get().startRecord("2");
-                o.get().startEntity("title");
-                o.get().literal("1", "ma");
-                o.get().literal("2", "js");
-                o.get().endEntity();
-                o.get().endRecord();
-
-                o.get().startRecord("3");
-                o.get().endRecord();
-            });
+            }
+        );
     }
 
     @Test
-    public void trim() {
+    public void shouldTrimString() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "trim('title')"),
+                "trim('title')"
+            ),
             i -> {
                 i.startRecord("1");
-                i.endRecord();
-
-                i.startRecord("2");
                 i.literal("title", "  marc  ");
-                i.literal("title", "  json  ");
                 i.endRecord();
-
-                i.startRecord("3");
-                i.endRecord();
-            }, o -> {
+            },
+            o -> {
                 o.get().startRecord("1");
+                o.get().literal("title", "marc");
                 o.get().endRecord();
-
-                o.get().startRecord("2");
-                o.get().startEntity("title");
-                o.get().literal("1", "marc");
-                o.get().literal("2", "json");
-                o.get().endEntity();
-                o.get().endRecord();
-
-                o.get().startRecord("3");
-                o.get().endRecord();
-            });
+            }
+        );
     }
 
     @Test
@@ -358,7 +334,7 @@ public class MetafixMethodTest {
 
     @Test
     public void parseTextEscapedGroups() {
-        assertThrows(IllegalArgumentException.class, "No group with name <c>", () ->
+        MetafixTestHelpers.assertThrows(IllegalArgumentException.class, "No group with name <c>", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "parse_text(data, '(?<a>.)(.)\\\\(?<c>.\\\\)')"
                 ),
@@ -375,7 +351,7 @@ public class MetafixMethodTest {
 
     @Test
     public void parseTextQuotedGroups() {
-        assertThrows(IllegalArgumentException.class, "No group with name <c>", () ->
+        MetafixTestHelpers.assertThrows(IllegalArgumentException.class, "No group with name <c>", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "parse_text(data, '(?<a>.)(.)\\\\Q(?<c>.)\\\\E')"
                 ),
@@ -518,6 +494,128 @@ public class MetafixMethodTest {
     }
 
     @Test
+    // TODO: Fix order (`animols.name` should stay before `animols.type`)
+    public void shouldAppendValueInHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "append(animols.name, ' boss')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animols");
+                i.literal("name", "bird");
+                i.literal("type", "TEST");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animols");
+                o.get().literal("type", "TEST");
+                o.get().literal("name", "bird boss");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldAppendValueInArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "append('animals[].1', ' is cool')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "dog is cool");
+                o.get().literal("2", "cat");
+                o.get().literal("3", "zebra");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/100
+    public void shouldAppendValueInEntireArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "append('animals[].*', ' is cool')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "dog is cool");
+                o.get().literal("2", "cat is cool");
+                o.get().literal("3", "zebra is cool");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/100
+    public void shouldNotAppendValueToArray() {
+        MetafixTestHelpers.assertThrows(IllegalStateException.class, "expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "append('animals[]', ' is cool')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("animals[]");
+                    i.literal("1", "dog");
+                    i.literal("2", "cat");
+                    i.literal("3", "zebra");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/100
+    public void shouldNotAppendValueToHash() {
+        MetafixTestHelpers.assertThrows(IllegalStateException.class, "expected String, got Hash", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "append('animals', ' is cool')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("animals");
+                    i.literal("1", "dog");
+                    i.literal("2", "cat");
+                    i.literal("3", "zebra");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
     public void shouldCountNumberOfValuesInArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "count(numbers)"
@@ -608,6 +706,51 @@ public class MetafixMethodTest {
     }
 
     @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/100
+    public void shouldFilterArrayObjectValues() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "filter('animals[]', '[Cc]at')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "Lion");
+                i.literal("2", "Cat");
+                i.literal("3", "Tiger");
+                i.literal("4", "Bobcat");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "Cat");
+                o.get().literal("2", "Bobcat");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldGetFirstIndexOfSubstring() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "index(animal, 'n')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("animal", "bunny");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("animal", "2");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldGetIndexOfSubstring() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "index(title, 't')"
@@ -647,6 +790,29 @@ public class MetafixMethodTest {
     }
 
     @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/100
+    public void shouldJoinArrayObjectField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "join_field('animals[]', ',')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("animals[]", "dog,cat,zebra");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldPrependValue() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "prepend(title, 'I love ')"
@@ -665,6 +831,106 @@ public class MetafixMethodTest {
     }
 
     @Test
+    // TODO: Fix order (`animols.name` should stay before `animols.type`)
+    public void shouldPrependValueInHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "prepend(animols.name, 'nice ')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animols");
+                i.literal("name", "bird");
+                i.literal("type", "TEST");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animols");
+                o.get().literal("type", "TEST");
+                o.get().literal("name", "nice bird");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldPrependValueInArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "prepend('animals[].1', 'cool ')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "cool dog");
+                o.get().literal("2", "cat");
+                o.get().literal("3", "zebra");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/100
+    public void shouldPrependValueInEntireArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "prepend('animals[].*', 'cool ')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "cool dog");
+                o.get().literal("2", "cool cat");
+                o.get().literal("3", "cool zebra");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/100
+    public void shouldNotPrependValueToArray() {
+        MetafixTestHelpers.assertThrows(IllegalStateException.class, "expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "prepend('animals[]', 'cool ')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("animals[]");
+                    i.literal("1", "dog");
+                    i.literal("2", "cat");
+                    i.literal("3", "zebra");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
     public void shouldReplaceAllRegexes() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "replace_all(title, '[aei]', 'X')"
@@ -677,6 +943,33 @@ public class MetafixMethodTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().literal("title", "mXtXfXx");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/100
+    public void shouldReplaceAllRegexesInArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all('animals[].*', a, QR)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "cQRt");
+                o.get().literal("3", "zebrQR");
+                o.get().endEntity();
                 o.get().endRecord();
             }
         );
@@ -776,7 +1069,7 @@ public class MetafixMethodTest {
 
     @Test
     public void shouldFailToSortNumericallyWithInvalidNumber() {
-        assertThrows(NumberFormatException.class, "For input string: \"x\"", () ->
+        MetafixTestHelpers.assertThrows(NumberFormatException.class, "For input string: \"x\"", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "sort_field(numbers, numeric: 'true')"
                 ),
@@ -954,6 +1247,35 @@ public class MetafixMethodTest {
     }
 
     @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldSplitNestedField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "split_field('others[].*.tools', '--')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("others[]");
+                i.startEntity("1");
+                i.literal("tools", "hammer--saw--bow");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("others[]");
+                o.get().startEntity("1");
+                o.get().startEntity("tools");
+                o.get().literal("1", "hammer");
+                o.get().literal("2", "saw");
+                o.get().literal("3", "bow");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldSumNumbers() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "sum(numbers)"
@@ -1018,12 +1340,6 @@ public class MetafixMethodTest {
                 o.get().endRecord();
             }
         );
-    }
-
-    private void assertThrows(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
-        final Throwable exception = Assertions.assertThrows(MetafactureException.class, executable).getCause();
-        Assertions.assertSame(expectedClass, exception.getClass());
-        Assertions.assertEquals(expectedMessage, exception.getMessage());
     }
 
 }
