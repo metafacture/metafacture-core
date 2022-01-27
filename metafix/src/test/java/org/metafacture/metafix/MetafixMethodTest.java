@@ -1297,7 +1297,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    public void shouldRemoveDuplicates() {
+    public void shouldRemoveDuplicateStrings() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "uniq(numbers)"
             ),
@@ -1316,6 +1316,96 @@ public class MetafixMethodTest {
                 o.get().literal("2", "42");
                 o.get().literal("3", "6");
                 o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldRemoveDuplicateArrays() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "uniq('arrays[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("arrays[]");
+                i.startEntity("1");
+                i.literal("number", "41");
+                i.literal("number", "23");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("number", "42");
+                i.literal("number", "23");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("number", "6");
+                i.literal("number", "23");
+                i.endEntity();
+                i.startEntity("4");
+                i.literal("number", "6");
+                i.literal("number", "23");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("arrays[]");
+                o.get().startEntity("1");
+                o.get().startEntity("number");
+                o.get().literal("1", "41");
+                o.get().literal("2", "23");
+                f.apply(2).endEntity();
+                o.get().startEntity("2");
+                o.get().startEntity("number");
+                o.get().literal("1", "42");
+                o.get().literal("2", "23");
+                f.apply(2).endEntity();
+                o.get().startEntity("3");
+                o.get().startEntity("number");
+                o.get().literal("1", "6");
+                o.get().literal("2", "23");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldRemoveDuplicateHashes() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "uniq('hashes[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("hashes[]");
+                i.startEntity("1");
+                i.literal("number", "41");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("number", "42");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("number", "6");
+                i.endEntity();
+                i.startEntity("4");
+                i.literal("number", "6");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("hashes[]");
+                o.get().startEntity("1");
+                o.get().literal("number", "41");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("number", "42");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("number", "6");
+                f.apply(2).endEntity();
                 o.get().endRecord();
             }
         );

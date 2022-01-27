@@ -16,6 +16,9 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.commons.tries.SimpleRegexTrie;
+
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +38,15 @@ public class HashValueTest {
     private static final Value OTHER_VALUE = new Value("other value");
 
     public HashValueTest() {
+    }
+
+    @Test
+    public void shouldSatisfyEqualsContract() {
+        EqualsVerifier.forClass(Value.Hash.class)
+            .withPrefabValues(Value.class, Value.newArray(), Value.newHash())
+            .withPrefabValues(SimpleRegexTrie.class, new SimpleRegexTrie<String>(), new SimpleRegexTrie<String>())
+            .withIgnoredFields("trie")
+            .verify();
     }
 
     @Test

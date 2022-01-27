@@ -321,6 +321,12 @@ public class Value {
     private abstract static class AbstractValueType {
 
         @Override
+        public abstract boolean equals(Object object);
+
+        @Override
+        public abstract int hashCode();
+
+        @Override
         public abstract String toString();
 
         protected enum InsertMode {
@@ -377,6 +383,25 @@ public class Value {
 
         public void forEach(final Consumer<Value> consumer) {
             list.forEach(consumer);
+        }
+
+        @Override
+        public final boolean equals(final Object object) {
+            if (object == this) {
+                return true;
+            }
+
+            if (!(object instanceof Array)) {
+                return false;
+            }
+
+            final Array other = (Array) object;
+            return Objects.equals(list, other.list);
+        }
+
+        @Override
+        public final int hashCode() {
+            return Objects.hashCode(list);
         }
 
         @Override
@@ -890,6 +915,25 @@ public class Value {
          */
         public void forEach(final BiConsumer<String, Value> consumer) {
             map.forEach(consumer);
+        }
+
+        @Override
+        public final boolean equals(final Object object) {
+            if (object == this) {
+                return true;
+            }
+
+            if (!(object instanceof Hash)) {
+                return false;
+            }
+
+            final Hash other = (Hash) object;
+            return Objects.equals(map, other.map);
+        }
+
+        @Override
+        public final int hashCode() {
+            return Objects.hashCode(map);
         }
 
         @Override
