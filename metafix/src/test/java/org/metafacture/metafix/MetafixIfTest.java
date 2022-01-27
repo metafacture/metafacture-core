@@ -19,6 +19,7 @@ package org.metafacture.metafix;
 import org.metafacture.framework.StreamReceiver;
 
 import com.google.common.collect.ImmutableMap;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -509,6 +510,161 @@ public class MetafixIfTest {
                 o.get().literal("type", "Unknown");
                 o.get().endRecord();
             });
+    }
+
+    private void shouldEqualAny(final String path) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if any_equal('" + path + "', 'University')",
+                "  add_field('type', 'Organization')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Mary");
+                i.literal("name", "University");
+                i.literal("nome", "Max");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("name");
+                o.get().literal("1", "Mary");
+                o.get().literal("2", "University");
+                o.get().endEntity();
+                o.get().literal("nome", "Max");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldEqualAny() {
+        shouldEqualAny("name");
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/115")
+    public void shouldEqualAnyCharacterClass() {
+        shouldEqualAny("n[ao]me");
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/115")
+    public void shouldEqualAnyAlternation() {
+        shouldEqualAny("name|nome");
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/115")
+    public void shouldEqualAnyWildcard() {
+        shouldEqualAny("n?me");
+    }
+
+    private void shouldEqualAnyNested(final String path) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if any_equal('" + path + "', 'University')",
+                "  add_field('data.type', 'Organization')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                i.literal("name", "Mary");
+                i.literal("name", "University");
+                i.literal("nome", "Max");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().startEntity("name");
+                o.get().literal("1", "Mary");
+                o.get().literal("2", "University");
+                o.get().endEntity();
+                o.get().literal("nome", "Max");
+                o.get().literal("type", "Organization");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldEqualAnyNested() {
+        shouldEqualAnyNested("data.name");
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/115")
+    public void shouldEqualAnyNestedCharacterClass() {
+        shouldEqualAnyNested("data.n[ao]me");
+    }
+
+    @Test
+    public void shouldEqualAnyNestedAlternation() {
+        shouldEqualAnyNested("data.name|data.nome");
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/115")
+    public void shouldEqualAnyNestedWildcard() {
+        shouldEqualAnyNested("data.n?me");
+    }
+
+    private void shouldEqualAnyListBind(final String path) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list(path: 'data', ^var: '$i')",
+                "  if any_equal('" + path + "', 'University')",
+                "    add_field('$i.type', 'Organization')",
+                "  end",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                i.literal("name", "Mary");
+                i.literal("name", "University");
+                i.literal("nome", "Max");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().startEntity("name");
+                o.get().literal("1", "Mary");
+                o.get().literal("2", "University");
+                o.get().endEntity();
+                o.get().literal("nome", "Max");
+                o.get().literal("type", "Organization");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldEqualAnyListBind() {
+        shouldEqualAnyListBind("$i.name");
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/115")
+    public void shouldEqualAnyListBindCharacterClass() {
+        shouldEqualAnyListBind("$i.n[ao]me");
+    }
+
+    @Test
+    public void shouldEqualAnyListBindAlternation() {
+        shouldEqualAnyListBind("$i.name|$i.nome");
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/115")
+    public void shouldEqualAnyListBindWildcard() {
+        shouldEqualAnyListBind("$i.n?me");
     }
 
     @Test
