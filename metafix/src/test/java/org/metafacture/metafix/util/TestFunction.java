@@ -29,6 +29,7 @@ public class TestFunction implements FixFunction {
     public TestFunction() {
     }
 
+    @Override
     public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
         params.add(params.get(0).toUpperCase());
         params.set(0, "test");

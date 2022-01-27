@@ -16,23 +16,24 @@
 
 package org.metafacture.metafix.util;
 
-import org.metafacture.metafix.FixConditional;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
-import org.metafacture.metafix.api.FixPredicate;
+import org.metafacture.metafix.api.FixContext;
+import org.metafacture.metafix.fix.Expression;
 
 import java.util.List;
 import java.util.Map;
 
-public class TestPredicate implements FixPredicate {
+public class TestContext implements FixContext {
 
-    public TestPredicate() {
+    public TestContext() {
     }
 
     @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-        return !FixConditional.exists.test(metafix, record, params, options) ||
-            FixConditional.any_equal.test(metafix, record, params, options);
+    public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final List<Expression> expressions) {
+        record.append("BEFORE", params.get(0));
+        metafix.getRecordTransformer().process(expressions);
+        record.append("AFTER", options.get("data"));
     }
 
 }

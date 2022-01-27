@@ -14,25 +14,18 @@
  * limitations under the License.
  */
 
-package org.metafacture.metafix.util;
+package org.metafacture.metafix.api;
 
-import org.metafacture.metafix.FixConditional;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
-import org.metafacture.metafix.api.FixPredicate;
+import org.metafacture.metafix.fix.Expression;
 
 import java.util.List;
 import java.util.Map;
 
-public class TestPredicate implements FixPredicate {
+@FunctionalInterface
+public interface FixContext {
 
-    public TestPredicate() {
-    }
-
-    @Override
-    public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-        return !FixConditional.exists.test(metafix, record, params, options) ||
-            FixConditional.any_equal.test(metafix, record, params, options);
-    }
+    void execute(Metafix metafix, Record record, List<String> params, Map<String, String> options, List<Expression> expressions);
 
 }
