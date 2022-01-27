@@ -56,10 +56,12 @@ import java.util.Map;
  */
 public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle-disable-line ClassDataAbstractionCoupling
 
-    public static final String VAR_START = "$[";
-    public static final String VAR_END = "]";
-    public static final Map<String, String> NO_VARS = Collections.emptyMap();
     public static final String ARRAY_MARKER = "[]";
+    public static final String FIX_EXTENSION = ".fix";
+    public static final String VAR_END = "]";
+    public static final String VAR_START = "$[";
+
+    public static final Map<String, String> NO_VARS = Collections.emptyMap();
 
     private static final Logger LOG = LoggerFactory.getLogger(Metafix.class);
 
@@ -72,13 +74,14 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     private final RecordTransformer recordTransformer = new RecordTransformer(this);
     private final StreamFlattener flattener = new StreamFlattener();
 
-    private Record currentRecord = new Record();
     private Fix fix;
-    private Map<String, String> vars = new HashMap<>();
-    private int entityCount;
-    private StreamReceiver outputStreamReceiver;
-    private String recordIdentifier;
     private List<Value> entities = new ArrayList<>();
+    private Map<String, String> vars = new HashMap<>();
+    private Record currentRecord = new Record();
+    private StreamReceiver outputStreamReceiver;
+    private String fixFile;
+    private String recordIdentifier;
+    private int entityCount;
 
     public Metafix() {
         flattener.setReceiver(new DefaultStreamReceiver() {
@@ -100,7 +103,11 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     }
 
     public Metafix(final String fixDef, final Map<String, String> vars) throws FileNotFoundException {
-        this(fixDef.endsWith(".fix") ? new FileReader(fixDef) : new StringReader(fixDef), vars);
+        this(fixReader(fixDef), vars);
+
+        if (isFixFile(fixDef)) {
+            fixFile = fixDef;
+        }
     }
 
     public Metafix(final Reader fixDef) {
@@ -110,6 +117,18 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     public Metafix(final Reader fixDef, final Map<String, String> vars) {
         this(vars);
         fix = FixStandaloneSetup.parseFix(fixDef);
+    }
+
+    /*package-private*/ static Reader fixReader(final String fixDef) throws FileNotFoundException {
+        return isFixFile(fixDef) ? new FileReader(fixDef) : new StringReader(fixDef);
+    }
+
+    /*package-private*/ static boolean isFixFile(final String fixDef) {
+        return fixDef.endsWith(FIX_EXTENSION);
+    }
+
+    /*package-private*/ String getFixFile() {
+        return fixFile;
     }
 
     public RecordTransformer getRecordTransformer() {

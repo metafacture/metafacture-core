@@ -1,0 +1,6 @@
+unless exists("trace")
+  set_array("trace")
+end
+add_field("trace", "before include")
+include("./base.fix")
+add_field("trace", "after include")
