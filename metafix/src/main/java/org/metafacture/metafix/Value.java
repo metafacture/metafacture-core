@@ -593,6 +593,37 @@ public class Value {
             return matchFields(field, Stream::anyMatch);
         }
 
+        public boolean containsPath(final String fieldPath) {
+            final String[] path = split(fieldPath);
+            final String field = path[0];
+
+            final boolean containsField = containsField(field);
+            final boolean containsPath;
+
+            if (containsField && path.length > 1) {
+                final Value value;
+
+                try {
+                    value = find(path);
+                }
+                catch (final MetafactureException e) {
+                    if (e.getCause() instanceof IllegalStateException) {
+                        return false;
+                    }
+                    else {
+                        throw e;
+                    }
+                }
+
+                containsPath = !isNull(value);
+            }
+            else {
+                containsPath = containsField;
+            }
+
+            return containsPath;
+        }
+
         /**
          * Checks whether this hash is empty.
          *

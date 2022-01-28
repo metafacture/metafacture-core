@@ -668,6 +668,182 @@ public class MetafixIfTest {
     }
 
     @Test
+    public void shouldContainImmediateField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if exists('name')",
+                "  add_field('type', 'Organization')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Mary");
+                i.literal("name", "A University");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.literal("name", "Mary");
+                i.literal("nome", "Max");
+                i.endRecord();
+
+                i.startRecord("3");
+                i.literal("nome", "Max");
+                i.endRecord();
+
+                i.startRecord("4");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("name");
+                o.get().literal("1", "Mary");
+                o.get().literal("2", "A University");
+                o.get().endEntity();
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().literal("name", "Mary");
+                o.get().literal("nome", "Max");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().literal("nome", "Max");
+                o.get().endRecord();
+
+                o.get().startRecord("4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/117
+    public void shouldContainNestedField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if exists('data.name')",
+                "  add_field('type', 'Organization')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                i.literal("name", "Mary");
+                i.literal("name", "A University");
+                i.endEntity();
+                i.endRecord();
+
+                i.startRecord("2");
+                i.startEntity("data");
+                i.literal("name", "Mary");
+                i.literal("nome", "Max");
+                i.endEntity();
+                i.endRecord();
+
+                i.startRecord("3");
+                i.literal("data", "Mary");
+                i.literal("name", "Max");
+                i.endRecord();
+
+                i.startRecord("4");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().startEntity("name");
+                o.get().literal("1", "Mary");
+                o.get().literal("2", "A University");
+                f.apply(2).endEntity();
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().startEntity("data");
+                o.get().literal("name", "Mary");
+                o.get().literal("nome", "Max");
+                o.get().endEntity();
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().literal("data", "Mary");
+                o.get().literal("name", "Max");
+                o.get().endRecord();
+
+                o.get().startRecord("4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/117
+    public void shouldContainNestedArrayField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if exists('data[].*.name')",
+                "  add_field('type', 'Organization')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data[]");
+                i.startEntity("1");
+                i.literal("nome", "Mary");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "A University");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+
+                i.startRecord("2");
+                i.startEntity("data[]");
+                i.literal("1", "Mary");
+                i.literal("2", "Max");
+                i.endEntity();
+                i.endRecord();
+
+                i.startRecord("3");
+                i.literal("data", "Mary");
+                i.literal("name", "Max");
+                i.endRecord();
+
+                i.startRecord("4");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data[]");
+                o.get().startEntity("1");
+                o.get().literal("nome", "Mary");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "A University");
+                f.apply(2).endEntity();
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().startEntity("data[]");
+                o.get().literal("1", "Mary");
+                o.get().literal("2", "Max");
+                o.get().endEntity();
+                o.get().literal("type", "Organization"); // FIXME: `data[].*.name` must not return `[Mary, Max]`
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().literal("data", "Mary");
+                o.get().literal("name", "Max");
+                o.get().endRecord();
+
+                o.get().startRecord("4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldResolveVariablesInIf() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if any_contain('name', 'Uni$[var]sity')",

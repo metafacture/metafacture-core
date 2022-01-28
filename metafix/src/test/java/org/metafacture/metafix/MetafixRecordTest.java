@@ -1451,13 +1451,16 @@ public class MetafixRecordTest {
     @Test
     public void reject() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "if exists ('_metadata.error')",
+                "if exists('_metadata.error')",
                 "  reject()",
                 "end"),
             i -> {
                 i.startRecord("1");
-                i.literal("_metadata.error", "details");
+                i.startEntity("_metadata");
+                i.literal("error", "details");
+                i.endEntity();
                 i.endRecord();
+
                 i.startRecord("2");
                 i.endRecord();
             }, o -> {
