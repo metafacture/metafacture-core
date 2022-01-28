@@ -64,7 +64,7 @@ public enum FixConditional implements FixPredicate {
     exists {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return record.containsField(params.get(0));
+            return record.containsPath(params.get(0));
         }
     },
 
