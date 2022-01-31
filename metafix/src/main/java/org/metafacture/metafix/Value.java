@@ -320,6 +320,20 @@ public class Value {
 
     private abstract static class AbstractValueType {
 
+        protected static final Predicate<Value> REMOVE_EMPTY_VALUES = v -> v.extractType((m, c) -> m
+                .ifArray(a -> {
+                    a.removeEmptyValues();
+                    c.accept(a.isEmpty());
+                })
+                .ifHash(h -> {
+                    h.removeEmptyValues();
+                    c.accept(h.isEmpty());
+                })
+                // TODO: Catmandu considers whitespace-only strings empty (`$v !~ /\S/`)
+                .ifString(s -> c.accept(s.isEmpty()))
+                .orElseThrow()
+        );
+
         @Override
         public abstract boolean equals(Object object);
 
@@ -369,6 +383,10 @@ public class Value {
             }
         }
 
+        private boolean isEmpty() {
+            return list.isEmpty();
+        }
+
         public int size() {
             return list.size();
         }
@@ -379,6 +397,10 @@ public class Value {
 
         public Stream<Value> stream() {
             return list.stream();
+        }
+
+        private void removeEmptyValues() {
+            list.removeIf(REMOVE_EMPTY_VALUES);
         }
 
         public void forEach(final Consumer<Value> consumer) {
@@ -927,16 +949,10 @@ public class Value {
         }
 
         /**
-         * Removes all field/value pairs from this hash whose value is empty.
+         * Recursively removes all field/value pairs from this hash whose value is empty.
          */
         public void removeEmptyValues() {
-            // TODO:
-            //
-            // - Remove empty arrays/hashes?
-            // - Remove empty strings(/arrays/hashes) recursively?
-            //
-            // => Compare Catmandu behaviour
-            map.values().removeIf(v -> v.isString() && v.asString().isEmpty());
+            map.values().removeIf(REMOVE_EMPTY_VALUES);
         }
 
         /**

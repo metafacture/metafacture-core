@@ -1527,9 +1527,74 @@ public class MetafixRecordTest {
     }
 
     @Test
-    public void vacuum() {
+    public void shouldDeleteEmptyArrays() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "vacuum()"),
+                "vacuum()"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("1[]");
+                i.literal("1", "one");
+                i.endEntity();
+                i.startEntity("2[]");
+                i.endEntity();
+                i.startEntity("3[]");
+                i.literal("1", "tre");
+                i.endEntity();
+                i.startEntity("4[]");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("1[]");
+                o.get().literal("1", "one");
+                o.get().endEntity();
+                o.get().startEntity("3[]");
+                o.get().literal("1", "tre");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldDeleteEmptyHashes() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "vacuum()"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("1");
+                i.literal("1", "one");
+                i.endEntity();
+                i.startEntity("2");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("1", "tre");
+                i.endEntity();
+                i.startEntity("4");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("1");
+                o.get().literal("1", "one");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("1", "tre");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldDeleteEmptyStrings() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "vacuum()"
+            ),
             i -> {
                 i.startRecord("1");
                 i.literal("1", "one");
@@ -1537,12 +1602,161 @@ public class MetafixRecordTest {
                 i.literal("3", "tre");
                 i.literal("4", "");
                 i.endRecord();
-            }, o -> {
+            },
+            o -> {
                 o.get().startRecord("1");
                 o.get().literal("1", "one");
                 o.get().literal("3", "tre");
                 o.get().endRecord();
-            });
+            }
+        );
+    }
+
+    @Test
+    public void shouldDeleteEmptyNestedArrays() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "vacuum()"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("arrays");
+                i.startEntity("1[]");
+                i.literal("1", "one");
+                i.endEntity();
+                i.startEntity("2[]");
+                i.endEntity();
+                i.startEntity("3[]");
+                i.literal("1", "tre");
+                i.endEntity();
+                i.startEntity("4[]");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("arrays");
+                o.get().startEntity("1[]");
+                o.get().literal("1", "one");
+                o.get().endEntity();
+                o.get().startEntity("3[]");
+                o.get().literal("1", "tre");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldDeleteEmptyNestedHashes() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "vacuum()"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("hashes");
+                i.startEntity("1");
+                i.literal("1", "one");
+                i.endEntity();
+                i.startEntity("2");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("1", "tre");
+                i.endEntity();
+                i.startEntity("4");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("hashes");
+                o.get().startEntity("1");
+                o.get().literal("1", "one");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("1", "tre");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldDeleteEmptyNestedStrings() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "vacuum()"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("nested");
+                i.literal("1", "one");
+                i.literal("2", "");
+                i.literal("3", "tre");
+                i.literal("4", "");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("nested");
+                o.get().literal("1", "one");
+                o.get().literal("3", "tre");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldDeleteEmptyDeeplyNestedArrays() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "vacuum()"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("arrays[]");
+                i.endEntity();
+                i.startEntity("hashes");
+                i.startEntity("foo[]");
+                i.endEntity();
+                i.endEntity();
+                i.literal("me", "1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("me", "1");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldDeleteEmptyArraysInArrays() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "vacuum()"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("arrays[]");
+                i.startEntity("1[]");
+                i.endEntity();
+                i.startEntity("2[]");
+                i.literal("1", ":-P yuck");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("arrays[]");
+                o.get().startEntity("1"); // TODO: Preserve array!? (`1[]`)
+                o.get().literal("1", ":-P yuck");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
     }
 
     @Test
