@@ -43,7 +43,10 @@ public interface FixPredicate {
         final String string = params.get(1);
 
         final Value value = record.find(field);
-        return value != null && qualifier.test(value.asList(null).asArray().stream(), v -> conditional.test(v.toString(), string));
+        return value != null && qualifier.test(value.asList(null).asArray().stream(), v -> v.extractType((m, c) -> m
+                    .ifString(s -> c.accept(conditional.test(s, string)))
+                    .orElse(w -> c.accept(false))
+        ));
     }
 
 }

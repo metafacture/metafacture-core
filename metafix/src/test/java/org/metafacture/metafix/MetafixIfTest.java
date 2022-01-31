@@ -366,6 +366,46 @@ public class MetafixIfTest {
     }
 
     @Test
+    public void shouldNotImplicitlyMatchNestedField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if any_match('author.name', '.*University.*')",
+                "  add_field('author.type', 'Organization')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author");
+                i.literal("name", "A University");
+                i.endEntity();
+                i.endRecord();
+
+                i.startRecord("2");
+                i.startEntity("author");
+                i.startEntity("name");
+                i.literal("label", "Some University");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().literal("name", "A University");
+                o.get().literal("type", "Organization");
+                o.get().endEntity();
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().startEntity("author");
+                o.get().startEntity("name");
+                o.get().literal("label", "Some University");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void ifAnyMatchFirstRecord() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if any_match('name', '.*University.*')",

@@ -269,7 +269,7 @@ public class Value {
         String
     }
 
-    /*private-private*/ static class TypeMatcher {
+    public static class TypeMatcher {
 
         private final Set<Type> expected = new HashSet<>();
         private final Value value;
