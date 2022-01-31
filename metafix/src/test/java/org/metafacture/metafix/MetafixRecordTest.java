@@ -45,7 +45,7 @@ public class MetafixRecordTest {
     @Test
     public void entitiesPassThrough() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "vacuum()"),
+                "nothing()"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("deep");
@@ -67,7 +67,7 @@ public class MetafixRecordTest {
     @Test
     public void shouldNotEmitVirtualFieldsByDefault() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "vacuum()"
+                "nothing()"
             ),
             i -> {
                 i.startRecord("1");
@@ -134,7 +134,7 @@ public class MetafixRecordTest {
     @Test
     public void entitiesPassThroughRepeatNestedEntity() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "vacuum()"),
+                "nothing()"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("deep");
@@ -1566,7 +1566,7 @@ public class MetafixRecordTest {
     @Test
     public void repeatToArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "vacuum()"),
+                "nothing()"),
             i -> {
                 i.startRecord("1");
                 i.literal("name", "max");
@@ -1644,7 +1644,7 @@ public class MetafixRecordTest {
     @Test
     public void repeatToArrayOfObjects() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "vacuum()"),
+                "nothing()"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("author");
@@ -1697,8 +1697,7 @@ public class MetafixRecordTest {
     // TODO: implement implicit iteration?
     public void accessArrayOfObjectsByWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "upcase('author.*.name')",
-                "vacuum()"),
+                "upcase('author.*.name')"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("author");
@@ -1726,8 +1725,7 @@ public class MetafixRecordTest {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list('path':'author','var':'a')",
                 "  upcase('a.name')",
-                "end",
-                "vacuum()"),
+                "end"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("author");
