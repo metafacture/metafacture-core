@@ -924,7 +924,7 @@ public class MetafixRecordTest {
 
     @Test
     public void move() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(// TODO: dot noation in move_field
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "move_field('my.name','your.name')",
                 "move_field('missing','whatever')"),
             i -> {
@@ -958,7 +958,7 @@ public class MetafixRecordTest {
 
     @Test
     public void copy() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(// TODO dot notation in copy_field
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "copy_field('your.name','your.name2')"),
             i -> {
                 i.startRecord("1");

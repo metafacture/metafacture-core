@@ -221,7 +221,7 @@ public class MetafixIfTest {
 
     @Test
     public void moveAndAddIfContain() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(// TODO: dot notation in contain etc.
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "move_field('name', 'author.name')",
                 "if all_contain('author.name', 'University')",
                 " add_field('author.type', 'Organization')",
@@ -326,7 +326,7 @@ public class MetafixIfTest {
 
     @Test
     public void ifAnyMatchNested() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(// TODO: dot notation in match etc.
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if any_match('author.name.label', '.*University.*')",
                 "  add_field('author.type', 'Organization')",
                 "end"),
