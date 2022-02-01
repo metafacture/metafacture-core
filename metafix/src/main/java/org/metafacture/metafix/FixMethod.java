@@ -217,8 +217,8 @@ public enum FixMethod implements FixFunction {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String joinChar = options.get("join_char");
             record.replace(params.get(0), params.subList(1, params.size()).stream()
-                    .filter(f -> literalString(f) || record.find(f) != null)
-                    .map(f -> literalString(f) ? new Value(f.substring(1)) : record.findList(f, null).asArray().get(0))
+                    .filter(f -> literalString(f) || new Path(f).findInHash(record) != null)
+                    .map(f -> literalString(f) ? new Value(f.substring(1)) : Value.asList(new Path(f).findInHash(record), null).asArray().get(0))
                     .map(Value::asString).collect(Collectors.joining(joinChar != null ? joinChar : " ")));
         }
 
@@ -255,7 +255,7 @@ public enum FixMethod implements FixFunction {
 
             final UnaryOperator<String> operator = s -> s.replaceAll(search, replace);
 
-            record.transformField(params.get(0), (m, c) -> m
+            new Path(params.get(0)).transformInHash(record, (m, c) -> m
                     .ifArray(a -> c.accept(renameArray(a, operator)))
                     .ifHash(h -> c.accept(renameHash(h, operator)))
                     .orElseThrow()
@@ -334,19 +334,19 @@ public enum FixMethod implements FixFunction {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String value = params.get(1);
-            record.transformField(params.get(0), s -> s + value);
+            new Path(params.get(0)).transformInHash(record, s -> s + value);
         }
     },
     capitalize {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), s -> s.substring(0, 1).toUpperCase() + s.substring(1));
+            new Path(params.get(0)).transformInHash(record, s -> s.substring(0, 1).toUpperCase() + s.substring(1));
         }
     },
     count {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), (m, c) -> m
+            new Path(params.get(0)).transformInHash(record, (m, c) -> m
                     .ifArray(a -> c.accept(new Value(a.size())))
                     .ifHash(h -> c.accept(new Value(h.size())))
             );
@@ -355,7 +355,7 @@ public enum FixMethod implements FixFunction {
     downcase {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), s -> s.toLowerCase());
+            new Path(params.get(0)).transformInHash(record, s -> s.toLowerCase());
         }
     },
     filter {
@@ -366,7 +366,7 @@ public enum FixMethod implements FixFunction {
 
             final Predicate<Value> predicate = s -> search.matcher(s.asString()).find();
 
-            record.transformField(params.get(0), (m, c) -> m
+            new Path(params.get(0)).transformInHash(record, (m, c) -> m
                     .ifArray(a -> c.accept(newArray(a.stream().filter(invert ? predicate.negate() : predicate))))
             );
         }
@@ -375,14 +375,14 @@ public enum FixMethod implements FixFunction {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String search = params.get(1);
-            record.transformField(params.get(0), s -> String.valueOf(s.indexOf(search))); // TODO: multiple
+            new Path(params.get(0)).transformInHash(record, s -> String.valueOf(s.indexOf(search))); // TODO: multiple
         }
     },
     join_field {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String joinChar = params.size() > 1 ? params.get(1) : "";
-            record.transformField(params.get(0), (m, c) -> m
+            new Path(params.get(0)).transformInHash(record, (m, c) -> m
                     .ifArray(a -> c.accept(new Value(a.stream().map(Value::asString).collect(Collectors.joining(joinChar)))))
             );
         }
@@ -406,14 +406,14 @@ public enum FixMethod implements FixFunction {
             }
 
             final String defaultValue = map.get(Maps.DEFAULT_MAP_KEY); // TODO: Catmandu uses 'default'
-            record.transformField(params.get(0), k -> map.getOrDefault(k, defaultValue));
+            new Path(params.get(0)).transformInHash(record, k -> map.getOrDefault(k, defaultValue));
         }
     },
     prepend {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String value = params.get(1);
-            record.transformField(params.get(0), s -> value + s);
+            new Path(params.get(0)).transformInHash(record, s -> value + s);
         }
     },
     replace_all {
@@ -422,13 +422,13 @@ public enum FixMethod implements FixFunction {
             final String search = params.get(1);
             final String replace = params.get(2);
 
-            record.transformField(params.get(0), s -> s.replaceAll(search, replace));
+            new Path(params.get(0)).transformInHash(record, s -> s.replaceAll(search, replace));
         }
     },
     reverse {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), (m, c) -> m
+            new Path(params.get(0)).transformInHash(record, (m, c) -> m
                     .ifArray(a -> {
                         final List<Value> list = a.stream().collect(Collectors.toList());
                         Collections.reverse(list);
@@ -449,7 +449,7 @@ public enum FixMethod implements FixFunction {
             final Comparator<Value> comparator = numeric ?
                 Comparator.comparing(function.andThen(Integer::parseInt)) : Comparator.comparing(function);
 
-            record.transformField(params.get(0), (m, c) -> m
+            new Path(params.get(0)).transformInHash(record, (m, c) -> m
                     .ifArray(a -> c.accept(new Value((uniq ? unique(a.stream()) : a.stream())
                                 .sorted(reverse ? comparator.reversed() : comparator).collect(Collectors.toList()))))
             );
@@ -464,7 +464,7 @@ public enum FixMethod implements FixFunction {
             final Function<String, Value> splitFunction = s ->
                 newArray(Arrays.stream(splitPattern.split(s)).map(Value::new));
 
-            record.transformField(params.get(0), (m, c) -> m
+            new Path(params.get(0)).transformInHash(record, (m, c) -> m
                     .ifArray(a -> c.accept(newArray(a.stream().map(Value::asString).map(splitFunction))))
                     .ifHash(h -> c.accept(Value.newHash(n -> h.forEach((f, w) -> n.put(f, splitFunction.apply(w.asString()))))))
                     .ifString(s -> c.accept(splitFunction.apply(s)))
@@ -474,13 +474,13 @@ public enum FixMethod implements FixFunction {
     substring {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), s -> s.substring(getInteger(params, 1), getInteger(params, 2) - 1));
+            new Path(params.get(0)).transformInHash(record, s -> s.substring(getInteger(params, 1), getInteger(params, 2) - 1));
         }
     },
     sum {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), (m, c) -> m
+            new Path(params.get(0)).transformInHash(record, (m, c) -> m
                     .ifArray(a -> c.accept(new Value(a.stream().map(Value::asString).mapToInt(Integer::parseInt).sum())))
             );
         }
@@ -488,13 +488,13 @@ public enum FixMethod implements FixFunction {
     trim {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), String::trim);
+            new Path(params.get(0)).transformInHash(record, String::trim);
         }
     },
     uniq {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), (m, c) -> m
+            new Path(params.get(0)).transformInHash(record, (m, c) -> m
                     .ifArray(a -> c.accept(newArray(unique(a.stream()))))
             );
         }
@@ -502,7 +502,7 @@ public enum FixMethod implements FixFunction {
     upcase {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformField(params.get(0), s -> s.toUpperCase());
+            new Path(params.get(0)).transformInHash(record, s -> s.toUpperCase());
         }
     };
 

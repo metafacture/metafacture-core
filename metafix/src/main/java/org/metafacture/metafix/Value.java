@@ -34,7 +34,6 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -60,6 +59,8 @@ public class Value {
     }
 
     private static final String ASTERISK = "*";
+
+    private static final String FIELD_PATH_SEPARATOR = "\\.";
 
     private final Array array;
     private final Hash hash;
@@ -256,6 +257,10 @@ public class Value {
         return Arrays.copyOfRange(fields, 1, fields.length);
     }
 
+    static String[] split(final String fieldPath) {
+        return fieldPath.split(FIELD_PATH_SEPARATOR);
+    }
+
     enum Type {
         Array,
         Hash,
@@ -311,7 +316,7 @@ public class Value {
 
     }
 
-    private abstract static class AbstractValueType {
+    public abstract static class AbstractValueType {
 
         protected static final Predicate<Value> REMOVE_EMPTY_VALUES = v -> v.extractType((m, c) -> m
                 .ifArray(a -> {
@@ -520,15 +525,18 @@ public class Value {
      */
     public static class Hash extends AbstractValueType {
 
-        private static final String FIELD_PATH_SEPARATOR = "\\.";
-
         private final Map<String, Value> map = new LinkedHashMap<>();
+
         private final SimpleRegexTrie<String> trie = new SimpleRegexTrie<>();
 
         /**
          * Creates an empty instance of {@link Hash}.
          */
         protected Hash() {
+        }
+
+        public Map<String, Value> getMap() {
+            return map;
         }
 
         /**
@@ -552,7 +560,7 @@ public class Value {
                 final Value value;
 
                 try {
-                    value = find(path);
+                    value = new Path(path).findInHash(this);
                 }
                 catch (final MetafactureException e) {
                     if (e.getCause() instanceof IllegalStateException) {
@@ -631,47 +639,12 @@ public class Value {
          */
         public Value get(final String field) {
             // TODO: special treatment (only) for exact matches?
-            final List<Value> list = findFields(field).map(map::get).collect(Collectors.toList());
+            final List<Value> list = matchFields(field, Stream::filter).map(map::get).collect(Collectors.toList());
             return list.isEmpty() ? null : list.size() == 1 ? list.get(0) : new Value(list);
-        }
-
-        // TODO path
-        public Value find(final String fieldPath) {
-            return find(split(fieldPath));
-        }
-
-        // TODO path
-        Value find(final String[] fields) {
-            final String field = fields[0];
-            if (field.equals(ASTERISK)) {
-                // TODO: search in all elements of value.asHash()?
-                return find(tail(fields));
-            }
-            return fields.length == 1 || !containsField(field) ? get(field) :
-                findNested(field, tail(fields));
-        }
-
-        // TODO path
-        private Value findNested(final String field, final String[] remainingFields) {
-            final Value value = get(field);
-            return value == null ? null : value.extractType((m, c) -> m
-                    .ifArray(a -> c.accept(new Path(remainingFields).findInArray(a)))
-                    .ifHash(h -> c.accept(h.find(remainingFields)))
-                    .orElseThrow()
-            );
-        }
-
-        // TODO path
-        public Value findList(final String fieldPath, final Consumer<Array> consumer) {
-            return asList(find(fieldPath), consumer);
         }
 
         public Value getList(final String field, final Consumer<Array> consumer) {
             return asList(get(field), consumer);
-        }
-
-        private String[] split(final String fieldPath) {
-            return fieldPath.split(FIELD_PATH_SEPARATOR);
         }
 
         public void addAll(final String field, final List<String> values) {
@@ -698,7 +671,7 @@ public class Value {
             return insert(mode, split(fieldPath), new Value(newValue));
         }
 
-        private Value insert(final InsertMode mode, final String[] fields, final Value newValue) {
+        Value insert(final InsertMode mode, final String[] fields, final Value newValue) {
             final String field = fields[0];
             if (fields.length == 1) {
                 if (field.equals(ASTERISK)) {
@@ -796,7 +769,7 @@ public class Value {
         public void copy(final List<String> params) {
             final String oldName = params.get(0);
             final String newName = params.get(1);
-            findList(oldName, a -> a.forEach(v -> appendValue(split(newName), v)));
+            asList(new Path(oldName).findInHash(this), a -> a.forEach(v -> appendValue(split(newName), v)));
         }
 
         private void appendValue(final String[] newName, final Value v) {
@@ -814,7 +787,7 @@ public class Value {
                             add(newName[0], v);
                         }
                         else {
-                            appendValue(newName, v.asHash().find(tail(newName)));
+                            appendValue(newName, new Path(tail(newName)).findInHash(v.asHash()));
                         }
                         break;
                     default:
@@ -823,65 +796,13 @@ public class Value {
             }
         }
 
-        // TODO path
-        public void transformField(final String path, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
-            final Value oldValue = find(path);
-
-            if (oldValue != null) {
-                final Value newValue = oldValue.extractType(consumer);
-
-                if (newValue != null) {
-                    insert(InsertMode.REPLACE, split(path), newValue);
-                }
-            }
-        }
-
-        // TODO path
-        public void transformField(final String path, final UnaryOperator<String> operator) {
-            transformPath(split(path), operator);
-        }
-
-        // TODO path
-        void transformPath(final String[] path, final UnaryOperator<String> operator) {
-            final String currentSegment = path[0];
-            final String[] remainingPath = tail(path);
-
-            if (currentSegment.equals(ASTERISK)) {
-                // TODO: search in all elements of value.asHash()?
-                transformPath(remainingPath, operator);
-                return;
-            }
-
-            modifyFields(currentSegment, f -> {
-                final Value value = map.get(f);
-
-                if (value != null) {
-                    if (remainingPath.length == 0) {
-                        map.remove(f);
-
-                        if (operator != null) {
-                            value.matchType()
-                                .ifString(s -> append(f, operator.apply(s)))
-                                .orElseThrow();
-                        }
-                    }
-                    else {
-                        new TypeMatcher(value)
-                            .ifArray(a -> new Path(remainingPath).transformInArray(a, operator))
-                            .ifHash(h -> h.transformPath(remainingPath, operator))
-                            .orElseThrow();
-                    }
-                }
-            });
-        }
-
         /**
          * Retains only the given field/value pairs in this hash.
          *
          * @param fields the field names
          */
         public void retainFields(final Collection<String> fields) {
-            map.keySet().retainAll(fields.stream().flatMap(this::findFields).collect(Collectors.toSet()));
+            map.keySet().retainAll(fields.stream().flatMap(f -> matchFields(f, Stream::filter)).collect(Collectors.toSet()));
         }
 
         /**
@@ -924,13 +845,8 @@ public class Value {
             return map.toString();
         }
 
-        private void modifyFields(final String pattern, final Consumer<String> consumer) {
-            findFields(pattern).collect(Collectors.toSet()).forEach(consumer);
-        }
-
-        // TODO path
-        private Stream<String> findFields(final String pattern) {
-            return matchFields(pattern, Stream::filter);
+        void modifyFields(final String pattern, final Consumer<String> consumer) {
+            matchFields(pattern, Stream::filter).collect(Collectors.toSet()).forEach(consumer);
         }
 
         private <T> T matchFields(final String pattern, final BiFunction<Stream<String>, Predicate<String>, T> function) {

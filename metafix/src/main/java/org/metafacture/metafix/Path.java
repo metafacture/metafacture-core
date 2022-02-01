@@ -16,9 +16,14 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.metafix.Value.AbstractValueType.InsertMode;
 import org.metafacture.metafix.Value.Array;
+import org.metafacture.metafix.Value.Hash;
+import org.metafacture.metafix.Value.TypeMatcher;
 
 import java.util.Arrays;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 /**
@@ -33,6 +38,10 @@ public class Path {
 
     public Path(final String[] path) {
         this.path = path;
+    }
+
+    public Path(final String path) {
+        this(Value.split(path));
     }
 
     public Value findInArray(final Value.Array array) {
@@ -66,7 +75,7 @@ public class Path {
         // TODO: move impl into enum elements, here call only value.find
         return value == null ? null : value.extractType((m, c) -> m
                 .ifArray(a -> c.accept(new Path(p).findInArray(a)))
-                .ifHash(h -> c.accept(h.find(p)))
+                .ifHash(h -> c.accept(new Path(p).findInHash(h)))
                 .orElse(c)
         );
     }
@@ -107,8 +116,72 @@ public class Path {
                 .ifString(s -> array.set(index, operator != null ? new Value(operator.apply(s)) : null))
                 .orElse(v -> new Value.TypeMatcher(v)
                         .ifArray(a -> new Path(p).transformInArray(a, operator))
-                        .ifHash(h -> h.transformPath(p, operator))
+                        .ifHash(h -> new Path(p).transformInHash(h, operator))
                         .orElseThrow());
         }
+    }
+
+    public Value findInHash(final Hash hash) {
+        final String field = path[0];
+        if (field.equals(ASTERISK)) {
+            // TODO: search in all elements of value.asHash()?
+            return new Path(tail(path)).findInHash(hash);
+        }
+        return path.length == 1 || !hash.containsField(field) ? hash.get(field) :
+            findNested(hash, field, tail(path));
+    }
+
+    private Value findNested(final Hash hash, final String field, final String[] remainingFields) {
+        final Value value = hash.get(field);
+        return value == null ? null : value.extractType((m, c) -> m
+                .ifArray(a -> c.accept(new Path(remainingFields).findInArray(a)))
+                .ifHash(h -> c.accept(new Path(remainingFields).findInHash(h)))
+                .orElseThrow()
+        );
+    }
+
+    public void transformInHash(final Hash hash, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
+        final Value oldValue = findInHash(hash);
+
+        if (oldValue != null) {
+            final Value newValue = oldValue.extractType(consumer);
+
+            if (newValue != null) {
+                hash.insert(InsertMode.REPLACE, path, newValue);
+            }
+        }
+    }
+
+    public void transformInHash(final Hash hash, final UnaryOperator<String> operator) {
+        final String currentSegment = path[0];
+        final String[] remainingPath = tail(path);
+
+        if (currentSegment.equals(ASTERISK)) {
+            // TODO: search in all elements of value.asHash()?
+            new Path(remainingPath).transformInHash(hash, operator);
+            return;
+        }
+
+        hash.modifyFields(currentSegment, f -> {
+            final Value value = hash.getMap().get(f);
+
+            if (value != null) {
+                if (remainingPath.length == 0) {
+                    hash.getMap().remove(f);
+
+                    if (operator != null) {
+                        value.matchType()
+                            .ifString(s -> hash.append(f, operator.apply(s)))
+                            .orElseThrow();
+                    }
+                }
+                else {
+                    new TypeMatcher(value)
+                        .ifArray(a -> new Path(remainingPath).transformInArray(a, operator))
+                        .ifHash(h -> new Path(remainingPath).transformInHash(h, operator))
+                        .orElseThrow();
+                }
+            }
+        });
     }
 }
