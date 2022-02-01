@@ -334,6 +334,117 @@ public class MetafixBindTest {
             });
     }
 
+    public void doListIndexedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list('path': 'name[]', 'var': 'n')",
+                " copy_field('n', 'author')",
+                "end",
+                "remove_field('name[]')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("name[]");
+                i.literal("1", "A University");
+                i.literal("2", "Max");
+                i.endEntity();
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().literal("1", "A University");
+                o.get().literal("2", "Max");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    @Disabled("Should output indexed-array style structure due to `author[].$append.name`")
+    public void doListIndexedArrayToArrayOfObjects() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list('path': 'name[]', 'var': 'n')",
+                " copy_field('n', 'author[].$append.name')",
+                "end",
+                "remove_field('name[]')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("name[]");
+                i.literal("1", "A University");
+                i.literal("2", "Max ");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "A University");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "Max");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void doListIndexedArrayOfObjects() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list('path': 'name[]', 'var': 'n')",
+                " copy_field('n.name', 'author')",
+                "end",
+                "remove_field('name[]')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("name[]");
+                i.startEntity("1");
+                i.literal("name", "A University");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "Max");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author");
+                o.get().literal("1", "A University");
+                o.get().literal("2", "Max");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    @Disabled("Should output indexed-array style structure due to `author[].$append.name`")
+    public void doListIndexedArrayOfObjectsToArrayOfObjects() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list('path': 'name[]', 'var': 'n')",
+                " copy_field('n.name', 'author[].$append.name')",
+                "end",
+                "remove_field('name[]')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("name[]");
+                i.startEntity("1");
+                i.literal("name", " A University");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "Max ");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "A University");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "Max");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
     @Test
     @Disabled("implement Fix-style binds with collectors?")
     public void ifInCollector() {
