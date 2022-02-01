@@ -358,9 +358,9 @@ public class MetafixBindTest {
     }
 
     @Test
-    @Disabled("Should output indexed-array style structure due to `author[].$append.name`")
     public void doListIndexedArrayToArrayOfObjects() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('author[]')",
                 "do list('path': 'name[]', 'var': 'n')",
                 " copy_field('n', 'author[].$append.name')",
                 "end",
@@ -369,7 +369,7 @@ public class MetafixBindTest {
                 i.startRecord("1");
                 i.startEntity("name[]");
                 i.literal("1", "A University");
-                i.literal("2", "Max ");
+                i.literal("2", "Max");
                 i.endEntity();
                 i.endRecord();
             }, (o, f) -> {
@@ -414,9 +414,9 @@ public class MetafixBindTest {
     }
 
     @Test
-    @Disabled("Should output indexed-array style structure due to `author[].$append.name`")
     public void doListIndexedArrayOfObjectsToArrayOfObjects() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('author[]')",
                 "do list('path': 'name[]', 'var': 'n')",
                 " copy_field('n.name', 'author[].$append.name')",
                 "end",
@@ -425,10 +425,10 @@ public class MetafixBindTest {
                 i.startRecord("1");
                 i.startEntity("name[]");
                 i.startEntity("1");
-                i.literal("name", " A University");
+                i.literal("name", "A University");
                 i.endEntity();
                 i.startEntity("2");
-                i.literal("name", "Max ");
+                i.literal("name", "Max");
                 i.endEntity();
                 i.endEntity();
                 i.endRecord();
