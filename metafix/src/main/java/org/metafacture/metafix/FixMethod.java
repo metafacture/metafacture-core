@@ -334,13 +334,13 @@ public enum FixMethod implements FixFunction {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String value = params.get(1);
-            record.transformFields(params, s -> s + value);
+            record.transformField(params.get(0), s -> s + value);
         }
     },
     capitalize {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformFields(params, s -> s.substring(0, 1).toUpperCase() + s.substring(1));
+            record.transformField(params.get(0), s -> s.substring(0, 1).toUpperCase() + s.substring(1));
         }
     },
     count {
@@ -355,7 +355,7 @@ public enum FixMethod implements FixFunction {
     downcase {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformFields(params, String::toLowerCase);
+            record.transformField(params.get(0), s -> s.toLowerCase());
         }
     },
     filter {
@@ -375,7 +375,7 @@ public enum FixMethod implements FixFunction {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String search = params.get(1);
-            record.transformFields(params, s -> String.valueOf(s.indexOf(search))); // TODO: multiple
+            record.transformField(params.get(0), s -> String.valueOf(s.indexOf(search))); // TODO: multiple
         }
     },
     join_field {
@@ -406,14 +406,14 @@ public enum FixMethod implements FixFunction {
             }
 
             final String defaultValue = map.get(Maps.DEFAULT_MAP_KEY); // TODO: Catmandu uses 'default'
-            record.transformFields(params, k -> map.getOrDefault(k, defaultValue));
+            record.transformField(params.get(0), k -> map.getOrDefault(k, defaultValue));
         }
     },
     prepend {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String value = params.get(1);
-            record.transformFields(params, s -> value + s);
+            record.transformField(params.get(0), s -> value + s);
         }
     },
     replace_all {
@@ -422,7 +422,7 @@ public enum FixMethod implements FixFunction {
             final String search = params.get(1);
             final String replace = params.get(2);
 
-            record.transformFields(params, s -> s.replaceAll(search, replace));
+            record.transformField(params.get(0), s -> s.replaceAll(search, replace));
         }
     },
     reverse {
@@ -474,7 +474,7 @@ public enum FixMethod implements FixFunction {
     substring {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformFields(params, s -> s.substring(getInteger(params, 1), getInteger(params, 2) - 1));
+            record.transformField(params.get(0), s -> s.substring(getInteger(params, 1), getInteger(params, 2) - 1));
         }
     },
     sum {
@@ -488,7 +488,7 @@ public enum FixMethod implements FixFunction {
     trim {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformFields(params, String::trim);
+            record.transformField(params.get(0), String::trim);
         }
     },
     uniq {
@@ -502,7 +502,7 @@ public enum FixMethod implements FixFunction {
     upcase {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transformFields(params, String::toUpperCase);
+            record.transformField(params.get(0), s -> s.toUpperCase());
         }
     };
 

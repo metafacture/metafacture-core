@@ -168,7 +168,7 @@ public class Value {
         return value == null || value.isNull();
     }
 
-    private static boolean isNumber(final String s) {
+    static boolean isNumber(final String s) {
         return s.matches("\\d+");
     }
 
@@ -256,13 +256,6 @@ public class Value {
         return Arrays.copyOfRange(fields, 1, fields.length);
     }
 
-    private void transformFields(final String[] fields, final UnaryOperator<String> operator) {
-        matchType()
-            .ifArray(a -> a.transformFields(fields, operator))
-            .ifHash(h -> h.transformFields(fields, operator))
-            .orElseThrow();
-    }
-
     enum Type {
         Array,
         Hash,
@@ -274,7 +267,7 @@ public class Value {
         private final Set<Type> expected = new HashSet<>();
         private final Value value;
 
-        private TypeMatcher(final Value value) {
+        TypeMatcher(final Value value) {
             this.value = value;
         }
 
@@ -377,6 +370,10 @@ public class Value {
         private Array() {
         }
 
+        public List<Value> getList() {
+            return list;
+        }
+
         public void add(final Value value) {
             if (!isNull(value)) {
                 list.add(value);
@@ -444,77 +441,6 @@ public class Value {
                 if (index >= 0 && index < size()) {
                     remove(index);
                 }
-            }
-        }
-
-        private Value find(final String[] path) {
-            final Value result;
-            if (path.length > 0) {
-                if (path[0].equals(ASTERISK)) {
-                    result = newArray(a -> forEach(v -> a.add(findInValue(tail(path), v))));
-                }
-                else if (isNumber(path[0])) {
-                    final int index = Integer.parseInt(path[0]) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
-                    if (index >= 0 && index < size()) {
-                        result = findInValue(tail(path), get(index));
-                    }
-                    else {
-                        result = null;
-                    }
-                }
-                // TODO: WDCD? copy_field('your.name','author[].name'), where name is an array
-                else {
-                    result = newArray(a -> forEach(v -> a.add(findInValue(path, v))));
-                }
-            }
-            else {
-                result = new Value(this);
-            }
-            return result;
-        }
-
-        private Value findInValue(final String[] path, final Value value) {
-            // TODO: move impl into enum elements, here call only value.find
-            return value == null ? null : value.extractType((m, c) -> m
-                    .ifArray(a -> c.accept(a.find(path)))
-                    .ifHash(h -> c.accept(h.find(path)))
-                    .orElse(c)
-            );
-        }
-
-        private void transformFields(final String[] fields, final UnaryOperator<String> operator) {
-            final String field = fields[0];
-            final String[] remainingFields = tail(fields);
-            final int size = size();
-
-            if (fields.length == 0 || field.equals(ASTERISK)) {
-                for (int i = 0; i < size; ++i) {
-                    transformFields(i, remainingFields, operator);
-                }
-            }
-            else if (isNumber(field)) {
-                final int index = Integer.parseInt(field) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
-                if (index >= 0 && index < size) {
-                    transformFields(index, remainingFields, operator);
-                }
-            }
-            // TODO: WDCD? copy_field('your.name','author[].name'), where name is an array
-            else {
-                for (int i = 0; i < size; ++i) {
-                    transformFields(i, fields, operator);
-                }
-            }
-
-            list.removeIf(v -> Value.isNull(v));
-        }
-
-        private void transformFields(final int index, final String[] fields, final UnaryOperator<String> operator) {
-            final Value value = get(index);
-
-            if (value != null) {
-                value.matchType()
-                    .ifString(s -> set(index, operator != null ? new Value(operator.apply(s)) : null))
-                    .orElse(v -> v.transformFields(fields, operator));
             }
         }
 
@@ -709,11 +635,13 @@ public class Value {
             return list.isEmpty() ? null : list.size() == 1 ? list.get(0) : new Value(list);
         }
 
+        // TODO path
         public Value find(final String fieldPath) {
             return find(split(fieldPath));
         }
 
-        private Value find(final String[] fields) {
+        // TODO path
+        Value find(final String[] fields) {
             final String field = fields[0];
             if (field.equals(ASTERISK)) {
                 // TODO: search in all elements of value.asHash()?
@@ -723,15 +651,17 @@ public class Value {
                 findNested(field, tail(fields));
         }
 
+        // TODO path
         private Value findNested(final String field, final String[] remainingFields) {
             final Value value = get(field);
             return value == null ? null : value.extractType((m, c) -> m
-                    .ifArray(a -> c.accept(a.find(remainingFields)))
+                    .ifArray(a -> c.accept(new Path(remainingFields).findInArray(a)))
                     .ifHash(h -> c.accept(h.find(remainingFields)))
                     .orElseThrow()
             );
         }
 
+        // TODO path
         public Value findList(final String fieldPath, final Consumer<Array> consumer) {
             return asList(find(fieldPath), consumer);
         }
@@ -893,37 +823,40 @@ public class Value {
             }
         }
 
-        public void transformField(final String field, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
-            final Value oldValue = find(field);
+        // TODO path
+        public void transformField(final String path, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
+            final Value oldValue = find(path);
 
             if (oldValue != null) {
                 final Value newValue = oldValue.extractType(consumer);
 
                 if (newValue != null) {
-                    insert(InsertMode.REPLACE, split(field), newValue);
+                    insert(InsertMode.REPLACE, split(path), newValue);
                 }
             }
         }
 
-        public void transformFields(final List<String> params, final UnaryOperator<String> operator) {
-            transformFields(split(params.get(0)), operator);
+        // TODO path
+        public void transformField(final String path, final UnaryOperator<String> operator) {
+            transformPath(split(path), operator);
         }
 
-        private void transformFields(final String[] fields, final UnaryOperator<String> operator) {
-            final String field = fields[0];
-            final String[] remainingFields = tail(fields);
+        // TODO path
+        void transformPath(final String[] path, final UnaryOperator<String> operator) {
+            final String currentSegment = path[0];
+            final String[] remainingPath = tail(path);
 
-            if (field.equals(ASTERISK)) {
+            if (currentSegment.equals(ASTERISK)) {
                 // TODO: search in all elements of value.asHash()?
-                transformFields(remainingFields, operator);
+                transformPath(remainingPath, operator);
                 return;
             }
 
-            modifyFields(field, f -> {
+            modifyFields(currentSegment, f -> {
                 final Value value = map.get(f);
 
                 if (value != null) {
-                    if (remainingFields.length == 0) {
+                    if (remainingPath.length == 0) {
                         map.remove(f);
 
                         if (operator != null) {
@@ -933,7 +866,10 @@ public class Value {
                         }
                     }
                     else {
-                        value.transformFields(remainingFields, operator);
+                        new TypeMatcher(value)
+                            .ifArray(a -> new Path(remainingPath).transformInArray(a, operator))
+                            .ifHash(h -> h.transformPath(remainingPath, operator))
+                            .orElseThrow();
                     }
                 }
             });
@@ -992,6 +928,7 @@ public class Value {
             findFields(pattern).collect(Collectors.toSet()).forEach(consumer);
         }
 
+        // TODO path
         private Stream<String> findFields(final String pattern) {
             return matchFields(pattern, Stream::filter);
         }
