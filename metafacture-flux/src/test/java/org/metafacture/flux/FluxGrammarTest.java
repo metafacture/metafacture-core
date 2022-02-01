@@ -29,6 +29,7 @@ import org.antlr.runtime.RecognitionException;
 import org.junit.Before;
 import org.junit.Test;
 import org.metafacture.flux.parser.FluxProgramm;
+import org.metafacture.framework.MetafactureException;
 
 /**
  * Tests for the Flux grammar.
@@ -89,15 +90,15 @@ public final class FluxGrammarTest {
                 stdoutBuffer.toString());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = FluxParseException.class)
     public void issue421_shouldThrowRuntimeExceptionWhenSemicolonInFlowIsMissing()
         throws RecognitionException, IOException {
         final String script = "\"test\"|print";
         try {
             FluxCompiler.compile(createInputStream(script), emptyMap());
-        } catch (RuntimeException re) {
-            assertEquals("mismatched input '<EOF>' expecting ';' in Flux", re.getMessage());
-            throw re;
+        } catch (FluxParseException fpe) {
+            assertEquals("mismatched input '<EOF>' expecting ';' in Flux", fpe.getMessage());
+            throw fpe;
         }
     }
 

@@ -33,6 +33,8 @@ tokens {
 
 @header {
 package org.metafacture.flux.parser;
+
+import org.metafacture.flux.FluxParseException;
 }
 
 @lexer::header {
@@ -48,7 +50,7 @@ catch [RecognitionException re] {
     recover(input,re);
     retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
     String msg = getErrorMessage(re, this.getTokenNames()) + " in Flux";
-    throw new RuntimeException(msg, re);
+    throw new FluxParseException(msg, re);
 }
 
 varDef
