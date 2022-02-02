@@ -241,7 +241,7 @@ public class MetafixScriptTest {
 
     @Test
     public void shouldNotIncludeRelativeFixFileFromInlineScript() {
-        final Throwable exception = Assertions.assertThrows(MetafactureException.class, () ->
+        MetafixTestHelpers.assertThrows(MetafactureException.class, "cannot resolve relative path: ./base.fix", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "include('src/test/resources/org/metafacture/metafix/fixes/include.fix')"
                 ),
@@ -253,8 +253,6 @@ public class MetafixScriptTest {
                 }
             )
         );
-
-        Assertions.assertEquals("cannot resolve relative path: ./base.fix", exception.getMessage());
     }
 
     @Test
