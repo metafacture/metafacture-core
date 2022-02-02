@@ -622,7 +622,7 @@ public class MetafixBindTest {
         shouldIterateOverList("n?me", 3);
     }
 
-    @Test
+    @Test // checkstyle-disable-line JavaNCSS
     @Disabled("See https://github.com/metafacture/metafacture-fix/issues/119")
     public void shouldPerformComplexOperationWithPathWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
