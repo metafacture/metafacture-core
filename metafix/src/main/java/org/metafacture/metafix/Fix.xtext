@@ -40,7 +40,7 @@ Else:
 ;
 
 Do:
-  'do' name = ValidID '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* ','? )? ( options = Options )? ')'
+  'do' name = QualifiedName '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* ','? )? ( options = Options )? ')'
     elements += Expression*
   'end'
 ;

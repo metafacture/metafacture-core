@@ -69,6 +69,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     private final List<Closeable> resources = new ArrayList<>();
     private final List<Expression> expressions = new ArrayList<>();
     private final Map<String, Map<String, String>> maps = new HashMap<>();
+    private final RecordTransformer recordTransformer = new RecordTransformer(this);
     private final StreamFlattener flattener = new StreamFlattener();
 
     private Record currentRecord = new Record();
@@ -111,6 +112,10 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
         fix = FixStandaloneSetup.parseFix(fixDef);
     }
 
+    public RecordTransformer getRecordTransformer() {
+        return recordTransformer;
+    }
+
     public List<Expression> getExpressions() {
         return expressions;
     }
@@ -136,7 +141,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
         }
         flattener.endRecord();
         LOG.debug("End record, walking fix: {}", currentRecord);
-        currentRecord = new RecordTransformer(this, fix).transform();
+        currentRecord = recordTransformer.transform(fix);
         if (!currentRecord.getReject()) {
             outputStreamReceiver.startRecord(recordIdentifier);
             LOG.debug("Sending results to {}", outputStreamReceiver);
