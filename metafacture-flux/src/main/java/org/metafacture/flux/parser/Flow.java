@@ -75,7 +75,7 @@ final class Flow {
             }
         }
         else {
-            throw new FluxParseException(element.getClass().getCanonicalName() + "is not a sender");
+            throw new FluxParseException(element.getClass().getCanonicalName() + " is not a sender");
         }
         element = nextElement;
     }
