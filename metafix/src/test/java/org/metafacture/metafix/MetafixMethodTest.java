@@ -1044,6 +1044,60 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void shouldReplaceAllRegexesWithMatch() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all(title, '[aei]', 'X$0Y')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "metafix");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "mXeYtXaYfXiYx");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReplaceAllRegexesWithGroupNumber() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all(title, '([aei])', 'X$1Y')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "metafix");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "mXeYtXaYfXiYx");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReplaceAllRegexesWithGroupName() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all(title, '(?<letter>[aei])', 'X${letter}Y')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "metafix");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "mXeYtXaYfXiYx");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldReplaceAllRegexesInArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
