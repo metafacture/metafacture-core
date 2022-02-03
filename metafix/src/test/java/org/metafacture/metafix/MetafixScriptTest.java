@@ -16,25 +16,35 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Consumer;
 
 /**
  * Tests Metafix script level methods.
  */
+@ExtendWith(MockitoExtension.class)
 public class MetafixScriptTest {
 
     private static final String MAP_NAME = "testMap";
 
     private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
     private static final String TSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.tsv";
+
+    @Mock
+    private StreamReceiver streamReceiver;
 
     public MetafixScriptTest() {
     }
@@ -130,6 +140,195 @@ public class MetafixScriptTest {
     @Test
     public void shouldDoNothing() {
         assertFix("nothing()", f -> { });
+    }
+
+    @Test
+    public void shouldIncludeFixFile() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('trace')",
+                "add_field('trace', 'before include')",
+                "include('src/test/resources/org/metafacture/metafix/fixes/base.fix')",
+                "add_field('trace', 'after include')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("record", "1");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.literal("record", "2");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("record", "1");
+                o.get().startEntity("trace");
+                o.get().literal("1", "before include");
+                o.get().literal("2", "base 1");
+                o.get().literal("3", "after include");
+                o.get().endEntity();
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().literal("record", "2");
+                o.get().startEntity("trace");
+                o.get().literal("1", "before include");
+                o.get().literal("2", "base 2");
+                o.get().literal("3", "after include");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldIncludeFixFileInBind() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('trace')",
+                "add_field('trace', 'before bind')",
+                "do list(path: 'data', 'var': '$i')",
+                "  paste('trace.$append', '~before include', '$i')",
+                "  include('src/test/resources/org/metafacture/metafix/fixes/var.fix')",
+                "  paste('trace.$append', '~after include', '$i')",
+                "end",
+                "add_field('trace', 'after bind')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("record", "1");
+                i.literal("data", "marc");
+                i.literal("data", "json");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.literal("record", "2");
+                i.literal("data", "test");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("record", "1");
+                o.get().startEntity("data");
+                o.get().literal("1", "marc");
+                o.get().literal("2", "json");
+                o.get().endEntity();
+                o.get().startEntity("trace");
+                o.get().literal("1", "before bind");
+                o.get().literal("2", "before include marc");
+                o.get().literal("3", "marc 1");
+                o.get().literal("4", "after include MARC");
+                o.get().literal("5", "before include json");
+                o.get().literal("6", "json 1");
+                o.get().literal("7", "after include JSON");
+                o.get().literal("8", "after bind");
+                o.get().endEntity();
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().literal("record", "2");
+                o.get().literal("data", "test");
+                o.get().startEntity("trace");
+                o.get().literal("1", "before bind");
+                o.get().literal("2", "before include test");
+                o.get().literal("3", "test 2");
+                o.get().literal("4", "after include TEST");
+                o.get().literal("5", "after bind");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotIncludeRelativeFixFileFromInlineScript() {
+        MetafixTestHelpers.assertThrows(MetafactureException.class, "cannot resolve relative path: ./base.fix", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "include('src/test/resources/org/metafacture/metafix/fixes/include.fix')"
+                ),
+                i -> {
+                    i.startRecord("");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldIncludeFixFileFromExternalScript() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "src/test/resources/org/metafacture/metafix/fixes/include.fix"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("record", "1");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.literal("record", "2");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("record", "1");
+                o.get().startEntity("trace");
+                o.get().literal("1", "before include");
+                o.get().literal("2", "base 1");
+                o.get().literal("3", "after include");
+                o.get().endEntity();
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().literal("record", "2");
+                o.get().startEntity("trace");
+                o.get().literal("1", "before include");
+                o.get().literal("2", "base 2");
+                o.get().literal("3", "after include");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldIncludeNestedFixFileFromExternalScript() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "src/test/resources/org/metafacture/metafix/fixes/nested.fix"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("record", "1");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.literal("record", "2");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("record", "1");
+                o.get().startEntity("trace");
+                o.get().literal("1", "before nested");
+                o.get().literal("2", "before include");
+                o.get().literal("3", "base 1");
+                o.get().literal("4", "after include");
+                o.get().literal("5", "after nested");
+                o.get().endEntity();
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().literal("record", "2");
+                o.get().startEntity("trace");
+                o.get().literal("1", "before nested");
+                o.get().literal("2", "before include");
+                o.get().literal("3", "base 2");
+                o.get().literal("4", "after include");
+                o.get().literal("5", "after nested");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
     }
 
     private void assertVar(final String fixDef, final Map<String, String> vars, final Map<String, String> result) {

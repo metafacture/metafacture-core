@@ -61,6 +61,10 @@ public class RecordTransformer {
 
     /*package-private*/ Record transform(final Fix fix) {
         setRecord(metafix.getCurrentRecord().shallowClone());
+        return transformRecord(fix);
+    }
+
+    public Record transformRecord(final Fix fix) {
         process(fix.getElements());
         return record;
     }

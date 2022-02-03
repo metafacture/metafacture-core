@@ -19,7 +19,6 @@ package org.metafacture.metafix;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.metamorph.api.MorphExecutionException;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -263,7 +262,7 @@ public class MetafixLookupTest {
 
     @Test
     public void shouldFailLookupInUnknownNamedMap() {
-        final Throwable exception = Assertions.assertThrows(MorphExecutionException.class, () ->
+        MetafixTestHelpers.assertThrows(MorphExecutionException.class, "File not found: testMap", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     LOOKUP + " 'testMap')"
                 ),
@@ -278,8 +277,6 @@ public class MetafixLookupTest {
                 }
             )
         );
-
-        Assertions.assertEquals("File not found: testMap", exception.getMessage());
     }
 
     private void assertMap(final String... fixDef) {

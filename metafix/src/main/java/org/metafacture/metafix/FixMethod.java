@@ -16,13 +16,18 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.metafix.api.FixFunction;
+import org.metafacture.metafix.fix.Fix;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.maps.FileMap;
 
+import java.io.FileNotFoundException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -37,6 +42,42 @@ public enum FixMethod implements FixFunction {
 
     // SCRIPT-LEVEL METHODS:
 
+    include {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String includeFile = params.get(0);
+            final String includePath;
+
+            if (!Metafix.isFixFile(includeFile)) {
+                throw new MetafactureException("not a Fix file: " + includeFile);
+            }
+
+            // TODO: Catmandu load path
+            if (includeFile.startsWith(".")) {
+                final String fixFile = metafix.getFixFile();
+
+                if (fixFile != null) {
+                    includePath = Paths.get(fixFile).resolveSibling(includeFile).toString();
+                }
+                else {
+                    throw new MetafactureException("cannot resolve relative path: " + includeFile);
+                }
+            }
+            else {
+                includePath = includeFile;
+            }
+
+            final RecordTransformer recordTransformer = metafix.getRecordTransformer();
+            recordTransformer.setRecord(recordTransformer.transformRecord(INCLUDE_FIX.computeIfAbsent(includePath, k -> {
+                try {
+                    return FixStandaloneSetup.parseFix(Metafix.fixReader(k));
+                }
+                catch (final FileNotFoundException e) {
+                    throw new MetafactureException(e);
+                }
+            })));
+        }
+    },
     nothing {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
@@ -474,5 +515,7 @@ public enum FixMethod implements FixFunction {
     private static final String FILEMAP_DEFAULT_SEPARATOR = ",";
 
     private static final Random RANDOM = new Random();
+
+    private static final Map<String, Fix> INCLUDE_FIX = new HashMap<>();
 
 }

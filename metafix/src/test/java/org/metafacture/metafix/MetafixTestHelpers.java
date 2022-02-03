@@ -45,10 +45,27 @@ public final class MetafixTestHelpers {
     private MetafixTestHelpers() {
     }
 
-    public static void assertThrows(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
-        final Throwable exception = Assertions.assertThrows(MetafactureException.class, executable).getCause();
-        Assertions.assertSame(expectedClass, exception.getClass());
-        Assertions.assertEquals(expectedMessage, exception.getMessage());
+    public static void assertThrowsCause(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
+        assertThrows(MetafactureException.class, expectedClass, expectedMessage, executable);
+    }
+
+    public static void assertThrows(final Class<? extends Throwable> expectedClass, final String expectedMessage, final Executable executable) {
+        assertThrows(expectedClass, null, expectedMessage, executable);
+    }
+
+    private static void assertThrows(final Class<? extends Throwable> exceptionClass, final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
+        final Throwable thrownException = Assertions.assertThrows(exceptionClass, executable);
+        final Throwable actualException;
+
+        if (expectedClass != null) {
+            actualException = thrownException.getCause();
+            Assertions.assertSame(expectedClass, actualException.getClass());
+        }
+        else {
+            actualException = thrownException;
+        }
+
+        Assertions.assertEquals(expectedMessage, actualException.getMessage());
     }
 
     public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Consumer<Metafix> in,
