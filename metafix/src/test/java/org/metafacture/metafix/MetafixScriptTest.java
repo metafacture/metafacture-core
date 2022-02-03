@@ -162,20 +162,16 @@ public class MetafixScriptTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().literal("record", "1");
-                o.get().startEntity("trace");
-                o.get().literal("1", "before include");
-                o.get().literal("2", "base 1");
-                o.get().literal("3", "after include");
-                o.get().endEntity();
+                o.get().literal("trace", "before include");
+                o.get().literal("trace", "base 1");
+                o.get().literal("trace", "after include");
                 o.get().endRecord();
 
                 o.get().startRecord("2");
                 o.get().literal("record", "2");
-                o.get().startEntity("trace");
-                o.get().literal("1", "before include");
-                o.get().literal("2", "base 2");
-                o.get().literal("3", "after include");
-                o.get().endEntity();
+                o.get().literal("trace", "before include");
+                o.get().literal("trace", "base 2");
+                o.get().literal("trace", "after include");
                 o.get().endRecord();
             }
         );
@@ -208,32 +204,26 @@ public class MetafixScriptTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().literal("record", "1");
-                o.get().startEntity("data");
-                o.get().literal("1", "marc");
-                o.get().literal("2", "json");
-                o.get().endEntity();
-                o.get().startEntity("trace");
-                o.get().literal("1", "before bind");
-                o.get().literal("2", "before include marc");
-                o.get().literal("3", "marc 1");
-                o.get().literal("4", "after include MARC");
-                o.get().literal("5", "before include json");
-                o.get().literal("6", "json 1");
-                o.get().literal("7", "after include JSON");
-                o.get().literal("8", "after bind");
-                o.get().endEntity();
+                o.get().literal("data", "marc");
+                o.get().literal("data", "json");
+                o.get().literal("trace", "before bind");
+                o.get().literal("trace", "before include marc");
+                o.get().literal("trace", "marc 1");
+                o.get().literal("trace", "after include MARC");
+                o.get().literal("trace", "before include json");
+                o.get().literal("trace", "json 1");
+                o.get().literal("trace", "after include JSON");
+                o.get().literal("trace", "after bind");
                 o.get().endRecord();
 
                 o.get().startRecord("2");
                 o.get().literal("record", "2");
                 o.get().literal("data", "test");
-                o.get().startEntity("trace");
-                o.get().literal("1", "before bind");
-                o.get().literal("2", "before include test");
-                o.get().literal("3", "test 2");
-                o.get().literal("4", "after include TEST");
-                o.get().literal("5", "after bind");
-                o.get().endEntity();
+                o.get().literal("trace", "before bind");
+                o.get().literal("trace", "before include test");
+                o.get().literal("trace", "test 2");
+                o.get().literal("trace", "after include TEST");
+                o.get().literal("trace", "after bind");
                 o.get().endRecord();
             }
         );
@@ -272,20 +262,16 @@ public class MetafixScriptTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().literal("record", "1");
-                o.get().startEntity("trace");
-                o.get().literal("1", "before include");
-                o.get().literal("2", "base 1");
-                o.get().literal("3", "after include");
-                o.get().endEntity();
+                o.get().literal("trace", "before include");
+                o.get().literal("trace", "base 1");
+                o.get().literal("trace", "after include");
                 o.get().endRecord();
 
                 o.get().startRecord("2");
                 o.get().literal("record", "2");
-                o.get().startEntity("trace");
-                o.get().literal("1", "before include");
-                o.get().literal("2", "base 2");
-                o.get().literal("3", "after include");
-                o.get().endEntity();
+                o.get().literal("trace", "before include");
+                o.get().literal("trace", "base 2");
+                o.get().literal("trace", "after include");
                 o.get().endRecord();
             }
         );
@@ -308,24 +294,20 @@ public class MetafixScriptTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().literal("record", "1");
-                o.get().startEntity("trace");
-                o.get().literal("1", "before nested");
-                o.get().literal("2", "before include");
-                o.get().literal("3", "base 1");
-                o.get().literal("4", "after include");
-                o.get().literal("5", "after nested");
-                o.get().endEntity();
+                o.get().literal("trace", "before nested");
+                o.get().literal("trace", "before include");
+                o.get().literal("trace", "base 1");
+                o.get().literal("trace", "after include");
+                o.get().literal("trace", "after nested");
                 o.get().endRecord();
 
                 o.get().startRecord("2");
                 o.get().literal("record", "2");
-                o.get().startEntity("trace");
-                o.get().literal("1", "before nested");
-                o.get().literal("2", "before include");
-                o.get().literal("3", "base 2");
-                o.get().literal("4", "after include");
-                o.get().literal("5", "after nested");
-                o.get().endEntity();
+                o.get().literal("trace", "before nested");
+                o.get().literal("trace", "before include");
+                o.get().literal("trace", "base 2");
+                o.get().literal("trace", "after include");
+                o.get().literal("trace", "after nested");
                 o.get().endRecord();
             }
         );
