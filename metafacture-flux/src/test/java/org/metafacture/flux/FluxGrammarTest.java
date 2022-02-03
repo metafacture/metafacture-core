@@ -28,8 +28,8 @@ import java.nio.charset.StandardCharsets;
 import org.antlr.runtime.RecognitionException;
 import org.junit.Before;
 import org.junit.Test;
+import org.metafacture.commons.reflection.ReflectionException;
 import org.metafacture.flux.parser.FluxProgramm;
-import org.metafacture.framework.MetafactureException;
 
 /**
  * Tests for the Flux grammar.
@@ -91,7 +91,7 @@ public final class FluxGrammarTest {
     }
 
     @Test(expected = FluxParseException.class)
-    public void issue421_shouldThrowRuntimeExceptionWhenSemicolonInFlowIsMissing()
+    public void issue421_shouldThrowFluxParseExceptionWhenSemicolonInFlowIsMissing()
         throws RecognitionException, IOException {
         final String script = "\"test\"|print";
         try {
@@ -102,14 +102,87 @@ public final class FluxGrammarTest {
         }
     }
 
-    @Test(expected = RuntimeException.class)
-    public void issue421_shouldThrowRuntimeExceptionWhenSemicolonInVarDefIsMissing()
+    @Test(expected = FluxParseException.class)
+    public void issue421_shouldThrowFluxParseExceptionWhenSemicolonInVarDefIsMissing()
         throws RecognitionException, IOException {
         final String script = "foo=42";
         try {
             FluxCompiler.compile(createInputStream(script), emptyMap());
-        } catch (RuntimeException re) {
+        } catch (FluxParseException re) {
             assertEquals("mismatched input '<EOF>' expecting ';' in Flux", re.getMessage());
+            throw re;
+        }
+    }
+
+    @Test(expected = ReflectionException.class)
+    public void issue421_shouldThrowReflectionExceptionWhenCommandIsNotFound()
+        throws RecognitionException, IOException {
+        final String script = "\"test\"|prin;";
+        try {
+            FluxCompiler.compile(createInputStream(script), emptyMap());
+        } catch (ReflectionException re) {
+             assertEquals("Class not found: prin", re.getMessage());
+            throw re;
+        }
+    }
+
+    @Test(expected = FluxParseException.class)
+    public void issue421_shouldThrowFluxParseExceptionWhenInputIsMissingAfterPipe1()
+        throws RecognitionException, IOException {
+        final String script =  "\"test\"|";
+        try {
+            FluxCompiler.compile(createInputStream(script), emptyMap());
+        } catch (FluxParseException re) {
+            assertEquals("no viable alternative at input '<EOF>' in Flux", re.getMessage());
+            throw re;
+        }
+    }
+
+    @Test(expected = FluxParseException.class)
+    public void issue421_shouldThrowFluxParseExceptionWhenInputIsMissingAfterPipe2()
+        throws RecognitionException, IOException {
+        final String script =  "\"test\"|;";
+        try {
+            FluxCompiler.compile(createInputStream(script), emptyMap());
+        } catch (FluxParseException re) {
+            assertEquals("no viable alternative at input ';' in Flux", re.getMessage());
+            throw re;
+        }
+    }
+
+    @Test(expected = FluxParseException.class)
+    public void issue421_shouldThrowFluxParseExceptionWhenTeeStructureOccursWithouATeeCommand()
+        throws RecognitionException, IOException {
+        final String script = "\"test\"|{print}{print} ;";
+        try {
+            FluxCompiler.compile(createInputStream(script), emptyMap());
+        } catch (FluxParseException re) {
+            assertEquals("Flow cannot be split without a tee-element.", re.getMessage());
+            throw re;
+        }
+    }
+
+    @Test(expected = FluxParseException.class)
+    public void issue421_shouldThrowFluxParseExceptionWhenTeeIsNotASender()
+        throws RecognitionException, IOException {
+        final String script =  "\"test\"|print|object-tee|{print}{print} ;";
+        try {
+            FluxCompiler.compile(createInputStream(script), emptyMap());
+        } catch (FluxParseException re) {
+            assertEquals("org.metafacture.io.ObjectStdoutWriter is not a sender", re.getMessage());
+            throw re;
+        }
+    }
+
+    @Test(expected = FluxParseException.class)
+    public void issue421_shouldInsertMissingSymbolsWhenTeeIsStructurallyInvalid()
+        throws RecognitionException, IOException {
+        final String script =  "\"test\"|object-tee|{object-tee{print{print} ;";
+        try {
+            FluxCompiler.compile(createInputStream(script), emptyMap());
+            String tmp=stdoutBuffer.toString();
+        } catch (FluxParseException re) {
+            assertEquals("missing '}' at '{' in Flux", re.getMessage());
             throw re;
         }
     }
