@@ -33,7 +33,7 @@ import java.util.Arrays;
  *
  * @author Fabian Steeg
  */
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class) // checkstyle-disable-line JavaNCSS
 public class MetafixRecordTest {
 
     @Mock
@@ -671,6 +671,147 @@ public class MetafixRecordTest {
     }
 
     @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/121
+    public void shouldCopyArrayFieldWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('TEST_TWO[]')",
+                "copy_field('test[].*', 'TEST_TWO[].$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("test[]");
+                i.literal("1", "One");
+                i.literal("2", "Two");
+                i.literal("3", "Three");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "One");
+                o.get().literal("2", "Two");
+                o.get().literal("3", "Three");
+                o.get().endEntity();
+                o.get().startEntity("TEST_TWO[]");
+                o.get().literal("1", "One");
+                o.get().literal("2", "Two");
+                o.get().literal("3", "Three");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/121")
+    public void shouldCopyNestedArrayFieldWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('TEST_4[]')",
+                "copy_field('nestedTest[].*.test[].*', 'TEST_4[].$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("nestedTest[]");
+                i.startEntity("1");
+                i.startEntity("test[]");
+                i.literal("1", "One");
+                i.literal("2", "Two");
+                i.literal("3", "Three");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("2");
+                i.startEntity("test[]");
+                i.literal("1", "4");
+                i.literal("2", "5");
+                i.literal("3", "6");
+                i.endEntity();
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("nestedTest[]");
+                o.get().startEntity("1");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "One");
+                o.get().literal("2", "Two");
+                o.get().literal("3", "Three");
+                f.apply(2).endEntity();
+                o.get().startEntity("2");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "4");
+                o.get().literal("2", "5");
+                o.get().literal("3", "6");
+                f.apply(3).endEntity();
+                o.get().startEntity("TEST_4[]");
+                o.get().literal("1", "One");
+                o.get().literal("2", "Two");
+                o.get().literal("3", "Three");
+                o.get().literal("4", "4");
+                o.get().literal("5", "5");
+                o.get().literal("6", "6");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/121
+    public void shouldCopyArraySubFieldWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('TEST_5[]')",
+                "copy_field('coll[].*.b', 'TEST_5[].$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("coll[]");
+                i.startEntity("1");
+                i.literal("a", "Dog");
+                i.literal("b", "Dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("a", "Ape");
+                i.literal("b", "Ape");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("a", "Giraffe");
+                i.endEntity();
+                i.startEntity("4");
+                i.literal("a", "Crocodile");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("a", "Dog");
+                o.get().literal("b", "Dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("a", "Ape");
+                o.get().literal("b", "Ape");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("a", "Giraffe");
+                o.get().endEntity();
+                o.get().startEntity("4");
+                o.get().literal("a", "Crocodile");
+                f.apply(2).endEntity();
+                o.get().startEntity("TEST_5[]");
+                o.get().literal("1", "Dog");
+                o.get().literal("2", "Ape");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void addFieldToFirstObjectInRepeatedFields() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "add_field('animals.$first.kind','nice')"
@@ -920,6 +1061,58 @@ public class MetafixRecordTest {
                 }
             );
         });
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/121")
+    public void shouldAddArraySubFieldWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('coll[].*.c', 'test')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("coll[]");
+                i.startEntity("1");
+                i.literal("a", "Dog");
+                i.literal("b", "Dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("a", "Ape");
+                i.literal("b", "Ape");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("a", "Giraffe");
+                i.endEntity();
+                i.startEntity("4");
+                i.literal("a", "Crocodile");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("a", "Dog");
+                o.get().literal("b", "Dog");
+                o.get().literal("c", "test");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("a", "Ape");
+                o.get().literal("b", "Ape");
+                o.get().literal("c", "test");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("a", "Giraffe");
+                o.get().literal("c", "test");
+                o.get().endEntity();
+                o.get().startEntity("4");
+                o.get().literal("a", "Crocodile");
+                o.get().literal("c", "test");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
     }
 
     @Test
@@ -2223,6 +2416,53 @@ public class MetafixRecordTest {
                 o.get().startEntity("fictional");
                 o.get().literal("XYmal", "unicorn");
                 o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/121")
+    public void shouldRenameArrayFieldWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "rename('OTHERS[].*', 'd', 'XY')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("OTHERS[]");
+                i.startEntity("1");
+                i.literal("name", "Jake");
+                i.startEntity("dnimals[]");
+                i.literal("1", "dog");
+                i.literal("2", "zebra");
+                i.literal("3", "cat");
+                i.endEntity();
+                i.startEntity("dumbers[]");
+                i.literal("1", "7");
+                i.literal("2", "2");
+                i.literal("3", "1");
+                i.literal("4", "10");
+                i.endEntity();
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("OTHERS[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "Jake");
+                o.get().startEntity("XYnimals[]");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "zebra");
+                o.get().literal("3", "cat");
+                o.get().endEntity();
+                o.get().startEntity("XYumbers[]");
+                o.get().literal("1", "7");
+                o.get().literal("2", "2");
+                o.get().literal("3", "1");
+                o.get().literal("4", "10");
+                f.apply(3).endEntity();
                 o.get().endRecord();
             }
         );

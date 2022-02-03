@@ -909,6 +909,101 @@ public class MetafixMethodTest {
     }
 
     @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/121
+    public void shouldPrependValueInNestedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "prepend('nestedTest[].*.test[].*', 'Number ')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("nestedTest[]");
+                i.startEntity("1");
+                i.startEntity("test[]");
+                i.literal("1", "One");
+                i.literal("2", "Two");
+                i.literal("3", "Three");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("2");
+                i.startEntity("test[]");
+                i.literal("1", "4");
+                i.literal("2", "5");
+                i.literal("3", "6");
+                i.endEntity();
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("nestedTest[]");
+                o.get().startEntity("1");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "Number One");
+                o.get().literal("2", "Number Two");
+                o.get().literal("3", "Number Three");
+                f.apply(2).endEntity();
+                o.get().startEntity("2");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "Number 4");
+                o.get().literal("2", "Number 5");
+                o.get().literal("3", "Number 6");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/121
+    // TODO: Fix order (`coll[].*.a` should stay before `coll[].*.b`)
+    public void shouldPrependValueInArraySubField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "prepend('coll[].*.a', 'HELLO ')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("coll[]");
+                i.startEntity("1");
+                i.literal("a", "Dog");
+                i.literal("b", "Dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("a", "Ape");
+                i.literal("b", "Ape");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("a", "Giraffe");
+                i.endEntity();
+                i.startEntity("4");
+                i.literal("a", "Crocodile");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("b", "Dog");
+                o.get().literal("a", "HELLO Dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("b", "Ape");
+                o.get().literal("a", "HELLO Ape");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("a", "HELLO Giraffe");
+                o.get().endEntity();
+                o.get().startEntity("4");
+                o.get().literal("a", "HELLO Crocodile");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldNotPrependValueToArray() {
         MetafixTestHelpers.assertThrows(IllegalStateException.class, "expected String, got Array", () ->
@@ -976,6 +1071,101 @@ public class MetafixMethodTest {
     }
 
     @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/121
+    // TODO: Fix order (`coll[].*.a` should stay before `coll[].*.b`)
+    public void shouldReplaceAllRegexesInArraySubField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all('coll[].*.a', 'o', '__')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("coll[]");
+                i.startEntity("1");
+                i.literal("a", "Dog");
+                i.literal("b", "Dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("a", "Ape");
+                i.literal("b", "Ape");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("a", "Giraffe");
+                i.endEntity();
+                i.startEntity("4");
+                i.literal("a", "Crocodile");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("b", "Dog");
+                o.get().literal("a", "D__g");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("b", "Ape");
+                o.get().literal("a", "Ape");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("a", "Giraffe");
+                o.get().endEntity();
+                o.get().startEntity("4");
+                o.get().literal("a", "Cr__c__dile");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/121
+    public void shouldReplaceAllRegexesInNestedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all('nestedTest[].*.test[].*', 'o', '__')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("nestedTest[]");
+                i.startEntity("1");
+                i.startEntity("test[]");
+                i.literal("1", "One");
+                i.literal("2", "Two");
+                i.literal("3", "Three");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("2");
+                i.startEntity("test[]");
+                i.literal("1", "4");
+                i.literal("2", "5");
+                i.literal("3", "6");
+                i.endEntity();
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("nestedTest[]");
+                o.get().startEntity("1");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "One");
+                o.get().literal("2", "Tw__");
+                o.get().literal("3", "Three");
+                f.apply(2).endEntity();
+                o.get().startEntity("2");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "4");
+                o.get().literal("2", "5");
+                o.get().literal("3", "6");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldReverseString() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "reverse(title)"
@@ -1010,6 +1200,69 @@ public class MetafixMethodTest {
                 o.get().literal("1", "json");
                 o.get().literal("2", "marc");
                 o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/121")
+    public void shouldReverseArrayOfStringsWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "reverse('test[].*')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("test[]");
+                i.literal("1", "One");
+                i.literal("2", "Two");
+                i.literal("3", "Three");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "enO");
+                o.get().literal("2", "owT");
+                o.get().literal("3", "eerhT");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/121")
+    public void shouldReverseArrayOfHashesWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "reverse('ANIMALS[].*')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("ANIMALS[]");
+                i.startEntity("1");
+                i.literal("Aanimal", "dog");
+                i.literal("name", "Jake");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("Aanimal", "parrot");
+                i.literal("name", "Blacky");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("ANIMALS[]");
+                o.get().startEntity("1");
+                o.get().literal("Aanimal", "parrot");
+                o.get().literal("name", "Blacky");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("Aanimal", "dog");
+                o.get().literal("name", "Jake");
+                f.apply(2).endEntity();
                 o.get().endRecord();
             }
         );
@@ -1165,6 +1418,53 @@ public class MetafixMethodTest {
     }
 
     @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/121")
+    public void shouldSortArrayFieldWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "sort_field('OTHERS[].*.dnimals[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("OTHERS[]");
+                i.startEntity("1");
+                i.literal("name", "Jake");
+                i.startEntity("dnimals[]");
+                i.literal("1", "dog");
+                i.literal("2", "zebra");
+                i.literal("3", "cat");
+                i.endEntity();
+                i.startEntity("dumbers[]");
+                i.literal("1", "7");
+                i.literal("2", "2");
+                i.literal("3", "1");
+                i.literal("4", "10");
+                i.endEntity();
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("OTHERS[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "Jake");
+                o.get().startEntity("dnimals[]");
+                o.get().literal("1", "cat");
+                o.get().literal("2", "dog");
+                o.get().literal("3", "zebra");
+                o.get().endEntity();
+                o.get().startEntity("dumbers[]");
+                o.get().literal("1", "7");
+                o.get().literal("2", "2");
+                o.get().literal("3", "1");
+                o.get().literal("4", "10");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldSplitStringField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "split_field(date, '-')"
@@ -1247,7 +1547,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100 and https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldSplitNestedField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "split_field('others[].*.tools', '--')"
@@ -1291,6 +1591,50 @@ public class MetafixMethodTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().literal("numbers", "95");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("java.lang.IllegalStateException: expected String, got Array; see https://github.com/metafacture/metafacture-fix/issues/121")
+    public void shouldSumArrayFieldWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "sum('OTHERS[].*.dumbers[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("OTHERS[]");
+                i.startEntity("1");
+                i.literal("name", "Jake");
+                i.startEntity("dnimals[]");
+                i.literal("1", "dog");
+                i.literal("2", "zebra");
+                i.literal("3", "cat");
+                i.endEntity();
+                i.startEntity("dumbers[]");
+                i.literal("1", "7");
+                i.literal("2", "2");
+                i.literal("3", "1");
+                i.literal("4", "10");
+                i.endEntity();
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("OTHERS[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "Jake");
+                o.get().startEntity("dnimals[]");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "zebra");
+                o.get().literal("3", "cat");
+                o.get().endEntity();
+                o.get().startEntity("dumbers[]");
+                o.get().literal("1", "20");
+                f.apply(3).endEntity();
                 o.get().endRecord();
             }
         );

@@ -25,6 +25,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 /**
  * Test Metafix binds.
@@ -572,6 +573,130 @@ public class MetafixBindTest {
                 o.get().literal("fullName", "Max Musterman");
                 o.get().endRecord();
             });
+    }
+
+    private void shouldIterateOverList(final String path, final int expectedCount) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list(path: '" + path + "', 'var': '$i')",
+                "  add_field('trace', 'true')",
+                "end",
+                "retain('trace')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Mary");
+                i.literal("name", "University");
+                i.literal("nome", "Max");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("trace");
+                IntStream.range(0, expectedCount).forEach(i -> o.get().literal(String.valueOf(i + 1), "true"));
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldIterateOverList() {
+        shouldIterateOverList("name", 2);
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/119")
+    public void shouldIterateOverListWithCharacterClass() {
+        shouldIterateOverList("n[ao]me", 3);
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/119")
+    public void shouldIterateOverListWithAlternation() {
+        shouldIterateOverList("name|nome", 3);
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/119")
+    public void shouldIterateOverListWithWildcard() {
+        shouldIterateOverList("n?me", 3);
+    }
+
+    @Test // checkstyle-disable-line JavaNCSS
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/119")
+    public void shouldPerformComplexOperationWithPathWildcard() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('coll[]')",
+                "do list(path: 'feld?', 'var': '$i')",
+                "  add_field('coll[].$append.feldtest', 'true')",
+                "  copy_field('$i.a.value', 'coll[].$last.a')",
+                "end",
+                "retain('coll[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("feldA");
+                i.startEntity("a");
+                i.literal("value", "Dog");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("feldA");
+                i.startEntity("a");
+                i.literal("value", "Ape");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("feldA");
+                i.startEntity("a");
+                i.literal("value", "Giraffe");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("feldB");
+                i.startEntity("a");
+                i.literal("value", "Crocodile");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("feldB");
+                i.startEntity("a");
+                i.literal("value", "Human");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("feldB");
+                i.startEntity("a");
+                i.literal("value", "Bird");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("feldtest", "true");
+                o.get().literal("a", "Dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("feldtest", "true");
+                o.get().literal("a", "Ape");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("feldtest", "true");
+                o.get().literal("a", "Giraffe");
+                o.get().endEntity();
+                o.get().startEntity("4");
+                o.get().literal("feldtest", "true");
+                o.get().literal("a", "Crocodile");
+                o.get().endEntity();
+                o.get().startEntity("5");
+                o.get().literal("feldtest", "true");
+                o.get().literal("a", "Human");
+                o.get().endEntity();
+                o.get().startEntity("6");
+                o.get().literal("feldtest", "true");
+                o.get().literal("a", "Bird");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
     }
 
     @Test

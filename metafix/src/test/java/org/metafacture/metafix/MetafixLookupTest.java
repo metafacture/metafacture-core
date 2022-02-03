@@ -92,6 +92,42 @@ public class MetafixLookupTest {
     }
 
     @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/121
+    public void shouldLookupArraySubFieldWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('animals[].*.Aanimal', '" + TSV_MAP + "', 'sep_char': '\t')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.startEntity("1");
+                i.literal("name", "Jake");
+                i.literal("Aanimal", "Aloha");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "Blacky");
+                i.literal("Aanimal", "Hey");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "Jake");
+                o.get().literal("Aanimal", "Alohaeha");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "Blacky");
+                o.get().literal("Aanimal", "Tach");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void csv() {
         assertMap(
                 LOOKUP + " '" + CSV_MAP + "')"
