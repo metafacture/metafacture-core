@@ -32,15 +32,15 @@ import java.util.function.UnaryOperator;
  * @author Fabian Steeg (fsteeg)
  *
  */
-public class Path {
+public class FixPath {
     private static final String ASTERISK = "*";
     private String[] path;
 
-    public Path(final String[] path) {
+    public FixPath(final String[] path) {
         this.path = path;
     }
 
-    public Path(final String path) {
+    public FixPath(final String path) {
         this(Value.split(path));
     }
 
@@ -74,8 +74,8 @@ public class Path {
     private Value findInValue(final Value value, final String[] p) {
         // TODO: move impl into enum elements, here call only value.find
         return value == null ? null : value.extractType((m, c) -> m
-                .ifArray(a -> c.accept(new Path(p).findInArray(a)))
-                .ifHash(h -> c.accept(new Path(p).findInHash(h)))
+                .ifArray(a -> c.accept(new FixPath(p).findInArray(a)))
+                .ifHash(h -> c.accept(new FixPath(p).findInHash(h)))
                 .orElse(c)
         );
     }
@@ -115,8 +115,8 @@ public class Path {
             value.matchType()
                 .ifString(s -> array.set(index, operator != null ? new Value(operator.apply(s)) : null))
                 .orElse(v -> new Value.TypeMatcher(v)
-                        .ifArray(a -> new Path(p).transformInArray(a, operator))
-                        .ifHash(h -> new Path(p).transformInHash(h, operator))
+                        .ifArray(a -> new FixPath(p).transformInArray(a, operator))
+                        .ifHash(h -> new FixPath(p).transformInHash(h, operator))
                         .orElseThrow());
         }
     }
@@ -125,7 +125,7 @@ public class Path {
         final String field = path[0];
         if (field.equals(ASTERISK)) {
             // TODO: search in all elements of value.asHash()?
-            return new Path(tail(path)).findInHash(hash);
+            return new FixPath(tail(path)).findInHash(hash);
         }
         return path.length == 1 || !hash.containsField(field) ? hash.get(field) :
             findNested(hash, field, tail(path));
@@ -134,8 +134,8 @@ public class Path {
     private Value findNested(final Hash hash, final String field, final String[] remainingFields) {
         final Value value = hash.get(field);
         return value == null ? null : value.extractType((m, c) -> m
-                .ifArray(a -> c.accept(new Path(remainingFields).findInArray(a)))
-                .ifHash(h -> c.accept(new Path(remainingFields).findInHash(h)))
+                .ifArray(a -> c.accept(new FixPath(remainingFields).findInArray(a)))
+                .ifHash(h -> c.accept(new FixPath(remainingFields).findInHash(h)))
                 .orElseThrow()
         );
     }
@@ -158,7 +158,7 @@ public class Path {
 
         if (currentSegment.equals(ASTERISK)) {
             // TODO: search in all elements of value.asHash()?
-            new Path(remainingPath).transformInHash(hash, operator);
+            new FixPath(remainingPath).transformInHash(hash, operator);
             return;
         }
 
@@ -177,8 +177,8 @@ public class Path {
                 }
                 else {
                     new TypeMatcher(value)
-                        .ifArray(a -> new Path(remainingPath).transformInArray(a, operator))
-                        .ifHash(h -> new Path(remainingPath).transformInHash(h, operator))
+                        .ifArray(a -> new FixPath(remainingPath).transformInArray(a, operator))
+                        .ifHash(h -> new FixPath(remainingPath).transformInHash(h, operator))
                         .orElseThrow();
                 }
             }

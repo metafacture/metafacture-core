@@ -560,7 +560,7 @@ public class Value {
                 final Value value;
 
                 try {
-                    value = new Path(path).findInHash(this);
+                    value = new FixPath(path).findInHash(this);
                 }
                 catch (final MetafactureException e) {
                     if (e.getCause() instanceof IllegalStateException) {
@@ -769,7 +769,7 @@ public class Value {
         public void copy(final List<String> params) {
             final String oldName = params.get(0);
             final String newName = params.get(1);
-            asList(new Path(oldName).findInHash(this), a -> a.forEach(v -> appendValue(split(newName), v)));
+            asList(new FixPath(oldName).findInHash(this), a -> a.forEach(v -> appendValue(split(newName), v)));
         }
 
         private void appendValue(final String[] newName, final Value v) {
@@ -787,7 +787,7 @@ public class Value {
                             add(newName[0], v);
                         }
                         else {
-                            appendValue(newName, new Path(tail(newName)).findInHash(v.asHash()));
+                            appendValue(newName, new FixPath(tail(newName)).findInHash(v.asHash()));
                         }
                         break;
                     default:
