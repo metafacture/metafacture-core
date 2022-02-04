@@ -43,7 +43,7 @@ public interface FixPredicate {
         final String field = params.get(0);
         final String string = params.get(1);
 
-        final Value value = new FixPath(field).findInHash(record);
+        final Value value = new FixPath(field).findIn(record);
         return value != null && qualifier.test(value.asList(null).asArray().stream(), v -> v.extractType((m, c) -> m
                     .ifString(s -> c.accept(conditional.test(s, string)))
                     .orElse(w -> c.accept(false))
