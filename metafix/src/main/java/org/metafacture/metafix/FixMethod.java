@@ -171,7 +171,7 @@ public enum FixMethod implements FixFunction {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.copy(params);
-            new FixPath(params.get(0)).removeNestedFromHash(record);
+            new FixPath(params.get(0)).removeNestedFrom(record);
         }
     },
     parse_text {
@@ -244,7 +244,7 @@ public enum FixMethod implements FixFunction {
     remove_field {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            params.forEach(p -> new FixPath(p).removeNestedFromHash(record));
+            params.forEach(p -> new FixPath(p).removeNestedFrom(record));
         }
     },
     rename {

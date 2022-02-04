@@ -167,7 +167,7 @@ public class Value {
         return value == null || value.isNull();
     }
 
-    static boolean isNumber(final String s) {
+    /*package-private*/ static boolean isNumber(final String s) {
         return s.matches("\\d+");
     }
 
@@ -270,7 +270,7 @@ public class Value {
         private final Set<Type> expected = new HashSet<>();
         private final Value value;
 
-        TypeMatcher(final Value value) {
+        /*package-private*/ TypeMatcher(final Value value) {
             this.value = value;
         }
 
@@ -314,7 +314,7 @@ public class Value {
 
     }
 
-    public abstract static class AbstractValueType {
+    private abstract static class AbstractValueType {
 
         protected static final Predicate<Value> REMOVE_EMPTY_VALUES = v -> v.extractType((m, c) -> m
                 .ifArray(a -> {
@@ -352,10 +352,6 @@ public class Value {
          * Creates an empty instance of {@link Array}.
          */
         private Array() {
-        }
-
-        public List<Value> getList() {
-            return list;
         }
 
         public void add(final Value value) {
@@ -420,6 +416,14 @@ public class Value {
             list.set(index, value);
         }
 
+        /*package-private*/ void removeIf(final Predicate<Value> predicate) {
+            list.removeIf(predicate);
+        }
+
+        /*package-private*/ void removeAll() {
+            list.clear();
+        }
+
     }
 
     /**
@@ -435,10 +439,6 @@ public class Value {
          * Creates an empty instance of {@link Hash}.
          */
         protected Hash() {
-        }
-
-        public Map<String, Value> getMap() {
-            return map;
         }
 
         /**
@@ -649,7 +649,7 @@ public class Value {
             return map.toString();
         }
 
-        void modifyFields(final String pattern, final Consumer<String> consumer) {
+        /*package-private*/ void modifyFields(final String pattern, final Consumer<String> consumer) {
             matchFields(pattern, Stream::filter).collect(Collectors.toSet()).forEach(consumer);
         }
 

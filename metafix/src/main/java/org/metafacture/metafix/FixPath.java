@@ -46,7 +46,17 @@ public class FixPath {
         this.path = path;
     }
 
-    public Value findIn(final Value.Array array) {
+    public Value findIn(final Hash hash) {
+        final String field = path[0];
+        if (field.equals(ASTERISK)) {
+            // TODO: search in all elements of value.asHash()?
+            return new FixPath(tail(path)).findIn(hash);
+        }
+        return path.length == 1 || !hash.containsField(field) ? hash.get(field) :
+            findNested(hash, field, tail(path));
+    }
+
+    /*package-private*/ Value findIn(final Value.Array array) {
         final Value result;
         if (path.length > 0) {
             final String currentSegment = path[0];
@@ -73,37 +83,41 @@ public class FixPath {
         return result;
     }
 
-    public Value findIn(final Hash hash) {
-        final String field = path[0];
-        if (field.equals(ASTERISK)) {
-            // TODO: search in all elements of value.asHash()?
-            return new FixPath(tail(path)).findIn(hash);
-        }
-        return path.length == 1 || !hash.containsField(field) ? hash.get(field) :
-            findNested(hash, field, tail(path));
+    private Value findInValue(final Value value, final String[] p) {
+        // TODO: move impl into enum elements, here call only value.find
+        return value == null ? null : value.extractType((m, c) -> m
+                .ifArray(a -> c.accept(new FixPath(p).findIn(a)))
+                .ifHash(h -> c.accept(new FixPath(p).findIn(h)))
+                .orElse(c)
+                );
     }
 
     public Value replaceIn(final Hash hash, final String newValue) {
-        return new FixPath(path).insertIntoHash(hash, InsertMode.REPLACE, new Value(newValue));
+        return new FixPath(path).insertInto(hash, InsertMode.REPLACE, new Value(newValue));
     }
 
     public Value appendIn(final Hash hash, final String newValue) {
-        return new FixPath(path).insertIntoHash(hash, InsertMode.APPEND, new Value(newValue));
+        return new FixPath(path).insertInto(hash, InsertMode.APPEND, new Value(newValue));
     }
 
-    public void transformIn(final Hash hash, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
+    @Override
+    public String toString() {
+        return Arrays.asList(path).toString();
+    }
+
+    /*package-private*/ void transformIn(final Hash hash, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
         final Value oldValue = findIn(hash);
 
         if (oldValue != null) {
             final Value newValue = oldValue.extractType(consumer);
 
             if (newValue != null) {
-                new FixPath(path).insertIntoHash(hash, InsertMode.REPLACE, newValue);
+                new FixPath(path).insertInto(hash, InsertMode.REPLACE, newValue);
             }
         }
     }
 
-    public void transformIn(final Hash hash, final UnaryOperator<String> operator) {
+    /*package-private*/ void transformIn(final Hash hash, final UnaryOperator<String> operator) {
         final String currentSegment = path[0];
         final String[] remainingPath = tail(path);
 
@@ -114,11 +128,11 @@ public class FixPath {
         }
 
         hash.modifyFields(currentSegment, f -> {
-            final Value value = hash.getMap().get(f);
+            final Value value = hash.get(f);
 
             if (value != null) {
                 if (remainingPath.length == 0) {
-                    hash.getMap().remove(f);
+                    hash.remove(f);
 
                     if (operator != null) {
                         value.matchType()
@@ -136,7 +150,7 @@ public class FixPath {
         });
     }
 
-    public void transformIn(final Array array, final UnaryOperator<String> operator) {
+    /*package-private*/ void transformIn(final Array array, final UnaryOperator<String> operator) {
         final String currentSegment = path[0];
         final int size = array.size();
 
@@ -158,12 +172,7 @@ public class FixPath {
             }
         }
 
-        array.getList().removeIf(v -> Value.isNull(v));
-    }
-
-    @Override
-    public String toString() {
-        return Arrays.asList(path).toString();
+        array.removeIf(v -> Value.isNull(v));
     }
 
     protected enum InsertMode {
@@ -185,9 +194,9 @@ public class FixPath {
 
     }
 
-    /*package-private*/ void removeNestedFromArray(final Array array) {
+    /*package-private*/ void removeNestedFrom(final Array array) {
         if (path.length >= 1 && path[0].equals(ASTERISK)) {
-            array.getList().clear();
+            array.removeAll();
         }
         else if (path.length >= 1 && Value.isNumber(path[0])) {
             final int index = Integer.parseInt(path[0]) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
@@ -197,7 +206,7 @@ public class FixPath {
         }
     }
 
-    /*package-private*/ void removeNestedFromHash(final Hash hash) {
+    /*package-private*/ void removeNestedFrom(final Hash hash) {
         final String field = path[0];
 
         if (path.length == 1) {
@@ -208,14 +217,14 @@ public class FixPath {
             // TODO: impl and call just value.remove
             if (value != null) {
                 value.matchType()
-                    .ifArray(a -> new FixPath(tail(path)).removeNestedFromArray(a))
-                    .ifHash(h -> new FixPath(tail(path)).removeNestedFromHash(h))
+                    .ifArray(a -> new FixPath(tail(path)).removeNestedFrom(a))
+                    .ifHash(h -> new FixPath(tail(path)).removeNestedFrom(h))
                     .orElseThrow();
             }
         }
     }
 
-    /*package-private*/ void insertIntoArray(final Array array, final InsertMode mode, final Value newValue) {
+    /*package-private*/ void insertInto(final Array array, final InsertMode mode, final Value newValue) {
         if (path[0].equals(ASTERISK)) {
             return; // TODO: WDCD? descend into the array?
         }
@@ -227,7 +236,7 @@ public class FixPath {
         }
     }
 
-    /*package-private*/ Value insertIntoHash(final Hash hash, final InsertMode mode, final Value newValue) {
+    /*package-private*/ Value insertInto(final Hash hash, final InsertMode mode, final Value newValue) {
         final String field = path[0];
         if (path.length == 1) {
             if (field.equals(ASTERISK)) {
@@ -249,8 +258,8 @@ public class FixPath {
             if (value != null) {
                 // TODO: move impl into enum elements, here call only value.insert
                 value.matchType()
-                    .ifArray(a -> new FixPath(tail).insertIntoArray(a, mode, newValue))
-                    .ifHash(h -> new FixPath(tail).insertIntoHash(h, mode, newValue))
+                    .ifArray(a -> new FixPath(tail).insertInto(a, mode, newValue))
+                    .ifHash(h -> new FixPath(tail).insertInto(h, mode, newValue))
                     .orElseThrow();
             }
         }
@@ -260,15 +269,6 @@ public class FixPath {
 
     private String[] tail(final String[] fields) {
         return Arrays.copyOfRange(fields, 1, fields.length);
-    }
-
-    private Value findInValue(final Value value, final String[] p) {
-        // TODO: move impl into enum elements, here call only value.find
-        return value == null ? null : value.extractType((m, c) -> m
-                .ifArray(a -> c.accept(new FixPath(p).findIn(a)))
-                .ifHash(h -> c.accept(new FixPath(p).findIn(h)))
-                .orElse(c)
-                );
     }
 
     private void transformValueAt(final Array array, final int index, final String[] p, final UnaryOperator<String> operator) {
@@ -300,19 +300,19 @@ public class FixPath {
                     array.add(newValue);
                 }
                 else {
-                    array.add(Value.newHash(h -> new FixPath(tail(path)).insertIntoHash(h, mode, newValue)));
+                    array.add(Value.newHash(h -> new FixPath(tail(path)).insertInto(h, mode, newValue)));
                 }
                 break;
             case $last:
                 if (array.size() > 0) {
-                    array.get(array.size() - 1).matchType().ifHash(h -> new FixPath(tail(path)).insertIntoHash(h, mode, newValue));
+                    array.get(array.size() - 1).matchType().ifHash(h -> new FixPath(tail(path)).insertInto(h, mode, newValue));
                 }
                 break;
             case $first:
                 if (array.size() > 0) {
                     final Value first = array.get(0);
                     if (first.isHash()) {
-                        new FixPath(tail(path)).insertIntoHash(first.asHash(), mode, newValue);
+                        new FixPath(tail(path)).insertInto(first.asHash(), mode, newValue);
                     }
                 }
                 break;
@@ -341,14 +341,14 @@ public class FixPath {
             }
         }
         else {
-            array.add(Value.newHash(h -> new FixPath(path).insertIntoHash(h, mode, newValue)));
+            array.add(Value.newHash(h -> new FixPath(path).insertInto(h, mode, newValue)));
         }
     }
 
     private Value processRef(final Hash hash, final InsertMode mode, final Value newValue, final String field, final String[] tail) {
         final Value referencedValue = getReferencedValue(hash, field);
         if (referencedValue != null) {
-            return new FixPath(tail).insertIntoHash(referencedValue.asHash(), mode, newValue);
+            return new FixPath(tail).insertInto(referencedValue.asHash(), mode, newValue);
         }
         else {
             throw new IllegalArgumentException("Using ref, but can't find: " + field + " in: " + hash);
