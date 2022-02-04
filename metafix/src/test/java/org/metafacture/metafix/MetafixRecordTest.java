@@ -1383,6 +1383,110 @@ public class MetafixRecordTest {
     }
 
     @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/106
+    public void shouldCopyMarkedArrayOfStringsIntoUnmarkedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('animal_string_Array[]', 'animals_repeated_SimpleField')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animal_string_Array[]");
+                i.literal("1", "dog");
+                i.literal("2", "elefant");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animal_string_Array[]");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "elefant");
+                o.get().endEntity();
+                o.get().literal("animals_repeated_SimpleField", "dog");
+                o.get().literal("animals_repeated_SimpleField", "elefant");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/106
+    public void shouldCopyMarkedArrayOfHashesIntoUnmarkedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('animal_object_Array[]', 'animals_repeated_ObjectField')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animal_object_Array[]");
+                i.startEntity("1");
+                i.literal("name", "dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "elefant");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animal_object_Array[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "elefant");
+                f.apply(2).endEntity();
+                o.get().startEntity("animals_repeated_ObjectField");
+                o.get().literal("name", "dog");
+                o.get().endEntity();
+                o.get().startEntity("animals_repeated_ObjectField");
+                o.get().literal("name", "elefant");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/106
+    public void shouldCopyMarkedArrayOfHashesIntoMarkedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('animal_object_Array[]', 'test_animal_object_Array[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animal_object_Array[]");
+                i.startEntity("1");
+                i.literal("name", "dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "elefant");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animal_object_Array[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "elefant");
+                f.apply(2).endEntity();
+                o.get().startEntity("test_animal_object_Array[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "elefant");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void removeLiteral() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "remove_field('your.name')"),
