@@ -171,7 +171,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
 
     private void emit(final String field, final Value value) {
         Value.asList(value, array -> {
-            final boolean isMulti = array.size() > 1 || value.isArray();
+            final boolean isMulti = isArrayName(field);
             if (isMulti) {
                 outputStreamReceiver.startEntity(field);
             }
@@ -196,6 +196,10 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
         });
     }
 
+    private boolean isArrayName(final String name) {
+        return name.endsWith(ARRAY_MARKER);
+    }
+
     private void addValue(final String name, final Value value) {
         final int index = entityCountStack.peek() - 1;
         if (index < 0 || entities.size() <= index) {
@@ -215,8 +219,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
             throw new IllegalArgumentException("Entity name must not be null.");
         }
 
-        final Value value = name.endsWith(ARRAY_MARKER) ? Value.newArray() : Value.newHash();
-        // TODO: Remove array marker? => name.substring(0, name.length() - ARRAY_MARKER.length());
+        final Value value = isArrayName(name) ? Value.newArray() : Value.newHash();
 
         addValue(name, value);
         entities.add(value);

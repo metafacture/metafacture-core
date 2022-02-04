@@ -77,14 +77,13 @@ public class MetafixLookupTest {
                 i.endEntity();
                 i.endRecord();
             },
-            (o, f) -> {
+            o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("data");
-                o.get().startEntity("title");
-                o.get().literal("1", "Alohaeha");
-                o.get().literal("2", "Moin zäme");
-                o.get().literal("3", "Tach");
-                f.apply(2).endEntity();
+                o.get().literal("title", "Alohaeha");
+                o.get().literal("title", "Moin zäme");
+                o.get().literal("title", "Tach");
+                o.get().endEntity();
                 o.get().endRecord();
             }
         );
@@ -228,8 +227,6 @@ public class MetafixLookupTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("title");
-                o.get().endEntity();
                 o.get().endRecord();
             }
         );
@@ -248,13 +245,9 @@ public class MetafixLookupTest {
                 i.literal("title", "Hey");
                 i.endRecord();
             },
-            o -> {
+            (o, f) -> {
                 o.get().startRecord("1");
-                o.get().startEntity("title");
-                o.get().literal("1", "Tach");
-                o.get().literal("2", "Tach");
-                o.get().literal("3", "Tach");
-                o.get().endEntity();
+                f.apply(3).literal("title", "Tach");
                 o.get().endRecord();
             }
         );
@@ -290,11 +283,9 @@ public class MetafixLookupTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("title");
-                o.get().literal("1", "Alohaeha");
-                o.get().literal("2", "Moin zäme");
-                o.get().literal("3", "Tach");
-                o.get().endEntity();
+                o.get().literal("title", "Alohaeha");
+                o.get().literal("title", "Moin zäme");
+                o.get().literal("title", "Tach");
                 o.get().endRecord();
             }
         );

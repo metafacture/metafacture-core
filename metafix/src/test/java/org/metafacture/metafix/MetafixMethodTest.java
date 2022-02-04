@@ -113,10 +113,8 @@ public class MetafixMethodTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("title");
-                o.get().literal("1", "marc");
-                o.get().literal("2", "json");
-                o.get().endEntity();
+                o.get().literal("title", "marc");
+                o.get().literal("title", "json");
                 o.get().endRecord();
             }
         );
@@ -153,10 +151,8 @@ public class MetafixMethodTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("title");
-                o.get().literal("1", "Marc");
-                o.get().literal("2", "Json");
-                o.get().endEntity();
+                o.get().literal("title", "Marc");
+                o.get().literal("title", "Json");
                 o.get().endRecord();
             }
         );
@@ -246,9 +242,7 @@ public class MetafixMethodTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("number");
-                o.get().literal("1", "41   : 15");
-                o.get().endEntity();
+                o.get().literal("number", "41   : 15");
                 o.get().endRecord();
             });
     }
@@ -263,11 +257,9 @@ public class MetafixMethodTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("date");
-                o.get().literal("1", "2015");
-                o.get().literal("2", "03");
-                o.get().literal("3", "07");
-                o.get().endEntity();
+                o.get().literal("date", "2015");
+                o.get().literal("date", "03");
+                o.get().literal("date", "07");
                 o.get().endRecord();
             });
     }
@@ -466,10 +458,8 @@ public class MetafixMethodTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("title");
-                o.get().literal("1", "marc");
-                o.get().literal("2", "json");
-                o.get().endEntity();
+                o.get().literal("title", "marc");
+                o.get().literal("title", "json");
                 o.get().endRecord();
             }
         );
@@ -672,10 +662,8 @@ public class MetafixMethodTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("animals");
-                o.get().literal("1", "Cat");
-                o.get().literal("2", "Bobcat");
-                o.get().endEntity();
+                o.get().literal("animals", "Cat");
+                o.get().literal("animals", "Bobcat");
                 o.get().endRecord();
             }
         );
@@ -696,10 +684,8 @@ public class MetafixMethodTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("animals");
-                o.get().literal("1", "Lion");
-                o.get().literal("2", "Tiger");
-                o.get().endEntity();
+                o.get().literal("animals", "Lion");
+                o.get().literal("animals", "Tiger");
                 o.get().endRecord();
             }
         );
@@ -806,7 +792,9 @@ public class MetafixMethodTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().literal("animals[]", "dog,cat,zebra");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "dog,cat,zebra");
+                o.get().endEntity();
                 o.get().endRecord();
             }
         );
@@ -1250,10 +1238,8 @@ public class MetafixMethodTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("title");
-                o.get().literal("1", "json");
-                o.get().literal("2", "marc");
-                o.get().endEntity();
+                o.get().literal("title", "json");
+                o.get().literal("title", "marc");
                 o.get().endRecord();
             }
         );
@@ -1335,14 +1321,11 @@ public class MetafixMethodTest {
                 i.literal("numbers", "6");
                 i.endRecord();
             },
-            o -> {
+            (o, f) -> {
                 o.get().startRecord("1");
-                o.get().startEntity("numbers");
-                o.get().literal("1", "41");
-                o.get().literal("2", "42");
-                o.get().literal("3", "6");
-                o.get().literal("4", "6");
-                o.get().endEntity();
+                o.get().literal("numbers", "41");
+                o.get().literal("numbers", "42");
+                f.apply(2).literal("numbers", "6");
                 o.get().endRecord();
             }
         );
@@ -1361,14 +1344,11 @@ public class MetafixMethodTest {
                 i.literal("numbers", "6");
                 i.endRecord();
             },
-            o -> {
+            (o, f) -> {
                 o.get().startRecord("1");
-                o.get().startEntity("numbers");
-                o.get().literal("1", "6");
-                o.get().literal("2", "6");
-                o.get().literal("3", "41");
-                o.get().literal("4", "42");
-                o.get().endEntity();
+                f.apply(2).literal("numbers", "6");
+                o.get().literal("numbers", "41");
+                o.get().literal("numbers", "42");
                 o.get().endRecord();
             }
         );
@@ -1407,14 +1387,11 @@ public class MetafixMethodTest {
                 i.literal("numbers", "6");
                 i.endRecord();
             },
-            o -> {
+            (o, f) -> {
                 o.get().startRecord("1");
-                o.get().startEntity("numbers");
-                o.get().literal("1", "6");
-                o.get().literal("2", "6");
-                o.get().literal("3", "42");
-                o.get().literal("4", "41");
-                o.get().endEntity();
+                f.apply(2).literal("numbers", "6");
+                o.get().literal("numbers", "42");
+                o.get().literal("numbers", "41");
                 o.get().endRecord();
             }
         );
@@ -1433,14 +1410,11 @@ public class MetafixMethodTest {
                 i.literal("numbers", "6");
                 i.endRecord();
             },
-            o -> {
+            (o, f) -> {
                 o.get().startRecord("1");
-                o.get().startEntity("numbers");
-                o.get().literal("1", "42");
-                o.get().literal("2", "41");
-                o.get().literal("3", "6");
-                o.get().literal("4", "6");
-                o.get().endEntity();
+                o.get().literal("numbers", "42");
+                o.get().literal("numbers", "41");
+                f.apply(2).literal("numbers", "6");
                 o.get().endRecord();
             }
         );
@@ -1461,11 +1435,9 @@ public class MetafixMethodTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("numbers");
-                o.get().literal("1", "41");
-                o.get().literal("2", "42");
-                o.get().literal("3", "6");
-                o.get().endEntity();
+                o.get().literal("numbers", "41");
+                o.get().literal("numbers", "42");
+                o.get().literal("numbers", "6");
                 o.get().endRecord();
             }
         );
@@ -1530,11 +1502,9 @@ public class MetafixMethodTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("date");
-                o.get().literal("1", "1918");
-                o.get().literal("2", "17");
-                o.get().literal("3", "16");
-                o.get().endEntity();
+                o.get().literal("date", "1918");
+                o.get().literal("date", "17");
+                o.get().literal("date", "16");
                 o.get().endRecord();
             }
         );
@@ -1551,15 +1521,40 @@ public class MetafixMethodTest {
                 i.literal("date", "2021-22-23");
                 i.endRecord();
             },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("date", "1918");
+                o.get().literal("date", "17");
+                o.get().literal("date", "16");
+                o.get().literal("date", "2021");
+                o.get().literal("date", "22");
+                o.get().literal("date", "23");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/106")
+    public void shouldSplitMarkedArrayFieldIntoArrayOfArrays() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "split_field('date[]', '-')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("date[]", "1918-17-16");
+                i.literal("date[]", "2021-22-23");
+                i.endRecord();
+            },
             (o, f) -> {
                 o.get().startRecord("1");
-                o.get().startEntity("date");
-                o.get().startEntity("1");
+                o.get().startEntity("date[]");
+                o.get().startEntity("1[]");
                 o.get().literal("1", "1918");
                 o.get().literal("2", "17");
                 o.get().literal("3", "16");
                 o.get().endEntity();
-                o.get().startEntity("2");
+                o.get().startEntity("2[]");
                 o.get().literal("1", "2021");
                 o.get().literal("2", "22");
                 o.get().literal("3", "23");
@@ -1582,19 +1577,16 @@ public class MetafixMethodTest {
                 i.endEntity();
                 i.endRecord();
             },
-            (o, f) -> {
+            o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("date");
-                o.get().startEntity("a");
-                o.get().literal("1", "1918");
-                o.get().literal("2", "17");
-                o.get().literal("3", "16");
+                o.get().literal("a", "1918");
+                o.get().literal("a", "17");
+                o.get().literal("a", "16");
+                o.get().literal("b", "2021");
+                o.get().literal("b", "22");
+                o.get().literal("b", "23");
                 o.get().endEntity();
-                o.get().startEntity("b");
-                o.get().literal("1", "2021");
-                o.get().literal("2", "22");
-                o.get().literal("3", "23");
-                f.apply(2).endEntity();
                 o.get().endRecord();
             }
         );
@@ -1619,11 +1611,10 @@ public class MetafixMethodTest {
                 o.get().startRecord("1");
                 o.get().startEntity("others[]");
                 o.get().startEntity("1");
-                o.get().startEntity("tools");
-                o.get().literal("1", "hammer");
-                o.get().literal("2", "saw");
-                o.get().literal("3", "bow");
-                f.apply(3).endEntity();
+                o.get().literal("tools", "hammer");
+                o.get().literal("tools", "saw");
+                o.get().literal("tools", "bow");
+                f.apply(2).endEntity();
                 o.get().endRecord();
             }
         );
@@ -1709,11 +1700,9 @@ public class MetafixMethodTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("numbers");
-                o.get().literal("1", "41");
-                o.get().literal("2", "42");
-                o.get().literal("3", "6");
-                o.get().endEntity();
+                o.get().literal("numbers", "41");
+                o.get().literal("numbers", "42");
+                o.get().literal("numbers", "6");
                 o.get().endRecord();
             }
         );
@@ -1750,20 +1739,17 @@ public class MetafixMethodTest {
                 o.get().startRecord("1");
                 o.get().startEntity("arrays[]");
                 o.get().startEntity("1");
-                o.get().startEntity("number");
-                o.get().literal("1", "41");
-                o.get().literal("2", "23");
-                f.apply(2).endEntity();
+                o.get().literal("number", "41");
+                o.get().literal("number", "23");
+                o.get().endEntity();
                 o.get().startEntity("2");
-                o.get().startEntity("number");
-                o.get().literal("1", "42");
-                o.get().literal("2", "23");
-                f.apply(2).endEntity();
+                o.get().literal("number", "42");
+                o.get().literal("number", "23");
+                o.get().endEntity();
                 o.get().startEntity("3");
-                o.get().startEntity("number");
-                o.get().literal("1", "6");
-                o.get().literal("2", "23");
-                f.apply(3).endEntity();
+                o.get().literal("number", "6");
+                o.get().literal("number", "23");
+                f.apply(2).endEntity();
                 o.get().endRecord();
             }
         );

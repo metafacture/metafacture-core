@@ -25,7 +25,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
-import java.util.stream.IntStream;
 
 /**
  * Test Metafix binds.
@@ -57,10 +56,8 @@ public class MetafixBindTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("author");
-                o.get().literal("1", "A UNIVERSITY");
-                o.get().literal("2", "MAX");
-                o.get().endEntity();
+                o.get().literal("author", "A UNIVERSITY");
+                o.get().literal("author", "MAX");
                 o.get().endRecord();
             });
     }
@@ -101,7 +98,8 @@ public class MetafixBindTest {
                 "do list('path':'foo','var':'loop')",
                 " copy_field('test','loop.baz')",
                 " copy_field('loop.bar','loop.qux')",
-                "end"),
+                "end"
+            ),
             i -> {
                 i.startRecord("1");
                 i.startEntity("foo");
@@ -112,22 +110,23 @@ public class MetafixBindTest {
                 i.endEntity();
                 i.literal("test", "42");
                 i.endRecord();
-            }, (o, f) -> {
+            },
+            o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("foo");
-                o.get().startEntity("1");
                 o.get().literal("bar", "1");
                 o.get().literal("baz", "42");
                 o.get().literal("qux", "1");
-                f.apply(1).endEntity();
-                o.get().startEntity("2");
+                o.get().endEntity();
+                o.get().startEntity("foo");
                 o.get().literal("bar", "2");
                 o.get().literal("baz", "42");
                 o.get().literal("qux", "2");
-                f.apply(2).endEntity();
+                o.get().endEntity();
                 o.get().literal("test", "42");
                 o.get().endRecord();
-            });
+            }
+        );
     }
 
     @Test
@@ -136,7 +135,8 @@ public class MetafixBindTest {
                 "do list('path':'foo')",
                 " copy_field('test','baz')",
                 " copy_field('bar','qux')",
-                "end"),
+                "end"
+            ),
             i -> {
                 i.startRecord("1");
                 i.startEntity("foo");
@@ -147,20 +147,21 @@ public class MetafixBindTest {
                 i.endEntity();
                 i.literal("test", "42");
                 i.endRecord();
-            }, (o, f) -> {
+            },
+            o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("foo");
-                o.get().startEntity("1");
                 o.get().literal("bar", "1");
                 o.get().literal("qux", "1");
-                f.apply(1).endEntity();
-                o.get().startEntity("2");
+                o.get().endEntity();
+                o.get().startEntity("foo");
                 o.get().literal("bar", "2");
                 o.get().literal("qux", "2");
-                f.apply(2).endEntity();
+                o.get().endEntity();
                 o.get().literal("test", "42");
                 o.get().endRecord();
-            });
+            }
+        );
     }
 
     @Test
@@ -181,10 +182,8 @@ public class MetafixBindTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("author");
-                o.get().literal("1", "A UNIVERSITY");
-                o.get().literal("2", "MAX");
-                o.get().endEntity();
+                o.get().literal("author", "A UNIVERSITY");
+                o.get().literal("author", "MAX");
                 o.get().endRecord();
             });
     }
@@ -242,10 +241,8 @@ public class MetafixBindTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("author");
-                o.get().literal("1", "A UNIVERSITY");
-                o.get().literal("2", "MAX");
-                o.get().endEntity();
+                o.get().literal("author", "A UNIVERSITY");
+                o.get().literal("author", "MAX");
                 o.get().endRecord();
             });
     }
@@ -406,10 +403,8 @@ public class MetafixBindTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
-                o.get().startEntity("author");
-                o.get().literal("1", "A University");
-                o.get().literal("2", "Max");
-                o.get().endEntity();
+                o.get().literal("author", "A University");
+                o.get().literal("author", "Max");
                 o.get().endRecord();
             });
     }
@@ -589,11 +584,9 @@ public class MetafixBindTest {
                 i.literal("nome", "Max");
                 i.endRecord();
             },
-            o -> {
+            (o, f) -> {
                 o.get().startRecord("1");
-                o.get().startEntity("trace");
-                IntStream.range(0, expectedCount).forEach(i -> o.get().literal(String.valueOf(i + 1), "true"));
-                o.get().endEntity();
+                f.apply(expectedCount).literal("trace", "true");
                 o.get().endRecord();
             }
         );
