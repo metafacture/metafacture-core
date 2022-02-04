@@ -56,7 +56,7 @@ public class FixPath {
             findNested(hash, field, tail(path));
     }
 
-    /*package-private*/ Value findIn(final Value.Array array) {
+    /*package-private*/ Value findIn(final Array array) {
         final Value result;
         if (path.length > 0) {
             final String currentSegment = path[0];
@@ -105,19 +105,7 @@ public class FixPath {
         return Arrays.asList(path).toString();
     }
 
-    /*package-private*/ void transformIn(final Hash hash, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
-        final Value oldValue = findIn(hash);
-
-        if (oldValue != null) {
-            final Value newValue = oldValue.extractType(consumer);
-
-            if (newValue != null) {
-                new FixPath(path).insertInto(hash, InsertMode.REPLACE, newValue);
-            }
-        }
-    }
-
-    /*package-private*/ void transformIn(final Hash hash, final UnaryOperator<String> operator) {
+    public void transformIn(final Hash hash, final UnaryOperator<String> operator) {
         final String currentSegment = path[0];
         final String[] remainingPath = tail(path);
 
@@ -141,13 +129,25 @@ public class FixPath {
                     }
                 }
                 else {
-                    new TypeMatcher(value)
+                    value.matchType()
                         .ifArray(a -> new FixPath(remainingPath).transformIn(a, operator))
                         .ifHash(h -> new FixPath(remainingPath).transformIn(h, operator))
                         .orElseThrow();
                 }
             }
         });
+    }
+
+    /*package-private*/ void transformIn(final Hash hash, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
+        final Value oldValue = findIn(hash);
+
+        if (oldValue != null) {
+            final Value newValue = oldValue.extractType(consumer);
+
+            if (newValue != null) {
+                new FixPath(path).insertInto(hash, InsertMode.REPLACE, newValue);
+            }
+        }
     }
 
     /*package-private*/ void transformIn(final Array array, final UnaryOperator<String> operator) {
@@ -175,7 +175,7 @@ public class FixPath {
         array.removeIf(v -> Value.isNull(v));
     }
 
-    protected enum InsertMode {
+    private enum InsertMode {
 
         REPLACE {
             @Override
@@ -276,7 +276,7 @@ public class FixPath {
         if (value != null) {
             value.matchType()
                 .ifString(s -> array.set(index, operator != null ? new Value(operator.apply(s)) : null))
-                .orElse(v -> new Value.TypeMatcher(v)
+                .orElse(v -> value.matchType()
                         .ifArray(a -> new FixPath(p).transformIn(a, operator))
                         .ifHash(h -> new FixPath(p).transformIn(h, operator))
                         .orElseThrow());

@@ -255,7 +255,7 @@ public class Value {
         return Arrays.copyOfRange(fields, 1, fields.length);
     }
 
-    static String[] split(final String fieldPath) {
+    /*package-private*/ static String[] split(final String fieldPath) {
         return fieldPath.split(FIELD_PATH_SEPARATOR);
     }
 
@@ -270,7 +270,7 @@ public class Value {
         private final Set<Type> expected = new HashSet<>();
         private final Value value;
 
-        /*package-private*/ TypeMatcher(final Value value) {
+        private TypeMatcher(final Value value) {
             this.value = value;
         }
 
