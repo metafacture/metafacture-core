@@ -120,7 +120,7 @@ public enum FixMethod implements FixFunction {
     add_field {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.append(params.get(0), params.get(1));
+            new FixPath(params.get(0)).appendIn(record, params.get(1));
         }
     },
     array { // array-from-hash
@@ -171,7 +171,7 @@ public enum FixMethod implements FixFunction {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.copy(params);
-            record.removeNested(params.get(0));
+            new FixPath(params.get(0)).removeNestedFromHash(record);
         }
     },
     parse_text {
@@ -216,7 +216,7 @@ public enum FixMethod implements FixFunction {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String joinChar = options.get("join_char");
-            record.replace(params.get(0), params.subList(1, params.size()).stream()
+            new FixPath(params.get(0)).replaceIn(record, params.subList(1, params.size()).stream()
                     .filter(f -> literalString(f) || new FixPath(f).findInHash(record) != null)
                     .map(f -> literalString(f) ? new Value(f.substring(1)) : Value.asList(new FixPath(f).findInHash(record), null).asArray().get(0))
                     .map(Value::asString).collect(Collectors.joining(joinChar != null ? joinChar : " ")));
@@ -232,7 +232,7 @@ public enum FixMethod implements FixFunction {
             final String field = params.get(0);
             final int max = getInteger(params, 1);
 
-            record.replace(field, String.valueOf(RANDOM.nextInt(max)));
+            new FixPath(field).replaceIn(record, String.valueOf(RANDOM.nextInt(max)));
         }
     },
     reject {
@@ -244,7 +244,7 @@ public enum FixMethod implements FixFunction {
     remove_field {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            params.forEach(record::removeNested);
+            params.forEach(p -> new FixPath(p).removeNestedFromHash(record));
         }
     },
     rename {
@@ -300,7 +300,7 @@ public enum FixMethod implements FixFunction {
     set_field {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.replace(params.get(0), params.get(1));
+            new FixPath(params.get(0)).replaceIn(record, params.get(1));
         }
     },
     set_hash {

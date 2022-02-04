@@ -341,25 +341,6 @@ public class Value {
         @Override
         public abstract String toString();
 
-        protected enum InsertMode {
-
-            REPLACE {
-                @Override
-                void apply(final Hash hash, final String field, final Value value) {
-                    hash.put(field, value);
-                }
-            },
-            APPEND {
-                @Override
-                void apply(final Hash hash, final String field, final Value value) {
-                    hash.add(field, value);
-                }
-            };
-
-            abstract void apply(Hash hash, String field, Value value);
-
-        }
-
     }
 
     /**
@@ -435,83 +416,6 @@ public class Value {
 
         public void remove(final int index) {
             list.remove(index);
-        }
-
-        private void removeNested(final String[] fields) {
-            if (fields.length >= 1 && fields[0].equals(ASTERISK)) {
-                list.clear();
-            }
-            else if (fields.length >= 1 && isNumber(fields[0])) {
-                final int index = Integer.parseInt(fields[0]) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
-                if (index >= 0 && index < size()) {
-                    remove(index);
-                }
-            }
-        }
-
-        private void insert(final InsertMode mode, final String[] fields, final Value newValue) {
-            if (fields[0].equals(ASTERISK)) {
-                return; // TODO: WDCD? descend into the array?
-            }
-            if (ReservedField.fromString(fields[0]) == null) {
-                processDefault(mode, fields, newValue);
-            }
-            else {
-                insertIntoReferencedObject(mode, fields, newValue);
-            }
-        }
-
-        private void insertIntoReferencedObject(final InsertMode mode, final String[] fields, final Value newValue) {
-            // TODO replace switch, extract to enum behavior like reservedField.insertIntoReferencedObject(this)?
-            switch (ReservedField.fromString(fields[0])) {
-                case $append:
-                    if (fields.length == 1) {
-                        add(newValue);
-                    }
-                    else {
-                        add(newHash(h -> h.insert(mode, tail(fields), newValue)));
-                    }
-                    break;
-                case $last:
-                    if (size() > 0) {
-                        get(size() - 1).matchType().ifHash(h -> h.insert(mode, tail(fields), newValue));
-                    }
-                    break;
-                case $first:
-                    if (size() > 0) {
-                        final Value first = get(0);
-                        if (first.isHash()) {
-                            first.asHash().insert(mode, tail(fields), newValue);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void processDefault(final InsertMode mode, final String[] fields, final Value newValue) {
-            if (isNumber(fields[0])) {
-                // TODO: WDCD? insert at the given index? also descend into the array?
-                if (fields.length == 1) {
-                    add(newValue);
-                }
-                else if (fields.length > 1) {
-                    final Value newHash;
-                    final int index = Integer.parseInt(fields[0]);
-                    if (index <= size()) {
-                        newHash = get(index - 1);
-                    }
-                    else {
-                        newHash = Value.newHash();
-                        add(newHash);
-                    }
-                    mode.apply(newHash.asHash(), fields[1], newValue);
-                }
-            }
-            else {
-                add(newHash(h -> h.insert(mode, fields, newValue)));
-            }
         }
 
         /*package-private*/ void set(final int index, final Value value) {
@@ -623,14 +527,6 @@ public class Value {
             }
         }
 
-        public Value replace(final String fieldPath, final String newValue) {
-            return insert(InsertMode.REPLACE, fieldPath, newValue);
-        }
-
-        public Value append(final String fieldPath, final String newValue) {
-            return insert(InsertMode.APPEND, fieldPath, newValue);
-        }
-
         /**
          * Retrieves the field value from this hash.
          *
@@ -667,74 +563,6 @@ public class Value {
             put(field, oldValue == null ? newValue : oldValue.asList(a1 -> newValue.asList(a2 -> a2.forEach(a1::add))));
         }
 
-        public Value insert(final InsertMode mode, final String fieldPath, final String newValue) {
-            return insert(mode, split(fieldPath), new Value(newValue));
-        }
-
-        Value insert(final InsertMode mode, final String[] fields, final Value newValue) {
-            final String field = fields[0];
-            if (fields.length == 1) {
-                if (field.equals(ASTERISK)) {
-                    //TODO: WDCD? insert into each element?
-                }
-                else {
-                    mode.apply(this, field, newValue);
-                }
-            }
-            else {
-                final String[] tail = tail(fields);
-                if (ReservedField.fromString(field) != null || isNumber(field)) {
-                    return processRef(mode, newValue, field, tail);
-                }
-                if (!containsField(field)) {
-                    put(field, newHash());
-                }
-                final Value value = get(field);
-                if (value != null) {
-                    // TODO: move impl into enum elements, here call only value.insert
-                    value.matchType()
-                        .ifArray(a -> a.insert(mode, tail, newValue))
-                        .ifHash(h -> h.insert(mode, tail, newValue))
-                        .orElseThrow();
-                }
-            }
-
-            return new Value(this);
-        }
-
-        private Value processRef(final InsertMode mode, final Value newValue, final String field, final String[] tail) {
-            final Value referencedValue = getReferencedValue(field);
-            if (referencedValue != null) {
-                return referencedValue.asHash().insert(mode, tail, newValue);
-            }
-            else {
-                throw new IllegalArgumentException("Using ref, but can't find: " + field + " in: " + this);
-            }
-        }
-
-        private Value getReferencedValue(final String field) {
-            Value referencedValue = null;
-            final ReservedField reservedField = ReservedField.fromString(field);
-            if (reservedField == null) {
-                return get(field);
-            }
-            // TODO replace switch, extract to enum behavior like reservedField.getReferencedValueInHash(this)?
-            switch (reservedField) {
-                case $first:
-                    referencedValue = get("1");
-                    break;
-                case $last:
-                    referencedValue = get(String.valueOf(size()));
-                    break;
-                case $append:
-                    referencedValue = new Value(this);
-                    break;
-                default:
-                    break;
-            }
-            return referencedValue;
-        }
-
         /**
          * Removes the given field/value pair from this hash.
          *
@@ -742,28 +570,6 @@ public class Value {
          */
         public void remove(final String field) {
             modifyFields(field, map::remove);
-        }
-
-        public void removeNested(final String fieldPath) {
-            removeNested(split(fieldPath));
-        }
-
-        private void removeNested(final String[] fields) {
-            final String field = fields[0];
-
-            if (fields.length == 1) {
-                remove(field);
-            }
-            else if (containsField(field)) {
-                final Value value = get(field);
-                // TODO: impl and call just value.remove
-                if (value != null) {
-                    value.matchType()
-                        .ifArray(a -> a.removeNested(tail(fields)))
-                        .ifHash(h -> h.removeNested(tail(fields)))
-                        .orElseThrow();
-                }
-            }
         }
 
         public void copy(final List<String> params) {
@@ -777,7 +583,7 @@ public class Value {
             if (v != null) {
                 switch (v.type) {
                     case String:
-                        append(String.join(".", newName), v.asString());
+                        new FixPath(String.join(".", newName)).appendIn(this, v.asString());
                         break;
                     case Array:
                         // TODO: do something here?

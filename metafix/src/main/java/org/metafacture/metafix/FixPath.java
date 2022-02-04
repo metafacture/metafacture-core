@@ -16,9 +16,9 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.metafix.Value.AbstractValueType.InsertMode;
 import org.metafacture.metafix.Value.Array;
 import org.metafacture.metafix.Value.Hash;
+import org.metafacture.metafix.Value.ReservedField;
 import org.metafacture.metafix.Value.TypeMatcher;
 
 import java.util.Arrays;
@@ -28,6 +28,8 @@ import java.util.function.UnaryOperator;
 
 /**
  * Our goal here is something like https://metacpan.org/pod/Catmandu::Path::simple
+ *
+ * With all get/set/update/create/delete logic collected here.
  *
  * @author Fabian Steeg (fsteeg)
  *
@@ -147,7 +149,7 @@ public class FixPath {
             final Value newValue = oldValue.extractType(consumer);
 
             if (newValue != null) {
-                hash.insert(InsertMode.REPLACE, path, newValue);
+                new FixPath(path).insertIntoHash(hash, InsertMode.REPLACE, newValue);
             }
         }
     }
@@ -171,7 +173,7 @@ public class FixPath {
 
                     if (operator != null) {
                         value.matchType()
-                            .ifString(s -> hash.append(f, operator.apply(s)))
+                            .ifString(s -> new FixPath(f).appendIn(hash, operator.apply(s)))
                             .orElseThrow();
                     }
                 }
@@ -184,4 +186,196 @@ public class FixPath {
             }
         });
     }
+
+    /* package-protected */ void insertIntoArray(final Array a, final InsertMode mode, final Value newValue) {
+        if (path[0].equals(ASTERISK)) {
+            return; // TODO: WDCD? descend into the array?
+        }
+        if (ReservedField.fromString(path[0]) == null) {
+            processDefault(a, mode, newValue);
+        }
+        else {
+            insertIntoReferencedObject(a, mode, newValue);
+        }
+    }
+
+    private void insertIntoReferencedObject(final Array a, final InsertMode mode, final Value newValue) {
+        // TODO replace switch, extract to enum behavior like reservedField.insertIntoReferencedObject(this)?
+        switch (ReservedField.fromString(path[0])) {
+            case $append:
+                if (path.length == 1) {
+                    a.add(newValue);
+                }
+                else {
+                    a.add(Value.newHash(h -> new FixPath(tail(path)).insertIntoHash(h, mode, newValue)));
+                }
+                break;
+            case $last:
+                if (a.size() > 0) {
+                    a.get(a.size() - 1).matchType().ifHash(h -> new FixPath(tail(path)).insertIntoHash(h, mode, newValue));
+                }
+                break;
+            case $first:
+                if (a.size() > 0) {
+                    final Value first = a.get(0);
+                    if (first.isHash()) {
+                        new FixPath(tail(path)).insertIntoHash(first.asHash(), mode, newValue);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void processDefault(final Array a, final InsertMode mode, final Value newValue) {
+        if (Value.isNumber(path[0])) {
+            // TODO: WDCD? insert at the given index? also descend into the array?
+            if (path.length == 1) {
+                a.add(newValue);
+            }
+            else if (path.length > 1) {
+                final Value newHash;
+                final int index = Integer.parseInt(path[0]);
+                if (index <= a.size()) {
+                    newHash = a.get(index - 1);
+                }
+                else {
+                    newHash = Value.newHash();
+                    a.add(newHash);
+                }
+                mode.apply(newHash.asHash(), path[1], newValue);
+            }
+        }
+        else {
+            a.add(Value.newHash(h -> new FixPath(path).insertIntoHash(h, mode, newValue)));
+        }
+    }
+
+    /*package-private*/ Value insertIntoHash(final Hash hash, final InsertMode mode, final Value newValue) {
+        final String field = path[0];
+        if (path.length == 1) {
+            if (field.equals(ASTERISK)) {
+                //TODO: WDCD? insert into each element?
+            }
+            else {
+                mode.apply(hash, field, newValue);
+            }
+        }
+        else {
+            final String[] tail = tail(path);
+            if (ReservedField.fromString(field) != null || Value.isNumber(field)) {
+                return processRef(hash, mode, newValue, field, tail);
+            }
+            if (!hash.containsField(field)) {
+                hash.put(field, Value.newHash());
+            }
+            final Value value = hash.get(field);
+            if (value != null) {
+                // TODO: move impl into enum elements, here call only value.insert
+                value.matchType()
+                    .ifArray(a -> new FixPath(tail).insertIntoArray(a, mode, newValue))
+                    .ifHash(h -> new FixPath(tail).insertIntoHash(h, mode, newValue))
+                    .orElseThrow();
+            }
+        }
+
+        return new Value(hash);
+    }
+
+    private Value processRef(final Hash hash, final InsertMode mode, final Value newValue, final String field, final String[] tail) {
+        final Value referencedValue = getReferencedValue(hash, field);
+        if (referencedValue != null) {
+            return new FixPath(tail).insertIntoHash(referencedValue.asHash(), mode, newValue);
+        }
+        else {
+            throw new IllegalArgumentException("Using ref, but can't find: " + field + " in: " + hash);
+        }
+    }
+
+    private Value getReferencedValue(final Hash hash, final String field) {
+        Value referencedValue = null;
+        final ReservedField reservedField = ReservedField.fromString(field);
+        if (reservedField == null) {
+            return hash.get(field);
+        }
+        // TODO replace switch, extract to enum behavior like reservedField.getReferencedValueInHash(this)?
+        switch (reservedField) {
+            case $first:
+                referencedValue = hash.get("1");
+                break;
+            case $last:
+                referencedValue = hash.get(String.valueOf(hash.size()));
+                break;
+            case $append:
+                referencedValue = new Value(hash);
+                break;
+            default:
+                break;
+        }
+        return referencedValue;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.asList(path).toString();
+    }
+
+    protected enum InsertMode {
+
+        REPLACE {
+            @Override
+            void apply(final Hash hash, final String field, final Value value) {
+                hash.put(field, value);
+            }
+        },
+        APPEND {
+            @Override
+            void apply(final Hash hash, final String field, final Value value) {
+                hash.add(field, value);
+            }
+        };
+
+        abstract void apply(Hash hash, String field, Value value);
+
+    }
+
+    public Value replaceIn(final Hash hash, final String newValue) {
+        return new FixPath(path).insertIntoHash(hash, InsertMode.REPLACE, new Value(newValue));
+    }
+
+    public Value appendIn(final Hash hash, final String newValue) {
+        return new FixPath(path).insertIntoHash(hash, InsertMode.APPEND, new Value(newValue));
+    }
+
+    /*package-protected*/ void removeNestedFromArray(final Array array) {
+        if (path.length >= 1 && path[0].equals(ASTERISK)) {
+            array.getList().clear();
+        }
+        else if (path.length >= 1 && Value.isNumber(path[0])) {
+            final int index = Integer.parseInt(path[0]) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
+            if (index >= 0 && index < array.size()) {
+                array.remove(index);
+            }
+        }
+    }
+
+    /*package-protected*/ void removeNestedFromHash(final Hash hash) {
+        final String field = path[0];
+
+        if (path.length == 1) {
+            hash.remove(field);
+        }
+        else if (hash.containsField(field)) {
+            final Value value = hash.get(field);
+            // TODO: impl and call just value.remove
+            if (value != null) {
+                value.matchType()
+                    .ifArray(a -> new FixPath(tail(path)).removeNestedFromArray(a))
+                    .ifHash(h -> new FixPath(tail(path)).removeNestedFromHash(h))
+                    .orElseThrow();
+            }
+        }
+    }
+
 }
