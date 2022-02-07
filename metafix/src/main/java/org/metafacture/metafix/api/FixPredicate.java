@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.api;
 
+import org.metafacture.metafix.FixPath;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
@@ -42,7 +43,7 @@ public interface FixPredicate {
         final String field = params.get(0);
         final String string = params.get(1);
 
-        final Value value = record.find(field);
+        final Value value = new FixPath(field).findIn(record);
         return value != null && qualifier.test(value.asList(null).asArray().stream(), v -> v.extractType((m, c) -> m
                     .ifString(s -> c.accept(conditional.test(s, string)))
                     .orElse(w -> c.accept(false))
