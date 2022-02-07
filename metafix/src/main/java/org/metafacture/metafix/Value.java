@@ -533,8 +533,12 @@ public class Value {
          */
         public Value get(final String field) {
             // TODO: special treatment (only) for exact matches?
-            final List<Value> list = matchFields(field, Stream::filter).map(map::get).collect(Collectors.toList());
+            final List<Value> list = matchFields(field, Stream::filter).map(this::getField).collect(Collectors.toList());
             return list.isEmpty() ? null : list.size() == 1 ? list.get(0) : new Value(list);
+        }
+
+        public Value getField(final String field) {
+            return map.get(field);
         }
 
         public Value getList(final String field, final Consumer<Array> consumer) {
@@ -567,7 +571,11 @@ public class Value {
          * @param field the field name
          */
         public void remove(final String field) {
-            modifyFields(field, map::remove);
+            modifyFields(field, this::removeField);
+        }
+
+        public void removeField(final String field) {
+            map.remove(field);
         }
 
         public void copy(final List<String> params) {

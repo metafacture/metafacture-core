@@ -35,6 +35,7 @@ import java.util.function.UnaryOperator;
  *
  */
 public class FixPath {
+
     private static final String ASTERISK = "*";
     private String[] path;
 
@@ -89,7 +90,7 @@ public class FixPath {
                 .ifArray(a -> c.accept(new FixPath(p).findIn(a)))
                 .ifHash(h -> c.accept(new FixPath(p).findIn(h)))
                 .orElse(c)
-                );
+        );
     }
 
     public Value replaceIn(final Hash hash, final String newValue) {
@@ -116,11 +117,11 @@ public class FixPath {
         }
 
         hash.modifyFields(currentSegment, f -> {
-            final Value value = hash.get(f);
+            final Value value = hash.getField(f);
 
             if (value != null) {
                 if (remainingPath.length == 0) {
-                    hash.remove(f);
+                    hash.removeField(f);
 
                     if (operator != null) {
                         value.matchType()
@@ -168,7 +169,7 @@ public class FixPath {
         // TODO: WDCD? copy_field('your.name','author[].name'), where name is an array
         else {
             for (int i = 0; i < size; ++i) {
-                transformValueAt(array, i, tail(path), operator);
+                transformValueAt(array, i, path, operator);
             }
         }
 
@@ -276,10 +277,11 @@ public class FixPath {
         if (value != null) {
             value.matchType()
                 .ifString(s -> array.set(index, operator != null ? new Value(operator.apply(s)) : null))
-                .orElse(v -> value.matchType()
+                .orElse(v -> v.matchType()
                         .ifArray(a -> new FixPath(p).transformIn(a, operator))
                         .ifHash(h -> new FixPath(p).transformIn(h, operator))
-                        .orElseThrow());
+                        .orElseThrow()
+                );
         }
     }
 

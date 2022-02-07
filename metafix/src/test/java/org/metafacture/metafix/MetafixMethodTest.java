@@ -232,6 +232,57 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void shouldTrimStringInHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "trim('data.title')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                i.literal("title", "  marc  ");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().literal("title", "marc");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/pull/133
+    public void shouldTrimStringInArrayOfHashes() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "trim('data.title')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                i.literal("title", "  marc  ");
+                i.endEntity();
+                i.startEntity("data");
+                i.literal("title", "  json  ");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().literal("title", "marc");
+                o.get().endEntity();
+                o.get().startEntity("data");
+                o.get().literal("title", "json");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void format() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "format(number,'%-5s: %s')"), // TODO actual number formatting with JSON-equiv record
