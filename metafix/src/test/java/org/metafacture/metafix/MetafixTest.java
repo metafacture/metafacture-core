@@ -157,4 +157,13 @@ public class MetafixTest {
         Assertions.assertEquals(VALUE, metafix.getValue(MAP_NAME, KEY));
     }
 
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/79
+    public void shouldThrowExceptionForInvalidFixFile() {
+        final String fixFile = "src/test/resources/org/metafacture/metafix/fixes/invalid.fix";
+        MetafixTestHelpers.assertThrows(FixParseException.class, "Invalid FixStandaloneSetup resource: " + fixFile, () -> new Metafix(fixFile));
+
+        // TODO: Test logging statements
+    }
+
 }

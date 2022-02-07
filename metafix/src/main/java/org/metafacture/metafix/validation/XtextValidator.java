@@ -1,5 +1,7 @@
 package org.metafacture.metafix.validation;
 
+import org.metafacture.metafix.FixParseException;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.ISetup;
 import org.eclipse.xtext.XtextStandaloneSetup;
@@ -31,7 +33,7 @@ public class XtextValidator {
 
         if (count > 0) {
             LOG.warn("The {} file '{}' has {} issue{}:",
-                    setup.getClass().getSimpleName(), resource.getURI().toFileString(), count, count > 1 ? "s" : "");
+                    resourceType(setup), resource.getURI().toFileString(), count, count > 1 ? "s" : "");
 
             issues.forEach(i -> LOG.warn("- {}: {} ({}:{})",
                         i.getSeverity(), i.getMessage(), i.getLineNumber(), i.getColumn()));
@@ -63,8 +65,17 @@ public class XtextValidator {
 
     public static XtextResource getValidatedResource(final String path, final ISetup setup) {
         final XtextResource resource = getResource(path, setup);
-        validate(resource, setup);
-        return resource;
+
+        if (validate(resource, setup)) {
+            return resource;
+        }
+        else {
+            throw new FixParseException("Invalid " + resourceType(setup) + " resource: " + path);
+        }
+    }
+
+    private static String resourceType(final ISetup setup) {
+        return setup.getClass().getSimpleName();
     }
 
     public static void main(final String[] args) {
