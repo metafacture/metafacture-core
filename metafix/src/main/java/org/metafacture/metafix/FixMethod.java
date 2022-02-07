@@ -22,7 +22,6 @@ import org.metafacture.metafix.fix.Fix;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.maps.FileMap;
 
-import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
@@ -68,14 +67,8 @@ public enum FixMethod implements FixFunction {
             }
 
             final RecordTransformer recordTransformer = metafix.getRecordTransformer();
-            recordTransformer.setRecord(recordTransformer.transformRecord(INCLUDE_FIX.computeIfAbsent(includePath, k -> {
-                try {
-                    return FixStandaloneSetup.parseFix(Metafix.fixReader(k));
-                }
-                catch (final FileNotFoundException e) {
-                    throw new MetafactureException(e);
-                }
-            })));
+            recordTransformer.setRecord(recordTransformer.transformRecord(
+                        INCLUDE_FIX.computeIfAbsent(includePath, FixStandaloneSetup::parseFix)));
         }
     },
     nothing {
