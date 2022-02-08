@@ -1259,6 +1259,110 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void shouldReplaceAllRegexesInArrayByIndex() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all('names.2', 'a', 'X')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("names", "Max");
+                i.literal("names", "Jake");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("names", "Max");
+                o.get().literal("names", "JXke");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/135")
+    public void shouldReplaceAllRegexesInArrayByArrayWildcard() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all('names.$last', 'a', 'X')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("names", "Max");
+                i.literal("names", "Jake");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("names", "Max");
+                o.get().literal("names", "JXke");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReplaceAllRegexesInArraySubFieldByIndex() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all('names[].2.name', 'a', 'X')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("names[]");
+                i.startEntity("1");
+                i.literal("name", "Max");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "Jake");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("names[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "Max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "JXke");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/135")
+    public void shouldReplaceAllRegexesInArraySubFieldByArrayWildcard() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all('names[].$last.name', 'a', 'X')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("names[]");
+                i.startEntity("1");
+                i.literal("name", "Max");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "Jake");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("names[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "Max");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "JXke");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldReverseString() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "reverse(title)"
