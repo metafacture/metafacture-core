@@ -1,3 +1,4 @@
 include 'metafix'
 include 'metafix-ide'
+include 'metafix-runner'
 include 'metafix-web'

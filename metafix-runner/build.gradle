@@ -1,0 +1,14 @@
+plugins {
+  id 'application'
+}
+
+dependencies {
+  implementation project(':metafix')
+
+  implementation "org.metafacture:metafacture-json:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-runner:${versions.metafacture}"
+}
+
+application {
+  mainClass = 'org.metafacture.runner.Flux'
+}

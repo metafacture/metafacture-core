@@ -53,19 +53,24 @@ test {
   maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 }
 
-task install(dependsOn: publishToMavenLocal,
+task integrationTest(type: Exec, group: 'Verification') {
+  executable './integrationTest.sh'
+  if (project.hasProperty("args")) args project.getProperty("args").split()
+}
+
+task install(dependsOn: publishToMavenLocal, group: 'Publishing',
     description: "Installs the 'archives' artifacts into the local Maven repository. [deprecated]") {
   doFirst { println "This task is deprecated; use 'publishToMavenLocal' instead." }
 }
 
-task validateFixFile(type: JavaExec) {
+task validateFixFile(type: JavaExec, group: 'Verification') {
   mainClass = 'org.metafacture.metafix.FixStandaloneSetup'
   classpath = sourceSets.main.runtimeClasspath
 }
 
 def xtextFile = 'src/main/java/org/metafacture/metafix/Fix.xtext'
 
-task validateXtextLanguage(type: JavaExec) {
+task validateXtextLanguage(type: JavaExec, group: 'Verification') {
   mainClass = 'org.metafacture.metafix.validation.XtextValidator'
   classpath = sourceSets.main.runtimeClasspath
   args += xtextFile
@@ -87,5 +92,6 @@ generateXtext.dependsOn(generateXtextLanguage)
 compileJava.dependsOn(generateXtextLanguage)
 clean.dependsOn(cleanGenerateXtextLanguage)
 check.dependsOn(validateXtextLanguage)
+check.dependsOn(integrationTest)
 
 eclipse.classpath.plusConfigurations += [configurations.mwe2]
