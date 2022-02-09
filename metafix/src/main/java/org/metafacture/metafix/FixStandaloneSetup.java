@@ -27,17 +27,17 @@ public class FixStandaloneSetup extends FixStandaloneSetupGenerated {
         throw new IllegalArgumentException(String.format("Usage: %s <fix-file>", FixStandaloneSetup.class.getName()));
     }
 
-    public static Fix parseFix(final Reader fixDef) {
-        final String path;
+    public static Fix parseFix(final String path) {
+        return (Fix) XtextValidator.getValidatedResource(path, new FixStandaloneSetup()).getContents().get(0);
+    }
 
+    public static Fix parseFix(final Reader fixDef) {
         try {
-            path = absPathToTempFile(fixDef, ".fix");
+            return parseFix(absPathToTempFile(fixDef, ".fix"));
         }
         catch (final IOException e) {
             throw new MetafactureException(e);
         }
-
-        return (Fix) XtextValidator.getValidatedResource(path, new FixStandaloneSetup()).getContents().get(0);
     }
 
     public static String absPathToTempFile(final Reader fixDef, final String suffix) throws IOException {

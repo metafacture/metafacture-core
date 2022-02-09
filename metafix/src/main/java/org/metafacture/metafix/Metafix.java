@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -103,10 +102,14 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     }
 
     public Metafix(final String fixDef, final Map<String, String> vars) throws FileNotFoundException {
-        this(fixReader(fixDef), vars);
+        this(vars);
 
         if (isFixFile(fixDef)) {
             fixFile = fixDef;
+            fix = FixStandaloneSetup.parseFix(fixDef);
+        }
+        else {
+            fix = FixStandaloneSetup.parseFix(new StringReader(fixDef));
         }
     }
 
@@ -117,10 +120,6 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     public Metafix(final Reader fixDef, final Map<String, String> vars) {
         this(vars);
         fix = FixStandaloneSetup.parseFix(fixDef);
-    }
-
-    /*package-private*/ static Reader fixReader(final String fixDef) throws FileNotFoundException {
-        return isFixFile(fixDef) ? new FileReader(fixDef) : new StringReader(fixDef);
     }
 
     /*package-private*/ static boolean isFixFile(final String fixDef) {
