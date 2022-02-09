@@ -1,6 +1,6 @@
 # About
 
-This is early work in progress towards tools and an implementation of the Fix language for Metafacture as an alternative to configuring data transformations with [Metamorph](https://github.com/metafacture/metafacture-core/wiki#morph). Inspired by [Catmandu::FIX](https://github.com/LibreCat/Catmandu/) Metafix processes metadata not as a data stream but as a whole records. The basic idea is to rebuild constructs from Catmandu::Fix like [functions](https://github.com/LibreCat/Catmandu/wiki/Functions), [selectors](https://github.com/LibreCat/Catmandu/wiki/Selectors) and [binds](https://github.com/LibreCat/Catmandu/wiki/Binds) in Java and add additional functionalities that from the Metamorph toolbox.
+This is early work in progress towards tools and an implementation of the Fix language for Metafacture as an alternative to configuring data transformations with [Metamorph](https://github.com/metafacture/metafacture-core/wiki#morph). Inspired by [Catmandu::FIX](https://github.com/LibreCat/Catmandu/) Metafix processes metadata not as a data stream but as whole records. The basic idea is to rebuild constructs from Catmandu::Fix like [functions](https://github.com/LibreCat/Catmandu/wiki/Functions), [selectors](https://github.com/LibreCat/Catmandu/wiki/Selectors) and [binds](https://github.com/LibreCat/Catmandu/wiki/Binds) in Java and add additional functionalities that the Metamorph toolbox.
 
 See [https://github.com/elag/FIG](https://github.com/elag/FIG)
 
