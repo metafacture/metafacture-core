@@ -662,7 +662,12 @@ public class MetafixRecordTest {
                 o.get().endEntity();
                 o.get().literal("ANIMALS", "dragon and unicorn");
                 o.get().startEntity("stringimals[]");
-                o.get().literal("1", "bunny");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "cat");
+                o.get().literal("3", "zebra");
+                o.get().literal("4", "bunny");
+                // TODO: Why is the hash (`animols`) not expected here?
+                // See also https://github.com/metafacture/metafacture-fix/issues/89#issuecomment-999433570
                 o.get().endEntity();
                 o.get().endRecord();
             }

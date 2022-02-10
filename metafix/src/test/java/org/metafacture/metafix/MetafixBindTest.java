@@ -598,25 +598,25 @@ public class MetafixBindTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/119")
+    // See https://github.com/metafacture/metafacture-fix/issues/119
     public void shouldIterateOverListWithCharacterClass() {
         shouldIterateOverList("n[ao]me", 3);
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/119")
+    // See https://github.com/metafacture/metafacture-fix/issues/119
     public void shouldIterateOverListWithAlternation() {
         shouldIterateOverList("name|nome", 3);
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/119")
+    // See https://github.com/metafacture/metafacture-fix/issues/119
     public void shouldIterateOverListWithWildcard() {
         shouldIterateOverList("n?me", 3);
     }
 
     @Test // checkstyle-disable-line JavaNCSS
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/119")
+    // See https://github.com/metafacture/metafacture-fix/issues/119
     public void shouldPerformComplexOperationWithPathWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('coll[]')",
