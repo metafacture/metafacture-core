@@ -1,444 +1,490 @@
-
 ## Functions and Cookbook
 
-### Thinks to remember when working with fix
+### Best practices and guidelines for working with Metafacture Fix
 
-- We recommend to use double quotationmarks for every argument and attribute-values in functions, binds and conditionals.
-- If using an `list`-bind with an variable. The `"var"`-attribute need quotation marks.
-- Every fix needs a trailing line-break.
-- Fix turns internally repeated fields into array but outputs only marked arrays (with `[]` at the end of the fieldname) as array all others only as repeated fields.
+- We recommend to use double quotation marks for arguments and values in functions, binds and conditionals.
+- If using a `list` bind with a variable, the `var` option requires quotation marks (`do list(path: "<sourceField>", "var": "<variableName>")`).
+- Fix turns repeated fields into arrays internally but only marked arrays (with `[]` at the end of the field name) are also emitted as "arrays" (entities with indexed literals), all other arrays are emitted as repeated fields.
+- Every Fix file should end with a final newline.
 
 ### Functions
 
 #### `include`
 
+---- TODO: THIS NEEDS MORE CONTENT -----
+
 #### `nothing`
 
-The function does nothing. It is used for benchmarking in Catmandu.
+Does nothing. It is used for benchmarking in Catmandu.
 
-`nothing()`
-
+```perl
+nothing()
+```
 
 #### `put_filemap`
 
-Defines a external map which can be used for lookup.
+Defines an external map for lookup from a file.
 
-`put_filemap("[source-file]", "[mapVariable]", sep_char:"\t")`
+```perl
+put_filemap("<sourceFile>", "<mapName>", sep_char: "\t")
+```
 
-`sep_char` can vary due to the source-file:
-tsv: `\t`
-csv: `;` or `,`
+The separator (`sep_char`) will vary depending on the source file, e.g.:
+
+| Type | Separator  |
+|------|------------|
+| CSV  | `,` or `;` |
+| TSV  | `\t`       |
 
 #### `put_map`
 
-Creates an internal map for lookup as list of key-value-pairs.
+Defines an internal map for lookup from key/value pairs.
 
-```
-put_map("[mapVariable]",
-  "dog":"mammal",
-  "parrot":"bird",
-  "shark":"fish"
-	)
+```perl
+put_map("<mapName>",
+  "dog": "mammal",
+  "parrot": "bird",
+  "shark": "fish"
+)
 ```
 
 #### `put_var`
 
-Creates a single internal variables, that can be resused with `$[[variableName]]`
+Defines a single internal variable that can be referenced with `$[<variableName>]`.
 
-`put_var("[variableName]", "[variableValue]")`
+```perl
+put_var("<variableName>", "<variableValue>")
+```
 
 #### `put_vars`
 
-Creates a list of multiple internal variables, that can be resused with `$[[variableName]]`
+Defines multiple internal variables that can be referenced with `$[<variableName>]`.
 
-`put_vars("[variableName_1]": "[variableValue_1]", "[variableName_2]": "[variableValue_2]")`
+```perl
+put_vars(
+  "<variableName_1>": "<variableValue_1>",
+  "<variableName_2>": "<variableValue_2>"
+)
+```
 
-___________________________________
+#### `add_field`
 
-#### `add_field` / `set_field`
+Creates (or appends to) a field with a defined value.
 
-Generates a new simple `string`-field with an defined value.
+```perl
+add_field("<targetFieldName>", "<fieldValue>")
+```
 
-`add_field("[targetFieldName]", "[fieldValue]")`
-`set_field("[targetFieldName]", "[fieldValue]")`
+#### `set_field`
+
+Creates (or replaces) a field with a defined value.
+
+```perl
+set_field("<targetFieldName>", "<fieldValue>")
+```
 
 #### `copy_field`
 
-Copy field and generate a new one.
+Copies (or appends to) a field from an existing field.
 
-`copy_field("[sourceField]", "[targetField]")`
+```perl
+copy_field("<sourceField>", "<targetField>")
+```
 
 #### `move_field`
 
-Move field and generate a new one. Can also be used to rename a certain field.
+Moves (or appends to) a field from an existing field. Can be used to rename a field.
 
-`move_field("[sourceField]", "[targetField]")`
+```perl
+move_field("<sourceField>", "<targetField>")
+```
 
 #### `remove_field`
 
-Removes selected field.
+Removes a field.
 
-`remove_field("[sourceField]")`
+```perl
+remove_field("<sourceField>")
+```
 
 #### `set_array`
 
-Generates a new array with an defined value but can be empty too.
+Creates a new array (with optional values).
 
-`set_array("[targetFieldName]")`
-
-`set_array("[targetFieldName]", "[value_1]" [, ...])`
+```perl
+set_array("<targetFieldName>")
+set_array("<targetFieldName>", "<value_1>"[, ...])
+```
 
 #### `set_hash`
 
-Generates a new hash with an defined value but can be empty too.
+Creates a new hash (with optional values).
 
-`set_hash("[targetFieldName]")`
+```perl
+set_hash("<targetFieldName>")
+set_hash("<targetFieldName>", "subfieldName": "<subfieldValue>"[, ...])
+```
 
-`set_hash("[targetFieldName]", "subfieldName": "[subfieldValue]" [, ...])`
 #### `retain`
 
-Deletes all not named fields and only keeps selected fields incl. subfields.
+Deletes all fields except the ones listed (incl. subfields).
 
-`retain("[sourceField_1]", ... , "[sourceField_n]")`
+```perl
+retain("<sourceField_1>"[, ...])
+```
 
 #### `rename`
 
-Replaces regex-pattern in subfield names of selected source field. Does not change the pattern of the selected field itself.
+Replaces a regular expression pattern in subfield names of a field. Does not change the name of the source field itself.
 
-`rename("[sourceField]","[regexp]","[substitut-string]")`
+```perl
+rename("<sourceField>", "<regexp>", "<replacement>")
+```
 
 #### `array`
 
-Turns hash/object into an array.
+Converts a hash/object into an array.
 
-`array("[sourceField]")`
+```perl
+array("<sourceField>")
+```
 
-e.g.:
-`array("foo")`
+E.g.:
 
-`foo => {"name":"value"}` => `[ "name" , "value" ]`
+```perl
+array("foo")
+# {"name":"value"} => ["name", "value"]
+```
 
 #### `hash`
 
-Turns array into hash/object.
+Converts an array into a hash/object.
 
-`hash("[sourceField]")`
+```perl
+hash("<sourceField>")
+```
 
-e.g.:
-`hash("foo")`
-`foo =>  [ "name" , "value" ]` => ` {"name":"value"}`
-
+E.g.:
+```perl
+hash("foo")
+# ["name", "value"] => {"name":"value"}
+```
 
 #### `format`
 
-Replace the value with a formatted (sprintf-like) version.
+Replaces the value with a formatted (`sprintf`-like) version.
 
 ---- TODO: THIS NEEDS MORE CONTENT -----
 
-`format("[sourceField]", "[formatString]")`
+```perl
+format("<sourceField>", "<formatString>")
+```
 
 #### `parse_text`
 
-Parses a text into an array or hash of values
+Parses a text into an array or hash of values.
 
 ---- TODO: THIS NEEDS MORE CONTENT -----
 
-`parse_text("[sourceField]", "[parsePattern]")`
+```perl
+parse_text("<sourceField>", "<parsePattern>")
+```
 
 #### `paste`
 
-Joins multiple field values into a newly generated field. Can be combined with additional custom strings.
+Joins multiple field values into a new field. Can be combined with additional literal strings.
 
-`paste("[targetField]", "[sourceField_1]", "[sourceField_2]" [,[...],"[sourceField_n]", join_char:", "])`
+The default `join_char` is a single space. Literal strings have to start with `~`.
 
-Default `join_char` is a single space.
-Custom strings need to start with `~`
-
-e.g.:
-in:
-
-```
-a: eeny
-b: meeny
-c: miny
-d: moe
+```perl
+paste("<targetField>", "<sourceField_1>"[, ...][, join_char: ", "])
 ```
 
-`paste("my.string","~Hi","a","~how are you?")`
+E.g.:
 
-out:
-`my.string: Hi eeny how are you?`
+```perl
+# a: eeny
+# b: meeny
+# c: miny
+# d: moe
+paste("my.string", "~Hi", "a", "~how are you?")
+# "my.string": "Hi eeny how are you?"
+```
 
 #### `random`
 
-Generates a new field with an random value up to a defined number.
-Replaces existing fields.
+Creates (or replaces) a field with a random number (less than the specified maximum).
 
-`random("[targetField]", "[number]")`
+```perl
+random("<targetField>", "<maximum>")
+```
 
 #### `vacuum`
+
 Deletes empty fields, arrays and objects.
 
-`vacuum()`
+```perl
+vacuum()
+```
 
 #### `append`
 
-Adds string at the end of field value.
+Adds a string at the end of a field value.
 
-`append("[sourceField]","[appendString]")`
+```perl
+append("<sourceField>", "<appendString>")
+```
 
 #### `prepend`
 
-Adds string at the beginning of field value.
+Adds a string at the beginning of a field value.
 
-`prepend("[sourceField]","[appendString]")`
+```perl
+prepend("<sourceField>", "<prependString>")
+```
 
 #### `filter`
 
-Only keeps fields with field values, that matches filterpattern.
-Filter pattern can be the regexp or simple string.
+Only keeps field values that match the regular expression pattern.
 
-`filter("[sourceField]","[filterPattern]")`
+```perl
+filter("<sourceField>", "<regexp>")
+```
 
 #### `capitalize`
 
-Capitalizes all characters in field value.
+Upcases the first character in a field value.
 
-`capitalize("[sourceField]")`
+```perl
+capitalize("<sourceField>")
+```
 
 #### `downcase`
 
-Downcases first character in field value.
+Downcases all characters in a field value.
 
-`downcase("[sourceField]")`
+```perl
+downcase("<sourceField>")
+```
 
 #### `upcase`
 
-Upcases first character in field value.
+Upcases all characters in a field value.
 
-`upcase("[sourceField]")`
+```perl
+upcase("<sourceField>")
+```
 
 #### `count`
 
-Counts numbers of elements in array or in hash.
+Counts the number of elements in an array or a hash and replaces the field value with this number.
 
-`count("[sourceField]")`
+```perl
+count("<sourceField>")
+```
 
 #### `index`
 
-Returns index position of defined value in array.
+Returns the index position of a substring in a field and replaces the field value with this number.
 
-`index("[sourceField]", ("[value]")`
+```perl
+index("<sourceField>", "<substring>")
+```
 
 #### `join_field`
 
-Joins array of strings to a single field.
+Joins an array of strings into a single string.
 
-`join_field("[sourceArray]", "[sep_characters]")`
+```perl
+join_field("<sourceField>", "<separator>")
+```
 
-#### lookup
+#### `lookup`
 
-Looks up matching values in map file. External file as well as internal defined maps can be used. `default` sets
+Looks up matching values in a map and replaces the field value with this match. External files as well as internal maps can be used.
 
-`lookup("[sourceField]","[mapFile]",sep_char:”,”)`
-
-`lookup("[sourceField]","[mapVariable]")`
-
-`lookup("[sourceField]","[mapVariable]", default:"NA")`
-
-`lookup("[sourceField]","[mapVariable]", delete:”true”)`
+```perl
+lookup("<sourceField>", "<mapFile>", sep_char: ”,”)
+lookup("<sourceField>", "<mapName>")
+lookup("<sourceField>", "<mapName>", default: "NA")
+```
 
 #### `replace_all`
 
-Replaces defined characters or regex-patterns in field value with defined values. Regex-Grouping is possible.
+Replaces a regular expression pattern in field values with a replacement string. Regexp capturing is possible; refer to capturing groups by number (`$<number>`) or name (`${<name>}`).
 
-`replace_all("[sourceField]","[pattern]", "[value]")`
+```perl
+replace_all("<sourceField>", "<regexp>", "<replacement>")
+```
 
 #### `reverse`
 
-Reverses the character order of array or element order in hash or array.
+Reverses the character order of a string or the element order of an array.
 
-`reverse("[sourceField]")`
+```perl
+reverse("<sourceField>")
+```
 
-#### sort_field
+#### `sort_field`
 
-Sorts strings in array. Alphabetically and A-Z by default. Optional numerical annd reverse sorting.
+Sorts strings in an array. Alphabetically and A-Z by default. Optional numerical and reverse sorting.
 
-`sort_field("[sourceField]")`
-
-`sort_field("[sourceField]",reverse:"true")`
-
-`sort_field("[sourceField]",numeric:"true")`
-
+```perl
+sort_field("<sourceField>")
+sort_field("<sourceField>", reverse: "true")
+sort_field("<sourceField>", numeric: "true")
+```
 
 #### `split_field`
 
-Splits simple field by defined seperation character.
+Splits a string into an array and replaces the field value with this array.
 
-`split_field("[sourceField]","[sepCharacter]")`
+```perl
+split_field("<sourceField>", "<separator>")
+```
 
 #### `substring`
 
-Reduces field value to defined substring. Substring is defined by position index.
+Replaces a string with its substring as defined by the start and end positions.
 
-substring("[sourceField]","[startPosition]","[endPosition]")
+```perl
+substring("<sourceField>", "<startPosition>", "<endPosition>")
+```
 
 #### `sum`
 
-Sums values in an array.
+Sums numbers in an array and replaces the field value with this number.
 
-`sum("[sourceField]")`
+```perl
+sum("<sourceField>")
+```
 
-#### trim
+#### `trim`
 
-Deletes spacing at the beginning and the end of a field value.
+Deletes whitespace at the beginning and the end of a field value.
 
-`trim("[sourceField]")`
+```perl
+trim("<sourceField>")
+```
 
 #### `uniq`
 
-Deletes duplicate values in array of strings.
+Deletes duplicate values in an array.
 
-`uniq("[sourceField]")`
-
-___________________________________
-
-### Selector
-
-Sort introduction
-
-#### reject
-
-Ignores records that match the condition.
-Can be written in short form
-
-`reject [condition]`
-
-But can also ignore all records. And be included in conditional:
-
+```perl
+uniq("<sourceField>")
 ```
-if [condition]
-    reject()
+
+### Selectors
+
+#### `reject`
+
+Ignores records that match a condition.
+
+```perl
+if <condition>
+  reject()
 end
 ```
-
 
 ### Binds
 
-Short introduction
+#### `do list`
 
-#### do list
+Iterates over each element of an array. In contrast to Catmandu, it can also iterate over a single object or string.
 
-Iterates over each string or object of an array. In contrast to Catmandu it also can iterate over single object or string.
-
-```
-do list(path:"[sourceField]")
-    [functions]
-end
-```
-Select strings and subfields of objects in array in this scenario are selected with an starting `"."`. You can only change stuff in the object or the array.
-
-
-```
-do list(path:"[sourceField]", "var": "[pathVar]")
-    [functions]
+```perl
+do list(path: "<sourceField>")
+  ...
 end
 ```
 
-When setting a `"var"` you can also manipulate and change stuff outside the array-object / and string.
+Only the current element is accessible in this case (as the root element).
 
-Instead of the simple `"."` one selects strings and objects of the array starting with the `"var"`-value.
+When specifying a variable name for the current element, the record remains accessible as the root element and the current element is accessible through the variable name:
 
-
-#### TODO more binds???
+```perl
+do list(path: "<sourceField>", "var": "<variableName>")
+  ...
+end
+```
 
 ### Conditionals
 
 Conditionals start with `if` in case of affirming the condition or `unless` rejecting the condition.
 
-Conditionals need a trainling `end`
+Conditionals require a final `end`.
 
-Additional contitionals can be set with `elsif` and `else`.
+Additional conditionals can be set with `elsif` and `else`.
 
-```
-if [condition(params,...)]
-    fix(..)
-    fix(..)
+```perl
+if <condition(params, ...)>
+  ...
 end
 ```
 
-```
-unless [condition(params,...)]
-    fix(..)
-    fix(..)
+```perl
+unless <condition(params, ...)>
+  ...
 end
 ```
 
-```
-if [condition(params,...)]
-    fix(..)
-    fix(..)
-else
-    fix(..)
-    fix(..)
-end
-```
-
-```
-if [condition(params,...)]
-    fix(..)
-    fix(..)
+```perl
+if <condition(params, ...)>
+  ...
 elsif
-    fix(..)
-    fix(..)
+  ...
+else
+  ...
 end
 ```
 
-#### exists
+#### `exists`
 
 Executes the functions if/unless the field exists.
 
-`if exists("[sourceField]")`
+```perl
+if exists("<sourceField>")
+```
 
-#### contain
+#### `contain`
 
 ##### `all_contain`
 
-Executes the functions if/unless the field contains the value. If it is an array or an hash all field values must contain the string.
+Executes the functions if/unless the field contains the value. If it is an array or a hash all field values must contain the string.
 
 ##### `any_contain`
 
-Executes the functions if/unless the field contains the value. If it is an array or an hash one or more field values contain the string.
+Executes the functions if/unless the field contains the value. If it is an array or a hash one or more field values must contain the string.
 
 ##### `none_contain`
 
-Executes the functions if/unless the field does not contain the value. If it is an array or an hash none of the field values contain the string.
+Executes the functions if/unless the field does not contain the value. If it is an array or a hash none of the field values may contain the string.
 
-#### equal
+#### `equal`
 
 ##### `all_equal`
 
-Executes the functions if/unless the field value equals the string. If it is an array or an hash all field values must equal the string.
+Executes the functions if/unless the field value equals the string. If it is an array or a hash all field values must equal the string.
 
 ##### `any_equal`
 
-Executes the functions if/unless the field equals the string. If it is an array or an hash one or more field values must equal the string.
+Executes the functions if/unless the field value equals the string. If it is an array or a hash one or more field values must equal the string.
 
 ##### `none_equal`
 
-Executes the functions if/unless the field value does not equals the value. If it is an array or an hash none of the field values euquals the string.
+Executes the functions if/unless the field value does not equal the string. If it is an array or a hash none of the field values may equal the string.
 
-#### match
+#### `match`
 
 ##### `all_match`
 
-Executes the functions if/unless the field value matches the regex-pattern. If it is an array or an hash all field values must match the regex-pattern.
+Executes the functions if/unless the field value matches the regular expression pattern. If it is an array or a hash all field values must match the regular expression pattern.
 
 ##### `any_match`
 
-Executes the functions if/unless the field matches the regex-pattern. If it is an array or an hash one or more field values must match the regex-pattern.
-
+Executes the functions if/unless the field value matches the regular expression pattern. If it is an array or a hash one or more field values must match the regular expression pattern.
 
 ##### `none_match`
 
-Executes the functions if/unless the field value does not match the regex-pattern.  the value. If it is an array or an hash none of the field values matches the regex-pattern.
+Executes the functions if/unless the field value does not match the regular expression pattern. If it is an array or a hash none of the field values may match the regular expression pattern.
