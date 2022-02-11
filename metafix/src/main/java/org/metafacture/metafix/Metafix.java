@@ -18,7 +18,6 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StandardEventNames;
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
@@ -36,6 +35,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -155,7 +155,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     public void endRecord() {
         entityCountStack.removeLast();
         if (!entityCountStack.isEmpty()) {
-            throw new MetafactureException(new IllegalStateException(ENTITIES_NOT_BALANCED));
+            throw new IllegalStateException(ENTITIES_NOT_BALANCED);
         }
         flattener.endRecord();
         LOG.debug("End record, walking fix: {}", currentRecord);
@@ -253,7 +253,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
                 closeable.close();
             }
             catch (final IOException e) {
-                throw new MetafactureException("Error while executing the Metafix transformation pipeline: " + e.getMessage(), e);
+                throw new UncheckedIOException(e);
             }
         }
 

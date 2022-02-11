@@ -16,7 +16,6 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 
 import org.junit.jupiter.api.Assertions;
@@ -46,7 +45,7 @@ public final class MetafixTestHelpers {
     }
 
     public static void assertThrowsCause(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
-        assertThrows(MetafactureException.class, expectedClass, expectedMessage, executable);
+        assertThrows(FixExecutionException.class, expectedClass, expectedMessage, executable);
     }
 
     public static void assertThrows(final Class<? extends Throwable> expectedClass, final String expectedMessage, final Executable executable) {

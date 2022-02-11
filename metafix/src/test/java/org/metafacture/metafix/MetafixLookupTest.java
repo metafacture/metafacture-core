@@ -255,7 +255,7 @@ public class MetafixLookupTest {
 
     @Test
     public void shouldFailLookupInUnknownNamedMap() {
-        MetafixTestHelpers.assertThrows(MorphExecutionException.class, "File not found: testMap", () ->
+        MetafixTestHelpers.assertThrowsCause(MorphExecutionException.class, "File not found: testMap", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     LOOKUP + " 'testMap')"
                 ),

@@ -16,7 +16,6 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
@@ -231,7 +230,7 @@ public class MetafixScriptTest {
 
     @Test
     public void shouldNotIncludeRelativeFixFileFromInlineScript() {
-        MetafixTestHelpers.assertThrows(MetafactureException.class, "cannot resolve relative path: ./base.fix", () ->
+        MetafixTestHelpers.assertThrowsCause(IllegalArgumentException.class, "Cannot resolve relative path: ./base.fix", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "include('src/test/resources/org/metafacture/metafix/fixes/include.fix')"
                 ),

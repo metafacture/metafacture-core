@@ -2112,7 +2112,7 @@ public class MetafixRecordTest {
 
     @Test
     public void shouldNotAccessArrayImplicitly() {
-        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "expected String, got Array", () ->
+        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "upcase('name')"
                 ),
