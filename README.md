@@ -116,7 +116,7 @@ Run workflows on the web server, passing `data`, `flux`, and `fix`:
 
 ## Module
 
-The repo contains and uses a new `Metafix` stream module for Metafacture which plays the role of the `Metamorph` module in Fix-based Metafacture workflows. For the current implementation of the `Metafix` stream module see `MetafixDslTest.java`. For a real-world usage sample see [https://gitlab.com/oersi/oersi-etl/-/blob/develop/data/production/edu-sharing.fix](https://gitlab.com/oersi/oersi-etl/-/blob/develop/data/production/edu-sharing.fix).
+The repo contains and uses a new `Metafix` stream module for Metafacture which plays the role of the `Metamorph` module in Fix-based Metafacture workflows. For the current implementation of the `Metafix` stream module see `MetafixDslTest.java`. For a real-world usage sample see [https://gitlab.com/oersi/oersi-etl/-/blob/master/data/production/openRub/openRub.fix](https://gitlab.com/oersi/oersi-etl/-/blob/master/data/production/openRub/openRub.fix).
 
 # Xtext
 
