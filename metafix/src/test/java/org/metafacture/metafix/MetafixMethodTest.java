@@ -658,10 +658,15 @@ public class MetafixMethodTest {
 
     @Test
     // See https://github.com/metafacture/metafacture-fix/issues/123
-    public void shouldIncludeFunctionInExecutionException() {
-        MetafixTestHelpers.assertThrows(FixExecutionException.class, "Error while executing Fix expression: append", () ->
+    public void shouldIncludeLocationAndTextInExecutionException() {
+        final String text = "append('animals', ' is cool')";
+        final String message = "Error while executing Fix expression (at FILE, line 2): " + text;
+
+        MetafixTestHelpers.assertThrows(FixExecutionException.class, s -> s.replaceAll("file:/.+?\\.fix", "FILE"), message, () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "append('animals', ' is cool')"
+                    "# comment",
+                    text,
+                    "nothing()"
                 ),
                 i -> {
                     i.startRecord("1");

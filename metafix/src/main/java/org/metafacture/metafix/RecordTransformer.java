@@ -31,6 +31,10 @@ import org.metafacture.metafix.fix.MethodCall;
 import org.metafacture.metafix.fix.Options;
 import org.metafacture.metafix.fix.Unless;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +44,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -91,7 +96,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
                 processFunction((MethodCall) e, params);
             }
             else {
-                throw new FixExecutionException("Unknown Fix expression type: " + e);
+                throw new FixExecutionException(executionExceptionMessage(e));
             }
         });
     }
@@ -112,10 +117,11 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         final ElsIf elseIfExpression = expression.getElseIf();
         final Else elseExpression = expression.getElse();
 
-        if (testConditional(expression.getName(), params)) {
+        if (testConditional(expression, expression.eResource(), expression.getName(), params)) {
             process(expression.getElements());
         }
-        else if (elseIfExpression != null && testConditional(elseIfExpression.getName(), resolveParams(elseIfExpression.getParams()))) {
+        else if (elseIfExpression != null && testConditional(elseIfExpression,
+                    elseIfExpression.eResource(), elseIfExpression.getName(), resolveParams(elseIfExpression.getParams()))) {
             process(elseIfExpression.getElements());
         }
         else if (elseExpression != null) {
@@ -124,18 +130,18 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     }
 
     private void processUnless(final Unless expression, final List<String> params) {
-        if (!testConditional(expression.getName(), params)) {
+        if (!testConditional(expression, expression.eResource(), expression.getName(), params)) {
             process(expression.getElements());
         }
     }
 
-    private boolean testConditional(final String conditional, final List<String> params) {
+    private boolean testConditional(final EObject object, final Resource resource, final String conditional, final List<String> params) {
         LOG.debug("<IF>: {} parameters: {}", conditional, params);
 
         final AtomicBoolean bool = new AtomicBoolean();
 
-        processResource(conditional, name -> {
-            final FixPredicate predicate = getInstance(name, FixPredicate.class, FixConditional::valueOf);
+        processFix(() -> executionExceptionMessage(object, resource), () -> {
+            final FixPredicate predicate = getInstance(conditional, FixPredicate.class, FixConditional::valueOf);
             bool.set(predicate.test(metafix, record, params, options(null))); // TODO: options
         });
 
@@ -161,19 +167,30 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     }
 
     private void processExpression(final Expression expression, final Consumer<String> consumer) {
-        processResource(expression.getName(), consumer);
+        processFix(() -> executionExceptionMessage(expression), () -> consumer.accept(expression.getName()));
     }
 
-    private void processResource(final String name, final Consumer<String> consumer) {
+    private void processFix(final Supplier<String> messageSupplier, final Runnable runnable) {
         try {
-            consumer.accept(name);
+            runnable.run();
         }
         catch (final FixExecutionException e) {
             throw e; // TODO: Add nesting information?
         }
         catch (final RuntimeException e) { // checkstyle-disable-line IllegalCatch
-            throw new FixExecutionException("Error while executing Fix expression: " + name, e);
+            throw new FixExecutionException(messageSupplier.get(), e);
         }
+    }
+
+    private String executionExceptionMessage(final Expression expression) {
+        return executionExceptionMessage(expression, expression.eResource());
+    }
+
+    private String executionExceptionMessage(final EObject object, final Resource resource) {
+        final INode node = NodeModelUtils.getNode(object);
+
+        return String.format("Error while executing Fix expression (at %s, line %d): %s",
+                resource.getURI(), node.getStartLine(), NodeModelUtils.getTokenText(node));
     }
 
     private List<String> resolveParams(final List<String> params) {

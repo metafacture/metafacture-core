@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 /**
  * Tests Metafix script level methods.
@@ -309,6 +310,28 @@ public class MetafixScriptTest {
                 o.get().literal("trace", "after nested");
                 o.get().endRecord();
             }
+        );
+    }
+
+    @Test
+    public void shouldIncludeLocationAndTextInExecutionException() {
+        final String fixFile = "src/test/resources/org/metafacture/metafix/fixes/error.fix";
+        final String message = "Error while executing Fix expression (at FILE, line 2): append(\"animals\", \" is cool\")";
+
+        MetafixTestHelpers.assertThrows(FixExecutionException.class, s -> s.replaceAll("file:/.+?" + Pattern.quote(fixFile), "FILE"), message, () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(fixFile),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("animals");
+                    i.literal("1", "dog");
+                    i.literal("2", "cat");
+                    i.literal("3", "zebra");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
         );
     }
 
