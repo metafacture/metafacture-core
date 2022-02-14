@@ -670,6 +670,39 @@ public class MetafixRecordTest {
     }
 
     @Test
+    // See https://github.com/metafacture/metafacture-fix/pull/142
+    public void shouldCopyArrayFieldWithoutAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('TEST_TWO[]')",
+                "copy_field('test[]', 'TEST_TWO[].$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("test[]");
+                i.literal("1", "One");
+                i.literal("2", "Two");
+                i.literal("3", "Three");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "One");
+                o.get().literal("2", "Two");
+                o.get().literal("3", "Three");
+                o.get().endEntity();
+                o.get().startEntity("TEST_TWO[]");
+                o.get().literal("1", "One");
+                o.get().literal("2", "Two");
+                o.get().literal("3", "Three");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     // See https://github.com/metafacture/metafacture-fix/issues/121
     public void shouldCopyArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
