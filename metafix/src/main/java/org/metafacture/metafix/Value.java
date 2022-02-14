@@ -527,8 +527,10 @@ public class Value {
          */
         public Value get(final String field) {
             // TODO: special treatment (only) for exact matches?
-            final List<Value> list = matchFields(field, Stream::filter).map(this::getField).collect(Collectors.toList());
-            return list.isEmpty() ? null : list.size() == 1 ? list.get(0) : new Value(list);
+            final List<Value> list = findFields(field).map(this::getField).collect(Collectors.toList());
+            return list.isEmpty() ? null : list.size() == 1 ? list.get(0) : newArray(a -> list.forEach(v -> v.matchType()
+                        .ifArray(b -> b.forEach(a::add))
+                        .orElse(a::add)));
         }
 
         public Value getField(final String field) {
@@ -608,7 +610,7 @@ public class Value {
          * @param fields the field names
          */
         public void retainFields(final Collection<String> fields) {
-            map.keySet().retainAll(fields.stream().flatMap(f -> matchFields(f, Stream::filter)).collect(Collectors.toSet()));
+            map.keySet().retainAll(fields.stream().flatMap(this::findFields).collect(Collectors.toSet()));
         }
 
         /**
@@ -652,7 +654,11 @@ public class Value {
         }
 
         /*package-private*/ void modifyFields(final String pattern, final Consumer<String> consumer) {
-            matchFields(pattern, Stream::filter).collect(Collectors.toSet()).forEach(consumer);
+            findFields(pattern).collect(Collectors.toSet()).forEach(consumer);
+        }
+
+        private Stream<String> findFields(final String pattern) {
+            return matchFields(pattern, Stream::filter);
         }
 
         private <T> T matchFields(final String pattern, final BiFunction<Stream<String>, Predicate<String>, T> function) {

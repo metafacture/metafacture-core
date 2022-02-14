@@ -19,7 +19,6 @@ package org.metafacture.metafix;
 import org.metafacture.framework.StreamReceiver;
 
 import com.google.common.collect.ImmutableMap;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -569,19 +568,19 @@ public class MetafixIfTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/115")
+    // See https://github.com/metafacture/metafacture-fix/issues/115
     public void shouldEqualAnyCharacterClass() {
         shouldEqualAny("n[ao]me");
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/115")
+    // See https://github.com/metafacture/metafacture-fix/issues/115
     public void shouldEqualAnyAlternation() {
         shouldEqualAny("name|nome");
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/115")
+    // See https://github.com/metafacture/metafacture-fix/issues/115
     public void shouldEqualAnyWildcard() {
         shouldEqualAny("n?me");
     }
@@ -620,7 +619,7 @@ public class MetafixIfTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/115")
+    // See https://github.com/metafacture/metafacture-fix/issues/115
     public void shouldEqualAnyNestedCharacterClass() {
         shouldEqualAnyNested("data.n[ao]me");
     }
@@ -631,7 +630,7 @@ public class MetafixIfTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/115")
+    // See https://github.com/metafacture/metafacture-fix/issues/115
     public void shouldEqualAnyNestedWildcard() {
         shouldEqualAnyNested("data.n?me");
     }
@@ -672,7 +671,7 @@ public class MetafixIfTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/115")
+    // See https://github.com/metafacture/metafacture-fix/issues/115
     public void shouldEqualAnyListBindCharacterClass() {
         shouldEqualAnyListBind("$i.n[ao]me");
     }
@@ -683,7 +682,7 @@ public class MetafixIfTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/115")
+    // See https://github.com/metafacture/metafacture-fix/issues/115
     public void shouldEqualAnyListBindWildcard() {
         shouldEqualAnyListBind("$i.n?me");
     }
