@@ -1,16 +1,16 @@
-# About
+# Metafacture Fix
 
-This is work in progress towards tools and an implementation of the Fix language for Metafacture as an alternative to configuring data transformations with [Metamorph](https://github.com/metafacture/metafacture-core/wiki#morph). Inspired by [Catmandu::FIX](https://github.com/LibreCat/Catmandu/) Metafix processes metadata not as a data stream but as whole records. The basic idea is to rebuild constructs from Catmandu::Fix like [functions](https://github.com/LibreCat/Catmandu/wiki/Functions), [selectors](https://github.com/LibreCat/Catmandu/wiki/Selectors) and [binds](https://github.com/LibreCat/Catmandu/wiki/Binds) in Java and add additional functionalities from the Metamorph toolbox.
+Metafacture Fix (Metafix) is work in progress towards tools and an implementation of the Fix language for [Metafacture](https://metafacture.org/) as an alternative to configuring data transformations with [Metamorph](https://github.com/metafacture/metafacture-core/wiki#morph). Inspired by [Catmandu Fix](https://librecat.org/Catmandu/#fix-language), Metafix processes metadata not as a continuous data stream but as discrete records. The basic idea is to rebuild constructs from the (Catmandu) Fix language like [functions](https://librecat.org/Catmandu/#functions), [selectors](https://librecat.org/Catmandu/#selectors) and [binds](https://librecat.org/Catmandu/#binds) in Java and combine with additional functionalities from the Metamorph toolbox.
 
-See [https://github.com/elag/FIG](https://github.com/elag/FIG)
+See also [Fix Interest Group](https://github.com/elag/FIG) for an initiative towards an implementation-independent specification for the Fix Language.
 
-This repo contains the actual implementation of the Fix language as a Metafacture module and related components. It started as an Xtext web project with a Fix grammar, from which a parser, a web editor, and a language server are generated. The repo also contains an extension for VS code/codium based on that language server. (The web editor has effectively been replaced by the [Metafacture Playground](https://metafacture.org/playground), but remains here for its integration into the language server, which [we want to move over](https://github.com/metafacture/metafacture-playground/issues?q=is%3Aissue+language+server+is%3Aopen) to the playground.)
+This repo contains the actual implementation of the Fix language as a Metafacture module and related components. It started as an [Xtext](#xtext) web project with a Fix grammar, from which a parser, a web editor, and a language server are generated. The repo also contains an extension for VS code/codium based on that language server. (The web editor has effectively been replaced by the [Metafacture Playground](https://metafacture.org/playground), but remains here for its integration into the language server, which [we want to move over](https://github.com/metafacture/metafacture-playground/issues?q=is%3Aissue+language+server+is%3Aopen) to the playground.)
 
 ## Setup
 
 [![Build](https://github.com/metafacture/metafacture-fix/workflows/Build/badge.svg)](https://github.com/metafacture/metafacture-fix/actions?query=workflow%3A%22Build%22)
 
-*Note: If you're using Windows, configure git option `core.autocrlf` before cloning: `git config core.autocrlf false`.*
+*Note: If you're using Windows, configure Git option `core.autocrlf` before cloning: `git config --global core.autocrlf false`.*
 
 Clone the Git repository:
 
@@ -24,13 +24,13 @@ Run the tests (in `metafix/src/test/java`) and checks (`.editorconfig`, `config/
 
 `./gradlew clean check`
 
-(To import the projects in Eclipse, choose File > Import > Existing Gradle Project and select the `metafacture-fix` directory.)
+(To import the projects in Eclipse, choose `File > Import > Existing Gradle Project` and select the `metafacture-fix` directory.)
 
 ## Usage
 
 The repo contains and uses a new `Metafix` stream module for Metafacture which plays the role of the `Metamorph` module in Fix-based Metafacture workflows. For the current implementation of the `Metafix` stream module see the tests in `metafix/src/test/java`. To play around with some examples, check out the [Metafacture Playground](https://metafacture.org/playground). For real-world usage samples see [openRub.fix](https://gitlab.com/oersi/oersi-etl/-/blob/master/data/production/openRub/openRub.fix) and [duepublico.fix](https://gitlab.com/oersi/oersi-etl/-/blob/master/data/production/duepublico/duepublico.fix). For reference documentation, see [Functions and cookbook](#functions-and-cookbook).
 
-## Extension
+### Extension
 
 The project `metafix-vsc` provides an extension for Visual Studio Code / Codium for `fix` via the language server protocol (LSP). In the current state the extension supports auto completion, simple syntax highlighting and auto closing brackets and quotes. This project was created using this [tutorial](https://www.typefox.io/blog/building-a-vs-code-extension-with-xtext-and-the-language-server-protocol) and the corresponding [example](https://github.com/TypeFox/languageserver-example).
 
@@ -44,7 +44,7 @@ Windows: `.\gradlew.bat installServer`
 4. In `metafix-vsc/` execute (tip: if you use windows, install cygwin to execute npm commands):
 `npm install`
 
-To start the extension in development mode (starting a second code/codium instance), follow A. To create an vsix file to install the extension permanently follow B.
+To start the extension in development mode (starting a second code/codium instance), follow A. To create a vsix file to install the extension permanently follow B.
 
 A) Run in dev mode:
 1. Open `metafix-vsc/` in Visual Studio Code / Codium
@@ -59,7 +59,7 @@ vsce will create a vsix file in the vsc directory which can be used for installa
 4. Click 'Extensions' section
 5. Click menu bar and choose 'Install from VSIX...'
 
-## Web editor
+### Web editor
 
 Start the web server:
 
@@ -107,12 +107,7 @@ Content assist is triggered with Ctrl-Space. The input above is also used in `Fi
 
 Run workflows on the web server, passing `data`, `flux`, and `fix`:
 
-[http://localhost:8080/xtext-service/run?data='1'{'a': '5', 'z': 10}&flux=as-lines|decode-formeta|fix|encode-formeta(style="multiline")&fix=map(a,b) map(_else)](http://localhost:8080/xtext-service/run?data=%271%27{%27a%27:%20%275%27,%20%27z%27:%2010}&flux=as-lines|decode-formeta|fix|encode-formeta(style=%22multiline%22)&fix=map(a,c)%20map(_else))
-
-# Xtext
-
-This repo has been originally set up with Xtext 2.17.0 and Eclipse for Java 2019-03, following [https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html](https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html).
-
+[http://localhost:8080/xtext-service/run?data='1'{'a': '5', 'z': 10}&flux=as-lines|decode-formeta|fix|encode-formeta(style="multiline")&fix=map(a,b) map(\_else)](http://localhost:8080/xtext-service/run?data=%271%27{%27a%27:%20%275%27,%20%27z%27:%2010}&flux=as-lines|decode-formeta|fix|encode-formeta(style=%22multiline%22)&fix=map(a,c)%20map(\_else))
 
 ## Functions and cookbook
 
@@ -122,6 +117,35 @@ This repo has been originally set up with Xtext 2.17.0 and Eclipse for Java 2019
 - If using a `list` bind with a variable, the `var` option requires quotation marks (`do list(path: "<sourceField>", "var": "<variableName>")`).
 - Fix turns repeated fields into arrays internally but only marked arrays (with `[]` at the end of the field name) are also emitted as "arrays" (entities with indexed literals), all other arrays are emitted as repeated fields.
 - Every Fix file should end with a final newline.
+
+### Glossary
+
+#### Array wildcards
+
+Array wildcards resemble [Catmandu's concept of wildcards](http://librecat.org/Catmandu/#wildcards).
+
+When working with arrays and repeated fields you can use wildcards instead of an index number to select elements of an array.
+
+| Wildcard | Meaning |
+|----------|:--------|
+| `*` | Selects _all_ elements of an array. |
+| `$first` | Selects only the _first_ element of an array. |
+| `$last` | Selects only the _last_ element of an array. |
+| `$prepend` | Selects the position _before_ the first element of an array. Can only be used when adding new elements to an array. |
+| `$append` | Selects the position _after_ the last element of an array. Can only be used when adding new elements to an array. |
+
+#### Path wildcards
+
+Path wildcards resemble [Metamorph's concept of wildcards](https://github.com/metafacture/metafacture-core/wiki/Metamorph-User-Guide#addressing-pieces-of-data). They are not supported in Catmandu (it has [specialized Fix functions](https://librecat.org/Catmandu/#marc-mab-pica-paths) instead).
+
+You can use path wildcards to select fields matching a pattern. They only match path _segments_ (field names), though, not _whole_ paths of nested fields. These wildcards cannot be used to add new elements.
+
+| Wildcard | Meaning |
+|----------|:--------|
+| `*` | Placeholder for zero or more characters. |
+| `?` | Placeholder for exactly one character. |
+| `\|` | Alternation of multiple patterns. |
+| `[...]` | Enumeration of characters. |
 
 ### Functions
 
@@ -605,28 +629,6 @@ Executes the functions if/unless the field value matches the regular expression 
 
 Executes the functions if/unless the field value does not match the regular expression pattern. If it is an array or a hash none of the field values may match the regular expression pattern.
 
-## Glossary
+## Xtext
 
-### Array wildcards
-
-Array-Wildcards resemble [Catmandus concept of wildcards](http://librecat.org/Catmandu/#wildcards).
-
-When working with arrays and repeated fields you can use wildcards to select all or certain elements of an array as well as select an additional new element.
-You use them instead of the index number. These can also be used (some only) when generating new elements of an array.
-- `*`: selects all elements of an array
-- `$first`: selects only the first element of an array
-- `$last`: selects only the last element of an array
-- `$prepend`: selects the position infront of the first element array. This can be used, when generating new elements in an array.
-- `$append`: selects the position behind the last element of an array. This can be used, when generating new elements in an array.
-
-### General path wildcards
-
-General path wildcards resemble [Metamorphs concept of wildcards](https://github.com/metafacture/metafacture-core/wiki/Metamorph-User-Guide#addressing-pieces-of-data)
-
-Beside the array-wildcards you can use other general wildcards to select variations of an path. These wildcards cannot be used to generating new elements.
-These wildcards are no part of the Catmandu Fix. They cannot be used (yet?) to select variation of whole paths but element names.
-
-- `*` is a placeholder for for unlimited characters
-- `?` is a placeholder for a single arbitrary character
-- `|` allows for multiple versions either of the whole path or of parts, when used in a group `(...|...)`
-- `[...]` can be used as placeholder for distinct characters
+This repo has been originally set up with [Xtext](https://www.eclipse.org/Xtext/) 2.17.0 and Eclipse for Java 2019-03, following [https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html](https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html).
