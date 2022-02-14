@@ -1,22 +1,16 @@
 # About
 
-This is early work in progress towards tools and an implementation of the Fix language for Metafacture as an alternative to configuring data transformations with [Metamorph](https://github.com/metafacture/metafacture-core/wiki#morph). Inspired by [Catmandu::FIX](https://github.com/LibreCat/Catmandu/) Metafix processes metadata not as a data stream but as whole records. The basic idea is to rebuild constructs from Catmandu::Fix like [functions](https://github.com/LibreCat/Catmandu/wiki/Functions), [selectors](https://github.com/LibreCat/Catmandu/wiki/Selectors) and [binds](https://github.com/LibreCat/Catmandu/wiki/Binds) in Java and add additional functionalities that the Metamorph toolbox.
+This is work in progress towards tools and an implementation of the Fix language for Metafacture as an alternative to configuring data transformations with [Metamorph](https://github.com/metafacture/metafacture-core/wiki#morph). Inspired by [Catmandu::FIX](https://github.com/LibreCat/Catmandu/) Metafix processes metadata not as a data stream but as whole records. The basic idea is to rebuild constructs from Catmandu::Fix like [functions](https://github.com/LibreCat/Catmandu/wiki/Functions), [selectors](https://github.com/LibreCat/Catmandu/wiki/Selectors) and [binds](https://github.com/LibreCat/Catmandu/wiki/Binds) in Java and add additional functionalities from the Metamorph toolbox.
 
 See [https://github.com/elag/FIG](https://github.com/elag/FIG)
 
-# State
+This repo contains the actual implementation of the Fix language as a Metafacture module and related components. It started as an Xtext web project with a Fix grammar, from which a parser, a web editor, and a language server are generated. The repo also contains an extension for VS code/codium based on that language server. (The web editor has effectively been replaced by the [Metafacture Playground](https://metafacture.org/playground), but remains here for its integration into the language server, which [we want to move over](https://github.com/metafacture/metafacture-playground/issues?q=is%3Aissue+language+server+is%3Aopen) to the playground.)
 
-[![Build and Deploy](https://github.com/metafacture/metafacture-fix/workflows/Build%20and%20Deploy/badge.svg)](https://github.com/metafacture/metafacture-fix/actions?query=workflow%3A%22Build+and+Deploy%22)
+## Setup
 
-This repo contains an Xtext web project with a basic Fix grammar, which generates a parser, a web editor, and a language server. The repo also contains an extension for VS code/codium based on that language server. The web editor UI contains input fields for sample data and a [Flux](https://github.com/metafacture/metafacture-core/wiki#flux) definition to run workflows with the given Fix. A test deployment of the web server is available at: [http://test.lobid.org/fix](http://test.lobid.org/fix).
+[![Build](https://github.com/metafacture/metafacture-fix/workflows/Build/badge.svg)](https://github.com/metafacture/metafacture-fix/actions?query=workflow%3A%22Build%22)
 
-# Setup
-
-If you're using Windows, configure git option core.autocrlf before cloning repository:
-`git config core.autocrlf false`
-Otherwise git will change all line endings to Windows crlf when you check out code (and vice versa) but that will lead to failures with gradle's check task.
-
-## Clone
+*Note: If you're using Windows, configure git option `core.autocrlf` before cloning: `git config core.autocrlf false`.*
 
 Clone the Git repository:
 
@@ -32,10 +26,13 @@ Run the tests (in `metafix/src/test/java`) and checks (`.editorconfig`, `config/
 
 (To import the projects in Eclipse, choose File > Import > Existing Gradle Project and select the `metafacture-fix` directory.)
 
+## Usage
+
+The repo contains and uses a new `Metafix` stream module for Metafacture which plays the role of the `Metamorph` module in Fix-based Metafacture workflows. For the current implementation of the `Metafix` stream module see the tests in `metafix/src/test/java`. To play around with some examples, check out the [Metafacture Playground](https://metafacture.org/playground). For real-world usage samples see [openRub.fix](https://gitlab.com/oersi/oersi-etl/-/blob/master/data/production/openRub/openRub.fix) and [duepublico.fix](https://gitlab.com/oersi/oersi-etl/-/blob/master/data/production/duepublico/duepublico.fix). For reference documentation, see [Functions and cookbook](#functions-and-cookbook).
+
 ## Extension
 
 The project `metafix-vsc` provides an extension for Visual Studio Code / Codium for `fix` via the language server protocol (LSP). In the current state the extension supports auto completion, simple syntax highlighting and auto closing brackets and quotes. This project was created using this [tutorial](https://www.typefox.io/blog/building-a-vs-code-extension-with-xtext-and-the-language-server-protocol) and the corresponding [example](https://github.com/TypeFox/languageserver-example).
-
 
 Build extension:
 
@@ -62,9 +59,7 @@ vsce will create a vsix file in the vsc directory which can be used for installa
 4. Click 'Extensions' section
 5. Click menu bar and choose 'Install from VSIX...'
 
-
-
-## Web Server
+## Web editor
 
 Start the web server:
 
@@ -114,16 +109,12 @@ Run workflows on the web server, passing `data`, `flux`, and `fix`:
 
 [http://localhost:8080/xtext-service/run?data='1'{'a': '5', 'z': 10}&flux=as-lines|decode-formeta|fix|encode-formeta(style="multiline")&fix=map(a,b) map(_else)](http://localhost:8080/xtext-service/run?data=%271%27{%27a%27:%20%275%27,%20%27z%27:%2010}&flux=as-lines|decode-formeta|fix|encode-formeta(style=%22multiline%22)&fix=map(a,c)%20map(_else))
 
-## Module
-
-The repo contains and uses a new `Metafix` stream module for Metafacture which plays the role of the `Metamorph` module in Fix-based Metafacture workflows. For the current implementation of the `Metafix` stream module see `MetafixDslTest.java`. For a real-world usage sample see [https://gitlab.com/oersi/oersi-etl/-/blob/master/data/production/openRub/openRub.fix](https://gitlab.com/oersi/oersi-etl/-/blob/master/data/production/openRub/openRub.fix).
-
 # Xtext
 
 This repo has been originally set up with Xtext 2.17.0 and Eclipse for Java 2019-03, following [https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html](https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html).
 
 
-## Functions and Cookbook
+## Functions and cookbook
 
 ### Best practices and guidelines for working with Metafacture Fix
 
@@ -616,7 +607,7 @@ Executes the functions if/unless the field value does not match the regular expr
 
 ## Glossary
 
-### Array-Wildcards
+### Array wildcards
 
 Array-Wildcards resemble [Catmandus concept of wildcards](http://librecat.org/Catmandu/#wildcards).
 
