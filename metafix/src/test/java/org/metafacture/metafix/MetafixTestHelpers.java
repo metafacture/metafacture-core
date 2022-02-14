@@ -16,7 +16,6 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StreamReceiver;
 
 import org.junit.jupiter.api.Assertions;
@@ -33,6 +32,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 /**
  * Helper functions for Metafix tests.
@@ -46,14 +46,18 @@ public final class MetafixTestHelpers {
     }
 
     public static void assertThrowsCause(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
-        assertThrows(MetafactureException.class, expectedClass, expectedMessage, executable);
+        assertThrows(FixExecutionException.class, expectedClass, expectedMessage, executable, UnaryOperator.identity());
     }
 
     public static void assertThrows(final Class<? extends Throwable> expectedClass, final String expectedMessage, final Executable executable) {
-        assertThrows(expectedClass, null, expectedMessage, executable);
+        assertThrows(expectedClass, null, expectedMessage, executable, UnaryOperator.identity());
     }
 
-    private static void assertThrows(final Class<? extends Throwable> exceptionClass, final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
+    public static void assertThrows(final Class<? extends Throwable> expectedClass, final UnaryOperator<String> operator, final String expectedMessage, final Executable executable) {
+        assertThrows(expectedClass, null, expectedMessage, executable, operator);
+    }
+
+    private static void assertThrows(final Class<? extends Throwable> exceptionClass, final Class<?> expectedClass, final String expectedMessage, final Executable executable, final UnaryOperator<String> operator) {
         final Throwable thrownException = Assertions.assertThrows(exceptionClass, executable);
         final Throwable actualException;
 
@@ -65,7 +69,7 @@ public final class MetafixTestHelpers {
             actualException = thrownException;
         }
 
-        Assertions.assertEquals(expectedMessage, actualException.getMessage());
+        Assertions.assertEquals(expectedMessage, operator.apply(actualException.getMessage()));
     }
 
     public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Consumer<Metafix> in,

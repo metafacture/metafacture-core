@@ -17,7 +17,6 @@
 package org.metafacture.metafix;
 
 import org.metafacture.commons.tries.SimpleRegexTrie;
-import org.metafacture.framework.MetafactureException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -295,7 +294,7 @@ public class Value {
         public void orElseThrow() {
             orElse(v -> {
                 final String types = expected.stream().map(Type::name).collect(Collectors.joining(" or "));
-                throw new MetafactureException(new IllegalStateException("expected " + types + ", got " + value.type));
+                throw new IllegalStateException("Expected " + types + ", got " + value.type);
             });
         }
 
@@ -308,7 +307,7 @@ public class Value {
                 return this;
             }
             else {
-                throw new MetafactureException(new IllegalStateException("already expecting " + type));
+                throw new IllegalStateException("Already expecting " + type);
             }
         }
 
@@ -464,13 +463,8 @@ public class Value {
                 try {
                     value = new FixPath(fieldPath).findIn(this);
                 }
-                catch (final MetafactureException e) {
-                    if (e.getCause() instanceof IllegalStateException) {
-                        return false;
-                    }
-                    else {
-                        throw e;
-                    }
+                catch (final IllegalStateException e) {
+                    return false;
                 }
 
                 containsPath = !isNull(value);

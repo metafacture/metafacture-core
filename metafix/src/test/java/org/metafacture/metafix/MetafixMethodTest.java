@@ -160,7 +160,7 @@ public class MetafixMethodTest {
 
     @Test
     public void shouldNotCapitalizeArray() {
-        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "expected String, got Array", () ->
+        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "capitalize('title')"
                 ),
@@ -615,7 +615,7 @@ public class MetafixMethodTest {
     @Test
     // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldNotAppendValueToArray() {
-        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "expected String, got Array", () ->
+        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "append('animals[]', ' is cool')"
                 ),
@@ -637,9 +637,36 @@ public class MetafixMethodTest {
     @Test
     // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldNotAppendValueToHash() {
-        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "expected String, got Hash", () ->
+        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Hash", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "append('animals', ' is cool')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("animals");
+                    i.literal("1", "dog");
+                    i.literal("2", "cat");
+                    i.literal("3", "zebra");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/123
+    public void shouldIncludeLocationAndTextInExecutionException() {
+        final String text = "append('animals', ' is cool')";
+        final String message = "Error while executing Fix expression (at FILE, line 2): " + text;
+
+        MetafixTestHelpers.assertThrows(FixExecutionException.class, s -> s.replaceAll("file:/.+?\\.fix", "FILE"), message, () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "# comment",
+                    text,
+                    "nothing()"
                 ),
                 i -> {
                     i.startRecord("1");
@@ -1045,7 +1072,7 @@ public class MetafixMethodTest {
     @Test
     // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldNotPrependValueToArray() {
-        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "expected String, got Array", () ->
+        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "prepend('animals[]', 'cool ')"
                 ),
@@ -1797,7 +1824,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("java.lang.IllegalStateException: expected String, got Array; see https://github.com/metafacture/metafacture-fix/issues/121")
+    @Disabled("java.lang.IllegalStateException: Expected String, got Array; see https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldSumArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "sum('OTHERS[].*.dumbers[]')"

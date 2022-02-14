@@ -16,7 +16,6 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.framework.MetafactureException;
 import org.metafacture.metafix.api.FixFunction;
 import org.metafacture.metafix.fix.Fix;
 import org.metafacture.metamorph.api.Maps;
@@ -48,7 +47,7 @@ public enum FixMethod implements FixFunction {
             final String includePath;
 
             if (!Metafix.isFixFile(includeFile)) {
-                throw new MetafactureException("not a Fix file: " + includeFile);
+                throw new IllegalArgumentException("Not a Fix file: " + includeFile);
             }
 
             // TODO: Catmandu load path
@@ -59,7 +58,7 @@ public enum FixMethod implements FixFunction {
                     includePath = Paths.get(fixFile).resolveSibling(includeFile).toString();
                 }
                 else {
-                    throw new MetafactureException("cannot resolve relative path: " + includeFile);
+                    throw new IllegalArgumentException("Cannot resolve relative path: " + includeFile);
                 }
             }
             else {

@@ -1,6 +1,5 @@
 package org.metafacture.metafix;
 
-import org.metafacture.framework.MetafactureException;
 import org.metafacture.metafix.fix.Fix;
 import org.metafacture.metafix.validation.XtextValidator;
 
@@ -10,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 
 /**
  * Initialization support for running Xtext languages without Equinox extension registry.
@@ -36,7 +36,7 @@ public class FixStandaloneSetup extends FixStandaloneSetupGenerated {
             return parseFix(absPathToTempFile(fixDef, ".fix"));
         }
         catch (final IOException e) {
-            throw new MetafactureException(e);
+            throw new UncheckedIOException(e);
         }
     }
 
