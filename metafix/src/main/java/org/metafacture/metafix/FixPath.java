@@ -106,7 +106,7 @@ public class FixPath {
         if (v != null) {
             v.matchType()
                 .ifString(s -> appendIn(hash, s))
-                //.ifArray(a -> /* TODO: cover by test */)
+                //.ifArray(a -> /* TODO: see MetafixMethodTest.moveToNestedArray */)
                 .ifHash(h -> {
                     if (path.length == 1) {
                         hash.add(path[0], v);
