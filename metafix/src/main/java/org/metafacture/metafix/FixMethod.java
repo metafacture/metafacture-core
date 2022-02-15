@@ -466,7 +466,14 @@ public enum FixMethod implements FixFunction {
     substring {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            new FixPath(params.get(0)).transformIn(record, s -> s.substring(getInteger(params, 1), getInteger(params, 2) - 1));
+            final int offset = getInteger(params, 1);
+            final Integer end = params.size() > 2 ? offset + getInteger(params, 2) : null;
+            // TODO: final String replacement = params.size() > 3 ? params.get(3) : null;
+
+            new FixPath(params.get(0)).transformIn(record, s -> {
+                final int length = s.length();
+                return offset > length ? s : end == null || end > length ? s.substring(offset) : s.substring(offset, end);
+            });
         }
     },
     sum {
