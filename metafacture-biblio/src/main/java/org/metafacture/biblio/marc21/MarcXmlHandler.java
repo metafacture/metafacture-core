@@ -126,7 +126,7 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
             getReceiver().endEntity();
         }
         else if (CONTROLFIELD.equals(localName)) {
-            getReceiver().literal(currentTag, builder.toString().trim());
+            getReceiver().literal(currentTag, builder.toString());
         }
         else if (RECORD.equals(localName) && checkNamespace(uri)) {
             getReceiver().endRecord();
