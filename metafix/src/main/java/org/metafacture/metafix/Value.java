@@ -562,7 +562,7 @@ public class Value {
          * @param field the field name
          */
         public void remove(final String field) {
-            modifyFields(field, this::removeField);
+            findFields(field).collect(Collectors.toSet()).forEach(this::removeField);
         }
 
         public void removeField(final String field) {
@@ -624,11 +624,7 @@ public class Value {
             return map.toString();
         }
 
-        /*package-private*/ void modifyFields(final String pattern, final Consumer<String> consumer) {
-            findFields(pattern).collect(Collectors.toSet()).forEach(consumer);
-        }
-
-        private Stream<String> findFields(final String pattern) {
+        /*package-private*/ Stream<String> findFields(final String pattern) {
             return matchFields(pattern, Stream::filter);
         }
 

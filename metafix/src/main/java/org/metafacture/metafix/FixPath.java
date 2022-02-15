@@ -21,10 +21,13 @@ import org.metafacture.metafix.Value.Hash;
 import org.metafacture.metafix.Value.ReservedField;
 import org.metafacture.metafix.Value.TypeMatcher;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
 /**
  * Our goal here is something like https://metacpan.org/pod/Catmandu::Path::simple
@@ -48,13 +51,32 @@ public class FixPath {
     }
 
     public Value findIn(final Hash hash) {
-        final String field = path[0];
-        if (field.equals(ASTERISK)) {
+        final String currentSegment = path[0];
+        final String[] remainingPath = tail(path);
+
+        if (currentSegment.equals(ASTERISK)) {
             // TODO: search in all elements of value.asHash()?
-            return new FixPath(tail(path)).findIn(hash);
+            return new FixPath(remainingPath).findIn(hash);
         }
-        return path.length == 1 || !hash.containsField(field) ? hash.get(field) :
-            findNested(hash, field, tail(path));
+        final List<Value> result = new ArrayList<Value>();
+        hash.findFields(currentSegment).collect(Collectors.toSet()).forEach(f -> {
+            final Value value = hash.getField(f);
+
+            if (value != null) {
+                if (remainingPath.length == 0) {
+                    result.add(value);
+                }
+                else {
+                    value.matchType()
+                        .ifArray(a -> result.add(new FixPath(remainingPath).findIn(a)))
+                        .ifHash(h -> result.add(new FixPath(remainingPath).findIn(h)))
+                        .orElseThrow();
+                }
+            }
+        });
+        return path.length == 1 ? hash.get(currentSegment) :
+               result.size() == 1 ? result.get(0) :
+               result.size() == 0 ? null : new Value(result);
     }
 
     /*package-private*/ Value findIn(final Array array) {
@@ -134,7 +156,7 @@ public class FixPath {
             return;
         }
 
-        hash.modifyFields(currentSegment, f -> {
+        hash.findFields(currentSegment).collect(Collectors.toSet()).forEach(f -> {
             final Value value = hash.getField(f);
 
             if (value != null) {
@@ -301,15 +323,6 @@ public class FixPath {
                         .orElseThrow()
                 );
         }
-    }
-
-    private Value findNested(final Hash hash, final String field, final String[] remainingFields) {
-        final Value value = hash.get(field);
-        return value == null ? null : value.extractType((m, c) -> m
-                .ifArray(a -> c.accept(new FixPath(remainingFields).findIn(a)))
-                .ifHash(h -> c.accept(new FixPath(remainingFields).findIn(h)))
-                .orElseThrow()
-        );
     }
 
     private void insertIntoReferencedObject(final Array array, final InsertMode mode, final Value newValue) {
