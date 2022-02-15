@@ -43,7 +43,7 @@ public class FixPath {
         this(Value.split(path));
     }
 
-    /*package-private*/ FixPath(final String[] path) {
+    private FixPath(final String[] path) {
         this.path = path;
     }
 
@@ -99,6 +99,24 @@ public class FixPath {
 
     public Value appendIn(final Hash hash, final String newValue) {
         return new FixPath(path).insertInto(hash, InsertMode.APPEND, new Value(newValue));
+    }
+
+    /*package-private*/ void appendIn(final Hash hash, final Value v) {
+        // TODO: impl and call just value.append
+        if (v != null) {
+            v.matchType()
+                .ifString(s -> appendIn(hash, s))
+                //.ifArray(a -> /* TODO: cover by test */)
+                .ifHash(h -> {
+                    if (path.length == 1) {
+                        hash.add(path[0], v);
+                    }
+                    else {
+                        appendIn(hash, new FixPath(tail(path)).findIn(h));
+                    }
+                })
+                .orElseThrow();
+        }
     }
 
     @Override
@@ -379,5 +397,4 @@ public class FixPath {
         }
         return referencedValue;
     }
-
 }
