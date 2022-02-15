@@ -156,6 +156,31 @@ public class MetafixLookupTest {
     }
 
     @Test
+    public void shouldNotLookupInRelativeExternalFileMapFromInlineScript() {
+        final String mapFile = "../maps/test.csv";
+
+        MetafixTestHelpers.assertThrowsCause(IllegalArgumentException.class, "Cannot resolve relative path: " + mapFile, () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    LOOKUP + " '" + mapFile + "')"
+                ),
+                i -> {
+                    i.startRecord("");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldLookupInRelativeExternalFileMapFromExternalScript() {
+        assertMap(
+                "src/test/resources/org/metafacture/metafix/fixes/filemap_lookup.fix"
+        );
+    }
+
+    @Test
     public void shouldLookupInSeparateExternalFileMapWithName() {
         assertMap(
                 "put_filemap('" + CSV_MAP + "', 'testMap')",
