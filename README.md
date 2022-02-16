@@ -485,10 +485,10 @@ split_field("<sourceField>", "<separator>")
 
 #### `substring`
 
-Replaces a string with its substring as defined by the start and end positions.
+Replaces a string with its substring as defined by the start position (offset) and length.
 
 ```perl
-substring("<sourceField>", "<startPosition>", "<endPosition>")
+substring("<sourceField>", "<startPosition>", "<length>")
 ```
 
 #### `sum`
