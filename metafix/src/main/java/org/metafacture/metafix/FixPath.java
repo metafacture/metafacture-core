@@ -21,13 +21,10 @@ import org.metafacture.metafix.Value.Hash;
 import org.metafacture.metafix.Value.ReservedField;
 import org.metafacture.metafix.Value.TypeMatcher;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 
 /**
  * Our goal here is something like https://metacpan.org/pod/Catmandu::Path::simple
@@ -52,40 +49,19 @@ public class FixPath {
 
     public Value findIn(final Hash hash) {
         final String currentSegment = path[0];
-        final String[] remainingPath = tail(path);
-
-        final Value result;
+        final FixPath remainingPath = new FixPath(tail(path));
 
         if (currentSegment.equals(ASTERISK)) {
             // TODO: search in all elements of value.asHash()?
-            result = new FixPath(remainingPath).findIn(hash);
-        }
-        else if (remainingPath.length == 0) {
-            result = hash.get(currentSegment);
-        }
-        else {
-            final List<Value> list = new ArrayList<>();
-
-            hash.findFields(currentSegment).forEach(f -> {
-                final Value value = hash.getField(f);
-
-                if (value != null) {
-                    if (remainingPath.length == 0) {
-                        list.add(value);
-                    }
-                    else {
-                        value.matchType()
-                            .ifArray(a -> list.add(new FixPath(remainingPath).findIn(a)))
-                            .ifHash(h -> list.add(new FixPath(remainingPath).findIn(h)))
-                            .orElseThrow();
-                    }
-                }
-            });
-
-            result = Value.fromList(list);
+            return remainingPath.findIn(hash);
         }
 
-        return result;
+        final Value value = hash.get(currentSegment);
+        return value == null || path.length == 1 ? value : value.extractType((m, c) -> m
+                .ifArray(a -> c.accept(remainingPath.findIn(a)))
+                .ifHash(h -> c.accept(remainingPath.findIn(h)))
+                .orElseThrow()
+        );
     }
 
     /*package-private*/ Value findIn(final Array array) {
@@ -165,7 +141,7 @@ public class FixPath {
             return;
         }
 
-        hash.findFields(currentSegment).collect(Collectors.toSet()).forEach(f -> {
+        hash.modifyFields(currentSegment, f -> {
             final Value value = hash.getField(f);
 
             if (value != null) {

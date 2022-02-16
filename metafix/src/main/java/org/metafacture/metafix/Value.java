@@ -37,7 +37,7 @@ import java.util.stream.Stream;
 
 /**
  * Represents a record value, i.e., either an {@link Array}, a {@link Hash},
- * or a {@link java.lang.String String}.
+ * or a {@link String}.
  */
 public class Value {
 
@@ -202,14 +202,6 @@ public class Value {
                 }
             });
         }
-    }
-
-    /*package-private*/ static Value fromList(final List<Value> list) {
-        list.removeIf(Objects::isNull);
-
-        return list.isEmpty() ? null : list.size() == 1 ? list.get(0) : newArray(a -> list.forEach(v -> v.matchType()
-                    .ifArray(b -> b.forEach(a::add))
-                    .orElse(a::add)));
     }
 
     public TypeMatcher matchType() {
@@ -530,7 +522,10 @@ public class Value {
          */
         public Value get(final String field) {
             // TODO: special treatment (only) for exact matches?
-            return fromList(findFields(field).map(this::getField).collect(Collectors.toList()));
+            final List<Value> list = findFields(field).map(this::getField).collect(Collectors.toList());
+            return list.isEmpty() ? null : list.size() == 1 ? list.get(0) : newArray(a -> list.forEach(v -> v.matchType()
+                        .ifArray(b -> b.forEach(a::add))
+                        .orElse(a::add)));
         }
 
         public Value getField(final String field) {
@@ -567,7 +562,7 @@ public class Value {
          * @param field the field name
          */
         public void remove(final String field) {
-            findFields(field).collect(Collectors.toSet()).forEach(this::removeField);
+            modifyFields(field, this::removeField);
         }
 
         public void removeField(final String field) {
@@ -629,7 +624,17 @@ public class Value {
             return map.toString();
         }
 
-        /*package-private*/ Stream<String> findFields(final String pattern) {
+        /**
+         * Avoids {@link ConcurrentModificationException} when modifying the hash based on matched fields.
+         *
+         * @param pattern the field name pattern
+         * @param consumer the action to be performed for each value
+         */
+        /*package-private*/ void modifyFields(final String pattern, final Consumer<String> consumer) {
+            findFields(pattern).collect(Collectors.toSet()).forEach(consumer);
+        }
+
+        private Stream<String> findFields(final String pattern) {
             return matchFields(pattern, Stream::filter);
         }
 
