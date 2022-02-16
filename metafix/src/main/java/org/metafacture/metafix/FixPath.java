@@ -54,29 +54,38 @@ public class FixPath {
         final String currentSegment = path[0];
         final String[] remainingPath = tail(path);
 
+        final Value result;
+
         if (currentSegment.equals(ASTERISK)) {
             // TODO: search in all elements of value.asHash()?
-            return new FixPath(remainingPath).findIn(hash);
+            result = new FixPath(remainingPath).findIn(hash);
         }
-        final List<Value> result = new ArrayList<Value>();
-        hash.findFields(currentSegment).collect(Collectors.toSet()).forEach(f -> {
-            final Value value = hash.getField(f);
+        else if (remainingPath.length == 0) {
+            result = hash.get(currentSegment);
+        }
+        else {
+            final List<Value> list = new ArrayList<>();
 
-            if (value != null) {
-                if (remainingPath.length == 0) {
-                    result.add(value);
+            hash.findFields(currentSegment).forEach(f -> {
+                final Value value = hash.getField(f);
+
+                if (value != null) {
+                    if (remainingPath.length == 0) {
+                        list.add(value);
+                    }
+                    else {
+                        value.matchType()
+                            .ifArray(a -> list.add(new FixPath(remainingPath).findIn(a)))
+                            .ifHash(h -> list.add(new FixPath(remainingPath).findIn(h)))
+                            .orElseThrow();
+                    }
                 }
-                else {
-                    value.matchType()
-                        .ifArray(a -> result.add(new FixPath(remainingPath).findIn(a)))
-                        .ifHash(h -> result.add(new FixPath(remainingPath).findIn(h)))
-                        .orElseThrow();
-                }
-            }
-        });
-        return path.length == 1 ? hash.get(currentSegment) :
-               result.size() == 1 ? result.get(0) :
-               result.size() == 0 ? null : new Value(result);
+            });
+
+            result = Value.fromList(list);
+        }
+
+        return result;
     }
 
     /*package-private*/ Value findIn(final Array array) {

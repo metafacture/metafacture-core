@@ -204,6 +204,14 @@ public class Value {
         }
     }
 
+    /*package-private*/ static Value fromList(final List<Value> list) {
+        list.removeIf(Objects::isNull);
+
+        return list.isEmpty() ? null : list.size() == 1 ? list.get(0) : newArray(a -> list.forEach(v -> v.matchType()
+                    .ifArray(b -> b.forEach(a::add))
+                    .orElse(a::add)));
+    }
+
     public TypeMatcher matchType() {
         return new TypeMatcher(this);
     }
@@ -522,10 +530,7 @@ public class Value {
          */
         public Value get(final String field) {
             // TODO: special treatment (only) for exact matches?
-            final List<Value> list = findFields(field).map(this::getField).collect(Collectors.toList());
-            return list.isEmpty() ? null : list.size() == 1 ? list.get(0) : newArray(a -> list.forEach(v -> v.matchType()
-                        .ifArray(b -> b.forEach(a::add))
-                        .orElse(a::add)));
+            return fromList(findFields(field).map(this::getField).collect(Collectors.toList()));
         }
 
         public Value getField(final String field) {

@@ -615,6 +615,58 @@ public class MetafixBindTest {
         shouldIterateOverList("n?me", 3);
     }
 
+    private void shouldIterateOverListOfHashes(final String path, final int expectedCount) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list(path: '" + path + "', 'var': '$i')",
+                "  add_field('trace', 'true')",
+                "end",
+                "retain('trace')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("name");
+                i.literal("value", "Mary");
+                i.endEntity();
+                i.startEntity("name");
+                i.literal("value", "University");
+                i.endEntity();
+                i.startEntity("nome");
+                i.literal("value", "Max");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                f.apply(expectedCount).literal("trace", "true");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldIterateOverListOfHashes() {
+        shouldIterateOverListOfHashes("name.value", 2);
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/119
+    public void shouldIterateOverListOfHashesWithCharacterClass() {
+        shouldIterateOverListOfHashes("n[ao]me.value", 3);
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/119
+    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/143")
+    public void shouldIterateOverListOfHashesWithAlternation() {
+        shouldIterateOverListOfHashes("name.value|nome.value", 3);
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/119
+    public void shouldIterateOverListOfHashesWithWildcard() {
+        shouldIterateOverListOfHashes("n?me.value", 3);
+    }
+
     @Test // checkstyle-disable-line JavaNCSS
     // See https://github.com/metafacture/metafacture-fix/issues/119
     public void shouldPerformComplexOperationWithPathWildcard() {
