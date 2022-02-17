@@ -18,7 +18,6 @@ package org.metafacture.metafix;
 
 import org.metafacture.framework.StreamReceiver;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -33,7 +32,7 @@ import java.util.Arrays;
  *
  */
 @ExtendWith(MockitoExtension.class)
-@Disabled("TODO: support Fix-style selectors https://github.com/LibreCat/Catmandu/wiki/Selectors")
+@ExtendWith(MetafixToDo.Extension.class)
 public final class MetafixSelectorTest {
 
     @Mock
@@ -42,6 +41,7 @@ public final class MetafixSelectorTest {
     public MetafixSelectorTest() { }
 
     @Test
+    @MetafixToDo("Support reject() with condition")
     public void reject() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "reject exists(error)"),
@@ -64,19 +64,23 @@ public final class MetafixSelectorTest {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if exists(error)",
                 "  reject()",
-                "end"),
+                "end"
+            ),
             i -> {
                 i.startRecord("1");
                 i.literal("error", "details");
                 i.endRecord();
 
                 i.startRecord("2");
+                i.literal("name", "Mary");
                 i.endRecord();
-            }, o -> {
+            },
+            o -> {
                 o.get().startRecord("2");
                 o.get().literal("name", "Mary");
                 o.get().endRecord();
-            });
+            }
+        );
     }
 
 }
