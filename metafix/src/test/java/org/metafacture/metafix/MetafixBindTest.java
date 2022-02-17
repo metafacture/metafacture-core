@@ -18,7 +18,6 @@ package org.metafacture.metafix;
 
 import org.metafacture.framework.StreamReceiver;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -32,6 +31,7 @@ import java.util.Arrays;
  * @author Fabian Steeg
  */
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(MetafixToDo.Extension.class)
 public class MetafixBindTest {
 
     @Mock
@@ -442,7 +442,7 @@ public class MetafixBindTest {
     }
 
     @Test
-    @Disabled("implement Fix-style binds with collectors?")
+    @MetafixToDo("implement Fix-style binds with collectors?")
     public void ifInCollector() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do entity('author')",
@@ -466,7 +466,7 @@ public class MetafixBindTest {
     }
 
     @Test
-    @Disabled("implement Fix-style binds with collectors?")
+    @MetafixToDo("implement Fix-style binds with collectors?")
     public void ifInCollectorMultiRecords() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do entity('author')",
@@ -510,7 +510,7 @@ public class MetafixBindTest {
     }
 
     @Test
-    @Disabled("implement Fix-style binds with collectors?")
+    @MetafixToDo("implement Fix-style binds with collectors?")
     public void ifInCollectorChoose() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do choose(flushWith: 'record')",
@@ -537,7 +537,7 @@ public class MetafixBindTest {
     }
 
     @Test
-    @Disabled("implement Fix-style binds with collectors?")
+    @MetafixToDo("implement Fix-style binds with collectors?")
     public void ifInCollectorCombine() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do combine(name: 'fullName', value: '${first} ${last}')",
@@ -656,7 +656,7 @@ public class MetafixBindTest {
 
     @Test
     // See https://github.com/metafacture/metafacture-fix/issues/119
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/143")
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/143")
     public void shouldIterateOverListOfHashesWithAlternation() {
         shouldIterateOverListOfHashes("name.value|nome.value", 3);
     }
