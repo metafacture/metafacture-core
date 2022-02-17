@@ -1717,7 +1717,47 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/106")
+    @Disabled("Arrays in arrays need to be preserved. See disabled isArray in FixPath#appendIn.")
+    public void moveToNestedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "move_field('date[]', 'd[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("date[]");
+                i.startEntity("1[]");
+                i.literal("1", "1918");
+                i.literal("2", "17");
+                i.literal("3", "16");
+                i.endEntity();
+                i.startEntity("2[]");
+                i.literal("1", "2021");
+                i.literal("2", "22");
+                i.literal("3", "23");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("d[]");
+                o.get().startEntity("1[]");
+                o.get().literal("1", "1918");
+                o.get().literal("2", "17");
+                o.get().literal("3", "16");
+                o.get().endEntity();
+                o.get().startEntity("2[]");
+                o.get().literal("1", "2021");
+                o.get().literal("2", "22");
+                o.get().literal("3", "23");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @Disabled("Arrays in arrays need to be preserved. See disabled isArray in FixPath#appendIn.")
     public void shouldSplitMarkedArrayFieldIntoArrayOfArrays() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "split_field('date[]', '-')"

@@ -43,18 +43,25 @@ public class FixPath {
         this(Value.split(path));
     }
 
-    /*package-private*/ FixPath(final String[] path) {
+    private FixPath(final String[] path) {
         this.path = path;
     }
 
     public Value findIn(final Hash hash) {
-        final String field = path[0];
-        if (field.equals(ASTERISK)) {
+        final String currentSegment = path[0];
+        final FixPath remainingPath = new FixPath(tail(path));
+
+        if (currentSegment.equals(ASTERISK)) {
             // TODO: search in all elements of value.asHash()?
-            return new FixPath(tail(path)).findIn(hash);
+            return remainingPath.findIn(hash);
         }
-        return path.length == 1 || !hash.containsField(field) ? hash.get(field) :
-            findNested(hash, field, tail(path));
+
+        final Value value = hash.get(currentSegment);
+        return value == null || path.length == 1 ? value : value.extractType((m, c) -> m
+                .ifArray(a -> c.accept(remainingPath.findIn(a)))
+                .ifHash(h -> c.accept(remainingPath.findIn(h)))
+                .orElseThrow()
+        );
     }
 
     /*package-private*/ Value findIn(final Array array) {
@@ -99,6 +106,24 @@ public class FixPath {
 
     public Value appendIn(final Hash hash, final String newValue) {
         return new FixPath(path).insertInto(hash, InsertMode.APPEND, new Value(newValue));
+    }
+
+    /*package-private*/ void appendIn(final Hash hash, final Value v) {
+        // TODO: impl and call just value.append
+        if (v != null) {
+            v.matchType()
+                .ifString(s -> appendIn(hash, s))
+                //.ifArray(a -> /* TODO: see MetafixMethodTest.moveToNestedArray */)
+                .ifHash(h -> {
+                    if (path.length == 1) {
+                        hash.add(path[0], v);
+                    }
+                    else {
+                        appendIn(hash, new FixPath(tail(path)).findIn(h));
+                    }
+                })
+                .orElseThrow();
+        }
     }
 
     @Override
@@ -285,15 +310,6 @@ public class FixPath {
         }
     }
 
-    private Value findNested(final Hash hash, final String field, final String[] remainingFields) {
-        final Value value = hash.get(field);
-        return value == null ? null : value.extractType((m, c) -> m
-                .ifArray(a -> c.accept(new FixPath(remainingFields).findIn(a)))
-                .ifHash(h -> c.accept(new FixPath(remainingFields).findIn(h)))
-                .orElseThrow()
-        );
-    }
-
     private void insertIntoReferencedObject(final Array array, final InsertMode mode, final Value newValue) {
         // TODO replace switch, extract to enum behavior like reservedField.insertIntoReferencedObject(this)?
         switch (ReservedField.fromString(path[0])) {
@@ -379,5 +395,4 @@ public class FixPath {
         }
         return referencedValue;
     }
-
 }
