@@ -21,7 +21,6 @@ import org.metafacture.metafix.fix.Fix;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.maps.FileMap;
 
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,26 +43,13 @@ public enum FixMethod implements FixFunction {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String includeFile = params.get(0);
-            final String includePath;
 
             if (!Metafix.isFixFile(includeFile)) {
                 throw new IllegalArgumentException("Not a Fix file: " + includeFile);
             }
 
             // TODO: Catmandu load path
-            if (includeFile.startsWith(".")) {
-                final String fixFile = metafix.getFixFile();
-
-                if (fixFile != null) {
-                    includePath = Paths.get(fixFile).resolveSibling(includeFile).toString();
-                }
-                else {
-                    throw new IllegalArgumentException("Cannot resolve relative path: " + includeFile);
-                }
-            }
-            else {
-                includePath = includeFile;
-            }
+            final String includePath = metafix.resolvePath(includeFile);
 
             final RecordTransformer recordTransformer = metafix.getRecordTransformer();
             recordTransformer.setRecord(recordTransformer.transformRecord(
@@ -83,9 +69,9 @@ public enum FixMethod implements FixFunction {
             final FileMap fileMap = new FileMap();
 
             fileMap.setSeparator(options.getOrDefault(FILEMAP_SEPARATOR_OPTION, FILEMAP_DEFAULT_SEPARATOR));
-            fileMap.setFile(fileName);
+            fileMap.setFile(metafix.resolvePath(fileName));
 
-            metafix.putMap(params.size() <= 1 ? fileName : params.get(1), fileMap);
+            metafix.putMap(params.size() > 1 ? params.get(1) : fileName, fileMap);
         }
     },
     put_map {
