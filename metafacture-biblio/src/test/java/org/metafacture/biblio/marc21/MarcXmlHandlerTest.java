@@ -78,6 +78,20 @@ public final class MarcXmlHandlerTest {
     }
 
     @Test
+    public void issue440_shouldNotRemoveWhitespaceFromControlFields() throws SAXException {
+        final AttributesImpl attributes = new AttributesImpl();
+        attributes.addAttribute(NAMESPACE, "tag", "tag", "CDATA", "008");
+
+        final String fieldValue = "      t20202020au |||||||||||| ||||ger d";
+
+        marcXmlHandler.startElement(NAMESPACE, CONTROLFIELD, "", attributes);
+        marcXmlHandler.characters(fieldValue.toCharArray(), 0, fieldValue.length());
+        marcXmlHandler.endElement(NAMESPACE, CONTROLFIELD, "");
+
+        verify(receiver).literal("008", fieldValue);
+    }
+
+    @Test
     public void issue233ShouldNotRemoveWhitespaceFromLeader()
             throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
