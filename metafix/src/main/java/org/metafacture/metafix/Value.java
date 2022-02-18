@@ -20,7 +20,7 @@ import org.metafacture.commons.tries.SimpleRegexTrie;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,21 +40,6 @@ import java.util.stream.Stream;
  * or a {@link String}.
  */
 public class Value {
-
-    /*package-private*/ enum ReservedField {
-        $append, $first, $last;
-
-        private static final Map<String, ReservedField> STRING_TO_ENUM = new HashMap<>();
-        static {
-            for (final ReservedField f : values()) {
-                STRING_TO_ENUM.put(f.toString(), f);
-            }
-        }
-
-        static ReservedField fromString(final String string) {
-            return STRING_TO_ENUM.get(string);
-        }
-    }
 
     private static final String FIELD_PATH_SEPARATOR = "\\.";
 

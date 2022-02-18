@@ -1083,7 +1083,7 @@ public class MetafixRecordTest {
     }
 
     private void assertThrowsOnEmptyRecord(final String index) {
-        MetafixTestHelpers.assertThrowsCause(IllegalArgumentException.class, "Using ref, but can't find: " + index + " in: {}", () -> {
+        MetafixTestHelpers.assertThrowsCause(IllegalArgumentException.class, "Using ref, but can't find: " + index + " in: null", () -> {
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "add_field('animals[]." + index + ".kind','nice')"
                 ),
@@ -1342,6 +1342,7 @@ public class MetafixRecordTest {
     }
 
     @Test
+    @MetafixToDo("Do we actually need/want implicit $append? WDCD?")
     public void copyIntoArrayOfHashesImplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('author[]')",
@@ -1801,6 +1802,7 @@ public class MetafixRecordTest {
     }
 
     @Test
+    @MetafixToDo("Is set_array with $append something we need/want? WDCD?")
     public void appendArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('nums[]', '1')",
@@ -2243,7 +2245,6 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // TODO: implement implicit iteration?
     public void accessArrayOfObjectsByWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "upcase('author.*.name')"

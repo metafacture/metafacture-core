@@ -267,13 +267,8 @@ public enum FixMethod implements FixFunction {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String field = params.get(0);
-            final List<String> toAdd = params.subList(1, params.size());
-            if (field.endsWith(DOT_APPEND)) {
-                record.addAll(field.replace(DOT_APPEND, EMPTY), toAdd);
-            }
-            else {
-                record.put(field, newArray(toAdd.stream().map(Value::new)));
-            }
+            final Value newValue = newArray(params.subList(1, params.size()).stream().map(Value::new));
+            new FixPath(field).insertInto(record, null, newValue);
         }
     },
     set_field {
@@ -286,16 +281,8 @@ public enum FixMethod implements FixFunction {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String field = params.get(0);
-
-            final Value value = record.get(field.replace(DOT_APPEND, EMPTY));
             final Value newValue = Value.newHash(h -> options.forEach((f, v) -> h.put(f, new Value(v))));
-
-            if (field.endsWith(DOT_APPEND) && value.isArray()) {
-                value.asArray().add(newValue);
-            }
-            else {
-                record.put(field, newValue);
-            }
+            new FixPath(field).insertInto(record, null, newValue);
         }
     },
     vacuum {
@@ -498,9 +485,6 @@ public enum FixMethod implements FixFunction {
     };
 
     private static final Pattern NAMED_GROUP_PATTERN = Pattern.compile("\\(\\?<(.+?)>");
-
-    private static final String EMPTY = "";
-    private static final String DOT_APPEND = "." + Value.ReservedField.$append.name();
 
     private static final String FILEMAP_SEPARATOR_OPTION = "sep_char";
     private static final String FILEMAP_DEFAULT_SEPARATOR = ",";

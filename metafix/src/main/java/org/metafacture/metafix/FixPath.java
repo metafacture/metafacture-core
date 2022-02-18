@@ -18,10 +18,11 @@ package org.metafacture.metafix;
 
 import org.metafacture.metafix.Value.Array;
 import org.metafacture.metafix.Value.Hash;
-import org.metafacture.metafix.Value.ReservedField;
 import org.metafacture.metafix.Value.TypeMatcher;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
@@ -132,6 +133,7 @@ public class FixPath {
     }
 
     public void transformIn(final Hash hash, final UnaryOperator<String> operator) {
+        // basic idea: reuse findIn logic here? setIn(hash, operator.apply(findIn(hash)))
         final String currentSegment = path[0];
         final String[] remainingPath = tail(path);
 
@@ -177,6 +179,7 @@ public class FixPath {
     }
 
     /*package-private*/ void transformIn(final Array array, final UnaryOperator<String> operator) {
+        // basic idea: reuse findIn logic here? setIn(findIn(array), newValue)
         final String currentSegment = path[0];
         final int size = array.size();
 
@@ -250,32 +253,42 @@ public class FixPath {
         }
     }
 
-    /*package-private*/ void insertInto(final Array array, final InsertMode mode, final Value newValue) {
-        if (path[0].equals(ASTERISK)) {
-            return; // TODO: WDCD? descend into the array?
-        }
-        if (ReservedField.fromString(path[0]) == null) {
-            processDefault(array, mode, newValue);
-        }
-        else {
-            insertIntoReferencedObject(array, mode, newValue);
-        }
-    }
-
-    /*package-private*/ Value insertInto(final Hash hash, final InsertMode mode, final Value newValue) {
+    /*package-private*/ Value insertInto(final Array array, final InsertMode mode, final Value newValue) {
+        // basic idea: reuse findIn logic here? setIn(findIn(array), newValue)
         final String field = path[0];
         if (path.length == 1) {
             if (field.equals(ASTERISK)) {
                 //TODO: WDCD? insert into each element?
             }
             else {
-                mode.apply(hash, field, newValue);
+                array.add(newValue);
             }
         }
         else {
             final String[] tail = tail(path);
-            if (ReservedField.fromString(field) != null || Value.isNumber(field)) {
-                return processRef(hash, mode, newValue, field, tail);
+            if (isReference(field)) {
+                return processRef(getReferencedValue(array, field), mode, newValue, field, tail);
+            }
+            array.add(Value.newHash(h -> new FixPath(path).insertInto(h, mode, newValue)));
+        }
+        return new Value(array);
+    }
+
+    /*package-private*/ Value insertInto(final Hash hash, final InsertMode mode, final Value newValue) {
+        // basic idea: reuse findIn logic here? setIn(findIn(hash), newValue)
+        final String field = path[0];
+        if (path.length == 1) {
+            if (field.equals(ASTERISK)) {
+                //TODO: WDCD? insert into each element?
+            }
+            else {
+                (mode != null ? mode : InsertMode.APPEND).apply(hash, field, newValue);
+            }
+        }
+        else {
+            final String[] tail = tail(path);
+            if (isReference(field)) {
+                return processRef(getReferencedValue(hash, field), mode, newValue, field, tail);
             }
             if (!hash.containsField(field)) {
                 hash.put(field, Value.newHash());
@@ -310,76 +323,70 @@ public class FixPath {
         }
     }
 
-    private void insertIntoReferencedObject(final Array array, final InsertMode mode, final Value newValue) {
-        // TODO replace switch, extract to enum behavior like reservedField.insertIntoReferencedObject(this)?
-        switch (ReservedField.fromString(path[0])) {
-            case $append:
-                if (path.length == 1) {
-                    array.add(newValue);
-                }
-                else {
-                    array.add(Value.newHash(h -> new FixPath(tail(path)).insertInto(h, mode, newValue)));
-                }
+    private Value processRef(final Value referencedValue, final InsertMode mode, final Value newValue, final String field,
+            final String[] tail) {
+        if (referencedValue != null) {
+            final FixPath fixPath = new FixPath(tail);
+            return referencedValue.extractType((m, c) -> m
+                    .ifArray(a -> c.accept(fixPath.insertInto(referencedValue.asArray(), mode, newValue)))
+                    .ifHash(h -> c.accept(fixPath.insertInto(referencedValue.asHash(), mode, newValue)))
+                    .orElseThrow());
+        }
+        else {
+            throw new IllegalArgumentException("Using ref, but can't find: " + field + " in: " + referencedValue);
+        }
+    }
+
+    private enum ReservedField {
+        $append, $first, $last;
+
+        private static final Map<String, ReservedField> STRING_TO_ENUM = new HashMap<>();
+        static {
+            for (final ReservedField f : values()) {
+                STRING_TO_ENUM.put(f.toString(), f);
+            }
+        }
+
+        static ReservedField fromString(final String string) {
+            return STRING_TO_ENUM.get(string);
+        }
+    }
+
+    private boolean isReference(final String field) {
+        return ReservedField.fromString(field) != null || Value.isNumber(field);
+    }
+
+    // TODO replace switch, extract to method on array?
+    private Value getReferencedValue(final Array array, final String field) {
+        Value referencedValue = null;
+        final ReservedField reservedField = ReservedField.fromString(field);
+        if (reservedField == null && Value.isNumber(field)) {
+            return array.get(Integer.valueOf(field) - 1);
+        }
+        switch (reservedField) {
+            case $first:
+                referencedValue = array.get(0);
                 break;
             case $last:
-                if (array.size() > 0) {
-                    array.get(array.size() - 1).matchType().ifHash(h -> new FixPath(tail(path)).insertInto(h, mode, newValue));
-                }
+                referencedValue = array.get(array.size() - 1);
                 break;
-            case $first:
-                if (array.size() > 0) {
-                    final Value first = array.get(0);
-                    if (first.isHash()) {
-                        new FixPath(tail(path)).insertInto(first.asHash(), mode, newValue);
-                    }
-                }
+            case $append:
+                referencedValue = Value.newHash(); // TODO: append non-hash?
+                array.add(referencedValue);
                 break;
             default:
                 break;
         }
+        return referencedValue;
     }
 
-    private void processDefault(final Array array, final InsertMode mode, final Value newValue) {
-        if (Value.isNumber(path[0])) {
-            // TODO: WDCD? insert at the given index? also descend into the array?
-            if (path.length == 1) {
-                array.add(newValue);
-            }
-            else if (path.length > 1) {
-                final Value newHash;
-                final int index = Integer.parseInt(path[0]);
-                if (index <= array.size()) {
-                    newHash = array.get(index - 1);
-                }
-                else {
-                    newHash = Value.newHash();
-                    array.add(newHash);
-                }
-                mode.apply(newHash.asHash(), path[1], newValue);
-            }
-        }
-        else {
-            array.add(Value.newHash(h -> new FixPath(path).insertInto(h, mode, newValue)));
-        }
-    }
-
-    private Value processRef(final Hash hash, final InsertMode mode, final Value newValue, final String field, final String[] tail) {
-        final Value referencedValue = getReferencedValue(hash, field);
-        if (referencedValue != null) {
-            return new FixPath(tail).insertInto(referencedValue.asHash(), mode, newValue);
-        }
-        else {
-            throw new IllegalArgumentException("Using ref, but can't find: " + field + " in: " + hash);
-        }
-    }
-
+    // TODO replace switch, extract to method on hash?
     private Value getReferencedValue(final Hash hash, final String field) {
         Value referencedValue = null;
         final ReservedField reservedField = ReservedField.fromString(field);
         if (reservedField == null) {
             return hash.get(field);
         }
-        // TODO replace switch, extract to enum behavior like reservedField.getReferencedValueInHash(this)?
         switch (reservedField) {
             case $first:
                 referencedValue = hash.get("1");
@@ -388,7 +395,8 @@ public class FixPath {
                 referencedValue = hash.get(String.valueOf(hash.size()));
                 break;
             case $append:
-                referencedValue = new Value(hash);
+                referencedValue = Value.newHash(); // TODO: append non-hash?
+                hash.put(String.valueOf(hash.size() + 1), referencedValue);
                 break;
             default:
                 break;
