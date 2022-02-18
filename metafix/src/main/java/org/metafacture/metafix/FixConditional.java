@@ -108,6 +108,25 @@ public enum FixConditional implements FixPredicate {
         }
     },
 
+    is_array {
+        @Override
+        public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            return testConditional(record, params, Value::isArray);
+        }
+    },
+    is_object {
+        @Override
+        public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            return testConditional(record, params, Value::isHash);
+        }
+    },
+    is_string {
+        @Override
+        public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            return testConditional(record, params, Value::isString);
+        }
+    },
+
     all_match {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {

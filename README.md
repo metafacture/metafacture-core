@@ -775,6 +775,18 @@ _Also aliased as [`is_contained_in`](#is_contained_in)._
 
 _Alias for [`in`](#in)._
 
+#### `is_array`
+
+Executes the functions if/unless the field value is an array.
+
+#### `is_object`
+
+Executes the functions if/unless the field value is a hash (object).
+
+#### `is_string`
+
+Executes the functions if/unless the field value is a string.
+
 #### `match`
 
 ##### `all_match`

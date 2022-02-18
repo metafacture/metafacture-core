@@ -1431,6 +1431,362 @@ public class MetafixIfTest {
     }
 
     @Test
+    public void shouldReportArrayAsArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if is_array(foo)",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "bar");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("3");
+                i.startEntity("foo");
+                i.literal("foo", "bar");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("4");
+                i.startEntity("foo");
+                i.literal("foo", "bar");
+                i.endEntity();
+                i.startEntity("foo");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("5");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "bar");
+                o.get().literal("foo", "1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "1");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "bar");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "bar");
+                o.get().endEntity();
+                o.get().startEntity("foo");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("5");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReportArrayEntityAsArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if is_array('foo[]')",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("foo[]");
+                i.literal("1", "bar");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("2");
+                i.startEntity("foo[]");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("3");
+                i.startEntity("foo");
+                i.endEntity();
+                i.startEntity("foo");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("4");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("foo[]");
+                o.get().literal("1", "bar");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().startEntity("foo[]");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().startEntity("foo");
+                o.get().endEntity();
+                o.get().startEntity("foo");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReportEmptyArrayAsArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array(foo)",
+                "if is_array(foo)",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "bar");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("3");
+                i.startEntity("foo");
+                i.literal("foo", "bar");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("4");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // checkstyle-disable-line JavaNCSS
+    public void shouldReportHashAsObject() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if is_object(foo)",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "bar");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("3");
+                i.startEntity("foo");
+                i.literal("foo", "bar");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("4");
+                i.startEntity("foo");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("5");
+                i.startEntity("foo");
+                i.literal("foo", "bar");
+                i.endEntity();
+                i.startEntity("foo");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("6");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "bar");
+                o.get().literal("foo", "1");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "1");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "bar");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().startEntity("foo");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("5");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "bar");
+                o.get().endEntity();
+                o.get().startEntity("foo");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("6");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReportEmptyHashAsObject() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_hash(foo)",
+                "if is_object(foo)",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "bar");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("3");
+                i.startEntity("foo");
+                i.literal("foo", "bar");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("4");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("foo");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().startEntity("foo");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().startEntity("foo");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().startEntity("foo");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // checkstyle-disable-line JavaNCSS
+    public void shouldReportStringAsString() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if is_string(foo)",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "0");
+                i.endRecord();
+                i.startRecord("3");
+                i.literal("foo", "-1");
+                i.endRecord();
+                i.startRecord("4");
+                i.literal("foo", "1.1");
+                i.endRecord();
+                i.startRecord("5");
+                i.literal("foo", "-1.1");
+                i.endRecord();
+                i.startRecord("6");
+                i.literal("foo", "1.1x");
+                i.endRecord();
+                i.startRecord("7");
+                i.literal("foo", "bar");
+                i.endRecord();
+                i.startRecord("8");
+                i.literal("foo", "");
+                i.endRecord();
+                i.startRecord("9");
+                i.startEntity("foo");
+                i.literal("foo", "bar");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("10");
+                i.literal("foo", "bar");
+                i.literal("foo", "0");
+                i.endRecord();
+                i.startRecord("11");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "0");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().literal("foo", "-1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().literal("foo", "1.1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("5");
+                o.get().literal("foo", "-1.1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("6");
+                o.get().literal("foo", "1.1x");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("7");
+                o.get().literal("foo", "bar");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("8");
+                o.get().literal("foo", "");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("9");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "bar");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("10");
+                o.get().literal("foo", "bar");
+                o.get().literal("foo", "0");
+                o.get().endRecord();
+                o.get().startRecord("11");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldContainString() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if str_contain('name', 'a$[var]')",

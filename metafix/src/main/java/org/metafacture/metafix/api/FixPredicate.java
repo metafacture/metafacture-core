@@ -49,6 +49,13 @@ public interface FixPredicate {
         ));
     }
 
+    default boolean testConditional(final Record record, final List<String> params, final Predicate<Value> conditional) {
+        final String field = params.get(0);
+
+        final Value value = record.get(field);
+        return value != null && conditional.test(value);
+    }
+
     default boolean testConditional(final List<String> params, final BiPredicate<String, String> conditional) {
         return conditional.test(params.get(0), params.get(1));
     }
