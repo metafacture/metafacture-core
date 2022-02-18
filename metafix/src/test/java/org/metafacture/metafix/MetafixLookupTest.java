@@ -279,10 +279,29 @@ public class MetafixLookupTest {
     }
 
     @Test
-    public void shouldFailLookupInUnknownNamedMap() {
-        MetafixTestHelpers.assertThrowsCause(MorphExecutionException.class, "File not found: testMap", () ->
+    public void shouldNotLookupInUnknownInternalMap() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                LOOKUP + " 'testMap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Hey");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldFailLookupInUnknownExternalMap() {
+        MetafixTestHelpers.assertThrowsCause(MorphExecutionException.class, "File not found: testMap.csv", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    LOOKUP + " 'testMap')"
+                    LOOKUP + " 'testMap.csv')"
                 ),
                 i -> {
                     i.startRecord("1");
