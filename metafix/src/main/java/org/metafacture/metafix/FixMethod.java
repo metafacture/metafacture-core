@@ -21,6 +21,7 @@ import org.metafacture.metafix.fix.Fix;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.maps.FileMap;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -377,7 +378,12 @@ public enum FixMethod implements FixFunction {
                 final String mapName = params.get(1);
 
                 if (!metafix.getMapNames().contains(mapName)) {
-                    put_filemap.apply(metafix, record, Arrays.asList(mapName), options);
+                    if (mapName.contains(".") || mapName.contains(File.separator)) {
+                        put_filemap.apply(metafix, record, Arrays.asList(mapName), options);
+                    }
+                    else {
+                        // Probably an unknown internal map? Log a warning?
+                    }
                 }
 
                 map = metafix.getMap(mapName);
