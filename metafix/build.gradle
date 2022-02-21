@@ -2,6 +2,12 @@ plugins {
   id 'maven-publish'
 }
 
+def passSystemProperties = {
+    System.properties.each { k, v ->
+        if (k.startsWith(group + '.')) it[k] = v
+    }
+}
+
 dependencies {
   implementation "org.eclipse.xtext:org.eclipse.xtext:${versions.xtext}"
   implementation "org.eclipse.xtext:org.eclipse.xtext.xbase:${versions.xtext}"
@@ -49,6 +55,8 @@ test {
     exceptionFormat = 'full'
     events 'SKIPPED'
   }
+
+  passSystemProperties(systemProperties)
 
   maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 }

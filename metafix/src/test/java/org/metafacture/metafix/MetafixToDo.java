@@ -30,6 +30,15 @@ public @interface MetafixToDo {
 
         @Override
         public void interceptTestMethod(final InvocationInterceptor.Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Throwable {
+            if (Boolean.parseBoolean(System.getProperty("org.metafacture.metafix.disableToDo"))) {
+                handleAnnotation(invocationContext, a -> {
+                    throw new TestAbortedException(a.value());
+                });
+
+                invocation.proceed();
+                return;
+            }
+
             try {
                 invocation.proceed();
             }
