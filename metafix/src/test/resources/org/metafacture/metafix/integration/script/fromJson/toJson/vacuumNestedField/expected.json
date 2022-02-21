@@ -1,16 +1,12 @@
 {
-    "key": [
-        {
-            "key2": "value2"
-        },
-        {
-            "key4": "value2",
-            "key5": {
-                "key7": "value7"
-            }
-        },
-        {
-            "key8": "value8"
-        }
-    ]
+  "key" : [ {
+    "key2" : "value2"
+  }, {
+    "key4" : "value2",
+    "key5" : {
+      "key7" : "value7"
+    }
+  }, {
+    "key8" : "value8"
+  } ]
 }
