@@ -14,6 +14,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 @Target(ElementType.METHOD)
@@ -25,12 +27,14 @@ public @interface MetafixToDo {
 
     class Extension implements InvocationInterceptor {
 
+        private static final boolean DISABLE_TO_DO = Boolean.parseBoolean(System.getProperty("org.metafacture.metafix.disableToDo"));
+
         private Extension() {
         }
 
         @Override
         public void interceptTestMethod(final InvocationInterceptor.Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) throws Throwable {
-            if (Boolean.parseBoolean(System.getProperty("org.metafacture.metafix.disableToDo"))) {
+            if (DISABLE_TO_DO) {
                 handleAnnotation(invocationContext, a -> {
                     throw new TestAbortedException(a.value());
                 });
@@ -68,21 +72,32 @@ public @interface MetafixToDo {
         private static final Class<Extension> EXTENSION_CLASS = Extension.class;
         private static final String EXTENSION_NAME = EXTENSION_CLASS.getTypeName();
 
+        private static final Map<Class<?>, Boolean> EXTENSION_PRESENT = new HashMap<>();
+
         private Handler() {
         }
 
         @Override
         public ConditionEvaluationResult evaluateExecutionCondition(final ExtensionContext context) {
-            for (final ExtendWith annotation : context.getTestClass().get().getAnnotationsByType(ExtendWith.class)) {
-                for (final Class<? extends org.junit.jupiter.api.extension.Extension> extensionClass : annotation.value()) {
-                    if (extensionClass.isAssignableFrom(EXTENSION_CLASS)) {
-                        return ConditionEvaluationResult.enabled("Extension present: " + EXTENSION_NAME);
+            final boolean extensionPresent = EXTENSION_PRESENT.computeIfAbsent(context.getTestClass().get(), k -> {
+                for (final ExtendWith annotation : k.getAnnotationsByType(ExtendWith.class)) {
+                    for (final Class<? extends org.junit.jupiter.api.extension.Extension> extensionClass : annotation.value()) {
+                        if (extensionClass.isAssignableFrom(EXTENSION_CLASS)) {
+                            return true;
+                        }
                     }
                 }
-            }
 
-            Assertions.fail("Extension missing: " + EXTENSION_NAME);
-            return null; // not reached
+                return false;
+            });
+
+            if (extensionPresent) {
+                return ConditionEvaluationResult.enabled("Extension present: " + EXTENSION_NAME);
+            }
+            else {
+                Assertions.fail("Extension missing: " + EXTENSION_NAME);
+                return null; // not reached
+            }
         }
 
     }
