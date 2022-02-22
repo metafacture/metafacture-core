@@ -1661,11 +1661,57 @@ public class MetafixRecordTest {
     }
 
     @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/111
+    public void setArrayReplaceExisting() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('foo[]','a','b','c')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("foo[]");
+                i.literal("1", "A");
+                i.literal("2", "B");
+                i.literal("3", "C");
+                i.endEntity();
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("foo[]");
+                o.get().literal("1", "a");
+                o.get().literal("2", "b");
+                o.get().literal("3", "c");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void setHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_hash('foo','a': 'b','c': 'd')"),
             i -> {
                 i.startRecord("1");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("foo");
+                o.get().literal("a", "b");
+                o.get().literal("c", "d");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/111
+    public void setHashReplaceExisting() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_hash('foo','a': 'b','c': 'd')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("foo");
+                i.literal("a", "B");
+                i.literal("c", "D");
+                i.endEntity();
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");

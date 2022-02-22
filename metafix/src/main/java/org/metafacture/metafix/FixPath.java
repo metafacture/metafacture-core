@@ -101,8 +101,8 @@ public class FixPath {
         );
     }
 
-    public Value replaceIn(final Hash hash, final String newValue) {
-        return new FixPath(path).insertInto(hash, InsertMode.REPLACE, new Value(newValue));
+    public Value replaceIn(final Hash hash, final Value newValue) {
+        return new FixPath(path).insertInto(hash, InsertMode.REPLACE, newValue);
     }
 
     public Value appendIn(final Hash hash, final String newValue) {

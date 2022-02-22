@@ -195,10 +195,10 @@ public enum FixMethod implements FixFunction {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String joinChar = options.get("join_char");
-            new FixPath(params.get(0)).replaceIn(record, params.subList(1, params.size()).stream()
+            new FixPath(params.get(0)).replaceIn(record, new Value(params.subList(1, params.size()).stream()
                     .filter(f -> literalString(f) || new FixPath(f).findIn(record) != null)
                     .map(f -> literalString(f) ? new Value(f.substring(1)) : Value.asList(new FixPath(f).findIn(record), null).asArray().get(0))
-                    .map(Value::asString).collect(Collectors.joining(joinChar != null ? joinChar : " ")));
+                    .map(Value::asString).collect(Collectors.joining(joinChar != null ? joinChar : " "))));
         }
 
         private boolean literalString(final String s) {
@@ -211,7 +211,7 @@ public enum FixMethod implements FixFunction {
             final String field = params.get(0);
             final int max = getInteger(params, 1);
 
-            new FixPath(field).replaceIn(record, String.valueOf(RANDOM.nextInt(max)));
+            new FixPath(field).replaceIn(record, new Value(String.valueOf(RANDOM.nextInt(max))));
         }
     },
     reject {
@@ -268,13 +268,13 @@ public enum FixMethod implements FixFunction {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String field = params.get(0);
             final Value newValue = newArray(params.subList(1, params.size()).stream().map(Value::new));
-            new FixPath(field).insertInto(record, null, newValue);
+            new FixPath(field).replaceIn(record, newValue);
         }
     },
     set_field {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            new FixPath(params.get(0)).replaceIn(record, params.get(1));
+            new FixPath(params.get(0)).replaceIn(record, new Value(params.get(1)));
         }
     },
     set_hash {
@@ -282,7 +282,7 @@ public enum FixMethod implements FixFunction {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String field = params.get(0);
             final Value newValue = Value.newHash(h -> options.forEach((f, v) -> h.put(f, new Value(v))));
-            new FixPath(field).insertInto(record, null, newValue);
+            new FixPath(field).replaceIn(record, newValue);
         }
     },
     vacuum {
