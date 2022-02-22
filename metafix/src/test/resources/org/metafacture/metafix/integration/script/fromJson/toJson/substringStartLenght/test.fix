@@ -1,1 +1,1 @@
-substring("key", "1", "4")
+substring("key", "0", "4")
