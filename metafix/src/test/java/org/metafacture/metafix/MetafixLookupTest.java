@@ -156,6 +156,31 @@ public class MetafixLookupTest {
     }
 
     @Test
+    public void shouldNotLookupInRelativeExternalFileMapFromInlineScript() {
+        final String mapFile = "../maps/test.csv";
+
+        MetafixTestHelpers.assertThrowsCause(IllegalArgumentException.class, "Cannot resolve relative path: " + mapFile, () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    LOOKUP + " '" + mapFile + "')"
+                ),
+                i -> {
+                    i.startRecord("");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldLookupInRelativeExternalFileMapFromExternalScript() {
+        assertMap(
+                "src/test/resources/org/metafacture/metafix/fixes/filemap_lookup.fix"
+        );
+    }
+
+    @Test
     public void shouldLookupInSeparateExternalFileMapWithName() {
         assertMap(
                 "put_filemap('" + CSV_MAP + "', 'testMap')",
@@ -254,10 +279,29 @@ public class MetafixLookupTest {
     }
 
     @Test
-    public void shouldFailLookupInUnknownNamedMap() {
-        MetafixTestHelpers.assertThrowsCause(MorphExecutionException.class, "File not found: testMap", () ->
+    public void shouldNotLookupInUnknownInternalMap() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                LOOKUP + " 'testMap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Hey");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldFailLookupInUnknownExternalMap() {
+        MetafixTestHelpers.assertThrowsCause(MorphExecutionException.class, "File not found: testMap.csv", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    LOOKUP + " 'testMap')"
+                    LOOKUP + " 'testMap.csv')"
                 ),
                 i -> {
                     i.startRecord("1");

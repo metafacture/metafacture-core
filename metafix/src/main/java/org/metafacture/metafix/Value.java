@@ -19,7 +19,6 @@ package org.metafacture.metafix;
 import org.metafacture.commons.tries.SimpleRegexTrie;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,7 +37,7 @@ import java.util.stream.Stream;
 
 /**
  * Represents a record value, i.e., either an {@link Array}, a {@link Hash},
- * or a {@link java.lang.String String}.
+ * or a {@link String}.
  */
 public class Value {
 
@@ -248,10 +247,6 @@ public class Value {
                 .ifString(c)
                 .orElseThrow()
         );
-    }
-
-    private static String[] tail(final String[] fields) {
-        return Arrays.copyOfRange(fields, 1, fields.length);
     }
 
     /*package-private*/ static String[] split(final String fieldPath) {
@@ -577,31 +572,7 @@ public class Value {
         public void copy(final List<String> params) {
             final String oldName = params.get(0);
             final String newName = params.get(1);
-            asList(new FixPath(oldName).findIn(this), a -> a.forEach(v -> appendValue(split(newName), v)));
-        }
-
-        private void appendValue(final String[] newName, final Value v) {
-            // TODO: impl and call just value.append
-            if (v != null) {
-                switch (v.type) {
-                    case String:
-                        new FixPath(String.join(".", newName)).appendIn(this, v.asString());
-                        break;
-                    case Array:
-                        // TODO: do something here?
-                        break;
-                    case Hash:
-                        if (newName.length == 1) {
-                            add(newName[0], v);
-                        }
-                        else {
-                            appendValue(newName, new FixPath(tail(newName)).findIn(v.asHash()));
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
+            asList(new FixPath(oldName).findIn(this), a -> a.forEach(v -> new FixPath(newName).appendIn(this, v)));
         }
 
         /**
@@ -653,6 +624,12 @@ public class Value {
             return map.toString();
         }
 
+        /**
+         * Avoids {@link ConcurrentModificationException} when modifying the hash based on matched fields.
+         *
+         * @param pattern the field name pattern
+         * @param consumer the action to be performed for each value
+         */
         /*package-private*/ void modifyFields(final String pattern, final Consumer<String> consumer) {
             findFields(pattern).collect(Collectors.toSet()).forEach(consumer);
         }

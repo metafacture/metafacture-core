@@ -115,6 +115,29 @@ public class MetafixScriptTest {
     }
 
     @Test
+    public void shouldNotPutRelativeExternalFileMapFromInlineScript() {
+        final String mapFile = "../maps/test.csv";
+
+        MetafixTestHelpers.assertThrowsCause(IllegalArgumentException.class, "Cannot resolve relative path: " + mapFile, () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "put_filemap('" + mapFile + "')"
+                ),
+                i -> {
+                    i.startRecord("");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldPutRelativeExternalFileMapFromExternalScript() {
+        assertMap("src/test/resources/org/metafacture/metafix/fixes/filemap.fix", MAP_NAME);
+    }
+
+    @Test
     public void shouldPutMultipleExternalFileMaps() {
         assertFix("put_filemap('" + CSV_MAP + "')\nput_filemap('" + TSV_MAP + "')", f -> {
             assertMap(f, CSV_MAP);

@@ -19,7 +19,6 @@ package org.metafacture.metafix;
 import org.metafacture.framework.StreamReceiver;
 
 import com.google.common.collect.ImmutableMap;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -34,6 +33,7 @@ import java.util.Arrays;
  * @author Fabian Steeg
  */
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(MetafixToDo.Extension.class)
 public class MetafixMethodTest {
 
     @Mock
@@ -1360,7 +1360,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/135")
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/135")
     public void shouldReplaceAllRegexesInArrayByArrayWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "replace_all('names.$last', 'a', 'X')"
@@ -1412,7 +1412,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/135")
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/135")
     public void shouldReplaceAllRegexesInArraySubFieldByArrayWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "replace_all('names[].$last.name', 'a', 'X')"
@@ -1482,7 +1482,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/121")
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldReverseArrayOfStringsWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "reverse('test[].*')"
@@ -1509,7 +1509,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/121")
+    @MetafixToDo("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldReverseArrayOfHashesWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "reverse('ANIMALS[].*')"
@@ -1680,7 +1680,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/121")
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldSortArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "sort_field('OTHERS[].*.dnimals[]')"
@@ -1771,7 +1771,47 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/106")
+    @MetafixToDo("Arrays in arrays need to be preserved. See disabled isArray in FixPath#appendIn.")
+    public void moveToNestedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "move_field('date[]', 'd[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("date[]");
+                i.startEntity("1[]");
+                i.literal("1", "1918");
+                i.literal("2", "17");
+                i.literal("3", "16");
+                i.endEntity();
+                i.startEntity("2[]");
+                i.literal("1", "2021");
+                i.literal("2", "22");
+                i.literal("3", "23");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("d[]");
+                o.get().startEntity("1[]");
+                o.get().literal("1", "1918");
+                o.get().literal("2", "17");
+                o.get().literal("3", "16");
+                o.get().endEntity();
+                o.get().startEntity("2[]");
+                o.get().literal("1", "2021");
+                o.get().literal("2", "22");
+                o.get().literal("3", "23");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @MetafixToDo("Arrays in arrays need to be preserved. See disabled isArray in FixPath#appendIn.")
     public void shouldSplitMarkedArrayFieldIntoArrayOfArrays() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "split_field('date[]', '-')"
@@ -1829,7 +1869,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100 and https://github.com/metafacture/metafacture-fix/issues/121")
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/100 and https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldSplitNestedField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "split_field('others[].*.tools', '--')"
@@ -1878,7 +1918,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @Disabled("java.lang.IllegalStateException: Expected String, got Array; see https://github.com/metafacture/metafacture-fix/issues/121")
+    @MetafixToDo("java.lang.IllegalStateException: Expected String, got Array; see https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldSumArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "sum('OTHERS[].*.dumbers[]')"

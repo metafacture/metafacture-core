@@ -18,7 +18,6 @@ package org.metafacture.metafix;
 
 import org.metafacture.framework.StreamReceiver;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -34,6 +33,7 @@ import java.util.Arrays;
  * @author Fabian Steeg
  */
 @ExtendWith(MockitoExtension.class) // checkstyle-disable-line JavaNCSS
+@ExtendWith(MetafixToDo.Extension.class)
 public class MetafixRecordTest {
 
     @Mock
@@ -426,7 +426,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/92")
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/92")
     public void complexAppendWithArrayOfObjects() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "copy_field('others', 'animals[].$append')",
@@ -741,7 +741,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/121")
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldCopyNestedArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('TEST_4[]')",
@@ -1098,7 +1098,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/121")
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldAddArraySubFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "add_field('coll[].*.c', 'test')"
@@ -2409,7 +2409,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled("See https://github.com/metafacture/metafacture-fix/issues/100")
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/100")
     public void shouldNotAppendRandomNumberToHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "random('animals.$append', '100')"
@@ -2518,7 +2518,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/100")
+    @MetafixToDo("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/100")
     public void shouldRenameAllFieldsInHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "rename('.', ani, XY)"
@@ -2562,7 +2562,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @Disabled("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/121")
+    @MetafixToDo("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldRenameArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "rename('OTHERS[].*', 'd', 'XY')"
