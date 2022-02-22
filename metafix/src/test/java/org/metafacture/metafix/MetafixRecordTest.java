@@ -426,7 +426,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/92")
+    // See https://github.com/metafacture/metafacture-fix/issues/92
     public void complexAppendWithArrayOfObjects() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "copy_field('others', 'animals[].$append')",
@@ -650,7 +650,7 @@ public class MetafixRecordTest {
                 i.literal("ANIMALS", "dragon and unicorn");
                 i.endRecord();
             },
-            o -> {
+            (o, f) -> {
                 o.get().startRecord("1");
                 o.get().literal("animals", "dog");
                 o.get().literal("animals", "cat");
@@ -666,9 +666,10 @@ public class MetafixRecordTest {
                 o.get().literal("2", "cat");
                 o.get().literal("3", "zebra");
                 o.get().literal("4", "bunny");
-                // TODO: Why is the hash (`animols`) not expected here?
-                // See also https://github.com/metafacture/metafacture-fix/issues/89#issuecomment-999433570
-                o.get().endEntity();
+                o.get().startEntity("5");
+                o.get().literal("name", "bird");
+                o.get().literal("type", "TEST");
+                f.apply(2).endEntity();
                 o.get().endRecord();
             }
         );

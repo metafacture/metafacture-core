@@ -537,7 +537,7 @@ public class Value {
          * @param newValue the new metadata value
          */
         public void add(final String field, final Value newValue) {
-            final Value oldValue = get(field);
+            final Value oldValue = new FixPath(field).findIn(this);
             put(field, oldValue == null ? newValue : oldValue.asList(a1 -> newValue.asList(a2 -> a2.forEach(a1::add))));
         }
 
@@ -547,17 +547,17 @@ public class Value {
          * @param field the field name
          */
         public void remove(final String field) {
-            modifyFields(field, this::removeField);
+            final FixPath fixPath = new FixPath(field);
+            if (fixPath.size() > 1) {
+                fixPath.removeNestedFrom(this);
+            }
+            else {
+                modifyFields(field, this::removeField);
+            }
         }
 
         public void removeField(final String field) {
             map.remove(field);
-        }
-
-        public void copy(final List<String> params) {
-            final String oldName = params.get(0);
-            final String newName = params.get(1);
-            asList(new FixPath(oldName).findIn(this), a -> a.forEach(v -> new FixPath(newName).appendIn(this, v)));
         }
 
         /**

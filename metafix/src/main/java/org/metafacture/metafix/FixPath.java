@@ -35,12 +35,12 @@ import java.util.function.UnaryOperator;
  * @author Fabian Steeg (fsteeg)
  *
  */
-public class FixPath {
+/*package-private*/ class FixPath {
 
     private static final String ASTERISK = "*";
     private String[] path;
 
-    public FixPath(final String path) {
+    /*package-private*/ FixPath(final String path) {
         this(Value.split(path));
     }
 
@@ -48,7 +48,7 @@ public class FixPath {
         this.path = path;
     }
 
-    public Value findIn(final Hash hash) {
+    /*package-private*/ Value findIn(final Hash hash) {
         final String currentSegment = path[0];
         final FixPath remainingPath = new FixPath(tail(path));
 
@@ -101,38 +101,16 @@ public class FixPath {
         );
     }
 
-    public Value replaceIn(final Hash hash, final Value newValue) {
-        return new FixPath(path).insertInto(hash, InsertMode.REPLACE, newValue);
-    }
-
-    public Value appendIn(final Hash hash, final String newValue) {
-        return new FixPath(path).insertInto(hash, InsertMode.APPEND, new Value(newValue));
-    }
-
-    /*package-private*/ void appendIn(final Hash hash, final Value v) {
-        // TODO: impl and call just value.append
-        if (v != null) {
-            v.matchType()
-                .ifString(s -> appendIn(hash, s))
-                //.ifArray(a -> /* TODO: see MetafixMethodTest.moveToNestedArray */)
-                .ifHash(h -> {
-                    if (path.length == 1) {
-                        hash.add(path[0], v);
-                    }
-                    else {
-                        appendIn(hash, new FixPath(tail(path)).findIn(h));
-                    }
-                })
-                .orElseThrow();
-        }
-    }
-
     @Override
     public String toString() {
         return Arrays.asList(path).toString();
     }
 
-    public void transformIn(final Hash hash, final UnaryOperator<String> operator) {
+    /*package-private*/ int size() {
+        return path.length;
+    }
+
+    /*package-private*/ void transformIn(final Hash hash, final UnaryOperator<String> operator) {
         // basic idea: reuse findIn logic here? setIn(hash, operator.apply(findIn(hash)))
         final String currentSegment = path[0];
         final String[] remainingPath = tail(path);
@@ -152,7 +130,7 @@ public class FixPath {
 
                     if (operator != null) {
                         value.matchType()
-                            .ifString(s -> new FixPath(f).appendIn(hash, operator.apply(s)))
+                            .ifString(s -> new FixPath(f).insertInto(hash, InsertMode.APPEND, new Value(operator.apply(s))))
                             .orElseThrow();
                     }
                 }
@@ -166,6 +144,25 @@ public class FixPath {
         });
     }
 
+    /* package-private */ enum InsertMode {
+
+        REPLACE {
+            @Override
+            void apply(final Hash hash, final String field, final Value value) {
+                hash.put(field, value);
+            }
+        },
+        APPEND {
+            @Override
+            void apply(final Hash hash, final String field, final Value value) {
+                hash.add(field, value);
+            }
+        };
+
+        abstract void apply(Hash hash, String field, Value value);
+
+    }
+
     /*package-private*/ void transformIn(final Hash hash, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
         final Value oldValue = findIn(hash);
 
@@ -173,7 +170,7 @@ public class FixPath {
             final Value newValue = oldValue.extractType(consumer);
 
             if (newValue != null) {
-                new FixPath(path).insertInto(hash, InsertMode.REPLACE, newValue);
+                insertInto(hash, InsertMode.REPLACE, newValue);
             }
         }
     }
@@ -202,25 +199,6 @@ public class FixPath {
         }
 
         array.removeIf(v -> Value.isNull(v));
-    }
-
-    private enum InsertMode {
-
-        REPLACE {
-            @Override
-            void apply(final Hash hash, final String field, final Value value) {
-                hash.put(field, value);
-            }
-        },
-        APPEND {
-            @Override
-            void apply(final Hash hash, final String field, final Value value) {
-                hash.add(field, value);
-            }
-        };
-
-        abstract void apply(Hash hash, String field, Value value);
-
     }
 
     /*package-private*/ void removeNestedFrom(final Array array) {
@@ -253,7 +231,7 @@ public class FixPath {
         }
     }
 
-    /*package-private*/ Value insertInto(final Array array, final InsertMode mode, final Value newValue) {
+    /*package-private*/ private Value insertInto(final Array array, final InsertMode mode, final Value newValue) {
         // basic idea: reuse findIn logic here? setIn(findIn(array), newValue)
         final String field = path[0];
         if (path.length == 1) {
@@ -282,7 +260,7 @@ public class FixPath {
                 //TODO: WDCD? insert into each element?
             }
             else {
-                (mode != null ? mode : InsertMode.APPEND).apply(hash, field, newValue);
+                mode.apply(hash, field, newValue);
             }
         }
         else {

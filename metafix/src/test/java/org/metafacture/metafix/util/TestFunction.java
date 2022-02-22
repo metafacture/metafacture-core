@@ -17,9 +17,9 @@
 package org.metafacture.metafix.util;
 
 import org.metafacture.metafix.FixMethod;
-import org.metafacture.metafix.FixPath;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
+import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixFunction;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public class TestFunction implements FixFunction {
         params.set(0, "test");
         FixMethod.add_field.apply(metafix, record, params, options);
 
-        options.forEach((k, v) -> new FixPath(k).appendIn(record, v));
+        options.forEach((k, v) -> record.set(k, new Value(v)));
     }
 
 }

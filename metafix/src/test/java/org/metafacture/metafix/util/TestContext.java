@@ -16,9 +16,9 @@
 
 package org.metafacture.metafix.util;
 
-import org.metafacture.metafix.FixPath;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
+import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixContext;
 import org.metafacture.metafix.fix.Expression;
 
@@ -32,9 +32,9 @@ public class TestContext implements FixContext {
 
     @Override
     public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final List<Expression> expressions) {
-        new FixPath("BEFORE").appendIn(record, params.get(0));
+        record.add("BEFORE", new Value(params.get(0)));
         metafix.getRecordTransformer().process(expressions);
-        new FixPath("AFTER").appendIn(record, options.get("data"));
+        record.add("AFTER", new Value(options.get("data")));
     }
 
 }

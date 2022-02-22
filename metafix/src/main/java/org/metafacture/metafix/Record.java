@@ -16,9 +16,12 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.metafix.FixPath.InsertMode;
+
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * Represents a metadata record, i.e., a {@link Value.Hash Hash} of fields
@@ -112,7 +115,20 @@ public class Record extends Value.Hash {
      */
     @Override
     public Value get(final String field) {
-        return containsField(field) ? super.get(field) : virtualFields.get(field);
+        final Value result;
+        if (containsField(field)) {
+            result = super.get(field);
+        }
+        else {
+            final FixPath fixPath = new FixPath(field);
+            if (fixPath.size() > 1) {
+                result = fixPath.findIn(this);
+            }
+            else {
+                result = virtualFields.get(field);
+            }
+        }
+        return result;
     }
 
     /**
@@ -129,8 +145,26 @@ public class Record extends Value.Hash {
             super.add(field, newValue);
         }
         else {
-            put(field, newValue);
+            final FixPath fixPath = new FixPath(field);
+            if (fixPath.size() > 1) {
+                fixPath.insertInto(this, InsertMode.APPEND, newValue);
+            }
+            else {
+                put(field, newValue);
+            }
         }
+    }
+
+    /**
+     * Sets a field/value pair to this record, replacing
+     * any previous association of the field with a value.
+     *
+     * @param field the field name
+     * @param newValue the new metadata value
+     */
+    public void set(final String field, final Value newValue) {
+        final FixPath fixPath = new FixPath(field);
+        fixPath.insertInto(this, InsertMode.REPLACE, newValue);
     }
 
     /**
