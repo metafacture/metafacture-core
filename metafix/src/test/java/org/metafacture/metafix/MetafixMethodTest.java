@@ -179,16 +179,70 @@ public class MetafixMethodTest {
     @Test
     public void shouldGetSubstringOfString() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "substring('title', '0', '2')"
+                "substring('rel', '5', '3')"
             ),
             i -> {
                 i.startRecord("1");
-                i.literal("title", "marc");
+                i.literal("rel", "grandson");
                 i.endRecord();
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().literal("title", "m");
+                o.get().literal("rel", "son");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldGetSubstringOfStringWithoutLength() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "substring('rel', '5')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("rel", "grandson");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("rel", "son");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldGetSubstringOfTruncatedString() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "substring('rel', '5', '6')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("rel", "grandson");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("rel", "son");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotGetSubstringOutsideOfString() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "substring('rel', '9', '3')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("rel", "grandson");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("rel", "grandson");
                 o.get().endRecord();
             }
         );
@@ -197,17 +251,17 @@ public class MetafixMethodTest {
     @Test
     public void shouldGetSubstringWithVar() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "substring('title', '0', '$[end]')"
+                "substring('rel', '0', '$[length]')"
             ),
-            ImmutableMap.of("end", "3"),
+            ImmutableMap.of("length", "5"),
             i -> {
                 i.startRecord("1");
-                i.literal("title", "marc");
+                i.literal("rel", "grandson");
                 i.endRecord();
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().literal("title", "ma");
+                o.get().literal("rel", "grand");
                 o.get().endRecord();
             }
         );
