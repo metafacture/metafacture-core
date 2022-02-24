@@ -65,7 +65,7 @@ subprojects {
 
   tasks.withType(JavaCompile) {
     'all -processing -rawtypes -serial'.split().each {
-        options.compilerArgs << "-Xlint:${it}"
+        options.compilerArgs << ("-Xlint:${it}" as String)
     }
 
     options.compilerArgs << '-Werror'
@@ -139,7 +139,7 @@ gradle.projectsEvaluated {
     }
 
     def mavenProjectDescription = {
-      name project.mavenName ?: project.name
+      name = project.mavenName ?: project.name
       if (project.description) {
         description project.description
       }
@@ -148,7 +148,7 @@ gradle.projectsEvaluated {
       developers {
         developer {
           id 'mgeipel'
-          name 'Markus M. Geipel'
+          name = 'Markus M. Geipel'
           email 'm.geipel@dnb.de'
           url 'https://github.com/mgeipel'
           roles {
@@ -158,7 +158,7 @@ gradle.projectsEvaluated {
         }
         developer {
           id 'cboehme'
-          name 'Christoph Böhme'
+          name = 'Christoph Böhme'
           email 'c.boehme@dnb.de'
           url 'https://github.com/cboehme'
           roles {
@@ -168,18 +168,18 @@ gradle.projectsEvaluated {
         }
       }
       organization {
-        name 'Metafacture'
+        name = 'Metafacture'
         url 'https://github.com/metafacture'
       }
       licenses {
         license {
-          name 'The Apache License, Version 2.0'
+          name = 'The Apache License, Version 2.0'
           url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
         }
       }
       mailingLists {
         mailingList {
-          name 'Metafacture Mailing List'
+          name = 'Metafacture Mailing List'
           post 'metafacture@lists.dnb.de'
           subscribe 'metafacture-subscribe@lists.dnb.de'
           unsubscribe 'metafacture-unsubscribe@lists.dnb.de'
@@ -286,7 +286,6 @@ class ScmInfo {
 }
 
 def getScmInfo() {
-  def version = null
   def tag = getGitTag()
   if (tag != null) {
     logger.lifecycle('SCM tag found. Making a release build')
@@ -304,11 +303,11 @@ def getSnapshotVersion() {
     logger.warn('No Git repository found')
     return 'non-scm-build-SNAPSHOT'
   }
-  if (grgit.branch.current().fullName.equals('HEAD')) {
+  if (grgit.branch.current().fullName == 'HEAD') {
     logger.lifecycle('Detached HEAD found')
     return "commit-${grgit.head().id}-SNAPSHOT"
   }
-  if (grgit.branch.current().name.equals('master')) {
+  if (grgit.branch.current().name == 'master') {
     logger.lifecycle('On master branch')
     return 'master-SNAPSHOT'
   }
@@ -343,7 +342,7 @@ def getGitTag() {
   return tag.name
 }
 
-def getAnnotatedTags() {
+ def getAnnotatedTags() {
   def tags = []
   for (tag in grgit.tag.list()) {
     if (tag.commit == grgit.head()
