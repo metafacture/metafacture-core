@@ -65,7 +65,7 @@ subprojects {
 
   tasks.withType(JavaCompile) {
     'all -processing -rawtypes -serial'.split().each {
-        options.compilerArgs << ("-Xlint:${it}" as String)
+        options.compilerArgs << "-Xlint:${it}".toString()
     }
 
     options.compilerArgs << '-Werror'
@@ -342,7 +342,7 @@ def getGitTag() {
   return tag.name
 }
 
- def getAnnotatedTags() {
+def getAnnotatedTags() {
   def tags = []
   for (tag in grgit.tag.list()) {
     if (tag.commit == grgit.head()
