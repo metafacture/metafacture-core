@@ -1,0 +1,5 @@
+set_array("animals[].*.test[]", "test")
+
+set_array("animals_2[].$last.test_2[]", "test", "test")
+
+set_array("animals_2[].$append.test_3[]", "test", "test", "test")

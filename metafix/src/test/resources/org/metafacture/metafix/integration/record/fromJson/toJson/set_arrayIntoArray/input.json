@@ -1,0 +1,16 @@
+{
+  "animals" : [ {
+    "name" : "Jake",
+    "type" : "dog"
+  }, {
+    "name" : "Blacky",
+    "type" : "bird"
+  } ],
+  "animals_2" : [ {
+    "name" : "Jake",
+    "type" : "dog"
+  }, {
+    "name" : "Blacky",
+    "type" : "bird"
+  } ]
+}
