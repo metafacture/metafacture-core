@@ -159,20 +159,23 @@ public class MetafixMethodTest {
     }
 
     @Test
-    public void shouldNotCapitalizeArray() {
-        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
-            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "capitalize('title')"
-                ),
-                i -> {
-                    i.startRecord("1");
-                    i.literal("title", "marc");
-                    i.literal("title", "json");
-                    i.endRecord();
-                },
-                o -> {
-                }
-            )
+    @MetafixToDo("Same name, is replaced. Repeated fields to array?")
+    public void capitalizeRepeatedField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "capitalize('title')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "marc");
+                i.literal("title", "json");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Marc");
+                o.get().literal("title", "Json");
+                o.get().endRecord();
+            }
         );
     }
 
@@ -268,7 +271,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    public void shouldTrimString() {
+    public void shouldTrimStringSingle() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "trim('title')"
             ),
@@ -286,7 +289,8 @@ public class MetafixMethodTest {
     }
 
     @Test
-    public void shouldTrimStringInHash() {
+    @MetafixToDo("Same name, is replaced. Repeated fields to array?")
+    public void shouldTrimStringRepeated() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "trim('data.title')"
             ),
@@ -294,6 +298,7 @@ public class MetafixMethodTest {
                 i.startRecord("1");
                 i.startEntity("data");
                 i.literal("title", "  marc  ");
+                i.literal("title", "  json  ");
                 i.endEntity();
                 i.endRecord();
             },
@@ -301,6 +306,7 @@ public class MetafixMethodTest {
                 o.get().startRecord("1");
                 o.get().startEntity("data");
                 o.get().literal("title", "marc");
+                o.get().literal("title", "json");
                 o.get().endEntity();
                 o.get().endRecord();
             }
@@ -309,9 +315,40 @@ public class MetafixMethodTest {
 
     @Test
     // See https://github.com/metafacture/metafacture-fix/pull/133
-    public void shouldTrimStringInArrayOfHashes() {
+    public void dontTrimStringInImplicitArrayOfHashes() {
+        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Non-index access to array at title", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "trim('data.title')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("data");
+                    i.literal("title", "  marc  ");
+                    i.endEntity();
+                    i.startEntity("data");
+                    i.literal("title", "  json  ");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().startEntity("data");
+                    o.get().literal("title", "  marc  ");
+                    o.get().endEntity();
+                    o.get().startEntity("data");
+                    o.get().literal("title", "  json  ");
+                    o.get().endEntity();
+                    o.get().endRecord();
+                }
+            )
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/pull/133
+    public void shouldTrimStringInExplicitArrayOfHashes() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "trim('data.title')"
+                "trim('data.*.title')"
             ),
             i -> {
                 i.startRecord("1");
@@ -589,7 +626,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // TODO: Fix order (`animols.name` should stay before `animols.type`)
     public void shouldAppendValueInHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "append(animols.name, ' boss')"
@@ -605,8 +641,8 @@ public class MetafixMethodTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("animols");
-                o.get().literal("type", "TEST");
                 o.get().literal("name", "bird boss");
+                o.get().literal("type", "TEST");
                 o.get().endEntity();
                 o.get().endRecord();
             }
@@ -667,24 +703,30 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/100
-    public void shouldNotAppendValueToArray() {
-        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
-            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "append('animals[]', ' is cool')"
-                ),
-                i -> {
-                    i.startRecord("1");
-                    i.startEntity("animals[]");
-                    i.literal("1", "dog");
-                    i.literal("2", "cat");
-                    i.literal("3", "zebra");
-                    i.endEntity();
-                    i.endRecord();
-                },
-                o -> {
-                }
-            )
+    @MetafixToDo("Like this? See also https://github.com/metafacture/metafacture-fix/issues/100")
+    public void appendValueToArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "append('animals[]', 'another one')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "cat");
+                o.get().literal("3", "zebra");
+                o.get().literal("4", "another one");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
         );
     }
 
@@ -951,7 +993,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // TODO: Fix order (`animols.name` should stay before `animols.type`)
     public void shouldPrependValueInHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "prepend(animols.name, 'nice ')"
@@ -967,8 +1008,8 @@ public class MetafixMethodTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("animols");
-                o.get().literal("type", "TEST");
                 o.get().literal("name", "nice bird");
+                o.get().literal("type", "TEST");
                 o.get().endEntity();
                 o.get().endRecord();
             }
@@ -1076,7 +1117,6 @@ public class MetafixMethodTest {
 
     @Test
     // See https://github.com/metafacture/metafacture-fix/issues/121
-    // TODO: Fix order (`coll[].*.a` should stay before `coll[].*.b`)
     public void shouldPrependValueInArraySubField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "prepend('coll[].*.a', 'HELLO ')"
@@ -1105,12 +1145,12 @@ public class MetafixMethodTest {
                 o.get().startRecord("1");
                 o.get().startEntity("coll[]");
                 o.get().startEntity("1");
-                o.get().literal("b", "Dog");
                 o.get().literal("a", "HELLO Dog");
+                o.get().literal("b", "Dog");
                 o.get().endEntity();
                 o.get().startEntity("2");
-                o.get().literal("b", "Ape");
                 o.get().literal("a", "HELLO Ape");
+                o.get().literal("b", "Ape");
                 o.get().endEntity();
                 o.get().startEntity("3");
                 o.get().literal("a", "HELLO Giraffe");
@@ -1124,24 +1164,30 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/100
-    public void shouldNotPrependValueToArray() {
-        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
-            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "prepend('animals[]', 'cool ')"
-                ),
-                i -> {
-                    i.startRecord("1");
-                    i.startEntity("animals[]");
-                    i.literal("1", "dog");
-                    i.literal("2", "cat");
-                    i.literal("3", "zebra");
-                    i.endEntity();
-                    i.endRecord();
-                },
-                o -> {
-                }
-            )
+    @MetafixToDo("Like this? See also https://github.com/metafacture/metafacture-fix/issues/100")
+    public void shouldPrependValueToArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "prepend('animals[]', 'the first one')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "cat");
+                i.literal("3", "zebra");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "the first one");
+                o.get().literal("2", "dog");
+                o.get().literal("3", "cat");
+                o.get().literal("4", "zebra");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
         );
     }
 
@@ -1246,7 +1292,6 @@ public class MetafixMethodTest {
 
     @Test
     // See https://github.com/metafacture/metafacture-fix/issues/121
-    // TODO: Fix order (`coll[].*.a` should stay before `coll[].*.b`)
     public void shouldReplaceAllRegexesInArraySubField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "replace_all('coll[].*.a', 'o', '__')"
@@ -1275,12 +1320,12 @@ public class MetafixMethodTest {
                 o.get().startRecord("1");
                 o.get().startEntity("coll[]");
                 o.get().startEntity("1");
-                o.get().literal("b", "Dog");
                 o.get().literal("a", "D__g");
+                o.get().literal("b", "Dog");
                 o.get().endEntity();
                 o.get().startEntity("2");
-                o.get().literal("b", "Ape");
                 o.get().literal("a", "Ape");
+                o.get().literal("b", "Ape");
                 o.get().endEntity();
                 o.get().startEntity("3");
                 o.get().literal("a", "Giraffe");
@@ -1985,7 +2030,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    public void shouldRemoveDuplicateArrays() {
+    public void shouldNotRemoveDuplicateArraysAtDifferentPath() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "uniq('arrays[]')"
             ),
@@ -2025,6 +2070,100 @@ public class MetafixMethodTest {
                 o.get().startEntity("3");
                 o.get().literal("number", "6");
                 o.get().literal("number", "23");
+                o.get().endEntity();
+                o.get().startEntity("4");
+                o.get().literal("number", "6");
+                o.get().literal("number", "23");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldRemoveDuplicateArrays() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "uniq('arrays[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("arrays[]");
+                i.startEntity("1");
+                i.literal("number", "41");
+                i.literal("number", "23");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("number", "42");
+                i.literal("number", "23");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("number", "6");
+                i.literal("number", "23");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("number", "6");
+                i.literal("number", "23");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("arrays[]");
+                o.get().startEntity("1");
+                o.get().literal("number", "41");
+                o.get().literal("number", "23");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("number", "42");
+                o.get().literal("number", "23");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("number", "6");
+                o.get().literal("number", "23");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotRemoveDuplicateHashesAtDifferentPath() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "uniq('hashes[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("hashes[]");
+                i.startEntity("1");
+                i.literal("number", "41");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("number", "42");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("number", "6");
+                i.endEntity();
+                i.startEntity("4");
+                i.literal("number", "6");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("hashes[]");
+                o.get().startEntity("1");
+                o.get().literal("number", "41");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("number", "42");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("number", "6");
+                o.get().endEntity();
+                o.get().startEntity("4");
+                o.get().literal("number", "6");
                 f.apply(2).endEntity();
                 o.get().endRecord();
             }
@@ -2048,7 +2187,7 @@ public class MetafixMethodTest {
                 i.startEntity("3");
                 i.literal("number", "6");
                 i.endEntity();
-                i.startEntity("4");
+                i.startEntity("3");
                 i.literal("number", "6");
                 i.endEntity();
                 i.endEntity();

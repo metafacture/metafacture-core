@@ -240,20 +240,22 @@ public class MetafixLookupTest {
 
     @Test
     public void shouldNotLookupInExternalFileMapWithWrongOptions() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                LOOKUP + " '" + CSV_MAP + "', sep_char: '\t')"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.literal("title", "Aloha");
-                i.literal("title", "Moin");
-                i.literal("title", "Hey");
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().endRecord();
-            }
+        MetafixTestHelpers.assertThrows(IllegalStateException.class, "Expected String, got null", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    LOOKUP + " '" + CSV_MAP + "', sep_char: '\t')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("title", "Aloha");
+                    i.literal("title", "Moin");
+                    i.literal("title", "Hey");
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    o.get().startRecord("1");
+                    o.get().endRecord();
+                }
+            )
         );
     }
 
@@ -280,20 +282,22 @@ public class MetafixLookupTest {
 
     @Test
     public void shouldNotLookupInUnknownInternalMap() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                LOOKUP + " 'testMap')"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.literal("title", "Aloha");
-                i.literal("title", "Moin");
-                i.literal("title", "Hey");
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().endRecord();
-            }
+        MetafixTestHelpers.assertThrows(IllegalStateException.class, "Expected String, got null", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    LOOKUP + " 'testMap')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("title", "Aloha");
+                    i.literal("title", "Moin");
+                    i.literal("title", "Hey");
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    o.get().startRecord("1");
+                    o.get().endRecord();
+                }
+            )
         );
     }
 

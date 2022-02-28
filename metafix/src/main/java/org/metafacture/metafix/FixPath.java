@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
 /**
  * Our goal here is something like https://metacpan.org/pod/Catmandu::Path::simple
@@ -51,12 +52,10 @@ import java.util.function.UnaryOperator;
     /*package-private*/ Value findIn(final Hash hash) {
         final String currentSegment = path[0];
         final FixPath remainingPath = new FixPath(tail(path));
-
         if (currentSegment.equals(ASTERISK)) {
             // TODO: search in all elements of value.asHash()?
             return remainingPath.findIn(hash);
         }
-
         final Value value = hash.get(currentSegment);
         return value == null || path.length == 1 ? value : value.extractType((m, c) -> m
                 .ifArray(a -> c.accept(remainingPath.findIn(a)))
@@ -70,7 +69,15 @@ import java.util.function.UnaryOperator;
         if (path.length > 0) {
             final String currentSegment = path[0];
             if (currentSegment.equals(ASTERISK)) {
-                result = Value.newArray(a -> array.forEach(v -> a.add(findInValue(v, tail(path)))));
+                result = Value.newArray(resultArray -> array.forEach(v -> {
+                    final Value findInValue = findInValue(v, tail(path));
+                    if (findInValue != null) {
+                        findInValue.matchType()
+                            // flatten result arrays (use Value#path for structure)
+                            .ifArray(a -> a.forEach(resultArray::add))
+                            .orElse(c -> resultArray.add(findInValue));
+                    }
+                }));
             }
             else if (Value.isNumber(currentSegment)) {
                 final int index = Integer.parseInt(currentSegment) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
@@ -111,56 +118,21 @@ import java.util.function.UnaryOperator;
     }
 
     /*package-private*/ void transformIn(final Hash hash, final UnaryOperator<String> operator) {
-        // basic idea: reuse findIn logic here? setIn(hash, operator.apply(findIn(hash)))
-        final String currentSegment = path[0];
-        final String[] remainingPath = tail(path);
-
-        if (currentSegment.equals(ASTERISK)) {
-            // TODO: search in all elements of value.asHash()?
-            new FixPath(remainingPath).transformIn(hash, operator);
-            return;
-        }
-
-        hash.modifyFields(currentSegment, f -> {
-            final Value value = hash.getField(f);
-
-            if (value != null) {
-                if (remainingPath.length == 0) {
-                    hash.removeField(f);
-
-                    if (operator != null) {
-                        value.matchType()
-                            .ifString(s -> new FixPath(f).insertInto(hash, InsertMode.APPEND, new Value(operator.apply(s))))
-                            .orElseThrow();
-                    }
-                }
-                else {
-                    value.matchType()
-                        .ifArray(a -> new FixPath(remainingPath).transformIn(a, operator))
-                        .ifHash(h -> new FixPath(remainingPath).transformIn(h, operator))
-                        .orElseThrow();
-                }
+        final Value findIn = findIn(hash);
+//        System.out.println("Found in hash for '" + Arrays.asList(path) + "': " + findIn);
+        Value.asList(findIn, results -> {
+            for (int i = 0; i < results.size(); ++i) {
+                final Value oldValue = results.get(i);
+                final FixPath p = pathTo(oldValue, i);
+                oldValue.matchType()
+                    .ifString(s -> {
+                        final Value newValue = new Value(operator.apply(s));
+                        p.insertInto(hash, InsertMode.REPLACE, newValue);
+//                        System.out.printf("Inserted at '%s': '%s' into '%s'\n", p, newValue, hash);
+                    })
+                    .orElseThrow();
             }
         });
-    }
-
-    /* package-private */ enum InsertMode {
-
-        REPLACE {
-            @Override
-            void apply(final Hash hash, final String field, final Value value) {
-                hash.put(field, value);
-            }
-        },
-        APPEND {
-            @Override
-            void apply(final Hash hash, final String field, final Value value) {
-                hash.add(field, value);
-            }
-        };
-
-        abstract void apply(Hash hash, String field, Value value);
-
     }
 
     /*package-private*/ void transformIn(final Hash hash, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
@@ -175,30 +147,60 @@ import java.util.function.UnaryOperator;
         }
     }
 
-    /*package-private*/ void transformIn(final Array array, final UnaryOperator<String> operator) {
-        // basic idea: reuse findIn logic here? setIn(findIn(array), newValue)
-        final String currentSegment = path[0];
-        final int size = array.size();
+    private FixPath pathTo(final Value oldValue, final int i) {
+        FixPath result = this;
+        // One *: replace with index of current result
+        if (countAsterisks() == 1) {
+            result = new FixPath(replaceInPath(ASTERISK, i));
+        }
+        // Multiple * or wildcards: use the old value's path
+        else if (oldValue.getPath() != null && (countAsterisks() >= 2) || hasWildcard()) {
+            result = new FixPath(oldValue.getPath());
+        }
+        return result;
+    }
 
-        if (path.length == 0 || currentSegment.equals(ASTERISK)) {
-            for (int i = 0; i < size; ++i) {
-                transformValueAt(array, i, tail(path), operator);
-            }
-        }
-        else if (Value.isNumber(currentSegment)) {
-            final int index = Integer.parseInt(currentSegment) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
-            if (index >= 0 && index < size) {
-                transformValueAt(array, index, tail(path), operator);
-            }
-        }
-        // TODO: WDCD? copy_field('your.name','author[].name'), where name is an array
-        else {
-            for (int i = 0; i < size; ++i) {
-                transformValueAt(array, i, path, operator);
-            }
-        }
+    private String[] replaceInPath(final String find, final int i) {
+        return Arrays.asList(path).stream().map(s -> s.equals(find) ? String.valueOf(i + 1) : s).collect(Collectors.toList()).toArray(new String[] {});
+    }
 
-        array.removeIf(v -> Value.isNull(v));
+    private boolean hasWildcard() {
+        return Arrays.asList(path).stream().filter(s -> s.contains("?") || s.contains("|") || s.matches(".*?\\[.+?\\].*?")).findAny().isPresent();
+    }
+
+    private long countAsterisks() {
+        return Arrays.asList(path).stream().filter(s -> s.equals(ASTERISK)).count();
+    }
+
+    /* package-private */ enum InsertMode {
+
+        REPLACE {
+            @Override
+            void apply(final Hash hash, final String field, final Value value) {
+                hash.put(field, value);
+            }
+
+            @Override
+            void apply(final Array array, final String field, final Value value) {
+                array.set(Integer.valueOf(field) - 1, value);
+            }
+        },
+        APPEND {
+            @Override
+            void apply(final Hash hash, final String field, final Value value) {
+                hash.add(field, value);
+            }
+
+            @Override
+            void apply(final Array array, final String field, final Value value) {
+                array.add(value);
+            }
+        };
+
+        abstract void apply(Hash hash, String field, Value value);
+
+        abstract void apply(Array array, String field, Value newValue);
+
     }
 
     /*package-private*/ void removeNestedFrom(final Array array) {
@@ -236,10 +238,21 @@ import java.util.function.UnaryOperator;
         final String field = path[0];
         if (path.length == 1) {
             if (field.equals(ASTERISK)) {
-                //TODO: WDCD? insert into each element?
+                for (int i = 0; i < array.size(); ++i) {
+                    mode.apply(array, "" + (i + 1), newValue);
+                }
             }
             else {
-                array.add(newValue);
+                // TODO unify ref usage from below
+                if ("$append".equals(field)) {
+                    array.add(newValue);
+                }
+                else if (Value.isNumber(field)) {
+                    mode.apply(array, field, newValue);
+                }
+                else {
+                    throw new IllegalStateException("Non-index access to array at " + field);
+                }
             }
         }
         else {
@@ -257,7 +270,7 @@ import java.util.function.UnaryOperator;
         final String field = path[0];
         if (path.length == 1) {
             if (field.equals(ASTERISK)) {
-                //TODO: WDCD? insert into each element?
+                hash.forEach((k, v) -> mode.apply(hash, k, newValue)); //TODO: WDCD? insert into each element?
             }
             else {
                 mode.apply(hash, field, newValue);
@@ -286,19 +299,6 @@ import java.util.function.UnaryOperator;
 
     private String[] tail(final String[] fields) {
         return Arrays.copyOfRange(fields, 1, fields.length);
-    }
-
-    private void transformValueAt(final Array array, final int index, final String[] p, final UnaryOperator<String> operator) {
-        final Value value = array.get(index);
-        if (value != null) {
-            value.matchType()
-                .ifString(s -> array.set(index, operator != null ? new Value(operator.apply(s)) : null))
-                .orElse(v -> v.matchType()
-                        .ifArray(a -> new FixPath(p).transformIn(a, operator))
-                        .ifHash(h -> new FixPath(p).transformIn(h, operator))
-                        .orElseThrow()
-                );
-        }
     }
 
     private Value processRef(final Value referencedValue, final InsertMode mode, final Value newValue, final String field,

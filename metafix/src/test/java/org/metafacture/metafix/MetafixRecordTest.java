@@ -742,7 +742,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/121")
+    // See https://github.com/metafacture/metafacture-fix/issues/121
     public void shouldCopyNestedArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('TEST_4[]')",
@@ -2198,20 +2198,41 @@ public class MetafixRecordTest {
     }
 
     @Test
-    public void shouldNotAccessArrayImplicitly() {
-        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
-            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "upcase('name')"
-                ),
-                i -> {
-                    i.startRecord("1");
-                    i.literal("name", "max");
-                    i.literal("name", "mo");
-                    i.endRecord();
-                },
-                o -> {
-                }
-            )
+    public void transformSingleField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "upcase('name')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "MAX");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @MetafixToDo("Same name, is replaced. Repeated fields to array?")
+    public void transformRepeatedField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "upcase('name')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.literal("name", "mo");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "MAX");
+                o.get().literal("name", "MO");
+                o.get().endRecord();
+            }
         );
     }
 

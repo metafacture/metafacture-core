@@ -49,12 +49,15 @@ public class Value {
 
     private final Type type;
 
+    private final String path;
+
     public Value(final Array array) {
         type = array != null ? Type.Array : null;
 
         this.array = array;
         this.hash = null;
         this.string = null;
+        this.path = null;
     }
 
     public Value(final List<Value> array) {
@@ -71,6 +74,7 @@ public class Value {
         this.array = null;
         this.hash = hash;
         this.string = null;
+        this.path = null;
     }
 
     public Value(final Map<String, Value> hash) {
@@ -87,10 +91,20 @@ public class Value {
         this.array = null;
         this.hash = null;
         this.string = string;
+        this.path = null;
     }
 
     public Value(final int integer) {
         this(String.valueOf(integer));
+    }
+
+    public Value(final String string, final String path) {
+        type = string != null ? Type.String : null;
+
+        this.array = null;
+        this.hash = null;
+        this.string = string;
+        this.path = path;
     }
 
     public static Value newArray() {
@@ -213,7 +227,8 @@ public class Value {
         return Objects.equals(type, other.type) &&
             Objects.equals(array, other.array) &&
             Objects.equals(hash, other.hash) &&
-            Objects.equals(string, other.string);
+            Objects.equals(string, other.string) &&
+            Objects.equals(path, other.path);
     }
 
     @Override
@@ -221,7 +236,8 @@ public class Value {
         return Objects.hashCode(type) +
             Objects.hashCode(array) +
             Objects.hashCode(hash) +
-            Objects.hashCode(string);
+            Objects.hashCode(string) +
+            Objects.hashCode(path);
     }
 
     @Override
@@ -229,13 +245,17 @@ public class Value {
         return isNull() ? null : extractType((m, c) -> m
                 .ifArray(a -> c.accept(a.toString()))
                 .ifHash(h -> c.accept(h.toString()))
-                .ifString(c)
+                .ifString(s -> c.accept(path == null ? s : String.format("<%s>@<%s>", s, path)))
                 .orElseThrow()
         );
     }
 
     /*package-private*/ static String[] split(final String fieldPath) {
         return fieldPath.split(FIELD_PATH_SEPARATOR);
+    }
+
+    public String getPath() {
+        return path;
     }
 
     enum Type {
@@ -538,7 +558,7 @@ public class Value {
          */
         public void add(final String field, final Value newValue) {
             final Value oldValue = new FixPath(field).findIn(this);
-            put(field, oldValue == null ? newValue : oldValue.asList(a1 -> newValue.asList(a2 -> a2.forEach(a1::add))));
+            put(field, oldValue == null ? newValue : oldValue.asList(oldVals -> newValue.asList(newVals -> newVals.forEach(oldVals::add))));
         }
 
         /**

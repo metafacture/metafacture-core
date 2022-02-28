@@ -85,10 +85,14 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
 
     public Metafix() {
         flattener.setReceiver(new DefaultStreamReceiver() {
+
             @Override
             public void literal(final String name, final String value) {
-                // TODO: keep flattener as option?
-                // add(currentRecord, name, value);
+                final String[] split = Value.split(name);
+                addValue(split[split.length - 1], new Value(value, name));
+                // TODO could this help with https://github.com/metafacture/metafacture-fix/issues/147?
+                // TODO use full path here to insert only once?
+                // new FixPath(name).insertInto(currentRecord, InsertMode.APPEND, new Value(value));
             }
         });
     }
@@ -197,7 +201,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
                         h.forEach(this::emit);
                         outputStreamReceiver.endEntity();
                     })
-                    .orElse(v -> outputStreamReceiver.literal(fieldName, v.toString()));
+                    .orElse(v -> outputStreamReceiver.literal(fieldName, v.asString()));
             }
 
             if (isMulti) {
@@ -230,7 +234,6 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
         }
 
         final Value value = isArrayName(name) ? Value.newArray() : Value.newHash();
-
         addValue(name, value);
         entities.add(value);
 
@@ -247,9 +250,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     @Override
     public void literal(final String name, final String value) {
         LOG.debug("Putting '{}': '{}'", name, value);
-        addValue(name, new Value(value));
-        // TODO: keep flattener as option?
-        // flattener.literal(name, value);
+        flattener.literal(name, value);
     }
 
     @Override
