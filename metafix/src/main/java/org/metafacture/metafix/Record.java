@@ -17,11 +17,14 @@
 package org.metafacture.metafix;
 
 import org.metafacture.metafix.FixPath.InsertMode;
+import org.metafacture.metafix.Value.TypeMatcher;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 /**
  * Represents a metadata record, i.e., a {@link Value.Hash Hash} of fields
@@ -185,6 +188,47 @@ public class Record extends Value.Hash {
         });
 
         super.retainFields(fields);
+    }
+
+    /**
+     * Transform this record by applying the given operator to all matching values for the given field.
+     *
+     * @param field The field
+     * @param operator The operator
+     */
+    public void transform(final String field, final UnaryOperator<String> operator) {
+        final FixPath findPath = new FixPath(field);
+        Value.asList(findPath.findIn(this), results -> {
+            for (int i = 0; i < results.size(); ++i) {
+                final Value oldValue = results.get(i);
+                final FixPath insertPath = findPath.to(oldValue, i);
+                oldValue.matchType()
+                    .ifString(s -> {
+                        final Value newValue = new Value(operator.apply(s));
+                        insertPath.insertInto(this, InsertMode.REPLACE, newValue);
+                    })
+                    .orElseThrow();
+            }
+        });
+    }
+
+    /**
+     * Transform this record by consuming all matching values for the given field with the given consumer.
+     *
+     * @param field The field
+     * @param consumer The consumer
+     */
+    public void transform(final String field, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
+        final FixPath path = new FixPath(field);
+        final Value oldValue = path.findIn(this);
+
+        if (oldValue != null) {
+            final Value newValue = oldValue.extractType(consumer);
+
+            if (newValue != null) {
+                path.insertInto(this, InsertMode.REPLACE, newValue);
+            }
+        }
     }
 
 }

@@ -18,14 +18,10 @@ package org.metafacture.metafix;
 
 import org.metafacture.metafix.Value.Array;
 import org.metafacture.metafix.Value.Hash;
-import org.metafacture.metafix.Value.TypeMatcher;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 /**
@@ -117,45 +113,19 @@ import java.util.stream.Collectors;
         return path.length;
     }
 
-    /*package-private*/ void transformIn(final Hash hash, final UnaryOperator<String> operator) {
-        final Value findIn = findIn(hash);
-//        System.out.println("Found in hash for '" + Arrays.asList(path) + "': " + findIn);
-        Value.asList(findIn, results -> {
-            for (int i = 0; i < results.size(); ++i) {
-                final Value oldValue = results.get(i);
-                final FixPath p = pathTo(oldValue, i);
-                oldValue.matchType()
-                    .ifString(s -> {
-                        final Value newValue = new Value(operator.apply(s));
-                        p.insertInto(hash, InsertMode.REPLACE, newValue);
-//                        System.out.printf("Inserted at '%s': '%s' into '%s'\n", p, newValue, hash);
-                    })
-                    .orElseThrow();
-            }
-        });
-    }
+    // TODO: this is still very much work in progress, I think we should
+    // try to replace this with consistent usage of Value#getPath
+    // (e.g. take care of handling repeated fields and their paths)
 
-    /*package-private*/ void transformIn(final Hash hash, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
-        final Value oldValue = findIn(hash);
-
-        if (oldValue != null) {
-            final Value newValue = oldValue.extractType(consumer);
-
-            if (newValue != null) {
-                insertInto(hash, InsertMode.REPLACE, newValue);
-            }
-        }
-    }
-
-    private FixPath pathTo(final Value oldValue, final int i) {
+    /*package-private*/ FixPath to(final Value value, final int i) {
         FixPath result = this;
         // One *: replace with index of current result
         if (countAsterisks() == 1) {
             result = new FixPath(replaceInPath(ASTERISK, i));
         }
         // Multiple * or wildcards: use the old value's path
-        else if (oldValue.getPath() != null && (countAsterisks() >= 2) || hasWildcard()) {
-            result = new FixPath(oldValue.getPath());
+        else if (value.getPath() != null && (countAsterisks() >= 2) || hasWildcard()) {
+            result = new FixPath(value.getPath());
         }
         return result;
     }
