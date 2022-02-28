@@ -64,7 +64,14 @@ test {
 task integrationTest(type: Exec, group: 'Verification') {
   executable './integrationTest.sh'
 
-  if (project.hasProperty('args')) args project.getProperty('args').split()
+  if (project.hasProperty('args')) {
+    args project.getProperty('args').split()
+  }
+
+  if (project.hasProperty('profile')) {
+    environment.METAFIX_INTEGRATION_TEST_PROFILE = project.getProperty('profile')
+  }
+
   environment.METAFIX_DISABLE_TO_DO = System.getProperty('org.metafacture.metafix.disableToDo')
 }
 

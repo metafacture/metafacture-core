@@ -6,6 +6,7 @@ out/
 node_modules/
 xtext-server/
 package-lock.json
+*.hprof.txt
 *.vsix
 /metafix/src/test/resources/org/metafacture/metafix/integration/**/*.diff
 /metafix/src/test/resources/org/metafacture/metafix/integration/**/*.err
