@@ -1,8 +1,8 @@
 {
-  "name": "Jake",
-  "type": "mammal"
+  "name" : "Jake",
+  "type" : "mammal"
 }
 {
-  "name": "Blacky",
-  "type": "bird"
+  "name" : "Blacky",
+  "type" : "bird"
 }

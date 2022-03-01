@@ -1,1 +1,1 @@
-lookup("type", "src/test/resources/org/metafacture/metafix/integration/method/fromJson/toJson/lookupSimpleWithExternalTsvFile/mapfile.tsv", "sep_char":"\t")
+lookup("type", "./mapfile.tsv", "sep_char":"\t")
