@@ -1,4 +1,6 @@
 .gradle/
+bin/
+!/misc/bin/
 build/
 generated/
 xtext-gen/
