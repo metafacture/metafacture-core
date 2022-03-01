@@ -17,6 +17,12 @@ editorconfig {
   ]
 }
 
+task editorconfigChecker(type: Exec, group: 'Verification') {
+  executable 'misc/bin/editorconfig-checker'
+  args('-exclude', '/bin/|/\\.|^gradlew.*|^LICENSE$')
+}
+
+editorconfigCheck.dependsOn(editorconfigChecker)
 check.dependsOn(editorconfigCheck)
 
 subprojects {
