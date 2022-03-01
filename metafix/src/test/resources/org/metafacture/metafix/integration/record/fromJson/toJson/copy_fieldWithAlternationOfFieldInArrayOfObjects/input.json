@@ -1,12 +1,13 @@
 {
   "array" : [ {
     "key" : "value"
-    }, {
+  }, {
     "key_2" : "more_value"
-    }, {
+  }, {
     "key_3" : "even_more_value"
-    }, {
+  }, {
     "key_4" : "a_lot_more_value"
-    } ],
+  } ],
   "test" : [ ]
 }
+
