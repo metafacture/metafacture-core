@@ -1,11 +1,7 @@
 .gradle/
-bin/
-!/misc/bin/
 build/
 generated/
 xtext-gen/
-.project
-.classpath
 out/
 node_modules/
 xtext-server/
