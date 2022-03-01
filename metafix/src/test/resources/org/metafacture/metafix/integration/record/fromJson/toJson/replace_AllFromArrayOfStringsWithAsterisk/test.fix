@@ -1,0 +1,1 @@
+replace_all("test[].*", "o", "__")
