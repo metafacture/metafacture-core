@@ -2,6 +2,6 @@
   "array" : [ { }, { } ],
   "array_2" : [ {
     "key_3" : "even_more_value"
-    }, { } ],
+  }, { } ],
   "test" : [ "value", "more_value", "a_lot_more_value" ]
 }
