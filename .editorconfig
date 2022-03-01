@@ -8,5 +8,8 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{fix,gradle,json,sh,yml}]
+[*.{fix,gradle,json,md,mwe2,sh,vim,xtext,yml}]
 indent_size = 2
+
+[*.tmLanguage]
+indent_style = tab
