@@ -1,0 +1,3 @@
+put_filemap("metafix/src/test/resources/org/metafacture/metafix/integration/script/fromJson/toJson/put_fileMap/mapfile.tsv", "map", "sep_char":"\t")
+
+lookup("type", "map")
