@@ -1,9 +1,9 @@
 {
-	"animals": [{
-			"name": "Jake",
-			"type": "dog"
-		},{
-			"name": "Blacky",
-			"type": "parrot"
-		}]
+  "animals": [{
+    "name": "Jake",
+    "type": "dog"
+  },{
+    "name": "Blacky",
+    "type": "parrot"
+  }]
 }
