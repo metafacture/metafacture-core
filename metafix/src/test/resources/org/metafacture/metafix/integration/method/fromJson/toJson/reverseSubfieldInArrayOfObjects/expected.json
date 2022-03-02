@@ -1,12 +1,12 @@
 {
-  "test": [{
-      "key": "1_eulav",
-      "test": "test_1"
-    },{
-      "key": "2_eulav",
-      "test": "test_2"
-    },{
-      "key": "3_eulav",
-      "test": "test_3"
-    }]
+  "test" : [ {
+    "key" : "1_eulav",
+    "test" : "test_1"
+  }, {
+    "key" : "2_eulav",
+    "test" : "test_2"
+  }, {
+    "key" : "3_eulav",
+    "test" : "test_3"
+  } ]
 }
