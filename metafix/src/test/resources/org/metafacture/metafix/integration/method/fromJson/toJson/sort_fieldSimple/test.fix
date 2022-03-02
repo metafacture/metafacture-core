@@ -1,0 +1,7 @@
+sort_field("animals[]")
+sort_field("numbers[]")
+sort_field("numbers_2[]",numeric:"true")
+sort_field("animals_2[]",reverse:"true")
+sort_field("numbers_3[]", numeric:"true",reverse:"true")
+sort_field("animals_3[]", uniq:"true")
+sort_field("numbers_4[]",numeric:"true", uniq:"true")
