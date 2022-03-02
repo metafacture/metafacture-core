@@ -67,6 +67,21 @@ function run_catmandu() {
   :
 }
 
+nanosecond_offset=-9
+
+function current_time() {
+  date +%s%N
+}
+
+function elapsed_time() {
+  local elapsed_time=$(($(current_time) - $1))
+
+  local seconds=${elapsed_time:0:$nanosecond_offset} milliseconds
+  [ "$seconds" -lt 60 ] && milliseconds=".${elapsed_time:$nanosecond_offset:3}"
+
+  echo " ($(date "+%-Hh %-Mm %-S${milliseconds}s" -ud "@$seconds" | sed 's/^\(0[hm] \)*//'))"
+}
+
 function get_file() {
   local test=$1 type=$2 reason; shift 2
 
@@ -127,6 +142,8 @@ function run_tests() {
       metafix_command_output="$test_directory/metafix.out"
       metafix_command_error="$test_directory/metafix.err"
 
+      metafix_start_time=$(current_time)
+
       # TODO: catmandu (optional)
 
       if run_metafix "$test_directory/$metafix_file" >"$metafix_command_output" 2>"$metafix_command_error"; then
@@ -136,8 +153,10 @@ function run_tests() {
           metafix_output=$current_file
           metafix_diff="$test_directory/metafix.diff"
 
+          metafix_elapsed_time=$(elapsed_time "$metafix_start_time")
+
           if diff -u "$test_expected" "$metafix_output" >"$metafix_diff"; then
-            #log "$color_test$test$color_reset: ${color_passed}PASSED$color_reset"
+            #log "$color_test$test$color_reset: ${color_passed}PASSED$color_reset$metafix_elapsed_time"
 
             rm -f "$metafix_diff" "$metafix_command_output" "$metafix_command_error"
 
@@ -145,7 +164,7 @@ function run_tests() {
 
             #log
           else
-            log "$color_test$test$color_reset: ${color_failed}FAILED$color_reset"
+            log "$color_test$test$color_reset: ${color_failed}FAILED$color_reset$metafix_elapsed_time"
 
             log "  Fix:      $test_fix"
             log "  Input:    $test_input"
@@ -185,6 +204,8 @@ function run_tests() {
   return $matched
 }
 
+start_time=$(current_time)
+
 if [ $# -eq 0 ]; then
   run_tests '*' || true
 else
@@ -199,6 +220,7 @@ summary="${color_passed}$passed passed$color_reset"
 summary+=", ${color_failed}$failed failed$color_reset"
 summary+=", ${color_skipped}$skipped skipped$color_reset"
 summary+=", ${color_invalid}$invalid invalid$color_reset"
+summary+=$(elapsed_time "$start_time")
 
 if [ $failed -gt 0 -o $invalid -gt 0 ]; then
   log "${color_failure}FAILURE$color_reset: $summary"
