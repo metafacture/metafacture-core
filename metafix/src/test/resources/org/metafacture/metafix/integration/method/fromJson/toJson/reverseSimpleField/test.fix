@@ -1,2 +1,2 @@
 reverse("animal")
-reverse("animal_2.test")
+reverse("animal_2.type")
