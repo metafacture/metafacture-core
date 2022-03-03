@@ -1,0 +1,3 @@
+unless all_contain("type", "e")
+  add_field("test", "test")
+end
