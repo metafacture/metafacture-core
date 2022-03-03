@@ -67,16 +67,22 @@ function run_catmandu() {
   :
 }
 
-nanosecond_offset=-9
+nanosecond_length=9
+nanosecond_offset=-$nanosecond_length
 
 function current_time() {
   date +%s%N
 }
 
 function elapsed_time() {
-  local elapsed_time=$(($(current_time) - $1))
+  local elapsed_time=$(($(current_time) - $1)) seconds=0 milliseconds
 
-  local seconds=${elapsed_time:0:$nanosecond_offset} milliseconds
+  if [ ${#elapsed_time} -gt $nanosecond_length ]; then
+    seconds=${elapsed_time:0:$nanosecond_offset}
+  else
+    elapsed_time=$(printf "%0${nanosecond_length}d" "$elapsed_time")
+  fi
+
   [ "$seconds" -lt 60 ] && milliseconds=".${elapsed_time:$nanosecond_offset:3}"
 
   echo " ($(date "+%-Hh %-Mm %-S${milliseconds}s" -ud "@$seconds" | sed 's/^\(0[hm] \)*//'))"
