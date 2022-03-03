@@ -6,14 +6,16 @@ plugins {
 
 editorconfig {
   excludes = [
-    '**/generated',
-    '**/xtext-gen',
-    '**/bin',
+    '**/*.out',
+    '**/*.vsix',
     '**/.*',
-    'gradlew*',
-    '**/out',
+    '**/bin',
+    '**/generated',
     '**/node_modules',
-    '**/*.vsix'
+    '**/out',
+    '**/output-*',
+    '**/xtext-gen',
+    'gradlew*'
   ]
 }
 
