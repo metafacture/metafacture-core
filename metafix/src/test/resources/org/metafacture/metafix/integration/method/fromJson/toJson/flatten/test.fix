@@ -1,2 +1,1 @@
-append("animals[].2.type", " is big")
-append("animals_2[].*.type", " is cool")
+flatten("animals[]")
