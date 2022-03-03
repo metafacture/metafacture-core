@@ -6,9 +6,9 @@
   "type" : "video"
 }
 {
-  "type" : "book"
+  "type" : "book",
+  "test" : "test"
 }
 {
-  "type" : "stone",
-  "test" : "test"
+  "type" : "stone"
 }

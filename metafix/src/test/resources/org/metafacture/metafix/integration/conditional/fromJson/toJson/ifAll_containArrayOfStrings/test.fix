@@ -1,3 +1,3 @@
-if any_contain("type[]", "o")
+if all_contain("type[]", "o")
   add_field("test", "test")
 end

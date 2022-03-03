@@ -2,8 +2,7 @@
   "type" : [ "dog", "dog", "dog" ]
 }
 {
-  "type" : [ "video", "dog", "dog" ],
-  "test" : "test"
+  "type" : [ "video", "dog", "dog" ]
 }
 {
   "type" : [ "book", "pc" ],
