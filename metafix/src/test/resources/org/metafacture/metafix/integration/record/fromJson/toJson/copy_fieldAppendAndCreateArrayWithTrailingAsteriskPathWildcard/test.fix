@@ -1,0 +1,1 @@
+copy_field("ke*", "test[].$append")

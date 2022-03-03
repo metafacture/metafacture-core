@@ -1,0 +1,8 @@
+put_vars(
+  "status": "yes",
+  "redist": "allowed"
+)
+
+
+add_field("open", "$[status]")
+add_field("reuse", "$[redist]")
