@@ -186,7 +186,9 @@ function run_tests() {
 
               ((failed++)) || true
             else
-              #log "$color_test$test$color_reset: ${color_passed}PASSED$color_reset$metafix_elapsed_time"
+              if parse_boolean "$METAFIX_LOG_PASSED"; then
+                log "$color_test$test$color_reset: ${color_passed}PASSED$color_reset$metafix_elapsed_time"
+              fi
 
               ((passed++)) || true
             fi
