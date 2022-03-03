@@ -1,0 +1,3 @@
+do list(path:"colors[]", "var": "$i")
+  copy_field("$i", "test[].$append")
+end
