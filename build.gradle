@@ -15,13 +15,14 @@ editorconfig {
     '**/out',
     '**/output-*',
     '**/xtext-gen',
-    'gradlew*'
+    'gradlew*',
+    '**/metafix.err'
   ]
 }
 
 task editorconfigChecker(type: Exec, group: 'Verification') {
   executable 'misc/bin/editorconfig-checker'
-  args('-exclude', '/bin/|/\\.|^gradlew.*|^LICENSE$')
+  args('-exclude', '/bin/|/\\.|^gradlew.*|^LICENSE$|.project')
 }
 
 editorconfigCheck.dependsOn(editorconfigChecker)
