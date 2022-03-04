@@ -1,0 +1,2 @@
+copy_field("arrayOfObjects[].$append.key", "value")
+copy_field("arrayOfObjects[].$append.key", "more_value")

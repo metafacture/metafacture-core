@@ -1,0 +1,2 @@
+set_array("object.test[]")
+set_array("object_2.test_2[]", "dog", "cat", "bird")

@@ -1,0 +1,6 @@
+{
+  "object" : {
+    "test" : [ "value", "more_value" ]
+  },
+  "test" : "test"
+}
