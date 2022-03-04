@@ -227,8 +227,7 @@ public class Value {
         return Objects.equals(type, other.type) &&
             Objects.equals(array, other.array) &&
             Objects.equals(hash, other.hash) &&
-            Objects.equals(string, other.string) &&
-            Objects.equals(path, other.path);
+            Objects.equals(string, other.string);
     }
 
     @Override
@@ -236,8 +235,7 @@ public class Value {
         return Objects.hashCode(type) +
             Objects.hashCode(array) +
             Objects.hashCode(hash) +
-            Objects.hashCode(string) +
-            Objects.hashCode(path);
+            Objects.hashCode(string);
     }
 
     @Override
@@ -245,7 +243,7 @@ public class Value {
         return isNull() ? null : extractType((m, c) -> m
                 .ifArray(a -> c.accept(a.toString()))
                 .ifHash(h -> c.accept(h.toString()))
-                .ifString(s -> c.accept(path == null ? s : String.format("<%s>@<%s>", s, path)))
+                .ifString(c)
                 .orElseThrow()
         );
     }

@@ -2030,7 +2030,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    public void shouldNotRemoveDuplicateArraysAtDifferentPath() {
+    public void shouldRemoveDuplicateArraysAtDifferentPath() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "uniq('arrays[]')"
             ),
@@ -2068,10 +2068,6 @@ public class MetafixMethodTest {
                 o.get().literal("number", "23");
                 o.get().endEntity();
                 o.get().startEntity("3");
-                o.get().literal("number", "6");
-                o.get().literal("number", "23");
-                o.get().endEntity();
-                o.get().startEntity("4");
                 o.get().literal("number", "6");
                 o.get().literal("number", "23");
                 f.apply(2).endEntity();
@@ -2128,7 +2124,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    public void shouldNotRemoveDuplicateHashesAtDifferentPath() {
+    public void shouldRemoveDuplicateHashesAtDifferentPath() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "uniq('hashes[]')"
             ),
@@ -2160,9 +2156,6 @@ public class MetafixMethodTest {
                 o.get().literal("number", "42");
                 o.get().endEntity();
                 o.get().startEntity("3");
-                o.get().literal("number", "6");
-                o.get().endEntity();
-                o.get().startEntity("4");
                 o.get().literal("number", "6");
                 f.apply(2).endEntity();
                 o.get().endRecord();

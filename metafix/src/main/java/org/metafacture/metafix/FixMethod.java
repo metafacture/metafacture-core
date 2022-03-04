@@ -131,7 +131,7 @@ public enum FixMethod implements FixFunction {
             final String field = params.get(0);
 
             record.getList(field, oldValues -> {
-                final String newValue = String.format(params.get(1), oldValues.stream().map(v -> v.asString()).toArray());
+                final String newValue = String.format(params.get(1), oldValues.stream().toArray());
                 record.replace(field, new Value(Arrays.asList(new Value(newValue))));
             });
         }
