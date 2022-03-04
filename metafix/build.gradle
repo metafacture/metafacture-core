@@ -63,7 +63,9 @@ test {
 
 task integrationTest(type: Exec, group: 'Verification') {
   executable './integrationTest.sh'
-  if (project.hasProperty("args")) args project.getProperty("args").split()
+
+  if (project.hasProperty('args')) args project.getProperty('args').split()
+  environment.METAFIX_DISABLE_TO_DO = System.getProperty('org.metafacture.metafix.disableToDo')
 }
 
 task install(dependsOn: publishToMavenLocal, group: 'Publishing',
