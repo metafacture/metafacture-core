@@ -22,7 +22,6 @@ import org.metafacture.metafix.Value.Hash;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Our goal here is something like https://metacpan.org/pod/Catmandu::Path::simple
@@ -118,7 +117,7 @@ import java.util.stream.Collectors;
     // (e.g. take care of handling repeated fields and their paths)
 
     /*package-private*/ FixPath to(final Value value, final int i) {
-        FixPath result = this;
+        final FixPath result;
         // One *: replace with index of current result
         if (countAsterisks() == 1) {
             result = new FixPath(replaceInPath(ASTERISK, i));
@@ -127,11 +126,14 @@ import java.util.stream.Collectors;
         else if (value.getPath() != null && (countAsterisks() >= 2) || hasWildcard()) {
             result = new FixPath(value.getPath());
         }
+        else {
+            result = this;
+        }
         return result;
     }
 
     private String[] replaceInPath(final String find, final int i) {
-        return Arrays.asList(path).stream().map(s -> s.equals(find) ? String.valueOf(i + 1) : s).collect(Collectors.toList()).toArray(new String[] {});
+        return Arrays.asList(path).stream().map(s -> s.equals(find) ? String.valueOf(i + 1) : s).toArray(String[]::new);
     }
 
     private boolean hasWildcard() {

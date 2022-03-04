@@ -501,4 +501,5 @@ public enum FixMethod implements FixFunction {
     private static final Random RANDOM = new Random();
 
     private static final Map<String, Fix> INCLUDE_FIX = new HashMap<>();
+
 }
