@@ -313,7 +313,8 @@ public class Value {
 
     private abstract static class AbstractValueType {
 
-        protected static final Predicate<Value> REMOVE_EMPTY_VALUES = v -> v.extractType((m, c) -> m
+        protected static final Predicate<Value> REMOVE_EMPTY_VALUES = v ->
+            v.isNull() ? true : v.extractType((m, c) -> m
                 .ifArray(a -> {
                     a.removeEmptyValues();
                     c.accept(a.isEmpty());

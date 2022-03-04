@@ -201,7 +201,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
                         h.forEach(this::emit);
                         outputStreamReceiver.endEntity();
                     })
-                    .orElse(v -> outputStreamReceiver.literal(fieldName, v.asString()));
+                    .ifString(s -> outputStreamReceiver.literal(fieldName, s));
             }
 
             if (isMulti) {

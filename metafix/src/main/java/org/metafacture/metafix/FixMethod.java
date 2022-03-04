@@ -383,7 +383,10 @@ public enum FixMethod implements FixFunction {
             }
 
             final String defaultValue = map.get(Maps.DEFAULT_MAP_KEY); // TODO: Catmandu uses 'default'
-            record.transform(params.get(0), k -> map.getOrDefault(k, defaultValue));
+            record.transform(params.get(0), oldValue -> {
+                final String newValue = map.getOrDefault(oldValue, defaultValue);
+                return newValue != null ? newValue : Boolean.valueOf(options.getOrDefault("delete", "false")) ? null : oldValue;
+            });
         }
     },
     prepend {
