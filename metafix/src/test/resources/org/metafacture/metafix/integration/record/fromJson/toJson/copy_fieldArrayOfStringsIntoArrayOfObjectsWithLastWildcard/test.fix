@@ -1,0 +1,1 @@
+copy_field("animal_string_Array[]", "test[].$last.animal_string_Array[]")

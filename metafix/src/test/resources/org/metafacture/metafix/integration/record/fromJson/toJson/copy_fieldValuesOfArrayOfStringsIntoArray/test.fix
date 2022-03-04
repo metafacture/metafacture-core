@@ -1,0 +1,2 @@
+copy_field("a[]", "z[].$append")
+copy_field("m[].*", "z[].$append")

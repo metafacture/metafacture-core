@@ -6,17 +6,25 @@ plugins {
 
 editorconfig {
   excludes = [
-    '**/generated',
-    '**/xtext-gen',
-    '**/bin',
+    '**/*.out',
+    '**/*.vsix',
     '**/.*',
-    'gradlew*',
-    '**/out',
+    '**/bin',
+    '**/generated',
     '**/node_modules',
-    '**/*.vsix'
+    '**/out',
+    '**/output-*',
+    '**/xtext-gen',
+    'gradlew*'
   ]
 }
 
+task editorconfigChecker(type: Exec, group: 'Verification') {
+  executable 'misc/bin/editorconfig-checker'
+  args('-exclude', '/bin/|/\\.|^gradlew.*|^LICENSE$')
+}
+
+editorconfigCheck.dependsOn(editorconfigChecker)
 check.dependsOn(editorconfigCheck)
 
 subprojects {

@@ -1,0 +1,1 @@
+copy_field("test[].$first", "test_2")

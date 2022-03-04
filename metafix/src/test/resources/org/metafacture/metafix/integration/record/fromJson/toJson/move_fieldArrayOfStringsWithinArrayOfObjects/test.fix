@@ -1,0 +1,1 @@
+move_field("arrayOfObjects[].1.arrayOfStrings[]", "arrayOfObjects[].1.arrayOfStrings_moved[]")

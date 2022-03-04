@@ -8,7 +8,7 @@ metafix_file=test.flux
 catmandu_file=test.cmd
 
 fix_file=test.fix
-disabled_file=disabled.txt
+todo_file=todo.txt
 
 input_glob=input.*
 expected_glob=expected.*
@@ -19,6 +19,12 @@ catmandu_output_glob=output-catmandu.*
 root_directory="$PWD"
 data_directory="$root_directory/src/test/resources/org/metafacture/metafix/integration"
 gradle_command="$root_directory/../gradlew"
+
+function parse_boolean() {
+  [ "${1,,}" == true ]
+}
+
+parse_boolean "$METAFIX_DISABLE_TO_DO" && disable_todo=1 || disable_todo=
 
 [ -t 1 -a -x /usr/bin/colordiff ] && colordiff=colordiff || colordiff=cat
 
@@ -67,6 +73,27 @@ function run_catmandu() {
   :
 }
 
+nanosecond_length=9
+nanosecond_offset=-$nanosecond_length
+
+function current_time() {
+  date +%s%N
+}
+
+function elapsed_time() {
+  local elapsed_time=$(($(current_time) - $1)) seconds=0 milliseconds
+
+  if [ ${#elapsed_time} -gt $nanosecond_length ]; then
+    seconds=${elapsed_time:0:$nanosecond_offset}
+  else
+    elapsed_time=$(printf "%0${nanosecond_length}d" "$elapsed_time")
+  fi
+
+  [ "$seconds" -lt 60 ] && milliseconds=".${elapsed_time:$nanosecond_offset:3}"
+
+  echo " ($(date "+%-Hh %-Mm %-S${milliseconds}s" -ud "@$seconds" | sed 's/^\(0[hm] \)*//'))"
+}
+
 function get_file() {
   local test=$1 type=$2 reason; shift 2
 
@@ -91,13 +118,30 @@ function command_info() {
 
   [ -s "$3" ] && log "  ${color_info}${1^} command output$color_reset: $3" || rm -f "$3"
   [ -s "$4" ] && log "  ${color_info}${1^} command error$color_reset:  $4" || rm -f "$4"
+
+  log
+}
+
+function skip_test() {
+  if [ -r "$2" ]; then
+    local message="$color_test$1$color_reset: ${color_skipped}SKIPPED$color_reset" reason=$(head -1 "$2")
+
+    [ -n "$reason" ] && message+=" ($reason)"
+    log "$message"
+
+    ((skipped++)) || true
+
+    return 0;
+  else
+    return 1;
+  fi
 }
 
 function run_tests() {
   local test matched=1\
-    test_input test_expected test_disabled\
-    metafix_command_output metafix_command_error\
-    metafix_exit_status metafix_output metafix_diff
+    test_directory test_fix test_input test_expected test_todo\
+    metafix_command_output metafix_command_error metafix_start_time\
+    metafix_exit_status metafix_output metafix_diff metafix_elapsed_time
 
   cd "$data_directory"
 
@@ -117,15 +161,13 @@ function run_tests() {
     get_file "$test" expected "$test_directory"/$expected_glob || { log; continue; }
     test_expected=$current_file
 
-    test_disabled="$test_directory/$disabled_file"
+    test_todo="$test_directory/$todo_file"
 
-    if [ -r "$test_disabled" ]; then
-      log "$color_test$test$color_reset: ${color_skipped}SKIPPED$color_reset ($(<"$test_disabled"))"
-
-      ((skipped++)) || true
-    else
+    if [ -z "$disable_todo" ] || ! skip_test "$test" "$test_todo"; then
       metafix_command_output="$test_directory/metafix.out"
       metafix_command_error="$test_directory/metafix.err"
+
+      metafix_start_time=$(current_time)
 
       # TODO: catmandu (optional)
 
@@ -136,16 +178,24 @@ function run_tests() {
           metafix_output=$current_file
           metafix_diff="$test_directory/metafix.diff"
 
+          metafix_elapsed_time=$(elapsed_time "$metafix_start_time")
+
           if diff -u "$test_expected" "$metafix_output" >"$metafix_diff"; then
-            #log "$color_test$test$color_reset: ${color_passed}PASSED$color_reset"
+            if [ -r "$test_todo" ]; then
+              log "$color_test$test$color_reset: ${color_failed}FAILED$color_reset (Marked as \"to do\", but passed.)"
+
+              ((failed++)) || true
+            else
+              if parse_boolean "$METAFIX_LOG_PASSED"; then
+                log "$color_test$test$color_reset: ${color_passed}PASSED$color_reset$metafix_elapsed_time"
+              fi
+
+              ((passed++)) || true
+            fi
 
             rm -f "$metafix_diff" "$metafix_command_output" "$metafix_command_error"
-
-            ((passed++)) || true
-
-            #log
-          else
-            log "$color_test$test$color_reset: ${color_failed}FAILED$color_reset"
+          elif ! skip_test "$test" "$test_todo"; then
+            log "$color_test$test$color_reset: ${color_failed}FAILED$color_reset$metafix_elapsed_time"
 
             log "  Fix:      $test_fix"
             log "  Input:    $test_input"
@@ -158,15 +208,11 @@ function run_tests() {
             command_info metafix "$metafix_exit_status" "$metafix_command_output" "$metafix_command_error"
 
             ((failed++)) || true
-
-            log
           fi
         else
           command_info metafix "$metafix_exit_status" "$metafix_command_output" "$metafix_command_error"
-
-          log
         fi
-      else
+      elif ! skip_test "$test" "$test_todo"; then
         metafix_exit_status=$?
 
         log "$color_test$test$color_reset: ${color_error}ERROR$color_reset"
@@ -174,8 +220,6 @@ function run_tests() {
         command_info metafix "$metafix_exit_status" "$metafix_command_output" "$metafix_command_error"
 
         ((failed++)) || true
-
-        log
       fi
     fi
   done
@@ -184,6 +228,8 @@ function run_tests() {
 
   return $matched
 }
+
+start_time=$(current_time)
 
 if [ $# -eq 0 ]; then
   run_tests '*' || true
@@ -199,6 +245,7 @@ summary="${color_passed}$passed passed$color_reset"
 summary+=", ${color_failed}$failed failed$color_reset"
 summary+=", ${color_skipped}$skipped skipped$color_reset"
 summary+=", ${color_invalid}$invalid invalid$color_reset"
+summary+=$(elapsed_time "$start_time")
 
 if [ $failed -gt 0 -o $invalid -gt 0 ]; then
   log "${color_failure}FAILURE$color_reset: $summary"

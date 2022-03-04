@@ -1,0 +1,13 @@
+{
+  "type" : [ "dog", "dog", "dog" ],
+  "test" : "test"
+}
+{
+  "type" : [ "video", "dog", "dog" ]
+}
+{
+  "type" : [ "book", "dog", "dog" ]
+}
+{
+  "type" : [ "stone", "cat" ]
+}

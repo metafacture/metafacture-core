@@ -1,0 +1,12 @@
+{
+  "key" : [ {
+    "foo" : "bar",
+    "word" : "value"
+  }, {
+    "foo" : "bar",
+    "word" : "m__re_value"
+  }, {
+    "foo" : "bar",
+    "word" : "even_m__re_value"
+  } ]
+}
