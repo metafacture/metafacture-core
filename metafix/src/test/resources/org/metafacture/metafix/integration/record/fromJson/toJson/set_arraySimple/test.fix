@@ -1,2 +1,0 @@
-set_array("test[]")
-set_array("test_2[]", "dog", "cat", "bird")
