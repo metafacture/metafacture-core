@@ -1,6 +1,6 @@
 {
   "test" : "test",
-  "arrayOfObjects" :[ {
+  "arrayOfObjects" : [ {
     "test" : [ "value", "more_value" ]
   }, {
     "test" : [ "even_more_value", "so_much_value" ]

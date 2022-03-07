@@ -1,9 +1,10 @@
 {
-  "arrayOfObjects" : [{
-    "key" : "value"
-  }, {
-    "key" : "more_value"
-  } ],
-  "key" : "value",
-  "key_2" : "more_value"
+  "test" : "test",
+  "object" : {
+    "arrayOfObjects" : [ {
+      "key" : "value"
+    }, {
+      "key" : "more_value"
+    } ]
+  }
 }

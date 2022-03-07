@@ -1,8 +1,8 @@
 {
-  "arrayOfObjects" : [{
+  "test" : "test",
+  "arrayOfObjects" : [ {
     "key" : "value"
   }, {
     "key" : "more_value"
-  } ],
-  "test" : "test"
+  } ]
 }

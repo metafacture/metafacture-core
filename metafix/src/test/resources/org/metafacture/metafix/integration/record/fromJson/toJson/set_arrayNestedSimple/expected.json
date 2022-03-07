@@ -1,5 +1,5 @@
 {
-  "key":"value",
+  "key" : "value",
   "object" : {
     "test" : [ ]
   },
@@ -7,4 +7,3 @@
     "test_2" : [ "dog", "cat", "bird" ]
   }
 }
-

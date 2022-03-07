@@ -1,11 +1,8 @@
 {
   "key" : "value",
-  "animals" : [
-    {
-      "name": "Jake"
-    },
-    {
-      "name": "Blacky"
-    }
-  ]
+  "animals" : [ {
+    "name" : "Jake"
+  }, {
+    "name" : "Blacky"
+  } ]
 }

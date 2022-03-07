@@ -4,7 +4,7 @@ elsif all_equal("name", "red")
   add_field("test_2", "true")
 elsif all_equal("name", "yellow")
   add_field("test_3", "true")
-elsif all_equal("name", "greem")
+elsif all_equal("name", "green")
   add_field("test_4", "true")
 else
   add_field("test", "false")

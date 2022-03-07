@@ -1,15 +1,15 @@
 {
   "adventureDuo" : [ {
-      "name" : "Jake",
-      "animal" : "dog",
-      "tools" : "magic",
-      "tools" : "arms",
-      "tools" : "shapeShifting"
-    }, {
-      "name" : "Finn",
-      "animal" : "human",
-      "tools" : "sword",
-      "tools" : "anotherSword",
-      "tools" : "arm"
-    } ]
+    "name" : "Jake",
+    "animal" : "dog",
+    "tools" : "magic",
+    "tools" : "arms",
+    "tools" : "shapeShifting"
+  }, {
+    "name" : "Finn",
+    "animal" : "human",
+    "tools" : "sword",
+    "tools" : "anotherSword",
+    "tools" : "arm"
+  } ]
 }
