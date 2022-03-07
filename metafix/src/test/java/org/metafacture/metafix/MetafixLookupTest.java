@@ -33,6 +33,7 @@ import java.util.Arrays;
  * @author Fabian Steeg
  */
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(MetafixToDo.Extension.class)
 public class MetafixLookupTest {
 
     private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
@@ -239,7 +240,15 @@ public class MetafixLookupTest {
     }
 
     @Test
+    @MetafixToDo("Lookup with wrong options should not touch record")
     public void shouldNotLookupInExternalFileMapWithWrongOptions() {
+        assertMap(
+                LOOKUP + " '" + CSV_MAP + "', sep_char:'\t')"
+        );
+    }
+
+    @Test
+    public void shouldDeleteLookupInExternalFileMapWithWrongOptions() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 LOOKUP + " '" + CSV_MAP + "', sep_char: '\t', delete: 'true')"
             ),
@@ -415,7 +424,15 @@ public class MetafixLookupTest {
     }
 
     @Test
+    @MetafixToDo("Lookup with unknown internal map should not touch record")
     public void shouldNotLookupInUnknownInternalMap() {
+        assertMap(
+                LOOKUP + " 'testMap')"
+        );
+    }
+
+    @Test
+    public void shouldDeleteLookupInUnknownInternalMap() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 LOOKUP + " 'testMap', delete: 'true')"
             ),

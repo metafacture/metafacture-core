@@ -7,6 +7,7 @@ plugins {
 editorconfig {
   excludes = [
     '**/*.out',
+    '**/*.err',
     '**/*.vsix',
     '**/.*',
     '**/bin',
@@ -15,14 +16,13 @@ editorconfig {
     '**/out',
     '**/output-*',
     '**/xtext-gen',
-    'gradlew*',
-    '**/metafix.err'
+    'gradlew*'
   ]
 }
 
 task editorconfigChecker(type: Exec, group: 'Verification') {
   executable 'misc/bin/editorconfig-checker'
-  args('-exclude', '/bin/|/\\.|^gradlew.*|^LICENSE$|.project')
+  args('-exclude', '/bin/|/\\.|^gradlew.*|^LICENSE$|^\\.project$')
 }
 
 editorconfigCheck.dependsOn(editorconfigChecker)
