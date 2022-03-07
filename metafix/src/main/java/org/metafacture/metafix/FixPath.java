@@ -116,6 +116,17 @@ import java.util.Map;
     // try to replace this with consistent usage of Value#getPath
     // (e.g. take care of handling repeated fields and their paths)
 
+    /*package-private*/ void throwIfNonString(final Value value) {
+        final boolean isNonString = value != null &&
+            // basic idea: path is only set on literals/strings
+            value.getPath() == null &&
+            // but with wildcards, we might still point to literals/strings
+            !hasWildcard();
+        if (isNonString) {
+            value.asString();
+        }
+    }
+
     /*package-private*/ FixPath to(final Value value, final int i) {
         final FixPath result;
         // One *: replace with index of current result
@@ -137,7 +148,7 @@ import java.util.Map;
     }
 
     private boolean hasWildcard() {
-        return Arrays.asList(path).stream().filter(s -> s.contains("?") || s.contains("|") || s.matches(".*?\\[.+?\\].*?")).findAny().isPresent();
+        return Arrays.asList(path).stream().filter(s -> s.equals("*") || s.contains("?") || s.contains("|") || s.matches(".*?\\[.+?\\].*?")).findAny().isPresent();
     }
 
     private long countAsterisks() {
@@ -219,11 +230,8 @@ import java.util.Map;
                 if ("$append".equals(field)) {
                     array.add(newValue);
                 }
-                else if (Value.isNumber(field)) {
-                    mode.apply(array, field, newValue);
-                }
                 else {
-                    throw new IllegalStateException("Non-index access to array at " + field);
+                    mode.apply(array, field, newValue);
                 }
             }
         }
@@ -353,4 +361,5 @@ import java.util.Map;
         }
         return referencedValue;
     }
+
 }

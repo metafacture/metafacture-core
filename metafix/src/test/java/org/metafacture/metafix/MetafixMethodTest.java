@@ -159,23 +159,20 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("Same name, is replaced. Repeated fields to array?")
-    public void capitalizeRepeatedField() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "capitalize('title')"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.literal("title", "marc");
-                i.literal("title", "json");
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().literal("title", "Marc");
-                o.get().literal("title", "Json");
-                o.get().endRecord();
-            }
+    public void shouldNotCapitalizeRepeatedField() {
+        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "capitalize('title')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("title", "marc");
+                    i.literal("title", "json");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
         );
     }
 
@@ -289,34 +286,29 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("Same name, is replaced. Repeated fields to array?")
-    public void shouldTrimStringRepeated() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "trim('data.title')"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.startEntity("data");
-                i.literal("title", "  marc  ");
-                i.literal("title", "  json  ");
-                i.endEntity();
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().startEntity("data");
-                o.get().literal("title", "marc");
-                o.get().literal("title", "json");
-                o.get().endEntity();
-                o.get().endRecord();
-            }
+    public void shouldNotTrimRepeatedField() {
+        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "trim('data.title')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("data");
+                    i.literal("title", "  marc  ");
+                    i.literal("title", "  json  ");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
         );
     }
 
     @Test
     // See https://github.com/metafacture/metafacture-fix/pull/133
     public void dontTrimStringInImplicitArrayOfHashes() {
-        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Non-index access to array at title", () ->
+        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "trim('data.title')"
                 ),
@@ -703,30 +695,23 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("Like this? See also https://github.com/metafacture/metafacture-fix/issues/100")
     public void appendValueToArray() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "append('animals[]', 'another one')"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.startEntity("animals[]");
-                i.literal("1", "dog");
-                i.literal("2", "cat");
-                i.literal("3", "zebra");
-                i.endEntity();
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().startEntity("animals[]");
-                o.get().literal("1", "dog");
-                o.get().literal("2", "cat");
-                o.get().literal("3", "zebra");
-                o.get().literal("4", "another one");
-                o.get().endEntity();
-                o.get().endRecord();
-            }
+        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "append('animals[]', 'another one')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("animals[]");
+                    i.literal("1", "dog");
+                    i.literal("2", "cat");
+                    i.literal("3", "zebra");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
         );
     }
 

@@ -198,7 +198,9 @@ public class Record extends Value.Hash {
      */
     public void transform(final String field, final UnaryOperator<String> operator) {
         final FixPath findPath = new FixPath(field);
-        Value.asList(findPath.findIn(this), results -> {
+        final Value found = findPath.findIn(this);
+        findPath.throwIfNonString(found);
+        Value.asList(found, results -> {
             for (int i = 0; i < results.size(); ++i) {
                 final Value oldValue = results.get(i);
                 final FixPath insertPath = findPath.to(oldValue, i);
@@ -230,5 +232,4 @@ public class Record extends Value.Hash {
             }
         }
     }
-
 }
