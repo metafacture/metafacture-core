@@ -1,0 +1,24 @@
+{
+  "creator" : [ {
+    "name" : "RUVIVAL Team",
+    "type" : "Person"
+  }, {
+    "name" : "Samuel Duval",
+    "type" : "Person"
+  }, {
+    "name" : "Berenice Lopez Mendez",
+    "type" : "Person"
+  }, {
+    "name" : "Lukas Schreiner",
+    "type" : "Person"
+  }, {
+    "name" : "Isidora Vrbavac",
+    "type" : "Person"
+  } ]
+}
+{
+  "creator" : [ {
+    "name" : "Jürgen Böhner",
+    "type" : "Person"
+  } ]
+}
