@@ -60,6 +60,7 @@ import java.util.Map;
     }
 
     /*package-private*/ Value findIn(final Array array) {
+
         final Value result;
         if (path.length > 0) {
             final String currentSegment = path[0];
@@ -92,6 +93,7 @@ import java.util.Map;
             result = new Value(array);
         }
         return result;
+
     }
 
     private Value findInValue(final Value value, final String[] p) {

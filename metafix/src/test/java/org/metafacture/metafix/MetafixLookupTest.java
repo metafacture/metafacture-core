@@ -240,10 +240,24 @@ public class MetafixLookupTest {
     }
 
     @Test
-    @MetafixToDo("Lookup with wrong options should not touch record")
     public void shouldNotLookupInExternalFileMapWithWrongOptions() {
-        assertMap(
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 LOOKUP + " '" + CSV_MAP + "', sep_char:'\t')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Hey");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Aloha");
+                o.get().literal("title", "Moin");
+                o.get().literal("title", "Hey");
+                o.get().endRecord();
+            }
         );
     }
 
@@ -424,10 +438,24 @@ public class MetafixLookupTest {
     }
 
     @Test
-    @MetafixToDo("Lookup with unknown internal map should not touch record")
     public void shouldNotLookupInUnknownInternalMap() {
-        assertMap(
-                LOOKUP + " 'testMap')"
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                LOOKUP + " '" + CSV_MAP + "', sep_char:'\t')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Hey");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Aloha");
+                o.get().literal("title", "Moin");
+                o.get().literal("title", "Hey");
+                o.get().endRecord();
+            }
         );
     }
 

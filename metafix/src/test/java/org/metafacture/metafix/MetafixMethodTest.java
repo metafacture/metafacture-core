@@ -307,7 +307,7 @@ public class MetafixMethodTest {
 
     @Test
     // See https://github.com/metafacture/metafacture-fix/pull/133
-    public void dontTrimStringInImplicitArrayOfHashes() {
+    public void shouldNotTrimStringInImplicitArrayOfHashes() {
         MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "trim('data.title')"
@@ -695,7 +695,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    public void appendValueToArray() {
+    public void shouldNotAppendValueToArray() {
         MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "append('animals[]', 'another one')"
@@ -1149,30 +1149,24 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("Like this? See also https://github.com/metafacture/metafacture-fix/issues/100")
-    public void shouldPrependValueToArray() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "prepend('animals[]', 'the first one')"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.startEntity("animals[]");
-                i.literal("1", "dog");
-                i.literal("2", "cat");
-                i.literal("3", "zebra");
-                i.endEntity();
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().startEntity("animals[]");
-                o.get().literal("1", "the first one");
-                o.get().literal("2", "dog");
-                o.get().literal("3", "cat");
-                o.get().literal("4", "zebra");
-                o.get().endEntity();
-                o.get().endRecord();
-            }
+    // See https://github.com/metafacture/metafacture-fix/issues/100
+    public void shouldNotPrependValueToArray() {
+        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "prepend('animals[]', 'the first one')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("animals[]");
+                    i.literal("1", "dog");
+                    i.literal("2", "cat");
+                    i.literal("3", "zebra");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
         );
     }
 
