@@ -440,7 +440,7 @@ public class MetafixLookupTest {
     @Test
     public void shouldNotLookupInUnknownInternalMap() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                LOOKUP + " '" + CSV_MAP + "', sep_char:'\t')"
+                LOOKUP + " 'testMap')"
             ),
             i -> {
                 i.startRecord("1");
