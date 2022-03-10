@@ -1,0 +1,15 @@
+{
+  "animals" : [ {
+    "name" : "Jake",
+    "type" : "Big dog"
+  }, {
+    "name" : "Blacky",
+    "type" : "Big bird"
+  } ]
+}
+{
+  "animals" : [ {
+    "name" : "Test",
+    "type" : "Big test"
+  } ]
+}

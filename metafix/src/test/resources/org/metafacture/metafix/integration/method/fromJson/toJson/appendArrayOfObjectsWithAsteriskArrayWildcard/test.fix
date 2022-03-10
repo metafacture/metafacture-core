@@ -1,0 +1,1 @@
+append("animals[].*.type", " is cool")
