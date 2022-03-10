@@ -1318,6 +1318,38 @@ public class MetafixMethodTest {
     }
 
     @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
+    public void shouldNotInsertOptionalArraySubFieldWithAsteriskInReplaceAll() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all('coll[].*.b', 'x', 'y')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("coll[]");
+                i.startEntity("1");
+                i.literal("a", "Dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("b", "Ape");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("a", "Dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("b", "Ape");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     // See https://github.com/metafacture/metafacture-fix/issues/121
     public void shouldReplaceAllRegexesInNestedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
