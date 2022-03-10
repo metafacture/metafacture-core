@@ -370,6 +370,36 @@ public class MetafixLookupTest {
     }
 
     @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/149
+    public void shouldDeleteNonFoundLookupOnDemandNonRepeatedField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('title', Aloha: Alohaeha, 'Moin': 'Moin zäme', delete: 'true')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("title", "Moin");
+                i.endRecord();
+                i.startRecord("3");
+                i.literal("title", "Yo");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("title", "Moin zäme");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldDeleteNonFoundLookupOnDemandAndVacuum() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "put_map('testMap', Aloha: Alohaeha, 'Moin': 'Moin zäme')",

@@ -136,7 +136,7 @@ import java.util.Map;
             result = new FixPath(replaceInPath(ASTERISK, i));
         }
         // Multiple * or wildcards: use the old value's path
-        else if (value.getPath() != null && (countAsterisks() >= 2) || hasWildcard()) {
+        else if (value.getPath() != null && countAsterisks() >= 2 || hasWildcard()) {
             result = new FixPath(value.getPath());
         }
         else {
