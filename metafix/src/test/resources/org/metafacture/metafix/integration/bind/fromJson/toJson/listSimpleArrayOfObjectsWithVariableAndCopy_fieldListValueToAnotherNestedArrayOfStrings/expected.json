@@ -1,0 +1,15 @@
+{
+  "arrayOfObjects" : [ {
+    "name" : "red",
+    "type" : "color"
+  }, {
+    "name" : "green",
+    "type" : "color"
+  }, {
+    "name" : "blue",
+    "type" : "color"
+  } ],
+  "test" : {
+    "array" : [ "red", "green", "blue" ]
+  }
+}

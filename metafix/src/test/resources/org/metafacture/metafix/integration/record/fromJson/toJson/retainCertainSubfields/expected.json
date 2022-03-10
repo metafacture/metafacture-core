@@ -6,6 +6,6 @@
   } ],
   "words" : [ "bla", "bla", "bla" ],
   "test_2" : {
-    "test": "test"
+    "test" : "test"
   }
 }

@@ -1,0 +1,2 @@
+move_field("key", "arrayOfObject[].$append.key")
+move_field("key_2", "arrayOfObject[].$append.key")
