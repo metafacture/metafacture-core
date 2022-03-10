@@ -201,14 +201,19 @@ public class Record extends Value.Hash {
         final Value found = findPath.findIn(this);
         findPath.throwIfNonString(found);
         Value.asList(found, results -> {
-            for (int i = 0; i < results.size(); ++i) {
+            for (int i = results.size() - 1; i >= 0; --i) {
                 final Value oldValue = results.get(i);
                 final FixPath insertPath = findPath.to(oldValue, i);
                 oldValue.matchType()
-                    .ifString(s -> {
-                        final Value newValue = new Value(operator.apply(s));
-                        insertPath.insertInto(this, InsertMode.REPLACE, newValue);
-                    })
+                        .ifString(s -> {
+                            final String newValue = operator.apply(s);
+                            if (newValue == null) {
+                                insertPath.removeNestedFrom(this);
+                            }
+                            else {
+                                insertPath.insertInto(this, InsertMode.REPLACE, new Value(newValue));
+                            }
+                        })
                     .orElseThrow();
             }
         });

@@ -325,7 +325,7 @@ public class Value {
                 })
                 // TODO: Catmandu considers whitespace-only strings empty (`$v !~ /\S/`)
                 .ifString(s -> c.accept(s.isEmpty()))
-                .orElse(w -> c.accept(true))
+                .orElseThrow()
         );
 
         @Override
