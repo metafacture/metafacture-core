@@ -1,0 +1,5 @@
+copy_field("dateModified", "test[].$last.dateModified")
+replace_all("test[].*.dateModified", 'T.*', '')
+
+copy_field("datePublished", "test[].$last.dateCreated")
+replace_all("test[].*.dateCreated", 'T.*', '')
