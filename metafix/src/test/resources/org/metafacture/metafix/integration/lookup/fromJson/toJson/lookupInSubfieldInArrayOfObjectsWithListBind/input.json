@@ -1,0 +1,18 @@
+{
+  "animals": [{
+    "name": "Jake",
+    "classification": {
+      "type": "dog"
+    }
+  },{
+    "name": "Blacky",
+    "classification": {
+      "type": "parrot"
+    }
+  }, {
+    "name": "Jens",
+    "classification": {
+      "type": "human"
+    }
+  } ]
+}
