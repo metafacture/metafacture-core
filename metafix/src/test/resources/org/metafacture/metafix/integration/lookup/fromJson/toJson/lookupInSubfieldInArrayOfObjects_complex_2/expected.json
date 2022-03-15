@@ -1,0 +1,25 @@
+{
+  "test" : [ {
+    "animal" : "mammal"
+  }, {
+    "animal" : "bird"
+  }, {
+    "animal" : "human"
+  } ],
+  "animals" : [ {
+    "animal" : "dog",
+    "classification" : {
+      "type" : "mammal"
+    }
+  }, {
+    "animal" : "parrot",
+    "classification" : {
+      "type" : "bird"
+    }
+  }, {
+    "animal" : "human",
+    "classification" : {
+      "type" : "human"
+    }
+  } ]
+}
