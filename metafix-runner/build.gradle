@@ -11,4 +11,9 @@ dependencies {
 
 application {
   mainClass = 'org.metafacture.runner.Flux'
+
+  if (project.hasProperty('profile')) {
+    def file = project.getProperty('profile') ?: project.name
+    applicationDefaultJvmArgs = ["-agentlib:hprof=heap=sites,cpu=samples,file=${file}.hprof.txt"]
+  }
 }
