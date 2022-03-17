@@ -19,6 +19,8 @@ syn region fixDoubleQuotedString start=/\v"/ skip=/\v\\./ end=/\v"/
 syn region fixIfBlock start="if" end="end" fold transparent
 syn region fixSingleQuotedString start=/\v'/ skip=/\v\\./ end=/\v'/
 
+syn sync ccomment fixCommentRegion
+
 hi link fixBareString String
 hi link fixBind Keyword
 hi link fixComment Comment
