@@ -1,0 +1,24 @@
+{
+  "id" : "test",
+  "node" : {
+    "dateModified" : "2019-07-23T09:25:58Z",
+    "datePublished" : "2017-11-13T16:11:36Z"
+  },
+  "test" : [ {
+    "id" : "test",
+    "dateModified" : "2019-07-23",
+    "dateCreated" : "2017-11-13"
+  } ]
+}
+{
+  "id" : "test",
+  "node" : {
+    "dateModified" : "2019-07-23T09:26:01Z",
+    "datePublished" : "2017-11-13T15:36:34Z"
+  },
+  "test" : [ {
+    "id" : "test",
+    "dateModified" : "2019-07-23",
+    "dateCreated" : "2017-11-13"
+  } ]
+}

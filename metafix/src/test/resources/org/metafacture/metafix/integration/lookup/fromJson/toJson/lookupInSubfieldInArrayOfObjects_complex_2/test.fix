@@ -1,8 +1,8 @@
 set_array("animals[]")
 do list(path: "metadata.real.test[]", "var": "$f")
   lookup("$f.animal", "./mapfile_2.tsv", "sep_char":"\t")
-   copy_field("$f.animal", "animals[].$append.animal")
-   copy_field("$f.animal", "animals[].$last.classification.type")
+  copy_field("$f.animal", "animals[].$append.animal")
+  copy_field("$f.animal", "animals[].$last.classification.type")
 end
 
 lookup("animals[].*.classification.type", "./mapfile.tsv", "sep_char":"\t")
