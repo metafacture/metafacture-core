@@ -261,7 +261,7 @@ import java.util.Map;
         else {
             final String[] tail = tail(path);
             if (isReference(field)) {
-                return processRef(getReferencedValue(hash, field), mode, newValue, field, tail);
+                return processRef(hash.get(field), mode, newValue, field, tail);
             }
             if (!hash.containsField(field)) {
                 hash.put(field, Value.newHash());
@@ -333,30 +333,6 @@ import java.util.Map;
             case $append:
                 referencedValue = Value.newHash(); // TODO: append non-hash?
                 array.add(referencedValue);
-                break;
-            default:
-                break;
-        }
-        return referencedValue;
-    }
-
-    // TODO replace switch, extract to method on hash?
-    private Value getReferencedValue(final Hash hash, final String field) {
-        Value referencedValue = null;
-        final ReservedField reservedField = ReservedField.fromString(field);
-        if (reservedField == null) {
-            return hash.get(field);
-        }
-        switch (reservedField) {
-            case $first:
-                referencedValue = hash.get("1");
-                break;
-            case $last:
-                referencedValue = hash.get(String.valueOf(hash.size()));
-                break;
-            case $append:
-                referencedValue = Value.newHash(); // TODO: append non-hash?
-                hash.put(String.valueOf(hash.size() + 1), referencedValue);
                 break;
             default:
                 break;
