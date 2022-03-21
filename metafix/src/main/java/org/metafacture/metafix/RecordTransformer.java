@@ -57,12 +57,14 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
 
     private static final Logger LOG = LoggerFactory.getLogger(RecordTransformer.class);
 
+    private final Map<String, String> vars;
     private final Metafix metafix;
 
     private Record record;
 
     /*package-private*/ RecordTransformer(final Metafix metafix) {
         this.metafix = metafix;
+        vars = metafix.getVars();
     }
 
     /*package-private*/ Record transform(final Fix fix) {
@@ -194,10 +196,11 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     }
 
     private List<String> resolveParams(final List<String> params) {
-        final Map<String, String> vars = metafix.getVars();
+        return params.stream().map(this::resolveVars).collect(Collectors.toList());
+    }
 
-        return params.stream().map(s -> s == null ? null :
-                StringUtil.format(s, Metafix.VAR_START, Metafix.VAR_END, false, vars)).collect(Collectors.toList());
+    private String resolveVars(final String value) {
+        return value == null ? null : StringUtil.format(value, Metafix.VAR_START, Metafix.VAR_END, false, vars);
     }
 
     private Map<String, String> options(final Options options) {
@@ -208,7 +211,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
             final List<String> values = options.getValues();
 
             for (int i = 0; i < keys.size(); i += 1) {
-                map.put(keys.get(i), values.get(i));
+                map.put(resolveVars(keys.get(i)), resolveVars(values.get(i)));
             }
         }
 
