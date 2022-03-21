@@ -1350,6 +1350,103 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void shouldReplaceAllRegexesInCopiedArraySubField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('coll[]')",
+                "copy_field('a', 'coll[].$append.a')",
+                "replace_all('coll[].*.a', 'o', '__')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("a", "Dog");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("a", "Dog");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("a", "D__g");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReplaceAllRegexesInMovedArraySubField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('coll[]')",
+                "move_field('a', 'coll[].$append.a')",
+                "replace_all('coll[].*.a', 'o', '__')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("a", "Dog");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("a", "D__g");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReplaceAllRegexesInCopiedArraySubFieldOriginal() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('coll[]')",
+                "copy_field('a', 'coll[].$append.a')",
+                "replace_all('a', 'o', '__')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("a", "Dog");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("a", "D__g");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("a", "Dog");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReplaceAllRegexesInListCopiedArraySubField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('coll[]')",
+                "do list(path: 'a', 'var': '$i')",
+                "  copy_field('$i', 'coll[].$append.a')",
+                "end",
+                "replace_all('coll[].*.a', 'o', '__')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("a", "Dog");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("a", "Dog");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("a", "D__g");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     // See https://github.com/metafacture/metafacture-fix/issues/121
     public void shouldReplaceAllRegexesInNestedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(

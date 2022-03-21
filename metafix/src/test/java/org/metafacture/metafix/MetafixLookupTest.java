@@ -90,6 +90,172 @@ public class MetafixLookupTest {
     }
 
     @Test
+    public void shouldLookupInternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('title', 'Aloha')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupDeduplicatedInternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('title', 'Aloha', 'Aloha')",
+                "uniq('title')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupCopiedInternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('data', 'Aloha')",
+                "set_array('title')",
+                "copy_field('data', 'title')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("data", "Aloha");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupCopiedDeduplicatedInternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('data', 'Aloha', 'Aloha')",
+                "uniq('data')",
+                "set_array('title')",
+                "copy_field('data', 'title')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("data", "Aloha");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupCopiedExternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('title')",
+                "copy_field('data', 'title')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("data", "Aloha");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("data", "Aloha");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupCopiedDeduplicatedExternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "uniq('data')",
+                "set_array('title')",
+                "copy_field('data', 'title')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("data", "Aloha");
+                i.literal("data", "Aloha");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("data", "Aloha");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupMovedDeduplicatedExternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "uniq('data')",
+                "set_array('title')",
+                "move_field('data', 'title')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("data", "Aloha");
+                i.literal("data", "Aloha");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupMovedExternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('title')",
+                "move_field('data', 'title')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("data", "Aloha");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     // See https://github.com/metafacture/metafacture-fix/issues/121
     public void shouldLookupArraySubFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
