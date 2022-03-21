@@ -1,5 +1,5 @@
 {
-  "test" : [ "dog", "parrot" ],
+  "test" : [ "dog", "parrot", "human" ],
   "animals" : [ {
     "animal" : "dog",
     "classification" : {
@@ -9,6 +9,11 @@
     "animal" : "parrot",
     "classification" : {
       "type" : "bird"
+    }
+  }, {
+    "animal" : "human",
+    "classification" : {
+      "type" : "human"
     }
   } ]
 }

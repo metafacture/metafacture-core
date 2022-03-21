@@ -5,6 +5,8 @@
         "animal" : "mammal"
       }, {
         "animal" : "bird"
+      }, {
+        "animal" : "human"
       } ] } },
   "animals" : [ {
     "animal" : "dog",
@@ -15,6 +17,11 @@
     "animal" : "parrot",
     "classification" : {
       "type" : "bird"
+    }
+  }, {
+    "animal" : "human",
+    "classification" : {
+      "type" : "human"
     }
   } ]
 }
