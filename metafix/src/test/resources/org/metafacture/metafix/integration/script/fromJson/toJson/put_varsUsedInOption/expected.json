@@ -1,0 +1,15 @@
+{
+  "arrayOfStrings" : [ "one", "two", "three" ],
+  "object" : {
+    "field" : "five",
+    "field_2" : "six"
+  },
+  "arrayOfObjects" : [ {
+    "field_3" : "SEVEN",
+    "field_4" : "abcight"
+  }, {
+    "field_3" : "NINE",
+    "field_4" : "tabcn"
+  } ],
+  "test" : [ "one", "two", "three" ]
+}
