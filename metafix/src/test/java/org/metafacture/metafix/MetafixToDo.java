@@ -1,6 +1,8 @@
 package org.metafacture.metafix;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,11 +27,26 @@ public @interface MetafixToDo {
 
     String value();
 
-    class Extension implements InvocationInterceptor {
+    class Extension implements AfterAllCallback, InvocationInterceptor {
 
         private static final boolean DISABLE_TO_DO = Boolean.parseBoolean(System.getProperty("org.metafacture.metafix.disableToDo"));
 
+        private boolean annotationPresent;
+
         private Extension() {
+        }
+
+        @Override
+        public void afterAll(final ExtensionContext context) {
+            if (!annotationPresent) {
+                for (final Method method : context.getTestClass().get().getDeclaredMethods()) {
+                    if (method.isAnnotationPresent(Test.class) && method.isAnnotationPresent(MetafixToDo.class)) {
+                        return;
+                    }
+                }
+
+                Assertions.fail("Unused extension (no annotations present): " + Handler.EXTENSION_NAME);
+            }
         }
 
         @Override
@@ -61,6 +78,7 @@ public @interface MetafixToDo {
             final MetafixToDo annotation = invocationContext.getExecutable().getAnnotation(MetafixToDo.class);
 
             if (annotation != null) {
+                annotationPresent = true;
                 consumer.accept(annotation);
             }
         }

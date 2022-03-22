@@ -1,0 +1,6 @@
+unless exists("animals[]")
+  set_array("animals[]")
+  copy_field("animals","animals[].$append")
+end
+
+lookup("animals[].*", "./mapfile.tsv", "sep_char":"\t")

@@ -21,9 +21,11 @@ import org.metafacture.commons.tries.SimpleRegexTrie;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Arrays;
 
+@ExtendWith(MetafixToDo.Extension.class)
 public class HashValueTest {
 
     private static final String FIELD = "field";
@@ -381,6 +383,42 @@ public class HashValueTest {
                 Arrays.asList(FIELD, OTHER_FIELD, "empty field", "_special field"),
                 Arrays.asList(VALUE, OTHER_VALUE, emptyValue, specialValue)
         );
+    }
+
+    private void shouldFindArray(final String field) {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, Value.newArray(a -> a.add(VALUE)));
+
+        Assertions.assertEquals(VALUE, new FixPath(String.join(".", FIELD, field)).findIn(hash));
+    }
+
+    @Test
+    public void shouldFindArrayIndex() {
+        shouldFindArray("1");
+    }
+
+    @Test
+    @MetafixToDo("Expected String, got Array")
+    public void shouldFindArrayWildcard() {
+        shouldFindArray("$last");
+    }
+
+    private void shouldFindArraySubfield(final String field) {
+        final Value.Hash hash = newHash();
+        hash.put(FIELD, Value.newArray(a -> a.add(Value.newHash(h -> h.put(OTHER_FIELD, OTHER_VALUE)))));
+
+        Assertions.assertEquals(OTHER_VALUE, new FixPath(String.join(".", FIELD, field, OTHER_FIELD)).findIn(hash));
+    }
+
+    @Test
+    public void shouldFindArrayIndexSubfield() {
+        shouldFindArraySubfield("1");
+    }
+
+    @Test
+    @MetafixToDo("Expected String, got Array")
+    public void shouldFindArrayWildcardSubfield() {
+        shouldFindArraySubfield("$last");
     }
 
     private Value.Hash newHash() {

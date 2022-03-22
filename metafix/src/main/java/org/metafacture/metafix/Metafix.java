@@ -71,12 +71,12 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     private final List<Closeable> resources = new ArrayList<>();
     private final List<Expression> expressions = new ArrayList<>();
     private final Map<String, Map<String, String>> maps = new HashMap<>();
+    private final Map<String, String> vars = new HashMap<>();
     private final RecordTransformer recordTransformer = new RecordTransformer(this);
     private final StreamFlattener flattener = new StreamFlattener();
 
     private Fix fix;
     private List<Value> entities = new ArrayList<>();
-    private Map<String, String> vars = new HashMap<>();
     private Record currentRecord = new Record();
     private StreamReceiver outputStreamReceiver;
     private String fixFile;

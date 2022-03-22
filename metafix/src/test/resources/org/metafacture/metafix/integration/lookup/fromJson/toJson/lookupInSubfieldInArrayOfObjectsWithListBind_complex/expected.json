@@ -1,0 +1,14 @@
+{
+  "test" : [ "dog", "parrot" ],
+  "animals" : [ {
+    "animal" : "dog",
+    "classification" : {
+      "type" : "mammal"
+    }
+  }, {
+    "animal" : "parrot",
+    "classification" : {
+      "type" : "bird"
+    }
+  } ]
+}

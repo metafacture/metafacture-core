@@ -1,0 +1,9 @@
+set_array("animals[]")
+do list(path: "test[]", "var": "$f")
+  copy_field("$f", "animals[].$append.animal")
+  copy_field("$f", "animals[].$last.classification.type")
+end
+
+do list(path: "animals[]")
+  lookup("classification.type", "./mapfile.tsv", "sep_char":"\t")
+end

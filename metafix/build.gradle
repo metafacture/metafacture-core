@@ -1,5 +1,6 @@
 plugins {
   id 'maven-publish'
+  id 'me.champeau.jmh' version '0.6.6'
 }
 
 def passSystemProperties = {
@@ -45,6 +46,14 @@ dependencies {
   mwe2 "org.eclipse.xtext:org.eclipse.xtext.common.types:${versions.xtext}"
   mwe2 "org.eclipse.xtext:org.eclipse.xtext.xtext.generator:${versions.xtext}"
   mwe2 'org.eclipse.xtext:xtext-antlr-generator'
+
+  jmh "org.metafacture:metafacture-io:${versions.metafacture}"
+  jmh "org.metafacture:metafacture-json:${versions.metafacture}"
+}
+
+jmhJar {
+  // SLF4J: Class path contains multiple SLF4J bindings.
+  exclude '/org/slf4j/impl/StaticLoggerBinder.class'
 }
 
 test {
@@ -64,7 +73,14 @@ test {
 task integrationTest(type: Exec, group: 'Verification') {
   executable './integrationTest.sh'
 
-  if (project.hasProperty('args')) args project.getProperty('args').split()
+  if (project.hasProperty('args')) {
+    args project.getProperty('args').split()
+  }
+
+  if (project.hasProperty('profile')) {
+    environment.METAFIX_INTEGRATION_TEST_PROFILE = project.getProperty('profile')
+  }
+
   environment.METAFIX_DISABLE_TO_DO = System.getProperty('org.metafacture.metafix.disableToDo')
 }
 

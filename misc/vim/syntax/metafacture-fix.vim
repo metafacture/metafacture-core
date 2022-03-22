@@ -13,11 +13,13 @@ syn match fixComment /\v(#|\/\/).*$/
 syn match fixFunction /\v([a-z][_0-9a-zA-Z]*\.)*[a-zA-Z][_0-9a-zA-Z]*\s*\(/me=e-1,he=e-1
 syn match fixOperator /\v(\&\&|\|\|)/
 syn match fixWildcard /\v\$(append|first|last|prepend)>/
-syn match fixWildcard /\v\*/
+syn match fixWildcard /\v(^\s*)\@<=\*/
 syn region fixCommentRegion start="\v\/\*" skip=/\v\\./ end="\v\*\/"
 syn region fixDoubleQuotedString start=/\v"/ skip=/\v\\./ end=/\v"/
 syn region fixIfBlock start="if" end="end" fold transparent
 syn region fixSingleQuotedString start=/\v'/ skip=/\v\\./ end=/\v'/
+
+syn sync ccomment fixCommentRegion
 
 hi link fixBareString String
 hi link fixBind Keyword

@@ -25,6 +25,7 @@ function parse_boolean() {
 }
 
 parse_boolean "$METAFIX_DISABLE_TO_DO" && disable_todo=1 || disable_todo=
+parse_boolean "$METAFIX_INTEGRATION_TEST_PROFILE" && noprofile= || noprofile=no
 
 [ -t 1 -a -x /usr/bin/colordiff ] && colordiff=colordiff || colordiff=cat
 
@@ -66,7 +67,7 @@ function die() {
 }
 
 function run_metafix() {
-  $gradle_command -p "$root_directory" :metafix-runner:run --args="$1"
+  $gradle_command -p "$root_directory" :metafix-runner:run --args="$1" -P${noprofile}profile="${1%.*}"
 }
 
 function run_catmandu() {

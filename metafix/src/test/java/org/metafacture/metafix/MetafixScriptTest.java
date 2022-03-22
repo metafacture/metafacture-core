@@ -85,10 +85,41 @@ public class MetafixScriptTest {
     }
 
     @Test
-    public void shouldNotResolveVariablesInMultipleVariablesFromMap() {
-        assertVar("put_vars(varName: 'value$[var]', '$[varName]Var': 'value2')",
+    public void shouldResolveVariablesInOptionsKeys() {
+        assertVar("put_vars('varName$[var]': 'value')",
                 ImmutableMap.of("var", "1"),
-                ImmutableMap.of("varName", "value$[var]", "$[varName]Var", "value2"));
+                ImmutableMap.of("varName1", "value"));
+    }
+
+    @Test
+    public void shouldResolveVariablesInOptionsValues() {
+        assertVar("put_vars('varName': 'value$[var]')",
+                ImmutableMap.of("var", "1"),
+                ImmutableMap.of("varName", "value1"));
+    }
+
+    @Test
+    public void shouldResolveVariablesInOptionsFromPreviousMap() {
+        assertVar("put_vars('varName': 'value$[var]')\nput_vars('$[varName]Var': 'value2')",
+                ImmutableMap.of("var", "1"),
+                ImmutableMap.of("varName", "value1", "value1Var", "value2"));
+    }
+
+    @Test
+    public void shouldNotResolveVariablesInOptionsFromCurrentMap() {
+        MetafixTestHelpers.assertThrowsCause(IllegalArgumentException.class, "Variable 'varName' was not assigned!\nAssigned variables:\n{var=1}", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "put_vars(varName: 'value$[var]', '$[varName]Var': 'value2')"
+                ),
+                ImmutableMap.of("var", "1"),
+                i -> {
+                    i.startRecord("");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
     }
 
     @Test
