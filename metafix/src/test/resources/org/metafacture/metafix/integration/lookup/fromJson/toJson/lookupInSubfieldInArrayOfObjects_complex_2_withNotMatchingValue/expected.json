@@ -1,13 +1,15 @@
 {
   "metadata" : {
     "real" : {
-      "test" : [ {
+    "test" : [ {
         "animal" : "mammal"
       }, {
         "animal" : "bird"
       }, {
         "animal" : "human"
-      } ] } },
+      } ]
+    }
+  },
   "animals" : [ {
     "animal" : "dog",
     "classification" : {
