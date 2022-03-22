@@ -1350,6 +1350,75 @@ public class MetafixMethodTest {
     }
 
     @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
+    public void copyFieldToSubfieldOfArrayOfObjectsWithIndexImplicitAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('test[]')",
+                "copy_field('key', 'test[].1.field')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("key", "value");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("key", "value");
+                o.get().startEntity("test[]");
+                o.get().startEntity("1");
+                o.get().literal("field", "value");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void copyFieldToSubfieldOfArrayOfStringsWithIndexImplicitAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('test[]')",
+                "copy_field('key', 'test[].1')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("key", "value");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("key", "value");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "value");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void copyFieldToSubfieldOfArrayOfObjectsWithIndexExplicitAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('test[]')",
+                "copy_field('key', 'test[].$append.field')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("key", "value");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("key", "value");
+                o.get().startEntity("test[]");
+                o.get().startEntity("1");
+                o.get().literal("field", "value");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldReplaceAllRegexesInCopiedArraySubField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('coll[]')",
