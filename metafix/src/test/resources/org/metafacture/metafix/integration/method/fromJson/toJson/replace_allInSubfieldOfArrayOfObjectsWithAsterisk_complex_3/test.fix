@@ -1,0 +1,11 @@
+copy_field("datePublished", "dateCreated")
+replace_all("dateCreated", 'T.*', '')
+
+set_array("test[]")
+copy_field("id", "test[].$append.id")
+
+copy_field("dateModified", "test[].$last.dateModified")
+replace_all("test[].*.dateModified", 'T.*', '')
+
+copy_field("datePublished", "test[].$last.dateCreated")
+replace_all("test[].*.dateCreated", 'T.*', '')
