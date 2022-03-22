@@ -3,9 +3,9 @@
     "real" : {
       "test" : [ {
         "animal" : "mammal"
-      }, {
+    }, {
         "animal" : "bird"
-      } ] } },
+    } ] } },
   "animals" : [ {
     "animal" : "dog",
     "classification" : {

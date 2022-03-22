@@ -9,5 +9,10 @@
     "classification" : {
       "type" : "bird"
     }
+  }, {
+    "name" : "Jens",
+    "classification" : {
+      "type" : "human"
+    }
   } ]
 }
