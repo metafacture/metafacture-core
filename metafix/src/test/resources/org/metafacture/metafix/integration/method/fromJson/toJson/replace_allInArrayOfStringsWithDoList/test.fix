@@ -1,0 +1,3 @@
+do list(path: "key[]", "var": "$i")
+  replace_all("$i", "o", "__")
+end
