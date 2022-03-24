@@ -1419,6 +1419,50 @@ public class MetafixMethodTest {
     }
 
     @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/205")
+    public void addFieldIntoArrayOfObjectsWithLastWildcardImplicitSkip() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('animals[].$last.key', 'value')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/205")
+    public void addFieldIntoArrayOfObjectsWithLastWildcardExplicitSkip() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if exists('animals[].$last')",
+                "  add_field('animals[].$last.key', 'value')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldReplaceAllRegexesInCopiedArraySubField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('coll[]')",
