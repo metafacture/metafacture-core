@@ -18,12 +18,16 @@ package org.metafacture.metafix;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 
+@ExtendWith(MetafixToDo.Extension.class)
 public class RecordTest {
 
     private static final String FIELD = "field";
+    private static final String OTHER_FIELD = "other field";
 
     private static final Value VALUE = new Value("value");
     private static final Value OTHER_VALUE = new Value("other value");
@@ -269,6 +273,48 @@ public class RecordTest {
 
         final Record clone = record.shallowClone();
         MetafixTestHelpers.assertEmittedFields(clone, Arrays.asList(), Arrays.asList());
+    }
+
+    private void shouldFindArrayIndexSubfield(final Consumer<Record> consumer) {
+        final Record record = new Record();
+        record.put(FIELD, Value.newArray(a -> a.add(Value.newHash(h -> {
+            h.put(FIELD, VALUE);
+            h.put(OTHER_FIELD, OTHER_VALUE);
+        }))));
+
+        if (consumer != null) {
+            consumer.accept(record);
+        }
+
+        Assertions.assertEquals(VALUE, record.get(String.join(".", FIELD, "1", FIELD)));
+    }
+
+    @Test
+    public void shouldFindArrayIndexSubfield() {
+        shouldFindArrayIndexSubfield(null);
+    }
+
+    @Test
+    public void shouldFindArrayIndexSubfieldAfterTransformingOtherSubfield() {
+        shouldFindArrayIndexSubfield(record -> {
+            final String path = String.join(".", FIELD, "1", OTHER_FIELD);
+            final String value =  "transformed value";
+
+            record.transform(path, s -> value);
+            Assertions.assertEquals(new Value(value), record.get(path));
+        });
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
+    public void shouldFindArrayIndexSubfieldAfterTransformingOtherSubfieldToNull() {
+        shouldFindArrayIndexSubfield(record -> {
+            final String path = String.join(".", FIELD, "1", OTHER_FIELD);
+            final String value = null;
+
+            record.transform(path, s -> value);
+            Assertions.assertEquals(value, record.get(path));
+        });
     }
 
 }
