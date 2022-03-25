@@ -98,7 +98,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
                 processFunction((MethodCall) e, params);
             }
             else {
-                throw new FixExecutionException(executionExceptionMessage(e));
+                throw new FixProcessException(executionExceptionMessage(e));
             }
         });
     }
@@ -173,15 +173,26 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     }
 
     private void processFix(final Supplier<String> messageSupplier, final Runnable runnable) {
+        final FixExecutionException exception;
+
         try {
             runnable.run();
+            return;
         }
-        catch (final FixExecutionException e) {
+        catch (final FixProcessException e) {
             throw e; // TODO: Add nesting information?
         }
-        catch (final RuntimeException e) { // checkstyle-disable-line IllegalCatch
-            throw new FixExecutionException(messageSupplier.get(), e);
+        catch (final FixExecutionException e) {
+            exception = e; // TODO: Add nesting information?
         }
+        catch (final IllegalStateException | NumberFormatException e) {
+            exception = new FixExecutionException(messageSupplier.get(), e);
+        }
+        catch (final RuntimeException e) { // checkstyle-disable-line IllegalCatch
+            throw new FixProcessException(messageSupplier.get(), e);
+        }
+
+        metafix.getStrictness().handle(exception, record);
     }
 
     private String executionExceptionMessage(final Expression expression) {
