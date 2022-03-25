@@ -18,10 +18,13 @@ package org.metafacture.metafix;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
 
+@ExtendWith(MetafixToDo.Extension.class)
 public class RecordTest {
 
     private static final String FIELD = "field";
@@ -312,6 +315,55 @@ public class RecordTest {
             record.transform(path, s -> value);
             Assertions.assertEquals(value, record.get(path));
         });
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
+    public void shouldPreserveOrderWhenTransformingArraySubfields() {
+        final Record record = new Record();
+        record.put(FIELD, Value.newArray(a -> {
+            for (int i = 0; i < 3; ++i) {
+                a.add(Value.newHash(h -> {
+                    h.put(FIELD, VALUE);
+                    h.put(OTHER_FIELD, OTHER_VALUE);
+                }));
+            }
+        }));
+
+        final String path = String.join(".", FIELD, "%s", OTHER_FIELD);
+
+        final LongAdder counter = new LongAdder();
+        record.transform(String.format(path, "*"), s -> {
+            counter.increment();
+            return s + counter;
+        });
+
+        Assertions.assertEquals(new Value(OTHER_VALUE + "1"), record.get(String.format(path, 1)));
+        Assertions.assertEquals(new Value(OTHER_VALUE + "2"), record.get(String.format(path, 2)));
+        Assertions.assertEquals(new Value(OTHER_VALUE + "3"), record.get(String.format(path, 3)));
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
+    public void shouldPreserveOrderWhenTransformingOptionalArraySubfield() {
+        final Record record = new Record();
+        record.put(FIELD, Value.newArray(a -> {
+            a.add(Value.newHash(h -> {
+                h.put(FIELD, VALUE);
+            }));
+            a.add(Value.newHash(h -> {
+                h.put(FIELD, VALUE);
+                h.put(OTHER_FIELD, OTHER_VALUE);
+            }));
+        }));
+
+        final String path = String.join(".", FIELD, "%s", OTHER_FIELD);
+        final String value = "transformed value";
+
+        record.transform(String.format(path, "*"), s -> value);
+
+        Assertions.assertEquals(null, record.get(String.format(path, 1)));
+        Assertions.assertEquals(new Value(value), record.get(String.format(path, 2)));
     }
 
 }
