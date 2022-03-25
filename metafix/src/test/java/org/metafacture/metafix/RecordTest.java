@@ -18,12 +18,10 @@ package org.metafacture.metafix;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-@ExtendWith(MetafixToDo.Extension.class)
 public class RecordTest {
 
     private static final String FIELD = "field";
@@ -306,7 +304,6 @@ public class RecordTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
     public void shouldFindArrayIndexSubfieldAfterTransformingOtherSubfieldToNull() {
         shouldFindArrayIndexSubfield(record -> {
             final String path = String.join(".", FIELD, "1", OTHER_FIELD);

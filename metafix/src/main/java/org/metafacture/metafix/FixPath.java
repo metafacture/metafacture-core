@@ -199,7 +199,12 @@ import java.util.Map;
         else if (path.length >= 1 && Value.isNumber(path[0])) {
             final int index = Integer.parseInt(path[0]) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
             if (index >= 0 && index < array.size()) {
-                array.remove(index);
+                if (path.length == 1) {
+                    array.remove(index);
+                }
+                else {
+                    removeNestedFrom(array.get(index));
+                }
             }
         }
     }
@@ -211,14 +216,17 @@ import java.util.Map;
             hash.remove(field);
         }
         else if (hash.containsField(field)) {
-            final Value value = hash.get(field);
-            // TODO: impl and call just value.remove
-            if (value != null) {
-                value.matchType()
-                    .ifArray(a -> new FixPath(tail(path)).removeNestedFrom(a))
-                    .ifHash(h -> new FixPath(tail(path)).removeNestedFrom(h))
-                    .orElseThrow();
-            }
+            removeNestedFrom(hash.get(field));
+        }
+    }
+
+    private void removeNestedFrom(final Value value) {
+        // TODO: impl and call just value.remove
+        if (value != null) {
+            value.matchType()
+                .ifArray(a -> new FixPath(tail(path)).removeNestedFrom(a))
+                .ifHash(h -> new FixPath(tail(path)).removeNestedFrom(h))
+                .orElseThrow();
         }
     }
 
