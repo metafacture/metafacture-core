@@ -131,18 +131,22 @@ import java.util.Map;
 
     /*package-private*/ FixPath to(final Value value, final int i) {
         final FixPath result;
-        // One *: replace with index of current result
-        if (countAsterisks() == 1) {
+        // One *, no matching path: replace with index of current result
+        if (countAsterisks() == 1 && !matches(value.getPath())) {
             result = new FixPath(replaceInPath(ASTERISK, i));
         }
-        // Multiple * or wildcards: use the old value's path
-        else if (value.getPath() != null && countAsterisks() >= 2 || hasWildcard()) {
+        // Multiple * or wildcards, value has a path: use the value's path
+        else if (value.getPath() != null && hasWildcard()) {
             result = new FixPath(value.getPath());
         }
         else {
             result = this;
         }
         return result;
+    }
+
+    private boolean matches(final String thatPath) {
+        return thatPath != null && thatPath.replaceAll("\\.\\d+\\.", ".*.").equals(String.join(".", this.path));
     }
 
     private String[] replaceInPath(final String find, final int i) {

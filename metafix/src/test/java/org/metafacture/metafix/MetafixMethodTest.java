@@ -1318,7 +1318,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
     public void shouldNotInsertOptionalArraySubFieldWithAsteriskInReplaceAll() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "replace_all('coll[].*.b', 'x', 'y')"
