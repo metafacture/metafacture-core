@@ -1,4 +1,6 @@
 {
   "key" : "value",
-  "test" : [ "value" ]
+  "key_2" : "value_2",
+  "key_3" : "value_3",
+  "test" : [ "value", "value_2", "value_3" ]
 }
