@@ -1,3 +1,12 @@
 {
-  "key" : "value"
+  "key" : "value",
+  "key_2" : "value_2",
+  "key_3" : "value_3",
+  "test" : [ {
+    "test" : "case"
+  }, {
+    "test" : "case_2"
+  }, {
+    "test" : "case_3"
+  } ]
 }

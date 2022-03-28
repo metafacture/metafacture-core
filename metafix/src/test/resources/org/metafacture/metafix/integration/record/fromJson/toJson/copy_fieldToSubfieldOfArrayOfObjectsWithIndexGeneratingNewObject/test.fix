@@ -1,3 +1,4 @@
+set_array("test[]")
 copy_field("key", "test[].1.field")
 copy_field("key_2", "test[].2.field")
 copy_field("key_3", "test[].3.field")
