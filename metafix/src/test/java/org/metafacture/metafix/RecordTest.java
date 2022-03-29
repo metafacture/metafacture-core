@@ -18,13 +18,11 @@ package org.metafacture.metafix;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
 
-@ExtendWith(MetafixToDo.Extension.class)
 public class RecordTest {
 
     private static final String FIELD = "field";
@@ -343,20 +341,20 @@ public class RecordTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
     public void shouldPreserveOrderWhenTransformingOptionalArraySubfield() {
         final Record record = new Record();
+        final String path = String.join(".", FIELD, "%s", OTHER_FIELD);
         record.put(FIELD, Value.newArray(a -> {
             a.add(Value.newHash(h -> {
                 h.put(FIELD, VALUE);
             }));
             a.add(Value.newHash(h -> {
                 h.put(FIELD, VALUE);
-                h.put(OTHER_FIELD, OTHER_VALUE);
+                // For proper transformation, we need to explicitly set the path (as in Metafix.java):
+                h.put(OTHER_FIELD, new Value(OTHER_VALUE.asString(), String.format(path, a.size() + 1)));
             }));
         }));
 
-        final String path = String.join(".", FIELD, "%s", OTHER_FIELD);
         final String value = "transformed value";
 
         record.transform(String.format(path, "*"), s -> value);
