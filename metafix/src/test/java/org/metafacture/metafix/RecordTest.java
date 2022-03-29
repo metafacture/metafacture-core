@@ -318,7 +318,6 @@ public class RecordTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
     public void shouldPreserveOrderWhenTransformingArraySubfields() {
         final Record record = new Record();
         record.put(FIELD, Value.newArray(a -> {

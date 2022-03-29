@@ -201,7 +201,7 @@ public class Record extends Value.Hash {
         final Value found = findPath.findIn(this);
         findPath.throwIfNonString(found);
         Value.asList(found, results -> {
-            for (int i = results.size() - 1; i >= 0; --i) {
+            for (int i = 0; i < results.size(); ++i) {
                 final Value oldValue = results.get(i);
                 final FixPath insertPath = findPath.to(oldValue, i);
                 oldValue.matchType()
