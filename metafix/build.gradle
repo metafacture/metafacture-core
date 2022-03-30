@@ -31,7 +31,7 @@ dependencies {
   implementation "org.metafacture:metamorph:${versions.metafacture}"
 
   testImplementation "nl.jqno.equalsverifier:equalsverifier:${versions.equalsverifier}"
-  testImplementation "org.mockito:mockito-core:${versions.mockito}"
+  testImplementation "org.mockito:mockito-inline:${versions.mockito}"
   testImplementation "org.mockito:mockito-junit-jupiter:${versions.mockito}"
 }
 

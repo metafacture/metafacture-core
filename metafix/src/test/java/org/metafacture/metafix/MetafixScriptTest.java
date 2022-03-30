@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.FileNotFoundException;
@@ -390,14 +391,19 @@ public class MetafixScriptTest {
         );
     }
 
-    private void assertStrictness(final Metafix.Strictness strictness, final String fixDef, final Consumer<Supplier<StreamReceiver>> out) {
+    private void assertStrictness(final Metafix.Strictness strictness, final String fixDef, final boolean stubLogging, final Consumer<Supplier<StreamReceiver>> out) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "add_field('before', '')",
                 fixDef,
                 "add_field('after', '')"
             ),
             i -> {
-                i.setStrictness(strictness);
+                final Metafix.Strictness strictnessSpy = Mockito.spy(strictness);
+                i.setStrictness(strictnessSpy);
+
+                if (stubLogging) {
+                    Mockito.doNothing().when(strictnessSpy).log(Mockito.any(), Mockito.any());
+                }
 
                 i.startRecord("1");
                 i.literal("data", "foo");
@@ -418,13 +424,13 @@ public class MetafixScriptTest {
         // TODO: Test logging statements
     }
 
-    private void assertStrictness(final Metafix.Strictness strictness, final Consumer<Supplier<StreamReceiver>> out) {
-        assertStrictness(strictness, "upcase('data')", out);
+    private void assertStrictness(final Metafix.Strictness strictness, final boolean stubLogging, final Consumer<Supplier<StreamReceiver>> out) {
+        assertStrictness(strictness, "upcase('data')", stubLogging, out);
     }
 
     @Test
     public void shouldSkipExpressionOnExecutionException() {
-        assertStrictness(Metafix.Strictness.EXPRESSION, o -> {
+        assertStrictness(Metafix.Strictness.EXPRESSION, true, o -> {
             o.get().startRecord("1");
             o.get().literal("before", "");
             o.get().literal("data", "FOO");
@@ -446,7 +452,7 @@ public class MetafixScriptTest {
 
     @Test
     public void shouldSkipRecordOnExecutionException() {
-        assertStrictness(Metafix.Strictness.RECORD, o -> {
+        assertStrictness(Metafix.Strictness.RECORD, true, o -> {
             o.get().startRecord("1");
             o.get().literal("before", "");
             o.get().literal("data", "FOO");
@@ -464,7 +470,7 @@ public class MetafixScriptTest {
     @Test
     public void shouldAbortProcessOnExecutionException() {
         MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
-                assertStrictness(Metafix.Strictness.PROCESS, o -> {
+                assertStrictness(Metafix.Strictness.PROCESS, false, o -> {
                 })
         );
     }
@@ -472,7 +478,7 @@ public class MetafixScriptTest {
     @Test
     public void shouldAbortProcessOnProcessException() {
         MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "No enum constant org.metafacture.metafix.FixMethod.foo", () ->
-                assertStrictness(Metafix.Strictness.EXPRESSION, "foo()", o -> {
+                assertStrictness(Metafix.Strictness.EXPRESSION, "foo()", false, o -> {
                 })
         );
     }
