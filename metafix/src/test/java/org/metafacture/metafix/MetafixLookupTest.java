@@ -538,6 +538,50 @@ public class MetafixLookupTest {
     }
 
     @Test
+    public void shouldLookupAfterKeepingUnsuccessfulLookup() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('title.*', Aloha: Alohaeha, 'Moin': 'Moin zäme')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Yo");
+                i.literal("title", "Moin");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().literal("title", "Yo");
+                o.get().literal("title", "Moin zäme");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/170")
+    public void shouldLookupAfterDeletingUnsuccessfulLookup() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('title.*', Aloha: Alohaeha, 'Moin': 'Moin zäme', delete: 'true')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Yo");
+                i.literal("title", "Moin");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().literal("title", "Moin zäme");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     // See https://github.com/metafacture/metafacture-fix/issues/149
     public void shouldDeleteNonFoundLookupOnDemandNonRepeatedField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
