@@ -173,26 +173,29 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     }
 
     private void processFix(final Supplier<String> messageSupplier, final Runnable runnable) {
-        final FixExecutionException exception;
+        final FixExecutionException exception = tryRun(messageSupplier, runnable);
+        if (exception != null) {
+            metafix.getStrictness().handle(exception, record);
+        }
+    }
 
+    private FixExecutionException tryRun(final Supplier<String> messageSupplier, final Runnable runnable) { // checkstyle-disable-line ReturnCount
         try {
             runnable.run();
-            return;
         }
         catch (final FixProcessException e) {
             throw e; // TODO: Add nesting information?
         }
         catch (final FixExecutionException e) {
-            exception = e; // TODO: Add nesting information?
+            return e; // TODO: Add nesting information?
         }
         catch (final IllegalStateException | NumberFormatException e) {
-            exception = new FixExecutionException(messageSupplier.get(), e);
+            return new FixExecutionException(messageSupplier.get(), e);
         }
         catch (final RuntimeException e) { // checkstyle-disable-line IllegalCatch
             throw new FixProcessException(messageSupplier.get(), e);
         }
-
-        metafix.getStrictness().handle(exception, record);
+        return null;
     }
 
     private String executionExceptionMessage(final Expression expression) {
