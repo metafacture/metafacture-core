@@ -1084,7 +1084,7 @@ public class MetafixRecordTest {
     }
 
     private void assertThrowsOnEmptyRecord(final String index) {
-        MetafixTestHelpers.assertThrowsCause(IllegalArgumentException.class, "Using ref, but can't find: " + index + " in: null", () -> {
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Using ref, but can't find: " + index + " in: null", () -> {
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "add_field('animals[]." + index + ".kind','nice')"
                 ),
@@ -2233,6 +2233,23 @@ public class MetafixRecordTest {
                 o.get().literal("name", "MO");
                 o.get().endRecord();
             }
+        );
+    }
+
+    public void shouldNotAccessArrayImplicitly() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "upcase('name')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("name", "max");
+                    i.literal("name", "mo");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
         );
     }
 

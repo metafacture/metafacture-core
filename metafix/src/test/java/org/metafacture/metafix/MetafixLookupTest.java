@@ -325,7 +325,7 @@ public class MetafixLookupTest {
     public void shouldNotLookupInRelativeExternalFileMapFromInlineScript() {
         final String mapFile = "../maps/test.csv";
 
-        MetafixTestHelpers.assertThrowsCause(IllegalArgumentException.class, "Cannot resolve relative path: " + mapFile, () ->
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Cannot resolve relative path: " + mapFile, () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     LOOKUP + " '" + mapFile + "')"
                 ),
@@ -718,7 +718,7 @@ public class MetafixLookupTest {
 
     @Test
     public void shouldFailLookupInUnknownExternalMap() {
-        MetafixTestHelpers.assertThrowsCause(MorphExecutionException.class, "File not found: testMap.csv", () ->
+        MetafixTestHelpers.assertProcessException(MorphExecutionException.class, "File not found: testMap.csv", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     LOOKUP + " 'testMap.csv')"
                 ),

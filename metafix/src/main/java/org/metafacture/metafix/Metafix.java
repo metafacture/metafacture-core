@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * Transforms a data stream sent via the {@link StreamReceiver} interface. Use
@@ -60,6 +61,8 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     public static final String FIX_EXTENSION = ".fix";
     public static final String VAR_END = "]";
     public static final String VAR_START = "$[";
+
+    public static final Strictness DEFAULT_STRICTNESS = Strictness.PROCESS;
 
     public static final Map<String, String> NO_VARS = Collections.emptyMap();
 
@@ -79,6 +82,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     private List<Value> entities = new ArrayList<>();
     private Record currentRecord = new Record();
     private StreamReceiver outputStreamReceiver;
+    private Strictness strictness = DEFAULT_STRICTNESS;
     private String fixFile;
     private String recordIdentifier;
     private int entityCount;
@@ -324,6 +328,60 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     @Override
     public String putValue(final String mapName, final String key, final String value) {
         return maps.computeIfAbsent(mapName, k -> new HashMap<>()).put(key, value);
+    }
+
+    public void setStrictness(final Strictness strictness) {
+        this.strictness = strictness != null ? strictness : DEFAULT_STRICTNESS;
+    }
+
+    public Strictness getStrictness() {
+        return strictness;
+    }
+
+    public enum Strictness {
+
+        /**
+         * Aborts process by throwing an exception.
+         */
+        PROCESS {
+            @Override
+            protected void handleInternal(final FixExecutionException exception, final Record record) {
+                throw exception;
+            }
+        },
+
+        /**
+         * Ignores (skips) record and logs an error.
+         */
+        RECORD {
+            @Override
+            protected void handleInternal(final FixExecutionException exception, final Record record) {
+                log(exception, LOG::error);
+                record.setReject(true); // TODO: Skip remaining expressions?
+            }
+        },
+
+        /**
+         * Ignores (skips) expression and logs a warning.
+         */
+        EXPRESSION {
+            @Override
+            protected void handleInternal(final FixExecutionException exception, final Record record) {
+                log(exception, LOG::warn);
+            }
+        };
+
+        public void handle(final FixExecutionException exception, final Record record) {
+            LOG.debug("Current record: {}", record);
+            handleInternal(exception, record);
+        }
+
+        protected abstract void handleInternal(FixExecutionException exception, Record record);
+
+        protected void log(final FixExecutionException exception, final BiConsumer<String, Throwable> logger) {
+            logger.accept(exception.getMessage(), exception.getCause());
+        }
+
     }
 
 }

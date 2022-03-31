@@ -12,3 +12,4 @@ package-lock.json
 /metafix/src/test/resources/org/metafacture/metafix/integration/**/*.err
 /metafix/src/test/resources/org/metafacture/metafix/integration/**/*.out
 /metafix/src/test/resources/org/metafacture/metafix/integration/**/output-*
+!/metafix/src/test/resources/org/metafacture/metafix/integration/**/expected.err
