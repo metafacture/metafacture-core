@@ -1350,6 +1350,35 @@ public class MetafixMethodTest {
 
     @Test
     @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
+    public void shouldNotInsertOptionalRepeatedHashSubFieldWithAsteriskInReplaceAll() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all('coll.*.b', 'x', 'y')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("coll");
+                i.literal("a", "Dog");
+                i.endEntity();
+                i.startEntity("coll");
+                i.literal("b", "Ape");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("coll");
+                o.get().literal("a", "Dog");
+                o.get().endEntity();
+                o.get().startEntity("coll");
+                o.get().literal("b", "Ape");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
     public void copyFieldToSubfieldOfArrayOfObjectsWithIndexImplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('test[]')",
