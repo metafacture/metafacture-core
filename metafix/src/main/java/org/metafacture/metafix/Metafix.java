@@ -371,7 +371,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
         };
 
         public void handle(final FixExecutionException exception, final Record record) {
-            LOG.debug("Current record: {}", record);
+            LOG.info("Current record: {}", record);
             handleInternal(exception, record);
         }
 
