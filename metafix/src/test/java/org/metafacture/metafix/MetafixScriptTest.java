@@ -38,6 +38,7 @@ import java.util.regex.Pattern;
  * Tests Metafix script level methods.
  */
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(MetafixToDo.Extension.class)
 public class MetafixScriptTest {
 
     private static final String MAP_NAME = "testMap";
@@ -429,6 +430,7 @@ public class MetafixScriptTest {
     }
 
     @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
     public void shouldSkipExpressionOnExecutionException() {
         assertStrictness(Metafix.Strictness.EXPRESSION, true, o -> {
             o.get().startRecord("1");
@@ -451,6 +453,7 @@ public class MetafixScriptTest {
     }
 
     @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
     public void shouldSkipRecordOnExecutionException() {
         assertStrictness(Metafix.Strictness.RECORD, true, o -> {
             o.get().startRecord("1");
