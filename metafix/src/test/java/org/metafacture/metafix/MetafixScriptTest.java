@@ -24,12 +24,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 /**
@@ -107,7 +109,7 @@ public class MetafixScriptTest {
 
     @Test
     public void shouldNotResolveVariablesInOptionsFromCurrentMap() {
-        MetafixTestHelpers.assertThrowsCause(IllegalArgumentException.class, "Variable 'varName' was not assigned!\nAssigned variables:\n{var=1}", () ->
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Variable 'varName' was not assigned!\nAssigned variables:\n{var=1}", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "put_vars(varName: 'value$[var]', '$[varName]Var': 'value2')"
                 ),
@@ -149,7 +151,7 @@ public class MetafixScriptTest {
     public void shouldNotPutRelativeExternalFileMapFromInlineScript() {
         final String mapFile = "../maps/test.csv";
 
-        MetafixTestHelpers.assertThrowsCause(IllegalArgumentException.class, "Cannot resolve relative path: " + mapFile, () ->
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Cannot resolve relative path: " + mapFile, () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "put_filemap('" + mapFile + "')"
                 ),
@@ -285,7 +287,7 @@ public class MetafixScriptTest {
 
     @Test
     public void shouldNotIncludeRelativeFixFileFromInlineScript() {
-        MetafixTestHelpers.assertThrowsCause(IllegalArgumentException.class, "Cannot resolve relative path: ./base.fix", () ->
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Cannot resolve relative path: ./base.fix", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "include('src/test/resources/org/metafacture/metafix/fixes/include.fix')"
                 ),
@@ -386,6 +388,98 @@ public class MetafixScriptTest {
                 o -> {
                 }
             )
+        );
+    }
+
+    private void assertStrictness(final Metafix.Strictness strictness, final String fixDef, final boolean stubLogging, final Consumer<Supplier<StreamReceiver>> out) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('before', '')",
+                fixDef,
+                "add_field('after', '')"
+            ),
+            i -> {
+                final Metafix.Strictness strictnessSpy = Mockito.spy(strictness);
+                i.setStrictness(strictnessSpy);
+
+                if (stubLogging) {
+                    Mockito.doNothing().when(strictnessSpy).log(Mockito.any(), Mockito.any());
+                }
+
+                i.startRecord("1");
+                i.literal("data", "foo");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.literal("data", "foo");
+                i.literal("data", "bar");
+                i.endRecord();
+
+                i.startRecord("3");
+                i.literal("data", "bar");
+                i.endRecord();
+            },
+            out
+        );
+
+        // TODO: Test logging statements
+    }
+
+    private void assertStrictness(final Metafix.Strictness strictness, final boolean stubLogging, final Consumer<Supplier<StreamReceiver>> out) {
+        assertStrictness(strictness, "upcase('data')", stubLogging, out);
+    }
+
+    @Test
+    public void shouldSkipExpressionOnExecutionException() {
+        assertStrictness(Metafix.Strictness.EXPRESSION, true, o -> {
+            o.get().startRecord("1");
+            o.get().literal("before", "");
+            o.get().literal("data", "FOO");
+            o.get().literal("after", "");
+            o.get().endRecord();
+
+            o.get().startRecord("2");
+            o.get().literal("before", "");
+            o.get().literal("after", "");
+            o.get().endRecord();
+
+            o.get().startRecord("3");
+            o.get().literal("before", "");
+            o.get().literal("data", "BAR");
+            o.get().literal("after", "");
+            o.get().endRecord();
+        });
+    }
+
+    @Test
+    public void shouldSkipRecordOnExecutionException() {
+        assertStrictness(Metafix.Strictness.RECORD, true, o -> {
+            o.get().startRecord("1");
+            o.get().literal("before", "");
+            o.get().literal("data", "FOO");
+            o.get().literal("after", "");
+            o.get().endRecord();
+
+            o.get().startRecord("3");
+            o.get().literal("before", "");
+            o.get().literal("data", "BAR");
+            o.get().literal("after", "");
+            o.get().endRecord();
+        });
+    }
+
+    @Test
+    public void shouldAbortProcessOnExecutionException() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
+                assertStrictness(Metafix.Strictness.PROCESS, false, o -> {
+                })
+        );
+    }
+
+    @Test
+    public void shouldAbortProcessOnProcessException() {
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "No enum constant org.metafacture.metafix.FixMethod.foo", () ->
+                assertStrictness(Metafix.Strictness.EXPRESSION, "foo()", false, o -> {
+                })
         );
     }
 

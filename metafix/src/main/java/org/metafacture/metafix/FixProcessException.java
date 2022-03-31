@@ -19,18 +19,18 @@ package org.metafacture.metafix;
 import org.metafacture.framework.MetafactureException;
 
 /**
- * Indicates dynamic (i.e., data-dependent) issues during Fix execution that
- * should be subject to {@link Metafix.Strictness strictness} handling.
+ * Indicates static (i.e., data-independent) issues with the usage of Fix
+ * expressions.
  *
- * @see FixProcessException
+ * @see FixExecutionException
  */
-public class FixExecutionException extends MetafactureException {
+public class FixProcessException extends MetafactureException {
 
-    public FixExecutionException(final String message) {
+    public FixProcessException(final String message) {
         super(message);
     }
 
-    public FixExecutionException(final String message, final Throwable cause) {
+    public FixProcessException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

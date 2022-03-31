@@ -1083,7 +1083,7 @@ public class MetafixRecordTest {
     }
 
     private void assertThrowsOnEmptyRecord(final String index) {
-        MetafixTestHelpers.assertThrowsCause(IllegalArgumentException.class, "Using ref, but can't find: " + index + " in: {}", () -> {
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Using ref, but can't find: " + index + " in: {}", () -> {
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "add_field('animals[]." + index + ".kind','nice')"
                 ),
@@ -2150,7 +2150,7 @@ public class MetafixRecordTest {
 
     @Test
     public void shouldNotAccessArrayImplicitly() {
-        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "upcase('name')"
                 ),

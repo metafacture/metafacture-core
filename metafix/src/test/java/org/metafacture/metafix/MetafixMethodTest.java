@@ -160,7 +160,7 @@ public class MetafixMethodTest {
 
     @Test
     public void shouldNotCapitalizeArray() {
-        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "capitalize('title')"
                 ),
@@ -431,7 +431,7 @@ public class MetafixMethodTest {
 
     @Test
     public void parseTextEscapedGroups() {
-        MetafixTestHelpers.assertThrowsCause(IllegalArgumentException.class, "No group with name <c>", () ->
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "No group with name <c>", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "parse_text(data, '(?<a>.)(.)\\\\(?<c>.\\\\)')"
                 ),
@@ -448,7 +448,7 @@ public class MetafixMethodTest {
 
     @Test
     public void parseTextQuotedGroups() {
-        MetafixTestHelpers.assertThrowsCause(IllegalArgumentException.class, "No group with name <c>", () ->
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "No group with name <c>", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "parse_text(data, '(?<a>.)(.)\\\\Q(?<c>.)\\\\E')"
                 ),
@@ -669,7 +669,7 @@ public class MetafixMethodTest {
     @Test
     // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldNotAppendValueToArray() {
-        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "append('animals[]', ' is cool')"
                 ),
@@ -691,7 +691,7 @@ public class MetafixMethodTest {
     @Test
     // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldNotAppendValueToHash() {
-        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Hash", () ->
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Hash", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "append('animals', ' is cool')"
                 ),
@@ -1126,7 +1126,7 @@ public class MetafixMethodTest {
     @Test
     // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldNotPrependValueToArray() {
-        MetafixTestHelpers.assertThrowsCause(IllegalStateException.class, "Expected String, got Array", () ->
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "prepend('animals[]', 'cool ')"
                 ),
@@ -1592,7 +1592,7 @@ public class MetafixMethodTest {
 
     @Test
     public void shouldFailToSortNumericallyWithInvalidNumber() {
-        MetafixTestHelpers.assertThrowsCause(NumberFormatException.class, "For input string: \"x\"", () ->
+        MetafixTestHelpers.assertExecutionException(NumberFormatException.class, "For input string: \"x\"", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "sort_field(numbers, numeric: 'true')"
                 ),

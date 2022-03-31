@@ -12,6 +12,7 @@ todo_file=todo.txt
 
 input_glob=input.*
 expected_glob=expected.*
+expected_errors_extension=err
 
 metafix_output_glob=output-metafix.*
 catmandu_output_glob=output-catmandu.*
@@ -102,6 +103,8 @@ function get_file() {
     reason="Ambiguous $type files: $*"
   elif [ ! -r "$1" ]; then
     reason="No $type file: $1"
+  elif [ "$type" != "output" ] && [ ! -s "$1" ]; then
+    reason="Empty $type file: $1"
   else
     current_file=$1
     return 0
@@ -138,6 +141,40 @@ function skip_test() {
   fi
 }
 
+function test_passed() {
+  if [ -r "$2" ]; then
+    log "$color_test$1$color_reset: ${color_failed}FAILED$color_reset (Marked as \"to do\", but passed.)"
+
+    ((failed++)) || true
+  else
+    if parse_boolean "$METAFIX_LOG_PASSED"; then
+      log "$color_test$1$color_reset: ${color_passed}PASSED$color_reset$3"
+    fi
+
+    ((passed++)) || true
+  fi
+}
+
+function test_failed() {
+  if ! skip_test "$1" "$2"; then
+    log "$color_test$1$color_reset: $color_failed$4$color_reset$3"
+
+    if [ $# -ge 13 ]; then
+      log "  Fix:      $9"
+      log "  Input:    ${10}"
+      log "  Expected: ${11}"
+      log "  Output:   ${12}"
+      log "  Diff:     ${13}"
+
+      [ -s "${13}" ] && $colordiff <"${13}" || rm -f "${13}"
+    fi
+
+    command_info "$5" "$6" "$7" "$8"
+
+    ((failed++)) || true
+  fi
+}
+
 function run_tests() {
   local test matched=1\
     test_directory test_fix test_input test_expected test_todo\
@@ -165,62 +202,51 @@ function run_tests() {
     test_todo="$test_directory/$todo_file"
 
     if [ -z "$disable_todo" ] || ! skip_test "$test" "$test_todo"; then
+      # TODO: catmandu (optional)
+
       metafix_command_output="$test_directory/metafix.out"
       metafix_command_error="$test_directory/metafix.err"
 
       metafix_start_time=$(current_time)
 
-      # TODO: catmandu (optional)
+      run_metafix "$test_directory/$metafix_file" >"$metafix_command_output" 2>"$metafix_command_error"
+      metafix_exit_status=$?
 
-      if run_metafix "$test_directory/$metafix_file" >"$metafix_command_output" 2>"$metafix_command_error"; then
-        metafix_exit_status=$?
+      metafix_elapsed_time=$(elapsed_time "$metafix_start_time")
 
+      if [ "$metafix_exit_status" -eq 0 ]; then
         if get_file "$test" output "$test_directory"/$metafix_output_glob; then
           metafix_output=$current_file
           metafix_diff="$test_directory/metafix.diff"
 
-          metafix_elapsed_time=$(elapsed_time "$metafix_start_time")
-
           if diff -u "$test_expected" "$metafix_output" >"$metafix_diff"; then
-            if [ -r "$test_todo" ]; then
-              log "$color_test$test$color_reset: ${color_failed}FAILED$color_reset (Marked as \"to do\", but passed.)"
-
-              ((failed++)) || true
-            else
-              if parse_boolean "$METAFIX_LOG_PASSED"; then
-                log "$color_test$test$color_reset: ${color_passed}PASSED$color_reset$metafix_elapsed_time"
-              fi
-
-              ((passed++)) || true
-            fi
+            test_passed "$test" "$test_todo" "$metafix_elapsed_time"
 
             rm -f "$metafix_diff" "$metafix_command_output" "$metafix_command_error"
-          elif ! skip_test "$test" "$test_todo"; then
-            log "$color_test$test$color_reset: ${color_failed}FAILED$color_reset$metafix_elapsed_time"
-
-            log "  Fix:      $test_fix"
-            log "  Input:    $test_input"
-            log "  Expected: $test_expected"
-            log "  Output:   $metafix_output"
-            log "  Diff:     $metafix_diff"
-
-            [ -s "$metafix_diff" ] && $colordiff <"$metafix_diff" || rm -f "$metafix_diff"
-
-            command_info metafix "$metafix_exit_status" "$metafix_command_output" "$metafix_command_error"
-
-            ((failed++)) || true
+          else
+            test_failed "$test" "$test_todo" "$metafix_elapsed_time" FAILED\
+              metafix "$metafix_exit_status" "$metafix_command_output" "$metafix_command_error"\
+              "$test_fix" "$test_input" "$test_expected" "$metafix_output" "$metafix_diff"
           fi
         else
           command_info metafix "$metafix_exit_status" "$metafix_command_output" "$metafix_command_error"
         fi
-      elif ! skip_test "$test" "$test_todo"; then
-        metafix_exit_status=$?
+      elif [ "${test_expected##*.}" == "$expected_errors_extension" ]; then
+        get_file "$test" error "$metafix_command_error" || { log; continue; }
 
-        log "$color_test$test$color_reset: ${color_error}ERROR$color_reset"
+        while read -r pattern; do
+          if ! grep -qE "$pattern" "$metafix_command_error"; then
+            test_failed "$test" "$test_todo" " (Pattern not found: $pattern)" FAILED\
+              metafix "$metafix_exit_status" "$metafix_command_output" "$metafix_command_error"
 
-        command_info metafix "$metafix_exit_status" "$metafix_command_output" "$metafix_command_error"
+            continue 2
+          fi
+        done <"$test_expected"
 
-        ((failed++)) || true
+        test_passed "$test" "$test_todo" "$metafix_elapsed_time"
+      else
+        test_failed "$test" "$test_todo" "$metafix_elapsed_time" ERROR\
+          metafix "$metafix_exit_status" "$metafix_command_output" "$metafix_command_error"
       fi
     fi
   done
