@@ -299,6 +299,7 @@ import java.util.Map;
             final String[] tail) {
         if (referencedValue != null) {
             final FixPath fixPath = new FixPath(tail);
+            newValue.updatePathAddBase(referencedValue, field);
             return referencedValue.extractType((m, c) -> m
                     .ifArray(a -> c.accept(fixPath.insertInto(referencedValue.asArray(), mode, newValue)))
                     .ifHash(h -> c.accept(fixPath.insertInto(referencedValue.asHash(), mode, newValue)))
@@ -345,6 +346,7 @@ import java.util.Map;
             case $append:
                 referencedValue = Value.newHash(); // TODO: append non-hash?
                 array.add(referencedValue);
+                referencedValue.updatePathAppend(String.valueOf(array.size()), "");
                 break;
             default:
                 break;

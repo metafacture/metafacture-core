@@ -203,6 +203,13 @@ public class Value {
         }
     }
 
+    /*package-private*/ Value updatePathRename(final String newName) {
+        if (path != null) {
+            path = newName.replaceAll("\\$[^.]+", split(path)[0]);
+        }
+        return this;
+    }
+
     /*package-private*/ Value updatePathAddBase(final Value container, final String fallback) {
         if (container.path != null) {
             final String[] pathSegments = split(path != null ? path : fallback);
@@ -212,7 +219,7 @@ public class Value {
         return this;
     }
 
-    private Value updatePathAppend(final String suffix, final String fallback) {
+    /*package-private*/ Value updatePathAppend(final String suffix, final String fallback) {
         if (path != null) {
             path = path + suffix;
         }
