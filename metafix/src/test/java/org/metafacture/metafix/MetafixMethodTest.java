@@ -1377,6 +1377,117 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void replaceAllInOptionalSubfieldInArrayOfObjectsWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all('RSWK[].*.subjectGenre', '[.]$', '')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("RSWK[]");
+                i.startEntity("1");
+                i.literal("subjectTopicName", "Nonprofit organizations");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("subjectTopicName", "Nonprofit organizations");
+                i.literal("subjectGenre", "Case studies.");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("RSWK[]");
+                o.get().startEntity("1");
+                o.get().literal("subjectTopicName", "Nonprofit organizations");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("subjectTopicName", "Nonprofit organizations");
+                o.get().literal("subjectGenre", "Case studies");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void inDoBindCopyFieldWithVarInSourceAndTarget() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('RSWK[]')",
+                "do list(path: '650??', 'var': '$i')",
+                "  copy_field('$i.a', 'RSWK[].$append.subjectTopicName')",
+                "  copy_field('$i.v', 'RSWK[].$last.subjectGenre')",
+                "end",
+                "retain('RSWK[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("650  ");
+                i.literal("a", "Nonprofit organizations");
+                i.literal("x", "Management.");
+                i.endEntity();
+                i.startEntity("650  ");
+                i.literal("a", "Nonprofit organizations");
+                i.literal("x", "Management");
+                i.literal("v", "Case studies.");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("RSWK[]");
+                o.get().startEntity("1");
+                o.get().literal("subjectTopicName", "Nonprofit organizations");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("subjectTopicName", "Nonprofit organizations");
+                o.get().literal("subjectGenre", "Case studies.");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
+    public void replaceAllWithWildcardAfterCopyFieldWithVarInSourceAndTarget() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('RSWK[]')",
+                "do list(path: '650??', 'var': '$i')",
+                "  copy_field('$i.a', 'RSWK[].$append.subjectTopicName')",
+                "  copy_field('$i.v', 'RSWK[].$last.subjectGenre')",
+                "end",
+                "replace_all('RSWK[].*.subjectGenre', '[.]$', '')",
+                "retain('RSWK[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("650  ");
+                i.literal("a", "Nonprofit organizations");
+                i.literal("x", "Management.");
+                i.endEntity();
+                i.startEntity("650  ");
+                i.literal("a", "Nonprofit organizations");
+                i.literal("x", "Management");
+                i.literal("v", "Case studies.");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("RSWK[]");
+                o.get().startEntity("1");
+                o.get().literal("subjectTopicName", "Nonprofit organizations");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("subjectTopicName", "Nonprofit organizations");
+                o.get().literal("subjectGenre", "Case studies");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
     public void copyFieldToSubfieldOfArrayOfObjectsWithIndexImplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
