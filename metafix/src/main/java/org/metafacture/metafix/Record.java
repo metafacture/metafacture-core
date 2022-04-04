@@ -209,12 +209,14 @@ public class Record extends Value.Hash {
                 final FixPath insertPath = findPath.to(oldValue, i);
                 oldValue.matchType()
                         .ifString(s -> {
-                            final String newValue = operator.apply(s);
-                            if (newValue == null) {
+                            final String newString = operator.apply(s);
+                            if (newString == null) {
                                 toDelete.addFirst(insertPath);
                             }
                             else {
-                                insertPath.insertInto(this, InsertMode.REPLACE, new Value(newValue));
+                                final Value newValue = new Value(newString);
+                                insertPath.insertInto(this, InsertMode.REPLACE, newValue);
+                                newValue.setPath(insertPath.toString());
                             }
                         })
                     .orElseThrow();

@@ -282,6 +282,10 @@ public class Value {
         return path;
     }
 
+    /*package-private*/ void setPath(final String path) {
+        this.path = path;
+    }
+
     enum Type {
         Array,
         Hash,

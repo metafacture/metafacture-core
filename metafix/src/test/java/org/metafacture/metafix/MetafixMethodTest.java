@@ -1487,7 +1487,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
     public void multipleReplaceAllWithWildcardAfterCopyFieldWithVarInSourceAndTarget() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('RSWK[]')",

@@ -107,7 +107,7 @@ import java.util.Map;
 
     @Override
     public String toString() {
-        return Arrays.asList(path).toString();
+        return String.join(".", path);
     }
 
     /*package-private*/ int size() {
