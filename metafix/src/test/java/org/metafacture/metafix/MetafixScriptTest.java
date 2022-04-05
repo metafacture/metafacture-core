@@ -426,7 +426,10 @@ public class MetafixScriptTest {
     }
 
     private void assertStrictness(final Metafix.Strictness strictness, final boolean stubLogging, final Consumer<Supplier<StreamReceiver>> out) {
-        assertStrictness(strictness, "upcase('data')", stubLogging, out);
+        assertStrictness(strictness,
+                "move_field('data','tmp')\n" +
+                "upcase('tmp')\n" +
+                "move_field('tmp','data')", stubLogging, out);
     }
 
     @Test
@@ -453,7 +456,6 @@ public class MetafixScriptTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
     public void shouldSkipRecordOnExecutionException() {
         assertStrictness(Metafix.Strictness.RECORD, true, o -> {
             o.get().startRecord("1");
