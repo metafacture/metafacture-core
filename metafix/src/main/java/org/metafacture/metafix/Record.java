@@ -207,19 +207,15 @@ public class Record extends Value.Hash {
             for (int i = 0; i < results.size(); ++i) {
                 final Value oldValue = results.get(i);
                 final FixPath insertPath = findPath.to(oldValue, i);
-                oldValue.matchType()
-                        .ifString(s -> {
-                            final String newString = operator.apply(s);
-                            if (newString == null) {
-                                toDelete.addFirst(insertPath);
-                            }
-                            else {
-                                final Value newValue = new Value(newString);
-                                insertPath.insertInto(this, InsertMode.REPLACE, newValue);
-                                newValue.setPath(insertPath.toString());
-                            }
-                        })
-                    .orElseThrow();
+                final String newString = operator.apply(oldValue.asString());
+                if (newString == null) {
+                    toDelete.addFirst(insertPath);
+                }
+                else {
+                    final Value newValue = new Value(newString);
+                    insertPath.insertInto(this, InsertMode.REPLACE, newValue);
+                    newValue.setPath(insertPath.toString());
+                }
             }
             toDelete.forEach(path -> path.removeNestedFrom(this));
         });
