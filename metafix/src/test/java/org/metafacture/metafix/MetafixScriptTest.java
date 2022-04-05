@@ -38,7 +38,6 @@ import java.util.regex.Pattern;
  * Tests Metafix script level methods.
  */
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(MetafixToDo.Extension.class)
 public class MetafixScriptTest {
 
     private static final String MAP_NAME = "testMap";
@@ -430,41 +429,41 @@ public class MetafixScriptTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
     public void shouldSkipExpressionOnExecutionException() {
         assertStrictness(Metafix.Strictness.EXPRESSION, true, o -> {
             o.get().startRecord("1");
-            o.get().literal("before", "");
             o.get().literal("data", "FOO");
+            o.get().literal("before", "");
             o.get().literal("after", "");
             o.get().endRecord();
 
             o.get().startRecord("2");
+            o.get().literal("data", "foo");
+            o.get().literal("data", "bar");
             o.get().literal("before", "");
             o.get().literal("after", "");
             o.get().endRecord();
 
             o.get().startRecord("3");
-            o.get().literal("before", "");
             o.get().literal("data", "BAR");
+            o.get().literal("before", "");
             o.get().literal("after", "");
             o.get().endRecord();
         });
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
     public void shouldSkipRecordOnExecutionException() {
         assertStrictness(Metafix.Strictness.RECORD, true, o -> {
             o.get().startRecord("1");
-            o.get().literal("before", "");
             o.get().literal("data", "FOO");
+            o.get().literal("before", "");
             o.get().literal("after", "");
             o.get().endRecord();
 
             o.get().startRecord("3");
-            o.get().literal("before", "");
             o.get().literal("data", "BAR");
+            o.get().literal("before", "");
             o.get().literal("after", "");
             o.get().endRecord();
         });
