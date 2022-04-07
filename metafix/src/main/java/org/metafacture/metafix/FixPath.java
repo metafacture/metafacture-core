@@ -45,16 +45,20 @@ import java.util.Map;
     }
 
     /*package-private*/ Value findIn(final Hash hash) {
+        return findIn(hash, false);
+    }
+
+    /*package-private*/ Value findIn(final Hash hash, final boolean enforceStringValue) {
         final String currentSegment = path[0];
         final FixPath remainingPath = new FixPath(tail(path));
         if (currentSegment.equals(ASTERISK)) {
             // TODO: search in all elements of value.asHash()?
-            return remainingPath.findIn(hash);
+            return remainingPath.findIn(hash, enforceStringValue);
         }
-        final Value value = hash.get(currentSegment);
+        final Value value = hash.get(currentSegment, enforceStringValue && path.length == 1);
         return value == null || path.length == 1 ? value : value.extractType((m, c) -> m
                 .ifArray(a -> c.accept(remainingPath.findIn(a)))
-                .ifHash(h -> c.accept(remainingPath.findIn(h)))
+                .ifHash(h -> c.accept(remainingPath.findIn(h, enforceStringValue)))
                 .orElseThrow()
         );
     }
@@ -117,17 +121,6 @@ import java.util.Map;
     // TODO: this is still very much work in progress, I think we should
     // try to replace this with consistent usage of Value#getPath
     // (e.g. take care of handling repeated fields and their paths)
-
-    /*package-private*/ void throwIfNonString(final Value value) {
-        final boolean isNonString = value != null &&
-            // basic idea: path is only set on literals/strings
-            value.getPath() == null &&
-            // but with wildcards, we might still point to literals/strings
-            !hasWildcard();
-        if (isNonString) {
-            value.asString();
-        }
-    }
 
     /*package-private*/ FixPath to(final Value value, final int i) {
         final FixPath result;

@@ -555,8 +555,18 @@ public class Value {
          * @return the metadata value
          */
         public Value get(final String field) {
+            return get(field, false);
+        }
+
+        /*package-private*/ Value get(final String field, final boolean enforceStringValue) { // TODO use Type.String etc.?
             // TODO: special treatment (only) for exact matches?
-            final List<Value> list = findFields(field).map(this::getField).collect(Collectors.toList());
+            final List<Value> list = findFields(field).map(actualField -> {
+                final Value value = getField(actualField);
+                if (enforceStringValue) {
+                    value.asString();
+                }
+                return value;
+            }).collect(Collectors.toList());
             return list.isEmpty() ? null : list.size() == 1 ? list.get(0) : newArray(a -> list.forEach(v -> v.matchType()
                         .ifArray(b -> b.forEach(a::add))
                         .orElse(a::add)));

@@ -200,8 +200,7 @@ public class Record extends Value.Hash {
      */
     public void transform(final String field, final UnaryOperator<String> operator) {
         final FixPath findPath = new FixPath(field);
-        final Value found = findPath.findIn(this);
-        findPath.throwIfNonString(found);
+        final Value found = findPath.findIn(this, true);
         Value.asList(found, results -> {
             final Deque<FixPath> toDelete = new LinkedList<>();
             for (int i = 0; i < results.size(); ++i) {

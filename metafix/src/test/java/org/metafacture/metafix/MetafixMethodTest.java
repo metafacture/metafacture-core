@@ -306,9 +306,31 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void shouldNotTrimIndexedArray() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Hash", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "trim('data.title')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("data");
+                    i.startEntity("title");
+                    i.literal("1", "  marc  ");
+                    i.literal("2", "  json  ");
+                    i.endEntity();
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
     // See https://github.com/metafacture/metafacture-fix/pull/133
     public void shouldNotTrimStringInImplicitArrayOfHashes() {
-        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
+        MetafixTestHelpers.assertExecutionException(NumberFormatException.class, "For input string: \"title\"", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "trim('data.title')"
                 ),
@@ -543,6 +565,39 @@ public class MetafixMethodTest {
                 o.get().startRecord("2");
                 o.get().literal("title-1", "marc");
                 o.get().literal("title-2", "json");
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void wildcardNested() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "trim('work.title-?')"),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.startEntity("work");
+                i.literal("title-1", "  marc  ");
+                i.literal("title-2", "  json  ");
+                i.endEntity();
+                i.endRecord();
+
+                i.startRecord("3");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().startEntity("work");
+                o.get().literal("title-1", "marc");
+                o.get().literal("title-2", "json");
+                o.get().endEntity();
                 o.get().endRecord();
 
                 o.get().startRecord("3");
@@ -1171,7 +1226,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
     public void shouldNotPrependValueToArrayWithWildcard() {
         MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
@@ -1183,6 +1237,29 @@ public class MetafixMethodTest {
                     i.literal("1", "dog");
                     i.literal("2", "cat");
                     i.literal("3", "zebra");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldNotPrependValueToArrayWithWildcardNested() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "prepend('some.animal?[]', 'the first one')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("some");
+                    i.startEntity("animals[]");
+                    i.literal("1", "dog");
+                    i.literal("2", "cat");
+                    i.literal("3", "zebra");
+                    i.endEntity();
                     i.endEntity();
                     i.endRecord();
                 },
