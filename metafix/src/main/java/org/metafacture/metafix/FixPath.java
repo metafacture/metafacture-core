@@ -164,7 +164,12 @@ import java.util.Map;
 
             @Override
             void apply(final Array array, final String field, final Value value) {
-                array.set(Integer.valueOf(field) - 1, value);
+                try {
+                    array.set(Integer.valueOf(field) - 1, value);
+                }
+                catch (final NumberFormatException e) {
+                    throw new IllegalStateException("Expected Hash, got Array", e);
+                }
             }
         },
         APPEND {
@@ -238,12 +243,7 @@ import java.util.Map;
                     array.add(newValue);
                 }
                 else {
-                    try {
-                        mode.apply(array, field, newValue);
-                    }
-                    catch (final NumberFormatException e) {
-                        throw new IllegalStateException("Expected Hash, got Array", e);
-                    }
+                    mode.apply(array, field, newValue);
                 }
             }
         }
