@@ -307,6 +307,28 @@ public class MetafixMethodTest {
 
     @Test
     public void shouldNotTrimIndexedArray() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "trim('data.title[]')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("data");
+                    i.startEntity("title[]");
+                    i.literal("1", "  marc  ");
+                    i.literal("2", "  json  ");
+                    i.endEntity();
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldNotTrimHash() {
         MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Hash", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "trim('data.title')"
