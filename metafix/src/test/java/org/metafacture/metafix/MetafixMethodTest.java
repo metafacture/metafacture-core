@@ -1626,7 +1626,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
+    @MetafixToDo("Do we actually want implicit append? WDCD? See (passing) copyFieldToSubfieldOfArrayOfStringsWithIndexImplicitAppend")
     public void copyFieldToSubfieldOfArrayOfObjectsWithIndexImplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('test[]')",
@@ -1650,6 +1650,7 @@ public class MetafixMethodTest {
     }
 
     @Test
+    // Do we actually want implicit append? WDCD? See (failing) copyFieldToSubfieldOfArrayOfObjectsWithIndexImplicitAppend
     public void copyFieldToSubfieldOfArrayOfStringsWithIndexImplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('test[]')",

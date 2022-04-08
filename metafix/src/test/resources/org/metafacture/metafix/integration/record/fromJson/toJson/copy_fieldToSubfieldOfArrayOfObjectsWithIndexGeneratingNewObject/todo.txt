@@ -1,1 +1,1 @@
-See PR #170. Do we actually want implicit append? WDCD?
+Do we actually want implicit append? WDCD? See MetafixMethodTest#*WithIndexImplicitAppend tests.
