@@ -238,7 +238,12 @@ import java.util.Map;
                     array.add(newValue);
                 }
                 else {
-                    mode.apply(array, field, newValue);
+                    try {
+                        mode.apply(array, field, newValue);
+                    }
+                    catch (final NumberFormatException e) {
+                        throw new IllegalStateException("Expected Hash, got Array", e);
+                    }
                 }
             }
         }

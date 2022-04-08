@@ -330,7 +330,7 @@ public class MetafixMethodTest {
     @Test
     // See https://github.com/metafacture/metafacture-fix/pull/133
     public void shouldNotTrimStringInImplicitArrayOfHashes() {
-        MetafixTestHelpers.assertExecutionException(NumberFormatException.class, "For input string: \"title\"", () ->
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected Hash, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "trim('data.title')"
                 ),
