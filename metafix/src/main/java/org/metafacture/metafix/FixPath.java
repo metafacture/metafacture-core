@@ -51,8 +51,8 @@ import java.util.Map;
     /*package-private*/ Value findIn(final Hash hash, final boolean enforceStringValue) {
         final String currentSegment = path[0];
         final FixPath remainingPath = new FixPath(tail(path));
-        if (currentSegment.equals(ASTERISK)) {
-            // TODO: search in all elements of value.asHash()?
+        if (currentSegment.equals(ASTERISK) && remainingPath.size() > 0) {
+            // TODO: search in all elements of hash?
             return remainingPath.findIn(hash, enforceStringValue);
         }
         final Value value = hash.get(currentSegment, enforceStringValue && path.length == 1);
@@ -147,7 +147,7 @@ import java.util.Map;
     }
 
     private boolean hasWildcard() {
-        return Arrays.asList(path).stream().filter(s -> s.equals("*") || s.contains("?") || s.contains("|") || s.matches(".*?\\[.+?\\].*?")).findAny().isPresent();
+        return Arrays.asList(path).stream().filter(s -> s.contains("*") || s.contains("?") || s.contains("|") || s.matches(".*?\\[.+?\\].*?")).findAny().isPresent();
     }
 
     private long countAsterisks() {
