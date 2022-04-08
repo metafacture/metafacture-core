@@ -2694,4 +2694,43 @@ public class MetafixRecordTest {
         );
     }
 
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/170")
+    public void shouldNotSplitLiteralName() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "nothing()"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("123. ", "foo");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("123. ", "foo");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotSplitEntityName() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "nothing()"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("123. ");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("123. ");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
 }

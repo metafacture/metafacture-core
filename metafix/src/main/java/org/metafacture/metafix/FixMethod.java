@@ -99,7 +99,7 @@ public enum FixMethod implements FixFunction {
     add_field {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.add(params.get(0), new Value(params.get(1)));
+            record.addNested(params.get(0), new Value(params.get(1)));
         }
     },
     array { // array-from-hash
@@ -111,8 +111,8 @@ public enum FixMethod implements FixFunction {
                 record.remove(field);
 
                 h.forEach((subField, value) -> {
-                    record.add(field, new Value(subField));
-                    record.add(field, value);
+                    record.addNested(field, new Value(subField));
+                    record.addNested(field, value);
                 });
             })));
         }
@@ -123,7 +123,7 @@ public enum FixMethod implements FixFunction {
             final String oldName = params.get(0);
             final String newName = params.get(1);
             Value.asList(record.get(oldName), a -> a.forEach(newValue -> {
-                record.add(newName, newValue);
+                record.addNested(newName, newValue);
                 newValue.updatePathRename(newName);
             }));
         }
@@ -185,11 +185,11 @@ public enum FixMethod implements FixFunction {
                     });
 
                     if (!value.asHash().isEmpty()) {
-                        record.add(field, value);
+                        record.addNested(field, value);
                     }
                     else {
                         for (int i = 1; i <= m.groupCount(); i = i + 1) {
-                            record.add(field, new Value(m.group(i)));
+                            record.addNested(field, new Value(m.group(i)));
                         }
                     }
                 }
