@@ -29,7 +29,7 @@ public enum FixBind implements FixContext {
         public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final List<Expression> expressions) {
             final RecordTransformer recordTransformer = metafix.getRecordTransformer();
             final String scopeVariable = options.get("var");
-            Value.asList(new FixPath(options.get("path")).findIn(record), a -> {
+            Value.asList(record.get(options.get("path")), a -> {
                 for (int i = 0; i < a.size(); ++i) {
                     final Value value = a.get(i);
 

@@ -16,9 +16,17 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.metafix.FixPath.InsertMode;
+import org.metafacture.metafix.Value.TypeMatcher;
+
 import java.util.Collection;
+import java.util.Deque;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 /**
  * Represents a metadata record, i.e., a {@link Value.Hash Hash} of fields
@@ -112,7 +120,20 @@ public class Record extends Value.Hash {
      */
     @Override
     public Value get(final String field) {
-        return containsField(field) ? super.get(field) : virtualFields.get(field);
+        final Value result;
+        if (containsField(field)) {
+            result = super.get(field);
+        }
+        else {
+            final FixPath fixPath = new FixPath(field);
+            if (fixPath.size() > 1) {
+                result = fixPath.findIn(this);
+            }
+            else {
+                result = virtualFields.get(field);
+            }
+        }
+        return result;
     }
 
     /**
@@ -129,8 +150,26 @@ public class Record extends Value.Hash {
             super.add(field, newValue);
         }
         else {
-            put(field, newValue);
+            final FixPath fixPath = new FixPath(field);
+            if (fixPath.size() > 1) {
+                fixPath.insertInto(this, InsertMode.APPEND, newValue);
+            }
+            else {
+                put(field, newValue);
+            }
         }
+    }
+
+    /**
+     * Sets a field/value pair to this record, replacing
+     * any previous association of the field with a value.
+     *
+     * @param field the field name
+     * @param newValue the new metadata value
+     */
+    public void set(final String field, final Value newValue) {
+        final FixPath fixPath = new FixPath(field);
+        fixPath.insertInto(this, InsertMode.REPLACE, newValue);
     }
 
     /**
@@ -151,6 +190,53 @@ public class Record extends Value.Hash {
         });
 
         super.retainFields(fields);
+    }
+
+    /**
+     * Transform this record by applying the given operator to all matching values for the given field.
+     *
+     * @param field The field
+     * @param operator The operator
+     */
+    public void transform(final String field, final UnaryOperator<String> operator) {
+        final FixPath findPath = new FixPath(field);
+        final Value found = findPath.findIn(this, true);
+        Value.asList(found, results -> {
+            final Deque<FixPath> toDelete = new LinkedList<>();
+            for (int i = 0; i < results.size(); ++i) {
+                final Value oldValue = results.get(i);
+                final FixPath insertPath = findPath.to(oldValue, i);
+                final String newString = operator.apply(oldValue.asString());
+                if (newString == null) {
+                    toDelete.addFirst(insertPath);
+                }
+                else {
+                    final Value newValue = new Value(newString);
+                    insertPath.insertInto(this, InsertMode.REPLACE, newValue);
+                    newValue.setPath(insertPath.toString());
+                }
+            }
+            toDelete.forEach(path -> path.removeNestedFrom(this));
+        });
+    }
+
+    /**
+     * Transform this record by consuming all matching values for the given field with the given consumer.
+     *
+     * @param field The field
+     * @param consumer The consumer
+     */
+    public void transform(final String field, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
+        final FixPath path = new FixPath(field);
+        final Value oldValue = path.findIn(this);
+
+        if (oldValue != null) {
+            final Value newValue = oldValue.extractType(consumer);
+
+            if (newValue != null) {
+                path.insertInto(this, InsertMode.REPLACE, newValue);
+            }
+        }
     }
 
 }

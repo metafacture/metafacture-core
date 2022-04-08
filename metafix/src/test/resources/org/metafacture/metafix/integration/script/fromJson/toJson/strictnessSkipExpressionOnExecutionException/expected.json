@@ -1,14 +1,16 @@
 {
-  "before" : "",
   "data" : "FOO",
-  "after" : ""
-}
-{
   "before" : "",
   "after" : ""
 }
 {
+  "data" : "foo",
+  "data" : "bar",
   "before" : "",
+  "after" : ""
+}
+{
   "data" : "BAR",
+  "before" : "",
   "after" : ""
 }

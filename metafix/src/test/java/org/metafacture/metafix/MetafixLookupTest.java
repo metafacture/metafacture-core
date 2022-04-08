@@ -90,6 +90,172 @@ public class MetafixLookupTest {
     }
 
     @Test
+    public void shouldLookupInternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('title', 'Aloha')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupDeduplicatedInternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('title', 'Aloha', 'Aloha')",
+                "uniq('title')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupCopiedInternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('data', 'Aloha')",
+                "set_array('title')",
+                "copy_field('data', 'title')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("data", "Aloha");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupCopiedDeduplicatedInternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('data', 'Aloha', 'Aloha')",
+                "uniq('data')",
+                "set_array('title')",
+                "copy_field('data', 'title')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("data", "Aloha");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupCopiedExternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('title')",
+                "copy_field('data', 'title')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("data", "Aloha");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("data", "Aloha");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupCopiedDeduplicatedExternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "uniq('data')",
+                "set_array('title')",
+                "copy_field('data', 'title')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("data", "Aloha");
+                i.literal("data", "Aloha");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("data", "Aloha");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupMovedDeduplicatedExternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "uniq('data')",
+                "set_array('title')",
+                "move_field('data', 'title')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("data", "Aloha");
+                i.literal("data", "Aloha");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupMovedExternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('title')",
+                "move_field('data', 'title')",
+                LOOKUP + " Aloha: Alohaeha)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("data", "Aloha");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     // See https://github.com/metafacture/metafacture-fix/issues/121
     public void shouldLookupArraySubFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
@@ -241,7 +407,7 @@ public class MetafixLookupTest {
     @Test
     public void shouldNotLookupInExternalFileMapWithWrongOptions() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                LOOKUP + " '" + CSV_MAP + "', sep_char: '\t')"
+                LOOKUP + " '" + CSV_MAP + "', sep_char:'\t')"
             ),
             i -> {
                 i.startRecord("1");
@@ -252,6 +418,237 @@ public class MetafixLookupTest {
             },
             o -> {
                 o.get().startRecord("1");
+                o.get().literal("title", "Aloha");
+                o.get().literal("title", "Moin");
+                o.get().literal("title", "Hey");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldDeleteLookupInExternalFileMapWithWrongOptions() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                LOOKUP + " '" + CSV_MAP + "', sep_char: '\t', delete: 'true')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Hey");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/149
+    public void shouldKeepOriginalValueIfNotFoundAndNoDefault() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('title.*', Aloha: 'Alohaeha', 'Moin': 'Moin zäme')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Yo");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().literal("title", "Moin zäme");
+                o.get().literal("title", "Yo");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldUseDefaultValueIfNotFound() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('title.*', Aloha: 'Alohaeha', 'Moin': 'Moin zäme', __default: Tach)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Yo");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().literal("title", "Moin zäme");
+                o.get().literal("title", "Tach");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/149
+    public void shouldDeleteNonFoundLookupOnDemand() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('title.*', Aloha: Alohaeha, 'Moin': 'Moin zäme', delete: 'true')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Yo");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().literal("title", "Moin zäme");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/149
+    public void shouldNotDeleteNonFoundLookupExplicitly() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('title.*', Aloha: Alohaeha, 'Moin': 'Moin zäme', delete: 'false')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Yo");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().literal("title", "Moin zäme");
+                o.get().literal("title", "Yo");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupAfterKeepingUnsuccessfulLookup() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('title.*', Aloha: Alohaeha, 'Moin': 'Moin zäme')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Yo");
+                i.literal("title", "Moin");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().literal("title", "Yo");
+                o.get().literal("title", "Moin zäme");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupAfterDeletingUnsuccessfulLookup() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('title.*', Aloha: Alohaeha, 'Moin': 'Moin zäme', delete: 'true')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Yo");
+                i.literal("title", "Moin");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().literal("title", "Moin zäme");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/149
+    public void shouldDeleteNonFoundLookupOnDemandNonRepeatedField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup('title', Aloha: Alohaeha, 'Moin': 'Moin zäme', delete: 'true')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("title", "Moin");
+                i.endRecord();
+                i.startRecord("3");
+                i.literal("title", "Yo");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("title", "Moin zäme");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldDeleteNonFoundLookupOnDemandAndVacuum() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_map('testMap', Aloha: Alohaeha, 'Moin': 'Moin zäme')",
+                "lookup('title.*', testMap, delete: 'true')",
+                "vacuum()"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Yo");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().literal("title", "Moin zäme");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldDeleteNonFoundLookupOnDemandAndMove() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_map('testMap', Aloha: Alohaeha, 'Moin': 'Moin zäme')",
+                "lookup('title.*', testMap, delete: 'true')",
+                "move_field('title','t')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Yo");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("t", "Alohaeha");
+                o.get().literal("t", "Moin zäme");
                 o.get().endRecord();
             }
         );
@@ -282,6 +679,28 @@ public class MetafixLookupTest {
     public void shouldNotLookupInUnknownInternalMap() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 LOOKUP + " 'testMap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Hey");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Aloha");
+                o.get().literal("title", "Moin");
+                o.get().literal("title", "Hey");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldDeleteLookupInUnknownInternalMap() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                LOOKUP + " 'testMap', delete: 'true')"
             ),
             i -> {
                 i.startRecord("1");

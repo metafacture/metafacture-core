@@ -1,7 +1,7 @@
 {
+  "animal" : "bunny is cool",
   "animal_2" : {
-    "type" : "TEST",
-    "name" : "bird boss"
-  },
-  "animal" : "bunny is cool"
+    "name" : "bird boss",
+    "type" : "TEST"
+  }
 }

@@ -748,18 +748,17 @@ public class MetafixBindTest {
     public void shouldExecuteCustomJavaContext() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do org.metafacture.metafix.util.TestContext(test, data: '42')",
-                "  upcase(title)",
+                "  add_field(title,'marc')",
                 "end"
             ),
             i -> {
                 i.startRecord("1");
-                i.literal("title", "marc");
                 i.endRecord();
             },
             o -> {
                 o.get().startRecord("1");
                 o.get().literal("BEFORE", "test");
-                o.get().literal("title", "MARC");
+                o.get().literal("title", "marc");
                 o.get().literal("AFTER", "42");
                 o.get().endRecord();
             }

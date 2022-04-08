@@ -426,7 +426,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/92")
+    // See https://github.com/metafacture/metafacture-fix/issues/92
     public void complexAppendWithArrayOfObjects() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "copy_field('others', 'animals[].$append')",
@@ -650,7 +650,7 @@ public class MetafixRecordTest {
                 i.literal("ANIMALS", "dragon and unicorn");
                 i.endRecord();
             },
-            o -> {
+            (o, f) -> {
                 o.get().startRecord("1");
                 o.get().literal("animals", "dog");
                 o.get().literal("animals", "cat");
@@ -666,9 +666,10 @@ public class MetafixRecordTest {
                 o.get().literal("2", "cat");
                 o.get().literal("3", "zebra");
                 o.get().literal("4", "bunny");
-                // TODO: Why is the hash (`animols`) not expected here?
-                // See also https://github.com/metafacture/metafacture-fix/issues/89#issuecomment-999433570
-                o.get().endEntity();
+                o.get().startEntity("5");
+                o.get().literal("name", "bird");
+                o.get().literal("type", "TEST");
+                f.apply(2).endEntity();
                 o.get().endRecord();
             }
         );
@@ -741,7 +742,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/121")
+    // See https://github.com/metafacture/metafacture-fix/issues/121
     public void shouldCopyNestedArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('TEST_4[]')",
@@ -1083,7 +1084,7 @@ public class MetafixRecordTest {
     }
 
     private void assertThrowsOnEmptyRecord(final String index) {
-        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Using ref, but can't find: " + index + " in: {}", () -> {
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Using ref, but can't find: " + index + " in: null", () -> {
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "add_field('animals[]." + index + ".kind','nice')"
                 ),
@@ -1342,6 +1343,7 @@ public class MetafixRecordTest {
     }
 
     @Test
+    @MetafixToDo("Do we actually need/want implicit $append? WDCD?")
     public void copyIntoArrayOfHashesImplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('author[]')",
@@ -1660,11 +1662,57 @@ public class MetafixRecordTest {
     }
 
     @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/111
+    public void setArrayReplaceExisting() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('foo[]','a','b','c')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("foo[]");
+                i.literal("1", "A");
+                i.literal("2", "B");
+                i.literal("3", "C");
+                i.endEntity();
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("foo[]");
+                o.get().literal("1", "a");
+                o.get().literal("2", "b");
+                o.get().literal("3", "c");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void setHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_hash('foo','a': 'b','c': 'd')"),
             i -> {
                 i.startRecord("1");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("foo");
+                o.get().literal("a", "b");
+                o.get().literal("c", "d");
+                o.get().endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/111
+    public void setHashReplaceExisting() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_hash('foo','a': 'b','c': 'd')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("foo");
+                i.literal("a", "B");
+                i.literal("c", "D");
+                i.endEntity();
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
@@ -1801,6 +1849,7 @@ public class MetafixRecordTest {
     }
 
     @Test
+    @MetafixToDo("Is set_array with $append something we need/want? WDCD?")
     public void appendArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('nums[]', '1')",
@@ -2149,6 +2198,44 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void transformSingleField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "upcase('name')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "MAX");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @MetafixToDo("Same name, is replaced. Repeated fields to array?")
+    public void transformRepeatedField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "upcase('name')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.literal("name", "mo");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "MAX");
+                o.get().literal("name", "MO");
+                o.get().endRecord();
+            }
+        );
+    }
+
     public void shouldNotAccessArrayImplicitly() {
         MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
@@ -2243,7 +2330,6 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // TODO: implement implicit iteration?
     public void accessArrayOfObjectsByWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "upcase('author.*.name')"

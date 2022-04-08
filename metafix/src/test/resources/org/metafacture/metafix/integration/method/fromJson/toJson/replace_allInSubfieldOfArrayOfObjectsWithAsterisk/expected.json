@@ -1,12 +1,12 @@
 {
   "key" : [ {
-    "foo" : "bar",
-    "word" : "value"
+    "word" : "value",
+    "foo" : "bar"
   }, {
-    "foo" : "bar",
-    "word" : "m__re_value"
+    "word" : "m__re_value",
+    "foo" : "bar"
   }, {
-    "foo" : "bar",
-    "word" : "even_m__re_value"
+    "word" : "even_m__re_value",
+    "foo" : "bar"
   } ]
 }

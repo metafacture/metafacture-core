@@ -5,8 +5,10 @@ plugins {
 dependencies {
   implementation project(':metafix')
 
+  implementation "org.metafacture:metafacture-biblio:${versions.metafacture}"
   implementation "org.metafacture:metafacture-json:${versions.metafacture}"
   implementation "org.metafacture:metafacture-runner:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-xml:${versions.metafacture}"
 }
 
 application {

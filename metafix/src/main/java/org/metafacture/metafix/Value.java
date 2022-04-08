@@ -20,7 +20,7 @@ import org.metafacture.commons.tries.SimpleRegexTrie;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,21 +41,6 @@ import java.util.stream.Stream;
  */
 public class Value {
 
-    /*package-private*/ enum ReservedField {
-        $append, $first, $last;
-
-        private static final Map<String, ReservedField> STRING_TO_ENUM = new HashMap<>();
-        static {
-            for (final ReservedField f : values()) {
-                STRING_TO_ENUM.put(f.toString(), f);
-            }
-        }
-
-        static ReservedField fromString(final String string) {
-            return STRING_TO_ENUM.get(string);
-        }
-    }
-
     private static final String FIELD_PATH_SEPARATOR = "\\.";
 
     private final Array array;
@@ -64,12 +49,15 @@ public class Value {
 
     private final Type type;
 
+    private String path;
+
     public Value(final Array array) {
         type = array != null ? Type.Array : null;
 
         this.array = array;
         this.hash = null;
         this.string = null;
+        this.path = null;
     }
 
     public Value(final List<Value> array) {
@@ -86,6 +74,7 @@ public class Value {
         this.array = null;
         this.hash = hash;
         this.string = null;
+        this.path = null;
     }
 
     public Value(final Map<String, Value> hash) {
@@ -102,10 +91,20 @@ public class Value {
         this.array = null;
         this.hash = null;
         this.string = string;
+        this.path = null;
     }
 
     public Value(final int integer) {
         this(String.valueOf(integer));
+    }
+
+    public Value(final String string, final String path) {
+        type = string != null ? Type.String : null;
+
+        this.array = null;
+        this.hash = null;
+        this.string = string;
+        this.path = path;
     }
 
     public static Value newArray() {
@@ -204,6 +203,32 @@ public class Value {
         }
     }
 
+    /*package-private*/ Value updatePathRename(final String newName) {
+        if (path != null) {
+            path = newName.replaceAll("\\$[^.]+", split(path)[0]);
+        }
+        return this;
+    }
+
+    /*package-private*/ Value updatePathAddBase(final Value container, final String fallback) {
+        if (container.path != null) {
+            final String[] pathSegments = split(path != null ? path : fallback);
+            final String lastSegment = pathSegments[pathSegments.length - 1];
+            this.path = container.path + "." + lastSegment;
+        }
+        return this;
+    }
+
+    /*package-private*/ Value updatePathAppend(final String suffix, final String fallback) {
+        if (path != null) {
+            path = path + suffix;
+        }
+        else {
+            path = fallback + suffix;
+        }
+        return this;
+    }
+
     public TypeMatcher matchType() {
         return new TypeMatcher(this);
     }
@@ -251,6 +276,14 @@ public class Value {
 
     /*package-private*/ static String[] split(final String fieldPath) {
         return fieldPath.split(FIELD_PATH_SEPARATOR);
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    /*package-private*/ void setPath(final String path) {
+        this.path = path;
     }
 
     enum Type {
@@ -310,7 +343,8 @@ public class Value {
 
     private abstract static class AbstractValueType {
 
-        protected static final Predicate<Value> REMOVE_EMPTY_VALUES = v -> v.extractType((m, c) -> m
+        protected static final Predicate<Value> REMOVE_EMPTY_VALUES = v ->
+            v.extractType((m, c) -> m
                 .ifArray(a -> {
                     a.removeEmptyValues();
                     c.accept(a.isEmpty());
@@ -521,8 +555,18 @@ public class Value {
          * @return the metadata value
          */
         public Value get(final String field) {
+            return get(field, false);
+        }
+
+        /*package-private*/ Value get(final String field, final boolean enforceStringValue) { // TODO use Type.String etc.?
             // TODO: special treatment (only) for exact matches?
-            final List<Value> list = findFields(field).map(this::getField).collect(Collectors.toList());
+            final List<Value> list = findFields(field).map(actualField -> {
+                final Value value = getField(actualField);
+                if (enforceStringValue) {
+                    value.asString();
+                }
+                return value;
+            }).collect(Collectors.toList());
             return list.isEmpty() ? null : list.size() == 1 ? list.get(0) : newArray(a -> list.forEach(v -> v.matchType()
                         .ifArray(b -> b.forEach(a::add))
                         .orElse(a::add)));
@@ -552,8 +596,20 @@ public class Value {
          * @param newValue the new metadata value
          */
         public void add(final String field, final Value newValue) {
-            final Value oldValue = get(field);
-            put(field, oldValue == null ? newValue : oldValue.asList(a1 -> newValue.asList(a2 -> a2.forEach(a1::add))));
+            final Value oldValue = new FixPath(field).findIn(this);
+            if (oldValue == null) {
+                put(field, newValue);
+            }
+            else {
+                if (!oldValue.isArray()) { // repeated field: convert single val to first in array
+                    oldValue.updatePathAppend(".1", field);
+                }
+                put(field, oldValue.asList(oldVals -> newValue.asList(newVals -> {
+                    for (int i = 0; i < newVals.size(); ++i) {
+                        oldVals.add(newVals.get(i).updatePathAppend("." + (i + 1 + oldVals.size()), field));
+                    }
+                })));
+            }
         }
 
         /**
@@ -562,17 +618,17 @@ public class Value {
          * @param field the field name
          */
         public void remove(final String field) {
-            modifyFields(field, this::removeField);
+            final FixPath fixPath = new FixPath(field);
+            if (fixPath.size() > 1) {
+                fixPath.removeNestedFrom(this);
+            }
+            else {
+                modifyFields(field, this::removeField);
+            }
         }
 
         public void removeField(final String field) {
             map.remove(field);
-        }
-
-        public void copy(final List<String> params) {
-            final String oldName = params.get(0);
-            final String newName = params.get(1);
-            asList(new FixPath(oldName).findIn(this), a -> a.forEach(v -> new FixPath(newName).appendIn(this, v)));
         }
 
         /**

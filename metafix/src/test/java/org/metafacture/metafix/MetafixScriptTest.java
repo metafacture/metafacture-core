@@ -432,19 +432,21 @@ public class MetafixScriptTest {
     public void shouldSkipExpressionOnExecutionException() {
         assertStrictness(Metafix.Strictness.EXPRESSION, true, o -> {
             o.get().startRecord("1");
-            o.get().literal("before", "");
             o.get().literal("data", "FOO");
+            o.get().literal("before", "");
             o.get().literal("after", "");
             o.get().endRecord();
 
             o.get().startRecord("2");
+            o.get().literal("data", "foo");
+            o.get().literal("data", "bar");
             o.get().literal("before", "");
             o.get().literal("after", "");
             o.get().endRecord();
 
             o.get().startRecord("3");
-            o.get().literal("before", "");
             o.get().literal("data", "BAR");
+            o.get().literal("before", "");
             o.get().literal("after", "");
             o.get().endRecord();
         });
@@ -454,14 +456,14 @@ public class MetafixScriptTest {
     public void shouldSkipRecordOnExecutionException() {
         assertStrictness(Metafix.Strictness.RECORD, true, o -> {
             o.get().startRecord("1");
-            o.get().literal("before", "");
             o.get().literal("data", "FOO");
+            o.get().literal("before", "");
             o.get().literal("after", "");
             o.get().endRecord();
 
             o.get().startRecord("3");
-            o.get().literal("before", "");
             o.get().literal("data", "BAR");
+            o.get().literal("before", "");
             o.get().literal("after", "");
             o.get().endRecord();
         });

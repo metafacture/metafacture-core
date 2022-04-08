@@ -32,7 +32,7 @@ import java.util.Arrays;
  *
  * @author Fabian Steeg
  */
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class) // checkstyle-disable-line JavaNCSS
 @ExtendWith(MetafixToDo.Extension.class)
 public class MetafixMethodTest {
 
@@ -268,7 +268,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    public void shouldTrimString() {
+    public void shouldTrimStringSingle() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "trim('title')"
             ),
@@ -286,32 +286,105 @@ public class MetafixMethodTest {
     }
 
     @Test
-    public void shouldTrimStringInHash() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "trim('data.title')"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.startEntity("data");
-                i.literal("title", "  marc  ");
-                i.endEntity();
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().startEntity("data");
-                o.get().literal("title", "marc");
-                o.get().endEntity();
-                o.get().endRecord();
-            }
+    public void shouldNotTrimRepeatedField() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "trim('data.title')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("data");
+                    i.literal("title", "  marc  ");
+                    i.literal("title", "  json  ");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldNotTrimIndexedArray() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "trim('data.title[]')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("data");
+                    i.startEntity("title[]");
+                    i.literal("1", "  marc  ");
+                    i.literal("2", "  json  ");
+                    i.endEntity();
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldNotTrimHash() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Hash", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "trim('data.title')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("data");
+                    i.startEntity("title");
+                    i.literal("1", "  marc  ");
+                    i.literal("2", "  json  ");
+                    i.endEntity();
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
         );
     }
 
     @Test
     // See https://github.com/metafacture/metafacture-fix/pull/133
-    public void shouldTrimStringInArrayOfHashes() {
+    public void shouldNotTrimStringInImplicitArrayOfHashes() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected Hash, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "trim('data.title')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("data");
+                    i.literal("title", "  marc  ");
+                    i.endEntity();
+                    i.startEntity("data");
+                    i.literal("title", "  json  ");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().startEntity("data");
+                    o.get().literal("title", "  marc  ");
+                    o.get().endEntity();
+                    o.get().startEntity("data");
+                    o.get().literal("title", "  json  ");
+                    o.get().endEntity();
+                    o.get().endRecord();
+                }
+            )
+        );
+    }
+
+    @Test
+    // See https://github.com/metafacture/metafacture-fix/pull/133
+    public void shouldTrimStringInExplicitArrayOfHashes() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "trim('data.title')"
+                "trim('data.*.title')"
             ),
             i -> {
                 i.startRecord("1");
@@ -493,7 +566,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    public void wildcard() {
+    public void wildcardSingleChar() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "trim('title-?')"),
             i -> {
@@ -514,6 +587,165 @@ public class MetafixMethodTest {
                 o.get().startRecord("2");
                 o.get().literal("title-1", "marc");
                 o.get().literal("title-2", "json");
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void wildcardMultiChar() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "trim('title*')"),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.literal("title-1", "  marc  ");
+                i.literal("title-2", "  json  ");
+                i.endRecord();
+
+                i.startRecord("3");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().literal("title-1", "marc");
+                o.get().literal("title-2", "json");
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void wildcardNestedPartialSingle() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "trim('work.title-?')"),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.startEntity("work");
+                i.literal("title-1", "  marc  ");
+                i.literal("title-2", "  json  ");
+                i.endEntity();
+                i.endRecord();
+
+                i.startRecord("3");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().startEntity("work");
+                o.get().literal("title-1", "marc");
+                o.get().literal("title-2", "json");
+                o.get().endEntity();
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void wildcardNestedPartialMulti() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "trim('work.title*')"),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.startEntity("work");
+                i.literal("title-1", "  marc  ");
+                i.literal("title-2", "  json  ");
+                i.endEntity();
+                i.endRecord();
+
+                i.startRecord("3");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().startEntity("work");
+                o.get().literal("title-1", "marc");
+                o.get().literal("title-2", "json");
+                o.get().endEntity();
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/121")
+    public void wildcardFullFieldNonIndex() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "trim('*')"),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.literal("title-1", "  marc  ");
+                i.literal("title-2", "  json  ");
+                i.endRecord();
+
+                i.startRecord("3");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().literal("title-1", "marc");
+                o.get().literal("title-2", "json");
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/121")
+    public void wildcardNestedFullFieldNonIndex() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "trim('work.*')"),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.startEntity("work");
+                i.literal("title-1", "  marc  ");
+                i.literal("title-2", "  json  ");
+                i.endEntity();
+                i.endRecord();
+
+                i.startRecord("3");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().startEntity("work");
+                o.get().literal("title-1", "marc");
+                o.get().literal("title-2", "json");
+                o.get().endEntity();
                 o.get().endRecord();
 
                 o.get().startRecord("3");
@@ -589,7 +821,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // TODO: Fix order (`animols.name` should stay before `animols.type`)
     public void shouldAppendValueInHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "append(animols.name, ' boss')"
@@ -605,8 +836,8 @@ public class MetafixMethodTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("animols");
-                o.get().literal("type", "TEST");
                 o.get().literal("name", "bird boss");
+                o.get().literal("type", "TEST");
                 o.get().endEntity();
                 o.get().endRecord();
             }
@@ -667,11 +898,10 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldNotAppendValueToArray() {
         MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "append('animals[]', ' is cool')"
+                    "append('animals[]', 'another one')"
                 ),
                 i -> {
                     i.startRecord("1");
@@ -951,7 +1181,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // TODO: Fix order (`animols.name` should stay before `animols.type`)
     public void shouldPrependValueInHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "prepend(animols.name, 'nice ')"
@@ -967,8 +1196,8 @@ public class MetafixMethodTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("animols");
-                o.get().literal("type", "TEST");
                 o.get().literal("name", "nice bird");
+                o.get().literal("type", "TEST");
                 o.get().endEntity();
                 o.get().endRecord();
             }
@@ -1076,7 +1305,6 @@ public class MetafixMethodTest {
 
     @Test
     // See https://github.com/metafacture/metafacture-fix/issues/121
-    // TODO: Fix order (`coll[].*.a` should stay before `coll[].*.b`)
     public void shouldPrependValueInArraySubField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "prepend('coll[].*.a', 'HELLO ')"
@@ -1105,12 +1333,12 @@ public class MetafixMethodTest {
                 o.get().startRecord("1");
                 o.get().startEntity("coll[]");
                 o.get().startEntity("1");
-                o.get().literal("b", "Dog");
                 o.get().literal("a", "HELLO Dog");
+                o.get().literal("b", "Dog");
                 o.get().endEntity();
                 o.get().startEntity("2");
-                o.get().literal("b", "Ape");
                 o.get().literal("a", "HELLO Ape");
+                o.get().literal("b", "Ape");
                 o.get().endEntity();
                 o.get().startEntity("3");
                 o.get().literal("a", "HELLO Giraffe");
@@ -1128,7 +1356,7 @@ public class MetafixMethodTest {
     public void shouldNotPrependValueToArray() {
         MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "prepend('animals[]', 'cool ')"
+                    "prepend('animals[]', 'the first one')"
                 ),
                 i -> {
                     i.startRecord("1");
@@ -1136,6 +1364,50 @@ public class MetafixMethodTest {
                     i.literal("1", "dog");
                     i.literal("2", "cat");
                     i.literal("3", "zebra");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldNotPrependValueToArrayWithWildcard() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "prepend('animal?[]', 'the first one')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("animals[]");
+                    i.literal("1", "dog");
+                    i.literal("2", "cat");
+                    i.literal("3", "zebra");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldNotPrependValueToArrayWithWildcardNested() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "prepend('some.animal?[]', 'the first one')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("some");
+                    i.startEntity("animals[]");
+                    i.literal("1", "dog");
+                    i.literal("2", "cat");
+                    i.literal("3", "zebra");
+                    i.endEntity();
                     i.endEntity();
                     i.endRecord();
                 },
@@ -1246,7 +1518,6 @@ public class MetafixMethodTest {
 
     @Test
     // See https://github.com/metafacture/metafacture-fix/issues/121
-    // TODO: Fix order (`coll[].*.a` should stay before `coll[].*.b`)
     public void shouldReplaceAllRegexesInArraySubField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "replace_all('coll[].*.a', 'o', '__')"
@@ -1275,18 +1546,438 @@ public class MetafixMethodTest {
                 o.get().startRecord("1");
                 o.get().startEntity("coll[]");
                 o.get().startEntity("1");
-                o.get().literal("b", "Dog");
                 o.get().literal("a", "D__g");
+                o.get().literal("b", "Dog");
                 o.get().endEntity();
                 o.get().startEntity("2");
-                o.get().literal("b", "Ape");
                 o.get().literal("a", "Ape");
+                o.get().literal("b", "Ape");
                 o.get().endEntity();
                 o.get().startEntity("3");
                 o.get().literal("a", "Giraffe");
                 o.get().endEntity();
                 o.get().startEntity("4");
                 o.get().literal("a", "Cr__c__dile");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotInsertOptionalArraySubFieldWithAsteriskInReplaceAll() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all('coll[].*.b', 'x', 'y')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("coll[]");
+                i.startEntity("1");
+                i.literal("a", "Dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("b", "Ape");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("a", "Dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("b", "Ape");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotInsertOptionalRepeatedHashSubFieldWithAsteriskInReplaceAll() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all('coll.*.b', 'x', 'y')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("coll");
+                i.literal("a", "Dog");
+                i.endEntity();
+                i.startEntity("coll");
+                i.literal("b", "Ape");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("coll");
+                o.get().literal("a", "Dog");
+                o.get().endEntity();
+                o.get().startEntity("coll");
+                o.get().literal("b", "Ape");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void replaceAllInOptionalSubfieldInArrayOfObjectsWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "replace_all('RSWK[].*.subjectGenre', '[.]$', '')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("RSWK[]");
+                i.startEntity("1");
+                i.literal("subjectTopicName", "Nonprofit organizations");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("subjectTopicName", "Nonprofit organizations");
+                i.literal("subjectGenre", "Case studies.");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("RSWK[]");
+                o.get().startEntity("1");
+                o.get().literal("subjectTopicName", "Nonprofit organizations");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("subjectTopicName", "Nonprofit organizations");
+                o.get().literal("subjectGenre", "Case studies");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void inDoBindCopyFieldWithVarInSourceAndTarget() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('RSWK[]')",
+                "do list(path: '650??', 'var': '$i')",
+                "  copy_field('$i.a', 'RSWK[].$append.subjectTopicName')",
+                "  copy_field('$i.v', 'RSWK[].$last.subjectGenre')",
+                "end",
+                "retain('RSWK[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("650  ");
+                i.literal("a", "Nonprofit organizations");
+                i.literal("x", "Management.");
+                i.endEntity();
+                i.startEntity("650  ");
+                i.literal("a", "Nonprofit organizations");
+                i.literal("x", "Management");
+                i.literal("v", "Case studies.");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("RSWK[]");
+                o.get().startEntity("1");
+                o.get().literal("subjectTopicName", "Nonprofit organizations");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("subjectTopicName", "Nonprofit organizations");
+                o.get().literal("subjectGenre", "Case studies.");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void replaceAllWithWildcardAfterCopyFieldWithVarInSourceAndTarget() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('RSWK[]')",
+                "do list(path: '650??', 'var': '$i')",
+                "  copy_field('$i.a', 'RSWK[].$append.subjectTopicName')",
+                "  copy_field('$i.v', 'RSWK[].$last.subjectGenre')",
+                "end",
+                "replace_all('RSWK[].*.subjectGenre', '[.]$', '')",
+                "retain('RSWK[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("650  ");
+                i.literal("a", "Nonprofit organizations");
+                i.literal("x", "Management.");
+                i.endEntity();
+                i.startEntity("650  ");
+                i.literal("a", "Nonprofit organizations");
+                i.literal("x", "Management");
+                i.literal("v", "Case studies.");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("RSWK[]");
+                o.get().startEntity("1");
+                o.get().literal("subjectTopicName", "Nonprofit organizations");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("subjectTopicName", "Nonprofit organizations");
+                o.get().literal("subjectGenre", "Case studies");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void multipleReplaceAllWithWildcardAfterCopyFieldWithVarInSourceAndTarget() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('RSWK[]')",
+                "do list(path: '650??', 'var': '$i')",
+                "  copy_field('$i.a', 'RSWK[].$append.subjectTopicName')",
+                "  copy_field('$i.v', 'RSWK[].$last.subjectGenre')",
+                "end",
+                "replace_all('RSWK[].*.subjectGenre', '[.]$', '')",
+                "replace_all('RSWK[].*.subjectGenre', '[.]$', '')",
+                "retain('RSWK[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("650  ");
+                i.literal("a", "Nonprofit organizations");
+                i.literal("x", "Management.");
+                i.endEntity();
+                i.startEntity("650  ");
+                i.literal("a", "Nonprofit organizations");
+                i.literal("x", "Management");
+                i.literal("v", "Case studies.");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("RSWK[]");
+                o.get().startEntity("1");
+                o.get().literal("subjectTopicName", "Nonprofit organizations");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("subjectTopicName", "Nonprofit organizations");
+                o.get().literal("subjectGenre", "Case studies");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @MetafixToDo("Do we actually want implicit append? WDCD? See (passing) copyFieldToSubfieldOfArrayOfStringsWithIndexImplicitAppend")
+    public void copyFieldToSubfieldOfArrayOfObjectsWithIndexImplicitAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('test[]')",
+                "copy_field('key', 'test[].1.field')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("key", "value");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("key", "value");
+                o.get().startEntity("test[]");
+                o.get().startEntity("1");
+                o.get().literal("field", "value");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    // Do we actually want implicit append? WDCD? See (failing) copyFieldToSubfieldOfArrayOfObjectsWithIndexImplicitAppend
+    public void copyFieldToSubfieldOfArrayOfStringsWithIndexImplicitAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('test[]')",
+                "copy_field('key', 'test[].1')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("key", "value");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("key", "value");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "value");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void copyFieldToSubfieldOfArrayOfObjectsWithIndexExplicitAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('test[]')",
+                "copy_field('key', 'test[].$append.field')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("key", "value");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("key", "value");
+                o.get().startEntity("test[]");
+                o.get().startEntity("1");
+                o.get().literal("field", "value");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/205")
+    public void addFieldIntoArrayOfObjectsWithLastWildcardImplicitSkip() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('animals[].$last.key', 'value')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/205")
+    public void addFieldIntoArrayOfObjectsWithLastWildcardExplicitSkip() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if exists('animals[].$last')",
+                "  add_field('animals[].$last.key', 'value')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReplaceAllRegexesInCopiedArraySubField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('coll[]')",
+                "copy_field('a', 'coll[].$append.a')",
+                "replace_all('coll[].*.a', 'o', '__')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("a", "Dog");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("a", "Dog");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("a", "D__g");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReplaceAllRegexesInMovedArraySubField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('coll[]')",
+                "move_field('a', 'coll[].$append.a')",
+                "replace_all('coll[].*.a', 'o', '__')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("a", "Dog");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("a", "D__g");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReplaceAllRegexesInCopiedArraySubFieldOriginal() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('coll[]')",
+                "copy_field('a', 'coll[].$append.a')",
+                "replace_all('a', 'o', '__')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("a", "Dog");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("a", "D__g");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("a", "Dog");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReplaceAllRegexesInListCopiedArraySubField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('coll[]')",
+                "do list(path: 'a', 'var': '$i')",
+                "  copy_field('$i', 'coll[].$append.a')",
+                "end",
+                "replace_all('coll[].*.a', 'o', '__')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("a", "Dog");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("a", "Dog");
+                o.get().startEntity("coll[]");
+                o.get().startEntity("1");
+                o.get().literal("a", "D__g");
                 f.apply(2).endEntity();
                 o.get().endRecord();
             }
@@ -1985,7 +2676,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    public void shouldRemoveDuplicateArrays() {
+    public void shouldRemoveDuplicateArraysAtDifferentPath() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "uniq('arrays[]')"
             ),
@@ -2032,7 +2723,54 @@ public class MetafixMethodTest {
     }
 
     @Test
-    public void shouldRemoveDuplicateHashes() {
+    public void shouldRemoveDuplicateArrays() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "uniq('arrays[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("arrays[]");
+                i.startEntity("1");
+                i.literal("number", "41");
+                i.literal("number", "23");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("number", "42");
+                i.literal("number", "23");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("number", "6");
+                i.literal("number", "23");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("number", "6");
+                i.literal("number", "23");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("arrays[]");
+                o.get().startEntity("1");
+                o.get().literal("number", "41");
+                o.get().literal("number", "23");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("number", "42");
+                o.get().literal("number", "23");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("number", "6");
+                o.get().literal("number", "23");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldRemoveDuplicateHashesAtDifferentPath() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "uniq('hashes[]')"
             ),
@@ -2049,6 +2787,46 @@ public class MetafixMethodTest {
                 i.literal("number", "6");
                 i.endEntity();
                 i.startEntity("4");
+                i.literal("number", "6");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("hashes[]");
+                o.get().startEntity("1");
+                o.get().literal("number", "41");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("number", "42");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("number", "6");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldRemoveDuplicateHashes() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "uniq('hashes[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("hashes[]");
+                i.startEntity("1");
+                i.literal("number", "41");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("number", "42");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("number", "6");
+                i.endEntity();
+                i.startEntity("3");
                 i.literal("number", "6");
                 i.endEntity();
                 i.endEntity();
