@@ -21,6 +21,7 @@ import org.metafacture.commons.tries.SimpleRegexTrie;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -459,9 +460,10 @@ public class Value {
      */
     public static class Hash extends AbstractValueType {
 
-        private final Map<String, Value> map = new LinkedHashMap<>();
+        private static final Map<String, Map<String, Boolean>> TRIE_CACHE = new HashMap<>();
+        private static final SimpleRegexTrie<String> TRIE = new SimpleRegexTrie<>();
 
-        private final SimpleRegexTrie<String> trie = new SimpleRegexTrie<>();
+        private final Map<String, Value> map = new LinkedHashMap<>();
 
         /**
          * Creates an empty instance of {@link Hash}.
@@ -695,8 +697,12 @@ public class Value {
         }
 
         private <T> T matchFields(final String pattern, final BiFunction<Stream<String>, Predicate<String>, T> function) {
-            trie.put(pattern, pattern);
-            return function.apply(map.keySet().stream(), f -> trie.get(f).contains(pattern));
+            final Map<String, Boolean> matcher = TRIE_CACHE.computeIfAbsent(pattern, k -> {
+                TRIE.put(k, k);
+                return new HashMap<>();
+            });
+
+            return function.apply(map.keySet().stream(), f -> matcher.computeIfAbsent(f, k -> TRIE.get(k).contains(pattern)));
         }
 
     }
