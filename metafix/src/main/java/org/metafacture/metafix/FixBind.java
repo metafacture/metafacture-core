@@ -17,7 +17,6 @@
 package org.metafacture.metafix;
 
 import org.metafacture.metafix.api.FixContext;
-import org.metafacture.metafix.fix.Expression;
 
 import java.util.List;
 import java.util.Map;
@@ -26,8 +25,7 @@ public enum FixBind implements FixContext {
 
     list {
         @Override
-        public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final List<Expression> expressions) {
-            final RecordTransformer recordTransformer = metafix.getRecordTransformer();
+        public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
             final String scopeVariable = options.get("var");
             Value.asList(record.get(options.get("path")), a -> {
                 for (int i = 0; i < a.size(); ++i) {
@@ -36,7 +34,7 @@ public enum FixBind implements FixContext {
                     // with var -> keep full record in scope, add the var:
                     if (scopeVariable != null) {
                         record.put(scopeVariable, value);
-                        recordTransformer.process(expressions);
+                        recordTransformer.transform(record);
                         record.remove(scopeVariable);
                     }
                     // w/o var -> use the currently bound value as the record:
@@ -48,10 +46,7 @@ public enum FixBind implements FixContext {
                                 final Record scopeRecord = new Record();
                                 scopeRecord.addAll(h);
 
-                                recordTransformer.setRecord(scopeRecord);
-                                recordTransformer.process(expressions);
-                                recordTransformer.setRecord(record);
-
+                                recordTransformer.transform(scopeRecord);
                                 a.set(index, new Value(scopeRecord));
                             })
                             // TODO: bind to arrays (if that makes sense) and strings (access with '.')

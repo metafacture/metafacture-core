@@ -57,32 +57,29 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
 
     private static final Logger LOG = LoggerFactory.getLogger(RecordTransformer.class);
 
+    private final List<Expression> expressions;
     private final Map<String, String> vars;
     private final Metafix metafix;
 
     private Record record;
 
-    /*package-private*/ RecordTransformer(final Metafix metafix) {
+    /*package-private*/ RecordTransformer(final Metafix metafix, final Fix fix) {
+        this(metafix, fix.getElements());
+    }
+
+    private RecordTransformer(final Metafix metafix, final List<Expression> expressions) {
+        this.expressions = expressions;
         this.metafix = metafix;
         vars = metafix.getVars();
     }
 
-    /*package-private*/ Record transform(final Fix fix) {
-        setRecord(metafix.getCurrentRecord().shallowClone());
-        return transformRecord(fix);
+    public void transform(final Record currentRecord) {
+        this.record = currentRecord;
+        process(expressions);
     }
 
-    public Record transformRecord(final Fix fix) {
-        process(fix.getElements());
-        return record;
-    }
-
-    public void setRecord(final Record record) {
-        this.record = record;
-    }
-
-    public void process(final List<Expression> expressions) {
-        expressions.forEach(e -> {
+    private void process(final List<Expression> currentExpressions) {
+        currentExpressions.forEach(e -> {
             final List<String> params = resolveParams(e.getParams());
 
             if (e instanceof Do) {
@@ -106,7 +103,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     private void processDo(final Do expression, final List<String> params) {
         processExpression(expression, name -> {
             final FixContext context = getInstance(name, FixContext.class, FixBind::valueOf);
-            context.execute(metafix, record, params, options(expression.getOptions()), expression.getElements());
+            context.execute(metafix, record, params, options(expression.getOptions()), new RecordTransformer(metafix, expression.getElements()));
         });
 
         // TODO, possibly: use morph collectors here
