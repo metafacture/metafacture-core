@@ -1012,4 +1012,61 @@ public class MetafixIfTest {
         );
     }
 
+    @Test
+    public void shouldIncludeLocationAndTextInProcessExceptionInConditional() {
+        final String text1 = "elsif exists()";
+        final String text2 = "nothing()";
+        final String message = "Error while executing Fix expression (at FILE, line 3): " + text1 + " " + text2;
+
+        MetafixTestHelpers.assertThrows(FixProcessException.class, s -> s.replaceAll("file:/.+?\\.fix", "FILE"), message, () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "if exists('animal')",
+                    "nothing()",
+                    text1,
+                    text2,
+                    "end"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("animals");
+                    i.literal("1", "dog");
+                    i.literal("2", "cat");
+                    i.literal("3", "zebra");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldIncludeLocationAndTextInProcessExceptionInBody() {
+        final String text = "add_field()";
+        final String message = "Error while executing Fix expression (at FILE, line 4): " + text;
+
+        MetafixTestHelpers.assertThrows(FixProcessException.class, s -> s.replaceAll("file:/.+?\\.fix", "FILE"), message, () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "if exists('animal')",
+                    "nothing()",
+                    "elsif exists('animals')",
+                    text,
+                    "end"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("animals");
+                    i.literal("1", "dog");
+                    i.literal("2", "cat");
+                    i.literal("3", "zebra");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
 }
