@@ -68,6 +68,7 @@ import java.util.Map;
         final Value result;
         if (path.length > 0) {
             final String currentSegment = path[0];
+            final ReservedField reservedField = ReservedField.fromString(currentSegment);
             if (currentSegment.equals(ASTERISK)) {
                 result = Value.newArray(resultArray -> array.forEach(v -> {
                     final Value findInValue = findInValue(v, tail(path));
@@ -78,6 +79,19 @@ import java.util.Map;
                             .orElse(c -> resultArray.add(findInValue));
                     }
                 }));
+            }
+            else if (reservedField != null) {
+                switch (reservedField) {
+                    case $first:
+                        result = findInValue(array.get(0), tail(path));
+                        break;
+                    case $last:
+                        result = findInValue(array.get(array.size() - 1), tail(path));
+                        break;
+                    default:
+                        result = null;
+                        break;
+                }
             }
             else if (Value.isNumber(currentSegment)) {
                 final int index = Integer.parseInt(currentSegment) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
@@ -165,7 +179,25 @@ import java.util.Map;
             @Override
             void apply(final Array array, final String field, final Value value) {
                 try {
-                    array.set(Integer.valueOf(field) - 1, value);
+                    final ReservedField reservedField = ReservedField.fromString(field);
+                    if (reservedField != null) {
+                        switch (reservedField) {
+                            case $append:
+                                array.add(value);
+                                break;
+                            case $first:
+                                array.set(0, value);
+                                break;
+                            case $last:
+                                array.set(array.size() - 1, value);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else {
+                        array.set(Integer.valueOf(field) - 1, value);
+                    }
                 }
                 catch (final NumberFormatException e) {
                     throw new IllegalStateException("Expected Hash, got Array", e);
@@ -234,17 +266,11 @@ import java.util.Map;
         if (path.length == 1) {
             if (field.equals(ASTERISK)) {
                 for (int i = 0; i < array.size(); ++i) {
-                    mode.apply(array, "" + (i + 1), newValue);
+                    mode.apply(array, String.valueOf(i + 1), newValue);
                 }
             }
             else {
-                // TODO unify ref usage from below
-                if ("$append".equals(field)) {
-                    array.add(newValue);
-                }
-                else {
-                    mode.apply(array, field, newValue);
-                }
+                mode.apply(array, field, newValue);
             }
         }
         else {

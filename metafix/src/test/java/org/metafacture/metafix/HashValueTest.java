@@ -19,11 +19,9 @@ package org.metafacture.metafix;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Arrays;
 
-@ExtendWith(MetafixToDo.Extension.class)
 public class HashValueTest {
 
     private static final String FIELD = "field";
@@ -394,7 +392,6 @@ public class HashValueTest {
     }
 
     @Test
-    @MetafixToDo("Expected String, got Array")
     public void shouldFindArrayWildcard() {
         shouldFindArray("$last");
     }
@@ -412,7 +409,6 @@ public class HashValueTest {
     }
 
     @Test
-    @MetafixToDo("Expected String, got Array")
     public void shouldFindArrayWildcardSubfield() {
         shouldFindArraySubfield("$last");
     }
