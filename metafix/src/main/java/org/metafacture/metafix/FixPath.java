@@ -263,22 +263,25 @@ import java.util.Map;
     /*package-private*/ private Value insertInto(final Array array, final InsertMode mode, final Value newValue) {
         // basic idea: reuse findIn logic here? setIn(findIn(array), newValue)
         final String field = path[0];
-        if (path.length == 1) {
-            if (field.equals(ASTERISK)) {
+        if (field.equals(ASTERISK)) {
+            if (path.length == 1) {
                 for (int i = 0; i < array.size(); ++i) {
                     mode.apply(array, String.valueOf(i + 1), newValue);
                 }
             }
             else {
-                mode.apply(array, field, newValue);
+                array.add(Value.newHash(h -> new FixPath(tail(path)).insertInto(h, mode, newValue)));
             }
         }
         else {
-            final String[] tail = tail(path);
-            if (isReference(field)) {
-                return processRef(getReferencedValue(array, field), mode, newValue, field, tail);
+            if (path.length == 1) {
+                mode.apply(array, field, newValue);
             }
-            array.add(Value.newHash(h -> new FixPath(path).insertInto(h, mode, newValue)));
+            else {
+                if (isReference(field)) {
+                    return processRef(getReferencedValue(array, field), mode, newValue, field, tail(path));
+                }
+            }
         }
         return new Value(array);
     }
@@ -287,12 +290,7 @@ import java.util.Map;
         // basic idea: reuse findIn logic here? setIn(findIn(hash), newValue)
         final String field = path[0];
         if (path.length == 1) {
-            if (field.equals(ASTERISK)) {
-                hash.forEach((k, v) -> mode.apply(hash, k, newValue)); //TODO: WDCD? insert into each element?
-            }
-            else {
-                mode.apply(hash, field, newValue);
-            }
+            mode.apply(hash, field, newValue);
         }
         else {
             final String[] tail = tail(path);
