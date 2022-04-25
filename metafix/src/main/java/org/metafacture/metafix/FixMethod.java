@@ -17,7 +17,6 @@
 package org.metafacture.metafix;
 
 import org.metafacture.metafix.api.FixFunction;
-import org.metafacture.metafix.fix.Fix;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.maps.FileMap;
 
@@ -25,7 +24,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -52,9 +50,7 @@ public enum FixMethod implements FixFunction {
             // TODO: Catmandu load path
             final String includePath = metafix.resolvePath(includeFile);
 
-            final RecordTransformer recordTransformer = metafix.getRecordTransformer();
-            recordTransformer.setRecord(recordTransformer.transformRecord(
-                        INCLUDE_FIX.computeIfAbsent(includePath, FixStandaloneSetup::parseFix)));
+            metafix.getRecordTransformer(includePath).transform(record);
         }
     },
     nothing {
@@ -498,7 +494,5 @@ public enum FixMethod implements FixFunction {
     private static final String FILEMAP_DEFAULT_SEPARATOR = ",";
 
     private static final Random RANDOM = new Random();
-
-    private static final Map<String, Fix> INCLUDE_FIX = new HashMap<>();
 
 }

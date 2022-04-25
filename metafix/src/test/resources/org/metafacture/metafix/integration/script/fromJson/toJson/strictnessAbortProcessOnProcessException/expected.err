@@ -1,2 +1,3 @@
-^Exception in thread "main" org\.metafacture\.metafix\.FixProcessException: Error while executing Fix expression \(at file:.*/metafix/src/test/resources/org/metafacture/metafix/integration/script/fromJson/toJson/strictnessAbortProcessOnProcessException/test\.fix, line 2\): foo\(\)$
+^Exception in thread "main" org\.metafacture\.commons\.reflection\.ReflectionException: class could not be instantiated: class org\.metafacture\.metafix\.Metafix$
+^Caused by: org\.metafacture\.metafix\.FixProcessException: Error while executing Fix expression \(at file:.*/metafix/src/test/resources/org/metafacture/metafix/integration/script/fromJson/toJson/strictnessAbortProcessOnProcessException/test\.fix, line 2\): foo\(\)$
 ^Caused by: java\.lang\.IllegalArgumentException: No enum constant org\.metafacture\.metafix\.FixMethod.foo$

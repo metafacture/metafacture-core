@@ -18,9 +18,9 @@ package org.metafacture.metafix.util;
 
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
+import org.metafacture.metafix.RecordTransformer;
 import org.metafacture.metafix.Value;
 import org.metafacture.metafix.api.FixContext;
-import org.metafacture.metafix.fix.Expression;
 
 import java.util.List;
 import java.util.Map;
@@ -31,9 +31,9 @@ public class TestContext implements FixContext {
     }
 
     @Override
-    public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final List<Expression> expressions) {
+    public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
         record.add("BEFORE", new Value(params.get(0)));
-        metafix.getRecordTransformer().process(expressions);
+        recordTransformer.transform(record);
         record.add("AFTER", new Value(options.get("data")));
     }
 

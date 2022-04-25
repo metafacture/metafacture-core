@@ -18,7 +18,7 @@ package org.metafacture.metafix.api;
 
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
-import org.metafacture.metafix.fix.Expression;
+import org.metafacture.metafix.RecordTransformer;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +26,6 @@ import java.util.Map;
 @FunctionalInterface
 public interface FixContext {
 
-    void execute(Metafix metafix, Record record, List<String> params, Map<String, String> options, List<Expression> expressions);
+    void execute(Metafix metafix, Record record, List<String> params, Map<String, String> options, RecordTransformer recordTransformer);
 
 }

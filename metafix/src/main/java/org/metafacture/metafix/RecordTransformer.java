@@ -39,9 +39,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -57,45 +57,32 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
 
     private static final Logger LOG = LoggerFactory.getLogger(RecordTransformer.class);
 
+    private final List<Consumer<Record>> consumers = new LinkedList<>();
     private final Map<String, String> vars;
     private final Metafix metafix;
 
-    private Record record;
+    private Supplier<String> currentMessageSupplier;
 
-    /*package-private*/ RecordTransformer(final Metafix metafix) {
+    /*package-private*/ RecordTransformer(final Metafix metafix, final Fix fix) {
+        this(metafix, fix.getElements());
+    }
+
+    private RecordTransformer(final Metafix metafix, final List<Expression> expressions) {
         this.metafix = metafix;
         vars = metafix.getVars();
-    }
 
-    /*package-private*/ Record transform(final Fix fix) {
-        setRecord(metafix.getCurrentRecord().shallowClone());
-        return transformRecord(fix);
-    }
-
-    public Record transformRecord(final Fix fix) {
-        process(fix.getElements());
-        return record;
-    }
-
-    public void setRecord(final Record record) {
-        this.record = record;
-    }
-
-    public void process(final List<Expression> expressions) {
         expressions.forEach(e -> {
-            final List<String> params = resolveParams(e.getParams());
-
             if (e instanceof Do) {
-                processDo((Do) e, params);
+                processDo((Do) e);
             }
             else if (e instanceof If) {
-                processIf((If) e, params);
+                processIf((If) e);
             }
             else if (e instanceof Unless) {
-                processUnless((Unless) e, params);
+                processUnless((Unless) e);
             }
             else if (e instanceof MethodCall) {
-                processFunction((MethodCall) e, params);
+                processFunction((MethodCall) e);
             }
             else {
                 throw new FixProcessException(executionExceptionMessage(e));
@@ -103,64 +90,80 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         });
     }
 
-    private void processDo(final Do expression, final List<String> params) {
-        processExpression(expression, name -> {
-            final FixContext context = getInstance(name, FixContext.class, FixBind::valueOf);
-            context.execute(metafix, record, params, options(expression.getOptions()), expression.getElements());
+    public void transform(final Record record) {
+        consumers.forEach(consumer -> {
+            final FixExecutionException exception = tryRun(() -> consumer.accept(record));
+
+            if (exception != null) {
+                metafix.getStrictness().handle(exception, record);
+            }
         });
-
-        // TODO, possibly: use morph collectors here
-        // final CollectFactory collectFactory = new CollectFactory();
-        // final Map<String, String> attributes = resolvedAttributeMap(params, expression.getOptions());
-        // final Collect collect = collectFactory.newInstance(expression.getName(), attributes);
     }
 
-    private void processIf(final If expression, final List<String> params) {
-        final ElsIf elseIfExpression = expression.getElseIf();
-        final Else elseExpression = expression.getElse();
+    private void processDo(final Do expression) {
+        processFix(() -> executionExceptionMessage(expression), () -> {
+            final FixContext context = getInstance(expression.getName(), FixContext.class, FixBind::valueOf);
+            final RecordTransformer recordTransformer = new RecordTransformer(metafix, expression.getElements());
 
-        if (testConditional(expression, expression.eResource(), expression.getName(), params)) {
-            process(expression.getElements());
-        }
-        else if (elseIfExpression != null && testConditional(elseIfExpression,
-                    elseIfExpression.eResource(), elseIfExpression.getName(), resolveParams(elseIfExpression.getParams()))) {
-            process(elseIfExpression.getElements());
-        }
-        else if (elseExpression != null) {
-            process(elseExpression.getElements());
-        }
-    }
-
-    private void processUnless(final Unless expression, final List<String> params) {
-        if (!testConditional(expression, expression.eResource(), expression.getName(), params)) {
-            process(expression.getElements());
-        }
-    }
-
-    private boolean testConditional(final EObject object, final Resource resource, final String conditional, final List<String> params) {
-        LOG.debug("<IF>: {} parameters: {}", conditional, params);
-
-        final AtomicBoolean bool = new AtomicBoolean();
-
-        processFix(() -> executionExceptionMessage(object, resource), () -> {
-            final FixPredicate predicate = getInstance(conditional, FixPredicate.class, FixConditional::valueOf);
-            bool.set(predicate.test(metafix, record, params, options(null))); // TODO: options
+            return record -> context.execute(metafix, record, params(expression.getParams()), options(expression.getOptions()), recordTransformer);
         });
-
-        return bool.get();
-
-        // TODO, possibly: use morph functions here (& in processFunction):
-        // final FunctionFactory functionFactory = new FunctionFactory();
-        // functionFactory.registerClass("not_equals", NotEquals.class);
-        // functionFactory.registerClass("replace_all", Replace.class);
-        // final Function function = functionFactory.newInstance(conditional,
-        // resolvedAttributeMap(params, theIf.getOptions()));
     }
 
-    private void processFunction(final MethodCall expression, final List<String> params) {
-        processExpression(expression, name -> {
-            final FixFunction function = getInstance(name, FixFunction.class, FixMethod::valueOf);
-            function.apply(metafix, record, params, options(expression.getOptions()));
+    private void processIf(final If ifExpression) {
+        final ElsIf elseIfExpression = ifExpression.getElseIf();
+        final Else elseExpression = ifExpression.getElse();
+
+        final Supplier<String> elseIfMessageSupplier = () -> executionExceptionMessage(elseIfExpression, elseIfExpression.eResource());
+        final Supplier<String> elseMessageSupplier = () -> executionExceptionMessage(elseExpression, elseExpression.eResource());
+
+        processFix(() -> executionExceptionMessage(ifExpression, ifExpression.eResource()), () -> {
+            final FixPredicate ifPredicate = getInstance(ifExpression.getName(), FixPredicate.class, FixConditional::valueOf);
+            final FixPredicate elseIfPredicate = elseIfExpression != null ? getInstance(elseIfExpression.getName(), FixPredicate.class, FixConditional::valueOf) : null;
+
+            final RecordTransformer ifTransformer = new RecordTransformer(metafix, ifExpression.getElements());
+            final RecordTransformer elseIfTransformer = elseIfExpression != null ? new RecordTransformer(metafix, elseIfExpression.getElements()) : null;
+            final RecordTransformer elseTransformer = elseExpression != null ? new RecordTransformer(metafix, elseExpression.getElements()) : null;
+
+            return record -> {
+                if (ifPredicate.test(metafix, record, params(ifExpression.getParams()), options(null))) { // TODO: options
+                    ifTransformer.transform(record);
+                }
+                else {
+                    if (elseIfExpression != null) {
+                        currentMessageSupplier = elseIfMessageSupplier;
+
+                        if (elseIfPredicate.test(metafix, record, params(elseIfExpression.getParams()), options(null))) { // TODO: options
+                            elseIfTransformer.transform(record);
+                            return;
+                        }
+                    }
+
+                    if (elseExpression != null) {
+                        currentMessageSupplier = elseMessageSupplier;
+                        elseTransformer.transform(record);
+                    }
+                }
+            };
+        });
+    }
+
+    private void processUnless(final Unless expression) {
+        processFix(() -> executionExceptionMessage(expression, expression.eResource()), () -> {
+            final FixPredicate predicate = getInstance(expression.getName(), FixPredicate.class, FixConditional::valueOf);
+            final RecordTransformer recordTransformer = new RecordTransformer(metafix, expression.getElements());
+
+            return record -> {
+                if (!predicate.test(metafix, record, params(expression.getParams()), options(null))) { // TODO: options
+                    recordTransformer.transform(record);
+                }
+            };
+        });
+    }
+
+    private void processFunction(final MethodCall expression) {
+        processFix(() -> executionExceptionMessage(expression), () -> {
+            final FixFunction function = getInstance(expression.getName(), FixFunction.class, FixMethod::valueOf);
+            return record -> function.apply(metafix, record, params(expression.getParams()), options(expression.getOptions()));
         });
     }
 
@@ -168,18 +171,24 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         return name.contains(".") ? ReflectionUtil.loadClass(name, baseType).newInstance() : enumFunction.apply(name);
     }
 
-    private void processExpression(final Expression expression, final Consumer<String> consumer) {
-        processFix(() -> executionExceptionMessage(expression), () -> consumer.accept(expression.getName()));
-    }
+    private void processFix(final Supplier<String> messageSupplier, final Supplier<Consumer<Record>> consumerSupplier) {
+        currentMessageSupplier = messageSupplier;
 
-    private void processFix(final Supplier<String> messageSupplier, final Runnable runnable) {
-        final FixExecutionException exception = tryRun(messageSupplier, runnable);
+        final FixExecutionException exception = tryRun(() -> {
+            final Consumer<Record> consumer = consumerSupplier.get();
+
+            consumers.add(record -> {
+                currentMessageSupplier = messageSupplier;
+                consumer.accept(record);
+            });
+        });
+
         if (exception != null) {
-            metafix.getStrictness().handle(exception, record);
+            throw exception;
         }
     }
 
-    private FixExecutionException tryRun(final Supplier<String> messageSupplier, final Runnable runnable) { // checkstyle-disable-line ReturnCount
+    private FixExecutionException tryRun(final Runnable runnable) { // checkstyle-disable-line ReturnCount
         try {
             runnable.run();
         }
@@ -190,11 +199,12 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
             return e; // TODO: Add nesting information?
         }
         catch (final IllegalStateException | NumberFormatException e) {
-            return new FixExecutionException(messageSupplier.get(), e);
+            return new FixExecutionException(currentMessageSupplier.get(), e);
         }
         catch (final RuntimeException e) { // checkstyle-disable-line IllegalCatch
-            throw new FixProcessException(messageSupplier.get(), e);
+            throw new FixProcessException(currentMessageSupplier.get(), e);
         }
+
         return null;
     }
 
@@ -209,12 +219,12 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
                 resource.getURI(), node.getStartLine(), NodeModelUtils.getTokenText(node));
     }
 
-    private List<String> resolveParams(final List<String> params) {
-        return params.stream().map(this::resolveVars).collect(Collectors.toList());
-    }
-
     private String resolveVars(final String value) {
         return value == null ? null : StringUtil.format(value, Metafix.VAR_START, Metafix.VAR_END, false, vars);
+    }
+
+    private List<String> params(final List<String> params) {
+        return params.stream().map(this::resolveVars).collect(Collectors.toList());
     }
 
     private Map<String, String> options(final Options options) {

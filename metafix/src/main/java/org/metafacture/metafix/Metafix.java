@@ -24,7 +24,6 @@ import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
 import org.metafacture.mangling.StreamFlattener;
 import org.metafacture.metafix.fix.Expression;
-import org.metafacture.metafix.fix.Fix;
 import org.metafacture.metamorph.api.Maps;
 
 import org.slf4j.Logger;
@@ -48,8 +47,8 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 /**
- * Transforms a data stream sent via the {@link StreamReceiver} interface. Use
- * {@link RecordTransformer} to transform based on a Fix DSL description.
+ * Transforms a data stream sent via the {@link StreamReceiver} interface. Uses
+ * {@link RecordTransformer} to transform records based on a Fix DSL description.
  *
  * @author Markus Michael Geipel (Metamorph)
  * @author Christoph Böhme (Metamorph)
@@ -73,12 +72,12 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     private final Deque<Integer> entityCountStack = new LinkedList<>();
     private final List<Closeable> resources = new ArrayList<>();
     private final List<Expression> expressions = new ArrayList<>();
+    private final Map<String, RecordTransformer> fixCache = new HashMap<>();
     private final Map<String, Map<String, String>> maps = new HashMap<>();
     private final Map<String, String> vars = new HashMap<>();
-    private final RecordTransformer recordTransformer = new RecordTransformer(this);
+    private final RecordTransformer recordTransformer;
     private final StreamFlattener flattener = new StreamFlattener();
 
-    private Fix fix;
     private List<Value> entities = new ArrayList<>();
     private Record currentRecord = new Record();
     private StreamReceiver outputStreamReceiver;
@@ -88,6 +87,40 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     private int entityCount;
 
     public Metafix() {
+        this(NO_VARS);
+    }
+
+    public Metafix(final Map<String, String> newVars) {
+        init(newVars);
+        recordTransformer = null;
+    }
+
+    public Metafix(final String fixDef) throws FileNotFoundException {
+        this(fixDef, NO_VARS);
+    }
+
+    public Metafix(final String fixDef, final Map<String, String> vars) throws FileNotFoundException {
+        init(vars);
+
+        if (isFixFile(fixDef)) {
+            fixFile = fixDef;
+            recordTransformer = getRecordTransformer(fixDef);
+        }
+        else {
+            recordTransformer = getRecordTransformer(new StringReader(fixDef));
+        }
+    }
+
+    public Metafix(final Reader fixDef) {
+        this(fixDef, NO_VARS);
+    }
+
+    public Metafix(final Reader fixDef, final Map<String, String> vars) {
+        init(vars);
+        recordTransformer = getRecordTransformer(fixDef);
+    }
+
+    private void init(final Map<String, String> newVars) {
         flattener.setReceiver(new DefaultStreamReceiver() {
 
             @Override
@@ -98,37 +131,10 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
                 // TODO use full path here to insert only once?
                 // new FixPath(name).insertInto(currentRecord, InsertMode.APPEND, new Value(value));
             }
+
         });
-    }
 
-    public Metafix(final Map<String, String> newVars) {
-        this();
         vars.putAll(newVars);
-    }
-
-    public Metafix(final String fixDef) throws FileNotFoundException {
-        this(fixDef, NO_VARS);
-    }
-
-    public Metafix(final String fixDef, final Map<String, String> vars) throws FileNotFoundException {
-        this(vars);
-
-        if (isFixFile(fixDef)) {
-            fixFile = fixDef;
-            fix = FixStandaloneSetup.parseFix(fixDef);
-        }
-        else {
-            fix = FixStandaloneSetup.parseFix(new StringReader(fixDef));
-        }
-    }
-
-    public Metafix(final Reader fixDef) {
-        this(fixDef, NO_VARS);
-    }
-
-    public Metafix(final Reader fixDef, final Map<String, String> vars) {
-        this(vars);
-        fix = FixStandaloneSetup.parseFix(fixDef);
     }
 
     /*package-private*/ static boolean isFixFile(final String fixDef) {
@@ -149,8 +155,12 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
         }
     }
 
-    public RecordTransformer getRecordTransformer() {
-        return recordTransformer;
+    public RecordTransformer getRecordTransformer(final String fixDef) {
+        return fixCache.computeIfAbsent(fixDef, k -> new RecordTransformer(this, FixStandaloneSetup.parseFix(k)));
+    }
+
+    private RecordTransformer getRecordTransformer(final Reader fixDef) {
+        return new RecordTransformer(this, FixStandaloneSetup.parseFix(fixDef));
     }
 
     public List<Expression> getExpressions() {
@@ -177,8 +187,8 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
             throw new IllegalStateException(ENTITIES_NOT_BALANCED);
         }
         flattener.endRecord();
-        LOG.debug("End record, walking fix: {}", currentRecord);
-        currentRecord = recordTransformer.transform(fix);
+        LOG.debug("End record, walking Fix: {}", currentRecord);
+        recordTransformer.transform(currentRecord);
         if (!currentRecord.getReject()) {
             outputStreamReceiver.startRecord(recordIdentifier);
             LOG.debug("Sending results to {}", outputStreamReceiver);
