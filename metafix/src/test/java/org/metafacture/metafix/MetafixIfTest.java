@@ -1069,4 +1069,69 @@ public class MetafixIfTest {
         );
     }
 
+    @Test
+    public void ifOnNonExistingIndexInArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if exists('animals[].2')",
+                "  copy_field('animals[].2', 'animals2')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.literal("2", "elefant");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("2");
+                i.startEntity("animals[]");
+                i.literal("1", "dog");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "dog");
+                o.get().literal("2", "elefant");
+                o.get().endEntity();
+                o.get().literal("animals2", "elefant");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().startEntity("animals[]");
+                o.get().literal("1", "dog");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void ifOnNonExistingIndexInRepeatedField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if exists('animal.2')",
+                "  copy_field('animal.2', 'animal2')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("animal", "dog");
+                i.literal("animal", "elefant");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("animal", "dog");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("animal", "dog");
+                o.get().literal("animal", "elefant");
+                o.get().literal("animal2", "elefant");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("animal", "dog");
+                o.get().endRecord();
+            }
+        );
+    }
 }

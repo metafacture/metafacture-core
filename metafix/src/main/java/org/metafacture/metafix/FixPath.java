@@ -66,9 +66,11 @@ import java.util.Map;
     /*package-private*/ Value findIn(final Array array) {
 
         final Value result;
-        if (path.length > 0) {
+        if (path.length == 0) {
+            result = new Value(array);
+        }
+        else {
             final String currentSegment = path[0];
-            final ReservedField reservedField = ReservedField.fromString(currentSegment);
             if (currentSegment.equals(ASTERISK)) {
                 result = Value.newArray(resultArray -> array.forEach(v -> {
                     final Value findInValue = findInValue(v, tail(path));
@@ -80,23 +82,10 @@ import java.util.Map;
                     }
                 }));
             }
-            else if (reservedField != null) {
-                switch (reservedField) {
-                    case $first:
-                        result = findInValue(array.get(0), tail(path));
-                        break;
-                    case $last:
-                        result = findInValue(array.get(array.size() - 1), tail(path));
-                        break;
-                    default:
-                        result = null;
-                        break;
-                }
-            }
-            else if (Value.isNumber(currentSegment)) {
-                final int index = Integer.parseInt(currentSegment) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
-                if (index >= 0 && index < array.size()) {
-                    result = findInValue(array.get(index), tail(path));
+            else if (isReference(currentSegment)) {
+                final Value referencedValue = getReferencedValue(array, currentSegment);
+                if (referencedValue != null) {
+                    result = findInValue(referencedValue, tail(path));
                 }
                 else {
                     result = null;
@@ -106,9 +95,6 @@ import java.util.Map;
             else {
                 result = Value.newArray(a -> array.forEach(v -> a.add(findInValue(v, path))));
             }
-        }
-        else {
-            result = new Value(array);
         }
         return result;
 
@@ -354,24 +340,27 @@ import java.util.Map;
     // TODO replace switch, extract to method on array?
     private Value getReferencedValue(final Array array, final String field) {
         Value referencedValue = null;
-        final ReservedField reservedField = ReservedField.fromString(field);
-        if (reservedField == null && Value.isNumber(field)) {
-            return array.get(Integer.valueOf(field) - 1);
+        if (Value.isNumber(field)) {
+            final int index = Integer.valueOf(field) - 1;
+            return 0 <= index && index < array.size() ? array.get(index) : null;
         }
-        switch (reservedField) {
-            case $first:
-                referencedValue = array.get(0);
-                break;
-            case $last:
-                referencedValue = array.get(array.size() - 1);
-                break;
-            case $append:
-                referencedValue = Value.newHash(); // TODO: append non-hash?
-                array.add(referencedValue);
-                referencedValue.updatePathAppend(String.valueOf(array.size()), "");
-                break;
-            default:
-                break;
+        final ReservedField reservedField = ReservedField.fromString(field);
+        if (reservedField != null) {
+            switch (reservedField) {
+                case $first:
+                    referencedValue = array.get(0);
+                    break;
+                case $last:
+                    referencedValue = array.get(array.size() - 1);
+                    break;
+                case $append:
+                    referencedValue = Value.newHash(); // TODO: append non-hash?
+                    array.add(referencedValue);
+                    referencedValue.updatePathAppend(String.valueOf(array.size()), "");
+                    break;
+                default:
+                    break;
+            }
         }
         return referencedValue;
     }
