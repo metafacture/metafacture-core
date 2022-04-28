@@ -66,7 +66,10 @@ import java.util.Map;
     /*package-private*/ Value findIn(final Array array) {
 
         final Value result;
-        if (path.length > 0) {
+        if (path.length == 0) {
+            result = new Value(array);
+        }
+        else {
             final String currentSegment = path[0];
             if (currentSegment.equals(ASTERISK)) {
                 result = Value.newArray(resultArray -> array.forEach(v -> {
@@ -79,10 +82,10 @@ import java.util.Map;
                     }
                 }));
             }
-            else if (Value.isNumber(currentSegment)) {
-                final int index = Integer.parseInt(currentSegment) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
-                if (index >= 0 && index < array.size()) {
-                    result = findInValue(array.get(index), tail(path));
+            else if (isReference(currentSegment)) {
+                final Value referencedValue = getReferencedValue(array, currentSegment);
+                if (referencedValue != null) {
+                    result = findInValue(referencedValue, tail(path));
                 }
                 else {
                     result = null;
@@ -92,9 +95,6 @@ import java.util.Map;
             else {
                 result = Value.newArray(a -> array.forEach(v -> a.add(findInValue(v, path))));
             }
-        }
-        else {
-            result = new Value(array);
         }
         return result;
 
@@ -165,7 +165,25 @@ import java.util.Map;
             @Override
             void apply(final Array array, final String field, final Value value) {
                 try {
-                    array.set(Integer.valueOf(field) - 1, value);
+                    final ReservedField reservedField = ReservedField.fromString(field);
+                    if (reservedField != null) {
+                        switch (reservedField) {
+                            case $append:
+                                array.add(value);
+                                break;
+                            case $first:
+                                array.set(0, value);
+                                break;
+                            case $last:
+                                array.set(array.size() - 1, value);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else {
+                        array.set(Integer.valueOf(field) - 1, value);
+                    }
                 }
                 catch (final NumberFormatException e) {
                     throw new IllegalStateException("Expected Hash, got Array", e);
@@ -231,28 +249,25 @@ import java.util.Map;
     /*package-private*/ private Value insertInto(final Array array, final InsertMode mode, final Value newValue) {
         // basic idea: reuse findIn logic here? setIn(findIn(array), newValue)
         final String field = path[0];
-        if (path.length == 1) {
-            if (field.equals(ASTERISK)) {
+        if (field.equals(ASTERISK)) {
+            if (path.length == 1) {
                 for (int i = 0; i < array.size(); ++i) {
-                    mode.apply(array, "" + (i + 1), newValue);
+                    mode.apply(array, String.valueOf(i + 1), newValue);
                 }
             }
             else {
-                // TODO unify ref usage from below
-                if ("$append".equals(field)) {
-                    array.add(newValue);
-                }
-                else {
-                    mode.apply(array, field, newValue);
-                }
+                array.add(Value.newHash(h -> new FixPath(tail(path)).insertInto(h, mode, newValue)));
             }
         }
         else {
-            final String[] tail = tail(path);
-            if (isReference(field)) {
-                return processRef(getReferencedValue(array, field), mode, newValue, field, tail);
+            if (path.length == 1) {
+                mode.apply(array, field, newValue);
             }
-            array.add(Value.newHash(h -> new FixPath(path).insertInto(h, mode, newValue)));
+            else {
+                if (isReference(field)) {
+                    return processRef(getReferencedValue(array, field), mode, newValue, field, tail(path));
+                }
+            }
         }
         return new Value(array);
     }
@@ -261,12 +276,7 @@ import java.util.Map;
         // basic idea: reuse findIn logic here? setIn(findIn(hash), newValue)
         final String field = path[0];
         if (path.length == 1) {
-            if (field.equals(ASTERISK)) {
-                hash.forEach((k, v) -> mode.apply(hash, k, newValue)); //TODO: WDCD? insert into each element?
-            }
-            else {
-                mode.apply(hash, field, newValue);
-            }
+            mode.apply(hash, field, newValue);
         }
         else {
             final String[] tail = tail(path);
@@ -330,24 +340,27 @@ import java.util.Map;
     // TODO replace switch, extract to method on array?
     private Value getReferencedValue(final Array array, final String field) {
         Value referencedValue = null;
-        final ReservedField reservedField = ReservedField.fromString(field);
-        if (reservedField == null && Value.isNumber(field)) {
-            return array.get(Integer.valueOf(field) - 1);
+        if (Value.isNumber(field)) {
+            final int index = Integer.valueOf(field) - 1;
+            return 0 <= index && index < array.size() ? array.get(index) : null;
         }
-        switch (reservedField) {
-            case $first:
-                referencedValue = array.get(0);
-                break;
-            case $last:
-                referencedValue = array.get(array.size() - 1);
-                break;
-            case $append:
-                referencedValue = Value.newHash(); // TODO: append non-hash?
-                array.add(referencedValue);
-                referencedValue.updatePathAppend(String.valueOf(array.size()), "");
-                break;
-            default:
-                break;
+        final ReservedField reservedField = ReservedField.fromString(field);
+        if (reservedField != null) {
+            switch (reservedField) {
+                case $first:
+                    referencedValue = array.get(0);
+                    break;
+                case $last:
+                    referencedValue = array.get(array.size() - 1);
+                    break;
+                case $append:
+                    referencedValue = Value.newHash(); // TODO: append non-hash?
+                    array.add(referencedValue);
+                    referencedValue.updatePathAppend(String.valueOf(array.size()), "");
+                    break;
+                default:
+                    break;
+            }
         }
         return referencedValue;
     }

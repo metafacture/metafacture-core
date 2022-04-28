@@ -2051,7 +2051,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/135")
     public void shouldReplaceAllRegexesInArrayByArrayWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "replace_all('names.$last', 'a', 'X')"
@@ -2103,7 +2102,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/135")
     public void shouldReplaceAllRegexesInArraySubFieldByArrayWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "replace_all('names[].$last.name', 'a', 'X')"
