@@ -1,1 +1,1 @@
-append("animals[].$last.type", "Big ")
+prepend("animals[].$last.type", "Big ")

@@ -1,1 +1,1 @@
-append("animals[].$last.type", " is cool")
+append("animals[].$first.type", " is cool")
