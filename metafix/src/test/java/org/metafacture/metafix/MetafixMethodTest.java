@@ -2369,7 +2369,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldSortArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "sort_field('OTHERS[].*.dnimals[]')"
@@ -2558,7 +2557,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/100 and https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldSplitNestedField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "split_field('others[].*.tools', '--')"
@@ -2607,7 +2605,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("java.lang.IllegalStateException: Expected String, got Array; see https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldSumArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "sum('OTHERS[].*.dumbers[]')"

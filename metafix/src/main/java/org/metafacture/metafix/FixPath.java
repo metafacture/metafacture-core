@@ -250,14 +250,10 @@ import java.util.Map;
         // basic idea: reuse findIn logic here? setIn(findIn(array), newValue)
         final String field = path[0];
         if (field.equals(ASTERISK)) {
-            if (path.length == 1) {
-                for (int i = 0; i < array.size(); ++i) {
-                    mode.apply(array, String.valueOf(i + 1), newValue);
-                }
-            }
-            else {
-                array.add(Value.newHash(h -> new FixPath(tail(path)).insertInto(h, mode, newValue)));
-            }
+            array.forEach(value -> value.matchType()
+                    .ifArray(a -> new FixPath(tail(path)).insertInto(a, mode, newValue))
+                    .ifHash(h -> new FixPath(tail(path)).insertInto(h, mode, newValue))
+                    .orElseThrow());
         }
         else {
             if (path.length == 1) {

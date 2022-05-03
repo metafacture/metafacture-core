@@ -1686,6 +1686,39 @@ public class MetafixRecordTest {
     }
 
     @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/130
+    public void setArrayInArrayWithAsterisk() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('foo[].*.test[]', 'test')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("foo[]");
+                i.startEntity("1");
+                i.literal("id", "A");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("id", "B");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("foo[]");
+                o.get().startEntity("1");
+                o.get().literal("id", "A");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "test");
+                f.apply(2).endEntity();
+                o.get().startEntity("2");
+                o.get().literal("id", "B");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "test");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
     public void setHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_hash('foo','a': 'b','c': 'd')"),
