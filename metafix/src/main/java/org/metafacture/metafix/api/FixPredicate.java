@@ -49,4 +49,8 @@ public interface FixPredicate {
         ));
     }
 
+    default boolean testConditional(final List<String> params, final BiPredicate<String, String> conditional) {
+        return conditional.test(params.get(0), params.get(1));
+    }
+
 }

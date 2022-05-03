@@ -1430,4 +1430,179 @@ public class MetafixIfTest {
         );
     }
 
+    @Test
+    public void shouldContainString() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if str_contain('name', 'a$[var]')",
+                "  add_field('type', 'Organization')",
+                "end"
+            ),
+            ImmutableMap.of("var", "me"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Mame");
+                i.literal("name", "A University");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.literal("name", "Mame");
+                i.literal("name", "Max");
+                i.endRecord();
+
+                i.startRecord("3");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Mame");
+                o.get().literal("name", "A University");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().literal("name", "Mame");
+                o.get().literal("name", "Max");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldEqualString() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if str_equal('name', 'na$[var]')",
+                "  add_field('type', 'Organization')",
+                "end"
+            ),
+            ImmutableMap.of("var", "me"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Mame");
+                i.literal("name", "A University");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.literal("name", "Mame");
+                i.literal("name", "Max");
+                i.endRecord();
+
+                i.startRecord("3");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Mame");
+                o.get().literal("name", "A University");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().literal("name", "Mame");
+                o.get().literal("name", "Max");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldMatchString() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if str_match('name', '.*a$[var]')",
+                "  add_field('type', 'Organization')",
+                "end"
+            ),
+            ImmutableMap.of("var", "me"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Mame");
+                i.literal("name", "A University");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.literal("name", "Mame");
+                i.literal("name", "Max");
+                i.endRecord();
+
+                i.startRecord("3");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Mame");
+                o.get().literal("name", "A University");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().literal("name", "Mame");
+                o.get().literal("name", "Max");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldTestMacroVariable() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do macro('test')",
+                "  if str_contain('name', 'a$[var]')",
+                "    add_field('type', 'Organization: $[var]')",
+                "  end",
+                "end",
+                "macro('test', 'var': 'm')",
+                "macro('test', 'var': 'me')",
+                "macro('test', 'var': 'mee')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Mame");
+                i.literal("name", "A University");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.literal("name", "Mame");
+                i.literal("name", "Max");
+                i.endRecord();
+
+                i.startRecord("3");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Mame");
+                o.get().literal("name", "A University");
+                o.get().literal("type", "Organization: m");
+                o.get().literal("type", "Organization: me");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().literal("name", "Mame");
+                o.get().literal("name", "Max");
+                o.get().literal("type", "Organization: m");
+                o.get().literal("type", "Organization: me");
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().literal("type", "Organization: m");
+                o.get().literal("type", "Organization: me");
+                o.get().endRecord();
+            }
+        );
+    }
+
 }
