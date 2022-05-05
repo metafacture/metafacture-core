@@ -102,7 +102,7 @@ import java.util.Map;
 
     private Value findInValue(final Value value, final String[] p) {
         // TODO: move impl into enum elements, here call only value.find
-        return value == null ? null : value.extractType((m, c) -> m
+        return p.length == 0 ? value : value == null ? null : value.extractType((m, c) -> m
                 .ifArray(a -> c.accept(new FixPath(p).findIn(a)))
                 .ifHash(h -> c.accept(new FixPath(p).findIn(h)))
                 .orElse(c)
@@ -249,20 +249,15 @@ import java.util.Map;
     /*package-private*/ private Value insertInto(final Array array, final InsertMode mode, final Value newValue) {
         // basic idea: reuse findIn logic here? setIn(findIn(array), newValue)
         final String field = path[0];
-        if (field.equals(ASTERISK)) {
-            array.forEach(value -> value.matchType()
-                    .ifArray(a -> new FixPath(tail(path)).insertInto(a, mode, newValue))
-                    .ifHash(h -> new FixPath(tail(path)).insertInto(h, mode, newValue))
-                    .orElseThrow());
+        if (path.length == 1) {
+            mode.apply(array, field, newValue);
         }
         else {
-            if (path.length == 1) {
-                mode.apply(array, field, newValue);
+            if (ASTERISK.equals(field)) {
+                array.forEach(value -> insertInto(value, mode, newValue, field, tail(path)));
             }
-            else {
-                if (isReference(field)) {
-                    return processRef(getReferencedValue(array, field), mode, newValue, field, tail(path));
-                }
+            else if (isReference(field)) {
+                insertInto(getReferencedValue(array, field), mode, newValue, field, tail(path));
             }
         }
         return new Value(array);
@@ -275,43 +270,32 @@ import java.util.Map;
             mode.apply(hash, field, newValue);
         }
         else {
-            final String[] tail = tail(path);
-            if (isReference(field)) {
-                return processRef(hash.get(field), mode, newValue, field, tail);
-            }
             if (!hash.containsField(field)) {
                 hash.put(field, Value.newHash());
             }
-            final Value value = hash.get(field);
-            if (value != null) {
-                // TODO: move impl into enum elements, here call only value.insert
-                value.matchType()
-                    .ifArray(a -> new FixPath(tail).insertInto(a, mode, newValue))
-                    .ifHash(h -> new FixPath(tail).insertInto(h, mode, newValue))
-                    .orElseThrow();
-            }
+            insertInto(hash.get(field), mode, newValue, field, tail(path));
         }
 
         return new Value(hash);
     }
 
-    private String[] tail(final String[] fields) {
-        return Arrays.copyOfRange(fields, 1, fields.length);
-    }
-
-    private Value processRef(final Value referencedValue, final InsertMode mode, final Value newValue, final String field,
+    private Value insertInto(final Value value, final InsertMode mode, final Value newValue, final String field,
             final String[] tail) {
-        if (referencedValue != null) {
+        if (value != null) {
             final FixPath fixPath = new FixPath(tail);
-            newValue.updatePathAddBase(referencedValue, field);
-            return referencedValue.extractType((m, c) -> m
-                    .ifArray(a -> c.accept(fixPath.insertInto(referencedValue.asArray(), mode, newValue)))
-                    .ifHash(h -> c.accept(fixPath.insertInto(referencedValue.asHash(), mode, newValue)))
+            newValue.updatePathAddBase(value, field);
+            return value.extractType((m, c) -> m
+                    .ifArray(a -> c.accept(fixPath.insertInto(a, mode, newValue)))
+                    .ifHash(h -> c.accept(fixPath.insertInto(h, mode, newValue)))
                     .orElseThrow());
         }
         else {
-            throw new IllegalArgumentException("Using ref, but can't find: " + field + " in: " + referencedValue);
+            throw new IllegalArgumentException("Using ref, but can't find: " + field + " in: " + value);
         }
+    }
+
+    private String[] tail(final String[] fields) {
+        return Arrays.copyOfRange(fields, 1, fields.length);
     }
 
     private enum ReservedField {
@@ -344,10 +328,10 @@ import java.util.Map;
         if (reservedField != null) {
             switch (reservedField) {
                 case $first:
-                    referencedValue = array.get(0);
+                    referencedValue = getReferencedValue(array, "1");
                     break;
                 case $last:
-                    referencedValue = array.get(array.size() - 1);
+                    referencedValue = getReferencedValue(array, String.valueOf(array.size()));
                     break;
                 case $append:
                     referencedValue = Value.newHash(); // TODO: append non-hash?

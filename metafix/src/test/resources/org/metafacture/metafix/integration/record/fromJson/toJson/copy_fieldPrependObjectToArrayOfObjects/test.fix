@@ -1,1 +1,1 @@
-copy_field("test_2", "test[].$append")
+copy_field("test_2", "test[].$prepend")

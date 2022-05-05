@@ -1098,26 +1098,28 @@ public class MetafixRecordTest {
 
     @Test
     public void addFieldToFirstObjectMissing() {
-        assertThrowsOnEmptyRecord("$first");
+        assertThrowsOnEmptyArray("$first");
     }
 
     @Test
     public void addFieldToLastObjectMissing() {
-        assertThrowsOnEmptyRecord("$last");
+        assertThrowsOnEmptyArray("$last");
     }
 
     @Test
     public void addFieldToObjectByIndexMissing() {
-        assertThrowsOnEmptyRecord("2");
+        assertThrowsOnEmptyArray("2");
     }
 
-    private void assertThrowsOnEmptyRecord(final String index) {
+    private void assertThrowsOnEmptyArray(final String index) {
         MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Using ref, but can't find: " + index + " in: null", () -> {
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "add_field('animals[]." + index + ".kind','nice')"
                 ),
                 i -> {
                     i.startRecord("1");
+                    i.startEntity("animals[]");
+                    i.endEntity();
                     i.endRecord();
                 },
                 o -> {

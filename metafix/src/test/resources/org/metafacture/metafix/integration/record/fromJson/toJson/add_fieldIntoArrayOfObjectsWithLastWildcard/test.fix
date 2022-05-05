@@ -1,1 +1,3 @@
-add_field("animals[].$last.key", "value")
+if exists("animals[].$last")
+  add_field("animals[].$last.key", "value")
+end
