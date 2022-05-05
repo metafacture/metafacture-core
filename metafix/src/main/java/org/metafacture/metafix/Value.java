@@ -33,6 +33,8 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -460,6 +462,9 @@ public class Value {
      */
     public static class Hash extends AbstractValueType {
 
+        // NOTE: Keep in sync with `WildcardTrie`/`SimpleRegexTrie` implementation in metafacture-core.
+        private static final Matcher PATTERN_MATCHER = Pattern.compile("[*?|]|\\[[^\\]]").matcher("");
+
         private static final Map<String, Map<String, Boolean>> TRIE_CACHE = new HashMap<>();
         private static final SimpleRegexTrie<String> TRIE = new SimpleRegexTrie<>();
 
@@ -697,12 +702,17 @@ public class Value {
         }
 
         private <T> T matchFields(final String pattern, final BiFunction<Stream<String>, Predicate<String>, T> function) {
-            final Map<String, Boolean> matcher = TRIE_CACHE.computeIfAbsent(pattern, k -> {
-                TRIE.put(k, k);
-                return new HashMap<>();
-            });
+            if (PATTERN_MATCHER.reset(pattern).find()) {
+                final Map<String, Boolean> matcher = TRIE_CACHE.computeIfAbsent(pattern, k -> {
+                    TRIE.put(k, k);
+                    return new HashMap<>();
+                });
 
-            return function.apply(map.keySet().stream(), f -> matcher.computeIfAbsent(f, k -> TRIE.get(k).contains(pattern)));
+                return function.apply(map.keySet().stream(), f -> matcher.computeIfAbsent(f, k -> TRIE.get(k).contains(pattern)));
+            }
+            else {
+                return function.apply(Stream.of(pattern), map::containsKey);
+            }
         }
 
     }
