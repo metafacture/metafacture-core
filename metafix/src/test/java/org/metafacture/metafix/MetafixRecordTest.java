@@ -676,7 +676,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/pull/142
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/113")
     public void shouldCopyArrayFieldWithoutAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('TEST_TWO[]')",
@@ -691,7 +691,7 @@ public class MetafixRecordTest {
                 i.endEntity();
                 i.endRecord();
             },
-            o -> {
+            (o, f) -> {
                 o.get().startRecord("1");
                 o.get().startEntity("test[]");
                 o.get().literal("1", "One");
@@ -699,13 +699,41 @@ public class MetafixRecordTest {
                 o.get().literal("3", "Three");
                 o.get().endEntity();
                 o.get().startEntity("TEST_TWO[]");
+                o.get().startEntity("1");
                 o.get().literal("1", "One");
                 o.get().literal("2", "Two");
                 o.get().literal("3", "Three");
-                o.get().endEntity();
+                f.apply(2).endEntity();
                 o.get().endRecord();
             }
         );
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/113")
+    public void copyFieldArrayOfObjectsAndListNewArrayOfObjectsAndMoveSubfield() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('author[]','creator[]')",
+                "do list(path:'creator[]')",
+                "  move_field('name','label')",
+                "end",
+                "retain('creator[]')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("author[]");
+                i.startEntity("1");
+                i.literal("name", "A University");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("creator[]");
+                o.get().startEntity("1");
+                o.get().literal("label", "A University");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
     }
 
     @Test
