@@ -462,6 +462,7 @@ public class Value {
      */
     public static class Hash extends AbstractValueType {
 
+        // NOTE: Keep in sync with `WildcardTrie`/`SimpleRegexTrie` implementation in metafacture-core.
         private static final Matcher PATTERN_MATCHER = Pattern.compile("[*?|]|\\[[^\\]]").matcher("");
 
         private static final Map<String, Map<String, Boolean>> TRIE_CACHE = new HashMap<>();
