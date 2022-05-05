@@ -1127,7 +1127,6 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldAddArraySubFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "add_field('coll[].*.c', 'test')"
@@ -1172,7 +1171,7 @@ public class MetafixRecordTest {
                 o.get().startEntity("4");
                 o.get().literal("a", "Crocodile");
                 o.get().literal("c", "test");
-                f.apply(3).endEntity();
+                f.apply(2).endEntity();
                 o.get().endRecord();
             }
         );
