@@ -2032,6 +2032,33 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void shouldCopyBindVarWithDollarAfterLookup() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('@coll[]')",
+                "do list(path: 'a', 'var': '$i')",
+                "  lookup('$i.name')",
+                "  copy_field('$i.name', '@coll[].$append')",
+                "end",
+                "remove_field('a')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("a");
+                i.literal("name", "Dog");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("@coll[]");
+                o.get().literal("1", "Dog");
+                f.apply(1).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     // See https://github.com/metafacture/metafacture-fix/issues/121
     public void shouldReplaceAllRegexesInNestedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(

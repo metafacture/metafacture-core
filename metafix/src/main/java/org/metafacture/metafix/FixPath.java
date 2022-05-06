@@ -298,7 +298,7 @@ import java.util.Map;
         return Arrays.copyOfRange(fields, 1, fields.length);
     }
 
-    private enum ReservedField {
+    /*package-private*/ enum ReservedField {
         $append, $first, $last;
 
         private static final Map<String, ReservedField> STRING_TO_ENUM = new HashMap<>();
