@@ -1844,10 +1844,34 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/205")
-    public void addFieldIntoArrayOfObjectsWithLastWildcardImplicitSkip() {
+    // We currently fail on unresolved references, see MetafixRecordTests#assertThrowsOnEmptyArray
+    public void addFieldIntoArrayOfObjectsWithLastWildcardMissingError() {
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Using ref, but can't find: $last in: null", () -> {
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "add_field('animals[].$last.key', 'value')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("animals[]");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    o.get().startRecord("1");
+                    o.get().startEntity("animals[]");
+                    o.get().endEntity();
+                    o.get().endRecord();
+                }
+            );
+        });
+    }
+
+    @Test
+    public void addFieldIntoArrayOfObjectsWithLastWildcardAllEmpty() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_field('animals[].$last.key', 'value')"
+                "if exists('animals[].$last')",
+                "  add_field('animals[].$last.key', 'value')",
+                "end"
             ),
             i -> {
                 i.startRecord("1");
@@ -1865,8 +1889,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/205")
-    public void addFieldIntoArrayOfObjectsWithLastWildcardExplicitSkip() {
+    public void addFieldIntoArrayOfObjectsWithLastWildcardLastEmpty() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if exists('animals[].$last')",
                 "  add_field('animals[].$last.key', 'value')",
@@ -1875,11 +1898,35 @@ public class MetafixMethodTest {
             i -> {
                 i.startRecord("1");
                 i.startEntity("animals[]");
+                i.startEntity("1");
+                i.literal("name", "Jake");
+                i.literal("type", "dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "Blacky");
+                i.literal("type", "bird");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("2");
+                i.startEntity("animals[]");
                 i.endEntity();
                 i.endRecord();
             },
             (o, f) -> {
                 o.get().startRecord("1");
+                o.get().startEntity("animals[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "Jake");
+                o.get().literal("type", "dog");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "Blacky");
+                o.get().literal("type", "bird");
+                o.get().literal("key", "value");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+                o.get().startRecord("2");
                 o.get().startEntity("animals[]");
                 o.get().endEntity();
                 o.get().endRecord();
@@ -2369,7 +2416,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldSortArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "sort_field('OTHERS[].*.dnimals[]')"
@@ -2558,7 +2604,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/100 and https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldSplitNestedField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "split_field('others[].*.tools', '--')"
@@ -2607,7 +2652,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("java.lang.IllegalStateException: Expected String, got Array; see https://github.com/metafacture/metafacture-fix/issues/121")
     public void shouldSumArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "sum('OTHERS[].*.dumbers[]')"
