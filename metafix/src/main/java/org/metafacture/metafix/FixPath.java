@@ -22,6 +22,8 @@ import org.metafacture.metafix.Value.Hash;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Our goal here is something like https://metacpan.org/pod/Catmandu::Path::simple
@@ -33,6 +35,8 @@ import java.util.Map;
  */
 /*package-private*/ class FixPath {
 
+    /*package-private*/ static final Pattern RESERVED_FIELD_PATTERN = Pattern.compile(String.format("(?:%s)",
+            Arrays.stream(ReservedField.values()).map(f -> Pattern.quote(f.name())).collect(Collectors.joining("|"))));
     private static final String ASTERISK = "*";
     private String[] path;
 
@@ -299,7 +303,7 @@ import java.util.Map;
         return Arrays.copyOfRange(fields, 1, fields.length);
     }
 
-    /*package-private*/ enum ReservedField {
+    private enum ReservedField {
         $append, $first, $last;
 
         private static final Map<String, ReservedField> STRING_TO_ENUM = new HashMap<>();

@@ -17,7 +17,6 @@
 package org.metafacture.metafix;
 
 import org.metafacture.commons.tries.SimpleRegexTrie;
-import org.metafacture.metafix.FixPath.ReservedField;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -209,10 +208,7 @@ public class Value {
 
     /*package-private*/ Value updatePathRename(final String newName) {
         if (path != null) {
-            final String basePath = split(path)[0];
-            for (final ReservedField rf : ReservedField.values()) {
-                path = newName.replace(rf.name(), basePath);
-            }
+            path = FixPath.RESERVED_FIELD_PATTERN.matcher(newName).replaceAll(Matcher.quoteReplacement(split(path)[0]));
         }
         return this;
     }
