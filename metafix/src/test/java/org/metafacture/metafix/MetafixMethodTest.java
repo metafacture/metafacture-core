@@ -2059,7 +2059,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("Should insert into specific object, but inserts into all")
     public void shouldCopyToFieldWithIndexAndReservedFieldName() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('a[].*.test[]', 'test')",
@@ -2099,7 +2098,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("Should insert into specific object, but inserts into all")
     public void shouldCopyToFieldWithTwoReservedFieldNames() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('a[].*.test[]', 'test')",

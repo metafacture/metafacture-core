@@ -293,6 +293,14 @@ public class Value {
         this.path = path;
     }
 
+    /*package-private*/ Value copy() {
+        return extractType((m, c) -> m
+                .ifArray(oldArray -> c.accept(Value.newArray(newArray -> oldArray.forEach(v -> newArray.add(v)))))
+                .ifHash(oldHash -> c.accept(Value.newHash(newHash -> oldHash.forEach((k, v) -> newHash.put(k, v)))))
+                .ifString(s -> c.accept(new Value(s)))
+                .orElseThrow());
+    }
+
     enum Type {
         Array,
         Hash,

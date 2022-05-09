@@ -248,13 +248,14 @@ import java.util.Map;
 
     /*package-private*/ private Value insertInto(final Array array, final InsertMode mode, final Value newValue) {
         // basic idea: reuse findIn logic here? setIn(findIn(array), newValue)
+
         final String field = path[0];
         if (path.length == 1) {
             mode.apply(array, field, newValue);
         }
         else {
             if (ASTERISK.equals(field)) {
-                array.forEach(value -> insertInto(value, mode, newValue, field, tail(path)));
+                array.forEach(value -> insertInto(value, mode, newValue.copy(), field, tail(path)));
             }
             else if (isReference(field)) {
                 insertInto(getReferencedValue(array, field), mode, newValue, field, tail(path));
