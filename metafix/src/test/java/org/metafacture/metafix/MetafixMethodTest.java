@@ -121,6 +121,35 @@ public class MetafixMethodTest {
     }
 
     @Test
+    @MetafixToDo("NumberFormatException: For input string: '*'")
+    public void shouldFilterArrayWithAsteriskAtEnd() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "filter('title[].*', 'faust')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("title[]");
+                i.startEntity("1[]");
+                i.literal("1", "faust");
+                i.endEntity();
+                i.startEntity("2[]");
+                i.literal("1", "räuber");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("title[]");
+                o.get().startEntity("1[]");
+                o.get().literal("1", "faust");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldCapitalizeString() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "capitalize('title')"
