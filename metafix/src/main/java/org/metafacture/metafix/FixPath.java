@@ -22,6 +22,8 @@ import org.metafacture.metafix.Value.Hash;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Our goal here is something like https://metacpan.org/pod/Catmandu::Path::simple
@@ -33,6 +35,8 @@ import java.util.Map;
  */
 /*package-private*/ class FixPath {
 
+    /*package-private*/ static final Pattern RESERVED_FIELD_PATTERN = Pattern.compile(String.format("(?:%s)",
+            Arrays.stream(ReservedField.values()).map(f -> Pattern.quote(f.name())).collect(Collectors.joining("|"))));
     private static final String ASTERISK = "*";
     private String[] path;
 
@@ -248,13 +252,14 @@ import java.util.Map;
 
     /*package-private*/ private Value insertInto(final Array array, final InsertMode mode, final Value newValue) {
         // basic idea: reuse findIn logic here? setIn(findIn(array), newValue)
+
         final String field = path[0];
         if (path.length == 1) {
             mode.apply(array, field, newValue);
         }
         else {
             if (ASTERISK.equals(field)) {
-                array.forEach(value -> insertInto(value, mode, newValue, field, tail(path)));
+                array.forEach(value -> insertInto(value, mode, newValue.copy(), field, tail(path)));
             }
             else if (isReference(field)) {
                 insertInto(getReferencedValue(array, field), mode, newValue, field, tail(path));

@@ -208,7 +208,7 @@ public class Value {
 
     /*package-private*/ Value updatePathRename(final String newName) {
         if (path != null) {
-            path = newName.replaceAll("\\$[^.]+", split(path)[0]);
+            path = FixPath.RESERVED_FIELD_PATTERN.matcher(newName).replaceAll(Matcher.quoteReplacement(split(path)[0]));
         }
         return this;
     }
@@ -287,6 +287,14 @@ public class Value {
 
     /*package-private*/ void setPath(final String path) {
         this.path = path;
+    }
+
+    /*package-private*/ Value copy() {
+        return extractType((m, c) -> m
+                .ifArray(oldArray -> c.accept(Value.newArray(newArray -> oldArray.forEach(v -> newArray.add(v)))))
+                .ifHash(oldHash -> c.accept(Value.newHash(newHash -> oldHash.forEach((k, v) -> newHash.put(k, v)))))
+                .ifString(s -> c.accept(new Value(s)))
+                .orElseThrow());
     }
 
     enum Type {

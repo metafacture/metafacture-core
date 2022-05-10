@@ -2061,6 +2061,167 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void shouldCopyBindVarWithDollarAfterLookup() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('@coll[]')",
+                "do list(path: 'a', 'var': '$i')",
+                "  lookup('$i.name')",
+                "  copy_field('$i.name', '@coll[].$append')",
+                "end",
+                "remove_field('a')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("a");
+                i.literal("name", "Dog");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("@coll[]");
+                o.get().literal("1", "Dog");
+                f.apply(1).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldCopyToFieldWithIndexAndReservedFieldName() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('a[].*.test[]', 'test')",
+                "copy_field('some', 'a[].1.test[].$append')",
+                "remove_field('some')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("some", "thing");
+                i.startEntity("a[]");
+                i.startEntity("1");
+                i.literal("name", "Dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "Cat");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("a[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "Dog");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "test");
+                o.get().literal("2", "thing");
+                f.apply(2).endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "Cat");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "test");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldCopyToFieldWithTwoReservedFieldNames() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('a[].*.test[]', 'test')",
+                "copy_field('some', 'a[].$first.test[].$append')",
+                "remove_field('some')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("some", "thing");
+                i.startEntity("a[]");
+                i.startEntity("1");
+                i.literal("name", "Dog");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "Cat");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("a[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "Dog");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "test");
+                o.get().literal("2", "thing");
+                f.apply(2).endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "Cat");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "test");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @MetafixToDo("Existing value has no path ('[[a]]'), resulting in wrong path for new value")
+    public void shouldMoveFieldToPathWithIndexAndReservedField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "move_field('b', 'names[].1.$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("b", "b");
+                i.startEntity("names[]");
+                i.startEntity("1[]");
+                i.literal("1", "a");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("names[]");
+                o.get().startEntity("1[]");
+                o.get().literal("1", "a");
+                o.get().literal("2", "b");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @MetafixToDo("Existing value has no path ('[[a]]'), resulting in wrong path for new value")
+    public void shouldMoveFieldToPathWithTwoReservedFields() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "move_field('b', 'names[].$first.$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("b", "b");
+                i.startEntity("names[]");
+                i.startEntity("1[]");
+                i.literal("1", "a");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("names[]");
+                o.get().startEntity("1[]");
+                o.get().literal("1", "a");
+                o.get().literal("2", "b");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     // See https://github.com/metafacture/metafacture-fix/issues/121
     public void shouldReplaceAllRegexesInNestedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
