@@ -2298,6 +2298,46 @@ public class MetafixRecordTest {
         );
     }
 
+    @Test
+    public void emitEntityForRepeatedField() {
+        MetafixTestHelpers.assertFix(streamReceiver, true, Arrays.asList(
+                "nothing()"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.literal("name", "mo");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("name");
+                o.get().literal("1", "max");
+                o.get().literal("2", "mo");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void dontEmitEntityForSingleField() {
+        MetafixTestHelpers.assertFix(streamReceiver, true, Arrays.asList(
+                "nothing()"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "max");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "max");
+                o.get().endRecord();
+            }
+        );
+    }
+
     public void shouldNotAccessArrayImplicitly() {
         MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
