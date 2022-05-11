@@ -16,6 +16,8 @@ application {
 
   if (project.hasProperty('profile')) {
     def file = project.getProperty('profile') ?: project.name
-    applicationDefaultJvmArgs = ["-agentlib:hprof=heap=sites,cpu=samples,file=${file}.hprof.txt"]
+    def depth = project.hasProperty('profile.depth') ? project.getProperty('profile.depth') : 8
+
+    applicationDefaultJvmArgs = ["-agentlib:hprof=heap=sites,cpu=samples,depth=${depth},file=${file}.hprof.txt"]
   }
 }
