@@ -82,6 +82,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     private Record currentRecord = new Record();
     private StreamReceiver outputStreamReceiver;
     private Strictness strictness = DEFAULT_STRICTNESS;
+    private boolean repeatedFieldsToEntities;
     private String fixFile;
     private String recordIdentifier;
     private int entityCount;
@@ -199,7 +200,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
 
     private void emit(final String field, final Value value) {
         Value.asList(value, array -> {
-            final boolean isMulti = isArrayName(field);
+            final boolean isMulti = repeatedFieldsToEntities && array.size() > 1 || isArrayName(field);
             if (isMulti) {
                 outputStreamReceiver.startEntity(field);
             }
@@ -347,6 +348,14 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
 
     public Strictness getStrictness() {
         return strictness;
+    }
+
+    public void setRepeatedFieldsToEntities(final boolean repeatedFieldsToEntities) {
+        this.repeatedFieldsToEntities = repeatedFieldsToEntities;
+    }
+
+    public boolean getRepeatedFieldsToEntities() {
+        return repeatedFieldsToEntities;
     }
 
     public enum Strictness {

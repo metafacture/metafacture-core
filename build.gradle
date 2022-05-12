@@ -77,7 +77,7 @@ subprojects {
   }
 
   checkstyle {
-    toolVersion '8.30'
+    toolVersion '8.44'
   }
 
   tasks.withType(JavaCompile) {
