@@ -200,7 +200,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
 
     private void emit(final String field, final Value value) {
         Value.asList(value, array -> {
-            final boolean isMulti = (repeatedFieldsToEntities && array.size() > 1) || isArrayName(field); // checkstyle-disable-line UnnecessaryParentheses
+            final boolean isMulti = repeatedFieldsToEntities && array.size() > 1 || isArrayName(field);
             if (isMulti) {
                 outputStreamReceiver.startEntity(field);
             }
