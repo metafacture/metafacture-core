@@ -2300,10 +2300,11 @@ public class MetafixRecordTest {
 
     @Test
     public void emitEntityForRepeatedField() {
-        MetafixTestHelpers.assertFix(streamReceiver, true, Arrays.asList(
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "nothing()"
             ),
             i -> {
+                i.setRepeatedFieldsToEntities(true);
                 i.startRecord("1");
                 i.literal("name", "max");
                 i.literal("name", "mo");
@@ -2322,10 +2323,11 @@ public class MetafixRecordTest {
 
     @Test
     public void dontEmitEntityForSingleField() {
-        MetafixTestHelpers.assertFix(streamReceiver, true, Arrays.asList(
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "nothing()"
             ),
             i -> {
+                i.setRepeatedFieldsToEntities(true);
                 i.startRecord("1");
                 i.literal("name", "max");
                 i.endRecord();

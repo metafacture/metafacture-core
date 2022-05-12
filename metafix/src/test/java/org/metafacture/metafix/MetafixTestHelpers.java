@@ -76,36 +76,30 @@ public final class MetafixTestHelpers {
         Assertions.assertEquals(expectedMessage, operator.apply(actualException.getMessage()));
     }
 
-    public static void assertFix(final StreamReceiver receiver, final boolean repeatedFieldsToEntities, final List<String> fixDef, final Consumer<Metafix> in,
-            final Consumer<Supplier<StreamReceiver>> out) {
-        assertFix(receiver, repeatedFieldsToEntities, fixDef, in, (s, f) -> out.accept(s), Metafix.NO_VARS);
-    }
-
     public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Consumer<Metafix> in,
             final Consumer<Supplier<StreamReceiver>> out) {
-        assertFix(receiver, false, fixDef, in, (s, f) -> out.accept(s), Metafix.NO_VARS);
+        assertFix(receiver, fixDef, in, (s, f) -> out.accept(s), Metafix.NO_VARS);
     }
 
     public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Consumer<Metafix> in,
             final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
-        assertFix(receiver, false, fixDef, in, out, Metafix.NO_VARS);
+        assertFix(receiver, fixDef, in, out, Metafix.NO_VARS);
     }
 
     public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Map<String, String> vars,
             final Consumer<Metafix> in, final Consumer<Supplier<StreamReceiver>> out) {
-        assertFix(receiver, false, fixDef, in, (s, f) -> out.accept(s), vars);
+        assertFix(receiver, fixDef, in, (s, f) -> out.accept(s), vars);
     }
 
     public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Map<String, String> vars,
             final Consumer<Metafix> in, final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out) {
-        assertFix(receiver, false, fixDef, in, out, vars);
+        assertFix(receiver, fixDef, in, out, vars);
     }
 
-    private static void assertFix(final StreamReceiver receiver, final boolean repeatedFieldsToEntities, final List<String> fixLines, final Consumer<Metafix> in, // checkstyle-disable-line ParameterNumberCheck
+    private static void assertFix(final StreamReceiver receiver, final List<String> fixLines, final Consumer<Metafix> in,
             final BiConsumer<Supplier<StreamReceiver>, IntFunction<StreamReceiver>> out, final Map<String, String> vars) {
         final String fixString = String.join("\n", fixLines);
         final Metafix metafix = fix(receiver, fixString, vars);
-        metafix.setRepeatedFieldsToEntities(repeatedFieldsToEntities);
         final InOrder ordered = Mockito.inOrder(receiver);
         try {
             in.accept(metafix);
