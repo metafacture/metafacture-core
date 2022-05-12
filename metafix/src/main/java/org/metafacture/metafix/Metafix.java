@@ -54,7 +54,7 @@ import java.util.function.BiConsumer;
  * @author Christoph Böhme (Metamorph)
  * @author Fabian Steeg (Metafix)
  */
-public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle-disable-line ClassDataAbstractionCoupling
+public class Metafix implements StreamPipe<StreamReceiver>, Maps {
 
     public static final String ARRAY_MARKER = "[]";
     public static final String FIX_EXTENSION = ".fix";
