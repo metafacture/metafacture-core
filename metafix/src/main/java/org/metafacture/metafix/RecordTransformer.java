@@ -38,6 +38,7 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +46,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * Transform a record using a {@link Fix}.
@@ -72,17 +72,20 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         vars = metafix.getVars();
 
         expressions.forEach(e -> {
+            final List<String> params = e.getParams();
+            final Map<String, String> options = options(e.getOptions());
+
             if (e instanceof Do) {
-                processDo((Do) e);
+                processDo((Do) e, params, options);
             }
             else if (e instanceof If) {
-                processIf((If) e);
+                processIf((If) e, params, options);
             }
             else if (e instanceof Unless) {
-                processUnless((Unless) e);
+                processUnless((Unless) e, params, options);
             }
             else if (e instanceof MethodCall) {
-                processFunction((MethodCall) e);
+                processFunction((MethodCall) e, params, options);
             }
             else {
                 throw new FixProcessException(executionExceptionMessage(e));
@@ -100,16 +103,16 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         });
     }
 
-    private void processDo(final Do expression) {
+    private void processDo(final Do expression, final List<String> params, final Map<String, String> options) {
         processFix(() -> executionExceptionMessage(expression), () -> {
             final FixContext context = getInstance(expression.getName(), FixContext.class, FixBind::valueOf);
             final RecordTransformer recordTransformer = new RecordTransformer(metafix, expression.getElements());
 
-            return record -> context.execute(metafix, record, params(expression.getParams()), options(expression.getOptions()), recordTransformer);
+            return record -> context.execute(metafix, record, resolveParams(params), resolveOptions(options), recordTransformer);
         });
     }
 
-    private void processIf(final If ifExpression) {
+    private void processIf(final If ifExpression, final List<String> ifParams, final Map<String, String> ifOptions) {
         final ElsIf elseIfExpression = ifExpression.getElseIf();
         final Else elseExpression = ifExpression.getElse();
 
@@ -118,21 +121,37 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
 
         processFix(() -> executionExceptionMessage(ifExpression, ifExpression.eResource()), () -> {
             final FixPredicate ifPredicate = getInstance(ifExpression.getName(), FixPredicate.class, FixConditional::valueOf);
-            final FixPredicate elseIfPredicate = elseIfExpression != null ? getInstance(elseIfExpression.getName(), FixPredicate.class, FixConditional::valueOf) : null;
-
             final RecordTransformer ifTransformer = new RecordTransformer(metafix, ifExpression.getElements());
-            final RecordTransformer elseIfTransformer = elseIfExpression != null ? new RecordTransformer(metafix, elseIfExpression.getElements()) : null;
+
+            final FixPredicate elseIfPredicate;
+            final List<String> elseIfParams;
+            final Map<String, String> elseIfOptions;
+            final RecordTransformer elseIfTransformer;
+
+            if (elseIfExpression != null) {
+                elseIfPredicate = getInstance(elseIfExpression.getName(), FixPredicate.class, FixConditional::valueOf);
+                elseIfParams = elseIfExpression.getParams();
+                elseIfOptions = options(elseIfExpression.getOptions());
+                elseIfTransformer = new RecordTransformer(metafix, elseIfExpression.getElements());
+            }
+            else {
+                elseIfPredicate = null;
+                elseIfParams = null;
+                elseIfOptions = null;
+                elseIfTransformer = null;
+            }
+
             final RecordTransformer elseTransformer = elseExpression != null ? new RecordTransformer(metafix, elseExpression.getElements()) : null;
 
             return record -> {
-                if (ifPredicate.test(metafix, record, params(ifExpression.getParams()), options(null))) { // TODO: options
+                if (ifPredicate.test(metafix, record, resolveParams(ifParams), resolveOptions(ifOptions))) {
                     ifTransformer.transform(record);
                 }
                 else {
                     if (elseIfExpression != null) {
                         currentMessageSupplier = elseIfMessageSupplier;
 
-                        if (elseIfPredicate.test(metafix, record, params(elseIfExpression.getParams()), options(null))) { // TODO: options
+                        if (elseIfPredicate.test(metafix, record, resolveParams(elseIfParams), resolveOptions(elseIfOptions))) {
                             elseIfTransformer.transform(record);
                             return;
                         }
@@ -147,23 +166,23 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         });
     }
 
-    private void processUnless(final Unless expression) {
+    private void processUnless(final Unless expression, final List<String> params, final Map<String, String> options) {
         processFix(() -> executionExceptionMessage(expression, expression.eResource()), () -> {
             final FixPredicate predicate = getInstance(expression.getName(), FixPredicate.class, FixConditional::valueOf);
             final RecordTransformer recordTransformer = new RecordTransformer(metafix, expression.getElements());
 
             return record -> {
-                if (!predicate.test(metafix, record, params(expression.getParams()), options(null))) { // TODO: options
+                if (!predicate.test(metafix, record, resolveParams(params), resolveOptions(options))) {
                     recordTransformer.transform(record);
                 }
             };
         });
     }
 
-    private void processFunction(final MethodCall expression) {
+    private void processFunction(final MethodCall expression, final List<String> params, final Map<String, String> options) {
         processFix(() -> executionExceptionMessage(expression), () -> {
             final FixFunction function = getInstance(expression.getName(), FixFunction.class, FixMethod::valueOf);
-            return record -> function.apply(metafix, record, params(expression.getParams()), options(expression.getOptions()));
+            return record -> function.apply(metafix, record, resolveParams(params), resolveOptions(options));
         });
     }
 
@@ -223,8 +242,14 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         return value == null ? null : StringUtil.format(value, Metafix.VAR_START, Metafix.VAR_END, false, vars);
     }
 
-    private List<String> params(final List<String> params) {
-        return params.stream().map(this::resolveVars).collect(Collectors.toList());
+    private List<String> resolveParams(final List<String> params) {
+        final List<String> list = new ArrayList<>(params.size());
+
+        for (final String entry : params) {
+            list.add(resolveVars(entry));
+        }
+
+        return list;
     }
 
     private Map<String, String> options(final Options options) {
@@ -235,8 +260,18 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
             final List<String> values = options.getValues();
 
             for (int i = 0; i < keys.size(); i += 1) {
-                map.put(resolveVars(keys.get(i)), resolveVars(values.get(i)));
+                map.put(keys.get(i), values.get(i));
             }
+        }
+
+        return map;
+    }
+
+    private Map<String, String> resolveOptions(final Map<String, String> options) {
+        final Map<String, String> map = new LinkedHashMap<>(options.size());
+
+        for (final Map.Entry<String, String> entry : options.entrySet()) {
+            map.put(resolveVars(entry.getKey()), resolveVars(entry.getValue()));
         }
 
         return map;
