@@ -28,7 +28,6 @@ import org.metafacture.metafix.fix.Expression;
 import org.metafacture.metafix.fix.Fix;
 import org.metafacture.metafix.fix.If;
 import org.metafacture.metafix.fix.MethodCall;
-import org.metafacture.metafix.fix.Options;
 import org.metafacture.metafix.fix.Unless;
 
 import org.eclipse.emf.ecore.EObject;
@@ -72,8 +71,8 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         vars = metafix.getVars();
 
         expressions.forEach(e -> {
-            final List<String> params = e.getParams();
-            final Map<String, String> options = options(e.getOptions());
+            final Params params = new Params(e.getParams(), vars);
+            final Options options = new Options(e.getOptions(), vars);
 
             if (e instanceof Do) {
                 processDo((Do) e, params, options);
@@ -103,16 +102,16 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         });
     }
 
-    private void processDo(final Do expression, final List<String> params, final Map<String, String> options) {
+    private void processDo(final Do expression, final Params params, final Options options) {
         processFix(() -> executionExceptionMessage(expression), () -> {
             final FixContext context = getInstance(expression.getName(), FixContext.class, FixBind::valueOf);
             final RecordTransformer recordTransformer = new RecordTransformer(metafix, expression.getElements());
 
-            return record -> context.execute(metafix, record, resolveParams(params), resolveOptions(options), recordTransformer);
+            return record -> context.execute(metafix, record, params.resolve(), options.resolve(), recordTransformer);
         });
     }
 
-    private void processIf(final If ifExpression, final List<String> ifParams, final Map<String, String> ifOptions) {
+    private void processIf(final If ifExpression, final Params ifParams, final Options ifOptions) {
         final ElsIf elseIfExpression = ifExpression.getElseIf();
         final Else elseExpression = ifExpression.getElse();
 
@@ -124,14 +123,14 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
             final RecordTransformer ifTransformer = new RecordTransformer(metafix, ifExpression.getElements());
 
             final FixPredicate elseIfPredicate;
-            final List<String> elseIfParams;
-            final Map<String, String> elseIfOptions;
+            final Params elseIfParams;
+            final Options elseIfOptions;
             final RecordTransformer elseIfTransformer;
 
             if (elseIfExpression != null) {
                 elseIfPredicate = getInstance(elseIfExpression.getName(), FixPredicate.class, FixConditional::valueOf);
-                elseIfParams = elseIfExpression.getParams();
-                elseIfOptions = options(elseIfExpression.getOptions());
+                elseIfParams = new Params(elseIfExpression.getParams(), vars);
+                elseIfOptions = new Options(elseIfExpression.getOptions(), vars);
                 elseIfTransformer = new RecordTransformer(metafix, elseIfExpression.getElements());
             }
             else {
@@ -144,14 +143,14 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
             final RecordTransformer elseTransformer = elseExpression != null ? new RecordTransformer(metafix, elseExpression.getElements()) : null;
 
             return record -> {
-                if (ifPredicate.test(metafix, record, resolveParams(ifParams), resolveOptions(ifOptions))) {
+                if (ifPredicate.test(metafix, record, ifParams.resolve(), ifOptions.resolve())) {
                     ifTransformer.transform(record);
                 }
                 else {
                     if (elseIfExpression != null) {
                         currentMessageSupplier = elseIfMessageSupplier;
 
-                        if (elseIfPredicate.test(metafix, record, resolveParams(elseIfParams), resolveOptions(elseIfOptions))) {
+                        if (elseIfPredicate.test(metafix, record, elseIfParams.resolve(), elseIfOptions.resolve())) {
                             elseIfTransformer.transform(record);
                             return;
                         }
@@ -166,23 +165,23 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         });
     }
 
-    private void processUnless(final Unless expression, final List<String> params, final Map<String, String> options) {
+    private void processUnless(final Unless expression, final Params params, final Options options) {
         processFix(() -> executionExceptionMessage(expression, expression.eResource()), () -> {
             final FixPredicate predicate = getInstance(expression.getName(), FixPredicate.class, FixConditional::valueOf);
             final RecordTransformer recordTransformer = new RecordTransformer(metafix, expression.getElements());
 
             return record -> {
-                if (!predicate.test(metafix, record, resolveParams(params), resolveOptions(options))) {
+                if (!predicate.test(metafix, record, params.resolve(), options.resolve())) {
                     recordTransformer.transform(record);
                 }
             };
         });
     }
 
-    private void processFunction(final MethodCall expression, final List<String> params, final Map<String, String> options) {
+    private void processFunction(final MethodCall expression, final Params params, final Options options) {
         processFix(() -> executionExceptionMessage(expression), () -> {
             final FixFunction function = getInstance(expression.getName(), FixFunction.class, FixMethod::valueOf);
-            return record -> function.apply(metafix, record, resolveParams(params), resolveOptions(options));
+            return record -> function.apply(metafix, record, params.resolve(), options.resolve());
         });
     }
 
@@ -238,43 +237,97 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
                 resource.getURI(), node.getStartLine(), NodeModelUtils.getTokenText(node));
     }
 
-    private String resolveVars(final String value) {
-        return value == null ? null : StringUtil.format(value, Metafix.VAR_START, Metafix.VAR_END, false, vars);
-    }
+    private abstract static class AbstractResolvable<T> {
 
-    private List<String> resolveParams(final List<String> params) {
-        final List<String> list = new ArrayList<>(params.size());
-
-        for (final String entry : params) {
-            list.add(resolveVars(entry));
+        protected boolean isResolvable(final String value) {
+            return value != null && value.contains(Metafix.VAR_START);
         }
 
-        return list;
+        protected String resolveVars(final String value, final Map<String, String> vars) {
+            return value == null ? null : StringUtil.format(value, Metafix.VAR_START, Metafix.VAR_END, false, vars);
+        }
+
+        protected abstract T resolve();
+
     }
 
-    private Map<String, String> options(final Options options) {
-        final Map<String, String> map = new LinkedHashMap<>();
+    private static class Params extends AbstractResolvable<List<String>> {
 
-        if (options != null) {
-            final List<String> keys = options.getKeys();
-            final List<String> values = options.getValues();
+        private final List<String> list;
+        private final Map<String, String> vars;
+        private final boolean resolve;
 
-            for (int i = 0; i < keys.size(); i += 1) {
-                map.put(keys.get(i), values.get(i));
+        private Params(final List<String> list, final Map<String, String> vars) {
+            this.list = list;
+            this.vars = vars;
+
+            resolve = list.stream().anyMatch(this::isResolvable);
+        }
+
+        @Override
+        protected List<String> resolve() {
+            if (resolve) {
+                final List<String> resolvedList = new ArrayList<>(list.size());
+
+                for (final String entry : list) {
+                    resolvedList.add(resolveVars(entry, vars));
+                }
+
+                return resolvedList;
+            }
+            else {
+                return list;
             }
         }
 
-        return map;
     }
 
-    private Map<String, String> resolveOptions(final Map<String, String> options) {
-        final Map<String, String> map = new LinkedHashMap<>(options.size());
+    private static class Options extends AbstractResolvable<Map<String, String>> {
 
-        for (final Map.Entry<String, String> entry : options.entrySet()) {
-            map.put(resolveVars(entry.getKey()), resolveVars(entry.getValue()));
+        private final Map<String, String> map = new LinkedHashMap<>();
+        private final Map<String, String> vars;
+        private final boolean resolve;
+
+        private Options(final org.metafacture.metafix.fix.Options options, final Map<String, String> vars) {
+            this.vars = vars;
+
+            boolean resolveTemp = false;
+
+            if (options != null) {
+                final List<String> keys = options.getKeys();
+                final List<String> values = options.getValues();
+
+                for (int i = 0; i < keys.size(); ++i) {
+                    final String key = keys.get(i);
+                    final String value = values.get(i);
+
+                    map.put(key, value);
+
+                    if (!resolveTemp && (isResolvable(key) || isResolvable(value))) {
+                        resolveTemp = true;
+                    }
+                }
+            }
+
+            resolve = resolveTemp;
         }
 
-        return map;
+        @Override
+        protected Map<String, String> resolve() {
+            if (resolve) {
+                final Map<String, String> resolvedMap = new LinkedHashMap<>(map.size());
+
+                for (final Map.Entry<String, String> entry : map.entrySet()) {
+                    resolvedMap.put(resolveVars(entry.getKey(), vars), resolveVars(entry.getValue(), vars));
+                }
+
+                return resolvedMap;
+            }
+            else {
+                return map;
+            }
+        }
+
     }
 
 }
