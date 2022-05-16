@@ -28,7 +28,6 @@ import org.metafacture.metafix.fix.Expression;
 import org.metafacture.metafix.fix.Fix;
 import org.metafacture.metafix.fix.If;
 import org.metafacture.metafix.fix.MethodCall;
-import org.metafacture.metafix.fix.Options;
 import org.metafacture.metafix.fix.Unless;
 
 import org.eclipse.emf.ecore.EObject;
@@ -38,6 +37,7 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +45,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * Transform a record using a {@link Fix}.
@@ -72,17 +71,20 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         vars = metafix.getVars();
 
         expressions.forEach(e -> {
+            final Params params = new Params(e.getParams(), vars);
+            final Options options = new Options(e.getOptions(), vars);
+
             if (e instanceof Do) {
-                processDo((Do) e);
+                processDo((Do) e, params, options);
             }
             else if (e instanceof If) {
-                processIf((If) e);
+                processIf((If) e, params, options);
             }
             else if (e instanceof Unless) {
-                processUnless((Unless) e);
+                processUnless((Unless) e, params, options);
             }
             else if (e instanceof MethodCall) {
-                processFunction((MethodCall) e);
+                processFunction((MethodCall) e, params, options);
             }
             else {
                 throw new FixProcessException(executionExceptionMessage(e));
@@ -100,16 +102,16 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         });
     }
 
-    private void processDo(final Do expression) {
+    private void processDo(final Do expression, final Params params, final Options options) {
         processFix(() -> executionExceptionMessage(expression), () -> {
             final FixContext context = getInstance(expression.getName(), FixContext.class, FixBind::valueOf);
             final RecordTransformer recordTransformer = new RecordTransformer(metafix, expression.getElements());
 
-            return record -> context.execute(metafix, record, params(expression.getParams()), options(expression.getOptions()), recordTransformer);
+            return record -> context.execute(metafix, record, params.resolve(), options.resolve(), recordTransformer);
         });
     }
 
-    private void processIf(final If ifExpression) {
+    private void processIf(final If ifExpression, final Params ifParams, final Options ifOptions) {
         final ElsIf elseIfExpression = ifExpression.getElseIf();
         final Else elseExpression = ifExpression.getElse();
 
@@ -118,21 +120,37 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
 
         processFix(() -> executionExceptionMessage(ifExpression, ifExpression.eResource()), () -> {
             final FixPredicate ifPredicate = getInstance(ifExpression.getName(), FixPredicate.class, FixConditional::valueOf);
-            final FixPredicate elseIfPredicate = elseIfExpression != null ? getInstance(elseIfExpression.getName(), FixPredicate.class, FixConditional::valueOf) : null;
-
             final RecordTransformer ifTransformer = new RecordTransformer(metafix, ifExpression.getElements());
-            final RecordTransformer elseIfTransformer = elseIfExpression != null ? new RecordTransformer(metafix, elseIfExpression.getElements()) : null;
+
+            final FixPredicate elseIfPredicate;
+            final Params elseIfParams;
+            final Options elseIfOptions;
+            final RecordTransformer elseIfTransformer;
+
+            if (elseIfExpression != null) {
+                elseIfPredicate = getInstance(elseIfExpression.getName(), FixPredicate.class, FixConditional::valueOf);
+                elseIfParams = new Params(elseIfExpression.getParams(), vars);
+                elseIfOptions = new Options(elseIfExpression.getOptions(), vars);
+                elseIfTransformer = new RecordTransformer(metafix, elseIfExpression.getElements());
+            }
+            else {
+                elseIfPredicate = null;
+                elseIfParams = null;
+                elseIfOptions = null;
+                elseIfTransformer = null;
+            }
+
             final RecordTransformer elseTransformer = elseExpression != null ? new RecordTransformer(metafix, elseExpression.getElements()) : null;
 
             return record -> {
-                if (ifPredicate.test(metafix, record, params(ifExpression.getParams()), options(null))) { // TODO: options
+                if (ifPredicate.test(metafix, record, ifParams.resolve(), ifOptions.resolve())) {
                     ifTransformer.transform(record);
                 }
                 else {
                     if (elseIfExpression != null) {
                         currentMessageSupplier = elseIfMessageSupplier;
 
-                        if (elseIfPredicate.test(metafix, record, params(elseIfExpression.getParams()), options(null))) { // TODO: options
+                        if (elseIfPredicate.test(metafix, record, elseIfParams.resolve(), elseIfOptions.resolve())) {
                             elseIfTransformer.transform(record);
                             return;
                         }
@@ -147,23 +165,23 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         });
     }
 
-    private void processUnless(final Unless expression) {
+    private void processUnless(final Unless expression, final Params params, final Options options) {
         processFix(() -> executionExceptionMessage(expression, expression.eResource()), () -> {
             final FixPredicate predicate = getInstance(expression.getName(), FixPredicate.class, FixConditional::valueOf);
             final RecordTransformer recordTransformer = new RecordTransformer(metafix, expression.getElements());
 
             return record -> {
-                if (!predicate.test(metafix, record, params(expression.getParams()), options(null))) { // TODO: options
+                if (!predicate.test(metafix, record, params.resolve(), options.resolve())) {
                     recordTransformer.transform(record);
                 }
             };
         });
     }
 
-    private void processFunction(final MethodCall expression) {
+    private void processFunction(final MethodCall expression, final Params params, final Options options) {
         processFix(() -> executionExceptionMessage(expression), () -> {
             final FixFunction function = getInstance(expression.getName(), FixFunction.class, FixMethod::valueOf);
-            return record -> function.apply(metafix, record, params(expression.getParams()), options(expression.getOptions()));
+            return record -> function.apply(metafix, record, params.resolve(), options.resolve());
         });
     }
 
@@ -219,27 +237,97 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
                 resource.getURI(), node.getStartLine(), NodeModelUtils.getTokenText(node));
     }
 
-    private String resolveVars(final String value) {
-        return value == null ? null : StringUtil.format(value, Metafix.VAR_START, Metafix.VAR_END, false, vars);
+    private abstract static class AbstractResolvable<T> {
+
+        protected boolean isResolvable(final String value) {
+            return value != null && value.contains(Metafix.VAR_START);
+        }
+
+        protected String resolveVars(final String value, final Map<String, String> vars) {
+            return value == null ? null : StringUtil.format(value, Metafix.VAR_START, Metafix.VAR_END, false, vars);
+        }
+
+        protected abstract T resolve();
+
     }
 
-    private List<String> params(final List<String> params) {
-        return params.stream().map(this::resolveVars).collect(Collectors.toList());
-    }
+    private static class Params extends AbstractResolvable<List<String>> {
 
-    private Map<String, String> options(final Options options) {
-        final Map<String, String> map = new LinkedHashMap<>();
+        private final List<String> list;
+        private final Map<String, String> vars;
+        private final boolean resolve;
 
-        if (options != null) {
-            final List<String> keys = options.getKeys();
-            final List<String> values = options.getValues();
+        private Params(final List<String> list, final Map<String, String> vars) {
+            this.list = list;
+            this.vars = vars;
 
-            for (int i = 0; i < keys.size(); i += 1) {
-                map.put(resolveVars(keys.get(i)), resolveVars(values.get(i)));
+            resolve = list.stream().anyMatch(this::isResolvable);
+        }
+
+        @Override
+        protected List<String> resolve() {
+            if (resolve) {
+                final List<String> resolvedList = new ArrayList<>(list.size());
+
+                for (final String entry : list) {
+                    resolvedList.add(resolveVars(entry, vars));
+                }
+
+                return resolvedList;
+            }
+            else {
+                return list;
             }
         }
 
-        return map;
+    }
+
+    private static class Options extends AbstractResolvable<Map<String, String>> {
+
+        private final Map<String, String> map = new LinkedHashMap<>();
+        private final Map<String, String> vars;
+        private final boolean resolve;
+
+        private Options(final org.metafacture.metafix.fix.Options options, final Map<String, String> vars) {
+            this.vars = vars;
+
+            boolean resolveTemp = false;
+
+            if (options != null) {
+                final List<String> keys = options.getKeys();
+                final List<String> values = options.getValues();
+
+                for (int i = 0; i < keys.size(); ++i) {
+                    final String key = keys.get(i);
+                    final String value = values.get(i);
+
+                    map.put(key, value);
+
+                    if (!resolveTemp && (isResolvable(key) || isResolvable(value))) {
+                        resolveTemp = true;
+                    }
+                }
+            }
+
+            resolve = resolveTemp;
+        }
+
+        @Override
+        protected Map<String, String> resolve() {
+            if (resolve) {
+                final Map<String, String> resolvedMap = new LinkedHashMap<>(map.size());
+
+                for (final Map.Entry<String, String> entry : map.entrySet()) {
+                    resolvedMap.put(resolveVars(entry.getKey(), vars), resolveVars(entry.getValue(), vars));
+                }
+
+                return resolvedMap;
+            }
+            else {
+                return map;
+            }
+        }
+
     }
 
 }

@@ -17,6 +17,7 @@
 package org.metafacture.metafix;
 
 import org.metafacture.commons.tries.SimpleRegexTrie;
+import org.metafacture.commons.tries.WildcardTrie;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,13 +25,13 @@ import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -210,6 +211,7 @@ public class Value {
         if (path != null) {
             path = FixPath.RESERVED_FIELD_PATTERN.matcher(newName).replaceAll(Matcher.quoteReplacement(split(path)[0]));
         }
+
         return this;
     }
 
@@ -219,6 +221,7 @@ public class Value {
             final String lastSegment = pathSegments[pathSegments.length - 1];
             this.path = container.path + "." + lastSegment;
         }
+
         return this;
     }
 
@@ -229,6 +232,7 @@ public class Value {
         else {
             path = fallback + suffix;
         }
+
         return this;
     }
 
@@ -471,7 +475,10 @@ public class Value {
     public static class Hash extends AbstractValueType {
 
         // NOTE: Keep in sync with `WildcardTrie`/`SimpleRegexTrie` implementation in metafacture-core.
-        private static final Matcher PATTERN_MATCHER = Pattern.compile("[*?|]|\\[[^\\]]").matcher("");
+        private static final Pattern ALTERNATION_PATTERN = Pattern.compile(WildcardTrie.OR_STRING, Pattern.LITERAL);
+        private static final Matcher PATTERN_MATCHER = Pattern.compile("[*?]|\\[[^\\]]").matcher("");
+
+        private static final Map<String, String> PREFIX_CACHE = new HashMap<>();
 
         private static final Map<String, Map<String, Boolean>> TRIE_CACHE = new HashMap<>();
         private static final SimpleRegexTrie<String> TRIE = new SimpleRegexTrie<>();
@@ -491,7 +498,7 @@ public class Value {
          * @return true if this hash contains the metadata field, false otherwise
          */
         public boolean containsField(final String field) {
-            return matchFields(field, Stream::anyMatch);
+            return !findFields(field).isEmpty();
         }
 
         public boolean containsPath(final String fieldPath) {
@@ -575,20 +582,27 @@ public class Value {
 
         /*package-private*/ Value get(final String field, final boolean enforceStringValue) { // TODO use Type.String etc.?
             // TODO: special treatment (only) for exact matches?
-            final List<Value> list = findFields(field).map(actualField -> {
-                final Value value = getField(actualField);
-                if (enforceStringValue) {
-                    value.asString();
-                }
-                return value;
-            }).collect(Collectors.toList());
-            return list.isEmpty() ? null : list.size() == 1 ? list.get(0) : newArray(a -> list.forEach(v -> v.matchType()
-                        .ifArray(b -> b.forEach(a::add))
-                        .orElse(a::add)));
+            final Set<String> set = findFields(field);
+
+            return set.isEmpty() ? null : set.size() == 1 ? getField(set.iterator().next(), enforceStringValue) :
+                newArray(a -> set.forEach(f -> getField(f, enforceStringValue).matchType()
+                            .ifArray(b -> b.forEach(a::add))
+                            .orElse(a::add)
+                ));
         }
 
         public Value getField(final String field) {
             return map.get(field);
+        }
+
+        private Value getField(final String field, final boolean enforceStringValue) {
+            final Value value = getField(field);
+
+            if (enforceStringValue) {
+                value.asString();
+            }
+
+            return value;
         }
 
         public Value getList(final String field, final Consumer<Array> consumer) {
@@ -612,6 +626,7 @@ public class Value {
          */
         public void add(final String field, final Value newValue) {
             final Value oldValue = new FixPath(field).findIn(this);
+
             if (oldValue == null) {
                 put(field, newValue);
             }
@@ -619,6 +634,7 @@ public class Value {
                 if (!oldValue.isArray()) { // repeated field: convert single val to first in array
                     oldValue.updatePathAppend(".1", field);
                 }
+
                 put(field, oldValue.asList(oldVals -> newValue.asList(newVals -> {
                     for (int i = 0; i < newVals.size(); ++i) {
                         oldVals.add(newVals.get(i).updatePathAppend("." + (i + 1 + oldVals.size()), field));
@@ -634,6 +650,7 @@ public class Value {
          */
         public void remove(final String field) {
             final FixPath fixPath = new FixPath(field);
+
             if (fixPath.size() > 1) {
                 fixPath.removeNestedFrom(this);
             }
@@ -652,7 +669,10 @@ public class Value {
          * @param fields the field names
          */
         public void retainFields(final Collection<String> fields) {
-            map.keySet().retainAll(fields.stream().flatMap(this::findFields).collect(Collectors.toSet()));
+            final Set<String> retainFields = new HashSet<>();
+            fields.forEach(f -> retainFields.addAll(findFields(f)));
+
+            map.keySet().retainAll(retainFields);
         }
 
         /**
@@ -702,24 +722,55 @@ public class Value {
          * @param consumer the action to be performed for each value
          */
         /*package-private*/ void modifyFields(final String pattern, final Consumer<String> consumer) {
-            findFields(pattern).collect(Collectors.toSet()).forEach(consumer);
+            findFields(pattern).forEach(consumer);
         }
 
-        private Stream<String> findFields(final String pattern) {
-            return matchFields(pattern, Stream::filter);
-        }
+        private Set<String> findFields(final String pattern) {
+            final Set<String> fieldSet = new LinkedHashSet<>();
 
-        private <T> T matchFields(final String pattern, final BiFunction<Stream<String>, Predicate<String>, T> function) {
-            if (PATTERN_MATCHER.reset(pattern).find()) {
-                final Map<String, Boolean> matcher = TRIE_CACHE.computeIfAbsent(pattern, k -> {
-                    TRIE.put(k, k);
-                    return new HashMap<>();
-                });
-
-                return function.apply(map.keySet().stream(), f -> matcher.computeIfAbsent(f, k -> TRIE.get(k).contains(pattern)));
+            for (final String term : ALTERNATION_PATTERN.split(pattern)) {
+                findFields(term, fieldSet);
             }
-            else {
-                return function.apply(Stream.of(pattern), map::containsKey);
+
+            return fieldSet;
+        }
+
+        private void findFields(final String pattern, final Set<String> fieldSet) {
+            if (!PREFIX_CACHE.containsKey(pattern)) {
+                final Matcher patternMatcher = PATTERN_MATCHER.reset(pattern);
+
+                if (patternMatcher.find()) {
+                    TRIE.put(pattern, pattern);
+                    TRIE_CACHE.put(pattern, new HashMap<>());
+
+                    PREFIX_CACHE.put(pattern, pattern.substring(0, patternMatcher.start()));
+                }
+                else {
+                    PREFIX_CACHE.put(pattern, null);
+                }
+            }
+
+            final String prefix = PREFIX_CACHE.get(pattern);
+
+            if (prefix != null) {
+                final Map<String, Boolean> fieldCache = TRIE_CACHE.get(pattern);
+
+                for (final String field : map.keySet()) {
+                    if (!fieldCache.containsKey(field)) {
+                        final boolean matches = field.startsWith(prefix) && TRIE.get(field).contains(pattern);
+                        fieldCache.put(field, matches);
+
+                        if (matches) {
+                            fieldSet.add(field);
+                        }
+                    }
+                    else if (fieldCache.get(field)) {
+                        fieldSet.add(field);
+                    }
+                }
+            }
+            else if (map.containsKey(pattern)) {
+                fieldSet.add(pattern);
             }
         }
 
