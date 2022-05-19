@@ -90,12 +90,7 @@ public class Value {
     }
 
     public Value(final String string) {
-        type = string != null ? Type.String : null;
-
-        this.array = null;
-        this.hash = null;
-        this.string = string;
-        this.path = null;
+        this(string, null);
     }
 
     public Value(final int integer) {

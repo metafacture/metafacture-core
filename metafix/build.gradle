@@ -94,6 +94,7 @@ task validateFixFile(type: JavaExec, group: 'Verification') {
   classpath = sourceSets.main.runtimeClasspath
 }
 
+def mwe2File = 'src/main/java/org/metafacture/metafix/GenerateFix.mwe2'
 def xtextFile = 'src/main/java/org/metafacture/metafix/Fix.xtext'
 
 task validateXtextLanguage(type: JavaExec, group: 'Verification') {
@@ -105,10 +106,10 @@ task validateXtextLanguage(type: JavaExec, group: 'Verification') {
 task generateXtextLanguage(type: JavaExec) {
   mainClass = 'org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher'
   classpath = configurations.mwe2
-  inputs.file 'src/main/java/org/metafacture/metafix/GenerateFix.mwe2'
+  inputs.file mwe2File
   inputs.file xtextFile
   outputs.dir 'src/main/xtext-gen'
-  args += 'src/main/java/org/metafacture/metafix/GenerateFix.mwe2'
+  args += mwe2File
   args += '-p'
   args += "rootPath=/${projectDir}/.."
 }
