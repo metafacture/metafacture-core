@@ -9,14 +9,6 @@ dependencies {
   implementation "org.metafacture:metafacture-json:${versions.metafacture}"
   implementation "org.metafacture:metafacture-runner:${versions.metafacture}"
   implementation "org.metafacture:metafacture-xml:${versions.metafacture}"
-  implementation "org.metafacture:metafacture-formeta:${versions.metafacture}"
-  implementation "org.metafacture:metafacture-triples:${versions.metafacture}"
-  implementation "org.metafacture:metafacture-strings:${versions.metafacture}"
-  implementation "org.metafacture:metafacture-formatting:${versions.metafacture}"
-  implementation "org.metafacture:metafacture-monitoring:${versions.metafacture}"
-  implementation "org.metafacture:metafacture-csv:${versions.metafacture}"
-  implementation "org.metafacture:metafacture-yaml:${versions.metafacture}"
-  implementation "org.metafacture:metafacture-html:${versions.metafacture}"
 }
 
 application {
