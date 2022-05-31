@@ -22,6 +22,7 @@ import org.metafacture.commons.tries.WildcardTrie;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -304,7 +305,7 @@ public class Value {
 
     public static class TypeMatcher {
 
-        private final Set<Type> expected = new HashSet<>();
+        private final Set<Type> expected = EnumSet.noneOf(Type.class);
         private final Value value;
 
         private TypeMatcher(final Value value) {
