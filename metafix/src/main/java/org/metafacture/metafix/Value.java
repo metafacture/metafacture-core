@@ -56,13 +56,28 @@ public class Value {
 
     private String path;
 
-    public Value(final Array array) {
-        type = array != null ? Type.Array : null;
+    private Value(final Type type, final Array array, final Hash hash, final String string) {
+        final boolean hasValue = array != null || hash != null || string != null;
 
+        if (type == null) {
+            if (hasValue) {
+                throw new IllegalArgumentException("Value without type");
+            }
+        }
+        else {
+            if (!hasValue) {
+                throw new IllegalArgumentException("Type without value");
+            }
+        }
+
+        this.type = type;
         this.array = array;
-        this.hash = null;
-        this.string = null;
-        this.path = null;
+        this.hash = hash;
+        this.string = string;
+    }
+
+    public Value(final Array array) {
+        this(array != null ? Type.Array : null, array, null, null);
     }
 
     public Value(final List<Value> array) {
@@ -74,12 +89,7 @@ public class Value {
     }
 
     public Value(final Hash hash) {
-        type = hash != null ? Type.Hash : null;
-
-        this.array = null;
-        this.hash = hash;
-        this.string = null;
-        this.path = null;
+        this(hash != null ? Type.Hash : null, null, hash, null);
     }
 
     public Value(final Map<String, Value> hash) {
@@ -99,11 +109,7 @@ public class Value {
     }
 
     public Value(final String string, final String path) {
-        type = string != null ? Type.String : null;
-
-        this.array = null;
-        this.hash = null;
-        this.string = string;
+        this(string != null ? Type.String : null, null, null, string);
         this.path = path;
     }
 
@@ -152,12 +158,7 @@ public class Value {
     }
 
     public boolean isNull() {
-        return type == null || this.<Boolean>extractType((m, c) -> m
-                .ifArray(a -> c.accept(a == null))
-                .ifHash(h -> c.accept(h == null))
-                .ifString(s -> c.accept(s == null))
-                .orElseThrow()
-        );
+        return isType(null);
     }
 
     public static boolean isNull(final Value value) {
