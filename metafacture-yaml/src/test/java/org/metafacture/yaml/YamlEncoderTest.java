@@ -277,8 +277,6 @@ public final class YamlEncoderTest {
     public void testShouldPrefixPrettyPrintedOutputWithNewline() {
         assertEncode(
                 i -> {
-                    i.setPrettyPrinting(true);
-
                     i.startRecord("");
                     i.literal(LITERAL1, VALUE1);
                     i.endRecord();

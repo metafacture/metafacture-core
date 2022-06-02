@@ -30,7 +30,6 @@ import com.fasterxml.jackson.core.JsonStreamContext;
 import com.fasterxml.jackson.core.SerializableString;
 import com.fasterxml.jackson.core.io.CharacterEscapes;
 import com.fasterxml.jackson.core.io.SerializedString;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 
@@ -47,7 +46,7 @@ import java.io.StringWriter;
  * @author Jens Wille
  *
  */
-@Description("Serialises an object as YAML")
+@Description("Serialises an object as YAML. The paramter 'prettyprinting (boolean)' is deprecated since it's not possible to not pretty print.")
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("encode-yaml")
@@ -95,20 +94,27 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     /**
      * Flags whether the data should be pretty printed.
+     * @deprecated
+     * Jackson's YAMLGenerator ignores any PrettyPrinter. It's always
+     * pretty printed.
      *
      * @param prettyPrinting true if the data should be pretty printed
      */
+    @Deprecated
     public void setPrettyPrinting(final boolean prettyPrinting) {
-        yamlGenerator.setPrettyPrinter(prettyPrinting ? new DefaultPrettyPrinter((SerializableString) null) : null);
     }
 
     /**
      * Checks whether to pretty print.
+     * @deprecated
+     * Jackson's YAMLGenerator ignores any PrettyPrinter. It's always
+     * pretty printed.
      *
      * @return true if the data should be pretty printed
      */
+    @Deprecated
     public boolean getPrettyPrinting() {
-        return yamlGenerator.getPrettyPrinter() != null;
+        return true;
     }
 
     /**
