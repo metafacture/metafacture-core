@@ -273,27 +273,6 @@ public final class YamlEncoderTest {
         );
     }
 
-    @Test
-    public void testShouldPrefixPrettyPrintedOutputWithNewline() {
-        assertEncode(
-                i -> {
-                    i.setPrettyPrinting(true);
-
-                    i.startRecord("");
-                    i.literal(LITERAL1, VALUE1);
-                    i.endRecord();
-                    i.startRecord("");
-                    i.literal(LITERAL2, VALUE2);
-                    i.endRecord();
-                },
-                "---\n" +
-                "L1: 'V1'",
-                "\n" +
-                "---\n" +
-                "L2: 'V2'"
-        );
-    }
-
     private void assertEncode(final Consumer<YamlEncoder> in, final String... out) {
         final InOrder ordered = Mockito.inOrder(receiver);
 
