@@ -99,15 +99,24 @@ public final class ConfigurableClass<T> {
     }
 
     /**
+     * Gets the parameter type of the setter method.
+     *
+     * @param method the setter method
+     * @return the type
+     */
+    public Class<?> getSetterType(final Method method) {
+        return method.getParameterTypes()[0];
+    }
+
+    /**
      * Gets the parameter types of the setter methods.
      *
      * @return a Map of the setter method names and their types
      */
     public Map<String, Class<?>> getSetterTypes() {
         final Map<String, Class<?>> setterTypes = new HashMap<>();
-        for (final Map.Entry<String, Method> method : getSetters().entrySet()) {
-            final Class<?> setterType = method.getValue().getParameterTypes()[0];
-            setterTypes.put(method.getKey(), setterType);
+        for (final Map.Entry<String, Method> entry : getSetters().entrySet()) {
+            setterTypes.put(entry.getKey(), getSetterType(entry.getValue()));
         }
         return setterTypes;
     }

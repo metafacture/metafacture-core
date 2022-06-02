@@ -17,6 +17,7 @@
 package org.metafacture.flux;
 
 import org.metafacture.commons.ResourceUtil;
+import org.metafacture.commons.reflection.ConfigurableClass;
 import org.metafacture.commons.reflection.ObjectFactory;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.annotations.Description;
@@ -80,8 +81,9 @@ public final class HelpPrinter {
         }
     }
 
-    private static <T> void describe(final String name, final ObjectFactory<T> factory, final PrintStream out) {
-        final Class<? extends T> moduleClass = factory.get(name).getPlainClass();
+    private static <T> void describe(final String name, final ObjectFactory<T> factory, final PrintStream out) { // checkstyle-disable-line ExecutableStatementCount
+        final ConfigurableClass<? extends T> configurableClass = factory.get(name);
+        final Class<? extends T> moduleClass = configurableClass.getPlainClass();
         final Description desc = moduleClass.getAnnotation(Description.class);
 
         out.println(name);
@@ -96,22 +98,29 @@ public final class HelpPrinter {
             out.println("- arguments:\t" + arguments);
         }
 
-        final Map<String, Class<?>> attributes = factory.get(name).getSetterTypes();
+        final Map<String, Method> attributes = configurableClass.getSetters();
 
         if (!attributes.isEmpty()) {
             out.print("- options:\t");
             final StringBuilder builder = new StringBuilder();
-            for (final Entry<String, Class<?>> entry : attributes.entrySet()) {
-                if (entry.getValue().isEnum()) {
+            for (final Entry<String, Method> entry : attributes.entrySet()) {
+                final Method method = entry.getValue();
+                final Class<?> type = configurableClass.getSetterType(method);
+
+                if (method.isAnnotationPresent(Deprecated.class)) {
+                    builder.append("[deprecated] ");
+                }
+
+                if (type.isEnum()) {
                     builder.append(entry.getKey())
                             .append(" ")
-                            .append(Arrays.asList(entry.getValue().getEnumConstants()))
+                            .append(Arrays.asList(type.getEnumConstants()))
                             .append(", ");
                 }
                 else {
                     builder.append(entry.getKey())
                             .append(" (")
-                            .append(entry.getValue().getSimpleName())
+                            .append(type.getSimpleName())
                             .append("), ");
                 }
 

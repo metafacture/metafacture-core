@@ -46,7 +46,7 @@ import java.io.StringWriter;
  * @author Jens Wille
  *
  */
-@Description("Serialises an object as YAML. The paramter 'prettyprinting (boolean)' is deprecated since it's not possible to not pretty print.")
+@Description("Serialises an object as YAML.")
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("encode-yaml")
