@@ -94,24 +94,6 @@ public final class YamlEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     }
 
     /**
-     * Flags whether the data should be pretty printed.
-     *
-     * @param prettyPrinting true if the data should be pretty printed
-     */
-    public void setPrettyPrinting(final boolean prettyPrinting) {
-        yamlGenerator.setPrettyPrinter(prettyPrinting ? new DefaultPrettyPrinter((SerializableString) null) : null);
-    }
-
-    /**
-     * Checks whether to pretty print.
-     *
-     * @return true if the data should be pretty printed
-     */
-    public boolean getPrettyPrinting() {
-        return yamlGenerator.getPrettyPrinter() != null;
-    }
-
-    /**
      * By default YAML output does only have escaping where it is strictly
      * necessary. This is recommended in the most cases. Nevertheless it can
      * be sometimes useful to have some more escaping.
