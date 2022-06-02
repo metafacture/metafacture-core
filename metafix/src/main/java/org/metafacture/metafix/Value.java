@@ -20,9 +20,9 @@ import org.metafacture.commons.tries.SimpleRegexTrie;
 import org.metafacture.commons.tries.WildcardTrie;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -306,9 +306,8 @@ public class Value {
 
     public static class TypeMatcher {
 
+        private final Set<Type> expected = EnumSet.noneOf(Type.class);
         private final Value value;
-
-        private byte expected; // NOTE: Covers at most 7 `Type`s.
 
         private TypeMatcher(final Value value) {
             this.value = value;
@@ -327,26 +326,20 @@ public class Value {
         }
 
         public void orElse(final Consumer<Value> consumer) {
-            if (!expecting(value.type)) {
+            if (!expected.contains(value.type)) {
                 consumer.accept(value);
             }
         }
 
         public void orElseThrow() {
             orElse(v -> {
-                final String types = Arrays.stream(Type.values()).filter(this::expecting)
-                    .map(Type::name).collect(Collectors.joining(" or "));
-
+                final String types = expected.stream().map(Type::name).collect(Collectors.joining(" or "));
                 throw new IllegalStateException("Expected " + types + ", got " + value.type);
             });
         }
 
         private <T> TypeMatcher match(final Type type, final Consumer<T> consumer, final T rawValue) {
-            final byte newExpected = (byte) (expected | bit(type));
-
-            if (expected != newExpected) {
-                expected = newExpected;
-
+            if (expected.add(type)) {
                 if (value.isType(type)) {
                     consumer.accept(rawValue);
                 }
@@ -356,14 +349,6 @@ public class Value {
             else {
                 throw new IllegalStateException("Already expecting " + type);
             }
-        }
-
-        private boolean expecting(final Type type) {
-            return (expected & bit(type)) != 0;
-        }
-
-        private byte bit(final Type type) {
-            return (byte) (1 << type.ordinal());
         }
 
     }
