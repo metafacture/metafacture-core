@@ -1,0 +1,12 @@
+@base <https://w3id.org/kim/hochschulfaechersystematik/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix schema: <http://schema.org/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+
+<n4> a skos:Concept ;
+    skos:prefLabel "Mathematik, Naturwissenschaften"@de, "Mathematics, Natural Sciences"@en ;
+    skos:narrower   <n36>, <n37>, <n39>, <n40>, <n41>, <n42>, <n43>, <n44> ;
+    skos:notation "4" ;
+    skos:topConceptOf <scheme> .
+

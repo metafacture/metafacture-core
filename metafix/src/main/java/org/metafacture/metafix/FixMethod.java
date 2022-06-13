@@ -17,6 +17,7 @@
 package org.metafacture.metafix;
 
 import org.metafacture.metafix.api.FixFunction;
+import org.metafacture.metafix.maps.RdfMap;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.functions.ISBN;
 import org.metafacture.metamorph.functions.Timestamp;
@@ -90,6 +91,24 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             metafix.putMap(params.get(0), options);
+        }
+    },
+    put_rdfmap {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String fileName = params.get(0);
+            final RdfMap rdf = new RdfMap();
+            rdf.setFile(metafix.resolvePath(fileName));
+            if (options.containsKey("target_language")) {
+                rdf.setTargetLanguage(options.get("target_language"));
+            }
+            if (options.containsKey("target")) {
+                rdf.setTarget(options.get("target"));
+            }
+            if (options.containsKey(Maps.DEFAULT_MAP_KEY)) {
+                rdf.setDefault(options.get(Maps.DEFAULT_MAP_KEY));
+            }
+            metafix.putMap(params.size() > 1 ? params.get(1) : fileName, rdf);
         }
     },
     put_var {
@@ -470,6 +489,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
 
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+<<<<<<< HEAD
             final Map<String, String> map;
 
             if (params.size() <= 1) {
@@ -515,6 +535,16 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
             else {
                 consumer.accept(null);
             }
+        }
+    },
+    lookup_rdf {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final Map<String, String> map = extracted(metafix, record, params, options, KIND_OF_RDFMAP);
+            record.transform(params.get(0), oldValue -> {
+                final String newValue = map.get(oldValue);
+                return newValue != null ? newValue : getBoolean(options, "delete") ? null : oldValue;
+            });
         }
     },
     prepend {
@@ -639,6 +669,8 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
         }
     };
 
+    public static final String KIND_OF_RDFMAP = "rdfmap";
+    public static final String KIND_OF_FILEMAP = "filemap";
     private static final Pattern NAMED_GROUP_PATTERN = Pattern.compile("\\(\\?<(.+?)>");
 
     private static final String FILEMAP_SEPARATOR_OPTION = "sep_char";
@@ -647,5 +679,33 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
     private static final String ERROR_STRING_OPTION = "error_string";
 
     private static final Random RANDOM = new Random();
+    private static String defaultValue;
+
+    private static Map<String, String> extracted(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final String kindOfMap) {
+        final Map<String, String> map;
+        if (params.size() <= 1) {
+            map = options;
+        }
+        else {
+            final String mapName = params.get(1);
+
+            if (!metafix.getMapNames().contains(mapName)) {
+                if (mapName.contains(".") || mapName.contains(File.separator)) {
+                    if (kindOfMap.equals(KIND_OF_FILEMAP)) {
+                        put_filemap.apply(metafix, record, Arrays.asList(mapName), options);
+                    }
+                    if (kindOfMap.equals(KIND_OF_RDFMAP)) {
+                        put_rdfmap.apply(metafix, record, Arrays.asList(mapName), options);
+                    }
+                }
+                else {
+                    // Probably an unknown internal map? Log a warning?
+                }
+            }
+            map = metafix.getMap(mapName);
+        }
+        defaultValue = map.get(Maps.DEFAULT_MAP_KEY); // TODO: Catmandu uses 'default'
+        return map;
+    }
 
 }

@@ -606,6 +606,16 @@ lookup("path.to.field", "map-name", __default: "NA")
 lookup("path.to.field", "map-name", print_unknown: "true", destination: "unknown.txt")
 ```
 
+##### `lookup_rdf`
+
+Looks up matching values in an RDF resource and replaces the field value with this match. A file as well as an HTTP(S) resource can be used.
+
+```perl
+lookup_rdf("<sourceField>", "<rdfResource>", target: "<RDF Property>")
+lookup_rdf("<sourceField>", "<rdfResource>", target: "<RDF Property>", target_language: "<RDF language tag>")
+lookup_rdf("<sourceField>", "<rdfResource>", target: "<RDF Property>", __default: "NA")
+```
+
 ##### `prepend`
 
 Adds a string at the beginning of a field value.

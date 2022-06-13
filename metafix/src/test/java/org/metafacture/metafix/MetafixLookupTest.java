@@ -37,9 +37,11 @@ import java.util.Arrays;
 public class MetafixLookupTest {
 
     private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
+    private static final String RDF_MAP = "src/test/resources/org/metafacture/metafix/maps/test.ttl";
     private static final String TSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.tsv";
 
     private static final String LOOKUP = "lookup('title.*',";
+    private static final String LOOKUP_IN_RDF = "lookup_in_rdf('prefLabel.*',";
 
     @Mock
     private StreamReceiver streamReceiver;
@@ -954,6 +956,99 @@ public class MetafixLookupTest {
     @Test
     public void shouldPrintUnknownToFileWithoutAppend() throws IOException {
         MetafixTestHelpers.assertTempFile("you\ntoo\n", p -> shouldPrintUnknown(", destination: '" + p + "', append: 'false'", null, ""));
+    }
+
+    @Test
+    public void shouldLookupInExternalRdfUseDefaultValueIfNotFound() {
+        MetafixTestHelpers.assertFix(streamReceiver,
+            Arrays.asList("lookup_rdf('created'," + " '" + RDF_MAP + "',  target:\"created\",  __default:\"0000-01-01\")"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("created", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("created", "0000-01-01");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupInExternalRdfMapGetObjectOfSubjectWithTargetedPredicate() {
+        MetafixTestHelpers.assertFix(streamReceiver,
+            Arrays.asList("lookup_rdf('notation'," + " '" + RDF_MAP + "',  target:\"skos:notation\")"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("notation", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("notation", "4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test //Scenario 1:
+    public void shouldLookupInExternalRdfMapGetObjectOfSubjectWithTargetedPredicateOfSpecificLanguage() {
+        MetafixTestHelpers.assertFix(streamReceiver,
+            Arrays.asList("set_array('prefLabel', 'https://w3id.org/kim/hochschulfaechersystematik/n4')",
+                "lookup_rdf('prefLabel.*'," + " '" + RDF_MAP + "',  target:\"skos:prefLabel\", target_language:\"de\" )"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("prefLabel", "Mathematik, Naturwissenschaften");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test       //Scenario 2:
+    public void shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguage() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList("set_array('id', 'Mathematics, Natural Sciences')",
+                "lookup_rdf('id.*'," + " '" + RDF_MAP + "',  target:\"skos:prefLabel\", " +
+                    "target_language:\"en\" )"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("prefLabel", "Mathematics, Natural Science");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("prefLabel", "Mathematics, Natural Science");
+                o.get().literal("id", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test       //Scenario 3:
+    public void shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguage() {
+        MetafixTestHelpers.assertFix(streamReceiver,
+            Arrays.asList("set_array('prefLabel', 'Mathematics, Natural Sciences')",
+                "lookup_rdf('prefLabel.*'," + " '" + RDF_MAP + "',  target:\"skos:prefLabel\", " +
+                    "target_language:\"de\" )"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("prefLabel", "Mathematik, Naturwissenschaften");
+                o.get().endRecord();
+            }
+        );
     }
 
     private void assertMap(final String... fixDef) {
