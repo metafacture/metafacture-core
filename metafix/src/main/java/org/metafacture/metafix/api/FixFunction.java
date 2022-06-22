@@ -24,12 +24,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 @FunctionalInterface
 public interface FixFunction {
 
     void apply(Metafix metafix, Record record, List<String> params, Map<String, String> options);
+
+    default void getOption(final Map<String, String> options, final String key, final Consumer<String> consumer) {
+        if (options.containsKey(key)) {
+            consumer.accept(options.get(key));
+        }
+    }
 
     default boolean getBoolean(final Map<String, String> options, final String key) {
         return Boolean.parseBoolean(options.get(key));

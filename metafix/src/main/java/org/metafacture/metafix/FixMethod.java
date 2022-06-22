@@ -18,6 +18,7 @@ package org.metafacture.metafix;
 
 import org.metafacture.metafix.api.FixFunction;
 import org.metafacture.metamorph.api.Maps;
+import org.metafacture.metamorph.functions.Timestamp;
 import org.metafacture.metamorph.maps.FileMap;
 
 import java.io.File;
@@ -284,6 +285,19 @@ public enum FixMethod implements FixFunction {
             final String field = params.get(0);
             final Value newValue = Value.newHash(h -> options.forEach((f, v) -> h.put(f, new Value(v))));
             record.set(field, newValue);
+        }
+    },
+    timestamp {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String field = params.get(0);
+            final Timestamp timestamp = new Timestamp();
+
+            getOption(options, "format", timestamp::setFormat);
+            getOption(options, "language", timestamp::setLanguage);
+            getOption(options, "timezone", timestamp::setTimezone);
+
+            record.set(field, new Value(timestamp.process(null)));
         }
     },
     vacuum {

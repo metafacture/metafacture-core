@@ -17,6 +17,7 @@
 package org.metafacture.metafix;
 
 import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.api.MorphBuildException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -2796,6 +2797,56 @@ public class MetafixRecordTest {
                 o.get().endRecord();
             }
         );
+    }
+
+    private void shouldNotAddTimestamp(final String options, final String message) {
+        MetafixTestHelpers.assertProcessException(MorphBuildException.class, message, () -> shouldAddTimestamp(options, ""));
+    }
+
+    private void shouldAddTimestamp(final String options, final String pattern) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "timestamp(test" + options + ")"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal(ArgumentMatchers.eq("test"), ArgumentMatchers.matches(pattern));
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldAddTimestamp() {
+        shouldAddTimestamp("", "\\d+");
+    }
+
+    @Test
+    public void shouldAddTimestampWithFormat() {
+        shouldAddTimestamp(", format: 'yyyy-MM-dd'", "\\d{4}-\\d{2}-\\d{2}");
+    }
+
+    @Test
+    public void shouldNotAddTimestampWithUnsupportedFormat() {
+        shouldNotAddTimestamp(", format: \"'\"", "The date/time format ''' is not supported. ");
+    }
+
+    @Test
+    public void shouldAddTimestampWithLanguage() {
+        shouldAddTimestamp(", format: 'yyyy-MM-dd G', language: 'pl'", "\\d{4}-\\d{2}-\\d{2} n\\.e\\.");
+    }
+
+    @Test
+    public void shouldNotAddTimestampWithUnsupportedLanguage() {
+        shouldNotAddTimestamp(", language: '--'", "Language '--' not supported.");
+    }
+
+    @Test
+    public void shouldAddTimestampWithTimezone() {
+        shouldAddTimestamp(", format: 'yyyy-MM-dd Z', timezone: 'UTC'", "\\d{4}-\\d{2}-\\d{2} \\+0000");
     }
 
     @Test
