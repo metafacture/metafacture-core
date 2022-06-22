@@ -18,6 +18,7 @@ package org.metafacture.metafix;
 
 import org.metafacture.metafix.api.FixFunction;
 import org.metafacture.metamorph.api.Maps;
+import org.metafacture.metamorph.functions.ISBN;
 import org.metafacture.metamorph.functions.Timestamp;
 import org.metafacture.metamorph.maps.FileMap;
 
@@ -357,6 +358,18 @@ public enum FixMethod implements FixFunction {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String search = params.get(1);
             record.transform(params.get(0), s -> String.valueOf(s.indexOf(search))); // TODO: multiple
+        }
+    },
+    isbn {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final ISBN isbn = new ISBN();
+
+            withOption(options, "error_string", isbn::setErrorString);
+            withOption(options, "to", isbn::setTo);
+            withOption(options, "verify_check_digit", isbn::setVerifyCheckDigit);
+
+            record.transform(params.get(0), isbn::process);
         }
     },
     join_field {

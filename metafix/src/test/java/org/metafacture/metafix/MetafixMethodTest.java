@@ -1146,6 +1146,95 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void shouldCleanseISBN10() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "isbn(test)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("test", "ISBN: 1-.93.3-988-31-2 EUro 17.70");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "1933988312");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldConvertISBN10ToISBN13() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "isbn(test, to: 'isbn13')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("test", "1933988312");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "9781933988313");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldConvertISBN13ToISBN10() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "isbn(test, to: 'isbn10')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("test", "9781933988313");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "1933988312");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotProcessInvalidISBN10() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "isbn(test, verify_check_digit: 'true')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("test", "1933988313");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldSetInvalidISBN10ToErrorString() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "isbn(test, verify_check_digit: 'true', error_string: 'invalid')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("test", "1933988313");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "invalid");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldJoinArrayField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "join_field(numbers, '/')"
