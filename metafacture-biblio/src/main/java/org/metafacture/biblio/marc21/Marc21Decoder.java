@@ -135,7 +135,7 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  */
 @In(String.class)
 @Out(StreamReceiver.class)
-@Description("Decodes MARC 21 records")
+@Description("Decodes MARC 21 records (UTF-8 encoding expected).")
 @FluxCommand("decode-marc21")
 public final class Marc21Decoder extends DefaultObjectPipe<String, StreamReceiver> {
 
