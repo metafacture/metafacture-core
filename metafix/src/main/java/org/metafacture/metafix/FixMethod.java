@@ -293,9 +293,9 @@ public enum FixMethod implements FixFunction {
             final String field = params.get(0);
             final Timestamp timestamp = new Timestamp();
 
-            getOption(options, "format", timestamp::setFormat);
-            getOption(options, "language", timestamp::setLanguage);
-            getOption(options, "timezone", timestamp::setTimezone);
+            withOption(options, "format", timestamp::setFormat);
+            withOption(options, "language", timestamp::setLanguage);
+            withOption(options, "timezone", timestamp::setTimezone);
 
             record.set(field, new Value(timestamp.process(null)));
         }

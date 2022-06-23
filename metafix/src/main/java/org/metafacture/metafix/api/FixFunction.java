@@ -32,7 +32,7 @@ public interface FixFunction {
 
     void apply(Metafix metafix, Record record, List<String> params, Map<String, String> options);
 
-    default void getOption(final Map<String, String> options, final String key, final Consumer<String> consumer) {
+    default void withOption(final Map<String, String> options, final String key, final Consumer<String> consumer) {
         if (options.containsKey(key)) {
             consumer.accept(options.get(key));
         }
