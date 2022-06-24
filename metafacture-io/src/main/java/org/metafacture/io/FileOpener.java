@@ -40,7 +40,7 @@ import java.io.Reader;
  */
 @Description("Opens a file.")
 @In(String.class)
-@Out(java.io.Reader.class)
+@Out(Reader.class)
 @FluxCommand("open-file")
 public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
@@ -66,8 +66,7 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     /**
      * Sets the encoding used to open the resource.
      *
-     * @param encoding
-     *            new encoding
+     * @param encoding new encoding
      */
     public void setEncoding(final String encoding) {
         this.encoding = encoding;
@@ -83,7 +82,7 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * * Sets the compression of the file.
+     * Sets the compression of the file.
      *
      * @param compression the {@link FileCompression}
      */
@@ -94,7 +93,7 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     /**
      * Sets the compression of the file.
      *
-     * @param compression the name of the compression.
+     * @param compression the name of the compression
      */
     public void setCompression(final String compression) {
         setCompression(FileCompression.valueOf(compression.toUpperCase()));
@@ -112,34 +111,51 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     /**
      * Flags whether to use decompress concatenated file compression.
      *
-     * @param decompressConcatenated true if file compression should be decompresses
-     *                               concatenated
+     * @param decompressConcatenated true if file compression should decompress concatenated
      */
     public void setDecompressConcatenated(final boolean decompressConcatenated) {
         this.decompressConcatenated = decompressConcatenated;
     }
 
+    /**
+     * Opens a file.
+     *
+     * @param file the file
+     * @return a Reader
+     * @throws IOException if an I/O error occurs
+     */
+    public Reader open(final String file) throws IOException {
+        return open(new FileInputStream(file));
+    }
+
+    /**
+     * Opens a file stream.
+     *
+     * @param stream the stream
+     * @return a Reader
+     * @throws IOException if an I/O error occurs
+     */
+    public Reader open(final InputStream stream) throws IOException {
+        try {
+            final InputStream decompressor = compression.createDecompressor(stream, decompressConcatenated);
+            try {
+                return new InputStreamReader(new BOMInputStream(decompressor), encoding);
+            }
+            catch (final IOException | MetafactureException e) {
+                decompressor.close();
+                throw e;
+            }
+        }
+        catch (final IOException | MetafactureException e) {
+            stream.close();
+            throw e;
+        }
+    }
+
     @Override
     public void process(final String file) {
         try {
-            final InputStream fileStream = new FileInputStream(file);
-            try {
-                final InputStream decompressor = compression.createDecompressor(fileStream, decompressConcatenated);
-                try {
-
-                    final Reader reader = new InputStreamReader(new BOMInputStream(
-                            decompressor), encoding);
-                    getReceiver().process(reader);
-                }
-                catch (final IOException | MetafactureException e) {
-                    decompressor.close();
-                    throw e;
-                }
-            }
-            catch (final IOException | MetafactureException e) {
-                fileStream.close();
-                throw e;
-            }
+            getReceiver().process(open(file));
         }
         catch (final IOException e) {
             throw new MetafactureException(e);

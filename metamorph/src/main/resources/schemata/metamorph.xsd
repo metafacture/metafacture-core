@@ -602,6 +602,21 @@
                     <documentation>Allow empty values in Map.</documentation>
                 </annotation>
             </attribute>
+            <attribute name="compression" type="string" use="optional" default="auto">
+                <annotation>
+                    <documentation>Sets the compression of the file.</documentation>
+                </annotation>
+            </attribute>
+            <attribute name="decompressConcatenated" type="boolean" use="optional" default="false">
+                <annotation>
+                    <documentation>Flags whether to use decompress concatenated file compression.</documentation>
+                </annotation>
+            </attribute>
+            <attribute name="encoding" type="string" use="optional" default="UTF-8">
+                <annotation>
+                    <documentation>Sets the encoding used to open the resource.</documentation>
+                </annotation>
+            </attribute>
             <attribute name="files" type="string" use="required">
                 <annotation>
                     <documentation>Filename(s) referencing the lookup table(s). Can be one

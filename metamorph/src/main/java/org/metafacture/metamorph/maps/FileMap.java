@@ -16,6 +16,7 @@
 
 package org.metafacture.metamorph.maps;
 
+import org.metafacture.io.FileOpener;
 import org.metafacture.metamorph.api.MorphExecutionException;
 import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
 
@@ -24,11 +25,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,6 +53,7 @@ import java.util.regex.Pattern;
  */
 public final class FileMap extends AbstractReadOnlyMap<String, String> {
 
+    private final FileOpener fileOpener = new FileOpener();
     private final Map<String, String> map = new HashMap<>();
 
     private Pattern split = Pattern.compile("\t", Pattern.LITERAL);
@@ -100,6 +101,33 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
         Collections.addAll(filenames, file);
     }
 
+    /**
+     * Sets the encoding used to open the resource.
+     *
+     * @param encoding new encoding
+     */
+    public void setEncoding(final String encoding) {
+        fileOpener.setEncoding(encoding);
+    }
+
+    /**
+     * Sets the compression of the file.
+     *
+     * @param compression the name of the compression
+     */
+    public void setCompression(final String compression) {
+        fileOpener.setCompression(compression);
+    }
+
+    /**
+     * Flags whether to use decompress concatenated file compression.
+     *
+     * @param decompressConcatenated true if file compression should decompress concatenated
+     */
+    public void setDecompressConcatenated(final boolean decompressConcatenated) {
+        fileOpener.setDecompressConcatenated(decompressConcatenated);
+    }
+
     private void loadFiles() {
         filenames.forEach(this::loadFile);
     }
@@ -107,10 +135,11 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
     private void loadFile(final String file) {
         try (
                 InputStream stream = openStream(file);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))
+                Reader reader = fileOpener.open(stream);
+                BufferedReader br = new BufferedReader(reader)
         ) {
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 if (line.isEmpty()) {
                     continue;
                 }
@@ -127,10 +156,9 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
 
     private InputStream openStream(final String file) {
         return openAsFile(file)
-                .orElseGet(() -> openAsResource(file)
-                        .orElseGet(() -> openAsUrl(file)
-                                .orElseThrow(() -> new MorphExecutionException(
-                                        "File not found: " + file))));
+            .orElseGet(() -> openAsResource(file)
+                .orElseGet(() -> openAsUrl(file)
+                    .orElseThrow(() -> new MorphExecutionException("File not found: " + file))));
     }
 
     private Optional<InputStream> openAsFile(final String file) {
