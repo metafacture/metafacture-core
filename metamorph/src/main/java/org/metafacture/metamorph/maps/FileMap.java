@@ -38,8 +38,11 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Provides a {@link Map} based on files. Can be one file or a comma separated list of files.
- * The files are supposed to be UTF-8 encoded. The default separator is {@code \t}.
+ * Provides a {@link Map} based on files. Can be a single file or a
+ * comma-separated list of files.
+ *
+ * The default {@link #setEncoding encoding} is UTF-8.
+ * The default {@link #setSeparator separator} is {@code \t}.
  *
  * By setting {@link #allowEmptyValues} to {@code true} the values in the
  * {@link Map} can be empty thus enabling e.g.
@@ -194,7 +197,7 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
     /**
      * Sets the separator.
      *
-     * <strong>Default value: {@code \t} </strong>
+     * <strong>Default value: {@code \t}</strong>
      *
      * @param delimiter the separator
      */
