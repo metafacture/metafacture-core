@@ -310,6 +310,20 @@ hash("foo")
 # ["name", "value"] => {"name":"value"}
 ```
 
+#### `timestamp`
+
+Adds field or overwrites field with current timestamp.
+
+Options:
+
+  - `format` patterns as in [java.text.SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
+  - `timezone` as in [java.util.TimeZone](https://docs.oracle.com/javase/8/docs/api/java/util/TimeZone.html)  (Standard: UTC)
+  - `language` area codes as in [java.util.Locale](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html)
+
+```perl
+timestamp("<targetField>", [, format: "<formatPattern>"][, timezone: "<timezoneCode>"][, language: "<areaCode>"])
+```
+
 #### `format`
 
 Replaces the value with a formatted (`sprintf`-like) version.
