@@ -312,16 +312,16 @@ hash("foo")
 
 #### `timestamp`
 
-Adds field or overwrites field with current timestamp.
+Creates (or replaces) a field with the current timestamp.
 
 Options:
 
-  - `format` patterns as in [java.text.SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html)
-  - `timezone` as in [java.util.TimeZone](https://docs.oracle.com/javase/8/docs/api/java/util/TimeZone.html)  (Standard: UTC)
-  - `language` area codes as in [java.util.Locale](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html)
+- `format`: Date and time pattern as in [java.text.SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) (Default: Unix timestamp).
+- `timezone`: Time zone as in [java.util.TimeZone](https://docs.oracle.com/javase/8/docs/api/java/util/TimeZone.html) (Default: UTC).
+- `language`: Language tag as in [java.util.Locale](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html) (Default: The locale of the host system).
 
 ```perl
-timestamp("<targetField>", [, format: "<formatPattern>"][, timezone: "<timezoneCode>"][, language: "<areaCode>"])
+timestamp("<targetField>"[, format: "<formatPattern>"][, timezone: "<timezoneCode>"][, language: "<languageCode>"])
 ```
 
 #### `format`
