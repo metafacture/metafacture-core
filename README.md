@@ -515,6 +515,19 @@ Deletes duplicate values in an array.
 uniq("<sourceField>")
 ```
 
+#### `isbn`
+
+Transforms and optionatily checks ISBN if correct.
+
+Options:
+  - `to`: either to `"ISBN13"`,`"ISBN10"` or `"clean"`(deleting semantic sugar)
+  - `verify_check_digit`: default `"false"`
+  - `error_string`: if check digit is wrong provide error message
+
+```perl
+isbn("<sourceField>",to:"<IsbnTransformation>"[,verify_check_digit:"<boolean>",error_string:"<errorMessage>"])
+```
+
 ### Selectors
 
 #### `reject`
