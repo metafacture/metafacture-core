@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Transform a record using a {@link Fix}.
@@ -112,33 +113,20 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     }
 
     private void processIf(final If ifExpression, final Params ifParams, final Options ifOptions) {
-        final ElsIf elseIfExpression = ifExpression.getElseIf();
+        final List<ElsIf> elseIfExpressions = ifExpression.getElseIf();
         final Else elseExpression = ifExpression.getElse();
 
-        final Supplier<String> elseIfMessageSupplier = () -> executionExceptionMessage(elseIfExpression, elseIfExpression.eResource());
+        final List<Supplier<String>> elseIfMessageSuppliers = mapList(elseIfExpressions, e -> () -> executionExceptionMessage(e, e.eResource()));
         final Supplier<String> elseMessageSupplier = () -> executionExceptionMessage(elseExpression, elseExpression.eResource());
 
         processFix(() -> executionExceptionMessage(ifExpression, ifExpression.eResource()), () -> {
             final FixPredicate ifPredicate = getInstance(ifExpression.getName(), FixPredicate.class, FixConditional::valueOf);
             final RecordTransformer ifTransformer = new RecordTransformer(metafix, ifExpression.getElements());
 
-            final FixPredicate elseIfPredicate;
-            final Params elseIfParams;
-            final Options elseIfOptions;
-            final RecordTransformer elseIfTransformer;
-
-            if (elseIfExpression != null) {
-                elseIfPredicate = getInstance(elseIfExpression.getName(), FixPredicate.class, FixConditional::valueOf);
-                elseIfParams = new Params(elseIfExpression.getParams(), vars);
-                elseIfOptions = new Options(elseIfExpression.getOptions(), vars);
-                elseIfTransformer = new RecordTransformer(metafix, elseIfExpression.getElements());
-            }
-            else {
-                elseIfPredicate = null;
-                elseIfParams = null;
-                elseIfOptions = null;
-                elseIfTransformer = null;
-            }
+            final List<FixPredicate> elseIfPredicates = mapList(elseIfExpressions, e -> getInstance(e.getName(), FixPredicate.class, FixConditional::valueOf));
+            final List<Params> elseIfParamsList = mapList(elseIfExpressions, e -> new Params(e.getParams(), vars));
+            final List<Options> elseIfOptionsList = mapList(elseIfExpressions, e -> new Options(e.getOptions(), vars));
+            final List<RecordTransformer> elseIfTransformers = mapList(elseIfExpressions, e -> new RecordTransformer(metafix, e.getElements()));
 
             final RecordTransformer elseTransformer = elseExpression != null ? new RecordTransformer(metafix, elseExpression.getElements()) : null;
 
@@ -147,8 +135,15 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
                     ifTransformer.transform(record);
                 }
                 else {
-                    if (elseIfExpression != null) {
-                        currentMessageSupplier = elseIfMessageSupplier;
+                    for (int i = 0; i < elseIfExpressions.size(); ++i) {
+                        currentMessageSupplier = elseIfMessageSuppliers.get(i);
+
+                        final ElsIf elseIfExpression = elseIfExpressions.get(i);
+
+                        final FixPredicate elseIfPredicate = elseIfPredicates.get(i);
+                        final Params elseIfParams = elseIfParamsList.get(i);
+                        final Options elseIfOptions = elseIfOptionsList.get(i);
+                        final RecordTransformer elseIfTransformer = elseIfTransformers.get(i);
 
                         if (elseIfPredicate.test(metafix, record, elseIfParams.resolve(), elseIfOptions.resolve())) {
                             elseIfTransformer.transform(record);
@@ -187,6 +182,10 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
 
     private <T> T getInstance(final String name, final Class<T> baseType, final Function<String, ? extends T> enumFunction) {
         return name.contains(".") ? ReflectionUtil.loadClass(name, baseType).newInstance() : enumFunction.apply(name);
+    }
+
+    private <T, R> List<R> mapList(final List<T> list, final Function<T, R> function) {
+        return list.stream().map(function).collect(Collectors.toList());
     }
 
     private void processFix(final Supplier<String> messageSupplier, final Supplier<Consumer<Record>> consumerSupplier) {

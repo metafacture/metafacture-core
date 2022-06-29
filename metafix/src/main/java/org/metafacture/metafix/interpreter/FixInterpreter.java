@@ -14,6 +14,8 @@ import org.eclipse.xtext.xbase.interpreter.impl.XbaseInterpreter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class FixInterpreter extends XbaseInterpreter {
 
     private static final Logger LOG = LoggerFactory.getLogger(FixInterpreter.class);
@@ -50,8 +52,8 @@ public class FixInterpreter extends XbaseInterpreter {
                 process(element);
             }
 
-            final ElsIf elseIfExpression = ifExpression.getElseIf();
-            if (elseIfExpression != null) {
+            final List<ElsIf> elseIfExpressions = ifExpression.getElseIf();
+            for (final ElsIf elseIfExpression : elseIfExpressions) {
                 LOG.debug("else if: " + elseIfExpression);
 
                 for (final Expression element : elseIfExpression.getElements()) {
