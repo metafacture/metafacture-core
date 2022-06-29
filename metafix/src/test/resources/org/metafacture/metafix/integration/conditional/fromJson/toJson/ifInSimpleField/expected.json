@@ -1,9 +1,9 @@
 {
   "test" : "cat",
-  "animal" : "cat"
+  "animal" : "cat",
+  "this" : "works"
 }
 {
   "test" : "cat",
-  "animal" : "dog",
-  "this" : "works"
+  "animal" : "dog"
 }

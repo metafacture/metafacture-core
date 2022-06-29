@@ -1,6 +1,7 @@
 {
   "test" : "cat",
-  "animals" : [ "cat", "dog", "zebra" ]
+  "animals" : [ "cat", "dog", "zebra" ],
+  "this" : "works"
 }
 {
   "test" : "cat",
