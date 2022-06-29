@@ -643,6 +643,9 @@ Executes the functions if/unless the field value matches the regular expression 
 
 Executes the functions if/unless the field value does not match the regular expression pattern. If it is an array or a hash none of the field values may match the regular expression pattern.
 
+#### `in`
+Executes the functions if/unless the field value is identical to a value in a given field.
+
 ## Xtext
 
 This repo has been originally set up with [Xtext](https://www.eclipse.org/Xtext/) 2.17.0 and Eclipse for Java 2019-03, following [https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html](https://www.eclipse.org/Xtext/documentation/104_jvmdomainmodel.html).
