@@ -517,15 +517,16 @@ uniq("<sourceField>")
 
 #### `isbn`
 
-Transforms and optionatily checks ISBN if correct.
+Extracts an ISBN and replaces the field value with the normalized ISBN; optionally converts and/or validates the ISBN.
 
 Options:
-  - `to`: either to `"ISBN13"`,`"ISBN10"` or `"clean"`(deleting semantic sugar)
-  - `verify_check_digit`: default `"false"`
-  - `error_string`: if check digit is wrong provide error message
+
+- `to`: ISBN format to convert to (either `ISBN10` or `ISBN13`). (Default: Only normalize ISBN)
+- `verify_check_digit`: Whether the check digit should be verified. (Default: `false`)
+- `error_string`: Error message as a placeholder if the ISBN couln't be validated. (Default: `null`)
 
 ```perl
-isbn("<sourceField>",to:"<IsbnTransformation>"[,verify_check_digit:"<boolean>",error_string:"<errorMessage>"])
+isbn("<sourceField>"[, to: "<isbnFormat>"][, verify_check_digit: "<boolean>"][, error_string: "<errorValue>"])
 ```
 
 ### Selectors
