@@ -645,7 +645,13 @@ Executes the functions if/unless the field value does not match the regular expr
 
 #### `in`
 
-Executes the functions if/unless the field value is contained in the value of the other field.
+Executes the functions if/unless the field value [is contained in](https://perldoc.perl.org/perlop#Smartmatch-Operator) the value of the other field.
+
+_Also aliased as [`is_contained_in`](#is_contained_in)._
+
+#### `is_contained_in`
+
+_Alias for [`in`](#in)._
 
 ## Xtext
 

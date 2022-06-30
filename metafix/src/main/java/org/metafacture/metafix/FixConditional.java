@@ -89,6 +89,12 @@ public enum FixConditional implements FixPredicate {
             );
         }
     },
+    is_contained_in {
+        @Override
+        public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            return in.test(metafix, record, params, options);
+        }
+    },
 
     all_match {
         @Override
