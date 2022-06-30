@@ -68,7 +68,7 @@ function die() {
 }
 
 function run_metafix() {
-  $gradle_command -p "$root_directory" :metafix-runner:run --args="$1" -P${noprofile}profile="${1%.*}"
+  $gradle_command --console=plain -p "$root_directory" :metafix-runner:run --args="$1" -P${noprofile}profile="${1%.*}"
 }
 
 function run_catmandu() {
