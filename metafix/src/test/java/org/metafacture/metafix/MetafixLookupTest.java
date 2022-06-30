@@ -33,6 +33,7 @@ import java.util.Arrays;
  * @author Fabian Steeg
  */
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(MetafixToDo.Extension.class)
 public class MetafixLookupTest {
 
     private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
@@ -711,6 +712,130 @@ public class MetafixLookupTest {
             },
             o -> {
                 o.get().startRecord("1");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // checkstyle-disable-line JavaNCSS
+    public void shouldLookupInNestedArrays() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_map('rswk-indicator', s: 'SubjectHeading')",
+                "lookup('subject[].*.componentList[].*.type[].*', 'rswk-indicator')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("subject[]");
+                i.startEntity("1");
+                i.startEntity("componentList[]");
+                i.startEntity("1");
+                i.startEntity("type[]");
+                i.literal("1", "s");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("2");
+                i.startEntity("type[]");
+                i.literal("1", "s");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("3");
+                i.startEntity("type[]");
+                i.literal("1", "s");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("4");
+                i.startEntity("type[]");
+                i.literal("1", "s");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("5");
+                i.startEntity("type[]");
+                i.literal("1", "s");
+                i.endEntity();
+                i.endEntity();
+                i.endEntity();
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("subject[]");
+                o.get().startEntity("1");
+                o.get().startEntity("componentList[]");
+                o.get().startEntity("1");
+                o.get().startEntity("type[]");
+                o.get().literal("1", "SubjectHeading");
+                f.apply(2).endEntity();
+                o.get().startEntity("2");
+                o.get().startEntity("type[]");
+                o.get().literal("1", "SubjectHeading");
+                f.apply(2).endEntity();
+                o.get().startEntity("3");
+                o.get().startEntity("type[]");
+                o.get().literal("1", "SubjectHeading");
+                f.apply(2).endEntity();
+                o.get().startEntity("4");
+                o.get().startEntity("type[]");
+                o.get().literal("1", "SubjectHeading");
+                f.apply(2).endEntity();
+                o.get().startEntity("5");
+                o.get().startEntity("type[]");
+                o.get().literal("1", "SubjectHeading");
+                f.apply(5).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/hbz/lobid-resources/pull/1354")
+    public void shouldLookupInCopiedNestedArrays() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_map('rswk-indicator', s: 'SubjectHeading')",
+                "set_array('subject[]')",
+                "set_array('subject[].$append.componentList[]')",
+                "set_array('subject[].$last.componentList[].$append.type[]')",
+                "do list(path: 'D', 'var': '$i')",
+                "  copy_field('$i', 'subject[].$last.componentList[].$last.type[].$append')",
+                "end",
+                "lookup('subject[].*.componentList[].*.type[].*', 'rswk-indicator')",
+                "retain('subject[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("D", "s");
+                i.literal("D", "s");
+                i.literal("D", "s");
+                i.literal("D", "s");
+                i.literal("D", "s");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("subject[]");
+                o.get().startEntity("1");
+                o.get().startEntity("componentList[]");
+                o.get().startEntity("1");
+                o.get().startEntity("type[]");
+                o.get().literal("1", "SubjectHeading");
+                f.apply(2).endEntity();
+                o.get().startEntity("2");
+                o.get().startEntity("type[]");
+                o.get().literal("1", "SubjectHeading");
+                f.apply(2).endEntity();
+                o.get().startEntity("3");
+                o.get().startEntity("type[]");
+                o.get().literal("1", "SubjectHeading");
+                f.apply(2).endEntity();
+                o.get().startEntity("4");
+                o.get().startEntity("type[]");
+                o.get().literal("1", "SubjectHeading");
+                f.apply(2).endEntity();
+                o.get().startEntity("5");
+                o.get().startEntity("type[]");
+                o.get().literal("1", "SubjectHeading");
+                f.apply(5).endEntity();
                 o.get().endRecord();
             }
         );
