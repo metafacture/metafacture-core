@@ -1165,6 +1165,35 @@ public class MetafixIfTest {
     }
 
     @Test
+    public void shouldContainStringInStringAlias() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if is_contained_in(foo,bar)",
+                "  add_field(forty_two,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "42");
+                i.literal("bar", "42");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "42");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "42");
+                o.get().literal("bar", "42");
+                o.get().literal("forty_two", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "42");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldContainStringInArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if in(foo,bar)",
