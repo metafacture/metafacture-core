@@ -19,6 +19,10 @@ package org.metafacture.metafix;
 import org.metafacture.commons.tries.SimpleRegexTrie;
 import org.metafacture.commons.tries.WildcardTrie;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
@@ -44,7 +48,7 @@ import java.util.stream.Stream;
  * Represents a record value, i.e., either an {@link Array}, a {@link Hash},
  * or a {@link String}.
  */
-public class Value {
+public class Value { // checkstyle-disable-line ClassDataAbstractionCoupling
 
     private static final String FIELD_PATH_SEPARATOR = "\\.";
 
@@ -278,6 +282,31 @@ public class Value {
         );
     }
 
+    private void toJson(final JsonGenerator jsonGenerator) {
+        if (isNull()) {
+            try {
+                jsonGenerator.writeNull();
+            }
+            catch (final IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+        else {
+            matchType()
+                .ifArray(a -> a.toJson(jsonGenerator))
+                .ifHash(h -> h.toJson(jsonGenerator))
+                .ifString(s -> {
+                    try {
+                        jsonGenerator.writeString(s);
+                    }
+                    catch (final IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                })
+                .orElseThrow();
+        }
+    }
+
     /*package-private*/ static String[] split(final String fieldPath) {
         return fieldPath.split(FIELD_PATH_SEPARATOR);
     }
@@ -379,6 +408,8 @@ public class Value {
         @Override
         public abstract String toString();
 
+        protected abstract void toJson(JsonGenerator jsonGenerator);
+
     }
 
     /**
@@ -446,6 +477,18 @@ public class Value {
         @Override
         public String toString() {
             return list.toString();
+        }
+
+        @Override
+        protected void toJson(final JsonGenerator jsonGenerator) {
+            try {
+                jsonGenerator.writeStartArray();
+                forEach(v -> v.toJson(jsonGenerator));
+                jsonGenerator.writeEndArray();
+            }
+            catch (final IOException e) {
+                throw new UncheckedIOException(e);
+            }
         }
 
         public void remove(final int index) {
@@ -710,6 +753,29 @@ public class Value {
         @Override
         public String toString() {
             return map.toString();
+        }
+
+        @Override
+        protected void toJson(final JsonGenerator jsonGenerator) {
+            try {
+                jsonGenerator.writeStartObject();
+
+                forEach((f, v) -> {
+                    try {
+                        jsonGenerator.writeFieldName(f);
+                    }
+                    catch (final IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+
+                    v.toJson(jsonGenerator);
+                });
+
+                jsonGenerator.writeEndObject();
+            }
+            catch (final IOException e) {
+                throw new UncheckedIOException(e);
+            }
         }
 
         /**
