@@ -538,6 +538,72 @@ public class MetafixIfTest {
             });
     }
 
+    @Test
+    public void ifAnyMatchMultipleElsif() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if any_match('name', '.*University.*')",
+                "  add_field('type', 'Organization')",
+                "elsif any_match('name', 'Mary')",
+                "  add_field('type', 'Person1')",
+                "elsif any_match('name', 'Max')",
+                "  add_field('type', 'Person2')",
+                "elsif any_match('name', '[^ ]* [^ ]*')",
+                "  add_field('type', 'Person')",
+                "else",
+                "  add_field('type', 'Unknown')",
+                "end"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Mary Power");
+                i.literal("name", "Max Power");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.literal("name", "Some University");
+                i.endRecord();
+
+                i.startRecord("3");
+                i.literal("name", "Filibandrina");
+                i.endRecord();
+
+                i.startRecord("4");
+                i.literal("name", "Mary");
+                i.literal("name", "Max Power");
+                i.endRecord();
+
+                i.startRecord("5");
+                i.literal("name", "Max");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Mary Power");
+                o.get().literal("name", "Max Power");
+                o.get().literal("type", "Person");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().literal("name", "Some University");
+                o.get().literal("type", "Organization");
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().literal("name", "Filibandrina");
+                o.get().literal("type", "Unknown");
+                o.get().endRecord();
+
+                o.get().startRecord("4");
+                o.get().literal("name", "Mary");
+                o.get().literal("name", "Max Power");
+                o.get().literal("type", "Person1");
+                o.get().endRecord();
+
+                o.get().startRecord("5");
+                o.get().literal("name", "Max");
+                o.get().literal("type", "Person2");
+                o.get().endRecord();
+            });
+    }
+
     private void shouldEqualAny(final String path) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if any_equal('" + path + "', 'University')",
