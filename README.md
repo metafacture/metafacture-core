@@ -242,6 +242,37 @@ Copies (or appends to) a field from an existing field.
 copy_field("<sourceField>", "<targetField>")
 ```
 
+##### `debug_record`
+
+Prints the current record either to standard output or to a file.
+
+Parameters:
+
+- `prefix` (optional): Prefix to print before the record. (Default: Empty string)
+
+Options:
+
+- `compression` (file output only): Compression mode. (Default: `auto`)
+- `destination`: Destination to write the record to; may include [format directives](https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html#syntax) for counter and record ID (in that order). (Default: `stdout`)
+- `encoding` (file output only): Encoding used by the underlying writer. (Default: `UTF-8`)
+- `footer`: Footer which is output after the record. (Default: `\n`)
+- `header`: Header which is output before the record. (Default: Empty string)
+- `id`: Field name which contains the record ID; if found, will be included before the prefix. (Default: `_id`)
+- `json`: Whether to encode the record as JSON. (Default: `false`)
+- `pretty`: Whether to use pretty printing. (Default: `false`)
+
+```perl
+debug_record(["<prefix>"][, <options>...])
+```
+
+E.g.:
+
+```perl
+debug_record("Before transformation")
+debug_record(destination: "record-%03d.gz", header: "After transformation: ")
+debug_record(destination: "record-%2$s.json", id: "001", json: "true", pretty: "true")
+```
+
 ##### `format`
 
 Replaces the value with a formatted (`sprintf`-like) version.
@@ -369,8 +400,8 @@ Creates (or replaces) a field with the current timestamp.
 
 Options:
 
-- `format`: Date and time pattern as in [java.text.SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html). (Default: Unix timestamp)
-- `timezone`: Time zone as in [java.util.TimeZone](https://docs.oracle.com/javase/8/docs/api/java/util/TimeZone.html). (Default: UTC)
+- `format`: Date and time pattern as in [java.text.SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html). (Default: `timestamp`)
+- `timezone`: Time zone as in [java.util.TimeZone](https://docs.oracle.com/javase/8/docs/api/java/util/TimeZone.html). (Default: `UTC`)
 - `language`: Language tag as in [java.util.Locale](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html). (Default: The locale of the host system)
 
 ```perl
