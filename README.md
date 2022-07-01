@@ -149,11 +149,13 @@ You can use path wildcards to select fields matching a pattern. They only match 
 
 ### Functions
 
-#### `include`
+#### Script-level functions
+
+##### `include`
 
 ---- TODO: THIS NEEDS MORE CONTENT -----
 
-#### `nothing`
+##### `nothing`
 
 Does nothing. It is used for benchmarking in Catmandu.
 
@@ -161,7 +163,7 @@ Does nothing. It is used for benchmarking in Catmandu.
 nothing()
 ```
 
-#### `put_filemap`
+##### `put_filemap`
 
 Defines an external map for lookup from a file.
 
@@ -176,7 +178,7 @@ The separator (`sep_char`) will vary depending on the source file, e.g.:
 | CSV  | `,` or `;` |
 | TSV  | `\t`       |
 
-#### `put_map`
+##### `put_map`
 
 Defines an internal map for lookup from key/value pairs.
 
@@ -188,7 +190,7 @@ put_map("<mapName>",
 )
 ```
 
-#### `put_var`
+##### `put_var`
 
 Defines a single internal variable that can be referenced with `$[<variableName>]`.
 
@@ -196,7 +198,7 @@ Defines a single internal variable that can be referenced with `$[<variableName>
 put_var("<variableName>", "<variableValue>")
 ```
 
-#### `put_vars`
+##### `put_vars`
 
 Defines multiple internal variables that can be referenced with `$[<variableName>]`.
 
@@ -207,7 +209,9 @@ put_vars(
 )
 ```
 
-#### `add_field`
+#### Record-level functions
+
+##### `add_field`
 
 Creates (or appends to) a field with a defined value.
 
@@ -215,73 +219,7 @@ Creates (or appends to) a field with a defined value.
 add_field("<targetFieldName>", "<fieldValue>")
 ```
 
-#### `set_field`
-
-Creates (or replaces) a field with a defined value.
-
-```perl
-set_field("<targetFieldName>", "<fieldValue>")
-```
-
-#### `copy_field`
-
-Copies (or appends to) a field from an existing field.
-
-```perl
-copy_field("<sourceField>", "<targetField>")
-```
-
-#### `move_field`
-
-Moves (or appends to) a field from an existing field. Can be used to rename a field.
-
-```perl
-move_field("<sourceField>", "<targetField>")
-```
-
-#### `remove_field`
-
-Removes a field.
-
-```perl
-remove_field("<sourceField>")
-```
-
-#### `set_array`
-
-Creates a new array (with optional values).
-
-```perl
-set_array("<targetFieldName>")
-set_array("<targetFieldName>", "<value_1>"[, ...])
-```
-
-#### `set_hash`
-
-Creates a new hash (with optional values).
-
-```perl
-set_hash("<targetFieldName>")
-set_hash("<targetFieldName>", "subfieldName": "<subfieldValue>"[, ...])
-```
-
-#### `retain`
-
-Deletes all fields except the ones listed (incl. subfields).
-
-```perl
-retain("<sourceField_1>"[, ...])
-```
-
-#### `rename`
-
-Replaces a regular expression pattern in subfield names of a field. Does not change the name of the source field itself.
-
-```perl
-rename("<sourceField>", "<regexp>", "<replacement>")
-```
-
-#### `array`
+##### `array`
 
 Converts a hash/object into an array.
 
@@ -296,7 +234,25 @@ array("foo")
 # {"name":"value"} => ["name", "value"]
 ```
 
-#### `hash`
+##### `copy_field`
+
+Copies (or appends to) a field from an existing field.
+
+```perl
+copy_field("<sourceField>", "<targetField>")
+```
+
+##### `format`
+
+Replaces the value with a formatted (`sprintf`-like) version.
+
+---- TODO: THIS NEEDS MORE CONTENT -----
+
+```perl
+format("<sourceField>", "<formatString>")
+```
+
+##### `hash`
 
 Converts an array into a hash/object.
 
@@ -310,31 +266,15 @@ hash("foo")
 # ["name", "value"] => {"name":"value"}
 ```
 
-#### `timestamp`
+##### `move_field`
 
-Creates (or replaces) a field with the current timestamp.
-
-Options:
-
-- `format`: Date and time pattern as in [java.text.SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html). (Default: Unix timestamp)
-- `timezone`: Time zone as in [java.util.TimeZone](https://docs.oracle.com/javase/8/docs/api/java/util/TimeZone.html). (Default: UTC)
-- `language`: Language tag as in [java.util.Locale](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html). (Default: The locale of the host system)
+Moves (or appends to) a field from an existing field. Can be used to rename a field.
 
 ```perl
-timestamp("<targetField>"[, format: "<formatPattern>"][, timezone: "<timezoneCode>"][, language: "<languageCode>"])
+move_field("<sourceField>", "<targetField>")
 ```
 
-#### `format`
-
-Replaces the value with a formatted (`sprintf`-like) version.
-
----- TODO: THIS NEEDS MORE CONTENT -----
-
-```perl
-format("<sourceField>", "<formatString>")
-```
-
-#### `parse_text`
+##### `parse_text`
 
 Parses a text into an array or hash of values.
 
@@ -344,7 +284,7 @@ Parses a text into an array or hash of values.
 parse_text("<sourceField>", "<parsePattern>")
 ```
 
-#### `paste`
+##### `paste`
 
 Joins multiple field values into a new field. Can be combined with additional literal strings.
 
@@ -365,7 +305,7 @@ paste("my.string", "~Hi", "a", "~how are you?")
 # "my.string": "Hi eeny how are you?"
 ```
 
-#### `random`
+##### `random`
 
 Creates (or replaces) a field with a random number (less than the specified maximum).
 
@@ -373,7 +313,71 @@ Creates (or replaces) a field with a random number (less than the specified maxi
 random("<targetField>", "<maximum>")
 ```
 
-#### `vacuum`
+##### `remove_field`
+
+Removes a field.
+
+```perl
+remove_field("<sourceField>")
+```
+
+##### `rename`
+
+Replaces a regular expression pattern in subfield names of a field. Does not change the name of the source field itself.
+
+```perl
+rename("<sourceField>", "<regexp>", "<replacement>")
+```
+
+##### `retain`
+
+Deletes all fields except the ones listed (incl. subfields).
+
+```perl
+retain("<sourceField_1>"[, ...])
+```
+
+##### `set_array`
+
+Creates a new array (with optional values).
+
+```perl
+set_array("<targetFieldName>")
+set_array("<targetFieldName>", "<value_1>"[, ...])
+```
+
+##### `set_field`
+
+Creates (or replaces) a field with a defined value.
+
+```perl
+set_field("<targetFieldName>", "<fieldValue>")
+```
+
+##### `set_hash`
+
+Creates a new hash (with optional values).
+
+```perl
+set_hash("<targetFieldName>")
+set_hash("<targetFieldName>", "subfieldName": "<subfieldValue>"[, ...])
+```
+
+##### `timestamp`
+
+Creates (or replaces) a field with the current timestamp.
+
+Options:
+
+- `format`: Date and time pattern as in [java.text.SimpleDateFormat](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html). (Default: Unix timestamp)
+- `timezone`: Time zone as in [java.util.TimeZone](https://docs.oracle.com/javase/8/docs/api/java/util/TimeZone.html). (Default: UTC)
+- `language`: Language tag as in [java.util.Locale](https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html). (Default: The locale of the host system)
+
+```perl
+timestamp("<targetField>"[, format: "<formatPattern>"][, timezone: "<timezoneCode>"][, language: "<languageCode>"])
+```
+
+##### `vacuum`
 
 Deletes empty fields, arrays and objects.
 
@@ -381,7 +385,9 @@ Deletes empty fields, arrays and objects.
 vacuum()
 ```
 
-#### `append`
+#### Field-level functions
+
+##### `append`
 
 Adds a string at the end of a field value.
 
@@ -389,23 +395,7 @@ Adds a string at the end of a field value.
 append("<sourceField>", "<appendString>")
 ```
 
-#### `prepend`
-
-Adds a string at the beginning of a field value.
-
-```perl
-prepend("<sourceField>", "<prependString>")
-```
-
-#### `filter`
-
-Only keeps field values that match the regular expression pattern.
-
-```perl
-filter("<sourceField>", "<regexp>")
-```
-
-#### `capitalize`
+##### `capitalize`
 
 Upcases the first character in a field value.
 
@@ -413,23 +403,7 @@ Upcases the first character in a field value.
 capitalize("<sourceField>")
 ```
 
-#### `downcase`
-
-Downcases all characters in a field value.
-
-```perl
-downcase("<sourceField>")
-```
-
-#### `upcase`
-
-Upcases all characters in a field value.
-
-```perl
-upcase("<sourceField>")
-```
-
-#### `count`
+##### `count`
 
 Counts the number of elements in an array or a hash and replaces the field value with this number.
 
@@ -437,7 +411,23 @@ Counts the number of elements in an array or a hash and replaces the field value
 count("<sourceField>")
 ```
 
-#### `index`
+##### `downcase`
+
+Downcases all characters in a field value.
+
+```perl
+downcase("<sourceField>")
+```
+
+##### `filter`
+
+Only keeps field values that match the regular expression pattern.
+
+```perl
+filter("<sourceField>", "<regexp>")
+```
+
+##### `index`
 
 Returns the index position of a substring in a field and replaces the field value with this number.
 
@@ -445,91 +435,7 @@ Returns the index position of a substring in a field and replaces the field valu
 index("<sourceField>", "<substring>")
 ```
 
-#### `join_field`
-
-Joins an array of strings into a single string.
-
-```perl
-join_field("<sourceField>", "<separator>")
-```
-
-#### `lookup`
-
-Looks up matching values in a map and replaces the field value with this match. External files as well as internal maps can be used.
-
-```perl
-lookup("<sourceField>", "<mapFile>", sep_char: ”,”)
-lookup("<sourceField>", "<mapName>")
-lookup("<sourceField>", "<mapName>", default: "NA")
-```
-
-#### `replace_all`
-
-Replaces a regular expression pattern in field values with a replacement string. Regexp capturing is possible; refer to capturing groups by number (`$<number>`) or name (`${<name>}`).
-
-```perl
-replace_all("<sourceField>", "<regexp>", "<replacement>")
-```
-
-#### `reverse`
-
-Reverses the character order of a string or the element order of an array.
-
-```perl
-reverse("<sourceField>")
-```
-
-#### `sort_field`
-
-Sorts strings in an array. Alphabetically and A-Z by default. Optional numerical and reverse sorting.
-
-```perl
-sort_field("<sourceField>")
-sort_field("<sourceField>", reverse: "true")
-sort_field("<sourceField>", numeric: "true")
-```
-
-#### `split_field`
-
-Splits a string into an array and replaces the field value with this array.
-
-```perl
-split_field("<sourceField>", "<separator>")
-```
-
-#### `substring`
-
-Replaces a string with its substring as defined by the start position (offset) and length.
-
-```perl
-substring("<sourceField>", "<startPosition>", "<length>")
-```
-
-#### `sum`
-
-Sums numbers in an array and replaces the field value with this number.
-
-```perl
-sum("<sourceField>")
-```
-
-#### `trim`
-
-Deletes whitespace at the beginning and the end of a field value.
-
-```perl
-trim("<sourceField>")
-```
-
-#### `uniq`
-
-Deletes duplicate values in an array.
-
-```perl
-uniq("<sourceField>")
-```
-
-#### `isbn`
+##### `isbn`
 
 Extracts an ISBN and replaces the field value with the normalized ISBN; optionally converts and/or validates the ISBN.
 
@@ -541,6 +447,106 @@ Options:
 
 ```perl
 isbn("<sourceField>"[, to: "<isbnFormat>"][, verify_check_digit: "<boolean>"][, error_string: "<errorValue>"])
+```
+
+##### `join_field`
+
+Joins an array of strings into a single string.
+
+```perl
+join_field("<sourceField>", "<separator>")
+```
+
+##### `lookup`
+
+Looks up matching values in a map and replaces the field value with this match. External files as well as internal maps can be used.
+
+```perl
+lookup("<sourceField>", "<mapFile>", sep_char: ”,”)
+lookup("<sourceField>", "<mapName>")
+lookup("<sourceField>", "<mapName>", default: "NA")
+```
+
+##### `prepend`
+
+Adds a string at the beginning of a field value.
+
+```perl
+prepend("<sourceField>", "<prependString>")
+```
+
+##### `replace_all`
+
+Replaces a regular expression pattern in field values with a replacement string. Regexp capturing is possible; refer to capturing groups by number (`$<number>`) or name (`${<name>}`).
+
+```perl
+replace_all("<sourceField>", "<regexp>", "<replacement>")
+```
+
+##### `reverse`
+
+Reverses the character order of a string or the element order of an array.
+
+```perl
+reverse("<sourceField>")
+```
+
+##### `sort_field`
+
+Sorts strings in an array. Alphabetically and A-Z by default. Optional numerical and reverse sorting.
+
+```perl
+sort_field("<sourceField>")
+sort_field("<sourceField>", reverse: "true")
+sort_field("<sourceField>", numeric: "true")
+```
+
+##### `split_field`
+
+Splits a string into an array and replaces the field value with this array.
+
+```perl
+split_field("<sourceField>", "<separator>")
+```
+
+##### `substring`
+
+Replaces a string with its substring as defined by the start position (offset) and length.
+
+```perl
+substring("<sourceField>", "<startPosition>", "<length>")
+```
+
+##### `sum`
+
+Sums numbers in an array and replaces the field value with this number.
+
+```perl
+sum("<sourceField>")
+```
+
+##### `trim`
+
+Deletes whitespace at the beginning and the end of a field value.
+
+```perl
+trim("<sourceField>")
+```
+
+##### `uniq`
+
+Deletes duplicate values in an array.
+
+```perl
+uniq("<sourceField>")
+```
+
+##### `upcase`
+
+Upcases all characters in a field value.
+
+```perl
+upcase("<sourceField>")
 ```
 
 ### Selectors
@@ -607,14 +613,6 @@ else
 end
 ```
 
-#### `exists`
-
-Executes the functions if/unless the field exists.
-
-```perl
-if exists("<sourceField>")
-```
-
 #### `contain`
 
 ##### `all_contain`
@@ -643,6 +641,24 @@ Executes the functions if/unless the field value equals the string. If it is an 
 
 Executes the functions if/unless the field value does not equal the string. If it is an array or a hash none of the field values may equal the string.
 
+#### `exists`
+
+Executes the functions if/unless the field exists.
+
+```perl
+if exists("<sourceField>")
+```
+
+#### `in`
+
+Executes the functions if/unless the field value [is contained in](https://perldoc.perl.org/perlop#Smartmatch-Operator) the value of the other field.
+
+_Also aliased as [`is_contained_in`](#is_contained_in)._
+
+#### `is_contained_in`
+
+_Alias for [`in`](#in)._
+
 #### `match`
 
 ##### `all_match`
@@ -656,16 +672,6 @@ Executes the functions if/unless the field value matches the regular expression 
 ##### `none_match`
 
 Executes the functions if/unless the field value does not match the regular expression pattern. If it is an array or a hash none of the field values may match the regular expression pattern.
-
-#### `in`
-
-Executes the functions if/unless the field value [is contained in](https://perldoc.perl.org/perlop#Smartmatch-Operator) the value of the other field.
-
-_Also aliased as [`is_contained_in`](#is_contained_in)._
-
-#### `is_contained_in`
-
-_Alias for [`in`](#in)._
 
 ## Xtext
 
