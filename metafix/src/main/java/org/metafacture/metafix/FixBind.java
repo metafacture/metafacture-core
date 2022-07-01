@@ -18,8 +18,11 @@ package org.metafacture.metafix;
 
 import org.metafacture.metafix.api.FixContext;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public enum FixBind implements FixContext {
 
@@ -54,6 +57,17 @@ public enum FixBind implements FixContext {
                     }
                 }
             });
+        }
+    },
+
+    once {
+        private Map<Metafix, Set<String>> executed = new HashMap<>();
+
+        @Override
+        public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
+            if (executed.computeIfAbsent(metafix, k -> new HashSet<>()).add(params.isEmpty() ? null : params.get(0))) {
+                recordTransformer.transform(record);
+            }
         }
     }
 

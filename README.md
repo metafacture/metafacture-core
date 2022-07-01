@@ -577,6 +577,27 @@ do list(path: "<sourceField>", "var": "<variableName>")
 end
 ```
 
+#### `do once`
+
+Executes the statements only once (when the bind is first encountered), not repeatedly for each record.
+
+```perl
+do once()
+  ...
+end
+```
+
+In order to execute multiple blocks only once, tag them with unique identifiers:
+
+```perl
+do once("maps setup")
+  ...
+end
+do once("vars setup")
+  ...
+end
+```
+
 ### Conditionals
 
 Conditionals start with `if` in case of affirming the condition or `unless` rejecting the condition.

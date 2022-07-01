@@ -745,6 +745,143 @@ public class MetafixBindTest {
     }
 
     @Test
+    public void shouldExecuteOnlyOnce() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do once()",
+                "  add_field(executed, 'true')",
+                "end",
+                "do once()",
+                "  add_field(never_executed, 'true')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+                i.startRecord("2");
+                i.endRecord();
+                i.startRecord("3");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("executed", "true");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldExecuteOnlyOncePerFixInstance() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do once()",
+                "  add_field(executed, 'true')",
+                "end",
+                "include('src/test/resources/org/metafacture/metafix/fixes/once.fix')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+                i.startRecord("2");
+                i.endRecord();
+                i.startRecord("3");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("executed", "true");
+                o.get().literal("included", "true");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("included", "true");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().literal("included", "true");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldExecuteOnlyOncePerIdentifier() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do once()",
+                "  add_field(executed, 'true')",
+                "end",
+                "do once()",
+                "  add_field(never_executed, 'true')",
+                "end",
+                "do once('setup')",
+                "  add_field(setup, 'true')",
+                "end",
+                "do once('setup')",
+                "  add_field(already_setup, 'true')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+                i.startRecord("2");
+                i.endRecord();
+                i.startRecord("3");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("executed", "true");
+                o.get().literal("setup", "true");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldExecuteOnlyOnceConditionally() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if exists(execute)",
+                "  do once()",
+                "    add_field(executed, 'false')",
+                "  end",
+                "  do once('setup')",
+                "    add_field(setup, 'true')",
+                "  end",
+                "else",
+                "  do once()",
+                "    add_field(already_executed, 'true')",
+                "  end",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("execute", "too late");
+                i.endRecord();
+                i.startRecord("3");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("already_executed", "true");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("execute", "too late");
+                o.get().literal("setup", "true");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldExecuteCustomJavaContext() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do org.metafacture.metafix.util.TestContext(test, data: '42')",
