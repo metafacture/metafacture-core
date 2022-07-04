@@ -29,6 +29,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -45,7 +46,8 @@ import java.util.regex.Pattern;
 @FluxCommand("open-http")
 public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
-    private static final Pattern HEADER_PATTERN = Pattern.compile(":\\s*");
+    private static final Pattern HEADER_FIELD_SEPARATOR = Pattern.compile("\n");
+    private static final Pattern HEADER_VALUE_SEPARATOR = Pattern.compile(":");
 
     private static final String ENCODING_HEADER = "accept-charset";
 
@@ -89,13 +91,15 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
      * @param header request property line
      */
     public void setHeader(final String header) {
-        final String[] parts = HEADER_PATTERN.split(header, 2);
-        if (parts.length == 2) {
-            setHeader(parts[0], parts[1]);
-        }
-        else {
-            throw new IllegalArgumentException("Invalid header: " + header);
-        }
+        Arrays.stream(HEADER_FIELD_SEPARATOR.split(header)).forEach(h -> {
+            final String[] parts = HEADER_VALUE_SEPARATOR.split(h, 2);
+            if (parts.length == 2) {
+                setHeader(parts[0], parts[1].trim());
+            }
+            else {
+                throw new IllegalArgumentException("Invalid header: " + h);
+            }
+        });
     }
 
     /**
