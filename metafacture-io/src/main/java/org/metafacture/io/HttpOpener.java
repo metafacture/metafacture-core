@@ -29,6 +29,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Opens a {@link URLConnection} and passes a reader to the receiver.
@@ -42,13 +45,18 @@ import java.net.URLConnection;
 @FluxCommand("open-http")
 public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
-    private String encoding = "UTF-8";
-    private String accept = "*/*";
+    private static final Pattern HEADER_PATTERN = Pattern.compile(":\\s*");
+
+    private static final String ENCODING_HEADER = "accept-charset";
+
+    private final Map<String, String> headers = new HashMap<>();
 
     /**
      * Creates an instance of {@link HttpOpener}.
      */
     public HttpOpener() {
+        setAccept("UTF-8");
+        setEncoding("*/*");
     }
 
     /**
@@ -59,20 +67,45 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
      * @param accept mime-type to use for the HTTP accept header
      */
     public void setAccept(final String accept) {
-        this.accept = accept;
+        setHeader("accept", accept);
     }
 
     /**
      * Sets the preferred encoding of the HTTP response. This value is in the
      * accept-charset header. Additonally, the encoding is used for reading the
-     * HTTP resonse if it does not  specify an encoding. The default value for
+     * HTTP resonse if it does not specify an encoding. The default value for
      * the encoding is UTF-8.
      *
      * @param encoding name of the encoding used for the accept-charset HTTP
      *                 header
      */
     public void setEncoding(final String encoding) {
-        this.encoding = encoding;
+        setHeader(ENCODING_HEADER, encoding);
+    }
+
+    /**
+     * Sets a request property.
+     *
+     * @param header request property line
+     */
+    public void setHeader(final String header) {
+        final String[] parts = HEADER_PATTERN.split(header, 2);
+        if (parts.length == 2) {
+            setHeader(parts[0], parts[1]);
+        }
+        else {
+            throw new IllegalArgumentException("Invalid header: " + header);
+        }
+    }
+
+    /**
+     * Sets a request property.
+     *
+     * @param key request property key
+     * @param value request property value
+     */
+    public void setHeader(final String key, final String value) {
+        headers.put(key.toLowerCase(), value);
     }
 
     @Override
@@ -80,11 +113,10 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         try {
             final URL url = new URL(urlStr);
             final URLConnection con = url.openConnection();
-            con.addRequestProperty("Accept", accept);
-            con.addRequestProperty("Accept-Charset", encoding);
+            headers.forEach(con::addRequestProperty);
             String enc = con.getContentEncoding();
             if (enc == null) {
-                enc = encoding;
+                enc = headers.get(ENCODING_HEADER);
             }
             getReceiver().process(new InputStreamReader(con.getInputStream(), enc));
         }
@@ -92,4 +124,5 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
             throw new MetafactureException(e);
         }
     }
+
 }
