@@ -40,9 +40,9 @@ import java.util.regex.Pattern;
  * @author Christoph Böhme
  * @author Jan Schnasse
  */
-@Description("Opens a http resource. Supports the setting of Accept and Accept-Charset as http header fields.")
+@Description("Opens an HTTP resource. Supports the setting of `Accept` and `Accept-Charset` as HTTP header fields, as well as generic headers (separated by `\\n`).")
 @In(String.class)
-@Out(java.io.Reader.class)
+@Out(Reader.class)
 @FluxCommand("open-http")
 public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
@@ -86,7 +86,8 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets a request property.
+     * Sets a request property, or multiple request properties separated by
+     * {@code \n}.
      *
      * @param header request property line
      */
