@@ -199,24 +199,24 @@ public final class JsonDecoderTest {
         jsonDecoder.process(
             "{" +
                 "\"lit1\":23," +
-                "\"lit2\":\"42\"," +
-                "\"arr1\":[{\"lit3\":42,\"lit4\":\"23\"}]," +
-                "\"arr2\":[23,42,\"23\"]" +
+                "\"lit2\":\"4.2\"," +
+                "\"arr1\":[{\"lit3\":4.2,\"lit4\":\"23\"}]," +
+                "\"arr2\":[23,4.2,\"23\"]" +
             "}"
         );
 
         final InOrder ordered = inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("lit1", "23");
-        ordered.verify(receiver).literal("lit2", "42");
+        ordered.verify(receiver).literal("lit2", "4.2");
         ordered.verify(receiver).startEntity("arr1[]");
         ordered.verify(receiver).startEntity("1");
-        ordered.verify(receiver).literal("lit3", "42");
+        ordered.verify(receiver).literal("lit3", "4.2");
         ordered.verify(receiver).literal("lit4", "23");
         ordered.verify(receiver, times(2)).endEntity();
         ordered.verify(receiver).startEntity("arr2[]");
         ordered.verify(receiver).literal("1", "23");
-        ordered.verify(receiver).literal("2", "42");
+        ordered.verify(receiver).literal("2", "4.2");
         ordered.verify(receiver).literal("3", "23");
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).endRecord();
@@ -228,24 +228,24 @@ public final class JsonDecoderTest {
         jsonDecoder.process(
             "{" +
                 "\"lit1\":23," +
-                "\"lit2\":\"42\"," +
-                "\"arr1\":[{\"lit3\":42,\"lit4\":\"23\"}]," +
-                "\"arr2\":[23,42,\"23\"]" +
+                "\"lit2\":\"4.2\"," +
+                "\"arr1\":[{\"lit3\":4.2,\"lit4\":\"23\"}]," +
+                "\"arr2\":[23,4.2,\"23\"]" +
             "}"
         );
 
         final InOrder ordered = inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("lit1#", "23");
-        ordered.verify(receiver).literal("lit2", "42");
+        ordered.verify(receiver).literal("lit2", "4.2");
         ordered.verify(receiver).startEntity("arr1[]");
         ordered.verify(receiver).startEntity("1");
-        ordered.verify(receiver).literal("lit3#", "42");
+        ordered.verify(receiver).literal("lit3#", "4.2");
         ordered.verify(receiver).literal("lit4", "23");
         ordered.verify(receiver, times(2)).endEntity();
         ordered.verify(receiver).startEntity("arr2[]");
         ordered.verify(receiver).literal("1#", "23");
-        ordered.verify(receiver).literal("2#", "42");
+        ordered.verify(receiver).literal("2#", "4.2");
         ordered.verify(receiver).literal("3", "23");
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).endRecord();

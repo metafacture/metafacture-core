@@ -251,16 +251,16 @@ public final class JsonEncoderTest {
     public void testShouldNotEncodeNumbers() {
         encoder.startRecord("1");
         encoder.literal("lit1#", "23");
-        encoder.literal("lit2", "42");
+        encoder.literal("lit2", "4.2");
         encoder.startEntity("arr1[]");
         encoder.startEntity("1");
-        encoder.literal("lit3#", "42");
+        encoder.literal("lit3#", "4.2");
         encoder.literal("lit4", "23");
         encoder.endEntity();
         encoder.endEntity();
         encoder.startEntity("arr2[]");
         encoder.literal("1#", "23");
-        encoder.literal("2#", "42");
+        encoder.literal("2#", "4.2");
         encoder.literal("3", "23");
         encoder.endEntity();
         encoder.endRecord();
@@ -268,9 +268,9 @@ public final class JsonEncoderTest {
         verify(receiver).process(
                 "{" +
                     "\"lit1#\":\"23\"," +
-                    "\"lit2\":\"42\"," +
-                    "\"arr1\":[{\"lit3#\":\"42\",\"lit4\":\"23\"}]," +
-                    "\"arr2\":[\"23\",\"42\",\"23\"]" +
+                    "\"lit2\":\"4.2\"," +
+                    "\"arr1\":[{\"lit3#\":\"4.2\",\"lit4\":\"23\"}]," +
+                    "\"arr2\":[\"23\",\"4.2\",\"23\"]" +
                 "}"
         );
     }
@@ -281,16 +281,16 @@ public final class JsonEncoderTest {
 
         encoder.startRecord("1");
         encoder.literal("lit1#", "23");
-        encoder.literal("lit2", "42");
+        encoder.literal("lit2", "4.2");
         encoder.startEntity("arr1[]");
         encoder.startEntity("1");
-        encoder.literal("lit3#", "42");
+        encoder.literal("lit3#", "4.2");
         encoder.literal("lit4", "23");
         encoder.endEntity();
         encoder.endEntity();
         encoder.startEntity("arr2[]");
         encoder.literal("1#", "23");
-        encoder.literal("2#", "42");
+        encoder.literal("2#", "4.2");
         encoder.literal("3", "23");
         encoder.endEntity();
         encoder.endRecord();
@@ -298,9 +298,9 @@ public final class JsonEncoderTest {
         verify(receiver).process(
                 "{" +
                     "\"lit1\":23," +
-                    "\"lit2\":\"42\"," +
-                    "\"arr1\":[{\"lit3\":42,\"lit4\":\"23\"}]," +
-                    "\"arr2\":[23,42,\"23\"]" +
+                    "\"lit2\":\"4.2\"," +
+                    "\"arr1\":[{\"lit3\":4.2,\"lit4\":\"23\"}]," +
+                    "\"arr2\":[23,4.2,\"23\"]" +
                 "}"
         );
     }
