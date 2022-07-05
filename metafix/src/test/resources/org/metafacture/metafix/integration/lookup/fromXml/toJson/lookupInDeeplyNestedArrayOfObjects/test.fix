@@ -3,25 +3,24 @@ put_map("rswk-indicator", s: "SubjectHeading")
 set_array("subject[]")
 
 if exists("6890?")
-  set_array("subject[].$append.type[]", "ComplexSubject")
-  set_array("subject[].$last.label")
-  set_array("subject[].$last.componentList[]")
+  set_array("subject[].$append.componentList[]")
   do list(path: "6890?", "var": "$i")
-    set_array("subject[].$last.componentList[].$append.type[]")
-    do list(path: "$i.D", "var": "$k")
-      copy_field("$k", "subject[].$last.componentList[].$last.type[].$append")
-    end
-    copy_field("$i.a", "subject[].$last.componentList[].$last.label")
     do list(path: "$i.0", "var": "$j")
       if any_match("$j", "^\\(DE-588\\)(.*)$")
-        add_field("subject[].$last.componentList[].$last.source.label", "Gemeinsame Normdatei (GND)")
-        add_field("subject[].$last.componentList[].$last.source.id", "https://d-nb.info/gnd/7749153-1")
+        copy_field("$j", "subject[].$last.componentList[].$append.gndIdentifier")
         copy_field("$j", "subject[].$last.componentList[].$last.id")
+        copy_field("$i.a", "subject[].$last.componentList[].$last.label")
+        add_field("subject[].$last.componentList[].$last.source.id", "https://d-nb.info/gnd/7749153-1")
+        add_field("subject[].$last.componentList[].$last.source.label", "Gemeinsame Normdatei (GND)")
         replace_all("subject[].$last.componentList[].$last..id", "^\\(DE-588\\)(.*)$", "http://d-nb.info/gnd/$1")
-        copy_field("$j", "subject[].$last.componentList[].$last.gndIdentifier")
         replace_all("subject[].$last.componentList[].$last..gndIdentifier", "^\\(DE-588\\)(.*)$", "$1")
       end
     end
+    set_array("subject[].$last.componentList[].$last.type[]")
+    do list(path: "$i.D", "var": "$k")
+      copy_field("$k", "subject[].$last.componentList[].$last.type[].$append")
+    end
+    set_array("subject[].$last.type[]", "ComplexSubject")
   end
 end
 

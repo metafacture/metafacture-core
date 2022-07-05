@@ -100,17 +100,12 @@ public class Value {
         }
     }
 
-    public Value(final String string) {
-        this(string, null);
-    }
-
     public Value(final int integer) {
         this(String.valueOf(integer));
     }
 
-    public Value(final String string, final String path) {
+    public Value(final String string) {
         this(string != null ? Type.String : null, null, null, string);
-        this.path = path;
     }
 
     public static Value newArray() {
@@ -204,35 +199,6 @@ public class Value {
         }
     }
 
-    /*package-private*/ Value updatePathRename(final String newName) {
-        if (path != null) {
-            path = FixPath.RESERVED_FIELD_PATTERN.matcher(newName).replaceAll(Matcher.quoteReplacement(split(path)[0]));
-        }
-
-        return this;
-    }
-
-    /*package-private*/ Value updatePathAddBase(final Value container, final String fallback) {
-        if (container.path != null) {
-            final String[] pathSegments = split(path != null ? path : fallback);
-            final String lastSegment = pathSegments[pathSegments.length - 1];
-            this.path = container.path + "." + lastSegment;
-        }
-
-        return this;
-    }
-
-    /*package-private*/ Value updatePathAppend(final String suffix, final String fallback) {
-        if (path != null) {
-            path = path + suffix;
-        }
-        else {
-            path = fallback + suffix;
-        }
-
-        return this;
-    }
-
     public TypeMatcher matchType() {
         return new TypeMatcher(this);
     }
@@ -286,8 +252,22 @@ public class Value {
         return path;
     }
 
-    /*package-private*/ void setPath(final String path) {
-        this.path = path;
+    /*package-private*/ Value withPathSet(final String p) {
+        this.path = p;
+        return this;
+    }
+
+    /*package-private*/ Value withPathAppend(final int i) {
+        return withPathAppend(String.valueOf(i));
+    }
+
+    /*package-private*/ Value withPathAppend(final String field) {
+        if (path == null || path.isEmpty()) {
+            return this.withPathSet(field);
+        }
+        else {
+            return this.withPathSet(path + "." + field);
+        }
     }
 
     /*package-private*/ Value copy() {
@@ -395,8 +375,12 @@ public class Value {
         }
 
         public void add(final Value value) {
+            add(value, true);
+        }
+
+        public void add(final Value value, final boolean appendToPath) {
             if (!isNull(value)) {
-                list.add(value);
+                list.add(appendToPath ? value.withPathAppend(list.size() + 1) : value);
             }
         }
 
@@ -454,6 +438,7 @@ public class Value {
 
         /*package-private*/ void set(final int index, final Value value) {
             list.set(index, value);
+            value.withPathAppend(index + 1);
         }
 
         /*package-private*/ void removeIf(final Predicate<Value> predicate) {
@@ -549,8 +534,12 @@ public class Value {
          * @param value the metadata value
          */
         public void put(final String field, final Value value) {
+            put(field, value, true);
+        }
+
+        /*package-private*/ void put(final String field, final Value value, final boolean appendToPath) {
             if (!isNull(value)) {
-                map.put(field, value);
+                map.put(field, appendToPath ? value.withPathAppend(field) : value);
             }
         }
 
@@ -583,8 +572,8 @@ public class Value {
 
             return set.isEmpty() ? null : set.size() == 1 ? getField(set.iterator().next(), enforceStringValue) :
                 newArray(a -> set.forEach(f -> getField(f, enforceStringValue).matchType()
-                            .ifArray(b -> b.forEach(a::add))
-                            .orElse(a::add)
+                            .ifArray(b -> b.forEach(t -> a.add(t, false)))
+                            .orElse(t -> a.add(t, false))
                 ));
         }
 
@@ -628,15 +617,13 @@ public class Value {
                 put(field, newValue);
             }
             else {
+                final String basePath = oldValue.getPath();
                 if (!oldValue.isArray()) { // repeated field: convert single val to first in array
-                    oldValue.updatePathAppend(".1", field);
+                    oldValue.withPathAppend(1);
                 }
 
-                put(field, oldValue.asList(oldVals -> newValue.asList(newVals -> {
-                    for (int i = 0; i < newVals.size(); ++i) {
-                        oldVals.add(newVals.get(i).updatePathAppend("." + (i + 1 + oldVals.size()), field));
-                    }
-                })));
+                put(field, oldValue.asList(oldVals -> newValue
+                        .asList(newVals -> newVals.forEach(newVal -> oldVals.add(newVal.withPathSet(basePath))))));
             }
         }
 

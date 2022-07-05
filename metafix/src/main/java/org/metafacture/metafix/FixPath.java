@@ -22,8 +22,6 @@ import org.metafacture.metafix.Value.Hash;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Our goal here is something like https://metacpan.org/pod/Catmandu::Path::simple
@@ -35,8 +33,6 @@ import java.util.stream.Collectors;
  */
 /*package-private*/ class FixPath {
 
-    /*package-private*/ static final Pattern RESERVED_FIELD_PATTERN = Pattern.compile(String.format("(?:%s)",
-            Arrays.stream(ReservedField.values()).map(f -> Pattern.quote(f.name())).collect(Collectors.joining("|"))));
     private static final String ASTERISK = "*";
     private String[] path;
 
@@ -81,13 +77,13 @@ import java.util.stream.Collectors;
                     if (findInValue != null) {
                         findInValue.matchType()
                             // flatten result arrays (use Value#path for structure)
-                            .ifArray(a -> a.forEach(resultArray::add))
-                            .orElse(c -> resultArray.add(findInValue));
+                            .ifArray(a -> a.forEach(t -> resultArray.add(t, false)))
+                            .orElse(c -> resultArray.add(findInValue, false));
                     }
                 }));
             }
             else if (isReference(currentSegment)) {
-                final Value referencedValue = getReferencedValue(array, currentSegment);
+                final Value referencedValue = getReferencedValue(array, currentSegment, null);
                 if (referencedValue != null) {
                     result = findInValue(referencedValue, tail(path));
                 }
@@ -262,7 +258,7 @@ import java.util.stream.Collectors;
                 array.forEach(value -> insertInto(value, mode, newValue.copy(), field, tail(path)));
             }
             else if (isReference(field)) {
-                insertInto(getReferencedValue(array, field), mode, newValue, field, tail(path));
+                insertInto(getReferencedValue(array, field, newValue.getPath()), mode, newValue, field, tail(path));
             }
         }
         return new Value(array);
@@ -280,7 +276,6 @@ import java.util.stream.Collectors;
             }
             insertInto(hash.get(field), mode, newValue, field, tail(path));
         }
-
         return new Value(hash);
     }
 
@@ -288,14 +283,14 @@ import java.util.stream.Collectors;
             final String[] tail) {
         if (value != null) {
             final FixPath fixPath = new FixPath(tail);
-            newValue.updatePathAddBase(value, field);
+            newValue.withPathSet(value.getPath());
             return value.extractType((m, c) -> m
                     .ifArray(a -> c.accept(fixPath.insertInto(a, mode, newValue)))
                     .ifHash(h -> c.accept(fixPath.insertInto(h, mode, newValue)))
                     .orElseThrow());
         }
         else {
-            throw new IllegalArgumentException("Using ref, but can't find: " + field + " in: " + value);
+            throw new IllegalArgumentException("Can't find: " + field + " in: " + value);
         }
     }
 
@@ -323,7 +318,7 @@ import java.util.stream.Collectors;
     }
 
     // TODO replace switch, extract to method on array?
-    private Value getReferencedValue(final Array array, final String field) {
+    private Value getReferencedValue(final Array array, final String field, final String p) {
         Value referencedValue = null;
         if (Value.isNumber(field)) {
             final int index = Integer.valueOf(field) - 1;
@@ -333,15 +328,14 @@ import java.util.stream.Collectors;
         if (reservedField != null) {
             switch (reservedField) {
                 case $first:
-                    referencedValue = getReferencedValue(array, "1");
+                    referencedValue = getReferencedValue(array, "1", p);
                     break;
                 case $last:
-                    referencedValue = getReferencedValue(array, String.valueOf(array.size()));
+                    referencedValue = getReferencedValue(array, String.valueOf(array.size()), p);
                     break;
                 case $append:
-                    referencedValue = Value.newHash(); // TODO: append non-hash?
+                    referencedValue = Value.newHash().withPathSet(p); // TODO: append non-hash?
                     array.add(referencedValue);
-                    referencedValue.updatePathAppend(String.valueOf(array.size()), "");
                     break;
                 default:
                     break;

@@ -209,9 +209,7 @@ public class Record extends Value.Hash {
                     toDelete.addFirst(insertPath);
                 }
                 else {
-                    final Value newValue = new Value(newString);
-                    insertPath.insertInto(this, InsertMode.REPLACE, newValue);
-                    newValue.setPath(insertPath.toString());
+                    insertPath.insertInto(this, InsertMode.REPLACE, new Value(newString));
                 }
             }
             toDelete.forEach(path -> path.removeNestedFrom(this));
