@@ -224,27 +224,22 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     @Override
     public void literal(final String name, final String value) {
         try {
-            final Type type = value == null ? Type.NULL :
-                isMarkedName(name, booleanMarker) ? Type.BOOLEAN :
-                isMarkedName(name, numberMarker) ? Type.NUMBER : Type.STRING;
-
             final JsonStreamContext ctx = jsonGenerator.getOutputContext();
             if (ctx.inObject()) {
                 jsonGenerator.writeFieldName(getUnmarkedName(name, booleanMarker, numberMarker));
             }
 
-            switch (type) {
-                case NULL:
-                    jsonGenerator.writeNull();
-                    break;
-                case BOOLEAN:
-                    jsonGenerator.writeBoolean(Boolean.parseBoolean(value));
-                    break;
-                case NUMBER:
-                    jsonGenerator.writeNumber(value);
-                    break;
-                default:
-                    jsonGenerator.writeString(value);
+            if (value == null) {
+                jsonGenerator.writeNull();
+            }
+            else if (isMarkedName(name, booleanMarker)) {
+                jsonGenerator.writeBoolean(Boolean.parseBoolean(value));
+            }
+            else if (isMarkedName(name, numberMarker)) {
+                jsonGenerator.writeNumber(value);
+            }
+            else {
+                jsonGenerator.writeString(value);
             }
         }
         catch (final JsonGenerationException e) {
@@ -356,10 +351,6 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     private String unicodeEscape(final char ch) {
         return String.format("\\u%4H", ch).replace(' ', '0');
-    }
-
-    private enum Type {
-        BOOLEAN, NULL, NUMBER, STRING
     }
 
 }
