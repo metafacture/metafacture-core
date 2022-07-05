@@ -50,6 +50,8 @@ import java.util.stream.Stream;
 public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver> {
 
     public static final String DEFAULT_ARRAY_MARKER = JsonEncoder.ARRAY_MARKER;
+    public static final String DEFAULT_BOOLEAN_MARKER = JsonEncoder.BOOLEAN_MARKER;
+    public static final String DEFAULT_NUMBER_MARKER = JsonEncoder.NUMBER_MARKER;
 
     public static final String DEFAULT_ARRAY_NAME = "%d";
 
@@ -62,6 +64,8 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
     private JsonParser jsonParser;
     private String arrayMarker = DEFAULT_ARRAY_MARKER;
     private String arrayName = DEFAULT_ARRAY_NAME;
+    private String booleanMarker = DEFAULT_BOOLEAN_MARKER;
+    private String numberMarker = DEFAULT_NUMBER_MARKER;
     private String recordId = DEFAULT_RECORD_ID;
     private String recordPath = DEFAULT_ROOT_PATH;
 
@@ -107,6 +111,42 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
      */
     public String getArrayMarker() {
         return arrayMarker;
+    }
+
+    /**
+     * Sets the boolean marker.
+     *
+     * @param booleanMarker the boolean marker
+     */
+    public void setBooleanMarker(final String booleanMarker) {
+        this.booleanMarker = booleanMarker;
+    }
+
+    /**
+     * Gets the boolean marker.
+     *
+     * @return the boolean marker
+     */
+    public String getBooleanMarker() {
+        return booleanMarker;
+    }
+
+    /**
+     * Sets the number marker.
+     *
+     * @param numberMarker the number marker
+     */
+    public void setNumberMarker(final String numberMarker) {
+        this.numberMarker = numberMarker;
+    }
+
+    /**
+     * Gets the number marker.
+     *
+     * @return the number marker
+     */
+    public String getNumberMarker() {
+        return numberMarker;
     }
 
     /**
@@ -290,7 +330,7 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
 
                 break;
             case START_ARRAY:
-                getReceiver().startEntity(name + arrayMarker);
+                getReceiver().startEntity(getMarkedName(name, arrayMarker));
                 decodeArray();
                 getReceiver().endEntity();
 
@@ -299,11 +339,25 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
                 getReceiver().literal(name, null);
 
                 break;
+            case VALUE_FALSE:
+            case VALUE_TRUE:
+                getReceiver().literal(getMarkedName(name, booleanMarker), jsonParser.getText());
+
+                break;
+            case VALUE_NUMBER_FLOAT:
+            case VALUE_NUMBER_INT:
+                getReceiver().literal(getMarkedName(name, numberMarker), jsonParser.getText());
+
+                break;
             default:
                 getReceiver().literal(name, jsonParser.getText());
 
                 break;
         }
+    }
+
+    private String getMarkedName(final String name, final String marker) {
+        return marker != null ? name + marker : name;
     }
 
 }
