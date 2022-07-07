@@ -41,7 +41,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public enum FixMethod implements FixFunction {
+public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
 
     // SCRIPT-LEVEL METHODS:
 
@@ -422,6 +422,24 @@ public enum FixMethod implements FixFunction {
             );
         }
     },
+    from_json {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String errorString = options.get(ERROR_STRING_OPTION);
+            final JsonValue.Parser parser = new JsonValue.Parser();
+
+            record.transform(params.get(0), (m, c) -> m
+                    .ifString(s -> {
+                        try {
+                            c.accept(parser.parse(s));
+                        }
+                        catch (final IOException e) {
+                            c.accept(errorString != null ? new Value(errorString) : null);
+                        }
+                    })
+            );
+        }
+    },
     index {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
@@ -434,7 +452,7 @@ public enum FixMethod implements FixFunction {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final ISBN isbn = new ISBN();
 
-            withOption(options, "error_string", isbn::setErrorString);
+            withOption(options, ERROR_STRING_OPTION, isbn::setErrorString);
             withOption(options, "to", isbn::setTo);
             withOption(options, "verify_check_digit", isbn::setVerifyCheckDigit);
 
@@ -563,6 +581,24 @@ public enum FixMethod implements FixFunction {
             );
         }
     },
+    to_json {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String errorString = options.get(ERROR_STRING_OPTION);
+            final boolean pretty = getBoolean(options, "pretty");
+
+            record.transform(params.get(0), (m, c) -> m
+                    .orElse(v -> {
+                        try {
+                            c.accept(new Value(v.toJson(pretty)));
+                        }
+                        catch (final IOException e) {
+                            c.accept(errorString != null ? new Value(errorString) : null);
+                        }
+                    })
+            );
+        }
+    },
     trim {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
@@ -588,6 +624,8 @@ public enum FixMethod implements FixFunction {
 
     private static final String FILEMAP_SEPARATOR_OPTION = "sep_char";
     private static final String FILEMAP_DEFAULT_SEPARATOR = ",";
+
+    private static final String ERROR_STRING_OPTION = "error_string";
 
     private static final Random RANDOM = new Random();
 
