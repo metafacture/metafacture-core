@@ -373,7 +373,7 @@ public class Value {
             add(value, true);
         }
 
-        public void add(final Value value, final boolean appendToPath) {
+        /* package-private */ void add(final Value value, final boolean appendToPath) {
             if (!isNull(value)) {
                 list.add(appendToPath ? value.withPathAppend(list.size() + 1) : value);
             }
