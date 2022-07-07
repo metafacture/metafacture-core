@@ -307,7 +307,7 @@ paste("my.string", "~Hi", "a", "~how are you?")
 
 ##### `print_record`
 
-Prints the current record either to standard output or to a file.
+Prints the current record as JSON either to standard output or to a file.
 
 Parameters:
 
@@ -321,7 +321,6 @@ Options:
 - `footer`: Footer which is output after the record. (Default: `\n`)
 - `header`: Header which is output before the record. (Default: Empty string)
 - `id`: Field name which contains the record ID; if found, will be included before the prefix. (Default: `_id`)
-- `json`: Whether to encode the record as JSON. (Default: `false`)
 - `pretty`: Whether to use pretty printing. (Default: `false`)
 
 ```perl
@@ -332,8 +331,8 @@ E.g.:
 
 ```perl
 print_record("Before transformation")
-print_record(destination: "record-%03d.gz", header: "After transformation: ")
-print_record(destination: "record-%2$s.json", id: "001", json: "true", pretty: "true")
+print_record(destination: "record-%2$s.json", id: "001", pretty: "true")
+print_record(destination: "record-%03d.json.gz", header: "After transformation: ")
 ```
 
 ##### `random`

@@ -222,7 +222,6 @@ public enum FixMethod implements FixFunction {
             final String destination = options.getOrDefault("destination", ObjectWriter.STDOUT);
             final Value idValue = record.get(options.getOrDefault("id", StandardEventNames.ID));
 
-            final boolean json = getBoolean(options, "json");
             final boolean pretty = getBoolean(options, "pretty");
 
             final String id = Value.isNull(idValue) ? "" : idValue.toString();
@@ -238,24 +237,11 @@ public enum FixMethod implements FixFunction {
             withOption(options, "footer", writer::setFooter);
             withOption(options, "header", writer::setHeader);
 
-            boolean written = false;
-
-            if (json) {
-                try {
-                    writer.process(prefix + record.toJson(pretty));
-                    written = true;
-                }
-                catch (final IOException e) {
-                }
+            try {
+                writer.process(prefix + record.toJson(pretty));
             }
-
-            if (!written) {
-                if (pretty) {
-                    record.forEach((f, v) -> writer.process(prefix + f + "=" + v));
-                }
-                else {
-                    writer.process(prefix + record);
-                }
+            catch (final IOException e) {
+                // Log a warning? Print string representation instead?
             }
 
             writer.closeStream();
