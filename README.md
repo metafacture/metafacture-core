@@ -311,7 +311,7 @@ Prints the current record as JSON either to standard output or to a file.
 
 Parameters:
 
-- `prefix` (optional): Prefix to print before the record. (Default: Empty string)
+- `prefix` (optional): Prefix to print before the record; may include [format directives](https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html#syntax) for counter and record ID (in that order). (Default: Empty string)
 
 Options:
 
@@ -320,7 +320,7 @@ Options:
 - `encoding` (file output only): Encoding used by the underlying writer. (Default: `UTF-8`)
 - `footer`: Footer which is output after the record. (Default: `\n`)
 - `header`: Header which is output before the record. (Default: Empty string)
-- `id`: Field name which contains the record ID; if found, will be included before the prefix. (Default: `_id`)
+- `id`: Field name which contains the record ID; if found, will be available for inclusion in `prefix` and `destination`. (Default: `_id`)
 - `pretty`: Whether to use pretty printing. (Default: `false`)
 
 ```perl
@@ -330,7 +330,7 @@ print_record(["<prefix>"][, <options>...])
 E.g.:
 
 ```perl
-print_record("Before transformation")
+print_record("%d) Before transformation: ")
 print_record(destination: "record-%2$s.json", id: "001", pretty: "true")
 print_record(destination: "record-%03d.json.gz", header: "After transformation: ")
 ```

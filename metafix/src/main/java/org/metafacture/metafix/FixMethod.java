@@ -224,12 +224,11 @@ public enum FixMethod implements FixFunction {
 
             final boolean pretty = getBoolean(options, "pretty");
 
-            final String id = Value.isNull(idValue) ? "" : idValue.toString();
-            final String prefix = (id.isEmpty() ? "" : "[" + id + "] ") + (params.isEmpty() ? "" : params.get(0) + ": ");
-
             final LongAdder counter = scopedCounter.computeIfAbsent(metafix, k -> new LongAdder());
             counter.increment();
 
+            final String id = Value.isNull(idValue) ? "" : idValue.toString();
+            final String prefix = params.isEmpty() ? "" : String.format(params.get(0), counter.sum(), id);
             final ObjectWriter<String> writer = new ObjectWriter<>(String.format(destination, counter.sum(), id));
 
             withOption(options, "compression", writer::setCompression);
