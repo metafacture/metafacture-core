@@ -64,8 +64,8 @@ import java.util.Map;
     }
 
     /*package-private*/ Value findIn(final Array array) {
-
         final Value result;
+
         if (path.length == 0) {
             result = new Value(array);
         }
@@ -96,8 +96,8 @@ import java.util.Map;
                 result = Value.newArray(a -> array.forEach(v -> a.add(findInValue(v, path))));
             }
         }
-        return result;
 
+        return result;
     }
 
     private Value findInValue(final Value value, final String[] p) {
@@ -124,6 +124,7 @@ import java.util.Map;
 
     /*package-private*/ FixPath to(final Value value, final int i) {
         final FixPath result;
+
         // One *, no matching path: replace with index of current result
         if (countAsterisks() == 1 && !matches(value.getPath())) {
             result = new FixPath(replaceInPath(ASTERISK, i));
@@ -135,6 +136,7 @@ import java.util.Map;
         else {
             result = this;
         }
+
         return result;
     }
 
@@ -154,7 +156,7 @@ import java.util.Map;
         return Arrays.asList(path).stream().filter(s -> s.equals(ASTERISK)).count();
     }
 
-    /* package-private */ enum InsertMode {
+    /*package-private*/ enum InsertMode {
 
         REPLACE {
             @Override
@@ -246,10 +248,10 @@ import java.util.Map;
         }
     }
 
-    /*package-private*/ private Value insertInto(final Array array, final InsertMode mode, final Value newValue) {
+    private Value insertInto(final Array array, final InsertMode mode, final Value newValue) {
         // basic idea: reuse findIn logic here? setIn(findIn(array), newValue)
-
         final String field = path[0];
+
         if (path.length == 1) {
             mode.apply(array, field, newValue);
         }
@@ -261,12 +263,14 @@ import java.util.Map;
                 insertInto(getReferencedValue(array, field, newValue.getPath()), mode, newValue, field, tail(path));
             }
         }
+
         return new Value(array);
     }
 
     /*package-private*/ Value insertInto(final Hash hash, final InsertMode mode, final Value newValue) {
         // basic idea: reuse findIn logic here? setIn(findIn(hash), newValue)
         final String field = path[0];
+
         if (path.length == 1) {
             mode.apply(hash, field, newValue);
         }
@@ -276,11 +280,11 @@ import java.util.Map;
             }
             insertInto(hash.get(field), mode, newValue, field, tail(path));
         }
+
         return new Value(hash);
     }
 
-    private Value insertInto(final Value value, final InsertMode mode, final Value newValue, final String field,
-            final String[] tail) {
+    private Value insertInto(final Value value, final InsertMode mode, final Value newValue, final String field, final String[] tail) {
         if (value != null) {
             final FixPath fixPath = new FixPath(tail);
             newValue.withPathSet(value.getPath());
@@ -320,10 +324,12 @@ import java.util.Map;
     // TODO replace switch, extract to method on array?
     private Value getReferencedValue(final Array array, final String field, final String p) {
         Value referencedValue = null;
+
         if (Value.isNumber(field)) {
             final int index = Integer.valueOf(field) - 1;
             return 0 <= index && index < array.size() ? array.get(index) : null;
         }
+
         final ReservedField reservedField = ReservedField.fromString(field);
         if (reservedField != null) {
             switch (reservedField) {
@@ -341,6 +347,7 @@ import java.util.Map;
                     break;
             }
         }
+
         return referencedValue;
     }
 

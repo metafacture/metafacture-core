@@ -100,12 +100,12 @@ public class Value {
         }
     }
 
-    public Value(final int integer) {
-        this(String.valueOf(integer));
-    }
-
     public Value(final String string) {
         this(string != null ? Type.String : null, null, null, string);
+    }
+
+    public Value(final int integer) {
+        this(String.valueOf(integer));
     }
 
     public static Value newArray() {
@@ -257,17 +257,12 @@ public class Value {
         return this;
     }
 
-    /*package-private*/ Value withPathAppend(final int i) {
+    private Value withPathAppend(final int i) {
         return withPathAppend(String.valueOf(i));
     }
 
-    /*package-private*/ Value withPathAppend(final String field) {
-        if (path == null || path.isEmpty()) {
-            return this.withPathSet(field);
-        }
-        else {
-            return this.withPathSet(path + "." + field);
-        }
+    private Value withPathAppend(final String field) {
+        return withPathSet(path == null || path.isEmpty() ? field : path + "." + field);
     }
 
     /*package-private*/ Value copy() {
@@ -437,8 +432,7 @@ public class Value {
         }
 
         /*package-private*/ void set(final int index, final Value value) {
-            list.set(index, value);
-            value.withPathAppend(index + 1);
+            list.set(index, value.withPathAppend(index + 1));
         }
 
         /*package-private*/ void removeIf(final Predicate<Value> predicate) {
@@ -622,8 +616,8 @@ public class Value {
                     oldValue.withPathAppend(1);
                 }
 
-                put(field, oldValue.asList(oldVals -> newValue
-                        .asList(newVals -> newVals.forEach(newVal -> oldVals.add(newVal.withPathSet(basePath))))));
+                put(field, oldValue.asList(oldVals -> newValue.asList(newVals ->
+                                newVals.forEach(newVal -> oldVals.add(newVal.withPathSet(basePath))))));
             }
         }
 

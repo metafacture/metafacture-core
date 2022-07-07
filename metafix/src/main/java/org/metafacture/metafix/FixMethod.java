@@ -124,7 +124,6 @@ public enum FixMethod implements FixFunction {
                 record.addNested(newName, oldValue); // we're actually aliasing
             }));
         }
-
     },
     format {
         @Override
