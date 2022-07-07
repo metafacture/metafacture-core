@@ -1,51 +1,51 @@
 {
   "subject" : [ {
+    "type" : [ "ComplexSubject" ],
     "componentList" : [ {
-      "gndIdentifier" : "(DE-588)4131620-4",
-      "id" : "(DE-588)4131620-4",
+      "type" : [ "SubjectHeading" ],
       "label" : "Schulhof",
       "source" : {
-        "id" : "https://d-nb.info/gnd/7749153-1",
-        "label" : "Gemeinsame Normdatei (GND)"
+        "label" : "Gemeinsame Normdatei (GND)",
+        "id" : "https://d-nb.info/gnd/7749153-1"
       },
-      "type" : [ "SubjectHeading" ]
+      "id" : "(DE-588)4131620-4",
+      "gndIdentifier" : "(DE-588)4131620-4"
     }, {
-      "gndIdentifier" : "(DE-588)4116546-9",
-      "id" : "(DE-588)4116546-9",
+      "type" : [ "SubjectHeading" ],
       "label" : "Sozialraum",
       "source" : {
-        "id" : "https://d-nb.info/gnd/7749153-1",
-        "label" : "Gemeinsame Normdatei (GND)"
+        "label" : "Gemeinsame Normdatei (GND)",
+        "id" : "https://d-nb.info/gnd/7749153-1"
       },
-      "type" : [ "SubjectHeading" ]
+      "id" : "(DE-588)4116546-9",
+      "gndIdentifier" : "(DE-588)4116546-9"
     }, {
-      "gndIdentifier" : "(DE-588)4680202-2",
-      "id" : "(DE-588)4680202-2",
+      "type" : [ "SubjectHeading" ],
       "label" : "Informelles Lernen",
       "source" : {
-        "id" : "https://d-nb.info/gnd/7749153-1",
-        "label" : "Gemeinsame Normdatei (GND)"
+        "label" : "Gemeinsame Normdatei (GND)",
+        "id" : "https://d-nb.info/gnd/7749153-1"
       },
-      "type" : [ "SubjectHeading" ]
+      "id" : "(DE-588)4680202-2",
+      "gndIdentifier" : "(DE-588)4680202-2"
     }, {
-      "gndIdentifier" : "(DE-588)4155947-2",
-      "id" : "(DE-588)4155947-2",
+      "type" : [ "SubjectHeading" ],
       "label" : "Ganztagsschule",
       "source" : {
-        "id" : "https://d-nb.info/gnd/7749153-1",
-        "label" : "Gemeinsame Normdatei (GND)"
+        "label" : "Gemeinsame Normdatei (GND)",
+        "id" : "https://d-nb.info/gnd/7749153-1"
       },
-      "type" : [ "SubjectHeading" ]
+      "id" : "(DE-588)4155947-2",
+      "gndIdentifier" : "(DE-588)4155947-2"
     }, {
-      "gndIdentifier" : "(DE-588)4130615-6",
-      "id" : "(DE-588)4130615-6",
+      "type" : [ "SubjectHeading" ],
       "label" : "Sportpädagogik",
       "source" : {
-        "id" : "https://d-nb.info/gnd/7749153-1",
-        "label" : "Gemeinsame Normdatei (GND)"
+        "label" : "Gemeinsame Normdatei (GND)",
+        "id" : "https://d-nb.info/gnd/7749153-1"
       },
-      "type" : [ "SubjectHeading" ]
-    } ],
-    "type" : [ "ComplexSubject" ]
+      "id" : "(DE-588)4130615-6",
+      "gndIdentifier" : "(DE-588)4130615-6"
+    } ]
   } ]
 }
