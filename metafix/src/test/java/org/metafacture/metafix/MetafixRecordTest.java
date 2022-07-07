@@ -1113,7 +1113,7 @@ public class MetafixRecordTest {
     }
 
     private void assertThrowsOnEmptyArray(final String index) {
-        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Using ref, but can't find: " + index + " in: null", () -> {
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Can't find: " + index + " in: null", () -> {
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "add_field('animals[]." + index + ".kind','nice')"
                 ),

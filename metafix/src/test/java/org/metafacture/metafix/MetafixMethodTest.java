@@ -1964,7 +1964,7 @@ public class MetafixMethodTest {
     @Test
     // We currently fail on unresolved references, see MetafixRecordTests#assertThrowsOnEmptyArray
     public void addFieldIntoArrayOfObjectsWithLastWildcardMissingError() {
-        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Using ref, but can't find: $last in: null", () -> {
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Can't find: $last in: null", () -> {
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "add_field('animals[].$last.key', 'value')"
                 ),

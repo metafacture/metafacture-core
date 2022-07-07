@@ -120,9 +120,8 @@ public enum FixMethod implements FixFunction {
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String oldName = params.get(0);
             final String newName = params.get(1);
-            Value.asList(record.get(oldName), a -> a.forEach(newValue -> {
-                record.addNested(newName, newValue);
-                newValue.updatePathRename(newName);
+            Value.asList(record.get(oldName), a -> a.forEach(oldValue -> {
+                record.addNested(newName, oldValue); // we're actually aliasing
             }));
         }
     },

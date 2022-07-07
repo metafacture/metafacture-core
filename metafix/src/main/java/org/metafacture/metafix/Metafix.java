@@ -127,8 +127,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
             @Override
             public void literal(final String name, final String value) {
                 final String[] split = Value.split(name);
-                addValue(split[split.length - 1], new Value(value, name));
-                // TODO could this help with https://github.com/metafacture/metafacture-fix/issues/147?
+                addValue(split[split.length - 1], new Value(value));
                 // TODO use full path here to insert only once?
                 // new FixPath(name).insertInto(currentRecord, InsertMode.APPEND, new Value(value));
             }
@@ -236,9 +235,10 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         }
         else {
             final Value entity = entities.get(index);
+            value.withPathSet(entity.getPath());
             entity.matchType()
-                .ifArray(a -> a.add(value.updatePathAddBase(entity, name)))
-                .ifHash(h -> h.add(name, value.updatePathAddBase(entity, name)))
+                .ifArray(a -> a.add(value))
+                .ifHash(h -> h.add(name, value))
                 .orElseThrow();
         }
     }

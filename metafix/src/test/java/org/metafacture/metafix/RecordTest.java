@@ -350,8 +350,8 @@ public class RecordTest {
             }));
             a.add(Value.newHash(h -> {
                 h.put(FIELD, VALUE);
-                // For proper transformation, we need to explicitly set the path (as in Metafix.java):
-                h.put(OTHER_FIELD, new Value(OTHER_VALUE.asString(), String.format(path, a.size() + 1)));
+                // For proper transformation, we have to explicitly set the path (as in Metafix.java):
+                h.put(OTHER_FIELD, OTHER_VALUE.withPathSet(String.format(path, a.size() + 1)), false);
             }));
         }));
 

@@ -33,7 +33,6 @@ import java.util.Arrays;
  * @author Fabian Steeg
  */
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(MetafixToDo.Extension.class)
 public class MetafixLookupTest {
 
     private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
@@ -789,7 +788,6 @@ public class MetafixLookupTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/hbz/lobid-resources/pull/1354")
     public void shouldLookupInCopiedNestedArrays() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "put_map('rswk-indicator', s: 'SubjectHeading')",
@@ -819,22 +817,10 @@ public class MetafixLookupTest {
                 o.get().startEntity("1");
                 o.get().startEntity("type[]");
                 o.get().literal("1", "SubjectHeading");
-                f.apply(2).endEntity();
-                o.get().startEntity("2");
-                o.get().startEntity("type[]");
-                o.get().literal("1", "SubjectHeading");
-                f.apply(2).endEntity();
-                o.get().startEntity("3");
-                o.get().startEntity("type[]");
-                o.get().literal("1", "SubjectHeading");
-                f.apply(2).endEntity();
-                o.get().startEntity("4");
-                o.get().startEntity("type[]");
-                o.get().literal("1", "SubjectHeading");
-                f.apply(2).endEntity();
-                o.get().startEntity("5");
-                o.get().startEntity("type[]");
-                o.get().literal("1", "SubjectHeading");
+                o.get().literal("2", "SubjectHeading");
+                o.get().literal("3", "SubjectHeading");
+                o.get().literal("4", "SubjectHeading");
+                o.get().literal("5", "SubjectHeading");
                 f.apply(5).endEntity();
                 o.get().endRecord();
             }
