@@ -24,7 +24,12 @@ import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +79,29 @@ public final class MetafixTestHelpers {
         }
 
         Assertions.assertEquals(expectedMessage, operator.apply(actualException.getMessage()));
+    }
+
+    public static void assertStdout(final String expected, final Runnable runnable) {
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        final PrintStream originalStdout = System.out;
+
+        try (PrintStream printStream = new PrintStream(outputStream)) {
+            System.setOut(printStream);
+            runnable.run();
+        }
+        finally {
+            System.setOut(originalStdout);
+        }
+
+        Assertions.assertEquals(expected, outputStream.toString());
+    }
+
+    public static void assertTempFile(final String expected, final Consumer<String> consumer) throws IOException {
+        final File tempFile = File.createTempFile("metafixTestHelpers", "");
+        tempFile.deleteOnExit();
+
+        consumer.accept(tempFile.getPath());
+        Assertions.assertEquals(expected, new String(Files.readAllBytes(tempFile.toPath())));
     }
 
     public static void assertFix(final StreamReceiver receiver, final List<String> fixDef, final Consumer<Metafix> in,

@@ -25,7 +25,10 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Tests Metafix record level methods. Following the cheat sheet
@@ -1852,6 +1855,102 @@ public class MetafixRecordTest {
                 o.get().endEntity();
                 o.get().endRecord();
             });
+    }
+
+    private void shouldPrintRecord(final String before, final String args, final String after, final Consumer<Supplier<StreamReceiver>> consumer, final String expected) {
+        MetafixTestHelpers.assertStdout(expected, () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    before,
+                    "print_record(" + args + ")",
+                    after
+                ),
+                i -> {
+                    i.startRecord("rec1");
+                    i.literal("a", "eeny");
+                    i.literal("a", "meeny");
+                    i.startEntity("c");
+                    i.literal("d", "moe");
+                    i.endEntity();
+                    i.endRecord();
+                }, o -> {
+                    o.get().startRecord("rec1");
+                    o.get().literal("a", "eeny");
+                    o.get().literal("a", "meeny");
+                    o.get().startEntity("c");
+                    o.get().literal("d", "moe");
+                    o.get().endEntity();
+
+                    if (consumer != null) {
+                        consumer.accept(o);
+                    }
+
+                    o.get().endRecord();
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldPrintRecord() {
+        shouldPrintRecord("", "", "", null,
+                "{\"a\":[\"eeny\",\"meeny\"],\"c\":{\"d\":\"moe\"}}\n");
+    }
+
+    @Test
+    public void shouldPrintRecordWithPrefix() {
+        shouldPrintRecord("", "'<%d:%s>'", "", null,
+                "<1:rec1>{\"a\":[\"eeny\",\"meeny\"],\"c\":{\"d\":\"moe\"}}\n");
+    }
+
+    @Test
+    public void shouldPrintRecordWithPrefixAndIdField() {
+        shouldPrintRecord("", "'<%d:%s>', id: 'c.d'", "", null,
+                "<1:moe>{\"a\":[\"eeny\",\"meeny\"],\"c\":{\"d\":\"moe\"}}\n");
+    }
+
+    @Test
+    public void shouldPrintRecordWithHeader() {
+        shouldPrintRecord("", "header: '<%d:%s>'", "", null,
+                "<%d:%s>{\"a\":[\"eeny\",\"meeny\"],\"c\":{\"d\":\"moe\"}}\n");
+    }
+
+    @Test
+    public void shouldPrintRecordWithFooter() {
+        shouldPrintRecord("", "footer: '<%d:%s>'", "", null,
+                "{\"a\":[\"eeny\",\"meeny\"],\"c\":{\"d\":\"moe\"}}<%d:%s>");
+    }
+
+    @Test
+    public void shouldPrintRecordWithPrettyPrinting() {
+        shouldPrintRecord("", "pretty: 'true'", "", null,
+                "{\n" +
+                "  \"a\" : [ \"eeny\", \"meeny\" ],\n" +
+                "  \"c\" : {\n" +
+                "    \"d\" : \"moe\"\n" +
+                "  }\n" +
+                "}\n"
+        );
+    }
+
+    @Test
+    public void shouldPrintRecordAfterTransformation() {
+        shouldPrintRecord("add_field('x', '23')", "", "",
+                o -> o.get().literal("x", "23"),
+                "{\"a\":[\"eeny\",\"meeny\"],\"c\":{\"d\":\"moe\"},\"x\":\"23\"}\n");
+    }
+
+    @Test
+    public void shouldPrintRecordBeforeTransformation() {
+        shouldPrintRecord("", "", "add_field('x', '23')",
+                o -> o.get().literal("x", "23"),
+                "{\"a\":[\"eeny\",\"meeny\"],\"c\":{\"d\":\"moe\"}}\n");
+    }
+
+    @Test
+    public void shouldPrintRecordToFile() throws IOException {
+        MetafixTestHelpers.assertTempFile(
+                "{\"a\":[\"eeny\",\"meeny\"],\"c\":{\"d\":\"moe\"}}\n",
+                p -> shouldPrintRecord("", "destination: '" + p + "'", "", null, ""));
     }
 
     @Test
