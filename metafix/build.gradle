@@ -12,6 +12,7 @@ def passSystemProperties = {
 dependencies {
   implementation "org.eclipse.xtext:org.eclipse.xtext:${versions.xtext}"
   implementation "org.eclipse.xtext:org.eclipse.xtext.xbase:${versions.xtext}"
+  implementation "com.fasterxml.jackson.core:jackson-core:${versions.jackson}"
   implementation "com.google.guava:guava:${versions.guava}"
   implementation "org.slf4j:slf4j-api:${versions.slf4j}"
 
@@ -25,9 +26,11 @@ dependencies {
   runtimeOnly "org.slf4j:slf4j-simple:${versions.slf4j}"
 
   implementation "org.metafacture:metafacture-commons:${versions.metafacture}"
-  implementation "org.metafacture:metafacture-mangling:${versions.metafacture}"
-  implementation "org.metafacture:metafacture-javaintegration:${versions.metafacture}"
   implementation "org.metafacture:metafacture-flowcontrol:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-framework:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-io:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-javaintegration:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-mangling:${versions.metafacture}"
   implementation "org.metafacture:metamorph:${versions.metafacture}"
 
   testImplementation "nl.jqno.equalsverifier:equalsverifier:${versions.equalsverifier}"

@@ -16,6 +16,8 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.framework.StandardEventNames;
+import org.metafacture.io.ObjectWriter;
 import org.metafacture.metafix.api.FixFunction;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.functions.ISBN;
@@ -23,12 +25,15 @@ import org.metafacture.metamorph.functions.Timestamp;
 import org.metafacture.metamorph.maps.FileMap;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
@@ -206,6 +211,38 @@ public enum FixMethod implements FixFunction {
 
         private boolean literalString(final String s) {
             return s.startsWith("~");
+        }
+    },
+    print_record {
+        private final Map<Metafix, LongAdder> scopedCounter = new HashMap<>();
+
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String destination = options.getOrDefault("destination", ObjectWriter.STDOUT);
+            final Value idValue = record.get(options.getOrDefault("id", StandardEventNames.ID));
+
+            final boolean pretty = getBoolean(options, "pretty");
+
+            final LongAdder counter = scopedCounter.computeIfAbsent(metafix, k -> new LongAdder());
+            counter.increment();
+
+            final String id = Value.isNull(idValue) ? "" : idValue.toString();
+            final String prefix = params.isEmpty() ? "" : String.format(params.get(0), counter.sum(), id);
+            final ObjectWriter<String> writer = new ObjectWriter<>(String.format(destination, counter.sum(), id));
+
+            withOption(options, "compression", writer::setCompression);
+            withOption(options, "encoding", writer::setEncoding);
+            withOption(options, "footer", writer::setFooter);
+            withOption(options, "header", writer::setHeader);
+
+            try {
+                writer.process(prefix + record.toJson(pretty));
+            }
+            catch (final IOException e) {
+                // Log a warning? Print string representation instead?
+            }
+
+            writer.closeStream();
         }
     },
     random {
