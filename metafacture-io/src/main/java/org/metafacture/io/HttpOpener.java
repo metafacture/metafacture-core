@@ -52,14 +52,17 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     private static final String ACCEPT_HEADER = "accept";
     private static final String ENCODING_HEADER = "accept-charset";
 
+    private static final String ACCEPT_DEFAULT = "*/*";
+    private static final String ENCODING_DEFAULT = "UTF-8";
+
     private final Map<String, String> headers = new HashMap<>();
 
     /**
      * Creates an instance of {@link HttpOpener}.
      */
     public HttpOpener() {
-        setAccept("UTF-8");
-        setEncoding("*/*");
+        setAccept(ACCEPT_DEFAULT);
+        setEncoding(ENCODING_DEFAULT);
     }
 
     /**
