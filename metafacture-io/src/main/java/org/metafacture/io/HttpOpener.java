@@ -49,6 +49,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     private static final Pattern HEADER_FIELD_SEPARATOR = Pattern.compile("\n");
     private static final Pattern HEADER_VALUE_SEPARATOR = Pattern.compile(":");
 
+    private static final String ACCEPT_HEADER = "accept";
     private static final String ENCODING_HEADER = "accept-charset";
 
     private final Map<String, String> headers = new HashMap<>();
@@ -69,7 +70,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
      * @param accept mime-type to use for the HTTP accept header
      */
     public void setAccept(final String accept) {
-        setHeader("accept", accept);
+        setHeader(ACCEPT_HEADER, accept);
     }
 
     /**
