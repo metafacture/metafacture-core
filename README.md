@@ -192,7 +192,7 @@ put_map("<mapName>",
 
 ##### `put_var`
 
-Defines a single internal variable that can be referenced with `$[<variableName>]`.
+Defines a single global variable that can be referenced with `$[<variableName>]`.
 
 ```perl
 put_var("<variableName>", "<variableValue>")
@@ -200,7 +200,7 @@ put_var("<variableName>", "<variableValue>")
 
 ##### `put_vars`
 
-Defines multiple internal variables that can be referenced with `$[<variableName>]`.
+Defines multiple global variables that can be referenced with `$[<variableName>]`.
 
 ```perl
 put_vars(
@@ -264,6 +264,25 @@ E.g.:
 ```perl
 hash("foo")
 # ["name", "value"] => {"name":"value"}
+```
+
+##### `macro`
+
+Calls a named macro, i.e. a list of statements that have been previously defined with the [`do macro`](#do-macro) bind.
+
+Parameters:
+
+- `name` (required): Unique name of the macro.
+
+Options:
+
+- All options are made available as "dynamic" local variables.
+
+```perl
+do macro("<macroName>"[, <staticLocalVariables>...])
+  ...
+end
+macro("<macroName>"[, <dynamicLocalVariables>...])
 ```
 
 ##### `move_field`
@@ -611,6 +630,25 @@ When specifying a variable name for the current element, the record remains acce
 do list(path: "<sourceField>", "var": "<variableName>")
   ...
 end
+```
+
+#### `do macro`
+
+Defines a named macro, i.e. a list of statements that can be executed later with the [`macro`](#macro) function.
+
+Parameters:
+
+- `name` (required): Unique name of the macro.
+
+Options:
+
+- All options are made available as "static" local variables.
+
+```perl
+do macro("<macroName>"[, <staticLocalVariables>...])
+  ...
+end
+macro("<macroName>"[, <dynamicLocalVariables>...])
 ```
 
 #### `do once`

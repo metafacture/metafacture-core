@@ -38,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +47,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+// TODO: Utilize org.metafacture.commons.types.ScopedHashMap for vars instead?
 
 /**
  * Transform a record using a {@link Fix}.
@@ -58,7 +61,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     private static final Logger LOG = LoggerFactory.getLogger(RecordTransformer.class);
 
     private final List<Consumer<Record>> consumers = new LinkedList<>();
-    private final Map<String, String> vars;
+    private final List<Map<String, String>> vars = new ArrayList<>();
     private final Metafix metafix;
 
     private Supplier<String> currentMessageSupplier;
@@ -69,7 +72,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
 
     private RecordTransformer(final Metafix metafix, final List<Expression> expressions) {
         this.metafix = metafix;
-        vars = metafix.getVars();
+        addVars(metafix.getVars());
 
         expressions.forEach(e -> {
             final Params params = new Params(e.getParams(), vars);
@@ -91,6 +94,22 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
                 throw new FixProcessException(executionExceptionMessage(e));
             }
         });
+    }
+
+    public void addVars(final Map<String, String> additionalVars) {
+        vars.add(additionalVars);
+    }
+
+    public void transform(final Record record, final Map<String, String> additionalVars) {
+        final int index = vars.size();
+        addVars(additionalVars);
+
+        try {
+            transform(record);
+        }
+        finally {
+            vars.remove(index);
+        }
     }
 
     public void transform(final Record record) {
@@ -246,6 +265,12 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
             return value == null ? null : StringUtil.format(value, Metafix.VAR_START, Metafix.VAR_END, false, vars);
         }
 
+        protected Map<String, String> mergeVars(final List<Map<String, String>> vars) {
+            final Map<String, String> mergedVars = new HashMap<>();
+            vars.forEach(mergedVars::putAll);
+            return mergedVars;
+        }
+
         protected abstract T resolve();
 
     }
@@ -253,10 +278,10 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     private static class Params extends AbstractResolvable<List<String>> {
 
         private final List<String> list;
-        private final Map<String, String> vars;
+        private final List<Map<String, String>> vars;
         private final boolean resolve;
 
-        private Params(final List<String> list, final Map<String, String> vars) {
+        private Params(final List<String> list, final List<Map<String, String>> vars) {
             this.list = list;
             this.vars = vars;
 
@@ -267,9 +292,10 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         protected List<String> resolve() {
             if (resolve) {
                 final List<String> resolvedList = new ArrayList<>(list.size());
+                final Map<String, String> mergedVars = mergeVars(vars);
 
                 for (final String entry : list) {
-                    resolvedList.add(resolveVars(entry, vars));
+                    resolvedList.add(resolveVars(entry, mergedVars));
                 }
 
                 return resolvedList;
@@ -284,10 +310,10 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     private static class Options extends AbstractResolvable<Map<String, String>> {
 
         private final Map<String, String> map = new LinkedHashMap<>();
-        private final Map<String, String> vars;
+        private final List<Map<String, String>> vars;
         private final boolean resolve;
 
-        private Options(final org.metafacture.metafix.fix.Options options, final Map<String, String> vars) {
+        private Options(final org.metafacture.metafix.fix.Options options, final List<Map<String, String>> vars) {
             this.vars = vars;
 
             boolean resolveTemp = false;
@@ -315,9 +341,10 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         protected Map<String, String> resolve() {
             if (resolve) {
                 final Map<String, String> resolvedMap = new LinkedHashMap<>(map.size());
+                final Map<String, String> mergedVars = mergeVars(vars);
 
                 for (final Map.Entry<String, String> entry : map.entrySet()) {
-                    resolvedMap.put(resolveVars(entry.getKey(), vars), resolveVars(entry.getValue(), vars));
+                    resolvedMap.put(resolveVars(entry.getKey(), mergedVars), resolveVars(entry.getValue(), mergedVars));
                 }
 
                 return resolvedMap;

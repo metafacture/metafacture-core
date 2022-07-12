@@ -153,6 +153,18 @@ public enum FixMethod implements FixFunction {
             })));
         }
     },
+    macro {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final RecordTransformer recordTransformer = metafix.getMacro(params.get(0));
+            if (recordTransformer != null) {
+                recordTransformer.transform(record, options);
+            }
+            else {
+                // TODO?: Metamorph throws MorphBuildException("Macro '" + macroName + "' undefined!")
+            }
+        }
+    },
     move_field {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {

@@ -72,8 +72,9 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     private final Deque<Integer> entityCountStack = new LinkedList<>();
     private final List<Closeable> resources = new ArrayList<>();
     private final List<Expression> expressions = new ArrayList<>();
-    private final Map<String, RecordTransformer> fixCache = new HashMap<>();
     private final Map<String, Map<String, String>> maps = new HashMap<>();
+    private final Map<String, RecordTransformer> fixCache = new HashMap<>();
+    private final Map<String, RecordTransformer> macros = new HashMap<>();
     private final Map<String, String> vars = new HashMap<>();
     private final RecordTransformer recordTransformer;
     private final StreamFlattener flattener = new StreamFlattener();
@@ -161,6 +162,14 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
 
     private RecordTransformer getRecordTransformer(final Reader fixDef) {
         return new RecordTransformer(this, FixStandaloneSetup.parseFix(fixDef));
+    }
+
+    public void putMacro(final String name, final RecordTransformer macro) {
+        macros.put(name, macro);
+    }
+
+    public RecordTransformer getMacro(final String name) {
+        return macros.get(name);
     }
 
     public List<Expression> getExpressions() {

@@ -1990,6 +1990,118 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void shouldCallMacro() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do macro('test')",
+                "  add_field('test', '42')",
+                "end",
+                "macro('test')",
+                "macro('test')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                f.apply(2).literal("test", "42");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotCallUnknownMacro() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "macro('test')",
+                "macro('test')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldCallMacroWithVariables() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_vars(a: '1', b: '2')", // global variables
+                "do macro('test', b: '22', c: '33')", // "static" local variables
+                "  add_field('test', '$[a]-$[b]-$[c]-$[d]')",
+                "end",
+                "macro('test', c: '333', d: '444')", // "dynamic" local variables
+                "macro('test', b: '555', d: '666')",
+                "add_field('vars', '$[a]-$[b]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "1-22-333-444");
+                o.get().literal("test", "1-555-33-666");
+                o.get().literal("vars", "1-2");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotLeakVariablesFromMacro() {
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Variable 'c' was not assigned!\nAssigned variables:\n{a=1, b=2}", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "put_vars(a: '1', b: '2')", // global variables
+                    "do macro('test', b: '22', c: '33')", // "static" local variables
+                    "end",
+                    "macro('test', c: '333', d: '444')", // "dynamic" local variables
+                    "macro('test', b: '555', d: '666')",
+                    "add_field('test', '$[a]-$[b]-$[c]-$[d]')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldCallNestedMacro() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do macro('test1', c: '23')",
+                "  add_field('test$[a]', '42')",
+                "  macro('test2', b: '$[b]', c: '$[c]')",
+                "end",
+                "do macro('test2')",
+                "  add_field('test$[b]', '$[c]')",
+                "end",
+                "macro('test1', a: '1', b: '2')",
+                "macro('test1', a: '3', b: '4')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test1", "42");
+                o.get().literal("test2", "23");
+                o.get().literal("test3", "42");
+                o.get().literal("test4", "23");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void reject() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if exists('_metadata.error')",
