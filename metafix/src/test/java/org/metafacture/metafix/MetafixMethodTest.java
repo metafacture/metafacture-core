@@ -1110,6 +1110,156 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void shouldFlattenFlatArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "flatten('flat')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("flat", "1");
+                i.literal("flat", "2");
+                i.literal("flat", "3");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("flat", "1");
+                o.get().literal("flat", "2");
+                o.get().literal("flat", "3");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldFlattenFlatHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "flatten('flat')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("flat");
+                i.literal("a", "1");
+                i.literal("a", "2");
+                i.literal("a", "3");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("flat");
+                o.get().literal("a", "1");
+                o.get().literal("a", "2");
+                o.get().literal("a", "3");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldFlattenFlatString() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "flatten('flat')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("flat", "1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("flat", "1");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldFlattenNestedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "flatten('deep[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("deep[]");
+                i.literal("1", "1");
+                i.startEntity("2[]");
+                i.literal("1", "2");
+                i.literal("2", "3");
+                i.endEntity();
+                i.startEntity("3[]");
+                i.startEntity("1[]");
+                i.literal("1", "4");
+                i.literal("2", "5");
+                i.endEntity();
+                i.literal("2", "6");
+                i.endEntity();
+                i.literal("4", "7");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("deep[]");
+                o.get().literal("1", "1");
+                o.get().literal("2", "2");
+                o.get().literal("3", "3");
+                o.get().literal("4", "4");
+                o.get().literal("5", "5");
+                o.get().literal("6", "6");
+                o.get().literal("7", "7");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldFlattenNestedArrayWithHashes() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "flatten('deep[]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("deep[]");
+                i.literal("1", "1");
+                i.startEntity("2");
+                i.literal("a", "2");
+                i.literal("a", "3");
+                i.endEntity();
+                i.startEntity("3[]");
+                i.startEntity("1");
+                i.literal("a", "4");
+                i.literal("a", "5");
+                i.endEntity();
+                i.literal("2", "6");
+                i.endEntity();
+                i.literal("4", "7");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("deep[]");
+                o.get().literal("1", "1");
+                o.get().startEntity("2");
+                o.get().literal("a", "2");
+                o.get().literal("a", "3");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("a", "4");
+                o.get().literal("a", "5");
+                o.get().endEntity();
+                o.get().literal("4", "6");
+                o.get().literal("5", "7");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldGetFirstIndexOfSubstring() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "index(animal, 'n')"
