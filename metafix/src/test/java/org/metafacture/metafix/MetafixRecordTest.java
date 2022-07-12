@@ -2053,6 +2053,60 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void shouldCallMacroWithVariablesPassedToNestedBinds() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_vars(a: '1', b: '2')", // global variables
+                "do macro('test', b: '22', c: '33')", // "static" local variables
+                "  do once()",
+                "    add_field('test', '$[a]-$[b]-$[c]-$[d]')",
+                "  end",
+                "end",
+                "macro('test', c: '333', d: '444')", // "dynamic" local variables
+                "macro('test', b: '555', d: '666')",
+                "add_field('vars', '$[a]-$[b]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "1-22-333-444");
+                o.get().literal("vars", "1-2");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldCallMacroWithVariablesPassedToNestedConditionals() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_vars(a: '1', b: '2')", // global variables
+                "do macro('test', b: '22', c: '33')", // "static" local variables
+                "  if any_equal('cond', '$[d]')",
+                "    add_field('test', '$[a]-$[b]-$[c]-$[d]')",
+                "  end",
+                "end",
+                "macro('test', c: '333', d: '444')", // "dynamic" local variables
+                "macro('test', b: '555', d: '666')",
+                "add_field('vars', '$[a]-$[b]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("cond", "666");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("cond", "666");
+                o.get().literal("test", "1-555-33-666");
+                o.get().literal("vars", "1-2");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldNotLeakVariablesFromMacro() {
         MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Variable 'c' was not assigned!\nAssigned variables:\n{a=1, b=2}", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(

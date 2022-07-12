@@ -63,20 +63,22 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     private final List<Consumer<Record>> consumers = new LinkedList<>();
     private final List<Map<String, String>> vars = new ArrayList<>();
     private final Metafix metafix;
+    private final RecordTransformer parent;
 
     private Supplier<String> currentMessageSupplier;
 
     /*package-private*/ RecordTransformer(final Metafix metafix, final Fix fix) {
-        this(metafix, fix.getElements());
+        this(metafix, fix.getElements(), null);
+        addVars(metafix.getVars());
     }
 
-    private RecordTransformer(final Metafix metafix, final List<Expression> expressions) {
+    private RecordTransformer(final Metafix metafix, final List<Expression> expressions, final RecordTransformer parent) {
         this.metafix = metafix;
-        addVars(metafix.getVars());
+        this.parent = parent;
 
         expressions.forEach(e -> {
-            final Params params = new Params(e.getParams(), vars);
-            final Options options = new Options(e.getOptions(), vars);
+            final Params params = new Params(e.getParams(), this);
+            final Options options = new Options(e.getOptions(), this);
 
             if (e instanceof Do) {
                 processDo((Do) e, params, options);
@@ -94,6 +96,10 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
                 throw new FixProcessException(executionExceptionMessage(e));
             }
         });
+    }
+
+    private RecordTransformer childTransformer(final List<Expression> expressions) {
+        return new RecordTransformer(metafix, expressions, this);
     }
 
     public void addVars(final Map<String, String> additionalVars) {
@@ -125,7 +131,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     private void processDo(final Do expression, final Params params, final Options options) {
         processFix(() -> executionExceptionMessage(expression), () -> {
             final FixContext context = getInstance(expression.getName(), FixContext.class, FixBind::valueOf);
-            final RecordTransformer recordTransformer = new RecordTransformer(metafix, expression.getElements());
+            final RecordTransformer recordTransformer = childTransformer(expression.getElements());
 
             return record -> context.execute(metafix, record, params.resolve(), options.resolve(), recordTransformer);
         });
@@ -140,14 +146,14 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
 
         processFix(() -> executionExceptionMessage(ifExpression, ifExpression.eResource()), () -> {
             final FixPredicate ifPredicate = getInstance(ifExpression.getName(), FixPredicate.class, FixConditional::valueOf);
-            final RecordTransformer ifTransformer = new RecordTransformer(metafix, ifExpression.getElements());
+            final RecordTransformer ifTransformer = childTransformer(ifExpression.getElements());
 
             final List<FixPredicate> elseIfPredicates = mapList(elseIfExpressions, e -> getInstance(e.getName(), FixPredicate.class, FixConditional::valueOf));
-            final List<Params> elseIfParamsList = mapList(elseIfExpressions, e -> new Params(e.getParams(), vars));
-            final List<Options> elseIfOptionsList = mapList(elseIfExpressions, e -> new Options(e.getOptions(), vars));
-            final List<RecordTransformer> elseIfTransformers = mapList(elseIfExpressions, e -> new RecordTransformer(metafix, e.getElements()));
+            final List<Params> elseIfParamsList = mapList(elseIfExpressions, e -> new Params(e.getParams(), this));
+            final List<Options> elseIfOptionsList = mapList(elseIfExpressions, e -> new Options(e.getOptions(), this));
+            final List<RecordTransformer> elseIfTransformers = mapList(elseIfExpressions, e -> childTransformer(e.getElements()));
 
-            final RecordTransformer elseTransformer = elseExpression != null ? new RecordTransformer(metafix, elseExpression.getElements()) : null;
+            final RecordTransformer elseTransformer = elseExpression != null ? childTransformer(elseExpression.getElements()) : null;
 
             return record -> {
                 if (ifPredicate.test(metafix, record, ifParams.resolve(), ifOptions.resolve())) {
@@ -182,7 +188,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     private void processUnless(final Unless expression, final Params params, final Options options) {
         processFix(() -> executionExceptionMessage(expression, expression.eResource()), () -> {
             final FixPredicate predicate = getInstance(expression.getName(), FixPredicate.class, FixConditional::valueOf);
-            final RecordTransformer recordTransformer = new RecordTransformer(metafix, expression.getElements());
+            final RecordTransformer recordTransformer = childTransformer(expression.getElements());
 
             return record -> {
                 if (!predicate.test(metafix, record, params.resolve(), options.resolve())) {
@@ -255,6 +261,12 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
                 resource.getURI(), node.getStartLine(), NodeModelUtils.getTokenText(node));
     }
 
+    private Map<String, String> getVars() {
+        final Map<String, String> mergedVars = parent != null ? parent.getVars() : new HashMap<>();
+        vars.forEach(mergedVars::putAll);
+        return mergedVars;
+    }
+
     private abstract static class AbstractResolvable<T> {
 
         protected boolean isResolvable(final String value) {
@@ -265,12 +277,6 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
             return value == null ? null : StringUtil.format(value, Metafix.VAR_START, Metafix.VAR_END, false, vars);
         }
 
-        protected Map<String, String> mergeVars(final List<Map<String, String>> vars) {
-            final Map<String, String> mergedVars = new HashMap<>();
-            vars.forEach(mergedVars::putAll);
-            return mergedVars;
-        }
-
         protected abstract T resolve();
 
     }
@@ -278,12 +284,12 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     private static class Params extends AbstractResolvable<List<String>> {
 
         private final List<String> list;
-        private final List<Map<String, String>> vars;
+        private final RecordTransformer recordTransformer;
         private final boolean resolve;
 
-        private Params(final List<String> list, final List<Map<String, String>> vars) {
+        private Params(final List<String> list, final RecordTransformer recordTransformer) {
             this.list = list;
-            this.vars = vars;
+            this.recordTransformer = recordTransformer;
 
             resolve = list.stream().anyMatch(this::isResolvable);
         }
@@ -292,10 +298,10 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         protected List<String> resolve() {
             if (resolve) {
                 final List<String> resolvedList = new ArrayList<>(list.size());
-                final Map<String, String> mergedVars = mergeVars(vars);
+                final Map<String, String> vars = recordTransformer.getVars();
 
                 for (final String entry : list) {
-                    resolvedList.add(resolveVars(entry, mergedVars));
+                    resolvedList.add(resolveVars(entry, vars));
                 }
 
                 return resolvedList;
@@ -310,11 +316,11 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     private static class Options extends AbstractResolvable<Map<String, String>> {
 
         private final Map<String, String> map = new LinkedHashMap<>();
-        private final List<Map<String, String>> vars;
+        private final RecordTransformer recordTransformer;
         private final boolean resolve;
 
-        private Options(final org.metafacture.metafix.fix.Options options, final List<Map<String, String>> vars) {
-            this.vars = vars;
+        private Options(final org.metafacture.metafix.fix.Options options, final RecordTransformer recordTransformer) {
+            this.recordTransformer = recordTransformer;
 
             boolean resolveTemp = false;
 
@@ -341,10 +347,10 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         protected Map<String, String> resolve() {
             if (resolve) {
                 final Map<String, String> resolvedMap = new LinkedHashMap<>(map.size());
-                final Map<String, String> mergedVars = mergeVars(vars);
+                final Map<String, String> vars = recordTransformer.getVars();
 
                 for (final Map.Entry<String, String> entry : map.entrySet()) {
-                    resolvedMap.put(resolveVars(entry.getKey(), mergedVars), resolveVars(entry.getValue(), mergedVars));
+                    resolvedMap.put(resolveVars(entry.getKey(), vars), resolveVars(entry.getValue(), vars));
                 }
 
                 return resolvedMap;
