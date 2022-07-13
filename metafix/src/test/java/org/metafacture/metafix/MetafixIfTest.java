@@ -1580,6 +1580,72 @@ public class MetafixIfTest {
     }
 
     @Test // checkstyle-disable-line JavaNCSS
+    public void shouldReportHashAsHash() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if is_hash(foo)",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "bar");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("3");
+                i.startEntity("foo");
+                i.literal("foo", "bar");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("4");
+                i.startEntity("foo");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("5");
+                i.startEntity("foo");
+                i.literal("foo", "bar");
+                i.endEntity();
+                i.startEntity("foo");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("6");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "bar");
+                o.get().literal("foo", "1");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "1");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "bar");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().startEntity("foo");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("5");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "bar");
+                o.get().endEntity();
+                o.get().startEntity("foo");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("6");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // checkstyle-disable-line JavaNCSS
     public void shouldReportHashAsObject() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if is_object(foo)",
