@@ -31,7 +31,7 @@ import java.util.Arrays;
  *
  * @author Fabian Steeg
  */
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class) // checkstyle-disable-line JavaNCSS
 public class MetafixIfTest {
 
     @Mock
@@ -1543,6 +1543,149 @@ public class MetafixIfTest {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array(foo)",
                 "if is_array(foo)",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "bar");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("3");
+                i.startEntity("foo");
+                i.literal("foo", "bar");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("4");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // checkstyle-disable-line JavaNCSS
+    public void shouldReportEmptyValueAsEmpty() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if is_empty(foo)",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "bar");
+                i.endRecord();
+                i.startRecord("3");
+                i.literal("foo", "   ");
+                i.endRecord();
+                i.startRecord("4");
+                i.literal("foo", "bar");
+                i.literal("foo", "");
+                i.endRecord();
+                i.startRecord("5");
+                i.startEntity("foo");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("6");
+                i.startEntity("foo");
+                i.literal("foo", "");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("7");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "bar");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().literal("foo", "   ");
+                //o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().literal("foo", "bar");
+                o.get().literal("foo", "");
+                o.get().endRecord();
+                o.get().startRecord("5");
+                o.get().startEntity("foo");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("6");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("7");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReportEmptyArrayEntityAsEmpty() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if is_empty('foo[]')",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("foo[]");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("2");
+                i.startEntity("foo[]");
+                i.literal("1", "bar");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("3");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("foo[]");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().startEntity("foo[]");
+                o.get().literal("1", "bar");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReportEmptyArrayAsEmpty() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array(foo)",
+                "if is_empty(foo)",
                 "  add_field(test,ok)",
                 "end"
             ),

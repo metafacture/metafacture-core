@@ -114,6 +114,12 @@ public enum FixConditional implements FixPredicate {
             return testConditional(record, params, Value::isArray);
         }
     },
+    is_empty {
+        @Override
+        public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            return testConditional(record, params, IS_EMPTY);
+        }
+    },
     is_false {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {

@@ -779,6 +779,10 @@ _Alias for [`in`](#in)._
 
 Executes the functions if/unless the field value is an array.
 
+#### `is_empty`
+
+Executes the functions if/unless the field value is empty.
+
 #### `is_false`
 
 Executes the functions if/unless the field value equals `false` or `0`.

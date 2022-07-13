@@ -50,6 +50,13 @@ public interface FixPredicate {
         }
     };
 
+    Predicate<Value> IS_EMPTY = v -> v.extractType((m, c) -> m
+            .ifArray(a -> c.accept(a.isEmpty()))
+            .ifHash(h -> c.accept(h.isEmpty()))
+            // TODO: Catmandu considers whitespace-only strings empty (`$v !~ /\S/`)
+            .ifString(s -> c.accept(s.isEmpty()))
+    );
+
     boolean test(Metafix metafix, Record record, List<String> params, Map<String, String> options);
 
     default boolean testConditional(final Record record, final List<String> params, final BiPredicate<Stream<Value>, Predicate<Value>> qualifier, final BiPredicate<String, String> conditional) {

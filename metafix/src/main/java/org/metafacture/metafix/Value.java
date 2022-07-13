@@ -410,7 +410,7 @@ public class Value { // checkstyle-disable-line ClassDataAbstractionCoupling
             }
         }
 
-        private boolean isEmpty() {
+        public boolean isEmpty() {
             return list.isEmpty();
         }
 
