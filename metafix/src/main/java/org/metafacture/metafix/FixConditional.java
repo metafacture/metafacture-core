@@ -114,10 +114,22 @@ public enum FixConditional implements FixPredicate {
             return testConditional(record, params, Value::isArray);
         }
     },
+    is_false {
+        @Override
+        public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            return testStringConditional(record, params, IS_FALSE); // TODO: strict=false
+        }
+    },
     is_hash {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             return is_object.test(metafix, record, params, options);
+        }
+    },
+    is_number {
+        @Override
+        public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            return testStringConditional(record, params, IS_NUMBER);
         }
     },
     is_object {
@@ -130,6 +142,12 @@ public enum FixConditional implements FixPredicate {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             return testConditional(record, params, Value::isString);
+        }
+    },
+    is_true {
+        @Override
+        public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            return testStringConditional(record, params, IS_TRUE); // TODO: strict=false
         }
     },
 

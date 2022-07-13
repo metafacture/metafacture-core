@@ -779,9 +779,17 @@ _Alias for [`in`](#in)._
 
 Executes the functions if/unless the field value is an array.
 
+#### `is_false`
+
+Executes the functions if/unless the field value equals `false` or `0`.
+
 #### `is_hash`
 
 _Alias for [`is_object`](#is_object)._
+
+#### `is_number`
+
+Executes the functions if/unless the field value is a number.
 
 #### `is_object`
 
@@ -792,6 +800,10 @@ _Also aliased as [`is_hash`](#is_hash)._
 #### `is_string`
 
 Executes the functions if/unless the field value is a string.
+
+#### `is_true`
+
+Executes the functions if/unless the field value equals `true` or `1`.
 
 #### `match`
 

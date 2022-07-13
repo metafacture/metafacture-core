@@ -20,6 +20,7 @@ import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
@@ -35,6 +36,19 @@ public interface FixPredicate {
     BiPredicate<String, String> CONTAINS = String::contains;
     BiPredicate<String, String> EQUALS = String::equals;
     BiPredicate<String, String> MATCHES = String::matches;
+
+    Predicate<String> IS_TRUE = s -> "true".equals(s) || "1".equals(s);
+    Predicate<String> IS_FALSE = s -> "false".equals(s) || "0".equals(s);
+
+    Predicate<String> IS_NUMBER = s -> {
+        try {
+            new BigDecimal(s);
+            return true;
+        }
+        catch (final NumberFormatException e) {
+            return false;
+        }
+    };
 
     boolean test(Metafix metafix, Record record, List<String> params, Map<String, String> options);
 
@@ -58,6 +72,13 @@ public interface FixPredicate {
 
     default boolean testConditional(final List<String> params, final BiPredicate<String, String> conditional) {
         return conditional.test(params.get(0), params.get(1));
+    }
+
+    default boolean testStringConditional(final Record record, final List<String> params, final Predicate<String> conditional) {
+        return testConditional(record, params, v -> v.extractType((m, c) -> m
+                    .ifString(s -> c.accept(conditional.test(s)))
+                    .orElse(w -> c.accept(false))
+        ));
     }
 
 }

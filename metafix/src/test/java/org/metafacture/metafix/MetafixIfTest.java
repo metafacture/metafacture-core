@@ -1579,6 +1579,116 @@ public class MetafixIfTest {
         );
     }
 
+    @Test
+    public void shouldReportFalseStringAsFalse() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if is_false(foo)",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "false");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "true");
+                i.endRecord();
+                i.startRecord("3");
+                i.literal("foo", "bar");
+                i.endRecord();
+                i.startRecord("4");
+                i.startEntity("foo");
+                i.literal("foo", "false");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("5");
+                i.literal("foo", "true");
+                i.literal("foo", "false");
+                i.endRecord();
+                i.startRecord("6");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "false");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "true");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().literal("foo", "bar");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "false");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("5");
+                o.get().literal("foo", "true");
+                o.get().literal("foo", "false");
+                o.get().endRecord();
+                o.get().startRecord("6");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReportFalseNumberAsFalse() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if is_false(foo)",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "0");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("3");
+                i.literal("foo", "42");
+                i.endRecord();
+                i.startRecord("4");
+                i.startEntity("foo");
+                i.literal("foo", "0");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("5");
+                i.literal("foo", "1");
+                i.literal("foo", "0");
+                i.endRecord();
+                i.startRecord("6");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "0");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "1");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().literal("foo", "42");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "0");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("5");
+                o.get().literal("foo", "1");
+                o.get().literal("foo", "0");
+                o.get().endRecord();
+                o.get().startRecord("6");
+                o.get().endRecord();
+            }
+        );
+    }
+
     @Test // checkstyle-disable-line JavaNCSS
     public void shouldReportHashAsHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
@@ -1640,6 +1750,83 @@ public class MetafixIfTest {
                 o.get().endEntity();
                 o.get().endRecord();
                 o.get().startRecord("6");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // checkstyle-disable-line JavaNCSS
+    public void shouldReportNumberStringAsNumber() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if is_number(foo)",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "0");
+                i.endRecord();
+                i.startRecord("3");
+                i.literal("foo", "-1");
+                i.endRecord();
+                i.startRecord("4");
+                i.literal("foo", "1.1");
+                i.endRecord();
+                i.startRecord("5");
+                i.literal("foo", "-1.1");
+                i.endRecord();
+                i.startRecord("6");
+                i.literal("foo", "1.1x");
+                i.endRecord();
+                i.startRecord("7");
+                i.startEntity("foo");
+                i.literal("foo", "1");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("8");
+                i.literal("foo", "1");
+                i.literal("foo", "0");
+                i.endRecord();
+                i.startRecord("9");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "0");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().literal("foo", "-1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().literal("foo", "1.1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("5");
+                o.get().literal("foo", "-1.1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("6");
+                o.get().literal("foo", "1.1x");
+                o.get().endRecord();
+                o.get().startRecord("7");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "1");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("8");
+                o.get().literal("foo", "1");
+                o.get().literal("foo", "0");
+                o.get().endRecord();
+                o.get().startRecord("9");
                 o.get().endRecord();
             }
         );
@@ -1847,6 +2034,116 @@ public class MetafixIfTest {
                 o.get().literal("foo", "0");
                 o.get().endRecord();
                 o.get().startRecord("11");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReportTrueStringAsTrue() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if is_true(foo)",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "true");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "false");
+                i.endRecord();
+                i.startRecord("3");
+                i.literal("foo", "bar");
+                i.endRecord();
+                i.startRecord("4");
+                i.startEntity("foo");
+                i.literal("foo", "true");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("5");
+                i.literal("foo", "true");
+                i.literal("foo", "false");
+                i.endRecord();
+                i.startRecord("6");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "true");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "false");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().literal("foo", "bar");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "true");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("5");
+                o.get().literal("foo", "true");
+                o.get().literal("foo", "false");
+                o.get().endRecord();
+                o.get().startRecord("6");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldReportTrueNumberAsTrue() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if is_true(foo)",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "0");
+                i.endRecord();
+                i.startRecord("3");
+                i.literal("foo", "42");
+                i.endRecord();
+                i.startRecord("4");
+                i.startEntity("foo");
+                i.literal("foo", "1");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("5");
+                i.literal("foo", "1");
+                i.literal("foo", "0");
+                i.endRecord();
+                i.startRecord("6");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "0");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().literal("foo", "42");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "1");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("5");
+                o.get().literal("foo", "1");
+                o.get().literal("foo", "0");
+                o.get().endRecord();
+                o.get().startRecord("6");
                 o.get().endRecord();
             }
         );
