@@ -61,13 +61,21 @@ public enum FixBind implements FixContext {
     },
 
     once {
-        private Map<Metafix, Set<String>> executed = new HashMap<>();
+        private final Map<Metafix, Set<String>> executed = new HashMap<>();
 
         @Override
         public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
             if (executed.computeIfAbsent(metafix, k -> new HashSet<>()).add(params.isEmpty() ? null : params.get(0))) {
                 recordTransformer.transform(record);
             }
+        }
+    },
+
+    put_macro {
+        @Override
+        public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
+            recordTransformer.addVars(options);
+            metafix.putMacro(params.get(0), recordTransformer);
         }
     }
 

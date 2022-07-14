@@ -192,7 +192,7 @@ put_map("<mapName>",
 
 ##### `put_var`
 
-Defines a single internal variable that can be referenced with `$[<variableName>]`.
+Defines a single global variable that can be referenced with `$[<variableName>]`.
 
 ```perl
 put_var("<variableName>", "<variableValue>")
@@ -200,7 +200,7 @@ put_var("<variableName>", "<variableValue>")
 
 ##### `put_vars`
 
-Defines multiple internal variables that can be referenced with `$[<variableName>]`.
+Defines multiple global variables that can be referenced with `$[<variableName>]`.
 
 ```perl
 put_vars(
@@ -232,6 +232,25 @@ E.g.:
 ```perl
 array("foo")
 # {"name":"value"} => ["name", "value"]
+```
+
+##### `call_macro`
+
+Calls a named macro, i.e. a list of statements that have been previously defined with the [`do put_macro`](#do-put_macro) bind.
+
+Parameters:
+
+- `name` (required): Unique name of the macro.
+
+Options:
+
+- All options are made available as "dynamic" local variables in the macro.
+
+```perl
+do put_macro("<macroName>"[, <staticLocalVariables>...])
+  ...
+end
+call_macro("<macroName>"[, <dynamicLocalVariables>...])
 ```
 
 ##### `copy_field`
@@ -632,6 +651,31 @@ end
 do once("vars setup")
   ...
 end
+```
+
+#### `do put_macro`
+
+Defines a named macro, i.e. a list of statements that can be executed later with the [`call_macro`](#call_macro) function.
+
+Variables can be referenced with `$[<variableName>]`, in the following order of precedence:
+
+1. "dynamic" local variables, passed as options to the `call_macro` function;
+2. "static" local variables, passed as options to the `do put_macro` bind;
+3. global variables, defined via [`put_var`](#put_var)/[`put_vars`](#put_vars).
+
+Parameters:
+
+- `name` (required): Unique name of the macro.
+
+Options:
+
+- All options are made available as "static" local variables in the macro.
+
+```perl
+do put_macro("<macroName>"[, <staticLocalVariables>...])
+  ...
+end
+call_macro("<macroName>"[, <dynamicLocalVariables>...])
 ```
 
 ### Conditionals

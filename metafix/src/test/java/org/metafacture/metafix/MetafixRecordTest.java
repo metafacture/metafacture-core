@@ -1990,6 +1990,172 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void shouldCallMacro() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do put_macro('test')",
+                "  add_field('test', '42')",
+                "end",
+                "call_macro('test')",
+                "call_macro('test')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                f.apply(2).literal("test", "42");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotCallUnknownMacro() {
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Macro 'test' undefined!", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "call_macro('test')",
+                    "call_macro('test')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldCallMacroWithVariables() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_vars(a: '1', b: '2')", // global variables
+                "do put_macro('test', b: '22', c: '33')", // "static" local variables
+                "  add_field('test', '$[a]-$[b]-$[c]-$[d]')",
+                "end",
+                "call_macro('test', c: '333', d: '444')", // "dynamic" local variables
+                "call_macro('test', b: '555', d: '666')",
+                "add_field('vars', '$[a]-$[b]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "1-22-333-444");
+                o.get().literal("test", "1-555-33-666");
+                o.get().literal("vars", "1-2");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldCallMacroWithVariablesPassedToNestedBinds() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_vars(a: '1', b: '2')", // global variables
+                "do put_macro('test', b: '22', c: '33')", // "static" local variables
+                "  do once()",
+                "    add_field('test', '$[a]-$[b]-$[c]-$[d]')",
+                "  end",
+                "end",
+                "call_macro('test', c: '333', d: '444')", // "dynamic" local variables
+                "call_macro('test', b: '555', d: '666')",
+                "add_field('vars', '$[a]-$[b]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "1-22-333-444");
+                o.get().literal("vars", "1-2");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldCallMacroWithVariablesPassedToNestedConditionals() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_vars(a: '1', b: '2')", // global variables
+                "do put_macro('test', b: '22', c: '33')", // "static" local variables
+                "  if any_equal('cond', '$[d]')",
+                "    add_field('test', '$[a]-$[b]-$[c]-$[d]')",
+                "  end",
+                "end",
+                "call_macro('test', c: '333', d: '444')", // "dynamic" local variables
+                "call_macro('test', b: '555', d: '666')",
+                "add_field('vars', '$[a]-$[b]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("cond", "666");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("cond", "666");
+                o.get().literal("test", "1-555-33-666");
+                o.get().literal("vars", "1-2");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotLeakVariablesFromMacro() {
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Variable 'c' was not assigned!\nAssigned variables:\n{a=1, b=2}", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "put_vars(a: '1', b: '2')", // global variables
+                    "do put_macro('test', b: '22', c: '33')", // "static" local variables
+                    "end",
+                    "call_macro('test', c: '333', d: '444')", // "dynamic" local variables
+                    "call_macro('test', b: '555', d: '666')",
+                    "add_field('test', '$[a]-$[b]-$[c]-$[d]')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldCallNestedMacro() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do put_macro('test1', c: '23')",
+                "  add_field('test$[a]', '42')",
+                "  call_macro('test2', b: '$[b]', c: '$[c]')",
+                "end",
+                "do put_macro('test2')",
+                "  add_field('test$[b]', '$[c]')",
+                "end",
+                "call_macro('test1', a: '1', b: '2')",
+                "call_macro('test1', a: '3', b: '4')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test1", "42");
+                o.get().literal("test2", "23");
+                o.get().literal("test3", "42");
+                o.get().literal("test4", "23");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void reject() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if exists('_metadata.error')",
