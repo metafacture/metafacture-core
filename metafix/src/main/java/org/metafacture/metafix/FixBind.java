@@ -60,14 +60,6 @@ public enum FixBind implements FixContext {
         }
     },
 
-    macro {
-        @Override
-        public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
-            recordTransformer.addVars(options);
-            metafix.putMacro(params.get(0), recordTransformer);
-        }
-    },
-
     once {
         private final Map<Metafix, Set<String>> executed = new HashMap<>();
 
@@ -76,6 +68,14 @@ public enum FixBind implements FixContext {
             if (executed.computeIfAbsent(metafix, k -> new HashSet<>()).add(params.isEmpty() ? null : params.get(0))) {
                 recordTransformer.transform(record);
             }
+        }
+    },
+
+    put_macro {
+        @Override
+        public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
+            recordTransformer.addVars(options);
+            metafix.putMacro(params.get(0), recordTransformer);
         }
     }
 

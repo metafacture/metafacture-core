@@ -234,6 +234,25 @@ array("foo")
 # {"name":"value"} => ["name", "value"]
 ```
 
+##### `call_macro`
+
+Calls a named macro, i.e. a list of statements that have been previously defined with the [`do put_macro`](#do-put_macro) bind.
+
+Parameters:
+
+- `name` (required): Unique name of the macro.
+
+Options:
+
+- All options are made available as "dynamic" local variables in the macro.
+
+```perl
+do put_macro("<macroName>"[, <staticLocalVariables>...])
+  ...
+end
+call_macro("<macroName>"[, <dynamicLocalVariables>...])
+```
+
 ##### `copy_field`
 
 Copies (or appends to) a field from an existing field.
@@ -264,25 +283,6 @@ E.g.:
 ```perl
 hash("foo")
 # ["name", "value"] => {"name":"value"}
-```
-
-##### `macro`
-
-Calls a named macro, i.e. a list of statements that have been previously defined with the [`do macro`](#do-macro) bind.
-
-Parameters:
-
-- `name` (required): Unique name of the macro.
-
-Options:
-
-- All options are made available as "dynamic" local variables.
-
-```perl
-do macro("<macroName>"[, <staticLocalVariables>...])
-  ...
-end
-macro("<macroName>"[, <dynamicLocalVariables>...])
 ```
 
 ##### `move_field`
@@ -632,25 +632,6 @@ do list(path: "<sourceField>", "var": "<variableName>")
 end
 ```
 
-#### `do macro`
-
-Defines a named macro, i.e. a list of statements that can be executed later with the [`macro`](#macro) function.
-
-Parameters:
-
-- `name` (required): Unique name of the macro.
-
-Options:
-
-- All options are made available as "static" local variables.
-
-```perl
-do macro("<macroName>"[, <staticLocalVariables>...])
-  ...
-end
-macro("<macroName>"[, <dynamicLocalVariables>...])
-```
-
 #### `do once`
 
 Executes the statements only once (when the bind is first encountered), not repeatedly for each record.
@@ -670,6 +651,25 @@ end
 do once("vars setup")
   ...
 end
+```
+
+#### `do put_macro`
+
+Defines a named macro, i.e. a list of statements that can be executed later with the [`call_macro`](#call_macro) function.
+
+Parameters:
+
+- `name` (required): Unique name of the macro.
+
+Options:
+
+- All options are made available as "static" local variables in the macro.
+
+```perl
+do put_macro("<macroName>"[, <staticLocalVariables>...])
+  ...
+end
+call_macro("<macroName>"[, <dynamicLocalVariables>...])
 ```
 
 ### Conditionals

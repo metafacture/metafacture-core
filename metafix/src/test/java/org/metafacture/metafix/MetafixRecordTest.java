@@ -1992,11 +1992,11 @@ public class MetafixRecordTest {
     @Test
     public void shouldCallMacro() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "do macro('test')",
+                "do put_macro('test')",
                 "  add_field('test', '42')",
                 "end",
-                "macro('test')",
-                "macro('test')"
+                "call_macro('test')",
+                "call_macro('test')"
             ),
             i -> {
                 i.startRecord("1");
@@ -2012,18 +2012,18 @@ public class MetafixRecordTest {
 
     @Test
     public void shouldNotCallUnknownMacro() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "macro('test')",
-                "macro('test')"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().endRecord();
-            }
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Macro 'test' undefined!", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "call_macro('test')",
+                    "call_macro('test')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
         );
     }
 
@@ -2031,11 +2031,11 @@ public class MetafixRecordTest {
     public void shouldCallMacroWithVariables() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "put_vars(a: '1', b: '2')", // global variables
-                "do macro('test', b: '22', c: '33')", // "static" local variables
+                "do put_macro('test', b: '22', c: '33')", // "static" local variables
                 "  add_field('test', '$[a]-$[b]-$[c]-$[d]')",
                 "end",
-                "macro('test', c: '333', d: '444')", // "dynamic" local variables
-                "macro('test', b: '555', d: '666')",
+                "call_macro('test', c: '333', d: '444')", // "dynamic" local variables
+                "call_macro('test', b: '555', d: '666')",
                 "add_field('vars', '$[a]-$[b]')"
             ),
             i -> {
@@ -2056,13 +2056,13 @@ public class MetafixRecordTest {
     public void shouldCallMacroWithVariablesPassedToNestedBinds() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "put_vars(a: '1', b: '2')", // global variables
-                "do macro('test', b: '22', c: '33')", // "static" local variables
+                "do put_macro('test', b: '22', c: '33')", // "static" local variables
                 "  do once()",
                 "    add_field('test', '$[a]-$[b]-$[c]-$[d]')",
                 "  end",
                 "end",
-                "macro('test', c: '333', d: '444')", // "dynamic" local variables
-                "macro('test', b: '555', d: '666')",
+                "call_macro('test', c: '333', d: '444')", // "dynamic" local variables
+                "call_macro('test', b: '555', d: '666')",
                 "add_field('vars', '$[a]-$[b]')"
             ),
             i -> {
@@ -2082,13 +2082,13 @@ public class MetafixRecordTest {
     public void shouldCallMacroWithVariablesPassedToNestedConditionals() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "put_vars(a: '1', b: '2')", // global variables
-                "do macro('test', b: '22', c: '33')", // "static" local variables
+                "do put_macro('test', b: '22', c: '33')", // "static" local variables
                 "  if any_equal('cond', '$[d]')",
                 "    add_field('test', '$[a]-$[b]-$[c]-$[d]')",
                 "  end",
                 "end",
-                "macro('test', c: '333', d: '444')", // "dynamic" local variables
-                "macro('test', b: '555', d: '666')",
+                "call_macro('test', c: '333', d: '444')", // "dynamic" local variables
+                "call_macro('test', b: '555', d: '666')",
                 "add_field('vars', '$[a]-$[b]')"
             ),
             i -> {
@@ -2111,10 +2111,10 @@ public class MetafixRecordTest {
         MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Variable 'c' was not assigned!\nAssigned variables:\n{a=1, b=2}", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "put_vars(a: '1', b: '2')", // global variables
-                    "do macro('test', b: '22', c: '33')", // "static" local variables
+                    "do put_macro('test', b: '22', c: '33')", // "static" local variables
                     "end",
-                    "macro('test', c: '333', d: '444')", // "dynamic" local variables
-                    "macro('test', b: '555', d: '666')",
+                    "call_macro('test', c: '333', d: '444')", // "dynamic" local variables
+                    "call_macro('test', b: '555', d: '666')",
                     "add_field('test', '$[a]-$[b]-$[c]-$[d]')"
                 ),
                 i -> {
@@ -2130,15 +2130,15 @@ public class MetafixRecordTest {
     @Test
     public void shouldCallNestedMacro() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "do macro('test1', c: '23')",
+                "do put_macro('test1', c: '23')",
                 "  add_field('test$[a]', '42')",
-                "  macro('test2', b: '$[b]', c: '$[c]')",
+                "  call_macro('test2', b: '$[b]', c: '$[c]')",
                 "end",
-                "do macro('test2')",
+                "do put_macro('test2')",
                 "  add_field('test$[b]', '$[c]')",
                 "end",
-                "macro('test1', a: '1', b: '2')",
-                "macro('test1', a: '3', b: '4')"
+                "call_macro('test1', a: '1', b: '2')",
+                "call_macro('test1', a: '3', b: '4')"
             ),
             i -> {
                 i.startRecord("1");

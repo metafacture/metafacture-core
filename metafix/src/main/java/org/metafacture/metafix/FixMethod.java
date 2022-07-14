@@ -120,6 +120,20 @@ public enum FixMethod implements FixFunction {
             })));
         }
     },
+    call_macro {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String macroName = params.get(0);
+            final RecordTransformer recordTransformer = metafix.getMacro(macroName);
+
+            if (recordTransformer != null) {
+                recordTransformer.transform(record, options);
+            }
+            else {
+                throw new IllegalArgumentException("Macro '" + macroName + "' undefined!");
+            }
+        }
+    },
     copy_field {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
@@ -151,18 +165,6 @@ public enum FixMethod implements FixFunction {
                     h.put(a.get(i - 1).asString(), a.get(i));
                 }
             })));
-        }
-    },
-    macro {
-        @Override
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final RecordTransformer recordTransformer = metafix.getMacro(params.get(0));
-            if (recordTransformer != null) {
-                recordTransformer.transform(record, options);
-            }
-            else {
-                // TODO?: Metamorph throws MorphBuildException("Macro '" + macroName + "' undefined!")
-            }
         }
     },
     move_field {
