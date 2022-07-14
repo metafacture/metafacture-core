@@ -141,7 +141,7 @@ public enum FixConditional implements FixPredicate {
     is_string {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            return testConditional(record, params, Value::isString);
+            return testConditional(record, params, Value::isString) && !is_number.test(metafix, record, params, options);
         }
     },
     is_true {

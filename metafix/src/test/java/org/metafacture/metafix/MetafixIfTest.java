@@ -1994,23 +1994,18 @@ public class MetafixIfTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().literal("foo", "1");
-                o.get().literal("test", "ok");
                 o.get().endRecord();
                 o.get().startRecord("2");
                 o.get().literal("foo", "0");
-                o.get().literal("test", "ok");
                 o.get().endRecord();
                 o.get().startRecord("3");
                 o.get().literal("foo", "-1");
-                o.get().literal("test", "ok");
                 o.get().endRecord();
                 o.get().startRecord("4");
                 o.get().literal("foo", "1.1");
-                o.get().literal("test", "ok");
                 o.get().endRecord();
                 o.get().startRecord("5");
                 o.get().literal("foo", "-1.1");
-                o.get().literal("test", "ok");
                 o.get().endRecord();
                 o.get().startRecord("6");
                 o.get().literal("foo", "1.1x");

@@ -799,7 +799,7 @@ _Also aliased as [`is_hash`](#is_hash)._
 
 #### `is_string`
 
-Executes the functions if/unless the field value is a string.
+Executes the functions if/unless the field value is a string (and not a number).
 
 #### `is_true`
 
