@@ -161,7 +161,7 @@ Parameters:
 
 Options:
 
-- All options are made available as "dynamic" local variables.
+- All options are made available as "dynamic" local variables in the included Fix file.
 
 ```perl
 include("<path>"[, <dynamicLocalVariables>...])
