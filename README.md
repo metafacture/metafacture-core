@@ -657,6 +657,12 @@ end
 
 Defines a named macro, i.e. a list of statements that can be executed later with the [`call_macro`](#call_macro) function.
 
+Variables can be referenced with `$[<variableName>]`, in the following order of precedence:
+
+1. "dynamic" local variables, passed as options to the `call_macro` function;
+2. "static" local variables, passed as options to the `do put_macro` bind;
+3. global variables, defined via [`put_var`](#put_var)/[`put_vars`](#put_vars).
+
 Parameters:
 
 - `name` (required): Unique name of the macro.
