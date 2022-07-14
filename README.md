@@ -153,7 +153,19 @@ You can use path wildcards to select fields matching a pattern. They only match 
 
 ##### `include`
 
----- TODO: THIS NEEDS MORE CONTENT -----
+Includes a Fix file and executes it as if its statements were written in place of the function call.
+
+Parameters:
+
+- `path` (required): Path to Fix file (if the path starts with a `.`, it is resolved relative to the including file's directory; otherwise, it is resolved relative to the current working directory).
+
+Options:
+
+- All options are made available as "dynamic" local variables in the included Fix file.
+
+```perl
+include("<path>"[, <dynamicLocalVariables>...])
+```
 
 ##### `nothing`
 

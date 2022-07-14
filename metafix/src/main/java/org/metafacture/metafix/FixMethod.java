@@ -57,7 +57,7 @@ public enum FixMethod implements FixFunction {
             // TODO: Catmandu load path
             final String includePath = metafix.resolvePath(includeFile);
 
-            metafix.getRecordTransformer(includePath).transform(record);
+            metafix.getRecordTransformer(includePath).transform(record, options);
         }
     },
     nothing {

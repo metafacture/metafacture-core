@@ -1,0 +1,1 @@
+paste("test$[a]", "_id", "~$[b]", join_char: "-")

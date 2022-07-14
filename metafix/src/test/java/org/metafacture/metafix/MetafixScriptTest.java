@@ -234,6 +234,50 @@ public class MetafixScriptTest {
     }
 
     @Test
+    public void shouldIncludeFixFileWithVariables() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "include('src/test/resources/org/metafacture/metafix/fixes/vars.fix', a: '1', b: '23')",
+                "include('src/test/resources/org/metafacture/metafix/fixes/vars.fix', a: '2', b: '42')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test1", "1-23");
+                o.get().literal("test2", "1-42");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().literal("test1", "2-23");
+                o.get().literal("test2", "2-42");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotLeakVariablesFromIncludingFixFile() {
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Variable 'a' was not assigned!\nAssigned variables:\n{}", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "include('src/test/resources/org/metafacture/metafix/fixes/vars.fix', a: '1', b: '23')",
+                    "add_field('vars', '$[a]-$[b]')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
     public void shouldIncludeFixFileInBind() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('trace')",
