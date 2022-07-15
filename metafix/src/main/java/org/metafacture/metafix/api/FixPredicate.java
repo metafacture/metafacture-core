@@ -20,6 +20,7 @@ import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
@@ -36,6 +37,26 @@ public interface FixPredicate {
     BiPredicate<String, String> EQUALS = String::equals;
     BiPredicate<String, String> MATCHES = String::matches;
 
+    Predicate<String> IS_TRUE = s -> "true".equals(s) || "1".equals(s);
+    Predicate<String> IS_FALSE = s -> "false".equals(s) || "0".equals(s);
+
+    Predicate<String> IS_NUMBER = s -> {
+        try {
+            new BigDecimal(s);
+            return true;
+        }
+        catch (final NumberFormatException e) {
+            return false;
+        }
+    };
+
+    Predicate<Value> IS_EMPTY = v -> v.extractType((m, c) -> m
+            .ifArray(a -> c.accept(a.isEmpty()))
+            .ifHash(h -> c.accept(h.isEmpty()))
+            // TODO: Catmandu considers whitespace-only strings empty (`$v !~ /\S/`)
+            .ifString(s -> c.accept(s.isEmpty()))
+    );
+
     boolean test(Metafix metafix, Record record, List<String> params, Map<String, String> options);
 
     default boolean testConditional(final Record record, final List<String> params, final BiPredicate<Stream<Value>, Predicate<Value>> qualifier, final BiPredicate<String, String> conditional) {
@@ -49,8 +70,22 @@ public interface FixPredicate {
         ));
     }
 
+    default boolean testConditional(final Record record, final List<String> params, final Predicate<Value> conditional) {
+        final String field = params.get(0);
+
+        final Value value = record.get(field);
+        return value != null && conditional.test(value);
+    }
+
     default boolean testConditional(final List<String> params, final BiPredicate<String, String> conditional) {
         return conditional.test(params.get(0), params.get(1));
+    }
+
+    default boolean testStringConditional(final Record record, final List<String> params, final Predicate<String> conditional) {
+        return testConditional(record, params, v -> v.extractType((m, c) -> m
+                    .ifString(s -> c.accept(conditional.test(s)))
+                    .orElse(w -> c.accept(false))
+        ));
     }
 
 }
