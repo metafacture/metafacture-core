@@ -1,1 +1,1 @@
-flatten("zoo.*.animals[]")
+flatten("zoo[].*.animals[]")
