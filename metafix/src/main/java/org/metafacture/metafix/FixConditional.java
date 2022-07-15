@@ -41,6 +41,12 @@ public enum FixConditional implements FixPredicate {
             return !any_contain.test(metafix, record, params, options);
         }
     },
+    str_contain {
+        @Override
+        public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            return testConditional(params, CONTAINS);
+        }
+    },
 
     all_equal {
         @Override
@@ -58,6 +64,12 @@ public enum FixConditional implements FixPredicate {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             return !any_equal.test(metafix, record, params, options);
+        }
+    },
+    str_equal {
+        @Override
+        public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            return testConditional(params, EQUALS);
         }
     },
 
@@ -112,6 +124,12 @@ public enum FixConditional implements FixPredicate {
         @Override
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             return !any_match.test(metafix, record, params, options);
+        }
+    },
+    str_match {
+        @Override
+        public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            return testConditional(params, MATCHES);
         }
     }
 
