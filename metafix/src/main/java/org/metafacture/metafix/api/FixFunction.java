@@ -55,4 +55,11 @@ public interface FixFunction {
         return stream.filter(set::add);
     }
 
+    default Stream<Value> flatten(final Stream<Value> stream) {
+        return stream.flatMap(v -> v.extractType((m, c) -> m
+                    .ifArray(a -> c.accept(flatten(a.stream())))
+                    .orElse(w -> c.accept(Stream.of(w)))
+        ));
+    }
+
 }

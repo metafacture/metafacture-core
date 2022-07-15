@@ -414,6 +414,14 @@ public enum FixMethod implements FixFunction {
             );
         }
     },
+    flatten {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.transform(params.get(0), (m, c) -> m
+                    .ifArray(a -> c.accept(newArray(flatten(a.stream()))))
+            );
+        }
+    },
     index {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {

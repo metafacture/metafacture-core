@@ -489,6 +489,14 @@ Only keeps field values that match the regular expression pattern.
 filter("<sourceField>", "<regexp>")
 ```
 
+##### `flatten`
+
+Flattens a nested array field.
+
+```perl
+flatten("<sourceField>")
+```
+
 ##### `index`
 
 Returns the index position of a substring in a field and replaces the field value with this number.
