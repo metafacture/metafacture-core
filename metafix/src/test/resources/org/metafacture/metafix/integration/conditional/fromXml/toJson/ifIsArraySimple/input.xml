@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <collection xmlns="http://www.loc.gov/MARC21/slim">
     <record>
-        <elementA>Test</elementA>
+        <controlfield tag="123">Test</controlfield>
     </record>
     <record>
-        <elementA>Test</elementA>
-        <elementA>Another Test</elementA>
+        <controlfield tag="123">Test</controlfield>
+        <controlfield tag="123">Another Test</controlfield>
     </record>
 </collection>

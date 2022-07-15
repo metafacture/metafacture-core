@@ -1,3 +1,3 @@
-if is_array("elementA")
-  add_field("elementB", "Hello")
+if is_array("123")
+  add_field("test", "Hello")
 end

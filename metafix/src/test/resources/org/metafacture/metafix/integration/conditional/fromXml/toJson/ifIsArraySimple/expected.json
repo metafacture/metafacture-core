@@ -1,7 +1,8 @@
 {
-  "elementA" : "Test"
+  "123" : "Test"
 }
 {
-  "elementA" : [ "Test", "Another Test" ],
-  "elementB" : "Hello"
+  "123" : "Test",
+  "123" : "Another Test",
+  "test" : "Hello"
 }
