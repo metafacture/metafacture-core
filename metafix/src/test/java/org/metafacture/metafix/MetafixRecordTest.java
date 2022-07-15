@@ -2456,12 +2456,12 @@ public class MetafixRecordTest {
                 i.endEntity();
                 i.endRecord();
             },
-            o -> {
+            (o, f) -> {
                 o.get().startRecord("1");
                 o.get().startEntity("arrays[]");
-                // TODO: Preserve nested array!? (`1[]`)
+                o.get().startEntity("1[]");
                 o.get().literal("1", ":-P yuck");
-                o.get().endEntity();
+                f.apply(2).endEntity();
                 o.get().endRecord();
             }
         );
@@ -2559,6 +2559,63 @@ public class MetafixRecordTest {
                 o.get().startRecord("1");
                 o.get().literal("name", "MAX");
                 o.get().literal("name", "MO");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldEmitNestedArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "nothing()"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("test");
+                i.startEntity("zoo[]");
+                i.startEntity("1");
+                i.startEntity("animals[]");
+                i.startEntity("1[]");
+                i.literal("1", "ant");
+                i.literal("2", "dog");
+                i.endEntity();
+                i.literal("2", "cat");
+                i.startEntity("3[]");
+                i.literal("1", "fish");
+                i.startEntity("2[]");
+                i.literal("1", "zebra");
+                i.literal("2", "horse");
+                i.endEntity();
+                i.literal("3", "hippo");
+                i.endEntity();
+                i.literal("4", "giraffe");
+                i.endEntity();
+                i.endEntity();
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("test");
+                o.get().startEntity("zoo[]");
+                o.get().startEntity("1");
+                o.get().startEntity("animals[]");
+                o.get().startEntity("1[]");
+                o.get().literal("1", "ant");
+                o.get().literal("2", "dog");
+                o.get().endEntity();
+                o.get().literal("2", "cat");
+                o.get().startEntity("3[]");
+                o.get().literal("1", "fish");
+                o.get().startEntity("2[]");
+                o.get().literal("1", "zebra");
+                o.get().literal("2", "horse");
+                o.get().endEntity();
+                o.get().literal("3", "hippo");
+                o.get().endEntity();
+                o.get().literal("4", "giraffe");
+                f.apply(4).endEntity();
                 o.get().endRecord();
             }
         );

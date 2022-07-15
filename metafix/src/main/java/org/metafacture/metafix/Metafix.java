@@ -218,7 +218,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
                 final String fieldName = isMulti ? String.valueOf(i + 1) : field;
 
                 currentValue.matchType()
-                    .ifArray(a -> emit(fieldName, currentValue))
+                    .ifArray(a -> emit(isMulti ? fieldName + ARRAY_MARKER : fieldName, currentValue))
                     .ifHash(h -> {
                         outputStreamReceiver.startEntity(fieldName);
                         h.forEach(this::emit);
