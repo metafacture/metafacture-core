@@ -735,6 +735,10 @@ Executes the functions if/unless the field contains the value. If it is an array
 
 Executes the functions if/unless the field does not contain the value. If it is an array or a hash none of the field values may contain the string.
 
+##### `str_contain`
+
+Executes the functions if/unless the first string contains the second string.
+
 #### `equal`
 
 ##### `all_equal`
@@ -748,6 +752,10 @@ Executes the functions if/unless the field value equals the string. If it is an 
 ##### `none_equal`
 
 Executes the functions if/unless the field value does not equal the string. If it is an array or a hash none of the field values may equal the string.
+
+##### `str_equal`
+
+Executes the functions if/unless the first string equals the second string.
 
 #### `exists`
 
@@ -780,6 +788,10 @@ Executes the functions if/unless the field value matches the regular expression 
 ##### `none_match`
 
 Executes the functions if/unless the field value does not match the regular expression pattern. If it is an array or a hash none of the field values may match the regular expression pattern.
+
+##### `str_match`
+
+Executes the functions if/unless the string matches the regular expression pattern.
 
 ## Xtext
 
