@@ -1559,14 +1559,14 @@ public class MetafixIfTest {
     @Test
     public void shouldTestMacroVariable() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "do macro('test')",
+                "do put_macro('test')",
                 "  if str_contain('name', 'a$[var]')",
                 "    add_field('type', 'Organization: $[var]')",
                 "  end",
                 "end",
-                "macro('test', 'var': 'm')",
-                "macro('test', 'var': 'me')",
-                "macro('test', 'var': 'mee')"
+                "call_macro('test', 'var': 'm')",
+                "call_macro('test', 'var': 'me')",
+                "call_macro('test', 'var': 'mee')"
             ),
             i -> {
                 i.startRecord("1");
