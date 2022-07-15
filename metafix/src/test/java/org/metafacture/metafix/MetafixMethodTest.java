@@ -2405,7 +2405,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("Existing value has no path ('[[a]]'), resulting in wrong path for new value")
     public void shouldMoveFieldToPathWithIndexAndReservedField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "move_field('b', 'names[].1.$append')"
@@ -2433,7 +2432,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("Existing value has no path ('[[a]]'), resulting in wrong path for new value")
     public void shouldMoveFieldToPathWithTwoReservedFields() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "move_field('b', 'names[].$first.$append')"
@@ -2975,7 +2973,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("Arrays in arrays need to be preserved. See disabled isArray in FixPath#appendIn.")
     public void shouldSplitMarkedArrayFieldIntoArrayOfArrays() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "split_field('date[]', '-')"
