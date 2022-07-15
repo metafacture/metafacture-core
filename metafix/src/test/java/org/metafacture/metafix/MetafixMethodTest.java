@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.metafacture.metafix;
+package org.metafacture.metafix; // checkstyle-disable-line JavaNCSS
 
 import org.metafacture.framework.StreamReceiver;
 
@@ -1077,6 +1077,155 @@ public class MetafixMethodTest {
                 o.get().startRecord("1");
                 o.get().literal("animals", "Lion");
                 o.get().literal("animals", "Tiger");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldConvertNullFromJson() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "from_json(test)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("test", "null");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "null");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldConvertStringFromJson() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "from_json(test)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("test", "\"eeny meeny miny moe\"");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "eeny meeny miny moe");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldConvertArrayFromJson() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "from_json(test)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("test", "[\"eeny\",\"meeny\",\"miny\",\"moe\"]");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "eeny");
+                o.get().literal("test", "meeny");
+                o.get().literal("test", "miny");
+                o.get().literal("test", "moe");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldConvertHashFromJson() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "from_json(test)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("test", "{\"a\":[\"eeny\",\"meeny\"],\"b\":\"miny\",\"c\":{\"d\":\"moe\"}}");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("test");
+                o.get().literal("a", "eeny");
+                o.get().literal("a", "meeny");
+                o.get().literal("b", "miny");
+                o.get().startEntity("c");
+                o.get().literal("d", "moe");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldConvertHashFromPrettyJson() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "from_json(test)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("test",
+                        "{\n" +
+                        "  \"a\" : [ \"eeny\", \"meeny\" ],\n" +
+                        "  \"b\" : \"miny\",\n" +
+                        "  \"c\" : {\n" +
+                        "    \"d\" : \"moe\"\n" +
+                        "  }\n" +
+                        "}"
+                );
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("test");
+                o.get().literal("a", "eeny");
+                o.get().literal("a", "meeny");
+                o.get().literal("b", "miny");
+                o.get().startEntity("c");
+                o.get().literal("d", "moe");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotConvertInvalidObjectFromJson() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "from_json(test)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("test", "eeny meeny miny moe");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "eeny meeny miny moe");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldConvertInvalidObjectFromJsonWithErrorString() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "from_json(test, error_string: 'invalid')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("test", "eeny meeny miny moe");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "invalid");
                 o.get().endRecord();
             }
         );
@@ -3115,6 +3264,103 @@ public class MetafixMethodTest {
                 o.get().startEntity("dumbers[]");
                 o.get().literal("1", "20");
                 f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldConvertStringToJson() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "to_json(test)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("test", "eeny meeny miny moe");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "\"eeny meeny miny moe\"");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldConvertArrayToJson() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "to_json(test)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("test", "eeny");
+                i.literal("test", "meeny");
+                i.literal("test", "miny");
+                i.literal("test", "moe");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "[\"eeny\",\"meeny\",\"miny\",\"moe\"]");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldConvertHashToJson() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "to_json(test)"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("test");
+                i.literal("a", "eeny");
+                i.literal("a", "meeny");
+                i.literal("b", "miny");
+                i.startEntity("c");
+                i.literal("d", "moe");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test", "{\"a\":[\"eeny\",\"meeny\"],\"b\":\"miny\",\"c\":{\"d\":\"moe\"}}");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldConvertHashToPrettyJson() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "to_json(test, pretty: 'true')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("test");
+                i.literal("a", "eeny");
+                i.literal("a", "meeny");
+                i.literal("b", "miny");
+                i.startEntity("c");
+                i.literal("d", "moe");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("test",
+                        "{\n" +
+                        "  \"a\" : [ \"eeny\", \"meeny\" ],\n" +
+                        "  \"b\" : \"miny\",\n" +
+                        "  \"c\" : {\n" +
+                        "    \"d\" : \"moe\"\n" +
+                        "  }\n" +
+                        "}"
+                );
                 o.get().endRecord();
             }
         );

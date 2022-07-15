@@ -497,6 +497,18 @@ Flattens a nested array field.
 flatten("<sourceField>")
 ```
 
+##### `from_json`
+
+Replaces the string with its JSON deserialization.
+
+Options:
+
+- `error_string`: Error message as a placeholder if the JSON couldn't be parsed. (Default: `null`)
+
+```perl
+from_json("<sourceField>"[, error_string: "<errorValue>"])
+```
+
 ##### `index`
 
 Returns the index position of a substring in a field and replaces the field value with this number.
@@ -513,7 +525,7 @@ Options:
 
 - `to`: ISBN format to convert to (either `ISBN10` or `ISBN13`). (Default: Only normalize ISBN)
 - `verify_check_digit`: Whether the check digit should be verified. (Default: `false`)
-- `error_string`: Error message as a placeholder if the ISBN couln't be validated. (Default: `null`)
+- `error_string`: Error message as a placeholder if the ISBN couldn't be validated. (Default: `null`)
 
 ```perl
 isbn("<sourceField>"[, to: "<isbnFormat>"][, verify_check_digit: "<boolean>"][, error_string: "<errorValue>"])
@@ -593,6 +605,19 @@ Sums numbers in an array and replaces the field value with this number.
 
 ```perl
 sum("<sourceField>")
+```
+
+##### `to_json`
+
+Replaces the value with its JSON serialization.
+
+Options:
+
+- `error_string`: Error message as a placeholder if the JSON couldn't be generated. (Default: `null`)
+- `pretty`: Whether to use pretty printing. (Default: `false`)
+
+```perl
+to_json("<sourceField>"[, pretty: "<boolean>"][, error_string: "<errorValue>"])
 ```
 
 ##### `trim`

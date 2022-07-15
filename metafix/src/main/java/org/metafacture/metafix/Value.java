@@ -48,7 +48,7 @@ import java.util.stream.Stream;
  * Represents a record value, i.e., either an {@link Array}, a {@link Hash},
  * or a {@link String}.
  */
-public class Value { // checkstyle-disable-line ClassDataAbstractionCoupling
+public class Value implements JsonValue { // checkstyle-disable-line ClassDataAbstractionCoupling
 
     private static final String FIELD_PATH_SEPARATOR = "\\.";
 
@@ -248,7 +248,8 @@ public class Value { // checkstyle-disable-line ClassDataAbstractionCoupling
         );
     }
 
-    private void toJson(final JsonGenerator jsonGenerator) {
+    @Override
+    public void toJson(final JsonGenerator jsonGenerator) {
         if (isNull()) {
             try {
                 jsonGenerator.writeNull();
@@ -357,7 +358,7 @@ public class Value { // checkstyle-disable-line ClassDataAbstractionCoupling
 
     }
 
-    private abstract static class AbstractValueType {
+    private abstract static class AbstractValueType implements JsonValue {
 
         protected static final Predicate<Value> REMOVE_EMPTY_VALUES = v ->
             v.extractType((m, c) -> m
@@ -383,7 +384,8 @@ public class Value { // checkstyle-disable-line ClassDataAbstractionCoupling
         @Override
         public abstract String toString();
 
-        protected abstract void toJson(JsonGenerator jsonGenerator);
+        @Override
+        public abstract void toJson(JsonGenerator jsonGenerator);
 
     }
 
@@ -459,7 +461,7 @@ public class Value { // checkstyle-disable-line ClassDataAbstractionCoupling
         }
 
         @Override
-        protected void toJson(final JsonGenerator jsonGenerator) {
+        public void toJson(final JsonGenerator jsonGenerator) {
             try {
                 jsonGenerator.writeStartArray();
                 forEach(v -> v.toJson(jsonGenerator));
@@ -737,7 +739,7 @@ public class Value { // checkstyle-disable-line ClassDataAbstractionCoupling
         }
 
         @Override
-        protected void toJson(final JsonGenerator jsonGenerator) {
+        public void toJson(final JsonGenerator jsonGenerator) {
             try {
                 jsonGenerator.writeStartObject();
 

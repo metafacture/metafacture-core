@@ -19,14 +19,6 @@ package org.metafacture.metafix;
 import org.metafacture.metafix.FixPath.InsertMode;
 import org.metafacture.metafix.Value.TypeMatcher;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.SerializableString;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedHashMap;
@@ -116,27 +108,6 @@ public class Record extends Value.Hash {
     public String toString() {
         // TODO: Improve string representation? Include reject status, virtual fields, etc.?
         return super.toString();
-    }
-
-    public String toJson() throws IOException {
-        return toJson(false);
-    }
-
-    public String toJson(final boolean prettyPrinting) throws IOException {
-        final StringWriter writer = new StringWriter();
-        final JsonGenerator jsonGenerator = new JsonFactory().createGenerator(writer);
-        jsonGenerator.setPrettyPrinter(prettyPrinting ? new DefaultPrettyPrinter((SerializableString) null) : null);
-
-        try {
-            toJson(jsonGenerator);
-        }
-        catch (final UncheckedIOException e) {
-            throw e.getCause();
-        }
-
-        jsonGenerator.flush();
-
-        return writer.toString();
     }
 
     /**
