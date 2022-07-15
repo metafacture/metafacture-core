@@ -85,6 +85,7 @@ task integrationTest(type: Exec, group: 'Verification') {
   }
 
   environment.METAFIX_DISABLE_TO_DO = System.getProperty('org.metafacture.metafix.disableToDo')
+  environment.METAFIX_KEEP_TEMP = System.getProperty('org.metafacture.metafix.keepTemp')
 }
 
 task install(dependsOn: publishToMavenLocal, group: 'Publishing',

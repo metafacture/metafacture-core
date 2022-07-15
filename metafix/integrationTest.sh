@@ -27,6 +27,7 @@ function parse_boolean() {
 
 parse_boolean "$METAFIX_DISABLE_TO_DO" && disable_todo=1 || disable_todo=
 parse_boolean "$METAFIX_INTEGRATION_TEST_PROFILE" && noprofile= || noprofile=no
+parse_boolean "$METAFIX_KEEP_TEMP" && keep_temp=1 || keep_temp=
 
 [ -t 1 -a -x /usr/bin/colordiff ] && colordiff=colordiff || colordiff=cat
 
@@ -65,6 +66,10 @@ function warn() {
 function die() {
   [ $# -gt 0 ] && warn "$@"
   exit 2
+}
+
+function rm_temp() {
+  [ -n "$keep_temp" ] || rm -f "$@"
 }
 
 function run_metafix() {
@@ -120,8 +125,8 @@ function get_file() {
 function command_info() {
   log "  ${color_info}${1^} command exit status$color_reset: $2"
 
-  [ -s "$3" ] && log "  ${color_info}${1^} command output$color_reset: $3" || rm -f "$3"
-  [ -s "$4" ] && log "  ${color_info}${1^} command error$color_reset:  $4" || rm -f "$4"
+  [ -s "$3" ] && log "  ${color_info}${1^} command output$color_reset: $3" || rm_temp "$3"
+  [ -s "$4" ] && log "  ${color_info}${1^} command error$color_reset:  $4" || rm_temp "$4"
 
   log
 }
@@ -166,7 +171,7 @@ function test_failed() {
       log "  Output:   ${12}"
       log "  Diff:     ${13}"
 
-      [ -s "${13}" ] && $colordiff <"${13}" || rm -f "${13}"
+      [ -s "${13}" ] && $colordiff <"${13}" || rm_temp "${13}"
     fi
 
     command_info "$5" "$6" "$7" "$8"
@@ -222,7 +227,7 @@ function run_tests() {
           if diff -u "$test_expected" "$metafix_output" >"$metafix_diff"; then
             test_passed "$test" "$test_todo" "$metafix_elapsed_time"
 
-            rm -f "$metafix_diff" "$metafix_command_output" "$metafix_command_error"
+            rm_temp "$metafix_diff" "$metafix_command_output" "$metafix_command_error"
           else
             test_failed "$test" "$test_todo" "$metafix_elapsed_time" FAILED\
               metafix "$metafix_exit_status" "$metafix_command_output" "$metafix_command_error"\
