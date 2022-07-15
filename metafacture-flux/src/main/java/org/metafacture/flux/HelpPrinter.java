@@ -49,6 +49,13 @@ public final class HelpPrinter {
         // no instances
     }
 
+    /**
+     * Prints Flux help to the standard output.
+     *
+     * @param args unused
+     *
+     * @see #print
+     */
     public static void main(final String[] args) {
         FluxProgramm.printHelp(System.out);
     }
