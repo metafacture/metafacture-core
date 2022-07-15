@@ -53,6 +53,8 @@ import java.io.StringWriter;
 public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
     public static final String ARRAY_MARKER = "[]";
+    public static final String BOOLEAN_MARKER = null;
+    public static final String NUMBER_MARKER = null;
 
     private static final char ESCAPE_CHAR_LOW = 0x20;
     private static final char ESCAPE_CHAR_HIGH = 0x7f;
@@ -61,6 +63,8 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     private final StringWriter writer = new StringWriter();
 
     private String arrayMarker = ARRAY_MARKER;
+    private String booleanMarker = BOOLEAN_MARKER;
+    private String numberMarker = NUMBER_MARKER;
 
     /**
      * Constructs a JsonEncoder if no IOException occurs. The root value
@@ -92,6 +96,42 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
      */
     public String getArrayMarker() {
         return arrayMarker;
+    }
+
+    /**
+     * Sets the boolean marker.
+     *
+     * @param booleanMarker the boolean marker
+     */
+    public void setBooleanMarker(final String booleanMarker) {
+        this.booleanMarker = booleanMarker;
+    }
+
+    /**
+     * Gets the boolean marker.
+     *
+     * @return the boolean marker
+     */
+    public String getBooleanMarker() {
+        return booleanMarker;
+    }
+
+    /**
+     * Sets the number marker.
+     *
+     * @param numberMarker the number marker
+     */
+    public void setNumberMarker(final String numberMarker) {
+        this.numberMarker = numberMarker;
+    }
+
+    /**
+     * Gets the number marker.
+     *
+     * @return the number marker
+     */
+    public String getNumberMarker() {
+        return numberMarker;
     }
 
     /**
@@ -186,10 +226,17 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         try {
             final JsonStreamContext ctx = jsonGenerator.getOutputContext();
             if (ctx.inObject()) {
-                jsonGenerator.writeFieldName(name);
+                jsonGenerator.writeFieldName(getUnmarkedName(name, booleanMarker, numberMarker));
             }
+
             if (value == null) {
                 jsonGenerator.writeNull();
+            }
+            else if (isMarkedName(name, booleanMarker)) {
+                jsonGenerator.writeBoolean(Boolean.parseBoolean(value));
+            }
+            else if (isMarkedName(name, numberMarker)) {
+                jsonGenerator.writeNumber(value);
             }
             else {
                 jsonGenerator.writeString(value);
@@ -206,9 +253,9 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     private void startGroup(final String name) {
         try {
             final JsonStreamContext ctx = jsonGenerator.getOutputContext();
-            if (name.endsWith(arrayMarker)) {
+            if (isMarkedName(name, arrayMarker)) {
                 if (ctx.inObject()) {
-                    jsonGenerator.writeFieldName(name.substring(0, name.length() - arrayMarker.length()));
+                    jsonGenerator.writeFieldName(getUnmarkedName(name, arrayMarker));
                 }
                 jsonGenerator.writeStartArray();
             }
@@ -243,6 +290,20 @@ public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         catch (final IOException e) {
             throw new MetafactureException(e);
         }
+    }
+
+    private boolean isMarkedName(final String name, final String marker) {
+        return marker != null && name.endsWith(marker);
+    }
+
+    private String getUnmarkedName(final String name, final String... markers) {
+        for (final String marker : markers) {
+            if (isMarkedName(name, marker)) {
+                return name.substring(0, name.length() - marker.length());
+            }
+        }
+
+        return name;
     }
 
     private String escapeChar(final char ch) {

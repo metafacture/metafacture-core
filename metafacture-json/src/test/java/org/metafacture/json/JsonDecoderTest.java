@@ -138,6 +138,120 @@ public final class JsonDecoderTest {
     }
 
     @Test
+    public void testShouldNotProcessBooleans() {
+        jsonDecoder.process(
+            "{" +
+                "\"lit1\":false," +
+                "\"lit2\":\"true\"," +
+                "\"arr1\":[{\"lit3\":true,\"lit4\":\"false\"}]," +
+                "\"arr2\":[false,true,\"false\"]" +
+            "}"
+        );
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("lit1", "false");
+        ordered.verify(receiver).literal("lit2", "true");
+        ordered.verify(receiver).startEntity("arr1[]");
+        ordered.verify(receiver).startEntity("1");
+        ordered.verify(receiver).literal("lit3", "true");
+        ordered.verify(receiver).literal("lit4", "false");
+        ordered.verify(receiver, times(2)).endEntity();
+        ordered.verify(receiver).startEntity("arr2[]");
+        ordered.verify(receiver).literal("1", "false");
+        ordered.verify(receiver).literal("2", "true");
+        ordered.verify(receiver).literal("3", "false");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+    }
+
+    @Test
+    public void testShouldProcessBooleansIfEnabled() {
+        jsonDecoder.setBooleanMarker("~");
+        jsonDecoder.process(
+            "{" +
+                "\"lit1\":false," +
+                "\"lit2\":\"true\"," +
+                "\"arr1\":[{\"lit3\":true,\"lit4\":\"false\"}]," +
+                "\"arr2\":[false,true,\"false\"]" +
+            "}"
+        );
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("lit1~", "false");
+        ordered.verify(receiver).literal("lit2", "true");
+        ordered.verify(receiver).startEntity("arr1[]");
+        ordered.verify(receiver).startEntity("1");
+        ordered.verify(receiver).literal("lit3~", "true");
+        ordered.verify(receiver).literal("lit4", "false");
+        ordered.verify(receiver, times(2)).endEntity();
+        ordered.verify(receiver).startEntity("arr2[]");
+        ordered.verify(receiver).literal("1~", "false");
+        ordered.verify(receiver).literal("2~", "true");
+        ordered.verify(receiver).literal("3", "false");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+    }
+
+    @Test
+    public void testShouldNotProcessNumbers() {
+        jsonDecoder.process(
+            "{" +
+                "\"lit1\":23," +
+                "\"lit2\":\"4.2\"," +
+                "\"arr1\":[{\"lit3\":4.2,\"lit4\":\"23\"}]," +
+                "\"arr2\":[23,4.2,\"23\"]" +
+            "}"
+        );
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("lit1", "23");
+        ordered.verify(receiver).literal("lit2", "4.2");
+        ordered.verify(receiver).startEntity("arr1[]");
+        ordered.verify(receiver).startEntity("1");
+        ordered.verify(receiver).literal("lit3", "4.2");
+        ordered.verify(receiver).literal("lit4", "23");
+        ordered.verify(receiver, times(2)).endEntity();
+        ordered.verify(receiver).startEntity("arr2[]");
+        ordered.verify(receiver).literal("1", "23");
+        ordered.verify(receiver).literal("2", "4.2");
+        ordered.verify(receiver).literal("3", "23");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+    }
+
+    @Test
+    public void testShouldProcessNumbersIfEnabled() {
+        jsonDecoder.setNumberMarker("#");
+        jsonDecoder.process(
+            "{" +
+                "\"lit1\":23," +
+                "\"lit2\":\"4.2\"," +
+                "\"arr1\":[{\"lit3\":4.2,\"lit4\":\"23\"}]," +
+                "\"arr2\":[23,4.2,\"23\"]" +
+            "}"
+        );
+
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("lit1#", "23");
+        ordered.verify(receiver).literal("lit2", "4.2");
+        ordered.verify(receiver).startEntity("arr1[]");
+        ordered.verify(receiver).startEntity("1");
+        ordered.verify(receiver).literal("lit3#", "4.2");
+        ordered.verify(receiver).literal("lit4", "23");
+        ordered.verify(receiver, times(2)).endEntity();
+        ordered.verify(receiver).startEntity("arr2[]");
+        ordered.verify(receiver).literal("1#", "23");
+        ordered.verify(receiver).literal("2#", "4.2");
+        ordered.verify(receiver).literal("3", "23");
+        ordered.verify(receiver).endEntity();
+        ordered.verify(receiver).endRecord();
+    }
+
+    @Test
     public void testShouldProcessConcatenatedRecords() {
         jsonDecoder.process(
             "{\"lit\": \"record 1\"}\n" +
