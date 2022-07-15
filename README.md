@@ -352,6 +352,7 @@ Options:
 - `footer`: Footer which is output after the record. (Default: `\n`)
 - `header`: Header which is output before the record. (Default: Empty string)
 - `id`: Field name which contains the record ID; if found, will be available for inclusion in `prefix` and `destination`. (Default: `_id`)
+- `internal`: Whether to print the record's internal representation instead of JSON. (Default: `false`)
 - `pretty`: Whether to use pretty printing. (Default: `false`)
 
 ```perl

@@ -235,6 +235,7 @@ public enum FixMethod implements FixFunction {
             final String destination = options.getOrDefault("destination", ObjectWriter.STDOUT);
             final Value idValue = record.get(options.getOrDefault("id", StandardEventNames.ID));
 
+            final boolean internal = getBoolean(options, "internal");
             final boolean pretty = getBoolean(options, "pretty");
 
             final LongAdder counter = scopedCounter.computeIfAbsent(metafix, k -> new LongAdder());
@@ -249,11 +250,21 @@ public enum FixMethod implements FixFunction {
             withOption(options, "footer", writer::setFooter);
             withOption(options, "header", writer::setHeader);
 
-            try {
-                writer.process(prefix + record.toJson(pretty));
+            if (internal) {
+                if (pretty) {
+                    record.forEach((f, v) -> writer.process(prefix + f + "=" + v));
+                }
+                else {
+                    writer.process(prefix + record);
+                }
             }
-            catch (final IOException e) {
-                // Log a warning? Print string representation instead?
+            else {
+                try {
+                    writer.process(prefix + record.toJson(pretty));
+                }
+                catch (final IOException e) {
+                    // Log a warning? Print string representation instead?
+                }
             }
 
             writer.closeStream();
