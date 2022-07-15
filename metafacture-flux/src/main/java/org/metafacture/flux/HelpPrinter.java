@@ -19,6 +19,7 @@ package org.metafacture.flux;
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.commons.reflection.ConfigurableClass;
 import org.metafacture.commons.reflection.ObjectFactory;
+import org.metafacture.flux.parser.FluxProgramm;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
@@ -43,8 +44,13 @@ import java.util.Map.Entry;
  * @author Markus Michael Geipel
  */
 public final class HelpPrinter {
+
     private HelpPrinter() {
         // no instances
+    }
+
+    public static void main(final String[] args) {
+        FluxProgramm.printHelp(System.out);
     }
 
     /**

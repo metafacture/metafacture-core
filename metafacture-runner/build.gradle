@@ -158,3 +158,8 @@ tasks.signArchives {
     }
   }
 }
+
+task('fluxCommands', type: JavaExec, description: 'Print available Flux commands') {
+  classpath = sourceSets.main.runtimeClasspath
+  main = 'org.metafacture.flux.HelpPrinter'
+}
