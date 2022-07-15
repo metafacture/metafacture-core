@@ -6,9 +6,10 @@ plugins {
 
 editorconfig {
   excludes = [
+    '**/*.diff',
+    '**/*.err',
     '**/*.hprof.txt',
     '**/*.out',
-    '**/*.err',
     '**/*.vsix',
     '**/.*',
     '**/bin',
