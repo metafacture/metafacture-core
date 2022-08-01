@@ -46,13 +46,12 @@ public final class FileMapTest {
         "  </data>" +
         "</rules>" +
         "<maps>" +
-        "  <filemap name='map1' files='org/metafacture/metamorph/maps/" +
-        "file-map-test.txt' %s/>" +
+        "  <filemap name='map1' files='org/metafacture/metamorph/maps/%s' %s/>" +
         "</maps>";
 
     @Test
     public void shouldLookupValuesInFileBasedMap() {
-        assertMorph(receiver, String.format(MORPH, "lookup in", ""),
+        assertMorph(receiver, buildMorph("lookup in", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -70,7 +69,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldWhitelistValuesInFileBasedMap() {
-        assertMorph(receiver, String.format(MORPH, "whitelist map", ""),
+        assertMorph(receiver, buildMorph("whitelist map", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -89,7 +88,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldReplaceValuesUsingFileBasedMap() {
-        assertMorph(receiver, String.format(MORPH, "setreplace map", ""),
+        assertMorph(receiver, buildMorph("setreplace map", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw-fj: 1:1");
@@ -107,7 +106,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldReplaceCommaSeparatedValuesUsingFileBasedMapSetting() {
-        assertMorph(receiver, String.format(MORPH, "setreplace map", "separator=\",\""),
+        assertMorph(receiver, buildMorph("setreplace map", "separator=\",\""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -125,7 +124,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldReplaceEmptyValuesUsingFileBasedMapSetting() {
-        assertMorph(receiver, String.format(MORPH, "setreplace map", "allowEmptyValues=\"true\""),
+        assertMorph(receiver, buildMorph("setreplace map", "allowEmptyValues=\"true\""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "zz");
@@ -141,7 +140,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldNotReplaceEmptyValuesUsingFileBasedMapSetting() {
-        assertMorph(receiver, String.format(MORPH, "setreplace map", ""),
+        assertMorph(receiver, buildMorph("setreplace map", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "zz");
@@ -154,4 +153,65 @@ public final class FileMapTest {
                 }
         );
     }
+
+    @Test
+    public void shouldLookupValuesInGzipFileMap() {
+        assertMorph(receiver, buildMorph("lookup in", "file-map-test.txt.gz", ""),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("1", "gw");
+                    i.literal("1", "fj");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("1", "Germany");
+                    o.get().literal("1", "Fiji");
+                    o.get().endRecord();
+                }
+        );
+    }
+
+    @Test
+    public void shouldNotLookupValuesInBlockedGzipFileMapWithoutDecompressConcatenated() {
+        assertMorph(receiver, buildMorph("lookup in", "file-map-test.txt.bgzf", ""),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("1", "gw");
+                    i.literal("1", "fj");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().endRecord();
+                }
+        );
+    }
+
+    @Test
+    public void shouldLookupValuesInBlockedGzipFileMap() {
+        assertMorph(receiver, buildMorph("lookup in", "file-map-test.txt.bgzf", "decompressConcatenated=\"true\""),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("1", "gw");
+                    i.literal("1", "fj");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("1", "Germany");
+                    o.get().literal("1", "Fiji");
+                    o.get().endRecord();
+                }
+        );
+    }
+
+    private String buildMorph(final String data, final String options) {
+        return buildMorph(data, "file-map-test.txt", options);
+    }
+
+    private String buildMorph(final String data, final String map, final String options) {
+        return String.format(MORPH, data, map, options);
+    }
+
 }
