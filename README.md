@@ -322,7 +322,7 @@ Joins multiple field values into a new field. Can be combined with additional li
 The default `join_char` is a single space. Literal strings have to start with `~`.
 
 ```perl
-paste("<targetField>", "<sourceField_1>"[, ...][, join_char: ", "])
+paste("<targetField>", "<sourceField_1>"[, ...][, "join_char": ", "])
 ```
 
 E.g.:
