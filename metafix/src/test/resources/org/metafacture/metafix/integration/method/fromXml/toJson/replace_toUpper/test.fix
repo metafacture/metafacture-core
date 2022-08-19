@@ -1,0 +1,25 @@
+set_array("contribution[]")
+
+do list(path:"700[01] ", "var":"$i")
+  unless exists("$i.M")
+    unless exists("$i.4")
+      add_field("$i.4","ctb")
+    end
+    do list(path: "$i.4", "var":"$j")
+      set_hash("contribution[].$append.agent")
+      do list(path:"$i.0","var":"$k")
+        if all_match("$k", "^\\(DE-588\\).*$")
+          paste("contribution[].$last.agent.gndIdentifier","$k")
+          paste("contribution[].$last.agent.id","$k")
+        end
+      end
+      copy_field("$i.a","contribution[].$last.agent.label")
+      set_array("contribution[].$last.agent.type[]","Person")
+      copy_field("$j","contribution[].$last.role.id")
+    end
+  end
+end
+
+set_array("contribution[].*.type[]", "Contribution")
+replace_all("contribution[].*.agent.id","^\\(DE-588\\)(.*$)","https://d-nb.info/gnd/$1")
+replace_all("contribution[].*.agent.label","(?<!\\p{Upper})\\.$|[,]$","")
