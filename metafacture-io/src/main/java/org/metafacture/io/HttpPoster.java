@@ -24,13 +24,18 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import java.io.*;
-import java.net.*;
-import java.util.Optional;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.stream.Collectors;
 
 /**
- * Uploads data using {@link URLConnection} with POST method and passes the response to the receiver.
+ * Uploads data using {@link HttpURLConnection} with POST method and passes the response to the receiver.
  * Supports the setting of 'Accept', 'ContentType' and 'Encoding' as HTTP header fields.
  *
  * @author Pascal Christoph (dr0i)
@@ -43,6 +48,9 @@ public final class HttpPoster extends DefaultObjectPipe<String, ObjectReceiver<S
 
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String POST = "POST";
+    private static final Boolean DO_OUTPUT = true;
+    private static final int HTTP_STATUS_CODE_MIN = 100;
+    private static final int HTTP_STATUS_CODE_MAX = 399;
     private String encoding = "UTF-8";
     private String contentType = "application/json";
     private URL url;
@@ -102,29 +110,28 @@ public final class HttpPoster extends DefaultObjectPipe<String, ObjectReceiver<S
 
     @Override
     public void process(final String data) throws IllegalStateException, NullPointerException {
-
         //    String encodedData = URLEncoder.encode( data, this.encoding );
         HttpURLConnection conn = null;
         try {
             conn = (HttpURLConnection) this.url.openConnection();
             BufferedReader br = null;
-            conn.setDoOutput(true);
+            conn.setDoOutput(DO_OUTPUT);
             conn.setRequestMethod(POST);
             conn.setRequestProperty("Accept", this.accept);
             conn.setRequestProperty(CONTENT_TYPE, this.contentType);
-            OutputStream os = conn.getOutputStream();
+            final OutputStream os = conn.getOutputStream();
             os.write(data.getBytes());
-            if (100 <= conn.getResponseCode() && conn.getResponseCode() <= 399) {
+            if (HTTP_STATUS_CODE_MIN <= conn.getResponseCode() && conn.getResponseCode() <= HTTP_STATUS_CODE_MAX) {
                 br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            } else {
+            }
+            else {
                 br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
             }
-            String responseBody = br.lines().collect(Collectors.joining());
-//            getReceiver().process(conn.getResponseMessage());
+            final String responseBody = br.lines().collect(Collectors.joining());
             getReceiver().process(responseBody);
 
-
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
 
