@@ -18,6 +18,7 @@ package org.metafacture.metafix;
 
 import org.metafacture.commons.StringUtil;
 import org.metafacture.commons.reflection.ReflectionUtil;
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.metafix.api.FixContext;
 import org.metafacture.metafix.api.FixFunction;
 import org.metafacture.metafix.api.FixPredicate;
@@ -120,7 +121,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
 
     public void transform(final Record record) {
         consumers.forEach(consumer -> {
-            final FixExecutionException exception = tryRun(() -> consumer.accept(record));
+            final MetafactureException exception = tryRun(() -> consumer.accept(record));
 
             if (exception != null) {
                 metafix.getStrictness().handle(exception, record);
@@ -216,7 +217,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     private void processFix(final Supplier<String> messageSupplier, final Supplier<Consumer<Record>> consumerSupplier) {
         currentMessageSupplier = messageSupplier;
 
-        final FixExecutionException exception = tryRun(() -> {
+        final MetafactureException exception = tryRun(() -> {
             final Consumer<Record> consumer = consumerSupplier.get();
 
             consumers.add(record -> {
@@ -230,7 +231,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         }
     }
 
-    private FixExecutionException tryRun(final Runnable runnable) { // checkstyle-disable-line ReturnCount
+    private MetafactureException tryRun(final Runnable runnable) { // checkstyle-disable-line ReturnCount
         try {
             runnable.run();
         }
@@ -244,7 +245,14 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
             return new FixExecutionException(currentMessageSupplier.get(), e);
         }
         catch (final RuntimeException e) { // checkstyle-disable-line IllegalCatch
-            throw new FixProcessException(currentMessageSupplier.get(), e);
+            final MetafactureException exception = new FixProcessException(currentMessageSupplier.get(), e);
+
+            if (metafix.getStrictnessHandlesProcessExceptions()) {
+                return exception;
+            }
+            else {
+                throw exception;
+            }
         }
 
         return null;

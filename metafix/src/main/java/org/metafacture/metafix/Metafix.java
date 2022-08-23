@@ -18,6 +18,7 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StandardEventNames;
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
@@ -83,9 +84,10 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     private Record currentRecord = new Record();
     private StreamReceiver outputStreamReceiver;
     private Strictness strictness = DEFAULT_STRICTNESS;
-    private boolean repeatedFieldsToEntities;
     private String fixFile;
     private String recordIdentifier;
+    private boolean repeatedFieldsToEntities;
+    private boolean strictnessHandlesProcessExceptions;
     private int entityCount;
 
     public Metafix() {
@@ -359,6 +361,14 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         return strictness;
     }
 
+    public void setStrictnessHandlesProcessExceptions(final boolean strictnessHandlesProcessExceptions) {
+        this.strictnessHandlesProcessExceptions = strictnessHandlesProcessExceptions;
+    }
+
+    public boolean getStrictnessHandlesProcessExceptions() {
+        return strictnessHandlesProcessExceptions;
+    }
+
     public void setRepeatedFieldsToEntities(final boolean repeatedFieldsToEntities) {
         this.repeatedFieldsToEntities = repeatedFieldsToEntities;
     }
@@ -374,7 +384,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
          */
         PROCESS {
             @Override
-            protected void handleInternal(final FixExecutionException exception, final Record record) {
+            protected void handleInternal(final MetafactureException exception, final Record record) {
                 throw exception;
             }
         },
@@ -384,7 +394,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
          */
         RECORD {
             @Override
-            protected void handleInternal(final FixExecutionException exception, final Record record) {
+            protected void handleInternal(final MetafactureException exception, final Record record) {
                 log(exception, LOG::error);
                 record.setReject(true); // TODO: Skip remaining expressions?
             }
@@ -395,19 +405,19 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
          */
         EXPRESSION {
             @Override
-            protected void handleInternal(final FixExecutionException exception, final Record record) {
+            protected void handleInternal(final MetafactureException exception, final Record record) {
                 log(exception, LOG::warn);
             }
         };
 
-        public void handle(final FixExecutionException exception, final Record record) {
+        public void handle(final MetafactureException exception, final Record record) {
             LOG.info("Current record: {}", record);
             handleInternal(exception, record);
         }
 
-        protected abstract void handleInternal(FixExecutionException exception, Record record);
+        protected abstract void handleInternal(MetafactureException exception, Record record);
 
-        protected void log(final FixExecutionException exception, final BiConsumer<String, Throwable> logger) {
+        protected void log(final MetafactureException exception, final BiConsumer<String, Throwable> logger) {
             logger.accept(exception.getMessage(), exception.getCause());
         }
 
