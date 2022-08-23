@@ -435,13 +435,17 @@ public class MetafixScriptTest {
         );
     }
 
-    private void assertStrictness(final Metafix.Strictness strictness, final String fixDef, final boolean stubLogging, final Consumer<Supplier<StreamReceiver>> out) {
+    private void assertStrictness(final Metafix.Strictness strictness, final String fixDef, final boolean stubLogging, final Consumer<Metafix> in, final Consumer<Supplier<StreamReceiver>> out) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "add_field('before', '')",
                 fixDef,
                 "add_field('after', '')"
             ),
             i -> {
+                if (in != null) {
+                    in.accept(i);
+                }
+
                 final Metafix.Strictness strictnessSpy = Mockito.spy(strictness);
                 i.setStrictness(strictnessSpy);
 
@@ -469,7 +473,7 @@ public class MetafixScriptTest {
     }
 
     private void assertStrictness(final Metafix.Strictness strictness, final boolean stubLogging, final Consumer<Supplier<StreamReceiver>> out) {
-        assertStrictness(strictness, "upcase('data')", stubLogging, out);
+        assertStrictness(strictness, "upcase('data')", stubLogging, null, out);
     }
 
     @Test
@@ -524,9 +528,33 @@ public class MetafixScriptTest {
     @Test
     public void shouldAbortProcessOnProcessException() {
         MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "No enum constant org.metafacture.metafix.FixMethod.foo", () ->
-                assertStrictness(Metafix.Strictness.EXPRESSION, "foo()", false, o -> {
+                assertStrictness(Metafix.Strictness.EXPRESSION, "foo()", false, null, o -> {
                 })
         );
+    }
+
+    @Test
+    public void shouldOptionallySkipExpressionOnProcessException() {
+        assertStrictness(Metafix.Strictness.EXPRESSION, "upcase()", true, i -> i.setStrictnessHandlesProcessExceptions(true), o -> {
+            o.get().startRecord("1");
+            o.get().literal("data", "foo");
+            o.get().literal("before", "");
+            o.get().literal("after", "");
+            o.get().endRecord();
+
+            o.get().startRecord("2");
+            o.get().literal("data", "foo");
+            o.get().literal("data", "bar");
+            o.get().literal("before", "");
+            o.get().literal("after", "");
+            o.get().endRecord();
+
+            o.get().startRecord("3");
+            o.get().literal("data", "bar");
+            o.get().literal("before", "");
+            o.get().literal("after", "");
+            o.get().endRecord();
+        });
     }
 
     private void assertVar(final String fixDef, final Map<String, String> vars, final Map<String, String> result) {
