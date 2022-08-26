@@ -24,18 +24,21 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.SequenceInputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * Opens a {@link URLConnection} and passes a reader to the receiver.
+ * Opens an {@link HttpURLConnection} and passes a reader to the receiver.
  *
  * @author Christoph Böhme
  * @author Jan Schnasse
@@ -55,7 +58,40 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     private static final String ACCEPT_DEFAULT = "*/*";
     private static final String ENCODING_DEFAULT = "UTF-8";
 
+    private static final String INPUT_DESIGNATOR = "@-";
+
+    private static final Method DEFAULT_METHOD = Method.GET;
+    private static final String DEFAULT_PREFIX = "ERROR: ";
+
     private final Map<String, String> headers = new HashMap<>();
+
+    private Method method;
+    private String body;
+    private String errorPrefix;
+    private String url;
+    private boolean inputUsed;
+
+    public enum Method {
+
+        DELETE(false),
+        GET(false),
+        HEAD(false),
+        OPTIONS(false),
+        POST(true),
+        PUT(true),
+        TRACE(false);
+
+        private final boolean inputAsBody;
+
+        Method(final boolean inputAsBody) {
+            this.inputAsBody = inputAsBody;
+        }
+
+        private boolean getInputAsBody() {
+            return inputAsBody;
+        }
+
+    }
 
     /**
      * Creates an instance of {@link HttpOpener}.
@@ -63,6 +99,9 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     public HttpOpener() {
         setAccept(ACCEPT_DEFAULT);
         setEncoding(ENCODING_DEFAULT);
+        setErrorPrefix(DEFAULT_PREFIX);
+        setMethod(DEFAULT_METHOD);
+        setUrl(INPUT_DESIGNATOR);
     }
 
     /**
@@ -77,6 +116,15 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
+     * Sets the HTTP request body.
+     *
+     * @param body the request body
+     */
+    public void setBody(final String body) {
+        this.body = body;
+    }
+
+    /**
      * Sets the preferred encoding of the HTTP response. This value is in the
      * accept-charset header. Additonally, the encoding is used for reading the
      * HTTP resonse if it does not specify an encoding. The default value for
@@ -87,6 +135,15 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
      */
     public void setEncoding(final String encoding) {
         setHeader(ENCODING_HEADER, encoding);
+    }
+
+    /**
+     * Sets the error prefix.
+     *
+     * @param errorPrefix the error prefix
+     */
+    public void setErrorPrefix(final String errorPrefix) {
+        this.errorPrefix = errorPrefix;
     }
 
     /**
@@ -117,21 +174,85 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         headers.put(key.toLowerCase(), value);
     }
 
+    /**
+     * Sets the HTTP request method.
+     *
+     * @param method the request method
+     */
+    public void setMethod(final Method method) {
+        this.method = method;
+    }
+
+    /**
+     * Sets the HTTP request URL.
+     *
+     * @param url the request URL
+     */
+    public void setUrl(final String url) {
+        this.url = url;
+    }
+
     @Override
-    public void process(final String urlStr) {
+    public void process(final String input) {
         try {
-            final URL url = new URL(urlStr);
-            final URLConnection con = url.openConnection();
-            headers.forEach(con::addRequestProperty);
-            String enc = con.getContentEncoding();
-            if (enc == null) {
-                enc = headers.get(ENCODING_HEADER);
+            final String requestUrl = getInput(input, url);
+            final String requestBody = getInput(input,
+                    body == null && method.getInputAsBody() ? INPUT_DESIGNATOR : body);
+
+            final HttpURLConnection connection =
+                (HttpURLConnection) new URL(requestUrl).openConnection();
+
+            connection.setRequestMethod(method.name());
+            headers.forEach(connection::addRequestProperty);
+
+            if (requestBody != null) {
+                connection.setDoOutput(true);
+                connection.getOutputStream().write(requestBody.getBytes());
             }
-            getReceiver().process(new InputStreamReader(con.getInputStream(), enc));
+
+            final InputStream errorStream = connection.getErrorStream();
+            final InputStream inputStream;
+
+            if (errorStream != null) {
+                if (errorPrefix != null) {
+                    final InputStream errorPrefixStream = new ByteArrayInputStream(errorPrefix.getBytes());
+                    inputStream = new SequenceInputStream(errorPrefixStream, errorStream);
+                }
+                else {
+                    inputStream = errorStream;
+                }
+            }
+            else {
+                inputStream = connection.getInputStream();
+            }
+
+            final String contentEncoding = getEncoding(connection.getContentEncoding());
+            getReceiver().process(new InputStreamReader(inputStream, contentEncoding));
         }
         catch (final IOException e) {
             throw new MetafactureException(e);
         }
+    }
+
+    private String getInput(final String input, final String value) {
+        final String result;
+
+        if (!INPUT_DESIGNATOR.equals(value)) {
+            result = value;
+        }
+        else if (inputUsed) {
+            result = null;
+        }
+        else {
+            inputUsed = true;
+            result = input;
+        }
+
+        return result;
+    }
+
+    private String getEncoding(final String contentEncoding) {
+        return contentEncoding != null ? contentEncoding : headers.get(ENCODING_HEADER);
     }
 
 }
