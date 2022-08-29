@@ -47,7 +47,8 @@ editorconfig {
     '**/*.bzip2',
     '**/*.gzip',
     '**/*.xz',
-    'gradlew*'
+    'gradlew*',
+    '**/bin'
   ]
 }
 
@@ -95,6 +96,7 @@ subprojects {
     options {
       addBooleanOption 'Xwerror', true
     }
+    exclude '**/harvester2/**'
   }
 
   artifacts {
@@ -242,7 +244,7 @@ gradle.projectsEvaluated {
       }
     }
 
-    //'upload' vs. 'publish, see 
+    //'upload' vs. 'publish, see
     //https://medium.com/dot-debug/deploying-artifacts-to-maven-using-gradle-b669acc1b6f8'
     /*
     task publish {
@@ -264,7 +266,7 @@ gradle.projectsEvaluated {
       repositories {
         maven {
           name = 'localEmbedded'
-          // run generated gradle task `./gradlew 
+          // run generated gradle task `./gradlew
           // publishMavenArtifactsPublicationToLocalEmbeddedRepository`
           // to publish all subprojects into the same local embedded repo:
           url = "file://${rootDir}/build/repo"

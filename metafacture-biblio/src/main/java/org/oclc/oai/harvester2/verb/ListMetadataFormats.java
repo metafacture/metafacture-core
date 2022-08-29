@@ -41,7 +41,7 @@ public class ListMetadataFormats extends HarvesterVerb {
      * @throws javax.xml.xpath.XPathExpressionException
      * @throws IOException an I/O error occurred
      */
-    public ListMetadataFormats(String baseURL) throws IOException, ParserConfigurationException, 
+    public ListMetadataFormats(String baseURL) throws IOException, ParserConfigurationException,
             SAXException, XPathExpressionException {
         this(baseURL, null);
     }

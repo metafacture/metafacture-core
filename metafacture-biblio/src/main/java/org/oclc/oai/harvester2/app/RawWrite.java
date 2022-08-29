@@ -31,8 +31,8 @@ public class RawWrite {
         try {
             System.out.println(new Date());
 
-            HashMap options = getOptions(args);
-            List rootArgs = (List) options.get("rootArgs");
+            HashMap<String, Object> options = getOptions(args);
+            List<?> rootArgs = (List<?>) options.get("rootArgs");
             String baseURL = null;
             if (rootArgs.size() > 0) {
                 baseURL = (String) rootArgs.get(0);
@@ -151,9 +151,9 @@ public class RawWrite {
         out.write("</harvest>\n".getBytes("UTF-8"));
     }
 
-    private static HashMap getOptions(String[] args) {
-        HashMap options = new HashMap();
-        ArrayList rootArgs = new ArrayList();
+    private static HashMap<String, Object> getOptions(String[] args) {
+        HashMap<String, Object> options = new HashMap<>();
+        ArrayList<String> rootArgs = new ArrayList<>();
         options.put("rootArgs", rootArgs);
 
         for (int i = 0; i < args.length; ++i) {

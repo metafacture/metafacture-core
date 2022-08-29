@@ -12,8 +12,11 @@
 package org.oclc.oai.harvester2.verb;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import org.xml.sax.SAXException;
@@ -106,12 +109,13 @@ public class ListIdentifiers extends HarvesterVerb {
      * @param baseURL
      * @param resumptionToken
      * @return
+     * @throws UnsupportedEncodingException
      */
     private static String getRequestURL(String baseURL,
-            String resumptionToken) {
+            String resumptionToken) throws UnsupportedEncodingException {
         StringBuilder requestURL = new StringBuilder(baseURL);
         requestURL.append("?verb=ListIdentifiers");
-        requestURL.append("&resumptionToken=").append(URLEncoder.encode(resumptionToken));
+        requestURL.append("&resumptionToken=").append(URLEncoder.encode(resumptionToken, StandardCharsets.UTF_8.name()));
         return requestURL.toString();
     }
 }
