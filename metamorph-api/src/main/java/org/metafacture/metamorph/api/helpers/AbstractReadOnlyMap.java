@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.api.helpers;
 
 import java.util.Collection;
@@ -20,8 +21,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Base class for maps which are read only and do not allow access to their
- * full contents.
+ * Base class for maps which are read only. Allows access to the key set. It's
+ * up to the extending class when overriding {@link #keySet()} to return an
+ * {@link java.util.Collections#unmodifiableSet(Set)}.
  *
  * @param <K> type of keys
  * @param <V> type of values
@@ -40,7 +42,7 @@ public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
     }
 
     @Override
-    public final boolean containsKey(final Object key) {
+    public boolean containsKey(final Object key) {
         return get(key) != null;
     }
 
@@ -70,8 +72,12 @@ public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * It's up to the extending class to return an
+     * {@link java.util.Collections#unmodifiableSet(Set)} when overriding.
+     */
     @Override
-    public final Set<K> keySet() {
+    public Set<K> keySet() {
         throw new UnsupportedOperationException();
     }
 

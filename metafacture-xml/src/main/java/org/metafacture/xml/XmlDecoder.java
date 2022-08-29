@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.xml;
 
-import java.io.IOException;
-import java.io.Reader;
+package org.metafacture.xml;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -25,6 +23,7 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
@@ -32,6 +31,8 @@ import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  * Reads an XML file and passes the XML events to a receiver.
@@ -43,18 +44,21 @@ import org.xml.sax.helpers.XMLReaderFactory;
 @In(Reader.class)
 @Out(XmlReceiver.class)
 @FluxCommand("decode-xml")
-public final class XmlDecoder
-        extends DefaultObjectPipe<Reader, XmlReceiver> {
+public final class XmlDecoder extends DefaultObjectPipe<Reader, XmlReceiver> {
 
     private static final String SAX_PROPERTY_LEXICAL_HANDLER = "http://xml.org/sax/properties/lexical-handler";
 
     private final XMLReader saxReader;
 
+    /**
+     * Constructs an XmlDecoder by obtaining a new instance of an
+     * {@link org.xml.sax.XMLReader}.
+     */
     public XmlDecoder() {
-        super();
         try {
             saxReader = XMLReaderFactory.createXMLReader();
-        } catch (SAXException e) {
+        }
+        catch (final SAXException e) {
             throw new MetafactureException(e);
         }
     }
@@ -63,9 +67,11 @@ public final class XmlDecoder
     public void process(final Reader reader) {
         try {
             saxReader.parse(new InputSource(reader));
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
-        } catch (SAXException e) {
+        }
+        catch (final SAXException e) {
             throw new MetafactureException(e);
         }
     }
@@ -78,9 +84,11 @@ public final class XmlDecoder
         saxReader.setErrorHandler(getReceiver());
         try {
             saxReader.setProperty(SAX_PROPERTY_LEXICAL_HANDLER, getReceiver());
-        } catch (SAXNotRecognizedException e) {
+        }
+        catch (final SAXNotRecognizedException e) {
             throw new MetafactureException(e);
-        } catch (SAXNotSupportedException e) {
+        }
+        catch (final SAXNotSupportedException e) {
             throw new MetafactureException(e);
         }
     }

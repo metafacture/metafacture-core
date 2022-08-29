@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.reflection;
 
 import java.util.Collections;
@@ -36,7 +37,19 @@ public class ObjectFactory<T> {
     private final Map<String, ConfigurableClass<? extends T>> classes =
             new HashMap<>();
 
-    public final void loadClassesFromMap(Map<?, ?> classMap, Class<T> baseType) {
+    /**
+     * Creates an instance of {@link ObjectFactory}.
+     */
+    public ObjectFactory() {
+    }
+
+    /**
+     * Loads classes from a map.
+     *
+     * @param classMap the map of classes
+     * @param baseType the object type of the classes
+     */
+    public final void loadClassesFromMap(final Map<?, ?> classMap, final Class<T> baseType) {
         final ClassLoader loader = ReflectionUtil.getContextClassLoader();
         for (final Entry<?, ?> entry : classMap.entrySet()) {
             final String key = entry.getKey().toString();
@@ -45,21 +58,46 @@ public class ObjectFactory<T> {
         }
     }
 
-    public final void registerClass(String key, Class<? extends T> objectClass) {
+    /**
+     * Registers a Class as a ConfigurableClass.
+     *
+     * @param key         the key associcated with the Class
+     * @param objectClass the Class
+     */
+    public final void registerClass(final String key, final Class<? extends T> objectClass) {
         registerClass(key, new ConfigurableClass<>(objectClass));
     }
 
-    public final void registerClass(String key,
-            ConfigurableClass<? extends T> objectClass) {
+    /**
+     * Registers a ConfigurableClass.
+     *
+     * @param key         the key associcated with the ConfigurableClass
+     * @param objectClass the ConfigurableClass
+     */
+    public final void registerClass(final String key, final ConfigurableClass<? extends T> objectClass) {
         classes.put(key, objectClass);
     }
 
-    public final T newInstance(String key, Object... constructorArgs) {
+    /**
+     * Returns a new instance of a ConfigurableClass with no setters.
+     *
+     * @param key             the name of the class
+     * @param constructorArgs the args of the constructor
+     * @return a new instance
+     */
+    public final T newInstance(final String key, final Object... constructorArgs) {
         return newInstance(key, Collections.emptyMap(), constructorArgs);
     }
 
-    public final T newInstance(String key, Map<String, String> values,
-            Object... constructorArgs) {
+    /**
+     * Returns a new instance of a ConfigurableClass.
+     *
+     * @param key             the name of the class
+     * @param values          the Map of Strings of the setters
+     * @param constructorArgs the args of the constructor
+     * @return a new instance
+     */
+    public final T newInstance(final String key, final Map<String, String> values, final Object... constructorArgs) {
         if (!classes.containsKey(key)) {
             throw new NoSuchElementException("no registered class for: " + key);
         }
@@ -67,15 +105,32 @@ public class ObjectFactory<T> {
         return instanceClass.newInstance(values, constructorArgs);
     }
 
-    public final boolean containsKey(String key) {
+    /**
+     * Checks whether a ConfigurableClass is asscociated with a key.
+     *
+     * @param key the key
+     * @return true if the key is associcated with a ConfigurableClass
+     */
+    public final boolean containsKey(final String key) {
         return classes.containsKey(key);
     }
 
+    /**
+     * Gets the key set of all {ConfigurableClass}es.
+     *
+     * @return all keys that identify the {ConfigurableClass}es
+     */
     public final Set<String> keySet() {
         return Collections.unmodifiableSet(classes.keySet());
     }
 
-    public final ConfigurableClass<? extends T> get(String key) {
+    /**
+     * Gets a ConfigurableClass.
+     *
+     * @param key the key that identifies the ConfigurableClass
+     * @return the ConfigurableClass
+     */
+    public final ConfigurableClass<? extends T> get(final String key) {
         return classes.get(key);
     }
 

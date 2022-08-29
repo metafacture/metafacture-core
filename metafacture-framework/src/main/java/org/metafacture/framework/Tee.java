@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.framework;
 
+package org.metafacture.framework;
 
 import org.metafacture.framework.helpers.DefaultTee;
 
@@ -75,6 +75,6 @@ public interface Tee<T extends Receiver> extends Sender<T> {
      *
      * @return reference to the tee for method chaining
      */
-     Tee<T> clearReceivers();
+    Tee<T> clearReceivers();
 
 }

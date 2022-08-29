@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.test.reader;
 
 import org.metafacture.io.LineReader;
@@ -26,6 +27,9 @@ import org.metafacture.json.JsonDecoder;
  */
 public class JsonLinesReader extends ReaderBase {
 
+    /**
+     * Creates an instance of {@link JsonLinesReader}.
+     */
     public JsonLinesReader() {
         super(new LineReader(), new JsonDecoder());
     }

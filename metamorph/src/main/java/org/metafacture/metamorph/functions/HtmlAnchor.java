@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 /**
@@ -25,21 +26,25 @@ public final class HtmlAnchor extends AbstractCompose {
 
     private String title;
 
+    /**
+     * Creates an instance of {@link HtmlAnchor}.
+     */
+    public HtmlAnchor() {
+    }
+
+    /**
+     * Sets the title.
+     *
+     * @param title the title.
+     */
     public void setTitle(final String title) {
         this.title = title;
     }
 
     @Override
     public String process(final String value) {
-        final String title;
-        if (this.title == null) {
-            title = value;
-        } else {
-            title = this.title;
-        }
-
-        return "<a href=\"" + getPrefix() + value + getPostfix() + "\">"
-                + title + "</a>";
+        final String text = title == null ? value : title;
+        return "<a href=\"" + getPrefix() + value + getPostfix() + "\">" + text + "</a>";
     }
 
 }

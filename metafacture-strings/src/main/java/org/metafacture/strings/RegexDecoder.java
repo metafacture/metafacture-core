@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.strings;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+package org.metafacture.strings;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
@@ -27,6 +23,10 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Decodes a string based on a regular expression using named capture groups.
@@ -49,10 +49,10 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * The regular expression may contain unnamed capture groups. These are
  * ignored.
  * <p>
- * If the pattern contains a capture group named &quot;{@value
- * #ID_CAPTURE_GROUP}&quot;, the first match of this group will be used as
- * record identifier. If there is no such capture group or if it does not
- * match, the empty string is used as record identifier.
+ * If the pattern contains a capture group named {@value #ID_CAPTURE_GROUP},
+ * the first match of this group will be used as record identifier. If there
+ * is no such capture group or if it does not match, the empty string is used
+ * as record identifier.
  * <p>
  * Example: The regex
  * <pre>{@literal
@@ -93,6 +93,11 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
 
     private String rawInputLiteral;
 
+    /**
+     * Constructs a RegexDecoder with a given regex.
+     *
+     * @param regex the regex
+     */
     public RegexDecoder(final String regex) {
         matcher = Pattern.compile(regex).matcher("");
         captureGroupNames = collectCaptureGroupNames(regex);
@@ -126,6 +131,11 @@ public final class RegexDecoder extends DefaultObjectPipe<String, StreamReceiver
         this.rawInputLiteral = rawInputLiteral;
     }
 
+    /**
+     * Gest the raw input literal.
+     *
+     * @return the raw input literal
+     */
     public String getRawInputLiteral() {
         return this.rawInputLiteral;
     }

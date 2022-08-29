@@ -13,7 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.triples;
+
+import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
+import org.metafacture.framework.helpers.DefaultObjectPipe;
+import org.metafacture.framework.objects.Triple;
 
 import java.io.BufferedInputStream;
 import java.io.EOFException;
@@ -21,21 +31,25 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.helpers.DefaultObjectPipe;
-import org.metafacture.framework.objects.Triple;
-
 /**
+ * Reads triples.
+ *
  * @author Christoph Böhme
  *
  */
+@Description("Reads triples")
+@In(String.class)
+@Out(Triple.class)
 @FluxCommand("read-triples")
-public final class TripleReader extends
-        DefaultObjectPipe<String, ObjectReceiver<Triple>> {
+public final class TripleReader extends DefaultObjectPipe<String, ObjectReceiver<Triple>> {
 
     public static final int BUFFERSIZE = 2048;
+
+    /**
+     * Creates an instance of {@link TripleReader}.
+     */
+    public TripleReader() {
+    }
 
     @Override
     public void process(final String filename) {
@@ -46,11 +60,14 @@ public final class TripleReader extends
                 while (true) {
                     getReceiver().process(Triple.read(in));
                 }
-            } catch (EOFException e) {
-            } finally {
+            }
+            catch (final EOFException e) {
+            }
+            finally {
                 in.close();
             }
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }

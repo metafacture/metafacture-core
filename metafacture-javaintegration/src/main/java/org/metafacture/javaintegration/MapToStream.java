@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.javaintegration;
 
-import java.util.Map;
+package org.metafacture.javaintegration;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StandardEventNames;
@@ -24,13 +23,15 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
+import java.util.Map;
+
 /**
  * Emits a {@link Map} as a record with a literal for each entry in the map.
  * When receiving an empty map only a <i>start-record</i> and <i>end-record</i>
  * event is emitted.
  * <p>
  * If the map contains an entry whose key value matches the one set as
- * {@link #setIdKey(Object)}, this entry's value is used as the record id.
+ * {@link #setIdKey(Object)}, this entry's value is used as the record ID.
  * <p>
  * The keys and values in the map can be of any type. They will be converted to
  * strings using their {@link Object#toString()} method. Neither key nor value
@@ -59,26 +60,37 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(Map.class)
 @Out(StreamReceiver.class)
 @FluxCommand("map-to-stream")
-public final class MapToStream extends
-        DefaultObjectPipe<Map<?, ?>, StreamReceiver> {
+public final class MapToStream extends DefaultObjectPipe<Map<?, ?>, StreamReceiver> {
 
     private Object idKey = StandardEventNames.ID;
 
     /**
-     * Sets the key of the map entry that is used for the record id.
+     * Creates an instance of {@link MapToStream}.
+     */
+    public MapToStream() {
+    }
+
+    /**
+     * Sets the key of the map entry that is used for the record ID.
      * <p>
-     * The default id key is &quot;{@value StandardEventNames#ID}&quot;.
+     * The default ID key is
+     * {@value org.metafacture.framework.StandardEventNames#ID}.
      * <p>
      * This parameter can be changed anytime during processing. The new value
      * becomes effective with the next record being processed.
      *
-     * @param idKey the id key. The object passed here is used in a call to
+     * @param idKey the ID key. The object passed here is used in a call to
      * {@link Map#get(Object)} to get the identifier value.
      */
     public void setIdKey(final Object idKey) {
         this.idKey = idKey;
     }
 
+    /**
+     * Gets the ID.
+     *
+     * @return the ID
+     */
     public Object getIdKey() {
         return idKey;
     }
@@ -88,7 +100,8 @@ public final class MapToStream extends
         final Object id = map.get(idKey);
         if (id == null) {
             getReceiver().startRecord("");
-        } else {
+        }
+        else {
             getReceiver().startRecord(id.toString());
         }
         for (final Map.Entry<?, ?> entry: map.entrySet()) {

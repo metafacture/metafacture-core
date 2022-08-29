@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.files;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.Arrays;
+package org.metafacture.files;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
@@ -25,6 +22,10 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Arrays;
 
 /**
  * Reads a directory and emits all filenames found.
@@ -40,14 +41,31 @@ public final class DirReader extends DefaultObjectPipe<String, ObjectReceiver<St
 
     private boolean recursive;
 
-    private String filenameFilterPattern = null;
+    private String filenameFilterPattern;
 
+    /**
+     * Creates an instance of {@link DirReader}.
+     */
+    public DirReader() {
+    }
+
+    /**
+     * Flags whether the directory should be traversered recursively.
+     *
+     * @param recursive true if the directory should be traversered recursively,
+     *                  otherwise false
+     */
     public void setRecursive(final boolean recursive) {
         this.recursive = recursive;
     }
 
-    public void setFilenamePattern(final String filenameFilterPattern) {
-        this.filenameFilterPattern = filenameFilterPattern;
+    /**
+     * Sets a filename pattern.
+     *
+     * @param newFilenameFilterPattern the pattern of the filename
+     */
+    public void setFilenamePattern(final String newFilenameFilterPattern) {
+        filenameFilterPattern = newFilenameFilterPattern;
     }
 
     @Override
@@ -55,27 +73,29 @@ public final class DirReader extends DefaultObjectPipe<String, ObjectReceiver<St
         final File file = new File(dir);
         if (file.isDirectory()) {
             dir(file);
-        } else {
+        }
+        else {
             getReceiver().process(dir);
         }
     }
 
     private void dir(final File dir) {
         final ObjectReceiver<String> receiver = getReceiver();
-        final File[] files = filenameFilterPattern == null ? dir.listFiles()
-                : dir.listFiles(new FilenameFilter() {
+        final File[] files = filenameFilterPattern == null ? dir.listFiles() :
+                dir.listFiles(new FilenameFilter() {
                     @Override
                     public boolean accept(final File dir, final String name) {
                         return name.matches(filenameFilterPattern);
                     }
                 });
         Arrays.sort(files);
-        for (File file : files) {
+        for (final File file : files) {
             if (file.isDirectory()) {
                 if (recursive) {
                     dir(file);
                 }
-            } else {
+            }
+            else {
                 receiver.process(file.getAbsolutePath());
             }
         }

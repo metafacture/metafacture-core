@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.test.reader;
 
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.XmlPipe;
 import org.metafacture.xml.XmlDecoder;
-
 
 /**
  * Base class for {@link Reader}s for xml formats.

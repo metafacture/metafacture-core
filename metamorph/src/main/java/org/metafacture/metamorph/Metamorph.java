@@ -13,22 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
+package org.metafacture.metamorph;
 
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.FluxCommand;
@@ -49,32 +35,49 @@ import org.metafacture.metamorph.api.NamedValuePipe;
 import org.metafacture.metamorph.api.NamedValueReceiver;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.SourceLocation;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+
 /**
- * Transforms a data stream send via the {@link StreamReceiver} interface. Use
- * {@link MorphBuilder} to create an instance based on an xml description
+ * Transforms a data stream sent via the {@link StreamReceiver} interface. Use
+ * {@link MorphBuilder} to create an instance based on an XML description.
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme
  */
-@Description("applies a metamorph transformation to the event stream. Metamorph "
-        + "definition is given in brackets.")
+@Description("Applies a metamorph transformation to the event stream. Metamorph definition is given in brackets.") // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("morph")
 public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePipe, Maps {
 
-    private static final String ELSE_NESTED_KEYWORD = "_elseNested";
     public static final String ELSE_KEYWORD = "_else";
+    public static final String ELSE_NESTED_KEYWORD = "_elseNested";
     public static final String ELSE_FLATTENED_KEYWORD = "_elseFlattened";
     public static final char FEEDBACK_CHAR = '@';
     public static final char ESCAPE_CHAR = '\\';
     public static final String METADATA = "__meta";
     public static final String VAR_START = "$[";
     public static final String VAR_END = "]";
+
+    private static final Logger LOG = LoggerFactory.getLogger(Metamorph.class);
 
     private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
     private static final String COULD_NOT_LOAD_MORPH_FILE = "Could not load morph file";
@@ -98,102 +101,215 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     private MorphErrorHandler errorHandler = new DefaultErrorHandler();
     private int recordCount;
     private final List<FlushListener> recordEndListener = new ArrayList<>();
+
+    private final Deque<EntityEntry> elseNestedEntities = new LinkedList<>();
     private boolean elseNested;
-    private boolean elseNestedEntityStarted;
     private String currentLiteralName;
-    private static final Logger LOG = LoggerFactory.getLogger(Metamorph.class);
 
     protected Metamorph() {
         // package private
         init();
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link String}.
+     *
+     * @param morphDef the {@link String}
+     */
     public Metamorph(final String morphDef) {
         this(morphDef, NO_VARS);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link String} and morph variables as a Map.
+     *
+     * @param morphDef the {@link String}
+     * @param vars     the morph variables as a Map
+     */
     public Metamorph(final String morphDef, final Map<String, String> vars) {
         this(morphDef, vars, NULL_INTERCEPTOR_FACTORY);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link String} and an {@link InterceptorFactory}.
+     *
+     * @param morphDef           the {@link String}
+     * @param interceptorFactory the {@link InterceptorFactory}
+     */
     public Metamorph(final String morphDef, final InterceptorFactory interceptorFactory) {
         this(morphDef, NO_VARS, interceptorFactory);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link String} and morph variables as a Map and an
+     * {@link InterceptorFactory}.
+     *
+     * @param morphDef           the {@link String}
+     * @param vars               the morph variables as a Map
+     * @param interceptorFactory the {@link InterceptorFactory}
+     */
     public Metamorph(final String morphDef, final Map<String, String> vars,
             final InterceptorFactory interceptorFactory) {
         this(getInputSource(morphDef), vars, interceptorFactory);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link Reader}.
+     *
+     * @param morphDef the {@link Reader}
+     */
     public Metamorph(final Reader morphDef) {
         this(morphDef, NO_VARS);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link Reader} and the morph variables as a Map.
+     *
+     * @param morphDef the {@link Reader}
+     * @param vars     the morph variables as a Map
+     */
     public Metamorph(final Reader morphDef, final Map<String, String> vars) {
         this(morphDef, vars, NULL_INTERCEPTOR_FACTORY);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link Reader} and an {@link InterceptorFactory}.
+     *
+     * @param morphDef           the {@link Reader}
+     * @param interceptorFactory the {@link InterceptorFactory}
+     */
     public Metamorph(final Reader morphDef, final InterceptorFactory interceptorFactory) {
         this(morphDef, NO_VARS, interceptorFactory);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link Reader} and morph variables as a Map and an
+     * {@link InterceptorFactory}.
+     *
+     * @param morphDef           the {@link Reader}
+     * @param vars               the morph variables as a Map
+     * @param interceptorFactory the {@link InterceptorFactory}
+     */
     public Metamorph(final Reader morphDef, final Map<String, String> vars,
             final InterceptorFactory interceptorFactory) {
         this(new InputSource(morphDef), vars, interceptorFactory);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link InputStream}.
+     *
+     * @param morphDef the {@link InputStream}
+     */
     public Metamorph(final InputStream morphDef) {
         this(morphDef, NO_VARS);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link InputStream} and morph variables as a Map.
+     *
+     * @param morphDef the {@link InputStream}
+     * @param vars     the morph variables as a Map
+     */
     public Metamorph(final InputStream morphDef, final Map<String, String> vars) {
         this(morphDef, vars, NULL_INTERCEPTOR_FACTORY);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link InputStream} and an {@link InterceptorFactory}.
+     *
+     * @param morphDef           the {@link InputStream}
+     * @param interceptorFactory the {@link InterceptorFactory}
+     */
     public Metamorph(final InputStream morphDef, final InterceptorFactory interceptorFactory) {
         this(morphDef, NO_VARS, interceptorFactory);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link InputStream}, morph variables as a Map and an
+     * {@link InterceptorFactory}.
+     *
+     * @param morphDef           the {@link InputStream}
+     * @param vars               the morph variables as a Map
+     * @param interceptorFactory the {@link InterceptorFactory}
+     */
     public Metamorph(final InputStream morphDef, final Map<String, String> vars,
             final InterceptorFactory interceptorFactory) {
         this(new InputSource(morphDef), vars, interceptorFactory);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link InputSource}.
+     *
+     * @param inputSource the {@link InputSource}
+     */
     public Metamorph(final InputSource inputSource) {
         this(inputSource, NO_VARS);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link InputSource} and morph variables as a Map.
+     *
+     * @param inputSource the {@link InputSource}
+     * @param vars        the morph variables as a Map
+     */
     public Metamorph(final InputSource inputSource, final Map<String, String> vars) {
         this(inputSource, vars, NULL_INTERCEPTOR_FACTORY);
     }
 
+    /**
+     * Creates an instance of {@link Metamorph} given by a morph definition as
+     * {@link InputSource} and an {@link InterceptorFactory}.
+     *
+     * @param inputSource        the {@link InputSource}
+     * @param interceptorFactory the {@link InterceptorFactory}
+     */
     public Metamorph(final InputSource inputSource, final InterceptorFactory interceptorFactory) {
         this(inputSource, NO_VARS, interceptorFactory);
     }
 
+    /**
+     * Constructs a Metamorph by setting a morph definition as {@link InputSource},
+     * a Map of variables and an {@link InterceptorFactory}.
+     *
+     * @param inputSource        the InputSource
+     * @param vars               the Map of variables
+     * @param interceptorFactory the InterceptorFactory
+     */
     public Metamorph(final InputSource inputSource, final Map<String, String> vars,
             final InterceptorFactory interceptorFactory) {
         buildPipeline(inputSource, vars, interceptorFactory);
         init();
     }
 
-    private void buildPipeline(InputSource inputSource, Map<String, String> vars,
-            InterceptorFactory interceptorFactory) {
+    private void buildPipeline(final InputSource inputSource, final Map<String, String> vars, final InterceptorFactory interceptorFactory) {
         try {
             final MorphBuilder builder = new MorphBuilder(this, interceptorFactory);
             builder.walk(inputSource, vars);
-        } catch (RuntimeException e) {
-            throw new MetamorphException(
-                    "Error while building the Metamorph transformation pipeline: " +
-                            e.getMessage(), e);
+        }
+        catch (final RuntimeException e) { // checkstyle-disable-line IllegalCatch
+            throw new MetamorphException("Error while building the Metamorph transformation pipeline: " + e.getMessage(), e);
         }
     }
 
     private static InputSource getInputSource(final String morphDef) {
         try {
-            return new InputSource(
-                    ResourceUtil.getUrl(morphDef).toExternalForm());
-        } catch (final MalformedURLException e) {
+            return new InputSource(ResourceUtil.getUrl(morphDef).toExternalForm());
+        }
+        catch (final MalformedURLException e) {
             throw new MorphBuildException(COULD_NOT_LOAD_MORPH_FILE, e);
         }
     }
@@ -215,6 +331,11 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         flattener.setEntityMarker(entityMarker);
     }
 
+    /**
+     * Sett the {@link MorphErrorHandler}.
+     *
+     * @param errorHandler the {@link MorphErrorHandler}
+     */
     public void setErrorHandler(final MorphErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
     }
@@ -231,7 +352,8 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
             else {
                 LOG.warn("Only one of '_else', '_elseFlattened' and '_elseNested' is allowed. Ignoring the superflous ones.");
             }
-        } else {
+        }
+        else {
             dataRegistry.register(source, data);
         }
     }
@@ -239,15 +361,15 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     @Override
     public void startRecord(final String identifier) {
         flattener.startRecord(identifier);
+        elseNestedEntities.clear();
         entityCountStack.clear();
 
         entityCount = 0;
         currentEntityCount = 0;
+        entityCountStack.push(Integer.valueOf(entityCount));
 
         ++recordCount;
         recordCount %= Integer.MAX_VALUE;
-
-        entityCountStack.add(Integer.valueOf(entityCount));
 
         final String identifierFinal = identifier;
 
@@ -257,17 +379,18 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
 
     @Override
     public void endRecord() {
-        for(final FlushListener listener: recordEndListener){
+        for (final FlushListener listener : recordEndListener) {
             listener.flush(recordCount, currentEntityCount);
         }
 
         outputStreamReceiver.endRecord();
-        entityCountStack.removeLast();
-        if (!entityCountStack.isEmpty()) {
+        flattener.endRecord();
+
+        entityCountStack.pop();
+
+        if (!elseNestedEntities.isEmpty() || !entityCountStack.isEmpty()) {
             throw new IllegalStateException(ENTITIES_NOT_BALANCED);
         }
-
-        flattener.endRecord();
     }
 
     @Override
@@ -281,15 +404,17 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         entityCountStack.push(Integer.valueOf(entityCount));
 
         flattener.startEntity(name);
+        elseNestedEntities.push(new EntityEntry(flattener));
     }
 
     @Override
     public void endEntity() {
         dispatch(flattener.getCurrentPath(), "", getElseSources(), true);
-        currentEntityCount = entityCountStack.pop().intValue();
         flattener.endEntity();
-    }
 
+        elseNestedEntities.pop();
+        currentEntityCount = entityCountStack.pop().intValue();
+    }
 
     @Override
     public void literal(final String name, final String value) {
@@ -308,7 +433,8 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         for (final Closeable closeable : resources) {
             try {
                 closeable.close();
-            } catch (final IOException e) {
+            }
+            catch (final IOException e) {
                 errorHandler.error(e);
             }
         }
@@ -322,29 +448,37 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
             send(path, value, matchingData);
         }
         else if (fallbackReceiver != null) {
-            if (endEntity) {
-                if (elseNestedEntityStarted) {
-                    outputStreamReceiver.endEntity();
-                    elseNestedEntityStarted = false;
-                }
+            dispatchFallback(path, endEntity, k -> send(escapeFeedbackChar(k), value, fallbackReceiver));
+        }
+    }
+
+    private void dispatchFallback(final String path, final boolean endEntity, final Consumer<String> consumer) {
+        final EntityEntry entityEntry = elseNested ? elseNestedEntities.peek() : null;
+
+        if (endEntity) {
+            if (entityEntry != null && entityEntry.getStarted()) {
+                outputStreamReceiver.endEntity();
             }
-            else {
-                final String entityName = elseNested ? flattener.getCurrentEntityName() : null;
+        }
+        else if (entityEntry != null) {
+            if (getData(entityEntry.getPath()) == null) {
+                final Deque<String> entities = new LinkedList<>();
 
-                if (entityName != null) {
-                    if (getData(entityName) == null) {
-                        if (!elseNestedEntityStarted) {
-                            outputStreamReceiver.startEntity(entityName);
-                            elseNestedEntityStarted = true;
-                        }
-
-                        send(escapeFeedbackChar(currentLiteralName), value, fallbackReceiver);
+                for (final EntityEntry e : elseNestedEntities) {
+                    if (e.getStarted()) {
+                        break;
                     }
+
+                    e.setStarted(true);
+                    entities.push(e.getName());
                 }
-                else {
-                    send(escapeFeedbackChar(path), value, fallbackReceiver);
-                }
+
+                entities.forEach(outputStreamReceiver::startEntity);
+                consumer.accept(currentLiteralName);
             }
+        }
+        else {
+            consumer.accept(path);
         }
     }
 
@@ -357,7 +491,8 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         for (final NamedValueReceiver data : dataList) {
             try {
                 data.receive(path, value, null, recordCount, currentEntityCount);
-            } catch (final RuntimeException e) {
+            }
+            catch (final RuntimeException e) { // checkstyle-disable-line IllegalCatch
                 errorHandler.error(e);
             }
         }
@@ -384,16 +519,19 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         return streamReceiver;
     }
 
+    /**
+     * Gets the {@link StreamReceiver}.
+     *
+     * @return the output {@link StreamReceiver}
+     */
     public StreamReceiver getStreamReceiver() {
         return outputStreamReceiver;
     }
 
     @Override
-    public void receive(final String name, final String value, final NamedValueSource source, final int recordCount,
-            final int entityCount) {
+    public void receive(final String name, final String value, final NamedValueSource source, final int unusedRecordCount, final int unusedEntityCount) {
         if (null == name) {
-            throw new IllegalArgumentException(
-                    "encountered literal with name='null'. This indicates a bug in a function or a collector.");
+            throw new IllegalArgumentException("encountered literal with name='null'. This indicates a bug in a function or a collector.");
         }
 
         if (startsWithFeedbackChar(name)) {
@@ -402,8 +540,7 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         }
 
         String unescapedName = name;
-        if(name.length() > 1 && name.charAt(0) == ESCAPE_CHAR
-                && (name.charAt(1) == FEEDBACK_CHAR || name.charAt(1) == ESCAPE_CHAR)) {
+        if (name.length() > 1 && name.charAt(0) == ESCAPE_CHAR && (name.charAt(1) == FEEDBACK_CHAR || name.charAt(1) == ESCAPE_CHAR)) {
             unescapedName = name.substring(1);
         }
         outputStreamReceiver.literal(unescapedName, value);
@@ -442,6 +579,11 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
         return Collections.unmodifiableSet(maps.keySet());
     }
 
+    /**
+     * Adds a {@link FlushListener} to the record end.
+     *
+     * @param flushListener the {@link FlushListener}
+     */
     public void registerRecordEndFlush(final FlushListener flushListener) {
         recordEndListener.add(flushListener);
     }
@@ -468,6 +610,36 @@ public final class Metamorph implements StreamPipe<StreamReceiver>, NamedValuePi
     public SourceLocation getSourceLocation() {
         // Metamorph does not have a source location
         return null;
+    }
+
+    private static class EntityEntry {
+
+        private final String name;
+        private final String path;
+
+        private boolean started;
+
+        EntityEntry(final StreamFlattener flattener) {
+            name = flattener.getCurrentEntityName();
+            path = flattener.getCurrentPath();
+        }
+
+        private String getName() {
+            return name;
+        }
+
+        private String getPath() {
+            return path;
+        }
+
+        private void setStarted(final boolean started) {
+            this.started = started;
+        }
+
+        private boolean getStarted() {
+            return started;
+        }
+
     }
 
 }

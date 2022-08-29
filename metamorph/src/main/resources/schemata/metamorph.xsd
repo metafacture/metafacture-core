@@ -587,7 +587,6 @@
         </complexType>
     </element>
 
-
     <element name="filemap">
         <annotation>
             <documentation>Lookup table defined by text files</documentation>
@@ -598,16 +597,36 @@
                     <documentation>Unique name of the lookup table</documentation>
                 </annotation>
             </attribute>
-            <attribute name="files" type="string" use="required">
+            <attribute name="allowEmptyValues" type="boolean" use="optional" default="false">
                 <annotation>
-                    <documentation>Filenames</documentation>
+                    <documentation>Allow empty values in Map.</documentation>
                 </annotation>
             </attribute>
-            <attribute name="separator" type="string" use="optional"
-                default="\t">
+            <attribute name="compression" type="string" use="optional" default="auto">
                 <annotation>
-                    <documentation>String used in the files to separate key from value.
-                    </documentation>
+                    <documentation>Sets the compression of the file.</documentation>
+                </annotation>
+            </attribute>
+            <attribute name="decompressConcatenated" type="boolean" use="optional" default="false">
+                <annotation>
+                    <documentation>Flags whether to use decompress concatenated file compression.</documentation>
+                </annotation>
+            </attribute>
+            <attribute name="encoding" type="string" use="optional" default="UTF-8">
+                <annotation>
+                    <documentation>Sets the encoding used to open the resource.</documentation>
+                </annotation>
+            </attribute>
+            <attribute name="files" type="string" use="required">
+                <annotation>
+                    <documentation>Filename(s) referencing the lookup table(s). Can be one
+                        filename or a comma separated list of filenames.</documentation>
+                </annotation>
+            </attribute>
+            <attribute name="separator" type="string" use="optional" default="&#09;">
+                <annotation>
+                    <documentation>String used in the files to separate keys from values.
+                        The default separator is the tabulator. </documentation>
                 </annotation>
             </attribute>
             <attribute ref="xml:base" />
@@ -795,7 +814,7 @@
 
     <element name="setreplace">
         <annotation>
-            <documentation>Relace strings based on a replacement table.
+            <documentation>Replace strings based on a replacement table.
             </documentation>
         </annotation>
         <complexType>

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.api.helpers;
 
 /**
@@ -26,7 +27,7 @@ public abstract class AbstractFilter extends AbstractSimpleStatelessFunction {
 
     @Override
     public final String process(final String value) {
-        if(accept(value)){
+        if (accept(value)) {
             return value;
         }
         return null;
@@ -34,10 +35,15 @@ public abstract class AbstractFilter extends AbstractSimpleStatelessFunction {
 
     protected abstract boolean accept(String value);
 
-    protected final  String getString() {
+    protected final String getString() {
         return string;
     }
 
+    /**
+     * Sets the string.
+     *
+     * @param string the string
+     */
     public final void setString(final String string) {
         this.string = string;
     }

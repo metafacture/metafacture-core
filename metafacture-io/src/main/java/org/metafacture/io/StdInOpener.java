@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.io;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+package org.metafacture.io;
 
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
@@ -25,6 +22,9 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Helper class to open stdin
@@ -37,17 +37,25 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(java.io.Reader.class)
 public final class StdInOpener extends DefaultObjectPipe<Object, ObjectReceiver<java.io.Reader>> {
 
+    /**
+     * Creates an instance of {@link StdInOpener}.
+     */
+    public StdInOpener() {
+    }
+
     @Override
     public void process(final Object notUsed) {
         if (notUsed == null) {
-            BufferedReader stdin;
+            final BufferedReader stdin;
             try {
                 stdin = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
+            }
+            catch (final UnsupportedEncodingException e) {
                 throw new IllegalStateException("UTF-8 not supported", e);
             }
             getReceiver().process(stdin);
-        } else {
+        }
+        else {
             throw new IllegalArgumentException("Parameter not used. Must be null");
         }
     }

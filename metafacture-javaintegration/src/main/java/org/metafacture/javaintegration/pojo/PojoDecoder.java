@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration.pojo;
 
 import org.metafacture.framework.FluxCommand;
@@ -78,6 +79,12 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 public class PojoDecoder<T> extends DefaultObjectPipe<T, StreamReceiver> {
 
     private final TypeDecoderFactory typeDecoderFactory = new TypeDecoderFactory();
+
+    /**
+     * Creates an instance of {@link PojoDecoder}.
+     */
+    public PojoDecoder() {
+    }
 
     @Override
     public void process(final T obj) {

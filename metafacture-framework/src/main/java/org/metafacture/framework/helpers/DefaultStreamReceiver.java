@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.framework.helpers;
 
 import org.metafacture.framework.StreamPipe;
@@ -30,6 +31,11 @@ import org.metafacture.framework.StreamReceiver;
  *
  */
 public class DefaultStreamReceiver extends DefaultLifeCycle implements StreamReceiver {
+    /**
+     * Creates an instance of {@link DefaultStreamReceiver}.
+     */
+    public DefaultStreamReceiver() {
+    }
 
     @Override
     public void startRecord(final String identifier) {
@@ -37,7 +43,7 @@ public class DefaultStreamReceiver extends DefaultLifeCycle implements StreamRec
     }
 
     @Override
-    public void endRecord(){
+    public void endRecord() {
         // Default implementation does nothing
     }
 

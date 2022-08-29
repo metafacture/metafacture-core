@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.api;
 
 /**
@@ -23,10 +24,22 @@ package org.metafacture.metamorph.api;
  *
  */
 public interface NamedValueReceiver extends KnowsSourceLocation {
+    /**
+     * Receives named values.
+     *
+     * @param name        the name of the key
+     * @param value       the value of the key
+     * @param source      the {@link NamedValueSource}
+     * @param recordCount the record count
+     * @param entityCount the entity count
+     */
+    void receive(String name, String value, NamedValueSource source, int recordCount, int entityCount);
 
-    void receive(String name, String value, NamedValueSource source,
-            int recordCount, int entityCount);
-
-    void addNamedValueSource(final NamedValueSource namedValueSource);
+    /**
+     * Adds a named value source.
+     *
+     * @param namedValueSource the {@link NamedValueSource}
+     */
+    void addNamedValueSource(NamedValueSource namedValueSource);
 
 }

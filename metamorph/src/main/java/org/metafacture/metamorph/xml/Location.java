@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.xml;
 
 import org.w3c.dom.Node;
@@ -49,28 +50,60 @@ public final class Location {
     private final Locator elementStart;
     private final Locator elementEnd;
 
+    /**
+     * Constructs a Location from a Locator as start element and a Locator as end
+     * element.
+     *
+     * @param elementStart the Locator as start element
+     * @param elementEnd   the Locator as end element
+     */
     public Location(final Locator elementStart, final Locator elementEnd) {
         this.elementStart = new LocatorImpl(elementStart);
         this.elementEnd = new LocatorImpl(elementEnd);
     }
 
+    /**
+     * Constructs a Location from another Location.
+     *
+     * @param src the Location
+     */
     public Location(final Location src) {
         elementStart = new LocatorImpl(src.elementStart);
         elementEnd = new LocatorImpl(src.elementEnd);
     }
 
+    /**
+     * Gets the start of the element.
+     *
+     * @return the start of the element
+     */
     public Locator getElementStart() {
         return elementStart;
     }
 
+    /**
+     * Gets the end of the element.
+     *
+     * @return the end of the element
+     */
     public Locator getElementEnd() {
         return elementEnd;
     }
 
+    /**
+     * Gets the system ID.
+     *
+     * @return the system ID
+     */
     public String getSystemId() {
         return elementStart.getSystemId();
     }
 
+    /**
+     * Gets the public ID
+     *
+     * @return the public ID
+     */
     public String getPublicId() {
         return elementStart.getPublicId();
     }

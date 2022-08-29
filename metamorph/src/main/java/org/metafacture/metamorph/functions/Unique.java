@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
+
+import org.metafacture.metamorph.api.helpers.AbstractStatefulFunction;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import org.metafacture.metamorph.api.helpers.AbstractStatefulFunction;
 
 /**
  * Checks whether the received value was not received before.
@@ -28,11 +29,11 @@ import org.metafacture.metamorph.api.helpers.AbstractStatefulFunction;
  */
 public final class Unique extends AbstractStatefulFunction {
 
-    private static final String ENTITY = "entity";
-    private static final String NAME = "name";
-    private static final String VALUE = "value";
+    public static final String ENTITY = "entity";
+    public static final String NAME = "name";
+    public static final String VALUE = "value";
 
-    private final Set<String> set = new HashSet<String>();
+    private final Set<String> set = new HashSet<>();
 
     private boolean uniqueInEntity;
 
@@ -42,6 +43,12 @@ public final class Unique extends AbstractStatefulFunction {
             return name + "\0" + value;
         }
     };
+
+    /**
+     * Creates an instance of {@link Unique}.
+     */
+    public Unique() {
+    }
 
     @Override
     public String process(final String value) {
@@ -63,10 +70,21 @@ public final class Unique extends AbstractStatefulFunction {
         return uniqueInEntity;
     }
 
+    /**
+     * Flags whether the scope is {@link #ENTITY}.
+     *
+     * @param scope the scope
+     */
     public void setIn(final String scope) {
         uniqueInEntity = ENTITY.equals(scope);
     }
 
+    /**
+     * Sets the Unique part to be processed. Possible values are {@value #NAME}
+     * or {@value #VALUE}.
+     *
+     * @param part the part
+     */
     public void setPart(final String part) {
         if (NAME.equals(part)) {
             keyGenerator = new KeyGenerator() {
@@ -75,7 +93,8 @@ public final class Unique extends AbstractStatefulFunction {
                     return name;
                 }
             };
-        } else if (VALUE.equals(part)) {
+        }
+        else if (VALUE.equals(part)) {
             keyGenerator = new KeyGenerator() {
                 @Override
                 public String createKey(final String name, final String value) {

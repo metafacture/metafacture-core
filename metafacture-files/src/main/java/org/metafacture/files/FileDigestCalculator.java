@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.files;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+package org.metafacture.files;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -29,6 +24,12 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.metafacture.framework.objects.Triple;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Interprets the input string as a file name and computes a cryptographic hash
@@ -48,18 +49,28 @@ public final class FileDigestCalculator extends
 
     private static final int HIGH_NIBBLE = 0xf0;
     private static final int LOW_NIBBLE = 0x0f;
-    private static final char[] NIBBLE_TO_HEX =
-            { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+    private static final char[] NIBBLE_TO_HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+    private static final int NIBBLE_TO_HEX_SHIFT_WIDTH = 4;
 
     private final DigestAlgorithm algorithm;
     private final MessageDigest messageDigest;
 
-
+    /**
+     * Uses the given DigestAlgorithm to define the MessageDigest.
+     *
+     * @param algorithm the DigestAlgorithm
+     */
     public FileDigestCalculator(final DigestAlgorithm algorithm) {
         this.algorithm = algorithm;
         this.messageDigest = this.algorithm.getInstance();
     }
 
+    /**
+     * Uses the given name of the algorithm to define the MessageDigest.
+     *
+     * @param algorithm the name of the algorithm
+     */
     public FileDigestCalculator(final String algorithm) {
         this.algorithm = DigestAlgorithm.valueOf(algorithm.toUpperCase());
         this.messageDigest = this.algorithm.getInstance();
@@ -72,12 +83,17 @@ public final class FileDigestCalculator extends
         try {
             stream = new FileInputStream(file);
             digest = bytesToHex(getDigest(stream, messageDigest));
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
-        } finally {
+        }
+        finally {
             if (stream != null) {
-                try { stream.close(); }
-                catch (final IOException e) { }
+                try {
+                    stream.close();
+                }
+                catch (final IOException e) {
+                }
             }
         }
         getReceiver().process(new Triple(file, algorithm.name(), digest));
@@ -96,8 +112,8 @@ public final class FileDigestCalculator extends
 
     private static String bytesToHex(final byte[] bytes) {
         final char[] hex = new char[bytes.length * 2];
-        for (int i=0; i < bytes.length; ++i) {
-            hex[i * 2] = NIBBLE_TO_HEX[(bytes[i] & HIGH_NIBBLE) >>> 4];
+        for (int i = 0; i < bytes.length; ++i) {
+            hex[i * 2] = NIBBLE_TO_HEX[(bytes[i] & HIGH_NIBBLE) >>> NIBBLE_TO_HEX_SHIFT_WIDTH];
             hex[i * 2 + 1] = NIBBLE_TO_HEX[bytes[i] & LOW_NIBBLE];
         }
         return new String(hex);
@@ -115,19 +131,26 @@ public final class FileDigestCalculator extends
         SHA1("SHA-1"),
         SHA256("SHA-256"),
         SHA384("SHA-384"),
-        SHA512 ("SHA-512");
+        SHA512("SHA-512");
 
         private final String identifier;
 
-        private DigestAlgorithm(final String identifier) {
+        DigestAlgorithm(final String identifier) {
             this.identifier = identifier;
         }
 
+        /**
+         * Returns a MessageDigest object that implements the specified digest
+         * algorithm.
+         *
+         * @return the MessageDigest
+         */
         public MessageDigest getInstance() {
             try {
                 return MessageDigest.getInstance(identifier);
-            } catch (NoSuchAlgorithmException e) {
-                throw new MetafactureException (e);
+            }
+            catch (final NoSuchAlgorithmException e) {
+                throw new MetafactureException(e);
             }
         }
 

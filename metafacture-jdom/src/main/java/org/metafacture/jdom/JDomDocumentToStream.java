@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.jdom;
 
-import org.jdom2.Document;
-import org.jdom2.JDOMException;
-import org.jdom2.output.SAXOutputter;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectPipe;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.XmlPipe;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
+
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.output.SAXOutputter;
 
 /**
  * Converts a {@link Document} to a stream.
@@ -39,6 +41,11 @@ public final class JDomDocumentToStream
     private final SAXOutputter saxOutputer;
     private final XmlPipe<StreamReceiver> xmlPipe;
 
+    /**
+     * Contructs a JDomDocumentToStream with a given XmlPipe.
+     *
+     * @param xmlPipe the XmlPipe of type StreamReceiver
+     */
     public JDomDocumentToStream(final XmlPipe<StreamReceiver> xmlPipe) {
         this.xmlPipe = xmlPipe;
         saxOutputer = new SAXOutputter(xmlPipe);
@@ -46,10 +53,11 @@ public final class JDomDocumentToStream
 
     @Override
     public void process(final Document document) {
-        assert null!=document;
+        assert null != document;
         try {
             saxOutputer.output(document);
-        } catch (JDOMException e) {
+        }
+        catch (final JDOMException e) {
             throw new IllegalArgumentException("Invalid JDOM document", e);
         }
     }

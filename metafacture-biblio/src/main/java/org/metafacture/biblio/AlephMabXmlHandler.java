@@ -12,6 +12,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package org.metafacture.biblio;
 
 import org.metafacture.framework.FluxCommand;
@@ -21,6 +22,7 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -48,6 +50,12 @@ public final class AlephMabXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private String currentTag = "";
     private StringBuilder builder = new StringBuilder();
 
+    /**
+     * Creates instance of {@link AlephMabXmlHandler}.
+     */
+    public AlephMabXmlHandler() {
+    }
+
     @Override
     public void characters(final char[] chars, final int start, final int length)
             throws SAXException {
@@ -60,11 +68,14 @@ public final class AlephMabXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         if (AlephMabXmlHandler.CONTROLLFIELD.equals(localName)) {
             getReceiver().literal(this.currentTag, this.builder.toString().trim());
             getReceiver().endEntity();
-        } else if (AlephMabXmlHandler.SUBFIELD.equals(localName)) {
+        }
+        else if (AlephMabXmlHandler.SUBFIELD.equals(localName)) {
             getReceiver().literal(this.currentTag, this.builder.toString().trim());
-        } else if (AlephMabXmlHandler.DATAFIELD.equals(localName)) {
+        }
+        else if (AlephMabXmlHandler.DATAFIELD.equals(localName)) {
             getReceiver().endEntity();
-        } else if (AlephMabXmlHandler.RECORD.equals(localName)) {
+        }
+        else if (AlephMabXmlHandler.RECORD.equals(localName)) {
             getReceiver().endRecord();
         }
     }
@@ -76,16 +87,20 @@ public final class AlephMabXmlHandler extends DefaultXmlPipe<StreamReceiver> {
             this.builder = new StringBuilder();
             this.currentTag = "";
             getReceiver().startEntity(attributes.getValue(AlephMabXmlHandler.DATAFIELD_ATTRIBUTE));
-        } else if (AlephMabXmlHandler.SUBFIELD.equals(localName)) {
+        }
+        else if (AlephMabXmlHandler.SUBFIELD.equals(localName)) {
             this.builder = new StringBuilder();
             this.currentTag = attributes.getValue(AlephMabXmlHandler.SUBFIELD_ATTRIBUTE);
-        } else if (AlephMabXmlHandler.DATAFIELD.equals(localName)) {
-            getReceiver().startEntity(attributes.getValue(AlephMabXmlHandler.DATAFIELD_ATTRIBUTE)
-                    + attributes.getValue(AlephMabXmlHandler.INDICATOR1)
-                    + attributes.getValue(AlephMabXmlHandler.INDICATOR2));
-        } else if (AlephMabXmlHandler.RECORD.equals(localName)) {
+        }
+        else if (AlephMabXmlHandler.DATAFIELD.equals(localName)) {
+            getReceiver().startEntity(attributes.getValue(AlephMabXmlHandler.DATAFIELD_ATTRIBUTE) +
+                    attributes.getValue(AlephMabXmlHandler.INDICATOR1) +
+                    attributes.getValue(AlephMabXmlHandler.INDICATOR2));
+        }
+        else if (AlephMabXmlHandler.RECORD.equals(localName)) {
             getReceiver().startRecord("");
-        } else if (AlephMabXmlHandler.LEADER.equals(localName)) {
+        }
+        else if (AlephMabXmlHandler.LEADER.equals(localName)) {
             this.builder = new StringBuilder();
             this.currentTag = AlephMabXmlHandler.LEADER;
         }

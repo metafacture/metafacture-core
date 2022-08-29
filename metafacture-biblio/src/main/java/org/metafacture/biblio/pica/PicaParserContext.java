@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.biblio.pica;
+
+import org.metafacture.framework.StreamReceiver;
 
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
-
-import org.metafacture.framework.StreamReceiver;
 
 /**
  * Parser context for the PICA+ parser.The context implements
@@ -42,6 +43,9 @@ final class PicaParserContext {
     private boolean literalsEmitted;
 
     private String subfieldName;
+
+    PicaParserContext() {
+    }
 
     public void setNormalizeUTF8(final boolean normalizeUTF8) {
         this.normalizeUTF8 = normalizeUTF8;

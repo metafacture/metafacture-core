@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
-import static org.mockito.Mockito.verify;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
-import org.metafacture.metamorph.Metamorph;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -39,26 +38,28 @@ public final class SplitTest {
     @Mock
     private StreamReceiver receiver;
 
-    private Metamorph metamorph;
-
     @Test
     public void issue265_shouldWorkIfLastFunctionInCombineStatement() {
-        metamorph = InlineMorph.in(this)
-                .with("<rules>")
-                .with("  <combine name='out' value='${v}'>")
-                .with("    <data source='in' name='v'>")
-                .with("      <split delimiter=' ' />")
-                .with("    </data>")
-                .with("  </combine>")
-                .with("</rules>")
-                .createConnectedTo(receiver);
-
-        metamorph.startRecord("1");
-        metamorph.literal("in", "1 2");
-        metamorph.endRecord();
-
-        verify(receiver).literal("out", "1");
-        verify(receiver).literal("out", "2");
+        assertMorph(receiver,
+                "<rules>" +
+                "  <combine name='out' value='${v}'>" +
+                "    <data source='in' name='v'>" +
+                "      <split delimiter=' ' />" +
+                "    </data>" +
+                "  </combine>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("in", "1 2");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("out", "1");
+                    o.get().literal("out", "2");
+                    o.get().endRecord();
+                }
+        );
     }
 
 }

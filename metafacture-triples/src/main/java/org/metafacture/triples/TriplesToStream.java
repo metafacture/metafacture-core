@@ -17,6 +17,7 @@
 /**
  *
  */
+
 package org.metafacture.triples;
 
 import org.metafacture.formeta.parser.FormetaParser;
@@ -46,6 +47,9 @@ public final class TriplesToStream extends
     private final FormetaParser parser = new FormetaParser();
     private final PartialRecordEmitter emitter = new PartialRecordEmitter();
 
+    /**
+     * Creates an instance of {@link TriplesToStream}.
+     */
     public TriplesToStream() {
         parser.setEmitter(emitter);
     }
@@ -53,12 +57,14 @@ public final class TriplesToStream extends
     @Override
     public void process(final Triple triple) {
         getReceiver().startRecord(triple.getSubject());
-        if(triple.getObjectType() == ObjectType.STRING){
+        if (triple.getObjectType() == ObjectType.STRING) {
             getReceiver().literal(triple.getPredicate(), triple.getObject());
-        }else if (triple.getObjectType() == ObjectType.ENTITY){
+        }
+        else if (triple.getObjectType() == ObjectType.ENTITY) {
             emitter.setDefaultName(triple.getPredicate());
             parser.parse(triple.getObject());
-        }else{
+        }
+        else {
             throw new UnsupportedOperationException(triple.getObjectType() + " can not yet be decoded");
         }
         getReceiver().endRecord();

@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.strings;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+package org.metafacture.strings;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
@@ -24,6 +22,9 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Splits a {@link String} into several {@link String}s, either by extracting
@@ -38,9 +39,8 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 public final class StringDecoder extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
     /**
-     * determines whether string is split by the regexp or parts matching the
-     * regexp are extracted
-     *
+     * Determines whether the string is split by the regexp or parts matching the
+     * regexp are extracted.
      */
     public enum Mode {
         SPLIT, EXTRACT
@@ -50,10 +50,20 @@ public final class StringDecoder extends DefaultObjectPipe<String, ObjectReceive
 
     private final Pattern pattern;
 
+    /**
+     * Creates an instance of {@link StringDecoder} by a given pattern.
+     *
+     * @param pattern the pattern
+     */
     public StringDecoder(final String pattern) {
         this.pattern = Pattern.compile(pattern);
     }
 
+    /**
+     * Sets the Mode.
+     *
+     * @param mode the {@link Mode}
+     */
     public void setMode(final Mode mode) {
         this.mode = mode;
     }
@@ -65,10 +75,11 @@ public final class StringDecoder extends DefaultObjectPipe<String, ObjectReceive
 
         final ObjectReceiver<String> receiver = getReceiver();
         if (mode == Mode.SPLIT) {
-            for (String part : pattern.split(obj)) {
+            for (final String part : pattern.split(obj)) {
                 receiver.process(part);
             }
-        } else {
+        }
+        else {
             final Matcher matcher = pattern.matcher(obj);
             while (matcher.find()) {
                 receiver.process(matcher.group());

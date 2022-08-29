@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.io;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+package org.metafacture.io;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.annotations.Description;
@@ -26,6 +22,10 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.annotations.ReturnsAvailableArguments;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Writes objects to stdout or a file
@@ -34,30 +34,45 @@ import org.metafacture.framework.annotations.ReturnsAvailableArguments;
  * @author Christoph Böhme
  *
  */
-
 @Description("Writes objects to stdout or a file")
 @In(Object.class)
 @Out(Void.class)
 @FluxCommand("write")
 public final class ObjectWriter<T> implements ConfigurableObjectWriter<T> {
 
-    private static final String STDOUT = "stdout";
+    public static final String STDOUT = "stdout";
+
     private static final List<String> ARGUMENTS = Collections.unmodifiableList(Arrays.asList(STDOUT, "PATH"));
 
     private final ConfigurableObjectWriter<T> objectWriter;
 
+    /**
+     * Sets the destination to write objects to. If the destination is set to
+     * {@value #STDOUT} the object is written to the standard output. Otherwise
+     * it's written to a file of that name.
+     *
+     * @param destination the path to be written to or standard out if it's
+     *                    {@value #STDOUT}
+     */
     public ObjectWriter(final String destination) {
         if (STDOUT.equals(destination)) {
             objectWriter = new ObjectStdoutWriter<T>();
-        } else {
+        }
+        else {
             objectWriter = new ObjectFileWriter<T>(destination);
         }
     }
 
+    /**
+     * Returns the available arguments.
+     *
+     * @return arguments
+     */
     @ReturnsAvailableArguments
     public static Collection<String> getArguments() {
         return ARGUMENTS;
     }
+
     @Override
     public String getEncoding() {
         return objectWriter.getEncoding();
@@ -82,7 +97,6 @@ public final class ObjectWriter<T> implements ConfigurableObjectWriter<T> {
     public void setCompression(final String compression) {
         objectWriter.setCompression(compression);
     }
-
 
     @Override
     public String getHeader() {

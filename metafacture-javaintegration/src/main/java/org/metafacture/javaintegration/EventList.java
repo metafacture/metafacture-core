@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration;
+
+import org.metafacture.framework.StreamReceiver;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.metafacture.framework.StreamReceiver;
 
 /**
  * Stores the received stream events in a list.
@@ -33,10 +34,26 @@ public final class EventList implements StreamReceiver {
 
     private boolean closed;
 
+    /**
+     * Creates an instance of {@link EventList}.
+     */
+    public EventList() {
+    }
+
+    /**
+     * Get events.
+     *
+     * @return the List of {@link Event}
+     */
     public List<Event> getEvents() {
         return Collections.unmodifiableList(events);
     }
 
+    /**
+     * Check whether EventList is closed.
+     *
+     * @return true if EventList is closed.
+     */
     public boolean isClosed() {
         return closed;
     }
@@ -114,14 +131,29 @@ public final class EventList implements StreamReceiver {
             this.value = value;
         }
 
+        /**
+         * Gets the type.
+         *
+         * @return the type
+         */
         public Type getType() {
             return type;
         }
 
+        /**
+         * Gets the name.
+         *
+         * @return the name
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
         public String getValue() {
             return value;
         }
@@ -131,7 +163,7 @@ public final class EventList implements StreamReceiver {
             final StringBuilder builder = new StringBuilder();
             builder.append(type);
             if (name != null) {
-                builder.append("(" );
+                builder.append("(");
                 builder.append(name);
                 if (value != null) {
                     builder.append("=");

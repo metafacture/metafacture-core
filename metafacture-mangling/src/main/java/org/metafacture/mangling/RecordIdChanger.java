@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.mangling;
 
 import org.metafacture.flowcontrol.StreamBuffer;
@@ -25,13 +26,13 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
 /**
- * Replaces the record id with the value of a literal from the record. The name
+ * Replaces the record ID with the value of a literal from the record. The name
  * of the literal can be configured using {@link #setIdLiteral(String)}.
  * <p>
  * If a record contains multiple matching literals, the value of the last
- * literal is used as id.
+ * literal is used as ID.
  * <p>
- * This module can optionally remove records which do not have an id literal
+ * This module can optionally remove records which do not have an ID literal
  * from the stream. This is configured through the
  * {@link #setKeepRecordsWithoutIdLiteral(boolean)} parameter.
  * <p>
@@ -56,14 +57,14 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
  * end-record
  * }</pre>
  *
- * By default, the id literals are removed from the record. This can be changed
+ * By default, the ID literals are removed from the record. This can be changed
  * through {@link #setKeepIdLiteral(boolean)}.
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme
  *
  */
-@Description("By default changes the record id to the value of the '_id' literal (if present). Use the contructor to choose another literal as id source.")
+@Description("By default changes the record ID to the value of the '_id' literal (if present). Use the contructor to choose another literal as ID source.")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("change-id")
@@ -79,15 +80,22 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
     private boolean keepIdLiteral;
 
     /**
-     * Sets the name of the literal that contains the new record id. This must be
+     * Creates an instance of {@link RecordIdChanger}.
+     */
+    public RecordIdChanger() {
+    }
+
+    /**
+     * Sets the name of the literal that contains the new record ID. This must be
      * a qualified literal name including the entities in which the literal is
      * contained.
      * <p>
-     * For instance, the id literal &ldquo;metadata.id&rdquo; matches only
+     * For instance, the ID literal &ldquo;metadata.id&rdquo; matches only
      * literals named &ldquo;id&rdquo; which are part of an entity named
      * &ldquo;metadata&rdquo;.
      * <p>
-     * The default value is &ldquo;{@value StandardEventNames#ID}&rdquo;.
+     * The default value is
+     * {@value org.metafacture.framework.StandardEventNames#ID}.
      * <p>
      * This parameter must only be changed between records otherwise the
      * behaviour of the module is undefined.
@@ -98,20 +106,25 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
         this.idLiteral = idLiteral;
     }
 
+    /**
+     * Gets the ID literal.
+     *
+     * @return the ID literal.
+     */
     public String getIdLiteral() {
         return idLiteral;
     }
 
     /**
-     * Controls whether records without an id literal are kept in the stream or
+     * Controls whether records without an ID literal are kept in the stream or
      * removed from the stream.
      * <p>
-     * By default records without an id literal are kept in the stream.
+     * By default records without an ID literal are kept in the stream.
      * <p>
      * This parameter may be changed at any time it becomes effective with the
      * next <i>end-record</i> event.
      *
-     * @param keepRecordsWithoutIdLiteral true to keep records without id
+     * @param keepRecordsWithoutIdLiteral true to keep records without ID
      * literal, false to remove them
      */
     public void setKeepRecordsWithoutIdLiteral(
@@ -119,27 +132,37 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
         this.keepRecordsWithoutIdLiteral = keepRecordsWithoutIdLiteral;
     }
 
+    /**
+     * Checks whether to keep records without ID literal.
+     *
+     * @return true if records without ID literal should be kept
+     */
     public boolean getKeepRecordsWithoutIdLiteral() {
         return keepRecordsWithoutIdLiteral;
     }
 
     /**
-     * Controls whether the id literal is kept in the record after changing the
-     * record id. If a record contains multiple id literals, all of them are
+     * Controls whether the ID literal is kept in the record after changing the
+     * record ID. If a record contains multiple ID literals, all of them are
      * removed.
      * <p>
-     * By default the id literal is removed from the stream.
+     * By default the ID literal is removed from the stream.
      * <p>
      * This parameter must only be changed between records otherwise the
      * behaviour of the module is undefined.
      *
-     * @param keepIdLiteral true to keep id literals in records, false to
+     * @param keepIdLiteral true to keep ID literals in records, false to
      * remove them
      */
     public void setKeepIdLiteral(final boolean keepIdLiteral) {
         this.keepIdLiteral = keepIdLiteral;
     }
 
+    /**
+     * Checks whether the ID literal should be kept.
+     *
+     * @return true if the ID literal should be kept
+     */
     public boolean getKeepIdLiteral() {
         return keepIdLiteral;
     }
@@ -158,7 +181,8 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
         if (currentIdentifier != null || keepRecordsWithoutIdLiteral) {
             if (currentIdentifier == null) {
                 getReceiver().startRecord(originalIdentifier);
-            } else {
+            }
+            else {
                 getReceiver().startRecord(currentIdentifier);
             }
             streamBuffer.replay();
@@ -193,18 +217,18 @@ public final class RecordIdChanger extends DefaultStreamPipe<StreamReceiver> {
     }
 
     @Override
-    public void onSetReceiver() {
+    protected void onSetReceiver() {
         streamBuffer.setReceiver(getReceiver());
     }
 
     @Override
-    public void onResetStream() {
+    protected void onResetStream() {
         streamBuffer.clear();
         entityPathTracker.resetStream();
     }
 
     @Override
-    public void onCloseStream() {
+    protected void onCloseStream() {
         streamBuffer.clear();
         entityPathTracker.closeStream();
     }

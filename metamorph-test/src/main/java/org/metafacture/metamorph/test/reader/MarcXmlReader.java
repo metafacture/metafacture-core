@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.test.reader;
 
 import org.metafacture.biblio.marc21.MarcXmlHandler;
@@ -25,6 +26,9 @@ import org.metafacture.biblio.marc21.MarcXmlHandler;
  */
 public class MarcXmlReader extends XmlReaderBase {
 
+    /**
+     * Creates an instance of {@link MarcXmlReader}.
+     */
     public MarcXmlReader() {
         super(new MarcXmlHandler());
     }

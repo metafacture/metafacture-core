@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration;
+
+import org.metafacture.framework.ObjectReceiver;
 
 import java.util.LinkedList;
 import java.util.Queue;
-
-import org.metafacture.framework.ObjectReceiver;
 
 /**
  * Collects the objects emitted by an upstream module.
@@ -35,15 +36,27 @@ public final class ObjectCollector<T> implements ObjectReceiver<T> {
 
     private boolean closed;
 
+    /**
+     * Creates an instance of {@link ObjectCollector}.
+     */
     public ObjectCollector() {
         this(-1);
     }
 
+    /**
+     * Creates an instance of {@link ObjectCollector} by a given capacity.
+     *
+     * @param maxCapacity the maximal capacity
+     */
     public ObjectCollector(final int maxCapacity) {
-        super();
         this.maxCapacity = maxCapacity;
     }
 
+    /**
+     * Check whether ObjectCollector is closed.
+     *
+     * @return true if ObjectCollector is closed.
+     */
     public boolean isClosed() {
         return closed;
     }

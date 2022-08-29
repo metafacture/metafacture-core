@@ -23,6 +23,7 @@ dependencies {
   api project(':metafacture-framework')
   implementation project(':metafacture-commons')
   implementation project(':metafacture-io')
+  testRuntime project(':metafacture-plumbing')
   antlr 'org.antlr:antlr:3.5.2'
   testImplementation 'junit:junit:4.12'
 }

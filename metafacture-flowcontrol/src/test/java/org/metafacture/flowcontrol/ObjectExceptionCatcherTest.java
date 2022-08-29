@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.flowcontrol;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -44,6 +45,7 @@ public final class ObjectExceptionCatcherTest {
                 .when(exceptionThrowingModule).process(anyString());
         exceptionCatcher = new ObjectExceptionCatcher<>();
         exceptionCatcher.setReceiver(exceptionThrowingModule);
+        exceptionCatcher.setLogExceptionMessage(false);
     }
 
     @Test

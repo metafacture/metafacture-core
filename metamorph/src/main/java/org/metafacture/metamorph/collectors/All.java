@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph.collectors;
 
-import java.util.HashSet;
-import java.util.Set;
+package org.metafacture.metamorph.collectors;
 
 import org.metafacture.commons.StringUtil;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Corresponds to the {@code <all>} tag.
@@ -34,6 +35,12 @@ public final class All extends AbstractFlushingCollect {
 
     private final Set<NamedValueSource> sources = new HashSet<NamedValueSource>();
     private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
+
+    /**
+     * Creates an instance of {@link All}.
+     */
+    public All() {
+    }
 
     @Override
     protected void receive(final String name, final String value, final NamedValueSource source) {
@@ -60,7 +67,7 @@ public final class All extends AbstractFlushingCollect {
     }
 
     @Override
-    public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
+    protected void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
         sources.add(namedValueSource);
         sourcesLeft.add(namedValueSource);
     }

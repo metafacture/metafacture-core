@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.mangling;
 
 import org.metafacture.framework.FluxCommand;
@@ -34,10 +35,15 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("filter-duplicate-objects")
-public final class DuplicateObjectFilter<T> extends
-        DefaultObjectPipe<T, ObjectReceiver<T>> {
+public final class DuplicateObjectFilter<T> extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 
     private T lastObj;
+
+    /**
+     * Creates an instance of {@link DuplicateObjectFilter}.
+     */
+    public DuplicateObjectFilter() {
+    }
 
     @Override
     public void process(final T obj) {

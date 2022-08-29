@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph;
 
 import org.metafacture.framework.MetafactureException;
@@ -27,7 +28,14 @@ public class MetamorphException extends MetafactureException {
 
     private static final long serialVersionUID = 0L;
 
-    public MetamorphException(String message, Throwable cause) {
+    /**
+     * Creates an instance of {@link MetamorphException} by a given message and
+     * cause.
+     *
+     * @param message the message
+     * @param cause   the {@link Throwable}
+     */
+    public MetamorphException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

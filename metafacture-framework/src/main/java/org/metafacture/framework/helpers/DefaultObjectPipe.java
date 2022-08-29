@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.framework.helpers;
 
 import org.metafacture.framework.ObjectPipe;
@@ -28,8 +29,13 @@ import org.metafacture.framework.Receiver;
  * @author Christoph Böhme
  *
  */
-public class DefaultObjectPipe<T, R extends Receiver>
-        extends DefaultSender<R> implements ObjectPipe<T, R> {
+public class DefaultObjectPipe<T, R extends Receiver> extends DefaultSender<R> implements ObjectPipe<T, R> {
+
+    /**
+     * Creates an instance of {@link DefaultObjectPipe}.
+     */
+    public DefaultObjectPipe() {
+    }
 
     @Override
     public void process(final T obj) {

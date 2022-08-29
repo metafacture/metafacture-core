@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph.functions;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+package org.metafacture.metamorph.functions;
 
 import org.metafacture.metamorph.api.MorphExecutionException;
 import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * URL encodes the received value.
@@ -29,13 +30,19 @@ import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
  */
 public final class URLEncode extends AbstractSimpleStatelessFunction {
 
+    /**
+     * Creates an instance of {@link URLEncode}.
+     */
+    public URLEncode() {
+    }
+
     @Override
     public String process(final String value) {
         try {
             return URLEncoder.encode(value, "UTF-8");
-        } catch (final UnsupportedEncodingException e) {
-            throw new MorphExecutionException("urlencode: unsupported encoding UTF-8",
-                    e);
+        }
+        catch (final UnsupportedEncodingException e) {
+            throw new MorphExecutionException("urlencode: unsupported encoding UTF-8", e);
         }
     }
 

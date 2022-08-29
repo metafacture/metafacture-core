@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.xml;
 
 /**
@@ -32,6 +33,6 @@ public interface RecordIdentifier {
      * @param property
      *            the property which will be used to extract a record name.
      */
-    public void setProperty(final String property);
+    void setProperty(String property);
 
 }

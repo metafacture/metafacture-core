@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.framework;
 
 /**
@@ -25,10 +26,21 @@ public class FormatException extends MetafactureException {
 
     private static final long serialVersionUID = 0L;
 
+    /**
+     * Creates an instance of {@link FormatException} by given message
+     *
+     * @param message the message
+     */
     public FormatException(final String message) {
         super(message);
     }
 
+    /**
+     * Creates an instance of {@link FormatException} by given message and cause.
+     *
+     * @param message the message
+     * @param cause   the {@link Throwable}
+     */
     public FormatException(final String message, final Throwable cause) {
         super(message, cause);
     }

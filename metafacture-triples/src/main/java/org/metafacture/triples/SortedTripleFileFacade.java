@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.triples;
+
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.objects.Triple;
 
 import java.io.BufferedInputStream;
 import java.io.EOFException;
@@ -22,11 +26,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.objects.Triple;
-
-
 /**
+ * A SortedTripleFileFacade created with a file. Reads a Triple from the file.
+ *
  * @author markus geipel
  *
  */
@@ -37,12 +39,24 @@ public final class SortedTripleFileFacade {
     private Triple triple;
     private boolean empty;
 
+    /**
+     * Constructs a SortedTripleFileFacade with a file. Reads a Triple from the
+     * file.
+     *
+     * @param file the File to load Triples from
+     * @throws IOException if Triple can't be loaded
+     */
     public SortedTripleFileFacade(final File file) throws IOException {
         this.file = file;
         in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file), BUFFERSIZE));
         next();
     }
 
+    /**
+     * Checks whether SortedTripleFileFacade is empty.
+     *
+     * @return true if SortedTripleFileFacade is empty.
+     */
     public boolean isEmpty() {
         return empty;
     }
@@ -51,18 +65,22 @@ public final class SortedTripleFileFacade {
         try {
             triple = Triple.read(in);
             empty = false;
-
-        } catch (EOFException e) {
+        }
+        catch (final EOFException e) {
             empty = true;
             triple = null;
         }
     }
 
+    /**
+     * Closes the {@link ObjectInputStream} and deletes the {@link #file} if it
+     * exists.
+     */
     public void close() {
-
         try {
             in.close();
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException("Error closing input stream", e);
         }
         if (file.exists()) {
@@ -70,6 +88,11 @@ public final class SortedTripleFileFacade {
         }
     }
 
+    /**
+     * Peeks at a Triple at the top of the stack.
+     *
+     * @return the Triple at the top of the stack
+     */
     public Triple peek() {
         if (isEmpty()) {
             return null;
@@ -77,11 +100,16 @@ public final class SortedTripleFileFacade {
         return triple;
     }
 
+    /**
+     * Pops a Triple from the stack.
+     *
+     * @return the Triple at the top of the stack.
+     * @throws IOException if the Triple can't be loaded
+     */
     public Triple pop() throws IOException {
-        final Triple triple = peek();
+        final Triple nextTriple = peek();
         next();
-        return triple;
+        return nextTriple;
     }
-
 
 }

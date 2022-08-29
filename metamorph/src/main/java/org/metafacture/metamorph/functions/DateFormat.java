@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
+
+import org.metafacture.metamorph.api.MorphBuildException;
+import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -22,9 +26,6 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-
-import org.metafacture.metamorph.api.MorphBuildException;
-import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
  * Format date/time strings in Metamorph. By default the input format is
@@ -121,6 +122,12 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
         SUPPORTED_LANGUAGES = Collections.unmodifiableSet(set);
     }
 
+    /**
+     * Creates an instance of {@link DateFormat}.
+     */
+    public DateFormat() {
+    }
+
     @Override
     public final String process(final String value) {
         String result;
@@ -130,7 +137,8 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
             c.setTime(sdf.parse(value));
             if (era == Era.BC) {
                 c.set(Calendar.ERA, GregorianCalendar.BC);
-            } else if (era == Era.AD) {
+            }
+            else if (era == Era.AD) {
                 c.set(Calendar.ERA, GregorianCalendar.AD);
             }
 
@@ -147,30 +155,59 @@ public class DateFormat extends AbstractSimpleStatelessFunction {
                 result = result.replaceAll("([0]{1,})([0-9]{1,})", "$2");
             }
 
-        } catch (final IllegalArgumentException e) {
+        }
+        catch (final IllegalArgumentException e) {
             throw new MorphBuildException("The date/time format is not supported.", e);
-        } catch (final Exception e) {
+        }
+        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             result = value;
         }
         return result;
     }
 
+    /**
+     * Sets the input format. <strong>Default value:
+     * {@code #DEFAULT_INPUT_FORMAT}</strong>
+     *
+     * @param inputFormat the input format
+     */
     public final void setInputFormat(final String inputFormat) {
         this.inputFormat = inputFormat;
     }
 
+    /**
+     * Sets the output format. <strong>Default value:
+     * {@link #DEFAULT_OUTPUT_FORMAT}</strong>
+     *
+     * @param outputFormat the output format
+     */
     public final void setOutputFormat(final DateFormats outputFormat) {
         this.outputFormat = outputFormat;
     }
 
+    /**
+     * Sets the output format. <strong>Default value: {@link #DEFAULT_ERA}</strong>
+     *
+     * @param era the {@link Era}
+     */
     public final void setEra(final Era era) {
         this.era = era;
     }
 
+    /**
+     * Flags whether to remove leading zeros.
+     *
+     * @param removeLeadingZeros true if leading zeros should be removed
+     */
     public final void setRemoveLeadingZeros(final boolean removeLeadingZeros) {
         this.removeLeadingZeros = removeLeadingZeros;
     }
 
+    /**
+     * Sets the language if it's included in {@link #SUPPORTED_LANGUAGES}.
+     *
+     * @param language the language
+     */
     public final void setLanguage(final String language) {
         if (!SUPPORTED_LANGUAGES.contains(language)) {
             throw new MorphBuildException("Language '" + language + "' not supported.");

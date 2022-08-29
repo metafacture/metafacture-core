@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.reflection;
 
 /**
@@ -27,6 +28,10 @@ public final class ReflectionUtil {
         throw new AssertionError("No instances allowed");
     }
 
+    /**
+     * @return the context ClassLoader for this thread, or null indicating the
+     *         system class loader (or, failing that, the bootstrap class loader)
+     */
     public static ClassLoader getContextClassLoader() {
         final ClassLoader loader = Thread.currentThread().getContextClassLoader();
         if (loader == null) {
@@ -35,22 +40,37 @@ public final class ReflectionUtil {
         return loader;
     }
 
-    public static <T> ConfigurableClass<? extends T> loadClass(String className,
-            Class<T> baseType) {
+    /**
+     * Loads a Class.
+     *
+     * @param <T>       the object type
+     * @param className the name of the class
+     * @param baseType  the object type of the class to be wrapped
+     * @return the ConfigurableClass
+     */
+    public static <T> ConfigurableClass<? extends T> loadClass(final String className, final Class<T> baseType) {
         return loadClass(getContextClassLoader(), className, baseType);
     }
 
-    public static <T> ConfigurableClass<? extends T> loadClass(ClassLoader loader,
-            String className, Class<T> baseType) {
+    /**
+     * Wraps a Class in a ConfigurableClass.
+     *
+     * @param <T>       the object type of the ConfigurableClass
+     * @param loader    the ClassLoader
+     * @param className the name of the class
+     * @param baseType  the object type of the class to be wrapped
+     * @return the ConfigurableClass
+     */
+    public static <T> ConfigurableClass<? extends T> loadClass(final ClassLoader loader, final String className, final Class<T> baseType) {
         final Class<?> clazz;
         try {
             clazz = loader.loadClass(className);
-        } catch (ClassNotFoundException e) {
+        }
+        catch (final ClassNotFoundException e) {
             throw new ReflectionException("Class not found: " + className, e);
         }
         if (!baseType.isAssignableFrom(clazz)) {
-            throw new ReflectionException(className + " must extend or implement " +
-                    baseType.getName());
+            throw new ReflectionException(className + " must extend or implement " + baseType.getName());
         }
         @SuppressWarnings("unchecked")  // protected by isAssignableFrom check
         final Class<? extends T> castedClass = (Class<? extends T>) clazz;

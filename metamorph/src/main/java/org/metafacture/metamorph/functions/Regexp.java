@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
+
+import org.metafacture.commons.StringUtil;
+import org.metafacture.metamorph.api.NamedValueSource;
+import org.metafacture.metamorph.api.helpers.AbstractFunction;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.metafacture.commons.StringUtil;
-import org.metafacture.metamorph.api.NamedValueSource;
-import org.metafacture.metamorph.api.helpers.AbstractFunction;
 
 /**
  * Performs regexp matching.
@@ -35,10 +36,14 @@ public final class Regexp extends AbstractFunction {
     private String format;
     private final Map<String, String> tempVars = new HashMap<String, String>();
 
+    /**
+     * Creates an instance of {@link Regexp}.
+     */
+    public Regexp() {
+    }
+
     @Override
-    public void receive(final String name, final String value,
-            final NamedValueSource source, final int recordCount,
-            final int entityCount) {
+    public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
         if (null == value) {
             return;
         }
@@ -51,7 +56,8 @@ public final class Regexp extends AbstractFunction {
                             recordCount, entityCount);
                 }
             }
-        } else {
+        }
+        else {
             while (matcher.find()) {
                 populateVars();
                 if (!tempVars.isEmpty()) {
@@ -73,10 +79,20 @@ public final class Regexp extends AbstractFunction {
         }
     }
 
+    /**
+     * Sets the matcher.
+     *
+     * @param match the matcher
+     */
     public void setMatch(final String match) {
-        this.matcher = Pattern.compile(match).matcher("");
+        matcher = Pattern.compile(match).matcher("");
     }
 
+    /**
+     * Sets the format.
+     *
+     * @param format the format
+     */
     public void setFormat(final String format) {
         this.format = format;
     }

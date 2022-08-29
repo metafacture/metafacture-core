@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph;
+
+import org.metafacture.framework.StreamReceiver;
+
+import org.xml.sax.InputSource;
 
 import java.io.StringReader;
 import java.net.URL;
-
-import org.metafacture.framework.StreamReceiver;
-import org.xml.sax.InputSource;
 
 /**
  * Helper for including Metamorph scripts directly in Java code.
@@ -53,6 +55,10 @@ import org.xml.sax.InputSource;
  */
 public final class InlineMorph {
 
+    private static final String XML_BOILERPLATE = "<?xml version='1.1' encoding='UTF-8'?>\n";
+    private static final String METAMORPH_BOILERPLATE = "<metamorph version='1'\n    xmlns='http://www.culturegraph.org/metamorph'>";
+    private static final String FINISH_METAMORPH_BOILERPLATE = "</metamorph>\n";
+
     private final StringBuilder scriptBuilder = new StringBuilder();
 
     private String systemId;
@@ -72,7 +78,7 @@ public final class InlineMorph {
      * @param owner the object which contains the morph script
      * @return an instance of {@code InlineMorph} for continuation
      */
-    public static InlineMorph in(Object owner) {
+    public static InlineMorph in(final Object owner) {
         return in(owner.getClass());
     }
 
@@ -86,11 +92,11 @@ public final class InlineMorph {
      * @param owner the class which contains the morph script
      * @return an instance of {@code InlineMorph} for continuation
      */
-    public static InlineMorph in(Class<?> owner) {
+    public static InlineMorph in(final Class<?> owner) {
         return new InlineMorph().setClassAsSystemId(owner);
     }
 
-    private InlineMorph setClassAsSystemId(Class<?> owner) {
+    private InlineMorph setClassAsSystemId(final Class<?> owner) {
         final URL baseUrl = owner.getResource("");
         systemId = baseUrl.toExternalForm();
         return this;
@@ -102,7 +108,7 @@ public final class InlineMorph {
      * @param line the next line of the morph script
      * @return a reference to {@code this} for continuation
      */
-    public InlineMorph with(String line) {
+    public InlineMorph with(final String line) {
         if (scriptBuilder.length() == 0) {
             appendBoilerplate(line);
         }
@@ -112,7 +118,7 @@ public final class InlineMorph {
         return this;
     }
 
-    private void appendBoilerplate(String line) {
+    private void appendBoilerplate(final String line) {
         final String trimmedLine = line.trim();
         if (!trimmedLine.startsWith("<?xml ")) {
             appendXmlBoilerplate();
@@ -124,13 +130,11 @@ public final class InlineMorph {
     }
 
     private void appendXmlBoilerplate() {
-        scriptBuilder.append("<?xml version='1.1' encoding='UTF-8'?>\n");
+        scriptBuilder.append(XML_BOILERPLATE);
     }
 
     private void appendMetamorphBoilerplate() {
-        scriptBuilder.append(
-                        "<metamorph version='1'\n" +
-                        "    xmlns='http://www.culturegraph.org/metamorph'>");
+        scriptBuilder.append(METAMORPH_BOILERPLATE);
     }
 
     /**
@@ -145,7 +149,7 @@ public final class InlineMorph {
 
     private void finishBoilerplate() {
         if (needFinishMetamorphBoilerplate) {
-            scriptBuilder.append("</metamorph>\n");
+            scriptBuilder.append(FINISH_METAMORPH_BOILERPLATE);
             needFinishMetamorphBoilerplate = false;
         }
     }
@@ -153,8 +157,18 @@ public final class InlineMorph {
     private InputSource createScriptSource() {
         final InputSource scriptSource = new InputSource();
         scriptSource.setSystemId(systemId);
-        scriptSource.setCharacterStream(new StringReader(scriptBuilder.toString()));
+        scriptSource.setCharacterStream(new StringReader(toString()));
         return scriptSource;
+    }
+
+    /**
+     * Returns the string representation of this Morph script.
+     *
+     * @return the Morph script
+     */
+    @Override
+    public String toString() {
+        return scriptBuilder.toString() + (needFinishMetamorphBoilerplate ? FINISH_METAMORPH_BOILERPLATE : "");
     }
 
     /**
@@ -169,7 +183,7 @@ public final class InlineMorph {
      *                  send its output.
      * @return a Metamorph object initialised with the inline script
      */
-    public Metamorph createConnectedTo(StreamReceiver receiver) {
+    public Metamorph createConnectedTo(final StreamReceiver receiver) {
         final Metamorph metamorph = create();
         metamorph.setReceiver(receiver);
         return metamorph;

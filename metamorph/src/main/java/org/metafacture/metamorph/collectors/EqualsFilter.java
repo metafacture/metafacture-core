@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.collectors;
+
+import org.metafacture.commons.StringUtil;
+import org.metafacture.metamorph.api.NamedValueSource;
+import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import org.metafacture.commons.StringUtil;
-import org.metafacture.metamorph.api.NamedValueSource;
-import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
 
 /**
  * Corresponds to the <code>&lt;equalsFilter-literal&gt;</code> tag. Emits data
@@ -37,42 +38,46 @@ public final class EqualsFilter extends AbstractFlushingCollect {
     private final Set<NamedValueSource> sourcesLeft = new HashSet<NamedValueSource>();
     private boolean isEqual = true;
 
+    /**
+     * Creates an instance of {@link EqualsFilter}.
+     */
+    public EqualsFilter() {
+    }
+
     @Override
     protected void emit() {
-        final String name = StringUtil.format(getName(), this.variables);
-        final String value = StringUtil.format(getValue(), this.variables);
-        if (this.isEqual) {
-            getNamedValueReceiver().receive(name, value, this,
-                    getRecordCount(), getEntityCount());
+        final String name = StringUtil.format(getName(), variables);
+        final String value = StringUtil.format(getValue(), variables);
+        if (isEqual) {
+            getNamedValueReceiver().receive(name, value, this, getRecordCount(), getEntityCount());
         }
     }
 
     @Override
     protected boolean isComplete() {
-        return this.sourcesLeft.isEmpty();
+        return sourcesLeft.isEmpty();
     }
 
     @Override
-    protected void receive(final String name, final String value,
-            final NamedValueSource source) {
-        if (this.variables.size() > 0 && !this.variables.containsValue(value)) {
-            this.isEqual = false;
+    protected void receive(final String name, final String value, final NamedValueSource source) {
+        if (variables.size() > 0 && !variables.containsValue(value)) {
+            isEqual = false;
         }
-        this.variables.put(name, value);
-        this.sourcesLeft.remove(source);
+        variables.put(name, value);
+        sourcesLeft.remove(source);
     }
 
     @Override
-    public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
-        this.sources.add(namedValueSource);
-        this.sourcesLeft.add(namedValueSource);
+    protected void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
+        sources.add(namedValueSource);
+        sourcesLeft.add(namedValueSource);
     }
 
     @Override
     protected void clear() {
-        this.sourcesLeft.addAll(this.sources);
-        this.variables.clear();
-        this.isEqual = true;
+        sourcesLeft.addAll(sources);
+        variables.clear();
+        isEqual = true;
     }
 
 }

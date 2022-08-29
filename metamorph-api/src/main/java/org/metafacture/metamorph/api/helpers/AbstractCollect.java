@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.api.helpers;
 
 import org.metafacture.metamorph.api.Collect;
@@ -70,6 +71,11 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
         this.sameEntity = sameEntity;
     }
 
+    /**
+     * Checks whether a reset should be done after emitting.
+     *
+     * @return true if a reset should be done after emitting
+     */
     public final boolean getReset() {
         return resetAfterEmit;
     }
@@ -96,6 +102,11 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
         resetCondition();
     }
 
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
     public final String getValue() {
         return value;
     }
@@ -130,8 +141,12 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
         return currentRecord == oldRecord;
     }
 
+    protected final boolean sameEntityConstraintSatisfied(final int entityCount) {
+        return !sameEntity || oldEntity == entityCount;
+    }
+
     @Override
-    public final void receive(final String name, final String value,
+    public final void receive(final String currentName, final String currentValue,
             final NamedValueSource source, final int recordCount,
             final int entityCount) {
 
@@ -139,8 +154,9 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
 
         if (source == conditionSource) {
             conditionMet = true;
-        } else {
-            receive(name, value, source);
+        }
+        else {
+            receive(currentName, currentValue, source);
         }
 
         if (!waitForFlush && isConditionMet() && isComplete()) {
@@ -152,12 +168,7 @@ public abstract class AbstractCollect extends AbstractNamedValuePipe
         }
     }
 
-    protected final boolean sameEntityConstraintSatisfied(final int entityCount) {
-        return !sameEntity || oldEntity == entityCount;
-    }
-
-    protected abstract void receive(final String name, final String value,
-            final NamedValueSource source);
+    protected abstract void receive(String currentName, String currentValue, NamedValueSource source);
 
     protected abstract boolean isComplete();
 

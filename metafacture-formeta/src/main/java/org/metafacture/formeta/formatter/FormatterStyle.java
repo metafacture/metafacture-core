@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta.formatter;
 
 /**
@@ -56,5 +57,12 @@ public enum FormatterStyle {
         }
     };
 
+    /**
+     * Create a Formatter with various output styles for formeta,
+     *
+     * @see Formatter
+     * @see  org.metafacture.formeta.Formeta
+     * @return the Formatter
+     */
     public abstract Formatter createFormatter();
 }

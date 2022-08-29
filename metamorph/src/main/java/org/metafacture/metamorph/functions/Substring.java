@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
@@ -27,6 +28,12 @@ public final class Substring extends AbstractSimpleStatelessFunction {
     private int start;
     private int end;
 
+    /**
+     * Creates an instance of {@link Substring}.
+     */
+    public Substring() {
+    }
+
     @Override
     public String process(final String value) {
         final int length = value.length();
@@ -37,7 +44,8 @@ public final class Substring extends AbstractSimpleStatelessFunction {
         final int adjEnd;
         if (end == 0  || end > length) {
             adjEnd = length;
-        } else {
+        }
+        else {
             adjEnd = end;
         }
 
@@ -45,16 +53,19 @@ public final class Substring extends AbstractSimpleStatelessFunction {
     }
 
     /**
-     * @param start
-     *            start of substring
+     * Sets the start of the substring.
+     *
+     * @param start start of substring
      */
     public void setStart(final String start) {
         this.start = Integer.parseInt(start);
     }
 
     /**
-     * @param end end of substring, if end==0 the the complete
-     *            remaining string is returned
+     * Sets the end of the substring.
+     *
+     * @param end end of substring, if end==0 the the complete remaining string is
+     *            returned
      *
      */
     public void setEnd(final String end) {

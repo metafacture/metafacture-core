@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.framework.helpers;
 
 import org.metafacture.framework.LifeCycle;
@@ -25,6 +26,12 @@ import org.metafacture.framework.LifeCycle;
  *
  */
 public class DefaultLifeCycle implements LifeCycle {
+
+    /**
+     * Creates an instance of {@link DefaultLifeCycle}.
+     */
+    public DefaultLifeCycle() {
+    }
 
     @Override
     public void resetStream() {

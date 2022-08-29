@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph.collectors;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+package org.metafacture.metamorph.collectors;
 
 import org.metafacture.commons.types.ListMap;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Builds the cross product of the data sources.
@@ -31,14 +32,32 @@ import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
  */
 public final class Tuples extends AbstractFlushingCollect {
 
-    private final ListMap<String, String> listMap = new ListMap<String, String>();
-    private int minN = 1;
+    public static final int MIN_N = 1;
+    private final ListMap<String, String> listMap = new ListMap<>();
+
+    private int minN = MIN_N;
     private String separator = "";
 
+    /**
+     * Creates an instance of {@link Tuples}.
+     */
+    public Tuples() {
+    }
+
+    /**
+     * Sets min N. <strong>Default value: {@value #MIN_N}</strong>
+     *
+     * @param minN the min N
+     */
     public void setMinN(final int minN) {
         this.minN = minN;
     }
 
+    /**
+     * Sets the separator.
+     *
+     * @param separator the separator
+     */
     public void setSeparator(final String separator) {
         this.separator = separator;
     }

@@ -14,27 +14,28 @@
 # limitations under the License.
 #
 
-root=true
+root = true
 
 [*]
-charset=utf-8
-end_of_line=lf
-insert_final_newline=true
-trim_trailing_whitespace=true
-indent_style=space
-indent_size=4
-continuation_indent_size=8
-
-[{*.yml,*.yaml}]
-indent_style=space
-indent_size=2
-
-[*.gradle]
-indent_style=space
-indent_size=2
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
 
 [*.bat]
-end_of_line=crlf
+end_of_line = crlf
+trim_trailing_whitespace = false
+
+[*.{gradle,yml}]
+indent_size = 2
+
+[metafacture-io/src/test/resources/org/metafacture/io/compressed.txt]
+insert_final_newline = false
+
+[metamorph/src/test/resources/org/metafacture/metamorph/maps/file-map-test.txt]
+trim_trailing_whitespace = false
 
 [metafacture-runner/src/main/dist/config/java-options.conf]
-end_of_line=crlf
+end_of_line = crlf

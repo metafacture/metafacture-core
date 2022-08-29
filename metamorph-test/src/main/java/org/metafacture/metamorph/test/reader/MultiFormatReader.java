@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.test.reader;
 
 import org.metafacture.framework.StreamReceiver;
-
 
 /**
  * Dynamically instantiated a reader for a specific data format. This module
@@ -31,14 +31,24 @@ public final class MultiFormatReader implements Reader {
     private StreamReceiver downstreamReceiver;
     private Reader currentReader;
 
+    /**
+     * Creates an instance of {@link MultiFormatReader} by a given format.
+     *
+     * @param format the format
+     */
     public MultiFormatReader(final String format) {
         setFormat(format);
     }
 
+    /**
+     * Sets the format of {@link #currentReader} if the {@link #READER_FACTORY}
+     * contains that format.
+     *
+     * @param format the format
+     */
     public void setFormat(final String format) {
-        if(!READER_FACTORY.containsKey(format)){
-            throw new IllegalArgumentException("Format '" + format +
-                    "' not regognized");
+        if (!READER_FACTORY.containsKey(format)) {
+            throw new IllegalArgumentException("Format '" + format + "' not regognized");
         }
         currentReader = READER_FACTORY.newInstance(format);
         currentReader.setReceiver(downstreamReceiver);

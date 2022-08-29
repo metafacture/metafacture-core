@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
@@ -23,6 +24,12 @@ import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
  * @author Markus Michael Geipel
  */
 public final class Trim extends AbstractSimpleStatelessFunction {
+
+    /**
+     * Creates an instance of {@link Trim}.
+     */
+    public Trim() {
+    }
 
     @Override
     public String process(final String value) {

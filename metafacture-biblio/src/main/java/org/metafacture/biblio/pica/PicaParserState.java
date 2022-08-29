@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.biblio.pica;
 
+package org.metafacture.biblio.pica;
 
 /**
  * A parser for PICA+ records. Only single records can be parsed as the parser
@@ -37,23 +37,23 @@ enum PicaParserState {
 
     FIELD_NAME {
         @Override
-        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx, boolean normalized) {
+        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx, final boolean normalized) {
             final PicaParserState next;
             switch (PicaConstants.from(normalized, ch)) {
-            case RECORD_MARKER:
-            case FIELD_MARKER:
-            case FIELD_END_MARKER:
-                ctx.emitStartEntity();
-                ctx.emitEndEntity();
-                next = FIELD_NAME;
-                break;
-            case SUBFIELD_MARKER:
-                ctx.emitStartEntity();
-                next = SUBFIELD_NAME;
-                break;
-            default:
-                ctx.appendText(ch);
-                next = this;
+                case RECORD_MARKER:
+                case FIELD_MARKER:
+                case FIELD_END_MARKER:
+                    ctx.emitStartEntity();
+                    ctx.emitEndEntity();
+                    next = FIELD_NAME;
+                    break;
+                case SUBFIELD_MARKER:
+                    ctx.emitStartEntity();
+                    next = SUBFIELD_NAME;
+                    break;
+                default:
+                    ctx.appendText(ch);
+                    next = this;
             }
             return next;
         }
@@ -66,21 +66,21 @@ enum PicaParserState {
     },
     SUBFIELD_NAME {
         @Override
-        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx, boolean normalized) {
+        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx, final boolean normalized) {
             final PicaParserState next;
             switch (PicaConstants.from(normalized, ch)) {
-            case RECORD_MARKER:
-            case FIELD_MARKER:
-            case FIELD_END_MARKER:
-                ctx.emitEndEntity();
-                next = FIELD_NAME;
-                break;
-            case SUBFIELD_MARKER:
-                next = this;
-                break;
-            default:
-                ctx.setSubfieldName(ch);
-                next = SUBFIELD_VALUE;
+                case RECORD_MARKER:
+                case FIELD_MARKER:
+                case FIELD_END_MARKER:
+                    ctx.emitEndEntity();
+                    next = FIELD_NAME;
+                    break;
+                case SUBFIELD_MARKER:
+                    next = this;
+                    break;
+                default:
+                    ctx.setSubfieldName(ch);
+                    next = SUBFIELD_VALUE;
             }
             return next;
         }
@@ -92,23 +92,23 @@ enum PicaParserState {
     },
     SUBFIELD_VALUE {
         @Override
-        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx, boolean normalized) {
+        protected PicaParserState parseChar(final char ch, final PicaParserContext ctx, final boolean normalized) {
             final PicaParserState next;
             switch (PicaConstants.from(normalized, ch)) {
-            case RECORD_MARKER:
-            case FIELD_MARKER:
-            case FIELD_END_MARKER:
-                ctx.emitLiteral();
-                ctx.emitEndEntity();
-                next = FIELD_NAME;
-                break;
-            case SUBFIELD_MARKER:
-                ctx.emitLiteral();
-                next = SUBFIELD_NAME;
-                break;
-            default:
-                ctx.appendText(ch);
-                next = this;
+                case RECORD_MARKER:
+                case FIELD_MARKER:
+                case FIELD_END_MARKER:
+                    ctx.emitLiteral();
+                    ctx.emitEndEntity();
+                    next = FIELD_NAME;
+                    break;
+                case SUBFIELD_MARKER:
+                    ctx.emitLiteral();
+                    next = SUBFIELD_NAME;
+                    break;
+                default:
+                    ctx.appendText(ch);
+                    next = this;
             }
             return next;
         }
@@ -120,8 +120,8 @@ enum PicaParserState {
         }
     };
 
-    protected abstract PicaParserState parseChar(final char ch, final PicaParserContext ctx, final boolean normalized);
+    protected abstract PicaParserState parseChar(char ch, PicaParserContext ctx, boolean normalized);
 
-    protected abstract void endOfInput(final PicaParserContext ctx);
+    protected abstract void endOfInput(PicaParserContext ctx);
 
 }

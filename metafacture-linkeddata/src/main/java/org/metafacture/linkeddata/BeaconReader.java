@@ -13,15 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.linkeddata;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+package org.metafacture.linkeddata;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -30,6 +23,14 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Reads BEACON format
@@ -42,6 +43,7 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @Out(StreamReceiver.class)
 @FluxCommand("read-beacon")
 public final class BeaconReader extends DefaultObjectPipe<java.io.Reader, StreamReceiver> {
+    public static final String DEFAULT_RELATION = "seeAlso";
 
     private static final int MB = 1024 * 1024;
     private static final int BUFFER_SIZE = MB * 2;
@@ -50,29 +52,45 @@ public final class BeaconReader extends DefaultObjectPipe<java.io.Reader, Stream
 
     private static final String TARGET = "target";
     private static final Pattern ID_PATTERN = Pattern.compile("(\\{ID\\})|\\$PND");
-    private static final String DEFAULT_RELATION = "seeAlso";
 
     private int bufferSize = BUFFER_SIZE;
     private Pattern metaDataFilter = Pattern.compile(".*");
     private String relation = DEFAULT_RELATION;
 
     /**
-     * @param bufferSize
-     *            in MB
+     * Creates an instance of {@link BeaconReader}.
+     */
+    public BeaconReader() {
+    }
+
+    /**
+     * Sets the buffer size.
+     *
+     * @param bufferSize in MB
      */
     public void setBufferSize(final int bufferSize) {
         this.bufferSize = MB * bufferSize;
     }
 
+    /**
+     * Sets the relation. Default value: {@value #DEFAULT_RELATION}.
+     *
+     * @param relation the relation
+     */
     public void setRelation(final String relation) {
         this.relation = relation;
     }
 
+    /**
+     * Sets a metadata data filter. This is useful to filter out metadata.
+     *
+     * @param metaDataFilter the metadata data filter.
+     */
     public void setMetaDataFilter(final String metaDataFilter) {
         this.metaDataFilter = Pattern.compile(metaDataFilter);
     }
 
-    @Override
+    @Override // checkstyle-disable-line CyclomaticComplexity|ExecutableStatementCount
     public void process(final Reader reader) {
         final BufferedReader bReader = new BufferedReader(reader, bufferSize);
         final Map<String, String> institution = new HashMap<String, String>();
@@ -92,16 +110,19 @@ public final class BeaconReader extends DefaultObjectPipe<java.io.Reader, Stream
                             final String value = line.substring(splitPoint + 1).trim();
                             if (TARGET.equals(key)) {
                                 target = value;
-                            } else if (metaDataFilter.matcher(key).find()) {
+                            }
+                            else if (metaDataFilter.matcher(key).find()) {
                                 institution.put(key, value);
                             }
                         }
-                    } else {
+                    }
+                    else {
                         final String[] parts = line.split("\\|");
                         final String url;
                         if (parts.length == COLUMNS_EXTENDED_BEACON) {
                             url = parts[2];
-                        } else {
+                        }
+                        else {
                             if (target == null || target.isEmpty()) {
                                 throw new MetafactureException("Error in BEACON file: target missing");
                             }
@@ -111,7 +132,7 @@ public final class BeaconReader extends DefaultObjectPipe<java.io.Reader, Stream
                         receiver.startRecord(parts[0]);
                         receiver.startEntity(relation);
                         receiver.literal("url", url);
-                        for (Map.Entry<String, String> instEntry : institution.entrySet()) {
+                        for (final Map.Entry<String, String> instEntry : institution.entrySet()) {
                             receiver.literal(instEntry.getKey(), instEntry.getValue());
                         }
                         receiver.endEntity();
@@ -122,7 +143,8 @@ public final class BeaconReader extends DefaultObjectPipe<java.io.Reader, Stream
             }
             bReader.close();
 
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException("Error reading BEACON format", e);
         }
     }

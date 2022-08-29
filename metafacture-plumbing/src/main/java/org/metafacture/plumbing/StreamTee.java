@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.plumbing;
 
 import org.metafacture.framework.FluxCommand;
@@ -33,40 +34,45 @@ import org.metafacture.framework.helpers.DefaultTee;
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("stream-tee")
-public final class StreamTee extends DefaultTee<StreamReceiver>
-        implements StreamPipe<StreamReceiver> {
+public final class StreamTee extends DefaultTee<StreamReceiver> implements StreamPipe<StreamReceiver> {
+
+    /**
+     * Creates an instance of {@link StreamTee}.
+     */
+    public StreamTee() {
+    }
 
     @Override
     public void startRecord(final String identifier) {
-        for (StreamReceiver receiver : getReceivers()) {
+        for (final StreamReceiver receiver : getReceivers()) {
             receiver.startRecord(identifier);
         }
     }
 
     @Override
     public void endRecord() {
-        for (StreamReceiver receiver : getReceivers()) {
+        for (final StreamReceiver receiver : getReceivers()) {
             receiver.endRecord();
         }
     }
 
     @Override
     public void startEntity(final String name) {
-        for (StreamReceiver receiver : getReceivers()) {
+        for (final StreamReceiver receiver : getReceivers()) {
             receiver.startEntity(name);
         }
     }
 
     @Override
     public void endEntity() {
-        for (StreamReceiver receiver : getReceivers()) {
+        for (final StreamReceiver receiver : getReceivers()) {
             receiver.endEntity();
         }
     }
 
     @Override
     public void literal(final String name, final String value) {
-        for (StreamReceiver receiver : getReceivers()) {
+        for (final StreamReceiver receiver : getReceivers()) {
             receiver.literal(name, value);
         }
     }

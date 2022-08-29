@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration.pojo;
 
 import java.lang.reflect.ParameterizedType;
@@ -41,10 +42,12 @@ class ValueType {
                     .getActualTypeArguments();
             if (Map.class.isAssignableFrom(clazz)) {
                 elementClass = (Class<?>) actualTypeArguments[1];
-            } else {
+            }
+            else {
                 elementClass = (Class<?>) actualTypeArguments[0];
             }
-        } else {
+        }
+        else {
             elementClass = null;
         }
     }

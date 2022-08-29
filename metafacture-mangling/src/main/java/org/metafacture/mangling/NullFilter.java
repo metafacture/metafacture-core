@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.mangling;
 
 import org.metafacture.framework.FluxCommand;
@@ -35,12 +36,28 @@ import org.metafacture.framework.helpers.ForwardingStreamPipe;
 @FluxCommand("filter-null-values")
 public final class NullFilter extends ForwardingStreamPipe {
 
-    private String replacement = null;
+    private String replacement;
 
+    /**
+     * Creates an instance of {@link NullFilter}.
+     */
+    public NullFilter() {
+    }
+
+    /**
+     * Sets the replacement.
+     *
+     * @param replacement the replacement
+     */
     public void setReplacement(final String replacement) {
         this.replacement = replacement;
     }
 
+    /**
+     * Gets the replacement or null.
+     *
+     * @return the replacement or null
+     */
     public String getReplacement() {
         return replacement;
     }
@@ -49,7 +66,8 @@ public final class NullFilter extends ForwardingStreamPipe {
     public void literal(final String name, final String value) {
         if (value != null) {
             getReceiver().literal(name, value);
-        } else if (replacement != null) {
+        }
+        else if (replacement != null) {
             getReceiver().literal(name, replacement);
         }
     }

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration;
 
 import java.util.Collection;
@@ -25,10 +26,20 @@ import java.util.Collection;
  * @author Markus Michael Geipel
  *
  */
-public interface Collector <V> {
-
+public interface Collector<V> {
+    /**
+     *
+     * Gets the Collection.
+     *
+     * @return the Collection of collected data
+     */
     Collection<V> getCollection();
 
+    /**
+     * Sets collection.
+     *
+     * @param collection the collection
+     */
     void setCollection(Collection<V> collection);
 
 }

@@ -13,27 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.strings;
 
 import org.metafacture.framework.ObjectReceiver;
 
 /**
- * concatenetes all recieved Strings
+ * Concatenates all received Strings.
  *
  * @author markus geipel
- *
  */
 public final class StringConcatenator implements ObjectReceiver<String> {
 
     private StringBuilder builder = new StringBuilder();
     private String separator = "";
 
+    /**
+     * Creates an instance of {@link StringConcatenator}.
+     */
+    public StringConcatenator() {
+    }
+
     @Override
     public void resetStream() {
         reset();
-
     }
 
+    /**
+     * Sets a separator.
+     *
+     * @param separator the separator
+     */
     public void setSeparator(final String separator) {
         this.separator = separator;
     }
@@ -41,21 +51,27 @@ public final class StringConcatenator implements ObjectReceiver<String> {
     @Override
     public void closeStream() {
         // nothing to do
-
     }
 
     @Override
     public void process(final String obj) {
         builder.append(separator);
         builder.append(obj);
-
     }
 
-    public void reset(){
+    /**
+     * Resets the content.
+     */
+    public void reset() {
         builder = new StringBuilder();
     }
 
-    public String getString(){
+    /**
+     * Gets the string.
+     *
+     * @return the string
+     */
+    public String getString() {
         return builder.toString();
     }
 

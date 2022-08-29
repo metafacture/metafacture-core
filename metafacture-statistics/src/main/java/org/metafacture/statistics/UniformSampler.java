@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.statistics;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+package org.metafacture.statistics;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
@@ -26,6 +23,9 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Draws a uniform sample of records from the input stream.
@@ -49,23 +49,39 @@ public final class UniformSampler<T> extends
 
     private long count;
 
+    /**
+     * Creates an instance of {@link UniformSampler} with a given sample size.
+     *
+     * @param sampleSize the size of the sample
+     */
     public UniformSampler(final int sampleSize) {
-        super();
         this.sampleSize = sampleSize;
         sample = new ArrayList<T>(sampleSize);
     }
 
-
+    /**
+     * Creates an instance of {@link UniformSampler} with a given sample size.
+     *
+     * @param sampleSize the sample size
+     */
     public UniformSampler(final String sampleSize) {
         this(Integer.parseInt(sampleSize));
     }
 
-
+    /**
+     * Gets the sample size.
+     *
+     * @return the sample size.
+     */
     public int getSampleSize() {
         return sampleSize;
     }
 
-
+    /**
+     * Sets the seed.
+     *
+     * @param seed the seed.
+     */
     public void setSeed(final long seed) {
         random.setSeed(seed);
     }
@@ -73,12 +89,13 @@ public final class UniformSampler<T> extends
     @Override
     public void process(final T obj) {
         assert !isClosed();
-        assert null!=obj;
+        assert null != obj;
         count += 1;
         if (sample.size() < sampleSize) {
             sample.add(obj);
-        } else {
-            final double p = sampleSize / (double)count;
+        }
+        else {
+            final double p = sampleSize / (double) count;
             if (random.nextDouble() < p) {
                 sample.set(random.nextInt(sampleSize), obj);
             }
@@ -87,7 +104,7 @@ public final class UniformSampler<T> extends
 
     @Override
     protected void onCloseStream() {
-        for(T obj : sample) {
+        for (final T obj : sample) {
             getReceiver().process(obj);
         }
         sample.clear();

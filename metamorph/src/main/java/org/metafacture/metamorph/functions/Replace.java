@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
-import java.util.regex.Pattern;
-
 import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
+
+import java.util.regex.Pattern;
 
 /**
  * Replaces the matches of pattern with a set value.
@@ -29,15 +30,31 @@ public final class Replace extends AbstractSimpleStatelessFunction {
     private Pattern pattern;
     private String with;
 
+    /**
+     * Creates an instance of {@link Replace}.
+     */
+    public Replace() {
+    }
+
     @Override
     public String process(final String value) {
         return pattern.matcher(value).replaceAll(with);
     }
 
+    /**
+     * Sets the pattern.
+     *
+     * @param string the pattern
+     */
     public void setPattern(final String string) {
-        this.pattern = Pattern.compile(string);
+        pattern = Pattern.compile(string);
     }
 
+    /**
+     * Sets the replacement.
+     *
+     * @param with the replacement
+     */
     public void setWith(final String with) {
         this.with = with;
     }

@@ -16,6 +16,7 @@
 /*
  *  Code based on http://www.javaspecialists.eu/archive/Issue092.html
  */
+
 package org.metafacture.triples;
 
 import java.lang.management.ManagementFactory;
@@ -25,7 +26,6 @@ import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryType;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import javax.management.Notification;
 import javax.management.NotificationEmitter;
 import javax.management.NotificationListener;
@@ -61,7 +61,7 @@ final class MemoryWarningSystem {
         }, null, null);
     }
 
-    private static Collection<Listener> getListeners(){
+    private static Collection<Listener> getListeners() {
         return LISTENERS;
     }
 
@@ -97,10 +97,11 @@ final class MemoryWarningSystem {
     private static MemoryPoolMXBean findTenuredGenPool() {
         // I don't know whether this approach is better, or whether
         // we should rather check for the pool name "Tenured Gen"?
-        for (final MemoryPoolMXBean pool : ManagementFactory.getMemoryPoolMXBeans())
+        for (final MemoryPoolMXBean pool : ManagementFactory.getMemoryPoolMXBeans()) {
             if (pool.getType() == MemoryType.HEAP && pool.isUsageThresholdSupported()) {
                 return pool;
             }
+        }
         throw new AssertionError("Could not find tenured space");
     }
 

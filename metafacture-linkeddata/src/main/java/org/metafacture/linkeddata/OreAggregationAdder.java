@@ -13,15 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.linkeddata;
 
-import java.io.IOException;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.regex.Pattern;
+package org.metafacture.linkeddata;
 
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.commons.types.ListMap;
@@ -33,7 +26,13 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
-
+import java.io.IOException;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.regex.Pattern;
 
 /**
  * Adds ore:Aggregation to an Europeana Data Model stream. The aggregation id is
@@ -63,16 +62,23 @@ public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver>
         final Properties properties;
         try {
             properties = ResourceUtil.loadProperties(ORE_AGGREGATION_PROPERTIES);
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException("Failed to load properties", e);
         }
-        for (Entry<Object, Object> entry : properties.entrySet()) {
+        for (final Entry<Object, Object> entry : properties.entrySet()) {
             final String[] parts = SPLIT_PATTERN.split(entry.getValue().toString());
             final String name = entry.getKey().toString();
-            for (String value : parts) {
+            for (final String value : parts) {
                 AGGREGATED_ENTITIES.add(name, value);
             }
         }
+    }
+
+    /**
+     * Creates an instance of {@link OreAggregationAdder}.
+     */
+    public OreAggregationAdder() {
     }
 
     @Override
@@ -94,19 +100,20 @@ public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver>
             final StreamReceiver receiver = getReceiver();
             receiver.startEntity(ORE_AGGREGATION);
             receiver.literal(RDF_ABOUT, aggregationId);
-            for (Entry<String, List<String>> entry : aggregation.entrySet()) {
+            for (final Entry<String, List<String>> entry : aggregation.entrySet()) {
                 final String key = entry.getKey();
                 if (AGGREGATED_ENTITIES.containsKey(key)) {
 
-                    for (String entity : AGGREGATED_ENTITIES.get(key)) {
-                        for (String value : entry.getValue()) {
+                    for (final String entity : AGGREGATED_ENTITIES.get(key)) {
+                        for (final String value : entry.getValue()) {
                             receiver.startEntity(entity);
                             receiver.literal(RDF_REFERENCE, value);
                             receiver.endEntity();
                         }
                     }
-                } else {
-                    for (String value : entry.getValue()) {
+                }
+                else {
+                    for (final String value : entry.getValue()) {
                         receiver.literal(key, value);
                     }
                 }
@@ -132,13 +139,14 @@ public final class OreAggregationAdder extends DefaultStreamPipe<StreamReceiver>
         if (entityStack.isEmpty()) {
             if (AGGREGATION_ID.equals(name)) {
                 aggregationId = value;
-            } else {
+            }
+            else {
                 aggregation.add(name, value);
             }
             return;
         }
 
-        if (entityStack.size()==1 && RDF_ABOUT.equals(name) && AGGREGATED_ENTITIES.containsKey(entityStack.peek())) {
+        if (entityStack.size() == 1 && RDF_ABOUT.equals(name) && AGGREGATED_ENTITIES.containsKey(entityStack.peek())) {
             aggregation.add(entityStack.peek(), value);
         }
         getReceiver().literal(name, value);

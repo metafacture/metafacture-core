@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formatting;
 
 import org.metafacture.framework.FluxCommand;
@@ -45,8 +46,7 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("encode-literals")
-public final class StreamLiteralFormatter
-        extends DefaultStreamPipe<ObjectReceiver<String>> {
+public final class StreamLiteralFormatter extends DefaultStreamPipe<ObjectReceiver<String>> {
 
     /**
      * The default value for {@link #setSeparator(String)}.
@@ -54,6 +54,12 @@ public final class StreamLiteralFormatter
     public static final String DEFAULT_SEPARATOR = "\t";
 
     private String separator = DEFAULT_SEPARATOR;
+
+    /**
+     * Creates an instance of {@link StreamLiteralFormatter}.
+     */
+    public StreamLiteralFormatter() {
+    }
 
     /**
      * Sets the separator between the literal name and value. The separator is
@@ -70,6 +76,11 @@ public final class StreamLiteralFormatter
         this.separator = separator;
     }
 
+    /**
+     * Gets the separator.
+     *
+     * @return the separator
+     */
     public String getSeparator() {
         return separator;
     }
@@ -78,7 +89,8 @@ public final class StreamLiteralFormatter
     public void literal(final String name, final String value) {
         if (name == null || name.isEmpty()) {
             getReceiver().process(value);
-        } else {
+        }
+        else {
             getReceiver().process(name + separator + value);
         }
     }

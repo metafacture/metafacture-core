@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.io;
 
-import java.io.Reader;
+package org.metafacture.io;
 
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.FluxCommand;
@@ -26,7 +25,8 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  * Opens a resource or file and passes a reader for it to the receiver.
@@ -38,10 +38,15 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(String.class)
 @Out(java.io.Reader.class)
 @FluxCommand("open-resource")
-public final class ResourceOpener
-        extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
+public final class ResourceOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
     private String encoding = "UTF-8";
+
+    /**
+     * Creates an instance of {@link ResourceOpener}.
+     */
+    public ResourceOpener() {
+    }
 
     /**
      * Returns the encoding used to open the resource.
@@ -65,7 +70,8 @@ public final class ResourceOpener
     public void process(final String file) {
         try {
             getReceiver().process(ResourceUtil.getReader(file, encoding));
-        } catch (java.io.IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }

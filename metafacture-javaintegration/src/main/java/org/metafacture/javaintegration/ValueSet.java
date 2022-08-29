@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration;
+
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-
 
 /**
  * Collects {@link String}s in a {@link Set}.
@@ -29,17 +29,15 @@ import org.metafacture.framework.helpers.DefaultStreamReceiver;
  * @author Markus Michael Geipel
  *
  */
-public final class ValueSet extends DefaultStreamReceiver
-        implements Set<String>, Collector<Set<String>> {
+public final class ValueSet extends DefaultStreamReceiver implements Set<String>, Collector<Set<String>> {
 
-    private Collection<Set<String>> collection;
+    private Collection<Set<String>> collection = new HashSet<>();
     private Set<String> set;
 
+    /**
+     * Creates an instance of {@link ValueSet}.
+     */
     public ValueSet() {
-        super();
-        set = new HashSet<>();
-        this.collection = null;
-
     }
 
     /**
@@ -49,8 +47,6 @@ public final class ValueSet extends DefaultStreamReceiver
      * @param collection is filled with the received results.
      */
     public ValueSet(final Collection<Set<String>> collection) {
-        super();
-        set = new HashSet<>();
         this.collection = collection;
     }
 

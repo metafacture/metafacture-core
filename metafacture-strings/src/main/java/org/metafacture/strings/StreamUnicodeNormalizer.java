@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.strings;
 
-import java.text.Normalizer;
+package org.metafacture.strings;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
@@ -23,6 +22,8 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.text.Normalizer;
 
 /**
  * Normalises Unicode characters in record identifiers, entity and literal
@@ -42,14 +43,12 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("normalize-unicode-stream")
-public final class StreamUnicodeNormalizer
-        extends DefaultStreamPipe<StreamReceiver> {
+public final class StreamUnicodeNormalizer extends DefaultStreamPipe<StreamReceiver> {
 
     /**
      * The default value for {@link #setNormalizationForm(Normalizer.Form)}.
      */
-    public static final Normalizer.Form DEFAULT_NORMALIZATION_FORM =
-            Normalizer.Form.NFC;
+    public static final Normalizer.Form DEFAULT_NORMALIZATION_FORM = Normalizer.Form.NFC;
 
     private boolean normalizeIds;
     private boolean normalizeKeys;
@@ -58,56 +57,77 @@ public final class StreamUnicodeNormalizer
     private Normalizer.Form normalizationForm = DEFAULT_NORMALIZATION_FORM;
 
     /**
-     * Controls whether to normalise record identifiers. By default record
-     * identifiers are not normalised.
+     * Creates an instance of {@link StreamUnicodeNormalizer}.
+     */
+    public StreamUnicodeNormalizer() {
+    }
+
+    /**
+     * Controls whether to normalize record identifiers. By default record
+     * identifiers are not normalized.
      * <p>
      * This parameter may be changed at any time. It becomes immediately
      * effective and affects all subsequently received <i>start-record</i>
      * events.
      *
-     * @param normalizeIds if true identifiers are normalised, otherwise not.
+     * @param normalizeIds if true identifiers are normalized, otherwise not.
      */
     public void setNormalizeIds(final boolean normalizeIds) {
         this.normalizeIds = normalizeIds;
     }
 
+    /**
+     * Checks whether IDs should be normalized.
+     *
+     * @return true if IDs should be normalized
+     */
     public boolean getNormalizeIds() {
         return normalizeIds;
     }
 
     /**
-     * Controls whether to normalise literal and entity names. By default these
-     * are not normalised.
+     * Controls whether to normalize literal and entity names. By default these
+     * are not normalized.
      * <p>
      * This parameter may be changed at any time. It becomes immediately
      * effective and affects all subsequently received <i>start-entity</i> and
      * <i>literal</i> events.
      *
-     * @param normalizeKeys if true literal and entity names are normalised,
+     * @param normalizeKeys if true literal and entity names are normalized,
      * otherwise not.
      */
     public void setNormalizeKeys(final boolean normalizeKeys) {
         this.normalizeKeys = normalizeKeys;
     }
 
+    /**
+     * Checks whether keys should be normalized.
+     *
+     * @return true if the keys should be normalized
+     */
     public boolean getNormalizeKeys() {
         return normalizeKeys;
     }
 
     /**
      * Controls whether to normalise literal values. By default these are
-     * normalised.
+     * normalized.
      * <p>
      * This parameter may be changed at any time. It becomes immediately
      * effective and affects all subsequently received <i>literal</i> events.
      *
-     * @param normalizeValues if true literal values are normalised, otherwise
+     * @param normalizeValues if true literal values are normalized, otherwise
      * not.
      */
     public void setNormalizeValues(final boolean normalizeValues) {
         this.normalizeValues = normalizeValues;
     }
 
+    /**
+     * Checks whether values should be normalized.
+     *
+     * @return true if values should be normalized
+     */
     public boolean getNormalizeValues() {
         return normalizeValues;
     }
@@ -129,6 +149,11 @@ public final class StreamUnicodeNormalizer
         this.normalizationForm = normalizationForm;
     }
 
+    /**
+     * Gets the normalization form.
+     *
+     * @return the {@link java.text.Normalizer.Form}
+     */
     public Normalizer.Form getNormalizationForm() {
         return normalizationForm;
     }
@@ -161,10 +186,8 @@ public final class StreamUnicodeNormalizer
 
     @Override
     public void literal(final String name, final String value) {
-        final String normalizedName =
-                normalizeKeys ? normalize(name) : name;
-        final String normalizedValue=
-                normalizeValues ? normalize(value) : value;
+        final String normalizedName = normalizeKeys ? normalize(name) : name;
+        final String normalizedValue = normalizeValues ? normalize(value) : value;
 
         getReceiver().literal(normalizedName, normalizedValue);
     }

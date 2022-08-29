@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.types;
 
 /**
- * Stores an immutable name-value-pair. The hash code is
+ * Stores an immutable name-value pair. The hash code is
  * precomputed during instantiation.
  *
  * @author Markus Michael Geipel
@@ -29,6 +30,12 @@ public final class NamedValue  implements Comparable<NamedValue> {
     private final String value;
     private final int preCompHashCode;
 
+    /**
+     * Constructs an immutable name-value pair by computing a hash code.
+     *
+     * @param name  the name of the pair
+     * @param value the value of the pair
+     */
     public NamedValue(final String name, final String value) {
         this.name = name;
         this.value = value;
@@ -61,9 +68,9 @@ public final class NamedValue  implements Comparable<NamedValue> {
     public boolean equals(final Object obj) {
         if (obj instanceof NamedValue) {
             final NamedValue namedValue = (NamedValue) obj;
-            return namedValue.preCompHashCode == preCompHashCode
-                    && namedValue.name.equals(name)
-                    && namedValue.value.equals(value);
+            return namedValue.preCompHashCode == preCompHashCode &&
+                    namedValue.name.equals(name) &&
+                    namedValue.value.equals(value);
         }
         return false;
     }

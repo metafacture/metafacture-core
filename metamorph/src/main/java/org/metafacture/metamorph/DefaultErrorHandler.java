@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph;
 
+package org.metafacture.metamorph;
 
 import org.metafacture.metamorph.api.MorphErrorHandler;
 
@@ -26,11 +26,15 @@ import org.metafacture.metamorph.api.MorphErrorHandler;
  */
 public final class DefaultErrorHandler implements MorphErrorHandler {
 
+    /**
+     * Creates an instance of {@link DefaultErrorHandler}.
+     */
+    public DefaultErrorHandler() {
+    }
+
     @Override
     public void error(final Exception exception) {
-        throw new MetamorphException(
-                "Error while executing the Metamorph transformation pipeline: " +
-                        exception.getMessage(), exception);
+        throw new MetamorphException("Error while executing the Metamorph transformation pipeline: " + exception.getMessage(), exception);
     }
 
 }

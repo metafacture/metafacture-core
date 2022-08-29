@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration.pojo;
 
-import java.util.Map;
-
 import org.metafacture.framework.StreamReceiver;
+
+import java.util.Map;
 
 /**
  * Decodes a {@link Map} to a Metafacture event stream.
@@ -37,8 +38,7 @@ class MapTypeDecoder implements TypeDecoder {
     }
 
     @Override
-    public void decodeToStream(final StreamReceiver streamReceiver,
-            final String name, final Object object) {
+    public void decodeToStream(final StreamReceiver streamReceiver, final String name, final Object object) {
         final Map<?, ?> map = (Map<?, ?>) object;
         if (name != null) {
             streamReceiver.startEntity(name);
@@ -46,8 +46,7 @@ class MapTypeDecoder implements TypeDecoder {
         for (final Map.Entry<?, ?> entry : map.entrySet()) {
             final String key = entry.getKey().toString();
             final Object value = entry.getValue();
-            final TypeDecoder typeDecoder = typeDecoderFactory.create(value
-                    .getClass());
+            final TypeDecoder typeDecoder = typeDecoderFactory.create(value.getClass());
             typeDecoder.decodeToStream(streamReceiver, key, value);
         }
         if (name != null) {

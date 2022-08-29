@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.flowcontrol;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+package org.metafacture.flowcontrol;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectPipe;
@@ -24,8 +22,12 @@ import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Creates a new thread in which subsequent flow elements run.
@@ -49,18 +51,37 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
     private ObjectReceiver<T> receiver;
     private boolean debug;
 
+    /**
+     * Creates an instance of {@link ObjectPipeDecoupler} by setting a default
+     * capacity of {@value #DEFAULT_CAPACITY}.
+     */
     public ObjectPipeDecoupler() {
         queue = new LinkedBlockingQueue<>(DEFAULT_CAPACITY);
     }
 
+    /**
+     * Creates an instance of {@link ObjectPipeDecoupler} by setting a capacity.
+     *
+     * @param capacity the capacity
+     */
     public ObjectPipeDecoupler(final int capacity) {
         queue = new LinkedBlockingQueue<>(capacity);
     }
 
+    /**
+     * Creates an instance of {@link ObjectPipeDecoupler} by setting a capacity.
+     *
+     * @param capacity the capacity as String. Will be parsed as integer.
+     */
     public ObjectPipeDecoupler(final String capacity) {
         queue = new LinkedBlockingQueue<>(Integer.parseInt(capacity));
     }
 
+    /**
+     * Sets the log messages to be more verbose.
+     *
+     * @param debug true if the log messages should be more verbose
+     */
     public void setDebug(final boolean debug) {
         this.debug = debug;
     }
@@ -76,7 +97,8 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
             if (debug) {
                 LOG.info("Current buffer size: {}", queue.size());
             }
-        } catch (InterruptedException e) {
+        }
+        catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
         }
     }
@@ -87,20 +109,21 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
     }
 
     @Override
-    public <R extends ObjectReceiver<T>> R setReceiver(final R receiver) {
+    public <R extends ObjectReceiver<T>> R setReceiver(final R newReceiver) {
         if (null != thread) {
             throw new IllegalStateException("Receiver cannot be changed while processing thread is running.");
         }
 
-        this.receiver = receiver;
-        return receiver;
+        receiver = newReceiver;
+        return newReceiver;
     }
 
     @Override
     public void resetStream() {
         try {
             queue.put(Feeder.BLUE_PILL);
-        } catch (InterruptedException e) {
+        }
+        catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
         }
     }
@@ -110,7 +133,8 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
         try {
             queue.put(Feeder.RED_PILL);
             thread.join();
-        } catch (InterruptedException e) {
+        }
+        catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
         }
         thread = null;
@@ -128,7 +152,7 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
         private final ObjectReceiver<T> receiver;
         private final BlockingQueue<Object> queue;
 
-        public Feeder(final ObjectReceiver<T> receiver, final BlockingQueue<Object> queue) {
+        Feeder(final ObjectReceiver<T> receiver, final BlockingQueue<Object> queue) {
             this.receiver = receiver;
             this.queue = queue;
         }
@@ -150,7 +174,8 @@ public final class ObjectPipeDecoupler<T> implements ObjectPipe<T, ObjectReceive
                     }
                     receiver.process((T) object);
                 }
-            } catch (InterruptedException e) {
+            }
+            catch (final InterruptedException e) {
                 Thread.currentThread().interrupt();
                 return;
             }

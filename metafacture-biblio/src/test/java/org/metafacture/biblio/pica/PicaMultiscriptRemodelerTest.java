@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.biblio.pica;
 
 import static org.mockito.Mockito.inOrder;
@@ -305,7 +306,8 @@ public class PicaMultiscriptRemodelerTest {
     private String mapScriptToEntityName(final String script) {
         if (SCRIPT_LATIN.equals(script)) {
             return PicaMultiscriptRemodeler.ENTITY_NAME_FOR_LATIN;
-        } else if (SCRIPT_ARABIC.equals(script)
+        }
+        else if (SCRIPT_ARABIC.equals(script)
                 || SCRIPT_HEBREW.equals(script)) {
             return PicaMultiscriptRemodeler.ENTITY_NAME_FOR_NON_LATIN_RL;
         }

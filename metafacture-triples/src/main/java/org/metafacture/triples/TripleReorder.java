@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.triples;
 
 import org.metafacture.framework.FluxCommand;
@@ -24,22 +25,21 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.metafacture.framework.objects.Triple;
 
 /**
- * Shifts subjectTo predicateTo and object around.
+ * Shifts subjectTo predicateTo and objectTo around.
  *
  * @author Christoph Böhme
  *
  */
-@Description("Shifts subjectTo predicateTo and object around")
+@Description("Shifts subjectTo predicateTo and objectTo around")
 @In(Triple.class)
 @Out(Triple.class)
 @FluxCommand("reorder-triple")
-public final class TripleReorder extends
-        DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
+public final class TripleReorder extends DefaultObjectPipe<Triple, ObjectReceiver<Triple>> {
 
     /**
      * Names of the elements in the triple
      */
-    public enum TripleElement { SUBJECT, PREDICATE, OBJECT };
+    public enum TripleElement { SUBJECT, PREDICATE, OBJECT }
     // Do not change the item order because the process method
     // uses ordinal().
 
@@ -47,26 +47,62 @@ public final class TripleReorder extends
     private TripleElement predicateFrom = TripleElement.PREDICATE;
     private TripleElement objectFrom =  TripleElement.OBJECT;
 
+    /**
+     * Creates an instance of {@link TripleReorder}.
+     */
+    public TripleReorder() {
+    }
+
+    /**
+     * Gets the TripleElement to shift the subject to.
+     *
+     * @return the {@link TripleElement}
+     */
     public TripleElement getSubjectFrom() {
         return subjectFrom;
     }
 
+    /**
+     * Gets the TripleElement to shift the predicate to.
+     *
+     * @return the {@link TripleElement}
+     */
     public TripleElement getPredicateFrom() {
         return predicateFrom;
     }
 
+    /**
+     * Gets the TripleElement to shift the object to.
+     *
+     * @return the {@link TripleElement}
+     */
     public TripleElement getObjectFrom() {
         return objectFrom;
     }
 
+    /**
+     * Sets shifting the subject from the given TripleElement.
+     *
+     * @param subjectFrom the {@link TripleElement}
+     */
     public void setSubjectFrom(final TripleElement subjectFrom) {
         this.subjectFrom = subjectFrom;
     }
 
+    /**
+     * Sets shifting the predicate from the given TripleElement.
+     *
+     * @param predicateFrom the {@link TripleElement}
+     */
     public void setPredicateFrom(final TripleElement predicateFrom) {
         this.predicateFrom = predicateFrom;
     }
 
+    /**
+     * Sets shifting the object from the given TripleElement.
+     *
+     * @param objectFrom the {@link TripleElement}
+     */
     public void setObjectFrom(final TripleElement objectFrom) {
         this.objectFrom = objectFrom;
     }
@@ -76,7 +112,7 @@ public final class TripleReorder extends
         final String[] elements = {
                 triple.getSubject(),
                 triple.getPredicate(),
-                triple.getObject(),
+                triple.getObject()
         };
 
         getReceiver().process(new Triple(

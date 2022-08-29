@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.collectors;
+
+import org.metafacture.metamorph.api.NamedValueSource;
+import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.metafacture.metamorph.api.NamedValueSource;
-import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
 
 /**
  * Corresponds to the <code>&lt;collect-literal&gt;</code> tag.
@@ -30,18 +31,40 @@ import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
 public final class Square extends AbstractFlushingCollect {
 
     private final List<String> values = new ArrayList<String>();
+
     private String prefix = "";
     private String postfix = "";
     private String delimiter = "";
 
+    /**
+     * Creates an instance of {@link Square}.
+     */
+    public Square() {
+    }
+
+    /**
+     * Sets the prefix.
+     *
+     * @param prefix the prefix
+     */
     public void setPrefix(final String prefix) {
         this.prefix = prefix;
     }
 
+    /**
+     * Sets the postfix.
+     *
+     * @param postfix the postfix
+     */
     public void setPostfix(final String postfix) {
         this.postfix = postfix;
     }
 
+    /**
+     * Sets the delimiter.
+     *
+     * @param delimiter the delimiter
+     */
     public void setDelimiter(final String delimiter) {
         this.delimiter = delimiter;
     }
@@ -50,7 +73,7 @@ public final class Square extends AbstractFlushingCollect {
     protected void emit() {
         Collections.sort(values);
         final int size = values.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; ++i) {
             final String last = values.remove(values.size() - 1);
             for (final String value : values) {
                 getNamedValueReceiver().receive(getName(),
@@ -66,8 +89,7 @@ public final class Square extends AbstractFlushingCollect {
     }
 
     @Override
-    protected void receive(final String name, final String value,
-            final NamedValueSource source) {
+    protected void receive(final String name, final String value, final NamedValueSource source) {
         values.add(value);
     }
 

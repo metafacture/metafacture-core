@@ -1,15 +1,14 @@
 package org.metafacture.io;
 
-import static java.util.Objects.requireNonNull;
+import org.metafacture.framework.helpers.DefaultObjectReceiver;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Objects;
 import java.util.function.Supplier;
-
-import org.metafacture.framework.helpers.DefaultObjectReceiver;
 
 /**
  * Writes byte arrays to regular output files.
@@ -29,6 +28,12 @@ public class ByteStreamFileWriter extends DefaultObjectReceiver<byte[]> {
     private OutputStream outputStream;
 
     /**
+     * Creates an instance of {@link ByteStreamFileWriter}.
+     */
+    public ByteStreamFileWriter() {
+    }
+
+    /**
      * Supplier for file names.
      * <p>
      * A new output file is created when {@link #process(byte[])} is called
@@ -42,9 +47,8 @@ public class ByteStreamFileWriter extends DefaultObjectReceiver<byte[]> {
      *
      * @param fileNameSupplier a supplier that returns file names.
      */
-    public void setFileNameSupplier(Supplier<File> fileNameSupplier) {
-
-        this.fileNameSupplier = requireNonNull(fileNameSupplier);
+    public void setFileNameSupplier(final Supplier<File> fileNameSupplier) {
+        this.fileNameSupplier = Objects.requireNonNull(fileNameSupplier);
     }
 
     /**
@@ -58,8 +62,7 @@ public class ByteStreamFileWriter extends DefaultObjectReceiver<byte[]> {
      * @param appendIfFileExists true if new data should be appended,
      *                           false to overwrite the existing file.
      */
-    public void setAppendIfFileExists(boolean appendIfFileExists) {
-
+    public void setAppendIfFileExists(final boolean appendIfFileExists) {
         this.appendIfFileExists = appendIfFileExists;
     }
 
@@ -75,8 +78,7 @@ public class ByteStreamFileWriter extends DefaultObjectReceiver<byte[]> {
      * @param flushAfterWrite true if the output stream should be flushed
      *                        after every write.
      */
-    public void setFlushAfterWrite(boolean flushAfterWrite) {
-
+    public void setFlushAfterWrite(final boolean flushAfterWrite) {
         this.flushAfterWrite = flushAfterWrite;
     }
 
@@ -88,7 +90,6 @@ public class ByteStreamFileWriter extends DefaultObjectReceiver<byte[]> {
      */
     @Override
     public void process(final byte[] bytes) {
-
         ensureOpenStream();
         try {
             outputStream.write(bytes);
@@ -96,7 +97,8 @@ public class ByteStreamFileWriter extends DefaultObjectReceiver<byte[]> {
                 outputStream.flush();
             }
 
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new WriteFailed("Error while writing bytes to output stream", e);
         }
     }
@@ -109,7 +111,6 @@ public class ByteStreamFileWriter extends DefaultObjectReceiver<byte[]> {
      */
     @Override
     public void resetStream() {
-
         closeStream();
         ensureOpenStream();
     }
@@ -121,12 +122,12 @@ public class ByteStreamFileWriter extends DefaultObjectReceiver<byte[]> {
      */
     @Override
     public void closeStream() {
-
         if (outputStream != null) {
             try {
                 outputStream.close();
 
-            } catch (IOException e) {
+            }
+            catch (final IOException e) {
                 throw new CloseFailed("Error while closing output stream", e);
             }
             outputStream = null;
@@ -134,14 +135,14 @@ public class ByteStreamFileWriter extends DefaultObjectReceiver<byte[]> {
     }
 
     private void ensureOpenStream() {
-
         if (outputStream != null) {
             return;
         }
         try {
             outputStream = new FileOutputStream(fileNameSupplier.get(), appendIfFileExists);
 
-        } catch (FileNotFoundException e) {
+        }
+        catch (final FileNotFoundException e) {
             throw new OpenFailed("Cannot open output stream. File not found.", e);
         }
     }

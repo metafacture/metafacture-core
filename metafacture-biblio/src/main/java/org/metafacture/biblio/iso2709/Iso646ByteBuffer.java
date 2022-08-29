@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.biblio.iso2709;
 
-import java.nio.charset.Charset;
-
 import org.metafacture.framework.FormatException;
+
+import java.nio.charset.Charset;
 
 /**
  * Provides methods for reading and writing strings and integers in a byte
@@ -255,7 +256,7 @@ final class Iso646ByteBuffer {
     }
 
     void writeInt(final int value) {
-        assert 0 <= value && value < 10;
+        assert 0 <= value && value < RADIX;
         byteArray[writePosition] = (byte) (Iso646Constants.ZERO + value);
         writePosition += 1;
     }
@@ -265,7 +266,7 @@ final class Iso646ByteBuffer {
         assert digits >= 0;
         assert (writePosition + digits) <= byteArray.length;
         int head = value;
-        for (int i = writePosition + digits - 1; i >= writePosition; i--) {
+        for (int i = writePosition + digits - 1; i >= writePosition; --i) {
             byteArray[i] = (byte) (Iso646Constants.ZERO + head % RADIX);
             head /= RADIX;
         }

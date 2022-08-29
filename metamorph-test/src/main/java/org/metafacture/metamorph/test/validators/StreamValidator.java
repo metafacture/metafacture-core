@@ -13,7 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.test.validators;
+
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.javaintegration.EventList;
+import org.metafacture.javaintegration.EventList.Event;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -21,13 +29,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.javaintegration.EventList;
-import org.metafacture.javaintegration.EventList.Event;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * Validates a stream of events using a list of expected stream events.
@@ -43,23 +44,18 @@ import org.slf4j.LoggerFactory;
  */
 public final class StreamValidator implements StreamReceiver {
 
-    public static final Consumer<String> DEFAULT_ERROR_HANDLER =
-            msg -> { /* do nothing */ };
+    public static final Consumer<String> DEFAULT_ERROR_HANDLER = msg -> { /* do nothing */ };
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(StreamValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StreamValidator.class);
 
-    private static final String CANNOT_CHANGE_OPTIONS =
-            "Cannot change options during validation";
-    private static final String VALIDATION_FAILED =
-            "Validation failed. Please reset the validator";
+    private static final String CANNOT_CHANGE_OPTIONS = "Cannot change options during validation";
+    private static final String VALIDATION_FAILED = "Validation failed. Please reset the validator";
 
     private static final String NO_RECORD_FOUND = "No record found: ";
     private static final String NO_ENTITY_FOUND = "No entity found: ";
     private static final String NO_LITERAL_FOUND = "No literal found: ";
 
-    private static final String UNCONSUMED_RECORDS_FOUND =
-            "Unconsumed records found";
+    private static final String UNCONSUMED_RECORDS_FOUND = "Unconsumed records found";
 
     private final Deque<List<EventNode>> stack = new ArrayDeque<>();
     private final EventNode eventStream;
@@ -72,9 +68,16 @@ public final class StreamValidator implements StreamReceiver {
     private boolean strictKeyOrder;
     private boolean strictValueOrder;
 
-    private final WellformednessChecker wellformednessChecker =
-            new WellformednessChecker();
+    private final WellformednessChecker wellformednessChecker = new WellformednessChecker();
 
+    /**
+     * Constructs a StreamValidator with a List of {@link Event}s. Validates this
+     * stream of events using that list of expected stream events. If the stream is
+     * invalid, the error handler set via {@link #setErrorHandler(Consumer)} is
+     * called. Checks for wellformedness and resets the stream.
+     *
+     * @param expectedStream the List of expected stream events
+     */
     public StreamValidator(final List<Event> expectedStream) {
         this.eventStream = new EventNode(null, null);
         foldEventStream(this.eventStream, expectedStream.iterator());
@@ -97,14 +100,30 @@ public final class StreamValidator implements StreamReceiver {
         wellformednessChecker.setErrorHandler(errorHandler);
     }
 
+    /**
+     * Gets the error handler.
+     *
+     * @return the error handler as a {@link Consumer}
+     */
     public Consumer<String> getErrorHandler() {
         return errorHandler;
     }
 
+    /**
+     * Checks whether the record order is strict.
+     *
+     * @return true if the record order is strict
+     */
     public boolean isStrictRecordOrder() {
         return strictRecordOrder;
     }
 
+    /**
+     * Sets strict record order.
+     *
+     * @param strictRecordOrder "true" if the record order should be strict, or
+     *                          "false" otherwise
+     */
     public void setStrictRecordOrder(final boolean strictRecordOrder) {
         if (validating) {
             throw new IllegalStateException(CANNOT_CHANGE_OPTIONS);
@@ -113,10 +132,21 @@ public final class StreamValidator implements StreamReceiver {
         this.strictRecordOrder = strictRecordOrder;
     }
 
+    /**
+     * Checks whether the key order is strict.
+     *
+     * @return true if the key order is strict
+     */
     public boolean isStrictKeyOrder() {
         return strictKeyOrder;
     }
 
+    /**
+     * Sets strict key order.
+     *
+     * @param strictKeyOrder "true" if key order should be strict, or
+     *                       "false" otherwise
+     */
     public void setStrictKeyOrder(final boolean strictKeyOrder) {
         if (validating) {
             throw new IllegalStateException(CANNOT_CHANGE_OPTIONS);
@@ -125,10 +155,21 @@ public final class StreamValidator implements StreamReceiver {
         this.strictKeyOrder = strictKeyOrder;
     }
 
+    /**
+     * Checks whether the value order is strict.
+     *
+     * @return true if the value order is strict
+     */
     public boolean isStrictValueOrder() {
         return strictValueOrder;
     }
 
+    /**
+     * Sets strict value order.
+     *
+     * @param strictValueOrder "true" if value order should be strict, or
+     *                         "false" otherwise
+     */
     public void setStrictValueOrder(final boolean strictValueOrder) {
         if (validating) {
             throw new IllegalStateException(CANNOT_CHANGE_OPTIONS);
@@ -167,8 +208,7 @@ public final class StreamValidator implements StreamReceiver {
         if (!closeGroups()) {
             validationFailed = true;
             logEventStream();
-            errorHandler.accept(NO_RECORD_FOUND +
-                    "No record matched the sequence of stream events");
+            errorHandler.accept(NO_RECORD_FOUND + "No record matched the sequence of stream events");
         }
     }
 
@@ -199,8 +239,7 @@ public final class StreamValidator implements StreamReceiver {
         if (!closeGroups()) {
             validationFailed = true;
             logEventStream();
-            errorHandler.accept(NO_ENTITY_FOUND +
-                    "No entity matched the sequence of stream events");
+            errorHandler.accept(NO_ENTITY_FOUND + "No entity matched the sequence of stream events");
         }
     }
 
@@ -258,40 +297,39 @@ public final class StreamValidator implements StreamReceiver {
 
         if (isGroupConsumed(eventStream)) {
             eventStream.setConsumed(true);
-        } else {
+        }
+        else {
             validationFailed = true;
             logEventStream();
             errorHandler.accept(UNCONSUMED_RECORDS_FOUND);
         }
     }
 
-    private void foldEventStream(final EventNode parent,
-            final Iterator<Event> eventStream) {
-        while (eventStream.hasNext()) {
-            final Event event = eventStream.next();
+    private void foldEventStream(final EventNode parent, final Iterator<Event> currentEventStream) {
+        while (currentEventStream.hasNext()) {
+            final Event event = currentEventStream.next();
             if (event.getType() == Event.Type.LITERAL) {
                 parent.getChildren().add(new EventNode(event, parent));
-            } else if (event.getType() == Event.Type.START_RECORD
-                    || event.getType() == Event.Type.START_ENTITY) {
+            }
+            else if (event.getType() == Event.Type.START_RECORD || event.getType() == Event.Type.START_ENTITY) {
                 final EventNode newNode = new EventNode(event, parent);
                 parent.getChildren().add(newNode);
-                foldEventStream(newNode, eventStream);
-            } else if (event.getType() == Event.Type.END_RECORD
-                    || event.getType() == Event.Type.END_ENTITY) {
+                foldEventStream(newNode, currentEventStream);
+            }
+            else if (event.getType() == Event.Type.END_RECORD || event.getType() == Event.Type.END_ENTITY) {
                 return;
             }
         }
     }
 
-    private boolean openGroups(final Event.Type type, final String name,
-            final boolean strictKeyOrder, final boolean strictValueOrder) {
+    private boolean openGroups(final Event.Type type, final String name, final boolean currentStrictKeyOrder, final boolean currentStrictValueOrder) {
         final List<EventNode> stackFrame = stack.peek();
         stack.push(new LinkedList<>());
 
         final Iterator<EventNode> iter = stackFrame.iterator();
         while (iter.hasNext()) {
             final EventNode eventNode = iter.next();
-            if (!consumeGroups(eventNode, type, name, strictKeyOrder, strictValueOrder)) {
+            if (!consumeGroups(eventNode, type, name, currentStrictKeyOrder, currentStrictValueOrder)) {
                 resetGroup(eventNode);
                 iter.remove();
             }
@@ -303,11 +341,11 @@ public final class StreamValidator implements StreamReceiver {
     private boolean closeGroups() {
         EventNode lastMatchParent = null;
         for (final EventNode eventNode : stack.pop()) {
-            if (eventNode.getParent() != lastMatchParent
-                    && isGroupConsumed(eventNode)) {
+            if (eventNode.getParent() != lastMatchParent && isGroupConsumed(eventNode)) {
                 eventNode.setConsumed(true);
                 lastMatchParent = eventNode.getParent();
-            } else {
+            }
+            else {
                 resetGroup(eventNode);
             }
         }
@@ -316,8 +354,8 @@ public final class StreamValidator implements StreamReceiver {
     }
 
     private boolean consumeGroups(final EventNode group, final Event.Type type,
-            final String name, final boolean strictKeyOrder,
-            final boolean strictValueOrder) {
+            final String name, final boolean currentStrictKeyOrder,
+            final boolean currentStrictValueOrder) {
         boolean foundMatch = false;
         for (final EventNode c : group.getChildren()) {
             if (!c.isConsumed()) {
@@ -326,11 +364,12 @@ public final class StreamValidator implements StreamReceiver {
                     if (event.getType() == type) {
                         stack.peek().add(c);
                         foundMatch = true;
-                    } else if (strictValueOrder) {
+                    }
+                    else if (currentStrictValueOrder) {
                         break;
                     }
                 }
-                if (strictKeyOrder) {
+                if (currentStrictKeyOrder) {
                     break;
                 }
             }
@@ -338,22 +377,22 @@ public final class StreamValidator implements StreamReceiver {
         return foundMatch;
     }
 
-    private boolean consumeLiteral(final EventNode group, final String name,
-            final String value) {
+    private boolean consumeLiteral(final EventNode group, final String name, final String value) {
         boolean foundMatch = false;
         for (final EventNode eventNode : group.getChildren()) {
             if (!eventNode.isConsumed()) {
                 final Event event = eventNode.getEvent();
                 if (compare(name, event.getName())) {
-                    if (event.getType() == Event.Type.LITERAL
-                            && compare(value, event.getValue())) {
+                    if (event.getType() == Event.Type.LITERAL && compare(value, event.getValue())) {
                         eventNode.setConsumed(true);
                         foundMatch = true;
                         break;
-                    } else if (strictValueOrder) {
+                    }
+                    else if (strictValueOrder) {
                         break;
                     }
-                } else if (strictKeyOrder) {
+                }
+                else if (strictKeyOrder) {
                     break;
                 }
             }
@@ -407,10 +446,10 @@ public final class StreamValidator implements StreamReceiver {
             this.event = event;
             this.parent = parent;
             // The null-event is used to indicate the stream-start:
-            if (this.event == null || this.event.getType() == Event.Type.START_RECORD
-                    || this.event.getType() == Event.Type.START_ENTITY) {
+            if (this.event == null || this.event.getType() == Event.Type.START_RECORD || this.event.getType() == Event.Type.START_ENTITY) {
                 children = new LinkedList<>();
-            } else {
+            }
+            else {
                 children = null;
             }
 
@@ -443,31 +482,29 @@ public final class StreamValidator implements StreamReceiver {
             final String consumedIndicator;
             if (consumed) {
                 consumedIndicator = CONSUMED_INDICATOR;
-            } else {
+            }
+            else {
                 consumedIndicator = "";
             }
 
             if (event == null) {
                 appendChildren(builder);
-            } else {
+            }
+            else {
                 switch (event.getType()) {
                     case START_RECORD:
                         builder.append(event.getName()).append(consumedIndicator).append("{");
                         appendChildren(builder);
                         builder.append("}");
                         break;
-
                     case START_ENTITY:
                         builder.append(event.getName()).append(consumedIndicator).append("[");
                         appendChildren(builder);
                         builder.append("]");
                         break;
-
                     case LITERAL:
-                        builder.append(event.getName()).append("=").append(event.getValue())
-                                .append(consumedIndicator);
+                        builder.append(event.getName()).append("=").append(event.getValue()).append(consumedIndicator);
                         break;
-
                     default:
                         break;
                 }

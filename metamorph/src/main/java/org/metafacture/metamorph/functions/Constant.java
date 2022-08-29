@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
@@ -26,11 +27,22 @@ public final class Constant extends AbstractSimpleStatelessFunction {
 
     private String constValue;
 
+    /**
+     * Creates an instance of {@link Constant}.
+     */
+    public Constant() {
+    }
+
     @Override
     public String process(final String value) {
         return constValue;
     }
 
+    /**
+     * Sets the constant.
+     *
+     * @param string the constant
+     */
     public void setValue(final String string) {
         this.constValue = string;
     }

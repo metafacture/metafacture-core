@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.tries;
 
 /**
@@ -24,32 +25,50 @@ package org.metafacture.commons.tries;
 public final class SimpleTrie<P> {
     private final Node<P> root = new Node<>(null);
 
-    public void put(final String key, final P value){
+    /**
+     * Creates an instance of {@link SimpleTrie}.
+     */
+    public SimpleTrie() {
+    }
 
+    /**
+     * Adds a value for the key.
+     *
+     * @param key   the name of the key
+     * @param value the value
+     */
+    public void put(final String key, final P value) {
         Node<P> node = root;
         Node<P> next;
         final int length = key.length();
-        for (int i = 0; i < length-1; ++i) {
+        for (int i = 0; i < length - 1; ++i) {
             next = node.getNext(key.charAt(i));
-            if(next==null){
+            if (next == null) {
                 next = node.addNext(key.charAt(i));
             }
             node = next;
         }
-        next = node.getNext(key.charAt(length-1));
-        if(next==null){
-            next = node.addNext(key.charAt(length-1), value);
-        }else{
+        next = node.getNext(key.charAt(length - 1));
+        if (next == null) {
+            next = node.addNext(key.charAt(length - 1), value);
+        }
+        else {
             throw new IllegalStateException("Value '" + value + "' already in trie");
         }
     }
 
-    public P get(final String key){
+    /**
+     * Gets the value of a key.
+     *
+     * @param key the name of the key
+     * @return the value
+     */
+    public P get(final String key) {
         Node<P> node = root;
         final int length = key.length();
         for (int i = 0; i < length; ++i) {
             node = node.getNext(key.charAt(i));
-            if(node==null){
+            if (node == null) {
                 return null;
             }
         }
@@ -65,25 +84,25 @@ public final class SimpleTrie<P> {
         private final P value;
         private final CharMap<Node<P>> links = new CharMap<Node<P>>();
 
-        public Node(final P value) {
+        Node(final P value) {
             this.value = value;
         }
 
-        public Node<P> addNext(final char key){
+        public Node<P> addNext(final char key) {
             return addNext(key, null);
         }
 
-        public Node<P> addNext(final char key, final P value){
-            final Node<P> next = new Node<P>(value);
+        public Node<P> addNext(final char key, final P currentValue) {
+            final Node<P> next = new Node<P>(currentValue);
             links.put(key, next);
             return next;
         }
 
-        public P getValue(){
+        public P getValue() {
             return value;
         }
 
-        public Node<P> getNext(final char key){
+        public Node<P> getNext(final char key) {
             return links.get(key);
         }
     }

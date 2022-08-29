@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.api;
 
 /**
@@ -22,7 +23,11 @@ package org.metafacture.metamorph.api;
  *
  */
 public interface ConditionAware {
-
+    /**
+     * makes statements conditional.
+     *
+     * @param receiver the {@link NamedValueSource}
+     */
     void setConditionSource(NamedValueSource receiver);
 
 }

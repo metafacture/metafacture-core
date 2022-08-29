@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.flowcontrol;
 
 import org.metafacture.framework.FluxCommand;
@@ -42,22 +43,32 @@ public class ObjectBatchResetter<T> extends DefaultObjectPipe<T, ObjectReceiver<
     private int objectCount;
 
     /**
+     * Creates an instance of {@link ObjectBatchResetter}.
+     */
+    public ObjectBatchResetter() {
+    }
+
+    /**
      * Number of objects after which a <i>reset-stream</i> event is triggered.
      * <p>
-     * The default value is {@value DEFAULT_BATCH_SIZE}.
+     * The default value is {@value #DEFAULT_BATCH_SIZE}.
      * <p>
-     * This parameter can be changed anytime during processing. If the new value
-     * is less than the number of received objects a <i>reset-stream</i> event is
+     * This parameter can be changed anytime during processing. If the new value is
+     * less than the number of received objects a <i>reset-stream</i> event is
      * emitted when the next object is received.
      *
      * @param batchSize number of objects before a <i>reset-stream</i> event is
      *                  triggered
      */
-    public void setBatchSize(int batchSize) {
-
+    public void setBatchSize(final int batchSize) {
         this.batchSize = batchSize;
     }
 
+    /**
+     * Gets the size of the batch.
+     *
+     * @return the size of the batch
+     */
     public int getBatchSize() {
         return batchSize;
     }

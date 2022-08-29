@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta;
 
 import org.metafacture.formeta.parser.Emitter;
@@ -41,6 +42,9 @@ public final class FormetaDecoder extends
     private final FormetaParser parser = new FormetaParser();
     private final Emitter emitter = new FullRecordEmitter();
 
+    /**
+     * Creates an instance of {@link FormetaDecoder}.
+     */
     public FormetaDecoder() {
         parser.setEmitter(emitter);
     }

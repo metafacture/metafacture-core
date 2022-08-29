@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons;
 
 import java.nio.CharBuffer;
@@ -26,13 +27,21 @@ import java.util.Map;
  */
 public final class StringUtil {
 
-    private static final String DEFAULT_VARSTART = "${";
-    private static final String DEFAULT_VAREND = "}";
+    public static final String DEFAULT_VARSTART = "${";
+    public static final String DEFAULT_VAREND = "}";
 
     private StringUtil() {
         // no instances allowed
     }
 
+    /**
+     * Returns a fallback of an object if the object is null.
+     *
+     * @param <O>           the type of the object
+     * @param value         the object
+     * @param fallbackValue the default object
+     * @return an object
+     */
     public static <O> O fallback(final O value, final O fallbackValue) {
         if (value == null) {
             return fallbackValue;
@@ -40,20 +49,64 @@ public final class StringUtil {
         return value;
     }
 
+    /**
+     * Formats a String. If a String has a variable it will be replaced based on a
+     * Map. The start and the end of indicating this variable must be defined.
+     * {@value #DEFAULT_VARSTART} indicates the start of a variable and
+     * {@value #DEFAULT_VAREND} the end of the variable . Unassigned variables are
+     * ignored.
+     *
+     * @param format            the String to be formatted
+     * @param variables         a Map of variable names and their values
+     * @return the formatted String
+     */
     public static String format(final String format, final Map<String, String> variables) {
         return format(format, DEFAULT_VARSTART, DEFAULT_VAREND, true, variables);
     }
 
+    /**
+     * Formats a String. If a String has a variable it will be replaced based on a
+     * Map. The start and the end of indicating this variable must be defined.
+     * Unassigned variables are ignored.
+     *
+     * @param format            the String to be formatted
+     * @param varStartIndicator a String indicating the start of a variable
+     * @param varEndIndicator   a String indicating the end of a variable
+     * @param variables         a Map of variable names and their values
+     * @return the formatted String
+     */
     public static String format(final String format, final String varStartIndicator, final String varEndIndicator,
             final Map<String, String> variables) {
         return format(format, varStartIndicator, varEndIndicator, true, variables);
     }
 
+    /**
+     * Formats a String. If a String has a variable it will be replaced based on a
+     * Map. The start and the end of indicating this variable must be defined.
+     * {@value #DEFAULT_VARSTART} indicates the start of a variable and
+     * {@value #DEFAULT_VAREND} the end of the variable .
+     *
+     * @param format            the String to be formatted
+     * @param ignoreMissingVars boolean if an unassigned variable should be ignored
+     * @param variables         a Map of variable names and their values
+     * @return the formatted String
+     */
     public static String format(final String format, final boolean ignoreMissingVars,
             final Map<String, String> variables) {
         return format(format, DEFAULT_VARSTART, DEFAULT_VAREND, ignoreMissingVars, variables);
     }
 
+    /**
+     * Formats a String. If a String has a variable it will be replaced based on a
+     * Map. The start and the end of indicating this variable must be defined.
+     *
+     * @param format            the String to be formatted
+     * @param varStartIndicator a String indicating the start of a variable
+     * @param varEndIndicator   a String indicating the end of a variable
+     * @param ignoreMissingVars boolean if an unassigned variable should be ignored
+     * @param variables         a Map of variable names and their values
+     * @return the formatted String
+     */
     public static String format(final String format, final String varStartIndicator, final String varEndIndicator,
             final boolean ignoreMissingVars, final Map<String, String> variables) {
         if (format.indexOf(varStartIndicator) < 0) { // shortcut if there is
@@ -85,9 +138,10 @@ public final class StringUtil {
             if (varValue == null) {
                 if (ignoreMissingVars) {
                     varValue = "";
-                } else {
-                    throw new IllegalArgumentException("Variable '" + varName
-                            + "' was not assigned!\nAssigned variables:\n" + variables);
+                }
+                else {
+                    throw new IllegalArgumentException("Variable '" + varName +
+                            "' was not assigned!\nAssigned variables:\n" + variables);
                 }
             }
             builder.append(varValue);
@@ -135,7 +189,7 @@ public final class StringUtil {
         char[] buffer = currentBuffer;
         int bufferLen = buffer.length;
 
-        while(strLen > bufferLen) {
+        while (strLen > bufferLen) {
             bufferLen *= 2;
         }
         if (bufferLen > buffer.length) {

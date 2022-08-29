@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.statistics;
+
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-
 
 /**
  * Counts entity names, literal names, or literal values.
@@ -29,50 +29,87 @@ import org.metafacture.framework.helpers.DefaultStreamReceiver;
  */
 public final class Histogram extends DefaultStreamReceiver {
 
-    private final Map<String, Integer> histogram = new HashMap<String, Integer>();
+    private final Map<String, Integer> histogram = new HashMap<>();
 
     private boolean countEntities;
     private boolean countLiterals;
     private String countField;
 
+    /**
+     * Creates an instance of {@link Histogram}.
+     */
     public Histogram() {
-        super();
     }
 
     /**
-     * Initialises the module with a countField.
+     * Creates an instance of {@link Histogram} with a field whose content is
+     * counted.
      *
      * @param countField name of the field whose content is counted
      */
     public Histogram(final String countField) {
-        super();
         setCountField(countField);
     }
 
+    /**
+     * Gets the histogram.
+     *
+     * @return the histogram
+     */
     public Map<String, Integer> getHistogram() {
         return Collections.unmodifiableMap(histogram);
     }
 
+    /**
+     * Checks whether entities are counted.
+     *
+     * @return true if entities are counted.
+     */
     public boolean isCountEntities() {
         return countEntities;
     }
 
+    /**
+     * Flags whether entities should be counted.
+     *
+     * @param countEntities true if entities should be counted.
+     */
     public void setCountEntities(final boolean countEntities) {
         this.countEntities = countEntities;
     }
 
+    /**
+     * Checks whether literals are counted.
+     *
+     * @return true if literals are counted
+     */
     public boolean isCountLiterals() {
         return countLiterals;
     }
 
+    /**
+     * Flags whether to count literals.
+     *
+     * @param countLiterals true if literals should be counted
+     */
     public void setCountLiterals(final boolean countLiterals) {
         this.countLiterals = countLiterals;
     }
 
+    /**
+     * Gets the name of the field whose content is counted.
+     *
+     * @return the name of the field whose content is counted
+     */
     public String getCountField() {
         return countField;
     }
 
+    /**
+     * Set the name of the field whose content is counted.
+     *
+     * @param countField the name of the field whose content is counted
+     */
     public void setCountField(final String countField) {
         this.countField = countField;
     }

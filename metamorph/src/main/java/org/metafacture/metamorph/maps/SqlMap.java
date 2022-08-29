@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.maps;
+
+import org.metafacture.metamorph.api.MorphExecutionException;
+import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -23,9 +27,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.metafacture.metamorph.api.MorphExecutionException;
-import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
-
 /**
  * A map implementation that queries an sql database.
  *
@@ -33,8 +34,7 @@ import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
  * @author Markus Michael Geipel
  *
  */
-public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
-        Closeable {
+public final class SqlMap extends AbstractReadOnlyMap<String, String> implements Closeable {
 
     private boolean isUninitialized = true;
 
@@ -48,13 +48,21 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
 
     private PreparedStatement preparedStatement;
 
-    public void init() {
+    /**
+     * Creates an instance of {@link SqlMap}.
+     */
+    public SqlMap() {
+    }
 
+    /**
+     * Initializes the prepared statement using the {@link #query}.
+     */
+    public void init() {
         try {
             preparedStatement = getMySqlConnection().prepareStatement(query);
-        } catch (final SQLException e) {
-            throw new MorphExecutionException(
-                    "sqlmap: could not create prepared statement for query", e);
+        }
+        catch (final SQLException e) {
+            throw new MorphExecutionException("sqlmap: could not create prepared statement for query", e);
         }
         isUninitialized = false;
     }
@@ -62,13 +70,12 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
     @Override
     public void close() throws IOException {
         try {
-
             if (conn != null) {
                 conn.close();
             }
-        } catch (final SQLException e) {
-            throw new MorphExecutionException("sqlmap: could not close db connection",
-                    e);
+        }
+        catch (final SQLException e) {
+            throw new MorphExecutionException("sqlmap: could not close db connection", e);
         }
     }
 
@@ -76,12 +83,11 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
         try {
             Class.forName(driver);
 
-            conn = DriverManager.getConnection("jdbc:mysql://" + host + "/"
-                    + database + "?" + "user=" + login + "&" + "password="
-                    + password);
-        } catch (final ClassNotFoundException | SQLException e) {
-            throw new MorphExecutionException("sqlmap: cannot create db connection",
-                    e);
+            conn = DriverManager.getConnection("jdbc:mysql://" + host + "/" +
+                    database + "?" + "user=" + login + "&" + "password=" + password);
+        }
+        catch (final ClassNotFoundException | SQLException e) {
+            throw new MorphExecutionException("sqlmap: cannot create db connection", e);
         }
         return conn;
     }
@@ -100,33 +106,63 @@ public final class SqlMap extends AbstractReadOnlyMap<String, String> implements
                 resultString = resultSet.getString(1);
             }
             resultSet.close();
-        } catch (final SQLException e) {
-            throw new MorphExecutionException(
-                    "sqlmap: execution of prepared statement failed", e);
+        }
+        catch (final SQLException e) {
+            throw new MorphExecutionException("sqlmap: execution of prepared statement failed", e);
         }
         return resultString;
     }
 
+    /**
+     * Sets the driver.
+     *
+     * @param driver the driver
+     */
     public void setDriver(final String driver) {
         this.driver = driver;
     }
 
+    /**
+     * Sets the host.
+     *
+     * @param host the host
+     */
     public void setHost(final String host) {
         this.host = host;
     }
 
+    /**
+     * Sets the login.
+     *
+     * @param login the login
+     */
     public void setLogin(final String login) {
         this.login = login;
     }
 
+    /**
+     * Sets the password.
+     *
+     * @param password the password
+     */
     public void setPassword(final String password) {
         this.password = password;
     }
 
+    /**
+     * Sets the database.
+     *
+     * @param database the database
+     */
     public void setDatabase(final String database) {
         this.database = database;
     }
 
+    /**
+     * Sets the query.
+     *
+     * @param query the query
+     */
     public void setQuery(final String query) {
         this.query = query;
     }

@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
+package org.metafacture.metamorph;
 
 import org.metafacture.commons.StringUtil;
 import org.metafacture.flowcontrol.StreamBuffer;
@@ -27,6 +22,12 @@ import org.metafacture.framework.StreamReceiver;
 import org.metafacture.metamorph.api.NamedValueReceiver;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.helpers.AbstractFlushingCollect;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Corresponds to the <code>&lt;entity&gt;</code> tag.
@@ -44,14 +45,30 @@ public final class Entity extends AbstractFlushingCollect {
     private NamedValueSource nameSource;
     private String currentName;
 
+    /**
+     * Creates an instance of {@link Entity} by a given {@link Metamorph}.
+     *
+     * @param metamorph the {@link Metamorph}
+     */
     public Entity(final Metamorph metamorph) {
         this.receiver = () -> metamorph.getStreamReceiver();
     }
 
+    /**
+     * Creates an instance of {@link Entity} by a given {@link Supplier} of object
+     * type {@link StreamReceiver}.
+     *
+     * @param receiver the {@link Supplier} of object type {@link StreamReceiver}
+     */
     public Entity(final Supplier<StreamReceiver> receiver) {
         this.receiver = receiver;
     }
 
+    /**
+     * Sets the NamedValueSource the entity will act on.
+     *
+     * @param source the NamedValueSource
+     */
     public void setNameSource(final NamedValueSource source) {
         nameSource = source;
         nameSource.setNamedValueReceiver(this);
@@ -64,29 +81,31 @@ public final class Entity extends AbstractFlushingCollect {
         if (namedValueReceiver instanceof Entity) {
             final Entity parent = (Entity) namedValueReceiver;
             parent.receive(null, null, this, getRecordCount(), getEntityCount());
-        } else {
+        }
+        else {
             write(receiver.get());
         }
     }
 
-    private void write(final StreamReceiver receiver) {
+    private void write(final StreamReceiver currentReceiver) {
         if (!buffer.isEmpty()) {
-            receiver.startEntity(StringUtil.fallback(currentName, getName()));
-            buffer.setReceiver(receiver);
+            currentReceiver.startEntity(StringUtil.fallback(currentName, getName()));
+            buffer.setReceiver(currentReceiver);
             buffer.replay();
-            receiver.endEntity();
+            currentReceiver.endEntity();
         }
     }
 
     @Override
-    protected void receive(final String name, final String value,
-            final NamedValueSource source) {
+    protected void receive(final String name, final String value, final NamedValueSource source) {
         if (source == nameSource) {
             currentName = value;
-        } else if (source instanceof Entity) {
+        }
+        else if (source instanceof Entity) {
             final Entity child = (Entity) source;
             child.write(buffer);
-        } else {
+        }
+        else {
             buffer.literal(name, value);
         }
         sourcesLeft.remove(source);
@@ -105,7 +124,7 @@ public final class Entity extends AbstractFlushingCollect {
     }
 
     @Override
-    public void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
+    protected void onNamedValueSourceAdded(final NamedValueSource namedValueSource) {
         sourceList.add(namedValueSource);
         sourcesLeft.add(namedValueSource);
     }

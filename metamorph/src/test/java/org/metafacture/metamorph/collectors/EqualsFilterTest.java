@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.collectors;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
-import org.metafacture.metamorph.Metamorph;
-import org.mockito.InOrder;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -39,280 +34,276 @@ import org.mockito.junit.MockitoRule;
  */
 public final class EqualsFilterTest {
 
-  @Rule
-  public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-  @Mock
-  private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-  private Metamorph metamorph;
+    @Test
+    public void shouldEmitValueIfAllReceivedValuesAreEqual() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}'>" +
+                "    <data source='data1' name='one' />" +
+                "    <data source='data2' name='two' />" +
+                "    <data source='data3' name='three' />" +
+                "  </equalsFilter>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data1", "a");
+                    i.literal("data2", "a");
+                    i.literal("data3", "a");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("equalsFiltered", "a");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-  @Test
-  public void shouldEmitValueIfAllReceivedValuesAreEqual() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <equalsFilter name='equalsFiltered' value='${one}'>")
-        .with("    <data source='data1' name='one' />")
-        .with("    <data source='data2' name='two' />")
-        .with("    <data source='data3' name='three' />")
-        .with("  </equalsFilter>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldEmitNothingIfReceivedValuesDiffer() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}'>" +
+                "    <data source='data1' name='one' />" +
+                "    <data source='data2' name='two' />" +
+                "    <data source='data3' name='three' />" +
+                "  </equalsFilter>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data1", "a");
+                    i.literal("data2", "a");
+                    i.literal("data3", "b");
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    o.get().startRecord("1");
+                    f.apply(0).literal(ArgumentMatchers.eq("equalsFiltered"), ArgumentMatchers.any());
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    metamorph.startRecord("1");
-    metamorph.literal("data1", "a");
-    metamorph.literal("data2", "a");
-    metamorph.literal("data3", "a");
-    metamorph.endRecord();
+    @Test
+    public void shouldFireIfOnlyASingleValueIsReceived() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}'>" +
+                "    <data source='data1' name='one' />" +
+                "  </equalsFilter>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data1", "a");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("equalsFiltered", "a");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("equalsFiltered", "a");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+    @Test
+    public void shouldIgnoreLiteralsNotListedInStatements() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}'>" +
+                "    <data source='data1' name='one' />" +
+                "    <data source='data2' name='two' />" +
+                "  </equalsFilter>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data1", "a");
+                    i.literal("data2", "a");
+                    i.literal("data3", "b");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("equalsFiltered", "a");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-  @Test
-  public void shouldEmitNothingIfReceivedValuesDiffer() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <equalsFilter name='equalsFiltered' value='${one}'>")
-        .with("    <data source='data1' name='one' />")
-        .with("    <data source='data2' name='two' />")
-        .with("    <data source='data3' name='three' />")
-        .with("  </equalsFilter>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldFireIfValuesInEntityAreEqual() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}'>" +
+                "    <data source='field.data1' name='one' />" +
+                "    <data source='field.data2' name='two' />" +
+                "    <data source='field.data3' name='three' />" +
+                "  </equalsFilter>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("field");
+                    i.literal("data1", "a");
+                    i.literal("data2", "a");
+                    i.literal("data3", "a");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("equalsFiltered", "a");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    metamorph.startRecord("1");
-    metamorph.literal("data1", "a");
-    metamorph.literal("data2", "a");
-    metamorph.literal("data3", "b");
-    metamorph.endRecord();
+    @Test
+    public void shouldNotFireIfValuesInEntityAreNotEqual() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}'>" +
+                "    <data source='field.data1' name='one' />" +
+                "    <data source='field.data2' name='two' />" +
+                "    <data source='field.data3' name='three' />" +
+                "  </equalsFilter>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("field");
+                    i.literal("data1", "a");
+                    i.literal("data2", "a");
+                    i.literal("data3", "b");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver, never()).literal(eq("equalsFiltered"), any());
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+    @Test
+    public void shouldFireIfLiteralsInEntitiesAreReceivedThatAreNotListedInStatements() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}'>" +
+                "    <data source='field1.data1' name='one' />" +
+                "    <data source='field1.data2' name='two' />" +
+                "  </equalsFilter>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("field1");
+                    i.literal("data1", "a");
+                    i.endEntity();
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.startEntity("field1");
+                    i.literal("data2", "a");
+                    i.endEntity();
+                    i.endRecord();
+                    i.startRecord("3");
+                    i.startEntity("field1");
+                    i.literal("data1", "a");
+                    i.literal("data2", "a");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().endRecord();
+                    o.get().startRecord("3");
+                    o.get().literal("equalsFiltered", "a");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-  @Test
-  public void shouldFireIfOnlyASingleValueIsReceived() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <equalsFilter name='equalsFiltered' value='${one}'>")
-        .with("    <data source='data1' name='one' />")
-        .with("  </equalsFilter>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldFireOnFlush() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}' flushWith='field1.data2'>" +
+                "    <data source='field1.data1' name='one' />" +
+                "    <data source='field1.data2' name='two' />" +
+                "  </equalsFilter>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("field1");
+                    i.literal("data1", "a");
+                    i.endEntity();
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.startEntity("field1");
+                    i.literal("data2", "a");
+                    i.endEntity();
+                    i.endRecord();
+                    i.startRecord("3");
+                    i.startEntity("field1");
+                    i.literal("data1", "a");
+                    i.literal("data2", "a");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().literal("equalsFiltered", "");
+                    o.get().endRecord();
+                    o.get().startRecord("3");
+                    o.get().literal("equalsFiltered", "a");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    metamorph.startRecord("1");
-    metamorph.literal("data1", "a");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("equalsFiltered", "a");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void shouldIgnoreLiteralsNotListedInStatements() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <equalsFilter name='equalsFiltered' value='${one}'>")
-        .with("    <data source='data1' name='one' />")
-        .with("    <data source='data2' name='two' />")
-        .with("  </equalsFilter>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("data1", "a");
-    metamorph.literal("data2", "a");
-    metamorph.literal("data3", "b");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("equalsFiltered", "a");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void shouldFireIfValuesInEntityAreEqual() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <equalsFilter name='equalsFiltered' value='${one}'>")
-        .with("    <data source='field.data1' name='one' />")
-        .with("    <data source='field.data2' name='two' />")
-        .with("    <data source='field.data3' name='three' />")
-        .with("  </equalsFilter>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.startEntity("field");
-    metamorph.literal("data1", "a");
-    metamorph.literal("data2", "a");
-    metamorph.literal("data3", "a");
-    metamorph.endEntity();
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("equalsFiltered", "a");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void shouldNotFireIfValuesInEntityAreNotEqual() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <equalsFilter name='equalsFiltered' value='${one}'>")
-        .with("    <data source='field.data1' name='one' />")
-        .with("    <data source='field.data2' name='two' />")
-        .with("    <data source='field.data3' name='three' />")
-        .with("  </equalsFilter>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.startEntity("field");
-    metamorph.literal("data1", "a");
-    metamorph.literal("data2", "a");
-    metamorph.literal("data3", "b");
-    metamorph.endEntity();
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void shouldFireIfLiteralsInEntitiesAreReceivedThatAreNotListedInStatements() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <equalsFilter name='equalsFiltered' value='${one}'>")
-        .with("    <data source='field1.data1' name='one' />")
-        .with("    <data source='field1.data2' name='two' />")
-        .with("  </equalsFilter>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.startEntity("field1");
-    metamorph.literal("data1", "a");
-    metamorph.endEntity();
-    metamorph.endRecord();
-    metamorph.startRecord("2");
-    metamorph.startEntity("field1");
-    metamorph.literal("data2", "a");
-    metamorph.endEntity();
-    metamorph.endRecord();
-    metamorph.startRecord("3");
-    metamorph.startEntity("field1");
-    metamorph.literal("data1", "a");
-    metamorph.literal("data2", "a");
-    metamorph.endEntity();
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("2");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("3");
-    ordered.verify(receiver).literal("equalsFiltered", "a");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void shouldFireOnFlush() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <equalsFilter name='equalsFiltered' value='${one}' flushWith='field1.data2'>")
-        .with("    <data source='field1.data1' name='one' />")
-        .with("    <data source='field1.data2' name='two' />")
-        .with("  </equalsFilter>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.startEntity("field1");
-    metamorph.literal("data1", "a");
-    metamorph.endEntity();
-    metamorph.endRecord();
-    metamorph.startRecord("2");
-    metamorph.startEntity("field1");
-    metamorph.literal("data2", "a");
-    metamorph.endEntity();
-    metamorph.endRecord();
-    metamorph.startRecord("3");
-    metamorph.startEntity("field1");
-    metamorph.literal("data1", "a");
-    metamorph.literal("data2", "a");
-    metamorph.endEntity();
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("2");
-    ordered.verify(receiver).literal("equalsFiltered", "");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("3");
-    ordered.verify(receiver).literal("equalsFiltered", "a");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-    verifyNoMoreInteractions(receiver);
-  }
-
-  @Test
-  public void shouldNotFireOnFlushIfIncomplete() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <equalsFilter name='equalsFiltered' value='${one}' flushWith='field1.data2' flushIncomplete='false'>")
-        .with("    <data source='field1.data1' name='one' />")
-        .with("    <data source='field1.data2' name='two' />")
-        .with("  </equalsFilter>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.startEntity("field1");
-    metamorph.literal("data1", "a");
-    metamorph.endEntity();
-    metamorph.endRecord();
-    metamorph.startRecord("2");
-    metamorph.startEntity("field1");
-    metamorph.literal("data2", "a");
-    metamorph.endEntity();
-    metamorph.endRecord();
-    metamorph.startRecord("3");
-    metamorph.startEntity("field1");
-    metamorph.literal("data1", "a");
-    metamorph.literal("data2", "a");
-    metamorph.endEntity();
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("2");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("3");
-    ordered.verify(receiver).literal("equalsFiltered", "a");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-    verifyNoMoreInteractions(receiver);
-  }
+    @Test
+    public void shouldNotFireOnFlushIfIncomplete() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <equalsFilter name='equalsFiltered' value='${one}' flushWith='field1.data2' flushIncomplete='false'>" +
+                "    <data source='field1.data1' name='one' />" +
+                "    <data source='field1.data2' name='two' />" +
+                "  </equalsFilter>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("field1");
+                    i.literal("data1", "a");
+                    i.endEntity();
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.startEntity("field1");
+                    i.literal("data2", "a");
+                    i.endEntity();
+                    i.endRecord();
+                    i.startRecord("3");
+                    i.startEntity("field1");
+                    i.literal("data1", "a");
+                    i.literal("data2", "a");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().endRecord();
+                    o.get().startRecord("3");
+                    o.get().literal("equalsFiltered", "a");
+                    o.get().endRecord();
+                }
+        );
+    }
 
 }

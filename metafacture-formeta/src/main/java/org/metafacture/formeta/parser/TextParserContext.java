@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta.parser;
 
 import org.metafacture.formeta.Formeta;
@@ -25,18 +26,21 @@ import org.metafacture.framework.FormatException;
  */
 class TextParserContext {
 
-    private static final String ESCAPABLE_CHARS = Formeta.WHITESPACE
-            + Formeta.QUOT_CHAR
-            + Formeta.ESCAPE_CHAR
-            + Formeta.GROUP_START
-            + Formeta.GROUP_END
-            + Formeta.ITEM_SEPARATOR
-            + Formeta.NAME_VALUE_SEPARATOR;
+    private static final String ESCAPABLE_CHARS = Formeta.WHITESPACE +
+        Formeta.QUOT_CHAR +
+        Formeta.ESCAPE_CHAR +
+        Formeta.GROUP_START +
+        Formeta.GROUP_END +
+        Formeta.ITEM_SEPARATOR +
+        Formeta.NAME_VALUE_SEPARATOR;
 
     private final StringBuilder text = new StringBuilder();
 
     private int lengthWithoutTrailingWs;
     private boolean quoted;
+
+    TextParserContext() {
+    }
 
     public String getText() {
         return text.substring(0, lengthWithoutTrailingWs);
@@ -56,11 +60,14 @@ class TextParserContext {
     public void appendEscapedChar(final char ch) {
         if (Formeta.NEWLINE_ESC_SEQ == ch) {
             text.append('\n');
-        } else if (Formeta.CARRIAGE_RETURN_ESC_SEQ == ch) {
+        }
+        else if (Formeta.CARRIAGE_RETURN_ESC_SEQ == ch) {
             text.append('\r');
-        } else if (ESCAPABLE_CHARS.indexOf(ch) > -1) {
+        }
+        else if (ESCAPABLE_CHARS.indexOf(ch) > -1) {
             text.append(ch);
-        } else {
+        }
+        else {
             throw new FormatException("invalid escape sequence: " + ch);
         }
         lengthWithoutTrailingWs = text.length();

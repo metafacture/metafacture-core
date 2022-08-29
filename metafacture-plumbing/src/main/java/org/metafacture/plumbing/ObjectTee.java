@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.plumbing;
 
 import org.metafacture.framework.FluxCommand;
@@ -35,12 +36,17 @@ import org.metafacture.framework.helpers.DefaultTee;
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("object-tee")
-public final class ObjectTee<T> extends DefaultTee<ObjectReceiver<T>>
-        implements ObjectPipe<T, ObjectReceiver<T>> {
+public final class ObjectTee<T> extends DefaultTee<ObjectReceiver<T>> implements ObjectPipe<T, ObjectReceiver<T>> {
+
+    /**
+     * Creates an instance of {@link ObjectTee}.
+     */
+    public ObjectTee() {
+    }
 
     @Override
     public void process(final T obj) {
-        for (ObjectReceiver<T> receiver : getReceivers()) {
+        for (final ObjectReceiver<T> receiver : getReceivers()) {
             receiver.process(obj);
         }
     }

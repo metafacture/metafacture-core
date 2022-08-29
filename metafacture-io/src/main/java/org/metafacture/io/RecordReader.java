@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.io;
 
-import java.io.IOException;
-import java.io.Reader;
+package org.metafacture.io;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -25,6 +23,9 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  * <p>Reads data from a {@code Reader} and splits it into individual
@@ -40,8 +41,7 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(Reader.class)
 @Out(String.class)
 @FluxCommand("as-records")
-public final class RecordReader extends
-        DefaultObjectPipe<Reader, ObjectReceiver<String>> {
+public final class RecordReader extends DefaultObjectPipe<Reader, ObjectReceiver<String>> {
 
     public static final char DEFAULT_SEPARATOR = '\u001d';
 
@@ -53,26 +53,58 @@ public final class RecordReader extends
     private char separator = DEFAULT_SEPARATOR;
     private boolean skipEmptyRecords = true;
 
+    /**
+     * Creates an instance of {@link RecordReader}.
+     */
+    public RecordReader() {
+    }
+
+    /**
+     * Sets the separator. The default is the global separator character (0x001d).
+     *
+     * @param separator the separator
+     */
     public void setSeparator(final String separator) {
         if (separator.length() >= 1) {
             this.separator = separator.charAt(0);
-        } else {
+        }
+        else {
             this.separator = DEFAULT_SEPARATOR;
         }
     }
 
+    /**
+     * Sets the separator.
+     *
+     * @param separator the separator
+     */
     public void setSeparator(final char separator) {
         this.separator = separator;
     }
 
+    /**
+     * Gets the separator
+     *
+     * @return the separator
+     */
     public char getSeparator() {
         return separator;
     }
 
+    /**
+     * Flags to skip empty records.
+     *
+     * @param skipEmptyRecords true if empty records should be skipped
+     */
     public void setSkipEmptyRecords(final boolean skipEmptyRecords) {
         this.skipEmptyRecords = skipEmptyRecords;
     }
 
+    /**
+     * Checks whether to skip empty records.
+     *
+     * @return true if empty records should be skipped
+     */
     public boolean getSkipEmptyRecords() {
         return skipEmptyRecords;
     }
@@ -100,7 +132,8 @@ public final class RecordReader extends
                 emitRecord();
             }
 
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }

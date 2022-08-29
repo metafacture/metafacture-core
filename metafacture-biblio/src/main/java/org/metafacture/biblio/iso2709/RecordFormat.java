@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.biblio.iso2709;
 
-import java.util.Arrays;
-
 import org.metafacture.commons.Require;
+
+import java.util.Arrays;
 
 /**
  * Holds the configuration of an instance of the ISO2709:2008 format.
@@ -30,19 +31,19 @@ public final class RecordFormat {
     /**
      * The number of characters in the field tags.
      */
-    public final int TAG_LENGTH = Iso2709Constants.TAG_LENGTH;
+    public static final int TAG_LENGTH = Iso2709Constants.TAG_LENGTH;
 
     /**
      * The number of characters in the implementation codes element of the
      * record leader.
      */
-    public final int IMPL_CODES_LENGTH = Iso2709Constants.IMPL_CODES_LENGTH;
+    public static final int IMPL_CODES_LENGTH = Iso2709Constants.IMPL_CODES_LENGTH;
 
     /**
      * The number of characters in the system characters element of the
      * record leader.
      */
-    public final int SYSTEM_CHARS_LENGTH = Iso2709Constants.SYSTEM_CHARS_LENGTH;
+    public static final int SYSTEM_CHARS_LENGTH = Iso2709Constants.SYSTEM_CHARS_LENGTH;
 
     private final int indicatorLength;
     private final int identifierLength;
@@ -50,6 +51,15 @@ public final class RecordFormat {
     private final int fieldStartLength;
     private final int implDefinedPartLength;
 
+    /**
+     * Initializes the RecordFormat.
+     *
+     * @param indicatorLength       the length of the indicator
+     * @param identifierLength      the length of the identifier
+     * @param fieldLengthLength     the length of the field length
+     * @param fieldStartLength      the length of the field start
+     * @param implDefinedPartLength the length of the defined part
+     */
     public RecordFormat(final int indicatorLength, final int identifierLength,
             final int fieldLengthLength, final int fieldStartLength,
             final int implDefinedPartLength) {
@@ -60,6 +70,11 @@ public final class RecordFormat {
         this.implDefinedPartLength = implDefinedPartLength;
     }
 
+    /**
+     * Initializes a RecordFormat defined by a RecordFormat.
+     *
+     * @param source the RecordFormat
+     */
     public RecordFormat(final RecordFormat source) {
         Require.notNull(source);
 
@@ -70,10 +85,21 @@ public final class RecordFormat {
         implDefinedPartLength = source.implDefinedPartLength;
     }
 
+    /**
+     * Returns a new default Builder.
+     *
+     * @return Builder
+     */
     public static Builder create() {
         return new Builder();
     }
 
+    /**
+     * Returns a new Builder created from a RecordFormat.
+     *
+     * @param source the RecordFormat
+     * @return Builder
+     */
     public static Builder createFrom(final RecordFormat source) {
         return create()
                 .withIndicatorLength(source.indicatorLength)
@@ -83,22 +109,47 @@ public final class RecordFormat {
                 .withImplDefinedPartLength(source.implDefinedPartLength);
     }
 
+    /**
+     * Gets the length of the indicator.
+     *
+     * @return the length of the indicator
+     */
     public int getIndicatorLength() {
         return indicatorLength;
     }
 
+    /**
+     * Gets the length of the identifier.
+     *
+     * @return the length of the identifier
+     */
     public int getIdentifierLength() {
         return identifierLength;
     }
 
+    /**
+     * Gets the length of the field length.
+     *
+     * @return the length of the field length
+     */
     public int getFieldLengthLength() {
         return fieldLengthLength;
     }
 
+    /**
+     * Gets the length of the field start.
+     *
+     * @return length of the field start
+     */
     public int getFieldStartLength() {
         return fieldStartLength;
     }
 
+    /**
+     * Gets the the length of the defined part.
+     *
+     * @return the length of the defined part
+     */
     public int getImplDefinedPartLength() {
         return implDefinedPartLength;
     }
@@ -110,19 +161,19 @@ public final class RecordFormat {
         }
         if (obj instanceof RecordFormat) {
             final RecordFormat other = (RecordFormat) obj;
-            return indicatorLength == other.indicatorLength
-                    && identifierLength == other.identifierLength
-                    && fieldLengthLength == other.fieldLengthLength
-                    && fieldStartLength == other.fieldStartLength
-                    && implDefinedPartLength == other.implDefinedPartLength;
+            return indicatorLength == other.indicatorLength &&
+                    identifierLength == other.identifierLength &&
+                    fieldLengthLength == other.fieldLengthLength &&
+                    fieldStartLength == other.fieldStartLength &&
+                    implDefinedPartLength == other.implDefinedPartLength;
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        final int[] items = { indicatorLength, identifierLength, fieldLengthLength,
-                fieldStartLength, implDefinedPartLength };
+        final int[] items = {indicatorLength, identifierLength, fieldLengthLength,
+            fieldStartLength, implDefinedPartLength};
         return Arrays.hashCode(items);
     }
 
@@ -137,47 +188,87 @@ public final class RecordFormat {
 
     public static class Builder {
 
+        private static final int RADIX = 10;
+
         private int indicatorLength;
         private int identifierLength;
         private int fieldLengthLength;
         private int fieldStartLength;
         private int implDefinedPartLength;
 
-        public Builder withIndicatorLength(final int indicatorLength) {
-            Require.notNegative(indicatorLength);
-            Require.that(indicatorLength <= 9);
-            this.indicatorLength = indicatorLength;
+        Builder() {
+        }
+
+        /**
+         * Returns a new Builder with defined indicator length.
+         *
+         * @param currentIndicatorLength the length of the indicator
+         * @return Builder
+         */
+        public Builder withIndicatorLength(final int currentIndicatorLength) {
+            Require.notNegative(currentIndicatorLength);
+            Require.that(currentIndicatorLength < RADIX);
+            indicatorLength = currentIndicatorLength;
             return this;
         }
 
-        public Builder withIdentifierLength(final int identifierLength) {
-            Require.notNegative(identifierLength);
-            Require.that(identifierLength <= 9);
-            this.identifierLength = identifierLength;
+        /**
+         * Returns a new Builder with defined identifier length.
+         *
+         * @param currentIdentifierLength the length of the identifier
+         * @return Builder
+         */
+        public Builder withIdentifierLength(final int currentIdentifierLength) {
+            Require.notNegative(currentIdentifierLength);
+            Require.that(currentIdentifierLength < RADIX);
+            identifierLength = currentIdentifierLength;
             return this;
         }
 
-        public Builder withFieldLengthLength(final int fieldLengthLength) {
-            Require.that(fieldLengthLength > 0);
-            Require.that(fieldLengthLength <= 9);
-            this.fieldLengthLength = fieldLengthLength;
+        /**
+         * Returns a new Builder with defined field length length.
+         *
+         * @param currentFieldLengthLength the length of the field length
+         * @return Builder
+         */
+        public Builder withFieldLengthLength(final int currentFieldLengthLength) {
+            Require.that(currentFieldLengthLength > 0);
+            Require.that(currentFieldLengthLength < RADIX);
+            fieldLengthLength = currentFieldLengthLength;
             return this;
         }
 
-        public Builder withFieldStartLength(final int fieldStartLength) {
-            Require.that(fieldStartLength > 0);
-            Require.that(fieldStartLength <= 9);
-            this.fieldStartLength = fieldStartLength;
+        /**
+         * Returns a new Builder with defined field start length.
+         *
+         * @param currentFieldStartLength the length of the field start
+         * @return Builder
+         */
+        public Builder withFieldStartLength(final int currentFieldStartLength) {
+            Require.that(currentFieldStartLength > 0);
+            Require.that(currentFieldStartLength < RADIX);
+            fieldStartLength = currentFieldStartLength;
             return this;
         }
 
-        public Builder withImplDefinedPartLength(final int implDefinedPartLength) {
-            Require.notNegative(implDefinedPartLength);
-            Require.that(implDefinedPartLength <= 9);
-            this.implDefinedPartLength = implDefinedPartLength;
+        /**
+         * Returns a new Builder with defined part length.
+         *
+         * @param currentImplDefinedPartLength the length of the defined part
+         * @return Builder
+         */
+        public Builder withImplDefinedPartLength(final int currentImplDefinedPartLength) {
+            Require.notNegative(currentImplDefinedPartLength);
+            Require.that(currentImplDefinedPartLength < RADIX);
+            implDefinedPartLength = currentImplDefinedPartLength;
             return this;
         }
 
+        /**
+         * Returns a new RecordFormat.
+         *
+         * @return RecordFormat
+         */
         public RecordFormat build() {
             return new RecordFormat(indicatorLength, identifierLength,
                     fieldLengthLength, fieldStartLength, implDefinedPartLength);

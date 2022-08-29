@@ -13,15 +13,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package org.metafacture.runner.util;
+
+import org.metafacture.framework.MetafactureException;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-
-import org.metafacture.framework.MetafactureException;
 
 /**
  * A class loader which allows adding directories to the class
@@ -36,24 +37,36 @@ public final class DirectoryClassLoader extends URLClassLoader {
     private static final String CLASS_FILE_EXTENSION = ".class";
 
     private static final FilenameFilter JAR_AND_CLASS_FILTER =
-            new FilenameFilter() {
+        new FilenameFilter() {
 
-                @Override
-                public boolean accept(final File dir, final String name) {
-                    return name.endsWith(JAR_FILE_EXTENSION)
-                            || name.endsWith(CLASS_FILE_EXTENSION);
-                }
-            };
+            @Override
+            public boolean accept(final File dir, final String name) {
+                return name.endsWith(JAR_FILE_EXTENSION) || name.endsWith(CLASS_FILE_EXTENSION);
+            }
+        };
 
+    /**
+     * Creates an instance of {@link DirectoryClassLoader} by a given parent
+     * ClassLoader.
+     *
+     * @param parent the {@link ClassLoader}
+     */
     public DirectoryClassLoader(final ClassLoader parent) {
         super(new URL[0], parent);
     }
 
+    /**
+     * Adds a directory and appends all jars and classes of that directory to the
+     * list of URLs to search for classes and resources.
+     *
+     * @param dir the directory as File to be added
+     */
     public void addDirectory(final File dir) {
         for (final File file : dir.listFiles(JAR_AND_CLASS_FILTER)) {
             try {
                 addURL(file.toURI().toURL());
-            } catch (final MalformedURLException e) {
+            }
+            catch (final MalformedURLException e) {
                 throw new MetafactureException("Could not add " + file + " to class loader", e);
             }
         }

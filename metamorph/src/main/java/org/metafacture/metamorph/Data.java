@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph;
 
 import org.metafacture.commons.StringUtil;
@@ -28,13 +29,12 @@ final class Data extends AbstractNamedValuePipe {
 
     private String name;
 
-    @Override
-    public void receive(final String recName, final String recValue,
-            final NamedValueSource source, final int recordCount,
-            final int entityCount) {
+    Data() {
+    }
 
-        getNamedValueReceiver().receive(StringUtil.fallback(name, recName),
-                recValue, this, recordCount, entityCount);
+    @Override
+    public void receive(final String recName, final String recValue, final NamedValueSource source, final int recordCount, final int entityCount) {
+        getNamedValueReceiver().receive(StringUtil.fallback(name, recName), recValue, this, recordCount, entityCount);
     }
 
     public void setName(final String name) {

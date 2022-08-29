@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.api;
 
 /**
@@ -25,10 +26,22 @@ public final class MorphBuildException extends RuntimeException {
 
     private static final long serialVersionUID = 0L;
 
+    /**
+     * Creates an instance of {@link MorphBuildException} by a given message.
+     *
+     * @param message the message
+     */
     public MorphBuildException(final String message) {
         super(message);
     }
 
+    /**
+     * Creates an instance of {@link MorphBuildException} by a given message and
+     * cause.
+     *
+     * @param message the message
+     * @param cause   the {@link Throwable}
+     */
     public MorphBuildException(final String message, final Throwable cause) {
         super(message, cause);
     }

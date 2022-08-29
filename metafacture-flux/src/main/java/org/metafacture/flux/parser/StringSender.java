@@ -13,30 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.flux.parser;
 
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
-
 
 /**
  * Helper class to start a pipe with a {@link String}
  *
  * @author Markus Michael Geipel
  */
-public final class StringSender extends DefaultObjectPipe<Object, ObjectReceiver<String>>{
+public final class StringSender extends DefaultObjectPipe<Object, ObjectReceiver<String>> {
 
     private final String string;
 
+    /**
+     * Creates an instance of {@link StringSender} with the given string.
+     *
+     * @param string the string
+     */
     public StringSender(final String string) {
         this.string = string;
     }
 
     @Override
     public void process(final Object notUsed) {
-        if(notUsed==null){
-        getReceiver().process(string);
-        }else{
+        if (notUsed == null) {
+            getReceiver().process(string);
+        }
+        else {
             throw new IllegalArgumentException("Parameter not used. Must be null");
         }
     }

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.monitoring;
 
 import org.metafacture.framework.FluxCommand;
@@ -34,10 +35,19 @@ import org.metafacture.framework.annotations.Out;
 public final class StreamTimer extends TimerBase<StreamReceiver> implements
         StreamPipe<StreamReceiver> {
 
+    /**
+     * Creates an instance of {@link StreamTimer}.
+     */
     public StreamTimer() {
         this("");
     }
 
+    /**
+     * Creates an instance of {@link StreamTimer} by a given prefix used when log
+     * messages.
+     *
+     * @param logPrefix the prefix of the log messages
+     */
     public StreamTimer(final String logPrefix) {
         super(logPrefix);
     }

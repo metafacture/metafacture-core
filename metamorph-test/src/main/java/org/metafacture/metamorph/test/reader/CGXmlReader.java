@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.test.reader;
 
 import org.metafacture.xml.CGXmlHandler;
@@ -25,6 +26,9 @@ import org.metafacture.xml.CGXmlHandler;
  */
 public final class CGXmlReader extends XmlReaderBase {
 
+    /**
+     * Creates an instance of {@link CGXmlReader}.
+     */
     public CGXmlReader() {
         super(new CGXmlHandler());
     }

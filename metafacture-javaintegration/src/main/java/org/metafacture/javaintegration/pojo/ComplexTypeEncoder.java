@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration.pojo;
+
+import org.metafacture.framework.MetafactureException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.metafacture.framework.MetafactureException;
 
 /**
  * Encodes a Metafacture event stream to a POJO.
@@ -43,40 +44,36 @@ class ComplexTypeEncoder implements TypeEncoder {
     private static Object createInstance(final Class<?> clazz) {
         try {
             return clazz.newInstance();
-        } catch (final Exception e) {
-            throw new MetafactureException(
-                    "Can't instantiate object of class: " + clazz, e);
+        }
+        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
+            throw new MetafactureException("Can't instantiate object of class: " + clazz, e);
         }
     }
 
-    private void addFieldValueSettersFor(Class<?> clazz) {
+    private void addFieldValueSettersFor(final Class<?> clazz) {
         final Field[] fields = clazz.getDeclaredFields();
         for (final Field field : fields) {
             if (FieldValueSetter.supportsField(field)) {
-                final FieldValueSetter fieldValueSetter = new FieldValueSetter(
-                        field);
-                valueSetters.put(fieldValueSetter.getName(),
-                        fieldValueSetter);
+                final FieldValueSetter fieldValueSetter = new FieldValueSetter(field);
+                valueSetters.put(fieldValueSetter.getName(), fieldValueSetter);
             }
         }
     }
 
-    private void addMethodValueSettersFor(Class<?> clazz) {
+    private void addMethodValueSettersFor(final Class<?> clazz) {
         final Method[] methods = clazz.getDeclaredMethods();
         for (final Method method : methods) {
             if (MethodValueSetter.supportsMethod(method)) {
-                final MethodValueSetter methodValueSetter = new MethodValueSetter(
-                        method);
-                valueSetters.put(methodValueSetter.getName(),
-                        methodValueSetter);
+                final MethodValueSetter methodValueSetter = new MethodValueSetter(method);
+                valueSetters.put(methodValueSetter.getName(), methodValueSetter);
             }
         }
     }
 
     static boolean supportsType(final Class<?> clazz) {
-        return !clazz.isPrimitive() && !clazz.equals(String.class)
-                && !MapTypeEncoder.supportsType(clazz)
-                && !ListTypeEncoder.supportsType(clazz);
+        return !clazz.isPrimitive() && !clazz.equals(String.class) &&
+            !MapTypeEncoder.supportsType(clazz) &&
+            !ListTypeEncoder.supportsType(clazz);
     }
 
     @Override

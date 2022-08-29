@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.biblio.iso2709;
-
-import static org.metafacture.biblio.iso2709.Iso2709Constants.FIELD_SEPARATOR;
-import static org.metafacture.biblio.iso2709.Iso2709Constants.IDENTIFIER_MARKER;
-import static org.metafacture.biblio.iso2709.Iso2709Constants.MIN_BASE_ADDRESS;
-import static org.metafacture.biblio.iso2709.Iso2709Constants.MIN_RECORD_LENGTH;
-
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 import org.metafacture.commons.Require;
 import org.metafacture.framework.FormatException;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Reads a record in ISO 2709:2008 format from a byte array.
@@ -36,7 +32,7 @@ public final class Record {
     private static final int RECORD_ID_MISSING = -1;
     private static final char[] EMPTY_IDENTIFIER = new char[0];
     private static final byte[] DATA_SEPARATORS = {
-            FIELD_SEPARATOR, IDENTIFIER_MARKER
+        Iso2709Constants.FIELD_SEPARATOR, Iso2709Constants.IDENTIFIER_MARKER
     };
 
     private final Iso646ByteBuffer buffer;
@@ -73,13 +69,13 @@ public final class Record {
     }
 
     private void checkRecordDataLength(final byte[] recordData) {
-        if (recordData.length < MIN_RECORD_LENGTH) {
+        if (recordData.length < Iso2709Constants.MIN_RECORD_LENGTH) {
             throw new FormatException("record is too short");
         }
     }
 
     private void checkBaseAddress() {
-        if (baseAddress < MIN_BASE_ADDRESS || baseAddress > buffer.getLength() - 1) {
+        if (baseAddress < Iso2709Constants.MIN_BASE_ADDRESS || baseAddress > buffer.getLength() - 1) {
             throw new FormatException("base address is out of range");
         }
     }
@@ -95,22 +91,47 @@ public final class Record {
         return RECORD_ID_MISSING;
     }
 
+    /**
+     * Gets the record format of the Label.
+     *
+     * @return the record format of the Label
+     */
     public RecordFormat getRecordFormat() {
         return label.getRecordFormat();
     }
 
+    /**
+     * Gets the record status of the Label.
+     *
+     * @return the record status of the Label
+     */
     public char getRecordStatus() {
         return label.getRecordStatus();
     }
 
+    /**
+     * Gets the impl codes.
+     *
+     * @return the impl codes
+     */
     public char[] getImplCodes() {
         return label.getImplCodes();
     }
 
+    /**
+     * Gets the systems chars of the Label.
+     *
+     * @return the system chars
+     */
     public char[] getSystemChars() {
         return label.getSystemChars();
     }
 
+    /**
+     * Gets the reserved char of the Label.
+     *
+     * @return the reserved char
+     */
     public char getReservedChar() {
         return label.getReservedChar();
     }
@@ -164,40 +185,43 @@ public final class Record {
     public String getLabel() {
         return label.toString();
     }
+
     /**
      * Iterates through all fields in the record and calls the appropriate method
      * on the supplied {@link FieldHandler} instance.
      *
-     * @param fieldHandler instance of field handler. Must not be null.
+     * @param currentFieldHandler instance of field handler. Must not be null.
      */
-    public void processFields(final FieldHandler fieldHandler) {
-        this.fieldHandler = Require.notNull(fieldHandler);
+    public void processFields(final FieldHandler currentFieldHandler) {
+        fieldHandler = Require.notNull(currentFieldHandler);
         boolean continuedField = false;
         directoryEntry.rewind();
         while (!directoryEntry.endOfDirectoryReached()) {
             if (continuedField) {
                 fieldHandler.additionalImplDefinedPart(
                         directoryEntry.getImplDefinedPart());
-            } else {
+            }
+            else {
                 processField();
             }
             continuedField = directoryEntry.isContinuedField();
             directoryEntry.gotoNext();
         }
-        this.fieldHandler = null;
+        fieldHandler = null;
     }
 
     private void processField() {
         if (directoryEntry.isReferenceField()) {
             processReferenceField();
-        } else {
+        }
+        else {
             processDataField();
         }
     }
 
     private void processReferenceField() {
         final int fieldStart = baseAddress + directoryEntry.getFieldStart();
-        final int fieldLength = buffer.distanceTo(FIELD_SEPARATOR, fieldStart);
+        final int fieldLength = buffer.distanceTo(Iso2709Constants.FIELD_SEPARATOR, fieldStart);
         final String value = buffer.stringAt(fieldStart, fieldLength, charset);
         fieldHandler.referenceField(directoryEntry.getTag(),
                 directoryEntry.getImplDefinedPart(), value);
@@ -214,7 +238,7 @@ public final class Record {
 
     private void processDataValues(final int fromIndex) {
         int start = fromIndex;
-        while (buffer.byteAt(start) != FIELD_SEPARATOR) {
+        while (buffer.byteAt(start) != Iso2709Constants.FIELD_SEPARATOR) {
             start = processDataValue(start);
         }
     }

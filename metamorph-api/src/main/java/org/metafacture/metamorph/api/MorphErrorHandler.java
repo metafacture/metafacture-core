@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.api;
 
 /**
@@ -23,7 +24,11 @@ package org.metafacture.metamorph.api;
  *
  */
 public interface MorphErrorHandler {
-
+    /**
+     * Provides custom error handling.
+     *
+     * @param exception the {@link Exception}
+     */
     void error(Exception exception);
 
 }

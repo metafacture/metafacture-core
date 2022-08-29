@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.collectors;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.times;
+import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.InlineMorph;
-import org.metafacture.metamorph.Metamorph;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -36,257 +33,255 @@ import org.mockito.junit.MockitoRule;
  */
 public final class ChooseTest {
 
-  @Rule
-  public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
 
-  @Mock
-  private StreamReceiver receiver;
+    @Mock
+    private StreamReceiver receiver;
 
-  private Metamorph metamorph;
+    @Test
+    public void shouldChooseValueOfTopMostFiringStatement() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <choose>" +
+                "    <data source='data1' />" +
+                "    <data source='data2' />" +
+                "  </choose>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data1", "A");
+                    i.literal("data2", "B");
+                    i.endRecord();
+                    i.startRecord("2");
+                    i.literal("data1", "B");
+                    i.literal("data2", "A");
+                    i.endRecord();
+                    i.startRecord("3");
+                    i.literal("data2", "C");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("data1", "A");
+                    o.get().endRecord();
+                    o.get().startRecord("2");
+                    o.get().literal("data1", "B");
+                    o.get().endRecord();
+                    o.get().startRecord("3");
+                    o.get().literal("data2", "C");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-  @Test
-  public void shouldChooseValueOfTopMostFiringStatement() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <choose>")
-        .with("    <data source='data1' />")
-        .with("    <data source='data2' />")
-        .with("  </choose>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void shouldMakeChooseDecisionOnFlushEvent() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <choose flushWith='entity'>" +
+                "    <data source='entity.data1' />" +
+                "    <data source='entity.data2' />" +
+                "  </choose>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("entity");
+                    i.literal("data1", "A");
+                    i.literal("data2", "B");
+                    i.endEntity();
+                    i.startEntity("entity");
+                    i.literal("data1", "B");
+                    i.literal("data2", "A");
+                    i.endEntity();
+                    i.startEntity("entity");
+                    i.literal("data2", "C");
+                    i.endEntity();
+                    i.startEntity("entity");
+                    i.literal("dataX", "X");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("entity.data1", "A");
+                    o.get().literal("entity.data1", "B");
+                    o.get().literal("entity.data2", "C");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    metamorph.startRecord("1");
-    metamorph.literal("data1", "A");
-    metamorph.literal("data2", "B");
-    metamorph.endRecord();
-    metamorph.startRecord("2");
-    metamorph.literal("data1", "B");
-    metamorph.literal("data2", "A");
-    metamorph.endRecord();
-    metamorph.startRecord("3");
-    metamorph.literal("data2", "C");
-    metamorph.endRecord();
+    @Test
+    public void issue110_shouldOutputFallBackIfFlushedWithEntity() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <choose name='chosen' flushWith='record|entity'>" +
+                "    <data source='entity.data1' />" +
+                "    <data source='L' />" +
+                "  </choose>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("L", "V");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("chosen", "V");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("data1", "A");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("2");
-    ordered.verify(receiver).literal("data1", "B");
-    ordered.verify(receiver).endRecord();
-    ordered.verify(receiver).startRecord("3");
-    ordered.verify(receiver).literal("data2", "C");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+    @Test
+    public void issue210_issue49_shouldRepeatedlyEmitNamedValueIfResetIsFalse() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <choose flushWith='flush' reset='false'>" +
+                "    <data source='lit1' />" +
+                "  </choose>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("lit1", "data1");
+                    i.literal("flush", "first");
+                    i.literal("flush", "second");
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    o.get().startRecord("1");
+                    f.apply(2).literal("lit1", "data1");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-  @Test
-  public void shouldMakeChooseDecisionOnFlushEvent() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <choose flushWith='entity'>")
-        .with("    <data source='entity.data1' />")
-        .with("    <data source='entity.data2' />")
-        .with("  </choose>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void issue210_shouldResetAfterEmittingNamedValueIfResetIsTrue() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <choose flushWith='flush' reset='true'>" +
+                "    <data source='lit1' />" +
+                "  </choose>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("lit1", "data1");
+                    i.literal("flush", "first");
+                    i.literal("flush", "second");
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    o.get().startRecord("1");
+                    f.apply(1).literal("lit1", "data1");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    metamorph.startRecord("1");
-    metamorph.startEntity("entity");
-    metamorph.literal("data1", "A");
-    metamorph.literal("data2", "B");
-    metamorph.endEntity();
-    metamorph.startEntity("entity");
-    metamorph.literal("data1", "B");
-    metamorph.literal("data2", "A");
-    metamorph.endEntity();
-    metamorph.startEntity("entity");
-    metamorph.literal("data2", "C");
-    metamorph.endEntity();
-    metamorph.startEntity("entity");
-    metamorph.literal("dataX", "X");
-    metamorph.endEntity();
-    metamorph.endRecord();
+    @Test
+    public void issue210_shouldResetAfterEmittingNamedValueByDefault() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <choose flushWith='flush'>" +
+                "    <data source='lit1' />" +
+                "  </choose>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.literal("lit1", "data1");
+                    i.literal("flush", "first");
+                    i.literal("flush", "second");
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    o.get().startRecord("1");
+                    f.apply(1).literal("lit1", "data1");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("entity.data1", "A");
-    ordered.verify(receiver).literal("entity.data1", "B");
-    ordered.verify(receiver).literal("entity.data2", "C");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+    @Test
+    public void issue250_shouldResetOnEntityChangeIfSameEntityIsTrue() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <choose sameEntity='true'>" +
+                "    <data source='entity.lit1' />" +
+                "    <data source='entity.lit2' />" +
+                "  </choose>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("entity");
+                    i.literal("lit1", "data1");
+                    i.endEntity();
+                    i.startEntity("entity");
+                    i.literal("lit2", "data2");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("entity.lit2", "data2");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-  @Test
-  public void issue110_shouldOutputFallBackIfFlushedWithEntity() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <choose name='chosen' flushWith='record|entity'>")
-        .with("    <data source='entity.data1' />")
-        .with("    <data source='L' />")
-        .with("  </choose>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
+    @Test
+    public void issue250_shouldNotResetOnEntityChangeIfSameEntityIsFalse() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <choose sameEntity='false'>" +
+                "    <data source='entity.lit1' />" +
+                "    <data source='entity.lit2' />" +
+                "  </choose>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("entity");
+                    i.literal("lit1", "data1");
+                    i.endEntity();
+                    i.startEntity("entity");
+                    i.literal("lit2", "data2");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("entity.lit1", "data1");
+                    o.get().endRecord();
+                }
+        );
+    }
 
-    metamorph.startRecord("1");
-    metamorph.literal("L", "V");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("chosen", "V");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void issue210_issue49_shouldRepeatedlyEmitNamedValueIfResetIsFalse() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <choose flushWith='flush' reset='false'>")
-        .with("    <data source='lit1' />")
-        .with("  </choose>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("lit1", "data1");
-    metamorph.literal("flush", "first");
-    metamorph.literal("flush", "second");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver, times(2)).literal("lit1", "data1");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void issue210_shouldResetAfterEmittingNamedValueIfResetIsTrue() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <choose flushWith='flush' reset='true'>")
-        .with("    <data source='lit1' />")
-        .with("  </choose>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("lit1", "data1");
-    metamorph.literal("flush", "first");
-    metamorph.literal("flush", "second");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver, times(1)).literal("lit1", "data1");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void issue210_shouldResetAfterEmittingNamedValueByDefault() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <choose flushWith='flush'>")
-        .with("    <data source='lit1' />")
-        .with("  </choose>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.literal("lit1", "data1");
-    metamorph.literal("flush", "first");
-    metamorph.literal("flush", "second");
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver, times(1)).literal("lit1", "data1");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void issue250_shouldResetOnEntityChangeIfSameEntityIsTrue() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <choose sameEntity='true'>")
-        .with("    <data source='entity.lit1' />")
-        .with("    <data source='entity.lit2' />")
-        .with("  </choose>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.startEntity("entity");
-    metamorph.literal("lit1", "data1");
-    metamorph.endEntity();
-    metamorph.startEntity("entity");
-    metamorph.literal("lit2", "data2");
-    metamorph.endEntity();
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("entity.lit2", "data2");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void issue250_shouldNotResetOnEntityChangeIfSameEntityIsFalse() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <choose sameEntity='false'>")
-        .with("    <data source='entity.lit1' />")
-        .with("    <data source='entity.lit2' />")
-        .with("  </choose>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.startEntity("entity");
-    metamorph.literal("lit1", "data1");
-    metamorph.endEntity();
-    metamorph.startEntity("entity");
-    metamorph.literal("lit2", "data2");
-    metamorph.endEntity();
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("entity.lit1", "data1");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
-
-  @Test
-  public void issue250_shouldNotResetOnEntityChangeByDefault() {
-    metamorph = InlineMorph.in(this)
-        .with("<rules>")
-        .with("  <choose>")
-        .with("    <data source='entity.lit1' />")
-        .with("    <data source='entity.lit2' />")
-        .with("  </choose>")
-        .with("</rules>")
-        .createConnectedTo(receiver);
-
-    metamorph.startRecord("1");
-    metamorph.startEntity("entity");
-    metamorph.literal("lit1", "data1");
-    metamorph.endEntity();
-    metamorph.startEntity("entity");
-    metamorph.literal("lit2", "data2");
-    metamorph.endEntity();
-    metamorph.endRecord();
-
-    final InOrder ordered = inOrder(receiver);
-    ordered.verify(receiver).startRecord("1");
-    ordered.verify(receiver).literal("entity.lit1", "data1");
-    ordered.verify(receiver).endRecord();
-    ordered.verifyNoMoreInteractions();
-  }
+    @Test
+    public void issue250_shouldNotResetOnEntityChangeByDefault() {
+        assertMorph(receiver,
+                "<rules>" +
+                "  <choose>" +
+                "    <data source='entity.lit1' />" +
+                "    <data source='entity.lit2' />" +
+                "  </choose>" +
+                "</rules>",
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("entity");
+                    i.literal("lit1", "data1");
+                    i.endEntity();
+                    i.startEntity("entity");
+                    i.literal("lit2", "data2");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("entity.lit1", "data1");
+                    o.get().endRecord();
+                }
+        );
+    }
 
 }

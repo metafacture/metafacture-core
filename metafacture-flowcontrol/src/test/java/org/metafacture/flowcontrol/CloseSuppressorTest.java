@@ -13,11 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.flowcontrol;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.ObjectReceiver;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 /**
  * Tests for class {@link CloseSuppressor}.
@@ -27,10 +32,15 @@ import org.mockito.Mockito;
  */
 public final class CloseSuppressorTest {
 
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+
+    @Mock
+    private ObjectReceiver<Object> receiver;
+
     @Test
     public void testSuppression() {
         final CloseSuppressor<Object> supressor = new CloseSuppressor<>(3);
-        final ObjectReceiver<Object> receiver = Mockito.mock(ObjectReceiver.class);
         supressor.setReceiver(receiver);
         supressor.closeStream();
         supressor.closeStream();

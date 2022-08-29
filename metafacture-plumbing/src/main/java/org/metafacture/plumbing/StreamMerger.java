@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.plumbing;
 
 import org.metafacture.framework.FluxCommand;
@@ -37,11 +38,16 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("merge-same-ids")
-public final class StreamMerger
-        extends DefaultStreamPipe<StreamReceiver> {
+public final class StreamMerger extends DefaultStreamPipe<StreamReceiver> {
 
     private boolean hasRecordsReceived;
     private String currentId = "";
+
+    /**
+     * Creates an instance of {@link StreamMerger}.
+     */
+    public StreamMerger() {
+    }
 
     @Override
     public void startRecord(final String identifier) {

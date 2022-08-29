@@ -13,7 +13,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package org.metafacture.elasticsearch;
+
+import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
+import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -23,14 +32,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.annotations.In;
-import org.metafacture.framework.annotations.Out;
-import org.metafacture.framework.helpers.DefaultObjectPipe;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Add Elasticsearch bulk indexing metadata to JSON input.
@@ -42,14 +43,141 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @In(String.class)
 @Out(String.class)
 @FluxCommand("json-to-elasticsearch-bulk")
-public class JsonToElasticsearchBulk extends
-        DefaultObjectPipe<String, ObjectReceiver<String>> {
+public class JsonToElasticsearchBulk extends DefaultObjectPipe<String, ObjectReceiver<String>> {
+
+    private ObjectMapper mapper = new ObjectMapper();
+    private String[] idPath = new String[] {};
+    private String type;
+    private String index;
+
+    /**
+     * Creates an instance of {@link JsonToElasticsearchBulk}.
+     */
+    public JsonToElasticsearchBulk() {
+    }
+
+    /**
+     * Creates an instance of {@link JsonToElasticsearchBulk}. As an id is not
+     * required it can be omitted.
+     *
+     * @param type  The Elasticsearch index type
+     * @param index The Elasticsearch index name
+     */
+    public JsonToElasticsearchBulk(final String type, final String index) {
+        this(new String[] {}, type, index);
+    }
+
+    /**
+     * Creates an instance of {@link JsonToElasticsearchBulk}.
+     *
+     * @param idPath the key path of the JSON value to be used as the ID for the
+     *               record
+     * @param type   the Elasticsearch index type
+     * @param index  the Elasticsearch index name
+     */
+    public JsonToElasticsearchBulk(final String[] idPath, final String type, final String index) {
+        this.idPath = idPath;
+        this.type = type;
+        this.index = index;
+    }
+
+    /**
+     * Creates an instance of {@link JsonToElasticsearchBulk}.
+     *
+     * @param idKey the key of the JSON value to be used as the ID for the record
+     * @param type  the Elasticsearch index type
+     * @param index the Elasticsearch index name
+     */
+    public JsonToElasticsearchBulk(final String idKey, final String type, final String index) {
+        this(new String[]{idKey}, type, index);
+    }
+
+    /**
+     *
+     * Creates an instance of {@link JsonToElasticsearchBulk}.
+     *
+     * @param idKey           the key of the JSON value to be used as the ID for the
+     *                        record
+     * @param type            the Elasticsearch index type
+     * @param index           the Elasticsearch index name
+     * @param entitySeparator the separator between entity names in idKey
+     */
+    public JsonToElasticsearchBulk(final String idKey, final String type, final String index, final String entitySeparator) {
+        this(idKey.split(Pattern.quote(entitySeparator)), type, index);
+    }
+
+    /**
+     * Sets the key path of the JSON value to be used as the ID for the record.
+     *
+     * @param idKey the key path of the JSON value
+     */
+    public void setIdKey(final String idKey) {
+        this.idPath = new String[]{idKey};
+    }
+
+    /**
+     * Sets the name of the type of the index.
+     *
+     * @param type the name of the type of the index.
+     */
+    public void setType(final String type) {
+        this.type = type;
+    }
+
+    /**
+     * Sets the name of the index.
+     *
+     * @param index the name of the index
+     */
+    public void setIndex(final String index) {
+        this.index = index;
+    }
+
+    @Override
+    public void process(final String obj) {
+        final StringWriter stringWriter = new StringWriter();
+        try {
+            final Map<String, Object> json = mapper.readValue(obj, MultiMap.class);
+            final Map<String, Object> detailsMap = new HashMap<String, Object>();
+            final Map<String, Object> indexMap = new HashMap<String, Object>();
+            indexMap.put("index", detailsMap);
+            if (idPath.length > 0) {
+                detailsMap.put("_id", findId(json));
+            }
+            detailsMap.put("_type", type);
+            detailsMap.put("_index", index);
+            mapper.writeValue(stringWriter, indexMap);
+            stringWriter.write("\n");
+            mapper.writeValue(stringWriter, json);
+        }
+        catch (final IOException e) {
+            e.printStackTrace();
+        }
+        getReceiver().process(stringWriter.toString());
+    }
+
+    private Object findId(final Object value) {
+        Object newValue = value;
+
+        for (final String key : idPath) {
+            if (newValue instanceof Map) {
+                @SuppressWarnings("unchecked")
+                final Map<String, Object> nestedMap = (Map<String, Object>) newValue;
+                newValue = nestedMap.get(key);
+            }
+            else {
+                return null;
+            }
+        }
+
+        return newValue;
+    }
 
     /**
      * Use a MultiMap with Jackson to collect values from multiple fields with
      * identical names under a single key.
      */
-    static class MultiMap extends HashMap<String, Object> {
+    static class MultiMap extends HashMap<String, Object> { // checkstyle-disable-line IllegalType
         private static final long serialVersionUID = 490682490432334605L;
 
         MultiMap() {
@@ -57,118 +185,28 @@ public class JsonToElasticsearchBulk extends
         }
 
         @Override
-        public Object put(String key, Object value) {
+        public Object put(final String key, final Object value) {
+            final Object newValue;
+
             if (containsKey(key)) {
-                Object oldValue = get(key);
+                final Object oldValue = get(key);
                 if (oldValue instanceof Set) {
                     @SuppressWarnings("unchecked")
-                    Set<Object> vals = ((Set<Object>) oldValue);
+                    final Set<Object> vals = (Set<Object>) oldValue;
                     vals.add(value);
-                    return super.put(key, vals);
+                    newValue = vals;
                 }
-                HashSet<Object> set = new HashSet<>(Arrays.asList(oldValue, value));
-                return super.put(key, set.size() == 1 ? value : set);
-            }
-            return super.put(key, value);
-        }
-    }
-
-    private ObjectMapper mapper = new ObjectMapper();
-    private String[] idPath;
-    private String type;
-    private String index;
-
-    public void setIdKey(String idKey) {
-        this.idPath = new String[]{idKey};
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setIndex(String index) {
-        this.index = index;
-    }
-
-    public JsonToElasticsearchBulk() {
-        super();
-        this.idPath = new String[]{};
-        this.type = null;
-        this.index = null;
-    }
-
-    /**
-     * As an id is not required it can be omitted.
-     *
-     * @param type The Elasticsearch index type
-     * @param index The Elasticsearch index name
-     */
-    public JsonToElasticsearchBulk(String type, String index) {
-        this(new String[] { }, type, index);
-    }
-
-    /**
-     * @param idPath The key path of the JSON value to be used as the ID for the record
-     * @param type The Elasticsearch index type
-     * @param index The Elasticsearch index name
-     */
-    public JsonToElasticsearchBulk(String[] idPath, String type, String index) {
-        this.idPath = idPath;
-        this.type = type;
-        this.index = index;
-    }
-
-    /**
-     * @param idKey The key of the JSON value to be used as the ID for the record
-     * @param type The Elasticsearch index type
-     * @param index The Elasticsearch index name
-     */
-    public JsonToElasticsearchBulk(String idKey, String type, String index) {
-        this(new String[]{idKey}, type, index);
-    }
-
-    /**
-     * @param idKey The key of the JSON value to be used as the ID for the record
-     * @param type The Elasticsearch index type
-     * @param index The Elasticsearch index name
-     * @param entitySeparator The separator between entity names in idKey
-     */
-    public JsonToElasticsearchBulk(String idKey, String type, String index, String entitySeparator) {
-        this(idKey.split(Pattern.quote(entitySeparator)), type, index);
-    }
-
-    @Override
-    public void process(String obj) {
-        StringWriter stringWriter = new StringWriter();
-        try {
-            Map<String, Object> json = mapper.readValue(obj, MultiMap.class);
-            Map<String, Object> detailsMap = new HashMap<String, Object>();
-            Map<String, Object> indexMap = new HashMap<String, Object>();
-            indexMap.put("index", detailsMap);
-            if (idPath.length > 0) detailsMap.put("_id", findId(json));
-            detailsMap.put("_type", type);
-            detailsMap.put("_index", index);
-            mapper.writeValue(stringWriter, indexMap);
-            stringWriter.write("\n");
-            mapper.writeValue(stringWriter, json);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        getReceiver().process(stringWriter.toString());
-    }
-
-    private Object findId(Object value) {
-        for (final String key : idPath) {
-            if (value instanceof Map) {
-                @SuppressWarnings("unchecked")
-                final Map<String, Object> nestedMap = (Map<String, Object>) value;
-                value = nestedMap.get(key);
+                else {
+                    final Set<Object> set = new HashSet<>(Arrays.asList(oldValue, value));
+                    newValue = set.size() == 1 ? value : set;
+                }
             }
             else {
-                return null;
+                newValue = value;
             }
-        }
 
-        return value;
+            return super.put(key, newValue);
+        }
     }
+
 }

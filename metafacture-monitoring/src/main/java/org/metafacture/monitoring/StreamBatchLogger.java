@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.monitoring;
 
-import java.util.HashMap;
-import java.util.Map;
+package org.metafacture.monitoring;
 
 import org.metafacture.commons.StringUtil;
 import org.metafacture.framework.FluxCommand;
@@ -25,8 +23,12 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.ForwardingStreamPipe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Writes log info every {@code batchSize} records.
@@ -44,14 +46,12 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
     public static final String BATCH_COUNT_VAR = "batches";
     public static final String BATCH_SIZE_VAR = "batchSize";
     public static final String TOTAL_RECORD_COUNT_VAR = "totalRecords";
+    public static final String DEFAULT_FORMAT = "records processed: ${totalRecords}";
 
     public static final long DEFAULT_BATCH_SIZE = 1000;
 
     private static final Logger LOG =
             LoggerFactory.getLogger(StreamBatchLogger.class);
-
-    private static final String DEFAULT_FORMAT =
-            "records processed: ${totalRecords}";
 
     private final Map<String, String> vars = new HashMap<>();
     private final String format;
@@ -60,42 +60,77 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
     private long recordCount;
     private long batchCount;
 
+    /**
+     * Creates an instance of {@link StreamBatchLogger} by a given format. The
+     * default format: {@value #DEFAULT_FORMAT}
+     */
     public StreamBatchLogger() {
         this.format = DEFAULT_FORMAT;
     }
 
+    /**
+     * Creates an instance of {@link StreamBatchLogger} by a given format.
+     *
+     * @param format the format
+     */
     public StreamBatchLogger(final String format) {
         this.format = format;
     }
 
+    /**
+     * Constructs a StreamBatchLogger with a format and a map of variables.
+     *
+     * @param format a format
+     * @param vars   a map of variables
+     */
     public StreamBatchLogger(final String format, final Map<String, String> vars) {
         this.format = format;
         this.vars.putAll(vars);
     }
 
-    public final void setBatchSize(final int batchSize) {
+    /**
+     * Sets the batch size.
+     *
+     * @param batchSize the batch size
+     */
+    public void setBatchSize(final int batchSize) {
         this.batchSize = batchSize;
     }
 
-    public final long getBatchSize() {
+    /**
+     * Gets the batch size.
+     *
+     * @return the batch size
+     */
+    public long getBatchSize() {
         return batchSize;
     }
 
+    /**
+     * Gets the batch count.
+     *
+     * @return the batch count
+     */
     public long getBatchCount() {
         return batchCount;
     }
 
+    /**
+     * Gets the record count.
+     *
+     * @return the record count
+     */
     public long getRecordCount() {
         return recordCount;
     }
 
     @Override
-    public final void endRecord() {
+    public void endRecord() {
         getReceiver().endRecord();
-        recordCount++;
+        ++recordCount;
         recordCount %= batchSize;
         if (recordCount == 0) {
-            batchCount++;
+            ++batchCount;
             writeLog();
         }
     }
@@ -106,7 +141,7 @@ public final class StreamBatchLogger extends ForwardingStreamPipe {
     }
 
     @Override
-    protected final void onResetStream() {
+    protected void onResetStream() {
         recordCount = 0;
         batchCount = 0;
     }

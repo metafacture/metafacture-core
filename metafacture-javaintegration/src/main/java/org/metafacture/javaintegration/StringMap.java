@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration;
+
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-
 
 /**
  * Collects the received results in a {@link Map}. Duplicate names are thus lost.
@@ -29,30 +29,31 @@ import org.metafacture.framework.helpers.DefaultStreamReceiver;
  * @author Markus Michael Geipel
  *
  */
-public final class StringMap extends DefaultStreamReceiver
-        implements Map<String, String> , Collector<Map<String, String>>{
+public final class StringMap extends DefaultStreamReceiver implements Map<String, String>, Collector<Map<String, String>> {
 
     private boolean closed;
     private Collection<Map<String, String>> collection;
-    private Map<String, String> map;
+    private Map<String, String> map = new HashMap<>();
 
+    /**
+     * Creates an instance of {@link StringMap}.
+     */
     public StringMap() {
-        super();
-        map = new HashMap<String, String>();
-        collection=null;
     }
 
+    /**
+     * Constructs a StringMap with a given Collection.
+     *
+     * @param collection the Collection
+     */
     public StringMap(final Collection<Map<String, String>> collection) {
-        super();
-        map = new HashMap<String, String>();
-        this.collection=collection;
+        this.collection = collection;
     }
 
     /**
      * @param map is filled with the received results.
      */
     public StringMap(final Map<String, String> map) {
-        super();
         this.map = map;
     }
 
@@ -60,6 +61,11 @@ public final class StringMap extends DefaultStreamReceiver
         this.map = map;
     }
 
+    /**
+     * Checks if the StringMap is closed.
+     *
+     * @return true if StringMap is closed.
+     */
     public boolean isClosed() {
         return closed;
     }

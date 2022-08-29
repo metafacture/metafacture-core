@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta.formatter;
 
 import org.metafacture.formeta.Formeta;
@@ -35,8 +36,10 @@ public final class MultilineFormatter extends AbstractFormatter {
     private boolean appendItemSeparator;
     private boolean firstItem;
 
+    /**
+     * Creates an instance of {@link MultilineFormatter}.
+     */
     public MultilineFormatter() {
-        super();
         onReset();
     }
 

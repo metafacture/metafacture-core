@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 import org.metafacture.metamorph.api.Function;
@@ -30,24 +31,36 @@ abstract class AbstractCompose extends AbstractSimpleStatelessFunction {
     private String postfix = "";
 
     /**
-     * @param prefix
-     *            the prefix to set
+     * Sets the prefix.
+     *
+     * @param prefix the prefix to set
      */
     public void setPrefix(final String prefix) {
         this.prefix = prefix;
     }
 
+    /**
+     * Gets the prefix.
+     *
+     * @return the prefix
+     */
     protected String getPrefix() {
         return prefix;
     }
 
+    /**
+     * Gets the postfix.
+     *
+     * @return the postfix
+     */
     protected String getPostfix() {
         return postfix;
     }
 
     /**
-     * @param postfix
-     *            the postfix to set
+     * Sets the posfix.
+     *
+     * @param postfix the postfix to set
      */
     public void setPostfix(final String postfix) {
         this.postfix = postfix;

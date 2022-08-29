@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.monitoring;
 
 import org.metafacture.framework.FluxCommand;
@@ -21,9 +22,9 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Logs the string representation of every object.
@@ -44,12 +45,20 @@ public final class ObjectLogger<T>
 
     private final String logPrefix;
 
+    /**
+     * Creates an instance of {@link ObjectLogger}.
+     */
     public ObjectLogger() {
         this("");
     }
 
+    /**
+     * Creates an instance of {@link ObjectLogger} by a given prefix of the log
+     * messages.
+     *
+     * @param logPrefix the prefix of the log messages
+     */
     public ObjectLogger(final String logPrefix) {
-        super();
         this.logPrefix = logPrefix;
     }
 

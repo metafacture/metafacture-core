@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph;
 
-import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
+package org.metafacture.metamorph;
 
 import org.metafacture.flowcontrol.StreamBuffer;
 import org.metafacture.framework.StreamPipe;
@@ -27,7 +24,9 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.javaintegration.SingleValue;
 
-
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Splits a stream based on a morph definition.
@@ -45,16 +44,31 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
     private final Map<String, StreamReceiver> receiverMap = new HashMap<String, StreamReceiver>();
     private final Metamorph metamorph;
 
+    /**
+     * Constructs a Splitter from the path to a Metamorph definition file.
+     *
+     * @param morphDef the name of the file of the Metamorph definition
+     */
     public Splitter(final String morphDef) {
         metamorph = new Metamorph(morphDef);
         metamorph.setReceiver(singleValue);
     }
 
+    /**
+     * Constructs a Splitter from the Reader of a Metamorph definition.
+     *
+     * @param morphDef the Reader of the metamorph definition
+     */
     public Splitter(final Reader morphDef) {
         metamorph = new Metamorph(morphDef);
         metamorph.setReceiver(singleValue);
     }
 
+    /**
+     * Constructs a Splitter from the Metamorph.
+     *
+     * @param metamorph the Metamoprh
+     */
     public Splitter(final Metamorph metamorph) {
         this.metamorph = metamorph;
         metamorph.setReceiver(singleValue);
@@ -66,16 +80,24 @@ public final class Splitter implements StreamPipe<StreamReceiver> {
         return receiver;
     }
 
+    /**
+     * Sets the receiver.
+     *
+     * @param <R>      the type of the receiver
+     * @param key      the name of the receiver
+     * @param receiver the receiver
+     * @return the receiver
+     */
     public <R extends StreamReceiver> R setReceiver(final String key, final R receiver) {
         receiverMap.put(key, receiver);
         return receiver;
     }
 
-    private void dispatch(){
+    private void dispatch() {
         final String key = singleValue.getValue();
         final StreamReceiver receiver = receiverMap.get(key);
 
-        if(null != receiver){
+        if (null != receiver) {
             buffer.setReceiver(receiver);
             buffer.replay();
         }

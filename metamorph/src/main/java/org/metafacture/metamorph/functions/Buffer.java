@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph.functions;
 
-import java.util.ArrayList;
-import java.util.List;
+package org.metafacture.metamorph.functions;
 
 import org.metafacture.metamorph.api.NamedValueReceiver;
 import org.metafacture.metamorph.api.NamedValueSource;
 import org.metafacture.metamorph.api.helpers.AbstractFunction;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Stores all received values and only releases them on flush.
@@ -34,23 +34,24 @@ public final class Buffer extends AbstractFunction {
     private final List<Receipt> receipts = new ArrayList<Receipt>();
     private int currentRecord;
 
-    @Override
-    public void receive(final String name, final String value,
-            final NamedValueSource source, final int recordCount,
-            final int entityCount) {
+    /**
+     * Creates an instance of {@link Buffer}.
+     */
+    public Buffer() {
+    }
 
+    @Override
+    public void receive(final String name, final String value, final NamedValueSource source, final int recordCount, final int entityCount) {
         if (currentRecord != recordCount) {
             receipts.clear();
             currentRecord = recordCount;
         }
 
         receipts.add(new Receipt(name, value, this, recordCount, entityCount));
-
     }
 
     @Override
     public void flush(final int recordCount, final int entityCount) {
-
         for (final Receipt receipt : receipts) {
             receipt.send(getNamedValueReceiver());
         }

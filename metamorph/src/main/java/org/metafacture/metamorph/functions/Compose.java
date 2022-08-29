@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 /**
@@ -21,6 +22,12 @@ package org.metafacture.metamorph.functions;
  * @author Markus Michael Geipel
  */
 public final class Compose extends AbstractCompose {
+
+    /**
+     * Creates an instance of {@link Compose}.
+     */
+    public Compose() {
+    }
 
     @Override
     public String process(final String value) {

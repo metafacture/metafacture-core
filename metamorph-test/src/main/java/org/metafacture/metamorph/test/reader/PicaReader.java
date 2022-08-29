@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.test.reader;
 
 import org.metafacture.biblio.pica.PicaDecoder;
@@ -25,6 +26,9 @@ import org.metafacture.io.LineReader;
  */
 public class PicaReader extends ReaderBase {
 
+    /**
+     * Creates an instance of {@link PicaReader}.
+     */
     public PicaReader() {
         super(new LineReader(), new PicaDecoder());
     }

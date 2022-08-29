@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration;
+
+import org.metafacture.commons.types.NamedValue;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import org.metafacture.commons.types.NamedValue;
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-
 
 /**
  * Collects {@link NamedValue}s in a {@link Set}. So there will not be
@@ -30,17 +30,15 @@ import org.metafacture.framework.helpers.DefaultStreamReceiver;
  *
  * @author Markus Michael Geipel
  */
-public final class NamedValueSet extends DefaultStreamReceiver
-        implements Set<NamedValue>, Collector<Set<NamedValue>> {
+public final class NamedValueSet extends DefaultStreamReceiver implements Set<NamedValue>, Collector<Set<NamedValue>> {
 
     private Collection<Set<NamedValue>> collection;
-    private Set<NamedValue> set;
+    private Set<NamedValue> set = new HashSet<>();
 
+    /**
+     * Creates an instance of {@link NamedValueSet}.
+     */
     public NamedValueSet() {
-        super();
-        set = new HashSet<>();
-        this.collection = null;
-
     }
 
     /**
@@ -50,8 +48,6 @@ public final class NamedValueSet extends DefaultStreamReceiver
      * @param collection is filled with the received results.
      */
     public NamedValueSet(final Collection<Set<NamedValue>> collection) {
-        super();
-        set = new HashSet<>();
         this.collection = collection;
     }
 

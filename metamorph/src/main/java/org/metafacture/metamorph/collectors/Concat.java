@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.collectors;
 
 import org.metafacture.metamorph.api.NamedValueSource;
@@ -30,22 +31,47 @@ public final class Concat extends AbstractFlushingCollect {
     private String prefix = "";
     private String postfix = "";
     private String delimiter = "";
-    private boolean reverse = false;
-
     private String currentDelimiter = "";
+    private boolean reverse;
 
+    /**
+     * Creates an instance of {@link Concat}.
+     */
+    public Concat() {
+    }
+
+    /**
+     * Sets the prefix.
+     *
+     * @param prefix the prefix
+     */
     public void setPrefix(final String prefix) {
         this.prefix = prefix;
     }
 
+    /**
+     * Sets the postfix.
+     *
+     * @param postfix the postfix
+     */
     public void setPostfix(final String postfix) {
         this.postfix = postfix;
     }
 
+    /**
+     * Sets the delimiter.
+     *
+     * @param delimiter the delimiter
+     */
     public void setDelimiter(final String delimiter) {
         this.delimiter = delimiter;
     }
 
+    /**
+     * Flasg whether the concatenation should be reversely done.
+     *
+     * @param reverse true if concatenation should be done reversely
+     */
     public void setReverse(final boolean reverse) {
         this.reverse = reverse;
     }
@@ -71,7 +97,8 @@ public final class Concat extends AbstractFlushingCollect {
         if (reverse) {
             builder.insert(0, currentDelimiter);
             builder.insert(0, value);
-        } else {
+        }
+        else {
             builder.append(currentDelimiter);
             builder.append(value);
         }

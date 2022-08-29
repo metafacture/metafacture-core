@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.json;
 
-import java.io.IOException;
-import java.io.StringWriter;
+package org.metafacture.json;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -36,6 +34,9 @@ import com.fasterxml.jackson.core.io.CharacterEscapes;
 import com.fasterxml.jackson.core.io.SerializedString;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 
+import java.io.IOException;
+import java.io.StringWriter;
+
 /**
  * Serialises an object as JSON. Records and entities are represented
  * as objects unless their name ends with []. If the name ends with [],
@@ -49,27 +50,104 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("encode-json")
-public final class JsonEncoder extends
-        DefaultStreamPipe<ObjectReceiver<String>> {
+public final class JsonEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
     public static final String ARRAY_MARKER = "[]";
+    public static final String BOOLEAN_MARKER = null;
+    public static final String NUMBER_MARKER = null;
+
+    private static final char ESCAPE_CHAR_LOW = 0x20;
+    private static final char ESCAPE_CHAR_HIGH = 0x7f;
 
     private final JsonGenerator jsonGenerator;
     private final StringWriter writer = new StringWriter();
 
+    private String arrayMarker = ARRAY_MARKER;
+    private String booleanMarker = BOOLEAN_MARKER;
+    private String numberMarker = NUMBER_MARKER;
+
+    /**
+     * Constructs a JsonEncoder if no IOException occurs. The root value
+     * separator of the JsonGenerator is set to null.
+     */
     public JsonEncoder() {
         try {
             jsonGenerator = new JsonFactory().createGenerator(writer);
             jsonGenerator.setRootValueSeparator(null);
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
 
+    /**
+     * Sets the array marker.
+     *
+     * @param arrayMarker the array marker
+     */
+    public void setArrayMarker(final String arrayMarker) {
+        this.arrayMarker = arrayMarker;
+    }
+
+    /**
+     * Gets the array marker.
+     *
+     * @return the array marker
+     */
+    public String getArrayMarker() {
+        return arrayMarker;
+    }
+
+    /**
+     * Sets the boolean marker.
+     *
+     * @param booleanMarker the boolean marker
+     */
+    public void setBooleanMarker(final String booleanMarker) {
+        this.booleanMarker = booleanMarker;
+    }
+
+    /**
+     * Gets the boolean marker.
+     *
+     * @return the boolean marker
+     */
+    public String getBooleanMarker() {
+        return booleanMarker;
+    }
+
+    /**
+     * Sets the number marker.
+     *
+     * @param numberMarker the number marker
+     */
+    public void setNumberMarker(final String numberMarker) {
+        this.numberMarker = numberMarker;
+    }
+
+    /**
+     * Gets the number marker.
+     *
+     * @return the number marker
+     */
+    public String getNumberMarker() {
+        return numberMarker;
+    }
+
+    /**
+     * Flags whether to use pretty printing.
+     *
+     * @param prettyPrinting true if pretty printing should be used
+     */
     public void setPrettyPrinting(final boolean prettyPrinting) {
         jsonGenerator.setPrettyPrinter(prettyPrinting ? new DefaultPrettyPrinter((SerializableString) null) : null);
     }
 
+    /**
+     * Checks if the {@link JsonGenerator} has a pretty printer.
+     *
+     * @return true if {@link JsonGenerator} has a pretty printer.
+     */
     public boolean getPrettyPrinting() {
         return jsonGenerator.getPrettyPrinter() != null;
     }
@@ -126,7 +204,8 @@ public final class JsonEncoder extends
         endGroup();
         try {
             jsonGenerator.flush();
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
         getReceiver().process(writer.toString());
@@ -147,14 +226,23 @@ public final class JsonEncoder extends
         try {
             final JsonStreamContext ctx = jsonGenerator.getOutputContext();
             if (ctx.inObject()) {
-                jsonGenerator.writeFieldName(name);
+                jsonGenerator.writeFieldName(getUnmarkedName(name, booleanMarker, numberMarker));
             }
+
             if (value == null) {
                 jsonGenerator.writeNull();
-            } else {
+            }
+            else if (isMarkedName(name, booleanMarker)) {
+                jsonGenerator.writeBoolean(Boolean.parseBoolean(value));
+            }
+            else if (isMarkedName(name, numberMarker)) {
+                jsonGenerator.writeNumber(value);
+            }
+            else {
                 jsonGenerator.writeString(value);
             }
-        } catch (final JsonGenerationException e) {
+        }
+        catch (final JsonGenerationException e) {
             throw new MetafactureException(e);
         }
         catch (final IOException e) {
@@ -165,18 +253,20 @@ public final class JsonEncoder extends
     private void startGroup(final String name) {
         try {
             final JsonStreamContext ctx = jsonGenerator.getOutputContext();
-            if (name.endsWith(ARRAY_MARKER)) {
+            if (isMarkedName(name, arrayMarker)) {
                 if (ctx.inObject()) {
-                    jsonGenerator.writeFieldName(name.substring(0, name.length() - ARRAY_MARKER.length()));
+                    jsonGenerator.writeFieldName(getUnmarkedName(name, arrayMarker));
                 }
                 jsonGenerator.writeStartArray();
-            } else {
+            }
+            else {
                 if (ctx.inObject()) {
                     jsonGenerator.writeFieldName(name);
                 }
                 jsonGenerator.writeStartObject();
             }
-        } catch (final JsonGenerationException e) {
+        }
+        catch (final JsonGenerationException e) {
             throw new MetafactureException(e);
         }
         catch (final IOException e) {
@@ -189,10 +279,12 @@ public final class JsonEncoder extends
             final JsonStreamContext ctx = jsonGenerator.getOutputContext();
             if (ctx.inObject()) {
                 jsonGenerator.writeEndObject();
-            } else if (ctx.inArray()) {
+            }
+            else if (ctx.inArray()) {
                 jsonGenerator.writeEndArray();
             }
-        } catch (final JsonGenerationException e) {
+        }
+        catch (final JsonGenerationException e) {
             throw new MetafactureException(e);
         }
         catch (final IOException e) {
@@ -200,34 +292,64 @@ public final class JsonEncoder extends
         }
     }
 
-    private String escapeChar(char ch) {
+    private boolean isMarkedName(final String name, final String marker) {
+        return marker != null && name.endsWith(marker);
+    }
+
+    private String getUnmarkedName(final String name, final String... markers) {
+        for (final String marker : markers) {
+            if (isMarkedName(name, marker)) {
+                return name.substring(0, name.length() - marker.length());
+            }
+        }
+
+        return name;
+    }
+
+    private String escapeChar(final char ch) {
         final String namedEscape = namedEscape(ch);
-        if (namedEscape != null) {
-            return namedEscape;
-        }
-        if (ch < 0x20 || 0x7f < ch ) {
-            return unicodeEscape(ch);
-        }
-        return Character.toString(ch);
+        return namedEscape != null ? namedEscape : (ch < ESCAPE_CHAR_LOW || ESCAPE_CHAR_HIGH < ch) ? unicodeEscape(ch) : Character.toString(ch);
     }
 
-    private String namedEscape(char ch) {
-        switch(ch) {
-            case '\b': return "\\b";
-            case '\n': return "\\n";
-            case '\t': return "\\t";
-            case '\f': return "\\f";
-            case '\r': return "\\r";
-            case '\'': return "\\'";
-            case '\\': return "\\\\";
-            case '"': return "\\\"";
-            case '/': return "\\/";
+    private String namedEscape(final char ch) {
+        final String result;
+
+        switch (ch) {
+            case '\b':
+                result = "\\b";
+                break;
+            case '\n':
+                result = "\\n";
+                break;
+            case '\t':
+                result = "\\t";
+                break;
+            case '\f':
+                result = "\\f";
+                break;
+            case '\r':
+                result = "\\r";
+                break;
+            case '\'':
+                result = "\\'";
+                break;
+            case '\\':
+                result = "\\\\";
+                break;
+            case '"':
+                result = "\\\"";
+                break;
+            case '/':
+                result = "\\/";
+                break;
             default:
-                return null;
+                result = null;
         }
+
+        return result;
     }
 
-    private String unicodeEscape(char ch) {
+    private String unicodeEscape(final char ch) {
         return String.format("\\u%4H", ch).replace(' ', '0');
     }
 

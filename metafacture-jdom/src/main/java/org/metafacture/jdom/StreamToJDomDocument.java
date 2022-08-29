@@ -13,18 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.jdom;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.regex.Pattern;
-
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -34,6 +25,17 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.regex.Pattern;
 
 /**
  * Converts a stream into a {@link Document}.
@@ -54,33 +56,39 @@ public final class StreamToJDomDocument
     private Document document;
     private Element currentElement;
     private final String rootTagName;
-    private final Map<String, Namespace> namespaces = new HashMap<String,Namespace>();
+    private final Map<String, Namespace> namespaces = new HashMap<String, Namespace>();
 
+    /**
+     * Constructs a StreamToJDomDocument initialized with a given root tag name and
+     * a location of a file with named properties.
+     *
+     * @param rootTagName         the root tag name
+     * @param namespaceProperties the location of the file of the named properties
+     */
     public StreamToJDomDocument(final String rootTagName, final String namespaceProperties) {
         this.rootTagName = rootTagName;
         namespaces.put(XML, Namespace.getNamespace(XML, "http://www.w3.org/XML/1998/namespace"));
         final Properties properties;
         try {
             properties = ResourceUtil.loadProperties(namespaceProperties);
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException("Cannot load namespaces list", e);
         }
-        for (Entry<Object, Object> entry : properties.entrySet()) {
+        for (final Entry<Object, Object> entry : properties.entrySet()) {
             namespaces.put(entry.getKey().toString(), Namespace.getNamespace(entry.getKey().toString(), entry.getValue().toString()));
         }
     }
-
 
     @Override
     public void startRecord(final String identifier) {
         assert !isClosed();
         currentElement = createElement(rootTagName);
-        for (Namespace namespace : namespaces.values()) {
+        for (final Namespace namespace : namespaces.values()) {
             currentElement.addNamespaceDeclaration(namespace);
         }
         document = new Document(currentElement);
     }
-
 
     @Override
     public void startEntity(final String name) {
@@ -98,14 +106,13 @@ public final class StreamToJDomDocument
         return new Element(name);
     }
 
-    private Namespace getNamespace(final String name){
+    private Namespace getNamespace(final String name) {
         final Namespace namespace = namespaces.get(name);
-        if(namespace==null){
+        if (namespace == null) {
             throw new IllegalArgumentException("Namespace " + name + " not registered");
         }
         return namespace;
     }
-
 
     @Override
     public void endEntity() {
@@ -113,21 +120,23 @@ public final class StreamToJDomDocument
         currentElement = currentElement.getParentElement();
     }
 
-
     @Override
     public void literal(final String name, final String value) {
         assert !isClosed();
         if (name.isEmpty()) {
             currentElement.addContent(value);
-        } else if (name.startsWith(ATTRIBUTE_MARKER)) {
+        }
+        else if (name.startsWith(ATTRIBUTE_MARKER)) {
             final String[] parts = NAMESPACE_DELIMITER.split(name);
             if (parts.length == 2) {
                 currentElement.setAttribute(parts[1], value, getNamespace(parts[0].substring(1)));
-            } else{
+            }
+            else {
                 currentElement.setAttribute(name.substring(1), value);
             }
 
-        } else {
+        }
+        else {
             final Element temp = createElement(name);
             currentElement.addContent(temp);
             temp.setText(value);

@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.test;
 
-import java.io.FileNotFoundException;
-import java.io.StringReader;
-
-import org.junit.runners.model.InitializationError;
-import org.junit.runners.model.Statement;
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.commons.XmlUtil;
 import org.metafacture.commons.reflection.ReflectionUtil;
@@ -30,9 +26,15 @@ import org.metafacture.metamorph.Metamorph;
 import org.metafacture.metamorph.test.reader.MultiFormatReader;
 import org.metafacture.metamorph.test.reader.Reader;
 import org.metafacture.metamorph.test.validators.StreamValidator;
+
+import org.junit.runners.model.InitializationError;
+import org.junit.runners.model.Statement;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
+import java.io.FileNotFoundException;
+import java.io.StringReader;
 
 /**
  * Runs a test defined in a Metamorph-Test definition.
@@ -40,10 +42,9 @@ import org.xml.sax.InputSource;
  * @author Christoph Böhme
  *
  */
-final class MetamorphTestCase extends Statement {
+final class MetamorphTestCase extends Statement { // checkstyle-disable-line ClassDataAbstractionCoupling
 
-    private static final String NO_DATA_FOUND =
-            "Please specify either element content or a src attribute";
+    private static final String NO_DATA_FOUND = "Please specify either element content or a src attribute";
 
     private static final String NAME_ATTR = "name";
     private static final String IGNORE_ATTR = "ignore";
@@ -77,12 +78,13 @@ final class MetamorphTestCase extends Statement {
     public void evaluate() throws InitializationError {
         final Reader inputReader = getReader(INPUT_TAG);
         @SuppressWarnings("unchecked")
-        final StreamPipe<StreamReceiver>transformation = getTransformation();
+        final StreamPipe<StreamReceiver> transformation = getTransformation();
         final EventList resultStream = new EventList();
 
         if (transformation == null) {
             inputReader.setReceiver(resultStream);
-        } else {
+        }
+        else {
             inputReader.setReceiver(transformation).setReceiver(resultStream);
         }
 
@@ -90,7 +92,9 @@ final class MetamorphTestCase extends Statement {
         inputReader.closeStream();
 
         final StreamValidator validator = new StreamValidator(resultStream.getEvents());
-        validator.setErrorHandler(msg -> { throw new AssertionError(msg); });
+        validator.setErrorHandler(msg -> {
+            throw new AssertionError(msg);
+        });
 
         final Element result = (Element) config.getElementsByTagName(RESULT_TAG).item(0);
         validator.setStrictRecordOrder(Boolean.parseBoolean(
@@ -113,8 +117,7 @@ final class MetamorphTestCase extends Statement {
         return new MultiFormatReader(mimeType);
     }
 
-    @SuppressWarnings("rawtypes")
-    private StreamPipe getTransformation() throws InitializationError {
+    private StreamPipe getTransformation() throws InitializationError { // checkstyle-disable-line ReturnCount
         final NodeList nodes = config.getElementsByTagName(TRANSFORMATION_TAG);
         if (nodes.getLength() == 0) {
             return null;
@@ -133,7 +136,8 @@ final class MetamorphTestCase extends Statement {
             }
             return new Metamorph(src);
 
-        } else if (MIME_JAVACLASS.equals(type)) {
+        }
+        else if (MIME_JAVACLASS.equals(type)) {
             if (src.isEmpty()) {
                 throw new InitializationError(
                         "class defining transformation not specified");
@@ -165,7 +169,8 @@ final class MetamorphTestCase extends Statement {
             throws InitializationError {
         try {
             return ResourceUtil.getReader(src);
-        } catch (final FileNotFoundException e) {
+        }
+        catch (final FileNotFoundException e) {
             throw new InitializationError("Could not find input file '" + src +
                     "': " + e.getMessage());
         }

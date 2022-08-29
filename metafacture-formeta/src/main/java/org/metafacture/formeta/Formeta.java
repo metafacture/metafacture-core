@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta;
 
 /**
@@ -39,6 +40,12 @@ public final class Formeta {
         // No instances allowed
     }
 
+    /**
+     * Checks whether a character is a whitespace.
+     *
+     * @param ch the character
+     * @return true if the character is a whitespace
+     */
     public static boolean isWhitespace(final char ch) {
         return WHITESPACE.indexOf(ch) > -1;
     }

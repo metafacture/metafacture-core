@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.json;
 
 import static org.mockito.Mockito.inOrder;
@@ -155,6 +156,153 @@ public final class JsonEncoderTest {
         encoder.endRecord();
 
         verify(receiver).process(fixQuotes("{'Li1':[['V1','V2'],['V3','V4']]}"));
+    }
+
+    @Test
+    public void testShouldNotEncodeEntitiesWithDifferentMarkerAsList() {
+        encoder.setArrayMarker("*");
+
+        encoder.startRecord("");
+        encoder.startEntity(LIST1);
+        encoder.literal(LITERAL1, VALUE1);
+        encoder.literal(LITERAL2, VALUE2);
+        encoder.literal(LITERAL3, VALUE3);
+        encoder.endEntity();
+        encoder.endRecord();
+
+        verify(receiver).process(fixQuotes("{'Li1[]':{'L1':'V1','L2':'V2','L3':'V3'}}"));
+    }
+
+    @Test
+    public void testShouldEncodeMarkedEntitiesWithConfiguredMarkerAsList() {
+        final String marker = "*";
+        encoder.setArrayMarker(marker);
+
+        encoder.startRecord("");
+        encoder.startEntity(LIST1.replace(JsonEncoder.ARRAY_MARKER, marker));
+        encoder.literal(LITERAL1, VALUE1);
+        encoder.literal(LITERAL2, VALUE2);
+        encoder.literal(LITERAL3, VALUE3);
+        encoder.endEntity();
+        encoder.endRecord();
+
+        verify(receiver).process(fixQuotes("{'Li1':['V1','V2','V3']}"));
+    }
+
+    @Test
+    public void testShouldNotEncodeBooleans() {
+        encoder.startRecord("1");
+        encoder.literal("lit1~", "false");
+        encoder.literal("lit2", "true");
+        encoder.startEntity("arr1[]");
+        encoder.startEntity("1");
+        encoder.literal("lit3~", "true");
+        encoder.literal("lit4", "false");
+        encoder.endEntity();
+        encoder.endEntity();
+        encoder.startEntity("arr2[]");
+        encoder.literal("1~", "false");
+        encoder.literal("2~", "true");
+        encoder.literal("3", "false");
+        encoder.endEntity();
+        encoder.endRecord();
+
+        verify(receiver).process(
+                "{" +
+                    "\"lit1~\":\"false\"," +
+                    "\"lit2\":\"true\"," +
+                    "\"arr1\":[{\"lit3~\":\"true\",\"lit4\":\"false\"}]," +
+                    "\"arr2\":[\"false\",\"true\",\"false\"]" +
+                "}"
+        );
+    }
+
+    @Test
+    public void testShouldEncodeBooleansIfEnabled() {
+        encoder.setBooleanMarker("~");
+
+        encoder.startRecord("1");
+        encoder.literal("lit1~", "false");
+        encoder.literal("lit2", "true");
+        encoder.startEntity("arr1[]");
+        encoder.startEntity("1");
+        encoder.literal("lit3~", "true");
+        encoder.literal("lit4", "false");
+        encoder.endEntity();
+        encoder.endEntity();
+        encoder.startEntity("arr2[]");
+        encoder.literal("1~", "false");
+        encoder.literal("2~", "true");
+        encoder.literal("3", "false");
+        encoder.endEntity();
+        encoder.endRecord();
+
+        verify(receiver).process(
+                "{" +
+                    "\"lit1\":false," +
+                    "\"lit2\":\"true\"," +
+                    "\"arr1\":[{\"lit3\":true,\"lit4\":\"false\"}]," +
+                    "\"arr2\":[false,true,\"false\"]" +
+                "}"
+        );
+    }
+
+    @Test
+    public void testShouldNotEncodeNumbers() {
+        encoder.startRecord("1");
+        encoder.literal("lit1#", "23");
+        encoder.literal("lit2", "4.2");
+        encoder.startEntity("arr1[]");
+        encoder.startEntity("1");
+        encoder.literal("lit3#", "4.2");
+        encoder.literal("lit4", "23");
+        encoder.endEntity();
+        encoder.endEntity();
+        encoder.startEntity("arr2[]");
+        encoder.literal("1#", "23");
+        encoder.literal("2#", "4.2");
+        encoder.literal("3", "23");
+        encoder.endEntity();
+        encoder.endRecord();
+
+        verify(receiver).process(
+                "{" +
+                    "\"lit1#\":\"23\"," +
+                    "\"lit2\":\"4.2\"," +
+                    "\"arr1\":[{\"lit3#\":\"4.2\",\"lit4\":\"23\"}]," +
+                    "\"arr2\":[\"23\",\"4.2\",\"23\"]" +
+                "}"
+        );
+    }
+
+    @Test
+    public void testShouldEncodeNumbersIfEnabled() {
+        encoder.setNumberMarker("#");
+
+        encoder.startRecord("1");
+        encoder.literal("lit1#", "23");
+        encoder.literal("lit2", "4.2");
+        encoder.startEntity("arr1[]");
+        encoder.startEntity("1");
+        encoder.literal("lit3#", "4.2");
+        encoder.literal("lit4", "23");
+        encoder.endEntity();
+        encoder.endEntity();
+        encoder.startEntity("arr2[]");
+        encoder.literal("1#", "23");
+        encoder.literal("2#", "4.2");
+        encoder.literal("3", "23");
+        encoder.endEntity();
+        encoder.endRecord();
+
+        verify(receiver).process(
+                "{" +
+                    "\"lit1\":23," +
+                    "\"lit2\":\"4.2\"," +
+                    "\"arr1\":[{\"lit3\":4.2,\"lit4\":\"23\"}]," +
+                    "\"arr2\":[23,4.2,\"23\"]" +
+                "}"
+        );
     }
 
     @Test

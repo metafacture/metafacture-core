@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.mangling;
 
 import org.metafacture.framework.FluxCommand;
@@ -36,36 +37,55 @@ public final class ObjectToLiteral<T> extends
     public static final String DEFAULT_LITERAL_NAME = "obj";
     public static final String DEFAULT_RECORD_ID = "";
 
-    private String literalName;
-    private String recordId;
+    private String literalName = DEFAULT_LITERAL_NAME;
+    private String recordId = DEFAULT_RECORD_ID;
     private int recordCount;
 
+    /**
+     * Creates an instance of {@link ObjectToLiteral}.
+     */
     public ObjectToLiteral() {
-        super();
-        setLiteralName(DEFAULT_LITERAL_NAME);
-        setRecordId(DEFAULT_RECORD_ID);
-        recordCount=0;
     }
 
+    /**
+     * Sets the literal name.
+     *
+     * @param literalName the literal name
+     */
     public void setLiteralName(final String literalName) {
         this.literalName = literalName;
     }
 
+    /**
+     * Sets the record ID.
+     *
+     * @param recordId the record ID
+     */
     public void setRecordId(final String recordId) {
         this.recordId = recordId;
     }
 
+    /**
+     * Gets the literal name.
+     *
+     * @return the literal name
+     */
     public String getLiteralName() {
         return literalName;
     }
 
+    /**
+     * Gets the record ID.
+     *
+     * @return the record ID
+     */
     public String getRecordId() {
         return recordId;
     }
 
     @Override
     public void process(final T obj) {
-        assert obj!=null;
+        assert obj != null;
         assert !isClosed();
         getReceiver().startRecord(String.format(recordId, ++recordCount));
         getReceiver().literal(literalName, obj.toString());

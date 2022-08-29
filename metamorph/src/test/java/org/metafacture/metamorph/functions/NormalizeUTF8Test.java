@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-
 
 /**
  * Tests for class {@link NormalizeUTF8}.
@@ -29,11 +29,11 @@ public final class NormalizeUTF8Test {
 
     // The umlauts in this string are composed of two characters (u and ", e.g.):
     private static final String INPUT_STR =
-            "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
+        "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 
     // The umlauts in this string are individual characters:
     private static final String OUTPUT_STR =
-            "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
+        "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 
     @Test
     public void testProcess() {

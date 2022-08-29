@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.mangling;
 
-import java.util.EnumSet;
+package org.metafacture.mangling;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
+
+import java.util.EnumSet;
 
 /**
  * Discards stream events by type. The type of a stream event is either
@@ -48,10 +49,16 @@ public class StreamEventDiscarder implements StreamPipe<StreamReceiver> {
 
     private EnumSet<EventType> discardedEvents = EnumSet.noneOf(EventType.class);
 
+    /**
+     * Creates an instance of {@link StreamEventDiscarder}.
+     */
+    public StreamEventDiscarder() {
+    }
+
     @Override
-    public <R extends StreamReceiver> R setReceiver(final R receiver) {
-        this.receiver = receiver;
-        return receiver;
+    public <R extends StreamReceiver> R setReceiver(final R newReceiver) {
+        receiver = newReceiver;
+        return newReceiver;
     }
 
     /**
@@ -122,7 +129,8 @@ public class StreamEventDiscarder implements StreamPipe<StreamReceiver> {
                                         final boolean discard) {
         if (discard) {
             discardedEvents.add(type);
-        } else {
+        }
+        else {
             discardedEvents.remove(type);
         }
     }

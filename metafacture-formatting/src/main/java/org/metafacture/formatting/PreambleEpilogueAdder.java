@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formatting;
 
 import org.metafacture.framework.FluxCommand;
@@ -21,7 +22,6 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
-
 
 /**
  * Emits a <i>preamble</i> string before the first string object in the
@@ -44,7 +44,13 @@ public final class PreambleEpilogueAdder extends DefaultObjectPipe<String, Objec
     private String preamble = "";
     private String epilogue = "";
 
-    private boolean objectsReceived = false;
+    private boolean objectsReceived;
+
+    /**
+     * Creates an instance of {@link PreambleEpilogueAdder}.
+     */
+    public PreambleEpilogueAdder() {
+    }
 
     /**
      * Sets the <i>preamble</i> string which is emitted before the first object.
@@ -61,6 +67,11 @@ public final class PreambleEpilogueAdder extends DefaultObjectPipe<String, Objec
         this.preamble = preamble;
     }
 
+    /**
+     * Gets the preamble.
+     *
+     * @return the preamble
+     */
     public String getPreamble() {
         return preamble;
     }
@@ -80,13 +91,18 @@ public final class PreambleEpilogueAdder extends DefaultObjectPipe<String, Objec
         this.epilogue = epilogue;
     }
 
+    /**
+     * Gets the epilogue.
+     *
+     * @return the epilogue
+     */
     public String getEpilogue() {
         return epilogue;
     }
 
     @Override
     public void process(final String obj) {
-        if(!objectsReceived && !preamble.isEmpty()) {
+        if (!objectsReceived && !preamble.isEmpty()) {
             getReceiver().process(preamble);
         }
         objectsReceived = true;
@@ -95,7 +111,7 @@ public final class PreambleEpilogueAdder extends DefaultObjectPipe<String, Objec
 
     @Override
     protected void onCloseStream() {
-        if(objectsReceived && !epilogue.isEmpty()) {
+        if (objectsReceived && !epilogue.isEmpty()) {
             getReceiver().process(epilogue);
         }
     }

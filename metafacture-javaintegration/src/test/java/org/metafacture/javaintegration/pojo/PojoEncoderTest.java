@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration.pojo;
 
 import static org.junit.Assert.assertEquals;
@@ -253,6 +254,7 @@ public class PojoEncoderTest {
                 .stringField2);
     }
 
+    @SuppressWarnings("unchecked")
     private <T> ObjectReceiver<T> createObjectReceiverMock() {
         // There is no type safe to create a mock with Mockito#mock(Class).
         // Hence, we have to use an unchecked cast here:

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.biblio.iso2709;
 
 /**
@@ -23,14 +24,42 @@ package org.metafacture.biblio.iso2709;
  */
 public interface FieldHandler {
 
+    /**
+     * Reference a field.
+     *
+     * @param tag             the tag
+     * @param implDefinedPart the impl defined part
+     * @param value           the value
+     */
     void referenceField(char[] tag, char[] implDefinedPart, String value);
 
+    /**
+     * Starts a data field.
+     *
+     * @param tag             the tag
+     * @param implDefinedPart the impl defined part
+     * @param indicators      the indicators
+     */
     void startDataField(char[] tag, char[] implDefinedPart, char[] indicators);
 
+    /**
+     * Ends the data field.
+     */
     void endDataField();
 
+    /**
+     * Sets the impl defined part.
+     *
+     * @param implDefinedPart he impl defined part
+     */
     void additionalImplDefinedPart(char[] implDefinedPart);
 
+    /**
+     * Sets the identifier to a value.
+     *
+     * @param identifier the identifier
+     * @param value      the value
+     */
     void data(char[] identifier, String value);
 
 }

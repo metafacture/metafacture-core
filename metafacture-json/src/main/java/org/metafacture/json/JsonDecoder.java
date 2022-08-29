@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 hbz
+ * Copyright 2017, 2021 hbz
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.json;
+
+import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
+import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.framework.helpers.DefaultObjectPipe;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Decodes a record in JSON format.
@@ -30,82 +42,207 @@ import java.io.IOException;
  * @author Jens Wille
  *
  */
+@Description("Decodes JSON to metadata events. The \'recordPath\' option can be used to set a JsonPath " +
+    "to extract a path as JSON - or to split the data into multiple JSON documents.")
+@In(String.class)
+@Out(StreamReceiver.class)
+@FluxCommand("decode-json")
 public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver> {
 
     public static final String DEFAULT_ARRAY_MARKER = JsonEncoder.ARRAY_MARKER;
+    public static final String DEFAULT_BOOLEAN_MARKER = JsonEncoder.BOOLEAN_MARKER;
+    public static final String DEFAULT_NUMBER_MARKER = JsonEncoder.NUMBER_MARKER;
 
     public static final String DEFAULT_ARRAY_NAME = "%d";
 
     public static final String DEFAULT_RECORD_ID = "%d";
 
+    public static final String DEFAULT_ROOT_PATH = "";
+
     private final JsonFactory jsonFactory = new JsonFactory();
 
     private JsonParser jsonParser;
-    private String arrayMarker;
-    private String arrayName;
-    private String recordId;
+    private String arrayMarker = DEFAULT_ARRAY_MARKER;
+    private String arrayName = DEFAULT_ARRAY_NAME;
+    private String booleanMarker = DEFAULT_BOOLEAN_MARKER;
+    private String numberMarker = DEFAULT_NUMBER_MARKER;
+    private String recordId = DEFAULT_RECORD_ID;
+    private String recordPath = DEFAULT_ROOT_PATH;
+
     private int recordCount;
 
+    /**
+     * Creates an instance of {@link JsonDecoder}.
+     */
     public JsonDecoder() {
-        super();
-
-        setArrayMarker(DEFAULT_ARRAY_MARKER);
-        setArrayName(DEFAULT_ARRAY_NAME);
-        setRecordId(DEFAULT_RECORD_ID);
-
-        resetRecordCount();
     }
 
+    /**
+     * Flags whether to allow comments.
+     *
+     * @param allowComments true if comments should be allowed
+     */
     public void setAllowComments(final boolean allowComments) {
         jsonFactory.configure(JsonParser.Feature.ALLOW_COMMENTS, allowComments);
     }
 
+    /**
+     * Checks if comments are allowed.
+     *
+     * @return true if comments are allowed
+     */
     public boolean getAllowComments() {
         return jsonFactory.isEnabled(JsonParser.Feature.ALLOW_COMMENTS);
     }
 
+    /**
+     * Sets the array marker.
+     *
+     * @param arrayMarker the array marker
+     */
     public void setArrayMarker(final String arrayMarker) {
         this.arrayMarker = arrayMarker;
     }
 
+    /**
+     * Gets the array marker.
+     *
+     * @return the array marker
+     */
     public String getArrayMarker() {
         return arrayMarker;
     }
 
+    /**
+     * Sets the boolean marker.
+     *
+     * @param booleanMarker the boolean marker
+     */
+    public void setBooleanMarker(final String booleanMarker) {
+        this.booleanMarker = booleanMarker;
+    }
+
+    /**
+     * Gets the boolean marker.
+     *
+     * @return the boolean marker
+     */
+    public String getBooleanMarker() {
+        return booleanMarker;
+    }
+
+    /**
+     * Sets the number marker.
+     *
+     * @param numberMarker the number marker
+     */
+    public void setNumberMarker(final String numberMarker) {
+        this.numberMarker = numberMarker;
+    }
+
+    /**
+     * Gets the number marker.
+     *
+     * @return the number marker
+     */
+    public String getNumberMarker() {
+        return numberMarker;
+    }
+
+    /**
+     * Sets the name of the array.
+     *
+     * @param arrayName the name of the array
+     */
     public void setArrayName(final String arrayName) {
         this.arrayName = arrayName;
     }
 
+    /**
+     * Gets the name of the array.
+     *
+     * @return the name of the array
+     */
     public String getArrayName() {
         return arrayName;
     }
 
+    /**
+     * Sets the ID of the record.
+     *
+     * @param recordId the ID of the record
+     */
     public void setRecordId(final String recordId) {
         this.recordId = recordId;
     }
 
+    /**
+     * Gets the ID of the record.
+     *
+     * @return the ID of the record
+     */
     public String getRecordId() {
         return recordId;
     }
 
+    /**
+     * Sets the record count.
+     *
+     * @param recordCount the record count
+     */
     public void setRecordCount(final int recordCount) {
         this.recordCount = recordCount;
     }
 
+    /**
+     * Gets the record count.
+     *
+     * @return the record count
+     */
     public int getRecordCount() {
         return recordCount;
     }
 
+    /**
+     * Sets the record path.
+     *
+     * @param recordPath the record path
+     */
+    public void setRecordPath(final String recordPath) {
+        this.recordPath = recordPath;
+    }
+
+    /**
+     * Gets the record path.
+     *
+     * @return the record path
+     */
+    public String getRecordPath() {
+        return recordPath;
+    }
+
+    /**
+     * Resets the record count.
+     */
     public void resetRecordCount() {
         setRecordCount(0);
     }
 
     @Override
-    public void process(final String string) {
+    public void process(final String json) {
         assert !isClosed();
+        if (recordPath.isEmpty()) {
+            processRecord(json);
+        }
+        else {
+            matches(JsonPath.read(json, recordPath)).forEach(record -> {
+                processRecord(record);
+            });
+        }
+    }
 
-        createParser(string);
-
+    private void processRecord(final String record) {
+        createParser(record);
         try {
             decode();
         }
@@ -115,6 +252,19 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
         finally {
             closeParser();
         }
+    }
+
+    private Stream<String> matches(final Object obj) {
+        final List<?> records = (obj instanceof List<?>) ? ((List<?>) obj) : Arrays.asList(obj);
+        return records.stream().map(doc -> {
+            try {
+                return new ObjectMapper().writeValueAsString(doc);
+            }
+            catch (final JsonProcessingException e) {
+                e.printStackTrace();
+                return doc.toString();
+            }
+        });
     }
 
     @Override
@@ -180,7 +330,7 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
 
                 break;
             case START_ARRAY:
-                getReceiver().startEntity(name + arrayMarker);
+                getReceiver().startEntity(getMarkedName(name, arrayMarker));
                 decodeArray();
                 getReceiver().endEntity();
 
@@ -189,11 +339,25 @@ public final class JsonDecoder extends DefaultObjectPipe<String, StreamReceiver>
                 getReceiver().literal(name, null);
 
                 break;
+            case VALUE_FALSE:
+            case VALUE_TRUE:
+                getReceiver().literal(getMarkedName(name, booleanMarker), jsonParser.getText());
+
+                break;
+            case VALUE_NUMBER_FLOAT:
+            case VALUE_NUMBER_INT:
+                getReceiver().literal(getMarkedName(name, numberMarker), jsonParser.getText());
+
+                break;
             default:
                 getReceiver().literal(name, jsonParser.getText());
 
                 break;
         }
+    }
+
+    private String getMarkedName(final String name, final String marker) {
+        return marker != null ? name + marker : name;
     }
 
 }

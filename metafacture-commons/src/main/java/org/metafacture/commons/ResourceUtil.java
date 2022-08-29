@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons;
 
 import java.io.BufferedReader;
@@ -30,7 +31,6 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Properties;
 
-
 /**
  * Various utility methods for working with files, resources and streams.
  *
@@ -38,7 +38,7 @@ import java.util.Properties;
  * @author Markus Michael Geipel
  *
  */
-public final class ResourceUtil {
+public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractionCoupling
 
     static final int BUFFER_SIZE = 4096;
 
@@ -47,12 +47,12 @@ public final class ResourceUtil {
     }
 
     /**
-     * First attempts to open open {@code name} as a file. On fail attempts to
-     * open resource with name {@code name}. On fail attempts to open {@code name}
-     * as a URL.
+     * First attempts to open a file with the provided name. On fail attempts to
+     * open a resource identified by the name. On fail attempts to open a URL
+     * identified by the name.
      *
-     * @param name name of the file or resource to open
-     * @return an input stream for reading the opened file or resource
+     * @param name name of the file, resource or the URL to open
+     * @return an input stream for reading the opened file, resource or URL
      * @throws FileNotFoundException if all attempts fail
      */
     public static InputStream getStream(final String name)
@@ -67,21 +67,32 @@ public final class ResourceUtil {
 
         InputStream stream = Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream(name);
-        if (stream != null) {
-            return stream;
-        }
-
-        try {
-            stream = new URL(name).openStream();
-        } catch (final IOException e) {
-            throwFileNotFoundException(name, e);
-        }
         if (stream == null) {
-            throwFileNotFoundException(name, null);
+            try {
+                stream = new URL(name).openStream();
+            }
+            catch (final IOException e) {
+                throwFileNotFoundException(name, e);
+            }
+            if (stream == null) {
+                throwFileNotFoundException(name, null);
+            }
         }
 
         return stream;
 
+    }
+
+    /**
+     * Gets an InputStream of a File.
+     *
+     * @param file the File.
+     * @return the InputStream
+     * @throws FileNotFoundException if the File couldn't be found
+     */
+    public static InputStream getStream(final File file)
+            throws FileNotFoundException {
+        return new FileInputStream(file);
     }
 
     private static void throwFileNotFoundException(final String name,
@@ -94,25 +105,53 @@ public final class ResourceUtil {
         throw e;
     }
 
-    public static InputStream getStream(final File file)
-            throws FileNotFoundException {
-        return new FileInputStream(file);
-    }
-
+    /**
+     * Gets a Reader. First attempts to open a file. On fail attempts to open the
+     * resource with name. On fail attempts to open name as a URL.
+     *
+     * @param name the name of the resource
+     * @return the Reader
+     * @throws FileNotFoundException if the File couldn't be found
+     */
     public static Reader getReader(final String name)
             throws FileNotFoundException {
         return new InputStreamReader(getStream(name));
     }
 
+    /**
+     * Gets a Reader from a File.
+     *
+     * @param file the File
+     * @return the Reader
+     * @throws FileNotFoundException if the File couldn't be found
+     */
     public static Reader getReader(final File file) throws FileNotFoundException {
         return new InputStreamReader(getStream(file));
     }
 
+    /**
+     * Gets a Reader. First attempts to open a file. On fail attempts to open the
+     * resource with name. On fail attempts to open name as a URL. Uses the given
+     * {@link java.nio.charset.Charset charset} as encoding.
+     *
+     * @param name     the name of the resource
+     * @param encoding the Charset
+     * @return the Reader
+     * @throws IOException if an I/O error occurs
+     */
     public static Reader getReader(final String name, final String encoding)
             throws IOException {
         return new InputStreamReader(getStream(name), encoding);
     }
 
+    /**
+     * Gets a Reader from a File using {@link java.nio.charset.Charset charset}.
+     *
+     * @param file     the File
+     * @param encoding the Charset
+     * @return the Reader
+     * @throws IOException if an I/O error occurs
+     */
     public static Reader getReader(final File file, final String encoding)
             throws IOException {
         return new InputStreamReader(getStream(file), encoding);
@@ -137,22 +176,41 @@ public final class ResourceUtil {
 
         final URL resourceUrl =
                 Thread.currentThread().getContextClassLoader().getResource(name);
-        if (resourceUrl != null) {
-            return resourceUrl;
-        }
-
-        return new URL(name);
+        return resourceUrl != null ? resourceUrl : new URL(name);
     }
 
+    /**
+     * Gets an URL of a File.
+     *
+     * @param file the File
+     * @return the URL
+     * @throws MalformedURLException if malformed URL has occurred
+     */
     public static URL getUrl(final File file) throws MalformedURLException {
         return file.toURI().toURL();
     }
 
+    /**
+     * Creates Properties based upon a location. First attempts to open a file. On
+     * fail attempts to open the resource with name. On fail attempts to open name
+     * as a URL.
+     *
+     * @param location the location of the resource
+     * @return the Properties
+     * @throws IOException if an I/O error occurs
+     */
     public static Properties loadProperties(final String location)
             throws IOException {
         return loadProperties(getStream(location));
     }
 
+    /**
+     * Loads properties from an InputStream.
+     *
+     * @param stream properties as InputStream
+     * @return the Properties
+     * @throws IOException if an I/O error occurs
+     */
     public static Properties loadProperties(final InputStream stream)
             throws IOException {
         final Properties properties;
@@ -161,10 +219,24 @@ public final class ResourceUtil {
         return properties;
     }
 
+    /**
+     * Loads properties from a URL.
+     *
+     * @param url properties as URL
+     * @return the Properties
+     * @throws IOException if an I/O error occurs
+     */
     public static Properties loadProperties(final URL url) throws IOException {
         return loadProperties(url.openStream());
     }
 
+    /**
+     * Loads a text file.
+     *
+     * @param location the filename
+     * @return the content of the file
+     * @throws IOException if an I/O error occurs
+     */
     public static String loadTextFile(final String location) throws IOException {
         final StringBuilder builder = new StringBuilder();
         final BufferedReader reader = new BufferedReader(getReader(location));
@@ -178,6 +250,14 @@ public final class ResourceUtil {
         return builder.toString();
     }
 
+    /**
+     * * Loads a text file.
+     *
+     * @param location the filename
+     * @param list a List of Strings to append the lines of the file to
+     * @return the List of Strings with the lines of the file appended
+     * @throws IOException if an I/O error occurs
+     */
     public static List<String> loadTextFile(final String location,
             final List<String> list) throws IOException {
         final BufferedReader reader = new BufferedReader(getReader(location));
@@ -191,14 +271,29 @@ public final class ResourceUtil {
         return list;
     }
 
-    public static String readAll(InputStream inputStream, Charset encoding)
+    /**
+     * Reads an InputStream with the given Charset.
+     *
+     * @param inputStream the InputStream
+     * @param encoding    the Charset
+     * @return a String of the content of the InputStream
+     * @throws IOException if an I/O error occurs
+     */
+    public static String readAll(final InputStream inputStream, final Charset encoding)
             throws IOException {
         try (Reader reader = new InputStreamReader(inputStream, encoding)) {
             return readAll(reader);
         }
     }
 
-    public static String readAll(Reader reader) throws IOException {
+    /**
+     * Reads a Reader.
+     *
+     * @param reader the Reader
+     * @return a String of the content of the Reader
+     * @throws IOException if an I/O error occurs
+     */
+    public static String readAll(final Reader reader) throws IOException {
         final StringBuilder loadedText = new StringBuilder();
         try (Reader bufferedReader = new BufferedReader(reader)) {
             final CharBuffer buffer = CharBuffer.allocate(BUFFER_SIZE);

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC
+    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+    "https://checkstyle.org/dtds/configuration_1_3.dtd">
+<module name="Checker">
+    <module name="SuppressWarningsFilter" />
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value=".*"/>
+        <property name="files" value="generated-src"/>
+    </module>
+    <module name="TreeWalker">
+        <module name="AbstractClassName"/>
+        <module name="AnnotationUseStyle"/>
+        <module name="AnonInnerLength"/>
+        <module name="ArrayTypeStyle"/>
+        <module name="AvoidNestedBlocks"/>
+        <module name="AvoidNoArgumentSuperConstructorCall"/>
+        <module name="AvoidStarImport"/>
+        <module name="AvoidStaticImport"/>
+        <module name="BooleanExpressionComplexity"/>
+        <module name="CatchParameterName">
+            <property name="format" value="^e$"/>
+        </module>
+        <module name="ClassDataAbstractionCoupling"/>
+        <module name="ClassFanOutComplexity"/>
+        <module name="ClassTypeParameterName"/>
+        <module name="ConstantName"/>
+        <module name="CovariantEquals"/>
+        <module name="CustomImportOrder">
+            <property name="customImportOrderRules" value="SAME_PACKAGE(2)###THIRD_PARTY_PACKAGE###STANDARD_JAVA_PACKAGE###SPECIAL_IMPORTS###STATIC"/>
+            <property name="separateLineBetweenGroups" value="true"/>
+            <property name="sortImportsInGroupAlphabetically" value="true"/>
+        </module>
+        <module name="CyclomaticComplexity"/>
+        <module name="DeclarationOrder"/>
+        <module name="DefaultComesLast"/>
+        <module name="EmptyLineSeparator">
+            <property name="allowMultipleEmptyLines" value="false"/>
+            <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
+            <property name="allowNoEmptyLineBetweenFields" value="true"/>
+        </module>
+        <module name="EmptyStatement"/>
+        <module name="EqualsAvoidNull"/>
+        <module name="EqualsHashCode"/>
+        <module name="ExecutableStatementCount"/>
+        <module name="ExplicitInitialization"/>
+        <module name="FallThrough"/>
+        <module name="FinalLocalVariable">
+            <property name="validateEnhancedForLoopVariable" value="true"/>
+        </module>
+        <module name="FinalParameters">
+            <property name="tokens" value="CTOR_DEF,LITERAL_CATCH,METHOD_DEF"/>
+        </module>
+        <module name="GenericWhitespace"/>
+        <module name="HiddenField">
+            <property name="ignoreConstructorParameter" value="true"/>
+            <property name="ignoreSetter" value="true"/>
+        </module>
+        <module name="HideUtilityClassConstructor"/>
+        <module name="IllegalCatch"/>
+        <module name="IllegalThrows"/>
+        <module name="IllegalToken">
+            <property name="tokens" value="POST_INC,POST_DEC"/>
+        </module>
+        <module name="IllegalType"/>
+        <module name="Indentation"/>
+        <module name="InnerAssignment"/>
+        <module name="InnerTypeLast"/>
+        <module name="InterfaceIsType"/>
+        <module name="InterfaceTypeParameterName"/>
+        <module name="JavaNCSS"/>
+        <module name="JavadocMethod"/>
+        <module name="JavadocType"/>
+        <module name="LambdaParameterName"/>
+        <module name="LeftCurly"/>
+        <module name="LocalFinalVariableName"/>
+        <module name="LocalVariableName"/>
+        <module name="MagicNumber"/>
+        <module name="MemberName"/>
+        <module name="MethodLength"/>
+        <module name="MethodName"/>
+        <module name="MethodParamPad"/>
+        <module name="MethodTypeParameterName"/>
+        <module name="MissingCtor"/>
+        <module name="MissingDeprecated"/>
+        <module name="MissingJavadocMethod"/>
+        <module name="MissingOverride"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="ModifiedControlVariable"/>
+        <module name="ModifierOrder"/>
+        <module name="MultipleStringLiterals">
+            <property name="allowedDuplicates" value="2"/>
+            <property name="ignoreStringsRegexp" value="^&quot;.?.?&quot;$"/>
+        </module>
+        <module name="MultipleVariableDeclarations"/>
+        <module name="MutableException"/>
+        <module name="NeedBraces"/>
+        <module name="NPathComplexity"/>
+        <module name="NoArrayTrailingComma"/>
+        <module name="NoClone"/>
+        <module name="NoEnumTrailingComma"/>
+        <module name="NoFinalizer"/>
+        <module name="NonEmptyAtclauseDescription"/>
+        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
+        <module name="OneStatementPerLine">
+            <property name="treatTryResourcesAsStatement" value="true"/>
+        </module>
+        <module name="OneTopLevelClass"/>
+        <module name="OperatorWrap">
+            <property name="option" value="eol"/>
+        </module>
+        <module name="OuterTypeFilename"/>
+        <module name="OuterTypeNumber"/>
+        <module name="OverloadMethodsDeclarationOrder"/>
+        <module name="PackageDeclaration"/>
+        <module name="PackageName"/>
+        <module name="ParameterAssignment"/>
+        <module name="ParameterName"/>
+        <module name="ParameterNumber">
+            <property name="max" value="5"/>
+        </module>
+        <module name="ParenPad"/>
+        <module name="RedundantImport"/>
+        <module name="RedundantModifier"/>
+        <module name="RequireThis"/>
+        <module name="ReturnCount"/>
+        <module name="RightCurly">
+            <property name="option" value="alone"/>
+        </module>
+        <module name="SeparatorWrap">
+            <property name="tokens" value="COMMA,SEMI,ELLIPSIS,ARRAY_DECLARATOR"/>
+            <property name="option" value="eol"/>
+        </module>
+        <module name="SeparatorWrap">
+            <property name="tokens" value="DOT,AT,METHOD_REF"/>
+            <property name="option" value="nl"/>
+        </module>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="StaticVariableName"/>
+        <module name="StringLiteralEquality"/>
+        <module name="SuperClone"/>
+        <module name="SuperFinalize"/>
+        <module name="SuppressWarnings">
+            <!-- allow: fallthrough, unchecked (cf. https://docs.oracle.com/javase/8/docs/technotes/tools/unix/javac.html#BHCJBHDF) -->
+            <property name="format" value="^\s*(?:all|cast|classfile|deprecation|dep-ann|divzero|empty|finally|options|overrides|path|processing|rawtypes|Serial|static|try|varargs)\s*$"/>
+        </module>
+        <module name="SuppressWithNearbyCommentFilter">
+            <property name="checkFormat" value="$1"/>
+            <property name="commentFormat" value="checkstyle-disable-line (\w+(?:\|\w+)?)"/>
+        </module>
+        <module name="SuppressWarningsHolder" />
+        <module name="ThrowsCount">
+            <property name="max" value="2"/>
+        </module>
+        <module name="TypecastParenPad"/>
+        <module name="TypeName"/>
+        <module name="UnnecessaryParentheses"/>
+        <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
+        <module name="UnnecessarySemicolonInEnumeration"/>
+        <module name="UnnecessarySemicolonInTryWithResources">
+            <property name="allowWhenNoBraceAfterSemicolon" value="false"/>
+        </module>
+        <module name="UnusedImports"/>
+        <module name="UpperEll"/>
+        <module name="VisibilityModifier"/>
+        <module name="WhitespaceAfter"/>
+        <module name="WhitespaceAround"/>
+    </module>
+</module>

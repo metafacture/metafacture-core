@@ -16,11 +16,11 @@
 package org.metafacture.strings;
 
 import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.ObjectPipe;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
+import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 /**
  * Collects strings and emits them as records when a line matches the pattern.
@@ -34,15 +34,26 @@ import org.metafacture.framework.annotations.Out;
 @In(String.class)
 @Out(String.class)
 @FluxCommand("lines-to-records")
-public final class LineRecorder implements ObjectPipe<String, ObjectReceiver<String>> {
+public final class LineRecorder extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
     private static final int SB_CAPACITY = 4096 * 7;
     // empty line is the default
     private String recordMarkerRegexp = "^\\s*$";
     private StringBuilder record = new StringBuilder(SB_CAPACITY);
     private ObjectReceiver<String> receiver;
-    private boolean isClosed = false;
+    private boolean isClosed;
 
+    /**
+     * Creates an instance of {@link LineRecorder}.
+     */
+    public LineRecorder() {
+    }
+
+    /**
+     * Sets the record marker regexp.
+     *
+     * @param regexp the regexp
+     */
     public void setRecordMarkerRegexp(final String regexp) {
         recordMarkerRegexp = regexp;
     }
@@ -53,38 +64,22 @@ public final class LineRecorder implements ObjectPipe<String, ObjectReceiver<Str
         if (line.matches(recordMarkerRegexp)) {
             getReceiver().process(record.toString());
             record = new StringBuilder(SB_CAPACITY);
-        } else
+        }
+        else {
             record.append(line + "\n");
-    }
-
-    private boolean isClosed() {
-        return isClosed;
+        }
     }
 
     @Override
-    public void resetStream() {
+    protected void onCloseStream() {
+        if (record.length() > 0) {
+            getReceiver().process(record.toString());
+        }
+    }
+
+    @Override
+    protected void onResetStream() {
         record = new StringBuilder(SB_CAPACITY);
-    }
-
-    @Override
-    public void closeStream() {
-        getReceiver().process(record.toString());
-        isClosed = true;
-    }
-
-    @Override
-    public <R extends ObjectReceiver<String>> R setReceiver(R receiver) {
-        this.receiver = receiver;
-        return receiver;
-    }
-
-    /**
-     * Returns a reference to the downstream module.
-     *
-     * @return reference to the downstream module
-     */
-    protected final ObjectReceiver<String> getReceiver() {
-        return receiver;
     }
 
 }

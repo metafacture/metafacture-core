@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.javaintegration;
+
+import org.metafacture.commons.types.ListMap;
+import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.metafacture.commons.types.ListMap;
-import org.metafacture.framework.helpers.DefaultStreamReceiver;
-
 
 /**
  * Collects the received results in a {@link ListMap}.
@@ -30,22 +30,32 @@ import org.metafacture.framework.helpers.DefaultStreamReceiver;
  * @author Markus Michael Geipel
  *
  */
-public final class StringListMap extends DefaultStreamReceiver
-        implements Collector<ListMap<String, String>>, Map<String, List<String>> {
+public final class StringListMap extends DefaultStreamReceiver implements Collector<ListMap<String, String>>, Map<String, List<String>> {
 
     private boolean closed;
     private Collection<ListMap<String, String>> collection;
     private ListMap<String, String> listMap = new ListMap<String, String>();
 
+    /**
+     * Creates an instance of {@link StringListMap}.
+     */
     public StringListMap() {
-        super();
     }
 
+    /**
+     * Creates an instance of {@link StringListMap} by a given Collection.
+     *
+     * @param collection the Collection
+     */
     public StringListMap(final Collection<ListMap<String, String>> collection) {
-        super();
         this.collection = collection;
     }
 
+    /**
+     * Checks if StringListMap is closed.
+     *
+     * @return true if it is closed
+     */
     public boolean isClosed() {
         return closed;
     }
@@ -55,14 +65,27 @@ public final class StringListMap extends DefaultStreamReceiver
         listMap.clear();
     }
 
+    /**
+     * Removes a key in the map.
+     *
+     * @param key the key
+     */
     public void removeKey(final String key) {
         listMap.removeKey(key);
     }
 
+    /**
+     * Clears a key in the map.
+     *
+     * @param key the key
+     */
     public void clearKey(final String key) {
         listMap.clearKey(key);
     }
 
+    /**
+     * Clears all keys in the map.
+     */
     public void clearAllKeys() {
         listMap.clearAllKeys();
     }
@@ -77,12 +100,29 @@ public final class StringListMap extends DefaultStreamReceiver
         return listMap.keySet();
     }
 
+    /**
+     * Adds a value to the List of values of the key in the map.
+     *
+     * @param name  the key
+     * @param value the value
+     */
     public void add(final String name, final String value) {
         listMap.add(name, value);
     }
 
+    /**
+     * Adds a List of values to a key in the map
+     *
+     * @param name      the key
+     * @param addValues the {@link Collection} of values
+     */
     public void putAll(final String name, final Collection<String> addValues) {
         listMap.putAll(name, addValues);
+    }
+
+    @Override
+    public void putAll(final Map<? extends String, ? extends List<String>> putMap) {
+        listMap.putAll(putMap);
     }
 
     @Override
@@ -95,10 +135,23 @@ public final class StringListMap extends DefaultStreamReceiver
         return listMap.get(name);
     }
 
+    /**
+     * Checks whether a key exists.
+     *
+     * @param name the key
+     * @return true if the key exists, otherwise false
+     */
     public boolean existsKey(final String name) {
         return listMap.existsKey(name);
     }
 
+    /**
+     * Gets the first element of the List of values of the key in the map or null
+     *
+     * @param name the name
+     * @return the first element of the List of values of the key in the map or
+     *         null.
+     */
     public String getFirst(final String name) {
         return listMap.getFirst(name);
     }
@@ -108,10 +161,20 @@ public final class StringListMap extends DefaultStreamReceiver
         return listMap.toString();
     }
 
+    /**
+     * Sets the ID.
+     *
+     * @param identifier the ID
+     */
     public void setId(final String identifier) {
         listMap.setId(identifier);
     }
 
+    /**
+     * Gets the ID.
+     *
+     * @return the ID
+     */
     public String getId() {
         return listMap.getId();
     }
@@ -144,11 +207,6 @@ public final class StringListMap extends DefaultStreamReceiver
     @Override
     public List<String> remove(final Object key) {
         return listMap.remove(key);
-    }
-
-    @Override
-    public void putAll(final Map<? extends String, ? extends List<String>> putMap) {
-        listMap.putAll(putMap);
     }
 
     @Override

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.api;
 
 /**
@@ -21,17 +22,40 @@ package org.metafacture.metamorph.api;
  * @author Markus Michael Geipel
  *
  */
-public interface Collect extends FlushListener, ConditionAware,
-        NamedValuePipe {
+public interface Collect extends FlushListener, ConditionAware, NamedValuePipe {
+    /**
+     * Flags whether to wait for a flush.
+     *
+     * @param waitForFlush true if to wait for a flush
+     */
+    void setWaitForFlush(boolean waitForFlush);
 
-    void setWaitForFlush(final boolean waitForFlush);
-
+    /**
+     * Flags whether the collector acts on the same entity.
+     *
+     * @param sameEntity true if the collector should acts on the same entity
+     */
     void setSameEntity(boolean sameEntity);
 
+    /**
+     * Flags whether a reset should be done.
+     *
+     * @param reset true if a reset should be done.
+     */
     void setReset(boolean reset);
 
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     String getName();
 
+    /**
+     * Sets the name.
+     *
+     * @param name the name
+     */
     void setName(String name);
 
 }

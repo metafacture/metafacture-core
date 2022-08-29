@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.api;
 
 /**
@@ -31,7 +32,7 @@ public interface KnowsSourceLocation {
      *
      * @param sourceLocation a source location
      */
-    void setSourceLocation(final SourceLocation sourceLocation);
+    void setSourceLocation(SourceLocation sourceLocation);
 
     /**
      * Gets the location object for the location in the morph definition file

@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.biblio.iso2709;
 
-import static org.metafacture.biblio.iso2709.Iso2709Constants.FIELD_SEPARATOR;
-import static org.metafacture.biblio.iso2709.Iso2709Constants.IDENTIFIER_MARKER;
-import static org.metafacture.biblio.iso2709.Iso2709Constants.RECORD_SEPARATOR;
+import org.metafacture.framework.FormatException;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-
-import org.metafacture.framework.FormatException;
 
 /**
  * Builds a list of fields in ISO 2709:2008 format.
@@ -42,7 +39,6 @@ final class FieldsBuilder {
 
     private int undoMarker = NO_MARKER_SET;
     private boolean inField;
-
 
     FieldsBuilder(final RecordFormat format, final int maxSize) {
         buffer = new Iso646ByteBuffer(maxSize);
@@ -75,7 +71,7 @@ final class FieldsBuilder {
         assert inField;
         checkCapacity(Byte.BYTES);
         inField = false;
-        buffer.writeByte(FIELD_SEPARATOR);
+        buffer.writeByte(Iso2709Constants.FIELD_SEPARATOR);
         return buffer.getWritePosition();
     }
 
@@ -91,7 +87,7 @@ final class FieldsBuilder {
         final byte[] bytes = value.getBytes(charset);
         checkCapacity(bytes.length + identifierLength + Byte.BYTES);
         if (identifierLength > 0) {
-            buffer.writeByte(IDENTIFIER_MARKER);
+            buffer.writeByte(Iso2709Constants.IDENTIFIER_MARKER);
             buffer.writeChars(identifier);
         }
         buffer.writeBytes(bytes);
@@ -126,7 +122,7 @@ final class FieldsBuilder {
         System.arraycopy(buffer.getByteArray(), 0, destBuffer, fromIndex,
                 fieldLength);
         final int fieldsEnd = fromIndex + fieldLength;
-        destBuffer[fieldsEnd] = RECORD_SEPARATOR;
+        destBuffer[fieldsEnd] = Iso2709Constants.RECORD_SEPARATOR;
     }
 
     @Override

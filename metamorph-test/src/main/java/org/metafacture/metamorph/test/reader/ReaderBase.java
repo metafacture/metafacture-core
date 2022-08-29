@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.test.reader;
 
 import org.metafacture.framework.ObjectPipe;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.StreamReceiver;
-
 
 /**
  * Base class for {@link Reader}s that are constructed from a record reader and

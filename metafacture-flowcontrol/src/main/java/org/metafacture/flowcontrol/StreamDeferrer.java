@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.flowcontrol;
 
 import org.metafacture.framework.FluxCommand;
@@ -43,6 +44,12 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 public class StreamDeferrer extends DefaultStreamPipe<StreamReceiver> {
 
     private final StreamBuffer buffer = new StreamBuffer();
+
+    /**
+     * Creates an instance of {@link StreamDeferrer}.
+     */
+    public StreamDeferrer() {
+    }
 
     @Override
     public void startRecord(final String identifier) {

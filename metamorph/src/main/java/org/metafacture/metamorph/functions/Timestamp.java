@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
+
+import org.metafacture.metamorph.api.MorphBuildException;
+import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,9 +27,6 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
-
-import org.metafacture.metamorph.api.MorphBuildException;
-import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
  * This function creates a timestamp. By default it returns a unix
@@ -61,6 +62,12 @@ public final class Timestamp extends AbstractSimpleStatelessFunction {
         SUPPORTED_LANGUAGES = Collections.unmodifiableSet(set);
     }
 
+    /**
+     * Creates an instance of {@link Timestamp}.
+     */
+    public Timestamp() {
+    }
+
     @Override
     public String process(final String value) {
         if (FORMAT_TIMESTAMP.equals(format)) {
@@ -69,21 +76,37 @@ public final class Timestamp extends AbstractSimpleStatelessFunction {
         final DateFormat dateFormat;
         try {
             dateFormat = new SimpleDateFormat(format, locale);
-        } catch (final IllegalArgumentException e) {
+        }
+        catch (final IllegalArgumentException e) {
             throw new MorphBuildException("The date/time format '" + format + "' is not supported. ", e);
         }
         dateFormat.setTimeZone(TimeZone.getTimeZone(timezone));
         return dateFormat.format(new Date());
     }
 
+    /**
+     * Sets the format. <strong>Default value: {@value #DEFAULT_FORMAT}</strong>
+     *
+     * @param format the format
+     */
     public void setFormat(final String format) {
         this.format = format;
     }
 
+    /**
+     * Sets the timezone. <strong>Default value: {@value #DEFAULT_TIMEZONE}</strong>
+     *
+     * @param timezone the timezone
+     */
     public void setTimezone(final String timezone) {
         this.timezone = timezone;
     }
 
+    /**
+     * Sets the language if it's included in {@link #SUPPORTED_LANGUAGES}.
+     *
+     * @param language the language
+     */
     public void setLanguage(final String language) {
         if (!SUPPORTED_LANGUAGES.contains(language)) {
             throw new MorphBuildException("Language '" + language + "' not supported.");

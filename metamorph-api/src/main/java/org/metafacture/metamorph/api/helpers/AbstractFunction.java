@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.metamorph.api.helpers;
 
-import java.util.HashMap;
-import java.util.Map;
+package org.metafacture.metamorph.api.helpers;
 
 import org.metafacture.metamorph.api.Function;
 import org.metafacture.metamorph.api.Maps;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Base class for functions.
@@ -33,8 +34,8 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
     private Map<String, String> localMap;
     private String mapName;
 
-    protected final String getValue(final String mapName, final String key) {
-        return maps.getValue(mapName, key);
+    protected final String getValue(final String currentMapName, final String key) {
+        return maps.getValue(currentMapName, key);
     }
 
     protected final String getLocalValue(final String key) {
@@ -44,19 +45,32 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
         return null;
     }
 
+    /**
+     * Gets the name of the map.
+     *
+     * @return the name of the map
+     */
     public final String getMapName() {
         return mapName;
     }
 
+    /**
+     * Gets the {@link #localMap} or, if unset, a Map with the name of {@link
+     * #mapName}.
+     *
+     * @return the Map
+     */
     public final Map<String, String> getMap() {
-        if (localMap == null) {
-            return maps.getMap(mapName);
-        }
-        return localMap;
+        return localMap != null ? localMap : maps.getMap(mapName);
     }
 
-    public final void setMap(final String mapName) {
-        this.mapName = mapName;
+    /**
+     * Sets the name of the map.
+     *
+     * @param newMapName the name of the map
+     */
+    public final void setMap(final String newMapName) {
+        mapName = newMapName;
     }
 
     @Override
@@ -67,6 +81,11 @@ public abstract class AbstractFunction extends AbstractNamedValuePipe
         localMap.put(key, value);
     }
 
+    /**
+     * Sets the maps.
+     *
+     * @param maps the {@link Maps}
+     */
     public final void setMaps(final Maps maps) {
         this.maps = maps;
     }

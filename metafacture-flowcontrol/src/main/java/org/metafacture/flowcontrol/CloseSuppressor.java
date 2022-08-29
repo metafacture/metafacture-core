@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.flowcontrol;
 
 import org.metafacture.framework.FluxCommand;
@@ -43,10 +44,23 @@ public final class CloseSuppressor<T>
     private final int numCloses;
     private int count;
 
+    /**
+     * Creates an instance of {@link CloseSuppressor} with a number defining the
+     * number of events to block before closing the stream.
+     *
+     * @param numCloses the number of events to block before closing the stream. The
+     *                  String is parsed to an integer.
+     */
     public CloseSuppressor(final String numCloses) {
         this(Integer.parseInt(numCloses));
     }
 
+    /**
+     * Creates an instance of {@link CloseSuppressor} with a number defining the
+     * number of events to block before closing the stream.
+     *
+     * @param numCloses the number of events to block before closing the stream
+     */
     public CloseSuppressor(final int numCloses) {
         this.numCloses = numCloses;
     }
@@ -59,9 +73,9 @@ public final class CloseSuppressor<T>
     }
 
     @Override
-    public <R extends ObjectReceiver<T>> R setReceiver(final R receiver) {
-        this.receiver = receiver;
-        return receiver;
+    public <R extends ObjectReceiver<T>> R setReceiver(final R newReceiver) {
+        receiver = newReceiver;
+        return newReceiver;
     }
 
     @Override

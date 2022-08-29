@@ -13,14 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.scripting;
-
-import java.io.FileNotFoundException;
-
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.FluxCommand;
@@ -30,6 +24,12 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import java.io.FileNotFoundException;
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 /**
  * Executes the function process(obj) in a given jscript.
@@ -47,10 +47,21 @@ public final class JScriptObjectPipe extends DefaultObjectPipe<Object, ObjectRec
     private String invoke = PROCESS;
     private Invocable invocable;
 
+    /**
+     * Creates an instance of {@link JScriptObjectPipe} by the given script.
+     *
+     * @param script the script
+     */
     public JScriptObjectPipe(final String script) {
         setScript(script);
     }
 
+    /**
+     * Sets the name of the procedure or function to call by
+     * {@code javax.script.Invocable#invokeFunction(String, Object...)}
+     *
+     * @param invoke the name of the procedure or function to call
+     */
     public void setInvoke(final String invoke) {
         this.invoke = invoke;
     }
@@ -62,15 +73,15 @@ public final class JScriptObjectPipe extends DefaultObjectPipe<Object, ObjectRec
         try {
             // LOG.info("loading code from '" + file + "'");
             engine.eval(ResourceUtil.getReader(file));
-        } catch (ScriptException e) {
+        }
+        catch (final ScriptException e) {
             throw new MetafactureException("Error in script", e);
-        } catch (FileNotFoundException e) {
+        }
+        catch (final FileNotFoundException e) {
             throw new MetafactureException("Error loading script '" + file + "'", e);
         }
         invocable = (Invocable) engine;
     }
-
-
 
     @Override
     public void process(final Object obj) {
@@ -83,9 +94,11 @@ public final class JScriptObjectPipe extends DefaultObjectPipe<Object, ObjectRec
 
             getReceiver().process(retObj);
 
-        } catch (ScriptException e) {
+        }
+        catch (final ScriptException e) {
             throw new MetafactureException("Error in script while evaluating 'process' method", e);
-        } catch (NoSuchMethodException e) {
+        }
+        catch (final NoSuchMethodException e) {
             throw new MetafactureException("'process' method is missing in script", e);
         }
     }

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.tries;
 
 import java.util.List;
@@ -32,10 +33,12 @@ public class SimpleRegexTrie<P> {
     // matches: `lit-[A]`, `lit-[AB]`, does not match: `a[].1`, `a[].1.b[].1`
     public static final String SIMPLE_CHARACTER_CLASS = ".*\\[[^\\[\\]]+\\].*";
 
-    private final WildcardTrie<P> trie;
+    private final WildcardTrie<P> trie = new WildcardTrie<P>();
 
+    /**
+     * Creates an instance of {@link SimpleRegexTrie}.
+     */
     public SimpleRegexTrie() {
-        trie = new WildcardTrie<P>();
     }
 
     /**
@@ -49,16 +52,25 @@ public class SimpleRegexTrie<P> {
         if (keys.matches(SIMPLE_CHARACTER_CLASS)) {
             int charClassStart = keys.indexOf('[', 0);
             final int charClassEnd = keys.indexOf(']', 1);
-            String begin = keys.substring(0, charClassStart);
-            for (; charClassStart < charClassEnd - 1; charClassStart++) {
-                char middle = keys.charAt(charClassStart + 1);
-                String end = keys.substring(charClassEnd + 1, keys.length());
+            final String begin = keys.substring(0, charClassStart);
+            for (; charClassStart < charClassEnd - 1; ++charClassStart) {
+                final char middle = keys.charAt(charClassStart + 1);
+                final String end = keys.substring(charClassEnd + 1, keys.length());
                 put(begin + middle + end, value);
             }
-        } else
+        }
+        else {
             trie.put(keys, value);
+        }
     }
 
+    /**
+     * Gets the List of values identified by a key.
+     *
+     * @see WildcardTrie
+     * @param key the key
+     * @return the List of the key if the key exists, otherwise an empty List
+     */
     public List<P> get(final String key) {
         return trie.get(key);
     }

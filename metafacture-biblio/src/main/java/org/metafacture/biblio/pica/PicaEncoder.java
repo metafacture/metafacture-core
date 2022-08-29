@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.biblio.pica;
 
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+package org.metafacture.biblio.pica;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.FormatException;
@@ -30,6 +26,10 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Encodes an event stream in pica+ format.
@@ -54,6 +54,8 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @FluxCommand("encode-pica")
 public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
+    public static final boolean IGNORE_RECORD_ID = false;
+
     private static final String FIELD_DELIMITER = "\u001e";
     private static final String SUB_DELIMITER = "\u001f";
     private static final String FIELD_IDN_INTERN = "003@";
@@ -62,11 +64,17 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
 
     private static StringBuilder builder = new StringBuilder(); //Result of the encoding process
 
-    private boolean entityOpen;         //Flag to inform whether an entity is opened.
-    private boolean idnControlSubField; //Flag to inform whether it is the 003@ field.
-    private boolean ignoreRecordId;     //Flag to decide whether the record Id is checked.
+    private boolean entityOpen; // Flag to inform whether an entity is opened.
+    private boolean idnControlSubField; // Flag to inform whether it is the 003@ field.
+    private boolean ignoreRecordId = IGNORE_RECORD_ID; // Flag to decide whether the record ID is checked.
 
     private String id;
+
+    /**
+     * Creates an instance of {@link PicaEncoder}.
+     */
+    public PicaEncoder() {
+    }
 
     @Override
     public void startRecord(final String recordId) {
@@ -78,10 +86,23 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         this.entityOpen = false;
     }
 
+    /**
+     * Sets the flag to decide whether the record ID is checked.
+     *
+     * <strong>Default value: {@value #IGNORE_RECORD_ID}</strong>
+     *
+     * @param ignoreRecordId true if the record ID should be ignored, otherwise
+     *                       false
+     */
     public void setIgnoreRecordId(final boolean ignoreRecordId) {
         this.ignoreRecordId = ignoreRecordId;
     }
 
+    /**
+     * Gets the flag to decide whether the record ID is checked.
+     *
+     * @return true if the record ID is ignored, otherwise false
+     */
     public boolean getIgnoreRecordId() {
         return this.ignoreRecordId;
     }
@@ -97,7 +118,7 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         if (entityOpen) { //No nested entities are allowed in pica+.
             throw new FormatException(name);
         }
-        builder.append(name.trim()+ " ");
+        builder.append(name.trim() + " ");
 
         idnControlSubField = !ignoreRecordId && FIELD_IDN_INTERN.equals(name.trim());
         //Now literals can be opened but no more entities.
@@ -115,16 +136,16 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         }
         final String valueNew = Normalizer.normalize(value, Form.NFD);
         if (idnControlSubField) {
-            // it is a 003@ field, the same record id delivered with record should follow
+            // it is a 003@ field, the same record ID delivered with record should follow
             if (!this.id.equals(value)) {
                 throw new MissingIdException(value);
             }
-            idnControlSubField = false; //only one record Id will be checked.
+            idnControlSubField = false; //only one record ID will be checked.
         }
         builder.append(SUB_DELIMITER);
         builder.append(name);
         builder.append(valueNew);
-}
+    }
 
     @Override
     public void endEntity() {

@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.flowcontrol;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+package org.metafacture.flowcontrol;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
@@ -24,9 +22,12 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Wraps the call to the process method of the downstream module
@@ -51,38 +52,76 @@ public final class ObjectExceptionCatcher<T> extends
 
     private String logPrefix;
     private boolean logStackTrace;
+    private boolean logExceptionMessage = true;
 
+    /**
+     * Creates an instance of {@link ObjectExceptionCatcher} without a log message
+     * prefix.
+     */
     public ObjectExceptionCatcher() {
         this("");
     }
 
+    /**
+     * Creates an instance of {@link ObjectExceptionCatcher} with a given prefix of
+     * the log messages.
+     *
+     * @param logPrefix the prefix of the log messages
+     */
     public ObjectExceptionCatcher(final String logPrefix) {
-        super();
         this.logPrefix = logPrefix;
     }
 
+    /**
+     * Sets the log prefix.
+     *
+     * @param logPrefix the log message prefix
+     */
     public void setLogPrefix(final String logPrefix) {
         this.logPrefix = logPrefix;
     }
 
+    /**
+     * Gets the log messages prefix.
+     *
+     * @return the log message prefix
+     */
     public String getLogPrefix() {
         return logPrefix;
     }
 
+    /**
+     * Sets the log messages to stack trace level.
+     *
+     * @param logStackTrace true if the log messages should be set to stack trace
+     *                      level.
+     */
     public void setLogStackTrace(final boolean logStackTrace) {
         this.logStackTrace = logStackTrace;
     }
 
+    /**
+     * Checks whether the log messages should be in stack trace level.
+     *
+     * @return true if the log messages are in stack trace level
+     */
     public boolean isLogStackTrace() {
         return logStackTrace;
+    }
+
+    /*package-private*/ void setLogExceptionMessage(final boolean logExceptionMessage) {
+        this.logExceptionMessage = logExceptionMessage;
     }
 
     @Override
     public void process(final T obj) {
         try {
             getReceiver().process(obj);
-        } catch(final Exception e) {
-            LOG.error("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
+        }
+        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
+            if (logExceptionMessage) {
+                LOG.error("{}'{}' while processing object: {}", logPrefix, e.getMessage(), obj);
+            }
 
             if (logStackTrace) {
                 final StringWriter stackTraceWriter = new StringWriter();

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 import org.metafacture.metamorph.api.helpers.AbstractFilter;
@@ -23,6 +24,12 @@ import org.metafacture.metamorph.api.helpers.AbstractFilter;
  * @author Hans-Georg Becker
  */
 public final class Contains extends AbstractFilter {
+
+    /**
+     * Creates an instance of {@link Contains}.
+     */
+    public Contains() {
+    }
 
     @Override
     protected boolean accept(final String value) {

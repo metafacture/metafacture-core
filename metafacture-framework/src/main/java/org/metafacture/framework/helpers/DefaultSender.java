@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.framework.helpers;
 
 import org.metafacture.framework.Receiver;
@@ -38,15 +39,26 @@ public class DefaultSender<T extends Receiver> implements Sender<T> {
     private T receiver;
     private boolean isClosed;
 
+    /**
+     * Creates an instance of {@link DefaultSender}.
+     */
+    public DefaultSender() {
+    }
+
+    /**
+     * Checks whether the DefaultSender is closed.
+     *
+     * @return true if the DefaultSender is closed
+     */
     public final boolean isClosed() {
         return isClosed;
     }
 
     @Override
-    public final <R extends T> R setReceiver(final R receiver) {
-        this.receiver = receiver;
+    public final <R extends T> R setReceiver(final R newReceiver) {
+        receiver = newReceiver;
         onSetReceiver();
-        return receiver;
+        return newReceiver;
     }
 
     @Override

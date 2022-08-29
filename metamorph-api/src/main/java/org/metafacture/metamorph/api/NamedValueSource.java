@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.api;
 
 /**
- * Base interface for all classes in Metamorph which emit name-value-pairs.
+ * Base interface for all classes in Metamorph which emit name-value pairs.
  *
  * @author Markus Michael Geipel
  * @author Christoph Böhme

@@ -14,18 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -33,10 +26,16 @@ import org.junit.Test;
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.api.NamedValueReceiver;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Tests for class {@link Metamorph}.
@@ -50,10 +49,7 @@ public final class MetamorphTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Mock
-    private NamedValueReceiver namedValueReceiver;
-
-    @Mock
-    private DefaultStreamReceiver receiver = new DefaultStreamReceiver();
+    private NamedValueReceiver receiver;
 
     private Metamorph metamorph;
 
@@ -63,84 +59,66 @@ public final class MetamorphTest {
         metamorph.setReceiver(new DefaultStreamReceiver());
     }
 
-
     @Test
     public void shouldMapMatchingPath() {
-        setupSimpleMappingMorph();
-
-        metamorph.startRecord("");
-        metamorph.literal("testEntity.testLiteral", "testValue");
-
-        verify(namedValueReceiver).receive(eq("outName"), eq("testValue"),
-                any(), anyInt(), anyInt());
+        assertNamedValue(true, i -> {
+            i.literal("testEntity.testLiteral", "testValue");
+        });
     }
 
     @Test
     public void shouldNotMapNonMatchingPath() {
-        setupSimpleMappingMorph();
-
-        metamorph.startRecord("");
-        metamorph.literal("nonMatching.path", "testValue");
-
-        verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(),
-                anyInt());
+        assertNamedValue(false, i -> {
+            i.literal("nonMatching.path", "testValue");
+        });
     }
 
     @Test
     public void shouldMapMatchingLiteralInMatchingEntity() {
-        setupSimpleMappingMorph();
-
-        metamorph.startRecord("");
-        metamorph.startEntity("testEntity");
-        metamorph.literal("testLiteral", "testValue");
-
-        verify(namedValueReceiver).receive(eq("outName"), eq("testValue"),
-                any(), anyInt(), anyInt());
+        assertNamedValue(true, i -> {
+            i.startEntity("testEntity");
+            i.literal("testLiteral", "testValue");
+        });
     }
 
     @Test
     public void shouldNotMapNonMatchingLiteralInMatchingEntity() {
-        setupSimpleMappingMorph();
-
-        metamorph.startRecord("");
-        metamorph.startEntity("testEntity");
-        metamorph.literal("nonMatching", "testValue");
-
-        verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(),
-                anyInt());
+        assertNamedValue(false, i -> {
+            i.startEntity("testEntity");
+            i.literal("nonMatching", "testValue");
+        });
     }
 
     @Test
     public void shouldNotMapMatchingLiteralInNonMatchingEntity() {
-        setupSimpleMappingMorph();
-
-        metamorph.startRecord("");
-        metamorph.startEntity("nonMatching");
-        metamorph.literal("testLiteral", "testValue");
-
-        verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(),
-                anyInt());
+        assertNamedValue(false, i -> {
+            i.startEntity("nonMatching");
+            i.literal("testLiteral", "testValue");
+        });
     }
     @Test
     public void shouldNotMapLiteralWithoutMatchingEntity() {
-        setupSimpleMappingMorph();
-
-        metamorph.startRecord("");
-        metamorph.literal("testLiteral", "testValue");
-
-        verify(namedValueReceiver, never()).receive(any(), any(), any(), anyInt(),
-                anyInt());
+        assertNamedValue(false, i -> {
+            i.literal("testLiteral", "testValue");
+        });
     }
 
-    /**
-     * Creates the Metamorph structure that corresponds to the Metamorph XML
-     * statement {@code <data source="testEntity.testLiteral" name="outName" />}.
-     */
-    private void setupSimpleMappingMorph() {
-        final Data data = new Data();
-        data.setName("outName");
-        data.setNamedValueReceiver(namedValueReceiver);
-        metamorph.registerNamedValueReceiver("testEntity" + '.' + "testLiteral", data);
+    @Test
+    public void shouldFedbackLiteralsStartingWithAtIntoMetamorph() {
+        assertNamedValue(true, i -> {
+            final Data data1;
+            data1 = new Data();
+            data1.setName("@feedback");
+            i.addNamedValueSource(data1);
+            i.registerNamedValueReceiver("testLiteral", data1);
+
+            final Data data2 = new Data();
+            data2.setName("outName");
+            data2.setNamedValueReceiver(receiver);
+            i.registerNamedValueReceiver("@feedback", data2);
+
+            i.literal("testLiteral", "testValue");
+        });
     }
 
     @Test
@@ -164,26 +142,6 @@ public final class MetamorphTest {
         assertEquals("defaultValue", metamorph.getValue("testMap", "nameNotInMap"));
     }
 
-    @Test
-    public void shouldFedbackLiteralsStartingWithAtIntoMetamorph() {
-        final Data data1;
-        data1 = new Data();
-        data1.setName("@feedback");
-        metamorph.addNamedValueSource(data1);
-        metamorph.registerNamedValueReceiver("testLiteral", data1);
-
-        final Data data2 = new Data();
-        data2.setName("outName");
-        data2.setNamedValueReceiver(namedValueReceiver);
-        metamorph.registerNamedValueReceiver("@feedback", data2);
-
-        metamorph.startRecord("");
-        metamorph.literal("testLiteral", "testValue");
-
-        verify(namedValueReceiver).receive(eq("outName"), eq("testValue"),
-                any(), anyInt(), anyInt());
-    }
-
     @Test(expected=IllegalStateException.class)
     public void shouldThrowIllegalStateExceptionIfEntityIsNotClosed() {
         metamorph.startRecord("");
@@ -191,6 +149,34 @@ public final class MetamorphTest {
         metamorph.startEntity("testEntity");
         metamorph.endEntity();
         metamorph.endRecord();  // Exception expected
+    }
+
+    private void assertNamedValue(final boolean matching, final Consumer<Metamorph> in) {
+        /**
+         * Creates the Metamorph structure that corresponds to the Metamorph XML
+         * statement {@code <data source="testEntity.testLiteral" name="outName" />}.
+         */
+        final Data data = new Data();
+        data.setName("outName");
+        data.setNamedValueReceiver(receiver);
+        metamorph.registerNamedValueReceiver("testEntity" + '.' + "testLiteral", data);
+
+        metamorph.startRecord("");
+        in.accept(metamorph);
+
+        try {
+            if (matching) {
+                Mockito.verify(receiver).receive(
+                        ArgumentMatchers.eq("outName"), ArgumentMatchers.eq("testValue"),
+                        ArgumentMatchers.any(), ArgumentMatchers.eq(1), ArgumentMatchers.anyInt());
+            }
+
+            Mockito.verifyNoMoreInteractions(receiver);
+        }
+        catch (final MockitoAssertionError e) {
+            System.out.println(Mockito.mockingDetails(receiver).printInvocations());
+            throw e;
+        }
     }
 
 }

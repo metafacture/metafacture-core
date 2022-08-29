@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons;
 
 /**
@@ -22,8 +23,8 @@ package org.metafacture.commons;
  */
 public final class TimeUtil {
 
-    public static final String[] UNIT_SYMBOLS = { "ns", "µs", "ms", "s", "min", "h" };
-    public static final long[] UNIT_FACTORS = { 1L, 1000L, 1000L, 1000L, 60L, 60L };
+    public static final String[] UNIT_SYMBOLS = {"ns", "µs", "ms", "s", "min", "h"};
+    public static final long[] UNIT_FACTORS = {1L, 1000L, 1000L, 1000L, 60L, 60L};
 
     public static final int BASE_UNIT_INDEX = 3;
 
@@ -38,6 +39,12 @@ public final class TimeUtil {
         // No instances allowed
     }
 
+    /**
+     * Formats a duration to human readable abbrevations.
+     *
+     * @param duration a long value of the duration
+     * @return a human readable format of the duration
+     */
     public static String formatDuration(final long duration) {
         long major = duration;
         long minor = 0;

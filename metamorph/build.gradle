@@ -22,6 +22,7 @@ dependencies {
   api project(':metamorph-api')
   implementation project(':metafacture-commons')
   implementation project(':metafacture-flowcontrol')
+  implementation project(':metafacture-io')
   implementation project(':metafacture-mangling')
   implementation project(':metafacture-javaintegration')
   implementation 'org.slf4j:slf4j-api:1.7.21'
@@ -37,12 +38,5 @@ sourceSets {
     // to work properly. A better solution would be to enable xinclude to load
     // resources from the classpath.
     output.resourcesDir = sourceSets.test.java.outputDir
-  }
-}
-
-test {
-  testLogging {
-    showStandardStreams = true
-    exceptionFormat = 'full'
   }
 }

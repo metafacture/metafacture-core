@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
 
 import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
@@ -28,7 +29,8 @@ abstract class AbstractLookup extends AbstractSimpleStatelessFunction {
         final String returnValue;
         if (getMapName() == null) {
             returnValue = getLocalValue(key);
-        } else {
+        }
+        else {
             returnValue = getValue(getMapName(), key);
         }
         return returnValue;

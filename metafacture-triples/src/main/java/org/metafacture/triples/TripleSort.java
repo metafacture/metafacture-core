@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.triples;
 
 import org.metafacture.framework.FluxCommand;
@@ -26,24 +27,48 @@ import org.metafacture.framework.objects.Triple;
  * @author markus geipel
  *
  */
-@Description("Sorts triples")
+@Description("Sorts triples. Several options can be combined, e.g. `by=\"object\",numeric=\"true\",order=\"decreasing\"` will numerically sort the Object of the triples in decreasing order (given that all Objects are indeed of numeric type).")
 @In(Triple.class)
 @Out(Triple.class)
 @FluxCommand("sort-triples")
 public final class TripleSort extends AbstractTripleSort {
+
+    /**
+     * Creates an instance of {@link TripleSort}.
+     */
+    public TripleSort() {
+    }
 
     @Override
     protected void sortedTriple(final Triple triple) {
         getReceiver().process(triple);
     }
 
-    public void setBy(final Compare compare){
+    /**
+     * Sets if the order should be done by subject, predicate or object.
+     *
+     * @param compare the {@link AbstractTripleSort.Compare}
+     */
+    public void setBy(final Compare compare) {
         setCompare(compare);
     }
 
-    public void setOrder(final Order order){
+    /**
+     * Sets increasing or decreasing order.
+     *
+     * @param order the {@link AbstractTripleSort.Order}.
+     */
+    public void setOrder(final Order order) {
         setSortOrder(order);
     }
 
+    /**
+     * Flags if sort should be numeric.
+     *
+     * @param numeric true if sort should be numeric
+     */
+    public void setNumeric(final boolean numeric) {
+        setSortNumeric(numeric);
+    }
 
 }

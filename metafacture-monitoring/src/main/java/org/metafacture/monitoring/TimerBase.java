@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.monitoring;
 
 import org.metafacture.commons.TimeUtil;
 import org.metafacture.framework.Receiver;
 import org.metafacture.framework.Sender;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * @author Christoph Böhme
@@ -41,16 +42,20 @@ public class TimerBase<R extends Receiver> implements Sender<R> {
     private R receiver;
 
     protected TimerBase(final String logPrefix) {
-        super();
         this.logPrefix = logPrefix;
     }
 
     @Override
-    public final <S extends R> S setReceiver(final S receiver) {
-        this.receiver = receiver;
-        return receiver;
+    public final <S extends R> S setReceiver(final S newReceiver) {
+        receiver = newReceiver;
+        return newReceiver;
     }
 
+    /**
+     * Gets the receiver.
+     *
+     * @return the receiver
+     */
     public final R getReceiver() {
         return receiver;
     }
@@ -69,12 +74,12 @@ public class TimerBase<R extends Receiver> implements Sender<R> {
         final long averageDuration;
         if (count > 0) {
             averageDuration = cumulativeDuration / count;
-        } else {
+        }
+        else {
             averageDuration = 0;
         }
-        LOG.info(logPrefix
-                + String.format("Executions: %d; Cumulative duration: %s; Average duration: %s", Long.valueOf(count),
-                        TimeUtil.formatDuration(cumulativeDuration), TimeUtil.formatDuration(averageDuration)));
+        LOG.info(logPrefix + String.format("Executions: %d; Cumulative duration: %s; Average duration: %s", Long.valueOf(count),
+                    TimeUtil.formatDuration(cumulativeDuration), TimeUtil.formatDuration(averageDuration)));
         startMeasurement();
         if (receiver != null) {
             receiver.closeStream();
@@ -86,7 +91,7 @@ public class TimerBase<R extends Receiver> implements Sender<R> {
         startTime = System.nanoTime();
     }
 
-    protected final void stopMeasurement(){
+    protected final void stopMeasurement() {
         stopMeasurement("Execution %1$d:");
     }
 

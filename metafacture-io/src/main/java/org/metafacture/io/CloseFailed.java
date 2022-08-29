@@ -2,15 +2,31 @@ package org.metafacture.io;
 
 public class CloseFailed extends IoFailed {
 
-    public CloseFailed(String message) {
+    /**
+     * Creates an instance of {@link CloseFailed} by a given message.
+     *
+     * @param message the message
+     */
+    public CloseFailed(final String message) {
         super(message);
     }
 
-    public CloseFailed(Throwable cause) {
+    /**
+     * Creates an instance of {@link CloseFailed} by a given cause.
+     *
+     * @param cause the {@link Throwable}
+     */
+    public CloseFailed(final Throwable cause) {
         super(cause);
     }
 
-    public CloseFailed(String message, Throwable cause) {
+    /**
+     * Creates an instance of {@link CloseFailed} by a given message and a cause.
+     *
+     * @param message the message
+     * @param cause   the {@link Throwable}
+     */
+    public CloseFailed(final String message, final Throwable cause) {
         super(message, cause);
     }
 

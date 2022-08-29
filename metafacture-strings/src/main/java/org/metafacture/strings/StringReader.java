@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.strings;
 
-import java.io.Reader;
+package org.metafacture.strings;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
@@ -24,6 +23,7 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
+import java.io.Reader;
 
 /**
  * Creates a reader for the supplied string and sends it to the receiver.
@@ -35,8 +35,13 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(String.class)
 @Out(java.io.Reader.class)
 @FluxCommand("read-string")
-public final class StringReader
-        extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
+public final class StringReader extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
+
+    /**
+     * Creates an instance of {@link StringReader}.
+     */
+    public StringReader() {
+    }
 
     @Override
     public void process(final String str) {

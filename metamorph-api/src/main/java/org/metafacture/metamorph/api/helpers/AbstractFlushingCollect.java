@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.api.helpers;
 
 /**
@@ -26,6 +27,11 @@ public abstract class AbstractFlushingCollect extends AbstractCollect {
 
     private boolean flushIncomplete = true;
 
+    /**
+     * Flags if to flush when incomplete.
+     *
+     * @param flushIncomplete true if it should be flushed when incomplete
+     */
     public final void setFlushIncomplete(final boolean flushIncomplete) {
         this.flushIncomplete = flushIncomplete;
     }
@@ -33,7 +39,7 @@ public abstract class AbstractFlushingCollect extends AbstractCollect {
     @Override
     public final void flush(final int recordCount, final int entityCount) {
         if (isSameRecord(recordCount) && sameEntityConstraintSatisfied(entityCount)) {
-            if(isConditionMet() && (flushIncomplete || isComplete())) {
+            if (isConditionMet() && (flushIncomplete || isComplete())) {
                 emit();
             }
             if (getReset()) {

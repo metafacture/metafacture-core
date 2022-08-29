@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.functions;
+
+import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
-
-import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
 /**
  * Performs normalization of diacritics in utf-8 encoded strings.
@@ -26,6 +27,12 @@ import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
  * @author Christoph Böhme
  */
 public final class NormalizeUTF8 extends AbstractSimpleStatelessFunction {
+
+    /**
+     * Creates an instance of {@link NormalizeUTF8}.
+     */
+    public NormalizeUTF8() {
+    }
 
     @Override
     public String process(final String value) {

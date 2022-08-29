@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.metamorph.test.reader;
 
 import org.metafacture.io.RecordReader;
@@ -26,6 +27,9 @@ import org.metafacture.json.JsonDecoder;
  */
 public class JsonReader extends ReaderBase {
 
+    /**
+     * Creates an instance of {@link JsonReader}.
+     */
     public JsonReader() {
         super(new RecordReader(), new JsonDecoder());
     }

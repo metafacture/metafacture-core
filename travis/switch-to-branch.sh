@@ -20,7 +20,7 @@
 # commit. This results in the working copy being in "detached HEAD" state.
 # This breaks the logic for deriving version numbers from branch names in the
 # build script.
-# 
+#
 # This script checks if the current build corresponds to the tip of a branch.
 # If it does then the branch is checked out.
 #
@@ -52,7 +52,7 @@ function require_not_triggered_by_tag {
 }
 
 function require_on_tip_of_branch {
-    if [ $TRAVIS_COMMIT != $( git rev-parse --verify $TRAVIS_BRANCH ) ] ; then 
+    if [ $TRAVIS_COMMIT != $( git rev-parse --verify $TRAVIS_BRANCH ) ] ; then
         echo "Detached head does not match tip of current branch. Staying on detached head."
         exit 0
     fi
@@ -60,7 +60,7 @@ function require_on_tip_of_branch {
 
 function checkout_branch {
     echo "Detached head matches tip of current branch. Replacing detached head with branch"
-    git checkout $TRAVIS_BRANCH 
+    git checkout $TRAVIS_BRANCH
 }
 
 main

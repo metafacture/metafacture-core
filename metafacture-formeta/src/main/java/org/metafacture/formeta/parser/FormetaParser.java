@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta.parser;
 
 import org.metafacture.commons.StringUtil;
@@ -36,16 +37,37 @@ public final class FormetaParser {
     private char[] buffer = new char[BUFFER_SIZE];
     private final StructureParserContext structureParserContext = new StructureParserContext();
 
+    /**
+     * Creates an instance of {@link FormetaParser}.
+     */
+    public FormetaParser() {
+    }
+
+    /**
+     * Sets the Emitter.
+     *
+     * @param emitter the Emitter
+     */
     public void setEmitter(final Emitter emitter) {
         structureParserContext.setEmitter(emitter);
     }
 
+    /**
+     * Gets the Emitter.
+     *
+     * @return the Emitter
+     */
     public Emitter getEmitter() {
         return structureParserContext.getEmitter();
     }
 
+    /**
+     * Parses the data.
+     *
+     * @param data the data
+     */
     public void parse(final String data) {
-        assert structureParserContext.getEmitter() != null: "No emitter set";
+        assert structureParserContext.getEmitter() != null : "No emitter set";
 
         // According to http://stackoverflow.com/a/11876086 it is faster to copy
         // a string into a char array then to use charAt():
@@ -59,16 +81,16 @@ public final class FormetaParser {
             for (; i < bufferLen; ++i) {
                 state = state.processChar(buffer[i], structureParserContext);
             }
-        } catch (final FormatException e) {
-            final String errorMsg = "Parsing error at position "
-                    + (i + 1) + ": "
-                    + getErrorSnippet(data, i) + ", "
-                    + e.getMessage();
+        }
+        catch (final FormatException e) {
+            final String errorMsg = "Parsing error at position " +
+                (i + 1) + ": " + getErrorSnippet(data, i) + ", " + e.getMessage();
             throw new FormatException(errorMsg, e);
         }
         try {
             state.endOfInput(structureParserContext);
-        } catch (final FormatException e) {
+        }
+        catch (final FormatException e) {
             throw new FormatException("Parsing error: " + e.getMessage(), e);
         }
     }
@@ -88,7 +110,8 @@ public final class FormetaParser {
         final int start = pos - SNIPPET_SIZE / 2;
         if (start < 0) {
             snippet.append(record.substring(0, pos));
-        } else {
+        }
+        else {
             snippet.append(SNIPPET_ELLIPSIS);
             snippet.append(record.substring(start, pos));
         }
@@ -101,7 +124,8 @@ public final class FormetaParser {
             final int end = pos + SNIPPET_SIZE / 2;
             if (end > record.length()) {
                 snippet.append(record.substring(pos + 1));
-            } else {
+            }
+            else {
                 snippet.append(record.substring(pos + 1, end));
                 snippet.append(SNIPPET_ELLIPSIS);
             }

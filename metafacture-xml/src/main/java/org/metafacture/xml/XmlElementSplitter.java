@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.xml;
 
-import java.util.HashSet;
+package org.metafacture.xml;
 
 import org.metafacture.commons.XmlUtil;
 import org.metafacture.framework.FluxCommand;
@@ -25,8 +24,12 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * An XML Element splitter.
@@ -39,16 +42,16 @@ import org.xml.sax.SAXException;
 @FluxCommand("split-xml-elements")
 public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
 
-    private String Element;
+    private String element;
     private StringBuilder builder = new StringBuilder();
-    private HashSet<String> namespaces = new HashSet<>();
-    private boolean inElement = false;
-    private int recordCnt = 0;
+    private Set<String> namespaces = new HashSet<>();
+    private boolean inElement;
+    private int recordCnt;
     private String root;
     private String rootStart = "";
     private String rootEnd = "";
     private String xmlDeclaration = "<?xml version = \"1.0\" encoding = \"UTF-8\"?>";
-    private int ElementDepth = 0;
+    private int elementDepth;
 
     /**
      * Default constructor
@@ -59,12 +62,12 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     /**
      * Enriched constructor setting the top level element and the Element name
      *
-     * @param aTopLevelElement the name of the top level XML tag
-     * @param aElementName the name of the tag defining a new Element to be split
+     * @param topLevelElement the name of the top level XML tag
+     * @param elementName the name of the tag defining a new Element to be split
      */
-    public XmlElementSplitter(String aTopLevelElement, String aElementName) {
-        setTopLevelElement(aTopLevelElement);
-        setElementName(aElementName);
+    public XmlElementSplitter(final String topLevelElement, final String elementName) {
+        setTopLevelElement(topLevelElement);
+        setElementName(elementName);
     }
 
     /**
@@ -74,35 +77,34 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
      * @param name Identifies the elements
      */
     public void setElementName(final String name) {
-        this.Element = name;
+        this.element = name;
     }
 
     /**
      * Sets the top-level XML document element.
      *
-     * @param root the top level element. Don't set it to omit setting top level
-     *             element.
+     * @param newRoot the top level element. Leave at default to omit the
+     *                top-level element.
      */
-    public void setTopLevelElement(final String root) {
-        this.root = root;
-        this.rootStart = "<" + root;
-        this.rootEnd = "</" + root + ">";
+    public void setTopLevelElement(final String newRoot) {
+        root = newRoot;
+        rootStart = "<" + newRoot;
+        rootEnd = "</" + newRoot + ">";
     }
 
     /**
-     * Sets the XML declaration.
+     * Sets the XML declaration. The default is
+     * {@code <?xml version = "1.0" encoding = "UTF-8"?>}. If an empty value is
+     * given, the XML declaration is skipped.
      *
-     * @param xmlDeclaration the xml declaration. Default is
-     *                       '{@code<?xml version = "1.0" encoding = "UTF-8"?>}'.
-     *                       If empty value is given, the xml declaration is
-     *                       skipped.
+     * @param xmlDeclaration the XML declaration
      */
     public void setXmlDeclaration(final String xmlDeclaration) {
         this.xmlDeclaration = xmlDeclaration;
     }
 
     @Override
-    public void startPrefixMapping(String prefix, String uri) throws SAXException {
+    public void startPrefixMapping(final String prefix, final String uri) throws SAXException {
         super.startPrefixMapping(prefix, uri);
         if (root != null & !prefix.isEmpty() && uri != null) {
             namespaces.add(" xmlns:" + prefix + "=\"" + uri + "\"");
@@ -110,19 +112,20 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void startElement(final String uri, final String localName, final String qName, final Attributes attributes)
-            throws SAXException {
+    public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException {
         if (!inElement) {
-            if (Element.equals(localName)) {
+            if (element.equals(localName)) {
                 builder = new StringBuilder();
-                getReceiver().startRecord(String.valueOf(this.recordCnt++));
+                getReceiver().startRecord(String.valueOf(recordCnt));
+                ++recordCnt;
                 inElement = true;
                 appendValuesToElement(qName, attributes);
-                ElementDepth++;
+                ++elementDepth;
             }
-        } else {
-            if (Element.equals(localName)) {
-                ElementDepth++;
+        }
+        else {
+            if (element.equals(localName)) {
+                ++elementDepth;
             }
             appendValuesToElement(qName, attributes);
         }
@@ -131,9 +134,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     private void appendValuesToElement(final String qName, final Attributes attributes) {
         this.builder.append("<" + qName);
         if (attributes.getLength() > 0) {
-            for (int i = 0; i < attributes.getLength(); i++) {
-                builder.append(" " + attributes.getQName(i) + "=\""
-                        + XmlUtil.escape(attributes.getValue(i)) + "\"");
+            for (int i = 0; i < attributes.getLength(); ++i) {
+                builder.append(" " + attributes.getQName(i) + "=\"" + XmlUtil.escape(attributes.getValue(i)) + "\"");
             }
         }
 
@@ -144,11 +146,11 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     public void endElement(final String uri, final String localName, final String qName) throws SAXException {
         if (inElement) {
             builder.append("</" + qName + ">");
-            if (Element.equals(localName)) {
-                if (ElementDepth <= 1) {
-                    StringBuilder sb = new StringBuilder(xmlDeclaration + rootStart);
+            if (element.equals(localName)) {
+                if (elementDepth <= 1) {
+                    final StringBuilder sb = new StringBuilder(xmlDeclaration + rootStart);
                     if (this.root != null && namespaces.size() > 0) {
-                        for (String ns : namespaces) {
+                        for (final String ns : namespaces) {
                             sb.append(ns);
                         }
                         sb.append(">");
@@ -159,7 +161,7 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
                     reset();
                     return;
                 }
-                ElementDepth--;
+                --elementDepth;
             }
         }
     }
@@ -168,7 +170,8 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     public void characters(final char[] chars, final int start, final int length) throws SAXException {
         try {
             builder.append(XmlUtil.escape(new String(chars, start, length)));
-        } catch (Exception e) {
+        }
+        catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             reset();
         }
     }
@@ -176,7 +179,7 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     private void reset() {
         inElement = false;
         builder = new StringBuilder();
-        ElementDepth = 0;
+        elementDepth = 0;
     }
 
     /**
@@ -189,7 +192,7 @@ public final class XmlElementSplitter extends DefaultXmlPipe<StreamReceiver> {
     }
 
     @Override
-    public void onResetStream() {
+    protected void onResetStream() {
         reset();
     }
 

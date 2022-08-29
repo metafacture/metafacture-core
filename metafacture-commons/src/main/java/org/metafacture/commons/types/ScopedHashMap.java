@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.types;
 
 import java.util.HashMap;
@@ -26,18 +27,24 @@ import java.util.Map;
  * @param <V> type of the values
  * @author Markus Michael Geipel
  */
-public final class ScopedHashMap<K, V> extends HashMap<K, V> {
+public final class ScopedHashMap<K, V> extends HashMap<K, V> { // checkstyle-disable-line IllegalType
 
     private static final long serialVersionUID = -7184066609960144713L;
     private final ScopedHashMap<K, V> outerScope;
 
+    /**
+     * Creates an instance of {@link ScopedHashMap} and sets the outer scope.
+     *
+     * @param outerScope outer scope
+     */
     public ScopedHashMap(final ScopedHashMap<K, V> outerScope) {
-        super();
         this.outerScope = outerScope;
     }
 
+    /**
+     * Creates an empty instance of {@link ScopedHashMap}.
+     */
     public ScopedHashMap() {
-        super();
         outerScope = null;
     }
 
@@ -66,6 +73,11 @@ public final class ScopedHashMap<K, V> extends HashMap<K, V> {
         return ret;
     }
 
+    /**
+     * Gets the outer scope.
+     *
+     * @return the outer scope
+     */
     public ScopedHashMap<K, V> getOuterScope() {
         return outerScope;
     }

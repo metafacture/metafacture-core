@@ -15,8 +15,6 @@
 
 package org.metafacture.biblio.marc21;
 
-import java.util.Collections;
-
 import org.metafacture.commons.XmlUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
@@ -26,6 +24,10 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.function.Function;
 
 /**
  * Encodes a stream into MARCXML.
@@ -39,74 +41,145 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @Out(String.class)
 @FluxCommand("encode-marcxml")
 public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
+
+    public static final String NAMESPACE_NAME = "marc";
+    public static final String XML_ENCODING = "UTF-8";
+    public static final String XML_VERSION =  "1.0";
+    public static final boolean PRETTY_PRINTED = true;
+    public static final boolean OMIT_XML_DECLARATION = false;
+
     private static final String ROOT_OPEN = "<marc:collection xmlns:marc=\"http://www.loc.gov/MARC21/slim\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\">";
     private static final String ROOT_CLOSE = "</marc:collection>";
 
-    private static final String RECORD_OPEN = "<marc:record>";
-    private static final String RECORD_CLOSE = "</marc:record>";
+    private enum Tag {
 
-    private static final String CONTROLFIELD_OPEN_TEMPLATE = "<marc:controlfield tag=\"%s\">";
-    private static final String CONTROLFIELD_CLOSE = "</marc:controlfield>";
+        collection(" xmlns%s=\"" + NAMESPACE + "\"%s"),
+        controlfield(" tag=\"%s\""),
+        datafield(" tag=\"%s\" ind1=\"%s\" ind2=\"%s\""),
+        leader(""),
+        record(""),
+        subfield(" code=\"%s\"");
 
-    private static final String DATAFIELD_OPEN_TEMPLATE = "<marc:datafield tag=\"%s\" ind1=\"%s\" ind2=\"%s\">";
-    private static final String DATAFIELD_CLOSE = "</marc:datafield>";
+        private static final String OPEN_TEMPLATE = "<%%s%s%s>";
+        private static final String CLOSE_TEMPLATE = "</%%s%s>";
 
-    private static final String SUBFIELD_OPEN_TEMPLATE = "<marc:subfield code=\"%s\">";
-    private static final String SUBFIELD_CLOSE = "</marc:subfield>";
+        private final String openTemplate;
+        private final String closeTemplate;
 
-    private static final String LEADER_OPEN_TEMPLATE = "<marc:leader>";
-    private static final String LEADER_CLOSE_TEMPLATE = "</marc:leader>";
+        Tag(final String template) {
+            openTemplate = String.format(OPEN_TEMPLATE, name(), template);
+            closeTemplate = String.format(CLOSE_TEMPLATE, name());
+        }
+
+        public String open(final Object[] args) {
+            return String.format(openTemplate, args);
+        }
+
+        public String close(final Object[] args) {
+            return String.format(closeTemplate, args);
+        }
+
+    }
+
+    private static final String NAMESPACE = "http://www.loc.gov/MARC21/slim";
+    private static final String NAMESPACE_PREFIX = NAMESPACE_NAME + ":";
+    private static final String NAMESPACE_SUFFIX = ":" + NAMESPACE_NAME;
+
+    private static final String SCHEMA_ATTRIBUTES = " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"" + NAMESPACE + " http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\"";
+
+    private static final String ATTRIBUTE_TEMPLATE = " %s=\"%s\"";
 
     private static final String NEW_LINE = "\n";
     private static final String INDENT = "\t";
+    private static final String EMPTY = "";
 
     private static final String XML_DECLARATION_TEMPLATE = "<?xml version=\"%s\" encoding=\"%s\"?>";
 
-    private final StringBuilder builder;
+    private static final int LEADER_ENTITY_LENGTH = 5;
 
-    private boolean atStreamStart;
+    private static final int IND1_BEGIN = 3;
+    private static final int IND1_END = 4;
+    private static final int IND2_BEGIN = 4;
+    private static final int IND2_END = 5;
+    private static final int TAG_BEGIN = 0;
+    private static final int TAG_END = 3;
 
-    private boolean omitXmlDeclaration;
-    private String xmlVersion;
-    private String xmlEncoding;
+    private final StringBuilder builder = new StringBuilder();
 
-    private String currentEntity;
+    private boolean atStreamStart = true;
+
+    private boolean omitXmlDeclaration = OMIT_XML_DECLARATION;
+    private String xmlVersion = XML_VERSION;
+    private String xmlEncoding = XML_ENCODING;
+
+    private String currentEntity = "";
+
+    private boolean emitNamespace = true;
+    private Object[] namespacePrefix = new Object[]{emitNamespace ? NAMESPACE_PREFIX : EMPTY};
+
     private int indentationLevel;
-    private boolean formatted;
+    private boolean formatted = PRETTY_PRINTED;
+    private int recordAttributeOffset;
 
+    /**
+     * Creates an instance of {@link MarcXmlEncoder}.
+     */
     public MarcXmlEncoder() {
-        this.builder = new StringBuilder();
-        this.atStreamStart = true;
-
-        this.omitXmlDeclaration = false;
-        this.xmlVersion = "1.0";
-        this.xmlEncoding = "UTF-8";
-
-        this.currentEntity = "";
-
-        this.indentationLevel = 0;
-        this.formatted = true;
     }
 
-    public void omitXmlDeclaration(boolean omitXmlDeclaration) {
-        this.omitXmlDeclaration = omitXmlDeclaration;
+    /**
+     * Sets the flag to decide whether to emit the {@value #NAMESPACE_NAME}
+     * namespace
+     *
+     * @param emitNamespace true if the namespace is emitted, otherwise false
+     */
+    public void setEmitNamespace(final boolean emitNamespace) {
+        this.emitNamespace = emitNamespace;
+        namespacePrefix = new Object[]{emitNamespace ? NAMESPACE_PREFIX : EMPTY};
     }
 
-    public void setXmlVersion(String xmlVersion) {
+    /**
+     * Sets the flag to decide whether to omit the XML declaration.
+     *
+     * <strong>Default value: {@value #OMIT_XML_DECLARATION}</strong>
+     *
+     * @param currentOmitXmlDeclaration true if the XML declaration is omitted, otherwise
+     *                           false
+     */
+    public void omitXmlDeclaration(final boolean currentOmitXmlDeclaration) {
+        omitXmlDeclaration = currentOmitXmlDeclaration;
+    }
+
+    /**
+     * Sets the XML version.
+     *
+     * <strong>Default value: {@value #XML_VERSION}</strong>
+     *
+     * @param xmlVersion the XML version
+     */
+    public void setXmlVersion(final String xmlVersion) {
         this.xmlVersion = xmlVersion;
     }
 
-    public void setXmlEncoding(String xmlEncoding) {
+    /**
+     * Sets the XML encoding.
+     *
+     * <strong>Default value: {@value #XML_ENCODING}</strong>
+     *
+     * @param xmlEncoding the XML encoding
+     */
+    public void setXmlEncoding(final String xmlEncoding) {
         this.xmlEncoding = xmlEncoding;
     }
 
     /**
-     * Formats the resulting xml, by indentation.
-     * 
-     * @param formatted
-     *            True, if formatting is activated.
+     * Formats the resulting xml by indentation. Aka "pretty printing".
+     *
+     * <strong>Default value: {@value #PRETTY_PRINTED}</strong>
+     *
+     * @param formatted true if formatting is activated, otherwise false
      */
-    public void setFormatted(boolean formatted) {
+    public void setFormatted(final boolean formatted) {
         this.formatted = formatted;
     }
 
@@ -117,14 +190,15 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
                 writeHeader();
                 prettyPrintNewLine();
             }
-            writeRaw(ROOT_OPEN);
+            writeTag(Tag.collection::open, emitNamespace ? NAMESPACE_SUFFIX : EMPTY, emitNamespace ? SCHEMA_ATTRIBUTES : EMPTY);
             prettyPrintNewLine();
             incrementIndentationLevel();
         }
         atStreamStart = false;
 
         prettyPrintIndentation();
-        writeRaw(RECORD_OPEN);
+        writeTag(Tag.record::open);
+        recordAttributeOffset = builder.length() - 1;
         prettyPrintNewLine();
 
         incrementIndentationLevel();
@@ -134,7 +208,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     public void endRecord() {
         decrementIndentationLevel();
         prettyPrintIndentation();
-        writeRaw(RECORD_CLOSE);
+        writeTag(Tag.record::close);
         prettyPrintNewLine();
         sendAndClearData();
     }
@@ -143,17 +217,17 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     public void startEntity(final String name) {
         currentEntity = name;
         if (!name.equals(Marc21EventNames.LEADER_ENTITY)) {
-            if (name.length() != 5) {
-                String message = String.format("Entity too short." + "Got a string ('%s') of length %d."
-                        + "Expected a length of 5 (field + indicators).", name, name.length());
+            if (name.length() != LEADER_ENTITY_LENGTH) {
+                final String message = String.format("Entity too short." + "Got a string ('%s') of length %d." +
+                        "Expected a length of " + LEADER_ENTITY_LENGTH + " (field + indicators).", name, name.length());
                 throw new MetafactureException(message);
             }
 
-            String tag = name.substring(0, 3);
-            String ind1 = name.substring(3, 4);
-            String ind2 = name.substring(4, 5);
+            final String tag = name.substring(TAG_BEGIN, TAG_END);
+            final String ind1 = name.substring(IND1_BEGIN, IND1_END);
+            final String ind2 = name.substring(IND2_BEGIN, IND2_END);
             prettyPrintIndentation();
-            writeRaw(String.format(DATAFIELD_OPEN_TEMPLATE, tag, ind1, ind2));
+            writeTag(Tag.datafield::open, tag, ind1, ind2);
             prettyPrintNewLine();
             incrementIndentationLevel();
         }
@@ -164,7 +238,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         if (!currentEntity.equals(Marc21EventNames.LEADER_ENTITY)) {
             decrementIndentationLevel();
             prettyPrintIndentation();
-            writeRaw(DATAFIELD_CLOSE);
+            writeTag(Tag.datafield::close);
             prettyPrintNewLine();
         }
         currentEntity = "";
@@ -172,27 +246,29 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     @Override
     public void literal(final String name, final String value) {
-        if (currentEntity.equals("")) {
-            prettyPrintIndentation();
-            writeRaw(String.format(CONTROLFIELD_OPEN_TEMPLATE, name));
-            if (value != null)
-                writeEscaped(value.trim());
-            writeRaw(CONTROLFIELD_CLOSE);
-            prettyPrintNewLine();
-        } else if (!currentEntity.equals(Marc21EventNames.LEADER_ENTITY)) {
-            prettyPrintIndentation();
-            writeRaw(String.format(SUBFIELD_OPEN_TEMPLATE, name));
-            writeEscaped(value.trim());
-            writeRaw(SUBFIELD_CLOSE);
-            prettyPrintNewLine();
-        } else {
-            if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
+        if ("".equals(currentEntity)) {
+            if (name.equals(Marc21EventNames.MARCXML_TYPE_LITERAL)) {
+                if (value != null) {
+                    builder.insert(recordAttributeOffset, String.format(ATTRIBUTE_TEMPLATE, name, value));
+                }
+            }
+            else if (!writeLeader(name, value)) {
                 prettyPrintIndentation();
-                writeRaw(LEADER_OPEN_TEMPLATE + value + LEADER_CLOSE_TEMPLATE);
+                writeTag(Tag.controlfield::open, name);
+                if (value != null) {
+                    writeEscaped(value.trim());
+                }
+                writeTag(Tag.controlfield::close);
                 prettyPrintNewLine();
             }
         }
-
+        else if (!writeLeader(currentEntity, value)) {
+            prettyPrintIndentation();
+            writeTag(Tag.subfield::open, name);
+            writeEscaped(value.trim());
+            writeTag(Tag.subfield::close);
+            prettyPrintNewLine();
+        }
     }
 
     @Override
@@ -227,22 +303,51 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     /** Closes the root tag */
     private void writeFooter() {
-        writeRaw(ROOT_CLOSE);
+        writeTag(Tag.collection::close);
     }
 
-    /** Writes a unescaped sequence */
+    /**
+    * Writes an unescaped sequence.
+    *
+    * @param str the unescaped sequence to be written
+    */
     private void writeRaw(final String str) {
         builder.append(str);
     }
 
-    /** Writes a escaped sequence */
+    /**
+    * Writes an escaped sequence.
+    *
+    * @param str the unescaped sequence to be written
+    */
     private void writeEscaped(final String str) {
         builder.append(XmlUtil.escape(str, false));
     }
 
+    private boolean writeLeader(final String name, final String value) {
+        if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
+            prettyPrintIndentation();
+            writeTag(Tag.leader::open);
+            writeRaw(value);
+            writeTag(Tag.leader::close);
+            prettyPrintNewLine();
+
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private void writeTag(final Function<Object[], String> function, final Object... args) {
+        final Object[] allArgs = Arrays.copyOf(namespacePrefix, namespacePrefix.length + args.length);
+        System.arraycopy(args, 0, allArgs, namespacePrefix.length, args.length);
+        writeRaw(function.apply(allArgs));
+    }
+
     private void prettyPrintIndentation() {
         if (formatted) {
-            String prefix = String.join("", Collections.nCopies(indentationLevel, INDENT));
+            final String prefix = String.join("", Collections.nCopies(indentationLevel, INDENT));
             builder.append(prefix);
         }
     }
@@ -256,5 +361,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     private void sendAndClearData() {
         getReceiver().process(builder.toString());
         builder.delete(0, builder.length());
+        recordAttributeOffset = 0;
     }
+
 }

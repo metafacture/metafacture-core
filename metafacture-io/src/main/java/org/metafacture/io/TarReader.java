@@ -13,18 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.io;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.Charset;
-
-import org.apache.commons.compress.archivers.ArchiveEntry;
-import org.apache.commons.compress.archivers.ArchiveInputStream;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.io.input.ReaderInputStream;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -32,6 +23,17 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.io.input.ReaderInputStream;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.Charset;
 
 /**
  * Opens (aka 'untar') a tar archive and passes every entry.
@@ -43,15 +45,19 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
 @In(Reader.class)
 @Out(Reader.class)
 @FluxCommand("open-tar")
-public class TarReader
-        extends DefaultObjectPipe<Reader, ObjectReceiver<Reader>> {
+public class TarReader extends DefaultObjectPipe<Reader, ObjectReceiver<Reader>> {
+
+    /**
+     * Creates an instance of {@link TarReader}.
+     */
+    public TarReader() {
+    }
 
     @Override
     public void process(final Reader reader) {
         try (
-                InputStream stream = new ReaderInputStream(reader,
-                        Charset.defaultCharset());
-                ArchiveInputStream tarStream = new TarArchiveInputStream(stream);
+                InputStream stream = new ReaderInputStream(reader, Charset.defaultCharset());
+                ArchiveInputStream tarStream = new TarArchiveInputStream(stream)
         ) {
             ArchiveEntry entry;
             while ((entry = tarStream.getNextEntry()) != null) {
@@ -59,16 +65,16 @@ public class TarReader
                     processFileEntry(tarStream);
                 }
             }
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
     }
 
-    private void processFileEntry(ArchiveInputStream archiveStream)
-            throws IOException {
+    private void processFileEntry(final ArchiveInputStream archiveStream) throws IOException {
         try (
                 InputStream entryStream = new ArchiveEntryInputStream(archiveStream);
-                Reader entryReader = new InputStreamReader(entryStream);
+                Reader entryReader = new InputStreamReader(entryStream)
         ) {
             getReceiver().process(entryReader);
         }
@@ -96,7 +102,7 @@ public class TarReader
 
         private final ArchiveInputStream archiveStream;
 
-        ArchiveEntryInputStream(ArchiveInputStream archiveStream) {
+        ArchiveEntryInputStream(final ArchiveInputStream archiveStream) {
             this.archiveStream = archiveStream;
         }
 
@@ -106,17 +112,17 @@ public class TarReader
         }
 
         @Override
-        public int read(byte[] b) throws IOException {
+        public int read(final byte[] b) throws IOException {
             return archiveStream.read(b);
         }
 
         @Override
-        public int read(byte[] b, int off, int len) throws IOException {
+        public int read(final byte[] b, final int off, final int len) throws IOException {
             return archiveStream.read(b, off, len);
         }
 
         @Override
-        public long skip(long n) throws IOException {
+        public long skip(final long n) throws IOException {
             return archiveStream.skip(n);
         }
 
@@ -131,7 +137,7 @@ public class TarReader
         }
 
         @Override
-        public void mark(int readlimit) {
+        public void mark(final int readlimit) {
             archiveStream.mark(readlimit);
         }
 

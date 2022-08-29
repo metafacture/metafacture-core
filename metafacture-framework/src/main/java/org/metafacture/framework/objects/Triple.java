@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.framework.objects;
 
 import java.io.IOException;
@@ -34,11 +35,26 @@ public final class Triple implements Comparable<Triple> {
 
     private final int preCompHashCode;
 
+    /**
+     * Creates an instance of {@link Triple}.
+     *
+     * @param subject   the subject
+     * @param predicate the predicate
+     * @param object    the object
+     */
     public Triple(final String subject, final String predicate,
             final String object) {
         this(subject, predicate, object, ObjectType.STRING);
     }
 
+    /**
+     * Constructs a Triple.
+     *
+     * @param subject    the subject
+     * @param predicate  the predicate
+     * @param object     the object
+     * @param objectType the ObjectType
+     */
     public Triple(final String subject, final String predicate,
             final String object, final ObjectType objectType) {
         this.subject = subject;
@@ -52,31 +68,65 @@ public final class Triple implements Comparable<Triple> {
         return Objects.hash(subject, predicate, object, objectType);
     }
 
+    /**
+     * Gets the subject.
+     *
+     * @return the subject
+     */
     public String getSubject() {
         return subject;
     }
 
+    /**
+     * Gets the predicate
+     *
+     * @return the predicate
+     */
     public String getPredicate() {
         return predicate;
     }
 
+    /**
+     * Gets the object.
+     *
+     * @return the object
+     */
     public String getObject() {
         return object;
     }
 
+    /**
+     * Gets the object type.
+     *
+     * @return the {@link ObjectType}
+     */
     public ObjectType getObjectType() {
         return objectType;
     }
 
+    /**
+     * Reads an ObjectInputStream as Triple and returns it.
+     *
+     * @param in the ObjectInputStream
+     * @return the Triple
+     * @throws IOException if an I/O error occurs
+     */
     public static Triple read(final ObjectInputStream in) throws IOException {
         try {
             return new Triple(in.readUTF(), in.readUTF(), in.readUTF(),
                     (ObjectType) in.readObject());
-        } catch (final ClassNotFoundException e) {
+        }
+        catch (final ClassNotFoundException e) {
             throw new IOException("Cannot read triple", e);
         }
     }
 
+    /**
+     * Writes the Triple to an ObjectOutputStream.
+     *
+     * @param out the ObjectOutputStream.
+     * @throws IOException if an I/O error occurs
+     */
     public void write(final ObjectOutputStream out) throws IOException {
         out.writeUTF(subject);
         out.writeUTF(predicate);
@@ -98,11 +148,11 @@ public final class Triple implements Comparable<Triple> {
             return false;
         }
         final Triple other = (Triple) obj;
-        return other.preCompHashCode == preCompHashCode
-                && other.predicate.equals(predicate)
-                && other.object.equals(object)
-                && other.subject.equals(subject)
-                && other.objectType == objectType;
+        return other.preCompHashCode == preCompHashCode &&
+                other.predicate.equals(predicate) &&
+                other.object.equals(object) &&
+                other.subject.equals(subject) &&
+                other.objectType == objectType;
     }
 
     @Override
@@ -112,7 +162,7 @@ public final class Triple implements Comparable<Triple> {
             result = predicate.compareTo(triple.predicate);
             if (result == 0) {
                 result = object.compareTo(triple.object);
-                if(result == 0) {
+                if (result == 0) {
                     return objectType.compareTo(triple.objectType);
                 }
             }

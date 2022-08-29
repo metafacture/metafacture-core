@@ -13,35 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.metafacture.javaintegration;
 
-import java.util.Collection;
+package org.metafacture.javaintegration;
 
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
 
+import java.util.Collection;
 
 /**
- * just records the value of the last received literal.
+ * Just records the value of the last received literal.
  * @author Markus Michael Geipel
  *
  */
-public final class SingleValue extends DefaultStreamReceiver
-        implements Collector<String> {
+public final class SingleValue extends DefaultStreamReceiver implements Collector<String> {
 
     private boolean closed;
     private String value = "";
     private Collection<String> collection;
 
+    /**
+     * Creates an instance of {@link SingleValue}.
+     */
     public SingleValue() {
-        super();
-        collection = null;
     }
 
+    /**
+     * Creates an instance of {@link SingleValue} by a given Collection.
+     *
+     * @param collection the Collection
+     */
     public SingleValue(final Collection<String> collection) {
-        super();
         this.collection = collection;
     }
 
+    /**
+     * Check whether SingleValue is closed.
+     *
+     * @return true if SingleValue is closed.
+     */
     public boolean isClosed() {
         return closed;
     }
@@ -72,9 +81,9 @@ public final class SingleValue extends DefaultStreamReceiver
     }
 
     @Override
-    public void literal(final String name, final String value) {
+    public void literal(final String name, final String newValue) {
         assert !closed;
-        this.setValue(value);
+        setValue(newValue);
     }
 
     @Override

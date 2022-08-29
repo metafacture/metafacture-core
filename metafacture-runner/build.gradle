@@ -30,9 +30,9 @@ configurations {
 }
 
 dependencies {
-  compile project(':metafacture-framework')
-  compile project(':metafacture-commons')
-  compile project(':metafacture-flux')
+  implementation project(':metafacture-framework')
+  implementation project(':metafacture-commons')
+  implementation project(':metafacture-flux')
 
   plugins project(':metafacture-biblio')
   plugins project(':metafacture-csv')
@@ -55,6 +55,7 @@ dependencies {
   plugins project(':metafacture-triples')
   plugins project(':metafacture-xml')
   plugins project(':metafacture-html')
+  plugins project(':metafacture-yaml')
   plugins project(':metamorph')
 
   // The plugins configuration needs to be on the runtime classpath:
@@ -66,7 +67,7 @@ dependencies {
   // class loader which was used to load the classes of the slf4j-api. Until
   // a solution is found for this problem, the binding need to be placed on the
   // class path:
-  runtime 'org.slf4j:slf4j-log4j12:1.7.21'
+  runtimeOnly 'org.slf4j:slf4j-log4j12:1.7.21'
 
   // The following dependencies are placed in the "provided" scope to prevent
   // them from being included in the class path but still have them available
@@ -87,7 +88,7 @@ jar {
   manifest {
     attributes(
         'Implementation-Title': project.name,
-        'Implementation-Version': version,
+        'Implementation-Version': archiveVersion,
         'Main-Class': 'org.metafacture.runner.Flux',
         'Class-Path':
             configurations.runtimeClasspath.files.collect { it.name }.join(' '))
@@ -103,7 +104,7 @@ jar {
 
 distributions {
   main {
-   baseName = parent.project.name
+    distributionBaseName = parent.project.name
     contents {
       dirMode = 0755
       fileMode = 0644
@@ -140,7 +141,7 @@ def metamorph() {
 distTar {
   compression = Compression.GZIP
   classifier = 'dist'
-  extension = 'tar.gz'
+  archiveExtension = 'tar.gz'
 }
 
 distZip {
@@ -156,4 +157,9 @@ tasks.signArchives {
       it.type = 'tar.gz.asc'
     }
   }
+}
+
+task('fluxCommands', type: JavaExec, description: 'Print available Flux commands') {
+  classpath = sourceSets.main.runtimeClasspath
+  main = 'org.metafacture.flux.HelpPrinter'
 }

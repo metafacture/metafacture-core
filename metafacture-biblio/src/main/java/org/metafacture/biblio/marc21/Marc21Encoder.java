@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.biblio.marc21;
 
-import java.util.Arrays;
-
 import org.metafacture.biblio.iso2709.RecordBuilder;
+import org.metafacture.biblio.iso2709.RecordFormat;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.FormatException;
 import org.metafacture.framework.ObjectReceiver;
@@ -26,6 +26,8 @@ import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
+
+import java.util.Arrays;
 
 /**
  * Encodes a stream in MARC21 format.
@@ -70,7 +72,7 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 public final class Marc21Encoder extends
         DefaultStreamPipe<ObjectReceiver<String>> {
 
-    private static final int NAME_LENGTH = Marc21Constants.MARC21_FORMAT.TAG_LENGTH +
+    private static final int NAME_LENGTH = RecordFormat.TAG_LENGTH +
             Marc21Constants.MARC21_FORMAT.getIndicatorLength();
 
     private final RecordBuilder builder;
@@ -79,10 +81,14 @@ public final class Marc21Encoder extends
 
     private boolean generateIdField;
 
+    /**
+     * Initializes the encoder with MARC 21 constants and charset.
+     */
     public Marc21Encoder() {
         builder = new RecordBuilder(Marc21Constants.MARC21_FORMAT);
         builder.setCharset(Marc21Constants.MARC21_CHARSET);
     }
+
     /**
      * Controls whether the record identifier field (&quot;001&quot;) is
      * generated from the record id in the <i>start-record</i> event. If id field
@@ -101,6 +107,11 @@ public final class Marc21Encoder extends
         this.generateIdField = generateIdField;
     }
 
+    /**
+     * Gets the flag to decide whether the ID field is generated.
+     *
+     * @return true if the record ID is generated, otherwise false
+     */
     public boolean getGenerateIdField() {
         return generateIdField;
     }
@@ -117,8 +128,8 @@ public final class Marc21Encoder extends
 
     private void initLeader() {
         builder.setRecordStatus(' ');
-        builder.setImplCodes(new char[]{ ' ', ' ', ' ', ' ' });
-        builder.setSystemChars(new char[]{ ' ', ' ', ' ' });
+        builder.setImplCodes(new char[]{' ', ' ', ' ', ' '});
+        builder.setSystemChars(new char[]{' ', ' ', ' '});
         builder.setReservedChar(Marc21Constants.RESERVED_CHAR);
     }
 
@@ -136,7 +147,8 @@ public final class Marc21Encoder extends
         }
         if (Marc21EventNames.LEADER_ENTITY.equals(name)) {
             state = State.IN_LEADER_ENTITY;
-        } else {
+        }
+        else {
             startField(name);
             state = State.IN_FIELD_ENTITY;
         }
@@ -146,13 +158,12 @@ public final class Marc21Encoder extends
         if (name.length() != NAME_LENGTH) {
             throw new FormatException("invalid entity name: " + name);
         }
-        final char[] tag = new char[Marc21Constants.MARC21_FORMAT.TAG_LENGTH];
+        final char[] tag = new char[RecordFormat.TAG_LENGTH];
         final char[] indicators = new char[Marc21Constants.MARC21_FORMAT.getIndicatorLength()];
         name.getChars(0, tag.length, tag, 0);
         name.getChars(tag.length, name.length(), indicators, 0);
         builder.startDataField(tag, indicators);
     }
-
 
     @Override
     public void endEntity() {
@@ -229,18 +240,17 @@ public final class Marc21Encoder extends
                 return;
             }
         }
-        throw new FormatException("invalid code '" + code + "'; allowed codes are: "
-                + Arrays.toString(validCodes));
+        throw new FormatException("invalid code '" + code + "'; allowed codes are: " + Arrays.toString(validCodes));
     }
 
     private void processTopLevelLiteral(final String name, final String value) {
-    if (Marc21EventNames.MARCXML_TYPE_LITERAL.equals(name)) {
-      // MarcXmlHandler may output `type` literals. The
-      // information in these literals is not included in
-      // marc21 records. Therefore, we need to ignore
-      // these literals here.
+        if (Marc21EventNames.MARCXML_TYPE_LITERAL.equals(name)) {
+            // MarcXmlHandler may output `type` literals. The
+            // information in these literals is not included in
+            // marc21 records. Therefore, we need to ignore
+            // these literals here.
             return;
-    }
+        }
         builder.appendReferenceField(name.toCharArray(), value);
     }
 

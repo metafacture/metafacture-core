@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta.formatter;
 
 /**
@@ -23,12 +24,29 @@ package org.metafacture.formeta.formatter;
  */
 public interface Formatter {
 
+    /**
+     * The reset event.
+     */
     void reset();
 
-    void startGroup(final String name);
+    /**
+     * The startGroup event.
+     *
+     * @param name the name of the startGroup
+     */
+    void startGroup(String name);
 
+    /**
+     * The literal endGroup event.
+     */
     void endGroup();
 
-    void literal(final String name, final String value);
+    /**
+     * The literal event.
+     *
+     * @param name  the name of the literal
+     * @param value the value of the literal
+     */
+    void literal(String name, String value);
 
 }

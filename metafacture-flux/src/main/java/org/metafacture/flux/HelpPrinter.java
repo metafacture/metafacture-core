@@ -13,7 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.flux;
+
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.commons.reflection.ConfigurableClass;
+import org.metafacture.commons.reflection.ObjectFactory;
+import org.metafacture.flux.parser.FluxProgramm;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
+import org.metafacture.framework.annotations.ReturnsAvailableArguments;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -27,24 +38,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.commons.reflection.ObjectFactory;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.annotations.Description;
-import org.metafacture.framework.annotations.In;
-import org.metafacture.framework.annotations.Out;
-import org.metafacture.framework.annotations.ReturnsAvailableArguments;
-
 /**
- * prints Flux help for a given {@link ObjectFactory}
+ * Prints Flux help for a given {@link ObjectFactory}
  *
  * @author Markus Michael Geipel
  */
 public final class HelpPrinter {
+
     private HelpPrinter() {
         // no instances
     }
 
+    /**
+     * Prints Flux help to the standard output.
+     *
+     * @param args unused
+     *
+     * @see #print
+     */
+    public static void main(final String[] args) {
+        FluxProgramm.printHelp(System.out);
+    }
+
+    /**
+     * Prints Flux help for a given ObjectFactory. Excerpts setters and their
+     * arguments, {@code @in} annotations and {@code @out} annotations.
+     *
+     * @param factory the ObjectFactory
+     * @param out     the PrintStream to print to
+     */
     public static void print(final ObjectFactory<?> factory,
             final PrintStream out) {
         out.println("Welcome to Metafacture");
@@ -58,7 +80,7 @@ public final class HelpPrinter {
         final List<String> keyWords = new ArrayList<String>();
         keyWords.addAll(factory.keySet());
         Collections.sort(keyWords);
-        for (String name : keyWords) {
+        for (final String name : keyWords) {
             describe(name, factory, out);
         }
     }
@@ -66,20 +88,19 @@ public final class HelpPrinter {
     private static String getVersionInfo() {
         try {
             return ResourceUtil.loadProperties("build.properties").toString();
-        } catch (IOException e) {
+        }
+        catch (final IOException e) {
             throw new MetafactureException("Failed to load build infos", e);
         }
     }
 
-    private static <T> void describe(String name, ObjectFactory<T> factory,
-            PrintStream out) {
-        final Class<? extends T> moduleClass = factory.get(name).getPlainClass();
+    private static <T> void describe(final String name, final ObjectFactory<T> factory, final PrintStream out) { // checkstyle-disable-line ExecutableStatementCount
+        final ConfigurableClass<? extends T> configurableClass = factory.get(name);
+        final Class<? extends T> moduleClass = configurableClass.getPlainClass();
         final Description desc = moduleClass.getAnnotation(Description.class);
 
         out.println(name);
-        name.chars().forEach(c-> {
-            out.print("-");
-        });
+        name.chars().forEach(c -> out.print("-"));
         out.println();
 
         if (desc != null) {
@@ -90,21 +111,29 @@ public final class HelpPrinter {
             out.println("- arguments:\t" + arguments);
         }
 
-        final Map<String, Class<?>> attributes = factory.get(name).getSetterTypes();
+        final Map<String, Method> attributes = configurableClass.getSetters();
 
         if (!attributes.isEmpty()) {
             out.print("- options:\t");
             final StringBuilder builder = new StringBuilder();
-            for (Entry<String, Class<?>> entry : attributes.entrySet()) {
-                if (entry.getValue().isEnum()) {
+            for (final Entry<String, Method> entry : attributes.entrySet()) {
+                final Method method = entry.getValue();
+                final Class<?> type = configurableClass.getSetterType(method);
+
+                if (method.isAnnotationPresent(Deprecated.class)) {
+                    builder.append("[deprecated] ");
+                }
+
+                if (type.isEnum()) {
                     builder.append(entry.getKey())
                             .append(" ")
-                            .append(Arrays.asList(entry.getValue().getEnumConstants()))
+                            .append(Arrays.asList(type.getEnumConstants()))
                             .append(", ");
-                } else {
+                }
+                else {
                     builder.append(entry.getKey())
                             .append(" (")
-                            .append(entry.getValue().getSimpleName())
+                            .append(type.getSimpleName())
                             .append("), ");
                 }
 
@@ -128,14 +157,13 @@ public final class HelpPrinter {
     }
 
     @SuppressWarnings("unchecked")
-    private static Collection<String> getAvailableArguments(
-            Class<?> moduleClass) {
-        for (Method method : moduleClass.getMethods()) {
+    private static Collection<String> getAvailableArguments(final Class<?> moduleClass) {
+        for (final Method method : moduleClass.getMethods()) {
             if (method.getAnnotation(ReturnsAvailableArguments.class) != null) {
                 try {
                     return (Collection<String>) method.invoke(moduleClass);
-                } catch (IllegalAccessException | InvocationTargetException |
-                        IllegalArgumentException e) {
+                }
+                catch (final IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
                     // silently ignore
                 }
             }

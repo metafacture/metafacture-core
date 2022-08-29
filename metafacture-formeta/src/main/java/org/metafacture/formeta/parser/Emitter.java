@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.formeta.parser;
 
 import org.metafacture.framework.StreamReceiver;
@@ -25,12 +26,35 @@ import org.metafacture.framework.StreamReceiver;
  */
 public interface Emitter {
 
-    void setReceiver(final StreamReceiver receiver);
+    /**
+     * Sets the receiver.
+     *
+     * @param receiver the receiver
+     */
+    void setReceiver(StreamReceiver receiver);
 
-    void startGroup(final String name, final int nestingLevel);
+    /**
+     * The startGroup event.
+     *
+     * @param name         the name of the startGroup event
+     * @param nestingLevel the nesting level of the startGroup event
+     */
+    void startGroup(String name, int nestingLevel);
 
-    void endGroup(final int nestingLevel);
+    /**
+     * The endGroup event.
+     *
+     * @param nestingLevel the nesting level
+     */
+    void endGroup(int nestingLevel);
 
-    void literal(final String name, final String value, final int nestingLevel);
+    /**
+     * The literal event.
+     *
+     * @param name         the name of the literal event
+     * @param value        the value of the literal event
+     * @param nestingLevel the nesting level of the literal event
+     */
+    void literal(String name, String value, int nestingLevel);
 
 }

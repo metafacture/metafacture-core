@@ -33,16 +33,53 @@ tokens {
 
 @header {
 package org.metafacture.flux.parser;
+
+import org.metafacture.flux.FluxParseException;
 }
 
 @lexer::header {
 package org.metafacture.flux.parser;
 }
 
+@parser::members {
+    // ensure throwing an exception
+    @Override
+    protected Object recoverFromMismatchedToken(IntStream input, int ttype, BitSet follow) throws RecognitionException {
+      {
+        RecognitionException e = new MismatchedTokenException(ttype, input);
+        // if next token is what we are looking for then "delete" this token
+        if ( mismatchIsUnwantedToken(input, ttype) ) {
+          e = new UnwantedTokenException(ttype, input);
+          beginResync();
+          input.consume(); // simply delete extra token
+          endResync();
+          reportError(e);  // report after consuming so AW sees the token in the exception
+          // we want to return the token we're actually matching
+          Object matchedSymbol = getCurrentInputSymbol(input);
+          input.consume(); // move past ttype token as if all were ok
+        }
+        // can't recover with single token deletion, try insertion
+        if ( mismatchIsMissingToken(input, follow) ) {
+          Object inserted = getMissingSymbol(input, e, ttype, follow);
+          e = new MissingTokenException(ttype, input, inserted);
+          reportError(e);  // report after inserting so AW sees the token in the exception
+        }
+        throw e;
+      }
+    }
+}
+
 flux
   :
   varDef* flow*
   ;
+catch [RecognitionException re] {
+    reportError(re);
+    recover(input,re);
+    retval.tree = (CommonTree)adaptor.errorNode(input, retval.start, input.LT(-1), re);
+    String msg = getErrorMessage(re, this.getTokenNames()) + " in Flux";
+    throw new FluxParseException(msg, re);
+}
 
 varDef
   :
@@ -53,6 +90,9 @@ varDef
     ->
       ^(ASSIGN Identifier exp)
   ;
+catch [RecognitionException re] {
+    throw re;
+}
 
 flow
   :
@@ -63,6 +103,9 @@ flow
   )
   '|'! flowtail ('|'! Wormhole)? ';'!
   ;
+catch [RecognitionException re] {
+    throw re;
+}
 
 tee
   :
@@ -73,6 +116,9 @@ tee
         ^(SUBFLOW flowtail)+
        )
   ;
+catch [RecognitionException re] {
+    throw re;
+}
 
 flowtail
   :
@@ -88,6 +134,9 @@ flowtail
     )
   )*
   ;
+catch [RecognitionException re] {
+    throw re;
+}
 
 StdIn
   :
@@ -105,6 +154,9 @@ exp
   :
   atom ('+'^ atom)*
   ;
+catch [RecognitionException re] {
+    throw re;
+}
 
 atom
   :
@@ -122,6 +174,9 @@ pipeArgs
   )
   (','! namedArg)*
   ;
+catch [RecognitionException re] {
+    throw re;
+}
 
 namedArg
   :

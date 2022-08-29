@@ -13,76 +13,80 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.metafacture.commons.tries;
+
+import org.metafacture.commons.tries.SetMatcher.Match;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import org.metafacture.commons.tries.SetMatcher.Match;
 
 /**
- * @author Markus Michael Geipel
+ * Replaces Strings by other Strings.
  *
+ * @author Markus Michael Geipel
  */
 public final class SetReplacer {
     private final SetMatcher<String> matcher = new SetMatcher<String>();
 
-    public void addReplacement(final String key, final String with) {
-        matcher.put(key, with);
+    /**
+     * Creates an instance of {@link SetReplacer}.
+     */
+    public SetReplacer() {
     }
 
+    /**
+     * Adds a replacement of a String by another String.
+     *
+     * @param toReplace   String to replace
+     * @param replacement String of replacement
+     */
+    public void addReplacement(final String toReplace, final String replacement) {
+        matcher.put(toReplace, replacement);
+    }
+
+    /**
+     * Adds replacements given as a Map of Strings.
+     *
+     * @param replacements the Map of Strings to be replaced
+     */
     public void addReplacements(final Map<String, String> replacements) {
-        for (Entry<String, String> entry : replacements.entrySet()) {
-            addReplacement(entry.getKey(), entry.getValue());
+        for (final String k : replacements.keySet()) {
+            addReplacement(k, replacements.get(k));
         }
     }
 
+    /**
+     * Replaces the Strings defined with {@link #addReplacement(String, String)} in
+     * the text.
+     *
+     * @param text the text
+     * @return the text with the replacements
+     */
     public String replaceIn(final String text) {
         final List<SetMatcher.Match<String>> matches = matcher.match(text);
         final StringBuilder builder = new StringBuilder();
-
         int lastCut = 0;
 
         Collections.sort(matches, new Comparator<SetMatcher.Match<String>>() {
             @Override
             public int compare(final Match<String> o1, final Match<String> o2) {
-                final int result;
                 final int delta = o1.getStart() - o2.getStart();
-                if (delta < 0) {
-                    result = -1;
-                } else if (delta > 0) {
-                    result = 1;
-                } else {
-                    if (o1.getLength() > o2.getLength()) {
-                        result = -1;
-                    } else {
-                        result = 1;
-                    }
-                }
-                return result;
+                return delta < 0 ? -1 : delta > 0 ? 1 : o1.getLength() > o2.getLength() ? -1 : 1;
             }
-
         });
 
-        for (SetMatcher.Match<String> match : matches) {
-
+        for (final SetMatcher.Match<String> match : matches) {
             if (match.getStart() < lastCut) {
                 continue;
             }
-
-            // System.out.println(match.getStart() + " "+ match.getValue() +" "+
-            // match.getLength());
-
             builder.append(text.substring(lastCut, match.getStart()));
             builder.append(match.getValue());
-
             lastCut = match.getStart() + match.getLength();
         }
         builder.append(text.substring(lastCut, text.length()));
-
         return builder.toString();
     }
 
