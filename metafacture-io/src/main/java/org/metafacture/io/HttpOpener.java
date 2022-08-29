@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013, 2022 Deutsche Nationalbibliothek et al
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -54,14 +54,14 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 
     private static final String ACCEPT_HEADER = "accept";
     private static final String ENCODING_HEADER = "accept-charset";
-
     private static final String ACCEPT_DEFAULT = "*/*";
+    private static final String CONTENT_TYPE_HEADER = "content-Type";
+    private static final String CONTENT_TYPE_DEFAULT = "application/json";
     private static final String ENCODING_DEFAULT = "UTF-8";
-
     private static final String INPUT_DESIGNATOR = "@-";
+    private static final String DEFAULT_PREFIX = "ERROR: ";
 
     private static final Method DEFAULT_METHOD = Method.GET;
-    private static final String DEFAULT_PREFIX = "ERROR: ";
 
     private final Map<String, String> headers = new HashMap<>();
 
@@ -98,6 +98,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
      */
     public HttpOpener() {
         setAccept(ACCEPT_DEFAULT);
+        setContentType(CONTENT_TYPE_DEFAULT);
         setEncoding(ENCODING_DEFAULT);
         setErrorPrefix(DEFAULT_PREFIX);
         setMethod(DEFAULT_METHOD);
@@ -122,6 +123,16 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
      */
     public void setBody(final String body) {
         this.body = body;
+    }
+
+    /**
+     * Sets the HTTP content type header. This is a mime-type such as text/plain,
+     * text/html. The default is application/json.
+     *
+     * @param contentType mime-type to use for the HTTP contentType header
+     */
+    public void setContentType(final String contentType) {
+        setHeader(CONTENT_TYPE_HEADER, contentType);
     }
 
     /**
