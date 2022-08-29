@@ -52,14 +52,13 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     private static final Pattern HEADER_FIELD_SEPARATOR = Pattern.compile("\n");
     private static final Pattern HEADER_VALUE_SEPARATOR = Pattern.compile(":");
 
-    private static final String ACCEPT_HEADER = "accept";
-    private static final String ENCODING_HEADER = "accept-charset";
     private static final String ACCEPT_DEFAULT = "*/*";
-    private static final String CONTENT_TYPE_HEADER = "content-Type";
-    private static final String CONTENT_TYPE_DEFAULT = "application/json";
-    private static final String ENCODING_DEFAULT = "UTF-8";
-    private static final String INPUT_DESIGNATOR = "@-";
+    private static final String ACCEPT_HEADER = "accept";
+    private static final String CONTENT_TYPE_HEADER = "content-type";
     private static final String DEFAULT_PREFIX = "ERROR: ";
+    private static final String ENCODING_DEFAULT = "UTF-8";
+    private static final String ENCODING_HEADER = "accept-charset";
+    private static final String INPUT_DESIGNATOR = "@-";
 
     private static final Method DEFAULT_METHOD = Method.GET;
 
@@ -98,7 +97,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
      */
     public HttpOpener() {
         setAccept(ACCEPT_DEFAULT);
-        setContentType(CONTENT_TYPE_DEFAULT);
+        setContentType(ACCEPT_DEFAULT);
         setEncoding(ENCODING_DEFAULT);
         setErrorPrefix(DEFAULT_PREFIX);
         setMethod(DEFAULT_METHOD);
