@@ -42,8 +42,9 @@ import java.util.regex.Pattern;
  *
  * @author Christoph Böhme
  * @author Jan Schnasse
+ * @author Jens Wille
  */
-@Description("Opens an HTTP resource. Supports the setting of `Accept` and `Accept-Charset` as HTTP header fields, as well as generic headers (separated by `\\n`).")
+@Description("Opens an HTTP resource. Supports the setting of `Accept` and `Accept-Charset` as HTTP header fields, as well as generic headers (separated by `\\n`). Default setting of header `Accept` and `Content-Type` is '*/*' and `Encoding` is 'UTF-8'; default for 'method' is 'GET' and 'ErrorPrefix' is '@-'.")
 @In(String.class)
 @Out(Reader.class)
 @FluxCommand("open-http")
