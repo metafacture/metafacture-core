@@ -23,7 +23,9 @@ dependencies {
   implementation 'commons-io:commons-io:2.5'
   implementation 'org.apache.commons:commons-compress:1.21'
   runtimeOnly 'org.tukaani:xz:1.6'
+  testImplementation 'com.github.tomakehurst:wiremock-jre8:2.33.2'
   testImplementation 'junit:junit:4.12'
   testImplementation 'org.mockito:mockito-core:2.5.5'
   testImplementation 'org.assertj:assertj-core:3.11.1'
+  testRuntimeOnly 'org.slf4j:slf4j-simple:1.7.21'
 }
