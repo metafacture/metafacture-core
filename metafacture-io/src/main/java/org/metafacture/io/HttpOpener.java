@@ -63,6 +63,9 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 
     private static final Method DEFAULT_METHOD = Method.GET;
 
+    private static final int SUCCESS_CODE_MIN = 200;
+    private static final int SUCCESS_CODE_MAX = 399;
+
     private final Map<String, String> headers = new HashMap<>();
 
     private Method method;
@@ -237,20 +240,8 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
             }
 
             final InputStream errorStream = connection.getErrorStream();
-            final InputStream inputStream;
-
-            if (errorStream != null) {
-                if (errorPrefix != null) {
-                    final InputStream errorPrefixStream = new ByteArrayInputStream(errorPrefix.getBytes());
-                    inputStream = new SequenceInputStream(errorPrefixStream, errorStream);
-                }
-                else {
-                    inputStream = errorStream;
-                }
-            }
-            else {
-                inputStream = connection.getInputStream();
-            }
+            final InputStream inputStream = errorStream != null ?
+                getErrorStream(errorStream) : getInputStream(connection);
 
             final String contentEncoding = getEncoding(connection.getContentEncoding());
             getReceiver().process(new InputStreamReader(inputStream, contentEncoding));
@@ -275,6 +266,42 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         }
 
         return result;
+    }
+
+    private InputStream getInputStream(final HttpURLConnection connection) throws IOException {
+        try {
+            return connection.getInputStream();
+        }
+        catch (final IOException e) {
+            final int responseCode = connection.getResponseCode();
+            if (responseCode >= SUCCESS_CODE_MIN && responseCode <= SUCCESS_CODE_MAX) {
+                throw e;
+            }
+            else {
+                final StringBuilder sb = new StringBuilder(String.valueOf(responseCode));
+
+                final String responseMessage = connection.getResponseMessage();
+                if (responseMessage != null) {
+                    sb.append(" - ").append(responseMessage);
+                }
+
+                return getErrorStream(getInputStream(sb.toString()));
+            }
+        }
+    }
+
+    private InputStream getInputStream(final String string) {
+        return new ByteArrayInputStream(string.getBytes());
+    }
+
+    private InputStream getErrorStream(final InputStream errorStream) {
+        if (errorPrefix != null) {
+            final InputStream errorPrefixStream = getInputStream(errorPrefix);
+            return new SequenceInputStream(errorPrefixStream, errorStream);
+        }
+        else {
+            return errorStream;
+        }
     }
 
     private String getEncoding(final String contentEncoding) {
