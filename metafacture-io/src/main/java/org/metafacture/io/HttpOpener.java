@@ -73,22 +73,38 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 
     public enum Method {
 
-        DELETE(false),
-        GET(false),
-        HEAD(false),
-        OPTIONS(false),
-        POST(true),
-        PUT(true),
-        TRACE(false);
+        DELETE(false, true),
+        GET(false, true),
+        HEAD(false, false),
+        OPTIONS(false, true),
+        POST(true, true),
+        PUT(true, true),
+        TRACE(false, true);
 
-        private final boolean inputAsBody;
+        private final boolean requestHasBody;
+        private final boolean responseHasBody;
 
-        Method(final boolean inputAsBody) {
-            this.inputAsBody = inputAsBody;
+        Method(final boolean requestHasBody, final boolean responseHasBody) {
+            this.requestHasBody = requestHasBody;
+            this.responseHasBody = responseHasBody;
         }
 
-        private boolean getInputAsBody() {
-            return inputAsBody;
+        /**
+         * Checks whether the request method accepts a request body.
+         *
+         * @return true if the request method accepts a request body
+         */
+        public boolean getRequestHasBody() {
+            return requestHasBody;
+        }
+
+        /**
+         * Checks whether the request method returns a response body.
+         *
+         * @return true if the request method returns a response body
+         */
+        public boolean getResponseHasBody() {
+            return responseHasBody;
         }
 
     }
@@ -207,7 +223,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         try {
             final String requestUrl = getInput(input, url);
             final String requestBody = getInput(input,
-                    body == null && method.getInputAsBody() ? INPUT_DESIGNATOR : body);
+                    body == null && method.getRequestHasBody() ? INPUT_DESIGNATOR : body);
 
             final HttpURLConnection connection =
                 (HttpURLConnection) new URL(requestUrl).openConnection();
