@@ -50,18 +50,22 @@ import java.util.regex.Pattern;
 @FluxCommand("open-http")
 public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
-    private static final Pattern HEADER_FIELD_SEPARATOR = Pattern.compile("\n");
-    private static final Pattern HEADER_VALUE_SEPARATOR = Pattern.compile(":");
+    public static final String ACCEPT_DEFAULT = "*/*";
+    public static final String ACCEPT_HEADER = "accept";
+    public static final String CONTENT_TYPE_HEADER = "content-type";
+    public static final String DEFAULT_PREFIX = "ERROR: ";
+    public static final String ENCODING_DEFAULT = "UTF-8";
+    public static final String ENCODING_HEADER = "accept-charset";
+    public static final String INPUT_DESIGNATOR = "@-";
 
-    private static final String ACCEPT_DEFAULT = "*/*";
-    private static final String ACCEPT_HEADER = "accept";
-    private static final String CONTENT_TYPE_HEADER = "content-type";
-    private static final String DEFAULT_PREFIX = "ERROR: ";
-    private static final String ENCODING_DEFAULT = "UTF-8";
-    private static final String ENCODING_HEADER = "accept-charset";
-    private static final String INPUT_DESIGNATOR = "@-";
+    public static final String DEFAULT_METHOD_NAME = "GET";
+    public static final Method DEFAULT_METHOD = Method.valueOf(DEFAULT_METHOD_NAME);
 
-    private static final Method DEFAULT_METHOD = Method.GET;
+    public static final String HEADER_FIELD_SEPARATOR = "\n";
+    public static final String HEADER_VALUE_SEPARATOR = ":";
+
+    private static final Pattern HEADER_FIELD_SEPARATOR_PATTERN = Pattern.compile(HEADER_FIELD_SEPARATOR);
+    private static final Pattern HEADER_VALUE_SEPARATOR_PATTERN = Pattern.compile(HEADER_VALUE_SEPARATOR);
 
     private static final int SUCCESS_CODE_MIN = 200;
     private static final int SUCCESS_CODE_MAX = 399;
@@ -124,18 +128,27 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP accept header value. This is a mime-type such as text/plain
-     * or text/html. The default value of the accept is *&#47;* which means
-     * any mime-type.
+     * Sets the HTTP {@value ACCEPT_HEADER} header value. This is a MIME type
+     * such as {@code text/plain} or {@code application/json}. The default
+     * value for the accept header is {@value ACCEPT_DEFAULT} which means
+     * any MIME type.
      *
-     * @param accept mime-type to use for the HTTP accept header
+     * @param accept MIME type to use for the HTTP accept header
      */
     public void setAccept(final String accept) {
         setHeader(ACCEPT_HEADER, accept);
     }
 
     /**
-     * Sets the HTTP request body.
+     * Sets the HTTP request body. The default value for the request body is
+     * {@value INPUT_DESIGNATOR} <i>if the {@link #setMethod(Method) request
+     * method} accepts a request body</i>, which means it will use the {@link
+     * #process(String) input data} data as request body <i>if the input has
+     * not already been used</i>; otherwise, no request body will be set by
+     * default.
+     *
+     * <p>If a request body has been set, but the request method does not
+     * accept a body, the method <i>may</i> be changed to {@code POST}.
      *
      * @param body the request body
      */
@@ -144,20 +157,20 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP content type header. This is a mime-type such as text/plain,
-     * text/html. The default is application/json.
+     * Sets the HTTP {@value CONTENT_TYPE_HEADER} header value. This is a
+     * MIME type such as {@code text/plain} or {@code application/json}.
      *
-     * @param contentType mime-type to use for the HTTP contentType header
+     * @param contentType MIME type to use for the HTTP content-type header
      */
     public void setContentType(final String contentType) {
         setHeader(CONTENT_TYPE_HEADER, contentType);
     }
 
     /**
-     * Sets the preferred encoding of the HTTP response. This value is in the
-     * accept-charset header. Additonally, the encoding is used for reading the
-     * HTTP resonse if it does not specify an encoding. The default value for
-     * the encoding is UTF-8.
+     * Sets the HTTP {@value ENCODING_HEADER} header value. This is the
+     * preferred encoding for the HTTP response. Additionally, the encoding
+     * is used for reading the HTTP response if it does not specify a content
+     * encoding. The default for the encoding is {@value ENCODING_DEFAULT}.
      *
      * @param encoding name of the encoding used for the accept-charset HTTP
      *                 header
@@ -167,7 +180,8 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the error prefix.
+     * Sets the error prefix. The default error prefix is
+     * {@value DEFAULT_PREFIX}.
      *
      * @param errorPrefix the error prefix
      */
@@ -176,14 +190,18 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets a request property, or multiple request properties separated by
-     * {@code \n}.
+     * Sets a request property (header), or multiple request properties
+     * separated by {@value HEADER_FIELD_SEPARATOR}. Header name and value
+     * are separated by {@value HEADER_VALUE_SEPARATOR}. The header name is
+     * case-insensitive.
      *
      * @param header request property line
+     *
+     * @see #setHeader(String, String)
      */
     public void setHeader(final String header) {
-        Arrays.stream(HEADER_FIELD_SEPARATOR.split(header)).forEach(h -> {
-            final String[] parts = HEADER_VALUE_SEPARATOR.split(h, 2);
+        Arrays.stream(HEADER_FIELD_SEPARATOR_PATTERN.split(header)).forEach(h -> {
+            final String[] parts = HEADER_VALUE_SEPARATOR_PATTERN.split(h, 2);
             if (parts.length == 2) {
                 setHeader(parts[0], parts[1].trim());
             }
@@ -194,7 +212,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets a request property.
+     * Sets a request property (header). The header name is case-insensitive.
      *
      * @param key request property key
      * @param value request property value
@@ -204,7 +222,8 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP request method.
+     * Sets the HTTP request method. The default request method is
+     * {@value DEFAULT_METHOD_NAME}.
      *
      * @param method the request method
      */
@@ -213,7 +232,9 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP request URL.
+     * Sets the HTTP request URL. The default value for the request URL is
+     * {@value INPUT_DESIGNATOR}, which means it will use the {@link
+     * #process(String) input data} as request URL.
      *
      * @param url the request URL
      */
