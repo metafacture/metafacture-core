@@ -1033,21 +1033,30 @@ public class MetafixLookupTest {
     }
 
     @Test       //Scenario 3:
-    public void shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguage() {
+    public void shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguageUsingNamespace() {
+        shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguage("skos:prefLabel");
+    }
+
+    @Test       //Scenario 3 without namespace :
+    public void shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguageWithoutNamespace() {
+        shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguage("http://www.w3.org/2004/02/skos/core#prefLabel");
+    }
+
+    private void shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguage(final String target) {
         MetafixTestHelpers.assertFix(streamReceiver,
-            Arrays.asList("set_array('prefLabel', 'Mathematics, Natural Sciences')",
-                "lookup_rdf('prefLabel.*'," + " '" + RDF_MAP + "',  target:\"skos:prefLabel\", " +
-                    "target_language:\"de\" )"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().literal("prefLabel", "Mathematik, Naturwissenschaften");
-                o.get().endRecord();
-            }
+                Arrays.asList("set_array('prefLabel', 'Mathematics, Natural Sciences')",
+                        "lookup_rdf('prefLabel.*'," + " '" + RDF_MAP + "',  target:\"" + target + "\", " +
+                                "target_language:\"de\" )"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("prefLabel", "Mathematik, Naturwissenschaften");
+                    o.get().endRecord();
+                }
         );
     }
 

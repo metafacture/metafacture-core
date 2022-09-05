@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014, 2021 Deutsche Nationalbibliothek et al
+ * Copyright 2022 hbz
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -33,19 +33,11 @@ import org.apache.jena.shared.PropertyNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -82,9 +74,9 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
         if (!map.containsKey(Maps.DEFAULT_MAP_KEY)) {
             setDefault(Maps.DEFAULT_MAP_KEY);
         }
-        final String[] nsPrefixAndProperty = target.split(":");
-        if (nsPrefixAndProperty.length == 2) {
-            target = model.getNsPrefixURI(nsPrefixAndProperty[0]) + nsPrefixAndProperty[1];
+        if (!target.toLowerCase().startsWith("http")) {
+            final String[] nsPrefixAndProperty = target.split(":");
+            target = nsPrefixAndProperty.length == 2 ? model.getNsPrefixURI(nsPrefixAndProperty[0]) + nsPrefixAndProperty[1] : nsPrefixAndProperty[0];
         }
         isUninitialized = false;
     }
@@ -122,39 +114,6 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
         }
         catch (final RiotNotFoundException e) {
             throw new FixExecutionException("rdf file: cannot read file", e);
-        }
-    }
-
-    private InputStream openStream(final String file) {
-        return openAsFile(file).orElseGet(() -> openAsResource(file).orElseGet(() -> openAsUrl(file).orElseThrow(() -> new FixExecutionException("File not found: " + file))));
-    }
-
-    private Optional<InputStream> openAsFile(final String file) {
-        try {
-            return Optional.of(new FileInputStream(file));
-        }
-        catch (final FileNotFoundException e) {
-            return Optional.empty();
-        }
-    }
-
-    private Optional<InputStream> openAsResource(final String file) {
-        return Optional.ofNullable(Thread.currentThread().getContextClassLoader().getResourceAsStream(file));
-    }
-
-    private Optional<InputStream> openAsUrl(final String file) {
-        final URL url;
-        try {
-            url = new URL(file);
-        }
-        catch (final MalformedURLException e) {
-            return Optional.empty();
-        }
-        try {
-            return Optional.of(url.openStream());
-        }
-        catch (final IOException e) {
-            throw new UncheckedIOException(e);
         }
     }
 
