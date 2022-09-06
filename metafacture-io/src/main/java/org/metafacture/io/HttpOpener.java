@@ -67,9 +67,6 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     private static final Pattern HEADER_FIELD_SEPARATOR_PATTERN = Pattern.compile(HEADER_FIELD_SEPARATOR);
     private static final Pattern HEADER_VALUE_SEPARATOR_PATTERN = Pattern.compile(HEADER_VALUE_SEPARATOR);
 
-    private static final int SUCCESS_CODE_MIN = 200;
-    private static final int SUCCESS_CODE_MAX = 399;
-
     private final Map<String, String> headers = new HashMap<>();
 
     private Method method;
@@ -260,11 +257,9 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
                 connection.getOutputStream().write(requestBody.getBytes());
             }
 
-            final InputStream errorStream = connection.getErrorStream();
-            final InputStream inputStream = errorStream != null ?
-                getErrorStream(errorStream) : getInputStream(connection);
-
+            final InputStream inputStream = getInputStream(connection);
             final String contentEncoding = getEncoding(connection.getContentEncoding());
+
             getReceiver().process(new InputStreamReader(inputStream, contentEncoding));
         }
         catch (final IOException e) {
@@ -294,30 +289,19 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
             return connection.getInputStream();
         }
         catch (final IOException e) {
-            final int responseCode = connection.getResponseCode();
-            if (responseCode >= SUCCESS_CODE_MIN && responseCode <= SUCCESS_CODE_MAX) {
-                throw e;
+            final InputStream errorStream = connection.getErrorStream();
+            if (errorStream != null) {
+                return getErrorStream(errorStream);
             }
             else {
-                final StringBuilder sb = new StringBuilder(String.valueOf(responseCode));
-
-                final String responseMessage = connection.getResponseMessage();
-                if (responseMessage != null) {
-                    sb.append(" - ").append(responseMessage);
-                }
-
-                return getErrorStream(getInputStream(sb.toString()));
+                throw e;
             }
         }
     }
 
-    private InputStream getInputStream(final String string) {
-        return new ByteArrayInputStream(string.getBytes());
-    }
-
     private InputStream getErrorStream(final InputStream errorStream) {
         if (errorPrefix != null) {
-            final InputStream errorPrefixStream = getInputStream(errorPrefix);
+            final InputStream errorPrefixStream = new ByteArrayInputStream(errorPrefix.getBytes());
             return new SequenceInputStream(errorPrefixStream, errorStream);
         }
         else {

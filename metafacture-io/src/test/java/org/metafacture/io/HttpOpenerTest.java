@@ -58,8 +58,6 @@ public final class HttpOpenerTest {
     private static final String TEST_STRING = "test string";
     private static final StringValuePattern TEST_VALUE = WireMock.equalTo(TEST_STRING);
 
-    private static final String TEST_ERROR = "400 - Bad Request";
-
     private static final String REQUEST_BODY = "request body";
     private static final String RESPONSE_BODY = "response bödy"; // UTF-8
 
@@ -263,19 +261,19 @@ public final class HttpOpenerTest {
     @Test
     public void shouldPerformGetRequestWithErrorResponse() throws IOException {
         shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> {},
-                null, null, WireMock.badRequest().withBody(RESPONSE_BODY), "ERROR: " + TEST_ERROR);
+                null, null, WireMock.badRequest().withBody(RESPONSE_BODY), "ERROR: " + RESPONSE_BODY);
     }
 
     @Test
     public void shouldPerformGetRequestWithErrorResponseAndErrorPrefixParameter() throws IOException {
         shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> o.setErrorPrefix(TEST_STRING),
-                null, null, WireMock.badRequest().withBody(RESPONSE_BODY), TEST_STRING + TEST_ERROR);
+                null, null, WireMock.badRequest().withBody(RESPONSE_BODY), TEST_STRING + RESPONSE_BODY);
     }
 
     @Test
     public void shouldPerformGetRequestWithErrorResponseAndWithoutErrorPrefixParameter() throws IOException {
         shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> o.setErrorPrefix(null),
-                null, null, WireMock.badRequest().withBody(RESPONSE_BODY), TEST_ERROR);
+                null, null, WireMock.badRequest().withBody(RESPONSE_BODY), RESPONSE_BODY);
     }
 
     private void shouldPerformRequest(final String input, final HttpOpener.Method method, final BiConsumer<HttpOpener, String> consumer, final String... headers) throws IOException {
