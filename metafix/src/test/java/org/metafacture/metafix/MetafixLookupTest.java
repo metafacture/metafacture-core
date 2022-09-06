@@ -38,10 +38,9 @@ public class MetafixLookupTest {
 
     private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
     private static final String RDF_MAP = "src/test/resources/org/metafacture/metafix/maps/test.ttl";
+    private static final String RDF_URL = "http://purl.org/lobid/rpb";
     private static final String TSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.tsv";
-
     private static final String LOOKUP = "lookup('title.*',";
-    private static final String LOOKUP_IN_RDF = "lookup_in_rdf('prefLabel.*',";
 
     @Mock
     private StreamReceiver streamReceiver;
@@ -989,6 +988,24 @@ public class MetafixLookupTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().literal("notation", "4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupRdfUrlWithRedirection() {
+        MetafixTestHelpers.assertFix(streamReceiver,
+            Arrays.asList("lookup_rdf('prefLabel'," + " '" + RDF_URL + "',  target:\"skos:prefLabel\")"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("prefLabel", "http://purl.org/lobid/rpb#n882022");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("prefLabel", "Presserecht");
                 o.get().endRecord();
             }
         );

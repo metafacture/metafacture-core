@@ -28,21 +28,23 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RiotNotFoundException;
 import org.apache.jena.shared.PropertyNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 /**
  * Provides a dynamically build {@link Map} based on an RDF resource. Can be one file or a comma separated list of RDF
- * files or an HTTP(S) URI.
+ * files or an HTTP(S) URI. Redirections of HTTP(S) URIs are followed.
  * The resources are supposed to be UTF-8 encoded.
  * <p>
  *
@@ -57,6 +59,10 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
     private static String targetLanguage = "";
     private static String target;
     private static final Logger LOG = LoggerFactory.getLogger(RdfMap.class);
+    private static final int MAX_REDIRECTIONS = 10;
+    private static final int MIN_HTTP_STATUS_CODE = 299;
+    private static final int MAX_HTTP_STATUS_CODE = 400;
+
     private Model model;
     private boolean isUninitialized = true;
     private final ArrayList<String> filenames = new ArrayList<>();
@@ -104,15 +110,19 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
     }
 
     private void loadFile(final String file) {
+        String f = file;
         try {
+            if (file.toLowerCase().startsWith("http")) {
+                f = read(file);
+            }
             if (model == null) {
-                model = RDFDataMgr.loadModel(file);
+                model = RDFDataMgr.loadModel(f);
             }
             else {
-                RDFDataMgr.read(model, file);
+                RDFDataMgr.read(model, f);
             }
         }
-        catch (final RiotNotFoundException e) {
+        catch (final IOException e) {
             throw new FixExecutionException("rdf file: cannot read file", e);
         }
     }
@@ -140,7 +150,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
         if (isUninitialized) {
             init();
         }
-        String ret = Maps.DEFAULT_MAP_KEY;
+        String ret;
         if (map.containsKey(key.toString())) {
             ret = map.get(key.toString());
         }
@@ -160,7 +170,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
                 //second try to get SUBJECT using PROPERTY and LITERAL
                 ret = getSubjectUsingPropertyAndLiteral(key, targetProperty);
                 //third try: get LITERAL of PREDICATE A using PREDICATE B
-                if (ret == Maps.DEFAULT_MAP_KEY) {
+                if (ret.equals(Maps.DEFAULT_MAP_KEY)) {
                     ret = getLiteralOfPredicateUsingOtherPredicate(key, targetProperty);
                 }
                 else {
@@ -180,7 +190,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
         while (iter.hasNext()) {
             resource = iter.nextResource();
             if (resource.getProperty(targetProperty).getString().equals(key.toString())) {
-                Statement stmt = resource.getProperty(targetProperty);
+                Statement stmt;
                 final StmtIterator iterProp = resource.listProperties(targetProperty);
                 while (iterProp.hasNext()) {
                     stmt = iterProp.nextStatement();
@@ -211,14 +221,6 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
             }
         }
         return ret;
-    }
-
-    @Override
-    public Set<String> keySet() {
-        if (isUninitialized) {
-            init();
-        }
-        return Collections.unmodifiableSet(map.keySet());
     }
 
     /**
@@ -252,5 +254,49 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
      */
     public void setDefault(final String defaultValue) {
         map.put(Maps.DEFAULT_MAP_KEY, defaultValue);
+    }
+
+    /**
+     * Gets a redirected URL, if any redirection takes place. Adapted predated code from org.apache.jena.rdfxml.xmlinput.JenaReader.
+     *
+     * @Deprecated Using newer jena version (needs java 11) this method would be obsolete.
+     * @param url the URL to resolve
+     * @return the (redirected) URL
+     * @throws IOException if any IO error occurs
+     */
+    private String read(final String url) throws IOException {
+        String connectionURL = url;
+        try {
+            int count = 0;
+            URLConnection conn;
+            while (true) {
+                final URLConnection conn2 = new URL(connectionURL).openConnection();
+                if (!(conn2 instanceof HttpURLConnection)) {
+                    conn = conn2;
+                    break;
+                }
+                count += 1;
+                if (count > MAX_REDIRECTIONS) {
+                    throw new IOException("Too many redirects followed for " + url);
+                }
+                final HttpURLConnection httpURLConnection = (HttpURLConnection) conn2;
+                conn2.setRequestProperty("accept", "*/*");
+                final int statusCode = httpURLConnection.getResponseCode();
+                if (statusCode <= MIN_HTTP_STATUS_CODE || statusCode >= MAX_HTTP_STATUS_CODE) {
+                    conn = conn2;
+                    break;
+                }
+                // Redirect
+                connectionURL = conn2.getHeaderField("Location");
+                if (connectionURL == null || url.equals(connectionURL)) {
+                    throw new IOException("Failed to follow redirects for " + url);
+                }
+            }
+            connectionURL = conn.getURL().toString();
+        }
+        catch (final IOException e) {
+            throw new IOException(e);
+        }
+        return connectionURL;
     }
 }
