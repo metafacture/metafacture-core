@@ -40,6 +40,7 @@ public class MetafixLookupTest {
     private static final String RDF_MAP = "src/test/resources/org/metafacture/metafix/maps/test.ttl";
     private static final String RDF_URL = "http://purl.org/lobid/rpb";
     private static final String TSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.tsv";
+
     private static final String LOOKUP = "lookup('title.*',";
 
     @Mock
@@ -959,8 +960,8 @@ public class MetafixLookupTest {
 
     @Test
     public void shouldLookupInExternalRdfUseDefaultValueIfNotFound() {
-        MetafixTestHelpers.assertFix(streamReceiver,
-            Arrays.asList("lookup_rdf('created'," + " '" + RDF_MAP + "',  target:\"created\",  __default:\"0000-01-01\")"
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup_rdf('created', '" + RDF_MAP + "', target: 'created', __default: '0000-01-01')"
             ),
             i -> {
                 i.startRecord("1");
@@ -977,8 +978,8 @@ public class MetafixLookupTest {
 
     @Test
     public void shouldLookupInExternalRdfMapGetObjectOfSubjectWithTargetedPredicate() {
-        MetafixTestHelpers.assertFix(streamReceiver,
-            Arrays.asList("lookup_rdf('notation'," + " '" + RDF_MAP + "',  target:\"skos:notation\")"
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup_rdf('notation', '" + RDF_MAP + "', target: 'skos:notation')"
             ),
             i -> {
                 i.startRecord("1");
@@ -995,8 +996,8 @@ public class MetafixLookupTest {
 
     @Test
     public void shouldLookupRdfUrlWithRedirection() {
-        MetafixTestHelpers.assertFix(streamReceiver,
-            Arrays.asList("lookup_rdf('prefLabel'," + " '" + RDF_URL + "',  target:\"skos:prefLabel\")"
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup_rdf('prefLabel', '" + RDF_URL + "', target: 'skos:prefLabel')"
             ),
             i -> {
                 i.startRecord("1");
@@ -1011,11 +1012,11 @@ public class MetafixLookupTest {
         );
     }
 
-    @Test //Scenario 1:
+    @Test // Scenario 1
     public void shouldLookupInExternalRdfMapGetObjectOfSubjectWithTargetedPredicateOfSpecificLanguage() {
-        MetafixTestHelpers.assertFix(streamReceiver,
-            Arrays.asList("set_array('prefLabel', 'https://w3id.org/kim/hochschulfaechersystematik/n4')",
-                "lookup_rdf('prefLabel.*'," + " '" + RDF_MAP + "',  target:\"skos:prefLabel\", target_language:\"de\" )"
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('prefLabel', 'https://w3id.org/kim/hochschulfaechersystematik/n4')",
+                "lookup_rdf('prefLabel.*', '" + RDF_MAP + "', target: 'skos:prefLabel', target_language: 'de')"
             ),
             i -> {
                 i.startRecord("1");
@@ -1029,11 +1030,11 @@ public class MetafixLookupTest {
         );
     }
 
-    @Test       //Scenario 2:
+    @Test // Scenario 2
     public void shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguage() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList("set_array('id', 'Mathematics, Natural Sciences')",
-                "lookup_rdf('id.*'," + " '" + RDF_MAP + "',  target:\"skos:prefLabel\", " +
-                    "target_language:\"en\" )"
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('id', 'Mathematics, Natural Sciences')",
+                "lookup_rdf('id.*', '" + RDF_MAP + "', target: 'skos:prefLabel', target_language: 'en')"
             ),
             i -> {
                 i.startRecord("1");
@@ -1049,31 +1050,30 @@ public class MetafixLookupTest {
         );
     }
 
-    @Test       //Scenario 3:
+    @Test // Scenario 3
     public void shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguageUsingNamespace() {
         shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguage("skos:prefLabel");
     }
 
-    @Test       //Scenario 3 without namespace :
+    @Test // Scenario 3 without namespace
     public void shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguageWithoutNamespace() {
         shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguage("http://www.w3.org/2004/02/skos/core#prefLabel");
     }
 
     private void shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguage(final String target) {
-        MetafixTestHelpers.assertFix(streamReceiver,
-                Arrays.asList("set_array('prefLabel', 'Mathematics, Natural Sciences')",
-                        "lookup_rdf('prefLabel.*'," + " '" + RDF_MAP + "',  target:\"" + target + "\", " +
-                                "target_language:\"de\" )"
-                ),
-                i -> {
-                    i.startRecord("1");
-                    i.endRecord();
-                },
-                o -> {
-                    o.get().startRecord("1");
-                    o.get().literal("prefLabel", "Mathematik, Naturwissenschaften");
-                    o.get().endRecord();
-                }
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('prefLabel', 'Mathematics, Natural Sciences')",
+                "lookup_rdf('prefLabel.*', '" + RDF_MAP + "', target: '" + target + "', target_language: 'de')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("prefLabel", "Mathematik, Naturwissenschaften");
+                o.get().endRecord();
+            }
         );
     }
 
