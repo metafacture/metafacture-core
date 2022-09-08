@@ -48,7 +48,7 @@ public class SimpleRegexTrie<P> {
      * @param keys pattern of keys
      * @param value value to associate with the key pattern
      */
-    public void put(final String keys, final P value) {
+    public synchronized void put(final String keys, final P value) {
         if (keys.matches(SIMPLE_CHARACTER_CLASS)) {
             int charClassStart = keys.indexOf('[', 0);
             final int charClassEnd = keys.indexOf(']', 1);
@@ -71,7 +71,7 @@ public class SimpleRegexTrie<P> {
      * @param key the key
      * @return the List of the key if the key exists, otherwise an empty List
      */
-    public List<P> get(final String key) {
+    public synchronized List<P> get(final String key) {
         return trie.get(key);
     }
 

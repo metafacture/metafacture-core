@@ -40,8 +40,8 @@ public final class WildcardTrie<P> {
     private static final Pattern OR_PATTERN = Pattern.compile(OR_STRING, Pattern.LITERAL);
     private final Node<P> root = new Node<P>();
 
-    private Set<Node<P>> nodes = new HashSet<Node<P>>();
-    private Set<Node<P>> nextNodes = new HashSet<Node<P>>();
+    private Set<Node<P>> nodes = Collections.synchronizedSet(new HashSet<Node<P>>());
+    private Set<Node<P>> nextNodes = Collections.synchronizedSet(new HashSet<Node<P>>());
 
     /**
      * Creates an instance of {@link WildcardTrie}.
@@ -56,7 +56,7 @@ public final class WildcardTrie<P> {
      * @param keys  pattern of keys to register
      * @param value value to associate with the key pattern
      */
-    public void put(final String keys, final P value) {
+    public synchronized void put(final String keys, final P value) {
         if (keys.contains(OR_STRING)) {
             final String[] keysSplit = OR_PATTERN.split(keys);
             for (final String string : keysSplit) {
@@ -68,7 +68,7 @@ public final class WildcardTrie<P> {
         }
     }
 
-    private void simplyPut(final String key, final P value) {
+    private synchronized void simplyPut(final String key, final P value) {
         final int length = key.length();
 
         Node<P> node = root;
@@ -89,7 +89,7 @@ public final class WildcardTrie<P> {
      * @param key the key
      * @return the List of
      */
-    public List<P> get(final String key) {
+    public synchronized List<P> get(final String key) {
         nodes.add(root);
         final int length = key.length();
         for (int i = 0; i < length; ++i) {
@@ -123,7 +123,7 @@ public final class WildcardTrie<P> {
         return matches();
     }
 
-    private List<P> matches() {
+    private synchronized List<P> matches() {
         List<P> matches = Collections.emptyList();
         for (final Node<P> node : nodes) {
             final Set<P> values = node.getValues();
@@ -153,7 +153,7 @@ public final class WildcardTrie<P> {
             // nothing to do
         }
 
-        public Node<T> addNext(final char key) {
+        public synchronized Node<T> addNext(final char key) {
             final Node<T> next = new Node<T>();
             links.put(key, next);
             if (key == STAR_WILDCARD) {
@@ -162,18 +162,18 @@ public final class WildcardTrie<P> {
             return next;
         }
 
-        public void addValue(final T value) {
+        public synchronized void addValue(final T value) {
             if (values == Collections.emptySet()) {
                 values = new LinkedHashSet<T>();
             }
             this.values.add(value);
         }
 
-        public Set<T> getValues() {
+        public synchronized Set<T> getValues() {
             return values;
         }
 
-        public Node<T> getNext(final char key) {
+        public synchronized Node<T> getNext(final char key) {
             return links.get(key);
         }
     }
