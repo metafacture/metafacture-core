@@ -99,15 +99,9 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
             final String fileName = params.get(0);
             final RdfMap rdf = new RdfMap();
             rdf.setFile(metafix.resolvePath(fileName));
-            if (options.containsKey("target_language")) {
-                rdf.setTargetLanguage(options.get("target_language"));
-            }
-            if (options.containsKey("target")) {
-                rdf.setTarget(options.get("target"));
-            }
-            if (options.containsKey(Maps.DEFAULT_MAP_KEY)) {
-                rdf.setDefault(options.get(Maps.DEFAULT_MAP_KEY));
-            }
+            withOption(options, "target", rdf::setTarget);
+            withOption(options, "target_language", rdf::setTargetLanguage);
+            withOption(options, Maps.DEFAULT_MAP_KEY, rdf::setDefault);
             metafix.putMap(params.size() > 1 ? params.get(1) : fileName, rdf);
         }
     },
