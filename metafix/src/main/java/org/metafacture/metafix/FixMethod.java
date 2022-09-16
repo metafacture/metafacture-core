@@ -535,7 +535,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final Map<String, String> map = getMap(metafix, record, params, options, KIND_OF_RDFMAP);
             record.transform(params.get(0), oldValue -> {
-                final String newValue = map.get(oldValue);
+                final String newValue = map.getOrDefault(oldValue, defaultValue);
                 return newValue != null ? newValue : getBoolean(options, "delete") ? null : oldValue;
             });
         }

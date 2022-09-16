@@ -959,7 +959,7 @@ public class MetafixLookupTest {
     }
 
     @Test
-    public void shouldLookupInExternalRdfUseDefaultValueIfNotFound() {
+    public void shouldLookupInExternalRdfUseDefinedDefaultValueIfNotFound() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "lookup_rdf('created', '" + RDF_MAP + "', target: 'created', __default: '0000-01-01')"
             ),
@@ -971,6 +971,24 @@ public class MetafixLookupTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().literal("created", "0000-01-01");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupInExternalRdfUseDefaultValueIfNotFound() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup_rdf('created', '" + RDF_MAP + "', target: 'created')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("created", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("created", "__default");
                 o.get().endRecord();
             }
         );
