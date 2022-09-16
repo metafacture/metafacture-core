@@ -37,7 +37,7 @@ public interface Maps {
     Collection<String> getMapNames();
 
     /**
-     * Gest a map.
+     * Gets a map.
      *
      * @param mapName the name of the map
      * @return the Map
