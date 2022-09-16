@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -62,15 +63,19 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     private static final Logger LOG = LoggerFactory.getLogger(RecordTransformer.class);
 
     private final List<Consumer<Record>> consumers = new LinkedList<>();
-    private final List<Map<String, String>> vars = new ArrayList<>();
+    private final List<Map<String, String>> vars = new ArrayList<>(Collections.nCopies(Vars.values().length, null));
     private final Metafix metafix;
     private final RecordTransformer parent;
 
     private Supplier<String> currentMessageSupplier;
 
+    private enum Vars {
+        GLOBAL, STATIC, DYNAMIC
+    }
+
     /*package-private*/ RecordTransformer(final Metafix metafix, final Fix fix) {
         this(metafix, fix.getElements(), null);
-        addVars(metafix.getVars());
+        setVars(Vars.GLOBAL, metafix.getVars());
     }
 
     private RecordTransformer(final Metafix metafix, final List<Expression> expressions, final RecordTransformer parent) {
@@ -103,19 +108,14 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         return new RecordTransformer(metafix, expressions, this);
     }
 
-    public void addVars(final Map<String, String> additionalVars) {
-        vars.add(additionalVars);
-    }
-
-    public void transform(final Record record, final Map<String, String> additionalVars) {
-        final int index = vars.size();
-        addVars(additionalVars);
+    public void transform(final Record record, final Map<String, String> dynamicVars) {
+        final Map<String, String> oldDynamicVars = setVars(Vars.DYNAMIC, dynamicVars);
 
         try {
             transform(record);
         }
         finally {
-            vars.remove(index);
+            setVars(Vars.DYNAMIC, oldDynamicVars);
         }
     }
 
@@ -269,9 +269,17 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
                 resource.getURI(), node.getStartLine(), NodeModelUtils.getTokenText(node));
     }
 
+    /*package-private*/ void setVars(final Map<String, String> staticVars) {
+        setVars(Vars.STATIC, staticVars);
+    }
+
+    private Map<String, String> setVars(final Vars type, final Map<String, String> newVars) {
+        return vars.set(type.ordinal(), newVars);
+    }
+
     private Map<String, String> getVars() {
         final Map<String, String> mergedVars = parent != null ? parent.getVars() : new HashMap<>();
-        vars.forEach(mergedVars::putAll);
+        vars.stream().filter(v -> v != null).forEach(mergedVars::putAll);
         return mergedVars;
     }
 
