@@ -1,0 +1,3 @@
+do put_macro("test")
+  append('animals', ' is cool')
+end

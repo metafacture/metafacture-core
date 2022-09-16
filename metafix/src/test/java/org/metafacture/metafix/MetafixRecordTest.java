@@ -2156,6 +2156,64 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void shouldIncludeCallerLocationAndTextForExceptionInMacro() {
+        final String format = "Error while executing Fix expression (at FILE, line %d): %s";
+
+        final String text1 = "call_macro('test')";
+        final String text2 = "append('animals', ' is cool')";
+        final String message = String.format(format, 4, text1) + " -> " + String.format(format, 2, text2);
+
+        MetafixTestHelpers.assertThrows(FixExecutionException.class, s -> s.replaceAll("file:/.+?\\.fix", "FILE"), message, () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "do put_macro('test')",
+                    text2,
+                    "end",
+                    text1
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("animals");
+                    i.literal("1", "dog");
+                    i.literal("2", "cat");
+                    i.literal("3", "zebra");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldIncludeCallerLocationAndTextForExceptionInIncludedMacro() {
+        final String format = "Error while executing Fix expression (at FILE, line %d): %s";
+
+        final String text1 = "call_macro('test')";
+        final String text2 = "append('animals', ' is cool')";
+        final String message = String.format(format, 2, text1) + " -> " + String.format(format, 2, text2);
+
+        MetafixTestHelpers.assertThrows(FixExecutionException.class, s -> s.replaceAll("file:/.+?\\.fix", "FILE"), message, () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "include('src/test/resources/org/metafacture/metafix/fixes/macro.fix')",
+                    text1
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("animals");
+                    i.literal("1", "dog");
+                    i.literal("2", "cat");
+                    i.literal("3", "zebra");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
     public void reject() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if exists('_metadata.error')",
