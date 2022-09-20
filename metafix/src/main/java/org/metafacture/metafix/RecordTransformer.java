@@ -67,6 +67,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
     private final Metafix metafix;
     private final RecordTransformer parent;
 
+    private String parentExceptionMessage;
     private Supplier<String> currentMessageSupplier;
 
     private enum Vars {
@@ -242,10 +243,10 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
             return e; // TODO: Add nesting information?
         }
         catch (final IllegalStateException | NumberFormatException e) {
-            return new FixExecutionException(currentMessageSupplier.get(), e);
+            return new FixExecutionException(getCurrentExceptionMessage(), e);
         }
         catch (final RuntimeException e) { // checkstyle-disable-line IllegalCatch
-            final MetafactureException exception = new FixProcessException(currentMessageSupplier.get(), e);
+            final MetafactureException exception = new FixProcessException(getCurrentExceptionMessage(), e);
 
             if (metafix.getStrictnessHandlesProcessExceptions()) {
                 return exception;
@@ -256,6 +257,24 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         }
 
         return null;
+    }
+
+    private String getCurrentExceptionMessage() {
+        final StringBuilder sb = new StringBuilder();
+
+        if (parentExceptionMessage != null) {
+            sb.append(parentExceptionMessage);
+            sb.append(" -> ");
+        }
+
+        sb.append(currentMessageSupplier.get());
+
+        return sb.toString();
+    }
+
+    /*package-private*/ void setParentExceptionMessageFrom(final RecordTransformer parentTransformer) {
+        parentExceptionMessage = parentTransformer != null && parentTransformer.currentMessageSupplier != null ?
+            parentTransformer.currentMessageSupplier.get() : null;
     }
 
     private String executionExceptionMessage(final Expression expression) {
