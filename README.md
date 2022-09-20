@@ -200,6 +200,17 @@ Options:
 - `key_column`: Defines the column to be used for keys. Uses zero index. (Default: `0`)
 - `value_column`: Defines the column to be used for values. Uses zero index. (Default: `1`)
 
+##### `put_rdfmap`
+
+Defines an external RDF map for lookup from a file or an HTTP(S) resource.
+As the RDF map is reducing RDF triples to a key/value map it is mandatory to set the target.
+The targeted RDF property can optional be bound by an RDF language tag.
+
+```perl
+put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>")
+put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>, target_language: "<rdfLanguageTag>"")
+```
+
 ##### `put_map`
 
 Defines an internal map for [lookup](#lookup) from key/value pairs.
@@ -608,12 +619,15 @@ lookup("path.to.field", "map-name", print_unknown: "true", destination: "unknown
 
 ##### `lookup_rdf`
 
-Looks up matching values in an RDF resource and replaces the field value with this match. A file as well as an HTTP(S) resource can be used.
+Looks up matching values in an RDF resource and replaces the field value with a match defined by a targeted RDF property. External files or HTTP(S) resources as well as internal RDF maps can be used.
+The targeted RDF property can optional be bound by an RDF language tag.
 
 ```perl
-lookup_rdf("<sourceField>", "<rdfResource>", target: "<rdfProperty>")
-lookup_rdf("<sourceField>", "<rdfResource>", target: "<rdfProperty>", target_language: "<rdfLanguageTag>")
-lookup_rdf("<sourceField>", "<rdfResource>", target: "<rdfProperty>", __default: "NA")
+lookup_rdf("<sourceField>", "<rdfFile>", target: "<rdfProperty>")
+lookup_rdf("<sourceField>", "<rdfHttpUri>", target: "<rdfProperty>")
+lookup_rdf("<sourceField>", "<rdfMapName>", target: "<rdfProperty>")
+lookup_rdf("<sourceField>", "<rdfMapName>", target: "<rdfProperty>", target_language: "<rdfLanguageTag>")
+lookup_rdf("<sourceField>", "<rdfMapName>", target: "<rdfProperty>", __default: "NA")
 ```
 
 ##### `prepend`

@@ -56,30 +56,30 @@ import java.util.NoSuchElementException;
  * @see org.metafacture.metamorph.maps.FileMap
  */
 public final class RdfMap extends AbstractReadOnlyMap<String, String> {
-    private static String targetLanguage = "";
-    private static String target;
-    private static final Logger LOG = LoggerFactory.getLogger(RdfMap.class);
+    public static final String TARGET = "target";
+    public static final String TARGET_LANGUAGE = "target_language";
     private static final int MAX_REDIRECTIONS = 10;
     private static final int MIN_HTTP_STATUS_CODE = 299;
     private static final int MAX_HTTP_STATUS_CODE = 400;
-
+    private static final Logger LOG = LoggerFactory.getLogger(RdfMap.class);
     private Model model;
     private boolean isUninitialized = true;
     private final ArrayList<String> filenames = new ArrayList<>();
     private final Map<String, String> map = new HashMap<>();
+    private String targetLanguage = "";
+    private String target;
 
     /**
      * Creates an instance of {@link RdfMap}.
      */
     public RdfMap() {
         targetLanguage = "";
+        setDefault(Maps.DEFAULT_MAP_KEY);
+
     }
 
     private void init() {
         loadFiles();
-        if (!map.containsKey(Maps.DEFAULT_MAP_KEY)) {
-            setDefault(Maps.DEFAULT_MAP_KEY);
-        }
         if (!target.toLowerCase().startsWith("http")) {
             final String[] nsPrefixAndProperty = target.split(":");
             target = nsPrefixAndProperty.length == 2 ? model.getNsPrefixURI(nsPrefixAndProperty[0]) + nsPrefixAndProperty[1] : nsPrefixAndProperty[0];
@@ -101,7 +101,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
      *
      * @param file the file
      */
-    public void setFile(final String file) {
+    public void setResource(final String file) {
         Collections.addAll(filenames, file);
     }
 
@@ -147,20 +147,20 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
      */
     @Override
     public String get(final Object key) {
-        if (isUninitialized) {
-            init();
-        }
         String ret;
         if (map.containsKey(key.toString())) {
             ret = map.get(key.toString());
         }
         else {
+            if (isUninitialized) {
+                init();
+            }
             final Resource resource = ResourceFactory.createResource(key.toString());
             final Property targetProperty = ResourceFactory.createProperty(target);
             try {
                 //first try to get LITERAL using SUBJECT and PROPERTY
-                if (!RdfMap.targetLanguage.isEmpty()) {
-                    ret = model.getRequiredProperty(resource, targetProperty, RdfMap.targetLanguage).getString();
+                if (!targetLanguage.isEmpty()) {
+                    ret = model.getRequiredProperty(resource, targetProperty, targetLanguage).getString();
                 }
                 else {
                     ret = model.getRequiredProperty(resource, targetProperty).getString();
@@ -174,7 +174,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
                     ret = getLiteralOfPredicateUsingOtherPredicate(key, targetProperty);
                 }
                 else {
-                    LOG.info("Could not lookup:'" + key + "@" + (RdfMap.targetLanguage.isEmpty() ? RdfMap.targetLanguage : "") + " for " + target + "'. Going with default value.");
+                    LOG.info("Could not lookup:'" + key  + (targetLanguage.isEmpty() ? "@" + targetLanguage : "") + " for " + target + "'. Going with default value.");
                 }
             }
             map.put(key.toString(), ret);
@@ -194,7 +194,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
                 final StmtIterator iterProp = resource.listProperties(targetProperty);
                 while (iterProp.hasNext()) {
                     stmt = iterProp.nextStatement();
-                    if (stmt.getLanguage().equals(RdfMap.targetLanguage) && !stmt.getString().equals(key)) {
+                    if (stmt.getLanguage().equals(targetLanguage) && !stmt.getString().equals(key)) {
                         ret = stmt.getString();
                     }
                 }
@@ -210,8 +210,8 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
         while (iter.hasNext()) {
             resource = iter.nextResource();
             if (resource.getProperty(targetProperty).getString().equals(key.toString())) {
-                if (!RdfMap.targetLanguage.isEmpty()) {
-                    if (resource.getProperty(targetProperty).getLanguage().equals(RdfMap.targetLanguage)) {
+                if (!this.targetLanguage.isEmpty()) {
+                    if (resource.getProperty(targetProperty).getLanguage().equals(targetLanguage)) {
                         ret = resource.getURI();
                     }
                 }
@@ -224,6 +224,16 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
     }
 
     /**
+     * Gets the language of the target Property which is queried in the RDF. Valid values are defined by BCP47.
+     * <br>
+     *
+     * @return the targeted language
+     */
+    public String getTargetLanguage() {
+        return targetLanguage;
+    }
+
+    /**
      * Sets the language of the target Property which is queried in the RDF. Valid values are defined by BCP47.
      * <br>
      * Setting the language of the target Property is optional.
@@ -231,7 +241,17 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
      * @param targetLanguage the language of the target Property to be queried
      */
     public void setTargetLanguage(final String targetLanguage) {
-        RdfMap.targetLanguage = targetLanguage;
+        this.targetLanguage = targetLanguage;
+    }
+
+    /**
+     * Gets the target Property which is queried in the RDF. Namespaces are allowed.
+     * <br>
+     *
+     * @return the target Property to be queried
+     */
+    public String getTarget() {
+        return target;
     }
 
     /**
@@ -242,7 +262,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
      * @param target the Property to be queried
      */
     public void setTarget(final String target) {
-        RdfMap.target = target;
+        this.target = target;
     }
 
     /**

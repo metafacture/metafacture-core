@@ -96,13 +96,14 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
     put_rdfmap {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final String fileName = params.get(0);
+            final String resourceName = params.get(0);
             final RdfMap rdf = new RdfMap();
-            rdf.setFile(metafix.resolvePath(fileName));
-            withOption(options, "target", rdf::setTarget);
-            withOption(options, "target_language", rdf::setTargetLanguage);
+            rdf.setResource(metafix.resolvePath(resourceName));
+            withOption(options, RdfMap.TARGET, rdf::setTarget);
+            withOption(options, RdfMap.TARGET_LANGUAGE, rdf::setTargetLanguage);
             withOption(options, Maps.DEFAULT_MAP_KEY, rdf::setDefault);
-            metafix.putMap(params.size() > 1 ? params.get(1) : fileName, rdf);
+            final String mapName = (params.size() > 1 ? params.get(1) : params.get(0)) + options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "");
+            metafix.putMap(mapName, rdf);
         }
     },
     put_var {
@@ -680,15 +681,20 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
             map = options;
         }
         else {
-            final String mapName = params.get(1);
-
+            final String mapName;
+            if (kindOfMap.equals(KIND_OF_FILEMAP)) {
+                mapName = params.get(1);
+            }
+            else {
+                mapName = params.get(1) + options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "");
+            }
             if (!metafix.getMapNames().contains(mapName)) {
                 if (mapName.contains(".") || mapName.contains(File.separator)) {
                     if (kindOfMap.equals(KIND_OF_FILEMAP)) {
                         put_filemap.apply(metafix, record, Arrays.asList(mapName), options);
                     }
                     if (kindOfMap.equals(KIND_OF_RDFMAP)) {
-                        put_rdfmap.apply(metafix, record, Arrays.asList(mapName), options);
+                        put_rdfmap.apply(metafix, record, Arrays.asList(params.get(1)), options);
                     }
                 }
                 else {

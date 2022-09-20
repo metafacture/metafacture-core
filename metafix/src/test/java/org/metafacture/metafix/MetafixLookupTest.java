@@ -959,6 +959,30 @@ public class MetafixLookupTest {
     }
 
     @Test
+    public void shouldLookupInSeparateExternalRdfFileMapWithName() {
+        assertRdfMap(
+            "put_rdfmap('" + RDF_MAP + "', 'testMapSkosNotation', target: 'skos:notation')",
+            "lookup_rdf('notation', 'testMapSkosNotation', target: 'skos:notation')"
+        );
+    }
+
+    @Test
+    public void shouldLookupInSeparateExternalRdfFileMapWithDifferentTargets() {
+        assertRdfMapWithDifferentTargets(
+            "put_rdfmap('" + RDF_MAP + "', 'testRdfMapSkosNotation', target: 'skos:notation')",
+            "put_rdfmap('" + RDF_MAP + "', 'testRdfMapCreated', target: 'created')",
+            "lookup_rdf('notation', 'testRdfMapSkosNotation', target: 'skos:notation')",
+            "lookup_rdf('created', 'testRdfMapCreated', target: 'created')");
+    }
+
+    @Test
+    public void shouldLookupInExternalRdfWithDifferentTargets() {
+        assertRdfMapWithDifferentTargets(
+            "lookup_rdf('notation', '" + RDF_MAP + "', target: 'skos:notation')",
+            "lookup_rdf('created', '" + RDF_MAP + "', target: 'created')");
+    }
+
+    @Test
     public void shouldLookupInExternalRdfUseDefinedDefaultValueIfNotFound() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "lookup_rdf('created', '" + RDF_MAP + "', target: 'created', __default: '0000-01-01')"
@@ -996,19 +1020,8 @@ public class MetafixLookupTest {
 
     @Test
     public void shouldLookupInExternalRdfMapGetObjectOfSubjectWithTargetedPredicate() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "lookup_rdf('notation', '" + RDF_MAP + "', target: 'skos:notation')"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.literal("notation", "https://w3id.org/kim/hochschulfaechersystematik/n4");
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().literal("notation", "4");
-                o.get().endRecord();
-            }
+        assertRdfMap(
+            "lookup_rdf('notation', '" + RDF_MAP + "', target: 'skos:notation')"
         );
     }
 
@@ -1109,6 +1122,38 @@ public class MetafixLookupTest {
                 o.get().literal("title", "Alohaeha");
                 o.get().literal("title", "Moin zäme");
                 o.get().literal("title", "Tach");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    private void assertRdfMap(final String... fixDef) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(fixDef),
+            i -> {
+                i.startRecord("1");
+                i.literal("notation", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("notation", "4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    private void assertRdfMapWithDifferentTargets(final String... fixDef) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(fixDef),
+            i -> {
+                i.startRecord("1");
+                i.literal("notation", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                i.literal("created", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("notation", "4");
+                o.get().literal("created", "__default");
                 o.get().endRecord();
             }
         );
