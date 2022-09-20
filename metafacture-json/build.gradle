@@ -22,6 +22,7 @@ dependencies {
   implementation 'com.fasterxml.jackson.core:jackson-core:2.13.0'
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
   implementation 'com.jayway.jsonpath:json-path:2.6.0'
+  implementation 'com.github.erosb:everit-json-schema:1.14.1'
   testImplementation 'junit:junit:4.12'
   testImplementation 'org.mockito:mockito-core:2.5.5'
   testRuntimeOnly 'org.slf4j:slf4j-simple:1.7.21'
