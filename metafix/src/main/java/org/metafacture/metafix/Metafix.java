@@ -174,7 +174,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         final RecordTransformer macro = macros.get(name);
 
         if (macro != null) {
-            macro.setParentExceptionMessage(recordTransformer);
+            macro.setParentExceptionMessageFrom(recordTransformer);
         }
 
         return macro;

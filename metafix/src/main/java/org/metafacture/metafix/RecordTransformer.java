@@ -272,7 +272,7 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         return sb.toString();
     }
 
-    /*package-private*/ void setParentExceptionMessage(final RecordTransformer parentTransformer) {
+    /*package-private*/ void setParentExceptionMessageFrom(final RecordTransformer parentTransformer) {
         parentExceptionMessage = parentTransformer != null && parentTransformer.currentMessageSupplier != null ?
             parentTransformer.currentMessageSupplier.get() : null;
     }
