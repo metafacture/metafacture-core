@@ -23,7 +23,6 @@ import org.metafacture.metamorph.functions.ISBN;
 import org.metafacture.metamorph.functions.Timestamp;
 import org.metafacture.metamorph.maps.FileMap;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,6 +30,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
@@ -96,14 +96,19 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
     put_rdfmap {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final String resourceName = params.get(0);
-            final RdfMap rdf = new RdfMap();
-            rdf.setResource(metafix.resolvePath(resourceName));
-            withOption(options, RdfMap.TARGET, rdf::setTarget);
-            withOption(options, RdfMap.TARGET_LANGUAGE, rdf::setTargetLanguage);
-            withOption(options, Maps.DEFAULT_MAP_KEY, rdf::setDefault);
-            final String mapName = (params.size() > 1 ? params.get(1) : params.get(0)) + options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "");
-            metafix.putMap(mapName, rdf);
+            final String rdfMapName = params.size() == 1 ? params.get(0) : params.get(1) + options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "");
+            final String replaceTargets = options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "");
+            final String resourceName = Optional.ofNullable(params.get(0))
+                .map(str -> str.replaceAll(replaceTargets + "$", ""))
+                .orElse(params.get(0));
+            final RdfMap rdfMap = new RdfMap();
+
+            rdfMap.setResource(metafix.resolvePath(resourceName));
+            withOption(options, RdfMap.TARGET, rdfMap::setTarget);
+            withOption(options, RdfMap.TARGET_LANGUAGE, rdfMap::setTargetLanguage);
+            withOption(options, Maps.DEFAULT_MAP_KEY, rdfMap::setDefault);
+
+            metafix.putMap(rdfMapName, rdfMap);
         }
     },
     put_var {
@@ -484,6 +489,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
 
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+<<<<<<< HEAD
             final Map<String, String> map;
 
             if (params.size() <= 1) {
@@ -534,11 +540,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
     lookup_rdf {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final Map<String, String> map = getMap(metafix, record, params, options, KIND_OF_RDFMAP);
-            record.transform(params.get(0), oldValue -> {
-                final String newValue = map.getOrDefault(oldValue, map.get(Maps.DEFAULT_MAP_KEY));
-                return newValue != null ? newValue : getBoolean(options, "delete") ? null : oldValue;
-            });
+            lookup(metafix, record, params, options, put_rdfmap);
         }
     },
     prepend {
@@ -663,8 +665,6 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
         }
     };
 
-    public static final String KIND_OF_RDFMAP = "rdfmap";
-    public static final String KIND_OF_FILEMAP = "filemap";
     private static final Pattern NAMED_GROUP_PATTERN = Pattern.compile("\\(\\?<(.+?)>");
 
     private static final String FILEMAP_SEPARATOR_OPTION = "sep_char";
@@ -674,35 +674,5 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
 
     private static final Random RANDOM = new Random();
 
-    private static Map<String, String> getMap(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final String kindOfMap) {
-        final Map<String, String> map;
-        if (params.size() <= 1) {
-            map = options;
-        }
-        else {
-            final String mapName;
-            if (kindOfMap.equals(KIND_OF_FILEMAP)) {
-                mapName = params.get(1);
-            }
-            else {
-                mapName = params.get(1) + options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "");
-            }
-            if (!metafix.getMapNames().contains(mapName)) {
-                if (mapName.contains(".") || mapName.contains(File.separator)) {
-                    if (kindOfMap.equals(KIND_OF_FILEMAP)) {
-                        put_filemap.apply(metafix, record, Arrays.asList(mapName), options);
-                    }
-                    if (kindOfMap.equals(KIND_OF_RDFMAP)) {
-                        put_rdfmap.apply(metafix, record, Arrays.asList(params.get(1)), options);
-                    }
-                }
-                else {
-                    // Probably an unknown internal map? Log a warning?
-                }
-            }
-            map = metafix.getMap(mapName);
-        }
-        return map;
-    }
 
 }
