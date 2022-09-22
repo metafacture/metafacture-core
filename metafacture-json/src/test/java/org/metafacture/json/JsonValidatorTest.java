@@ -87,7 +87,7 @@ public final class JsonValidatorTest {
 
     @Test(expected = MetafactureException.class)
     public void testShouldCatchMissingSchemaFile() {
-        new JsonValidator("").process("");
+        new JsonValidator("").process("{}");
     }
 
     @Test(expected = MetafactureException.class)

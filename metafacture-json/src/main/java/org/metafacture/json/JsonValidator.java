@@ -91,13 +91,17 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
 
     @Override
     public void process(final String json) {
-        JSONObject object = null;
+        final JSONObject object;
         try {
             object = new JSONObject(json); // throws JSONException on syntax error
+            validate(json, object);
         }
         catch (final JSONException e) {
             handleInvalid(json, null, e.getMessage());
         }
+    }
+
+    private void validate(final String json, final JSONObject object) {
         try {
             initSchema();
             schema.validate(object); // throws ValidationException if invalid
