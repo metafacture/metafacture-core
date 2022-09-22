@@ -45,7 +45,7 @@ import java.io.InputStream;
  */
 @Description("Validate JSON against a given schema, send only valid input to the receiver. Pass the schema location to validate against. " +
         "Set `schemaRoot` for resolving sub-schemas referenced in `$id` or `$ref` (defaults to the classpath root: `/`). " +
-        "Write valid and/or invalid output to locations specified with `writeValid` and `writeInvalid`." +
+        "Write valid and/or invalid output to locations specified with `writeValid` and `writeInvalid`. " +
         "Set the JSON key for the record ID value with `idKey` (for logging output, defaults to `id`).")
 @In(String.class)
 @Out(String.class)
@@ -101,10 +101,8 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
 
     @Override
     public void process(final String json) {
-        final JSONObject object;
         try {
-            object = new JSONObject(json); // throws JSONException on syntax error
-            validate(json, object);
+            validate(json, new JSONObject(json) /* throws JSONException on syntax error */);
         }
         catch (final JSONException e) {
             handleInvalid(json, null, e.getMessage());
