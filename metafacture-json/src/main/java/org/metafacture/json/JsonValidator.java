@@ -45,7 +45,8 @@ import java.io.InputStream;
  */
 @Description("Validate JSON against a given schema, send only valid input to the receiver. Pass the schema location to validate against. " +
         "Set 'schemaRoot' for resolving sub-schemas referenced in '$id' or '$ref' (defaults to the classpath root: '/'). " +
-        "Write valid and/or invalid output to locations specified with 'writeValid' and 'writeInvalid'.")
+        "Write valid and/or invalid output to locations specified with 'writeValid' and 'writeInvalid'." +
+        "Set the JSON key for the record ID value with 'idKey' (for logging output, defaults to 'id').")
 @In(String.class)
 @Out(String.class)
 @FluxCommand("validate-json")
@@ -53,6 +54,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
 
     private static final Logger LOG = LoggerFactory.getLogger(JsonValidator.class);
     private static final String DEFAULT_SCHEMA_ROOT = "/";
+    private static final String DEFAULT_ID_KEY = "id";
     private String schemaUrl;
     private Schema schema;
     private long fail;
@@ -60,6 +62,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
     private FileWriter writeInvalid;
     private FileWriter writeValid;
     private String schemaRoot = DEFAULT_SCHEMA_ROOT;
+    private String idKey = DEFAULT_ID_KEY;
 
     /**
      * @param url The URL of the schema to validate against.
@@ -87,6 +90,13 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
      */
     public void setWriteInvalid(final String writeInvalid) {
         this.writeInvalid = fileWriter(writeInvalid);
+    }
+
+    /**
+     * @param idKey The JSON key for the record ID value.
+     */
+    public void setIdKey(final String idKey) {
+        this.idKey = idKey;
     }
 
     @Override
@@ -149,7 +159,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
 
     private void handleInvalid(final String json, final JSONObject object,
             final String errorMessage) {
-        LOG.info("Invalid JSON: {} in {}", errorMessage, object != null ? object.opt("id") : json);
+        LOG.info("Invalid JSON: {} in {}", errorMessage, object != null ? object.opt(idKey) : json);
         ++fail;
         write(json, writeInvalid);
     }
