@@ -232,7 +232,7 @@ The targeted RDF property can optionally be bound by an RDF language tag.
 
 ```perl
 put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>")
-put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>, target_language: "<rdfLanguageTag>")
+put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>", target_language: "<rdfLanguageTag>")
 ```
 
 ##### `put_var`
@@ -632,7 +632,7 @@ lookup("path.to.field", "map-name", print_unknown: "true", destination: "unknown
 ##### `lookup_rdf`
 
 Looks up matching values in an RDF resource and replaces the field value with a match defined by a targeted RDF property. External files or HTTP(S) resources as well as internal RDF maps can be used.
-The targeted RDF property can optionalyl be bound by an RDF language tag.
+The targeted RDF property can optionally be bound by an RDF language tag.
 
 ```perl
 lookup_rdf("<sourceField>", "<rdfFile>", target: "<rdfProperty>")
