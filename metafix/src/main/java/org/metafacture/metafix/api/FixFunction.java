@@ -111,24 +111,24 @@ public interface FixFunction {
         ));
     }
 
-    default void lookup(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final FixFunction kindOfMap) {
-        final Map<String, String> map = getMap(metafix, record, params, options, kindOfMap);
+    default void lookup(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final FixFunction mapFunction) {
+        final Map<String, String> map = getMap(metafix, record, params, options, mapFunction);
         record.transform(params.get(0), oldValue -> {
             final String newValue = map.getOrDefault(oldValue, map.get(Maps.DEFAULT_MAP_KEY));
             return newValue != null ? newValue : getBoolean(options, "delete") ? null : oldValue;
         });
     }
 
-    static Map<String, String> getMap(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final FixFunction kindOfMap) {
+    static Map<String, String> getMap(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final FixFunction mapFunction) {
         final Map<String, String> map;
         if (params.size() <= 1) {
             map = options;
         }
         else {
-            final String mapName = kindOfMap.toString().equals("put_rdfmap") ? (params.size() > 1 ? params.get(1) : params.get(0)) + options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "") : params.get(1);
+            final String mapName = mapFunction.toString().equals("put_rdfmap") ? (params.size() > 1 ? params.get(1) : params.get(0)) + options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "") : params.get(1);
             if (!metafix.getMapNames().contains(mapName)) {
                 if (mapName.contains(".") || mapName.contains(File.separator)) {
-                    kindOfMap.apply(metafix, record, Arrays.asList(mapName), options);
+                    mapFunction.apply(metafix, record, Arrays.asList(mapName), options);
                 }
                 else {
                     // Probably an unknown internal map? Log a warning?

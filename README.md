@@ -190,6 +190,7 @@ The separator (`sep_char`) will vary depending on the source file, e.g.:
 | CSV  | `,` or `;` |
 | TSV  | `\t`       |
 
+<<<<<<< HEAD
 Options:
 
 - `allow_empty_values`: Sets whether to allow empty values in the filemap or to ignore these entries. (Default: `false`)
@@ -221,6 +222,17 @@ put_map("<mapName>",
   "parrot": "bird",
   "shark": "fish"
 )
+```
+
+##### `put_rdfmap`
+
+Defines an external RDF map for lookup from a file or an HTTP(S) resource.
+As the RDF map is reducing RDF triples to a key/value map it is mandatory to set the target.
+The targeted RDF property can optionally be bound by an RDF language tag.
+
+```perl
+put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>")
+put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>, target_language: "<rdfLanguageTag>")
 ```
 
 ##### `put_var`
@@ -620,7 +632,7 @@ lookup("path.to.field", "map-name", print_unknown: "true", destination: "unknown
 ##### `lookup_rdf`
 
 Looks up matching values in an RDF resource and replaces the field value with a match defined by a targeted RDF property. External files or HTTP(S) resources as well as internal RDF maps can be used.
-The targeted RDF property can optional be bound by an RDF language tag.
+The targeted RDF property can optionalyl be bound by an RDF language tag.
 
 ```perl
 lookup_rdf("<sourceField>", "<rdfFile>", target: "<rdfProperty>")
