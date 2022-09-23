@@ -2018,6 +2018,29 @@ public class MetafixMethodTest {
     }
 
     @Test
+    // See https://github.com/metafacture/metafacture-fix/issues/255
+    public void shouldFailToReplaceAllInRepeatedSubfieldOfObjectWithAsterisk() {
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Can't find: 2 in: null", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "replace_all('predecessor[].*.label', 'Vorg. ---> ', '')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("predecessor[]");
+                    i.startEntity("1");
+                    i.literal("label", "Früher u.d.T.");
+                    i.literal("label", "Gewaltprävention in Schule und Jugendhilfe");
+                    i.endEntity();
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
     public void shouldNotInsertOptionalArraySubFieldWithAsteriskInReplaceAll() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "replace_all('coll[].*.b', 'x', 'y')"
