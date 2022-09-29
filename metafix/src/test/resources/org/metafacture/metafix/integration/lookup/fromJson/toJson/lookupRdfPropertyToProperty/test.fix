@@ -1,0 +1,1 @@
+lookup_rdf("a", "./hcrt.ttl", target: "http://www.w3.org/2004/02/skos/core#prefLabel", target_language: "en")

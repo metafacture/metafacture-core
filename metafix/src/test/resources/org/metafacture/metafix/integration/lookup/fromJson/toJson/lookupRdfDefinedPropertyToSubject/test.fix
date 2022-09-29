@@ -1,0 +1,4 @@
+lookup_rdf("a", "./hcrt.ttl")
+# Cant define specific lookup-match fields, would expect something like this:
+# lookup_rdf("a", "./hcrt.ttl", match="http://www.w3.org/2004/02/skos/core#prefLabel", match_language: "de")
+
