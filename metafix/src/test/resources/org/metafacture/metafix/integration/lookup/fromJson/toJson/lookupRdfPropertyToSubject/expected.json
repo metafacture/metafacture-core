@@ -1,12 +1,12 @@
 {
-  "name": "Jake",
-  "a": "https://w3id.org/kim/hcrt/application"
+  "name" : "Jake",
+  "a" : "https://w3id.org/kim/hcrt/application"
 }
 {
-  "name": "Blacky",
-  "a": "https://w3id.org/kim/hcrt/index"
+  "name" : "Blacky",
+  "a" : "https://w3id.org/kim/hcrt/index"
 }
 {
-  "name": "Noone",
-  "a": "cat"
+  "name" : "Noone",
+  "a" : "cat"
 }

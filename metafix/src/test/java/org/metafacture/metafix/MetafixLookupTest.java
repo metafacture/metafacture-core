@@ -38,6 +38,8 @@ public class MetafixLookupTest {
 
     private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
     private static final String RDF_MAP = "src/test/resources/org/metafacture/metafix/maps/test.ttl";
+
+    private static final String HCRT_RDF_MAP = "src/test/resources/org/metafacture/metafix/maps/hcrt.ttl";
     private static final String RDF_URL = "http://purl.org/lobid/rpb";
     private static final String TSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.tsv";
 
@@ -970,7 +972,7 @@ public class MetafixLookupTest {
     public void shouldLookupInSeparateExternalRdfFileMapWithDifferentTargets() {
         assertRdfMapWithDifferentTargets(
             "put_rdfmap('" + RDF_MAP + "', 'testRdfMapSkosNotation', target: 'skos:notation')",
-            "put_rdfmap('" + RDF_MAP + "', 'testRdfMapCreated', target: 'created')",
+            "put_rdfmap('" + RDF_MAP + "', 'testRdfMapCreated', target: 'created', __default: '__default')",
             "lookup_rdf('notation', 'testRdfMapSkosNotation', target: 'skos:notation')",
             "lookup_rdf('created', 'testRdfMapCreated', target: 'created')");
     }
@@ -979,7 +981,7 @@ public class MetafixLookupTest {
     public void shouldLookupInExternalRdfWithDifferentTargets() {
         assertRdfMapWithDifferentTargets(
             "lookup_rdf('notation', '" + RDF_MAP + "', target: 'skos:notation')",
-            "lookup_rdf('created', '" + RDF_MAP + "', target: 'created')");
+            "lookup_rdf('created', '" + RDF_MAP + "', target: 'created', __default: '__default')");
     }
 
     @Test
@@ -1003,7 +1005,7 @@ public class MetafixLookupTest {
     @Test
     public void shouldLookupInExternalRdfUseDefaultValueIfNotFound() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "lookup_rdf('created', '" + RDF_MAP + "', target: 'created')"
+                "lookup_rdf('created', '" + RDF_MAP + "', target: 'created', __default: '__default')"
             ),
             i -> {
                 i.startRecord("1");
@@ -1076,6 +1078,70 @@ public class MetafixLookupTest {
                 o.get().startRecord("1");
                 o.get().literal("prefLabel", "Mathematics, Natural Science");
                 o.get().literal("id", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // Scenario lookupRdfPropertyToProperty
+    public void shouldLookupInExternalRdfMapGetPropertyOfSpecificLanguageWithTargetedPredicate() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup_rdf('a', '" + HCRT_RDF_MAP + "', target: 'skos:prefLabel', target_language: 'en')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("a", "Softwareanwendung");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("a", "Software Application");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // Scenario lookupRdfPropertyToSubject
+    public void shouldLookupInExternalRdfMapGetSubjectOfPropertyWithTargetedPredicate() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup_rdf('a', '" + HCRT_RDF_MAP + "', target: 'skos:prefLabel')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("a", "Softwareanwendung");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("a", "https://w3id.org/kim/hcrt/application");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void lookupRdfDefinedPropertyToSubjectNonDefault() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup_rdf('a', '" + HCRT_RDF_MAP + "', target: 'skos:prefLabel', target_language: 'de')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Jake");
+                i.literal("a", "Softwareanwendung");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("name", "Noone");
+                i.literal("a", "cat");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Jake");
+                o.get().literal("a", "https://w3id.org/kim/hcrt/application");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("name", "Noone");
+                o.get().literal("a", "cat");
                 o.get().endRecord();
             }
         );

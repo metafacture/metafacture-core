@@ -1,12 +1,12 @@
 {
-  "name": "Jake",
-  "a": "Software Application"
+  "name" : "Jake",
+  "a" : "Software Application"
 }
 {
-  "name": "Blacky",
-  "a": "Reference Work"
+  "name" : "Blacky",
+  "a" : "Reference Work"
 }
 {
-  "name": "Noone",
-  "a": "cat"
+  "name" : "Noone",
+  "a" : "cat"
 }

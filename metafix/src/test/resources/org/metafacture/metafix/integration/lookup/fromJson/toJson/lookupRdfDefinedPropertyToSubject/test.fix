@@ -1,4 +1,4 @@
-lookup_rdf("a", "./hcrt.ttl")
+lookup_rdf('a', '../../../../../maps/hcrt.ttl', target: 'http://www.w3.org/2004/02/skos/core#prefLabel', target_language: 'de')
 # Cant define specific lookup-match fields, would expect something like this:
 # lookup_rdf("a", "./hcrt.ttl", match="http://www.w3.org/2004/02/skos/core#prefLabel", match_language: "de")
 

@@ -1,1 +1,1 @@
-lookup_rdf("a", "./hcrt.ttl", target: "skos:Concept")
+lookup_rdf("a", "../../../../../maps/hcrt.ttl", target: "skos:prefLabel")
