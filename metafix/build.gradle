@@ -13,6 +13,7 @@ dependencies {
   implementation "com.fasterxml.jackson.core:jackson-core:${versions.jackson}"
   implementation "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}"
   implementation "com.google.guava:guava:${versions.guava}"
+  implementation "org.eclipse.emf:org.eclipse.emf.ecore:${versions.xtext}" // Workaround for hbz/lobid-resources#1462
   implementation "org.eclipse.xtext:org.eclipse.xtext.xbase:${versions.xtext}"
   implementation "org.eclipse.xtext:org.eclipse.xtext:${versions.xtext}"
   implementation "org.slf4j:slf4j-api:${versions.slf4j}"
