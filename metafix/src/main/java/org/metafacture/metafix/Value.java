@@ -497,14 +497,18 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
 
         // NOTE: Keep in sync with `WildcardTrie`/`SimpleRegexTrie` implementation in metafacture-core.
         private static final Pattern ALTERNATION_PATTERN = Pattern.compile(WildcardTrie.OR_STRING, Pattern.LITERAL);
-        private static final Matcher PATTERN_MATCHER = Pattern.compile("[*?]|\\[[^\\]]").matcher("");
+        private static final ThreadLocal<Matcher> PATTERN_MATCHER = ThreadLocal.withInitial(() -> Pattern.compile("[*?]|\\[[^\\]]").matcher(""));
 
-        private static final Map<String, String> PREFIX_CACHE = new HashMap<>();
+        private static final ThreadLocal<Map<String, String>> PREFIX_CACHE = ThreadLocal.withInitial(HashMap::new);
 
-        private static final Map<String, Map<String, Boolean>> TRIE_CACHE = new HashMap<>();
-        private static final SimpleRegexTrie<String> TRIE = new SimpleRegexTrie<>();
+        private static final ThreadLocal<Map<String, Map<String, Boolean>>> TRIE_CACHE = ThreadLocal.withInitial(HashMap::new);
+        private static final ThreadLocal<SimpleRegexTrie<String>> TRIE = ThreadLocal.withInitial(SimpleRegexTrie::new);
 
+        private final Map<String, Map<String, Boolean>> trieCache = TRIE_CACHE.get();
+        private final Map<String, String> prefixCache = PREFIX_CACHE.get();
         private final Map<String, Value> map = new LinkedHashMap<>();
+        private final Matcher patternMatcher = PATTERN_MATCHER.get();
+        private final SimpleRegexTrie<String> trie = TRIE.get();
 
         /**
          * Creates an empty instance of {@link Hash}.
@@ -782,28 +786,28 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         }
 
         private void findFields(final String pattern, final Set<String> fieldSet) {
-            if (!PREFIX_CACHE.containsKey(pattern)) {
-                final Matcher patternMatcher = PATTERN_MATCHER.reset(pattern);
+            if (!prefixCache.containsKey(pattern)) {
+                final Matcher matcher = patternMatcher.reset(pattern);
 
-                if (patternMatcher.find()) {
-                    TRIE.put(pattern, pattern);
-                    TRIE_CACHE.put(pattern, new HashMap<>());
+                if (matcher.find()) {
+                    trie.put(pattern, pattern);
+                    trieCache.put(pattern, new HashMap<>());
 
-                    PREFIX_CACHE.put(pattern, pattern.substring(0, patternMatcher.start()));
+                    prefixCache.put(pattern, pattern.substring(0, matcher.start()));
                 }
                 else {
-                    PREFIX_CACHE.put(pattern, null);
+                    prefixCache.put(pattern, null);
                 }
             }
 
-            final String prefix = PREFIX_CACHE.get(pattern);
+            final String prefix = prefixCache.get(pattern);
 
             if (prefix != null) {
-                final Map<String, Boolean> fieldCache = TRIE_CACHE.get(pattern);
+                final Map<String, Boolean> fieldCache = trieCache.get(pattern);
 
                 for (final String field : map.keySet()) {
                     if (!fieldCache.containsKey(field)) {
-                        final boolean matches = field.startsWith(prefix) && TRIE.get(field).contains(pattern);
+                        final boolean matches = field.startsWith(prefix) && trie.get(field).contains(pattern);
                         fieldCache.put(field, matches);
 
                         if (matches) {
