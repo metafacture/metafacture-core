@@ -43,14 +43,19 @@ import java.util.regex.Pattern;
  *
  * The default {@link #setEncoding encoding} is UTF-8.
  * The default {@link #setSeparator separator} is {@code \t}.
+ * The default {@link #setKeyColumn keyColumn} is {@code 0}.
+ * The default {@link #setValueColumn valueColumn} is {@code 1}.
  *
- * By setting {@link #allowEmptyValues} to {@code true} the values in the
- * {@link Map} can be empty thus enabling e.g.
+ * <p>By setting {@link #setAllowEmptyValues allowEmptyValues} to {@code true},
+ * the values in the {@link Map} can be empty; thus enabling e.g.
  * {@link org.metafacture.metamorph.functions.SetReplace} to remove matching
  * keys.
  *
- * <strong>Important:</strong> All other lines that are not split in two parts
- * by the separator are ignored!
+ * <p>By setting {@link #setAllowTrailingColumns allowTrailingColumns} to
+ * {@code true}, the number of columns is not checked.
+ *
+ * <p><strong>Important:</strong> Otherwise, all lines that are not split in
+ * two parts by the separator are ignored!
  *
  * @author Markus Michael Geipel
  */
@@ -59,10 +64,13 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
     private final FileOpener fileOpener = new FileOpener();
     private final Map<String, String> map = new HashMap<>();
 
+    private ArrayList<String> filenames = new ArrayList<>();
     private Pattern split = Pattern.compile("\t", Pattern.LITERAL);
     private boolean allowEmptyValues;
+    private boolean allowTrailingColumns;
     private boolean isUninitialized = true;
-    private ArrayList<String> filenames = new ArrayList<>();
+    private int keyColumn;
+    private int valueColumn = 1;
 
     /**
      * Creates an instance of {@link FileMap}.
@@ -79,12 +87,24 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
      * Sets whether to allow empty values in the {@link Map} or ignore these
      * entries.
      *
-     * <strong>Default value: false </strong>
+     * <strong>Default value: false</strong>
      *
      * @param allowEmptyValues true if empty values in the Map are allowed
      */
     public void setAllowEmptyValues(final boolean allowEmptyValues) {
         this.allowEmptyValues = allowEmptyValues;
+    }
+
+    /**
+     * Sets whether to allow trailing columns in the {@link Map} or ignore these
+     * entries.
+     *
+     * <strong>Default value: false</strong>
+     *
+     * @param allowTrailingColumns true if trailing columns in the Map are allowed
+     */
+    public void setAllowTrailingColumns(final boolean allowTrailingColumns) {
+        this.allowTrailingColumns = allowTrailingColumns;
     }
 
     /**
@@ -141,14 +161,18 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
                 Reader reader = fileOpener.open(stream);
                 BufferedReader br = new BufferedReader(reader)
         ) {
+            final int minColumns = Math.max(keyColumn, valueColumn) + 1;
+            final int maxColumns = allowTrailingColumns ? Integer.MAX_VALUE : minColumns;
+
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.isEmpty()) {
                     continue;
                 }
+
                 final String[] parts = allowEmptyValues ? split.split(line, -1) : split.split(line);
-                if (parts.length == 2) {
-                    map.put(parts[0], parts[1]);
+                if (parts.length >= minColumns && parts.length <= maxColumns) {
+                    map.put(parts[keyColumn], parts[valueColumn]);
                 }
             }
         }
@@ -203,6 +227,28 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
      */
     public void setSeparator(final String delimiter) {
         split = Pattern.compile(delimiter, Pattern.LITERAL);
+    }
+
+    /**
+     * Sets the key column (0-based).
+     *
+     * <strong>Default value: {@code 0}</strong>
+     *
+     * @param keyColumn the key column
+     */
+    public void setKeyColumn(final int keyColumn) {
+        this.keyColumn = keyColumn;
+    }
+
+    /**
+     * Sets the value column (0-based).
+     *
+     * <strong>Default value: {@code 1}</strong>
+     *
+     * @param valueColumn the value column
+     */
+    public void setValueColumn(final int valueColumn) {
+        this.valueColumn = valueColumn;
     }
 
     @Override
