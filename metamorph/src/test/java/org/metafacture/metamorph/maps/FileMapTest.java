@@ -271,10 +271,20 @@ public final class FileMapTest {
     }
 
     @Test
-    public void shouldLoadFileWithTrailingColumns() {
+    public void shouldLoadFileWithExpectedColumns() {
+        assertMap(24, i -> {
+            i.setSeparator(" ");
+            i.setExpectedColumns(3);
+
+            Assert.assertEquals("New", i.get("pp\tPapua"));
+        });
+    }
+
+    @Test
+    public void shouldLoadFileWithArbitraryExpectedColumns() {
         assertMap(149, i -> {
             i.setSeparator(" ");
-            i.setAllowTrailingColumns(true);
+            i.setExpectedColumns(-1);
 
             Assert.assertEquals("New", i.get("pp\tPapua"));
         });
@@ -291,6 +301,20 @@ public final class FileMapTest {
     public void shouldNotLoadFileWithOutOfRangeValueColumn() {
         assertMap(0, i -> {
             i.setValueColumn(2);
+        });
+    }
+
+    @Test
+    public void shouldNotLoadFileWithTooFewExpectedColumns() {
+        assertMap(0, i -> {
+            i.setExpectedColumns(1);
+        });
+    }
+
+    @Test
+    public void shouldNotLoadFileWithTooManyExpectedColumns() {
+        assertMap(0, i -> {
+            i.setExpectedColumns(99);
         });
     }
 

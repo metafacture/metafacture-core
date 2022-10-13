@@ -51,11 +51,11 @@ import java.util.regex.Pattern;
  * {@link org.metafacture.metamorph.functions.SetReplace} to remove matching
  * keys.
  *
- * <p>By setting {@link #setAllowTrailingColumns allowTrailingColumns} to
- * {@code true}, the number of columns is not checked.
+ * <p>By setting {@link #setExpectedColumns expectedColumns} to
+ * {@code -1}, the number of columns is not checked.
  *
- * <p><strong>Important:</strong> Otherwise, all lines that are not split in
- * two parts by the separator are ignored!
+ * <p><strong>Important:</strong> Otherwise, all lines that are not split into
+ * the expected number of parts by the separator are ignored!
  *
  * @author Markus Michael Geipel
  */
@@ -67,8 +67,8 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
     private ArrayList<String> filenames = new ArrayList<>();
     private Pattern split = Pattern.compile("\t", Pattern.LITERAL);
     private boolean allowEmptyValues;
-    private boolean allowTrailingColumns;
     private boolean isUninitialized = true;
+    private int expectedColumns;
     private int keyColumn;
     private int valueColumn = 1;
 
@@ -96,15 +96,17 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
     }
 
     /**
-     * Sets whether to allow trailing columns in the {@link Map} or ignore these
-     * entries.
+     * Sets number of expected columns; lines with different number of columns
+     * are ignored. Set to {@code -1} to disable the check and allow arbitrary
+     * number of columns.
      *
-     * <strong>Default value: false</strong>
+     * <strong>Default value: calculated from {@link #setKeyColumn key} and
+     * {@link #setValueColumn value} columns</strong>
      *
-     * @param allowTrailingColumns true if trailing columns in the Map are allowed
+     * @param expectedColumns number of expected columns
      */
-    public void setAllowTrailingColumns(final boolean allowTrailingColumns) {
-        this.allowTrailingColumns = allowTrailingColumns;
+    public void setExpectedColumns(final int expectedColumns) {
+        this.expectedColumns = expectedColumns;
     }
 
     /**
@@ -162,7 +164,7 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
                 BufferedReader br = new BufferedReader(reader)
         ) {
             final int minColumns = Math.max(keyColumn, valueColumn) + 1;
-            final int maxColumns = allowTrailingColumns ? Integer.MAX_VALUE : minColumns;
+            final int expColumns = expectedColumns != 0 ? expectedColumns : minColumns;
 
             String line;
             while ((line = br.readLine()) != null) {
@@ -171,7 +173,11 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
                 }
 
                 final String[] parts = allowEmptyValues ? split.split(line, -1) : split.split(line);
-                if (parts.length >= minColumns && parts.length <= maxColumns) {
+                if (parts.length < minColumns) {
+                    continue;
+                }
+
+                if (expColumns < 0 || parts.length == expColumns) {
                     map.put(parts[keyColumn], parts[valueColumn]);
                 }
             }
