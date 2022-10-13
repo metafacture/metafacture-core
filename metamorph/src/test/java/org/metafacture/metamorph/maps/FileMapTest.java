@@ -18,12 +18,15 @@ package org.metafacture.metamorph.maps;
 
 import static org.metafacture.metamorph.TestHelpers.assertMorph;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
+import java.util.function.Consumer;
 
 /**
  * Tests for class {@link FileMap}.
@@ -39,6 +42,8 @@ public final class FileMapTest {
     @Mock
     private StreamReceiver receiver;
 
+    private static String MAPS = "org/metafacture/metamorph/maps/";
+
     private static String MORPH =
         "<rules>" +
         "  <data source='1'>" +
@@ -46,7 +51,7 @@ public final class FileMapTest {
         "  </data>" +
         "</rules>" +
         "<maps>" +
-        "  <filemap name='map1' files='org/metafacture/metamorph/maps/%s' %s/>" +
+        "  <filemap name='map1' files='" + MAPS + "%s' %s/>" +
         "</maps>";
 
     @Test
@@ -204,6 +209,97 @@ public final class FileMapTest {
                     o.get().endRecord();
                 }
         );
+    }
+
+    @Test
+    public void shouldLoadFile() {
+        assertMap(379, i -> {
+            Assert.assertEquals("Puerto Rico", i.get("pr"));
+            Assert.assertNull(i.get("zz"));
+        });
+    }
+
+    @Test
+    public void shouldLoadFileWithEmptyValues() {
+        assertMap(380, i -> {
+            i.setAllowEmptyValues(true);
+
+            Assert.assertEquals("Puerto Rico", i.get("pr"));
+            Assert.assertEquals("", i.get("zz"));
+        });
+    }
+
+    @Test
+    public void shouldLoadFileWithSeparator() {
+        assertMap(99, i -> {
+            i.setSeparator(" ");
+
+            Assert.assertNull(i.get("pp\tPapua"));
+            Assert.assertEquals("Rico", i.get("pr\tPuerto"));
+        });
+    }
+
+    @Test
+    public void shouldLoadFileWithKeyColumn() {
+        assertMap(21, i -> {
+            i.setSeparator(" ");
+            i.setKeyColumn(2);
+
+            Assert.assertEquals("New", i.get("Guinea"));
+        });
+    }
+
+    @Test
+    public void shouldLoadFileWithValueColumn() {
+        assertMap(24, i -> {
+            i.setSeparator(" ");
+            i.setValueColumn(2);
+
+            Assert.assertEquals("Guinea", i.get("pp\tPapua"));
+        });
+    }
+
+    @Test
+    public void shouldLoadFileWithKeyAndValueColumn() {
+        assertMap(66, i -> {
+            i.setSeparator(" ");
+            i.setKeyColumn(1);
+            i.setValueColumn(0);
+
+            Assert.assertEquals("pr\tPuerto", i.get("Rico"));
+        });
+    }
+
+    @Test
+    public void shouldLoadFileWithTrailingColumns() {
+        assertMap(149, i -> {
+            i.setSeparator(" ");
+            i.setAllowTrailingColumns(true);
+
+            Assert.assertEquals("New", i.get("pp\tPapua"));
+        });
+    }
+
+    @Test
+    public void shouldNotLoadFileWithOutOfRangeKeyColumn() {
+        assertMap(0, i -> {
+            i.setKeyColumn(2);
+        });
+    }
+
+    @Test
+    public void shouldNotLoadFileWithOutOfRangeValueColumn() {
+        assertMap(0, i -> {
+            i.setValueColumn(2);
+        });
+    }
+
+    private void assertMap(final int size, final Consumer<FileMap> consumer) {
+        final FileMap fileMap = new FileMap();
+        fileMap.setFile(MAPS + "file-map-test-columns.txt");
+
+        consumer.accept(fileMap);
+        Assert.assertEquals(size, fileMap.keySet().size());
     }
 
     private String buildMorph(final String data, final String options) {
