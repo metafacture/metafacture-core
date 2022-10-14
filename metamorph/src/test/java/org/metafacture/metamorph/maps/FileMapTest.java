@@ -91,6 +91,25 @@ public final class FileMapTest {
     }
 
     @Test
+    public void shouldLookupValuesInFileBasedMapWithIgnorePattern() {
+        assertMorph(receiver, buildMorph("lookup in", "ignorePattern=\"g.*\""),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("1", "gw");
+                    i.literal("1", "fj");
+                    i.literal("1", "hk");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("1", "Fiji");
+                    o.get().literal("1", "HongKong");
+                    o.get().endRecord();
+                }
+        );
+    }
+
+    @Test
     public void shouldWhitelistValuesInFileBasedMap() {
         assertMorph(receiver, buildMorph("whitelist map", ""),
                 i -> {
@@ -305,6 +324,16 @@ public final class FileMapTest {
             i.setExpectedColumns(-1);
 
             Assert.assertEquals("New", i.get("pp\tPapua"));
+        });
+    }
+
+    @Test
+    public void shouldLoadFileWithIgnorePattern() {
+        assertMap(369, i -> {
+            i.setIgnorePattern(".*New.*");
+
+            Assert.assertNull(i.get("pp"));
+            Assert.assertEquals("Puerto Rico", i.get("pr"));
         });
     }
 
