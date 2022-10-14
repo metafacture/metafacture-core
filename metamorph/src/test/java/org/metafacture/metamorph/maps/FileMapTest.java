@@ -73,6 +73,24 @@ public final class FileMapTest {
     }
 
     @Test
+    public void shouldLookupValuesInFileBasedMapWithColumnOptions() {
+        assertMorph(receiver, buildMorph("lookup in", "keyColumn=\"1\" valueColumn=\"0\" expectedColumns=\"2\""),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("1", "Germany");
+                    i.literal("1", "Fiji");
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().literal("1", "gw");
+                    o.get().literal("1", "fj");
+                    o.get().endRecord();
+                }
+        );
+    }
+
+    @Test
     public void shouldWhitelistValuesInFileBasedMap() {
         assertMorph(receiver, buildMorph("whitelist map", ""),
                 i -> {

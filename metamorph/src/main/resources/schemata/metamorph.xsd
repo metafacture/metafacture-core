@@ -629,6 +629,37 @@
                         The default separator is the tabulator. </documentation>
                 </annotation>
             </attribute>
+            <attribute name="keyColumn" use="optional" default="0">
+                <annotation>
+                    <documentation>Sets the key column (0-based).</documentation>
+                </annotation>
+                <simpleType>
+                    <restriction base="int">
+                        <minInclusive value="0" />
+                    </restriction>
+                </simpleType>
+            </attribute>
+            <attribute name="valueColumn" use="optional" default="1">
+                <annotation>
+                    <documentation>Sets the value column (0-based).</documentation>
+                </annotation>
+                <simpleType>
+                    <restriction base="int">
+                        <minInclusive value="0" />
+                    </restriction>
+                </simpleType>
+            </attribute>
+            <attribute name="expectedColumns" use="optional" default="0">
+                <annotation>
+                    <documentation>Sets number of expected columns; set to -1 to disable
+                        column check.</documentation>
+                </annotation>
+                <simpleType>
+                    <restriction base="int">
+                        <minInclusive value="-1" />
+                    </restriction>
+                </simpleType>
+            </attribute>
             <attribute ref="xml:base" />
         </complexType>
     </element>
