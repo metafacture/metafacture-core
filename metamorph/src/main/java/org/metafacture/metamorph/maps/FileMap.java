@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -65,6 +66,7 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
     private final Map<String, String> map = new HashMap<>();
 
     private ArrayList<String> filenames = new ArrayList<>();
+    private Matcher ignoreMatcher;
     private Pattern split = Pattern.compile("\t", Pattern.LITERAL);
     private boolean allowEmptyValues;
     private boolean isUninitialized = true;
@@ -107,6 +109,15 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
      */
     public void setExpectedColumns(final int expectedColumns) {
         this.expectedColumns = expectedColumns;
+    }
+
+    /**
+     * Sets the pattern which determines whether a line should be ignored.
+     *
+     * @param ignorePattern a Java regular expression
+     */
+    public void setIgnorePattern(final String ignorePattern) {
+        this.ignoreMatcher = Pattern.compile(ignorePattern).matcher("");
     }
 
     /**
@@ -168,23 +179,29 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
 
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.isEmpty()) {
+                if (ignore(line)) {
                     continue;
                 }
 
                 final String[] parts = allowEmptyValues ? split.split(line, -1) : split.split(line);
-                if (parts.length < minColumns) {
+                if (ignore(parts.length, minColumns, expColumns)) {
                     continue;
                 }
 
-                if (expColumns < 0 || parts.length == expColumns) {
-                    map.put(parts[keyColumn], parts[valueColumn]);
-                }
+                map.put(parts[keyColumn], parts[valueColumn]);
             }
         }
         catch (final IOException | UncheckedIOException e) {
             throw new MorphExecutionException("filemap: cannot read map file", e);
         }
+    }
+
+    private boolean ignore(final String line) {
+        return line.isEmpty() || (ignoreMatcher != null && ignoreMatcher.reset(line).matches());
+    }
+
+    private boolean ignore(final int partsLength, final int minColumns, final int expColumns) {
+        return partsLength < minColumns || (expColumns > 0 && partsLength != expColumns);
     }
 
     private InputStream openStream(final String file) {

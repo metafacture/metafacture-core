@@ -660,6 +660,12 @@
                     </restriction>
                 </simpleType>
             </attribute>
+            <attribute name="ignorePattern" type="string" use="optional">
+                <annotation>
+                    <documentation>Sets the pattern which determines whether a line should
+                        be ignored.</documentation>
+                </annotation>
+            </attribute>
             <attribute ref="xml:base" />
         </complexType>
     </element>
