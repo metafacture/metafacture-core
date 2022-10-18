@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -33,13 +34,21 @@ public interface FixFunction {
     void apply(Metafix metafix, Record record, List<String> params, Map<String, String> options);
 
     default void withOption(final Map<String, String> options, final String key, final Consumer<String> consumer) {
+        withOption(options, key, consumer, Map::get);
+    }
+
+    default <T> void withOption(final Map<String, String> options, final String key, final Consumer<T> consumer, final BiFunction<Map<String, String>, String, T> function) {
         if (options.containsKey(key)) {
-            consumer.accept(options.get(key));
+            consumer.accept(function.apply(options, key));
         }
     }
 
     default boolean getBoolean(final Map<String, String> options, final String key) {
         return Boolean.parseBoolean(options.get(key));
+    }
+
+    default int getInteger(final Map<String, String> options, final String key) {
+        return Integer.parseInt(options.get(key));
     }
 
     default int getInteger(final List<String> params, final int index) {

@@ -75,6 +75,15 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
             fileMap.setSeparator(options.getOrDefault(FILEMAP_SEPARATOR_OPTION, FILEMAP_DEFAULT_SEPARATOR));
             fileMap.setFile(metafix.resolvePath(fileName));
 
+            withOption(options, "allow_empty_values", fileMap::setAllowEmptyValues, this::getBoolean);
+            withOption(options, "compression", fileMap::setCompression);
+            withOption(options, "decompress_concatenated", fileMap::setDecompressConcatenated, this::getBoolean);
+            withOption(options, "encoding", fileMap::setEncoding);
+            withOption(options, "expected_columns", fileMap::setExpectedColumns, this::getInteger);
+            withOption(options, "ignore_pattern", fileMap::setIgnorePattern);
+            withOption(options, "key_column", fileMap::setKeyColumn, this::getInteger);
+            withOption(options, "value_column", fileMap::setValueColumn, this::getInteger);
+
             metafix.putMap(params.size() > 1 ? params.get(1) : fileName, fileMap);
         }
     },
