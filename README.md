@@ -60,7 +60,7 @@ dependencies {
 }
 ```
 
-Occasionally, we publish snapshot builds on [Sonatype OSS Repository](https://oss.sonatype.org/index.html#nexus-search;gav~org.metafacture~~~~). The version number is derived from the branch name. Snapshot builds from the master branch always have the version `master-SNAPSHOT`.
+Occasionally, we publish snapshot builds on [Sonatype OSS Repository](https://oss.sonatype.org/index.html#nexus-search;gav~org.metafacture~~~~). The version number is derived from the branch name. Snapshot builds from the master branch always have the version `master-SNAPSHOT`. We also provide sometimes pre releases as github packages.
 
 <!--
 TODO: Link to getting started tutorial

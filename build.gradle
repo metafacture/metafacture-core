@@ -57,6 +57,7 @@ subprojects {
   apply plugin: 'maven'
   apply plugin: 'jacoco'
   apply plugin: 'checkstyle'
+  apply plugin: 'maven-publish'
 
   check.dependsOn(editorconfigCheck)
   check.dependsOn(javadoc)
@@ -126,6 +127,35 @@ subprojects {
   repositories {
     mavenLocal()
     mavenCentral()
+  }
+
+  publishing {
+    publications {
+      mavenArtifacts(MavenPublication) {
+        from components.java
+        afterEvaluate {
+          groupId = project.group
+          artifactId = project.name
+        }
+      }
+    }
+    repositories {
+      maven {
+        name = 'localEmbedded'
+        // run generated gradle task `./gradlew
+        // publishMavenArtifactsPublicationToLocalEmbeddedRepository`
+        // to publish all subprojects into the same local embedded repo:
+        url = "file://${rootDir}/build/repo"
+      }
+      maven {
+        name = "GitHubPackages"
+        url = "https://maven.pkg.github.com/metafacture/metafacture-core"
+        credentials {
+          username = System.getenv("GITHUB_ACTOR")
+          password = System.getenv("GITHUB_TOKEN")
+        }
+      }
+    }
   }
 }
 
@@ -240,10 +270,6 @@ gradle.projectsEvaluated {
           }
         }
       }
-    }
-
-    task publish {
-      dependsOn tasks.uploadArchives
     }
   }
 }
