@@ -28,6 +28,7 @@ function parse_boolean() {
 parse_boolean "$METAFIX_DISABLE_TO_DO" && disable_todo=1 || disable_todo=
 parse_boolean "$METAFIX_INTEGRATION_TEST_PROFILE" && noprofile= || noprofile=no
 parse_boolean "$METAFIX_KEEP_TEMP" && keep_temp=1 || keep_temp=
+parse_boolean "$CI" && ci=1 || ci=
 
 [ -t 1 -a -x /usr/bin/colordiff ] && colordiff=colordiff || colordiff=cat
 
@@ -122,11 +123,23 @@ function get_file() {
   return 1
 }
 
+function log_file() {
+  if [ -s "$1" ]; then
+    log "$2$1"
+
+    if [ "$3" -ne 0 -a -n "$ci" ]; then
+      cat "$1"
+    fi
+  else
+    rm_temp "$1"
+  fi
+}
+
 function command_info() {
   log "  ${color_info}${1^} command exit status$color_reset: $2"
 
-  [ -s "$3" ] && log "  ${color_info}${1^} command output$color_reset: $3" || rm_temp "$3"
-  [ -s "$4" ] && log "  ${color_info}${1^} command error$color_reset:  $4" || rm_temp "$4"
+  log_file "$3" "  ${color_info}${1^} command output$color_reset: " "$2"
+  log_file "$4" "  ${color_info}${1^} command error$color_reset:  " "$2"
 
   log
 }
