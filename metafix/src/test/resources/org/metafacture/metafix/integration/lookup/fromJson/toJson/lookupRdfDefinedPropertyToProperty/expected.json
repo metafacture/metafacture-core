@@ -1,10 +1,10 @@
 {
-  "name" : "Jake",
-  "a" : "https://w3id.org/kim/hcrt/application"
+  "name": "Jake",
+  "a" : "Software Application"
 }
 {
-  "name" : "Blacky",
-  "a" : "https://w3id.org/kim/hcrt/index"
+  "name": "Blacky",
+  "a" : "Reference Work"
 }
 {
   "name" : "Noone",
@@ -12,5 +12,5 @@
 }
 {
   "name" : "Noone_2",
-  "a" : "Assessment"
+  "a" : "Grafik"
 }
