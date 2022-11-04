@@ -1157,6 +1157,50 @@ public class MetafixLookupTest {
         shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguage("http://www.w3.org/2004/02/skos/core#prefLabel");
     }
 
+    @Test
+    public void shouldLookupRdfDefinedPropertyToSubject() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "lookup_rdf('a', '" + HCRT_RDF_MAP + "', target: 'skos:prefLabel', target_language: 'de', select: 'subject')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Jake");
+                i.literal("a", "Softwareanwendung");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("name", "Blacky");
+                i.literal("a", "Nachschlagewerk");
+                i.endRecord();
+                i.startRecord("3");
+                i.literal("name", "Noone");
+                i.literal("a", "cat");
+                i.endRecord();
+                i.startRecord("4");
+                i.literal("name", "Noone_2");
+                i.literal("a", "Assessment");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Jake");
+                o.get().literal("a", "https://w3id.org/kim/hcrt/application");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("name", "Blacky");
+                o.get().literal("a", "https://w3id.org/kim/hcrt/index");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().literal("name", "Noone");
+                o.get().literal("a", "cat");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().literal("name", "Noone_2");
+                o.get().literal("a", "Assessment");
+                o.get().endRecord();
+            }
+        );
+    }
+
     private void shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguage(final String target) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('prefLabel', 'Mathematics, Natural Sciences')",

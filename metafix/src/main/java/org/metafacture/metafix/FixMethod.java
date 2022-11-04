@@ -23,6 +23,7 @@ import org.metafacture.metamorph.functions.ISBN;
 import org.metafacture.metamorph.functions.Timestamp;
 import org.metafacture.metamorph.maps.FileMap;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -102,10 +103,15 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
                 .map(str -> str.replaceAll(replaceTargets + "$", ""))
                 .orElse(params.get(0));
             final RdfMap rdfMap = new RdfMap();
-
-            rdfMap.setResource(metafix.resolvePath(resourceName));
+            if (resourceName.startsWith("http")) {
+                rdfMap.setResource(resourceName);
+            }
+            else {
+                rdfMap.setResource(metafix.resolvePath(resourceName));
+            }
             withOption(options, RdfMap.TARGET, rdfMap::setTarget);
             withOption(options, RdfMap.TARGET_LANGUAGE, rdfMap::setTargetLanguage);
+            withOption(options, RdfMap.SELECT, rdfMap::setSelect);
             withOption(options, Maps.DEFAULT_MAP_KEY, rdfMap::setDefault);
 
             metafix.putMap(rdfMapName, rdfMap);
@@ -489,7 +495,6 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
 
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-<<<<<<< HEAD
             final Map<String, String> map;
 
             if (params.size() <= 1) {

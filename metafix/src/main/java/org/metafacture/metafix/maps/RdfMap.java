@@ -57,6 +57,7 @@ import java.util.NoSuchElementException;
 public final class RdfMap extends AbstractReadOnlyMap<String, String> {
     public static final String TARGET = "target";
     public static final String TARGET_LANGUAGE = "target_language";
+    public static final String SELECT = "select";
     private static final int MAX_REDIRECTIONS = 10;
     private static final int MIN_HTTP_STATUS_CODE = 299;
     private static final int MAX_HTTP_STATUS_CODE = 400;
@@ -66,6 +67,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
     private final Map<String, String> map = new HashMap<>();
     private String targetLanguage;
     private String target;
+    private Select select = Select.DEFAULT;
 
     /**
      * Creates an instance of {@link RdfMap}.
@@ -145,7 +147,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
      */
     @Override
     public String get(final Object key) {
-        String ret;
+        String ret = null;
         if (map.containsKey(key.toString())) {
             ret = map.get(key.toString());
         }
@@ -156,20 +158,29 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
             final Resource resource = ResourceFactory.createResource(key.toString());
             final Property targetProperty = ResourceFactory.createProperty(target);
             try {
-                //first try to get LITERAL using SUBJECT and PROPERTY
-                if (!targetLanguage.isEmpty()) {
-                    ret = model.getRequiredProperty(resource, targetProperty, targetLanguage).getString();
+                if (select.equals(Select.SUBJECT)) {
+                    ret = getSubjectUsingPropertyAndLiteral(key, targetProperty);
                 }
                 else {
-                    ret = model.getRequiredProperty(resource, targetProperty).getString();
+                    //first try to get LITERAL using SUBJECT and PROPERTY
+                    if (!targetLanguage.isEmpty()) {
+                        ret = model.getRequiredProperty(resource, targetProperty, targetLanguage).getString();
+                    }
+                    else {
+                        ret = model.getRequiredProperty(resource, targetProperty).getString();
+                    }
                 }
             }
             catch (final PropertyNotFoundException | NullPointerException | NoSuchElementException e) {
                 //second try to get SUBJECT using PROPERTY and LITERAL
-                ret = getSubjectUsingPropertyAndLiteral(key, targetProperty);
+                if (select.equals(Select.DEFAULT)) {
+                    ret = getSubjectUsingPropertyAndLiteral(key, targetProperty);
+                }
                 //third try: get LITERAL of PREDICATE A using PREDICATE B
-                if (ret == null) {
-                    ret = getLiteralOfPredicateUsingOtherPredicate(key, targetProperty);
+                if (!select.equals(Select.SUBJECT)) {
+                    if (ret == null) {
+                        ret = getLiteralOfPredicateUsingOtherPredicate(key, targetProperty);
+                    }
                 }
             }
             map.put(key.toString(), ret);
@@ -271,6 +282,37 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
     }
 
     /**
+     * Gets whether the Subject or the Object or a mixture of both should be retrieved in the RDF.
+     * <br>
+     * Setting "select" is optional.
+     *
+     * @return the selected position to be retrieved
+     **/
+    public String getSelect() {
+        return select.toString();
+    }
+
+    /**
+     * Sets whether the Subject or the Object or a mixture of both should be retrieved in the RDF.
+     * <br>
+     * Setting "select" is optional.
+     * <strong>Defaults to retrieve both: tries to get "objects" and as a fallback "subjects".</strong>
+     *
+     * @param position the position to be retrieved. Can be "subject" or "object".
+     */
+    public void setSelect(final String position) {
+        if ("subject".equalsIgnoreCase(position)) {
+            select = Select.SUBJECT;
+        }
+        else if ("object".equalsIgnoreCase(position)) {
+            select = Select.OBJECT;
+        }
+        else {
+            throw new FixExecutionException("Couldn't set parameter - use 'subject' or 'object' as value");
+        }
+    }
+
+    /**
      * Sets the default value returned if the key couldn't be found.
      * <br>
      * <strong>Default value: {@link Maps#DEFAULT_MAP_KEY} </strong>
@@ -283,8 +325,9 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
 
     /**
      * Gets a redirected URL, if any redirection takes place. Adapted predated code from org.apache.jena.rdfxml.xmlinput.JenaReader.
-     *
+     * <p>
      * Note: Using newer jena version (needs java 11) this method would be obsolete.
+     *
      * @param url the URL to resolve
      * @return the (redirected) URL
      * @throws IOException if any IO error occurs
@@ -324,4 +367,9 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
         }
         return connectionURL;
     }
+
+    private enum Select {
+        SUBJECT, OBJECT, DEFAULT
+    }
+
 }
