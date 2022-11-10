@@ -745,21 +745,18 @@ public class MetafixBindTest {
     }
 
     @Test
-    public void shouldDoListAs() {
+    public void shouldDoListAsWithSingleList() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('sourceOrga[]')",
-                "do list_as(orgId: 'ccm:university[]', orgName: 'ccm:university_DISPLAYNAME[]')",
+                "do list_as(orgId: 'ccm:university[]')",
                 "  copy_field(orgId, 'sourceOrga[].$append.id')",
-                "  copy_field(orgName, 'sourceOrga[].$last.name')",
                 "end"
             ),
             i -> {
                 i.startRecord("1");
                 i.startEntity("ccm:university[]");
                 i.literal("1", "https://ror.org/0304hq317");
-                i.endEntity();
-                i.startEntity("ccm:university_DISPLAYNAME[]");
-                i.literal("1", "Gottfried Wilhelm Leibniz Universität Hannover");
+                i.literal("2", "https://ror.org/014nnvj65");
                 i.endEntity();
                 i.endRecord();
             },
@@ -767,14 +764,140 @@ public class MetafixBindTest {
                 o.get().startRecord("1");
                 o.get().startEntity("ccm:university[]");
                 o.get().literal("1", "https://ror.org/0304hq317");
+                o.get().literal("2", "https://ror.org/014nnvj65");
+                o.get().endEntity();
+                o.get().startEntity("sourceOrga[]");
+                o.get().startEntity("1");
+                o.get().literal("id", "https://ror.org/0304hq317");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("id", "https://ror.org/014nnvj65");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldDoListAsWithMultipleLists() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('sourceOrga[]')",
+                "do list_as(orgId: 'ccm:university[]', orgName: 'ccm:university_DISPLAYNAME[]', orgLoc: 'ccm:university_LOCATION[]')",
+                "  copy_field(orgId, 'sourceOrga[].$append.id')",
+                "  copy_field(orgName, 'sourceOrga[].$last.name')",
+                "  copy_field(orgLoc, 'sourceOrga[].$last.location')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("ccm:university[]");
+                i.literal("1", "https://ror.org/0304hq317");
+                i.literal("2", "https://ror.org/014nnvj65");
+                i.endEntity();
+                i.startEntity("ccm:university_DISPLAYNAME[]");
+                i.literal("1", "Gottfried Wilhelm Leibniz Universität Hannover");
+                i.literal("2", "Technische Hochschule Köln");
+                i.endEntity();
+                i.startEntity("ccm:university_LOCATION[]");
+                i.literal("1", "Hannover");
+                i.literal("2", "Köln");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("ccm:university[]");
+                o.get().literal("1", "https://ror.org/0304hq317");
+                o.get().literal("2", "https://ror.org/014nnvj65");
                 o.get().endEntity();
                 o.get().startEntity("ccm:university_DISPLAYNAME[]");
                 o.get().literal("1", "Gottfried Wilhelm Leibniz Universität Hannover");
+                o.get().literal("2", "Technische Hochschule Köln");
+                o.get().endEntity();
+                o.get().startEntity("ccm:university_LOCATION[]");
+                o.get().literal("1", "Hannover");
+                o.get().literal("2", "Köln");
                 o.get().endEntity();
                 o.get().startEntity("sourceOrga[]");
                 o.get().startEntity("1");
                 o.get().literal("id", "https://ror.org/0304hq317");
                 o.get().literal("name", "Gottfried Wilhelm Leibniz Universität Hannover");
+                o.get().literal("location", "Hannover");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("id", "https://ror.org/014nnvj65");
+                o.get().literal("name", "Technische Hochschule Köln");
+                o.get().literal("location", "Köln");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // checkstyle-disable-line JavaNCSS
+    public void shouldDoListAsWithMultipleListsOfDifferentSizes() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('sourceOrga[]')",
+                "do list_as(orgId: 'ccm:university[]', orgName: 'ccm:university_DISPLAYNAME[]', orgLoc: 'ccm:university_LOCATION[]')",
+                "  set_hash('sourceOrga[].$append')",
+                "  copy_field(orgId, 'sourceOrga[].$last.id')",
+                "  copy_field(orgName, 'sourceOrga[].$last.name')",
+                "  copy_field(orgLoc, 'sourceOrga[].$last.location')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("ccm:university[]");
+                i.literal("1", "https://ror.org/0304hq317");
+                i.literal("2", "https://ror.org/014nnvj65");
+                i.endEntity();
+                i.startEntity("ccm:university_DISPLAYNAME[]");
+                i.literal("1", "Gottfried Wilhelm Leibniz Universität Hannover");
+                i.literal("2", "Technische Hochschule Köln");
+                i.literal("3", "Universität zu Köln");
+                i.literal("4", "Stadtbibliothek Köln");
+                i.endEntity();
+                i.startEntity("ccm:university_LOCATION[]");
+                i.literal("1", "Hannover");
+                i.literal("2", "Köln");
+                i.literal("3", "Köln");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("ccm:university[]");
+                o.get().literal("1", "https://ror.org/0304hq317");
+                o.get().literal("2", "https://ror.org/014nnvj65");
+                o.get().endEntity();
+                o.get().startEntity("ccm:university_DISPLAYNAME[]");
+                o.get().literal("1", "Gottfried Wilhelm Leibniz Universität Hannover");
+                o.get().literal("2", "Technische Hochschule Köln");
+                o.get().literal("3", "Universität zu Köln");
+                o.get().literal("4", "Stadtbibliothek Köln");
+                o.get().endEntity();
+                o.get().startEntity("ccm:university_LOCATION[]");
+                o.get().literal("1", "Hannover");
+                o.get().literal("2", "Köln");
+                o.get().literal("3", "Köln");
+                o.get().endEntity();
+                o.get().startEntity("sourceOrga[]");
+                o.get().startEntity("1");
+                o.get().literal("id", "https://ror.org/0304hq317");
+                o.get().literal("name", "Gottfried Wilhelm Leibniz Universität Hannover");
+                o.get().literal("location", "Hannover");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("id", "https://ror.org/014nnvj65");
+                o.get().literal("name", "Technische Hochschule Köln");
+                o.get().literal("location", "Köln");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                o.get().literal("name", "Universität zu Köln");
+                o.get().literal("location", "Köln");
+                o.get().endEntity();
+                o.get().startEntity("4");
+                o.get().literal("name", "Stadtbibliothek Köln");
                 f.apply(2).endEntity();
                 o.get().endRecord();
             }
