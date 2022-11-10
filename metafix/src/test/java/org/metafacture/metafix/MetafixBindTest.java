@@ -745,6 +745,43 @@ public class MetafixBindTest {
     }
 
     @Test
+    public void shouldDoListAs() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('sourceOrga[]')",
+                "do list_as(orgId: 'ccm:university[]', orgName: 'ccm:university_DISPLAYNAME[]')",
+                "  copy_field(orgId, 'sourceOrga[].$append.id')",
+                "  copy_field(orgName, 'sourceOrga[].$last.name')",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("ccm:university[]");
+                i.literal("1", "https://ror.org/0304hq317");
+                i.endEntity();
+                i.startEntity("ccm:university_DISPLAYNAME[]");
+                i.literal("1", "Gottfried Wilhelm Leibniz Universität Hannover");
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("ccm:university[]");
+                o.get().literal("1", "https://ror.org/0304hq317");
+                o.get().endEntity();
+                o.get().startEntity("ccm:university_DISPLAYNAME[]");
+                o.get().literal("1", "Gottfried Wilhelm Leibniz Universität Hannover");
+                o.get().endEntity();
+                o.get().startEntity("sourceOrga[]");
+                o.get().startEntity("1");
+                o.get().literal("id", "https://ror.org/0304hq317");
+                o.get().literal("name", "Gottfried Wilhelm Leibniz Universität Hannover");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldExecuteOnlyOnce() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do once()",

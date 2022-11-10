@@ -678,6 +678,10 @@ do list(path: "<sourceField>", "var": "<variableName>")
 end
 ```
 
+#### `do list_as`
+
+TODO
+
 #### `do once`
 
 Executes the statements only once (when the bind is first encountered), not repeatedly for each record.
