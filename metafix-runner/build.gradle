@@ -9,6 +9,10 @@ dependencies {
   implementation "org.metafacture:metafacture-json:${versions.metafacture}"
   implementation "org.metafacture:metafacture-runner:${versions.metafacture}"
   implementation "org.metafacture:metafacture-xml:${versions.metafacture}"
+
+  implementation('org.antlr:antlr-runtime') {
+    version { strictly versions.antlr }
+  }
 }
 
 application {
