@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.api;
 
+import org.metafacture.io.ObjectWriter;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 @FunctionalInterface
@@ -40,6 +42,24 @@ public interface FixFunction {
     default <T> void withOption(final Map<String, String> options, final String key, final Consumer<T> consumer, final BiFunction<Map<String, String>, String, T> function) {
         if (options.containsKey(key)) {
             consumer.accept(function.apply(options, key));
+        }
+    }
+
+    default void withWriter(final Map<String, String> options, final UnaryOperator<String> operator, final Consumer<ObjectWriter<String>> consumer) {
+        final String destination = options.getOrDefault("destination", ObjectWriter.STDOUT);
+        final ObjectWriter<String> writer = new ObjectWriter<>(operator != null ? operator.apply(destination) : destination);
+
+        withOption(options, "compression", writer::setCompression);
+        withOption(options, "encoding", writer::setEncoding);
+        withOption(options, "footer", writer::setFooter);
+        withOption(options, "header", writer::setHeader);
+        withOption(options, "separator", writer::setSeparator);
+
+        try {
+            consumer.accept(writer);
+        }
+        finally {
+            writer.closeStream();
         }
     }
 

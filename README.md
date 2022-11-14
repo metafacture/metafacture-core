@@ -562,6 +562,17 @@ Options:
 
 - `__default`: Default value to use for unknown values. (Default: Old value)
 - `delete`: Whether to delete unknown values. (Default: `false`)
+- `print_unknown`: Whether to print unknown values. (Default: `false`)
+
+Additional options when printing unknown values:
+
+- `compression` (file output only): Compression mode. (Default: `auto`)
+- `destination`: Destination to write unknown values to; may include [format directives](https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html#syntax) for counter and record ID (in that order). (Default: `stdout`)
+- `encoding` (file output only): Encoding used by the underlying writer. (Default: `UTF-8`)
+- `footer`: Footer which is written at the end of the output. (Default: `\n`)
+- `header`: Header which is written at the beginning of the output. (Default: Empty string)
+- `id`: Field name which contains the record ID; if found, will be available for inclusion in `destination`. (Default: `_id`)
+- `separator`: Separator which is written after the unknown value. (Default: `\n`)
 
 ```perl
 lookup("<sourceField>"[, <mapName>][, <options>...])
@@ -586,6 +597,9 @@ lookup("path.to.field", "file-map")
 
 # with default value
 lookup("path.to.field", "map-name", __default: "NA")
+
+# with printing unknown values to a file
+lookup("path.to.field", "map-name", print_unknown: "true", destination: "unknown.txt")
 ```
 
 ##### `prepend`
