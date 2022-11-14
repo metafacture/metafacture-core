@@ -553,10 +553,39 @@ join_field("<sourceField>", "<separator>")
 
 Looks up matching values in a map and replaces the field value with this match. External files as well as internal maps can be used.
 
+Parameters:
+
+- `path` (required): Field path to look up.
+- `map` (optional): Name or path of the map in which to look up values.
+
+Options:
+
+- `__default`: Default value to use for unknown values. (Default: Old value)
+- `delete`: Whether to delete unknown values. (Default: `false`)
+
 ```perl
-lookup("<sourceField>", "<mapFile>", sep_char: ”,”)
-lookup("<sourceField>", "<mapName>")
-lookup("<sourceField>", "<mapName>", default: "NA")
+lookup("<sourceField>"[, <mapName>][, <options>...])
+```
+
+E.g.:
+
+```perl
+# local (unnamed) map
+lookup("path.to.field", key_1: "value_1", ...)
+
+# internal (named) map
+put_map("internal-map", key_1: "value_1", ...)
+lookup("path.to.field", "internal-map")
+
+# external file map (implicit)
+lookup("path.to.field", "path/to/file", sep_char: ";")
+
+# external file map (explicit)
+put_filemap("path/to/file", "file-map", sep_char: ";")
+lookup("path.to.field", "file-map")
+
+# with default value
+lookup("path.to.field", "map-name", __default: "NA")
 ```
 
 ##### `prepend`
