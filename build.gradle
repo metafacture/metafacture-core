@@ -52,6 +52,66 @@ editorconfig {
   ]
 }
 
+def mavenProjectDescription = { proj ->
+  { it ->
+    name = proj.mavenName ?: proj.name
+    if (proj.description) {
+      description = proj.description
+    }
+    url = 'https://github.com/metafacture/metafacture-core'
+    inceptionYear = '2011'
+    developers {
+      developer {
+        id = 'mgeipel'
+        name = 'Markus M. Geipel'
+        email = 'm.geipel@dnb.de'
+        url = 'https://github.com/mgeipel'
+        roles = ['architect', 'developer']
+      }
+      developer {
+        id = 'cboehme'
+        name = 'Christoph Böhme'
+        email = 'c.boehme@dnb.de'
+        url = 'https://github.com/cboehme'
+        roles = ['architect', 'developer']
+      }
+    }
+    organization {
+      name = 'Metafacture'
+      url = 'https://github.com/metafacture'
+    }
+    licenses {
+      license {
+        name = 'The Apache License, Version 2.0'
+        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+      }
+    }
+    mailingLists {
+      mailingList {
+        name = 'Metafacture Mailing List'
+        post = 'metafacture@lists.dnb.de'
+        subscribe = 'metafacture-subscribe@lists.dnb.de'
+        unsubscribe = 'metafacture-unsubscribe@lists.dnb.de'
+        archive = 'http://lists.dnb.de/pipermail/metafacture/'
+      }
+    }
+    scm {
+      connection = 'scm:git:https://github.com/metafacture/metafacture-core.git'
+      developerConnection = 'scm:git:https://github.com/metafacture/metafacture-core.git'
+      url = 'https://github.com/metafacture/metafacture-core'
+      tag = rootProject.scmInfo.tag ?: 'HEAD'
+    }
+    issueManagement {
+      system = 'Github'
+      url = 'https://github.com/metafacture/metafacture-core/issues'
+    }
+    ciManagement {
+      system = 'Github Actions'
+      url = 'https://github.com/metafacture/metafacture-core/actions'
+    }
+  }
+}
+
 subprojects {
   apply plugin: 'signing'
   apply plugin: 'maven'
@@ -134,6 +194,7 @@ subprojects {
       mavenArtifacts(MavenPublication) {
         from components.java
         afterEvaluate {
+          pom mavenProjectDescription(project)
           groupId = project.group
           artifactId = project.name
         }
@@ -169,74 +230,10 @@ gradle.projectsEvaluated {
       mavenDeploySupport "org.apache.maven.wagon:wagon-http:2.2"
     }
 
-    def mavenProjectDescription = {
-      name = project.mavenName ?: project.name
-      if (project.description) {
-        description project.description
-      }
-      url 'https://github.com/metafacture/metafacture-core'
-      inceptionYear '2011'
-      developers {
-        developer {
-          id 'mgeipel'
-          name = 'Markus M. Geipel'
-          email 'm.geipel@dnb.de'
-          url 'https://github.com/mgeipel'
-          roles {
-            role 'architect'
-            role 'developer'
-          }
-        }
-        developer {
-          id 'cboehme'
-          name = 'Christoph Böhme'
-          email 'c.boehme@dnb.de'
-          url 'https://github.com/cboehme'
-          roles {
-            role 'architect'
-            role 'developer'
-          }
-        }
-      }
-      organization {
-        name = 'Metafacture'
-        url 'https://github.com/metafacture'
-      }
-      licenses {
-        license {
-          name = 'The Apache License, Version 2.0'
-          url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-        }
-      }
-      mailingLists {
-        mailingList {
-          name = 'Metafacture Mailing List'
-          post 'metafacture@lists.dnb.de'
-          subscribe 'metafacture-subscribe@lists.dnb.de'
-          unsubscribe 'metafacture-unsubscribe@lists.dnb.de'
-          archive 'http://lists.dnb.de/pipermail/metafacture/'
-        }
-      }
-      scm {
-        connection 'scm:git:https://github.com/metafacture/metafacture-core.git'
-        developerConnection 'scm:git:https://github.com/metafacture/metafacture-core.git'
-        url 'https://github.com/metafacture/metafacture-core'
-        tag rootProject.scmInfo.tag ?: 'HEAD'
-      }
-      issueManagement {
-        system 'Github'
-        url 'https://github.com/metafacture/metafacture-core/issues'
-      }
-      ciManagement {
-        system 'Github Actions'
-        url 'https://github.com/metafacture/metafacture-core/actions'
-      }
-    }
-
     install {
       repositories {
         mavenInstaller {
-          pom.project mavenProjectDescription
+          pom.project mavenProjectDescription(project)
           beforeDeployment {
             MavenDeployment deployment -> signing.signPom(deployment)
           }
@@ -264,7 +261,7 @@ gradle.projectsEvaluated {
               }
             }
           }
-          pom.project mavenProjectDescription
+          pom.project mavenProjectDescription(project)
           beforeDeployment {
             MavenDeployment deployment -> signing.signPom(deployment)
           }
