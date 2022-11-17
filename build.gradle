@@ -47,6 +47,7 @@ editorconfig {
     '**/*.bzip2',
     '**/*.gzip',
     '**/*.xz',
+    '**/.*',
     '**/bin',
     'gradlew*'
   ]
