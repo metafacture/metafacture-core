@@ -46,7 +46,7 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
     private String path;
     private int count;
     private Writer writer;
-    private boolean firstObject;
+    private boolean firstObject = true;
     private boolean closed;
 
     private String encoding = "UTF-8";
@@ -59,12 +59,6 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
      */
     public ObjectFileWriter(final String path) {
         this.path = path;
-        startNewFile();
-
-        final Matcher matcher = VAR_PATTERN.matcher(this.path);
-        if (!matcher.find()) {
-            this.path = this.path + VAR;
-        }
     }
 
     @Override
@@ -97,13 +91,13 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
         assert !closed;
         try {
             if (firstObject) {
-                writer.write(getHeader());
+                getWriter().write(getHeader());
                 firstObject = false;
             }
             else {
-                writer.write(getSeparator());
+                getWriter().write(getSeparator());
             }
-            writer.write(obj.toString());
+            getWriter().write(obj.toString());
         }
         catch (final IOException e) {
             throw new MetafactureException(e);
@@ -112,20 +106,7 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
 
     @Override
     public void resetStream() {
-        if (!closed) {
-            try {
-                if (!firstObject) {
-                    writer.write(getFooter());
-                }
-                writer.close();
-            }
-            catch (final IOException e) {
-                throw new MetafactureException(e);
-            }
-            finally {
-                closed = true;
-            }
-        }
+        closeStream();
         startNewFile();
         ++count;
     }
@@ -135,9 +116,9 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
         if (!closed) {
             try {
                 if (!firstObject) {
-                    writer.write(getFooter());
+                    getWriter().write(getFooter());
                 }
-                writer.close();
+                getWriter().close();
             }
             catch (final IOException e) {
                 throw new MetafactureException(e);
@@ -173,6 +154,19 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
         catch (final IOException e) {
             throw new MetafactureException("Error creating file '" + currentPath + "'.", e);
         }
+    }
+
+    private Writer getWriter() {
+        if (writer == null) {
+            startNewFile();
+
+            final Matcher matcher = VAR_PATTERN.matcher(this.path);
+            if (!matcher.find()) {
+                this.path = this.path + VAR;
+            }
+        }
+
+        return writer;
     }
 
 }
