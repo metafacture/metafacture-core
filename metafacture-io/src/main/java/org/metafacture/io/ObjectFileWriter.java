@@ -46,6 +46,7 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
     private String path;
     private int count;
     private Writer writer;
+    private boolean appendIfFileExists;
     private boolean firstObject = true;
     private boolean closed;
 
@@ -129,11 +130,26 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
         }
     }
 
+    /**
+     * Controls whether to open files in append mode if they exist.
+     * <p>
+     * The default value is {@code false}.
+     * <p>
+     * This property can be changed anytime during processing. It becomes
+     * effective the next time a new output file is opened.
+     *
+     * @param appendIfFileExists true if new data should be appended,
+     *                           false to overwrite the existing file.
+     */
+    public void setAppendIfFileExists(final boolean appendIfFileExists) {
+        this.appendIfFileExists = appendIfFileExists;
+    }
+
     private void startNewFile() {
         final Matcher matcher = VAR_PATTERN.matcher(this.path);
         final String currentPath = matcher.replaceAll(String.valueOf(count));
         try {
-            final OutputStream file = new FileOutputStream(currentPath);
+            final OutputStream file = new FileOutputStream(currentPath, appendIfFileExists);
             try {
                 final OutputStream compressor = compression.createCompressor(file, currentPath);
                 try {
