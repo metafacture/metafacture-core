@@ -49,6 +49,7 @@ public interface FixFunction {
         final String destination = options.getOrDefault("destination", ObjectWriter.STDOUT);
         final ObjectWriter<String> writer = new ObjectWriter<>(operator != null ? operator.apply(destination) : destination);
 
+        withOption(options, "append", writer::setAppendIfFileExists, this::getBoolean);
         withOption(options, "compression", writer::setCompression);
         withOption(options, "encoding", writer::setEncoding);
         withOption(options, "footer", writer::setFooter);

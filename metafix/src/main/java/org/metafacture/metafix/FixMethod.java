@@ -515,6 +515,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
             });
 
             if (printUnknown) {
+                options.putIfAbsent("append", "true");
                 withWriter(options, null, consumer);
             }
             else {

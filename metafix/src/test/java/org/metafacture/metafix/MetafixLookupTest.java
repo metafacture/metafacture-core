@@ -934,7 +934,12 @@ public class MetafixLookupTest {
 
     @Test
     public void shouldPrintUnknownToFile() throws IOException {
-        MetafixTestHelpers.assertTempFile("you\ntoo\n", p -> shouldPrintUnknown(", destination: '" + p + "'", null, ""));
+        MetafixTestHelpers.assertTempFile("Hey\nyou\nthere\nyou\ntoo\n", p -> shouldPrintUnknown(", destination: '" + p + "'", null, ""));
+    }
+
+    @Test
+    public void shouldPrintUnknownToFileWithoutAppend() throws IOException {
+        MetafixTestHelpers.assertTempFile("you\ntoo\n", p -> shouldPrintUnknown(", destination: '" + p + "', append: 'false'", null, ""));
     }
 
     private void assertMap(final String... fixDef) {

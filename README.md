@@ -566,6 +566,7 @@ Options:
 
 Additional options when printing unknown values:
 
+- `append`: Whether to open files in append mode if they exist. (Default: `true`)
 - `compression` (file output only): Compression mode. (Default: `auto`)
 - `destination`: Destination to write unknown values to; may include [format directives](https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html#syntax) for counter and record ID (in that order). (Default: `stdout`)
 - `encoding` (file output only): Encoding used by the underlying writer. (Default: `UTF-8`)
