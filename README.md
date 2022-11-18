@@ -177,7 +177,7 @@ nothing()
 
 ##### `put_filemap`
 
-Defines an external map for lookup from a file.
+Defines an external map for lookup from a file. Multi-column mapss are supported.
 
 ```perl
 put_filemap("<sourceFile>", "<mapName>", sep_char: "\t")
@@ -189,6 +189,16 @@ The separator (`sep_char`) will vary depending on the source file, e.g.:
 |------|------------|
 | CSV  | `,` or `;` |
 | TSV  | `\t`       |
+
+Additional options:
+
+- `key_column` defines the column to be used for keys. Uses zero index. Default value: `0`.
+- `value_column` defines the column to be used for values. Uses zero index. Default value: `1`.
+- `expected_columns` sets number of expected columns; lines with different number of columns are ignored. Set to `-1` to disable the check and allow arbitrary number of columns. Default value: `2`.
+- `allow_empty_values` sets whether to allow empty values in the filemap or to ignore these entries. Default value: `false`.
+- `compression` sets the compression of the file.
+- `decompress_concatenated` flags whether to use decompress concatenated file compression.
+- `encoding` sets the encoding used to open the resource.
 
 ##### `put_map`
 
