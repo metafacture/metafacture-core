@@ -139,7 +139,7 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
      * effective the next time a new output file is opened.
      *
      * @param appendIfFileExists true if new data should be appended,
-     *                           false to overwrite the existing file.
+     *                           false to overwrite the existing file
      */
     public void setAppendIfFileExists(final boolean appendIfFileExists) {
         this.appendIfFileExists = appendIfFileExists;

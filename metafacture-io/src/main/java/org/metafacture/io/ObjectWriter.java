@@ -128,6 +128,20 @@ public final class ObjectWriter<T> implements ConfigurableObjectWriter<T> {
         objectWriter.setSeparator(separator);
     }
 
+    /**
+     * Controls whether to open files in append mode if they exist.
+     *
+     * @see ObjectFileWriter#setAppendIfFileExists
+     *
+     * @param appendIfFileExists true if new data should be appended,
+     *                           false to overwrite the existing file
+     */
+    public void setAppendIfFileExists(final boolean appendIfFileExists) {
+        if (objectWriter instanceof ObjectFileWriter) {
+            ((ObjectFileWriter) objectWriter).setAppendIfFileExists(appendIfFileExists);
+        }
+    }
+
     @Override
     public void process(final T obj) {
         objectWriter.process(obj);
