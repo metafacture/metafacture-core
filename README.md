@@ -356,14 +356,16 @@ Parameters:
 
 Options:
 
+- `append`: Whether to open files in append mode if they exist. (Default: `false`)
 - `compression` (file output only): Compression mode. (Default: `auto`)
 - `destination`: Destination to write the record to; may include [format directives](https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html#syntax) for counter and record ID (in that order). (Default: `stdout`)
 - `encoding` (file output only): Encoding used by the underlying writer. (Default: `UTF-8`)
-- `footer`: Footer which is output after the record. (Default: `\n`)
-- `header`: Header which is output before the record. (Default: Empty string)
+- `footer`: Footer which is written at the end of the output. (Default: `\n`)
+- `header`: Header which is written at the beginning of the output. (Default: Empty string)
 - `id`: Field name which contains the record ID; if found, will be available for inclusion in `prefix` and `destination`. (Default: `_id`)
 - `internal`: Whether to print the record's internal representation instead of JSON. (Default: `false`)
 - `pretty`: Whether to use pretty printing. (Default: `false`)
+- `separator`: Separator which is written after the record. (Default: `\n`)
 
 ```perl
 print_record(["<prefix>"][, <options>...])
