@@ -60,6 +60,34 @@ public enum FixBind implements FixContext {
         }
     },
 
+    list_as {
+        @Override
+        public void execute(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final RecordTransformer recordTransformer) {
+            final Map<String, Value.Array> lists = new HashMap<>();
+            options.forEach((k, v) -> Value.asList(record.get(v), a -> lists.put(k, a)));
+
+            final int size = lists.values().stream().mapToInt(a -> a.size()).max().orElse(0);
+            for (int i = 0; i < size; ++i) {
+                final int index = i;
+
+                lists.forEach((k, v) -> {
+                    final Value value = index < v.size() ? v.get(index) : null;
+
+                    if (value != null) {
+                        record.put(k, v.get(index));
+                    }
+                    else {
+                        record.remove(k);
+                    }
+                });
+
+                recordTransformer.transform(record);
+            }
+
+            lists.keySet().forEach(record::remove);
+        }
+    },
+
     once {
         private final Map<Metafix, Set<String>> executed = new HashMap<>();
 

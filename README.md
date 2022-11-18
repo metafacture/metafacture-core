@@ -688,6 +688,29 @@ do list(path: "<sourceField>", "var": "<variableName>")
 end
 ```
 
+#### `do list_as`
+
+Iterates over each _named_ element of an array (like [`do list`](#do-list) with a variable name). If multiple arrays are given, iterates over the _corresponding_ elements from each array (i.e., all elements with the same array index, skipping elements whose arrays have already been exhausted).
+
+```perl
+do list_as(element_1: "<sourceField_1>"[, ...])
+  ...
+end
+```
+
+E.g.:
+
+```perl
+# "ccm:university":["https://ror.org/0304hq317"]
+# "ccm:university_DISPLAYNAME":["Gottfried Wilhelm Leibniz Universität Hannover"]
+set_array("sourceOrga[]")
+do list_as(orgId: "ccm:university[]", orgName: "ccm:university_DISPLAYNAME[]")
+  copy_field(orgId, "sourceOrga[].$append.id")
+  copy_field(orgName, "sourceOrga[].$last.name")
+end
+# {"sourceOrga":[{"id":"https://ror.org/0304hq317","name":"Gottfried Wilhelm Leibniz Universität Hannover"}]}
+```
+
 #### `do once`
 
 Executes the statements only once (when the bind is first encountered), not repeatedly for each record.
