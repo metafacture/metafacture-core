@@ -47,6 +47,7 @@ public final class ObjectFileWriterCompressionTest {
     private static final String FILENAME_BZ2 = "compressed.txt.bz2";
     private static final String FILENAME_BZIP2 = "compressed.txt.bzip2";
     private static final String FILENAME_GZ = "compressed.txt.gz";
+    private static final String FILENAME_GZ_NOAUTO = "compressed.txt.gz.noauto";
     private static final String FILENAME_GZIP = "compressed.txt.gzip";
     private static final String FILENAME_XZ = "compressed.txt.xz";
 
@@ -76,11 +77,13 @@ public final class ObjectFileWriterCompressionTest {
                 { FILENAME_BZ2, FileCompression.AUTO, MAGIC_BYTES_BZIP2 },
                 { FILENAME_BZIP2, FileCompression.AUTO, MAGIC_BYTES_BZIP2 },
                 { FILENAME_GZ, FileCompression.AUTO, MAGIC_BYTES_GZIP },
+                { FILENAME_GZ_NOAUTO, FileCompression.AUTO, MAGIC_BYTES_NONE },
                 { FILENAME_GZIP, FileCompression.AUTO, MAGIC_BYTES_GZIP },
                 { FILENAME_XZ, FileCompression.AUTO, MAGIC_BYTES_XZ },
                 { FILENAME_NONE, FileCompression.NONE, MAGIC_BYTES_NONE },
                 { FILENAME_BZ2, FileCompression.BZIP2, MAGIC_BYTES_BZIP2 },
                 { FILENAME_GZ, FileCompression.GZIP, MAGIC_BYTES_GZIP },
+                { FILENAME_GZ_NOAUTO, FileCompression.GZIP, MAGIC_BYTES_GZIP },
                 { FILENAME_XZ, FileCompression.XZ, MAGIC_BYTES_XZ },
             });
     }
