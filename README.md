@@ -177,7 +177,7 @@ nothing()
 
 ##### `put_filemap`
 
-Defines an external map for lookup from a file. Maps with more than 2 columns are supported but are reduced to a defined key and a value column.
+Defines an external map for [lookup](#lookup) from a file. Maps with more than 2 columns are supported but are reduced to a defined key and a value column.
 
 ```perl
 put_filemap("<sourceFile>", "<mapName>", sep_char: "\t")
@@ -202,7 +202,7 @@ Options:
 
 ##### `put_map`
 
-Defines an internal map for lookup from key/value pairs.
+Defines an internal map for [lookup](#lookup) from key/value pairs.
 
 ```perl
 put_map("<mapName>",
@@ -574,7 +574,7 @@ Additional options when printing unknown values:
 - `encoding` (file output only): Encoding used by the underlying writer. (Default: `UTF-8`)
 - `footer`: Footer which is written at the end of the output. (Default: `\n`)
 - `header`: Header which is written at the beginning of the output. (Default: Empty string)
-- `id`: Field name which contains the record ID; if found, will be available for inclusion in `destination`. (Default: `_id`)
+- `id`: Field name which contains the record ID; if found, will be available for inclusion in `prefix` and `destination`. (Default: `_id`)
 - `prefix`: Prefix to print before the unknown value; may include [format directives](https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html#syntax) for counter and record ID (in that order). (Default: Empty string)
 - `separator`: Separator which is written after the unknown value. (Default: `\n`)
 
