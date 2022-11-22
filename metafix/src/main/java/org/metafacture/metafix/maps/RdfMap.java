@@ -56,7 +56,7 @@ import java.util.NoSuchElementException;
  */
 public final class RdfMap extends AbstractReadOnlyMap<String, String> {
     public static final String TARGET = "target";
-    public static final String TARGET_LANGUAGE = "target_language";
+    public static final String TARGET_LANGUAGE = "select_language";
     public static final String SELECT = "select";
     private static final int MAX_REDIRECTIONS = 10;
     private static final int MIN_HTTP_STATUS_CODE = 299;
