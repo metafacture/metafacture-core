@@ -16,8 +16,6 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.framework.StandardEventNames;
-import org.metafacture.io.ObjectWriter;
 import org.metafacture.metafix.api.FixFunction;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.functions.ISBN;
@@ -242,31 +240,25 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
 
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final Value idValue = record.get(options.getOrDefault("id", StandardEventNames.ID));
-
             final boolean internal = getBoolean(options, "internal");
             final boolean pretty = getBoolean(options, "pretty");
 
-            final LongAdder counter = scopedCounter.computeIfAbsent(metafix, k -> new LongAdder());
-            counter.increment();
+            if (!params.isEmpty()) {
+                options.put("prefix", params.get(0));
+            }
 
-            final UnaryOperator<String> formatter = s -> String.format(s,
-                    counter.sum(), Value.isNull(idValue) ? "" : idValue.toString());
-
-            final String prefix = params.isEmpty() ? "" : formatter.apply(params.get(0));
-
-            withWriter(options, formatter, w -> {
+            withWriter(metafix, record, options, scopedCounter, c -> {
                 if (internal) {
                     if (pretty) {
-                        record.forEach((f, v) -> w.process(prefix + f + "=" + v));
+                        record.forEach((f, v) -> c.accept(f + "=" + v));
                     }
                     else {
-                        w.process(prefix + record);
+                        c.accept(record.toString());
                     }
                 }
                 else {
                     try {
-                        w.process(prefix + record.toJson(pretty));
+                        c.accept(record.toJson(pretty));
                     }
                     catch (final IOException e) {
                         // Log a warning? Print string representation instead?
@@ -474,6 +466,8 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
         }
     },
     lookup {
+        private final Map<Metafix, LongAdder> scopedCounter = new HashMap<>();
+
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final Map<String, String> map;
@@ -500,14 +494,14 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
             final boolean delete = getBoolean(options, "delete");
             final boolean printUnknown = getBoolean(options, "print_unknown");
 
-            final Consumer<ObjectWriter<String>> consumer = w -> record.transform(params.get(0), oldValue -> {
+            final Consumer<Consumer<String>> consumer = c -> record.transform(params.get(0), oldValue -> {
                 final String newValue = map.get(oldValue);
                 if (newValue != null) {
                     return newValue;
                 }
                 else {
-                    if (w != null) {
-                        w.process(oldValue);
+                    if (c != null) {
+                        c.accept(oldValue);
                     }
 
                     return defaultValue != null ? defaultValue : delete ? null : oldValue;
@@ -516,7 +510,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
 
             if (printUnknown) {
                 options.putIfAbsent("append", "true");
-                withWriter(options, null, consumer);
+                withWriter(metafix, record, options, scopedCounter, consumer);
             }
             else {
                 consumer.accept(null);

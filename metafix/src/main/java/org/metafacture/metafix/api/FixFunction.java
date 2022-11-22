@@ -16,6 +16,7 @@
 
 package org.metafacture.metafix.api;
 
+import org.metafacture.framework.StandardEventNames;
 import org.metafacture.io.ObjectWriter;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
@@ -25,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
@@ -62,6 +64,19 @@ public interface FixFunction {
         finally {
             writer.closeStream();
         }
+    }
+
+    default void withWriter(final Metafix metafix, final Record record, final Map<String, String> options, final Map<Metafix, LongAdder> scopedCounter, final Consumer<Consumer<String>> consumer) {
+        final Value idValue = record.get(options.getOrDefault("id", StandardEventNames.ID));
+
+        final LongAdder counter = scopedCounter.computeIfAbsent(metafix, k -> new LongAdder());
+        counter.increment();
+
+        final UnaryOperator<String> formatter = s -> String.format(s,
+                counter.sum(), Value.isNull(idValue) ? "" : idValue.toString());
+
+        final String prefix = formatter.apply(options.getOrDefault("prefix", ""));
+        withWriter(options, formatter, w -> consumer.accept(s -> w.process(prefix + s)));
     }
 
     default boolean getBoolean(final Map<String, String> options, final String key) {

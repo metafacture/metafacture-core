@@ -854,6 +854,7 @@ public class MetafixLookupTest {
                 ),
                 i -> {
                     i.startRecord("rec1");
+                    i.literal("name", "moe");
                     i.literal("title", "Aloha");
                     i.literal("title", "Moin");
                     i.literal("title", "Hey");
@@ -862,6 +863,7 @@ public class MetafixLookupTest {
                     i.endRecord();
 
                     i.startRecord("rec2");
+                    i.literal("name", "joe");
                     i.literal("title", "Aloha");
                     i.literal("title", "you");
                     i.literal("title", "too");
@@ -871,6 +873,7 @@ public class MetafixLookupTest {
                     final boolean delete = "__delete".equals(defaultValue);
 
                     o.get().startRecord("rec1");
+                    o.get().literal("name", "moe");
                     o.get().literal("title", "Alohaeha");
                     o.get().literal("title", "Moin zäme");
 
@@ -886,6 +889,7 @@ public class MetafixLookupTest {
                     o.get().endRecord();
 
                     o.get().startRecord("rec2");
+                    o.get().literal("name", "joe");
                     o.get().literal("title", "Alohaeha");
 
                     if (defaultValue == null) {
@@ -915,6 +919,16 @@ public class MetafixLookupTest {
     @Test
     public void shouldPrintUnknownWithDelete() {
         shouldPrintUnknown(", delete: 'true'", "__delete", "Hey\nyou\nthere\nyou\ntoo\n");
+    }
+
+    @Test
+    public void shouldPrintUnknownWithPrefix() {
+        shouldPrintUnknown(", prefix: '<%d:%s>'", null, "<1:rec1>Hey\n<1:rec1>you\n<1:rec1>there\n<2:rec2>you\n<2:rec2>too\n");
+    }
+
+    @Test
+    public void shouldPrintUnknownWithPrefixAndIdField() {
+        shouldPrintUnknown(", prefix: '<%d:%s>', id: 'name'", null, "<1:moe>Hey\n<1:moe>you\n<1:moe>there\n<2:joe>you\n<2:joe>too\n");
     }
 
     @Test

@@ -575,6 +575,7 @@ Additional options when printing unknown values:
 - `footer`: Footer which is written at the end of the output. (Default: `\n`)
 - `header`: Header which is written at the beginning of the output. (Default: Empty string)
 - `id`: Field name which contains the record ID; if found, will be available for inclusion in `destination`. (Default: `_id`)
+- `prefix`: Prefix to print before the unknown value; may include [format directives](https://docs.oracle.com/javase/8/docs/api/java/util/Formatter.html#syntax) for counter and record ID (in that order). (Default: Empty string)
 - `separator`: Separator which is written after the unknown value. (Default: `\n`)
 
 ```perl
