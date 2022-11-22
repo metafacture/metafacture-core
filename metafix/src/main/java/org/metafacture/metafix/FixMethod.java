@@ -16,8 +16,6 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.framework.StandardEventNames;
-import org.metafacture.io.ObjectWriter;
 import org.metafacture.metafix.api.FixFunction;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.functions.ISBN;
@@ -34,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.LongAdder;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
@@ -241,42 +240,31 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
 
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final String destination = options.getOrDefault("destination", ObjectWriter.STDOUT);
-            final Value idValue = record.get(options.getOrDefault("id", StandardEventNames.ID));
-
             final boolean internal = getBoolean(options, "internal");
             final boolean pretty = getBoolean(options, "pretty");
 
-            final LongAdder counter = scopedCounter.computeIfAbsent(metafix, k -> new LongAdder());
-            counter.increment();
+            if (!params.isEmpty()) {
+                options.put("prefix", params.get(0));
+            }
 
-            final String id = Value.isNull(idValue) ? "" : idValue.toString();
-            final String prefix = params.isEmpty() ? "" : String.format(params.get(0), counter.sum(), id);
-            final ObjectWriter<String> writer = new ObjectWriter<>(String.format(destination, counter.sum(), id));
-
-            withOption(options, "compression", writer::setCompression);
-            withOption(options, "encoding", writer::setEncoding);
-            withOption(options, "footer", writer::setFooter);
-            withOption(options, "header", writer::setHeader);
-
-            if (internal) {
-                if (pretty) {
-                    record.forEach((f, v) -> writer.process(prefix + f + "=" + v));
+            withWriter(metafix, record, options, scopedCounter, c -> {
+                if (internal) {
+                    if (pretty) {
+                        record.forEach((f, v) -> c.accept(f + "=" + v));
+                    }
+                    else {
+                        c.accept(record.toString());
+                    }
                 }
                 else {
-                    writer.process(prefix + record);
+                    try {
+                        c.accept(record.toJson(pretty));
+                    }
+                    catch (final IOException e) {
+                        // Log a warning? Print string representation instead?
+                    }
                 }
-            }
-            else {
-                try {
-                    writer.process(prefix + record.toJson(pretty));
-                }
-                catch (final IOException e) {
-                    // Log a warning? Print string representation instead?
-                }
-            }
-
-            writer.closeStream();
+            });
         }
     },
     random {
@@ -478,6 +466,8 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
         }
     },
     lookup {
+        private final Map<Metafix, LongAdder> scopedCounter = new HashMap<>();
+
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final Map<String, String> map;
@@ -501,10 +491,30 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
             }
 
             final String defaultValue = map.get(Maps.DEFAULT_MAP_KEY); // TODO: Catmandu uses 'default'
-            record.transform(params.get(0), oldValue -> {
-                final String newValue = map.getOrDefault(oldValue, defaultValue);
-                return newValue != null ? newValue : getBoolean(options, "delete") ? null : oldValue;
+            final boolean delete = getBoolean(options, "delete");
+            final boolean printUnknown = getBoolean(options, "print_unknown");
+
+            final Consumer<Consumer<String>> consumer = c -> record.transform(params.get(0), oldValue -> {
+                final String newValue = map.get(oldValue);
+                if (newValue != null) {
+                    return newValue;
+                }
+                else {
+                    if (c != null) {
+                        c.accept(oldValue);
+                    }
+
+                    return defaultValue != null ? defaultValue : delete ? null : oldValue;
+                }
             });
+
+            if (printUnknown) {
+                options.putIfAbsent("append", "true");
+                withWriter(metafix, record, options, scopedCounter, consumer);
+            }
+            else {
+                consumer.accept(null);
+            }
         }
     },
     prepend {

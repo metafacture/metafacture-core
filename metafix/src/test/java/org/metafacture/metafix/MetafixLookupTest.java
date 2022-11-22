@@ -24,6 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -844,6 +845,115 @@ public class MetafixLookupTest {
                 }
             )
         );
+    }
+
+    private void shouldPrintUnknown(final String args, final String defaultValue, final String expected) {
+        MetafixTestHelpers.assertStdout(expected, () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    LOOKUP + " Aloha: Alohaeha, 'Moin': 'Moin zäme'" + args + ", print_unknown: 'true')"
+                ),
+                i -> {
+                    i.startRecord("rec1");
+                    i.literal("name", "moe");
+                    i.literal("title", "Aloha");
+                    i.literal("title", "Moin");
+                    i.literal("title", "Hey");
+                    i.literal("title", "you");
+                    i.literal("title", "there");
+                    i.endRecord();
+
+                    i.startRecord("rec2");
+                    i.literal("name", "joe");
+                    i.literal("title", "Aloha");
+                    i.literal("title", "you");
+                    i.literal("title", "too");
+                    i.endRecord();
+                },
+                (o, f) -> {
+                    final boolean delete = "__delete".equals(defaultValue);
+
+                    o.get().startRecord("rec1");
+                    o.get().literal("name", "moe");
+                    o.get().literal("title", "Alohaeha");
+                    o.get().literal("title", "Moin zäme");
+
+                    if (defaultValue == null) {
+                        o.get().literal("title", "Hey");
+                        o.get().literal("title", "you");
+                        o.get().literal("title", "there");
+                    }
+                    else if (!delete) {
+                        f.apply(3).literal("title", defaultValue);
+                    }
+
+                    o.get().endRecord();
+
+                    o.get().startRecord("rec2");
+                    o.get().literal("name", "joe");
+                    o.get().literal("title", "Alohaeha");
+
+                    if (defaultValue == null) {
+                        o.get().literal("title", "you");
+                        o.get().literal("title", "too");
+                    }
+                    else if (!delete) {
+                        f.apply(2).literal("title", defaultValue);
+                    }
+
+                    o.get().endRecord();
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldPrintUnknown() {
+        shouldPrintUnknown("", null, "Hey\nyou\nthere\nyou\ntoo\n");
+    }
+
+    @Test
+    public void shouldPrintUnknownWithDefault() {
+        shouldPrintUnknown(", __default: Tach", "Tach", "Hey\nyou\nthere\nyou\ntoo\n");
+    }
+
+    @Test
+    public void shouldPrintUnknownWithDelete() {
+        shouldPrintUnknown(", delete: 'true'", "__delete", "Hey\nyou\nthere\nyou\ntoo\n");
+    }
+
+    @Test
+    public void shouldPrintUnknownWithPrefix() {
+        shouldPrintUnknown(", prefix: '<%d:%s>'", null, "<1:rec1>Hey\n<1:rec1>you\n<1:rec1>there\n<2:rec2>you\n<2:rec2>too\n");
+    }
+
+    @Test
+    public void shouldPrintUnknownWithPrefixAndIdField() {
+        shouldPrintUnknown(", prefix: '<%d:%s>', id: 'name'", null, "<1:moe>Hey\n<1:moe>you\n<1:moe>there\n<2:joe>you\n<2:joe>too\n");
+    }
+
+    @Test
+    public void shouldPrintUnknownWithHeader() {
+        shouldPrintUnknown(", header: '<%d:%s>'", null, "<%d:%s>Hey\nyou\nthere\n<%d:%s>you\ntoo\n");
+    }
+
+    @Test
+    public void shouldPrintUnknownWithFooter() {
+        shouldPrintUnknown(", footer: '<%d:%s>'", null, "Hey\nyou\nthere<%d:%s>you\ntoo<%d:%s>");
+    }
+
+    @Test
+    public void shouldPrintUnknownWithSeparator() {
+        shouldPrintUnknown(", separator: '<%d:%s>'", null, "Hey<%d:%s>you<%d:%s>there\nyou<%d:%s>too\n");
+    }
+
+    @Test
+    public void shouldPrintUnknownToFile() throws IOException {
+        MetafixTestHelpers.assertTempFile("Hey\nyou\nthere\nyou\ntoo\n", p -> shouldPrintUnknown(", destination: '" + p + "'", null, ""));
+    }
+
+    @Test
+    public void shouldPrintUnknownToFileWithoutAppend() throws IOException {
+        MetafixTestHelpers.assertTempFile("you\ntoo\n", p -> shouldPrintUnknown(", destination: '" + p + "', append: 'false'", null, ""));
     }
 
     private void assertMap(final String... fixDef) {
