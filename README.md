@@ -553,7 +553,7 @@ join_field("<sourceField>", "<separator>")
 
 ##### `lookup`
 
-Looks up matching values in a map and replaces the field value with this match. External files as well as internal maps can be used.
+Looks up matching values in a map and replaces the field value with this match. [External files](#put_filemap) as well as [internal maps](#put_map) can be used.
 
 Parameters:
 
