@@ -161,7 +161,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         }
 
         final String resolvedPath = basePath.resolve(path).normalize().toString();
-        LOG.debug("Resolved path: path = '{}', result = '{}', base = '{}'", path, resolvedPath, basePath);
+        LOG.debug("Resolved path: base = '{}', path = '{}', result = '{}'", basePath, path, resolvedPath);
 
         return resolvedPath;
     }
