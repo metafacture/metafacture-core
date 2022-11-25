@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UncheckedIOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -145,17 +146,28 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     }
 
     public String resolvePath(final String path) {
+        final Path basePath;
+
         if (path.startsWith(".")) {
             if (fixFile != null) {
-                return Paths.get(fixFile).resolveSibling(path).toString();
+                basePath = getPath(fixFile).getParent();
             }
             else {
                 throw new IllegalArgumentException("Cannot resolve relative path: " + path);
             }
         }
         else {
-            return path;
+            basePath = getPath("");
         }
+
+        final String resolvedPath = basePath.resolve(path).normalize().toString();
+        LOG.debug("Resolved path: path = '{}', result = '{}', base = '{}'", path, resolvedPath, basePath);
+
+        return resolvedPath;
+    }
+
+    private Path getPath(final String path) {
+        return Paths.get(path).toAbsolutePath().normalize();
     }
 
     public RecordTransformer getRecordTransformer(final String fixDef) {

@@ -55,7 +55,11 @@ public final class MetafixTestHelpers {
     }
 
     public static void assertProcessException(final Class<?> expectedClass, final String expectedMessage, final Executable executable) {
-        assertThrows(FixProcessException.class, expectedClass, expectedMessage, executable, UnaryOperator.identity());
+        assertProcessException(expectedClass, UnaryOperator.identity(), expectedMessage, executable);
+    }
+
+    public static void assertProcessException(final Class<?> expectedClass, final UnaryOperator<String> operator, final String expectedMessage, final Executable executable) {
+        assertThrows(FixProcessException.class, expectedClass, expectedMessage, executable, operator);
     }
 
     public static void assertThrows(final Class<? extends Throwable> expectedClass, final String expectedMessage, final Executable executable) {

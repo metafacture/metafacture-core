@@ -1084,7 +1084,7 @@ public class MetafixIfTest {
         final String text2 = "nothing()";
         final String message = "Error while executing Fix expression (at FILE, line 3): " + text1 + " " + text2;
 
-        MetafixTestHelpers.assertThrows(FixProcessException.class, s -> s.replaceAll("file:/.+?\\.fix", "FILE"), message, () ->
+        MetafixTestHelpers.assertProcessException(/*BasicIndexOutOfBoundsException.class*/null, s -> s.replaceAll("file:/.+?\\.fix", "FILE"), message, () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "if exists('animal')",
                     "nothing()",
@@ -1112,7 +1112,7 @@ public class MetafixIfTest {
         final String text = "add_field()";
         final String message = "Error while executing Fix expression (at FILE, line 4): " + text;
 
-        MetafixTestHelpers.assertThrows(FixProcessException.class, s -> s.replaceAll("file:/.+?\\.fix", "FILE"), message, () ->
+        MetafixTestHelpers.assertProcessException(/*BasicIndexOutOfBoundsException.class*/null, s -> s.replaceAll("file:/.+?\\.fix", "FILE"), message, () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "if exists('animal')",
                     "nothing()",

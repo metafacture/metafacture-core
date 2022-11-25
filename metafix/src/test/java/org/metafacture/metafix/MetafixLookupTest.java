@@ -830,7 +830,7 @@ public class MetafixLookupTest {
 
     @Test
     public void shouldFailLookupInUnknownExternalMap() {
-        MetafixTestHelpers.assertProcessException(MorphExecutionException.class, "File not found: testMap.csv", () ->
+        MetafixTestHelpers.assertProcessException(MorphExecutionException.class, s -> s.replaceAll(": /.+?/testMap\\.csv", ": FILE"), "File not found: FILE", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     LOOKUP + " 'testMap.csv')"
                 ),
