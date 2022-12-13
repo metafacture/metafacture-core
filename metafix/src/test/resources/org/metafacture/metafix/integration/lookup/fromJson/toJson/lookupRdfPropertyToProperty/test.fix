@@ -1,1 +1,1 @@
-lookup_rdf("a", "../../../../../maps/hcrt.ttl", target: "http://www.w3.org/2004/02/skos/core#prefLabel", select_language: 'en')
+lookup("a", "../../../../../maps/hcrt.ttl", target: "http://www.w3.org/2004/02/skos/core#prefLabel", select_language: 'en')

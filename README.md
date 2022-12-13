@@ -190,7 +190,6 @@ The separator (`sep_char`) will vary depending on the source file, e.g.:
 | CSV  | `,` or `;` |
 | TSV  | `\t`       |
 
-<<<<<<< HEAD
 Options:
 
 - `allow_empty_values`: Sets whether to allow empty values in the filemap or to ignore these entries. (Default: `false`)
@@ -209,7 +208,7 @@ The targeted RDF property can optional be bound by an RDF language tag.
 
 ```perl
 put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>")
-put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>, target_language: "<rdfLanguageTag>"")
+put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>, select: "<rdfLanguageTag>"")
 ```
 
 ##### `put_map`
@@ -232,7 +231,7 @@ The targeted RDF property can optionally be bound by an RDF language tag.
 
 ```perl
 put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>")
-put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>", target_language: "<rdfLanguageTag>")
+put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>", select_language: "<rdfLanguageTag>")
 ```
 
 ##### `put_var`
@@ -576,7 +575,7 @@ join_field("<sourceField>", "<separator>")
 
 ##### `lookup`
 
-Looks up matching values in a map and replaces the field value with this match. [External files](#put_filemap) as well as [internal maps](#put_map) can be used.
+Looks up matching values in a map and replaces the field value with this match. [External files](#put_filemap), [internal maps](#put_map) as well as [rdf resources](#put_rdfmap) can be used.
 
 Parameters:
 
@@ -627,19 +626,19 @@ lookup("path.to.field", "map-name", __default: "NA")
 
 # with printing unknown values to a file
 lookup("path.to.field", "map-name", print_unknown: "true", destination: "unknown.txt")
-```
 
-##### `lookup_rdf`
-
-Looks up matching values in an RDF resource and replaces the field value with a match defined by a targeted RDF property. External files or HTTP(S) resources as well as internal RDF maps can be used.
+# rdf: Looks up matching values in an RDF resource and replaces the field value with a match defined by a targeted RDF property. External files or HTTP(S) resources as well as internal RDF maps can be used.
 The targeted RDF property can optionally be bound by an RDF language tag.
 
-```perl
-lookup_rdf("<sourceField>", "<rdfFile>", target: "<rdfProperty>")
-lookup_rdf("<sourceField>", "<rdfHttpUri>", target: "<rdfProperty>")
-lookup_rdf("<sourceField>", "<rdfMapName>", target: "<rdfProperty>")
-lookup_rdf("<sourceField>", "<rdfMapName>", target: "<rdfProperty>", target_language: "<rdfLanguageTag>")
-lookup_rdf("<sourceField>", "<rdfMapName>", target: "<rdfProperty>", __default: "NA")
+## rdf map (explicit)
+put_rdfmap("path/to/file", "rdf-map", "target:<rdfProperty>")
+lookup("path.to.field", "rdf-map")
+
+## rdf with mandatory "target" (implicit)
+lookup("path.to.field", "path/to/file|URL", target: "<rdfProperty>")
+
+## rdf with mandatory "target" and "select_language" (implicit)
+lookup("path.to.field", "path/to/file|URL", target: "<rdfProperty>", select_language: "<rdfLanguageTag>")
 ```
 
 ##### `prepend`

@@ -1,1 +1,1 @@
-lookup_rdf("a", "../../../../../maps/hcrt.ttl", target: "skos:prefLabel")
+lookup("a", "../../../../../maps/hcrt.ttl", target: "skos:prefLabel")

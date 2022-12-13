@@ -97,7 +97,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
     put_rdfmap {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final String rdfMapName = params.size() == 1 ? params.get(0) : params.get(1) + options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "");
+            final String rdfMapName = params.size() == 1 ? params.get(0) + options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "") : params.get(1);
             final String replaceTargets = options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "");
             final String resourceName = Optional.ofNullable(params.get(0))
                 .map(str -> str.replaceAll(replaceTargets + "$", ""))
@@ -501,15 +501,10 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
                 map = options;
             }
             else {
-                final String mapName = params.get(1);
+                String mapName = params.get(1);
 
                 if (!metafix.getMapNames().contains(mapName)) {
-                    if (mapName.contains(".") || mapName.contains(File.separator)) {
-                        put_filemap.apply(metafix, record, Arrays.asList(mapName), options);
-                    }
-                    else {
-                        // Probably an unknown internal map? Log a warning?
-                    }
+                    mapName = putMapAndGetMapName(metafix, record, params, options, mapName);
                 }
 
                 map = metafix.getMap(mapName);
@@ -541,11 +536,22 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
                 consumer.accept(null);
             }
         }
-    },
-    lookup_rdf {
-        @Override
-        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            lookup(metafix, record, params, options, put_rdfmap);
+
+        private String putMapAndGetMapName(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final String mapName) {
+            String newMapName = mapName;
+            if (options.containsKey(RdfMap.TARGET)) {
+                put_rdfmap.apply(metafix, record, Arrays.asList(params.get(1)), options);
+                newMapName = params.get(1) + options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "");
+            }
+            else {
+                if (mapName.contains(".") || mapName.contains(File.separator)) {
+                    put_filemap.apply(metafix, record, Arrays.asList(mapName), options);
+                }
+                else {
+                    // Probably an unknown internal map? Log a warning?
+                }
+            }
+            return newMapName;
         }
     },
     prepend {

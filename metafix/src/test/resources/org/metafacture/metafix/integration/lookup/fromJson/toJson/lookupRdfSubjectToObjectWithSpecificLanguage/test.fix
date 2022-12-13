@@ -1,2 +1,2 @@
 # Lookup replaces with default value by default. Should be an option.
-lookup_rdf("a", "../../../../../maps/hcrt.ttl", target: "http://www.w3.org/2004/02/skos/core#prefLabel", select_language: "de")
+lookup("a", "../../../../../maps/hcrt.ttl", target: "http://www.w3.org/2004/02/skos/core#prefLabel", select_language: "de")
