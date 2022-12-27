@@ -19,13 +19,23 @@ package org.metafacture.metafix;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.metamorph.api.MorphExecutionException;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.matching.UrlPattern;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * Tests Metafix lookup. Following the cheat sheet examples at
@@ -37,12 +47,15 @@ import java.util.Arrays;
 public class MetafixLookupTest {
     private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
     private static final String RDF_MAP = "src/test/resources/org/metafacture/metafix/maps/test.ttl";
-
     private static final String HCRT_RDF_MAP = "src/test/resources/org/metafacture/metafix/maps/hcrt.ttl";
-    private static final String RDF_URL = "http://purl.org/lobid/rpb";
+    private static final String RDF_PATH = "/maps/rpb.ttl";
+    private static final String RDF_URL = "%s" + RDF_PATH;
     private static final String TSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.tsv";
-
     private static final String LOOKUP = "lookup('title.*',";
+
+    private static final WireMockServer WIRE_MOCK_SERVER = new WireMockRule(WireMockConfiguration.wireMockConfig()
+        .jettyAcceptors(Runtime.getRuntime().availableProcessors())
+        .dynamicPort());
 
     @Mock
     private StreamReceiver streamReceiver;
@@ -1028,8 +1041,11 @@ public class MetafixLookupTest {
 
     @Test
     public void shouldExplicitLookupRdfUrlWithRedirection() {
+        final String baseUrl = WIRE_MOCK_SERVER.baseUrl();
+        final String mockedRdfUrl = String.format(RDF_URL, baseUrl);
+
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "put_rdfmap('" + RDF_URL + "', 'testMapSkosNotation', target: 'skos:prefLabel')",
+                "put_rdfmap('" + mockedRdfUrl + "', 'testMapSkosNotation', target: 'skos:prefLabel')",
                 "lookup('prefLabel', 'testMapSkosNotation' , target: 'skos:prefLabel')"
             ),
             i -> {
@@ -1047,8 +1063,11 @@ public class MetafixLookupTest {
 
     @Test
     public void shouldLookupRdfUrlWithRedirection() {
+        final String baseUrl = WIRE_MOCK_SERVER.baseUrl();
+        final String mockedRdfUrl = String.format(RDF_URL, baseUrl);
+
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "lookup('prefLabel', '" + RDF_URL + "', target: 'skos:prefLabel')"
+                "lookup('prefLabel', '" + mockedRdfUrl + "', target: 'skos:prefLabel')"
             ),
             i -> {
                 i.startRecord("1");
@@ -1287,4 +1306,25 @@ public class MetafixLookupTest {
         );
     }
 
+    @BeforeAll
+    static void setStubForWireMock() {
+        WIRE_MOCK_SERVER.start();
+        final UrlPattern urlPattern = WireMock.urlPathEqualTo(RDF_PATH);
+        final String redirectToUrl = "/redirect" + RDF_PATH;
+        final UrlPattern urlPatternRedirectToUrl = WireMock.urlPathEqualTo(redirectToUrl);
+
+        WIRE_MOCK_SERVER.stubFor(WireMock.get(urlPattern)
+            .willReturn(WireMock.temporaryRedirect(redirectToUrl)));
+        final String responseBody = new BufferedReader(new InputStreamReader(MetafixLookupTest.class.getResourceAsStream("." + RDF_PATH))).lines()
+            .collect(Collectors.joining("\n"));
+        WIRE_MOCK_SERVER.stubFor(WireMock.get(urlPatternRedirectToUrl)
+            .willReturn(WireMock.aResponse()
+                .withHeader("Content-Type", "text/turtle")
+                .withBody(responseBody)));
+    }
+
+    @AfterAll
+    static void tearDownWireMock() {
+        WIRE_MOCK_SERVER.stop();
+    }
 }

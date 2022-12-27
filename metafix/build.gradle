@@ -26,6 +26,7 @@ dependencies {
   testImplementation "org.junit.platform:junit-platform-launcher:${versions.junit_platform}"
   testImplementation "org.eclipse.xtext:org.eclipse.xtext.testing:${versions.xtext}"
   testImplementation "org.eclipse.xtext:org.eclipse.xtext.xbase.testing:${versions.xtext}"
+  testImplementation "com.github.tomakehurst:wiremock-jre8:${versions.wiremock}"
 
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit_jupiter}"
 
