@@ -2713,6 +2713,289 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void copyFieldWithoutReplaceAllString() {
+        copyFieldWithReplaceAllString(false);
+    }
+
+    @Test
+    public void copyFieldWithReplaceAllString() {
+        copyFieldWithReplaceAllString(true);
+    }
+
+    private void copyFieldWithReplaceAllString(final boolean replaceAll) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list(path: 'contribution[]', 'var': '$i')",
+                "  copy_field('$i.label', '$i.agent.altLabel')",
+                "end",
+                "do list(path: 'subject[]', 'var': '$i')",
+                "  copy_field('$i.label', '$i.altLabel')",
+                "end",
+                replaceAll ? "replace_all('contribution[].*.agent.altLabel', 't', '')" : "",
+                replaceAll ? "replace_all('subject[].*.altLabel', 't', '')" : ""
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("contribution[]");
+                i.startEntity("1");
+                i.literal("label", "contribution");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("subject[]");
+                i.startEntity("1");
+                i.literal("label", "subject");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("contribution[]");
+                o.get().startEntity("1");
+                o.get().literal("label", "contribution");
+                o.get().startEntity("agent");
+                o.get().literal("altLabel", replaceAll ? "conribuion" : "contribution");
+                f.apply(3).endEntity();
+                o.get().startEntity("subject[]");
+                o.get().startEntity("1");
+                o.get().literal("label", "subject");
+                o.get().literal("altLabel", replaceAll ? "subjec" : "subject");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void addFieldWithoutReplaceAllArray() {
+        addFieldWithReplaceAllArray(false);
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/278")
+    public void addFieldWithReplaceAllArray() {
+        addFieldWithReplaceAllArray(true);
+    }
+
+    private void addFieldWithReplaceAllArray(final boolean replaceAll) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list(path: 'contribution[]', 'var': '$i')",
+                "  set_array('$i.agent.altLabel[]')",
+                "  add_field('$i.agent.altLabel[].$append', 'contribution')",
+                "end",
+                "do list(path: 'subject[]', 'var': '$i')",
+                "  set_array('$i.altLabel[]')",
+                "  add_field('$i.altLabel[].$append', 'subject')",
+                "end",
+                replaceAll ? "replace_all('contribution[].*.agent.altLabel[].*', 't', '')" : "",
+                replaceAll ? "replace_all('subject[].*.altLabel[].*', 't', '')" : ""
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("contribution[]");
+                i.startEntity("1");
+                i.literal("label", "contribution");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("subject[]");
+                i.startEntity("1");
+                i.literal("label", "subject");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("contribution[]");
+                o.get().startEntity("1");
+                o.get().literal("label", "contribution");
+                o.get().startEntity("agent");
+                o.get().startEntity("altLabel[]");
+                o.get().literal("1", replaceAll ? "conribuion" : "contribution");
+                f.apply(4).endEntity();
+                o.get().startEntity("subject[]");
+                o.get().startEntity("1");
+                o.get().literal("label", "subject");
+                o.get().startEntity("altLabel[]");
+                o.get().literal("1", replaceAll ? "subjec" : "subject");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void setArrayWithoutReplaceAll() {
+        setArrayWithReplaceAll(false);
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/278")
+    public void setArrayWithReplaceAll() {
+        setArrayWithReplaceAll(true);
+    }
+
+    private void setArrayWithReplaceAll(final boolean replaceAll) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list(path: 'contribution[]', 'var': '$i')",
+                "  set_array('$i.agent.altLabel[]', 'contribution')",
+                "end",
+                "do list(path: 'subject[]', 'var': '$i')",
+                "  set_array('$i.altLabel[]', 'subject')",
+                "end",
+                replaceAll ? "replace_all('contribution[].*.agent.altLabel[].*', 't', '')" : "",
+                replaceAll ? "replace_all('subject[].*.altLabel[].*', 't', '')" : ""
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("contribution[]");
+                i.startEntity("1");
+                i.literal("label", "contribution");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("subject[]");
+                i.startEntity("1");
+                i.literal("label", "subject");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("contribution[]");
+                o.get().startEntity("1");
+                o.get().literal("label", "contribution");
+                o.get().startEntity("agent");
+                o.get().startEntity("altLabel[]");
+                o.get().literal("1", replaceAll ? "conribuion" : "contribution");
+                f.apply(4).endEntity();
+                o.get().startEntity("subject[]");
+                o.get().startEntity("1");
+                o.get().literal("label", "subject");
+                o.get().startEntity("altLabel[]");
+                o.get().literal("1", replaceAll ? "subjec" : "subject");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void copyFieldWithoutReplaceAllArray() {
+        copyFieldWithReplaceAllArray(false);
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/278")
+    public void copyFieldWithReplaceAllArray() {
+        copyFieldWithReplaceAllArray(true);
+    }
+
+    private void copyFieldWithReplaceAllArray(final boolean replaceAll) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list(path: 'contribution[]', 'var': '$i')",
+                "  set_array('$i.agent.altLabel[]')",
+                "  copy_field('$i.label', '$i.agent.altLabel[].$append')",
+                "end",
+                "do list(path: 'subject[]', 'var': '$i')",
+                "  set_array('$i.altLabel[]')",
+                "  copy_field('$i.label', '$i.altLabel[].$append')",
+                "end",
+                replaceAll ? "replace_all('contribution[].*.agent.altLabel[].*', 't', '')" : "",
+                replaceAll ? "replace_all('subject[].*.altLabel[].*', 't', '')" : ""
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("contribution[]");
+                i.startEntity("1");
+                i.literal("label", "contribution");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("subject[]");
+                i.startEntity("1");
+                i.literal("label", "subject");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("contribution[]");
+                o.get().startEntity("1");
+                o.get().literal("label", "contribution");
+                o.get().startEntity("agent");
+                o.get().startEntity("altLabel[]");
+                o.get().literal("1", replaceAll ? "conribuion" : "contribution");
+                f.apply(4).endEntity();
+                o.get().startEntity("subject[]");
+                o.get().startEntity("1");
+                o.get().literal("label", "subject");
+                o.get().startEntity("altLabel[]");
+                o.get().literal("1", replaceAll ? "subjec" : "subject");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void pasteWithoutReplaceAll() {
+        pasteWithReplaceAll(false);
+    }
+
+    @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/278")
+    public void pasteWithReplaceAll() {
+        pasteWithReplaceAll(true);
+    }
+
+    private void pasteWithReplaceAll(final boolean replaceAll) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "do list(path: 'contribution[]', 'var': '$i')",
+                "  set_array('$i.agent.altLabel[]')",
+                "  paste('$i.agent.altLabel[].$append', '$i.label', '~!')",
+                "end",
+                "do list(path: 'subject[]', 'var': '$i')",
+                "  set_array('$i.altLabel[]')",
+                "  paste('$i.altLabel[].$append', '$i.label', '~!')",
+                "end",
+                replaceAll ? "replace_all('contribution[].*.agent.altLabel[].*', '!', '')" : "",
+                replaceAll ? "replace_all('subject[].*.altLabel[].*', '!', '')" : ""
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("contribution[]");
+                i.startEntity("1");
+                i.literal("label", "contribution");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("subject[]");
+                i.startEntity("1");
+                i.literal("label", "subject");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("contribution[]");
+                o.get().startEntity("1");
+                o.get().literal("label", "contribution");
+                o.get().startEntity("agent");
+                o.get().startEntity("altLabel[]");
+                o.get().literal("1", replaceAll ? "contribution" : "contribution !");
+                f.apply(4).endEntity();
+                o.get().startEntity("subject[]");
+                o.get().startEntity("1");
+                o.get().literal("label", "subject");
+                o.get().startEntity("altLabel[]");
+                o.get().literal("1", replaceAll ? "subject" : "subject !");
+                f.apply(3).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldReplaceAllRegexesInArrayByIndex() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "replace_all('names.2', 'a', 'X')"
