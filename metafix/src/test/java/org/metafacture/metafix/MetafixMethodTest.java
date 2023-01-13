@@ -2828,7 +2828,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/278")
     public void setArrayWithReplaceAll() {
         setArrayWithReplaceAll(true);
     }
