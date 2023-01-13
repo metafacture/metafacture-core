@@ -2771,7 +2771,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/278")
     public void addFieldWithReplaceAllArray() {
         addFieldWithReplaceAllArray(true);
     }
@@ -2885,7 +2884,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/278")
     public void copyFieldWithReplaceAllArray() {
         copyFieldWithReplaceAllArray(true);
     }
@@ -2943,7 +2941,6 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/278")
     public void pasteWithReplaceAll() {
         pasteWithReplaceAll(true);
     }
@@ -2958,8 +2955,8 @@ public class MetafixMethodTest {
                 "  set_array('$i.altLabel[]')",
                 "  paste('$i.altLabel[].$append', '$i.label', '~!')",
                 "end",
-                replaceAll ? "replace_all('contribution[].*.agent.altLabel[].*', '!', '')" : "",
-                replaceAll ? "replace_all('subject[].*.altLabel[].*', '!', '')" : ""
+                replaceAll ? "replace_all('contribution[].*.agent.altLabel[].*', ' !', '')" : "",
+                replaceAll ? "replace_all('subject[].*.altLabel[].*', ' !', '')" : ""
             ),
             i -> {
                 i.startRecord("1");
