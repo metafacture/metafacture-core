@@ -36,7 +36,7 @@ public enum FixBind implements FixContext {
 
                     // with var -> keep full record in scope, add the var:
                     if (scopeVariable != null) {
-                        record.put(scopeVariable, value);
+                        record.put(scopeVariable, value, false);
                         recordTransformer.transform(record);
                         record.remove(scopeVariable);
                     }

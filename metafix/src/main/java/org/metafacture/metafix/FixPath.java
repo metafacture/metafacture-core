@@ -276,7 +276,7 @@ import java.util.Map;
         }
         else {
             if (!hash.containsField(field)) {
-                hash.put(field, Value.newHash());
+                hash.put(field, Value.newHash().withPathSet(newValue.getPath()));
             }
             insertInto(hash.get(field), mode, newValue, field, tail(path));
         }

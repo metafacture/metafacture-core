@@ -330,6 +330,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
             final String field = params.get(0);
             final Value newValue = newArray(params.subList(1, params.size()).stream().map(Value::new));
             record.set(field, newValue);
+            newValue.asArray().forEach(value -> value.withPathSet(newValue.getPath() + "." + value.getPath()));
         }
     },
     set_field {
