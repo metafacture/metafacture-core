@@ -15,8 +15,21 @@
  */
 package org.metafacture.json;
 
+import static org.hamcrest.CoreMatchers.both;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
+
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
@@ -24,6 +37,11 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 
 /**
  * Tests for {@link JsonValidator}.
@@ -46,13 +64,30 @@ public final class JsonValidatorTest {
     private ObjectReceiver<String> receiver;
     private InOrder inOrder;
 
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig()
+            .jettyAcceptors(Runtime.getRuntime().availableProcessors()).dynamicPort());
+
     @Before
-    public void setup() {
+    public void setup() throws IOException {
         MockitoAnnotations.initMocks(this);
+        WireMock.stubFor(WireMock.request("GET", WireMock.urlEqualTo("/schema"))
+                .willReturn(WireMock.ok().withBody(readToString(getClass().getResource(SCHEMA)))));
         validator = new JsonValidator(SCHEMA);
         validator.setSchemaRoot("/schemas/");
         validator.setReceiver(receiver);
         inOrder = Mockito.inOrder(receiver);
+    }
+
+    private String readToString(final URL url) throws IOException {
+        return new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))
+                .lines().collect(Collectors.joining("\n"));
+    }
+
+    @Test
+    public void callWireMockSchema() throws MalformedURLException, IOException {
+        final String schemaContent = readToString(new URL(wireMockRule.baseUrl() + "/schema"));
+        assertThat(schemaContent, both(containsString("$schema")).and(containsString("$ref")));
     }
 
     @Test
