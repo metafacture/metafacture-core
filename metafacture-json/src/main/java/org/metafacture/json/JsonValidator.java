@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, 2022 Fabian Steeg, hbz
+ * Copyright 2021, 2023 Fabian Steeg, hbz
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaClient;
 import org.everit.json.schema.loader.SchemaLoader;
+import org.everit.json.schema.loader.SchemaLoader.SchemaLoaderBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -37,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Validate JSON against a given schema, pass only valid input to the receiver.
@@ -44,7 +46,6 @@ import java.io.InputStream;
  * @author Fabian Steeg (fsteeg)
  */
 @Description("Validate JSON against a given schema, send only valid input to the receiver. Pass the schema location to validate against. " +
-        "Set `schemaRoot` for resolving sub-schemas referenced in `$id` or `$ref` (defaults to the classpath root: `/`). " +
         "Write valid and/or invalid output to locations specified with `writeValid` and `writeInvalid`. " +
         "Set the JSON key for the record ID value with `idKey` (for logging output, defaults to `id`).")
 @In(String.class)
@@ -53,7 +54,6 @@ import java.io.InputStream;
 public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceiver<String>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(JsonValidator.class);
-    private static final String DEFAULT_SCHEMA_ROOT = "/";
     private static final String DEFAULT_ID_KEY = "id";
     private String schemaUrl;
     private Schema schema;
@@ -61,7 +61,6 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
     private long success;
     private FileWriter writeInvalid;
     private FileWriter writeValid;
-    private String schemaRoot = DEFAULT_SCHEMA_ROOT;
     private String idKey = DEFAULT_ID_KEY;
 
     /**
@@ -69,13 +68,6 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
      */
     public JsonValidator(final String url) {
         this.schemaUrl = url;
-    }
-
-    /**
-     * @param schemaRoot The root location for resolving sub-schemas referenced in '$id' or '$ref'.
-     */
-    public void setSchemaRoot(final String schemaRoot) {
-        this.schemaRoot = schemaRoot;
     }
 
     /**
@@ -134,16 +126,32 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
         if (schema != null) {
             return;
         }
-        try (InputStream inputStream = getClass().getResourceAsStream(schemaUrl)) {
-            schema = SchemaLoader.builder()
-                    .schemaJson(new JSONObject(new JSONTokener(inputStream)))
-                    .schemaClient(SchemaClient.classPathAwareClient())
-                    .resolutionScope("classpath://" + schemaRoot)
-                    .build().load().build();
+        SchemaLoaderBuilder schemaLoader = SchemaLoader.builder();
+        try {
+            final URL url = new URL(schemaUrl);
+            schemaLoader = schemaLoader.schemaJson(jsonFrom(url.openStream()))
+                    .resolutionScope(baseFor(url.toString()));
         }
-        catch (final IOException | JSONException e) {
+        catch (final IOException e) {
+            LOG.info("Could not read as URL: {}, trying to load from class path", schemaUrl);
+            schemaLoader = schemaLoader.schemaClient(SchemaClient.classPathAwareClient())
+                    .schemaJson(jsonFrom(getClass().getResourceAsStream(schemaUrl)))
+                    .resolutionScope("classpath://" + baseFor(schemaUrl));
+        }
+        schema = schemaLoader.build().load().build();
+    }
+
+    private JSONObject jsonFrom(final InputStream inputStream) {
+        try {
+            return new JSONObject(new JSONTokener(inputStream));
+        }
+        catch (final JSONException e) {
             throw new MetafactureException(e.getMessage(), e);
         }
+    }
+
+    private String baseFor(final String path) {
+        return path.substring(0, path.lastIndexOf('/') + 1);
     }
 
     private FileWriter fileWriter(final String fileLocation) {

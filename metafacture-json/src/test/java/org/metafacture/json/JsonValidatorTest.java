@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, 2022 Fabian Steeg, hbz
+ * Copyright 2021, 2023 Fabian Steeg, hbz
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ package org.metafacture.json;
 import static org.hamcrest.CoreMatchers.both;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.request;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,12 +27,17 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
@@ -49,9 +56,11 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
  * @author Fabian Steeg
  *
  */
+@RunWith(Parameterized.class)
 public final class JsonValidatorTest {
 
-    private static final String SCHEMA = "/schemas/schema.json";
+    private static final String MAIN_SCHEMA = "/schemas/schema.json";
+    private static final String ID_SCHEMA = "/schemas/id.json";
     private static final String JSON_VALID = "{\"id\":\"http://example.org/\"}";
     private static final String JSON_INVALID_MISSING_REQUIRED = "{}";
     private static final String JSON_INVALID_URI_FORMAT= "{\"id\":\"example.org/\"}";
@@ -63,20 +72,41 @@ public final class JsonValidatorTest {
     @Mock
     private ObjectReceiver<String> receiver;
     private InOrder inOrder;
+    private Function<Object, String> schemaLocationGetter;
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig()
             .jettyAcceptors(Runtime.getRuntime().availableProcessors()).dynamicPort());
 
+    @Parameterized.Parameters(name = "{index}")
+    public static Collection<Object[]> siteMaps() {
+        return Arrays.asList((Object[][]) (new Function[][] { //
+                // Pass the schema to each test as path on classpath, file url, and http url:
+                { (Object rule) -> MAIN_SCHEMA },
+                { (Object rule) -> JsonValidatorTest.class.getResource(MAIN_SCHEMA).toString() },
+                { (Object rule) -> ((WireMockRule) rule).baseUrl() + MAIN_SCHEMA } }));
+    }
+
+    public JsonValidatorTest(Function<Object, String> schemaLocationGetter) {
+        this.schemaLocationGetter = schemaLocationGetter;
+    }
+
     @Before
     public void setup() throws IOException {
         MockitoAnnotations.initMocks(this);
-        WireMock.stubFor(WireMock.request("GET", WireMock.urlEqualTo("/schema"))
-                .willReturn(WireMock.ok().withBody(readToString(getClass().getResource(SCHEMA)))));
-        validator = new JsonValidator(SCHEMA);
-        validator.setSchemaRoot("/schemas/");
+        wireMock(MAIN_SCHEMA, ID_SCHEMA);
+        String schemaLocation = schemaLocationGetter.apply(wireMockRule);
+        validator = new JsonValidator(schemaLocation);
         validator.setReceiver(receiver);
         inOrder = Mockito.inOrder(receiver);
+    }
+
+    private void wireMock(final String... schemaLocations) throws IOException {
+        for (String schemaLocation : schemaLocations) {
+            stubFor(request("GET", WireMock.urlEqualTo(schemaLocation)).willReturn(
+                    WireMock.ok().withBody(readToString(getClass().getResource(schemaLocation)))
+                            .withHeader("Content-type", "application/json")));
+        }
     }
 
     private String readToString(final URL url) throws IOException {
@@ -86,7 +116,7 @@ public final class JsonValidatorTest {
 
     @Test
     public void callWireMockSchema() throws MalformedURLException, IOException {
-        final String schemaContent = readToString(new URL(wireMockRule.baseUrl() + "/schema"));
+        final String schemaContent = readToString(new URL(wireMockRule.baseUrl() + MAIN_SCHEMA));
         assertThat(schemaContent, both(containsString("$schema")).and(containsString("$ref")));
     }
 
