@@ -55,7 +55,6 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
 
     private static final Logger LOG = LoggerFactory.getLogger(JsonValidator.class);
     private static final String DEFAULT_ID_KEY = "id";
-    private String schemaUrl;
     private Schema schema;
     private long fail;
     private long success;
@@ -67,7 +66,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
      * @param url The URL of the schema to validate against.
      */
     public JsonValidator(final String url) {
-        this.schemaUrl = url;
+        initSchema(url);
     }
 
     /**
@@ -103,7 +102,6 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
 
     private void validate(final String json, final JSONObject object) {
         try {
-            initSchema();
             schema.validate(object); // throws ValidationException if invalid
             getReceiver().process(json);
             ++success;
@@ -122,7 +120,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
         super.onCloseStream();
     }
 
-    private void initSchema() {
+    private void initSchema(final String schemaUrl) {
         if (schema != null) {
             return;
         }
