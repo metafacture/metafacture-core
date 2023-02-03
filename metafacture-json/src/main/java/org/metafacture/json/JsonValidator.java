@@ -131,7 +131,7 @@ public final class JsonValidator extends DefaultObjectPipe<String, ObjectReceive
                     .resolutionScope(baseFor(url.toString()));
         }
         catch (final IOException e) {
-            LOG.info("Could not read as URL: {}, trying to load from class path", schemaUrl);
+            LOG.debug("Could not read as URL: {}, trying to load from class path", schemaUrl);
             schemaLoader = schemaLoader.schemaClient(SchemaClient.classPathAwareClient())
                     .schemaJson(jsonFrom(getClass().getResourceAsStream(schemaUrl)))
                     .resolutionScope("classpath://" + baseFor(schemaUrl));
