@@ -21,11 +21,7 @@ import org.metafacture.io.ObjectWriter;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
-import org.metafacture.metafix.maps.RdfMap;
-import org.metafacture.metamorph.api.Maps;
 
-import java.io.File;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -109,34 +105,6 @@ public interface FixFunction {
                     .ifArray(a -> c.accept(flatten(a.stream())))
                     .orElse(w -> c.accept(Stream.of(w)))
         ));
-    }
-
-    default void lookup(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final FixFunction mapFunction) {
-        final Map<String, String> map = getMap(metafix, record, params, options, mapFunction);
-        record.transform(params.get(0), oldValue -> {
-            final String newValue = map.getOrDefault(oldValue, map.get(Maps.DEFAULT_MAP_KEY));
-            return newValue != null ? newValue : getBoolean(options, "delete") ? null : oldValue;
-        });
-    }
-
-    static Map<String, String> getMap(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final FixFunction mapFunction) {
-        final Map<String, String> map;
-        if (params.size() <= 1) {
-            map = options;
-        }
-        else {
-            final String mapName = mapFunction.toString().equals("put_rdfmap") ? (params.size() > 1 ? params.get(1) : params.get(0)) + options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "") : params.get(1);
-            if (!metafix.getMapNames().contains(mapName)) {
-                if (mapName.contains(".") || mapName.contains(File.separator)) {
-                    mapFunction.apply(metafix, record, Arrays.asList(mapName), options);
-                }
-                else {
-                    // Probably an unknown internal map? Log a warning?
-                }
-            }
-            map = metafix.getMap(mapName);
-        }
-        return map;
     }
 
 }
