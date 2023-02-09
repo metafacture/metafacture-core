@@ -99,7 +99,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
             final String fileName = params.get(0);
             final RdfMap rdfMap = new RdfMap();
 
-            rdfMap.setResource(fileName.startsWith("http") ? fileName : metafix.resolvePath(fileName));
+            rdfMap.setResource(fileName, metafix::resolvePath);
 
             withOption(options, RdfMap.TARGET, rdfMap::setTarget);
             withOption(options, RdfMap.TARGET_LANGUAGE, rdfMap::setTargetLanguage);

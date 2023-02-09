@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.function.UnaryOperator;
 
 /**
  * Provides a dynamically build {@link Map} based on an RDF resource. Can be one file or a comma separated list of RDF
@@ -78,9 +79,13 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
 
     }
 
+    private boolean isURI(final String name) {
+        return name.toLowerCase().startsWith("http");
+    }
+
     private void init() {
         loadFiles();
-        if (!target.toLowerCase().startsWith("http")) {
+        if (!isURI(target)) {
             final String[] nsPrefixAndProperty = target.split(":");
             target = nsPrefixAndProperty.length == 2 ? model.getNsPrefixURI(nsPrefixAndProperty[0]) + nsPrefixAndProperty[1] : nsPrefixAndProperty[0];
         }
@@ -102,7 +107,17 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
      * @param file the file
      */
     public void setResource(final String file) {
-        Collections.addAll(filenames, file);
+        filenames.add(file);
+    }
+
+    /**
+     * Sets a file or URI which provides the {@link Model}.
+     *
+     * @param file the file or URI
+     * @param operator an operator to apply to the file
+     */
+    public void setResource(final String file, final UnaryOperator<String> operator) {
+        setResource(isURI(file) ? file : operator.apply(file));
     }
 
     private void loadFiles() {
@@ -112,7 +127,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
     private void loadFile(final String file) {
         String f = file;
         try {
-            if (file.toLowerCase().startsWith("http")) {
+            if (isURI(file)) {
                 f = read(file);
             }
             if (model == null) {
