@@ -63,6 +63,31 @@ public class MetafixLookupTest {
     public MetafixLookupTest() {
     }
 
+    @BeforeAll
+    private static void setStubForWireMock() {
+        WIRE_MOCK_SERVER.start();
+
+        final UrlPattern urlPattern = WireMock.urlPathEqualTo(RDF_PATH);
+        final String redirectToUrl = "/redirect" + RDF_PATH;
+        final UrlPattern urlPatternRedirectToUrl = WireMock.urlPathEqualTo(redirectToUrl);
+
+        WIRE_MOCK_SERVER.stubFor(WireMock.get(urlPattern)
+            .willReturn(WireMock.temporaryRedirect(redirectToUrl)));
+
+        final String responseBody = new BufferedReader(new InputStreamReader(
+                    MetafixLookupTest.class.getResourceAsStream("." + RDF_PATH))).lines().collect(Collectors.joining("\n"));
+
+        WIRE_MOCK_SERVER.stubFor(WireMock.get(urlPatternRedirectToUrl)
+            .willReturn(WireMock.aResponse()
+                .withHeader("Content-Type", "text/turtle")
+                .withBody(responseBody)));
+    }
+
+    @AfterAll
+    private static void tearDownWireMock() {
+        WIRE_MOCK_SERVER.stop();
+    }
+
     @Test
     public void inline() {
         assertMap(
@@ -1289,25 +1314,4 @@ public class MetafixLookupTest {
         );
     }
 
-    @BeforeAll
-    static void setStubForWireMock() {
-        WIRE_MOCK_SERVER.start();
-        final UrlPattern urlPattern = WireMock.urlPathEqualTo(RDF_PATH);
-        final String redirectToUrl = "/redirect" + RDF_PATH;
-        final UrlPattern urlPatternRedirectToUrl = WireMock.urlPathEqualTo(redirectToUrl);
-
-        WIRE_MOCK_SERVER.stubFor(WireMock.get(urlPattern)
-            .willReturn(WireMock.temporaryRedirect(redirectToUrl)));
-        final String responseBody = new BufferedReader(new InputStreamReader(MetafixLookupTest.class.getResourceAsStream("." + RDF_PATH))).lines()
-            .collect(Collectors.joining("\n"));
-        WIRE_MOCK_SERVER.stubFor(WireMock.get(urlPatternRedirectToUrl)
-            .willReturn(WireMock.aResponse()
-                .withHeader("Content-Type", "text/turtle")
-                .withBody(responseBody)));
-    }
-
-    @AfterAll
-    static void tearDownWireMock() {
-        WIRE_MOCK_SERVER.stop();
-    }
 }

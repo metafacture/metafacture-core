@@ -564,7 +564,7 @@ join_field("<sourceField>", "<separator>")
 
 ##### `lookup`
 
-Looks up matching values in a map and replaces the field value with this match. [External files](#put_filemap), [internal maps](#put_map) as well as [rdf resources](#put_rdfmap) can be used.
+Looks up matching values in a map and replaces the field value with this match. [External files](#put_filemap), [internal maps](#put_map) as well as [RDF resources](#put_rdfmap) can be used.
 
 Parameters:
 
@@ -610,18 +610,15 @@ lookup("path.to.field", "path/to/file", sep_char: ";")
 put_filemap("path/to/file", "file-map", sep_char: ";")
 lookup("path.to.field", "file-map")
 
+# RDF map (explicit)
+put_rdfmap("path/to/file", "rdf-map", target: "<rdfProperty>")
+lookup("path.to.field", "rdf-map")
+
 # with default value
 lookup("path.to.field", "map-name", __default: "NA")
 
 # with printing unknown values to a file
 lookup("path.to.field", "map-name", print_unknown: "true", destination: "unknown.txt")
-
-# rdf: Looks up matching values in an RDF resource and replaces the field value with a match defined by a targeted RDF property. External files or HTTP(S) resources as well as internal RDF maps can be used.
-The targeted RDF property can optionally be bound by an RDF language tag.
-
-## rdf map (explicit)
-put_rdfmap("path/to/file", "rdf-map", "target:<rdfProperty>")
-lookup("path.to.field", "rdf-map")
 ```
 
 ##### `prepend`

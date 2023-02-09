@@ -43,8 +43,8 @@ import java.util.NoSuchElementException;
 import java.util.function.UnaryOperator;
 
 /**
- * Provides a dynamically build {@link Map} based on an RDF resource. Can be one file or a comma separated list of RDF
- * files or an HTTP(S) URI. Redirections of HTTP(S) URIs are followed.
+ * Provides a dynamically built {@link Map} based on an RDF resource. Can be one file or a comma separated list of RDF
+ * files or HTTP(S) URIs. Redirections of HTTP(S) URIs are followed.
  * The resources are supposed to be UTF-8 encoded.
  * <p>
  *
@@ -53,30 +53,34 @@ import java.util.function.UnaryOperator;
  *
  * @author Markus Michael Geipel
  * @author Pascal Christoph (dr0i)
+ *
  * @see org.metafacture.metamorph.maps.FileMap
  */
 public final class RdfMap extends AbstractReadOnlyMap<String, String> {
+
+    public static final String SELECT = "select";
     public static final String TARGET = "target";
     public static final String TARGET_LANGUAGE = "select_language";
-    public static final String SELECT = "select";
+
     private static final int MAX_REDIRECTIONS = 10;
+
     private static final int MIN_HTTP_STATUS_CODE = 299;
     private static final int MAX_HTTP_STATUS_CODE = 400;
-    private Model model;
-    private boolean isUninitialized = true;
+
     private final ArrayList<String> filenames = new ArrayList<>();
     private final Map<String, String> map = new HashMap<>();
-    private String targetLanguage;
-    private String target;
+
+    private Model model;
     private Select select = Select.DEFAULT;
+    private String target;
+    private String targetLanguage = "";
+    private boolean isUninitialized = true;
 
     /**
      * Creates an instance of {@link RdfMap}.
      */
     public RdfMap() {
-        targetLanguage = "";
         setDefault(null);
-
     }
 
     private boolean isURI(final String name) {
@@ -84,11 +88,13 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
     }
 
     private void init() {
-        loadFiles();
+        filenames.forEach(this::loadFile);
+
         if (!isURI(target)) {
             final String[] nsPrefixAndProperty = target.split(":");
             target = nsPrefixAndProperty.length == 2 ? model.getNsPrefixURI(nsPrefixAndProperty[0]) + nsPrefixAndProperty[1] : nsPrefixAndProperty[0];
         }
+
         isUninitialized = false;
     }
 
@@ -111,34 +117,28 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
     }
 
     /**
-     * Sets a file or URI which provides the {@link Model}.
+     * Sets a file or URL which provides the {@link Model}.
      *
-     * @param file the file or URI
+     * @param file the file or URL
      * @param operator an operator to apply to the file
      */
     public void setResource(final String file, final UnaryOperator<String> operator) {
         setResource(isURI(file) ? file : operator.apply(file));
     }
 
-    private void loadFiles() {
-        filenames.forEach(this::loadFile);
-    }
-
     private void loadFile(final String file) {
-        String f = file;
         try {
-            if (isURI(file)) {
-                f = read(file);
-            }
+            final String uri = isURI(file) ? read(file) : file;
+
             if (model == null) {
-                model = RDFDataMgr.loadModel(f);
+                model = RDFDataMgr.loadModel(uri);
             }
             else {
-                RDFDataMgr.read(model, f);
+                RDFDataMgr.read(model, uri);
             }
         }
         catch (final IOException e) {
-            throw new FixExecutionException("rdf file: cannot read file", e);
+            throw new FixExecutionException("Error while loading RDF file: " + file, e);
         }
     }
 
@@ -162,101 +162,112 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
      */
     @Override
     public String get(final Object key) {
-        String ret = null;
-        if (map.containsKey(key.toString())) {
-            ret = map.get(key.toString());
+        final String resourceName = key.toString();
+        String result = null;
+
+        if (map.containsKey(resourceName)) {
+            result = map.get(resourceName);
         }
         else {
             if (isUninitialized) {
                 init();
             }
-            final Resource resource = ResourceFactory.createResource(key.toString());
+
+            final Resource resource = ResourceFactory.createResource(resourceName);
             final Property targetProperty = ResourceFactory.createProperty(target);
+
             try {
                 if (select.equals(Select.SUBJECT)) {
-                    ret = getSubjectUsingPropertyAndLiteral(key, targetProperty);
+                    result = getSubjectUsingPropertyAndLiteral(resourceName, targetProperty);
                 }
                 else {
-                    //first try to get LITERAL using SUBJECT and PROPERTY
+                    // 1. try to get LITERAL using SUBJECT and PROPERTY
                     if (!targetLanguage.isEmpty()) {
-                        ret = model.getRequiredProperty(resource, targetProperty, targetLanguage).getString();
+                        result = model.getRequiredProperty(resource, targetProperty, targetLanguage).getString();
                     }
                     else {
-                        ret = model.getRequiredProperty(resource, targetProperty).getString();
+                        result = model.getRequiredProperty(resource, targetProperty).getString();
                     }
                 }
             }
             catch (final PropertyNotFoundException | NullPointerException | NoSuchElementException e) {
-                //second try to get SUBJECT using PROPERTY and LITERAL
+                // 2. try to get SUBJECT using PROPERTY and LITERAL
                 if (select.equals(Select.DEFAULT)) {
-                    ret = getSubjectUsingPropertyAndLiteral(key, targetProperty);
+                    result = getSubjectUsingPropertyAndLiteral(resourceName, targetProperty);
                 }
-                //third try: get LITERAL of PREDICATE A using PREDICATE B
+                // 3. try to get LITERAL of PREDICATE A using PREDICATE B
                 if (!select.equals(Select.SUBJECT)) {
-                    if (ret == null) {
-                        ret = getLiteralOfPredicateUsingOtherPredicate(key, targetProperty);
+                    if (result == null) {
+                        result = getLiteralOfPredicateUsingOtherPredicate(resourceName, targetProperty);
                     }
                 }
             }
-            map.put(key.toString(), ret);
+
+            map.put(resourceName, result);
         }
-        return ret;
+
+        return result;
     }
 
-    private String getLiteralOfPredicateUsingOtherPredicate(final Object key, final Property targetProperty) {
-        Resource resource;
-        final ResIterator iter;
-        String ret = map.get(Maps.DEFAULT_MAP_KEY);
-        iter = model.listSubjectsWithProperty(targetProperty);
+    private String getLiteralOfPredicateUsingOtherPredicate(final String resourceName, final Property targetProperty) {
+        final ResIterator iter = model.listSubjectsWithProperty(targetProperty);
+        String result = map.get(Maps.DEFAULT_MAP_KEY);
+
         while (iter.hasNext()) {
-            resource = iter.nextResource();
-            Statement stmt;
-            StmtIterator iterProp = resource.listProperties(targetProperty);
+            final Resource resource = iter.nextResource();
+            final StmtIterator iterProp = resource.listProperties(targetProperty);
+
             while (iterProp.hasNext()) {
-                stmt = iterProp.nextStatement();
-                if (stmt.getObject().asLiteral().getString().equals(key.toString())) {
-                    iterProp = resource.listProperties(targetProperty);
-                    while (iterProp.hasNext()) {
-                        stmt = iterProp.nextStatement();
-                        if (stmt.getLanguage().equals(targetLanguage) && !stmt.getString().equals(key)) {
-                            ret = stmt.getString();
+                final Statement stmt = iterProp.nextStatement();
+
+                if (stmt.getObject().asLiteral().getString().equals(resourceName)) {
+                    final StmtIterator subIterProp = resource.listProperties(targetProperty);
+
+                    while (subIterProp.hasNext()) {
+                        final Statement subStmt = subIterProp.nextStatement();
+
+                        if (subStmt.getLanguage().equals(targetLanguage) && !subStmt.getString().equals(resourceName)) {
+                            result = subStmt.getString();
                         }
                     }
                 }
             }
         }
-        return ret;
+
+        return result;
     }
 
-    private String getSubjectUsingPropertyAndLiteral(final Object key, final Property targetProperty) {
-        Resource resource;
-        String ret = map.get(Maps.DEFAULT_MAP_KEY);
+    private String getSubjectUsingPropertyAndLiteral(final String resourceName, final Property targetProperty) {
         final ResIterator iter = model.listSubjectsWithProperty(targetProperty);
+        String result = map.get(Maps.DEFAULT_MAP_KEY);
+
         while (iter.hasNext()) {
-            resource = iter.nextResource();
+            final Resource resource = iter.nextResource();
             final StmtIterator stmtIterator = resource.listProperties(targetProperty);
+
             while (stmtIterator.hasNext()) {
                 final RDFNode node = stmtIterator.next().getObject();
-                if (!this.targetLanguage.isEmpty()) {
-                    if (node.asLiteral().toString().equals(key.toString() + "@" + targetLanguage)) {
-                        ret = resource.getURI();
+
+                if (!targetLanguage.isEmpty()) {
+                    if (node.asLiteral().toString().equals(resourceName + "@" + targetLanguage)) {
+                        result = resource.getURI();
                         break;
                     }
                 }
                 else {
-                    if (node.asLiteral().getString().equals(key.toString())) {
-                        ret = resource.getURI();
+                    if (node.asLiteral().getString().equals(resourceName)) {
+                        result = resource.getURI();
                         break;
                     }
                 }
             }
         }
-        return ret;
+
+        return result;
     }
 
     /**
      * Gets the language of the target Property which is queried in the RDF. Valid values are defined by BCP47.
-     * <br>
      *
      * @return the targeted language
      */
@@ -277,7 +288,6 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
 
     /**
      * Gets the target Property which is queried in the RDF. Namespaces are allowed.
-     * <br>
      *
      * @return the target Property to be queried
      */
@@ -316,10 +326,10 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
      * @param position the position to be retrieved. Can be "subject" or "object".
      */
     public void setSelect(final String position) {
-        if ("subject".equalsIgnoreCase(position)) {
+        if (Select.SUBJECT.name().equalsIgnoreCase(position)) {
             select = Select.SUBJECT;
         }
-        else if ("object".equalsIgnoreCase(position)) {
+        else if (Select.OBJECT.name().equalsIgnoreCase(position)) {
             select = Select.OBJECT;
         }
         else {
@@ -341,7 +351,7 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
     /**
      * Gets a redirected URL, if any redirection takes place. Adapted predated code from org.apache.jena.rdfxml.xmlinput.JenaReader.
      * <p>
-     * Note: Using newer jena version (needs java 11) this method would be obsolete.
+     * Note: Using newer Jena version (needs java 11) this method would be obsolete.
      *
      * @param url the URL to resolve
      * @return the (redirected) URL
@@ -349,38 +359,39 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
      */
     private String read(final String url) throws IOException {
         String connectionURL = url;
-        try {
-            int count = 0;
-            URLConnection conn;
-            while (true) {
-                final URLConnection conn2 = new URL(connectionURL).openConnection();
-                if (!(conn2 instanceof HttpURLConnection)) {
-                    conn = conn2;
-                    break;
-                }
-                count += 1;
-                if (count > MAX_REDIRECTIONS) {
-                    throw new IOException("Too many redirects followed for " + url);
-                }
-                final HttpURLConnection httpURLConnection = (HttpURLConnection) conn2;
-                conn2.setRequestProperty("accept", "*/*");
-                final int statusCode = httpURLConnection.getResponseCode();
-                if (statusCode <= MIN_HTTP_STATUS_CODE || statusCode >= MAX_HTTP_STATUS_CODE) {
-                    conn = conn2;
-                    break;
-                }
-                // Redirect
-                connectionURL = conn2.getHeaderField("Location");
-                if (connectionURL == null || url.equals(connectionURL)) {
-                    throw new IOException("Failed to follow redirects for " + url);
-                }
+
+        int count = 0;
+        URLConnection conn;
+
+        while (true) {
+            final URLConnection conn2 = new URL(connectionURL).openConnection();
+            if (!(conn2 instanceof HttpURLConnection)) {
+                conn = conn2;
+                break;
             }
-            connectionURL = conn.getURL().toString();
+
+            count += 1;
+            if (count > MAX_REDIRECTIONS) {
+                throw new IOException("Too many redirects followed for " + url);
+            }
+
+            final HttpURLConnection httpURLConnection = (HttpURLConnection) conn2;
+            conn2.setRequestProperty("accept", "*/*");
+
+            final int statusCode = httpURLConnection.getResponseCode();
+            if (statusCode <= MIN_HTTP_STATUS_CODE || statusCode >= MAX_HTTP_STATUS_CODE) {
+                conn = conn2;
+                break;
+            }
+
+            // Redirect
+            connectionURL = conn2.getHeaderField("Location");
+            if (connectionURL == null || url.equals(connectionURL)) {
+                throw new IOException("Failed to follow redirects for " + url);
+            }
         }
-        catch (final IOException e) {
-            throw new IOException(e);
-        }
-        return connectionURL;
+
+        return conn.getURL().toString();
     }
 
     private enum Select {
