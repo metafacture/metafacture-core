@@ -1,1 +1,2 @@
-lookup("a", "../../../../../maps/hcrt.ttl", target: "skos:prefLabel")
+put_rdfmap("../../../../../maps/hcrt.ttl", "rdfmap", target: "skos:prefLabel")
+lookup("a", "rdfmap")

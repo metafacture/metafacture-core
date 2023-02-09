@@ -501,10 +501,15 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
                 map = options;
             }
             else {
-                String mapName = params.get(1);
+                final String mapName = params.get(1);
 
                 if (!metafix.getMapNames().contains(mapName)) {
-                    mapName = putMapAndGetMapName(metafix, record, params, options, mapName);
+                    if (mapName.contains(".") || mapName.contains(File.separator)) {
+                        put_filemap.apply(metafix, record, Arrays.asList(mapName), options);
+                    }
+                    else {
+                        // Probably an unknown internal map? Log a warning?
+                    }
                 }
 
                 map = metafix.getMap(mapName);
@@ -535,23 +540,6 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
             else {
                 consumer.accept(null);
             }
-        }
-
-        private String putMapAndGetMapName(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options, final String mapName) {
-            String newMapName = mapName;
-            if (options.containsKey(RdfMap.TARGET)) {
-                put_rdfmap.apply(metafix, record, Arrays.asList(params.get(1)), options);
-                newMapName = params.get(1) + options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "");
-            }
-            else {
-                if (mapName.contains(".") || mapName.contains(File.separator)) {
-                    put_filemap.apply(metafix, record, Arrays.asList(mapName), options);
-                }
-                else {
-                    // Probably an unknown internal map? Log a warning?
-                }
-            }
-            return newMapName;
         }
     },
     prepend {

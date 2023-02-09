@@ -1,1 +1,2 @@
-lookup_rdf("a", "../../../../../maps/hcrt.ttl", target: "http://www.w3.org/2004/02/skos/core#altLabel", target_language: "de", select: "object", returnPredicate:"http://www.w3.org/2004/02/skos/core#prefLabel", return_language: "de")
+put_rdfmap("../../../../../maps/hcrt.ttl", "rdfmap", target: "http://www.w3.org/2004/02/skos/core#altLabel", target_language: "de", select: "object", returnPredicate:"http://www.w3.org/2004/02/skos/core#prefLabel", return_language: "de")
+lookup("a", "rdfmap")

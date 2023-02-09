@@ -200,17 +200,6 @@ Options:
 - `key_column`: Defines the column to be used for keys. Uses zero index. (Default: `0`)
 - `value_column`: Defines the column to be used for values. Uses zero index. (Default: `1`)
 
-##### `put_rdfmap`
-
-Defines an external RDF map for lookup from a file or an HTTP(S) resource.
-As the RDF map is reducing RDF triples to a key/value map it is mandatory to set the target.
-The targeted RDF property can optional be bound by an RDF language tag.
-
-```perl
-put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>")
-put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>, select: "<rdfLanguageTag>"")
-```
-
 ##### `put_map`
 
 Defines an internal map for [lookup](#lookup) from key/value pairs.
@@ -633,12 +622,6 @@ The targeted RDF property can optionally be bound by an RDF language tag.
 ## rdf map (explicit)
 put_rdfmap("path/to/file", "rdf-map", "target:<rdfProperty>")
 lookup("path.to.field", "rdf-map")
-
-## rdf with mandatory "target" (implicit)
-lookup("path.to.field", "path/to/file|URL", target: "<rdfProperty>")
-
-## rdf with mandatory "target" and "select_language" (implicit)
-lookup("path.to.field", "path/to/file|URL", target: "<rdfProperty>", select_language: "<rdfLanguageTag>")
 ```
 
 ##### `prepend`

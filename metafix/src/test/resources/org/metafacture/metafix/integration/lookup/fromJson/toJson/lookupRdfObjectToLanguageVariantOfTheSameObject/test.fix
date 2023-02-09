@@ -1,1 +1,2 @@
-lookup("a", "../../../../../maps/hcrt.ttl", target: "http://www.w3.org/2004/02/skos/core#prefLabel", select_language: "en")
+put_rdfmap("../../../../../maps/hcrt.ttl", "rdfmap", target: "http://www.w3.org/2004/02/skos/core#prefLabel", select_language: "en")
+lookup("a", "rdfmap")
