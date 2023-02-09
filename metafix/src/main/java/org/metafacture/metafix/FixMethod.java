@@ -31,7 +31,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
@@ -97,24 +96,17 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
     put_rdfmap {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final String rdfMapName = params.size() == 1 ? params.get(0) + options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "") : params.get(1);
-            final String replaceTargets = options.get(RdfMap.TARGET) + options.getOrDefault(RdfMap.TARGET_LANGUAGE, "");
-            final String resourceName = Optional.ofNullable(params.get(0))
-                .map(str -> str.replaceAll(replaceTargets + "$", ""))
-                .orElse(params.get(0));
+            final String fileName = params.get(0);
             final RdfMap rdfMap = new RdfMap();
-            if (resourceName.startsWith("http")) {
-                rdfMap.setResource(resourceName);
-            }
-            else {
-                rdfMap.setResource(metafix.resolvePath(resourceName));
-            }
+
+            rdfMap.setResource(fileName.startsWith("http") ? fileName : metafix.resolvePath(fileName));
+
             withOption(options, RdfMap.TARGET, rdfMap::setTarget);
             withOption(options, RdfMap.TARGET_LANGUAGE, rdfMap::setTargetLanguage);
             withOption(options, RdfMap.SELECT, rdfMap::setSelect);
             withOption(options, Maps.DEFAULT_MAP_KEY, rdfMap::setDefault);
 
-            metafix.putMap(rdfMapName, rdfMap);
+            metafix.putMap(params.size() > 1 ? params.get(1) : fileName, rdfMap);
         }
     },
     put_var {
