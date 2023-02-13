@@ -212,6 +212,17 @@ put_map("<mapName>",
 )
 ```
 
+##### `put_rdfmap`
+
+Defines an external RDF map for lookup from a file or an HTTP(S) resource.
+As the RDF map is reducing RDF triples to a key/value map it is mandatory to set the target.
+The targeted RDF property can optionally be bound by an RDF language tag.
+
+```perl
+put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>")
+put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>", select_language: "<rdfLanguageTag>")
+```
+
 ##### `put_var`
 
 Defines a single global variable that can be referenced with `$[<variableName>]`.
@@ -553,7 +564,7 @@ join_field("<sourceField>", "<separator>")
 
 ##### `lookup`
 
-Looks up matching values in a map and replaces the field value with this match. [External files](#put_filemap) as well as [internal maps](#put_map) can be used.
+Looks up matching values in a map and replaces the field value with this match. [External files](#put_filemap), [internal maps](#put_map) as well as [RDF resources](#put_rdfmap) can be used.
 
 Parameters:
 
@@ -598,6 +609,10 @@ lookup("path.to.field", "path/to/file", sep_char: ";")
 # external file map (explicit)
 put_filemap("path/to/file", "file-map", sep_char: ";")
 lookup("path.to.field", "file-map")
+
+# RDF map (explicit)
+put_rdfmap("path/to/file", "rdf-map", target: "<rdfProperty>")
+lookup("path.to.field", "rdf-map")
 
 # with default value
 lookup("path.to.field", "map-name", __default: "NA")

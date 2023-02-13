@@ -17,6 +17,7 @@
 package org.metafacture.metafix;
 
 import org.metafacture.metafix.api.FixFunction;
+import org.metafacture.metafix.maps.RdfMap;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.functions.ISBN;
 import org.metafacture.metamorph.functions.Timestamp;
@@ -90,6 +91,22 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             metafix.putMap(params.get(0), options);
+        }
+    },
+    put_rdfmap {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String fileName = params.get(0);
+            final RdfMap rdfMap = new RdfMap();
+
+            rdfMap.setResource(fileName, metafix::resolvePath);
+
+            withOption(options, RdfMap.TARGET, rdfMap::setTarget);
+            withOption(options, RdfMap.TARGET_LANGUAGE, rdfMap::setTargetLanguage);
+            withOption(options, RdfMap.SELECT, rdfMap::setSelect);
+            withOption(options, Maps.DEFAULT_MAP_KEY, rdfMap::setDefault);
+
+            metafix.putMap(params.size() > 1 ? params.get(1) : fileName, rdfMap);
         }
     },
     put_var {

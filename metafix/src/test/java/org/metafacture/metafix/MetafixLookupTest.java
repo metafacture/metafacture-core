@@ -19,13 +19,23 @@ package org.metafacture.metafix;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.metamorph.api.MorphExecutionException;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.matching.UrlPattern;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * Tests Metafix lookup. Following the cheat sheet examples at
@@ -35,16 +45,47 @@ import java.util.Arrays;
  */
 @ExtendWith(MockitoExtension.class)
 public class MetafixLookupTest {
-
     private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
+    private static final String RDF_MAP = "src/test/resources/org/metafacture/metafix/maps/test.ttl";
+    private static final String HCRT_RDF_MAP = "src/test/resources/org/metafacture/metafix/maps/hcrt.ttl";
+    private static final String RDF_PATH = "/maps/rpb.ttl";
+    private static final String RDF_URL = "%s" + RDF_PATH;
     private static final String TSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.tsv";
-
     private static final String LOOKUP = "lookup('title.*',";
+
+    private static final WireMockServer WIRE_MOCK_SERVER = new WireMockRule(WireMockConfiguration.wireMockConfig()
+        .jettyAcceptors(Runtime.getRuntime().availableProcessors())
+        .dynamicPort());
 
     @Mock
     private StreamReceiver streamReceiver;
 
     public MetafixLookupTest() {
+    }
+
+    @BeforeAll
+    private static void setStubForWireMock() {
+        WIRE_MOCK_SERVER.start();
+
+        final UrlPattern urlPattern = WireMock.urlPathEqualTo(RDF_PATH);
+        final String redirectToUrl = "/redirect" + RDF_PATH;
+        final UrlPattern urlPatternRedirectToUrl = WireMock.urlPathEqualTo(redirectToUrl);
+
+        WIRE_MOCK_SERVER.stubFor(WireMock.get(urlPattern)
+            .willReturn(WireMock.temporaryRedirect(redirectToUrl)));
+
+        final String responseBody = new BufferedReader(new InputStreamReader(
+                    MetafixLookupTest.class.getResourceAsStream("." + RDF_PATH))).lines().collect(Collectors.joining("\n"));
+
+        WIRE_MOCK_SERVER.stubFor(WireMock.get(urlPatternRedirectToUrl)
+            .willReturn(WireMock.aResponse()
+                .withHeader("Content-Type", "text/turtle")
+                .withBody(responseBody)));
+    }
+
+    @AfterAll
+    private static void tearDownWireMock() {
+        WIRE_MOCK_SERVER.stop();
     }
 
     @Test
@@ -956,6 +997,272 @@ public class MetafixLookupTest {
         MetafixTestHelpers.assertTempFile("you\ntoo\n", p -> shouldPrintUnknown(", destination: '" + p + "', append: 'false'", null, ""));
     }
 
+    @Test
+    public void shouldLookupInSeparateExternalRdfFileMapWithName() {
+        assertRdfMap(
+            "put_rdfmap('" + RDF_MAP + "', 'testMapSkosNotation', target: 'skos:notation')",
+            "lookup('notation', 'testMapSkosNotation')"
+        );
+    }
+
+    @Test
+    public void shouldLookupInSeparateExternalRdfFileMapWithDifferentTargets() {
+        assertRdfMapWithDifferentTargets(
+            "put_rdfmap('" + RDF_MAP + "', 'testRdfMapSkosNotation', target: 'skos:notation')",
+            "put_rdfmap('" + RDF_MAP + "', 'testRdfMapCreated', target: 'created', __default: '__default')",
+            "lookup('notation', 'testRdfMapSkosNotation')",
+            "lookup('created', 'testRdfMapCreated')"
+        );
+    }
+
+    @Test
+    public void shouldLookupInExternalRdfUseDefinedDefaultValueIfNotFound() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: 'created', __default: '0000-01-01')",
+                "lookup('created', 'rdfmap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("created", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("created", "0000-01-01");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupInExternalRdfUseDefaultValueIfNotFound() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: 'created', __default: '__default')",
+                "lookup('created', 'rdfmap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("created", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("created", "__default");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldLookupInExternalRdfMapGetObjectOfSubjectWithTargetedPredicate() {
+        assertRdfMap(
+            "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: 'skos:notation')",
+            "lookup('notation', 'rdfmap')"
+        );
+    }
+
+    @Test
+    public void shouldExplicitLookupRdfUrlWithRedirection() {
+        final String baseUrl = WIRE_MOCK_SERVER.baseUrl();
+        final String mockedRdfUrl = String.format(RDF_URL, baseUrl);
+
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_rdfmap('" + mockedRdfUrl + "', 'testMapSkosNotation', target: 'skos:prefLabel')",
+                "lookup('prefLabel', 'testMapSkosNotation')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("prefLabel", "http://purl.org/lobid/rpb#n882022");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("prefLabel", "Presserecht");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // Scenario 1
+    public void shouldLookupInExternalRdfMapGetObjectOfSubjectWithTargetedPredicateOfSpecificLanguage() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('prefLabel', 'https://w3id.org/kim/hochschulfaechersystematik/n4')",
+                "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel', select_language: 'de')",
+                "lookup('prefLabel.*', 'rdfmap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("prefLabel", "Mathematik, Naturwissenschaften");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // Scenario 2
+    public void shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguage() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('id', 'Mathematics, Natural Sciences')",
+                "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel', select_language: 'en')",
+                "lookup('id.*', 'rdfmap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("prefLabel", "Mathematics, Natural Science");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("prefLabel", "Mathematics, Natural Science");
+                o.get().literal("id", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // Scenario lookupRdfPropertyToProperty
+    public void shouldLookupInExternalRdfMapGetPropertyOfSpecificLanguageWithTargetedPredicate() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_rdfmap('" + HCRT_RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel', select_language: 'en')",
+                "lookup('a', 'rdfmap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("a", "Softwareanwendung");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("a", "Software Application");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // Scenario lookupRdfPropertyToSubject
+    public void shouldLookupInExternalRdfMapGetSubjectOfPropertyWithTargetedPredicate() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_rdfmap('" + HCRT_RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel')",
+                "lookup('a', 'rdfmap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("a", "Softwareanwendung");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("a", "https://w3id.org/kim/hcrt/application");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void lookupRdfDefinedPropertyToSubjectNonDefault() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_rdfmap('" + HCRT_RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel', select_language: 'de')",
+                "lookup('a', 'rdfmap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Jake");
+                i.literal("a", "Softwareanwendung");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("name", "Noone");
+                i.literal("a", "cat");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Jake");
+                o.get().literal("a", "https://w3id.org/kim/hcrt/application");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("name", "Noone");
+                o.get().literal("a", "cat");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // Scenario 3
+    public void shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguageUsingNamespace() {
+        shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguage("skos:prefLabel");
+    }
+
+    @Test // Scenario 3 without namespace
+    public void shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguageWithoutNamespace() {
+        shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguage("http://www.w3.org/2004/02/skos/core#prefLabel");
+    }
+
+    @Test
+    public void shouldLookupRdfDefinedPropertyToSubject() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_rdfmap('" + HCRT_RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel', select_language: 'de', select: 'subject')",
+                "lookup('a', 'rdfmap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", "Jake");
+                i.literal("a", "Softwareanwendung");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("name", "Blacky");
+                i.literal("a", "Nachschlagewerk");
+                i.endRecord();
+                i.startRecord("3");
+                i.literal("name", "Noone");
+                i.literal("a", "cat");
+                i.endRecord();
+                i.startRecord("4");
+                i.literal("name", "Noone_2");
+                i.literal("a", "Assessment");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("name", "Jake");
+                o.get().literal("a", "https://w3id.org/kim/hcrt/application");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("name", "Blacky");
+                o.get().literal("a", "https://w3id.org/kim/hcrt/index");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().literal("name", "Noone");
+                o.get().literal("a", "cat");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().literal("name", "Noone_2");
+                o.get().literal("a", "Assessment");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    private void shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguage(final String target) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('prefLabel', 'Mathematics, Natural Sciences')",
+                "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: '" + target + "', select_language: 'de')",
+                "lookup('prefLabel.*', 'rdfmap')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("prefLabel", "Mathematik, Naturwissenschaften");
+                o.get().endRecord();
+            }
+        );
+    }
+
     private void assertMap(final String... fixDef) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(fixDef),
             i -> {
@@ -970,6 +1277,38 @@ public class MetafixLookupTest {
                 o.get().literal("title", "Alohaeha");
                 o.get().literal("title", "Moin zäme");
                 o.get().literal("title", "Tach");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    private void assertRdfMap(final String... fixDef) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(fixDef),
+            i -> {
+                i.startRecord("1");
+                i.literal("notation", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("notation", "4");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    private void assertRdfMapWithDifferentTargets(final String... fixDef) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(fixDef),
+            i -> {
+                i.startRecord("1");
+                i.literal("notation", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                i.literal("created", "https://w3id.org/kim/hochschulfaechersystematik/n4");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("notation", "4");
+                o.get().literal("created", "__default");
                 o.get().endRecord();
             }
         );
