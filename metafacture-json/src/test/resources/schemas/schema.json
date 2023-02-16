@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schema.json",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "id.json"
+    }
+  },
+  "required": [
+    "id"
+  ]
+}

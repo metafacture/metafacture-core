@@ -1,0 +1,8 @@
+{
+  "$id": "id.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "URL",
+  "description": "The URL/URI of the resource",
+  "type": "string",
+  "format": "uri"
+}
