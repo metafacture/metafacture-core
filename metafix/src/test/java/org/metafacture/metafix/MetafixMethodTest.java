@@ -3972,4 +3972,40 @@ public class MetafixMethodTest {
         );
     }
 
+    @Test
+    public void shouldUriEncodeString() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "uri_encode('title')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "café");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "caf%C3%A9");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldUriEncodePathSegment() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "uri_encode('id')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("id", "slash/990223521400206441:DE-A96:61 TYD 16(3)#!");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("id", "slash%2F990223521400206441%3ADE%2DA96%3A61%20TYD%2016%283%29%23%21");
+                o.get().endRecord();
+            }
+        );
+    }
+
 }

@@ -21,6 +21,7 @@ import org.metafacture.metafix.maps.RdfMap;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.functions.ISBN;
 import org.metafacture.metamorph.functions.Timestamp;
+import org.metafacture.metamorph.functions.URLEncode;
 import org.metafacture.metamorph.maps.FileMap;
 
 import java.io.File;
@@ -662,8 +663,16 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.transform(params.get(0), s -> s.toUpperCase());
         }
+    },
+    uri_encode {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            URL_ENCODER.setPlusForSpace(false);
+            record.transform(params.get(0), URL_ENCODER::process);
+        }
     };
 
+    private static final URLEncode URL_ENCODER = new URLEncode();
     private static final Pattern NAMED_GROUP_PATTERN = Pattern.compile("\\(\\?<(.+?)>");
 
     private static final String FILEMAP_SEPARATOR_OPTION = "sep_char";
