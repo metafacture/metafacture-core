@@ -131,7 +131,7 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
      * @param mapString the attributes to be added as subfields
      */
     public void setAttrValsAsSubfields(final String mapString) {
-        this.attrValsAsSubfields = new HashMap<String, String>();
+        this.attrValsAsSubfields = new HashMap<>();
         final String input = mapString.startsWith("&") ? DEFAULT_ATTR_VALS_AS_SUBFIELDS + mapString : mapString;
         for (final String nameValuePair : input.split("&")) {
             final String[] nameValue = nameValuePair.split("=");
