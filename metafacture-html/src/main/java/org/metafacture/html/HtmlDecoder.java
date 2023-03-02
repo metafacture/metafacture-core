@@ -98,12 +98,10 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
                 addedValueAsSubfield = handleAttributeValuesAsSubfields(receiver, element, attributes, attribute);
                 receiver.literal(attribute.getKey(), attribute.getValue());
             }
-            if (element.children().isEmpty()) {
-                final String text = element.text().trim();
-                final String value = text.isEmpty() ? element.data() : text;
-                if (!value.isEmpty() && !addedValueAsSubfield) {
-                    receiver.literal("value", value);
-                }
+            final String text = element.text().trim();
+            final String value = text.isEmpty() ? element.data() : text;
+            if (!value.isEmpty() && !addedValueAsSubfield) {
+                receiver.literal("value", value);
             }
             process(element, receiver);
             receiver.endEntity();
