@@ -98,12 +98,10 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
                 addedValueAsSubfield = handleAttributeValuesAsSubfields(receiver, element, attributes, attribute);
                 receiver.literal(attribute.getKey(), attribute.getValue());
             }
-            if (element.children().isEmpty()) {
-                final String text = element.text().trim();
-                final String value = text.isEmpty() ? element.data() : text;
-                if (!value.isEmpty() && !addedValueAsSubfield) {
-                    receiver.literal("value", value);
-                }
+            final String text = element.text().trim();
+            final String value = text.isEmpty() ? element.data() : text;
+            if (!value.isEmpty() && !addedValueAsSubfield) {
+                receiver.literal("value", value);
             }
             process(element, receiver);
             receiver.endEntity();
@@ -133,7 +131,7 @@ public class HtmlDecoder extends DefaultObjectPipe<Reader, StreamReceiver> {
      * @param mapString the attributes to be added as subfields
      */
     public void setAttrValsAsSubfields(final String mapString) {
-        this.attrValsAsSubfields = new HashMap<String, String>();
+        this.attrValsAsSubfields = new HashMap<>();
         final String input = mapString.startsWith("&") ? DEFAULT_ATTR_VALS_AS_SUBFIELDS + mapString : mapString;
         for (final String nameValuePair : input.split("&")) {
             final String[] nameValue = nameValuePair.split("=");

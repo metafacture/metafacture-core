@@ -78,6 +78,17 @@ public final class HtmlDecoderTest {
     }
 
     @Test
+    public void mixedContent() {
+        htmlDecoder.process(new StringReader("<p>This is the <strong>full</strong> text</p>"));
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startEntity("p");
+        ordered.verify(receiver).literal("value", "This is the full text");
+        // elements above plus body, html
+        ordered.verify(receiver, times(4)).endEntity();
+
+    }
+
+    @Test
     public void htmlAttributesAsLiterals() {
         htmlDecoder.process(new StringReader("<p class=lead>Text"));
         final InOrder ordered = inOrder(receiver);
