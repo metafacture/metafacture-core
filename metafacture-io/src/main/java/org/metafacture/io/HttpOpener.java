@@ -265,6 +265,9 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         catch (final IOException e) {
             throw new MetafactureException(e);
         }
+        finally {
+            inputUsed = false;
+        }
     }
 
     private String getInput(final String input, final String value) {
