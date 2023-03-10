@@ -39,6 +39,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import static org.mockito.Mockito.times;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Arrays;
@@ -318,11 +320,15 @@ public final class HttpOpenerTest {
         WireMock.stubFor(stub);
 
         opener.process(String.format(input, baseUrl));
+
+        // use the opener a second time in a workflow:
+        opener.process(String.format(input, baseUrl));
+
         opener.closeStream();
 
         WireMock.verify(request);
 
-        Mockito.verify(receiver).process(processedObject.capture());
+        Mockito.verify(receiver, times(2)).process(processedObject.capture());
         Assert.assertEquals(responseBody, ResourceUtil.readAll(processedObject.getValue()));
     }
 
