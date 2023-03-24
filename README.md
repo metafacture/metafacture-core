@@ -506,7 +506,7 @@ downcase("<sourceField>")
 
 ##### `filter`
 
-Only keeps field values that match the regular expression pattern.
+Only keeps field values that match the regular expression pattern. Works only with array of strings/repeated fields.
 
 ```perl
 filter("<sourceField>", "<regexp>")
