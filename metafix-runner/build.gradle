@@ -6,9 +6,30 @@ dependencies {
   implementation project(':metafix')
 
   implementation "org.metafacture:metafacture-biblio:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-commons:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-csv:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-elasticsearch:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-files:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-flowcontrol:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-formatting:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-formeta:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-html:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-io:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-javaintegration:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-jdom:${versions.metafacture}"
   implementation "org.metafacture:metafacture-json:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-linkeddata:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-mangling:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-monitoring:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-plumbing:${versions.metafacture}"
   implementation "org.metafacture:metafacture-runner:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-scripting:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-statistics:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-strings:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-triples:${versions.metafacture}"
   implementation "org.metafacture:metafacture-xml:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-yaml:${versions.metafacture}"
+  implementation "org.metafacture:metamorph:${versions.metafacture}"
 
   implementation('org.antlr:antlr-runtime') {
     version { strictly versions.antlr }
