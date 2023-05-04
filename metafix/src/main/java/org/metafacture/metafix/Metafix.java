@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2019 Deutsche Nationalbibliothek and others
+ * Copyright 2013, 2023 Deutsche Nationalbibliothek and others
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -88,6 +88,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     private String fixFile;
     private String recordIdentifier;
     private boolean repeatedFieldsToEntities;
+    private String entityMemberName = "%d";
     private boolean strictnessHandlesProcessExceptions;
     private int entityCount;
 
@@ -235,7 +236,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
 
             for (int i = 0; i < array.size(); ++i) {
                 final Value currentValue = array.get(i);
-                final String fieldName = isMulti ? String.valueOf(i + 1) : field;
+                final String fieldName = isMulti ? String.format(entityMemberName, i + 1) : field;
 
                 currentValue.matchType()
                     .ifArray(a -> emit(isMulti ? fieldName + ARRAY_MARKER : fieldName, currentValue))
@@ -395,6 +396,14 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         return repeatedFieldsToEntities;
     }
 
+    public void setEntityMemberName(final String entityMemberName) {
+        this.entityMemberName = entityMemberName;
+    }
+
+    public String getEntityMemberName() {
+        return entityMemberName;
+    }
+
     public enum Strictness {
 
         /**
@@ -440,5 +449,4 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         }
 
     }
-
 }
