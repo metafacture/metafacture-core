@@ -87,8 +87,8 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     private Strictness strictness = DEFAULT_STRICTNESS;
     private String fixFile;
     private String recordIdentifier;
-    private boolean repeatedFieldsToEntities;
     private String entityMemberName = "%d";
+    private boolean repeatedFieldsToEntities;
     private boolean strictnessHandlesProcessExceptions;
     private int entityCount;
 
@@ -450,3 +450,4 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
 
     }
 }
+
