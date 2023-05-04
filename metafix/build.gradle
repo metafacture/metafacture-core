@@ -36,6 +36,8 @@ dependencies {
   implementation "org.metafacture:metafacture-io:${versions.metafacture}"
   implementation "org.metafacture:metafacture-javaintegration:${versions.metafacture}"
   implementation "org.metafacture:metafacture-mangling:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-formatting:${versions.metafacture}"
+  implementation "org.metafacture:metafacture-triples:${versions.metafacture}"
   implementation "org.metafacture:metamorph:${versions.metafacture}"
 
   testImplementation "nl.jqno.equalsverifier:equalsverifier:${versions.equalsverifier}"
