@@ -19,6 +19,7 @@ package org.metafacture.metafix;
 import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -44,49 +45,74 @@ public final class MetafixListPathsTest {
 
     @Test
     public void testShouldListPaths() {
-        processRecord();
-        verify("a.*\t 3");
+        verify(
+            "c.*\t 3",
+            "b.*\t 2",
+            "a\t 1");
     }
 
     @Test
     public void testShouldListPathsNoCount() {
         lister.setCount(false);
-        processRecord();
-        verify("a.*");
+        verify(
+            "a",
+            "b.*",
+            "c.*");
     }
 
     @Test
     public void testShouldListPathsUseIndex() {
         lister.setIndex(true);
-        processRecord();
-        verify("a.1\t 1");
-        verify("a.2\t 1");
-        verify("a.3\t 1");
+        verify(
+            "a\t 1",
+            "b.1\t 1",
+            "b.2\t 1",
+            "c.1\t 1",
+            "c.2\t 1",
+            "c.3\t 1");
     }
 
     @Test
     public void testShouldListPathsNoCountUseIndex() {
         lister.setCount(false);
         lister.setIndex(true);
-        processRecord();
-        verify("a.1");
-        verify("a.2");
-        verify("a.3");
+        verify(
+            "a",
+            "b.1",
+            "b.2",
+            "c.1",
+            "c.2",
+            "c.3");
+    }
+
+    @Test
+    public void testShouldListPathsSortedByFrequency() {
+        verify(
+            "c.*\t 3",
+            "b.*\t 2",
+            "a\t 1");
     }
 
     private void processRecord() {
         lister.setReceiver(receiver);
         lister.startRecord("");
-        lister.literal("a", "A");
-        lister.literal("a", "B");
-        lister.literal("a", "C");
+        lister.literal("a", "");
+        lister.literal("b", "");
+        lister.literal("b", "");
+        lister.literal("c", "");
+        lister.literal("c", "");
+        lister.literal("c", "");
         lister.endRecord();
         lister.closeStream();
     }
 
-    private void verify(final String result) throws MockitoAssertionError {
+    private void verify(final String... result) throws MockitoAssertionError {
+        processRecord();
         try {
-            Mockito.verify(receiver).process(result);
+            final InOrder ordered = Mockito.inOrder(receiver);
+            for (final String r : result) {
+                ordered.verify(receiver).process(r);
+            }
         }
         catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());

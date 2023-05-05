@@ -18,12 +18,15 @@ package org.metafacture.metafix;
 
 import org.metafacture.formatting.ObjectTemplate;
 import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.Sender;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
-import org.metafacture.framework.objects.Triple;
+import org.metafacture.mangling.DuplicateObjectFilter;
 import org.metafacture.mangling.StreamFlattener;
 import org.metafacture.triples.AbstractTripleSort.Compare;
+import org.metafacture.triples.AbstractTripleSort.Order;
 import org.metafacture.triples.StreamToTriples;
 import org.metafacture.triples.TripleCount;
+import org.metafacture.triples.TripleSort;
 
 import java.io.FileNotFoundException;
 
@@ -50,17 +53,39 @@ public class MetafixListPaths extends DefaultStreamPipe<ObjectReceiver<String>> 
 
     @Override
     protected void onSetReceiver() {
+        fix.setEntityMemberName(index ? "%d" : "*");
+        final StreamToTriples triples = fix
+                .setReceiver(new StreamFlattener())
+                .setReceiver(new StreamToTriples());
+        (count ? counted(triples) : unique(triples))
+                .setReceiver(getReceiver());
+    }
+
+    private Sender<ObjectReceiver<String>> counted(final StreamToTriples triples) {
+        return triples
+                .setReceiver(tripleCount())
+                .setReceiver(tripleSort())
+                .setReceiver(new ObjectTemplate<>("${s}\t ${o}"));
+    }
+
+    private Sender<ObjectReceiver<String>> unique(final StreamToTriples triples) {
+        return triples
+                .setReceiver(new ObjectTemplate<>("${p}"))
+                .setReceiver(new DuplicateObjectFilter<>());
+    }
+
+    private TripleCount tripleCount() {
         final TripleCount tripleCount = new TripleCount();
         tripleCount.setCountBy(Compare.PREDICATE);
-        if (!index) {
-            fix.setEntityMemberName("*");
-        }
-        fix
-            .setReceiver(new StreamFlattener())
-            .setReceiver(new StreamToTriples())
-            .setReceiver(tripleCount)
-            .setReceiver(new ObjectTemplate<Triple>(count ? "${s}\t ${o}" : "${s}"))
-            .setReceiver(getReceiver());
+        return tripleCount;
+    }
+
+    private TripleSort tripleSort() {
+        final TripleSort tripleSort = new TripleSort();
+        tripleSort.setNumeric(true);
+        tripleSort.setBy(Compare.OBJECT);
+        tripleSort.setOrder(Order.DECREASING);
+        return tripleSort;
     }
 
     @Override
