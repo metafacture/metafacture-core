@@ -17,8 +17,13 @@
 package org.metafacture.metafix;
 
 import org.metafacture.formatting.ObjectTemplate;
+import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.Sender;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 import org.metafacture.mangling.DuplicateObjectFilter;
 import org.metafacture.mangling.StreamFlattener;
@@ -35,6 +40,12 @@ import java.io.FileNotFoundException;
  *
  * @author Fabian Steeg
  */
+@Description("Lists all paths found in a record. These paths can be used in a Fix to address fields. Options: " +
+        "count (output occurence frequency of each path, sorted by highest frequency first; default: true), " +
+        "index (output individual repeated subfields and array elements with index numbers instead of '*'; default: false)")
+@In(StreamReceiver.class)
+@Out(String.class)
+@FluxCommand("fix-list-paths")
 public class MetafixListPaths extends DefaultStreamPipe<ObjectReceiver<String>> {
 
     private Metafix fix;
