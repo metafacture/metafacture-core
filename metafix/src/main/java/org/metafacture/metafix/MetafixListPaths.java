@@ -35,12 +35,13 @@ import java.io.FileNotFoundException;
 public class MetafixListPaths extends DefaultStreamPipe<ObjectReceiver<String>> {
 
     private Metafix fix;
+    private boolean count = true;
+    private boolean index;
 
     public MetafixListPaths() {
         try {
             fix = new Metafix("nothing()");
             fix.setRepeatedFieldsToEntities(true);
-            fix.setEntityMemberName("*");
         }
         catch (final FileNotFoundException e) {
             e.printStackTrace();
@@ -51,11 +52,14 @@ public class MetafixListPaths extends DefaultStreamPipe<ObjectReceiver<String>> 
     protected void onSetReceiver() {
         final TripleCount tripleCount = new TripleCount();
         tripleCount.setCountBy(Compare.PREDICATE);
+        if (!index) {
+            fix.setEntityMemberName("*");
+        }
         fix
             .setReceiver(new StreamFlattener())
             .setReceiver(new StreamToTriples())
             .setReceiver(tripleCount)
-            .setReceiver(new ObjectTemplate<Triple>("${s}\t ${o}"))
+            .setReceiver(new ObjectTemplate<Triple>(count ? "${s}\t ${o}" : "${s}"))
             .setReceiver(getReceiver());
     }
 
@@ -92,5 +96,21 @@ public class MetafixListPaths extends DefaultStreamPipe<ObjectReceiver<String>> 
     @Override
     protected void onResetStream() {
         fix.resetStream();
+    }
+
+    public void setCount(final boolean count) {
+        this.count = count;
+    }
+
+    public boolean getCount() {
+        return this.count;
+    }
+
+    public void setIndex(final boolean index) {
+        this.index = index;
+    }
+
+    public boolean getIndex() {
+        return this.index;
     }
 }

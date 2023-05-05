@@ -40,19 +40,53 @@ public final class MetafixListPathsTest {
     public MetafixListPathsTest() {
         MockitoAnnotations.initMocks(this);
         lister = new MetafixListPaths();
-        lister.setReceiver(receiver);
     }
 
     @Test
     public void testShouldListPaths() {
+        processRecord();
+        verify("a.*\t 3");
+    }
+
+    @Test
+    public void testShouldListPathsNoCount() {
+        lister.setCount(false);
+        processRecord();
+        verify("a.*");
+    }
+
+    @Test
+    public void testShouldListPathsUseIndex() {
+        lister.setIndex(true);
+        processRecord();
+        verify("a.1\t 1");
+        verify("a.2\t 1");
+        verify("a.3\t 1");
+    }
+
+    @Test
+    public void testShouldListPathsNoCountUseIndex() {
+        lister.setCount(false);
+        lister.setIndex(true);
+        processRecord();
+        verify("a.1");
+        verify("a.2");
+        verify("a.3");
+    }
+
+    private void processRecord() {
+        lister.setReceiver(receiver);
         lister.startRecord("");
         lister.literal("a", "A");
         lister.literal("a", "B");
         lister.literal("a", "C");
         lister.endRecord();
         lister.closeStream();
+    }
+
+    private void verify(final String result) throws MockitoAssertionError {
         try {
-            Mockito.verify(receiver).process("a.*\t 3");
+            Mockito.verify(receiver).process(result);
         }
         catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());
