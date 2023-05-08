@@ -16,27 +16,15 @@
 
 package org.metafacture.metafix;
 
-import org.metafacture.formatting.ObjectTemplate;
 import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.Sender;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
-import org.metafacture.framework.helpers.DefaultStreamPipe;
-import org.metafacture.mangling.DuplicateObjectFilter;
-import org.metafacture.mangling.StreamFlattener;
 import org.metafacture.triples.AbstractTripleSort.Compare;
-import org.metafacture.triples.AbstractTripleSort.Order;
-import org.metafacture.triples.StreamToTriples;
-import org.metafacture.triples.TripleCount;
-import org.metafacture.triples.TripleSort;
-
-import java.io.FileNotFoundException;
 
 /**
- * Provide a user-friendly way to list all paths available for processing in fix.
+ * Provide a user-friendly way to list all paths available for processing in fix (see also {@link MetafixListValues}).
  *
  * @author Fabian Steeg
  */
@@ -46,107 +34,18 @@ import java.io.FileNotFoundException;
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("fix-list-paths")
-public class MetafixListPaths extends DefaultStreamPipe<ObjectReceiver<String>> {
-
-    private Metafix fix;
-    private boolean count = true;
-    private boolean index;
+public class MetafixListPaths extends MetafixStreamAnalyzer {
 
     public MetafixListPaths() {
-        try {
-            fix = new Metafix("nothing()");
-            fix.setRepeatedFieldsToEntities(true);
-        }
-        catch (final FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onSetReceiver() {
-        fix.setEntityMemberName(index ? "%d" : "*");
-        final StreamToTriples triples = fix
-                .setReceiver(new StreamFlattener())
-                .setReceiver(new StreamToTriples());
-        (count ? counted(triples) : unique(triples))
-                .setReceiver(getReceiver());
-    }
-
-    private Sender<ObjectReceiver<String>> counted(final StreamToTriples triples) {
-        return triples
-                .setReceiver(tripleCount())
-                .setReceiver(tripleSort())
-                .setReceiver(new ObjectTemplate<>("${s}\t ${o}"));
-    }
-
-    private Sender<ObjectReceiver<String>> unique(final StreamToTriples triples) {
-        return triples
-                .setReceiver(new ObjectTemplate<>("${p}"))
-                .setReceiver(new DuplicateObjectFilter<>());
-    }
-
-    private TripleCount tripleCount() {
-        final TripleCount tripleCount = new TripleCount();
-        tripleCount.setCountBy(Compare.PREDICATE);
-        return tripleCount;
-    }
-
-    private TripleSort tripleSort() {
-        final TripleSort tripleSort = new TripleSort();
-        tripleSort.setNumeric(true);
-        tripleSort.setBy(Compare.OBJECT);
-        tripleSort.setOrder(Order.DECREASING);
-        return tripleSort;
-    }
-
-    @Override
-    public void startRecord(final String identifier) {
-        fix.startRecord(identifier);
-    }
-
-    @Override
-    public void endRecord() {
-        fix.endRecord();
-    }
-
-    @Override
-    public void startEntity(final String name) {
-        fix.startEntity(name);
-    }
-
-    @Override
-    public void endEntity() {
-        fix.endEntity();
-    }
-
-    @Override
-    public void literal(final String name, final String value) {
-        fix.literal(name, value);
-    }
-
-    @Override
-    protected void onCloseStream() {
-        fix.closeStream();
-    }
-
-    @Override
-    protected void onResetStream() {
-        fix.resetStream();
-    }
-
-    public void setCount(final boolean count) {
-        this.count = count;
-    }
-
-    public boolean getCount() {
-        return this.count;
+        super("nothing()", Compare.PREDICATE, "${s}\t ${o}", "${p}");
+        setIndex(false);
     }
 
     public void setIndex(final boolean index) {
-        this.index = index;
+        super.getFix().setEntityMemberName(index ? Metafix.DEFAULT_ENTITY_MEMBER_NAME : "*");
     }
 
     public boolean getIndex() {
-        return this.index;
+        return super.getFix().getEntityMemberName().equals(Metafix.DEFAULT_ENTITY_MEMBER_NAME);
     }
 }

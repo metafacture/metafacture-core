@@ -64,6 +64,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     public static final String VAR_START = "$[";
 
     public static final Strictness DEFAULT_STRICTNESS = Strictness.PROCESS;
+    public static final String DEFAULT_ENTITY_MEMBER_NAME = "%d";
 
     public static final Map<String, String> NO_VARS = Collections.emptyMap();
 
@@ -87,7 +88,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     private Strictness strictness = DEFAULT_STRICTNESS;
     private String fixFile;
     private String recordIdentifier;
-    private String entityMemberName = "%d";
+    private String entityMemberName = DEFAULT_ENTITY_MEMBER_NAME;
     private boolean repeatedFieldsToEntities;
     private boolean strictnessHandlesProcessExceptions;
     private int entityCount;
