@@ -20,15 +20,15 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>entity.name.function.fix-method</string>
+			<string>entity.name.function.fix</string>
 			<key>match</key>
-			<string>\b(include|nothing|put_filemap|put_map|put_rdfmap|put_var|put_vars|add_field|array|call_macro|copy_field|format|hash|move_field|parse_text|paste|print_record|random|reject|rename|retain|set_array|set_field|set_hash|timestamp|vacuum|append|capitalize|count|downcase|filter|flatten|from_json|index|isbn|json_field|lookup|prepend|replace_all|reverse|sort_field|split_field|substring|sum|to_json|trim|uniq|upcase)\b</string>
+			<string>\b(include|nothing|put_filemap|put_map|put_rdfmap|put_var|put_vars|add_field|array|call_macro|copy_field|format|hash|move_field|parse_text|paste|print_record|random|reject|rename|retain|set_array|set_field|set_hash|timestamp|vacuum|append|capitalize|count|downcase|filter|flatten|from_json|index|isbn|join_field|lookup|prepend|replace_all|reverse|sort_field|split_field|substring|sum|to_json|trim|uniq|upcase)\b</string>
 			<key>comment</key>
 			<string>The method names are taken from https://github.com/metafacture/metafacture-fix/blob/master/metafix/src/main/java/org/metafacture/metafix/FixMethod.java</string>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>entity.name.function.fix-conditional</string>
+			<string>keyword.operator.fix</string>
 			<key>match</key>
 			<string>\b(all_contain|any_contain|none_contain|str_contain|all_equal|any_equal|none_equal|str_equal|exists|in|is_contained_in|is_array|is_empty|is_false|is_hash|is_number|is_object|is_sring|is_true|all_match|any_match|none_match|str_match)\b</string>
 			<key>comment</key>
@@ -36,7 +36,7 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>entity.name.function.fix-bind</string>
+			<string>storage.type.fix</string>
 			<key>match</key>
 			<string>\b(list|list_as|once|put_macro)\b</string>
 			<key>comment</key>
@@ -44,7 +44,7 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>comment.line.number-sign</string>
+			<string>comment.line.number-sign.fix</string>
 			<key>begin</key>
 			<string>#</string>
 			<key>end</key>
@@ -52,7 +52,7 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>string.quoted.single</string>
+			<string>string.quoted.single.fix</string>
 			<key>begin</key>
 			<string>'</string>
 			<key>end</key>
@@ -60,7 +60,7 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>string.quoted.double</string>
+			<string>string.quoted.double.fix</string>
 			<key>begin</key>
 			<string>"</string>
 			<key>end</key>
