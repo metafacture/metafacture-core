@@ -32,7 +32,7 @@
 			<key>match</key>
 			<string>\b(all_contain|any_contain|none_contain|str_contain|all_equal|any_equal|none_equal|str_equal|exists|in|is_contained_in|is_array|is_empty|is_false|is_hash|is_number|is_object|is_sring|is_true|all_match|any_match|none_match|str_match)\b</string>
 			<key>comment</key>
-			<string>The names of the conditionals are taken from https://github.com/metafacture/metafacture-fix/blob/master/metafix/src/main/java/org/metafacture/metafix/FixMethod.java</string>
+			<string>The names of the conditionals are taken from https://github.com/metafacture/metafacture-fix/blob/master/metafix/src/main/java/org/metafacture/metafix/FixConditional.java</string>
 		</dict>
 		<dict>
 			<key>name</key>
