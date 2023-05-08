@@ -26,7 +26,6 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 import org.metafacture.mangling.DuplicateObjectFilter;
-import org.metafacture.mangling.StreamFlattener;
 import org.metafacture.triples.AbstractTripleSort.Compare;
 import org.metafacture.triples.AbstractTripleSort.Order;
 import org.metafacture.triples.StreamToTriples;
@@ -36,26 +35,25 @@ import org.metafacture.triples.TripleSort;
 import java.io.FileNotFoundException;
 
 /**
- * Provide a user-friendly way to list all paths available for processing in fix.
+ * Provide a user-friendly way to list all values for a given path (see {@link MetafixListPaths}).
  *
  * @author Fabian Steeg
  */
-@Description("Lists all paths found in the input records. These paths can be used in a Fix to address fields. Options: " +
-        "count (output occurence frequency of each path, sorted by highest frequency first; default: true), " +
-        "index (output individual repeated subfields and array elements with index numbers instead of '*'; default: false)")
+@Description("Lists all values found for the given path. The paths can be found using fix-list-paths. Options: " +
+        "count (output occurence frequency of each value, sorted by highest frequency first; default: true)")
 @In(StreamReceiver.class)
 @Out(String.class)
-@FluxCommand("fix-list-paths")
-public class MetafixListPaths extends DefaultStreamPipe<ObjectReceiver<String>> {
+@FluxCommand("fix-list-values")
+public class MetafixListValues extends DefaultStreamPipe<ObjectReceiver<String>> {
 
+    private String path;
     private Metafix fix;
     private boolean count = true;
-    private boolean index;
 
-    public MetafixListPaths() {
+    public MetafixListValues(final String path) {
+        this.path = path;
         try {
-            fix = new Metafix("nothing()");
-            fix.setRepeatedFieldsToEntities(true);
+            fix = new Metafix("retain(\"" + path + "\")");
         }
         catch (final FileNotFoundException e) {
             e.printStackTrace();
@@ -64,9 +62,7 @@ public class MetafixListPaths extends DefaultStreamPipe<ObjectReceiver<String>> 
 
     @Override
     protected void onSetReceiver() {
-        fix.setEntityMemberName(index ? "%d" : "*");
         final StreamToTriples triples = fix
-                .setReceiver(new StreamFlattener())
                 .setReceiver(new StreamToTriples());
         (count ? counted(triples) : unique(triples))
                 .setReceiver(getReceiver());
@@ -76,18 +72,18 @@ public class MetafixListPaths extends DefaultStreamPipe<ObjectReceiver<String>> 
         return triples
                 .setReceiver(tripleCount())
                 .setReceiver(tripleSort())
-                .setReceiver(new ObjectTemplate<>("${s}\t ${o}"));
+                .setReceiver(new ObjectTemplate<>("${o}\t ${s}"));
     }
 
     private Sender<ObjectReceiver<String>> unique(final StreamToTriples triples) {
         return triples
-                .setReceiver(new ObjectTemplate<>("${p}"))
+                .setReceiver(new ObjectTemplate<>("${o}"))
                 .setReceiver(new DuplicateObjectFilter<>());
     }
 
     private TripleCount tripleCount() {
         final TripleCount tripleCount = new TripleCount();
-        tripleCount.setCountBy(Compare.PREDICATE);
+        tripleCount.setCountBy(Compare.OBJECT);
         return tripleCount;
     }
 
@@ -142,11 +138,11 @@ public class MetafixListPaths extends DefaultStreamPipe<ObjectReceiver<String>> 
         return this.count;
     }
 
-    public void setIndex(final boolean index) {
-        this.index = index;
+    public void setPath(final String path) {
+        this.path = path;
     }
 
-    public boolean getIndex() {
-        return this.index;
+    public String getPath() {
+        return this.path;
     }
 }
