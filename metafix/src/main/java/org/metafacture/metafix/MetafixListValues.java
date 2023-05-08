@@ -36,7 +36,13 @@ import org.metafacture.triples.AbstractTripleSort.Compare;
 public class MetafixListValues extends MetafixStreamAnalyzer {
 
     public MetafixListValues(final String path) {
-        super("retain(\"" + path + "\")", Compare.OBJECT, "${o}\t ${s}", "${o}");
+        super(fix(path), Compare.OBJECT, "${o}\t ${s}", "${o}");
+    }
+
+    private static String fix(final String path) {
+        return
+            "copy_field(\"" + path + "\",\"value.$append\")\n" +
+            "retain(\"value\")";
     }
 
 }

@@ -43,21 +43,48 @@ public final class MetafixListValuesTest {
     }
 
     @Test
-    public void testShouldListPathsA() {
+    public void testShouldListPathsSimple() {
         lister = new MetafixListValues("a");
         verify("2\t aA");
     }
 
     @Test
-    public void testShouldListPathsB() {
+    public void testShouldListPathsWildcard() {
+        lister = new MetafixListValues("a.*");
+        verify("2\t aA");
+    }
+
+    @Test
+    public void testShouldListPathsIndex() {
+        lister = new MetafixListValues("a.1");
+        verify("1\t aA");
+    }
+
+    @Test
+    public void testShouldListPathsTwoValues() {
         lister = new MetafixListValues("b");
+        verify(
+                "2\t bB",
+                "1\t bA");
+    }
+
+    @Test
+    public void testShouldListPathsTwoValuesWildcard() {
+        lister = new MetafixListValues("b.*");
         verify(
             "2\t bB",
             "1\t bA");
     }
 
     @Test
-    public void testShouldListPathsC() {
+    public void testShouldListPathsTwoValuesIndex() {
+        lister = new MetafixListValues("b.1");
+        verify(
+            "1\t bB");
+    }
+
+    @Test
+    public void testShouldListPathsSortCount() {
         lister = new MetafixListValues("c");
         verify(
             "3\t cC",
