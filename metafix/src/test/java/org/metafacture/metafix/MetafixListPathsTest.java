@@ -46,9 +46,9 @@ public final class MetafixListPathsTest {
     @Test
     public void testShouldListPaths() {
         verify(
-            "c.*\t 3",
-            "b.*\t 2",
-            "a\t 1");
+            "c.*\t|\t3",
+            "b.*\t|\t2",
+            "a\t|\t1");
     }
 
     @Test
@@ -64,12 +64,12 @@ public final class MetafixListPathsTest {
     public void testShouldListPathsUseIndex() {
         lister.setIndex(true);
         verify(
-            "a\t 1",
-            "b.1\t 1",
-            "b.2\t 1",
-            "c.1\t 1",
-            "c.2\t 1",
-            "c.3\t 1");
+            "a\t|\t1",
+            "b.1\t|\t1",
+            "b.2\t|\t1",
+            "c.1\t|\t1",
+            "c.2\t|\t1",
+            "c.3\t|\t1");
     }
 
     @Test
@@ -88,9 +88,9 @@ public final class MetafixListPathsTest {
     @Test
     public void testShouldListPathsSortedByFrequency() {
         verify(
-            "c.*\t 3",
-            "b.*\t 2",
-            "a\t 1");
+            "c.*\t|\t3",
+            "b.*\t|\t2",
+            "a\t|\t1");
     }
 
     private void processRecord() {

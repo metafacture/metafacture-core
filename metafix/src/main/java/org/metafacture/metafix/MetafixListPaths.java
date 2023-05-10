@@ -37,7 +37,7 @@ import org.metafacture.triples.AbstractTripleSort.Compare;
 public class MetafixListPaths extends MetafixStreamAnalyzer {
 
     public MetafixListPaths() {
-        super("nothing()", Compare.PREDICATE, "${s}\t ${o}", "${p}");
+        super("nothing()", Compare.PREDICATE, "${s}\t|\t${o}", "${p}");
         setIndex(false);
     }
 
