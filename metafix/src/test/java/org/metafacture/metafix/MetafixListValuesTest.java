@@ -98,8 +98,8 @@ public final class MetafixListValuesTest {
         lister.setCount(false);
         verify(
             "cC",
-            "cB",
-            "cA");
+            "cA",
+            "cB");
     }
 
     private void processRecord() {
@@ -111,10 +111,10 @@ public final class MetafixListValuesTest {
         lister.literal("b", "bB");
         lister.literal("b", "bA");
         lister.literal("c", "cC");
-        lister.literal("c", "cC");
-        lister.literal("c", "cC");
         lister.literal("c", "cB");
+        lister.literal("c", "cC");
         lister.literal("c", "cA");
+        lister.literal("c", "cC");
         lister.endRecord();
         lister.closeStream();
     }
@@ -126,6 +126,9 @@ public final class MetafixListValuesTest {
             for (final String r : result) {
                 ordered.verify(receiver).process(r);
             }
+            ordered.verify(receiver, Mockito.times(2)).closeStream();
+            ordered.verifyNoMoreInteractions();
+            Mockito.verifyNoMoreInteractions(receiver);
         }
         catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());

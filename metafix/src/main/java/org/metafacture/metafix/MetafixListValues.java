@@ -36,7 +36,7 @@ import org.metafacture.triples.AbstractTripleSort.Compare;
 public class MetafixListValues extends MetafixStreamAnalyzer {
 
     public MetafixListValues(final String path) {
-        super(fix(path), Compare.OBJECT, "${o}\t|\t${s}", "${o}");
+        super(fix(path), Compare.OBJECT, "${o}\t|\t${s}");
     }
 
     private static String fix(final String path) {

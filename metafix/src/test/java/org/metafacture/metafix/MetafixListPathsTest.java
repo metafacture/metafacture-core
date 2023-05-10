@@ -55,9 +55,9 @@ public final class MetafixListPathsTest {
     public void testShouldListPathsNoCount() {
         lister.setCount(false);
         verify(
-            "a",
+            "c.*",
             "b.*",
-            "c.*");
+            "a");
     }
 
     @Test
