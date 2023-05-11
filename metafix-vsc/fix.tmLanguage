@@ -14,55 +14,45 @@
 			<key>name</key>
 			<string>keyword.control.fix</string>
 			<key>match</key>
-			<string>\b(do|if|elsif|else|end)\b</string>
+			<string>\b(do|if|elsif|else|end|unless)\b</string>
+			<key>comment</key>
+			<string>The fix grammar can be found here: https://github.com/metafacture/metafacture-fix/blob/master/metafix/src/main/java/org/metafacture/metafix/Fix.xtext</string>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>entity.name.function.morph-collectors</string>
+			<string>entity.name.function.method.fix</string>
 			<key>match</key>
-			<string>\b(all|any|combine|choose|group|concat|none|tuples|square|range|equalsFilter|entity)\b</string>
+			<string>\b(include|nothing|put_filemap|put_map|put_rdfmap|put_var|put_vars|add_field|array|call_macro|copy_field|format|hash|move_field|parse_text|paste|print_record|random|reject|rename|retain|set_array|set_field|set_hash|timestamp|vacuum|append|capitalize|count|downcase|filter|flatten|from_json|index|isbn|join_field|lookup|prepend|replace_all|reverse|sort_field|split_field|substring|sum|to_json|trim|uniq|upcase)\b</string>
+			<key>comment</key>
+			<string>The method names are taken from https://github.com/metafacture/metafacture-fix/blob/master/metafix/src/main/java/org/metafacture/metafix/FixMethod.java</string>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>entity.name.function.morph-functions</string>
+			<string>support.function.conditional.fix</string>
 			<key>match</key>
-			<string>\b(regexp|substring|compose|lookup|whitelist|blacklist|replace|isbn|equals|not_equals|contains|not_contains|case|htmlanchor|trim|normalize_utf8|urlencode|split|occurence|constant|count|buffer|switch_name_value|unique|script|setreplace|timestamp|dateformat)\b</string>
+			<string>\b(all_contain|any_contain|none_contain|str_contain|all_equal|any_equal|none_equal|str_equal|exists|in|is_contained_in|is_array|is_empty|is_false|is_hash|is_number|is_object|is_sring|is_true|all_match|any_match|none_match|str_match)\b</string>
+			<key>comment</key>
+			<string>The names of the conditionals are taken from https://github.com/metafacture/metafacture-fix/blob/master/metafix/src/main/java/org/metafacture/metafix/FixConditional.java</string>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>entity.name.function.morph-maps</string>
+			<string>storage.type.bind.fix</string>
 			<key>match</key>
-			<string>\b(filemap|restmap|sqlmap|jndisqlmap)\b</string>
+			<string>\b(list|list_as|once|put_macro)\b</string>
+			<key>comment</key>
+			<string>The names of the fix binds are taken from https://github.com/metafacture/metafacture-fix/blob/master/metafix/src/main/java/org/metafacture/metafix/FixBind.java</string>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>entity.name.function.fix-functions</string>
-			<key>match</key>
-			<string>\b(map|add_field|lookup|array|replace_all)\b</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>variable.parameter.morph-collector-parameters</string>
-			<key>match</key>
-			<string>\b(flushWith|reset|sameEntity|delimiter|name|prefix|postfix|minN|pattern|in|with):</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>entity.name.type.fix</string>
-			<key>match</key>
-			<string>\b(type|string|int|boolean)\b</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>comment.block</string>
+			<string>comment.line.number-sign.fix</string>
 			<key>begin</key>
-			<string>/\*</string>
+			<string>#</string>
 			<key>end</key>
-			<string>\*/</string>
+			<string>\n</string>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>string.quoted.single</string>
+			<string>string.quoted.single.fix</string>
 			<key>begin</key>
 			<string>'</string>
 			<key>end</key>
@@ -70,7 +60,7 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>string.quoted.double</string>
+			<string>string.quoted.double.fix</string>
 			<key>begin</key>
 			<string>"</string>
 			<key>end</key>
