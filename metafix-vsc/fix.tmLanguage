@@ -20,7 +20,7 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>entity.name.function.fix</string>
+			<string>entity.name.function.method.fix</string>
 			<key>match</key>
 			<string>\b(include|nothing|put_filemap|put_map|put_rdfmap|put_var|put_vars|add_field|array|call_macro|copy_field|format|hash|move_field|parse_text|paste|print_record|random|reject|rename|retain|set_array|set_field|set_hash|timestamp|vacuum|append|capitalize|count|downcase|filter|flatten|from_json|index|isbn|join_field|lookup|prepend|replace_all|reverse|sort_field|split_field|substring|sum|to_json|trim|uniq|upcase)\b</string>
 			<key>comment</key>
@@ -28,7 +28,7 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>keyword.operator.fix</string>
+			<string>support.function.conditional.fix</string>
 			<key>match</key>
 			<string>\b(all_contain|any_contain|none_contain|str_contain|all_equal|any_equal|none_equal|str_equal|exists|in|is_contained_in|is_array|is_empty|is_false|is_hash|is_number|is_object|is_sring|is_true|all_match|any_match|none_match|str_match)\b</string>
 			<key>comment</key>
@@ -36,7 +36,7 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>storage.type.fix</string>
+			<string>storage.type.bind.fix</string>
 			<key>match</key>
 			<string>\b(list|list_as|once|put_macro)\b</string>
 			<key>comment</key>
