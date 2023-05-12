@@ -120,6 +120,7 @@ public final class MetafixListValuesTest {
     }
 
     private void verify(final String... result) throws MockitoAssertionError {
+        lister.setTemplate(lister.getCount() ? "${o}\t|\t${s}" : "${s}");
         processRecord();
         try {
             final InOrder ordered = Mockito.inOrder(receiver);

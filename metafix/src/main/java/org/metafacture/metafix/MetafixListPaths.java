@@ -30,6 +30,7 @@ import org.metafacture.triples.AbstractTripleSort.Compare;
  */
 @Description("Lists all paths found in the input records. These paths can be used in a Fix to address fields. Options: " +
         "count (output occurence frequency of each path, sorted by highest frequency first; default: true), " +
+        "template (for formatting the internal triple structure; default: ${s}\t|\t${o} if count is true, else ${s})" +
         "index (output individual repeated subfields and array elements with index numbers instead of '*'; default: false)")
 @In(StreamReceiver.class)
 @Out(String.class)
@@ -37,7 +38,7 @@ import org.metafacture.triples.AbstractTripleSort.Compare;
 public class MetafixListPaths extends MetafixStreamAnalyzer {
 
     public MetafixListPaths() {
-        super("nothing()", Compare.PREDICATE, "${s}\t|\t${o}");
+        super("nothing()", Compare.PREDICATE);
         setIndex(false);
     }
 

@@ -36,14 +36,15 @@ import java.io.FileNotFoundException;
  */
 /* package-private */ class MetafixStreamAnalyzer extends DefaultStreamPipe<ObjectReceiver<String>> {
 
+    private static final String DEFAULT_COUNTED_TEMPLATE = "${s}\t|\t${o}";
+    private static final String DEFAULT_UNCOUNTED_TEMPLATE = "${s}";
+
     private Metafix fix;
     private boolean count = true;
     private Compare countBy;
-    private String countedTemplate;
-    private String uncountedTemplate = "${s}";
+    private String template;
 
-    /* package-private */ MetafixStreamAnalyzer(final String fix, final Compare countBy,
-            final String countedTemplate) {
+    /* package-private */ MetafixStreamAnalyzer(final String fix, final Compare countBy) {
         try {
             this.fix = new Metafix(fix);
             this.fix.setRepeatedFieldsToEntities(true);
@@ -52,17 +53,17 @@ import java.io.FileNotFoundException;
             throw new MetafactureException(e);
         }
         this.countBy = countBy;
-        this.countedTemplate = countedTemplate;
     }
 
     @Override
     protected void onSetReceiver() {
+        template = template != null ? template : count ? DEFAULT_COUNTED_TEMPLATE : DEFAULT_UNCOUNTED_TEMPLATE;
         fix
             .setReceiver(new StreamFlattener())
             .setReceiver(new StreamToTriples())
             .setReceiver(tripleCount())
             .setReceiver(tripleSort())
-            .setReceiver(new ObjectTemplate<>(count ? countedTemplate : uncountedTemplate))
+            .setReceiver(new ObjectTemplate<>(template))
             .setReceiver(getReceiver());
     }
 
@@ -121,6 +122,14 @@ import java.io.FileNotFoundException;
 
     public boolean getCount() {
         return this.count;
+    }
+
+    public void setTemplate(final String template) {
+        this.template = template;
+    }
+
+    public String getTemplate() {
+        return this.template;
     }
 
     /* package-private */ Metafix getFix() {

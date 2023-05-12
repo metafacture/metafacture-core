@@ -29,14 +29,15 @@ import org.metafacture.triples.AbstractTripleSort.Compare;
  * @author Fabian Steeg
  */
 @Description("Lists all values found for the given path. The paths can be found using fix-list-paths. Options: " +
-        "count (output occurence frequency of each value, sorted by highest frequency first; default: true)")
+        "count (output occurence frequency of each value, sorted by highest frequency first; default: true)" +
+        "template (for formatting the internal triple structure; default: ${s}\t|\t${o} if count is true, else ${s})")
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("fix-list-values")
 public class MetafixListValues extends MetafixStreamAnalyzer {
 
     public MetafixListValues(final String path) {
-        super(fix(path), Compare.OBJECT, "${o}\t|\t${s}");
+        super(fix(path), Compare.OBJECT);
     }
 
     private static String fix(final String path) {
