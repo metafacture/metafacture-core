@@ -97,9 +97,9 @@ public final class MetafixListValuesTest {
         lister = new MetafixListValues("c");
         lister.setCount(false);
         verify(
-            "cC",
             "cA",
-            "cB");
+            "cB",
+            "cC");
     }
 
     private void processRecord() {
