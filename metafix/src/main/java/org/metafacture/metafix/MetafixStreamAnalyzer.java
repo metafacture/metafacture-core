@@ -76,7 +76,7 @@ import java.io.FileNotFoundException;
     private TripleSort tripleSort() {
         final TripleSort tripleSort = new TripleSort();
         tripleSort.setNumeric(count);
-        tripleSort.setBy(Compare.OBJECT);
+        tripleSort.setBy(count ? Compare.OBJECT : Compare.SUBJECT);
         tripleSort.setOrder(count ? Order.DECREASING : Order.INCREASING);
         return tripleSort;
     }

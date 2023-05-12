@@ -46,8 +46,8 @@ public final class MetafixListPathsTest {
     @Test
     public void testShouldListPaths() {
         verify(
-            "3\t|\tc.*",
-            "2\t|\tb.*",
+            "3\t|\tb.*",
+            "2\t|\tc.*",
             "1\t|\ta");
     }
 
@@ -67,9 +67,9 @@ public final class MetafixListPathsTest {
             "1\t|\ta",
             "1\t|\tb.1",
             "1\t|\tb.2",
+            "1\t|\tb.3",
             "1\t|\tc.1",
-            "1\t|\tc.2",
-            "1\t|\tc.3");
+            "1\t|\tc.2");
     }
 
     @Test
@@ -80,16 +80,16 @@ public final class MetafixListPathsTest {
             "a",
             "b.1",
             "b.2",
+            "b.3",
             "c.1",
-            "c.2",
-            "c.3");
+            "c.2");
     }
 
     @Test
     public void testShouldListPathsSortedByFrequency() {
         verify(
-            "3\t|\tc.*",
-            "2\t|\tb.*",
+            "3\t|\tb.*",
+            "2\t|\tc.*",
             "1\t|\ta");
     }
 
@@ -99,7 +99,7 @@ public final class MetafixListPathsTest {
         lister.literal("a", "");
         lister.literal("b", "");
         lister.literal("b", "");
-        lister.literal("c", "");
+        lister.literal("b", "");
         lister.literal("c", "");
         lister.literal("c", "");
         lister.endRecord();
@@ -113,6 +113,9 @@ public final class MetafixListPathsTest {
             for (final String r : result) {
                 ordered.verify(receiver).process(r);
             }
+            ordered.verify(receiver, Mockito.times(2)).closeStream();
+            ordered.verifyNoMoreInteractions();
+            Mockito.verifyNoMoreInteractions(receiver);
         }
         catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());
