@@ -36,7 +36,7 @@ import java.io.FileNotFoundException;
  */
 /* package-private */ class MetafixStreamAnalyzer extends DefaultStreamPipe<ObjectReceiver<String>> {
 
-    private static final String DEFAULT_COUNTED_TEMPLATE = "${s}\t|\t${o}";
+    private static final String DEFAULT_COUNTED_TEMPLATE = "${o}\t|\t${s}";
     private static final String DEFAULT_UNCOUNTED_TEMPLATE = "${s}";
 
     private Metafix fix;
