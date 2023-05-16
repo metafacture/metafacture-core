@@ -24,19 +24,19 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.triples.AbstractTripleSort.Compare;
 
 /**
- * Provide a user-friendly way to list all values for a given path (see {@link MetafixListPaths}).
+ * Provide a user-friendly way to list all values for a given path (see {@link ListFixPaths}).
  *
  * @author Fabian Steeg
  */
 @Description("Lists all values found for the given path. The paths can be found using fix-list-paths. Options: " +
-        "count (output occurence frequency of each value, sorted by highest frequency first; default: true)" +
-        "template (for formatting the internal triple structure; default: ${o}\t|\t${s} if count is true, else ${s})")
+        "`count` (output occurence frequency of each value, sorted by highest frequency first; default: `true`)" +
+        "`template` (for formatting the internal triple structure; default: `${o}\t|\t${s}` if count is true, else `${s}`)")
 @In(StreamReceiver.class)
 @Out(String.class)
-@FluxCommand("fix-list-values")
-public class MetafixListValues extends MetafixStreamAnalyzer {
+@FluxCommand("list-fix-values")
+public class ListFixValues extends MetafixStreamAnalyzer {
 
-    public MetafixListValues(final String path) {
+    public ListFixValues(final String path) {
         super(fix(path), Compare.OBJECT);
     }
 

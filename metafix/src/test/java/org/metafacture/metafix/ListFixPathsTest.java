@@ -26,21 +26,21 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.exceptions.base.MockitoAssertionError;
 
 /**
- * Tests for class {@link MetafixListPaths}.
+ * Tests for class {@link ListFixPaths}.
  *
  * @author Fabian Steeg
  *
  */
-public final class MetafixListPathsTest {
+public final class ListFixPathsTest {
 
-    private MetafixListPaths lister;
+    private ListFixPaths lister;
 
     @Mock
     private ObjectReceiver<String> receiver;
 
-    public MetafixListPathsTest() {
+    public ListFixPathsTest() {
         MockitoAnnotations.initMocks(this);
-        lister = new MetafixListPaths();
+        lister = new ListFixPaths();
     }
 
     @Test

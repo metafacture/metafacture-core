@@ -39,9 +39,9 @@ import java.io.FileNotFoundException;
     private static final String DEFAULT_COUNTED_TEMPLATE = "${o}\t|\t${s}";
     private static final String DEFAULT_UNCOUNTED_TEMPLATE = "${s}";
 
-    private Metafix fix;
+    private final Metafix fix;
     private boolean count = true;
-    private Compare countBy;
+    private final Compare countBy;
     private String template;
 
     /* package-private */ MetafixStreamAnalyzer(final String fix, final Compare countBy) {
@@ -136,7 +136,4 @@ import java.io.FileNotFoundException;
         return this.fix;
     }
 
-    /* package-private */ void setFix(final Metafix fix) {
-        this.fix = fix;
-    }
 }

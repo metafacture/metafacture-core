@@ -24,29 +24,29 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.triples.AbstractTripleSort.Compare;
 
 /**
- * Provide a user-friendly way to list all paths available for processing in fix (see also {@link MetafixListValues}).
+ * Provide a user-friendly way to list all paths available for processing in fix (see also {@link ListFixValues}).
  *
  * @author Fabian Steeg
  */
 @Description("Lists all paths found in the input records. These paths can be used in a Fix to address fields. Options: " +
-        "count (output occurence frequency of each path, sorted by highest frequency first; default: true), " +
-        "template (for formatting the internal triple structure; default: ${o}\t|\t${s} if count is true, else ${s})" +
-        "index (output individual repeated subfields and array elements with index numbers instead of '*'; default: false)")
+        "`count` (output occurence frequency of each path, sorted by highest frequency first; default: `true`), " +
+        "`template` (for formatting the internal triple structure; default: `${o}\t|\t${s}` if count is true, else `${s}`)" +
+        "`index` (output individual repeated subfields and array elements with index numbers instead of '*'; default: `false`)")
 @In(StreamReceiver.class)
 @Out(String.class)
-@FluxCommand("fix-list-paths")
-public class MetafixListPaths extends MetafixStreamAnalyzer {
+@FluxCommand("list-fix-paths")
+public class ListFixPaths extends MetafixStreamAnalyzer {
 
-    public MetafixListPaths() {
+    public ListFixPaths() {
         super("nothing()", Compare.PREDICATE);
         setIndex(false);
     }
 
     public void setIndex(final boolean index) {
-        super.getFix().setEntityMemberName(index ? Metafix.DEFAULT_ENTITY_MEMBER_NAME : "*");
+        getFix().setEntityMemberName(index ? Metafix.DEFAULT_ENTITY_MEMBER_NAME : "*");
     }
 
     public boolean getIndex() {
-        return super.getFix().getEntityMemberName().equals(Metafix.DEFAULT_ENTITY_MEMBER_NAME);
+        return getFix().getEntityMemberName().equals(Metafix.DEFAULT_ENTITY_MEMBER_NAME);
     }
 }

@@ -26,43 +26,43 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.exceptions.base.MockitoAssertionError;
 
 /**
- * Tests for class {@link MetafixListPaths}.
+ * Tests for class {@link ListFixValues}.
  *
  * @author Fabian Steeg
  *
  */
-public final class MetafixListValuesTest {
+public final class ListFixValuesTest {
 
-    private MetafixListValues lister;
+    private ListFixValues lister;
 
     @Mock
     private ObjectReceiver<String> receiver;
 
-    public MetafixListValuesTest() {
+    public ListFixValuesTest() {
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void testShouldListPathsSimple() {
-        lister = new MetafixListValues("a");
+        lister = new ListFixValues("a");
         verify("2\t|\taA");
     }
 
     @Test
     public void testShouldListPathsWildcard() {
-        lister = new MetafixListValues("a.*");
+        lister = new ListFixValues("a.*");
         verify("2\t|\taA");
     }
 
     @Test
     public void testShouldListPathsIndex() {
-        lister = new MetafixListValues("a.1");
+        lister = new ListFixValues("a.1");
         verify("1\t|\taA");
     }
 
     @Test
     public void testShouldListPathsTwoValues() {
-        lister = new MetafixListValues("b");
+        lister = new ListFixValues("b");
         verify(
                 "2\t|\tbB",
                 "1\t|\tbA");
@@ -70,7 +70,7 @@ public final class MetafixListValuesTest {
 
     @Test
     public void testShouldListPathsTwoValuesWildcard() {
-        lister = new MetafixListValues("b.*");
+        lister = new ListFixValues("b.*");
         verify(
             "2\t|\tbB",
             "1\t|\tbA");
@@ -78,14 +78,14 @@ public final class MetafixListValuesTest {
 
     @Test
     public void testShouldListPathsTwoValuesIndex() {
-        lister = new MetafixListValues("b.1");
+        lister = new ListFixValues("b.1");
         verify(
             "1\t|\tbB");
     }
 
     @Test
     public void testShouldListPathsSortCount() {
-        lister = new MetafixListValues("c");
+        lister = new ListFixValues("c");
         verify(
             "3\t|\tcC",
             "1\t|\tcA",
@@ -94,7 +94,7 @@ public final class MetafixListValuesTest {
 
     @Test
     public void testShouldListPathsDontCount() {
-        lister = new MetafixListValues("c");
+        lister = new ListFixValues("c");
         lister.setCount(false);
         verify(
             "cA",
@@ -120,7 +120,6 @@ public final class MetafixListValuesTest {
     }
 
     private void verify(final String... result) throws MockitoAssertionError {
-        lister.setTemplate(lister.getCount() ? "${o}\t|\t${s}" : "${s}");
         processRecord();
         try {
             final InOrder ordered = Mockito.inOrder(receiver);
