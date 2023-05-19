@@ -183,8 +183,7 @@ public class CsvEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
     public void endRecord() {
         if (isFirstRecord) {
             if (includeHeader) {
-                final List<String> uniqueHeader = header.stream().distinct().collect(Collectors.toList());
-                writeRow(uniqueHeader);
+                writeRow(header);
                 header.clear();
             }
             isFirstRecord = false;
