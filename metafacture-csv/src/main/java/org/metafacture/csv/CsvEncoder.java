@@ -104,7 +104,7 @@ public class CsvEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
     }
 
     /**
-     * Add a character to separate the columns.
+     * Set the character to separate the columns.
      * The default is {@value #DEFAULT_SEP}.
      *
      * @param separator set the character which separates the columns
