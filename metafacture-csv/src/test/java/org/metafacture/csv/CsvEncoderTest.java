@@ -19,13 +19,11 @@ package org.metafacture.csv;
 import org.junit.Rule;
 import org.metafacture.framework.ObjectReceiver;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.exceptions.base.MockitoAssertionError;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
