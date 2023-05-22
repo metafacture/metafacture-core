@@ -16,6 +16,7 @@
 
 package org.metafacture.csv;
 
+import org.junit.Rule;
 import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.Before;
@@ -26,6 +27,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.exceptions.base.MockitoAssertionError;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -53,13 +56,8 @@ public final class CsvEncoderTest {
     private static final String VALUE5 = "e";
     private static final String VALUE6 = "f";
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        CsvEncoder encoder = new CsvEncoder();
-        encoder.setReceiver(receiver);
-    }
-
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
 
     @Test
     public void shouldReceiveSingleRecord() {
