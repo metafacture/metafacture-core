@@ -157,6 +157,20 @@ public final class CsvEncoderTest {
         }, "\"a\",\"b\",\"c\",\"d\"");
     }
 
+    @Test
+    public void shouldRepeatHeaderForRepeatedColumns() {
+        assertEncode(i -> {
+            i.setIncludeHeader(true);
+            i.startRecord(RECORD_ID1);
+            i.literal(LITERAL1, VALUE1);
+            i.literal(LITERAL2, VALUE2);
+            i.literal(LITERAL2, VALUE3);
+            i.literal(LITERAL1, VALUE4);
+            i.literal(LITERAL2, VALUE5);
+            i.endRecord();
+        }, "\"column 1\",\"column 2\",\"column 2\",\"column 1\",\"column 2\"", "\"a\",\"b\",\"c\",\"d\",\"e\"");
+    }
+
     private void assertEncode(final Consumer<CsvEncoder> in, final String... out) {
         final InOrder ordered = Mockito.inOrder(receiver);
 
