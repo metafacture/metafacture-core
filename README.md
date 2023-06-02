@@ -91,7 +91,7 @@ end
 # Loops
 
 do list(path: "foo", "var": "$i")
-  add_field("$i", "bar")
+  add_field("$i.bar", "baz")
 end
 ```
 
