@@ -72,26 +72,26 @@ Visit [http://localhost:8080/](http://localhost:8080/), and paste this into the 
 
 # Simple fixes
 
-add_field("hello","world")
+add_field("hello", "world")
 remove_field("my.deep.nested.junk")
-copy_field("stats","output.$append")
+copy_field("stats", "output.$append")
 
 # Conditionals
 
 if exists("error")
-    set_field("is_valid", "no")
-    log("error")
+  set_field("is_valid", "no")
+  log("error")
 elsif exists("warning")
-    set_field("is_valid", "yes")
-    log("warning")
+  set_field("is_valid", "yes")
+  log("warning")
 else
-    set_field("is_valid", "yes")
+  set_field("is_valid", "yes")
 end
 
 # Loops
 
-do list(path: "foo", "var":"$i")
-    add_field("$i","bar")
+do list(path: "foo", "var": "$i")
+  add_field("$i", "bar")
 end
 ```
 
