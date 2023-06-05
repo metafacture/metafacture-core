@@ -19,7 +19,8 @@ description = 'Modules for processing YAML data in Metafacture'
 
 dependencies {
   api project(':metafacture-framework')
-  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.0'
-  testImplementation 'junit:junit:4.12'
-  testImplementation 'org.mockito:mockito-core:2.5.5'
+  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.1'
+  testImplementation "junit:junit:${versions.junit}"
+  testImplementation "org.mockito:mockito-core:${versions.mockito}"
+  testRuntimeOnly "org.slf4j:slf4j-api:${versions.slf4j}"
 }

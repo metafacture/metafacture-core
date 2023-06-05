@@ -19,6 +19,6 @@ description = 'Modules for converting JDOM documents to Metafacture streams and 
 
 dependencies {
   api project(':metafacture-framework')
-  api 'org.jdom:jdom2:2.0.6'
+  api 'org.jdom:jdom2:2.0.6.1'
   implementation project(':metafacture-commons')
 }

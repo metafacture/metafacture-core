@@ -18,7 +18,7 @@ ext.mavenName = 'Metamorph Test'
 description = 'A framework writing tests for Metamorph scripts in XML'
 
 dependencies {
-  api 'junit:junit:4.12'
+  api "junit:junit:${versions.junit}"
   implementation project(':metafacture-framework')
   implementation project(':metafacture-commons')
   implementation project(':metamorph')
@@ -28,8 +28,8 @@ dependencies {
   implementation project(':metafacture-formeta')
   implementation project(':metafacture-xml')
   implementation project(':metafacture-javaintegration')
-  implementation 'org.slf4j:slf4j-api:1.7.21'
-  testImplementation 'org.mockito:mockito-core:2.5.5'
+  implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+  testImplementation "org.mockito:mockito-core:${versions.mockito}"
   testImplementation project(':metafacture-formeta')
-  testRuntimeOnly 'org.slf4j:slf4j-simple:1.7.21'
+  testRuntimeOnly "org.slf4j:slf4j-simple:${versions.slf4j}"
 }
