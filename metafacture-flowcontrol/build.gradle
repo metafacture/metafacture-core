@@ -19,9 +19,9 @@ description = 'Modules for controlling the data flow in a Metafacture pipeline'
 
 dependencies {
   api project(':metafacture-framework')
-  implementation 'org.slf4j:slf4j-api:1.7.21'
-  testImplementation 'junit:junit:4.12'
-  testImplementation 'org.mockito:mockito-core:2.5.5'
-  testImplementation 'org.assertj:assertj-core:3.11.1'
-  testRuntimeOnly 'org.slf4j:slf4j-simple:1.7.21'
+  implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+  testImplementation "junit:junit:${versions.junit}"
+  testImplementation "org.mockito:mockito-core:${versions.mockito}"
+  testImplementation "org.assertj:assertj-core:${versions.assertj_core}"
+  testRuntimeOnly "org.slf4j:slf4j-simple:${versions.slf4j}"
 }

@@ -18,5 +18,5 @@ ext.mavenName = 'Metafacture Commons'
 description = 'Basic types, algorithms and utilities for Metafacture'
 
 dependencies {
-  testImplementation 'junit:junit:4.12'
+  testImplementation "junit:junit:${versions.junit}"
 }

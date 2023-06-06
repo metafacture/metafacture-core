@@ -25,10 +25,10 @@ dependencies {
   implementation project(':metafacture-io')
   implementation project(':metafacture-mangling')
   implementation project(':metafacture-javaintegration')
-  implementation 'org.slf4j:slf4j-api:1.7.21'
-  testImplementation 'junit:junit:4.12'
-  testImplementation 'org.mockito:mockito-core:2.5.5'
-  testRuntimeOnly 'org.slf4j:slf4j-simple:1.7.21'
+  implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+  testRuntimeOnly "org.slf4j:slf4j-simple:${versions.slf4j}"
+  testImplementation "junit:junit:${versions.junit}"
+  testImplementation "org.mockito:mockito-core:${versions.mockito}"
 }
 
 sourceSets {
