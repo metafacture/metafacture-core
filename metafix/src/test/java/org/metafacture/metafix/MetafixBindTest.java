@@ -572,8 +572,9 @@ public class MetafixBindTest {
 
     private void shouldIterateOverList(final String path, final int expectedCount) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('trace')",
                 "do list(path: '" + path + "', 'var': '$i')",
-                "  add_field('trace', 'true')",
+                "  add_field('trace.$append', 'true')",
                 "end",
                 "retain('trace')"
             ),
@@ -617,8 +618,9 @@ public class MetafixBindTest {
 
     private void shouldIterateOverListOfHashes(final String path, final int expectedCount) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('trace')",
                 "do list(path: '" + path + "', 'var': '$i')",
-                "  add_field('trace', 'true')",
+                "  add_field('trace.$append', 'true')",
                 "end",
                 "retain('trace')"
             ),

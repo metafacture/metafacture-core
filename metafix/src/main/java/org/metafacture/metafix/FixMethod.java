@@ -127,7 +127,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
     add_field {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.addNested(params.get(0), new Value(params.get(1)));
+            record.set(params.get(0), new Value(params.get(1)));
         }
     },
     array { // array-from-hash

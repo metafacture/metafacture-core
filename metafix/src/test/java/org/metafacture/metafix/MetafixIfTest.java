@@ -2416,9 +2416,10 @@ public class MetafixIfTest {
     @Test
     public void shouldTestMacroVariable() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('type')",
                 "do put_macro('test')",
                 "  if str_contain('name', 'a$[var]')",
-                "    add_field('type', 'Organization: $[var]')",
+                "    add_field('type.$append', 'Organization: $[var]')",
                 "  end",
                 "end",
                 "call_macro('test', 'var': 'm')",

@@ -202,9 +202,9 @@ public class MetafixScriptTest {
     public void shouldIncludeFixFile() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('trace')",
-                "add_field('trace', 'before include')",
+                "add_field('trace.$append', 'before include')",
                 "include('src/test/resources/org/metafacture/metafix/fixes/base.fix')",
-                "add_field('trace', 'after include')"
+                "add_field('trace.$append', 'after include')"
             ),
             i -> {
                 i.startRecord("1");
@@ -281,13 +281,13 @@ public class MetafixScriptTest {
     public void shouldIncludeFixFileInBind() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('trace')",
-                "add_field('trace', 'before bind')",
+                "add_field('trace.$append', 'before bind')",
                 "do list(path: 'data', 'var': '$i')",
                 "  paste('trace.$append', '~before include', '$i')",
                 "  include('src/test/resources/org/metafacture/metafix/fixes/var.fix')",
                 "  paste('trace.$append', '~after include', '$i')",
                 "end",
-                "add_field('trace', 'after bind')"
+                "add_field('trace.$append', 'after bind')"
             ),
             i -> {
                 i.startRecord("1");
