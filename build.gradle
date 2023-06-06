@@ -29,10 +29,10 @@ subprojects {
       'assertj_core': '3.11.1',
       'commons_compress': '1.21',
       'jackson_databind': '2.15.1',
-      'junit':          '4.12',
-      'mockito':        '2.5.7',
-      'slf4j':          '1.7.36',
-      'wiremock_jre':   '2.35.0'
+      'junit': '4.12',
+      'mockito': '2.5.7',
+      'slf4j': '1.7.36',
+      'wiremock_jre': '2.35.0'
     ]
   }
 }

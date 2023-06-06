@@ -22,5 +22,4 @@ dependencies {
   implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.1'
   testImplementation "junit:junit:${versions.junit}"
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
-  testRuntimeOnly "org.slf4j:slf4j-api:${versions.slf4j}"
 }
