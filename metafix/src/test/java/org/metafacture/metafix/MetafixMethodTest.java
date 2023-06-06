@@ -2250,54 +2250,25 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("Do we actually want implicit append? WDCD? See (passing) copyFieldToSubfieldOfArrayOfStringsWithIndexImplicitAppend")
     public void copyFieldToSubfieldOfArrayOfObjectsWithIndexImplicitAppend() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('test[]')",
-                "copy_field('key', 'test[].1.field')"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.literal("key", "value");
-                i.endRecord();
-            },
-            (o, f) -> {
-                o.get().startRecord("1");
-                o.get().literal("key", "value");
-                o.get().startEntity("test[]");
-                o.get().startEntity("1");
-                o.get().literal("field", "value");
-                f.apply(2).endEntity();
-                o.get().endRecord();
-            }
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Can't find: 1 in: null", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "set_array('test[]')",
+                    "copy_field('key', 'test[].1.field')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("key", "value");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
         );
     }
 
     @Test
-    // Do we actually want implicit append? WDCD? See (failing) copyFieldToSubfieldOfArrayOfObjectsWithIndexImplicitAppend
-    public void copyFieldToSubfieldOfArrayOfStringsWithIndexImplicitAppend() {
-        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('test[]')",
-                "copy_field('key', 'test[].1')"
-            ),
-            i -> {
-                i.startRecord("1");
-                i.literal("key", "value");
-                i.endRecord();
-            },
-            o -> {
-                o.get().startRecord("1");
-                o.get().literal("key", "value");
-                o.get().startEntity("test[]");
-                o.get().literal("1", "value");
-                o.get().endEntity();
-                o.get().endRecord();
-            }
-        );
-    }
-
-    @Test
-    public void copyFieldToSubfieldOfArrayOfObjectsWithIndexExplicitAppend() {
+    public void copyFieldToSubfieldOfArrayOfObjectsWithExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('test[]')",
                 "copy_field('key', 'test[].$append.field')"
@@ -2314,6 +2285,46 @@ public class MetafixMethodTest {
                 o.get().startEntity("1");
                 o.get().literal("field", "value");
                 f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void copyFieldToSubfieldOfArrayOfStringsWithIndexImplicitAppend() {
+        MetafixTestHelpers.assertProcessException(IndexOutOfBoundsException.class, "Index: 0, Size: 0", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "set_array('test[]')",
+                    "copy_field('key', 'test[].1')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("key", "value");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void copyFieldToSubfieldOfArrayOfStringsWithExplicitAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('test[]')",
+                "copy_field('key', 'test[].$append')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("key", "value");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("key", "value");
+                o.get().startEntity("test[]");
+                o.get().literal("1", "value");
+                o.get().endEntity();
                 o.get().endRecord();
             }
         );

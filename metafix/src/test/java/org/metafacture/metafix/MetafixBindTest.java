@@ -56,6 +56,28 @@ public class MetafixBindTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
+                o.get().literal("author", "MAX");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void doListExplicitAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('author')",
+                "do list('path': 'name', 'var': 'n')",
+                " upcase('n')",
+                " trim('n')",
+                " copy_field('n', 'author.$append')",
+                "end",
+                "remove_field('name')"),
+            i -> {
+                i.startRecord("1");
+                i.literal("name", " A University");
+                i.literal("name", "Max ");
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
                 o.get().literal("author", "A UNIVERSITY");
                 o.get().literal("author", "MAX");
                 o.get().endRecord();
@@ -182,6 +204,30 @@ public class MetafixBindTest {
                 i.endRecord();
             }, o -> {
                 o.get().startRecord("1");
+                o.get().literal("author", "MAX");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void doListPathWithDotsExplicitAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('author')",
+                "do list('path': 'some.name', 'var': 'n')",
+                " upcase('n')",
+                " trim('n')",
+                " copy_field('n', 'author.$append')",
+                "end",
+                "remove_field('some')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("some");
+                i.literal("name", " A University");
+                i.literal("name", "Max ");
+                i.endEntity();
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
                 o.get().literal("author", "A UNIVERSITY");
                 o.get().literal("author", "MAX");
                 o.get().endRecord();
@@ -228,6 +274,32 @@ public class MetafixBindTest {
                 " upcase('c.name')",
                 " trim('c.name')",
                 " copy_field('c.name', 'author')",
+                "end",
+                "remove_field('creator')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("creator");
+                i.literal("name", " A University");
+                i.endEntity();
+                i.startEntity("creator");
+                i.literal("name", "Max ");
+                i.endEntity();
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("author", "MAX");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void doListEntitesToLiteralsExplicitAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('author')",
+                "do list('path': 'creator', 'var': 'c')",
+                " upcase('c.name')",
+                " trim('c.name')",
+                " copy_field('c.name', 'author.$append')",
                 "end",
                 "remove_field('creator')"),
             i -> {
@@ -388,6 +460,32 @@ public class MetafixBindTest {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list('path': 'name[]', 'var': 'n')",
                 " copy_field('n.name', 'author')",
+                "end",
+                "remove_field('name[]')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("name[]");
+                i.startEntity("1");
+                i.literal("name", "A University");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("name", "Max");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            }, o -> {
+                o.get().startRecord("1");
+                o.get().literal("author", "Max");
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void doListIndexedArrayOfObjectsExplicitAppend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('author')",
+                "do list('path': 'name[]', 'var': 'n')",
+                " copy_field('n.name', 'author.$append')",
                 "end",
                 "remove_field('name[]')"),
             i -> {
