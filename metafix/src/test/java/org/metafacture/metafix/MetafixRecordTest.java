@@ -239,6 +239,48 @@ public class MetafixRecordTest {
             o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("my");
+                o.get().literal("name", "nicolas");
+                o.get().endEntity();
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().startEntity("my");
+                o.get().literal("name", "nicolas");
+                o.get().endEntity();
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().startEntity("my");
+                o.get().literal("name", "nicolas");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void addWithAppendInNewArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('my.name')",
+                "add_field('my.name.$append','patrick')",
+                "add_field('my.name.$append','nicolas')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.startEntity("my");
+                i.literal("name", "max");
+                i.endEntity();
+                i.endRecord();
+
+                i.startRecord("3");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("my");
                 o.get().literal("name", "patrick");
                 o.get().literal("name", "nicolas");
                 o.get().endEntity();
@@ -246,7 +288,6 @@ public class MetafixRecordTest {
 
                 o.get().startRecord("2");
                 o.get().startEntity("my");
-                o.get().literal("name", "max");
                 o.get().literal("name", "patrick");
                 o.get().literal("name", "nicolas");
                 o.get().endEntity();
@@ -1992,8 +2033,9 @@ public class MetafixRecordTest {
     @Test
     public void shouldCallMacro() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('test')",
                 "do put_macro('test')",
-                "  add_field('test', '42')",
+                "  add_field('test.$append', '42')",
                 "end",
                 "call_macro('test')",
                 "call_macro('test')"
@@ -2030,9 +2072,10 @@ public class MetafixRecordTest {
     @Test
     public void shouldCallMacroWithVariables() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_array('test')",
                 "put_vars(a: '1', b: '2')", // global variables
                 "do put_macro('test', b: '22', c: '33')", // "static" local variables
-                "  add_field('test', '$[a]-$[b]-$[c]-$[d]')",
+                "  add_field('test.$append', '$[a]-$[b]-$[c]-$[d]')",
                 "end",
                 "call_macro('test', c: '333', d: '444')", // "dynamic" local variables
                 "call_macro('test', b: '555', d: '666')",
