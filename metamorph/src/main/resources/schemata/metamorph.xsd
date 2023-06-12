@@ -977,6 +977,21 @@
             </documentation>
         </annotation>
         <complexType>
+            <attribute name="safechars" type="string" use="optional">
+                <annotation>
+                    <documentation>Chars which will not be escaped. The ranges
+                    0..9, a..z and A..Z are always safe and should not be
+                    specified.
+                    </documentation>
+                </annotation>
+            </attribute>
+            <attribute name="plusforspace" type="boolean" use="optional" default="true">
+                <annotation>
+                    <documentation>Sets if a space should be converted into a
+                    plus sign "+" or percent escaped as "%20".
+                    </documentation>
+                </annotation>
+            </attribute>
         </complexType>
     </element>
 

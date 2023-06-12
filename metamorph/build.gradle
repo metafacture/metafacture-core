@@ -25,6 +25,8 @@ dependencies {
   implementation project(':metafacture-io')
   implementation project(':metafacture-mangling')
   implementation project(':metafacture-javaintegration')
+  implementation "com.google.guava:guava:${versions.guava}"
+  implementation "org.slf4j:slf4j-api:${versions.slf4j}"
   implementation "org.slf4j:slf4j-api:${versions.slf4j}"
   testRuntimeOnly "org.slf4j:slf4j-simple:${versions.slf4j}"
   testImplementation "junit:junit:${versions.junit}"
