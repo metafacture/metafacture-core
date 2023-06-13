@@ -50,7 +50,7 @@ public final class URLEncode extends AbstractSimpleStatelessFunction {
      * Sets a URI escaper with the specified safe characters. The ranges 0..9, a..z and A..Z are always safe
      * and should not be specified.
      *
-     * @param safeChars
+     * @param safeChars the chars which will not be escaped
      */
     public void setSafeChars(final String safeChars) {
         this.safeChars = safeChars;

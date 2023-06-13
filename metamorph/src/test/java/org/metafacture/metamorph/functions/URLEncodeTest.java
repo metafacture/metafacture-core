@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
- * tests {@link ISBN}
+ * Tests {@link URLEncode}
  *
  * @author Pascal Christoph (dr0i)
  */
