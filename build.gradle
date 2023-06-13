@@ -28,6 +28,7 @@ subprojects {
     versions = [
       'assertj_core': '3.11.1',
       'commons_compress': '1.21',
+      'guava': '29.0-jre',
       'jackson_databind': '2.15.1',
       'junit': '4.12',
       'mockito': '2.5.7',
