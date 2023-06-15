@@ -169,11 +169,30 @@ public class MetafixLookupTest {
     }
 
     @Test
-    public void shouldLookupCopiedInternalArrayWithAsterisk() {
+    public void shouldNotLookupCopiedInternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected Array or Hash, got String", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "set_array('data', 'Aloha')",
+                    "set_array('title')",
+                    "copy_field('data', 'title')",
+                    LOOKUP + " Aloha: Alohaeha)"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldLookupCopiedInternalArrayWithAsteriskExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('data', 'Aloha')",
                 "set_array('title')",
-                "copy_field('data', 'title')",
+                "copy_field('data', 'title.$append')",
                 LOOKUP + " Aloha: Alohaeha)"
             ),
             i -> {
@@ -190,12 +209,32 @@ public class MetafixLookupTest {
     }
 
     @Test
-    public void shouldLookupCopiedDeduplicatedInternalArrayWithAsterisk() {
+    public void shouldNotLookupCopiedDeduplicatedInternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected Array or Hash, got String", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "set_array('data', 'Aloha', 'Aloha')",
+                    "uniq('data')",
+                    "set_array('title')",
+                    "copy_field('data', 'title')",
+                    LOOKUP + " Aloha: Alohaeha)"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldLookupCopiedDeduplicatedInternalArrayWithAsteriskExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('data', 'Aloha', 'Aloha')",
                 "uniq('data')",
                 "set_array('title')",
-                "copy_field('data', 'title')",
+                "copy_field('data', 'title.$append')",
                 LOOKUP + " Aloha: Alohaeha)"
             ),
             i -> {
@@ -212,10 +251,10 @@ public class MetafixLookupTest {
     }
 
     @Test
-    public void shouldLookupCopiedExternalArrayWithAsterisk() {
+    public void shouldLookupCopiedExternalArrayWithAsteriskExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('title')",
-                "copy_field('data', 'title')",
+                "copy_field('data', 'title.$append')",
                 LOOKUP + " Aloha: Alohaeha)"
             ),
             i -> {
@@ -233,11 +272,11 @@ public class MetafixLookupTest {
     }
 
     @Test
-    public void shouldLookupCopiedDeduplicatedExternalArrayWithAsterisk() {
+    public void shouldLookupCopiedDeduplicatedExternalArrayWithAsteriskExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "uniq('data')",
                 "set_array('title')",
-                "copy_field('data', 'title')",
+                "copy_field('data', 'title.$append')",
                 LOOKUP + " Aloha: Alohaeha)"
             ),
             i -> {
@@ -256,11 +295,32 @@ public class MetafixLookupTest {
     }
 
     @Test
-    public void shouldLookupMovedDeduplicatedExternalArrayWithAsterisk() {
+    public void shouldNotLookupMovedDeduplicatedExternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected Array or Hash, got String", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "uniq('data')",
+                    "set_array('title')",
+                    "move_field('data', 'title')",
+                    LOOKUP + " Aloha: Alohaeha)"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", "Aloha");
+                    i.literal("data", "Aloha");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldLookupMovedDeduplicatedExternalArrayWithAsteriskExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "uniq('data')",
                 "set_array('title')",
-                "move_field('data', 'title')",
+                "move_field('data', 'title.$append')",
                 LOOKUP + " Aloha: Alohaeha)"
             ),
             i -> {
@@ -278,10 +338,29 @@ public class MetafixLookupTest {
     }
 
     @Test
-    public void shouldLookupMovedExternalArrayWithAsterisk() {
+    public void shouldNotLookupMovedExternalArrayWithAsterisk() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected Array or Hash, got String", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "set_array('title')",
+                    "move_field('data', 'title')",
+                    LOOKUP + " Aloha: Alohaeha)"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.literal("data", "Aloha");
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldLookupMovedExternalArrayWithAsteriskExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('title')",
-                "move_field('data', 'title')",
+                "move_field('data', 'title.$append')",
                 LOOKUP + " Aloha: Alohaeha)"
             ),
             i -> {

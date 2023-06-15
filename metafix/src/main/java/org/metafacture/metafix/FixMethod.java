@@ -164,9 +164,16 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final String oldName = params.get(0);
             final String newName = params.get(1);
-            Value.asList(record.get(oldName), a -> a.forEach(oldValue -> {
-                record.addNested(newName, oldValue); // we're actually aliasing
-            }));
+
+            final Value oldValue = record.get(oldName);
+            if (!Value.isNull(oldValue)) {
+                oldValue.matchType()
+                    .ifArray(a -> {
+                        record.remove(newName);
+                        a.forEach(v -> record.addNested(newName, v));
+                    })
+                    .orElse(v -> record.set(newName, v));
+            }
         }
     },
     format {

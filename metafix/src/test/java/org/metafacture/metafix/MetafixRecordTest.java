@@ -569,9 +569,9 @@ public class MetafixRecordTest {
                 i.literal("cnimal", "zebra");
                 i.endRecord();
             },
-            (o, f) -> {
+            o -> {
                 o.get().startRecord("1");
-                f.apply(2).literal("animal", "dog");
+                o.get().literal("animal", "dog");
                 o.get().endRecord();
                 o.get().startRecord("2");
                 o.get().literal("bnimal", "cat");
