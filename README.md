@@ -716,6 +716,14 @@ Upcases all characters in a field value.
 upcase("<sourceField>")
 ```
 
+##### `uri_encode`
+
+Encodes a field value as URI. Aka percent-encoding.
+
+```perl
+uri_encode("<sourceField>")
+```
+
 ### Selectors
 
 #### `reject`
