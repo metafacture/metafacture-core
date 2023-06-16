@@ -462,6 +462,14 @@ Options:
 timestamp("<targetField>"[, format: "<formatPattern>"][, timezone: "<timezoneCode>"][, language: "<languageCode>"])
 ```
 
+##### `uri_encode`
+
+Encodes a field value as URI. Aka percent-encoding.
+
+```perl
+uri_encode("<sourceField>")
+```
+
 ##### `vacuum`
 
 Deletes empty fields, arrays and objects.
