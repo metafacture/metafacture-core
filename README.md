@@ -242,6 +242,14 @@ put_vars(
 )
 ```
 
+##### `uri_encode`
+
+Encodes a field value as URI. Aka percent-encoding.
+
+```perl
+uri_encode("<sourceField>")
+```
+
 #### Record-level functions
 
 ##### `add_field`
@@ -460,14 +468,6 @@ Options:
 
 ```perl
 timestamp("<targetField>"[, format: "<formatPattern>"][, timezone: "<timezoneCode>"][, language: "<languageCode>"])
-```
-
-##### `uri_encode`
-
-Encodes a field value as URI. Aka percent-encoding.
-
-```perl
-uri_encode("<sourceField>")
 ```
 
 ##### `vacuum`
