@@ -35,6 +35,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +47,8 @@ import java.util.stream.Collectors;
 @ExtendWith(MockitoExtension.class)
 public class MetafixLookupTest {
     private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
+    private static final String CSV_PATH = "/maps/test.csv";
+    private static final String CSV_URL = "%s" + CSV_PATH;
     private static final String RDF_MAP = "src/test/resources/org/metafacture/metafix/maps/test.ttl";
     private static final String HCRT_RDF_MAP = "src/test/resources/org/metafacture/metafix/maps/hcrt.ttl";
     private static final String RDF_PATH = "/maps/rpb.ttl";
@@ -67,20 +70,27 @@ public class MetafixLookupTest {
     private static void setStubForWireMock() {
         WIRE_MOCK_SERVER.start();
 
-        final UrlPattern urlPattern = WireMock.urlPathEqualTo(RDF_PATH);
+        // stubs for RDF
+        final UrlPattern rdfUrlPattern = WireMock.urlPathEqualTo(RDF_PATH);
         final String redirectToUrl = "/redirect" + RDF_PATH;
         final UrlPattern urlPatternRedirectToUrl = WireMock.urlPathEqualTo(redirectToUrl);
-
-        WIRE_MOCK_SERVER.stubFor(WireMock.get(urlPattern)
+        WIRE_MOCK_SERVER.stubFor(WireMock.get(rdfUrlPattern)
             .willReturn(WireMock.temporaryRedirect(redirectToUrl)));
-
-        final String responseBody = new BufferedReader(new InputStreamReader(
-                    MetafixLookupTest.class.getResourceAsStream("." + RDF_PATH))).lines().collect(Collectors.joining("\n"));
-
+        final String rdfResponseBody = loadFile(RDF_PATH);
         WIRE_MOCK_SERVER.stubFor(WireMock.get(urlPatternRedirectToUrl)
             .willReturn(WireMock.aResponse()
                 .withHeader("Content-Type", "text/turtle")
-                .withBody(responseBody)));
+                .withBody(rdfResponseBody)));
+
+        // stub for CSV
+        final UrlPattern csvUrlPattern = WireMock.urlPathEqualTo(CSV_PATH);
+        final String csvResponseBody = loadFile(CSV_PATH);
+        WIRE_MOCK_SERVER.stubFor(WireMock.get(csvUrlPattern).willReturn(WireMock.aResponse().withBody(csvResponseBody)));
+    }
+
+    private static String loadFile(final String path) {
+        return new BufferedReader(new InputStreamReader(
+            Objects.requireNonNull(MetafixLookupTest.class.getResourceAsStream("." + path)))).lines().collect(Collectors.joining("\n"));
     }
 
     @AfterAll
@@ -416,6 +426,15 @@ public class MetafixLookupTest {
     public void csv() {
         assertMap(
                 LOOKUP + " '" + CSV_MAP + "')"
+        );
+    }
+
+    @Test
+    public void csvViaUrl() {
+        final String baseUrl = WIRE_MOCK_SERVER.baseUrl();
+        final String mockedCsvUrl = String.format(CSV_URL, baseUrl);
+        assertMap(
+            LOOKUP + " '" + mockedCsvUrl + "')"
         );
     }
 

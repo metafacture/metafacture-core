@@ -177,7 +177,7 @@ nothing()
 
 ##### `put_filemap`
 
-Defines an external map for [lookup](#lookup) from a file. Maps with more than 2 columns are supported but are reduced to a defined key and a value column.
+Defines an external map for [lookup](#lookup) from a file or a URL. Maps with more than 2 columns are supported but are reduced to a defined key and a value column.
 
 ```perl
 put_filemap("<sourceFile>", "<mapName>", sep_char: "\t")
