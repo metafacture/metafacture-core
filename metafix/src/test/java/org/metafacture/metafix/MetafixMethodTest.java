@@ -1591,6 +1591,24 @@ public class MetafixMethodTest {
     }
 
     @Test
+    public void shouldJoinSingleField() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "join_field(number, '/')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("number", "6");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("number", "6");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     // See https://github.com/metafacture/metafacture-fix/issues/100
     public void shouldJoinArrayObjectField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
