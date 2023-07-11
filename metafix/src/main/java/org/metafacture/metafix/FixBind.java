@@ -74,7 +74,7 @@ public enum FixBind implements FixContext {
                     final Value value = index < v.size() ? v.get(index) : null;
 
                     if (value != null) {
-                        record.put(k, v.get(index));
+                        record.put(k, value);
                     }
                     else {
                         record.remove(k);
