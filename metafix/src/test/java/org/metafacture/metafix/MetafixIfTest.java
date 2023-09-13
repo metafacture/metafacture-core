@@ -1431,6 +1431,89 @@ public class MetafixIfTest {
     }
 
     @Test
+    public void shouldNotContainArrayInString() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "unless in(bar,foo)",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "1");
+                i.literal("bar", "1");
+                i.literal("bar", "2");
+                i.literal("bar", "3");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "42");
+                i.literal("bar", "1");
+                i.literal("bar", "2");
+                i.literal("bar", "3");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "1");
+                o.get().literal("bar", "1");
+                o.get().literal("bar", "2");
+                o.get().literal("bar", "3");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "42");
+                o.get().literal("bar", "1");
+                o.get().literal("bar", "2");
+                o.get().literal("bar", "3");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotContainHashInString() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "unless in(bar,foo)",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "name");
+                i.startEntity("bar");
+                i.literal("name", "Patrick");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "name");
+                i.startEntity("bar");
+                i.startEntity("deep");
+                i.literal("name", "Nicolas");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "name");
+                o.get().startEntity("bar");
+                o.get().literal("name", "Patrick");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "name");
+                o.get().startEntity("bar");
+                o.get().startEntity("deep");
+                o.get().literal("name", "Nicolas");
+                f.apply(2).endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldReportArrayAsArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if is_array(foo)",

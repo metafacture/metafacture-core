@@ -89,9 +89,11 @@ public enum FixConditional implements FixPredicate {
             return value1 != null && value2 != null && value1.<Boolean>extractType((m, c) -> m
                 .ifArray(a1 -> value2.matchType()
                     .ifArray(a2 -> c.accept(a1.equals(a2)))
+                    .orElse(v -> c.accept(false))
                 )
                 .ifHash(h1 -> value2.matchType()
                     .ifHash(h2 -> c.accept(h1.equals(h2)))
+                    .orElse(v -> c.accept(false))
                 )
                 .ifString(s1 -> value2.matchType()
                     .ifArray(a2 -> c.accept(a2.stream().anyMatch(value1::equals)))
