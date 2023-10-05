@@ -108,8 +108,8 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
     @Override
     public void resetStream() {
         closeStream();
-        startNewFile();
         ++count;
+        startNewFile();
     }
 
     @Override

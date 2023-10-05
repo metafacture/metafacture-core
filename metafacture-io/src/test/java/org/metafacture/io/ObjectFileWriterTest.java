@@ -17,6 +17,7 @@
 package org.metafacture.io;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
 
 import java.io.File;
@@ -91,6 +92,17 @@ public final class ObjectFileWriterTest
         writer.closeStream();
 
         assertOutput(DATA + "\n" + DATA + "\n");
+    }
+
+    @Test
+    public void shouldIncrementCountOnResetBeforeStartingNewFile() throws IOException {
+        final String pathWithVar = tempFolder.getRoot() + "/test-${i}";
+        writer = new ObjectFileWriter<String>(pathWithVar);
+        writer.process(DATA);
+        assertTrue(new File(tempFolder.getRoot(), "test-0").exists());
+        writer.resetStream(); // increments count, starts new file
+        writer.process(DATA);
+        assertTrue(new File(tempFolder.getRoot(), "test-1").exists());
     }
 
     @Override
