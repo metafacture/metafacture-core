@@ -79,6 +79,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     private final Map<String, Map<String, String>> maps = new HashMap<>();
     private final Map<String, RecordTransformer> fixCache = new HashMap<>();
     private final Map<String, RecordTransformer> macros = new HashMap<>();
+    private final Map<String, String> pathCache = new HashMap<>();
     private final Map<String, String> vars = new HashMap<>();
     private final RecordTransformer recordTransformer;
     private final StreamFlattener flattener = new StreamFlattener();
@@ -149,6 +150,10 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
     }
 
     public String resolvePath(final String path) {
+        return pathCache.computeIfAbsent(path, this::resolvePathInternal);
+    }
+
+    private String resolvePathInternal(final String path) {
         final String resolvedPath;
 
         if (isValidUrl(path)) {
