@@ -28,7 +28,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * A marc xml reader.
+ * A marc xml reader. To read marc data without namespace specification set option `namespace=""` or to null when using JAVA code.
  * @author Markus Michael Geipel
  *
  */
