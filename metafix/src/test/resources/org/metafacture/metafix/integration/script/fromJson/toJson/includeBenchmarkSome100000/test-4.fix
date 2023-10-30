@@ -1,0 +1,6 @@
+copy_field("m", "s")
+copy_field("n", "t")
+copy_field("o", "u")
+copy_field("p", "v")
+copy_field("q", "w")
+copy_field("r", "x")
