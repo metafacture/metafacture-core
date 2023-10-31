@@ -1,35 +1,35 @@
 plugins {
-  id 'org.ec4j.editorconfig' version '0.0.3'
+  //id 'org.ec4j.editorconfig' version '0.0.3'
   id 'org.xtext.builder' version '4.0.0'
   id 'io.github.0ffz.github-packages' version '1.2.1'
 }
 
-editorconfig {
-  excludes = [
-    '**/*.diff',
-    '**/*.err',
-    '**/*.hprof.txt',
-    '**/*.out',
-    '**/*.vsix',
-    '**/.*',
-    '**/bin',
-    '**/generated',
-    '**/includeBenchmark*100000/expected.json',
-    '**/node_modules',
-    '**/out',
-    '**/output-*',
-    '**/xtext-gen',
-    'gradlew*'
-  ]
-}
+//editorconfig {
+//  excludes = [
+//    '**/*.diff',
+//    '**/*.err',
+//    '**/*.hprof.txt',
+//    '**/*.out',
+//    '**/*.vsix',
+//    '**/.*',
+//    '**/bin',
+//    '**/generated',
+//    '**/includeBenchmark*100000/expected.json',
+//    '**/node_modules',
+//    '**/out',
+//    '**/output-*',
+//    '**/xtext-gen',
+//    'gradlew*'
+//  ]
+//}
 
 task editorconfigChecker(type: Exec, group: 'Verification') {
   executable 'misc/bin/editorconfig-checker'
   args('-exclude', '/bin/|/\\.|^gradlew.*|^LICENSE$|^\\.project$')
 }
 
-editorconfigCheck.dependsOn(editorconfigChecker)
-check.dependsOn(editorconfigCheck)
+//editorconfigCheck.dependsOn(editorconfigChecker)
+check.dependsOn(editorconfigChecker)
 
 subprojects {
   ext {
