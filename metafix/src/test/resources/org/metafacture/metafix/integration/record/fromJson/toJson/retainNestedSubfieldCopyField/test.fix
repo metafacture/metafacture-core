@@ -1,0 +1,2 @@
+copy_field("node.properties.ccm:educationallearningresourcetype[]", "lrt[]")
+retain("node.properties.ccm:educationallearningresourcetype[]", "lrt[]")

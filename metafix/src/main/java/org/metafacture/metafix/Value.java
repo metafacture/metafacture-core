@@ -38,10 +38,12 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -303,6 +305,13 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
                 .orElseThrow());
     }
 
+    private void retainFields(final Collection<String> fields) {
+        matchType()
+            .ifArray(a -> a.retainFields(fields))
+            .ifHash(h -> h.retainFields(fields))
+            .orElseThrow();
+    }
+
     enum Type {
         Array,
         Hash,
@@ -387,6 +396,23 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         @Override
         public abstract void toJson(JsonGenerator jsonGenerator);
 
+        protected <T> Map<T, Collection<String>> retainFields(final Collection<String> fields, final Function<String, Set<T>> function) {
+            final Map<T, Collection<String>> retainFields = new HashMap<>();
+
+            fields.forEach(p -> {
+                final String[] parts = p.split(FIELD_PATH_SEPARATOR, 2);
+
+                function.apply(parts[0]).forEach(f -> {
+                    final Collection<String> retainNested = retainFields.computeIfAbsent(f, k -> new HashSet<>());
+                    if (parts.length > 1) {
+                        retainNested.add(parts[1]);
+                    }
+                });
+            });
+
+            return retainFields;
+        }
+
     }
 
     /**
@@ -428,8 +454,44 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
             return list.stream();
         }
 
+        private IntStream indexes() {
+            return IntStream.range(0, size());
+        }
+
         private void removeEmptyValues() {
             list.removeIf(REMOVE_EMPTY_VALUES);
+        }
+
+        private void retainFields(final Collection<String> fields) {
+            final Map<Integer, Collection<String>> retainFields = retainFields(fields, this::findFields);
+
+            final int max = size() - 1;
+            indexes().map(i -> max - i).forEach(i -> {
+                final Collection<String> retainNested = retainFields.get(i);
+                if (retainNested == null) {
+                    remove(i);
+                }
+                else if (!retainNested.isEmpty()) {
+                    get(i).retainFields(retainNested);
+                }
+            });
+        }
+
+        private Set<Integer> findFields(final String pattern) {
+            final Set<Integer> fieldSet = new LinkedHashSet<>();
+
+            if ("*".equals(pattern)) {
+                indexes().forEach(fieldSet::add);
+            }
+            else {
+                final int index = Integer.parseInt(pattern) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
+
+                if (index >= 0 && index < size()) {
+                    fieldSet.add(index);
+                }
+            }
+
+            return fieldSet;
         }
 
         public void forEach(final Consumer<Value> consumer) {
@@ -696,10 +758,15 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
          * @param fields the field names
          */
         public void retainFields(final Collection<String> fields) {
-            final Set<String> retainFields = new HashSet<>();
-            fields.forEach(f -> retainFields.addAll(findFields(f)));
+            final Map<String, Collection<String>> retainFields = retainFields(fields, this::findFields);
 
-            map.keySet().retainAll(retainFields);
+            map.keySet().retainAll(retainFields.keySet());
+
+            retainFields.forEach((k, v) -> {
+                if (!v.isEmpty()) {
+                    getField(k).retainFields(v);
+                }
+            });
         }
 
         /**
