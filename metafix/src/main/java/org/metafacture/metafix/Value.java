@@ -484,7 +484,18 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
                 indexes().forEach(fieldSet::add);
             }
             else {
-                final int index = Integer.parseInt(pattern) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
+                final int index;
+
+                switch (pattern) {
+                    case "$first":
+                        index = 0;
+                        break;
+                    case "$last":
+                        index = size() - 1;
+                        break;
+                    default:
+                        index = Integer.parseInt(pattern) - 1; // TODO: 0-based Catmandu vs. 1-based Metafacture
+                }
 
                 if (index >= 0 && index < size()) {
                     fieldSet.add(index);

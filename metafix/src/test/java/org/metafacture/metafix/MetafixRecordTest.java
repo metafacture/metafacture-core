@@ -2419,6 +2419,58 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void retainNestedReservedFields() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "retain('b[].$first.b','c[].$last')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("b[]");
+                i.startEntity("1");
+                i.literal("a", "1");
+                i.literal("b", "2");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("a", "1");
+                i.literal("b", "2");
+                i.literal("c", "3");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("c", "4");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("c[]");
+                i.startEntity("1");
+                i.literal("a", "1");
+                i.literal("b", "2");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("a", "1");
+                i.literal("b", "2");
+                i.literal("c", "3");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("c", "4");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("b[]");
+                o.get().startEntity("1");
+                o.get().literal("b", "2");
+                f.apply(2).endEntity();
+                o.get().startEntity("c[]");
+                o.get().startEntity("1");
+                o.get().literal("c", "4");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void shouldDeleteEmptyArrays() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "vacuum()"
