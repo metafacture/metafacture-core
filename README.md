@@ -238,7 +238,7 @@ put_vars(
 
 ##### `add_field`
 
-Creates (or appends to) a field with a defined value.
+Creates a field with a defined value.
 
 ```perl
 add_field("<targetFieldName>", "<fieldValue>")
@@ -280,7 +280,7 @@ call_macro("<macroName>"[, <dynamicLocalVariables>...])
 
 ##### `copy_field`
 
-Copies (or appends to) a field from an existing field.
+Copies a field from an existing field.
 
 ```perl
 copy_field("<sourceField>", "<targetField>")
@@ -312,7 +312,7 @@ hash("foo")
 
 ##### `move_field`
 
-Moves (or appends to) a field from an existing field. Can be used to rename a field.
+Moves a field from an existing field. Can be used to rename a field.
 
 ```perl
 move_field("<sourceField>", "<targetField>")
