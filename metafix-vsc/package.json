@@ -2,7 +2,7 @@
     "name": "fix",
     "displayName": "fix",
     "description": "Language Support for Metafacture Fix (Xtext Language Server for Metafacture Fix). For more information, visit https://metafacture.org",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "publisher": "metafacture",
     "license": "Apache-2.0",
     "engines": {
