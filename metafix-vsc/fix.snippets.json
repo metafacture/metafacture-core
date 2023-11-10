@@ -6,7 +6,7 @@
     },
     "do list_as": {
       "prefix": ["do list_as"],
-      "body": ["do list_as(\"${1:<variableName_1>}\", \"${2:<sourceField_1>}\")", "\t${0:body}", "end"],
+      "body": ["do list_as(\"${1:<variableName_1>}\": \"${2:<sourceField_1>}\")", "\t${0:body}", "end"],
       "description": "Iterates over each named element of an array (like do list with a variable name). If multiple arrays are given, iterates over the corresponding elements from each array (i.e., all elements with the same array index, skipping elements whose arrays have already been exhausted)."
     },
     "do once": {
