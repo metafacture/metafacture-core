@@ -16,6 +16,9 @@
 
 package org.metafacture.metamorph.functions;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -31,6 +34,10 @@ public final class URLEncodeTest {
     private static final String CAFE_ENCODED = "caf%C3%A9";
     private static final String SOME_CHARS = "/&%\\+";
     private static final String SOME_CHARS_ENCODED = "%2F%26%25%5C%2B";
+    private static final String SPECIAL_CHARACTERS = ".-*_";
+    private static final String URL =
+            "http://lobid.org/resources/search?q=hasItem.hasItem.heldBy.id:\"http://lobid" +
+                    ".org/organisations/DE-290#!\"&format=json";
     private static final String WHITESPACE = " ";
     private static final String WHITESPACE_AS_PLUS_ENCODED = "+";
     private static final String WHITESPACE_PERCENT_ENCODED = "%20";
@@ -63,6 +70,16 @@ public final class URLEncodeTest {
         final URLEncode urlEncode = new URLEncode();
         urlEncode.setSafeChars(SOME_CHARS);
         assertEquals(SOME_CHARS, urlEncode.process(SOME_CHARS));
+    }
+    @Test
+    public void testSpecialChars(){
+        final URLEncode urlEncode = new URLEncode();
+        assertEquals(SPECIAL_CHARACTERS, urlEncode.process(SPECIAL_CHARACTERS));
+    }
+    @Test
+    public void testBackwardsCompatibility() throws UnsupportedEncodingException {
+        final URLEncode urlEncode = new URLEncode();
+        assertEquals(urlEncode.process(URL), URLEncoder.encode(URL, "UTF-8"));
     }
 
 }
