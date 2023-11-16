@@ -42,7 +42,6 @@ public final class URLEncodeTest {
     private static final String WHITESPACE_AS_PLUS_ENCODED = "+";
     private static final String WHITESPACE_PERCENT_ENCODED = "%20";
 
-URLEncoder urlEncoder;
     @Test
     public void testUtf8(){
         final URLEncode urlEncode = new URLEncode();
