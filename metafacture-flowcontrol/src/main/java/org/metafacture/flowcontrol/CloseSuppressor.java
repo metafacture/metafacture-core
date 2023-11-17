@@ -33,7 +33,7 @@ import org.metafacture.framework.annotations.Out;
  * @author Markus Geipel
  *
  */
-@Description("")
+@Description("Blocks close-stream events until a given number of close-stream events have been received.")
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("wait-for-inputs")
