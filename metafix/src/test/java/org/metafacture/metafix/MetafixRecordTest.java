@@ -2335,6 +2335,141 @@ public class MetafixRecordTest {
             });
     }
 
+    @Test // checkstyle-disable-line JavaNCSS
+    public void retainNested() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "retain('a.b.c','a.[cd].b','b[].2.c','c[].*.a','c[].2.b')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("a");
+                i.startEntity("a");
+                i.literal("b", "1");
+                i.literal("c", "2");
+                i.endEntity();
+                i.startEntity("b");
+                i.literal("c", "1");
+                i.literal("d", "2");
+                i.endEntity();
+                i.startEntity("c");
+                i.literal("b", "1");
+                i.literal("c", "2");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("b[]");
+                i.startEntity("1");
+                i.literal("a", "1");
+                i.literal("b", "2");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("a", "1");
+                i.literal("b", "2");
+                i.literal("c", "3");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("c", "4");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("c[]");
+                i.startEntity("1");
+                i.literal("a", "1");
+                i.literal("b", "2");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("a", "1");
+                i.literal("b", "2");
+                i.literal("c", "3");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("c", "4");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("d");
+                i.literal("e", "5");
+                i.endEntity();
+                i.literal("e", "6");
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("a");
+                o.get().startEntity("b");
+                o.get().literal("c", "1");
+                o.get().endEntity();
+                o.get().startEntity("c");
+                o.get().literal("b", "1");
+                f.apply(2).endEntity();
+                o.get().startEntity("b[]");
+                o.get().startEntity("1");
+                o.get().literal("c", "3");
+                f.apply(2).endEntity();
+                o.get().startEntity("c[]");
+                o.get().startEntity("1");
+                o.get().literal("a", "1");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("a", "1");
+                o.get().literal("b", "2");
+                o.get().endEntity();
+                o.get().startEntity("3");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void retainNestedReservedFields() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "retain('b[].$first.b','c[].$last')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("b[]");
+                i.startEntity("1");
+                i.literal("a", "1");
+                i.literal("b", "2");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("a", "1");
+                i.literal("b", "2");
+                i.literal("c", "3");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("c", "4");
+                i.endEntity();
+                i.endEntity();
+                i.startEntity("c[]");
+                i.startEntity("1");
+                i.literal("a", "1");
+                i.literal("b", "2");
+                i.endEntity();
+                i.startEntity("2");
+                i.literal("a", "1");
+                i.literal("b", "2");
+                i.literal("c", "3");
+                i.endEntity();
+                i.startEntity("3");
+                i.literal("c", "4");
+                i.endEntity();
+                i.endEntity();
+                i.endRecord();
+            },
+            (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("b[]");
+                o.get().startEntity("1");
+                o.get().literal("b", "2");
+                f.apply(2).endEntity();
+                o.get().startEntity("c[]");
+                o.get().startEntity("1");
+                o.get().literal("c", "4");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
     @Test
     public void shouldDeleteEmptyArrays() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
