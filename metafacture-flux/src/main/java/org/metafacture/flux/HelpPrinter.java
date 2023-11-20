@@ -26,24 +26,34 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.annotations.ReturnsAvailableArguments;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * Prints Flux help for a given {@link ObjectFactory}
+ * Prints Flux help for a given {@link ObjectFactory}.
+ * If the file at {@value #PATH_TO_EXAMPLES} exists it's taken to insert links to examples and to the source code.
  *
  * @author Markus Michael Geipel
  */
 public final class HelpPrinter {
+    private static final String PATH_TO_EXAMPLES = "../metafacture-documentation/linksAndExamples.tsv";
+    private static final Map<String, String[]> EXAMPLES_MAP = new HashMap<>();
+    private static final int COLUMN_TO_PG_EXAMPLE = 3;
+    private static final int REQUIRED_COLUMNS_OF_EXAMPLE = 2;
 
     private HelpPrinter() {
         // no instances
@@ -55,8 +65,9 @@ public final class HelpPrinter {
      * @param args unused
      *
      * @see #print
+     * @throws IOException when an I/O error occurs
      */
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws IOException {
         FluxProgramm.printHelp(System.out);
     }
 
@@ -66,9 +77,10 @@ public final class HelpPrinter {
      *
      * @param factory the ObjectFactory
      * @param out     the PrintStream to print to
+     * @throws IOException when an I/O error occurs
      */
     public static void print(final ObjectFactory<?> factory,
-            final PrintStream out) {
+            final PrintStream out) throws IOException {
         out.println("Welcome to Metafacture");
         out.println("======================");
         out.println();
@@ -77,9 +89,9 @@ public final class HelpPrinter {
         out.println("\nUsage:\tflux FLOW_FILE [VARNAME=VALUE ...]\n");
         out.println("Available flux commands:\n");
 
-        final List<String> keyWords = new ArrayList<String>();
-        keyWords.addAll(factory.keySet());
+        final List<String> keyWords = new ArrayList<>(factory.keySet());
         Collections.sort(keyWords);
+        loadExamples();
         for (final String name : keyWords) {
             describe(name, factory, out);
         }
@@ -111,8 +123,42 @@ public final class HelpPrinter {
             out.println("- arguments:\t" + arguments);
         }
 
-        final Map<String, Method> attributes = configurableClass.getSetters();
+        printAttributes(out, configurableClass, configurableClass.getSetters());
+        printSignature(out, moduleClass);
 
+        final String[] examplesEntry = EXAMPLES_MAP.get(name);
+        if (!EXAMPLES_MAP.isEmpty() && (examplesEntry == null || examplesEntry.length < REQUIRED_COLUMNS_OF_EXAMPLE)) {
+            throw new MetafactureException(
+                    "Failed to load build infos: tsv with links hasn't at least " + REQUIRED_COLUMNS_OF_EXAMPLE +
+                            " for the entry '" + name + "'");
+        }
+        if (examplesEntry != null && examplesEntry.length == COLUMN_TO_PG_EXAMPLE) {
+            out.println("- [example in Playground]" + "(" + examplesEntry[COLUMN_TO_PG_EXAMPLE - 1] + ")");
+        }
+        if (examplesEntry != null) {
+            out.println("- java class:\t[" + moduleClass.getCanonicalName() + "](" + examplesEntry[1] + ")");
+        }
+        else {
+            out.println("- java class:\t" + moduleClass.getCanonicalName());
+        }
+        out.println();
+    }
+
+    private static <T> void printSignature(final PrintStream out, final Class<? extends T> moduleClass) {
+        String inString = "<unknown>";
+        String outString = "";
+        final In inClass = moduleClass.getAnnotation(In.class);
+        if (inClass != null) {
+            inString = inClass.value().getSimpleName();
+        }
+        final Out outClass = moduleClass.getAnnotation(Out.class);
+        if (outClass != null) {
+            outString = outClass.value().getSimpleName();
+        }
+        out.println("- signature:\t" + inString + " -> " + outString);
+    }
+
+    private static <T> void printAttributes(final PrintStream out, final ConfigurableClass<? extends T> configurableClass, final Map<String, Method> attributes) {
         if (!attributes.isEmpty()) {
             out.print("- options:\t");
             final StringBuilder builder = new StringBuilder();
@@ -140,20 +186,6 @@ public final class HelpPrinter {
             }
             out.println(builder.substring(0, builder.length() - 2));
         }
-
-        String inString = "<unknown>";
-        String outString = "";
-        final In inClass = moduleClass.getAnnotation(In.class);
-        if (inClass != null) {
-            inString = inClass.value().getSimpleName();
-        }
-        final Out outClass = moduleClass.getAnnotation(Out.class);
-        if (outClass != null) {
-            outString = outClass.value().getSimpleName();
-        }
-        out.println("- signature:\t" + inString + " -> " + outString);
-        out.println("- java class:\t" + moduleClass.getCanonicalName());
-        out.println();
     }
 
     @SuppressWarnings("unchecked")
@@ -169,6 +201,18 @@ public final class HelpPrinter {
             }
         }
         return Collections.emptyList();
+    }
+
+    private static void loadExamples() throws IOException {
+        final File f = new File(PATH_TO_EXAMPLES);
+        if (Files.exists(f.toPath())) {
+            final BufferedReader bufferedReader = new BufferedReader(new FileReader(f));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                final String[] tsv = line.split("\t");
+                EXAMPLES_MAP.put(tsv[0], tsv);
+            }
+        }
     }
 
 }

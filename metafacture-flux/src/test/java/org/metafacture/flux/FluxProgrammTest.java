@@ -16,12 +16,12 @@
 
 package org.metafacture.flux;
 
+import org.junit.Test;
+import org.metafacture.flux.parser.FluxProgramm;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-
-import org.junit.Test;
-import org.metafacture.flux.parser.FluxProgramm;
 
 /**
  * Tests {@link FluxProgramm}
@@ -33,7 +33,7 @@ import org.metafacture.flux.parser.FluxProgramm;
 public final class FluxProgrammTest {
 
     @Test
-    public void testCommandRegistration() {
+    public void testCommandRegistration() throws IOException {
         // all commands must properly load to print the help
         FluxProgramm.printHelp(discardOutput());
 
