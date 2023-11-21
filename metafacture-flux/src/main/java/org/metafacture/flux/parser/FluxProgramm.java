@@ -178,9 +178,10 @@ public final class FluxProgramm {
     /**
      * Prints the help to the given PrintStream.
      *
-     * @param out the PrintStream to orint to
+     * @param out the PrintStream to print to
+     * @throws IOException when an I/O error occurs
      */
-    public static void printHelp(final PrintStream out) {
+    public static void printHelp(final PrintStream out) throws IOException {
         HelpPrinter.print(COMMAND_FACTORY, out);
     }
 
