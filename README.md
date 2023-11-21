@@ -715,8 +715,20 @@ upcase("<sourceField>")
 
 Encodes a field value as URI. Aka percent-encoding.
 
+Options:
+
+- `allow_empty_values`: Sets whether to allow empty values in the filemap or to ignore these entries. (Default: `false`)
+- `compression`: Sets the compression of the file.
+
+
 ```perl
-uri_encode("<sourceField>")
+uri_encode("<sourceField>"[, <options>...])
+```
+
+E.g.:
+
+```perl
+uri_encode("path.to.field", plus_for_space:"false", safe_chars:"")
 ```
 
 ### Selectors
