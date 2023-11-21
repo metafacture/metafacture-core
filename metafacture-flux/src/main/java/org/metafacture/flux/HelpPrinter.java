@@ -49,11 +49,9 @@ import java.util.Map.Entry;
  * @author Markus Michael Geipel
  */
 public final class HelpPrinter {
+
     private static final String PATH_TO_EXAMPLES = "../metafacture-documentation/linksAndExamples.tsv";
     private static final Map<String, String[]> EXAMPLES_MAP = new HashMap<>();
-    private static final int COLUMN_TO_PG_EXAMPLE = 3;
-    private static final int MAX_COLUMNS_OF_EXAMPLE = COLUMN_TO_PG_EXAMPLE;
-    private static final int MIN_COLUMNS_OF_EXAMPLE = 2;
 
     private HelpPrinter() {
         // no instances
@@ -127,17 +125,10 @@ public final class HelpPrinter {
         printSignature(out, moduleClass);
 
         final String[] examplesEntry = EXAMPLES_MAP.get(name);
-        if (!EXAMPLES_MAP.isEmpty() && (examplesEntry == null || examplesEntry.length < MIN_COLUMNS_OF_EXAMPLE ||
-                examplesEntry.length > MAX_COLUMNS_OF_EXAMPLE)) {
-            throw new MetafactureException(
-                    "Failed to load build infos: tsv with links hasn't at least " + MIN_COLUMNS_OF_EXAMPLE + " " +
-                            "or exceeds the number of allowed columns (i.e. " + MAX_COLUMNS_OF_EXAMPLE + ")" +
-                            " for the entry '" + name + "'");
+        if (examplesEntry != null && examplesEntry.length > 2) {
+            out.println("- [example in Playground]" + "(" + examplesEntry[2] + ")");
         }
-        if (examplesEntry != null && examplesEntry.length == COLUMN_TO_PG_EXAMPLE) {
-            out.println("- [example in Playground]" + "(" + examplesEntry[COLUMN_TO_PG_EXAMPLE - 1] + ")");
-        }
-        if (examplesEntry != null) {
+        if (examplesEntry != null && examplesEntry.length > 1) {
             out.println("- java class:\t[" + moduleClass.getCanonicalName() + "](" + examplesEntry[1] + ")");
         }
         else {
@@ -213,6 +204,10 @@ public final class HelpPrinter {
             while ((line = bufferedReader.readLine()) != null) {
                 final String[] tsv = line.split("\t");
                 EXAMPLES_MAP.put(tsv[0], tsv);
+
+                if (tsv.length < 2) {
+                    System.err.println("Invalid command info: " + line);
+                }
             }
         }
     }
