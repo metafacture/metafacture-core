@@ -717,9 +717,10 @@ Encodes a field value as URI. Aka percent-encoding.
 
 Options:
 
-- `allow_empty_values`: Sets whether to allow empty values in the filemap or to ignore these entries. (Default: `false`)
-- `compression`: Sets the compression of the file.
-
+- `plus_for_space`: Sets whether "space" (' ') will be substituted by a "plus" ('+') or be percent escaped ('%20'). Default: `true`)
+- `safe_chars`: Sets characters that won't be escaped. Safe characters are the
+ranges 0..9, a..z and A..Z. These are always safe and should not be specified.
+Default safe characters are also ".", "-", "*", and "_".
 
 ```perl
 uri_encode("<sourceField>"[, <options>...])

@@ -4047,7 +4047,7 @@ public class MetafixMethodTest {
     @Test
     public void shouldUriEncodePathSegmentWithoutSafeChars() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "uri_encode('id', safe_chars:'', plus_for_space:'false')"
+                "uri_encode('id', safe_chars:'')"
             ),
             i -> {
                 i.startRecord("1");
@@ -4056,7 +4056,7 @@ public class MetafixMethodTest {
             },
             o -> {
                 o.get().startRecord("1");
-                o.get().literal("id", "%2FDE%2DA96%3A%25%20%283%29%23%21");
+                o.get().literal("id", "%2FDE%2DA96%3A%25+%283%29%23%21");
                 o.get().endRecord();
             }
         );
