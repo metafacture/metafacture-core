@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -205,7 +204,7 @@ public final class HelpPrinter {
 
     private static void loadExamples() throws IOException {
         final File f = new File(PATH_TO_EXAMPLES);
-        if (Files.exists(f.toPath())) {
+        if (f.exists()) {
             final BufferedReader bufferedReader = new BufferedReader(new FileReader(f));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
