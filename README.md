@@ -902,7 +902,7 @@ end
 call_macro("<macroName>"[, <dynamicLocalVariables>...])
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=do+pu+macro)
+[Example in Playground](https://metafacture.org/playground/?example=do+put+macro)
 
 ### Conditionals
 
