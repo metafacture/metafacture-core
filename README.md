@@ -715,8 +715,19 @@ upcase("<sourceField>")
 
 Encodes a field value as URI. Aka percent-encoding.
 
+Options:
+
+- `plus_for_space`: Sets whether "space" (` `) will be substituted by a "plus" (`+`) or be percent escaped (`%20`). (Default: `true`)
+- `safe_chars`: Sets characters that won't be escaped. Safe characters are the ranges 0..9, a..z and A..Z. These are always safe and should not be specified. (Default: `.-*_`)
+
 ```perl
-uri_encode("<sourceField>")
+uri_encode("<sourceField>"[, <options>...])
+```
+
+E.g.:
+
+```perl
+uri_encode("path.to.field", plus_for_space:"false", safe_chars:"")
 ```
 
 ### Selectors

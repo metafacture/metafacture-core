@@ -668,7 +668,8 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final URLEncode urlEncoder = new URLEncode();
-            urlEncoder.setPlusForSpace(false);
+            withOption(options, "safe_chars", urlEncoder::setSafeChars);
+            withOption(options, "plus_for_space", urlEncoder::setPlusForSpace, this::getBoolean);
 
             record.transform(params.get(0), urlEncoder::process);
         }
