@@ -170,7 +170,7 @@ Does nothing. It is used for benchmarking in Catmandu.
 nothing()
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=nothing)
+[Example in Playground](https://metafacture.org/playground/?example=nothing)
 
 ##### `put_filemap`
 
@@ -180,7 +180,7 @@ Defines an external map for [lookup](#lookup) from a file or a URL. Maps with mo
 put_filemap("<sourceFile>", "<mapName>", sep_char: "\t")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=put_filemap)
+[Example in Playground](https://metafacture.org/playground/?example=put_filemap)
 
 The separator (`sep_char`) will vary depending on the source file, e.g.:
 
@@ -211,7 +211,7 @@ put_map("<mapName>",
 )
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=put_map)
+[Example in Playground](https://metafacture.org/playground/?example=put_map)
 
 ##### `put_rdfmap`
 
@@ -224,7 +224,7 @@ put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>")
 put_rdfmap("<rdfResource>", "<rdfMapName>", target: "<rdfProperty>", select_language: "<rdfLanguageTag>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=put_rdfmap)
+[Example in Playground](https://metafacture.org/playground/?example=put_rdfmap)
 
 ##### `put_var`
 
@@ -234,7 +234,7 @@ Defines a single global variable that can be referenced with `$[<variableName>]`
 put_var("<variableName>", "<variableValue>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=put_var)
+[Example in Playground](https://metafacture.org/playground/?example=put_var)
 
 ##### `put_vars`
 
@@ -247,7 +247,7 @@ put_vars(
 )
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=put_vars)
+[Example in Playground](https://metafacture.org/playground/?example=put_vars)
 
 #### Record-level functions
 
@@ -259,7 +259,7 @@ Creates a field with a defined value.
 add_field("<targetFieldName>", "<fieldValue>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=add+field)
+[Example in Playground](https://metafacture.org/playground/?example=add+field)
 
 ##### `array`
 
@@ -295,7 +295,7 @@ end
 call_macro("<macroName>"[, <dynamicLocalVariables>...])
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=call+macro)
+[Example in Playground](https://metafacture.org/playground/?example=call+macro)
 
 ##### `copy_field`
 
@@ -305,7 +305,7 @@ Copies a field from an existing field.
 copy_field("<sourceField>", "<targetField>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=copy+field)
+[Example in Playground](https://metafacture.org/playground/?example=copy+field)
 
 
 ##### `format`
@@ -340,7 +340,7 @@ Moves a field from an existing field. Can be used to rename a field.
 move_field("<sourceField>", "<targetField>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=move+field)
+[Example in Playground](https://metafacture.org/playground/?example=move+field)
 
 
 ##### `parse_text`
@@ -374,7 +374,7 @@ paste("my.string", "~Hi", "a", "~how are you?")
 # "my.string": "Hi eeny how are you?"
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=paste)
+[Example in Playground](https://metafacture.org/playground/?example=paste)
 
 ##### `print_record`
 
@@ -425,7 +425,7 @@ Removes a field.
 remove_field("<sourceField>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=remove+field)
+[Example in Playground](https://metafacture.org/playground/?example=remove+field)
 
 ##### `rename`
 
@@ -435,7 +435,7 @@ Replaces a regular expression pattern in subfield names of a field. Does not cha
 rename("<sourceField>", "<regexp>", "<replacement>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=rename)
+[Example in Playground](https://metafacture.org/playground/?example=rename)
 
 ##### `retain`
 
@@ -445,7 +445,7 @@ Deletes all fields except the ones listed (incl. subfields).
 retain("<sourceField_1>"[, ...])
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=retain)
+[Example in Playground](https://metafacture.org/playground/?example=retain)
 
 ##### `set_array`
 
@@ -456,7 +456,7 @@ set_array("<targetFieldName>")
 set_array("<targetFieldName>", "<value_1>"[, ...])
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=set+array)
+[Example in Playground](https://metafacture.org/playground/?example=set+array)
 
 ##### `set_field`
 
@@ -497,7 +497,7 @@ Deletes empty fields, arrays and objects.
 vacuum()
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=vacuum)
+[Example in Playground](https://metafacture.org/playground/?example=vacuum)
 
 #### Field-level functions
 
@@ -509,7 +509,7 @@ Adds a string at the end of a field value.
 append("<sourceField>", "<appendString>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=append)
+[Example in Playground](https://metafacture.org/playground/?example=append)
 
 ##### `capitalize`
 
@@ -519,7 +519,7 @@ Upcases the first character in a field value.
 capitalize("<sourceField>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=capitalize)
+[Example in Playground](https://metafacture.org/playground/?example=capitalize)
 
 ##### `count`
 
@@ -537,7 +537,7 @@ Downcases all characters in a field value.
 downcase("<sourceField>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=downcase)
+[Example in Playground](https://metafacture.org/playground/?example=downcase)
 
 ##### `filter`
 
@@ -555,7 +555,7 @@ Flattens a nested array field.
 flatten("<sourceField>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=flatten)
+[Example in Playground](https://metafacture.org/playground/?example=flatten)
 
 ##### `from_json`
 
@@ -591,7 +591,7 @@ Options:
 isbn("<sourceField>"[, to: "<isbnFormat>"][, verify_check_digit: "<boolean>"][, error_string: "<errorValue>"])
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=isbn)
+[Example in Playground](https://metafacture.org/playground/?example=isbn)
 
 ##### `join_field`
 
@@ -601,7 +601,7 @@ Joins an array of strings into a single string.
 join_field("<sourceField>", "<separator>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=join+field)
+[Example in Playground](https://metafacture.org/playground/?example=join+field)
 
 ##### `lookup`
 
@@ -670,7 +670,7 @@ Adds a string at the beginning of a field value.
 prepend("<sourceField>", "<prependString>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=prepend)
+[Example in Playground](https://metafacture.org/playground/?example=prepend)
 
 ##### `replace_all`
 
@@ -680,7 +680,7 @@ Replaces a regular expression pattern in field values with a replacement string.
 replace_all("<sourceField>", "<regexp>", "<replacement>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=replace+all)
+[Example in Playground](https://metafacture.org/playground/?example=replace+all)
 
 ##### `reverse`
 
@@ -700,7 +700,7 @@ sort_field("<sourceField>", reverse: "true")
 sort_field("<sourceField>", numeric: "true")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=sort+field)
+[Example in Playground](https://metafacture.org/playground/?example=sort+field)
 
 ##### `split_field`
 
@@ -710,7 +710,7 @@ Splits a string into an array and replaces the field value with this array.
 split_field("<sourceField>", "<separator>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=split+field)
+[Example in Playground](https://metafacture.org/playground/?example=split+field)
 
 ##### `substring`
 
@@ -749,7 +749,7 @@ Deletes whitespace at the beginning and the end of a field value.
 trim("<sourceField>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=trim)
+[Example in Playground](https://metafacture.org/playground/?example=trim)
 
 ##### `uniq`
 
@@ -759,7 +759,7 @@ Deletes duplicate values in an array.
 uniq("<sourceField>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=uniq)
+[Example in Playground](https://metafacture.org/playground/?example=uniq)
 
 
 ##### `upcase`
@@ -770,7 +770,7 @@ Upcases all characters in a field value.
 upcase("<sourceField>")
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=upcase)
+[Example in Playground](https://metafacture.org/playground/?example=upcase)
 
 ##### `uri_encode`
 
@@ -803,7 +803,7 @@ if <condition>
 end
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=reject)
+[Example in Playground](https://metafacture.org/playground/?example=reject)
 
 ### Binds
 
@@ -817,7 +817,7 @@ do list(path: "<sourceField>")
 end
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=do+list)
+[Example in Playground](https://metafacture.org/playground/?example=do+list)
 
 Only the current element is accessible in this case (as the root element).
 
@@ -829,7 +829,7 @@ do list(path: "<sourceField>", "var": "<variableName>")
 end
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=do+list+with+var)
+[Example in Playground](https://metafacture.org/playground/?example=do+list+with+var)
 
 #### `do list_as`
 
@@ -864,7 +864,7 @@ do once()
 end
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=do+once)
+[Example in Playground](https://metafacture.org/playground/?example=do+once)
 
 In order to execute multiple blocks only once, tag them with unique identifiers:
 
@@ -902,7 +902,7 @@ end
 call_macro("<macroName>"[, <dynamicLocalVariables>...])
 ```
 
-[Playground-Example](https://metafacture.org/playground/?example=do+pu+macro)
+[Example in Playground](https://metafacture.org/playground/?example=do+pu+macro)
 
 ### Conditionals
 
