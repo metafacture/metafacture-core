@@ -259,7 +259,7 @@ Creates a field with a defined value.
 add_field("<targetFieldName>", "<fieldValue>")
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=add+field)
+[Example in Playground](https://metafacture.org/playground/?example=add_field)
 
 ##### `array`
 
@@ -295,7 +295,7 @@ end
 call_macro("<macroName>"[, <dynamicLocalVariables>...])
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=call+macro)
+[Example in Playground](https://metafacture.org/playground/?example=call_macro)
 
 ##### `copy_field`
 
@@ -305,7 +305,7 @@ Copies a field from an existing field.
 copy_field("<sourceField>", "<targetField>")
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=copy+field)
+[Example in Playground](https://metafacture.org/playground/?example=copy_field)
 
 
 ##### `format`
@@ -340,7 +340,7 @@ Moves a field from an existing field. Can be used to rename a field.
 move_field("<sourceField>", "<targetField>")
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=move+field)
+[Example in Playground](https://metafacture.org/playground/?example=move_field)
 
 
 ##### `parse_text`
@@ -425,7 +425,7 @@ Removes a field.
 remove_field("<sourceField>")
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=remove+field)
+[Example in Playground](https://metafacture.org/playground/?example=remove_field)
 
 ##### `rename`
 
@@ -456,7 +456,7 @@ set_array("<targetFieldName>")
 set_array("<targetFieldName>", "<value_1>"[, ...])
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=set+array)
+[Example in Playground](https://metafacture.org/playground/?example=set_array)
 
 ##### `set_field`
 
@@ -601,7 +601,7 @@ Joins an array of strings into a single string.
 join_field("<sourceField>", "<separator>")
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=join+field)
+[Example in Playground](https://metafacture.org/playground/?example=join_field)
 
 ##### `lookup`
 
@@ -680,7 +680,7 @@ Replaces a regular expression pattern in field values with a replacement string.
 replace_all("<sourceField>", "<regexp>", "<replacement>")
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=replace+all)
+[Example in Playground](https://metafacture.org/playground/?example=replace_all)
 
 ##### `reverse`
 
@@ -700,7 +700,7 @@ sort_field("<sourceField>", reverse: "true")
 sort_field("<sourceField>", numeric: "true")
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=sort+field)
+[Example in Playground](https://metafacture.org/playground/?example=sort_field)
 
 ##### `split_field`
 
@@ -710,7 +710,7 @@ Splits a string into an array and replaces the field value with this array.
 split_field("<sourceField>", "<separator>")
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=split+field)
+[Example in Playground](https://metafacture.org/playground/?example=split_field)
 
 ##### `substring`
 
@@ -817,7 +817,7 @@ do list(path: "<sourceField>")
 end
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=do+list)
+[Example in Playground](https://metafacture.org/playground/?example=do_list)
 
 Only the current element is accessible in this case (as the root element).
 
@@ -829,7 +829,7 @@ do list(path: "<sourceField>", "var": "<variableName>")
 end
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=do+list+with+var)
+[Example in Playground](https://metafacture.org/playground/?example=do_list_with_var)
 
 #### `do list_as`
 
@@ -864,7 +864,7 @@ do once()
 end
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=do+once)
+[Example in Playground](https://metafacture.org/playground/?example=do_once)
 
 In order to execute multiple blocks only once, tag them with unique identifiers:
 
@@ -902,7 +902,7 @@ end
 call_macro("<macroName>"[, <dynamicLocalVariables>...])
 ```
 
-[Example in Playground](https://metafacture.org/playground/?example=do+put+macro)
+[Example in Playground](https://metafacture.org/playground/?example=do_put_macro)
 
 ### Conditionals
 
