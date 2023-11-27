@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2022 Deutsche Nationalbibliothek et al
+ * Copyright 2013, 2023 Deutsche Nationalbibliothek et al
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,12 @@ import java.io.Reader;
 import java.io.SequenceInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Opens an {@link HttpURLConnection} and passes a reader to the receiver.
@@ -43,8 +45,9 @@ import java.util.regex.Pattern;
  * @author Christoph Böhme
  * @author Jan Schnasse
  * @author Jens Wille
+ * @author Pascal Christoph (dr0i)
  */
-@Description("Opens an HTTP resource. Supports setting HTTP header fields `Accept`, `Accept-Charset` and `Content-Type`, as well as generic headers (separated by `\\n`). Defaults: request `method` = `GET`, request `url` = `@-` (input data), request `body` = `@-` (input data) if request method supports body and input data not already used, `Accept` header = `*/*`, `Accept-Charset` header (`encoding`) = `UTF-8`, `errorPrefix` = `ERROR: `.")
+@Description("Opens an HTTP resource. Supports setting HTTP header fields `Accept`, `Accept-Charset`, `Accept-Encoding` and `Content-Type`, as well as generic headers (separated by `\\n`). Defaults: request `method` = `GET`, request `url` = `@-` (input data), request `body` = `@-` (input data) if request method supports body and input data not already used, `Accept` header = `*/*`, `Accept-Charset` header (`encoding`) = `UTF-8`, `errorPrefix` = `ERROR: `.")
 @In(String.class)
 @Out(Reader.class)
 @FluxCommand("open-http")
@@ -53,22 +56,21 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     public static final String ACCEPT_DEFAULT = "*/*";
     public static final String ACCEPT_HEADER = "accept";
     public static final String CONTENT_TYPE_HEADER = "content-type";
+    public static final String ACCEPT_ENCODING_HEADER = "accept-encoding";
+    public static final String ENCODING_HEADER = "content-encoding";
     public static final String DEFAULT_PREFIX = "ERROR: ";
-    public static final String ENCODING_DEFAULT = "UTF-8";
-    public static final String ENCODING_HEADER = "accept-charset";
+    public static final String CHARSET_DEFAULT = "UTF-8";
+    public static final String ACCEPT_CHARSET_HEADER = "accept-charset";
     public static final String INPUT_DESIGNATOR = "@-";
-
     public static final String DEFAULT_METHOD_NAME = "GET";
     public static final Method DEFAULT_METHOD = Method.valueOf(DEFAULT_METHOD_NAME);
-
     public static final String HEADER_FIELD_SEPARATOR = "\n";
     public static final String HEADER_VALUE_SEPARATOR = ":";
-
     private static final Pattern HEADER_FIELD_SEPARATOR_PATTERN = Pattern.compile(HEADER_FIELD_SEPARATOR);
     private static final Pattern HEADER_VALUE_SEPARATOR_PATTERN = Pattern.compile(HEADER_VALUE_SEPARATOR);
-
+    private static final int ALLOWED_REDIRECTIONS = 3;
+    private static final int CONNECTION_TIMEOUT = 11000;
     private final Map<String, String> headers = new HashMap<>();
-
     private Method method;
     private String body;
     private String errorPrefix;
@@ -118,7 +120,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
      */
     public HttpOpener() {
         setAccept(ACCEPT_DEFAULT);
-        setEncoding(ENCODING_DEFAULT);
+        setAcceptCharset(CHARSET_DEFAULT);
         setErrorPrefix(DEFAULT_PREFIX);
         setMethod(DEFAULT_METHOD);
         setUrl(INPUT_DESIGNATOR);
@@ -164,16 +166,49 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP {@value ENCODING_HEADER} header value. This is the
-     * preferred encoding for the HTTP response. Additionally, the encoding
-     * is used for reading the HTTP response if it does not specify a content
-     * encoding. The default for the encoding is {@value ENCODING_DEFAULT}.
+     * Sets the HTTP {@value ACCEPT_CHARSET_HEADER} header value. This is the
+     * preferred charset for the HTTP response.
+     * The default charset is {@value CHARSET_DEFAULT}.
      *
-     * @param encoding name of the encoding used for the accept-charset HTTP
+     * @param charset name of the charset used for the accept-charset HTTP header
+     */
+    public void setAcceptCharset(final String charset) {
+        setHeader(ACCEPT_CHARSET_HEADER, charset);
+    }
+
+    /**
+     * @deprecated Use {@link #setAcceptCharset} instead.
+     * @param charset name of the charset used for the accept-charset HTTP header
+     */
+    @Deprecated
+    public void setEncoding(final String charset) {
+        setAcceptCharset(charset);
+    }
+
+    /**
+     * Sets the HTTP {@value ACCEPT_ENCODING_HEADER} header value. This is the
+     * preferred content encoding for the HTTP response. It accepts HTTP compression.
+     * Allowed values are i.a. "gzip" and "Brotli".
+     * The default for the content encoding is null, which means "no compression".
+     *
+     * @param contentEncoding name of content encoding used for the accept-encoding HTTP
      *                 header
      */
-    public void setEncoding(final String encoding) {
-        setHeader(ENCODING_HEADER, encoding);
+    public void setAcceptContentEncoding(final String contentEncoding) {
+        setHeader(ACCEPT_ENCODING_HEADER, contentEncoding);
+    }
+
+    /**
+     * Sets the HTTP {@value ENCODING_HEADER} header value. This is the
+     * content encoding for the HTTP GET. It enables HTTP compression.
+     * Allowed values are "gzip".
+     * The default for the content encoding is null, which means "no compression".
+     *
+     * @param contentEncoding name of content encoding used for the content-encoding HTTP
+     *                 header
+     */
+    public void setContentEncoding(final String contentEncoding) {
+        setHeader(ENCODING_HEADER, contentEncoding);
     }
 
     /**
@@ -244,23 +279,15 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         try {
             final String requestUrl = getInput(input, url);
             final String requestBody = getInput(input,
-                    body == null && method.getRequestHasBody() ? INPUT_DESIGNATOR : body);
-
-            final HttpURLConnection connection =
-                (HttpURLConnection) new URL(requestUrl).openConnection();
-
-            connection.setRequestMethod(method.name());
-            headers.forEach(connection::addRequestProperty);
-
+                body == null && method.getRequestHasBody() ? INPUT_DESIGNATOR : body);
+            Reader reader = null;
             if (requestBody != null) {
-                connection.setDoOutput(true);
-                connection.getOutputStream().write(requestBody.getBytes());
+                reader = doPostOrPut(requestBody, new URL(requestUrl));
             }
-
-            final InputStream inputStream = getInputStream(connection);
-            final String contentEncoding = getEncoding(connection.getContentEncoding());
-
-            getReceiver().process(new InputStreamReader(inputStream, contentEncoding));
+            else {
+                reader = doGet(requestUrl);
+            }
+            getReceiver().process(reader);
         }
         catch (final IOException e) {
             throw new MetafactureException(e);
@@ -268,6 +295,32 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         finally {
             inputUsed = false;
         }
+    }
+
+    private Reader doPostOrPut(final String requestBody, final URL urlToOpen) throws IOException {
+        final HttpURLConnection connection = (HttpURLConnection) urlToOpen.openConnection();
+        connection.setDoOutput(true);
+        connection.setRequestMethod(method.name());
+        headers.forEach(connection::setRequestProperty);
+        connection.getOutputStream().write(requestBody.getBytes());
+        final InputStream inputStream = getInputStream(connection);
+        return new InputStreamReader(inputStream, headers.get(ACCEPT_CHARSET_HEADER));
+    }
+
+    private Reader doGet(final String requestUrl) throws IOException {
+        final Reader reader;
+        final HttpURLConnection connection;
+        connection = followRedirects(new URL(requestUrl));
+        final InputStream inputStream = getInputStream(connection);
+
+        if ("gzip".equalsIgnoreCase(connection.getContentEncoding())) {
+            final GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
+            reader = new InputStreamReader(gzipInputStream);
+        }
+        else {
+            reader = new InputStreamReader(inputStream, headers.get(ACCEPT_CHARSET_HEADER));
+        }
+        return reader;
     }
 
     private String getInput(final String input, final String value) {
@@ -312,8 +365,36 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         }
     }
 
-    private String getEncoding(final String contentEncoding) {
-        return contentEncoding != null ? contentEncoding : headers.get(ENCODING_HEADER);
+    private HttpURLConnection followRedirects(final URL startingUrl) throws IOException {
+        int times = 0;
+        HttpURLConnection conn;
+        URL urlToFollow = startingUrl;
+        while (true) {
+            times = times + 1;
+
+            if (times > ALLOWED_REDIRECTIONS) {
+                throw new IOException("Stuck in redirect loop");
+            }
+
+            conn = (HttpURLConnection) urlToFollow.openConnection();
+            headers.forEach(conn::setRequestProperty);
+            conn.setRequestMethod(method.name());
+            conn.setConnectTimeout(CONNECTION_TIMEOUT);
+            conn.setInstanceFollowRedirects(false); // Make the logic below easier to detect redirections
+
+            switch (conn.getResponseCode()) {
+                case HttpURLConnection.HTTP_MOVED_PERM:
+                case HttpURLConnection.HTTP_MOVED_TEMP:
+                    String location = conn.getHeaderField("Location");
+                    location = URLDecoder.decode(location, "UTF-8");
+                    urlToFollow = new URL(urlToFollow, location); // Deal with relative URLs
+                    continue;
+                default:
+                    break;
+            }
+            break;
+        }
+        return conn;
     }
 
 }
