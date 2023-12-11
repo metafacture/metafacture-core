@@ -1,7 +1,22 @@
 {
-    "do bind": {
-      "prefix": ["do"],
-      "body": ["do ${1:collector}(${2:args})", "\t${0:body}", "end"],
-      "description": "A do bind changes the execution context of the body functions. They are executed for each element in the list."
+    "do list": {
+      "prefix": ["do list"],
+      "body": ["do list(path: \"${1:<sourceField>}\", \"var\": \"${4:<variableName>}\")", "\t${0:body}", "end"],
+      "description": "Iterates over each element of an array. In contrast to Catmandu, it can also iterate over a single object or string."
+    },
+    "do list_as": {
+      "prefix": ["do list_as"],
+      "body": ["do list_as(\"${1:<variableName_1>}\": \"${2:<sourceField_1>}\")", "\t${0:body}", "end"],
+      "description": "Iterates over each named element of an array (like do list with a variable name). If multiple arrays are given, iterates over the corresponding elements from each array (i.e., all elements with the same array index, skipping elements whose arrays have already been exhausted)."
+    },
+    "do once": {
+      "prefix": ["do once"],
+      "body": ["do once(\"${1:<blockName>}\")", "\t${0:body}", "end"],
+      "description": "Executes the statements only once (when the bind is first encountered), not repeatedly for each record."
+    },
+    "do put_macro": {
+      "prefix": ["do put_macro"],
+      "body": ["do put_macro(\"${1:<macroName>}\")", "\t${0:body}", "end"],
+      "description": "Defines a named macro, i.e. a list of statements that can be executed later with the call_macro function."
     }
   }
