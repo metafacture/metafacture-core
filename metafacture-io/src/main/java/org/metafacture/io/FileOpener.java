@@ -154,8 +154,8 @@ public final class FileOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 
     @Override
     public void process(final String file) {
-        try {
-            getReceiver().process(open(file));
+        try (Reader reader = open(file)) {
+            getReceiver().process(reader);
         }
         catch (final IOException e) {
             throw new MetafactureException(e);

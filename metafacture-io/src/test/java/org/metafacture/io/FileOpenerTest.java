@@ -16,10 +16,18 @@
 
 package org.metafacture.io;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeFalse;
-import static org.mockito.Mockito.verify;
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.framework.ObjectReceiver;
+
+import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,17 +40,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.framework.ObjectReceiver;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import java.util.function.Consumer;
 
 /**
  * Tests for class {@link FileOpener}.
@@ -63,24 +61,12 @@ public final class FileOpenerTest {
     @Mock
     private ObjectReceiver<Reader> receiver;
 
-    @Captor
-    private ArgumentCaptor<Reader> processedObject;
-
     @Test
     public void testUtf8IsDefaultEncoding() throws IOException {
-        assumeFalse("Default encoding is UTF-8: It is not possible to test whether " +
-                        "FileOpener sets the encoding to UTF-8 correctly.",
-                StandardCharsets.UTF_8.equals(Charset.defaultCharset()));
+        Assume.assumeFalse("Default encoding is UTF-8: It is not possible to test whether FileOpener sets " +
+                "the encoding to UTF-8 correctly.", StandardCharsets.UTF_8.equals(Charset.defaultCharset()));
 
-        final File testFile = createTestFile();
-
-        final FileOpener opener = new FileOpener();
-        opener.setReceiver(receiver);
-        opener.process(testFile.getAbsolutePath());
-        opener.closeStream();
-
-        verify(receiver).process(processedObject.capture());
-        assertEquals(DATA, ResourceUtil.readAll(processedObject.getValue()));
+        assertData(receiver, DATA, createTestFile(), null);
     }
 
     @Test
@@ -105,19 +91,27 @@ public final class FileOpenerTest {
         }
 
         final String data = sb.toString();
-        assertTrue(data.length() + " > " + maxBytes, data.length() > maxBytes);
+        Assert.assertTrue(data.length() + " > " + maxBytes, data.length() > maxBytes);
 
-        final File testFile = copyResourceToTempFile("compressed-large.txt.bgzf");
+        assertData(receiver, decompressConcatenated ? data : data.substring(0, maxBytes),
+                copyResourceToTempFile("compressed-large.txt.bgzf"), o -> o.setDecompressConcatenated(decompressConcatenated));
+    }
+
+    /*package-private*/ static void assertData(final ObjectReceiver<Reader> receiver, final String expected, final File file, final Consumer<FileOpener> consumer) {
+        final StringBuilder sb = new StringBuilder();
+        Mockito.doAnswer(i -> sb.append(ResourceUtil.readAll(i.getArgument(0)))).when(receiver).process(Mockito.any(Reader.class));
 
         final FileOpener opener = new FileOpener();
-        opener.setDecompressConcatenated(decompressConcatenated);
+        if (consumer != null) {
+            consumer.accept(opener);
+        }
+
         opener.setReceiver(receiver);
-        opener.process(testFile.getAbsolutePath());
+        opener.process(file.getAbsolutePath());
         opener.closeStream();
 
-        verify(receiver).process(processedObject.capture());
-        assertEquals(decompressConcatenated ? data : data.substring(0, maxBytes),
-                ResourceUtil.readAll(processedObject.getValue()));
+        Mockito.verify(receiver).process(Mockito.any(Reader.class));
+        Assert.assertEquals(expected, sb.toString());
     }
 
     private File createTestFile() throws IOException {
