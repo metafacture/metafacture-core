@@ -201,7 +201,9 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      */
     public static Properties loadProperties(final String location)
             throws IOException {
-        return loadProperties(getStream(location));
+        try (InputStream stream = getStream(location)) {
+            return loadProperties(stream);
+        }
     }
 
     /**
