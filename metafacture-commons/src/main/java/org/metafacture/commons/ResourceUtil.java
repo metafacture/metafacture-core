@@ -30,6 +30,7 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Properties;
+import java.util.function.Consumer;
 
 /**
  * Various utility methods for working with files, resources and streams.
@@ -241,14 +242,7 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      */
     public static String loadTextFile(final String location) throws IOException {
         final StringBuilder builder = new StringBuilder();
-        final BufferedReader reader = new BufferedReader(getReader(location));
-
-        String line = reader.readLine();
-        while (line != null) {
-            builder.append(line);
-            line = reader.readLine();
-        }
-
+        loadTextFile(location, builder::append);
         return builder.toString();
     }
 
@@ -260,17 +254,19 @@ public final class ResourceUtil { // checkstyle-disable-line ClassDataAbstractio
      * @return the List of Strings with the lines of the file appended
      * @throws IOException if an I/O error occurs
      */
-    public static List<String> loadTextFile(final String location,
-            final List<String> list) throws IOException {
-        final BufferedReader reader = new BufferedReader(getReader(location));
-
-        String line = reader.readLine();
-        while (line != null) {
-            list.add(line);
-            line = reader.readLine();
-        }
-
+    public static List<String> loadTextFile(final String location, final List<String> list) throws IOException {
+        loadTextFile(location, list::add);
         return list;
+    }
+
+    private static void loadTextFile(final String location, final Consumer<String> consumer) throws IOException {
+        try (BufferedReader reader = new BufferedReader(getReader(location))) {
+            String line = reader.readLine();
+            while (line != null) {
+                consumer.accept(line);
+                line = reader.readLine();
+            }
+        }
     }
 
     /**
