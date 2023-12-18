@@ -68,8 +68,8 @@ public final class ResourceOpener extends DefaultObjectPipe<String, ObjectReceiv
 
     @Override
     public void process(final String file) {
-        try {
-            getReceiver().process(ResourceUtil.getReader(file, encoding));
+        try (Reader reader = ResourceUtil.getReader(file, encoding)) {
+            getReceiver().process(reader);
         }
         catch (final IOException e) {
             throw new MetafactureException(e);
