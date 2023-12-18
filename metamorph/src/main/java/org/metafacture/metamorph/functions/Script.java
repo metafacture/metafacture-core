@@ -21,7 +21,8 @@ import org.metafacture.metamorph.api.MorphBuildException;
 import org.metafacture.metamorph.api.MorphExecutionException;
 import org.metafacture.metamorph.api.helpers.AbstractSimpleStatelessFunction;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Reader;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -60,14 +61,14 @@ public final class Script extends AbstractSimpleStatelessFunction {
     public void setFile(final String file) {
         final ScriptEngineManager manager = new ScriptEngineManager();
         final ScriptEngine engine = manager.getEngineByName("JavaScript");
-        try {
-            // TODO: The script file should be loaded relatively to the base URI
-            engine.eval(ResourceUtil.getReader(file));
+        // TODO: The script file should be loaded relatively to the base URI
+        try (Reader reader = ResourceUtil.getReader(file)) {
+            engine.eval(reader);
         }
         catch (final ScriptException e) {
             throw new MorphBuildException("Error in script", e);
         }
-        catch (final FileNotFoundException e) {
+        catch (final IOException e) {
             throw new MorphBuildException("Error loading script '" + file + "'", e);
         }
         invocable = (Invocable) engine;
