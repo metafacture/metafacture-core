@@ -149,23 +149,6 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP request body. The default value for the request body is
-     * {@value INPUT_DESIGNATOR} <i>if the {@link #setMethod(Method) request
-     * method} accepts a request body</i>, which means it will use the {@link
-     * #process(String) input data} data as request body <i>if the input has
-     * not already been used</i>; otherwise, no request body will be set by
-     * default.
-     *
-     * <p>If a request body has been set, but the request method does not
-     * accept a body, the method <i>may</i> be changed to {@code POST}.
-     *
-     * @param body the request body
-     */
-    public void setBody(final String body) {
-        this.body = body;
-    }
-
-    /**
      * Sets the HTTP {@value CONTENT_TYPE_HEADER} header value. This is a
      * MIME type such as {@code text/plain} or {@code application/json}.
      *
@@ -282,6 +265,23 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
      */
     public void setUrl(final String url) {
         this.url = url;
+    }
+
+    /**
+     * Sets the HTTP request body. The default value for the request body is
+     * {@value INPUT_DESIGNATOR} <i>if the {@link #setMethod(Method) request
+     * method} accepts a request body</i>, which means it will use the {@link
+     * #process(String) input data} data as request body <i>if the input has
+     * not already been used</i>; otherwise, no request body will be set by
+     * default.
+     *
+     * <p>If a request body has been set, but the request method does not
+     * accept a body, the method <i>may</i> be changed to {@code POST}.
+     *
+     * @param body the request body
+     */
+    public void setBody(final String body) {
+        this.body = body;
     }
 
     @Override
