@@ -65,12 +65,16 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     public static final String HEADER_FIELD_SEPARATOR = "\n";
     public static final String HEADER_VALUE_SEPARATOR = ":";
     public static final String INPUT_DESIGNATOR = "@-";
+    public static final String MIME_PARAMETER_CHARSET = "charset";
+    public static final String MIME_PARAMETER_SEPARATOR = ";";
+    public static final String MIME_PARAMETER_VALUE_SEPARATOR = "=";
 
     public static final String DEFAULT_METHOD_NAME = "GET";
     public static final Method DEFAULT_METHOD = Method.valueOf(DEFAULT_METHOD_NAME);
 
     private static final Pattern HEADER_FIELD_SEPARATOR_PATTERN = Pattern.compile(HEADER_FIELD_SEPARATOR);
     private static final Pattern HEADER_VALUE_SEPARATOR_PATTERN = Pattern.compile(HEADER_VALUE_SEPARATOR);
+    private static final Pattern MIME_PARAMETER_SEPARATOR_PATTERN = Pattern.compile(MIME_PARAMETER_SEPARATOR);
 
     private static final int ALLOWED_REDIRECTIONS = 3;
     private static final int CONNECTION_TIMEOUT = 11000;
@@ -310,7 +314,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         headers.forEach(connection::setRequestProperty);
         connection.getOutputStream().write(requestBody.getBytes());
         final InputStream inputStream = getInputStream(connection);
-        return new InputStreamReader(inputStream, headers.get(ACCEPT_CHARSET_HEADER));
+        return new InputStreamReader(inputStream, getContentCharset(connection));
     }
 
     private Reader doGet(final String requestUrl) throws IOException {
@@ -321,10 +325,10 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 
         if ("gzip".equalsIgnoreCase(connection.getContentEncoding())) {
             final GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
-            reader = new InputStreamReader(gzipInputStream);
+            reader = new InputStreamReader(gzipInputStream, getContentCharset(connection));
         }
         else {
-            reader = new InputStreamReader(inputStream, headers.get(ACCEPT_CHARSET_HEADER));
+            reader = new InputStreamReader(inputStream, getContentCharset(connection));
         }
         return reader;
     }
@@ -369,6 +373,25 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         else {
             return errorStream;
         }
+    }
+
+    private String getContentCharset(final HttpURLConnection connection) {
+        final String contentType = connection.getContentType();
+
+        if (contentType != null) {
+            final String[] parts = MIME_PARAMETER_SEPARATOR_PATTERN.split(contentType);
+
+            for (int i = 1; i < parts.length; ++i) {
+                final String parameter = parts[i].trim();
+                final int index = parameter.indexOf(MIME_PARAMETER_VALUE_SEPARATOR);
+
+                if (index != -1 && MIME_PARAMETER_CHARSET.equalsIgnoreCase(parameter.substring(0, index))) {
+                    return parameter.substring(index + 1);
+                }
+            }
+        }
+
+        return CHARSET_DEFAULT;
     }
 
     private HttpURLConnection followRedirects(final URL startingUrl) throws IOException {

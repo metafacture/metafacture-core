@@ -240,20 +240,35 @@ public final class HttpOpenerTest {
 
     @Test
     public void shouldPerformPostRequestWithCharsetParameter() throws IOException {
+        shouldPerformPostRequestWithCharsetParameter(null);
+    }
+
+    @Test
+    public void shouldPerformPostRequestWithCharsetParameterAndContentTypeResponseHeader() throws IOException {
+        shouldPerformPostRequestWithCharsetParameter("expected:<response b[ö]dy> but was:<response b[Ã¶]dy>");
+    }
+
+    private void shouldPerformPostRequestWithCharsetParameter(final String expectedMessage) throws IOException {
         final String charset = "ISO-8859-1";
         final String header = "Accept-Charset";
         final StringValuePattern value = WireMock.equalTo(charset);
 
+        String actualMessage;
         try {
             shouldPerformRequest(REQUEST_BODY, HttpOpener.Method.POST, (o, u) -> {
                 o.setMethod(HttpOpener.Method.POST);
                 o.setUrl(u);
                 o.setAcceptCharset(charset);
-            }, s -> s.withHeader(header, value), q -> q.withHeader(header, value), null);
+            }, s -> s.withHeader(header, value), q -> q.withHeader(header, value), expectedMessage != null ?
+                r -> r.withHeader(HttpOpener.CONTENT_TYPE_HEADER, "text/plain; charset=" + charset) : null);
+
+            actualMessage = null;
         }
         catch (final ComparisonFailure e) {
-            Assert.assertEquals("expected:<response b[ö]dy> but was:<response b[Ã¶]dy>", e.getMessage());
+            actualMessage = e.getMessage();
         }
+
+        Assert.assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
