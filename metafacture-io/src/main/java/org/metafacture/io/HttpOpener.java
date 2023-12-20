@@ -53,24 +53,30 @@ import java.util.zip.GZIPInputStream;
 @FluxCommand("open-http")
 public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
-    public static final String ACCEPT_DEFAULT = "*/*";
     public static final String ACCEPT_HEADER = "accept";
-    public static final String CONTENT_TYPE_HEADER = "content-type";
-    public static final String ACCEPT_ENCODING_HEADER = "accept-encoding";
-    public static final String ENCODING_HEADER = "content-encoding";
-    public static final String DEFAULT_PREFIX = "ERROR: ";
-    public static final String CHARSET_DEFAULT = "UTF-8";
     public static final String ACCEPT_CHARSET_HEADER = "accept-charset";
-    public static final String INPUT_DESIGNATOR = "@-";
-    public static final String DEFAULT_METHOD_NAME = "GET";
-    public static final Method DEFAULT_METHOD = Method.valueOf(DEFAULT_METHOD_NAME);
+    public static final String ACCEPT_ENCODING_HEADER = "accept-encoding";
+    public static final String CONTENT_ENCODING_HEADER = "content-encoding";
+    public static final String CONTENT_TYPE_HEADER = "content-type";
+
+    public static final String ACCEPT_DEFAULT = "*/*";
+    public static final String CHARSET_DEFAULT = "UTF-8";
+    public static final String DEFAULT_PREFIX = "ERROR: ";
     public static final String HEADER_FIELD_SEPARATOR = "\n";
     public static final String HEADER_VALUE_SEPARATOR = ":";
+    public static final String INPUT_DESIGNATOR = "@-";
+
+    public static final String DEFAULT_METHOD_NAME = "GET";
+    public static final Method DEFAULT_METHOD = Method.valueOf(DEFAULT_METHOD_NAME);
+
     private static final Pattern HEADER_FIELD_SEPARATOR_PATTERN = Pattern.compile(HEADER_FIELD_SEPARATOR);
     private static final Pattern HEADER_VALUE_SEPARATOR_PATTERN = Pattern.compile(HEADER_VALUE_SEPARATOR);
+
     private static final int ALLOWED_REDIRECTIONS = 3;
     private static final int CONNECTION_TIMEOUT = 11000;
+
     private final Map<String, String> headers = new HashMap<>();
+
     private Method method;
     private String body;
     private String errorPrefix;
@@ -199,8 +205,8 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP {@value ENCODING_HEADER} header value. This is the
-     * content encoding for the HTTP GET. It enables HTTP compression.
+     * Sets the HTTP {@value CONTENT_ENCODING_HEADER} header value. This is the
+     * content encoding for the HTTP request. It enables HTTP compression.
      * Allowed values are "gzip".
      * The default for the content encoding is null, which means "no compression".
      *
@@ -208,7 +214,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
      *                 header
      */
     public void setContentEncoding(final String contentEncoding) {
-        setHeader(ENCODING_HEADER, contentEncoding);
+        setHeader(CONTENT_ENCODING_HEADER, contentEncoding);
     }
 
     /**
