@@ -276,7 +276,7 @@ public final class HttpOpenerTest {
 
     @Test
     public void shouldPerformGetRequestWithGzipedContentEncoding() throws IOException {
-        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> o.setAcceptContentEncoding("gzip"),
+        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> o.setAcceptEncoding("gzip"),
                              null, null,
                              WireMock.ok().withBody(GZIPPED_RESPONSE_BODY).withHeaders(new HttpHeaders(new HttpHeader(HttpOpener.CONTENT_ENCODING_HEADER,"gzip"))),
                              RESPONSE_BODY);

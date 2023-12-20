@@ -197,11 +197,11 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
      * Allowed values are i.a. "gzip" and "Brotli".
      * The default for the content encoding is null, which means "no compression".
      *
-     * @param contentEncoding name of content encoding used for the accept-encoding HTTP
+     * @param acceptEncoding name of content encoding used for the accept-encoding HTTP
      *                 header
      */
-    public void setAcceptContentEncoding(final String contentEncoding) {
-        setHeader(ACCEPT_ENCODING_HEADER, contentEncoding);
+    public void setAcceptEncoding(final String acceptEncoding) {
+        setHeader(ACCEPT_ENCODING_HEADER, acceptEncoding);
     }
 
     /**
