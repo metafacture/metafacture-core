@@ -50,7 +50,8 @@ import java.util.Map.Entry;
  */
 public final class HelpPrinter {
 
-    private static final String PATH_TO_EXAMPLES = "../metafacture-documentation/linksAndExamples.tsv";
+    public static final String PATH_TO_EXAMPLES = "../metafacture-documentation/linksAndExamples.tsv";
+
     private static final Map<String, String[]> EXAMPLES_MAP = new HashMap<>();
 
     private HelpPrinter() {
