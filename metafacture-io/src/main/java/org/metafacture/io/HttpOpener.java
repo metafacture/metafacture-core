@@ -47,7 +47,7 @@ import java.util.zip.GZIPInputStream;
  * @author Jens Wille
  * @author Pascal Christoph (dr0i)
  */
-@Description("Opens an HTTP resource. Supports setting HTTP header fields `Accept`, `Accept-Charset`, `Accept-Encoding` and `Content-Type`, as well as generic headers (separated by `\\n`). Defaults: request `method` = `GET`, request `url` = `@-` (input data), request `body` = `@-` (input data) if request method supports body and input data not already used, `Accept` header = `*/*`, `Accept-Charset` header (`encoding`) = `UTF-8`, `errorPrefix` = `ERROR: `.")
+@Description("Opens an HTTP resource. Supports setting HTTP header fields `Accept`, `Accept-Charset`, `Accept-Encoding`, `Content-Encoding` and `Content-Type`, as well as generic headers (separated by `\\n`). Defaults: request `method` = `GET`, request `url` = `@-` (input data), request `body` = `@-` (input data) if request method supports body and input data not already used, `Accept` header (`accept`) = `*/*`, `Accept-Charset` header (`acceptcharset`) = `UTF-8`, `errorprefix` = `ERROR: `.")
 @In(String.class)
 @Out(Reader.class)
 @FluxCommand("open-http")
