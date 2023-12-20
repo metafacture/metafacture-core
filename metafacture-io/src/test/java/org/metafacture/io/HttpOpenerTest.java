@@ -16,6 +16,9 @@
 
 package org.metafacture.io;
 
+import org.metafacture.commons.ResourceUtil;
+import org.metafacture.framework.ObjectReceiver;
+
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -31,8 +34,6 @@ import org.junit.Assert;
 import org.junit.ComparisonFailure;
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.commons.ResourceUtil;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -40,7 +41,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -63,15 +66,17 @@ public final class HttpOpenerTest {
 
     private static final String REQUEST_BODY = "request body";
     private static final String RESPONSE_BODY = "response bödy"; // UTF-8
+
     private static byte[] GZIPPED_RESPONSE_BODY;
     static {
-        try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            GZIPOutputStream gzip = new GZIPOutputStream(out);
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            final GZIPOutputStream gzip = new GZIPOutputStream(out);
             gzip.write(RESPONSE_BODY.getBytes("UTF-8"));
             gzip.close();
+
             GZIPPED_RESPONSE_BODY = out.toByteArray();
-        }catch (Exception e){
+        }
+        catch (final IOException e) {
             e.printStackTrace();
         }
     }
@@ -290,11 +295,9 @@ public final class HttpOpenerTest {
     }
 
     @Test
-    public void shouldPerformGetRequestWithGzipedContentEncoding() throws IOException {
+    public void shouldPerformGetRequestWithGzippedContentEncoding() throws IOException {
         shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> o.setAcceptEncoding("gzip"),
-                             null, null,
-                             WireMock.ok().withBody(GZIPPED_RESPONSE_BODY).withHeaders(new HttpHeaders(new HttpHeader(HttpOpener.CONTENT_ENCODING_HEADER,"gzip"))),
-                             RESPONSE_BODY);
+                null, null, WireMock.ok().withBody(GZIPPED_RESPONSE_BODY).withHeader(HttpOpener.CONTENT_ENCODING_HEADER, "gzip"), RESPONSE_BODY);
     }
 
     private void shouldPerformRequest(final String input, final HttpOpener.Method method, final BiConsumer<HttpOpener, String> consumer, final String... headers) throws IOException {
@@ -308,6 +311,7 @@ public final class HttpOpenerTest {
         if (responseConsumer != null) {
             responseConsumer.accept(response);
         }
+
         shouldPerformRequest(input, method,
                 consumer, stubConsumer, requestConsumer,
                 response, method.getResponseHasBody() ? RESPONSE_BODY : "");
