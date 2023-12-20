@@ -290,14 +290,17 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
             final String requestUrl = getInput(input, url);
             final String requestBody = getInput(input,
                 body == null && method.getRequestHasBody() ? INPUT_DESIGNATOR : body);
-            Reader reader = null;
-            if (requestBody != null) {
-                reader = doPostOrPut(requestBody, new URL(requestUrl));
-            }
-            else {
-                reader = doGet(requestUrl);
-            }
-            getReceiver().process(reader);
+
+            final URL urlToOpen = new URL(requestUrl);
+            final HttpURLConnection connection = requestBody != null ?
+                doOutput(urlToOpen, requestBody) : doRedirects(urlToOpen);
+
+            final InputStream inputStream = getInputStream(connection);
+            final String charset = getContentCharset(connection);
+
+            getReceiver().process(new InputStreamReader(
+                        "gzip".equalsIgnoreCase(connection.getContentEncoding()) ?
+                        new GZIPInputStream(inputStream) : inputStream, charset));
         }
         catch (final IOException e) {
             throw new MetafactureException(e);
@@ -305,32 +308,6 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         finally {
             inputUsed = false;
         }
-    }
-
-    private Reader doPostOrPut(final String requestBody, final URL urlToOpen) throws IOException {
-        final HttpURLConnection connection = (HttpURLConnection) urlToOpen.openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestMethod(method.name());
-        headers.forEach(connection::setRequestProperty);
-        connection.getOutputStream().write(requestBody.getBytes());
-        final InputStream inputStream = getInputStream(connection);
-        return new InputStreamReader(inputStream, getContentCharset(connection));
-    }
-
-    private Reader doGet(final String requestUrl) throws IOException {
-        final Reader reader;
-        final HttpURLConnection connection;
-        connection = followRedirects(new URL(requestUrl));
-        final InputStream inputStream = getInputStream(connection);
-
-        if ("gzip".equalsIgnoreCase(connection.getContentEncoding())) {
-            final GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
-            reader = new InputStreamReader(gzipInputStream, getContentCharset(connection));
-        }
-        else {
-            reader = new InputStreamReader(inputStream, getContentCharset(connection));
-        }
-        return reader;
     }
 
     private String getInput(final String input, final String value) {
@@ -348,6 +325,46 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         }
 
         return result;
+    }
+
+    private HttpURLConnection doOutput(final URL urlToOpen, final String requestBody) throws IOException {
+        final HttpURLConnection connection = openConnection(urlToOpen);
+
+        connection.setDoOutput(true);
+        connection.getOutputStream().write(requestBody.getBytes());
+
+        return connection;
+    }
+
+    private HttpURLConnection doRedirects(final URL startingUrl) throws IOException {
+        URL urlToFollow = startingUrl;
+
+        for (int i = 0; i < ALLOWED_REDIRECTIONS; ++i) {
+            final HttpURLConnection connection = openConnection(urlToFollow);
+            connection.setInstanceFollowRedirects(false); // Make the logic below easier to detect redirections
+
+            switch (connection.getResponseCode()) {
+                case HttpURLConnection.HTTP_MOVED_PERM:
+                case HttpURLConnection.HTTP_MOVED_TEMP:
+                    final String location = URLDecoder.decode(connection.getHeaderField("Location"), "UTF-8");
+                    urlToFollow = new URL(urlToFollow, location); // Deal with relative URLs
+                    break;
+                default:
+                    return connection;
+            }
+        }
+
+        throw new IOException("Too many redirects");
+    }
+
+    private HttpURLConnection openConnection(final URL urlToOpen) throws IOException {
+        final HttpURLConnection connection = (HttpURLConnection) urlToOpen.openConnection();
+
+        connection.setRequestMethod(method.name());
+        connection.setConnectTimeout(CONNECTION_TIMEOUT);
+        headers.forEach(connection::setRequestProperty);
+
+        return connection;
     }
 
     private InputStream getInputStream(final HttpURLConnection connection) throws IOException {
@@ -392,38 +409,6 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         }
 
         return CHARSET_DEFAULT;
-    }
-
-    private HttpURLConnection followRedirects(final URL startingUrl) throws IOException {
-        int times = 0;
-        HttpURLConnection conn;
-        URL urlToFollow = startingUrl;
-        while (true) {
-            times = times + 1;
-
-            if (times > ALLOWED_REDIRECTIONS) {
-                throw new IOException("Stuck in redirect loop");
-            }
-
-            conn = (HttpURLConnection) urlToFollow.openConnection();
-            headers.forEach(conn::setRequestProperty);
-            conn.setRequestMethod(method.name());
-            conn.setConnectTimeout(CONNECTION_TIMEOUT);
-            conn.setInstanceFollowRedirects(false); // Make the logic below easier to detect redirections
-
-            switch (conn.getResponseCode()) {
-                case HttpURLConnection.HTTP_MOVED_PERM:
-                case HttpURLConnection.HTTP_MOVED_TEMP:
-                    String location = conn.getHeaderField("Location");
-                    location = URLDecoder.decode(location, "UTF-8");
-                    urlToFollow = new URL(urlToFollow, location); // Deal with relative URLs
-                    continue;
-                default:
-                    break;
-            }
-            break;
-        }
-        return conn;
     }
 
 }
