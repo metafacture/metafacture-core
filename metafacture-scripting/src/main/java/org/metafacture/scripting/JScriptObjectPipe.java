@@ -25,7 +25,8 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Reader;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -70,14 +71,14 @@ public final class JScriptObjectPipe extends DefaultObjectPipe<Object, ObjectRec
 
         final ScriptEngineManager manager = new ScriptEngineManager();
         final ScriptEngine engine = manager.getEngineByName("JavaScript");
-        try {
+        try (Reader reader = ResourceUtil.getReader(file)) {
             // LOG.info("loading code from '" + file + "'");
-            engine.eval(ResourceUtil.getReader(file));
+            engine.eval(reader);
         }
         catch (final ScriptException e) {
             throw new MetafactureException("Error in script", e);
         }
-        catch (final FileNotFoundException e) {
+        catch (final IOException e) {
             throw new MetafactureException("Error loading script '" + file + "'", e);
         }
         invocable = (Invocable) engine;

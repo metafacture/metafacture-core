@@ -25,6 +25,7 @@ import org.antlr.runtime.RecognitionException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -82,7 +83,9 @@ public final class Flux {
             }
 
             // run parser and builder
-            FluxCompiler.compile(ResourceUtil.getStream(fluxFile), vars).start();
+            try (InputStream inputStream = ResourceUtil.getStream(fluxFile)) {
+                FluxCompiler.compile(inputStream, vars).start();
+            }
         }
     }
 
