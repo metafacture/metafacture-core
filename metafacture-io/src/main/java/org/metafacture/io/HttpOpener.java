@@ -286,21 +286,21 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
 
     @Override
     public void process(final String input) {
-        try {
-            final String requestUrl = getInput(input, url);
-            final String requestBody = getInput(input,
-                body == null && method.getRequestHasBody() ? INPUT_DESIGNATOR : body);
+        final String requestUrl = getInput(input, url);
+        final String requestBody = getInput(input,
+            body == null && method.getRequestHasBody() ? INPUT_DESIGNATOR : body);
 
+        try {
             final URL urlToOpen = new URL(requestUrl);
             final HttpURLConnection connection = requestBody != null ?
                 doOutput(urlToOpen, requestBody) : doRedirects(urlToOpen);
 
             final InputStream inputStream = getInputStream(connection);
             final String charset = getContentCharset(connection);
-
-            getReceiver().process(new InputStreamReader(
-                        "gzip".equalsIgnoreCase(connection.getContentEncoding()) ?
-                        new GZIPInputStream(inputStream) : inputStream, charset));
+            final Reader reader = new InputStreamReader(
+                "gzip".equalsIgnoreCase(connection.getContentEncoding()) ?
+                    new GZIPInputStream(inputStream) : inputStream, charset);
+            getReceiver().process(reader);
         }
         catch (final IOException e) {
             throw new MetafactureException(e);
