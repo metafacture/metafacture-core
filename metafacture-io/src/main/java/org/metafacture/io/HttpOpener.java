@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2022 Deutsche Nationalbibliothek et al
+ * Copyright 2013, 2023 Deutsche Nationalbibliothek et al
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,12 @@ import java.io.Reader;
 import java.io.SequenceInputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Opens an {@link HttpURLConnection} and passes a reader to the receiver.
@@ -43,29 +45,39 @@ import java.util.regex.Pattern;
  * @author Christoph Böhme
  * @author Jan Schnasse
  * @author Jens Wille
+ * @author Pascal Christoph (dr0i)
  */
-@Description("Opens an HTTP resource. Supports setting HTTP header fields `Accept`, `Accept-Charset` and `Content-Type`, as well as generic headers (separated by `\\n`). Defaults: request `method` = `GET`, request `url` = `@-` (input data), request `body` = `@-` (input data) if request method supports body and input data not already used, `Accept` header = `*/*`, `Accept-Charset` header (`encoding`) = `UTF-8`, `errorPrefix` = `ERROR: `.")
+@Description("Opens an HTTP resource. Supports setting HTTP header fields `Accept`, `Accept-Charset`, `Accept-Encoding`, `Content-Encoding` and `Content-Type`, as well as generic headers (separated by `\\n`). Defaults: request `method` = `GET`, request `url` = `@-` (input data), request `body` = `@-` (input data) if request method supports body and input data not already used, `Accept` header (`accept`) = `*/*`, `Accept-Charset` header (`acceptcharset`) = `UTF-8`, `errorprefix` = `ERROR: `.")
 @In(String.class)
 @Out(Reader.class)
 @FluxCommand("open-http")
 public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
-    public static final String ACCEPT_DEFAULT = "*/*";
     public static final String ACCEPT_HEADER = "accept";
+    public static final String ACCEPT_CHARSET_HEADER = "accept-charset";
+    public static final String ACCEPT_ENCODING_HEADER = "accept-encoding";
+    public static final String CONTENT_ENCODING_HEADER = "content-encoding";
     public static final String CONTENT_TYPE_HEADER = "content-type";
+
+    public static final String ACCEPT_DEFAULT = "*/*";
+    public static final String CHARSET_DEFAULT = "UTF-8";
     public static final String DEFAULT_PREFIX = "ERROR: ";
-    public static final String ENCODING_DEFAULT = "UTF-8";
-    public static final String ENCODING_HEADER = "accept-charset";
+    public static final String HEADER_FIELD_SEPARATOR = "\n";
+    public static final String HEADER_VALUE_SEPARATOR = ":";
     public static final String INPUT_DESIGNATOR = "@-";
+    public static final String MIME_PARAMETER_CHARSET = "charset";
+    public static final String MIME_PARAMETER_SEPARATOR = ";";
+    public static final String MIME_PARAMETER_VALUE_SEPARATOR = "=";
 
     public static final String DEFAULT_METHOD_NAME = "GET";
     public static final Method DEFAULT_METHOD = Method.valueOf(DEFAULT_METHOD_NAME);
 
-    public static final String HEADER_FIELD_SEPARATOR = "\n";
-    public static final String HEADER_VALUE_SEPARATOR = ":";
-
     private static final Pattern HEADER_FIELD_SEPARATOR_PATTERN = Pattern.compile(HEADER_FIELD_SEPARATOR);
     private static final Pattern HEADER_VALUE_SEPARATOR_PATTERN = Pattern.compile(HEADER_VALUE_SEPARATOR);
+    private static final Pattern MIME_PARAMETER_SEPARATOR_PATTERN = Pattern.compile(MIME_PARAMETER_SEPARATOR);
+
+    private static final int ALLOWED_REDIRECTIONS = 3;
+    private static final int CONNECTION_TIMEOUT = 11000;
 
     private final Map<String, String> headers = new HashMap<>();
 
@@ -118,7 +130,7 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
      */
     public HttpOpener() {
         setAccept(ACCEPT_DEFAULT);
-        setEncoding(ENCODING_DEFAULT);
+        setAcceptCharset(CHARSET_DEFAULT);
         setErrorPrefix(DEFAULT_PREFIX);
         setMethod(DEFAULT_METHOD);
         setUrl(INPUT_DESIGNATOR);
@@ -137,23 +149,6 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP request body. The default value for the request body is
-     * {@value INPUT_DESIGNATOR} <i>if the {@link #setMethod(Method) request
-     * method} accepts a request body</i>, which means it will use the {@link
-     * #process(String) input data} data as request body <i>if the input has
-     * not already been used</i>; otherwise, no request body will be set by
-     * default.
-     *
-     * <p>If a request body has been set, but the request method does not
-     * accept a body, the method <i>may</i> be changed to {@code POST}.
-     *
-     * @param body the request body
-     */
-    public void setBody(final String body) {
-        this.body = body;
-    }
-
-    /**
      * Sets the HTTP {@value CONTENT_TYPE_HEADER} header value. This is a
      * MIME type such as {@code text/plain} or {@code application/json}.
      *
@@ -164,16 +159,49 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
     }
 
     /**
-     * Sets the HTTP {@value ENCODING_HEADER} header value. This is the
-     * preferred encoding for the HTTP response. Additionally, the encoding
-     * is used for reading the HTTP response if it does not specify a content
-     * encoding. The default for the encoding is {@value ENCODING_DEFAULT}.
+     * Sets the HTTP {@value ACCEPT_CHARSET_HEADER} header value. This is the
+     * preferred charset for the HTTP response.
+     * The default charset is {@value CHARSET_DEFAULT}.
      *
-     * @param encoding name of the encoding used for the accept-charset HTTP
+     * @param charset name of the charset used for the accept-charset HTTP header
+     */
+    public void setAcceptCharset(final String charset) {
+        setHeader(ACCEPT_CHARSET_HEADER, charset);
+    }
+
+    /**
+     * @deprecated Use {@link #setAcceptCharset} instead.
+     * @param charset name of the charset used for the accept-charset HTTP header
+     */
+    @Deprecated
+    public void setEncoding(final String charset) {
+        setAcceptCharset(charset);
+    }
+
+    /**
+     * Sets the HTTP {@value ACCEPT_ENCODING_HEADER} header value. This is the
+     * preferred content encoding for the HTTP response. It accepts HTTP compression.
+     * Allowed values are i.a. "gzip" and "Brotli".
+     * The default for the content encoding is null, which means "no compression".
+     *
+     * @param acceptEncoding name of content encoding used for the accept-encoding HTTP
      *                 header
      */
-    public void setEncoding(final String encoding) {
-        setHeader(ENCODING_HEADER, encoding);
+    public void setAcceptEncoding(final String acceptEncoding) {
+        setHeader(ACCEPT_ENCODING_HEADER, acceptEncoding);
+    }
+
+    /**
+     * Sets the HTTP {@value CONTENT_ENCODING_HEADER} header value. This is the
+     * content encoding for the HTTP request. It enables HTTP compression.
+     * Allowed values are "gzip".
+     * The default for the content encoding is null, which means "no compression".
+     *
+     * @param contentEncoding name of content encoding used for the content-encoding HTTP
+     *                 header
+     */
+    public void setContentEncoding(final String contentEncoding) {
+        setHeader(CONTENT_ENCODING_HEADER, contentEncoding);
     }
 
     /**
@@ -239,28 +267,40 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         this.url = url;
     }
 
+    /**
+     * Sets the HTTP request body. The default value for the request body is
+     * {@value INPUT_DESIGNATOR} <i>if the {@link #setMethod(Method) request
+     * method} accepts a request body</i>, which means it will use the {@link
+     * #process(String) input data} data as request body <i>if the input has
+     * not already been used</i>; otherwise, no request body will be set by
+     * default.
+     *
+     * <p>If a request body has been set, but the request method does not
+     * accept a body, the method <i>may</i> be changed to {@code POST}.
+     *
+     * @param body the request body
+     */
+    public void setBody(final String body) {
+        this.body = body;
+    }
+
     @Override
     public void process(final String input) {
         try {
             final String requestUrl = getInput(input, url);
             final String requestBody = getInput(input,
-                    body == null && method.getRequestHasBody() ? INPUT_DESIGNATOR : body);
+                body == null && method.getRequestHasBody() ? INPUT_DESIGNATOR : body);
 
-            final HttpURLConnection connection =
-                (HttpURLConnection) new URL(requestUrl).openConnection();
-
-            connection.setRequestMethod(method.name());
-            headers.forEach(connection::addRequestProperty);
-
-            if (requestBody != null) {
-                connection.setDoOutput(true);
-                connection.getOutputStream().write(requestBody.getBytes());
-            }
+            final URL urlToOpen = new URL(requestUrl);
+            final HttpURLConnection connection = requestBody != null ?
+                doOutput(urlToOpen, requestBody) : doRedirects(urlToOpen);
 
             final InputStream inputStream = getInputStream(connection);
-            final String contentEncoding = getEncoding(connection.getContentEncoding());
+            final String charset = getContentCharset(connection);
 
-            getReceiver().process(new InputStreamReader(inputStream, contentEncoding));
+            getReceiver().process(new InputStreamReader(
+                        "gzip".equalsIgnoreCase(connection.getContentEncoding()) ?
+                        new GZIPInputStream(inputStream) : inputStream, charset));
         }
         catch (final IOException e) {
             throw new MetafactureException(e);
@@ -285,6 +325,46 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         }
 
         return result;
+    }
+
+    private HttpURLConnection doOutput(final URL urlToOpen, final String requestBody) throws IOException {
+        final HttpURLConnection connection = openConnection(urlToOpen);
+
+        connection.setDoOutput(true);
+        connection.getOutputStream().write(requestBody.getBytes());
+
+        return connection;
+    }
+
+    private HttpURLConnection doRedirects(final URL startingUrl) throws IOException {
+        URL urlToFollow = startingUrl;
+
+        for (int i = 0; i < ALLOWED_REDIRECTIONS; ++i) {
+            final HttpURLConnection connection = openConnection(urlToFollow);
+            connection.setInstanceFollowRedirects(false); // Make the logic below easier to detect redirections
+
+            switch (connection.getResponseCode()) {
+                case HttpURLConnection.HTTP_MOVED_PERM:
+                case HttpURLConnection.HTTP_MOVED_TEMP:
+                    final String location = URLDecoder.decode(connection.getHeaderField("Location"), "UTF-8");
+                    urlToFollow = new URL(urlToFollow, location); // Deal with relative URLs
+                    break;
+                default:
+                    return connection;
+            }
+        }
+
+        throw new IOException("Too many redirects");
+    }
+
+    private HttpURLConnection openConnection(final URL urlToOpen) throws IOException {
+        final HttpURLConnection connection = (HttpURLConnection) urlToOpen.openConnection();
+
+        connection.setRequestMethod(method.name());
+        connection.setConnectTimeout(CONNECTION_TIMEOUT);
+        headers.forEach(connection::setRequestProperty);
+
+        return connection;
     }
 
     private InputStream getInputStream(final HttpURLConnection connection) throws IOException {
@@ -312,8 +392,23 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
         }
     }
 
-    private String getEncoding(final String contentEncoding) {
-        return contentEncoding != null ? contentEncoding : headers.get(ENCODING_HEADER);
+    private String getContentCharset(final HttpURLConnection connection) {
+        final String contentType = connection.getContentType();
+
+        if (contentType != null) {
+            final String[] parts = MIME_PARAMETER_SEPARATOR_PATTERN.split(contentType);
+
+            for (int i = 1; i < parts.length; ++i) {
+                final String parameter = parts[i].trim();
+                final int index = parameter.indexOf(MIME_PARAMETER_VALUE_SEPARATOR);
+
+                if (index != -1 && MIME_PARAMETER_CHARSET.equalsIgnoreCase(parameter.substring(0, index))) {
+                    return parameter.substring(index + 1);
+                }
+            }
+        }
+
+        return CHARSET_DEFAULT;
     }
 
 }

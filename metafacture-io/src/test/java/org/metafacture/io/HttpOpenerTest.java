@@ -23,6 +23,8 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.http.HttpHeader;
+import com.github.tomakehurst.wiremock.http.HttpHeaders;
 import com.github.tomakehurst.wiremock.http.RequestMethod;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
@@ -39,13 +41,15 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import static org.mockito.Mockito.times;
-
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.zip.GZIPOutputStream;
+
+import static org.mockito.Mockito.times;
 
 /**
  * Tests for class {@link HttpOpener}.
@@ -62,6 +66,20 @@ public final class HttpOpenerTest {
 
     private static final String REQUEST_BODY = "request body";
     private static final String RESPONSE_BODY = "response bödy"; // UTF-8
+
+    private static byte[] GZIPPED_RESPONSE_BODY;
+    static {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            final GZIPOutputStream gzip = new GZIPOutputStream(out);
+            gzip.write(RESPONSE_BODY.getBytes("UTF-8"));
+            gzip.close();
+
+            GZIPPED_RESPONSE_BODY = out.toByteArray();
+        }
+        catch (final IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -226,38 +244,36 @@ public final class HttpOpenerTest {
     }
 
     @Test
-    public void shouldPerformPostRequestWithEncodingParameter() throws IOException {
-        final String encoding = "ISO-8859-1";
-        final String header = "Accept-Charset";
-        final StringValuePattern value = WireMock.equalTo(encoding);
+    public void shouldPerformPostRequestWithCharsetParameter() throws IOException {
+        shouldPerformPostRequestWithCharsetParameter(null);
+    }
 
+    @Test
+    public void shouldPerformPostRequestWithCharsetParameterAndContentTypeResponseHeader() throws IOException {
+        shouldPerformPostRequestWithCharsetParameter("expected:<response b[ö]dy> but was:<response b[Ã¶]dy>");
+    }
+
+    private void shouldPerformPostRequestWithCharsetParameter(final String expectedMessage) throws IOException {
+        final String charset = "ISO-8859-1";
+        final String header = "Accept-Charset";
+        final StringValuePattern value = WireMock.equalTo(charset);
+
+        String actualMessage;
         try {
             shouldPerformRequest(REQUEST_BODY, HttpOpener.Method.POST, (o, u) -> {
                 o.setMethod(HttpOpener.Method.POST);
                 o.setUrl(u);
-                o.setEncoding(encoding);
-            }, s -> s.withHeader(header, value), q -> q.withHeader(header, value), null);
+                o.setAcceptCharset(charset);
+            }, s -> s.withHeader(header, value), q -> q.withHeader(header, value), expectedMessage != null ?
+                r -> r.withHeader(HttpOpener.CONTENT_TYPE_HEADER, "text/plain; charset=" + charset) : null);
+
+            actualMessage = null;
         }
         catch (final ComparisonFailure e) {
-            Assert.assertEquals("expected:<response b[ö]dy> but was:<response b[Ã¶]dy>", e.getMessage());
+            actualMessage = e.getMessage();
         }
-    }
 
-    @Test
-    public void shouldPerformPostRequestWithEncodingParameterAndContentEncodingResponseHeader() throws IOException {
-        final String encoding = "ISO-8859-1";
-        final String header = "Accept-Charset";
-        final StringValuePattern value = WireMock.equalTo(encoding);
-
-        shouldPerformRequest(REQUEST_BODY, HttpOpener.Method.POST, (o, u) -> {
-                o.setMethod(HttpOpener.Method.POST);
-                o.setUrl(u);
-                o.setEncoding(encoding);
-            },
-            s -> s.withHeader(header, value),
-            q -> q.withHeader(header, value),
-            r -> r.withHeader("Content-Encoding", "UTF-8")
-        );
+        Assert.assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -276,6 +292,12 @@ public final class HttpOpenerTest {
     public void shouldPerformGetRequestWithErrorResponseAndWithoutErrorPrefixParameter() throws IOException {
         shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> o.setErrorPrefix(null),
                 null, null, WireMock.badRequest().withBody(RESPONSE_BODY), RESPONSE_BODY);
+    }
+
+    @Test
+    public void shouldPerformGetRequestWithGzippedContentEncoding() throws IOException {
+        shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> o.setAcceptEncoding("gzip"),
+                null, null, WireMock.ok().withBody(GZIPPED_RESPONSE_BODY).withHeader(HttpOpener.CONTENT_ENCODING_HEADER, "gzip"), RESPONSE_BODY);
     }
 
     private void shouldPerformRequest(final String input, final HttpOpener.Method method, final BiConsumer<HttpOpener, String> consumer, final String... headers) throws IOException {
