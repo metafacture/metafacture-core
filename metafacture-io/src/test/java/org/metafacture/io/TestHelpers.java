@@ -24,13 +24,15 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.IntSupplier;
 
 public final class TestHelpers {
 
     public static void assertFile(final ObjectReceiver<Reader> receiver, final String expected, final File file, final Consumer<FileOpener> consumer) {
-        assertReader(receiver, expected, () -> {
+        assertReader(receiver, () -> {
             final FileOpener opener = new FileOpener();
             if (consumer != null) {
                 consumer.accept(opener);
@@ -39,25 +41,18 @@ public final class TestHelpers {
             opener.setReceiver(receiver);
             opener.process(file.getAbsolutePath());
             opener.closeStream();
-
-            return 1;
-        });
+        }, expected);
     }
 
-    public static void assertReader(final ObjectReceiver<Reader> receiver, final String expected, final IntSupplier supplier) {
-        final StringBuilder sb = new StringBuilder();
+    public static void assertReader(final ObjectReceiver<Reader> receiver, final Runnable runnable, final String... expected) {
+        final List<String> actual = new ArrayList<>();
+        Mockito.doAnswer(i -> actual.add(ResourceUtil.readAll(i.getArgument(0)))).when(receiver).process(Mockito.any(Reader.class));
 
-        Mockito.doAnswer(i -> {
-            sb.delete(0, sb.length());
-            sb.append(ResourceUtil.readAll(i.getArgument(0)));
+        runnable.run();
 
-            return null;
-        }).when(receiver).process(Mockito.any(Reader.class));
-
-        final int times = supplier.getAsInt();
-
-        Mockito.verify(receiver, Mockito.times(times)).process(Mockito.any(Reader.class));
-        Assert.assertEquals(expected, sb.toString());
+        Mockito.verify(receiver, Mockito.times(expected.length)).process(Mockito.any(Reader.class));
+        Arrays.stream(expected).forEach(i -> Assert.assertEquals(i, actual.remove(0)));
+        Assert.assertEquals(0, actual.size());
     }
 
 }

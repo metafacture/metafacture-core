@@ -330,16 +330,14 @@ public final class HttpOpenerTest {
 
         WireMock.stubFor(stub);
 
-        TestHelpers.assertReader(receiver, responseBody, () -> {
+        TestHelpers.assertReader(receiver, () -> {
             opener.process(String.format(input, baseUrl));
 
             // use the opener a second time in a workflow:
             opener.process(String.format(input, baseUrl));
 
             opener.closeStream();
-
-            return 2;
-        });
+        }, responseBody, responseBody);
 
         WireMock.verify(request);
     }
