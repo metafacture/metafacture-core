@@ -295,12 +295,16 @@ public final class HttpOpener extends DefaultObjectPipe<String, ObjectReceiver<R
             final HttpURLConnection connection = requestBody != null ?
                 doOutput(urlToOpen, requestBody) : doRedirects(urlToOpen);
 
-            final InputStream inputStream = getInputStream(connection);
             final String charset = getContentCharset(connection);
 
-            getReceiver().process(new InputStreamReader(
+            try (
+                    InputStream inputStream = getInputStream(connection);
+                    Reader reader = new InputStreamReader(
                         "gzip".equalsIgnoreCase(connection.getContentEncoding()) ?
-                        new GZIPInputStream(inputStream) : inputStream, charset));
+                        new GZIPInputStream(inputStream) : inputStream, charset)
+            ) {
+                getReceiver().process(reader);
+            }
         }
         catch (final IOException e) {
             throw new MetafactureException(e);

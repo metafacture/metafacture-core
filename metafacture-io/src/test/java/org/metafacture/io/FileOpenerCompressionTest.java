@@ -93,7 +93,7 @@ public final class FileOpenerCompressionTest {
             Files.copy(in, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
 
-        FileOpenerTest.assertData(receiver, DATA, file, o -> o.setCompression(compression));
+        TestHelpers.assertFile(receiver, DATA, file, o -> o.setCompression(compression));
     }
 
 }

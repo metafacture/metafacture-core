@@ -16,15 +16,12 @@
 
 package org.metafacture.io;
 
-import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.ObjectReceiver;
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.http.HttpHeader;
-import com.github.tomakehurst.wiremock.http.HttpHeaders;
 import com.github.tomakehurst.wiremock.http.RequestMethod;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
@@ -34,10 +31,7 @@ import org.junit.Assert;
 import org.junit.ComparisonFailure;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
@@ -48,8 +42,6 @@ import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.zip.GZIPOutputStream;
-
-import static org.mockito.Mockito.times;
 
 /**
  * Tests for class {@link HttpOpener}.
@@ -91,9 +83,6 @@ public final class HttpOpenerTest {
 
     @Mock
     private ObjectReceiver<Reader> receiver;
-
-    @Captor
-    private ArgumentCaptor<Reader> processedObject;
 
     @Test
     public void shouldPerformGetRequestWithInputAsUrlByDefault() throws IOException {
@@ -341,17 +330,16 @@ public final class HttpOpenerTest {
 
         WireMock.stubFor(stub);
 
-        opener.process(String.format(input, baseUrl));
+        TestHelpers.assertReader(receiver, () -> {
+            opener.process(String.format(input, baseUrl));
 
-        // use the opener a second time in a workflow:
-        opener.process(String.format(input, baseUrl));
+            // use the opener a second time in a workflow:
+            opener.process(String.format(input, baseUrl));
 
-        opener.closeStream();
+            opener.closeStream();
+        }, responseBody, responseBody);
 
         WireMock.verify(request);
-
-        Mockito.verify(receiver, times(2)).process(processedObject.capture());
-        Assert.assertEquals(responseBody, ResourceUtil.readAll(processedObject.getValue()));
     }
 
 }
