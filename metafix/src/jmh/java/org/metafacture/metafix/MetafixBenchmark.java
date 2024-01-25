@@ -25,7 +25,7 @@ import org.metafacture.json.JsonEncoder;
 
 import org.openjdk.jmh.annotations.Param;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UncheckedIOException;
 
 public class MetafixBenchmark extends FixParseBenchmark { // checkstyle-disable-line ClassDataAbstractionCoupling
@@ -57,7 +57,7 @@ public class MetafixBenchmark extends FixParseBenchmark { // checkstyle-disable-
         try {
             metafix = new Metafix(fixFile);
         }
-        catch (final FileNotFoundException e) {
+        catch (final IOException e) {
             throw new UncheckedIOException(e);
         }
 

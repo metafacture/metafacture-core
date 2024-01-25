@@ -27,7 +27,7 @@ import org.metafacture.triples.StreamToTriples;
 import org.metafacture.triples.TripleCount;
 import org.metafacture.triples.TripleSort;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Superclass for Metafix-based analyzer modules based on triples (see {@link org.metafacture.framework.objects.Triple}).
@@ -49,7 +49,7 @@ import java.io.FileNotFoundException;
             this.fix = new Metafix(fix);
             this.fix.setRepeatedFieldsToEntities(true);
         }
-        catch (final FileNotFoundException e) {
+        catch (final IOException e) {
             throw new MetafactureException(e);
         }
         this.countBy = countBy;

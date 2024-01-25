@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -104,11 +103,11 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
         recordTransformer = null;
     }
 
-    public Metafix(final String fixDef) throws FileNotFoundException {
+    public Metafix(final String fixDef) throws IOException {
         this(fixDef, NO_VARS);
     }
 
-    public Metafix(final String fixDef, final Map<String, String> vars) throws FileNotFoundException {
+    public Metafix(final String fixDef, final Map<String, String> vars) throws IOException {
         init(vars);
 
         if (isFixFile(fixDef)) {
@@ -116,7 +115,9 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
             recordTransformer = getRecordTransformer(fixDef);
         }
         else {
-            recordTransformer = getRecordTransformer(new StringReader(fixDef));
+            try (Reader reader = new StringReader(fixDef)) {
+                recordTransformer = getRecordTransformer(reader);
+            }
         }
     }
 
@@ -475,4 +476,3 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle
 
     }
 }
-

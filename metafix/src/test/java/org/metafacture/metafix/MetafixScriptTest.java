@@ -27,7 +27,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -585,7 +585,7 @@ public class MetafixScriptTest {
 
             consumer.accept(metafix);
         }
-        catch (final FileNotFoundException e) {
+        catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }
