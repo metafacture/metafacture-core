@@ -9,6 +9,7 @@ import org.eclipse.xtext.web.servlet.XtextServlet;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -106,7 +107,9 @@ public class FixServlet extends XtextServlet {
     }
 
     private String absPathToTempFile(final String content, final String suffix) throws IOException {
-        return FixStandaloneSetup.absPathToTempFile(new StringReader(content), suffix);
+        try (Reader reader = new StringReader(content)) {
+            return FixStandaloneSetup.absPathToTempFile(reader, suffix);
+        }
     }
 
 }

@@ -26,7 +26,6 @@ import org.mockito.exceptions.base.MockitoAssertionError;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
@@ -152,7 +151,7 @@ public final class MetafixTestHelpers {
             metafix = new Metafix(fix, vars);
             metafix.setReceiver(receiver);
         }
-        catch (final FileNotFoundException e) {
+        catch (final IOException e) {
             e.printStackTrace();
         }
         return metafix;
