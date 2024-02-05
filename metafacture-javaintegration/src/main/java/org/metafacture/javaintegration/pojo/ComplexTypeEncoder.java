@@ -43,7 +43,7 @@ class ComplexTypeEncoder implements TypeEncoder {
 
     private static Object createInstance(final Class<?> clazz) {
         try {
-            return clazz.newInstance();
+            return clazz.getDeclaredConstructor().newInstance();
         }
         catch (final Exception e) { // checkstyle-disable-line IllegalCatch
             throw new MetafactureException("Can't instantiate object of class: " + clazz, e);
