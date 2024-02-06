@@ -29,10 +29,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.IOException;
 import java.io.Reader;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 
 /**
  * Reads an XML file and passes the XML events to a receiver.
@@ -56,9 +57,12 @@ public final class XmlDecoder extends DefaultObjectPipe<Reader, XmlReceiver> {
      */
     public XmlDecoder() {
         try {
-            saxReader = XMLReaderFactory.createXMLReader();
+            final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+            parserFactory.setNamespaceAware(true);
+
+            saxReader = parserFactory.newSAXParser().getXMLReader();
         }
-        catch (final SAXException e) {
+        catch (final ParserConfigurationException | SAXException e) {
             throw new MetafactureException(e);
         }
     }
