@@ -38,6 +38,6 @@ sourceSets {
     // for test TestMetamorphMacros#issue227_shouldSupportXincludeForMacros()
     // to work properly. A better solution would be to enable xinclude to load
     // resources from the classpath.
-    output.resourcesDir = sourceSets.test.java.outputDir
+    output.resourcesDir = sourceSets.test.java.classesDirectory
   }
 }

@@ -18,7 +18,7 @@ import java.util.regex.Matcher
 
 plugins {
   id 'org.ajoberstar.grgit' version '2.3.0'
-  id 'org.ec4j.editorconfig' version '0.0.3'
+  //id 'org.ec4j.editorconfig' version '0.0.3'
   id 'org.sonarqube' version '2.6.2'
   id 'io.codearte.nexus-staging' version '0.30.0'
 }
@@ -54,19 +54,19 @@ project(':metafacture-runner') {
   apply plugin: 'java'
 }
 
-editorconfig {
-  excludes = [
-    '**/*.beacon',
-    '**/*.bgzf',
-    '**/*.bz2',
-    '**/*.bzip2',
-    '**/*.gzip',
-    '**/*.xz',
-    '**/.*',
-    '**/bin',
-    'gradlew*'
-  ]
-}
+//editorconfig {
+//  excludes = [
+//    '**/*.beacon',
+//    '**/*.bgzf',
+//    '**/*.bz2',
+//    '**/*.bzip2',
+//    '**/*.gzip',
+//    '**/*.xz',
+//    '**/.*',
+//    '**/bin',
+//    'gradlew*'
+//  ]
+//}
 
 task editorconfigChecker(type: Exec, group: 'Verification') {
   executable 'misc/bin/editorconfig-checker'
@@ -79,8 +79,7 @@ subprojects {
   apply plugin: 'checkstyle'
   apply plugin: 'maven-publish'
 
-  editorconfigCheck.dependsOn(editorconfigChecker)
-  check.dependsOn(editorconfigCheck)
+  check.dependsOn(editorconfigChecker)
   check.dependsOn(javadoc)
 
   sourceCompatibility = 1.8
@@ -98,7 +97,7 @@ subprojects {
   task sourceJar(type: Jar) {
     dependsOn tasks.classes
     from sourceSets.main.allJava
-    classifier 'sources'
+    archiveClassifier = 'sources'
     description 'Creates a jar containing the source files of this project.'
     group 'build'
   }
@@ -106,7 +105,7 @@ subprojects {
   task javadocJar(type: Jar) {
     dependsOn tasks.javadoc
     from tasks.javadoc
-    classifier 'javadoc'
+    archiveClassifier = 'javadoc'
     description 'Creates a jar containing the javadoc of this project.'
     group 'build'
   }
