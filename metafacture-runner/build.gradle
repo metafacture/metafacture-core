@@ -59,7 +59,7 @@ dependencies {
   plugins project(':metamorph')
 
   // The plugins configuration needs to be on the runtime classpath:
-  runtime configurations.plugins
+  runtimeClasspath configurations.plugins
 
   // In a perfect world the slf4j binding would be a provided dependency so that
   // the user can replace it easily with a different binding. However, slf4j
@@ -146,17 +146,6 @@ distTar {
 
 distZip {
   classifier = 'dist'
-}
-
-// Fix for incomplete extensions on the signature file for the tar.gz archive.
-// The signature file contains only the last file extension (gz). The tar-part
-// is missing. This doLast action fixes this:
-tasks.signArchives {
-  doLast {
-    signatures.matching({ it.type == 'gz.asc' }).all {
-      it.type = 'tar.gz.asc'
-    }
-  }
 }
 
 task('fluxCommands', type: JavaExec, description: 'Print available Flux commands') {

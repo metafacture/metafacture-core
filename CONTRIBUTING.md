@@ -217,6 +217,6 @@ Upload archives to sonatype (where they can be released to Maven Central)
    ```
 1. Let the release be built, signed and uploaded:
    ```
-   ./gradlew uploadArchives
+   ./gradlew publishAllPublicationsToMavenRepository
    ```
 1. Finally, go to oss.sonatype.org , check the `Staging Repositories` when it's finished, and release it by clicking `close`

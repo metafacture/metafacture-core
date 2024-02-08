@@ -77,10 +77,10 @@ $ git clone https://github.com/metafacture/metafacture-core.git
 $ cd metafacture-core
 ```
 
-2. Invoke the Gradle wrapper to download Gradle and build metafacture-core (on Windows call `gradlew.bat install` instead):
+2. Invoke the Gradle wrapper to download Gradle and build metafacture-core (on Windows call `gradlew.bat publishToMavenLocal` instead):
 
 ```bash
-$ ./gradlew install
+$ ./gradlew publishToMavenLocal
 ```
 
 Besides the resulting distribution in `metafacture-core/metafacture-runner/build/distributions/` this also provides builds in your local maven repository.
