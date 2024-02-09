@@ -53,16 +53,16 @@ import java.util.regex.Pattern;
  *
  */
 @Description("Emits the literals which are received as triples such " +
-         "that the name and value become the predicate and the object " +
-         "of the triple. The record id containing the literal becomes " +
-         "the subject. " +
-         "If 'redirect' is true, the value of the subject is determined " +
-         "by using either the value of a literal named '_id', or for " +
-         "individual literals by prefixing their name with '{to:ID}'. " +
-         "Set 'recordPredicate' to encode a complete record in one triple. " +
-         "The value of 'recordPredicate' is used as the predicate of the " +
-         "triple. If 'recordPredicate' is set, no {to:ID}NAME-style " +
-         "redirects are possible.")
+        "that the name and value become the predicate and the object " +
+        "of the triple. The record id containing the literal becomes " +
+        "the subject. " +
+        "If 'redirect' is true, the value of the subject is determined " +
+        "by using either the value of a literal named '_id', or for " +
+        "individual literals by prefixing their name with '{to:ID}'. " +
+        "Set 'recordPredicate' to encode a complete record in one triple. " +
+        "The value of 'recordPredicate' is used as the predicate of the " +
+        "triple. If 'recordPredicate' is set, no {to:ID}NAME-style " +
+        "redirects are possible.")
 @In(StreamReceiver.class)
 @Out(Triple.class)
 @FluxCommand("stream-to-triples")

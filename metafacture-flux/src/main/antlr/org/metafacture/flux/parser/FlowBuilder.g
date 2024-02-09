@@ -48,12 +48,12 @@ flux returns [FluxProgramm retValue = flux]
   (
     flow
         {
-         flux.nextFlow();
+          flux.nextFlow();
         }
   )*
 
   {
-   flux.compile();
+    flux.compile();
   }
   ;
 
@@ -61,24 +61,24 @@ flow
   :
   (
     StdIn
-         {
-          flux.setStdInStart();
-         }
+          {
+            flux.setStdInStart();
+          }
     | e=exp
-           {
+          {
             flux.setStringStart($e.value);
-           }
+          }
     | ws=Wormhole
-                 {
-                  flux.setWormholeStart($ws.text);
-                 }
+          {
+            flux.setWormholeStart($ws.text);
+          }
   )
   flowtail
   (
     we=Wormhole
-               {
-                flux.setWormholeEnd($we.text);
-               }
+          {
+            flux.setWormholeEnd($we.text);
+          }
   )?
   ;
 
@@ -92,15 +92,15 @@ varDef
   ^(ASSIGN name=Identifier e=exp?)
 
   {
-   vars.put($name.text, $e.value);
+    vars.put($name.text, $e.value);
   }
   |
   ^(DEFAULT name=Identifier e=exp?)
 
   {
-   if (!vars.containsKey($name.text)) {
-    vars.put($name.text, $e.value);
-   }
+    if (!vars.containsKey($name.text)) {
+      vars.put($name.text, $e.value);
+    }
   }
   ;
 
@@ -108,23 +108,23 @@ tee
   :
   ^(
     TEE
-       {
+      {
         flux.startTee();
         //System.out.println("start tee");
-       }
+      }
     (
       ^(SUBFLOW flowtail)
 
       {
-       flux.endSubFlow();
-       // System.out.println("end subflow");
+        flux.endSubFlow();
+        // System.out.println("end subflow");
       }
     )+
-   )
+  )
 
   {
-   flux.endTee();
-   //System.out.println("end tee");
+    flux.endTee();
+    //System.out.println("end tee");
   }
   ;
 
@@ -139,21 +139,21 @@ flowtail
 exp returns [String value]
   :
   s=StringLiteral
-                 {
+                {
                   $value = $s.text;
-                 }
+                }
   | id=Identifier
-                 {
+                {
                   $value = vars.get($id.text);
                   if ($value == null) {
                     throw new FluxParseException("Variable " + $id.text + " not assigned.");
                   }
-                 }
+                }
   |
   ^('+' e1=exp e2=exp)
 
   {
-   $value = $e1.value + $e2.value;
+    $value = $e1.value + $e2.value;
   }
   ;
 
@@ -167,26 +167,26 @@ final List<Object> cArgs = new ArrayList<Object>();
     name=QualifiedName
     (
       e=exp
-           {
+          {
             cArgs.add($e.value);
-           }
+          }
     )?
     (
       VarRef
-            {
-             cArgs.add(Collections.unmodifiableMap(vars));
-            }
+          {
+            cArgs.add(Collections.unmodifiableMap(vars));
+          }
     )?
     (
       a=arg
-           {
+          {
             namedArgs.put($a.key, $a.value);
-           }
+          }
     )*
-   )
+  )
 
   {
-   flux.addElement($name.text, namedArgs, cArgs);
+    flux.addElement($name.text, namedArgs, cArgs);
   }
   ;
 
@@ -195,7 +195,7 @@ arg returns [String key, String value]
   ^(ARG k=Identifier e=exp)
 
   {
-   $key = $k.text;
-   $value = $e.value;
+    $key = $k.text;
+    $value = $e.value;
   }
   ;

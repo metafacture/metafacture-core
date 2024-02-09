@@ -114,7 +114,7 @@ tee
       ^(
         TEE
         ^(SUBFLOW flowtail)+
-       )
+      )
   ;
 catch [RecognitionException re] {
     throw re;
@@ -207,9 +207,9 @@ Identifier
 Wormhole
   :
   '@' id=Identifier
-                   {
+                  {
                     setText(id.getText());
-                   }
+                  }
   ;
 
 StringLiteral
@@ -255,9 +255,9 @@ OctalEscape[StringBuilder stringBuilder]
   | digit3=OctalDigit
   ) {
     String octalString =
-     ( digit1 != null ? digit1.getText() : "") +
-     ( digit2 != null ? digit2.getText() : "") +
-     digit3.getText();
+      ( digit1 != null ? digit1.getText() : "") +
+      ( digit2 != null ? digit2.getText() : "") +
+      digit3.getText();
     stringBuilder.appendCodePoint(Integer.valueOf(octalString, 8));
   }
   ;
@@ -320,7 +320,7 @@ LINE_COMMENT
   ~(
     '\n'
     | '\r'
-   )*
+  )*
   (
     '\r'? '\n'
     | EOF
@@ -342,6 +342,6 @@ WS
   )
 
   {
-   $channel = HIDDEN;
+    $channel = HIDDEN;
   }
   ;

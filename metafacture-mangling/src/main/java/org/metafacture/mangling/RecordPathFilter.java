@@ -24,7 +24,7 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 
 /**
-  Splits a stream into records based on entity path.
+ * Splits a stream into records based on entity path.
  */
 @Description("Splits a stream into records based on entity path")
 @In(StreamReceiver.class)

@@ -68,12 +68,18 @@ editorconfig {
   ]
 }
 
+task editorconfigChecker(type: Exec, group: 'Verification') {
+  executable 'misc/bin/editorconfig-checker'
+  args('-exclude', '/\\.|/bin/|\\.beacon$|\\.txt\\.|^LICENSE$|^\\.project$|^gradlew.*')
+}
+
 subprojects {
   apply plugin: 'signing'
   apply plugin: 'jacoco'
   apply plugin: 'checkstyle'
   apply plugin: 'maven-publish'
 
+  editorconfigCheck.dependsOn(editorconfigChecker)
   check.dependsOn(editorconfigCheck)
   check.dependsOn(javadoc)
 

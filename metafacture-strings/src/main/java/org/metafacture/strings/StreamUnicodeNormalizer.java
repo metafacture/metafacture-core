@@ -31,7 +31,7 @@ import java.text.Normalizer;
  * characters and composed characters. There are four different forms of
  * conversion which can be selected using
  * {@link #setNormalizationForm(Normalizer.Form)}.
-   <p>
+ * <p>
  * In the default configuration only literal values are
  * converted. The {@link #setNormalizeIds(boolean)},
  * {@link #setNormalizeKeys(boolean)} and {@link #setNormalizeValues(boolean)}

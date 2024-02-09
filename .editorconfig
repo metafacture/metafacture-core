@@ -28,7 +28,7 @@ trim_trailing_whitespace = true
 end_of_line = crlf
 trim_trailing_whitespace = false
 
-[*.{gradle,yml}]
+[*.{g,gradle,json,xml,xsd,yml}]
 indent_size = 2
 
 [metafacture-io/src/test/resources/org/metafacture/io/compressed.txt]

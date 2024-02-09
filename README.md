@@ -21,19 +21,19 @@ If you are only interested in running Flux scripts without doing any Java progra
 1. Download the latest distribution package from the [release page](https://github.com/metafacture/metafacture-core/releases). Make sure that you do download a distribution package and *not* a source code package (the file name should include `*-dist*`).
 
 2. Extract the downloaded archive:
-   ```bash
-   $ tar xzf metafacture-core-$VERSION-dist.tar.gz
-   ```
-   This will create a new directory containing a ready-to-use Metafacture distribution.
+    ```bash
+    $ tar xzf metafacture-core-$VERSION-dist.tar.gz
+    ```
+    This will create a new directory containing a ready-to-use Metafacture distribution.
 3. Change into the newly created directory:
-   ```bash
-   $ cd metafacture-core-$VERSION
-   ```
+    ```bash
+    $ cd metafacture-core-$VERSION
+    ```
 4. Run one of the example scripts:
-   ```bash
-   $ ./flux.sh examples/read/marc21/read-marc21.flux
-   ```
-   This example will print a number of MARC 21 records on standard output.
+    ```bash
+    $ ./flux.sh examples/read/marc21/read-marc21.flux
+    ```
+    This example will print a number of MARC 21 records on standard output.
 
 The `examples` folder contains many more examples which provide a good starting point for learning Metafacture. If you have any questions please join our [mailing list](http://lists.dnb.de/mailman/listinfo/metafacture) or use our issue-based discussion forum over at [metafacture-documentation](https://github.com/metafacture/metafacture-documentation).
 

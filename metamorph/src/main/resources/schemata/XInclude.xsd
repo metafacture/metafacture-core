@@ -1,10 +1,10 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xi="http://www.w3.org/2001/XInclude" targetNamespace="http://www.w3.org/2001/XInclude" finalDefault="extension">
   <xs:annotation>
-   <xs:documentation>
-    Not normative, but may be useful.
-    See the REC http://www.w3.org/TR/XInclude for definitive
-    information about this namespace.
-   </xs:documentation>
+    <xs:documentation>
+      Not normative, but may be useful.
+      See the REC http://www.w3.org/TR/XInclude for definitive
+      information about this namespace.
+    </xs:documentation>
   </xs:annotation>
 
   <xs:element name="include" type="xi:includeType"/>

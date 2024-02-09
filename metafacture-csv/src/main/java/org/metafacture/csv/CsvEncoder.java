@@ -138,9 +138,7 @@ public class CsvEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
     private void initialize() {
         writer = new StringWriter();
         final String emptyLineEnd = "";
-        csvWriter = new CSVWriter(writer, separator,
-                                  noQuotes ? CSVWriter.NO_QUOTE_CHARACTER : CSVWriter.DEFAULT_QUOTE_CHARACTER,
-                                  CSVWriter.DEFAULT_ESCAPE_CHARACTER, emptyLineEnd);
+        csvWriter = new CSVWriter(writer, separator, noQuotes ? CSVWriter.NO_QUOTE_CHARACTER : CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, emptyLineEnd);
     }
 
     private String[] arrayOf(final List<String> list) {
