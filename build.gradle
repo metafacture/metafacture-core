@@ -30,6 +30,7 @@ subprojects {
       'commons_compress': '1.21',
       'guava': '29.0-jre',
       'jackson_databind': '2.15.1',
+      'jdk': '8',
       'junit': '4.12',
       'mockito': '2.27.0',
       'slf4j': '1.7.36',
@@ -82,8 +83,17 @@ subprojects {
   check.dependsOn(editorconfigChecker)
   check.dependsOn(javadoc)
 
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
+  java {
+    toolchain {
+      languageVersion = JavaLanguageVersion.of(versions.jdk)
+    }
+  }
+
+  tasks.withType(JavaExec) {
+    javaLauncher = javaToolchains.launcherFor {
+      languageVersion = java.toolchain.languageVersion
+    }
+  }
 
   tasks.withType(JavaCompile) {
     'all -processing -rawtypes -serial'.split().each {
