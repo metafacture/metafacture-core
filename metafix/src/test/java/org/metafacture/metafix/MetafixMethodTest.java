@@ -2310,7 +2310,7 @@ public class MetafixMethodTest {
 
     @Test
     public void copyFieldToSubfieldOfArrayOfStringsWithIndexImplicitAppend() {
-        MetafixTestHelpers.assertProcessException(IndexOutOfBoundsException.class, "Index 0 out of bounds for length 0", () ->
+        MetafixTestHelpers.assertProcessException(IndexOutOfBoundsException.class, "Index: 0, Size: 0", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "set_array('test[]')",
                     "copy_field('key', 'test[].1')"
