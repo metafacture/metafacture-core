@@ -221,13 +221,6 @@ subprojects {
     }
     repositories {
       maven {
-        name = 'localEmbedded'
-        // run generated gradle task `./gradlew
-        // publishAllPublicationsToLocalEmbeddedRepository`
-        // to publish all subprojects into the same local embedded repo:
-        url = "file://${rootDir}/build/repo"
-      }
-      maven {
         name = "GitHubPackages"
         url = "https://maven.pkg.github.com/metafacture/metafacture-core"
         credentials {
