@@ -39,6 +39,7 @@ subprojects {
       'equalsverifier': '3.8.2',
       'guava':          '29.0-jre',
       'jackson':        '2.13.3',
+      'jdk':            '8',
       'jena':           '3.17.0',
       'jetty':          '9.4.14.v20181114',
       'jquery':         '3.3.1-1',
@@ -66,9 +67,6 @@ subprojects {
 
   check.dependsOn(javadoc)
 
-  sourceCompatibility = '1.8'
-  targetCompatibility = '1.8'
-
   repositories {
     mavenCentral()
     maven githubPackage.invoke("metafacture")
@@ -84,6 +82,18 @@ subprojects {
 
   checkstyle {
     toolVersion '8.44'
+  }
+
+  java {
+    toolchain {
+      languageVersion = JavaLanguageVersion.of(versions.jdk)
+    }
+  }
+
+  tasks.withType(JavaExec) {
+    javaLauncher = javaToolchains.launcherFor {
+      languageVersion = java.toolchain.languageVersion
+    }
   }
 
   tasks.withType(JavaCompile) {
