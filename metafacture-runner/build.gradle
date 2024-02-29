@@ -19,6 +19,7 @@ ext.mavenName = 'Metafacture Runner'
 description = 'CLI application for data processing with Flux and Metamorph'
 
 apply plugin: 'distribution'
+apply plugin: 'signing'
 
 configurations {
   plugins {
@@ -142,6 +143,10 @@ distTar {
   compression = Compression.GZIP
   archiveClassifier = 'dist'
   archiveExtension = 'tar.gz'
+}
+
+signing {
+  sign configurations.archives
 }
 
 distZip {
