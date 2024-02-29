@@ -27,7 +27,7 @@ b) Download
 
 Download the latest distribution package from the [release page](https://github.com/metafacture/metafacture-core/releases). Make sure that you do download a distribution package and *not* a source code package (the file name should include `*-dist*`).
 
-Regardless if you've build or downloaded, go on with:
+Regardless if you've built or downloaded, go on with:
 
 1. Extract the archive:
     ```bash
