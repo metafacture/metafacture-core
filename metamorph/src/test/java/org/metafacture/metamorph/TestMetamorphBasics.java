@@ -655,33 +655,33 @@ public final class TestMetamorphBasics {
     public void shouldHandleUseCaseSandboxElseNestedEntities() {
         assertMorph(receiver,
                 "<rules>" +
-                  "<entity name='85640' flushWith='85640.3' reset='true'>" +
-                    "<data source='85640.u' name='u'>" +
-                      "<contains string='hdl.handle.net/2003/' />" +
-                      "<replace pattern='http://' with='https://' />" +
-                    "</data>" +
-                    "<data source='85640.u' name='u'>" +
-                      "<contains string='doi.org/10.17877/' />" +
-                      "<replace pattern='http://' with='https://' />" +
-                      "<replace pattern='dx.doi.org' with='doi.org' />" +
-                    "</data>" +
-                    "<data source='85640.x' name='x' />" +
-                    "<data source='85640.3' name='3' />" +
-                  "</entity>" +
-                  "<entity name='8564 ' flushWith='8564 .3' reset='true'>" +
-                    "<data source='8564 .u' name='u'>" +
-                      "<contains string='hdl.handle.net/2003/' />" +
-                      "<replace pattern='http://' with='https://' />" +
-                    "</data>" +
-                    "<data source='8564 .u' name='u'>" +
-                      "<contains string='doi.org/10.17877/' />" +
-                      "<replace pattern='http://' with='https://' />" +
-                      "<replace pattern='dx.doi.org' with='doi.org' />" +
-                    "</data>" +
-                    "<data source='8564 .x' name='x' />" +
-                    "<data source='8564 .3' name='3' />" +
-                  "</entity>" +
-                  "<data source='_elseNested' />" +
+                    "<entity name='85640' flushWith='85640.3' reset='true'>" +
+                        "<data source='85640.u' name='u'>" +
+                            "<contains string='hdl.handle.net/2003/' />" +
+                            "<replace pattern='http://' with='https://' />" +
+                        "</data>" +
+                        "<data source='85640.u' name='u'>" +
+                            "<contains string='doi.org/10.17877/' />" +
+                            "<replace pattern='http://' with='https://' />" +
+                            "<replace pattern='dx.doi.org' with='doi.org' />" +
+                        "</data>" +
+                        "<data source='85640.x' name='x' />" +
+                        "<data source='85640.3' name='3' />" +
+                    "</entity>" +
+                    "<entity name='8564 ' flushWith='8564 .3' reset='true'>" +
+                        "<data source='8564 .u' name='u'>" +
+                            "<contains string='hdl.handle.net/2003/' />" +
+                            "<replace pattern='http://' with='https://' />" +
+                        "</data>" +
+                        "<data source='8564 .u' name='u'>" +
+                            "<contains string='doi.org/10.17877/' />" +
+                            "<replace pattern='http://' with='https://' />" +
+                            "<replace pattern='dx.doi.org' with='doi.org' />" +
+                        "</data>" +
+                        "<data source='8564 .x' name='x' />" +
+                        "<data source='8564 .3' name='3' />" +
+                    "</entity>" +
+                    "<data source='_elseNested' />" +
                 "</rules>",
                 i -> {
                     i.startRecord("ID1687931");

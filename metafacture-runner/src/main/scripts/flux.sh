@@ -95,14 +95,14 @@ fi
 # script terminates at the first line which appears not to be
 # a variable definition:
 vars_to_script=$( cat <<'EOF'
-    s/^[^=]*$//g ;                        # is this not a variable definition?
-                                          # then jump to quit
+    s/^[^=]*$//g ;                          # is this not a variable definition?
+                                            # then jump to quit
     t quit
-    s/\\/\\\\/g ;                         # otherwise escape backslashes,
-    s/!/\\!/g ;                           # escape exclamation marks,
-    s/='(.*)'$/=\1/ ;                     # remove quotes,
-    s/^([^=]+)=(.*)$/s!\\$\1!\2!g ; /g ;  # convert to sed regexp command
-                                          # and continue with next line
+    s/\\/\\\\/g ;                           # otherwise escape backslashes,
+    s/!/\\!/g ;                             # escape exclamation marks,
+    s/='(.*)'$/=\1/ ;                       # remove quotes,
+    s/^([^=]+)=(.*)$/s!\\$\1!\2!g ; /g ;    # convert to sed regexp command
+                                            # and continue with next line
     b
     : quit
     q

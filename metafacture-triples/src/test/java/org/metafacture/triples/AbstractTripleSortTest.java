@@ -30,7 +30,7 @@ import org.metafacture.framework.objects.Triple;
  *
  * @author Christoph Böhme
  */
- public final class AbstractTripleSortTest {
+public final class AbstractTripleSortTest {
 
     private static final Triple T1 = new Triple("s", "p", "o");
 

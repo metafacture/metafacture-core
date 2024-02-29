@@ -39,39 +39,39 @@ import org.mockito.MockitoAnnotations;
  */
 public final class ObjectThreaderTest {
 
-	@Mock
-	private ObjectReceiver<String> receiverThread1;
-	@Mock
-	private ObjectReceiver<String> receiverThread2;
+    @Mock
+    private ObjectReceiver<String> receiverThread1;
+    @Mock
+    private ObjectReceiver<String> receiverThread2;
 
-	private final ObjectThreader<String> objectThreader = new ObjectThreader<>();
-	private static final int ACTIVE_THREADS_AT_BEGINNING = Thread.getAllStackTraces().keySet().size();
+    private final ObjectThreader<String> objectThreader = new ObjectThreader<>();
+    private static final int ACTIVE_THREADS_AT_BEGINNING = Thread.getAllStackTraces().keySet().size();
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		objectThreader//
-				.addReceiver(receiverThread1)//
-				.addReceiver(receiverThread2);
-	}
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        objectThreader//
+                .addReceiver(receiverThread1)//
+                .addReceiver(receiverThread2);
+    }
 
-	@Test
-	public void shouldSplitAllObjectsToAllThreadedDownStreamReceivers() throws InterruptedException {
-		objectThreader.process("a");
-		objectThreader.process("b");
-		objectThreader.process("a");
-		objectThreader.process("c");
-		// check if two more threads were indeed created
-		assertThat(Thread.getAllStackTraces().keySet().size() - ACTIVE_THREADS_AT_BEGINNING).isEqualTo(2);
-		objectThreader.closeStream();
-		// verify thread 1
-		verify(receiverThread1, atLeast(2)).process("a");
-		verify(receiverThread1, atMost(0)).process("b");
-		verify(receiverThread1, atMost(0)).process("c");
-		// verify thread 2
-		verify(receiverThread2, atMost(0)).process("a");
-		verify(receiverThread2, atLeast(1)).process("b");
-		verify(receiverThread2, atLeast(1)).process("c");
-	}
+    @Test
+    public void shouldSplitAllObjectsToAllThreadedDownStreamReceivers() throws InterruptedException {
+        objectThreader.process("a");
+        objectThreader.process("b");
+        objectThreader.process("a");
+        objectThreader.process("c");
+        // check if two more threads were indeed created
+        assertThat(Thread.getAllStackTraces().keySet().size() - ACTIVE_THREADS_AT_BEGINNING).isEqualTo(2);
+        objectThreader.closeStream();
+        // verify thread 1
+        verify(receiverThread1, atLeast(2)).process("a");
+        verify(receiverThread1, atMost(0)).process("b");
+        verify(receiverThread1, atMost(0)).process("c");
+        // verify thread 2
+        verify(receiverThread2, atMost(0)).process("a");
+        verify(receiverThread2, atLeast(1)).process("b");
+        verify(receiverThread2, atLeast(1)).process("c");
+    }
 
 }

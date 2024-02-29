@@ -32,7 +32,6 @@ tmp
 .classpath
 .project
 .settings/
-bin/
 
 # Ignore IntelliJ project files:
 *.ipr

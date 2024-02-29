@@ -19,6 +19,7 @@ ext.mavenName = 'Metafacture Runner'
 description = 'CLI application for data processing with Flux and Metamorph'
 
 apply plugin: 'distribution'
+apply plugin: 'signing'
 
 configurations {
   plugins {
@@ -27,6 +28,9 @@ configurations {
   provided {
     description = 'provided libraries'
   }
+
+  // The plugins configuration needs to be on the runtime classpath:
+  runtimeClasspath.extendsFrom plugins
 }
 
 dependencies {
@@ -57,9 +61,6 @@ dependencies {
   plugins project(':metafacture-html')
   plugins project(':metafacture-yaml')
   plugins project(':metamorph')
-
-  // The plugins configuration needs to be on the runtime classpath:
-  runtime configurations.plugins
 
   // In a perfect world the slf4j binding would be a provided dependency so that
   // the user can replace it easily with a different binding. However, slf4j
@@ -117,7 +118,7 @@ distributions {
         from configurations.provided
       }
       from('src/main/scripts') {
-        filter(ReplaceTokens, tokens: [jarfile: 'lib/' + jar.archiveName ])
+        filter(ReplaceTokens, tokens: [jarfile: 'lib/' + jar.archiveFileName.get() ])
         filteringCharset = 'UTF-8'
         fileMode = 0755
       }
@@ -140,26 +141,19 @@ def metamorph() {
 
 distTar {
   compression = Compression.GZIP
-  classifier = 'dist'
+  archiveClassifier = 'dist'
   archiveExtension = 'tar.gz'
 }
 
-distZip {
-  classifier = 'dist'
+signing {
+  sign configurations.archives
 }
 
-// Fix for incomplete extensions on the signature file for the tar.gz archive.
-// The signature file contains only the last file extension (gz). The tar-part
-// is missing. This doLast action fixes this:
-tasks.signArchives {
-  doLast {
-    signatures.matching({ it.type == 'gz.asc' }).all {
-      it.type = 'tar.gz.asc'
-    }
-  }
+distZip {
+  archiveClassifier = 'dist'
 }
 
 task('fluxCommands', type: JavaExec, description: 'Print available Flux commands') {
   classpath = sourceSets.main.runtimeClasspath
-  main = 'org.metafacture.flux.HelpPrinter'
+  mainClass = 'org.metafacture.flux.HelpPrinter'
 }

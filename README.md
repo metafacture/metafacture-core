@@ -17,23 +17,32 @@ You can either use Metafacture as a stand-alone application or include it as a J
 ## Metafacture as a stand-alone application
 
 If you are only interested in running Flux scripts without doing any Java programming this is the way to go. The instructions assume that you are using a \*nix-like shell. [See more information in the wiki page about Flux](https://github.com/metafacture/metafacture-core/wiki/Flux-user-guide).
+You can `build` the stand-alone application yourself or `download` it.
 
-1. Download the latest distribution package from the [release page](https://github.com/metafacture/metafacture-core/releases). Make sure that you do download a distribution package and *not* a source code package (the file name should include `*-dist*`).
+a) Build
 
-2. Extract the downloaded archive:
-   ```bash
-   $ tar xzf metafacture-core-$VERSION-dist.tar.gz
-   ```
-   This will create a new directory containing a ready-to-use Metafacture distribution.
-3. Change into the newly created directory:
-   ```bash
-   $ cd metafacture-core-$VERSION
-   ```
-4. Run one of the example scripts:
-   ```bash
-   $ ./flux.sh examples/read/marc21/read-marc21.flux
-   ```
-   This example will print a number of MARC 21 records on standard output.
+Proceed as described in [Building metafacture-core from source](#build_from_source).
+
+b) Download
+
+Download the latest distribution package from the [release page](https://github.com/metafacture/metafacture-core/releases). Make sure that you do download a distribution package and *not* a source code package (the file name should include `*-dist*`).
+
+Regardless if you've built or downloaded, go on with:
+
+1. Extract the archive:
+    ```bash
+    $ tar xzf metafacture-core-$VERSION-dist.tar.gz
+    ```
+    This will create a new directory containing a ready-to-use Metafacture distribution.
+2. Change into the newly created directory:
+    ```bash
+    $ cd metafacture-core-$VERSION
+    ```
+3. Run one of the example scripts:
+    ```bash
+    $ ./flux.sh examples/read/marc21/read-marc21.flux
+    ```
+    This example will print a number of MARC 21 records on standard output.
 
 The `examples` folder contains many more examples which provide a good starting point for learning Metafacture. If you have any questions please join our [mailing list](http://lists.dnb.de/mailman/listinfo/metafacture) or use our issue-based discussion forum over at [metafacture-documentation](https://github.com/metafacture/metafacture-documentation).
 
@@ -66,25 +75,27 @@ Occasionally, we publish snapshot builds on [Sonatype OSS Repository](https://os
 TODO: Link to getting started tutorial
 -->
 
+
+<a name="build_from_source"></a>
 # Building metafacture-core from source
 
 Building metafacture-core from source is easy. All you need is git and JDK 8:
 
 1. Clone the metafacture-core repository and change into the directory:
+    ```bash
+    $ git clone https://github.com/metafacture/metafacture-core.git
+    $ cd metafacture-core
+    ```
 
-```bash
-$ git clone https://github.com/metafacture/metafacture-core.git
-$ cd metafacture-core
-```
+2. Invoke the Gradle wrapper to download Gradle and build metafacture-core (on Windows call `gradlew.bat publishToMavenLocal` instead) and publish these to your local Maven repository:
+    ```bash
+    $ ./gradlew publishToMavenLocal
+    ```
 
-2. Invoke the Gradle wrapper to download Gradle and build metafacture-core (on Windows call `gradlew.bat install` instead):
-
-```bash
-$ ./gradlew install
-```
-
-Besides the resulting distribution in `metafacture-core/metafacture-runner/build/distributions/` this also provides builds in your local maven repository.
-
+3. Create a distribution if you need one. The resulting distribution can be found in `metafacture-core/metafacture-runner/build/distributions/`:
+    ```bash
+    $ ./gradlew assembleDist
+    ```
 
 See [Code Quality and Style](https://github.com/metafacture/metafacture-core/wiki/Code-Quality-and-Style) on the wiki for further information on the sources.
 

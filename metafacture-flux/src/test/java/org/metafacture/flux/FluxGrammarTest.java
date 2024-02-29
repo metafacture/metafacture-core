@@ -121,7 +121,7 @@ public final class FluxGrammarTest {
         try {
             FluxCompiler.compile(createInputStream(script), emptyMap());
         } catch (ReflectionException re) {
-             assertEquals("Class not found: prin", re.getMessage());
+            assertEquals("Class not found: prin", re.getMessage());
             throw re;
         }
     }

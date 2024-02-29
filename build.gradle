@@ -18,9 +18,9 @@ import java.util.regex.Matcher
 
 plugins {
   id 'org.ajoberstar.grgit' version '2.3.0'
-  id 'org.ec4j.editorconfig' version '0.0.3'
+  //id 'org.ec4j.editorconfig' version '0.0.3'
   id 'org.sonarqube' version '2.6.2'
-  id 'io.codearte.nexus-staging' version '0.11.0'
+  id 'io.github.gradle-nexus.publish-plugin' version '1.3.0'
 }
 
 subprojects {
@@ -30,6 +30,7 @@ subprojects {
       'commons_compress': '1.21',
       'guava': '29.0-jre',
       'jackson_databind': '2.15.1',
+      'jdk': '8',
       'junit': '4.12',
       'mockito': '2.27.0',
       'slf4j': '1.7.36',
@@ -54,92 +55,45 @@ project(':metafacture-runner') {
   apply plugin: 'java'
 }
 
-editorconfig {
-  excludes = [
-    '**/*.beacon',
-    '**/*.bgzf',
-    '**/*.bz2',
-    '**/*.bzip2',
-    '**/*.gzip',
-    '**/*.xz',
-    '**/.*',
-    '**/bin',
-    'gradlew*'
-  ]
-}
+//editorconfig {
+//  excludes = [
+//    '**/*.beacon',
+//    '**/*.bgzf',
+//    '**/*.bz2',
+//    '**/*.bzip2',
+//    '**/*.gzip',
+//    '**/*.xz',
+//    '**/.*',
+//    '**/bin',
+//    'gradlew*'
+//  ]
+//}
 
-def mavenProjectDescription = { proj ->
-  { it ->
-    name = proj.mavenName ?: proj.name
-    if (proj.description) {
-      description = proj.description
-    }
-    url = 'https://github.com/metafacture/metafacture-core'
-    inceptionYear = '2011'
-    developers {
-      developer {
-        id = 'mgeipel'
-        name = 'Markus M. Geipel'
-        email = 'm.geipel@dnb.de'
-        url = 'https://github.com/mgeipel'
-        roles = ['architect', 'developer']
-      }
-      developer {
-        id = 'cboehme'
-        name = 'Christoph Böhme'
-        email = 'c.boehme@dnb.de'
-        url = 'https://github.com/cboehme'
-        roles = ['architect', 'developer']
-      }
-    }
-    organization {
-      name = 'Metafacture'
-      url = 'https://github.com/metafacture'
-    }
-    licenses {
-      license {
-        name = 'The Apache License, Version 2.0'
-        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-      }
-    }
-    mailingLists {
-      mailingList {
-        name = 'Metafacture Mailing List'
-        post = 'metafacture@lists.dnb.de'
-        subscribe = 'metafacture-subscribe@lists.dnb.de'
-        unsubscribe = 'metafacture-unsubscribe@lists.dnb.de'
-        archive = 'http://lists.dnb.de/pipermail/metafacture/'
-      }
-    }
-    scm {
-      connection = 'scm:git:https://github.com/metafacture/metafacture-core.git'
-      developerConnection = 'scm:git:https://github.com/metafacture/metafacture-core.git'
-      url = 'https://github.com/metafacture/metafacture-core'
-      tag = rootProject.scmInfo.tag ?: 'HEAD'
-    }
-    issueManagement {
-      system = 'Github'
-      url = 'https://github.com/metafacture/metafacture-core/issues'
-    }
-    ciManagement {
-      system = 'Github Actions'
-      url = 'https://github.com/metafacture/metafacture-core/actions'
-    }
-  }
+task editorconfigChecker(type: Exec, group: 'Verification') {
+  executable 'misc/bin/editorconfig-checker'
+  args('-exclude', '/\\.|/bin/|\\.beacon$|\\.txt\\.|^LICENSE$|^\\.project$|^gradlew.*')
 }
 
 subprojects {
   apply plugin: 'signing'
-  apply plugin: 'maven'
   apply plugin: 'jacoco'
   apply plugin: 'checkstyle'
   apply plugin: 'maven-publish'
 
-  check.dependsOn(editorconfigCheck)
+  check.dependsOn(editorconfigChecker)
   check.dependsOn(javadoc)
 
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
+  java {
+    toolchain {
+      languageVersion = JavaLanguageVersion.of(versions.jdk)
+    }
+  }
+
+  tasks.withType(JavaExec) {
+    javaLauncher = javaToolchains.launcherFor {
+      languageVersion = java.toolchain.languageVersion
+    }
+  }
 
   tasks.withType(JavaCompile) {
     'all -processing -rawtypes -serial'.split().each {
@@ -153,7 +107,7 @@ subprojects {
   task sourceJar(type: Jar) {
     dependsOn tasks.classes
     from sourceSets.main.allJava
-    classifier 'sources'
+    archiveClassifier = 'sources'
     description 'Creates a jar containing the source files of this project.'
     group 'build'
   }
@@ -161,7 +115,7 @@ subprojects {
   task javadocJar(type: Jar) {
     dependsOn tasks.javadoc
     from tasks.javadoc
-    classifier 'javadoc'
+    archiveClassifier = 'javadoc'
     description 'Creates a jar containing the javadoc of this project.'
     group 'build'
   }
@@ -172,11 +126,6 @@ subprojects {
     options {
       addBooleanOption 'Xwerror', true
     }
-  }
-
-  artifacts {
-    archives sourceJar
-    archives javadocJar
   }
 
   checkstyle {
@@ -193,13 +142,6 @@ subprojects {
     }
   }
 
-  signing {
-    required {
-      scmInfo.isRelease() && gradle.taskGraph.hasTask(tasks.uploadArchives)
-    }
-    sign configurations.archives
-  }
-
   repositories {
     mavenLocal()
     mavenCentral()
@@ -209,21 +151,72 @@ subprojects {
     publications {
       mavenArtifacts(MavenPublication) {
         from components.java
+
         afterEvaluate {
-          pom mavenProjectDescription(project)
           groupId = project.group
           artifactId = project.name
+
+          pom {
+            name = project.mavenName ?: project.name
+            description = project.description ?: project.name
+            url = 'https://github.com/metafacture/metafacture-core'
+            inceptionYear = '2011'
+            developers {
+              developer {
+                id = 'mgeipel'
+                name = 'Markus M. Geipel'
+                email = 'm.geipel@dnb.de'
+                url = 'https://github.com/mgeipel'
+                roles = ['architect', 'developer']
+              }
+              developer {
+                id = 'cboehme'
+                name = 'Christoph Böhme'
+                email = 'c.boehme@dnb.de'
+                url = 'https://github.com/cboehme'
+                roles = ['architect', 'developer']
+              }
+            }
+            organization {
+              name = 'Metafacture'
+              url = 'https://github.com/metafacture'
+            }
+            licenses {
+              license {
+                name = 'The Apache License, Version 2.0'
+                url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+              }
+            }
+            mailingLists {
+              mailingList {
+                name = 'Metafacture Mailing List'
+                post = 'metafacture@lists.dnb.de'
+                subscribe = 'metafacture-subscribe@lists.dnb.de'
+                unsubscribe = 'metafacture-unsubscribe@lists.dnb.de'
+                archive = 'http://lists.dnb.de/pipermail/metafacture/'
+              }
+            }
+            scm {
+              connection = 'scm:git:https://github.com/metafacture/metafacture-core.git'
+              developerConnection = 'scm:git:https://github.com/metafacture/metafacture-core.git'
+              url = 'https://github.com/metafacture/metafacture-core'
+              tag = rootProject.scmInfo.tag ?: 'HEAD'
+            }
+            issueManagement {
+              system = 'Github'
+              url = 'https://github.com/metafacture/metafacture-core/issues'
+            }
+            ciManagement {
+              system = 'Github Actions'
+              url = 'https://github.com/metafacture/metafacture-core/actions'
+            }
+          }
+          artifact(sourceJar)
+          artifact(javadocJar)
         }
       }
     }
     repositories {
-      maven {
-        name = 'localEmbedded'
-        // run generated gradle task `./gradlew
-        // publishMavenArtifactsPublicationToLocalEmbeddedRepository`
-        // to publish all subprojects into the same local embedded repo:
-        url = "file://${rootDir}/build/repo"
-      }
       maven {
         name = "GitHubPackages"
         url = "https://maven.pkg.github.com/metafacture/metafacture-core"
@@ -232,58 +225,28 @@ subprojects {
           password = System.getenv("GITHUB_TOKEN")
         }
       }
+      if (scmInfo.isRelease() && project.hasProperty('releaseRepositoryUrl')) {
+        maven {
+          url = releaseRepositoryUrl
+          credentials {
+            username = releaseRepositoryUser
+            password = releaseRepositoryPassword
+          }
+        }
+      }
     }
   }
-}
 
-gradle.projectsEvaluated {
-  subprojects {
-    configurations {
-      mavenDeploySupport
+  signing {
+    required {
+      scmInfo.isRelease()
     }
+    sign publishing.publications.mavenArtifacts
+  }
 
-    dependencies {
-      mavenDeploySupport "org.apache.maven.wagon:wagon-http:2.2"
-    }
-
-    install {
-      repositories {
-        mavenInstaller {
-          pom.project mavenProjectDescription(project)
-          beforeDeployment {
-            MavenDeployment deployment -> signing.signPom(deployment)
-          }
-        }
-      }
-    }
-
-    uploadArchives {
-      repositories {
-        mavenDeployer {
-          configuration = configurations.mavenDeploySupport
-          if (project.hasProperty('releaseRepositoryUrl')) {
-            repository(url: releaseRepositoryUrl) {
-              if (project.hasProperty('releaseRepositoryUser')) {
-                authentication(userName: releaseRepositoryUser,
-                               password: releaseRepositoryPassword)
-              }
-            }
-          }
-          if (project.hasProperty('snapshotRepositoryUrl')) {
-            snapshotRepository(url: snapshotRepositoryUrl) {
-              if (project.hasProperty('snapshotRepositoryUser')) {
-                authentication(userName: snapshotRepositoryUser,
-                               password: snapshotRepositoryPassword)
-              }
-            }
-          }
-          pom.project mavenProjectDescription(project)
-          beforeDeployment {
-            MavenDeployment deployment -> signing.signPom(deployment)
-          }
-        }
-      }
-    }
+  task install(dependsOn: publishToMavenLocal,
+      description: "Installs the 'archives' artifacts into the local Maven repository. [deprecated]") {
+    doFirst { println "This task is deprecated; use 'publishToMavenLocal' instead." }
   }
 }
 
@@ -293,22 +256,10 @@ sonarqube {
   }
 }
 
-nexusStaging {
-  if (project.hasProperty('stagingServerUrl')) {
-    serverUrl = stagingServerUrl
+nexusPublishing {
+  repositories {
+    sonatype ()
   }
-  if (project.hasProperty('releaseRepositoryUser')) {
-    username = releaseRepositoryUser
-    password = releaseRepositoryPassword
-  }
-}
-
-tasks.closeRepository.onlyIf {
-  rootProject.scmInfo.isRelease()
-}
-
-tasks.releaseRepository.onlyIf {
-  rootProject.scmInfo.isRelease()
 }
 
 class ScmInfo {

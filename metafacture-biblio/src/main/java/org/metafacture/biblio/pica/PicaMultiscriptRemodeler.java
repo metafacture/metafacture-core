@@ -226,8 +226,7 @@ public final class PicaMultiscriptRemodeler extends DefaultStreamPipe<StreamRece
 
     private String mapScriptToEntityName(final String script) {
         return LATIN_SCRIPT.equals(script)                                 ? ENTITY_NAME_FOR_LATIN :
-            (ARABIC_SCRIPT.equals(script) || HEBREW_SCRIPT.equals(script)) ? ENTITY_NAME_FOR_NON_LATIN_RL :
-                                                                             ENTITY_NAME_FOR_NON_LATIN_LR;
+            (ARABIC_SCRIPT.equals(script) || HEBREW_SCRIPT.equals(script)) ? ENTITY_NAME_FOR_NON_LATIN_RL : ENTITY_NAME_FOR_NON_LATIN_LR;
     }
 
     private static class BufferedField {
