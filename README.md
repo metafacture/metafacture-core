@@ -87,7 +87,7 @@ Building metafacture-core from source is easy. All you need is git and JDK 8:
     $ cd metafacture-core
     ```
 
-2. Invoke the Gradle wrapper to download Gradle and build metafacture-core (on Windows call `gradlew.bat publishToMavenLocal` instead) and publish these to your local maven repository:
+2. Invoke the Gradle wrapper to download Gradle and build metafacture-core (on Windows call `gradlew.bat publishToMavenLocal` instead) and publish these to your local Maven repository:
     ```bash
     $ ./gradlew publishToMavenLocal
     ```
