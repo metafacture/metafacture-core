@@ -61,7 +61,7 @@ Alternatively, you can simply guess the package names from the top-level folders
 </dependency>
 ```
 
-or if Gradle is your buildbuild_from_source tool of choice use:
+or if Gradle is your build tool of choice use:
 
 ```groovy
 dependencies {
