@@ -30,7 +30,7 @@ subprojects {
       'commons_compress': '1.21',
       'guava': '29.0-jre',
       'jackson_databind': '2.15.1',
-      'jdk': '8',
+      'jdk': '11',
       'junit': '4.12',
       'mockito': '2.27.0',
       'slf4j': '1.7.36',
