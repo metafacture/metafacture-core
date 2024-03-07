@@ -67,7 +67,7 @@ public class MetafixLookupTest {
     }
 
     @BeforeAll
-    private static void setStubForWireMock() {
+    public static void setStubForWireMock() {
         WIRE_MOCK_SERVER.start();
 
         // stubs for RDF
@@ -94,7 +94,7 @@ public class MetafixLookupTest {
     }
 
     @AfterAll
-    private static void tearDownWireMock() {
+    public static void tearDownWireMock() {
         WIRE_MOCK_SERVER.stop();
     }
 

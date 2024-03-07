@@ -19,11 +19,12 @@ package org.metafacture.metafix;
 import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.exceptions.base.MockitoAssertionError;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * Tests for class {@link ListFixValues}.
@@ -31,6 +32,7 @@ import org.mockito.exceptions.base.MockitoAssertionError;
  * @author Fabian Steeg
  *
  */
+@ExtendWith(MockitoExtension.class)
 public final class ListFixValuesTest {
 
     private ListFixValues lister;
@@ -39,7 +41,6 @@ public final class ListFixValuesTest {
     private ObjectReceiver<String> receiver;
 
     public ListFixValuesTest() {
-        MockitoAnnotations.initMocks(this);
     }
 
     @Test
