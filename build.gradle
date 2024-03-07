@@ -39,7 +39,7 @@ subprojects {
       'equalsverifier': '3.8.2',
       'guava':          '29.0-jre',
       'jackson':        '2.13.3',
-      'jdk':            '8',
+      'jdk':            '11',
       'jena':           '3.17.0',
       'jetty':          '9.4.14.v20181114',
       'jquery':         '3.3.1-1',
