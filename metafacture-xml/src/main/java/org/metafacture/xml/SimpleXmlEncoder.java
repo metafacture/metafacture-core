@@ -29,6 +29,7 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,6 +69,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
     private static final String XML_HEADER = "<?xml version=\"%s\" encoding=\"%s\"?>\n";
     private static final String XMLNS_MARKER = " xmlns";
+    private static final String DEFAULT = "__default";
 
     private final StringBuilder builder = new StringBuilder();
 
@@ -141,9 +143,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
         catch (final IOException e) {
             throw new MetafactureException("Failed to load namespaces list", e);
         }
-        for (final Entry<Object, Object> entry : properties.entrySet()) {
-            namespaces.put(entry.getKey().toString(), entry.getValue().toString());
-        }
+        propertiesToMap(properties);
     }
 
     /**
@@ -159,9 +159,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
         catch (final IOException e) {
             throw new MetafactureException("Failed to load namespaces list", e);
         }
-        for (final Entry<Object, Object> entry : properties.entrySet()) {
-            namespaces.put(entry.getKey().toString(), entry.getValue().toString());
-        }
+        propertiesToMap(properties);
     }
 
     /**
@@ -219,6 +217,31 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     }
 
     /**
+     * Sets the namespace(s).
+     *
+     * @param namespacesString the namespaces as a String. It allows Java Properties
+     *                         structure, i.e. a key-value structure where the key is separated from the value
+     *                         by an equal sign '=', a semicolon ':' or a white space ' '.Multiple namespaces
+     *                         are separated by a line feed '\n'
+     */
+    public void setNamespaces(final String namespacesString) {
+        final Properties properties = new Properties();
+        final StringReader sr = new StringReader(namespacesString);
+        try {
+            properties.load(sr);
+        }
+        catch (final IOException e) {
+            throw new MetafactureException("Failed to create namespace list");
+        }
+        finally {
+            if (sr != null) {
+                sr.close();
+            }
+        }
+        propertiesToMap(properties);
+    }
+
+    /**
      * Sets the attribute marker.
      *
      * @param attributeMarker the attribute marker.
@@ -256,7 +279,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     private void addNamespacesToElement() {
         for (final Entry<String, String> namespace : namespaces.entrySet()) {
             final String key = namespace.getKey();
-            final String name = XMLNS_MARKER + (key.isEmpty() ? "" : ":") + key;
+            final String name = XMLNS_MARKER + (isDefaultNamespace(key) ? "" : ":" + key);
             element.addAttribute(name, namespace.getValue());
         }
     }
@@ -326,7 +349,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
             builder.append(rootTag);
             for (final Entry<String, String> entry : namespaces.entrySet()) {
                 builder.append(XMLNS_MARKER);
-                if (!entry.getKey().isEmpty()) {
+                if (!isDefaultNamespace(entry.getKey())) {
                     builder.append(':');
                     builder.append(entry.getKey());
                 }
@@ -349,6 +372,16 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
 
     protected static void writeEscaped(final StringBuilder builder, final String str) {
         builder.append(XmlUtil.escape(str, false));
+    }
+
+    private boolean isDefaultNamespace(final String ns) {
+        return ns.isEmpty() || ns.equals(DEFAULT);
+    }
+
+    private void propertiesToMap(final Properties properties) {
+        for (final Entry<Object, Object> entry : properties.entrySet()) {
+            namespaces.put(entry.getKey().toString(), entry.getValue().toString());
+        }
     }
 
     /**
