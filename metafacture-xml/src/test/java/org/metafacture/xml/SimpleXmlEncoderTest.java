@@ -113,9 +113,30 @@ public final class SimpleXmlEncoderTest {
     }
 
     @Test
+    public void shouldAddMultipleNamespacesFromParameterToRootElement() {
+        simpleXmlEncoder.setNamespaces("__default=http://default.org/ns\nns=http://example.org/ns\nns1=http://example.org/ns1");
+
+        emitEmptyRecord();
+
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns=\"http://default.org/ns\" xmlns:ns=\"http://example.org/ns\" xmlns:ns1=\"http://example.org/ns1\"><record /></records>",
+                getResultXml());
+    }
+    @Test
     public void shouldAddNamespaceWithEmptyKeyAsDefaultNamespaceToRootTag() {
         final Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("", "http://example.org/ns");
+        simpleXmlEncoder.setNamespaces(namespaces);
+
+        emitEmptyRecord();
+
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns=\"http://example.org/ns\"><record /></records>",
+                getResultXml());
+    }
+
+    @Test
+    public void shouldAddNamespaceWithDefaultKeyAsDefaultNamespaceToRootTag() {
+        final Map<String, String> namespaces = new HashMap<String, String>();
+        namespaces.put("__default", "http://example.org/ns");
         simpleXmlEncoder.setNamespaces(namespaces);
 
         emitEmptyRecord();
@@ -171,8 +192,31 @@ public final class SimpleXmlEncoderTest {
     }
 
     @Test
+    public void shouldAddNamespaceWithDefaultKeyAsDefaultNamespaceToRecordTag() {
+        final Map<String, String> namespaces = new HashMap<String, String>();
+        namespaces.put("__default", "http://example.org/ns");
+        simpleXmlEncoder.setNamespaces(namespaces);
+        simpleXmlEncoder.setWriteRootTag(false);
+
+        emitEmptyRecord();
+
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns=\"http://example.org/ns\" />",
+                getResultXml());
+    }
+
+    @Test
     public void shouldAddNamespaceWithEmptyKeyFromPropertiesFileAsDefaultNamespaceToRecordTag() {
         simpleXmlEncoder.setNamespaceFile("org/metafacture/xml/SimpleXmlEncoderTest_namespaces.properties");
+        simpleXmlEncoder.setWriteRootTag(false);
+
+        emitEmptyRecord();
+
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns=\"http://example.org/ns\" />",
+                getResultXml());
+    }
+    @Test
+    public void shouldAddNamespaceWithEmptyKeyFromParameterAsDefaultNamespaceToRecordTag() {
+        simpleXmlEncoder.setNamespaces("=http://example.org/ns");
         simpleXmlEncoder.setWriteRootTag(false);
 
         emitEmptyRecord();
