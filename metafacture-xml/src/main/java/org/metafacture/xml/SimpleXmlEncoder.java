@@ -226,17 +226,11 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
      */
     public void setNamespaces(final String namespacesString) {
         final Properties properties = new Properties();
-        final StringReader sr = new StringReader(namespacesString);
-        try {
+        try (StringReader sr = new StringReader(namespacesString)) {
             properties.load(sr);
         }
         catch (final IOException e) {
             throw new MetafactureException("Failed to create namespace list");
-        }
-        finally {
-            if (sr != null) {
-                sr.close();
-            }
         }
         propertiesToMap(properties);
     }
@@ -379,9 +373,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
     }
 
     private void propertiesToMap(final Properties properties) {
-        for (final Entry<Object, Object> entry : properties.entrySet()) {
-            namespaces.put(entry.getKey().toString(), entry.getValue().toString());
-        }
+        properties.forEach((k, v) -> namespaces.put(k.toString(), v.toString()));
     }
 
     /**
