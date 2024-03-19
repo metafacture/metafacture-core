@@ -221,7 +221,7 @@ public final class SimpleXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Str
      *
      * @param namespacesString the namespaces as a String. It allows Java Properties
      *                         structure, i.e. a key-value structure where the key is separated from the value
-     *                         by an equal sign '=', a semicolon ':' or a white space ' '.Multiple namespaces
+     *                         by an equal sign '=', a colon ':' or a white space ' '. Multiple namespaces
      *                         are separated by a line feed '\n'
      */
     public void setNamespaces(final String namespacesString) {
