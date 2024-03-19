@@ -118,7 +118,7 @@ public final class SimpleXmlEncoderTest {
 
         emitEmptyRecord();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns=\"http://default.org/ns\" xmlns:ns=\"http://example.org/ns\" xmlns:ns1=\"http://example.org/ns1\"><record /></records>",
+        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns:ns=\"http://example.org/ns\" xmlns=\"http://default.org/ns\" xmlns:ns1=\"http://example.org/ns1\"><record /></records>",
                 getResultXml());
     }
     @Test
