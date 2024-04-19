@@ -114,4 +114,26 @@ public final class Marc21EncoderTest {
         verify(receiver).process(any(String.class));
     }
 
+    @Test
+    public void issue454ShouldNotFailWhenProcessingEntityLeaderAsOneString() {
+        marc21Encoder.startRecord("");
+        marc21Encoder.startEntity(LEADER_ENTITY);
+        marc21Encoder.literal(LEADER_ENTITY, "02602pam a2200529 c 4500");
+        marc21Encoder.endEntity();
+        marc21Encoder.endEntity();
+        marc21Encoder.endRecord();
+
+        verify(receiver).process(matches("00026pam a2200025 c 4500\u001e\u001d"));
+    }
+
+    @Test
+    public void issue454ShouldNotFailWhenProcessingLeaderAsOneString() {
+        marc21Encoder.startRecord("");
+        marc21Encoder.literal(LEADER_ENTITY, "02602pam a2200529 c 4500");
+        marc21Encoder.endEntity();
+        marc21Encoder.endRecord();
+
+        verify(receiver).process(matches("00026pam a2200025 c 4500\u001e\u001d"));
+    }
+
 }
