@@ -23,9 +23,13 @@ package org.metafacture.biblio.iso2709;
  * @author Christoph Böhme
  *
  */
-final class Iso2709Constants {
+public final class Iso2709Constants {
 
-    static final int RECORD_LABEL_LENGTH = 24;
+    public static final int IMPL_CODES_START = 6;
+    public static final int IMPL_CODES_LENGTH = 4;
+    public static final int RECORD_LABEL_LENGTH = 24;
+    public static final int RECORD_STATUS_POS = 5;
+    public static final int SYSTEM_CHARS_START = 17;
 
     static final int MIN_RECORD_LENGTH = RECORD_LABEL_LENGTH + 2;
     static final int MAX_RECORD_LENGTH = 99_999;
@@ -38,18 +42,11 @@ final class Iso2709Constants {
     static final int RECORD_LENGTH_START = 0;
     static final int RECORD_LENGTH_LENGTH = 5;
 
-    static final int RECORD_STATUS_POS = 5;
-
-    static final int IMPL_CODES_START = 6;
-    static final int IMPL_CODES_LENGTH = 4;
-
     static final int INDICATOR_LENGTH_POS = 10;
     static final int IDENTIFIER_LENGTH_POS = 11;
 
     static final int BASE_ADDRESS_START = 12;
     static final int BASE_ADDRESS_LENGTH = 5;
-
-    static final int SYSTEM_CHARS_START = 17;
     static final int SYSTEM_CHARS_LENGTH = 3;
 
     static final int FIELD_LENGTH_LENGTH_POS = 20;

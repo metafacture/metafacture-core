@@ -16,6 +16,7 @@
 
 package org.metafacture.biblio.marc21;
 
+import org.metafacture.biblio.iso2709.Iso2709Constants;
 import org.metafacture.biblio.iso2709.RecordBuilder;
 import org.metafacture.biblio.iso2709.RecordFormat;
 import org.metafacture.framework.FluxCommand;
@@ -180,7 +181,12 @@ public final class Marc21Encoder extends
                 builder.appendSubfield(name.toCharArray(), value);
                 break;
             case IN_LEADER_ENTITY:
-                processLiteralInLeader(name, value);
+                if (name == Marc21EventNames.LEADER_ENTITY) {
+                    processLeaderAsOneLiteral(value);
+                }
+                else {
+                    processLeaderAsSubfields(name, value);
+                }
                 break;
             case IN_RECORD:
                 processTopLevelLiteral(name, value);
@@ -190,12 +196,30 @@ public final class Marc21Encoder extends
         }
     }
 
-    private void processLiteralInLeader(final String name, final String value) {
+    private void processLeaderAsOneLiteral(final String value) {
+        if (value.length() != Iso2709Constants.RECORD_LABEL_LENGTH) {
+            throw new FormatException(
+                    "leader literal must contain " + Iso2709Constants.RECORD_LABEL_LENGTH + "  characters: " + value);
+        }
+        processLeaderAsSubfields(Marc21EventNames.RECORD_STATUS_LITERAL, value.charAt(Iso2709Constants.RECORD_STATUS_POS));
+        processLeaderAsSubfields(Marc21EventNames.RECORD_TYPE_LITERAL, value.charAt(Iso2709Constants.IMPL_CODES_START));
+        processLeaderAsSubfields(Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL, value.charAt(Iso2709Constants.IMPL_CODES_START + 1));
+        processLeaderAsSubfields(Marc21EventNames.TYPE_OF_CONTROL_LITERAL, value.charAt(Iso2709Constants.IMPL_CODES_START + 2));
+        processLeaderAsSubfields(Marc21EventNames.CHARACTER_CODING_LITERAL, value.charAt(Iso2709Constants.RECORD_STATUS_POS + Iso2709Constants.IMPL_CODES_LENGTH));
+        processLeaderAsSubfields(Marc21EventNames.ENCODING_LEVEL_LITERAL, value.charAt(Iso2709Constants.SYSTEM_CHARS_START));
+        processLeaderAsSubfields(Marc21EventNames.CATALOGING_FORM_LITERAL, value.charAt(Iso2709Constants.SYSTEM_CHARS_START + 1));
+        processLeaderAsSubfields(Marc21EventNames.MULTIPART_LEVEL_LITERAL, value.charAt(Iso2709Constants.SYSTEM_CHARS_START + 2));
+    }
+
+    private void processLeaderAsSubfields(final String name, final String value) {
         if (value.length() != 1) {
             throw new FormatException(
                     "literal must only contain a single character:" + name);
         }
-        final char code = value.charAt(0);
+        processLeaderAsSubfields(name, value.charAt(0));
+    }
+
+    private void processLeaderAsSubfields(final String name, final char code) {
         switch (name) {
             case Marc21EventNames.RECORD_STATUS_LITERAL:
                 requireValidCode(code, Marc21Constants.RECORD_STATUS_CODES);
@@ -251,7 +275,12 @@ public final class Marc21Encoder extends
             // these literals here.
             return;
         }
-        builder.appendReferenceField(name.toCharArray(), value);
+        if (Marc21EventNames.LEADER_ENTITY.equals(name)) {
+            processLeaderAsOneLiteral(value);
+        }
+        else {
+            builder.appendReferenceField(name.toCharArray(), value);
+        }
     }
 
     @Override
