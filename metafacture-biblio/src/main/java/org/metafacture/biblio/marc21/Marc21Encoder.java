@@ -199,16 +199,16 @@ public final class Marc21Encoder extends
     private void processLeaderAsOneLiteral(final String value) {
         if (value.length() != Iso2709Constants.RECORD_LABEL_LENGTH) {
             throw new FormatException(
-                    "leader literal must contain " + Iso2709Constants.RECORD_LABEL_LENGTH + "  characters:" + value);
+                    "leader literal must contain " + Iso2709Constants.RECORD_LABEL_LENGTH + "  characters: " + value);
         }
-        processLeaderAsSubfields(Marc21EventNames.RECORD_STATUS_LITERAL, String.valueOf(value.charAt(Iso2709Constants.RECORD_STATUS_POS)));
-        processLeaderAsSubfields(Marc21EventNames.RECORD_TYPE_LITERAL, String.valueOf(value.charAt(Iso2709Constants.IMPL_CODES_START)));
-        processLeaderAsSubfields(Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL, String.valueOf(value.charAt(Iso2709Constants.IMPL_CODES_START + 1)));
-        processLeaderAsSubfields(Marc21EventNames.TYPE_OF_CONTROL_LITERAL, String.valueOf(value.charAt(Iso2709Constants.IMPL_CODES_START + 2)));
-        processLeaderAsSubfields(Marc21EventNames.CHARACTER_CODING_LITERAL, String.valueOf(value.charAt(Iso2709Constants.RECORD_STATUS_POS + Iso2709Constants.IMPL_CODES_LENGTH)));
-        processLeaderAsSubfields(Marc21EventNames.ENCODING_LEVEL_LITERAL, String.valueOf(value.charAt(Iso2709Constants.SYSTEM_CHARS_START)));
-        processLeaderAsSubfields(Marc21EventNames.CATALOGING_FORM_LITERAL, String.valueOf(value.charAt(Iso2709Constants.SYSTEM_CHARS_START + 1)));
-        processLeaderAsSubfields(Marc21EventNames.MULTIPART_LEVEL_LITERAL, String.valueOf(value.charAt(Iso2709Constants.SYSTEM_CHARS_START + 2)));
+        processLeaderAsSubfields(Marc21EventNames.RECORD_STATUS_LITERAL, value.charAt(Iso2709Constants.RECORD_STATUS_POS));
+        processLeaderAsSubfields(Marc21EventNames.RECORD_TYPE_LITERAL, value.charAt(Iso2709Constants.IMPL_CODES_START));
+        processLeaderAsSubfields(Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL, value.charAt(Iso2709Constants.IMPL_CODES_START + 1));
+        processLeaderAsSubfields(Marc21EventNames.TYPE_OF_CONTROL_LITERAL, value.charAt(Iso2709Constants.IMPL_CODES_START + 2));
+        processLeaderAsSubfields(Marc21EventNames.CHARACTER_CODING_LITERAL, value.charAt(Iso2709Constants.RECORD_STATUS_POS + Iso2709Constants.IMPL_CODES_LENGTH));
+        processLeaderAsSubfields(Marc21EventNames.ENCODING_LEVEL_LITERAL, value.charAt(Iso2709Constants.SYSTEM_CHARS_START));
+        processLeaderAsSubfields(Marc21EventNames.CATALOGING_FORM_LITERAL, value.charAt(Iso2709Constants.SYSTEM_CHARS_START + 1));
+        processLeaderAsSubfields(Marc21EventNames.MULTIPART_LEVEL_LITERAL, value.charAt(Iso2709Constants.SYSTEM_CHARS_START + 2));
     }
 
     private void processLeaderAsSubfields(final String name, final String value) {
@@ -216,7 +216,10 @@ public final class Marc21Encoder extends
             throw new FormatException(
                     "literal must only contain a single character:" + name);
         }
-        final char code = value.charAt(0);
+        processLeaderAsSubfields(name, value.charAt(0));
+    }
+
+    private void processLeaderAsSubfields(final String name, final char code) {
         switch (name) {
             case Marc21EventNames.RECORD_STATUS_LITERAL:
                 requireValidCode(code, Marc21Constants.RECORD_STATUS_CODES);
