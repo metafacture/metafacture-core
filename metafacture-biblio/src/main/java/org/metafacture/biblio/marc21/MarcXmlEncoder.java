@@ -106,6 +106,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     private final StringBuilder builder = new StringBuilder();
 
+    private final StringBuilder  builderLeader = new StringBuilder();
     private boolean atStreamStart = true;
 
     private boolean omitXmlDeclaration = OMIT_XML_DECLARATION;
@@ -206,6 +207,11 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     @Override
     public void endRecord() {
+        prettyPrintIndentation();
+        writeTag(Tag.leader::open);
+        writeRaw(builderLeader.toString());
+        writeTag(Tag.leader::close);
+        prettyPrintNewLine();
         decrementIndentationLevel();
         prettyPrintIndentation();
         writeTag(Tag.record::close);
@@ -316,6 +322,15 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     }
 
     /**
+     * Writes an unescaped sequence to the leader literal.
+     *
+     * @param str the unescaped sequence to be written
+     */
+    private void writeRawLeader(final String str) {
+        builderLeader.append(str);
+    }
+
+    /**
     * Writes an escaped sequence.
     *
     * @param str the unescaped sequence to be written
@@ -326,12 +341,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     private boolean writeLeader(final String name, final String value) {
         if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
-            prettyPrintIndentation();
-            writeTag(Tag.leader::open);
-            writeRaw(value);
-            writeTag(Tag.leader::close);
-            prettyPrintNewLine();
-
+            writeRawLeader(value);
             return true;
         }
         else {

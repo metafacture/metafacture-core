@@ -16,9 +16,6 @@
 
 package org.metafacture.biblio.marc21;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verifyZeroInteractions;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +24,9 @@ import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import static org.mockito.ArgumentMatchers.matches;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests for class {@link Marc21Decoder}.

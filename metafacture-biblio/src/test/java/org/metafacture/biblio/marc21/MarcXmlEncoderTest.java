@@ -18,6 +18,7 @@ package org.metafacture.biblio.marc21;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.metafacture.biblio.marc21.Marc21EventNames.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -204,6 +205,28 @@ public class MarcXmlEncoderTest {
     public void issue336_createRecordWithTopLevelLeader() {
         encoder.startRecord("1");
         encoder.literal(Marc21EventNames.LEADER_ENTITY, "dummy");
+        encoder.endRecord();
+        encoder.closeStream();
+        String expected = XML_DECLARATION + XML_ROOT_OPEN
+                + "<marc:record><marc:leader>dummy</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void issue527ShouldEmitLeaderAlwaysAsWholeString() {
+        encoder.startRecord("1");
+        encoder.startEntity(Marc21EventNames.LEADER_ENTITY);
+        encoder.literal(RECORD_STATUS_LITERAL, "a");
+
+        encoder.literal(RECORD_TYPE_LITERAL, "o");
+        encoder.literal(BIBLIOGRAPHIC_LEVEL_LITERAL, "a");
+        encoder.literal(TYPE_OF_CONTROL_LITERAL, " ");
+        encoder.literal(CHARACTER_CODING_LITERAL, "a");
+        encoder.literal(ENCODING_LEVEL_LITERAL, "z");
+        encoder.literal(CATALOGING_FORM_LITERAL, "u");
+        encoder.literal(MULTIPART_LEVEL_LITERAL, " ");
+        encoder.endEntity();
         encoder.endRecord();
         encoder.closeStream();
         String expected = XML_DECLARATION + XML_ROOT_OPEN
