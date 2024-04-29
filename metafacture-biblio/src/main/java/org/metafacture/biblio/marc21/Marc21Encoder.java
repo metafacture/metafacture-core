@@ -137,6 +137,7 @@ public final class Marc21Encoder extends
     @Override
     public void endRecord() {
         final byte[] record = builder.build();
+        System.out.println(builder.toString());
         getReceiver().process(new String(record, Marc21Constants.MARC21_CHARSET));
         state = State.IN_STREAM;
     }
@@ -163,6 +164,10 @@ public final class Marc21Encoder extends
         final char[] indicators = new char[Marc21Constants.MARC21_FORMAT.getIndicatorLength()];
         name.getChars(0, tag.length, tag, 0);
         name.getChars(tag.length, name.length(), indicators, 0);
+        System.out.println(name);
+        if (name.startsWith("7872")){
+            System.out.println(name);
+        }
         builder.startDataField(tag, indicators);
     }
 

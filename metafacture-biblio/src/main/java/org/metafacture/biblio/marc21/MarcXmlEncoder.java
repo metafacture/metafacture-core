@@ -208,15 +208,19 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     @Override
     public void endRecord() {
         prettyPrintIndentation();
-        writeTag(Tag.leader::open);
-        writeRaw(builderLeader.toString());
-        writeTag(Tag.leader::close);
+        writeLeader();
         prettyPrintNewLine();
         decrementIndentationLevel();
         prettyPrintIndentation();
         writeTag(Tag.record::close);
         prettyPrintNewLine();
         sendAndClearData();
+    }
+
+    private void writeLeader() {
+        writeTag(Tag.leader::open);
+        writeRaw(builderLeader.toString());
+        writeTag(Tag.leader::close);
     }
 
     @Override
