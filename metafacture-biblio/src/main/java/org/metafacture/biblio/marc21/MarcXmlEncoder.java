@@ -36,7 +36,7 @@ import java.util.function.Function;
  * @author Pascal Christoph (dr0i) dug it up again
  */
 
-@Description("Encodes a stream into MARCXML.")
+@Description("Encodes a stream into MARCXML. Use this only if you can ensure valid MARC21. Also, the leader must be correct and set as one literal. You may want to use encode-marc21xml instead (which can cope with e.g. an irregular leader).")
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("encode-marcxml")
