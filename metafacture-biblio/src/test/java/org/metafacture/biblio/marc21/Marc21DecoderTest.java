@@ -82,6 +82,7 @@ public final class Marc21DecoderTest {
 
         marcXmlHandlerWrapper =new Marc21XmlEncoder();
 
+        marcXmlHandlerWrapper.setFormatted(true);
          marc21Decoder.setReceiver(marcXmlHandlerWrapper);
          marcXmlHandlerWrapper.setReceiver(receiver);
 

@@ -24,7 +24,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectReceiver;
+import org.metafacture.framework.helpers.DefaultStreamPipe;
+import org.mockito.Mock;
 
 /**
  * Tests for class {@link MarcXmlEncoder}.
@@ -34,7 +37,7 @@ import org.metafacture.framework.helpers.DefaultObjectReceiver;
  *
  */
 
-public class MarcXmlEncoderTest {
+ class MarcXmlEncoderTest {
 
     private static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     private static final String XML_1_DECLARATION = "<?xml version=\"1.1\" encoding=\"UTF-8\"?>";
@@ -49,11 +52,17 @@ public class MarcXmlEncoderTest {
     private static final String RECORD_ID = "92005291";
 
     private static StringBuilder resultCollector;
-    private static MarcXmlEncoder encoder;
+    private static MarcXmlEncoderAbstract encoder;
 
+   // private DefaultObjectReceiver<String> receiver = new DefaultObjectReceiver<String>();
+
+    MarcXmlEncoderTest(MarcXmlEncoderAbstract encoder){
+        MarcXmlEncoderTest.encoder=encoder;
+      //  encoder.setReceiver(receiver);
+        setUp();
+    }
     @Before
     public void setUp() {
-        encoder = new MarcXmlEncoder();
         encoder.setFormatted(false);
         encoder.setReceiver(new DefaultObjectReceiver<String>() {
             @Override
@@ -68,7 +77,7 @@ public class MarcXmlEncoderTest {
     public void tearDown() {
     }
 
-    private void addOneRecord(MarcXmlEncoder encoder) {
+    private void addOneRecord(MarcXmlEncoderAbstract encoder) {
         encoder.startRecord(RECORD_ID);
         encoder.literal("001", RECORD_ID);
         encoder.startEntity("010  ");

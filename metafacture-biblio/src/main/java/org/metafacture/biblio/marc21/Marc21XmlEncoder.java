@@ -17,13 +17,10 @@ package org.metafacture.biblio.marc21;
 
 
 import org.metafacture.framework.FluxCommand;
-import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
-import org.metafacture.framework.helpers.DefaultStreamPipe;
-
 
 /**
  * Acts as a wrapper: pipes input to Marc21Encoder which output is piped to Marc21Decoder which output is piped to MarcXmlEncoder.
@@ -35,7 +32,7 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
 @Out(String.class)
 @Description("Encodes MARC21 records as MARCXML. It wraps 'encode-marc21 | decode-marc21 | encode-marcxml ' to generate MARCXML more safely, especially when the building the 'leader'.")
 @FluxCommand("encode-marc21xml")
-public class Marc21XmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> implements MarcXmlEncoderInterface {
+public class Marc21XmlEncoder extends MarcXmlEncoderAbstract {
     private final Marc21Decoder marc21Decoder = new Marc21Decoder();
     private final Marc21Encoder marc21Encoder = new Marc21Encoder ();
     private final MarcXmlEncoder marcXmlEncoder =new MarcXmlEncoder();
@@ -81,7 +78,7 @@ public class Marc21XmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> 
     }
 
     @Override
-    protected void onResetStream() {
+    public void onResetStream() {
         marc21Encoder.resetStream();
     }
 

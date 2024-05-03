@@ -40,7 +40,7 @@ import java.util.function.Function;
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("encode-marcxml")
-public class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> implements MarcXmlEncoderInterface {
+public class MarcXmlEncoder extends MarcXmlEncoderAbstract {
 
     public static final String NAMESPACE_NAME = "marc";
     public static final String XML_ENCODING = "UTF-8";
@@ -282,7 +282,7 @@ public class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> im
     }
 
     @Override
-    protected void onResetStream() {
+    public void onResetStream() {
         if (!atStreamStart) {
             writeFooter();
         }
