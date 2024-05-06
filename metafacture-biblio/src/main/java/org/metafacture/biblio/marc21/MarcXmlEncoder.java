@@ -18,12 +18,10 @@ package org.metafacture.biblio.marc21;
 import org.metafacture.commons.XmlUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
-import org.metafacture.framework.helpers.DefaultStreamPipe;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,11 +34,11 @@ import java.util.function.Function;
  * @author Pascal Christoph (dr0i) dug it up again
  */
 
-@Description("Encodes a stream into MARCXML.")
+@Description("Encodes a stream into MARCXML. Use this only if you can ensure valid MARC21. Also, the leader must be correct and set as one literal. You may want to use encode-marc21xml instead (which can cope with e.g. an irregular leader).")
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("encode-marcxml")
-public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
+public class MarcXmlEncoder extends AbstractMarcXmlEncoder {
 
     public static final String NAMESPACE_NAME = "marc";
     public static final String XML_ENCODING = "UTF-8";
@@ -106,6 +104,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     private final StringBuilder builder = new StringBuilder();
 
+    private final StringBuilder  builderLeader = new StringBuilder();
     private boolean atStreamStart = true;
 
     private boolean omitXmlDeclaration = OMIT_XML_DECLARATION;
@@ -206,6 +205,9 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     @Override
     public void endRecord() {
+        if (builderLeader.length() > 0) {
+            writeLeader();
+        }
         decrementIndentationLevel();
         prettyPrintIndentation();
         writeTag(Tag.record::close);
@@ -316,6 +318,15 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     }
 
     /**
+     * Writes an unescaped sequence to the leader literal.
+     *
+     * @param str the unescaped sequence to be written
+     */
+    private void writeRawLeader(final String str) {
+        builderLeader.append(str);
+    }
+
+    /**
     * Writes an escaped sequence.
     *
     * @param str the unescaped sequence to be written
@@ -324,14 +335,17 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         builder.append(XmlUtil.escape(str, false));
     }
 
+    private void writeLeader() {
+        prettyPrintIndentation();
+        writeTag(Tag.leader::open);
+        writeRaw(builderLeader.toString());
+        writeTag(Tag.leader::close);
+        prettyPrintNewLine();
+    }
+
     private boolean writeLeader(final String name, final String value) {
         if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
-            prettyPrintIndentation();
-            writeTag(Tag.leader::open);
-            writeRaw(value);
-            writeTag(Tag.leader::close);
-            prettyPrintNewLine();
-
+            writeRawLeader(value);
             return true;
         }
         else {

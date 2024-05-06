@@ -16,12 +16,20 @@
 
 package org.metafacture.biblio.marc21;
 
+import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.After;
 import org.junit.Before;
+import org.junit.ComparisonFailure;
 import org.junit.Test;
+import static org.metafacture.biblio.marc21.Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL;
+import static org.metafacture.biblio.marc21.Marc21EventNames.CATALOGING_FORM_LITERAL;
+import static org.metafacture.biblio.marc21.Marc21EventNames.CHARACTER_CODING_LITERAL;
+import static org.metafacture.biblio.marc21.Marc21EventNames.ENCODING_LEVEL_LITERAL;
+import static org.metafacture.biblio.marc21.Marc21EventNames.MULTIPART_LEVEL_LITERAL;
+import static org.metafacture.biblio.marc21.Marc21EventNames.RECORD_STATUS_LITERAL;
+import static org.metafacture.biblio.marc21.Marc21EventNames.RECORD_TYPE_LITERAL;
+import static org.metafacture.biblio.marc21.Marc21EventNames.TYPE_OF_CONTROL_LITERAL;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.helpers.DefaultObjectReceiver;
 
@@ -48,11 +56,15 @@ public class MarcXmlEncoderTest {
     private static final String RECORD_ID = "92005291";
 
     private static StringBuilder resultCollector;
-    private static MarcXmlEncoder encoder;
+    AbstractMarcXmlEncoder encoder;
 
     @Before
     public void setUp() {
         encoder = new MarcXmlEncoder();
+        initializeEncoder();
+    }
+
+    void initializeEncoder() {
         encoder.setFormatted(false);
         encoder.setReceiver(new DefaultObjectReceiver<String>() {
             @Override
@@ -67,7 +79,7 @@ public class MarcXmlEncoderTest {
     public void tearDown() {
     }
 
-    private void addOneRecord(MarcXmlEncoder encoder) {
+    private void addOneRecord(AbstractMarcXmlEncoder encoder) {
         encoder.startRecord(RECORD_ID);
         encoder.literal("001", RECORD_ID);
         encoder.startEntity("010  ");
@@ -208,6 +220,42 @@ public class MarcXmlEncoderTest {
         encoder.closeStream();
         String expected = XML_DECLARATION + XML_ROOT_OPEN
                 + "<marc:record><marc:leader>dummy</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test(expected = ComparisonFailure.class)
+    public void issue336_createRecordWithTopLevelLeader_Marc21Xml() {
+        encoder.startRecord("1");
+        encoder.literal("001", "8u3287432");
+        encoder.literal(Marc21EventNames.LEADER_ENTITY, "00000naa a2200000uc 4500");
+        encoder.endRecord();
+        encoder.closeStream();
+        String expected = XML_DECLARATION + XML_ROOT_OPEN
+            + "<marc:record><marc:controlfield tag=\"001\">8u3287432</marc:controlfield>" +
+            "<marc:leader>00048naa a2200037uc 4500</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void issue527ShouldEmitLeaderAlwaysAsWholeString() {
+        encoder.startRecord("1");
+        encoder.startEntity(Marc21EventNames.LEADER_ENTITY);
+        encoder.literal(RECORD_STATUS_LITERAL, "a");
+
+        encoder.literal(RECORD_TYPE_LITERAL, "o");
+        encoder.literal(BIBLIOGRAPHIC_LEVEL_LITERAL, "a");
+        encoder.literal(TYPE_OF_CONTROL_LITERAL, " ");
+        encoder.literal(CHARACTER_CODING_LITERAL, "a");
+        encoder.literal(ENCODING_LEVEL_LITERAL, "z");
+        encoder.literal(CATALOGING_FORM_LITERAL, "u");
+        encoder.literal(MULTIPART_LEVEL_LITERAL, " ");
+        encoder.endEntity();
+        encoder.endRecord();
+        encoder.closeStream();
+        String expected = XML_DECLARATION + XML_ROOT_OPEN
+                + "<marc:record><marc:leader>aoa azu </marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
     }
