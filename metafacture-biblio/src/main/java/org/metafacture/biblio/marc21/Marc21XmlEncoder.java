@@ -30,7 +30,7 @@ import org.metafacture.framework.annotations.Out;
  */
 @In(StreamReceiver.class)
 @Out(String.class)
-@Description("Encodes MARC21 records as MARCXML. It wraps 'encode-marc21 | decode-marc21 | encode-marcxml ' to generate MARCXML more safely, especially when the building the 'leader'.")
+@Description("Encodes MARC21 records as MARCXML. It wraps `encode-marc21 | decode-marc21 | encode-marcxml` to generate MARCXML more safely, especially when building the `leader`.")
 @FluxCommand("encode-marc21xml")
 public final class Marc21XmlEncoder extends AbstractMarcXmlEncoder {
     private final Marc21Decoder marc21Decoder = new Marc21Decoder();
