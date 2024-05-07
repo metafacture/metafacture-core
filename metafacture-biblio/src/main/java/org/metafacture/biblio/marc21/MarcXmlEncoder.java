@@ -277,6 +277,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
             writeFooter();
         }
         sendAndClearData();
+        indentationLevel = 0;
         atStreamStart = true;
     }
 
