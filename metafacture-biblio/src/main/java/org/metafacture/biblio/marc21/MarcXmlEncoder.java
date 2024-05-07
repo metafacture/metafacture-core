@@ -104,7 +104,7 @@ public final class MarcXmlEncoder extends AbstractMarcXmlEncoder {
 
     private final StringBuilder builder = new StringBuilder();
 
-    private final StringBuilder  builderLeader = new StringBuilder();
+    private final StringBuilder builderLeader = new StringBuilder();
     private boolean atStreamStart = true;
 
     private boolean omitXmlDeclaration = OMIT_XML_DECLARATION;
