@@ -30,7 +30,9 @@ import static org.metafacture.biblio.marc21.Marc21EventNames.MULTIPART_LEVEL_LIT
 import static org.metafacture.biblio.marc21.Marc21EventNames.RECORD_STATUS_LITERAL;
 import static org.metafacture.biblio.marc21.Marc21EventNames.RECORD_TYPE_LITERAL;
 import static org.metafacture.biblio.marc21.Marc21EventNames.TYPE_OF_CONTROL_LITERAL;
+import org.metafacture.framework.FormatException;
 import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.MissingIdException;
 import org.metafacture.framework.helpers.DefaultObjectReceiver;
 
 /**
@@ -56,17 +58,22 @@ public class MarcXmlEncoderTest {
     private static final String RECORD_ID = "92005291";
 
     private static StringBuilder resultCollector;
-    AbstractMarcXmlEncoder encoder;
+    private static MarcXmlEncoder encoder;
+    private static MarcXmlEncoder encoder_ensureCorrectMarc21Xml;
+
 
     @Before
     public void setUp() {
         encoder = new MarcXmlEncoder();
-        initializeEncoder();
+        initializeEncoder(encoder);
+        encoder_ensureCorrectMarc21Xml = new MarcXmlEncoder();
+        encoder_ensureCorrectMarc21Xml.setEnsureCorrectMarc21Xml(true);
+        initializeEncoder(encoder_ensureCorrectMarc21Xml);
     }
 
-    void initializeEncoder() {
-        encoder.setFormatted(false);
-        encoder.setReceiver(new DefaultObjectReceiver<String>() {
+    private void initializeEncoder(MarcXmlEncoder enc) {
+        enc.setFormatted(false);
+        enc.setReceiver(new DefaultObjectReceiver<String>() {
             @Override
             public void process(final String obj) {
                 resultCollector.append(obj);
@@ -79,7 +86,7 @@ public class MarcXmlEncoderTest {
     public void tearDown() {
     }
 
-    private void addOneRecord(AbstractMarcXmlEncoder encoder) {
+    private void addOneRecord(MarcXmlEncoder encoder) {
         encoder.startRecord(RECORD_ID);
         encoder.literal("001", RECORD_ID);
         encoder.startEntity("010  ");
@@ -199,13 +206,23 @@ public class MarcXmlEncoderTest {
     }
 
     @Test
-    public void createAnRecordWithLeader() {
-        encoder.startRecord("1");
-        encoder.startEntity(Marc21EventNames.LEADER_ENTITY);
-        encoder.literal(Marc21EventNames.LEADER_ENTITY, "dummy");
-        encoder.endEntity();
-        encoder.endRecord();
-        encoder.closeStream();
+    public void createAnRecordWithLeader(){
+        createAnRecordWithLeader(encoder);
+    }
+
+    @Test(expected = FormatException.class)
+    public void createAnRecordWithLeader_ensureCorrectMarc21Xml() {
+        encoder_ensureCorrectMarc21Xml.setEnsureCorrectMarc21Xml(true);
+        createAnRecordWithLeader(encoder_ensureCorrectMarc21Xml);
+    }
+
+    private void createAnRecordWithLeader(MarcXmlEncoder enc) {
+        enc.startRecord("1");
+        enc.startEntity(Marc21EventNames.LEADER_ENTITY);
+        enc.literal(Marc21EventNames.LEADER_ENTITY, "dummy");
+        enc.endEntity();
+        enc.endRecord();
+        enc.closeStream();
         String expected = XML_DECLARATION + XML_ROOT_OPEN
                 + "<marc:record><marc:leader>dummy</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
         String actual = resultCollector.toString();
@@ -224,8 +241,23 @@ public class MarcXmlEncoderTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    public void issue336_createRecordWithTopLevelLeader_ensureCorrectMarc21Xml() {
+        issue336_createRecordWithTopLevelLeader_correctMarc21Xml(encoder_ensureCorrectMarc21Xml);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void setParameterAfterSettingReceiver_ensureCorrectMarc21Xml() {
+        encoder_ensureCorrectMarc21Xml.setEnsureCorrectMarc21Xml(true);
+        issue336_createRecordWithTopLevelLeader_correctMarc21Xml(encoder_ensureCorrectMarc21Xml);
+    }
+
     @Test(expected = ComparisonFailure.class)
-    public void issue336_createRecordWithTopLevelLeader_Marc21Xml() {
+    public void issue336_createRecordWithTopLevelLeader_correctMarc21Xml() {
+        issue336_createRecordWithTopLevelLeader_correctMarc21Xml(encoder);
+    }
+
+    private void issue336_createRecordWithTopLevelLeader_correctMarc21Xml(MarcXmlEncoder encoder) {
         encoder.startRecord("1");
         encoder.literal("001", "8u3287432");
         encoder.literal(Marc21EventNames.LEADER_ENTITY, "00000naa a2200000uc 4500");
@@ -240,6 +272,16 @@ public class MarcXmlEncoderTest {
 
     @Test
     public void issue527ShouldEmitLeaderAlwaysAsWholeString() {
+        issue527ShouldEmitLeaderAlwaysAsWholeString(encoder);
+    }
+
+    @Test(expected = MissingIdException.class)
+    public void issue527ShouldEmitLeaderAlwaysAsWholeString_ensureCorrectMarc21Xml() {
+        encoder_ensureCorrectMarc21Xml.setEnsureCorrectMarc21Xml(true);
+        this.issue527ShouldEmitLeaderAlwaysAsWholeString(encoder_ensureCorrectMarc21Xml);
+    }
+
+    private void issue527ShouldEmitLeaderAlwaysAsWholeString(MarcXmlEncoder encoder) {
         encoder.startRecord("1");
         encoder.startEntity(Marc21EventNames.LEADER_ENTITY);
         encoder.literal(RECORD_STATUS_LITERAL, "a");
@@ -259,6 +301,8 @@ public class MarcXmlEncoderTest {
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
     }
+
+
 
     @Test
     public void sendDataAndClearWhenRecordStartedAndStreamResets() {

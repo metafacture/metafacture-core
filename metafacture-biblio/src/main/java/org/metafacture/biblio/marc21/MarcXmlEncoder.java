@@ -18,10 +18,12 @@ package org.metafacture.biblio.marc21;
 import org.metafacture.commons.XmlUtil;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
+import org.metafacture.framework.helpers.DefaultStreamPipe;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,17 +36,18 @@ import java.util.function.Function;
  * @author Pascal Christoph (dr0i) dug it up again
  */
 
-@Description("Encodes a stream into MARCXML. Use this only if you can ensure valid MARC21. Also, the leader must be correct and set as one literal. You may want to use `encode-marc21xml` instead (which can cope with e.g. an irregular leader).")
+@Description("Encodes a stream into MARCXML. If you can't ensure valid MARC21 (e.g. the leader isn't correct or not set as one literal) then set the parameter `ensureCorrectMarc21Xml` to `true`.")
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("encode-marcxml")
-public final class MarcXmlEncoder extends AbstractMarcXmlEncoder {
+public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<String>> {
 
     public static final String NAMESPACE_NAME = "marc";
     public static final String XML_ENCODING = "UTF-8";
     public static final String XML_VERSION =  "1.0";
     public static final boolean PRETTY_PRINTED = true;
     public static final boolean OMIT_XML_DECLARATION = false;
+    public static final boolean ENSURE_CORRECT_MARC21_XML = false;
 
     private static final String ROOT_OPEN = "<marc:collection xmlns:marc=\"http://www.loc.gov/MARC21/slim\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd\">";
     private static final String ROOT_CLOSE = "</marc:collection>";
@@ -102,6 +105,8 @@ public final class MarcXmlEncoder extends AbstractMarcXmlEncoder {
     private static final int TAG_BEGIN = 0;
     private static final int TAG_END = 3;
 
+    private static boolean isInstanced;
+
     private final StringBuilder builder = new StringBuilder();
 
     private final StringBuilder builderLeader = new StringBuilder();
@@ -120,10 +125,23 @@ public final class MarcXmlEncoder extends AbstractMarcXmlEncoder {
     private boolean formatted = PRETTY_PRINTED;
     private int recordAttributeOffset;
 
+    private boolean ensureCorrectMarc21Xml = ENSURE_CORRECT_MARC21_XML;
+    private final Marc21Decoder marc21Decoder = new Marc21Decoder();
+    private final Marc21Encoder marc21Encoder = new Marc21Encoder();
+    private  MarcXmlEncoder marcXmlEncoder;
     /**
      * Creates an instance of {@link MarcXmlEncoder}.
      */
+
     public MarcXmlEncoder() {
+        if (!isInstanced) {
+            isInstanced = true;
+            marcXmlEncoder = new MarcXmlEncoder();
+            marc21Decoder.setEmitLeaderAsWhole(true);
+
+            marc21Encoder.setReceiver(marc21Decoder);
+            marc21Decoder.setReceiver(marcXmlEncoder);
+        }
     }
 
     /**
@@ -135,11 +153,13 @@ public final class MarcXmlEncoder extends AbstractMarcXmlEncoder {
     public void setEmitNamespace(final boolean emitNamespace) {
         this.emitNamespace = emitNamespace;
         namespacePrefix = new Object[]{emitNamespace ? NAMESPACE_PREFIX : EMPTY};
+        if (marcXmlEncoder != null) {
+            marcXmlEncoder.setEmitNamespace(emitNamespace);
+        }
     }
 
     /**
      * Sets the flag to decide whether to omit the XML declaration.
-     *
      * <strong>Default value: {@value #OMIT_XML_DECLARATION}</strong>
      *
      * @param currentOmitXmlDeclaration true if the XML declaration is omitted, otherwise
@@ -147,145 +167,217 @@ public final class MarcXmlEncoder extends AbstractMarcXmlEncoder {
      */
     public void omitXmlDeclaration(final boolean currentOmitXmlDeclaration) {
         omitXmlDeclaration = currentOmitXmlDeclaration;
+        if (marcXmlEncoder != null) {
+            marcXmlEncoder.omitXmlDeclaration(currentOmitXmlDeclaration);
+        }
     }
 
     /**
      * Sets the XML version.
-     *
      * <strong>Default value: {@value #XML_VERSION}</strong>
      *
      * @param xmlVersion the XML version
      */
     public void setXmlVersion(final String xmlVersion) {
         this.xmlVersion = xmlVersion;
+        this.xmlVersion = xmlVersion;
+        if (marcXmlEncoder != null) {
+            marcXmlEncoder.setXmlVersion(xmlVersion);
+        }
     }
 
     /**
      * Sets the XML encoding.
-     *
      * <strong>Default value: {@value #XML_ENCODING}</strong>
      *
      * @param xmlEncoding the XML encoding
      */
     public void setXmlEncoding(final String xmlEncoding) {
         this.xmlEncoding = xmlEncoding;
+        if (marcXmlEncoder != null) {
+            marcXmlEncoder.setXmlEncoding(xmlEncoding);
+        }
+    }
+
+    /**
+     * Sets to ensure correct MARC21 XML.
+     * If true, the input data is validated to ensure correct MARC21. Also the leader may be generated.
+     * It acts as a wrapper: the input is piped to {@link org.metafacture.biblio.marc21.Marc21Encoder}, whose output is piped to {@link org.metafacture.biblio.marc21.Marc21Decoder}, whose output is piped to {@link org.metafacture.biblio.marc21.MarcXmlEncoder}.
+     * This validation and treatment of the leader is more safe but comes with a performance impact.
+     *
+     * <strong>Default value: {@value #ENSURE_CORRECT_MARC21_XML}</strong>
+     *
+     * @param ensureCorrectMarc21Xml if true the input data is validated to ensure correct MARC21. Also the leader may be generated.
+     */
+    public void setEnsureCorrectMarc21Xml(final boolean ensureCorrectMarc21Xml) {
+        this.ensureCorrectMarc21Xml = ensureCorrectMarc21Xml;
+        isInstanced = true;
+        marcXmlEncoder = new MarcXmlEncoder();
+        marc21Decoder.setEmitLeaderAsWhole(true);
+
+        marc21Encoder.setReceiver(marc21Decoder);
+        marc21Decoder.setReceiver(marcXmlEncoder);
     }
 
     /**
      * Formats the resulting xml by indentation. Aka "pretty printing".
-     *
      * <strong>Default value: {@value #PRETTY_PRINTED}</strong>
      *
      * @param formatted true if formatting is activated, otherwise false
      */
     public void setFormatted(final boolean formatted) {
         this.formatted = formatted;
+        if (marcXmlEncoder != null) {
+            marcXmlEncoder.setFormatted(formatted);
+        }
+    }
+
+    @Override
+    protected void onSetReceiver() {
+        if (marcXmlEncoder != null) {
+            marcXmlEncoder.setReceiver(getReceiver());
+        }
     }
 
     @Override
     public void startRecord(final String identifier) {
-        if (atStreamStart) {
-            if (!omitXmlDeclaration) {
-                writeHeader();
+        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
+            marc21Encoder.startRecord(identifier);
+        }
+        else {
+            if (atStreamStart) {
+                if (!omitXmlDeclaration) {
+                    writeHeader();
+                    prettyPrintNewLine();
+                }
+                writeTag(Tag.collection::open, emitNamespace ? NAMESPACE_SUFFIX : EMPTY, emitNamespace ? SCHEMA_ATTRIBUTES : EMPTY);
                 prettyPrintNewLine();
+                incrementIndentationLevel();
             }
-            writeTag(Tag.collection::open, emitNamespace ? NAMESPACE_SUFFIX : EMPTY, emitNamespace ? SCHEMA_ATTRIBUTES : EMPTY);
+            atStreamStart = false;
+
+            prettyPrintIndentation();
+            writeTag(Tag.record::open);
+            recordAttributeOffset = builder.length() - 1;
             prettyPrintNewLine();
+
             incrementIndentationLevel();
         }
-        atStreamStart = false;
-
-        prettyPrintIndentation();
-        writeTag(Tag.record::open);
-        recordAttributeOffset = builder.length() - 1;
-        prettyPrintNewLine();
-
-        incrementIndentationLevel();
     }
 
     @Override
     public void endRecord() {
-        if (builderLeader.length() > 0) {
-            writeLeader();
+        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
+            marc21Encoder.endRecord();
         }
-        decrementIndentationLevel();
-        prettyPrintIndentation();
-        writeTag(Tag.record::close);
-        prettyPrintNewLine();
-        sendAndClearData();
+        else {
+            if (builderLeader.length() > 0) {
+                writeLeader();
+            }
+            decrementIndentationLevel();
+            prettyPrintIndentation();
+            writeTag(Tag.record::close);
+            prettyPrintNewLine();
+            sendAndClearData();
+        }
     }
 
     @Override
     public void startEntity(final String name) {
-        currentEntity = name;
-        if (!name.equals(Marc21EventNames.LEADER_ENTITY)) {
-            if (name.length() != LEADER_ENTITY_LENGTH) {
-                final String message = String.format("Entity too short." + "Got a string ('%s') of length %d." +
-                        "Expected a length of " + LEADER_ENTITY_LENGTH + " (field + indicators).", name, name.length());
-                throw new MetafactureException(message);
-            }
+        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
+            marc21Encoder.startEntity(name);
+        }
+        else {
+            currentEntity = name;
+            if (!name.equals(Marc21EventNames.LEADER_ENTITY)) {
+                if (name.length() != LEADER_ENTITY_LENGTH) {
+                    final String message = String.format("Entity too short." + "Got a string ('%s') of length %d." +
+                            "Expected a length of " + LEADER_ENTITY_LENGTH + " (field + indicators).", name, name.length());
+                    throw new MetafactureException(message);
+                }
 
-            final String tag = name.substring(TAG_BEGIN, TAG_END);
-            final String ind1 = name.substring(IND1_BEGIN, IND1_END);
-            final String ind2 = name.substring(IND2_BEGIN, IND2_END);
-            prettyPrintIndentation();
-            writeTag(Tag.datafield::open, tag, ind1, ind2);
-            prettyPrintNewLine();
-            incrementIndentationLevel();
+                final String tag = name.substring(TAG_BEGIN, TAG_END);
+                final String ind1 = name.substring(IND1_BEGIN, IND1_END);
+                final String ind2 = name.substring(IND2_BEGIN, IND2_END);
+                prettyPrintIndentation();
+                writeTag(Tag.datafield::open, tag, ind1, ind2);
+                prettyPrintNewLine();
+                incrementIndentationLevel();
+            }
         }
     }
 
     @Override
     public void endEntity() {
-        if (!currentEntity.equals(Marc21EventNames.LEADER_ENTITY)) {
-            decrementIndentationLevel();
-            prettyPrintIndentation();
-            writeTag(Tag.datafield::close);
-            prettyPrintNewLine();
+        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
+            marc21Encoder.endEntity();
         }
-        currentEntity = "";
+        else {
+            if (!currentEntity.equals(Marc21EventNames.LEADER_ENTITY)) {
+                decrementIndentationLevel();
+                prettyPrintIndentation();
+                writeTag(Tag.datafield::close);
+                prettyPrintNewLine();
+            }
+            currentEntity = "";
+        }
     }
 
     @Override
     public void literal(final String name, final String value) {
-        if ("".equals(currentEntity)) {
-            if (name.equals(Marc21EventNames.MARCXML_TYPE_LITERAL)) {
-                if (value != null) {
-                    builder.insert(recordAttributeOffset, String.format(ATTRIBUTE_TEMPLATE, name, value));
+        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
+            marc21Encoder.literal(name, value);
+        }
+        else {
+            if ("".equals(currentEntity)) {
+                if (name.equals(Marc21EventNames.MARCXML_TYPE_LITERAL)) {
+                    if (value != null) {
+                        builder.insert(recordAttributeOffset, String.format(ATTRIBUTE_TEMPLATE, name, value));
+                    }
+                }
+                else if (!writeLeader(name, value)) {
+                    prettyPrintIndentation();
+                    writeTag(Tag.controlfield::open, name);
+                    if (value != null) {
+                        writeEscaped(value.trim());
+                    }
+                    writeTag(Tag.controlfield::close);
+                    prettyPrintNewLine();
                 }
             }
-            else if (!writeLeader(name, value)) {
+            else if (!writeLeader(currentEntity, value)) {
                 prettyPrintIndentation();
-                writeTag(Tag.controlfield::open, name);
-                if (value != null) {
-                    writeEscaped(value.trim());
-                }
-                writeTag(Tag.controlfield::close);
+                writeTag(Tag.subfield::open, name);
+                writeEscaped(value.trim());
+                writeTag(Tag.subfield::close);
                 prettyPrintNewLine();
             }
-        }
-        else if (!writeLeader(currentEntity, value)) {
-            prettyPrintIndentation();
-            writeTag(Tag.subfield::open, name);
-            writeEscaped(value.trim());
-            writeTag(Tag.subfield::close);
-            prettyPrintNewLine();
         }
     }
 
     @Override
     protected void onResetStream() {
-        if (!atStreamStart) {
-            writeFooter();
+        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
+            marc21Encoder.resetStream();
         }
-        sendAndClearData();
-        atStreamStart = true;
+        else {
+            if (!atStreamStart) {
+                writeFooter();
+            }
+            sendAndClearData();
+            atStreamStart = true;
+        }
     }
 
     @Override
     protected void onCloseStream() {
-        writeFooter();
-        sendAndClearData();
+        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
+            marc21Encoder.closeStream();
+        }
+        else {
+            writeFooter();
+            sendAndClearData();
+        }
     }
 
     /** Increments the indentation level by one */
@@ -373,9 +465,14 @@ public final class MarcXmlEncoder extends AbstractMarcXmlEncoder {
     }
 
     private void sendAndClearData() {
-        getReceiver().process(builder.toString());
-        builder.delete(0, builder.length());
-        recordAttributeOffset = 0;
+        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
+            marcXmlEncoder.sendAndClearData();
+        }
+        else {
+            getReceiver().process(builder.toString());
+            builder.delete(0, builder.length());
+            recordAttributeOffset = 0;
+        }
     }
 
 }
