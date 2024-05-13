@@ -335,7 +335,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
                         builder.insert(recordAttributeOffset, String.format(ATTRIBUTE_TEMPLATE, name, value));
                     }
                 }
-                else if (!writeLeader(name, value)) {
+                else if (!appendLeader(name, value)) {
                     prettyPrintIndentation();
                     writeTag(Tag.controlfield::open, name);
                     if (value != null) {
@@ -345,7 +345,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
                     prettyPrintNewLine();
                 }
             }
-            else if (!writeLeader(currentEntity, value)) {
+            else if (!appendLeader(currentEntity, value)) {
                 prettyPrintIndentation();
                 writeTag(Tag.subfield::open, name);
                 writeEscaped(value.trim());
@@ -414,8 +414,18 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
      *
      * @param str the unescaped sequence to be written
      */
-    private void writeRawLeader(final String str) {
+    private void appendLeader(final String str) {
         builderLeader.append(str);
+    }
+
+    private boolean appendLeader(final String name, final String value) {
+        if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
+            appendLeader(value);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
@@ -433,16 +443,6 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         writeRaw(builderLeader.toString());
         writeTag(Tag.leader::close);
         prettyPrintNewLine();
-    }
-
-    private boolean writeLeader(final String name, final String value) {
-        if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
-            writeRawLeader(value);
-            return true;
-        }
-        else {
-            return false;
-        }
     }
 
     private void writeTag(final Function<Object[], String> function, final Object... args) {

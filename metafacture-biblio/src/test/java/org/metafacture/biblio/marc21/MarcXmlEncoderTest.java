@@ -20,7 +20,6 @@ import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
-import org.junit.ComparisonFailure;
 import org.junit.Test;
 import static org.metafacture.biblio.marc21.Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL;
 import static org.metafacture.biblio.marc21.Marc21EventNames.CATALOGING_FORM_LITERAL;
@@ -58,15 +57,13 @@ public class MarcXmlEncoderTest {
     private static final String RECORD_ID = "92005291";
 
     private static StringBuilder resultCollector;
-    private static MarcXmlEncoder encoder;
-    private static MarcXmlEncoder encoder_ensureCorrectMarc21Xml;
+    private final MarcXmlEncoder encoder = new MarcXmlEncoder();
+    private final MarcXmlEncoder encoder_ensureCorrectMarc21Xml = new MarcXmlEncoder();
 
 
     @Before
     public void setUp() {
-        encoder = new MarcXmlEncoder();
         initializeEncoder(encoder);
-        encoder_ensureCorrectMarc21Xml = new MarcXmlEncoder();
         encoder_ensureCorrectMarc21Xml.setEnsureCorrectMarc21Xml(true);
         initializeEncoder(encoder_ensureCorrectMarc21Xml);
     }
@@ -243,21 +240,15 @@ public class MarcXmlEncoderTest {
 
     @Test
     public void issue336_createRecordWithTopLevelLeader_ensureCorrectMarc21Xml() {
-        issue336_createRecordWithTopLevelLeader_correctMarc21Xml(encoder_ensureCorrectMarc21Xml);
+        createRecordWithTopLevelLeader(encoder_ensureCorrectMarc21Xml, "00048naa a2200037uc 4500");
     }
 
-    @Test(expected = NullPointerException.class)
-    public void setParameterAfterSettingReceiver_ensureCorrectMarc21Xml() {
-        encoder_ensureCorrectMarc21Xml.setEnsureCorrectMarc21Xml(true);
-        issue336_createRecordWithTopLevelLeader_correctMarc21Xml(encoder_ensureCorrectMarc21Xml);
+    @Test
+    public void issue336_createRecordWithTopLevelLeader_defaultMarc21Xml() {
+        createRecordWithTopLevelLeader(encoder,"00000naa a2200000uc 4500");
     }
 
-    @Test(expected = ComparisonFailure.class)
-    public void issue336_createRecordWithTopLevelLeader_correctMarc21Xml() {
-        issue336_createRecordWithTopLevelLeader_correctMarc21Xml(encoder);
-    }
-
-    private void issue336_createRecordWithTopLevelLeader_correctMarc21Xml(MarcXmlEncoder encoder) {
+    private void createRecordWithTopLevelLeader(final MarcXmlEncoder encoder, final String expectedLeader) {
         encoder.startRecord("1");
         encoder.literal("001", "8u3287432");
         encoder.literal(Marc21EventNames.LEADER_ENTITY, "00000naa a2200000uc 4500");
@@ -265,9 +256,15 @@ public class MarcXmlEncoderTest {
         encoder.closeStream();
         String expected = XML_DECLARATION + XML_ROOT_OPEN
             + "<marc:record><marc:controlfield tag=\"001\">8u3287432</marc:controlfield>" +
-            "<marc:leader>00048naa a2200037uc 4500</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
+            "<marc:leader>" + expectedLeader + "</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void ensureCorrectMarc21XmlParameterAfterSettingReceiver() {
+        encoder_ensureCorrectMarc21Xml.setEnsureCorrectMarc21Xml(true);
+        createRecordWithTopLevelLeader(encoder_ensureCorrectMarc21Xml,"ignored");
     }
 
     @Test
@@ -285,7 +282,6 @@ public class MarcXmlEncoderTest {
         encoder.startRecord("1");
         encoder.startEntity(Marc21EventNames.LEADER_ENTITY);
         encoder.literal(RECORD_STATUS_LITERAL, "a");
-
         encoder.literal(RECORD_TYPE_LITERAL, "o");
         encoder.literal(BIBLIOGRAPHIC_LEVEL_LITERAL, "a");
         encoder.literal(TYPE_OF_CONTROL_LITERAL, " ");
