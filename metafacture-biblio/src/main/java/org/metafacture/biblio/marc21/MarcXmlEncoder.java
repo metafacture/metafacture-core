@@ -105,43 +105,23 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     private static final int TAG_BEGIN = 0;
     private static final int TAG_END = 3;
 
-    private static boolean isInstanced;
+    private final Encoder encoder = new Encoder();
+    private final Marc21Decoder decoder = new Marc21Decoder();
+    private final Marc21Encoder wrapper = new Marc21Encoder();
 
-    private final StringBuilder builder = new StringBuilder();
+    private DefaultStreamPipe<ObjectReceiver<String>> pipe;
 
-    private final StringBuilder builderLeader = new StringBuilder();
-    private boolean atStreamStart = true;
-
-    private boolean omitXmlDeclaration = OMIT_XML_DECLARATION;
-    private String xmlVersion = XML_VERSION;
-    private String xmlEncoding = XML_ENCODING;
-
-    private String currentEntity = "";
-
-    private boolean emitNamespace = true;
-    private Object[] namespacePrefix = new Object[]{emitNamespace ? NAMESPACE_PREFIX : EMPTY};
-
-    private int indentationLevel;
-    private boolean formatted = PRETTY_PRINTED;
-    private int recordAttributeOffset;
-
-    private boolean ensureCorrectMarc21Xml = ENSURE_CORRECT_MARC21_XML;
-    private final Marc21Decoder marc21Decoder = new Marc21Decoder();
-    private final Marc21Encoder marc21Encoder = new Marc21Encoder();
-    private  MarcXmlEncoder marcXmlEncoder;
     /**
      * Creates an instance of {@link MarcXmlEncoder}.
      */
-
     public MarcXmlEncoder() {
-        if (!isInstanced) {
-            isInstanced = true;
-            marcXmlEncoder = new MarcXmlEncoder();
-            marc21Decoder.setEmitLeaderAsWhole(true);
+        decoder.setEmitLeaderAsWhole(true);
 
-            marc21Encoder.setReceiver(marc21Decoder);
-            marc21Decoder.setReceiver(marcXmlEncoder);
-        }
+        wrapper
+            .setReceiver(decoder)
+            .setReceiver(encoder);
+
+        setEnsureCorrectMarc21Xml(ENSURE_CORRECT_MARC21_XML);
     }
 
     /**
@@ -151,52 +131,41 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
      * @param emitNamespace true if the namespace is emitted, otherwise false
      */
     public void setEmitNamespace(final boolean emitNamespace) {
-        this.emitNamespace = emitNamespace;
-        namespacePrefix = new Object[]{emitNamespace ? NAMESPACE_PREFIX : EMPTY};
-        if (marcXmlEncoder != null) {
-            marcXmlEncoder.setEmitNamespace(emitNamespace);
-        }
+        encoder.setEmitNamespace(emitNamespace);
     }
 
     /**
      * Sets the flag to decide whether to omit the XML declaration.
+     *
      * <strong>Default value: {@value #OMIT_XML_DECLARATION}</strong>
      *
      * @param currentOmitXmlDeclaration true if the XML declaration is omitted, otherwise
      *                           false
      */
     public void omitXmlDeclaration(final boolean currentOmitXmlDeclaration) {
-        omitXmlDeclaration = currentOmitXmlDeclaration;
-        if (marcXmlEncoder != null) {
-            marcXmlEncoder.omitXmlDeclaration(currentOmitXmlDeclaration);
-        }
+        encoder.omitXmlDeclaration(currentOmitXmlDeclaration);
     }
 
     /**
      * Sets the XML version.
+     *
      * <strong>Default value: {@value #XML_VERSION}</strong>
      *
      * @param xmlVersion the XML version
      */
     public void setXmlVersion(final String xmlVersion) {
-        this.xmlVersion = xmlVersion;
-        this.xmlVersion = xmlVersion;
-        if (marcXmlEncoder != null) {
-            marcXmlEncoder.setXmlVersion(xmlVersion);
-        }
+        encoder.setXmlVersion(xmlVersion);
     }
 
     /**
      * Sets the XML encoding.
+     *
      * <strong>Default value: {@value #XML_ENCODING}</strong>
      *
      * @param xmlEncoding the XML encoding
      */
     public void setXmlEncoding(final String xmlEncoding) {
-        this.xmlEncoding = xmlEncoding;
-        if (marcXmlEncoder != null) {
-            marcXmlEncoder.setXmlEncoding(xmlEncoding);
-        }
+        encoder.setXmlEncoding(xmlEncoding);
     }
 
     /**
@@ -210,41 +179,106 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
      * @param ensureCorrectMarc21Xml if true the input data is validated to ensure correct MARC21. Also the leader may be generated.
      */
     public void setEnsureCorrectMarc21Xml(final boolean ensureCorrectMarc21Xml) {
-        this.ensureCorrectMarc21Xml = ensureCorrectMarc21Xml;
-        isInstanced = true;
-        marcXmlEncoder = new MarcXmlEncoder();
-        marc21Decoder.setEmitLeaderAsWhole(true);
-
-        marc21Encoder.setReceiver(marc21Decoder);
-        marc21Decoder.setReceiver(marcXmlEncoder);
+        pipe = ensureCorrectMarc21Xml ? wrapper : encoder;
     }
 
     /**
      * Formats the resulting xml by indentation. Aka "pretty printing".
+     *
      * <strong>Default value: {@value #PRETTY_PRINTED}</strong>
      *
      * @param formatted true if formatting is activated, otherwise false
      */
     public void setFormatted(final boolean formatted) {
-        this.formatted = formatted;
-        if (marcXmlEncoder != null) {
-            marcXmlEncoder.setFormatted(formatted);
-        }
-    }
-
-    @Override
-    protected void onSetReceiver() {
-        if (marcXmlEncoder != null) {
-            marcXmlEncoder.setReceiver(getReceiver());
-        }
+        encoder.setFormatted(formatted);
     }
 
     @Override
     public void startRecord(final String identifier) {
-        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
-            marc21Encoder.startRecord(identifier);
+        pipe.startRecord(identifier);
+    }
+
+    @Override
+    public void endRecord() {
+        pipe.endRecord();
+    }
+
+    @Override
+    public void startEntity(final String name) {
+        pipe.startEntity(name);
+    }
+
+    @Override
+    public void endEntity() {
+        pipe.endEntity();
+    }
+
+    @Override
+    public void literal(final String name, final String value) {
+        pipe.literal(name, value);
+    }
+
+    @Override
+    protected void onResetStream() {
+        pipe.resetStream();
+    }
+
+    @Override
+    protected void onCloseStream() {
+        pipe.closeStream();
+    }
+
+    @Override
+    protected void onSetReceiver() {
+        encoder.setReceiver(getReceiver());
+    }
+
+    private static class Encoder extends DefaultStreamPipe<ObjectReceiver<String>> {
+
+        private final StringBuilder builder = new StringBuilder();
+        private final StringBuilder leaderBuilder = new StringBuilder();
+
+        private boolean atStreamStart = true;
+
+        private boolean omitXmlDeclaration = OMIT_XML_DECLARATION;
+        private String xmlVersion = XML_VERSION;
+        private String xmlEncoding = XML_ENCODING;
+
+        private String currentEntity = "";
+
+        private boolean emitNamespace = true;
+        private Object[] namespacePrefix = new Object[]{emitNamespace ? NAMESPACE_PREFIX : EMPTY};
+
+        private int indentationLevel;
+        private boolean formatted = PRETTY_PRINTED;
+        private int recordAttributeOffset;
+
+        private Encoder() {
         }
-        else {
+
+        public void setEmitNamespace(final boolean emitNamespace) {
+            this.emitNamespace = emitNamespace;
+            namespacePrefix = new Object[]{emitNamespace ? NAMESPACE_PREFIX : EMPTY};
+        }
+
+        public void omitXmlDeclaration(final boolean currentOmitXmlDeclaration) {
+            omitXmlDeclaration = currentOmitXmlDeclaration;
+        }
+
+        public void setXmlVersion(final String xmlVersion) {
+            this.xmlVersion = xmlVersion;
+        }
+
+        public void setXmlEncoding(final String xmlEncoding) {
+            this.xmlEncoding = xmlEncoding;
+        }
+
+        public void setFormatted(final boolean formatted) {
+            this.formatted = formatted;
+        }
+
+        @Override
+        public void startRecord(final String identifier) {
             if (atStreamStart) {
                 if (!omitXmlDeclaration) {
                     writeHeader();
@@ -263,15 +297,10 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
             incrementIndentationLevel();
         }
-    }
 
-    @Override
-    public void endRecord() {
-        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
-            marc21Encoder.endRecord();
-        }
-        else {
-            if (builderLeader.length() > 0) {
+        @Override
+        public void endRecord() {
+            if (leaderBuilder.length() > 0) {
                 writeLeader();
             }
             decrementIndentationLevel();
@@ -280,14 +309,9 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
             prettyPrintNewLine();
             sendAndClearData();
         }
-    }
 
-    @Override
-    public void startEntity(final String name) {
-        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
-            marc21Encoder.startEntity(name);
-        }
-        else {
+        @Override
+        public void startEntity(final String name) {
             currentEntity = name;
             if (!name.equals(Marc21EventNames.LEADER_ENTITY)) {
                 if (name.length() != LEADER_ENTITY_LENGTH) {
@@ -305,14 +329,9 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
                 incrementIndentationLevel();
             }
         }
-    }
 
-    @Override
-    public void endEntity() {
-        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
-            marc21Encoder.endEntity();
-        }
-        else {
+        @Override
+        public void endEntity() {
             if (!currentEntity.equals(Marc21EventNames.LEADER_ENTITY)) {
                 decrementIndentationLevel();
                 prettyPrintIndentation();
@@ -321,14 +340,9 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
             }
             currentEntity = "";
         }
-    }
 
-    @Override
-    public void literal(final String name, final String value) {
-        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
-            marc21Encoder.literal(name, value);
-        }
-        else {
+        @Override
+        public void literal(final String name, final String value) {
             if ("".equals(currentEntity)) {
                 if (name.equals(Marc21EventNames.MARCXML_TYPE_LITERAL)) {
                     if (value != null) {
@@ -353,126 +367,112 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
                 prettyPrintNewLine();
             }
         }
-    }
 
-    @Override
-    protected void onResetStream() {
-        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
-            marc21Encoder.resetStream();
-        }
-        else {
+        @Override
+        protected void onResetStream() {
             if (!atStreamStart) {
                 writeFooter();
             }
             sendAndClearData();
             atStreamStart = true;
         }
-    }
 
-    @Override
-    protected void onCloseStream() {
-        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
-            marc21Encoder.closeStream();
-        }
-        else {
+        @Override
+        protected void onCloseStream() {
             writeFooter();
             sendAndClearData();
         }
-    }
 
-    /** Increments the indentation level by one */
-    private void incrementIndentationLevel() {
-        indentationLevel += 1;
-    }
-
-    /** Decrements the indentation level by one */
-    private void decrementIndentationLevel() {
-        indentationLevel -= 1;
-    }
-
-    /** Adds a XML Header */
-    private void writeHeader() {
-        writeRaw(String.format(XML_DECLARATION_TEMPLATE, xmlVersion, xmlEncoding));
-    }
-
-    /** Closes the root tag */
-    private void writeFooter() {
-        writeTag(Tag.collection::close);
-    }
-
-    /**
-    * Writes an unescaped sequence.
-    *
-    * @param str the unescaped sequence to be written
-    */
-    private void writeRaw(final String str) {
-        builder.append(str);
-    }
-
-    /**
-     * Writes an unescaped sequence to the leader literal.
-     *
-     * @param str the unescaped sequence to be written
-     */
-    private void appendLeader(final String str) {
-        builderLeader.append(str);
-    }
-
-    private boolean appendLeader(final String name, final String value) {
-        if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
-            appendLeader(value);
-            return true;
+        /** Increments the indentation level by one */
+        private void incrementIndentationLevel() {
+            indentationLevel += 1;
         }
-        else {
-            return false;
+
+        /** Decrements the indentation level by one */
+        private void decrementIndentationLevel() {
+            indentationLevel -= 1;
         }
-    }
 
-    /**
-    * Writes an escaped sequence.
-    *
-    * @param str the unescaped sequence to be written
-    */
-    private void writeEscaped(final String str) {
-        builder.append(XmlUtil.escape(str, false));
-    }
-
-    private void writeLeader() {
-        prettyPrintIndentation();
-        writeTag(Tag.leader::open);
-        writeRaw(builderLeader.toString());
-        writeTag(Tag.leader::close);
-        prettyPrintNewLine();
-    }
-
-    private void writeTag(final Function<Object[], String> function, final Object... args) {
-        final Object[] allArgs = Arrays.copyOf(namespacePrefix, namespacePrefix.length + args.length);
-        System.arraycopy(args, 0, allArgs, namespacePrefix.length, args.length);
-        writeRaw(function.apply(allArgs));
-    }
-
-    private void prettyPrintIndentation() {
-        if (formatted) {
-            final String prefix = String.join("", Collections.nCopies(indentationLevel, INDENT));
-            builder.append(prefix);
+        /** Adds a XML Header */
+        private void writeHeader() {
+            writeRaw(String.format(XML_DECLARATION_TEMPLATE, xmlVersion, xmlEncoding));
         }
-    }
 
-    private void prettyPrintNewLine() {
-        if (formatted) {
-            builder.append(NEW_LINE);
+        /** Closes the root tag */
+        private void writeFooter() {
+            writeTag(Tag.collection::close);
         }
-    }
 
-    private void sendAndClearData() {
-        if (ensureCorrectMarc21Xml && marcXmlEncoder != null) {
-            marcXmlEncoder.sendAndClearData();
+        /**
+         * Writes an unescaped sequence.
+         *
+         * @param str the unescaped sequence to be written
+         */
+        private void writeRaw(final String str) {
+            builder.append(str);
         }
-        else {
+
+        /**
+         * Writes an unescaped sequence to the leader literal.
+         *
+         * @param str the unescaped sequence to be written
+         */
+        private void appendLeader(final String str) {
+            leaderBuilder.append(str);
+        }
+
+        private boolean appendLeader(final String name, final String value) {
+            if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
+                appendLeader(value);
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        /**
+         * Writes an escaped sequence.
+         *
+         * @param str the unescaped sequence to be written
+         */
+        private void writeEscaped(final String str) {
+            builder.append(XmlUtil.escape(str, false));
+        }
+
+        private void writeLeader() {
+            prettyPrintIndentation();
+            writeTag(Tag.leader::open);
+            writeRaw(leaderBuilder.toString());
+            writeTag(Tag.leader::close);
+            prettyPrintNewLine();
+        }
+
+        private void writeTag(final Function<Object[], String> function, final Object... args) {
+            final Object[] allArgs = Arrays.copyOf(namespacePrefix, namespacePrefix.length + args.length);
+            System.arraycopy(args, 0, allArgs, namespacePrefix.length, args.length);
+            writeRaw(function.apply(allArgs));
+        }
+
+        private void prettyPrintIndentation() {
+            if (formatted) {
+                final String prefix = String.join("", Collections.nCopies(indentationLevel, INDENT));
+                builder.append(prefix);
+            }
+        }
+
+        private void prettyPrintNewLine() {
+            if (formatted) {
+                builder.append(NEW_LINE);
+            }
+        }
+
+        private void sendAndClearData() {
             getReceiver().process(builder.toString());
             builder.delete(0, builder.length());
             recordAttributeOffset = 0;
         }
+
     }
 
 }
