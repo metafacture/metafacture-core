@@ -43,22 +43,64 @@ import java.io.IOException;
 @FluxCommand("find-fix-paths")
 
 public class FindFixPaths extends DefaultStreamPipe<ObjectReceiver<String>> {
+    private final Metafix fix;
+    private String objectPattern;
+
     public FindFixPaths(final String objectPattern) {
-        final Metafix fix;
+        this.objectPattern = objectPattern;
         try {
-            fix = new Metafix("nothing()");
-            fix.setRepeatedFieldsToEntities(true);
+            this.fix = new Metafix("nothing()");
+            this.fix.setRepeatedFieldsToEntities(true);
         }
         catch (final IOException e) {
             throw new MetafactureException(e);
         }
+    }
+
+    @Override
+    protected void onSetReceiver() {
         final TripleFilter tripleFilter = new TripleFilter();
         tripleFilter.setObjectPattern(objectPattern);
         fix
                 .setReceiver(new StreamFlattener())
                 .setReceiver(new StreamToTriples())
                 .setReceiver(tripleFilter)
-                .setReceiver(new ObjectTemplate<>("${p}\t ${o}"))
+                .setReceiver(new ObjectTemplate<>("${p}\\t|\\t${o}"))
                 .setReceiver(getReceiver());
+    }
+
+    @Override
+    public void startRecord(final String identifier) {
+        fix.startRecord(identifier);
+    }
+
+    @Override
+    public void endRecord() {
+        fix.endRecord();
+    }
+
+    @Override
+    public void startEntity(final String name) {
+        fix.startEntity(name);
+    }
+
+    @Override
+    public void endEntity() {
+        fix.endEntity();
+    }
+
+    @Override
+    public void literal(final String name, final String value) {
+        fix.literal(name, value);
+    }
+
+    @Override
+    protected void onCloseStream() {
+        fix.closeStream();
+    }
+
+    @Override
+    protected void onResetStream() {
+        fix.resetStream();
     }
 }
