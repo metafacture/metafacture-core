@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Fabian Steeg, hbz
+ * Copyright 2024 Tobias Bülte, hbz
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 /**
  * Tests for class {@link FindFixPaths}.
  *
- * @author Fabian Steeg
+ * @author Tobias Bülte
  *
  */
 @ExtendWith(MockitoExtension.class)
