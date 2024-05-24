@@ -24,10 +24,6 @@ Run the tests (in `metafix/src/test/java`) and checks (`.editorconfig`, `config/
 
 `./gradlew clean check`
 
-To execute a Fix (embedded in a Flux) via CLI:
-
-`./gradlew :metafix-runner:run --args="$PWD/path/to.flux"`
-
 (To import the projects in Eclipse, choose `File > Import > Existing Gradle Project` and select the `metafacture-fix` directory.)
 
 ## Usage
