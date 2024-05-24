@@ -21,6 +21,7 @@ target/
 .gradle
 .gradletasknamecache
 build
+bin/
 
 # Ignore tmp directory
 tmp
