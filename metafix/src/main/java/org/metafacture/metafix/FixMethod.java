@@ -41,6 +41,7 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.Base64;
 
 public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
 
@@ -624,6 +625,13 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
             record.transform(params.get(0), (m, c) -> m
                     .ifArray(a -> c.accept(new Value(a.stream().map(Value::asString).mapToInt(Integer::parseInt).sum())))
             );
+        }
+    },
+    to_base64 {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params,
+                final Map<String, String> options) {
+            record.transform(params.get(0), s -> Base64.getEncoder().encodeToString(s.getBytes()));
         }
     },
     to_json {

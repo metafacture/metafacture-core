@@ -4062,4 +4062,24 @@ public class MetafixMethodTest {
         );
     }
 
+    @Test
+    public void shouldTransformStringToBase64() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "to_base64('data.title')"),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("data");
+                    i.literal("title", "this-is-a-test");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                    o.get().startRecord("1");
+                    o.get().startEntity("data");
+                    o.get().literal("title", "dGhpcy1pcy1hLXRlc3Q=");
+                    o.get().endEntity();
+                    o.get().endRecord();
+                });
+    }
+
 }
