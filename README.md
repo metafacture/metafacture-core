@@ -835,7 +835,7 @@ to_json("<sourceField>"[, pretty: "<boolean>"][, error_string: "<errorValue>"])
 
 ##### `to_base64`
 
-Encodes the value as base64 hash.
+Replaces the value with its Base64 encoding.
 
 ```perl
 to_base64("<sourceField>")
