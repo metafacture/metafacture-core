@@ -833,6 +833,16 @@ to_json("<sourceField>"[, pretty: "<boolean>"][, error_string: "<errorValue>"])
 
 [Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+to_json+{")
 
+##### `to_base64`
+
+Encodes the value as base64 hash.
+
+```perl
+to_base64("<sourceField>")
+```
+
+[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+to_base64+{")
+
 ##### `trim`
 
 Deletes whitespace at the beginning and the end of a field value.
