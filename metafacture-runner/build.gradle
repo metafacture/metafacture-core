@@ -107,8 +107,8 @@ distributions {
   main {
     distributionBaseName = parent.project.name
     contents {
-      dirMode = 0755
-      fileMode = 0644
+      dirPermissions { unix 0755 }
+      filePermissions { unix 0644 }
 
       into('lib/') {
         from jar
@@ -120,7 +120,7 @@ distributions {
       from('src/main/scripts') {
         filter(ReplaceTokens, tokens: [jarfile: 'lib/' + jar.archiveFileName.get() ])
         filteringCharset = 'UTF-8'
-        fileMode = 0755
+        filePermissions { unix 0755 }
       }
       from('../') {
         include 'LICENSE'
