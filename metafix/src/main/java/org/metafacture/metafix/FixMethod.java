@@ -27,6 +27,7 @@ import org.metafacture.metamorph.maps.FileMap;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -624,6 +625,12 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
             record.transform(params.get(0), (m, c) -> m
                     .ifArray(a -> c.accept(new Value(a.stream().map(Value::asString).mapToInt(Integer::parseInt).sum())))
             );
+        }
+    },
+    to_base64 {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            record.transform(params.get(0), s -> Base64.getEncoder().encodeToString(s.getBytes()));
         }
     },
     to_json {
