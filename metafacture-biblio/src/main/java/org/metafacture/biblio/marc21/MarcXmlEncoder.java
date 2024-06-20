@@ -105,6 +105,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
     private static final int TAG_END = 3;
 
     private final StringBuilder builder = new StringBuilder();
+    private final StringBuilder leaderBuilder = new StringBuilder();
 
     private boolean atStreamStart = true;
 
@@ -206,6 +207,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     @Override
     public void endRecord() {
+        writeLeader();
         decrementIndentationLevel();
         prettyPrintIndentation();
         writeTag(Tag.record::close);
@@ -252,7 +254,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
                     builder.insert(recordAttributeOffset, String.format(ATTRIBUTE_TEMPLATE, name, value));
                 }
             }
-            else if (!writeLeader(name, value)) {
+            else if (!appendLeader(name, value)) {
                 prettyPrintIndentation();
                 writeTag(Tag.controlfield::open, name);
                 if (value != null) {
@@ -262,7 +264,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
                 prettyPrintNewLine();
             }
         }
-        else if (!writeLeader(currentEntity, value)) {
+        else if (!appendLeader(currentEntity, value)) {
             prettyPrintIndentation();
             writeTag(Tag.subfield::open, name);
             writeEscaped(value.trim());
@@ -316,6 +318,16 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         builder.append(str);
     }
 
+    private boolean appendLeader(final String name, final String value) {
+        if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
+            leaderBuilder.append(value);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     /**
     * Writes an escaped sequence.
     *
@@ -325,18 +337,14 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         builder.append(XmlUtil.escape(str, false));
     }
 
-    private boolean writeLeader(final String name, final String value) {
-        if (name.equals(Marc21EventNames.LEADER_ENTITY)) {
+    private void writeLeader() {
+        final String leader = leaderBuilder.toString();
+        if (!leader.isEmpty()) {
             prettyPrintIndentation();
             writeTag(Tag.leader::open);
-            writeRaw(value);
+            writeRaw(leader);
             writeTag(Tag.leader::close);
             prettyPrintNewLine();
-
-            return true;
-        }
-        else {
-            return false;
         }
     }
 
