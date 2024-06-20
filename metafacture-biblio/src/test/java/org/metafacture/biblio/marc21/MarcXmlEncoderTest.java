@@ -16,7 +16,9 @@
 
 package org.metafacture.biblio.marc21;
 
+import org.metafacture.framework.FormatException;
 import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.MissingIdException;
 import org.metafacture.framework.helpers.DefaultObjectReceiver;
 
 import org.junit.Before;
@@ -183,7 +185,7 @@ public class MarcXmlEncoderTest {
     }
 
     @Test
-    public void createAnRecordWithLeader() {
+    public void createRecordWithLeader() {
         encoder.startRecord("1");
         encoder.startEntity(Marc21EventNames.LEADER_ENTITY);
         encoder.literal(Marc21EventNames.LEADER_ENTITY, "dummy");
@@ -194,6 +196,12 @@ public class MarcXmlEncoderTest {
                 + "<marc:record><marc:leader>dummy</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
+    }
+
+    @Test(expected = FormatException.class)
+    public void createRecordWithLeader_ensureCorrectMarc21Xml() {
+        encoder.setEnsureCorrectMarc21Xml(true);
+        createRecordWithLeader();
     }
 
     @Test
@@ -213,6 +221,12 @@ public class MarcXmlEncoderTest {
         issue336_createRecordWithTopLevelLeader(encoder, "00000naa a2200000uc 4500");
     }
 
+    @Test
+    public void issue336_createRecordWithTopLevelLeader_ensureCorrectMarc21Xml() {
+        encoder.setEnsureCorrectMarc21Xml(true);
+        issue336_createRecordWithTopLevelLeader(encoder, "00048naa a2200037uc 4500");
+    }
+
     private void issue336_createRecordWithTopLevelLeader(final MarcXmlEncoder encoder, final String expectedLeader) {
         encoder.startRecord("1");
         encoder.literal("001", "8u3287432");
@@ -228,6 +242,12 @@ public class MarcXmlEncoderTest {
 
     @Test
     public void issue527_shouldEmitLeaderAlwaysAsWholeString() {
+        issue527_shouldEmitLeaderAlwaysAsWholeString(encoder);
+    }
+
+    @Test(expected = MissingIdException.class)
+    public void issue527_shouldEmitLeaderAlwaysAsWholeString_ensureCorrectMarc21Xml() {
+        encoder.setEnsureCorrectMarc21Xml(true);
         issue527_shouldEmitLeaderAlwaysAsWholeString(encoder);
     }
 
