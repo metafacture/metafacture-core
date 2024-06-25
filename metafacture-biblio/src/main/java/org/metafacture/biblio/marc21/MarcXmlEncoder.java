@@ -463,6 +463,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         private void sendAndClearData() {
             getReceiver().process(builder.toString());
             builder.delete(0, builder.length());
+            leaderBuilder.delete(0, leaderBuilder.length());
             recordAttributeOffset = 0;
         }
 

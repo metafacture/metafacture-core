@@ -184,6 +184,21 @@ public class MarcXmlEncoderTest {
         encoder.startEntity("123456");
     }
 
+    private void createRecordWithLeader(final String id, final String... leader) {
+        encoder.startRecord(id);
+        encoder.startEntity(Marc21EventNames.LEADER_ENTITY);
+        encoder.literal(Marc21EventNames.RECORD_STATUS_LITERAL, leader[0]);
+        encoder.literal(Marc21EventNames.RECORD_TYPE_LITERAL, leader[1]);
+        encoder.literal(Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL, leader[2]);
+        encoder.literal(Marc21EventNames.TYPE_OF_CONTROL_LITERAL, leader[3]);
+        encoder.literal(Marc21EventNames.CHARACTER_CODING_LITERAL, leader[4]);
+        encoder.literal(Marc21EventNames.ENCODING_LEVEL_LITERAL, leader[5]);
+        encoder.literal(Marc21EventNames.CATALOGING_FORM_LITERAL, leader[6]);
+        encoder.literal(Marc21EventNames.MULTIPART_LEVEL_LITERAL, leader[7]);
+        encoder.endEntity();
+        encoder.endRecord();
+    }
+
     @Test
     public void createRecordWithLeader() {
         encoder.startRecord("1");
@@ -242,33 +257,20 @@ public class MarcXmlEncoderTest {
 
     @Test
     public void issue527_shouldEmitLeaderAlwaysAsWholeString() {
-        issue527_shouldEmitLeaderAlwaysAsWholeString(encoder);
+        createRecordWithLeader("1", "a", "o", "a", " ", "a", "z", "u", " ");
+        createRecordWithLeader("2", "d", "u", "m", " ", "m", "y", "#", " ");
+        encoder.closeStream();
+        String expected = XML_DECLARATION + XML_ROOT_OPEN
+                + "<marc:record><marc:leader>aoa azu </marc:leader></marc:record>"
+                + "<marc:record><marc:leader>dum my# </marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertEquals(expected, actual);
     }
 
     @Test(expected = MissingIdException.class)
     public void issue527_shouldEmitLeaderAlwaysAsWholeString_ensureCorrectMarc21Xml() {
         encoder.setEnsureCorrectMarc21Xml(true);
-        issue527_shouldEmitLeaderAlwaysAsWholeString(encoder);
-    }
-
-    private void issue527_shouldEmitLeaderAlwaysAsWholeString(final MarcXmlEncoder encoder) {
-        encoder.startRecord("1");
-        encoder.startEntity(Marc21EventNames.LEADER_ENTITY);
-        encoder.literal(Marc21EventNames.RECORD_STATUS_LITERAL, "a");
-        encoder.literal(Marc21EventNames.RECORD_TYPE_LITERAL, "o");
-        encoder.literal(Marc21EventNames.BIBLIOGRAPHIC_LEVEL_LITERAL, "a");
-        encoder.literal(Marc21EventNames.TYPE_OF_CONTROL_LITERAL, " ");
-        encoder.literal(Marc21EventNames.CHARACTER_CODING_LITERAL, "a");
-        encoder.literal(Marc21EventNames.ENCODING_LEVEL_LITERAL, "z");
-        encoder.literal(Marc21EventNames.CATALOGING_FORM_LITERAL, "u");
-        encoder.literal(Marc21EventNames.MULTIPART_LEVEL_LITERAL, " ");
-        encoder.endEntity();
-        encoder.endRecord();
-        encoder.closeStream();
-        String expected = XML_DECLARATION + XML_ROOT_OPEN
-                + "<marc:record><marc:leader>aoa azu </marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
-        String actual = resultCollector.toString();
-        assertEquals(expected, actual);
+        issue527_shouldEmitLeaderAlwaysAsWholeString();
     }
 
     @Test
