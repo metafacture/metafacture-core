@@ -435,7 +435,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
             if (!leader.isEmpty()) {
                 prettyPrintIndentation();
                 writeTag(Tag.leader::open);
-                writeRaw(leader);
+                writeRaw("0000" + leader.substring(0, 4) + "2200000" + leader.substring(5, 7) + "4500"); // creates a valid leader without counted elements
                 writeTag(Tag.leader::close);
                 prettyPrintNewLine();
             }
