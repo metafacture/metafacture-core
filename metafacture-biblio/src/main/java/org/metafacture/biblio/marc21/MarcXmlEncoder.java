@@ -252,6 +252,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         private int indentationLevel;
         private boolean formatted = PRETTY_PRINTED;
         private int recordAttributeOffset;
+        private int recordLeaderOffset;
 
         private Encoder() {
         }
@@ -294,7 +295,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
             writeTag(Tag.record::open);
             recordAttributeOffset = builder.length() - 1;
             prettyPrintNewLine();
-
+            recordLeaderOffset = builder.length();
             incrementIndentationLevel();
         }
 
@@ -353,7 +354,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
                     if (value != null) {
                         writeEscaped(value.trim());
                     }
-                    writeTag(Tag.controlfield::close);
+                    writeTag(Tag.controlfield::close, false);
                     prettyPrintNewLine();
                 }
             }
@@ -408,7 +409,18 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
          * @param str the unescaped sequence to be written
          */
         private void writeRaw(final String str) {
+
             builder.append(str);
+        }
+
+        /**
+         * Writes the unescaped sequence to the leader position.
+         *
+         * @param str the unescaped sequence to be written to the leader position
+         */
+        private void writeRawLeader(final String str) {
+            builder.insert(recordLeaderOffset, str);
+            recordLeaderOffset = recordLeaderOffset + str.length();
         }
 
         private boolean appendLeader(final String name, final String value) {
@@ -432,11 +444,11 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
         private void writeLeader() {
             final String leader = leaderBuilder.toString();
-            if (!leader.isEmpty()) {
+            if (leaderBuilder.length() > 0) {
                 prettyPrintIndentation();
-                writeTag(Tag.leader::open);
-                writeRaw(leader);
-                writeTag(Tag.leader::close);
+                writeTagLeader(Tag.leader::open);
+                writeRawLeader(leader);
+                writeTagLeader(Tag.leader::close);
                 prettyPrintNewLine();
             }
         }
@@ -446,6 +458,11 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
             System.arraycopy(args, 0, allArgs, namespacePrefix.length, args.length);
             writeRaw(function.apply(allArgs));
         }
+
+        private void writeTagLeader(final Function<Object[], String> function) {
+            writeRawLeader(function.apply(namespacePrefix));
+        }
+
 
         private void prettyPrintIndentation() {
             if (formatted) {

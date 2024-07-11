@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -249,10 +250,24 @@ public class MarcXmlEncoderTest {
         encoder.endRecord();
         encoder.closeStream();
         String expected = XML_DECLARATION + XML_ROOT_OPEN
-            + "<marc:record><marc:controlfield tag=\"001\">8u3287432</marc:controlfield>" +
-            "<marc:leader>" + expectedLeader + "</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
+            + "<marc:record><marc:leader>" + expectedLeader + "</marc:leader>" +
+            "<marc:controlfield tag=\"001\">8u3287432</marc:controlfield></marc:record>" + XML_MARC_COLLECTION_END_TAG;
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void issue548_failWhenLeaderIsNotFirst() {
+        encoder.startRecord("1");
+        encoder.literal("001", "8u3287432");
+        encoder.literal(Marc21EventNames.LEADER_ENTITY, "00000naa a2200000uc 4500");
+        encoder.endRecord();
+        encoder.closeStream();
+        String expected = XML_DECLARATION + XML_ROOT_OPEN
+            + "<marc:record><marc:controlfield tag=\"001\">8u3287432</marc:controlfield>" +
+            "<marc:leader>00000naa a2200000uc 4500</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertNotEquals(expected, actual);
     }
 
     @Test
