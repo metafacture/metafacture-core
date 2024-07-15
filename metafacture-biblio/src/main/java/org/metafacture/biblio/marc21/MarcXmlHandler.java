@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  * @author Markus Michael Geipel
  *
  */
-@Description("A marc xml reader")
+@Description("A MARC XML reader. To read marc data without namespace specification set option `namespace=\"\"`")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("handle-marcxml")
@@ -63,7 +63,8 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
      *
      * <strong>Default value: {@value #NAMESPACE}</strong>
      *
-     * @param namespace the namespace
+     * @param namespace the namespace. Set to null if namespace shouldn't be checked. Set it empty
+     *        if the namespace is missing in the data.
      */
     public void setNamespace(final String namespace) {
         this.namespace = namespace;
