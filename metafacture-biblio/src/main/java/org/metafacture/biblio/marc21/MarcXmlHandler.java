@@ -63,7 +63,7 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
      *
      * <strong>Default value: {@value #NAMESPACE}</strong>
      *
-     * @param namespace the namespace. Set to null if namespace shouldn't be checked. Set it empty
+     * @param namespace the namespace. Set to null if namespace shouldn't be checked. Set to empty string
      *        if the namespace is missing in the data.
      */
     public void setNamespace(final String namespace) {
