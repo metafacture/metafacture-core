@@ -88,10 +88,7 @@ public final class XmlDecoder extends DefaultObjectPipe<Reader, XmlReceiver> {
         try {
             saxReader.parse(new InputSource(reader));
         }
-        catch (final IOException e) {
-            throw new MetafactureException(e);
-        }
-        catch (final SAXException e) {
+        catch (final IOException | SAXException e) {
             throw new MetafactureException(e);
         }
     }
@@ -105,10 +102,7 @@ public final class XmlDecoder extends DefaultObjectPipe<Reader, XmlReceiver> {
         try {
             saxReader.setProperty(SAX_PROPERTY_LEXICAL_HANDLER, getReceiver());
         }
-        catch (final SAXNotRecognizedException e) {
-            throw new MetafactureException(e);
-        }
-        catch (final SAXNotSupportedException e) {
+        catch (final SAXNotRecognizedException | SAXNotSupportedException e) {
             throw new MetafactureException(e);
         }
     }
