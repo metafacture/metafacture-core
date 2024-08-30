@@ -41,7 +41,7 @@ import javax.xml.parsers.SAXParserFactory;
  * @author Christoph Böhme
  *
  */
-@Description("Reads an XML file and passes the XML events to a receiver.")
+@Description("Reads an XML file and passes the XML events to a receiver. Set 'totalEntitySizeLimit=\"0\"' to allow unlimited XML entities.")
 @In(Reader.class)
 @Out(XmlReceiver.class)
 @FluxCommand("decode-xml")
