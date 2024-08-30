@@ -48,8 +48,8 @@ import javax.xml.parsers.SAXParserFactory;
 public final class XmlDecoder extends DefaultObjectPipe<Reader, XmlReceiver> {
 
     private static final String SAX_PROPERTY_LEXICAL_HANDLER = "http://xml.org/sax/properties/lexical-handler";
-    private XMLReader saxReader;
-    private final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+    private static final String TOTAL_ENTITY_SIZE_LIMIT = "http://www.oracle.com/xml/jaxp/properties/totalEntitySizeLimit";
+    private final XMLReader saxReader;
 
     /**
      * Creates an instance of {@link XmlDecoder} by obtaining a new instance of an
@@ -57,6 +57,7 @@ public final class XmlDecoder extends DefaultObjectPipe<Reader, XmlReceiver> {
      */
     public XmlDecoder() {
         try {
+            final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
             parserFactory.setNamespaceAware(true);
             saxReader = parserFactory.newSAXParser().getXMLReader();
         }
@@ -71,14 +72,13 @@ public final class XmlDecoder extends DefaultObjectPipe<Reader, XmlReceiver> {
      *
      * Defaults to "50,000,000". Set to "0" to allow unlimited entities.
      *
-     * @param size the size of the allowed entities. Set to "0" if entities should be unlimited.
+     * @param totalEntitySizeLimit the size of the allowed entities. Set to "0" if entities should be unlimited.
      */
-    public void setTotalEntitySizeLimit(final String size) {
+    public void setTotalEntitySizeLimit(final String totalEntitySizeLimit) {
         try {
-            System.setProperty("jdk.xml.totalEntitySizeLimit", size);
-            saxReader = parserFactory.newSAXParser().getXMLReader();
+            saxReader.setProperty(TOTAL_ENTITY_SIZE_LIMIT, totalEntitySizeLimit);
         }
-        catch (final ParserConfigurationException | SAXException e) {
+        catch (final SAXException e) {
             throw new MetafactureException(e);
         }
     }
