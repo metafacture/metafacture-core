@@ -46,8 +46,8 @@ public final class FindFixPathsTest {
     @Test
     public void testShouldFindPaths() {
         verify(
-                "a\\t|\\tAn ETL test",
-                "c.2\\t|\\tETL what?");
+                "a\t|\tAn ETL test",
+                "c.2\t|\tETL what?");
     }
 
     private void processRecord() {
