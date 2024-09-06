@@ -437,11 +437,17 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
         private void writeLeader() {
             final String leader = leaderBuilder.toString();
             if (leaderBuilder.length() > 0) {
-                prettyPrintIndentation();
+                if (formatted) {
+                    writeRawLeader(getIndentationPrefix());
+                }
+
                 writeTagLeader(Tag.leader::open);
                 writeRawLeader(leader);
                 writeTagLeader(Tag.leader::close);
-                prettyPrintNewLine();
+
+                if (formatted) {
+                    writeRawLeader(NEW_LINE);
+                }
             }
         }
 
@@ -455,10 +461,13 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
             writeRawLeader(function.apply(namespacePrefix));
         }
 
+        private String getIndentationPrefix() {
+            return String.join("", Collections.nCopies(indentationLevel, INDENT));
+        }
+
         private void prettyPrintIndentation() {
             if (formatted) {
-                final String prefix = String.join("", Collections.nCopies(indentationLevel, INDENT));
-                builder.append(prefix);
+                builder.append(getIndentationPrefix());
             }
         }
 

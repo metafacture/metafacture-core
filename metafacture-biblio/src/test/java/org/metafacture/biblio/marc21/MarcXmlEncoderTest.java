@@ -130,10 +130,19 @@ public class MarcXmlEncoderTest {
     @Test
     public void createARecordPrettyPrint() {
         encoder.setFormatted(true);
-        addOneRecord(encoder);
+        encoder.startRecord(RECORD_ID);
+        encoder.startEntity(Marc21EventNames.LEADER_ENTITY);
+        encoder.literal(Marc21EventNames.LEADER_ENTITY, "dummy");
+        encoder.endEntity();
+        encoder.literal("001", RECORD_ID);
+        encoder.startEntity("010  ");
+        encoder.literal("a", RECORD_ID);
+        encoder.endEntity();
+        encoder.endRecord();
         encoder.closeStream();
-        String expected = XML_DECLARATION + "\n" + XML_ROOT_OPEN + "\n"// " <marc:record>\n"
+        String expected = XML_DECLARATION + "\n" + XML_ROOT_OPEN + "\n"
                 + "\t<marc:record>\n"//
+                + "\t\t<marc:leader>dummy</marc:leader>\n"
                 + "\t\t<marc:controlfield tag=\"001\">92005291</marc:controlfield>\n"//
                 + "\t\t<marc:datafield tag=\"010\" ind1=\" \" ind2=\" \">\n"//
                 + "\t\t\t<marc:subfield code=\"a\">92005291</marc:subfield>\n"//
