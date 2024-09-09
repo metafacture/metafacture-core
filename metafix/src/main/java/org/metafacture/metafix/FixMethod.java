@@ -517,10 +517,10 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
                 map = metafix.getMap(mapName);
             }
 
-            final String defaultValue = map.get(Maps.DEFAULT_MAP_KEY); // TODO: Catmandu uses 'default'
+            final String defaultOption = options.get("default");
+            final String defaultValue = options.getOrDefault(Maps.DEFAULT_MAP_KEY, map.get(Maps.DEFAULT_MAP_KEY));
             final boolean delete = getBoolean(options, "delete");
             final boolean printUnknown = getBoolean(options, "print_unknown");
-            final String defaultOption = options.get("default");
 
             final Consumer<Consumer<String>> consumer = c -> record.transform(params.get(0), oldValue -> {
                 final String newValue = map.get(oldValue);
@@ -531,11 +531,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
                     if (c != null) {
                         c.accept(oldValue);
                     }
-                    elsif (defaultOption != null){
-                        return defaultOption;
-                    }
-                    return defaultValue != null ? defaultValue : delete ? null : oldValue;
-
+                    return defaultOption != null ? defaultOption : defaultValue != null ? defaultValue : delete ? null : oldValue;
                 }
             });
 
