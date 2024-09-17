@@ -65,7 +65,7 @@ public class FindFixPaths extends DefaultStreamPipe<ObjectReceiver<String>> {
                 .setReceiver(new StreamFlattener())
                 .setReceiver(new StreamToTriples())
                 .setReceiver(tripleFilter)
-                .setReceiver(new ObjectTemplate<>("${p}\\t|\\t${o}"))
+                .setReceiver(new ObjectTemplate<>("${p}\t|\t${o}"))
                 .setReceiver(getReceiver());
     }
 
