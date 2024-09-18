@@ -43,6 +43,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
 
     // SCRIPT-LEVEL METHODS:
@@ -60,6 +63,23 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
             final String includePath = metafix.resolvePath(includeFile);
 
             metafix.getRecordTransformer(includePath).transform(record, options);
+        }
+    },
+    log {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String logMessage = params.get(0);
+            final String logLevel = options.get("level"); // does not support Catmandu lop level option FATAL
+
+            if (logLevel.equals("WARN")) {
+                LOG.warn(logMessage);
+            }
+            else if (logLevel.equals("ERROR")) {
+                LOG.error(logMessage);
+            }
+            else {
+                LOG.info(logMessage);
+            }
         }
     },
     nothing {
@@ -690,5 +710,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
     private static final String ERROR_STRING_OPTION = "error_string";
 
     private static final Random RANDOM = new Random();
+
+    private static final Logger LOG = LoggerFactory.getLogger(FixMethod.class);
 
 }
