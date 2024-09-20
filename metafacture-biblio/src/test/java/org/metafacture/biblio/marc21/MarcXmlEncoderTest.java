@@ -242,6 +242,21 @@ public class MarcXmlEncoderTest {
     }
 
     @Test
+    public void issue548_createRecordWithTypeAttributeInRecordTagAndLeader() {
+        encoder.startRecord(RECORD_ID);
+        encoder.literal("type", "Bibliographic");
+        encoder.startEntity(Marc21EventNames.LEADER_ENTITY);
+        encoder.literal(Marc21EventNames.LEADER_ENTITY, "dummy");
+        encoder.endEntity();
+        encoder.endRecord();
+        encoder.closeStream();
+        String expected = XML_DECLARATION + XML_ROOT_OPEN +  "<marc:record type=\"Bibliographic\">" +
+            "<marc:leader>dummy</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void issue336_createRecordWithTopLevelLeader_defaultMarc21Xml() {
         issue336_createRecordWithTopLevelLeader(encoder, "00000naa a2200000uc 4500");
     }
