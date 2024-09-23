@@ -338,6 +338,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
                 if (name.equals(Marc21EventNames.MARCXML_TYPE_LITERAL)) {
                     if (value != null) {
                         builder.insert(recordAttributeOffset, String.format(ATTRIBUTE_TEMPLATE, name, value));
+                        recordLeaderOffset = builder.length();
                     }
                 }
                 else if (!appendLeader(name, value)) {
