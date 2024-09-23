@@ -4084,4 +4084,39 @@ public class MetafixMethodTest {
         );
     }
 
+    @Test
+    public void shouldCreateVariableFromLiteralValue() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "to_var('data.title','testVar')",
+                "add_field('testResult','This is a $[testVar]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                i.literal("title", "test");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("2");
+                i.startEntity("data");
+                i.literal("title", "second-test");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().literal("title", "test");
+                o.get().endEntity();
+                o.get().literal("testResult", "This is a test");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().startEntity("data");
+                o.get().literal("title", "second-test");
+                o.get().endEntity();
+                o.get().literal("testResult", "This is a second-test");
+                o.get().endRecord();
+            }
+        );
+    }
+
 }
