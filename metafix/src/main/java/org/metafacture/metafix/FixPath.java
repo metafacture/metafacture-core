@@ -276,7 +276,16 @@ import java.util.Map;
         }
         else {
             if (!hash.containsField(field)) {
-                hash.put(field, Value.newHash().withPathSet(newValue.getPath()));
+                if (ReservedField.$append.name().equals(tail(path)[0])) {
+                    hash.put(field, Value.newArray().withPathSet(newValue.getPath()));
+                }
+                else {
+                    hash.put(field, Value.newHash().withPathSet(newValue.getPath()));
+                }
+            }
+            final Value value = hash.get(field);
+            if (value.isString()) {
+                hash.put(field, Value.newArray(a -> a.add(value)));
             }
             insertInto(hash.get(field), mode, newValue, field, tail(path));
         }
