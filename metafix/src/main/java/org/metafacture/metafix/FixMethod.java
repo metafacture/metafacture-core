@@ -517,8 +517,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
                 map = metafix.getMap(mapName);
             }
 
-            final String defaultOption = options.get("default");
-            final String defaultValue = options.getOrDefault(Maps.DEFAULT_MAP_KEY, map.get(Maps.DEFAULT_MAP_KEY));
+            final String defaultValue = options.getOrDefault("default", map.get(Maps.DEFAULT_MAP_KEY));
             final boolean delete = getBoolean(options, "delete");
             final boolean printUnknown = getBoolean(options, "print_unknown");
 
@@ -531,7 +530,8 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
                     if (c != null) {
                         c.accept(oldValue);
                     }
-                    return defaultOption != null ? defaultOption : defaultValue != null ? defaultValue : delete ? null : oldValue;
+
+                    return defaultValue != null ? defaultValue : delete ? null : oldValue;
                 }
             });
 
