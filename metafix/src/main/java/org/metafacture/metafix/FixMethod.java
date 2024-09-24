@@ -123,16 +123,11 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
             metafix.getVars().putAll(options);
         }
     },
-
     to_var {
         @Override
-
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final String fieldName = params.get(0);
-            final String variableName = params.get(1);
-            final String variableValue = record.get(fieldName).toString();
-
-            metafix.getVars().put(variableName, variableValue);
+            final Value value = record.get(params.get(0));
+            metafix.getVars().put(params.get(1), Value.isNull(value) ? "" : value.toString());
         }
     },
 
