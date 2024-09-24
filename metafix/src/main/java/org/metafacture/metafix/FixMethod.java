@@ -24,6 +24,9 @@ import org.metafacture.metamorph.functions.Timestamp;
 import org.metafacture.metamorph.functions.URLEncode;
 import org.metafacture.metamorph.maps.FileMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -42,9 +45,6 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
 
@@ -68,18 +68,29 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
     log {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final String logMessage = params.get(0);
-            final String logLevel = options.get("level"); // does not support Catmandu lop level option FATAL
+            // does not support Catmandu log level option FATAL
 
-            if (logLevel.equals("WARN")) {
-                LOG.warn(logMessage);
+            final String level = options.getOrDefault("level", "INFO");
+            final Consumer<String> consumer;
+
+            switch (level) {
+                case "DEBUG":
+                    consumer = LOG::debug;
+                    break;
+                case "ERROR":
+                    consumer = LOG::error;
+                    break;
+                case "INFO":
+                    consumer = LOG::info;
+                    break;
+                case "WARN":
+                    consumer = LOG::warn;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported log level: " + level);
             }
-            else if (logLevel.equals("ERROR")) {
-                LOG.error(logMessage);
-            }
-            else {
-                LOG.info(logMessage);
-            }
+
+            consumer.accept(params.get(0));
         }
     },
     nothing {

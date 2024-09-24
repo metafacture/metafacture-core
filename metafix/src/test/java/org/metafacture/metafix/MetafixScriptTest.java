@@ -26,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -44,6 +45,9 @@ public class MetafixScriptTest {
 
     private static final String CSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.csv";
     private static final String TSV_MAP = "src/test/resources/org/metafacture/metafix/maps/test.tsv";
+
+    @Mock(name = "org.metafacture.metafix.FixMethod")
+    private Logger fixMethodLogger;
 
     @Mock
     private StreamReceiver streamReceiver;
@@ -191,6 +195,29 @@ public class MetafixScriptTest {
     @Test
     public void shouldPutExternalFileMapWithNameAndOptions() {
         assertMap("put_filemap('" + TSV_MAP + "', '" + MAP_NAME + "', sep_char: '\t')", MAP_NAME);
+    }
+
+    @Test
+    public void shouldLog() {
+        assertFix("log('test')", f -> {
+            Mockito.verify(fixMethodLogger).info("test");
+            Mockito.verifyNoMoreInteractions(fixMethodLogger);
+        });
+    }
+
+    @Test
+    public void shouldLogWithLevel() {
+        assertFix("log('test', level: 'DEBUG')", f -> {
+            Mockito.verify(fixMethodLogger).debug("test");
+            Mockito.verifyNoMoreInteractions(fixMethodLogger);
+        });
+    }
+
+    @Test
+    public void shouldNotLogWithUnsupportedLevel() {
+        MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Unsupported log level: FATAL", () ->
+            assertFix("log('test', level: 'FATAL')", f -> { })
+        );
     }
 
     @Test
