@@ -1462,11 +1462,9 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @MetafixToDo("Do we actually need/want implicit $append? WDCD?")
     public void copyIntoArrayOfHashesImplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('author[]')",
-                "copy_field('your.name','author[].name')",
+                "copy_field('your.name','author[].$append.name')",
                 "remove_field('your')"),
             i -> {
                 i.startRecord("1");
