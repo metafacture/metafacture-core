@@ -1507,7 +1507,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    public void copyIntoArrayOfHashesImplicitAppend() {
+    public void copyIntoImplicitArrayAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "copy_field('your.name','author[].$append.name')",
                 "remove_field('your')"),
@@ -1534,7 +1534,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    public void copyIntoArrayOfHashesImplicitPrepend() {
+    public void copyIntoImplicitArrayPrepend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "copy_field('your.name','author[].$prepend.name')",
                 "remove_field('your')"),
@@ -1561,7 +1561,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    public void copyIntoArrayOfHashesExplicitAppend() {
+    public void copyIntoExplicitArrayAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('author[]')",
                 "copy_field('your.name','author[].$append.name')",
