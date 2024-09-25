@@ -438,6 +438,12 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
             }
         }
 
+        /* package-private */ void add(final int index, final Value value) {
+            if (!isNull(value)) {
+                list.add(index, value);
+            }
+        }
+
         public boolean isEmpty() {
             return list.isEmpty();
         }

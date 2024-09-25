@@ -170,6 +170,9 @@ import java.util.Map;
                     final ReservedField reservedField = ReservedField.fromString(field);
                     if (reservedField != null) {
                         switch (reservedField) {
+                            case $prepend:
+                                array.add(0, value);
+                                break;
                             case $append:
                                 array.add(value);
                                 break;
@@ -276,7 +279,7 @@ import java.util.Map;
         }
         else {
             if (!hash.containsField(field)) {
-                if (ReservedField.$append.name().equals(tail(path)[0])) {
+                if (ReservedField.$prepend.name().equals(tail(path)[0]) || ReservedField.$append.name().equals(tail(path)[0])) {
                     hash.put(field, Value.newArray().withPathSet(newValue.getPath()));
                 }
                 else {
@@ -312,7 +315,7 @@ import java.util.Map;
     }
 
     private enum ReservedField {
-        $append, $first, $last;
+        $prepend, $append, $first, $last;
 
         private static final Map<String, ReservedField> STRING_TO_ENUM = new HashMap<>();
         static {
@@ -351,6 +354,10 @@ import java.util.Map;
                 case $append:
                     referencedValue = Value.newHash().withPathSet(p); // TODO: append non-hash?
                     array.add(referencedValue);
+                    break;
+                case $prepend:
+                    referencedValue = Value.newHash().withPathSet(p);
+                    array.add(0, referencedValue);
                     break;
                 default:
                     break;

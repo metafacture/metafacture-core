@@ -349,6 +349,51 @@ public class MetafixRecordTest {
     }
 
     @Test
+    public void addWithPrependInImplicitArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('my.name.$prepend','patrick')",
+                "add_field('my.name.$prepend','nicolas')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.startEntity("my");
+                i.literal("name", "max");
+                i.endEntity();
+                i.endRecord();
+
+                i.startRecord("3");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("my");
+                o.get().literal("name", "nicolas");
+                o.get().literal("name", "patrick");
+                o.get().endEntity();
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().startEntity("my");
+                o.get().literal("name", "nicolas");
+                o.get().literal("name", "patrick");
+                o.get().literal("name", "max");
+                o.get().endEntity();
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().startEntity("my");
+                o.get().literal("name", "nicolas");
+                o.get().literal("name", "patrick");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void addWithAppendInArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "add_field('names.$append','patrick')"
@@ -1483,6 +1528,33 @@ public class MetafixRecordTest {
                 o.get().endEntity();
                 o.get().startEntity("2");
                 o.get().literal("name", "mo");
+                f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void copyIntoArrayOfHashesImplicitPrepend() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "copy_field('your.name','author[].$prepend.name')",
+                "remove_field('your')"),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("your");
+                i.literal("name", "max");
+                i.endEntity();
+                i.startEntity("your");
+                i.literal("name", "mo");
+                i.endEntity();
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
+                o.get().startEntity("author[]");
+                o.get().startEntity("1");
+                o.get().literal("name", "mo");
+                o.get().endEntity();
+                o.get().startEntity("2");
+                o.get().literal("name", "max");
                 f.apply(2).endEntity();
                 o.get().endRecord();
             });
