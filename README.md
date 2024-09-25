@@ -706,7 +706,7 @@ Parameters:
 
 Options:
 
-- `__default`: Default value to use for unknown values. (Default: Old value)
+- `default`: Default value to use for unknown values. (Default: Old value)
 - `delete`: Whether to delete unknown values. (Default: `false`)
 - `print_unknown`: Whether to print unknown values. (Default: `false`)
 
@@ -748,7 +748,7 @@ put_rdfmap("path/to/file", "rdf-map", target: "<rdfProperty>")
 lookup("path.to.field", "rdf-map")
 
 # with default value
-lookup("path.to.field", "map-name", __default: "NA")
+lookup("path.to.field", "map-name", default: "NA")
 
 # with printing unknown values to a file
 lookup("path.to.field", "map-name", print_unknown: "true", destination: "unknown.txt")
