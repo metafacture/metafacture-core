@@ -454,6 +454,14 @@ public class MetafixLookupTest {
     }
 
     @Test
+    public void shouldUseDefaultOptionFromLookupOption() {
+        assertMap(
+                "put_map('testMap', Aloha: Alohaeha, 'Moin': 'Moin zäme')",
+                LOOKUP + " 'testMap', default: 'Tach')"
+        );
+    }
+
+    @Test
     public void shouldLookupInSeparateExternalFileMap() {
         assertMap(
                 "put_filemap('" + CSV_MAP + "')",
@@ -625,6 +633,52 @@ public class MetafixLookupTest {
                 o.get().literal("title", "Alohaeha");
                 o.get().literal("title", "Moin zäme");
                 o.get().literal("title", "Tach");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldUseDefaultOptionValueIfNotFound() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_map('testMap', Aloha: Alohaeha, 'Moin': 'Moin zäme')",
+                "lookup('title.*', 'testMap', default: 'Tach')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Yo");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().literal("title", "Moin zäme");
+                o.get().literal("title", "Tach");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldPreferDefaultOptionValueOverDefaultMapValue() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "put_map('testMap', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)",
+                "lookup('title.*', 'testMap', default: 'Hi')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("title", "Aloha");
+                i.literal("title", "Moin");
+                i.literal("title", "Yo");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("title", "Alohaeha");
+                o.get().literal("title", "Moin zäme");
+                o.get().literal("title", "Hi");
                 o.get().endRecord();
             }
         );
