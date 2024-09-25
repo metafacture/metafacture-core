@@ -168,6 +168,21 @@ include("<path>"[, <dynamicLocalVariables>...])
 
 [Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+include+{")
 
+##### `log`
+Send a message to the logs.
+
+Parameters:
+
+- `logMessage` specifies the message that should be logged.
+
+Options:
+
+- `level` sets one of the following log levels: INFO, DEBUG, ERROR, WARN (Default: INFO).
+
+```perl
+log(“<logMessage>”,level:DEBUG)
+```
+
 ##### `nothing`
 
 Does nothing. It is used for benchmarking in Catmandu.
