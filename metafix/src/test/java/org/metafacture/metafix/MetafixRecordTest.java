@@ -394,6 +394,42 @@ public class MetafixRecordTest {
     }
 
     @Test
+    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/369")
+    public void addWithLastInImplicitArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "add_field('my.name.$last','patrick')",
+                "add_field('my.name.$last','nicolas')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+
+                i.startRecord("2");
+                i.startEntity("my");
+                i.literal("name", "max");
+                i.endEntity();
+                i.endRecord();
+
+                i.startRecord("3");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().endRecord();
+
+                o.get().startRecord("2");
+                o.get().startEntity("my");
+                o.get().literal("name", "nicolas");
+                o.get().endEntity();
+                o.get().endRecord();
+
+                o.get().startRecord("3");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
     public void addWithAppendInArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "add_field('names.$append','patrick')"
