@@ -439,8 +439,20 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         }
 
         /* package-private */ void add(final int index, final Value value) {
+            add(index, value, true);
+        }
+
+        /* package-private */ void add(final int index, final Value value, final boolean appendToPath) {
             if (!isNull(value)) {
-                list.add(index, value);
+                list.add(index, appendToPath ? value.withPathAppend(index + 1) : value);
+                updateIndexesInPathsAfter(index);
+            }
+        }
+
+        private void updateIndexesInPathsAfter(final int start) {
+            for (int index = start + 1; index < list.size(); index = index + 1) {
+                final Value value = list.get(index);
+                value.withPathSet(value.getPath().replaceAll("\\d+$", String.valueOf(index + 1)));
             }
         }
 
