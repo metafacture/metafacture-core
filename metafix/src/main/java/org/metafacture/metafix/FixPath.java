@@ -278,18 +278,8 @@ import java.util.Map;
             mode.apply(hash, field, newValue);
         }
         else {
-            if (!hash.containsField(field)) {
-                final Value value = Arrays.asList(ReservedField.$prepend.name(), ReservedField.$append.name())
-                        .contains(tail(path)[0]) ? Value.newArray() : Value.newHash();
-                hash.put(field, value.withPathSet(newValue.getPath()));
-            }
-            else {
-                final Value value = hash.get(field);
-                if (value.isString()) {
-                    hash.put(field, Value.newArray(a -> a.add(value)));
-                }
-            }
-            insertInto(hash.get(field), mode, newValue, field, tail(path));
+            final String[] tail = tail(path);
+            insertInto(getContainerValue(hash, field, newValue.getPath(), tail[0]), mode, newValue, field, tail);
         }
 
         return new Value(hash);
@@ -307,6 +297,23 @@ import java.util.Map;
         else {
             throw new IllegalArgumentException("Can't find: " + field + " in: " + value);
         }
+    }
+
+    private Value getContainerValue(final Hash hash, final String field, final String newPath, final String nextField) {
+        Value result = hash.get(field);
+        if (result == null) {
+            result = (nextField.equals(ReservedField.$prepend.name()) || nextField.equals(ReservedField.$append.name()) ?
+                    Value.newArray() : Value.newHash()).withPathSet(newPath);
+            hash.put(field, result);
+        }
+        else {
+            if (result.isString()) {
+                final Value value = result;
+                result = Value.newArray(a -> a.add(value));
+                hash.put(field, result);
+            }
+        }
+        return result;
     }
 
     private String[] tail(final String[] fields) {
