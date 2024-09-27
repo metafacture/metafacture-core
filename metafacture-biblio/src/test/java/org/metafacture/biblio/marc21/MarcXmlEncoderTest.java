@@ -389,4 +389,11 @@ public class MarcXmlEncoderTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    public void issue543_shouldNotWriteFooterWhenRecordIsEmpty() {
+        encoder.closeStream();
+        String actual = resultCollector.toString();
+        assertTrue(actual.isEmpty());
+    }
+
 }

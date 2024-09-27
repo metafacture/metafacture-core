@@ -372,7 +372,9 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
         @Override
         protected void onCloseStream() {
-            writeFooter();
+            if (!atStreamStart) {
+                writeFooter();
+            }
             sendAndClearData();
         }
 
