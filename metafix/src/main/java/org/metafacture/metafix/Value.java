@@ -433,9 +433,7 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         }
 
         /* package-private */ void add(final Value value, final boolean appendToPath) {
-            if (!isNull(value)) {
-                list.add(appendToPath ? value.withPathAppend(list.size() + 1) : value);
-            }
+            add(list.size(), value, appendToPath);
         }
 
         /* package-private */ void add(final int index, final Value value) {
