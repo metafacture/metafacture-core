@@ -51,6 +51,7 @@ public class MarcXmlEncoderTest {
     private static final String RECORD_ID = "92005291";
 
     private static StringBuilder resultCollector;
+    private static int resultCollectorsResetStreamCount;
     private static MarcXmlEncoder encoder;
 
     @Before
@@ -62,6 +63,11 @@ public class MarcXmlEncoderTest {
             public void process(final String obj) {
                 resultCollector.append(obj);
             }
+            @Override
+            public void resetStream() {
+                ++resultCollectorsResetStreamCount;
+            }
+
         });
         resultCollector = new StringBuilder();
     }
@@ -394,6 +400,21 @@ public class MarcXmlEncoderTest {
         encoder.closeStream();
         String actual = resultCollector.toString();
         assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    public void issue543_shouldOnlyResetStreamOnce() {
+        resultCollectorsResetStreamCount = 0;
+        encoder.resetStream();
+        assertEquals(resultCollectorsResetStreamCount, 1);
+    }
+
+    @Test
+    public void issue543_shouldOnlyResetStreamOnceUsingWrapper() {
+        resultCollectorsResetStreamCount = 0;
+        encoder.setEnsureCorrectMarc21Xml(true);
+        encoder.resetStream();
+        assertEquals(resultCollectorsResetStreamCount, 1);
     }
 
 }

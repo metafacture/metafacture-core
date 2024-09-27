@@ -212,7 +212,7 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     @Override
     protected void onResetStream() {
-        pipe.resetStream();
+        encoder.onResetStream();
     }
 
     @Override
