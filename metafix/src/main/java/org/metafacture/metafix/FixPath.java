@@ -301,13 +301,13 @@ import java.util.Map;
 
     private Value getContainerValue(final Hash hash, final String field, final String newPath, final String nextField) {
         Value result = hash.get(field);
+        final boolean isAddingToArray = nextField.equals(ReservedField.$prepend.name()) || nextField.equals(ReservedField.$append.name());
         if (result == null) {
-            result = (nextField.equals(ReservedField.$prepend.name()) || nextField.equals(ReservedField.$append.name()) ?
-                    Value.newArray() : Value.newHash()).withPathSet(newPath);
+            result = (isAddingToArray ? Value.newArray() : Value.newHash()).withPathSet(newPath);
             hash.put(field, result);
         }
         else {
-            if (result.isString()) {
+            if (isAddingToArray && result.isString()) {
                 final Value value = result;
                 result = Value.newArray(a -> a.add(value));
                 hash.put(field, result);
