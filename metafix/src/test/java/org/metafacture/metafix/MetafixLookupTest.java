@@ -928,14 +928,23 @@ public class MetafixLookupTest {
     }
 
     @Test
-    public void shouldLookupInCopiedNestedArrays() {
+    public void shouldLookupInCopiedNestedArraysCreatedWithAppend() {
+        shouldLookupInCopiedNestedArraysCreatedWith("$append");
+    }
+
+    @Test
+    public void shouldLookupInCopiedNestedArraysCreatedWithPrepend() {
+        shouldLookupInCopiedNestedArraysCreatedWith("$prepend");
+    }
+
+    private void shouldLookupInCopiedNestedArraysCreatedWith(final String reservedField) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "put_map('rswk-indicator', s: 'SubjectHeading')",
                 "set_array('subject[]')",
-                "set_array('subject[].$append.componentList[]')",
-                "set_array('subject[].$last.componentList[].$append.type[]')",
+                "set_array('subject[]." + reservedField + ".componentList[]')",
+                "set_array('subject[].$last.componentList[]." + reservedField + ".type[]')",
                 "do list(path: 'D', 'var': '$i')",
-                "  copy_field('$i', 'subject[].$last.componentList[].$last.type[].$append')",
+                "  copy_field('$i', 'subject[].$last.componentList[].$last.type[]." + reservedField + "')",
                 "end",
                 "lookup('subject[].*.componentList[].*.type[].*', 'rswk-indicator')",
                 "retain('subject[]')"

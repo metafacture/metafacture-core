@@ -1,12 +1,12 @@
 {
-  "arrayOfObjects_1" : [ {
-    "arrayOfObjects_2" : [ {
+  "arrayOfObject_1" : [ {
+    "arrayOfObject_2" : [ {
       "key" : "value"
     }, {
       "key" : "more_value"
     } ]
   }, {
-    "arrayOfObjects_3" : [ {
+    "arrayOfObject_3" : [ {
       "key" : "even_more_value"
     }, {
       "key" : "so_much_value"

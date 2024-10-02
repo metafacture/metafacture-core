@@ -170,6 +170,9 @@ import java.util.Map;
                     final ReservedField reservedField = ReservedField.fromString(field);
                     if (reservedField != null) {
                         switch (reservedField) {
+                            case $prepend:
+                                array.add(0, value);
+                                break;
                             case $append:
                                 array.add(value);
                                 break;
@@ -275,10 +278,8 @@ import java.util.Map;
             mode.apply(hash, field, newValue);
         }
         else {
-            if (!hash.containsField(field)) {
-                hash.put(field, Value.newHash().withPathSet(newValue.getPath()));
-            }
-            insertInto(hash.get(field), mode, newValue, field, tail(path));
+            final String[] tail = tail(path);
+            insertInto(getContainerValue(hash, field, newValue.getPath(), tail[0]), mode, newValue, field, tail);
         }
 
         return new Value(hash);
@@ -298,12 +299,29 @@ import java.util.Map;
         }
     }
 
+    private Value getContainerValue(final Hash hash, final String field, final String newPath, final String nextField) {
+        Value result = hash.get(field);
+        final boolean isAddingToArray = nextField.equals(ReservedField.$prepend.name()) || nextField.equals(ReservedField.$append.name());
+        if (result == null) {
+            result = (isAddingToArray ? Value.newArray() : Value.newHash()).withPathSet(newPath);
+            hash.put(field, result);
+        }
+        else {
+            if (isAddingToArray && result.isString()) {
+                final Value value = result;
+                result = Value.newArray(a -> a.add(value));
+                hash.put(field, result);
+            }
+        }
+        return result;
+    }
+
     private String[] tail(final String[] fields) {
         return Arrays.copyOfRange(fields, 1, fields.length);
     }
 
     private enum ReservedField {
-        $append, $first, $last;
+        $prepend, $append, $first, $last;
 
         private static final Map<String, ReservedField> STRING_TO_ENUM = new HashMap<>();
         static {
@@ -342,6 +360,10 @@ import java.util.Map;
                 case $append:
                     referencedValue = Value.newHash().withPathSet(p); // TODO: append non-hash?
                     array.add(referencedValue);
+                    break;
+                case $prepend:
+                    referencedValue = Value.newHash().withPathSet(p);
+                    array.add(0, referencedValue);
                     break;
                 default:
                     break;

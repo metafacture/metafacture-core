@@ -1,9 +1,9 @@
 {
-  "arrayOfObjects" : [ {
+  "key" : "value",
+  "key_2" : "more_value",
+  "arrayOfObject" : [ {
     "key" : "value"
   }, {
     "key" : "more_value"
-  } ],
-  "key" : "value",
-  "key_2" : "more_value"
+  } ]
 }
