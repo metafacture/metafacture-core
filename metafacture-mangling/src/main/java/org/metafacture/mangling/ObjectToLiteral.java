@@ -29,6 +29,7 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * @author Christoph Böhme, Fabian Steeg
  */
 @Description("Outputs a record containing the input object as literal")
+@In(Object.class) 
 @Out(StreamReceiver.class)
 @FluxCommand("object-to-literal")
 public final class ObjectToLiteral<T> extends
