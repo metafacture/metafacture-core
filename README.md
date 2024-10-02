@@ -169,19 +169,22 @@ include("<path>"[, <dynamicLocalVariables>...])
 [Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+include+{")
 
 ##### `log`
-Send a message to the logs.
+
+Sends a message to the logs.
 
 Parameters:
 
-- `logMessage` specifies the message that should be logged.
+- `logMessage` (required): Message to log.
 
 Options:
 
-- `level` sets one of the following log levels: INFO, DEBUG, ERROR, WARN (Default: INFO).
+- `level`: Log level to log at (one of `DEBUG`, `INFO`, `WARN` or `ERROR`). (Default: `INFO`)
 
 ```perl
-log(“<logMessage>”,level:DEBUG)
+log("<logMessage>"[, level: "<logLevel>"])
 ```
+
+[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+log+{")
 
 ##### `nothing`
 
