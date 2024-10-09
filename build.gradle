@@ -49,6 +49,7 @@ subprojects {
       'mockito':        '2.27.0',
       'requirejs':      '2.3.6',
       'slf4j':          '1.7.21',
+      'slf4j_mock':     '2.3.0',
       'wiremock':       '2.33.2',
       'xtext':          '2.26.0'
     ]

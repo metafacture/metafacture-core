@@ -25,6 +25,7 @@ dependencies {
   testImplementation "org.eclipse.xtext:org.eclipse.xtext.xbase.testing:${versions.xtext}"
   testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit_jupiter}"
   testImplementation "org.junit.platform:junit-platform-launcher:${versions.junit_platform}"
+  testImplementation "org.simplify4u:slf4j2-mock:${versions.slf4j_mock}"
 
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit_jupiter}"
 
