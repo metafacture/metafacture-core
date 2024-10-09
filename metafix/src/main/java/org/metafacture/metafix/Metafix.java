@@ -18,10 +18,14 @@
 
 package org.metafacture.metafix;
 
+import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.StandardEventNames;
 import org.metafacture.framework.StreamPipe;
 import org.metafacture.framework.StreamReceiver;
+import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
 import org.metafacture.mangling.StreamFlattener;
 import org.metafacture.metafix.fix.Expression;
