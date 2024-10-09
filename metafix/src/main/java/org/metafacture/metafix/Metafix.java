@@ -101,6 +101,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     private boolean repeatedFieldsToEntities;
     private boolean strictnessHandlesProcessExceptions;
     private int entityCount;
+    private int maxEntityCount = Integer.getInteger("org.metafacture.metafix.maxEntityCount", -1);
 
     public Metafix() {
         this(NO_VARS);
@@ -313,22 +314,36 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
             throw new IllegalArgumentException("Entity name must not be null.");
         }
 
+        ++entityCount;
+        if (maxEntityCountExceeded()) {
+            LOG.debug("Maximum number of entities exceeded: {}/{}", entityCount, maxEntityCount);
+            return;
+        }
+
         final Value value = isArrayName(name) ? Value.newArray() : Value.newHash();
         addValue(name, value);
         entities.add(value);
 
-        entityCountStack.push(++entityCount);
+        entityCountStack.push(entityCount);
         flattener.startEntity(name);
     }
 
     @Override
     public void endEntity() {
+        if (maxEntityCountExceeded()) {
+            return;
+        }
+
         entityCountStack.pop();
         flattener.endEntity();
     }
 
     @Override
     public void literal(final String name, final String value) {
+        if (entityCountStack.size() > 1 && maxEntityCountExceeded()) {
+            return;
+        }
+
         LOG.debug("Putting '{}': '{}'", name, value);
         flattener.literal(name, value);
     }
@@ -436,6 +451,18 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
 
     public String getEntityMemberName() {
         return entityMemberName;
+    }
+
+    public void setMaxEntityCount(final int maxEntityCount) {
+        this.maxEntityCount = maxEntityCount;
+    }
+
+    public int getMaxEntityCount() {
+        return maxEntityCount;
+    }
+
+    private boolean maxEntityCountExceeded() {
+        return maxEntityCount >= 0 && entityCount > maxEntityCount;
     }
 
     public enum Strictness {
