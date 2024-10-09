@@ -19,6 +19,7 @@ package org.metafacture.mangling;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.annotations.Description;
+import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
@@ -29,6 +30,7 @@ import org.metafacture.framework.helpers.DefaultObjectPipe;
  * @author Christoph Böhme, Fabian Steeg
  */
 @Description("Outputs a record containing the input object as literal")
+@In(Object.class)
 @Out(StreamReceiver.class)
 @FluxCommand("object-to-literal")
 public final class ObjectToLiteral<T> extends
