@@ -127,7 +127,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final Value value = record.get(params.get(0));
-            metafix.getVars().put(params.get(1), Value.isNull(value) ? "" : value.toString());
+            metafix.getVars().put(params.get(1), Value.isNull(value) ? options.getOrDefault(DEFAULT_OPTION, "") : value.toString());
         }
     },
 
@@ -694,6 +694,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
     private static final String FILEMAP_SEPARATOR_OPTION = "sep_char";
     private static final String FILEMAP_DEFAULT_SEPARATOR = ",";
 
+    private static final String DEFAULT_OPTION = "default";
     private static final String ERROR_STRING_OPTION = "error_string";
 
     private static final Random RANDOM = new Random();
