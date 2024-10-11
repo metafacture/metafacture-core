@@ -127,7 +127,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             final Value value = record.get(params.get(0));
-            metafix.getVars().put(params.get(1), Value.isNull(value) ? options.getOrDefault(DEFAULT_OPTION, "") : value.toString());
+            metafix.getVars().put(params.get(1), Value.isNull(value) ? options.getOrDefault(DEFAULT_OPTION, "") : value.asString());
         }
     },
 

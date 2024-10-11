@@ -4097,27 +4097,14 @@ public class MetafixMethodTest {
                 i.endEntity();
                 i.endRecord();
                 i.startRecord("2");
-                i.startEntity("data");
-                i.literal("title", "test1");
-                i.literal("title", "test2");
-                i.endEntity();
                 i.endRecord();
                 i.startRecord("3");
-                i.startEntity("data");
-                i.startEntity("title");
-                i.literal("key", "value");
-                i.endEntity();
-                i.endEntity();
-                i.endRecord();
-                i.startRecord("4");
-                i.endRecord();
-                i.startRecord("5");
                 i.startEntity("data");
                 i.literal("title", "final-test");
                 i.endEntity();
                 i.endRecord();
             },
-            (o, f) -> {
+            o -> {
                 o.get().startRecord("1");
                 o.get().startEntity("data");
                 o.get().literal("title", "test");
@@ -4125,23 +4112,9 @@ public class MetafixMethodTest {
                 o.get().literal("testResult", "This is a test");
                 o.get().endRecord();
                 o.get().startRecord("2");
-                o.get().startEntity("data");
-                o.get().literal("title", "test1");
-                o.get().literal("title", "test2");
-                o.get().endEntity();
-                o.get().literal("testResult", "This is a [test1, test2]");
-                o.get().endRecord();
-                o.get().startRecord("3");
-                o.get().startEntity("data");
-                o.get().startEntity("title");
-                o.get().literal("key", "value");
-                f.apply(2).endEntity();
-                o.get().literal("testResult", "This is a {key=value}");
-                o.get().endRecord();
-                o.get().startRecord("4");
                 o.get().literal("testResult", "This is a ");
                 o.get().endRecord();
-                o.get().startRecord("5");
+                o.get().startRecord("3");
                 o.get().startEntity("data");
                 o.get().literal("title", "final-test");
                 o.get().endEntity();
@@ -4177,6 +4150,47 @@ public class MetafixMethodTest {
                 o.get().literal("testResult", "This is a n/a");
                 o.get().endRecord();
             }
+        );
+    }
+
+    @Test
+    public void shouldNotCreateVariableFromArrayValue() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "to_var('data.title', 'testVar')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("data");
+                    i.literal("title", "test1");
+                    i.literal("title", "test2");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldNotCreateVariableFromHashValue() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Hash", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "to_var('data.title', 'testVar')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("data");
+                    i.startEntity("title");
+                    i.literal("key", "value");
+                    i.endEntity();
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
         );
     }
 
