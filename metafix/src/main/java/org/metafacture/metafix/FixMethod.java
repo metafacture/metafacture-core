@@ -555,7 +555,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
                 map = metafix.getMap(mapName);
             }
 
-            final String defaultValue = map.get(Maps.DEFAULT_MAP_KEY); // TODO: Catmandu uses 'default'
+            final String defaultValue = options.getOrDefault("default", map.get(Maps.DEFAULT_MAP_KEY));
             final boolean delete = getBoolean(options, "delete");
             final boolean printUnknown = getBoolean(options, "print_unknown");
 
