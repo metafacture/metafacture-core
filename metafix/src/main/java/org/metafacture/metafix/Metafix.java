@@ -65,7 +65,7 @@ import java.util.function.BiConsumer;
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("fix")
-public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle-disable-line ClassDataAbstractionCoupling
+public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     public static final String ARRAY_MARKER = "[]";
     public static final String FIX_EXTENSION = ".fix";
     public static final String VAR_END = "]";
