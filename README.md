@@ -285,6 +285,22 @@ put_vars(
 
 [Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+put_vars+{")
 
+##### `to_var`
+
+Defines a single global variable that can be referenced with `$[<variableName>]` and assigns the value of the `<sourceField>`.
+
+```perl
+to_var("<sourceField>", "<variableName>")
+```
+
+Options:
+
+- `default`: Default value if source field does not exist. The option needs to be written in quotation marks because it is a reserved word in Java. (Default: Empty string)
+
+[Example in Playground](https://metafacture.org/playground/?example=to_var)
+
+[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+to_var+{")
+
 #### Record-level functions
 
 ##### `add_field`

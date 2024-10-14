@@ -4084,4 +4084,114 @@ public class MetafixMethodTest {
         );
     }
 
+    @Test // checkstyle-disable-line JavaNCSS
+    public void shouldCreateVariableFromLiteralValue() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "to_var('data.title', 'testVar')",
+                "add_field('testResult', 'This is a $[testVar]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                i.literal("title", "test");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("2");
+                i.endRecord();
+                i.startRecord("3");
+                i.startEntity("data");
+                i.literal("title", "final-test");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().literal("title", "test");
+                o.get().endEntity();
+                o.get().literal("testResult", "This is a test");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("testResult", "This is a ");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().startEntity("data");
+                o.get().literal("title", "final-test");
+                o.get().endEntity();
+                o.get().literal("testResult", "This is a final-test");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldCreateVariableFromLiteralValueWithDefault() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "to_var('data.title', 'testVar', 'default': 'n/a')",
+                "add_field('testResult', 'This is a $[testVar]')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                i.literal("title", "test");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("2");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().literal("title", "test");
+                o.get().endEntity();
+                o.get().literal("testResult", "This is a test");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("testResult", "This is a n/a");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldNotCreateVariableFromArrayValue() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "to_var('data.title', 'testVar')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("data");
+                    i.literal("title", "test1");
+                    i.literal("title", "test2");
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
+    @Test
+    public void shouldNotCreateVariableFromHashValue() {
+        MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Hash", () ->
+            MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                    "to_var('data.title', 'testVar')"
+                ),
+                i -> {
+                    i.startRecord("1");
+                    i.startEntity("data");
+                    i.startEntity("title");
+                    i.literal("key", "value");
+                    i.endEntity();
+                    i.endEntity();
+                    i.endRecord();
+                },
+                o -> {
+                }
+            )
+        );
+    }
+
 }
