@@ -1,6 +1,14 @@
+set_array("RSWK[]")
 do list(path: "650??", "var": "$i")
   copy_field("$i.a", "RSWK[].$append.subjectTopicName")
   copy_field("$i.v", "RSWK[].$last.subjectGenre")
 end
 replace_all("RSWK[].*.subjectGenre", "[.]$", "")
-retain("RSWK[]")
+
+do list(path: "650??", "var": "$i")
+  copy_field("$i.a", "rswk[].$append.subjectTopicName")
+  copy_field("$i.v", "rswk[].$last.subjectGenre")
+end
+replace_all("rswk[].*.subjectGenre", "[.]$", "")
+
+retain("RSWK[]","rswk[]")
