@@ -61,11 +61,10 @@ import java.util.function.BiConsumer;
  * @author Christoph Böhme (Metamorph)
  * @author Fabian Steeg (Metafix)
  */
-@Description("Applies a fix transformation to the event stream. Fix definition is given in brackets.") // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
+@Description("Applies a fix transformation to the event stream, given as the path to a fix file or the fixes themselves.") // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("fix")
-
 public class Metafix implements StreamPipe<StreamReceiver>, Maps { // checkstyle-disable-line ClassDataAbstractionCoupling
     public static final String ARRAY_MARKER = "[]";
     public static final String FIX_EXTENSION = ".fix";
