@@ -2,7 +2,6 @@ put_vars(
   "test": "arrayOfStrings[]",
   "test_2": "arrayOfObjects[]"
 )
-set_array("test[]")
 do list (path: "$[test]", "var": "$i")
   copy_field("$i", "test[].$append")
 end
