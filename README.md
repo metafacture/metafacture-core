@@ -706,7 +706,7 @@ Parameters:
 
 Options:
 
-- `default`: Default value to use for unknown values. (Default: Old value)
+- `"default"`: Default value to use for unknown values. The `"default"`-key needs to be in quotation marks since it is a reserved word in Java.  (Default: Old value)
 - `delete`: Whether to delete unknown values. (Default: `false`)
 - `print_unknown`: Whether to print unknown values. (Default: `false`)
 

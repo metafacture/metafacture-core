@@ -457,7 +457,7 @@ public class MetafixLookupTest {
     public void shouldUseDefaultOptionFromLookupOption() {
         assertMap(
                 "put_map('testMap', Aloha: Alohaeha, 'Moin': 'Moin zäme')",
-                LOOKUP + " 'testMap', default: 'Tach')"
+                LOOKUP + " 'testMap', 'default': 'Tach')"
         );
     }
 
@@ -642,7 +642,7 @@ public class MetafixLookupTest {
     public void shouldUseDefaultOptionValueIfNotFound() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "put_map('testMap', Aloha: Alohaeha, 'Moin': 'Moin zäme')",
-                "lookup('title.*', 'testMap', default: 'Tach')"
+                "lookup('title.*', 'testMap', 'default': 'Tach')"
             ),
             i -> {
                 i.startRecord("1");
@@ -665,7 +665,7 @@ public class MetafixLookupTest {
     public void shouldPreferDefaultOptionValueOverDefaultMapValue() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "put_map('testMap', Aloha: Alohaeha, 'Moin': 'Moin zäme', __default: Tach)",
-                "lookup('title.*', 'testMap', default: 'Hi')"
+                "lookup('title.*', 'testMap', 'default': 'Hi')"
             ),
             i -> {
                 i.startRecord("1");
