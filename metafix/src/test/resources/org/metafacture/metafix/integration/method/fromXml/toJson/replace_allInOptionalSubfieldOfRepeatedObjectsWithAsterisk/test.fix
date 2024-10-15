@@ -5,10 +5,4 @@ do list(path: "650??", "var": "$i")
 end
 replace_all("RSWK[].*.subjectGenre", "[.]$", "")
 
-do list(path: "650??", "var": "$i")
-  copy_field("$i.a", "rswk[].$append.subjectTopicName")
-  copy_field("$i.v", "rswk[].$last.subjectGenre")
-end
-replace_all("rswk[].*.subjectGenre", "[.]$", "")
-
-retain("RSWK[]","rswk[]")
+retain("RSWK[]")
