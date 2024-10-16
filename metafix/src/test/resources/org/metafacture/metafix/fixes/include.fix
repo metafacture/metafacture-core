@@ -1,5 +1,5 @@
 unless exists("trace")
-  set_array("trace")
+  add_array("trace")
 end
 add_field("trace.$append", "before include")
 include("./base.fix")

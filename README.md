@@ -303,6 +303,19 @@ Options:
 
 #### Record-level functions
 
+##### `add_array`
+
+Creates a new array (with optional values).
+
+```perl
+add_array("<targetFieldName>")
+add_array("<targetFieldName>", "<value_1>"[, ...])
+```
+
+[Example in Playground](https://metafacture.org/playground/?example=add_array)
+
+[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+add_array+{")
+
 ##### `add_field`
 
 Creates a field with a defined value.
@@ -314,6 +327,19 @@ add_field("<targetFieldName>", "<fieldValue>")
 [Example in Playground](https://metafacture.org/playground/?example=add_field)
 
 [Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+add_field+{")
+
+##### `add_hash`
+
+Creates a new hash (with optional values).
+
+```perl
+add_hash("<targetFieldName>")
+add_hash("<targetFieldName>", "subfieldName": "<subfieldValue>"[, ...])
+```
+
+[Example in Playground](https://metafacture.org/playground/?example=add_hash)
+
+[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+add_hash+{")
 
 ##### `array`
 
@@ -1027,7 +1053,7 @@ E.g.:
 ```perl
 # "ccm:university":["https://ror.org/0304hq317"]
 # "ccm:university_DISPLAYNAME":["Gottfried Wilhelm Leibniz Universität Hannover"]
-set_array("sourceOrga[]")
+add_array("sourceOrga[]")
 do list_as(orgId: "ccm:university[]", orgName: "ccm:university_DISPLAYNAME[]")
   copy_field(orgId, "sourceOrga[].$append.id")
   copy_field(orgName, "sourceOrga[].$last.name")

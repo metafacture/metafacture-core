@@ -261,7 +261,7 @@ public class MetafixRecordTest {
     @Test
     public void addWithAppendInNewArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('my.name')",
+                "add_array('my.name')",
                 "add_field('my.name.$append','patrick')",
                 "add_field('my.name.$append','nicolas')"
             ),
@@ -634,7 +634,7 @@ public class MetafixRecordTest {
     @Test
     public void appendWithWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('stringimals[]')",
+                "add_array('stringimals[]')",
                 "copy_field('?nimal', 'stringimals[].$append')"
             ),
             i -> {
@@ -697,7 +697,7 @@ public class MetafixRecordTest {
     @Test
     public void appendWithMultipleWildcards() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('stringimals[]')",
+                "add_array('stringimals[]')",
                 "copy_field('?ni??l', 'stringimals[].$append')"
             ),
             i -> {
@@ -728,7 +728,7 @@ public class MetafixRecordTest {
     @Test
     public void appendWithAsteriksWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('stringimals[]')",
+                "add_array('stringimals[]')",
                 "copy_field('*al', 'stringimals[].$append')"
             ),
             i -> {
@@ -758,7 +758,7 @@ public class MetafixRecordTest {
     @Test
     public void appendWithBracketWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('stringimals[]')",
+                "add_array('stringimals[]')",
                 "copy_field('[ac]nimal', 'stringimals[].$append')"
             ),
             i -> {
@@ -788,7 +788,7 @@ public class MetafixRecordTest {
     // See https://github.com/metafacture/metafacture-fix/issues/89
     public void appendWithAsteriksWildcardAtTheEnd() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('stringimals[]')",
+                "add_array('stringimals[]')",
                 "copy_field('ani*', 'stringimals[].$append')"
             ),
             i -> {
@@ -833,7 +833,7 @@ public class MetafixRecordTest {
     @MetafixToDo("See https://github.com/metafacture/metafacture-fix/pull/113")
     public void shouldCopyArrayFieldWithoutAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('TEST_TWO[]')",
+                "add_array('TEST_TWO[]')",
                 "copy_field('test[]', 'TEST_TWO[].$append')"
             ),
             i -> {
@@ -894,7 +894,7 @@ public class MetafixRecordTest {
     // See https://github.com/metafacture/metafacture-fix/issues/121
     public void shouldCopyArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('TEST_TWO[]')",
+                "add_array('TEST_TWO[]')",
                 "copy_field('test[].*', 'TEST_TWO[].$append')"
             ),
             i -> {
@@ -927,7 +927,7 @@ public class MetafixRecordTest {
     // See https://github.com/metafacture/metafacture-fix/issues/121
     public void shouldCopyNestedArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('TEST_4[]')",
+                "add_array('TEST_4[]')",
                 "copy_field('nestedTest[].*.test[].*', 'TEST_4[].$append')"
             ),
             i -> {
@@ -982,7 +982,7 @@ public class MetafixRecordTest {
     // See https://github.com/metafacture/metafacture-fix/issues/121
     public void shouldCopyArraySubFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('TEST_5[]')",
+                "add_array('TEST_5[]')",
                 "copy_field('coll[].*.b', 'TEST_5[].$append')"
             ),
             i -> {
@@ -1402,7 +1402,7 @@ public class MetafixRecordTest {
     @Test
     public void copyIntoArrayOfStrings() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                // "set_array('author')", <- results in separate objects/entities here
+                // "add_array('author')", <- results in separate objects/entities here
                 "copy_field('your.name','author.name[]')",
                 "remove_field('your')"),
             i -> {
@@ -1582,7 +1582,7 @@ public class MetafixRecordTest {
     @Test
     public void copyIntoExplicitArrayAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('author[]')",
+                "add_array('author[]')",
                 "copy_field('your.name','author[].$append.name')",
                 "remove_field('your')"),
             i -> {
@@ -1610,7 +1610,7 @@ public class MetafixRecordTest {
     @Test
     public void copyIntoArrayTopLevel() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('author[]')",
+                "add_array('author[]')",
                 "copy_field('your.name', 'author[]')",
                 "remove_field('your')"),
             i -> {
@@ -1854,7 +1854,7 @@ public class MetafixRecordTest {
     @Test
     public void setArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('foo[]','a','b','c')"),
+                "add_array('foo[]','a','b','c')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -1873,7 +1873,7 @@ public class MetafixRecordTest {
     // See https://github.com/metafacture/metafacture-fix/issues/111
     public void setArrayReplaceExisting() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('foo[]','a','b','c')"),
+                "add_array('foo[]','a','b','c')"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("foo[]");
@@ -1897,7 +1897,7 @@ public class MetafixRecordTest {
     // See https://github.com/metafacture/metafacture-fix/issues/130
     public void setArrayInArrayWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('foo[].*.test[]', 'test')"),
+                "add_array('foo[].*.test[]', 'test')"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("foo[]");
@@ -1929,7 +1929,7 @@ public class MetafixRecordTest {
     @Test
     public void setHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_hash('foo','a': 'b','c': 'd')"),
+                "add_hash('foo','a': 'b','c': 'd')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -1947,7 +1947,7 @@ public class MetafixRecordTest {
     // See https://github.com/metafacture/metafacture-fix/issues/111
     public void setHashReplaceExisting() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_hash('foo','a': 'b','c': 'd')"),
+                "add_hash('foo','a': 'b','c': 'd')"),
             i -> {
                 i.startRecord("1");
                 i.startEntity("foo");
@@ -2131,7 +2131,7 @@ public class MetafixRecordTest {
     @Test
     public void hashFromArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('foo','a','b','c','d')",
+                "add_array('foo','a','b','c','d')",
                 "hash('foo')"),
             i -> {
                 i.startRecord("1");
@@ -2149,7 +2149,7 @@ public class MetafixRecordTest {
     @Test
     public void arrayFromHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_hash('foo','a': 'b','c': 'd')",
+                "add_hash('foo','a': 'b','c': 'd')",
                 "array('foo')"),
             i -> {
                 i.startRecord("1");
@@ -2167,7 +2167,7 @@ public class MetafixRecordTest {
     @Test
     public void shouldCallMacro() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('test')",
+                "add_array('test')",
                 "do put_macro('test')",
                 "  add_field('test.$append', '42')",
                 "end",
@@ -2206,7 +2206,7 @@ public class MetafixRecordTest {
     @Test
     public void shouldCallMacroWithVariables() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('test')",
+                "add_array('test')",
                 "put_vars(a: '1', b: '2')", // global variables
                 "do put_macro('test', b: '22', c: '33')", // "static" local variables
                 "  add_field('test.$append', '$[a]-$[b]-$[c]-$[d]')",
@@ -2412,11 +2412,11 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @MetafixToDo("Is set_array with $append something we need/want? WDCD?")
+    @MetafixToDo("Is add_array with $append something we need/want? WDCD?")
     public void appendArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('nums[]', '1')",
-                "set_array('nums[].$append', '2', '3')"),
+                "add_array('nums[]', '1')",
+                "add_array('nums[].$append', '2', '3')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -2434,8 +2434,8 @@ public class MetafixRecordTest {
     @Test
     public void mixedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('@context[]', 'https://w3id.org/kim/lrmi-profile/draft/context.jsonld')",
-                "set_hash('@context[].$append', '@language': 'de')"),
+                "add_array('@context[]', 'https://w3id.org/kim/lrmi-profile/draft/context.jsonld')",
+                "add_hash('@context[].$append', '@language': 'de')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -3384,7 +3384,7 @@ public class MetafixRecordTest {
     @Test
     public void shouldAddObjectWithRandomNumberToMarkedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('bnimals[]')",
+                "add_array('bnimals[]')",
                 "random('bnimals[].$append.number', '100')"
             ),
             i -> {

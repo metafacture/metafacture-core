@@ -1,4 +1,4 @@
-set_array("trace")
+add_array("trace")
 add_field("trace.$append", "before nested")
 include("src/test/resources/org/metafacture/metafix/fixes/include.fix")
 add_field("trace.$append", "after nested")

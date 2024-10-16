@@ -228,7 +228,7 @@ public class MetafixScriptTest {
     @Test
     public void shouldIncludeFixFile() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('trace')",
+                "add_array('trace')",
                 "add_field('trace.$append', 'before include')",
                 "include('src/test/resources/org/metafacture/metafix/fixes/base.fix')",
                 "add_field('trace.$append', 'after include')"
@@ -307,7 +307,7 @@ public class MetafixScriptTest {
     @Test
     public void shouldIncludeFixFileInBind() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('trace')",
+                "add_array('trace')",
                 "add_field('trace.$append', 'before bind')",
                 "do list(path: 'data', 'var': '$i')",
                 "  paste('trace.$append', '~before include', '$i')",
