@@ -1,2 +1,2 @@
-set_array("test[]", "dog", "cat", "bird")
+add_array("test[]", "dog", "cat", "bird")
 move_field("test[]", "animals[].1.test[]")
