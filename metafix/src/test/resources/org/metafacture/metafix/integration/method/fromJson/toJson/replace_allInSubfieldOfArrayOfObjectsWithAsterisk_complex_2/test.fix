@@ -1,4 +1,3 @@
-set_array("test[]")
 copy_field("id", "test[].$append.id")
 
 copy_field("dateModified", "test[].$last.dateModified")

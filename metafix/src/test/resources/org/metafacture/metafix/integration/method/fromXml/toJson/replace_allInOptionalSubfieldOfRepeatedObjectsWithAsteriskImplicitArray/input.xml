@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection xmlns="http://www.loc.gov/MARC21/slim">
+    <record>
+        <datafield tag="650" ind1=" " ind2=" ">
+            <subfield code="a">Nonprofit organizations</subfield>
+            <subfield code="x">Management.</subfield>
+        </datafield>
+        <datafield tag="650" ind1=" " ind2=" ">
+            <subfield code="a">Nonprofit organizations</subfield>
+            <subfield code="x">Management</subfield>
+            <subfield code="v">Case studies.</subfield>
+        </datafield>
+    </record>
+</collection>

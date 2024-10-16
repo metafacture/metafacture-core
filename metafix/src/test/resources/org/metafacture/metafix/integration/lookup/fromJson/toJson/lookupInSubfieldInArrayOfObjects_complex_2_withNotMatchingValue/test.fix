@@ -1,4 +1,3 @@
-set_array("animals[]")
 do list(path: "metadata.real.test[]", "var": "$f")
   lookup("$f.animal", "./mapfile_2.tsv", "sep_char":"\t")
   copy_field("$f.animal", "animals[].$append.animal")
