@@ -90,18 +90,21 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
     @Override
     public void process(final T obj) {
         assert !closed;
-        try {
-            if (firstObject) {
-                getWriter().write(getHeader());
-                firstObject = false;
+        final String objStr = obj.toString();
+        if (!objStr.isEmpty()) {
+            try {
+                if (firstObject) {
+                    getWriter().write(getHeader());
+                    firstObject = false;
+                }
+                else {
+                    getWriter().write(getSeparator());
+                }
+                getWriter().write(objStr);
             }
-            else {
-                getWriter().write(getSeparator());
+            catch (final IOException e) {
+                throw new MetafactureException(e);
             }
-            getWriter().write(obj.toString());
-        }
-        catch (final IOException e) {
-            throw new MetafactureException(e);
         }
     }
 
