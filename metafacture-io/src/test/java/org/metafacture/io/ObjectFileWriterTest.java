@@ -20,6 +20,12 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
 
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.metafacture.commons.ResourceUtil;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,12 +33,6 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.metafacture.commons.ResourceUtil;
 
 /**
  * Tests for class {@link ObjectFileWriter}.
@@ -103,6 +103,14 @@ public final class ObjectFileWriterTest
         writer.resetStream(); // increments count, starts new file
         writer.process(DATA);
         assertTrue(new File(tempFolder.getRoot(), "test-1").exists());
+    }
+
+    @Test
+    public void issue543_shouldResultEmptyWhenNothingIsProcessed() throws IOException {
+        writer.process("");
+        writer.closeStream();
+
+        assertOutput("");
     }
 
     @Override
