@@ -47,7 +47,7 @@ import java.util.Properties;
  * @author Christoph Böhme
  *
  */
-@Description("Encodes a stream as xml. Defaults: `rootTag=\"records\"`, `recordTag=\"record\"`, no attributeMarker.")
+@Description("Encodes a stream as XML. Defaults: `rootTag=\"records\"`, `recordTag=\"record\"`, no attributeMarker.")
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("stream-to-xml")
