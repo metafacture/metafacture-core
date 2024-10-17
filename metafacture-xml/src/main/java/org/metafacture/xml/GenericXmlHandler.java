@@ -34,10 +34,10 @@ import java.util.regex.Pattern;
  * @author Markus Michael Geipel
  *
  */
-@Description("A generic XML reader. Separates XML data in distinct records with the defined record tag name (default: `recordtagname=\"record\"`)" +
-        "If no matching record tag is found, the output will be empty." +
-        "The handler breaks down XML elements with simple string values and optional attributes" +
-        "into entities with a value subfield (name configurable) and additional subfields for each attribute." +
+@Description("A generic XML reader. Separates XML data in distinct records with the defined record tag name (default: `recordtagname=\"record\"`) " +
+        "If no matching record tag is found, the output will be empty. " +
+        "The handler breaks down XML elements with simple string values and optional attributes " +
+        "into entities with a value subfield (name configurable) and additional subfields for each attribute. " +
         "Record tag and value tag names can be configured. Attributes can get an attributeMarker.")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
