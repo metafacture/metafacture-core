@@ -14,25 +14,28 @@
 * limitations under the License.
 */
 
-package org.metafacture.strings;
+package org.metafacture.flowcontrol;
 
 import org.metafacture.framework.FluxCommand;
+import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
+
 /**
  * Lets the process between objects sleep for a specific ms.
-*
-* @author Tobias Bülte
-*/
+ *
+ * @param <T> object type
+ * @author Tobias Bülte
+ */
 @Description("Lets the process between objects sleep for a specific ms.")
 @In(Object.class)
 @Out(Object.class)
-@FluxCommand("object-sleep")
-public final class ObjectSleeper extends DefaultObjectPipe<T, ObjectReceiver<T>> {
+@FluxCommand("sleep")
+public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 
     public static final long DEFAULT_SLEEP_TIME = 1000;
 
@@ -44,8 +47,7 @@ public final class ObjectSleeper extends DefaultObjectPipe<T, ObjectReceiver<T>>
     public ObjectSleeper() {
     }
 
-
-        /**
+    /**
      * Sets the time in ms for the sleep phase.
      *
      * @param sleepTime the time to sleep
@@ -54,7 +56,7 @@ public final class ObjectSleeper extends DefaultObjectPipe<T, ObjectReceiver<T>>
         this.sleepTime = sleepTime;
     }
 
-        /**
+    /**
      * Gets the time in ms for the sleep phase.
      *
      * @return the time to sleep
@@ -65,7 +67,13 @@ public final class ObjectSleeper extends DefaultObjectPipe<T, ObjectReceiver<T>>
 
     @Override
     public void process(final T obj) {
-        Thread.sleep(sleepTime);
+        try {
+            Thread.sleep(sleepTime);
+        }
+        catch (final InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new MetafactureException(e.getMessage(), e);
+        }
         getReceiver().process(obj);
     }
 
