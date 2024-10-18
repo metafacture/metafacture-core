@@ -76,6 +76,8 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
 
     public static final Map<String, String> NO_VARS = Collections.emptyMap();
 
+    public static final int MAX_ENTITY_COUNT = Integer.getInteger("org.metafacture.metafix.maxEntityCount", -1);
+
     private static final Logger LOG = LoggerFactory.getLogger(Metafix.class);
 
     private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
@@ -101,7 +103,6 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     private boolean repeatedFieldsToEntities;
     private boolean strictnessHandlesProcessExceptions;
     private int entityCount;
-    private int maxEntityCount = Integer.getInteger("org.metafacture.metafix.maxEntityCount", -1);
 
     public Metafix() {
         this(NO_VARS);
@@ -316,7 +317,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
 
         ++entityCount;
         if (maxEntityCountExceeded()) {
-            LOG.debug("Maximum number of entities exceeded: {}/{}", entityCount, maxEntityCount);
+            LOG.debug("Maximum number of entities exceeded: {}/{}", entityCount, MAX_ENTITY_COUNT);
             return;
         }
 
@@ -340,7 +341,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
 
     @Override
     public void literal(final String name, final String value) {
-        if (entityCountStack.size() > 1 && maxEntityCountExceeded()) {
+        if (maxEntityCountExceeded()) {
             return;
         }
 
@@ -453,16 +454,8 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         return entityMemberName;
     }
 
-    public void setMaxEntityCount(final int maxEntityCount) {
-        this.maxEntityCount = maxEntityCount;
-    }
-
-    public int getMaxEntityCount() {
-        return maxEntityCount;
-    }
-
     private boolean maxEntityCountExceeded() {
-        return maxEntityCount >= 0 && entityCount > maxEntityCount;
+        return MAX_ENTITY_COUNT >= 0 && entityCount > MAX_ENTITY_COUNT;
     }
 
     public enum Strictness {
