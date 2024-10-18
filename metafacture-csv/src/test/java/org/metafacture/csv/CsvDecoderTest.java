@@ -89,4 +89,22 @@ public final class CsvDecoderTest {
         ordered.verify(receiver).endRecord();
     }
 
+    /**
+     * In: "a","b\t","c\\t","\","\cd\"
+     * Out: a, b	, c\\t, \, \cd\
+     */
+    @Test
+    public void issue496_escaping() {
+        decoder.setHasHeader(false);
+        decoder.process("\"a\",\"b\t\",\"c\\t\",\"\\\",\"\\cd\\\"");
+        final InOrder ordered = inOrder(receiver);
+        ordered.verify(receiver).startRecord("1");
+        ordered.verify(receiver).literal("0", "a");
+        ordered.verify(receiver).literal("1", "b\t");
+        ordered.verify(receiver).literal("2", "c\\t");
+        ordered.verify(receiver).literal("3", "\\");
+        ordered.verify(receiver).literal("4", "\\cd\\");
+        ordered.verify(receiver).endRecord();
+    }
+
 }
