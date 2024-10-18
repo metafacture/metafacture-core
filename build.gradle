@@ -8,7 +8,7 @@ plugins {
 //  excludes = [
 //    '**/*.diff',
 //    '**/*.err',
-//    '**/*.hprof.txt',
+//    '**/*.jfr',
 //    '**/*.out',
 //    '**/*.vsix',
 //    '**/.*',

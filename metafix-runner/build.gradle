@@ -42,8 +42,10 @@ application {
   if (project.hasProperty('profile')) {
     def file = project.getProperty('profile') ?: project.name
     def depth = project.hasProperty('profile.depth') ? project.getProperty('profile.depth') : 8
-    def cutoff = project.hasProperty('profile.cutoff') ? project.getProperty('profile.cutoff') : 0.001
 
-    applicationDefaultJvmArgs = ["-agentlib:hprof=heap=sites,cpu=samples,depth=${depth},cutoff=${cutoff},file=${file}.hprof.txt"]
+    applicationDefaultJvmArgs = [
+      "-XX:FlightRecorderOptions=stackdepth=${depth}",
+      "-XX:StartFlightRecording=dumponexit=true,filename=${file}.jfr,settings=profile"
+    ]
   }
 }
