@@ -36,7 +36,9 @@ import java.util.regex.Pattern;
  * @author Christoph Böhme
  *
  */
+@Description("Writes objects to one (or more) file(s)")
 @In(Object.class)
+@In(Void.class)
 @FluxCommand("write-files")
 public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
 

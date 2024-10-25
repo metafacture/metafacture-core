@@ -31,6 +31,7 @@ import java.nio.charset.Charset;
 
 @Description("Writes objects to stdout")
 @In(Object.class)
+@Out(Void.class)
 @FluxCommand("print")
 public final class ObjectStdoutWriter<T> extends AbstractObjectWriter<T>  {
 
