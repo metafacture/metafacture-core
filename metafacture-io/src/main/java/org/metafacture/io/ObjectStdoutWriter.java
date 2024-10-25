@@ -19,6 +19,7 @@ package org.metafacture.io;
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
 
 import java.nio.charset.Charset;
 
