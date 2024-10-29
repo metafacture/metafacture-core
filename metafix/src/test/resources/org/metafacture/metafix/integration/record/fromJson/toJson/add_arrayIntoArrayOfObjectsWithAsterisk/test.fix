@@ -1,1 +1,0 @@
-add_array("animals[].*.test[]", "test")

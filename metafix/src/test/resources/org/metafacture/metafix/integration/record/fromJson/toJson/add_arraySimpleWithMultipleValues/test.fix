@@ -1,1 +1,0 @@
-add_array("test[]", "dog", "cat", "bird")

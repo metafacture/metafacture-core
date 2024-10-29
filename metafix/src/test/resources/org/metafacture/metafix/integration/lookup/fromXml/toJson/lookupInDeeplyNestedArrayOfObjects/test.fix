@@ -1,11 +1,11 @@
 put_map("rswk-indicator", s: "SubjectHeading")
 
 if exists("6890?")
-  add_array("subject[].$append.type[]", "ComplexSubject")
-  add_array("subject[].$last.label")
-  add_array("subject[].$last.componentList[]")
+  set_array("subject[].$append.type[]", "ComplexSubject")
+  set_array("subject[].$last.label")
+  set_array("subject[].$last.componentList[]")
   do list(path: "6890?", "var": "$i")
-    add_array("subject[].$last.componentList[].$append.type[]")
+    set_array("subject[].$last.componentList[].$append.type[]")
     do list(path: "$i.D", "var": "$k")
       copy_field("$k", "subject[].$last.componentList[].$last.type[].$append")
     end
