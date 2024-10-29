@@ -144,7 +144,7 @@ public class MetafixLookupTest {
     @Test
     public void shouldLookupInternalArrayWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('title', 'Aloha')",
+                "set_array('title', 'Aloha')",
                 LOOKUP + " Aloha: Alohaeha)"
             ),
             i -> {
@@ -162,7 +162,7 @@ public class MetafixLookupTest {
     @Test
     public void shouldLookupDeduplicatedInternalArrayWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('title', 'Aloha', 'Aloha')",
+                "set_array('title', 'Aloha', 'Aloha')",
                 "uniq('title')",
                 LOOKUP + " Aloha: Alohaeha)"
             ),
@@ -182,8 +182,8 @@ public class MetafixLookupTest {
     public void shouldNotLookupCopiedInternalArrayWithAsterisk() {
         MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected Array or Hash, got String", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "add_array('data', 'Aloha')",
-                    "add_array('title')",
+                    "set_array('data', 'Aloha')",
+                    "set_array('title')",
                     "copy_field('data', 'title')",
                     LOOKUP + " Aloha: Alohaeha)"
                 ),
@@ -200,8 +200,8 @@ public class MetafixLookupTest {
     @Test
     public void shouldLookupCopiedInternalArrayWithAsteriskExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('data', 'Aloha')",
-                "add_array('title')",
+                "set_array('data', 'Aloha')",
+                "set_array('title')",
                 "copy_field('data', 'title.$append')",
                 LOOKUP + " Aloha: Alohaeha)"
             ),
@@ -222,9 +222,9 @@ public class MetafixLookupTest {
     public void shouldNotLookupCopiedDeduplicatedInternalArrayWithAsterisk() {
         MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected Array or Hash, got String", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "add_array('data', 'Aloha', 'Aloha')",
+                    "set_array('data', 'Aloha', 'Aloha')",
                     "uniq('data')",
-                    "add_array('title')",
+                    "set_array('title')",
                     "copy_field('data', 'title')",
                     LOOKUP + " Aloha: Alohaeha)"
                 ),
@@ -241,9 +241,9 @@ public class MetafixLookupTest {
     @Test
     public void shouldLookupCopiedDeduplicatedInternalArrayWithAsteriskExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('data', 'Aloha', 'Aloha')",
+                "set_array('data', 'Aloha', 'Aloha')",
                 "uniq('data')",
-                "add_array('title')",
+                "set_array('title')",
                 "copy_field('data', 'title.$append')",
                 LOOKUP + " Aloha: Alohaeha)"
             ),
@@ -263,7 +263,7 @@ public class MetafixLookupTest {
     @Test
     public void shouldLookupCopiedExternalArrayWithAsteriskExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('title')",
+                "set_array('title')",
                 "copy_field('data', 'title.$append')",
                 LOOKUP + " Aloha: Alohaeha)"
             ),
@@ -285,7 +285,7 @@ public class MetafixLookupTest {
     public void shouldLookupCopiedDeduplicatedExternalArrayWithAsteriskExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "uniq('data')",
-                "add_array('title')",
+                "set_array('title')",
                 "copy_field('data', 'title.$append')",
                 LOOKUP + " Aloha: Alohaeha)"
             ),
@@ -309,7 +309,7 @@ public class MetafixLookupTest {
         MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected Array or Hash, got String", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                     "uniq('data')",
-                    "add_array('title')",
+                    "set_array('title')",
                     "move_field('data', 'title')",
                     LOOKUP + " Aloha: Alohaeha)"
                 ),
@@ -329,7 +329,7 @@ public class MetafixLookupTest {
     public void shouldLookupMovedDeduplicatedExternalArrayWithAsteriskExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "uniq('data')",
-                "add_array('title')",
+                "set_array('title')",
                 "move_field('data', 'title.$append')",
                 LOOKUP + " Aloha: Alohaeha)"
             ),
@@ -351,7 +351,7 @@ public class MetafixLookupTest {
     public void shouldNotLookupMovedExternalArrayWithAsterisk() {
         MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected Array or Hash, got String", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "add_array('title')",
+                    "set_array('title')",
                     "move_field('data', 'title')",
                     LOOKUP + " Aloha: Alohaeha)"
                 ),
@@ -369,7 +369,7 @@ public class MetafixLookupTest {
     @Test
     public void shouldLookupMovedExternalArrayWithAsteriskExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('title')",
+                "set_array('title')",
                 "move_field('data', 'title.$append')",
                 LOOKUP + " Aloha: Alohaeha)"
             ),
@@ -994,9 +994,9 @@ public class MetafixLookupTest {
     private void shouldLookupInCopiedNestedArraysCreatedWith(final String reservedField) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "put_map('rswk-indicator', s: 'SubjectHeading')",
-                "add_array('subject[]')",
-                "add_array('subject[]." + reservedField + ".componentList[]')",
-                "add_array('subject[].$last.componentList[]." + reservedField + ".type[]')",
+                "set_array('subject[]')",
+                "set_array('subject[]." + reservedField + ".componentList[]')",
+                "set_array('subject[].$last.componentList[]." + reservedField + ".type[]')",
                 "do list(path: 'D', 'var': '$i')",
                 "  copy_field('$i', 'subject[].$last.componentList[].$last.type[]." + reservedField + "')",
                 "end",
@@ -1247,7 +1247,7 @@ public class MetafixLookupTest {
     @Test // Scenario 1
     public void shouldLookupInExternalRdfMapGetObjectOfSubjectWithTargetedPredicateOfSpecificLanguage() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('prefLabel', 'https://w3id.org/kim/hochschulfaechersystematik/n4')",
+                "set_array('prefLabel', 'https://w3id.org/kim/hochschulfaechersystematik/n4')",
                 "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel', select_language: 'de')",
                 "lookup('prefLabel.*', 'rdfmap')"
             ),
@@ -1266,7 +1266,7 @@ public class MetafixLookupTest {
     @Test // Scenario 2
     public void shouldLookupInExternalRdfMapGetSubjectWithTargetedPredicateOfSpecificLanguage() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('id', 'Mathematics, Natural Sciences')",
+                "set_array('id', 'Mathematics, Natural Sciences')",
                 "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: 'skos:prefLabel', select_language: 'en')",
                 "lookup('id.*', 'rdfmap')"
             ),
@@ -1408,7 +1408,7 @@ public class MetafixLookupTest {
 
     private void shouldLookupInExternalRdfMapGetObjectWithTargetedPredicateOfSpecificLanguage(final String target) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('prefLabel', 'Mathematics, Natural Sciences')",
+                "set_array('prefLabel', 'Mathematics, Natural Sciences')",
                 "put_rdfmap('" + RDF_MAP + "', 'rdfmap', target: '" + target + "', select_language: 'de')",
                 "lookup('prefLabel.*', 'rdfmap')"
             ),

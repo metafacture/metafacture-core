@@ -64,7 +64,7 @@ public class MetafixBindTest {
     @Test
     public void doListExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('author')",
+                "set_array('author')",
                 "do list('path': 'name', 'var': 'n')",
                 " upcase('n')",
                 " trim('n')",
@@ -212,7 +212,7 @@ public class MetafixBindTest {
     @Test
     public void doListPathWithDotsExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('author')",
+                "set_array('author')",
                 "do list('path': 'some.name', 'var': 'n')",
                 " upcase('n')",
                 " trim('n')",
@@ -237,7 +237,7 @@ public class MetafixBindTest {
     @Test
     public void doListWithAppendAndLast() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('author[]')",
+                "set_array('author[]')",
                 "do list('path': 'creator', 'var': 'c')",
                 " copy_field('c.name', 'author[].$append.name')",
                 " add_field('author[].$last.type', 'Default')",
@@ -295,7 +295,7 @@ public class MetafixBindTest {
     @Test
     public void doListEntitesToLiteralsExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('author')",
+                "set_array('author')",
                 "do list('path': 'creator', 'var': 'c')",
                 " upcase('c.name')",
                 " trim('c.name')",
@@ -322,7 +322,7 @@ public class MetafixBindTest {
     @Test
     public void doListEntitesToEntities() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('author[]')",
+                "set_array('author[]')",
                 "do list('path': 'creator', 'var': 'c')",
                 " copy_field('c.name', 'author[].$append.name')",
                 " if all_contain('c.name', 'University')",
@@ -359,7 +359,7 @@ public class MetafixBindTest {
     @Test
     public void wildcardForNestedEntities() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('author[]')",
+                "set_array('author[]')",
                 "do list('path': 'creator', 'var': 'c')",
                 " if any_match('c.role.*.roleTerm.*.value','aut|cre')",
                 "  copy_field('c.name', 'author[].$append.name')",
@@ -430,7 +430,7 @@ public class MetafixBindTest {
     @Test
     public void doListIndexedArrayToArrayOfObjects() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('author[]')",
+                "set_array('author[]')",
                 "do list('path': 'name[]', 'var': 'n')",
                 " copy_field('n', 'author[].$append.name')",
                 "end",
@@ -483,7 +483,7 @@ public class MetafixBindTest {
     @Test
     public void doListIndexedArrayOfObjectsExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('author')",
+                "set_array('author')",
                 "do list('path': 'name[]', 'var': 'n')",
                 " copy_field('n.name', 'author.$append')",
                 "end",
@@ -510,7 +510,7 @@ public class MetafixBindTest {
     @Test
     public void doListIndexedArrayOfObjectsToArrayOfObjects() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('author[]')",
+                "set_array('author[]')",
                 "do list('path': 'name[]', 'var': 'n')",
                 " copy_field('n.name', 'author[].$append.name')",
                 "end",
@@ -670,7 +670,7 @@ public class MetafixBindTest {
 
     private void shouldIterateOverList(final String path, final int expectedCount) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('trace')",
+                "set_array('trace')",
                 "do list(path: '" + path + "', 'var': '$i')",
                 "  add_field('trace.$append', 'true')",
                 "end",
@@ -716,7 +716,7 @@ public class MetafixBindTest {
 
     private void shouldIterateOverListOfHashes(final String path, final int expectedCount) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('trace')",
+                "set_array('trace')",
                 "do list(path: '" + path + "', 'var': '$i')",
                 "  add_field('trace.$append', 'true')",
                 "end",
@@ -771,7 +771,7 @@ public class MetafixBindTest {
     // See https://github.com/metafacture/metafacture-fix/issues/119
     public void shouldPerformComplexOperationWithPathWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('coll[]')",
+                "set_array('coll[]')",
                 "do list(path: 'feld?', 'var': '$i')",
                 "  add_field('coll[].$append.feldtest', 'true')",
                 "  copy_field('$i.a.value', 'coll[].$last.a')",
@@ -847,7 +847,7 @@ public class MetafixBindTest {
     @Test
     public void shouldDoListAsWithSingleList() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('sourceOrga[]')",
+                "set_array('sourceOrga[]')",
                 "do list_as(orgId: 'ccm:university[]')",
                 "  copy_field(orgId, 'sourceOrga[].$append.id')",
                 "end"
@@ -881,7 +881,7 @@ public class MetafixBindTest {
     @Test
     public void shouldDoListAsWithMultipleLists() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('sourceOrga[]')",
+                "set_array('sourceOrga[]')",
                 "do list_as(orgId: 'ccm:university[]', orgName: 'ccm:university_DISPLAYNAME[]', orgLoc: 'ccm:university_LOCATION[]')",
                 "  copy_field(orgId, 'sourceOrga[].$append.id')",
                 "  copy_field(orgName, 'sourceOrga[].$last.name')",
@@ -937,9 +937,9 @@ public class MetafixBindTest {
     @Test // checkstyle-disable-line JavaNCSS
     public void shouldDoListAsWithMultipleListsOfDifferentSizes() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('sourceOrga[]')",
+                "set_array('sourceOrga[]')",
                 "do list_as(orgId: 'ccm:university[]', orgName: 'ccm:university_DISPLAYNAME[]', orgLoc: 'ccm:university_LOCATION[]')",
-                "  add_hash('sourceOrga[].$append')",
+                "  set_hash('sourceOrga[].$append')",
                 "  copy_field(orgId, 'sourceOrga[].$last.id')",
                 "  copy_field(orgName, 'sourceOrga[].$last.name')",
                 "  copy_field(orgLoc, 'sourceOrga[].$last.location')",

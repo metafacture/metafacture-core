@@ -2153,7 +2153,7 @@ public class MetafixMethodTest {
     @Test
     public void inDoBindCopyFieldWithVarInSourceAndTarget() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('RSWK[]')",
+                "set_array('RSWK[]')",
                 "do list(path: '650??', 'var': '$i')",
                 "  copy_field('$i.a', 'RSWK[].$append.subjectTopicName')",
                 "  copy_field('$i.v', 'RSWK[].$last.subjectGenre')",
@@ -2191,7 +2191,7 @@ public class MetafixMethodTest {
     @Test
     public void replaceAllWithWildcardAfterCopyFieldWithVarInSourceAndTarget() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('RSWK[]')",
+                "set_array('RSWK[]')",
                 "do list(path: '650??', 'var': '$i')",
                 "  copy_field('$i.a', 'RSWK[].$append.subjectTopicName')",
                 "  copy_field('$i.v', 'RSWK[].$last.subjectGenre')",
@@ -2230,7 +2230,7 @@ public class MetafixMethodTest {
     @Test
     public void multipleReplaceAllWithWildcardAfterCopyFieldWithVarInSourceAndTarget() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('RSWK[]')",
+                "set_array('RSWK[]')",
                 "do list(path: '650??', 'var': '$i')",
                 "  copy_field('$i.a', 'RSWK[].$append.subjectTopicName')",
                 "  copy_field('$i.v', 'RSWK[].$last.subjectGenre')",
@@ -2271,7 +2271,7 @@ public class MetafixMethodTest {
     public void copyFieldToSubfieldOfArrayOfObjectsWithIndexImplicitAppend() {
         MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Can't find: 1 in: null", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "add_array('test[]')",
+                    "set_array('test[]')",
                     "copy_field('key', 'test[].1.field')"
                 ),
                 i -> {
@@ -2288,7 +2288,7 @@ public class MetafixMethodTest {
     @Test
     public void copyFieldToSubfieldOfArrayOfObjectsWithExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('test[]')",
+                "set_array('test[]')",
                 "copy_field('key', 'test[].$append.field')"
             ),
             i -> {
@@ -2312,7 +2312,7 @@ public class MetafixMethodTest {
     public void copyFieldToSubfieldOfArrayOfStringsWithIndexImplicitAppend() {
         MetafixTestHelpers.assertProcessException(IndexOutOfBoundsException.class, "Index 0 out of bounds for length 0", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                    "add_array('test[]')",
+                    "set_array('test[]')",
                     "copy_field('key', 'test[].1')"
                 ),
                 i -> {
@@ -2329,7 +2329,7 @@ public class MetafixMethodTest {
     @Test
     public void copyFieldToSubfieldOfArrayOfStringsWithExplicitAppend() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('test[]')",
+                "set_array('test[]')",
                 "copy_field('key', 'test[].$append')"
             ),
             i -> {
@@ -2442,7 +2442,7 @@ public class MetafixMethodTest {
     @Test
     public void shouldReplaceAllRegexesInCopiedArraySubField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('coll[]')",
+                "set_array('coll[]')",
                 "copy_field('a', 'coll[].$append.a')",
                 "replace_all('coll[].*.a', 'o', '__')"
             ),
@@ -2466,7 +2466,7 @@ public class MetafixMethodTest {
     @Test
     public void shouldReplaceAllRegexesInMovedArraySubField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('coll[]')",
+                "set_array('coll[]')",
                 "move_field('a', 'coll[].$append.a')",
                 "replace_all('coll[].*.a', 'o', '__')"
             ),
@@ -2489,7 +2489,7 @@ public class MetafixMethodTest {
     @Test
     public void shouldReplaceAllRegexesInCopiedArraySubFieldOriginal() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('coll[]')",
+                "set_array('coll[]')",
                 "copy_field('a', 'coll[].$append.a')",
                 "replace_all('a', 'o', '__')"
             ),
@@ -2513,7 +2513,7 @@ public class MetafixMethodTest {
     @Test
     public void shouldReplaceAllRegexesInListCopiedArraySubField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('coll[]')",
+                "set_array('coll[]')",
                 "do list(path: 'a', 'var': '$i')",
                 "  copy_field('$i', 'coll[].$append.a')",
                 "end",
@@ -2539,7 +2539,7 @@ public class MetafixMethodTest {
     @Test
     public void shouldCopyBindVarWithDollarAfterLookup() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('@coll[]')",
+                "set_array('@coll[]')",
                 "do list(path: 'a', 'var': '$i')",
                 "  lookup('$i.name')",
                 "  copy_field('$i.name', '@coll[].$append')",
@@ -2566,7 +2566,7 @@ public class MetafixMethodTest {
     @Test
     public void shouldCopyToFieldWithIndexAndReservedFieldName() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('a[].*.test[]', 'test')",
+                "set_array('a[].*.test[]', 'test')",
                 "copy_field('some', 'a[].1.test[].$append')",
                 "remove_field('some')"
             ),
@@ -2605,7 +2605,7 @@ public class MetafixMethodTest {
     @Test
     public void shouldCopyToFieldWithTwoReservedFieldNames() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('a[].*.test[]', 'test')",
+                "set_array('a[].*.test[]', 'test')",
                 "copy_field('some', 'a[].$first.test[].$append')",
                 "remove_field('some')"
             ),
@@ -2807,11 +2807,11 @@ public class MetafixMethodTest {
     private void addFieldWithReplaceAllArray(final boolean replaceAll) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list(path: 'contribution[]', 'var': '$i')",
-                "  add_array('$i.agent.altLabel[]')",
+                "  set_array('$i.agent.altLabel[]')",
                 "  add_field('$i.agent.altLabel[].$append', 'contribution')",
                 "end",
                 "do list(path: 'subject[]', 'var': '$i')",
-                "  add_array('$i.altLabel[]')",
+                "  set_array('$i.altLabel[]')",
                 "  add_field('$i.altLabel[].$append', 'subject')",
                 "end",
                 replaceAll ? "replace_all('contribution[].*.agent.altLabel[].*', 't', '')" : "",
@@ -2864,10 +2864,10 @@ public class MetafixMethodTest {
     private void setArrayWithReplaceAll(final boolean replaceAll) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list(path: 'contribution[]', 'var': '$i')",
-                "  add_array('$i.agent.altLabel[]', 'contribution')",
+                "  set_array('$i.agent.altLabel[]', 'contribution')",
                 "end",
                 "do list(path: 'subject[]', 'var': '$i')",
-                "  add_array('$i.altLabel[]', 'subject')",
+                "  set_array('$i.altLabel[]', 'subject')",
                 "end",
                 replaceAll ? "replace_all('contribution[].*.agent.altLabel[].*', 't', '')" : "",
                 replaceAll ? "replace_all('subject[].*.altLabel[].*', 't', '')" : ""
@@ -2919,11 +2919,11 @@ public class MetafixMethodTest {
     private void copyFieldWithReplaceAllArray(final boolean replaceAll) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list(path: 'contribution[]', 'var': '$i')",
-                "  add_array('$i.agent.altLabel[]')",
+                "  set_array('$i.agent.altLabel[]')",
                 "  copy_field('$i.label', '$i.agent.altLabel[].$append')",
                 "end",
                 "do list(path: 'subject[]', 'var': '$i')",
-                "  add_array('$i.altLabel[]')",
+                "  set_array('$i.altLabel[]')",
                 "  copy_field('$i.label', '$i.altLabel[].$append')",
                 "end",
                 replaceAll ? "replace_all('contribution[].*.agent.altLabel[].*', 't', '')" : "",
@@ -2976,11 +2976,11 @@ public class MetafixMethodTest {
     private void pasteWithReplaceAll(final boolean replaceAll) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "do list(path: 'contribution[]', 'var': '$i')",
-                "  add_array('$i.agent.altLabel[]')",
+                "  set_array('$i.agent.altLabel[]')",
                 "  paste('$i.agent.altLabel[].$append', '$i.label', '~!')",
                 "end",
                 "do list(path: 'subject[]', 'var': '$i')",
-                "  add_array('$i.altLabel[]')",
+                "  set_array('$i.altLabel[]')",
                 "  paste('$i.altLabel[].$append', '$i.label', '~!')",
                 "end",
                 replaceAll ? "replace_all('contribution[].*.agent.altLabel[].*', ' !', '')" : "",

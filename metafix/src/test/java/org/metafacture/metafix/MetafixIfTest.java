@@ -1624,7 +1624,7 @@ public class MetafixIfTest {
     @Test
     public void shouldReportEmptyArrayAsArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array(foo)",
+                "set_array(foo)",
                 "if is_array(foo)",
                 "  add_field(test,ok)",
                 "end"
@@ -1767,7 +1767,7 @@ public class MetafixIfTest {
     @Test
     public void shouldReportEmptyArrayAsEmpty() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array(foo)",
+                "set_array(foo)",
                 "if is_empty(foo)",
                 "  add_field(test,ok)",
                 "end"
@@ -2127,7 +2127,7 @@ public class MetafixIfTest {
     @Test
     public void shouldReportEmptyHashAsObject() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_hash(foo)",
+                "set_hash(foo)",
                 "if is_object(foo)",
                 "  add_field(test,ok)",
                 "end"
@@ -2499,7 +2499,7 @@ public class MetafixIfTest {
     @Test
     public void shouldTestMacroVariable() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "add_array('type')",
+                "set_array('type')",
                 "do put_macro('test')",
                 "  if str_contain('name', 'a$[var]')",
                 "    add_field('type.$append', 'Organization: $[var]')",
