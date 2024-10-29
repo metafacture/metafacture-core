@@ -1,5 +1,5 @@
 do list(path: "700[01] ", "var": "$i")
-  add_hash("contribution[].$append.agent")
+  set_hash("contribution[].$append.agent")
   copy_field("$i.a", "contribution[].$last.agent.label")
 end
 
