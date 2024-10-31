@@ -54,6 +54,10 @@ public final class HelpPrinter {
 
     private static final Map<String, String[]> EXAMPLES_MAP = new HashMap<>();
 
+    private static final String INDENTATION = "  ";
+
+    private static StringBuilder htmlTable = new StringBuilder();
+
     private HelpPrinter() {
         // no instances
     }
@@ -91,9 +95,12 @@ public final class HelpPrinter {
         final List<String> keyWords = new ArrayList<>(factory.keySet());
         Collections.sort(keyWords);
         loadExamples();
+        htmlTable.append(INDENTATION+INDENTATION+"<tbody>\n");
         for (final String name : keyWords) {
             describe(name, factory, out);
         }
+        htmlTable.append(INDENTATION+INDENTATION+"</tbody>\n");
+        out.println(htmlTable);
     }
 
     private static String getVersionInfo() {
@@ -109,33 +116,53 @@ public final class HelpPrinter {
         final ConfigurableClass<? extends T> configurableClass = factory.get(name);
         final Class<? extends T> moduleClass = configurableClass.getPlainClass();
         final Description desc = moduleClass.getAnnotation(Description.class);
-
+String indentation=INDENTATION+INDENTATION+INDENTATION;
         out.println(name);
+        htmlTable.append(indentation+"<tr>\n");
+        indentation=indentation+INDENTATION;
+        htmlTable.append(indentation+"<td>"+name+"</td>\n");
+
         name.chars().forEach(c -> out.print("-"));
         out.println();
-
+      htmlTable.append(indentation+"<td>");
         if (desc != null) {
             out.println("- description:\t" + desc.value());
+          htmlTable.append(desc.value());
         }
         final Collection<String> arguments = getAvailableArguments(moduleClass);
         if (!arguments.isEmpty()) {
             out.println("- arguments:\t" + arguments);
+            htmlTable.append("\nArguments: "+arguments);
         }
+        htmlTable.append("</td>\n");
 
+        htmlTable.append(indentation);
         printAttributes(out, configurableClass, configurableClass.getSetters());
+        htmlTable.append(indentation);
         printSignature(out, moduleClass);
 
         final String[] examplesEntry = EXAMPLES_MAP.get(name);
+        htmlTable.append(indentation+"<td>");
         if (examplesEntry != null && examplesEntry.length > 2) {
             out.println("- [example in Playground]" + "(" + examplesEntry[2] + ")");
+            htmlTable.append("<a href=\""+examplesEntry[2]+"\">example in Playground</a>");
         }
-        if (examplesEntry != null && examplesEntry.length > 1) {
+        htmlTable.append("</td>\n");
+
+        htmlTable.append(indentation+"<td>");
+      if (examplesEntry != null && examplesEntry.length > 1) {
             out.println("- java class:\t[" + moduleClass.getCanonicalName() + "](" + examplesEntry[1] + ")");
-        }
+        htmlTable.append("<a href=\""+examplesEntry[1]+"\">"+ moduleClass.getCanonicalName()+"</a>");
+      }
         else {
             out.println("- java class:\t" + moduleClass.getCanonicalName());
-        }
-        out.println();
+        htmlTable.append(moduleClass.getCanonicalName());
+
+      }
+      htmlTable.append("</td>\n");
+
+      out.println();
+        htmlTable.append(INDENTATION+INDENTATION+INDENTATION+"</tr>\n");
     }
 
     private static <T> void printSignature(final PrintStream out, final Class<? extends T> moduleClass) {
@@ -150,10 +177,13 @@ public final class HelpPrinter {
             outString = outClass.value().getSimpleName();
         }
         out.println("- signature:\t" + inString + " -> " + outString);
+        htmlTable.append("<td>"+inString+"</td>\n");
+        htmlTable.append("<td>"+outString+"</td>\n");
     }
 
     private static <T> void printAttributes(final PrintStream out, final ConfigurableClass<? extends T> configurableClass, final Map<String, Method> attributes) {
-        if (!attributes.isEmpty()) {
+      String options="";
+      if (!attributes.isEmpty()) {
             out.print("- options:\t");
             final StringBuilder builder = new StringBuilder();
             for (final Entry<String, Method> entry : attributes.entrySet()) {
@@ -178,8 +208,11 @@ public final class HelpPrinter {
                 }
 
             }
-            out.println(builder.substring(0, builder.length() - 2));
+             options = builder.substring(0, builder.length() - 2);
+            out.println(options);
         }
+      htmlTable.append("<td>"+options+"</td>\n");
+
     }
 
     @SuppressWarnings("unchecked")
