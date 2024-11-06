@@ -24,21 +24,26 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
+import java.util.concurrent.TimeUnit;
 
 /**
- * Lets the process between objects sleep for a specific ms.
+ * Lets the process sleep for a specific amount of time between objects.
  *
  * @param <T> object type
  * @author Tobias Bülte
  */
-@Description("Lets the process between objects sleep for a specific ms.")
+@Description("Lets the process sleep for a specific amount of time between objects.")
 @In(Object.class)
 @Out(Object.class)
 @FluxCommand("sleep")
 public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<T>> {
 
+    public static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.MILLISECONDS;
     public static final long DEFAULT_SLEEP_TIME = 1000;
 
+    private static final String TIME_UNIT_SUFFIX = "S";
+
+    private TimeUnit timeUnit = DEFAULT_TIME_UNIT;
     private long sleepTime = DEFAULT_SLEEP_TIME;
 
     /**
@@ -48,16 +53,29 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
     }
 
     /**
-     * Sets the time in ms for the sleep phase.
+     * Sets the amount of time for the sleep phase (measured in {@link
+     * #setTimeUnit time unit}).
      *
      * @param sleepTime the time to sleep
      */
     public void setSleepTime(final int sleepTime) {
+        // NOTE: ConfigurableClass.convertValue() doesn't support long.
+        setSleepTime((long) sleepTime);
+    }
+
+    /**
+     * Sets the amount of time for the sleep phase (measured in {@link
+     * #setTimeUnit time unit}).
+     *
+     * @param sleepTime the time to sleep
+     */
+    public void setSleepTime(final long sleepTime) {
         this.sleepTime = sleepTime;
     }
 
     /**
-     * Gets the time in ms for the sleep phase.
+     * Gets the amount of time for the sleep phase (measured in {@link
+     * #setTimeUnit time unit}).
      *
      * @return the time to sleep
      */
@@ -66,11 +84,44 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
     }
 
     /**
+     * Sets the time unit for the sleep phase. See {@link TimeUnit available
+     * time units}, case-insensitive, trailing "s" optional.
+     *
+     * @param timeUnit the time unit
+     */
+    public void setTimeUnit(final String timeUnit) {
+        // NOTE: Adds NANOSECONDS and DAYS over Catmandu's supported time units.
+
+        final String timeUnitName = timeUnit.toUpperCase();
+        final String timeUnitSuffix = timeUnitName.endsWith(TIME_UNIT_SUFFIX) ? "" : TIME_UNIT_SUFFIX;
+
+        setTimeUnit(TimeUnit.valueOf(timeUnitName + timeUnitSuffix));
+    }
+
+    /**
+     * Sets the time unit for the sleep phase.
+     *
+     * @param timeUnit the time unit
+     */
+    public void setTimeUnit(final TimeUnit timeUnit) {
+        this.timeUnit = timeUnit;
+    }
+
+    /**
+     * Gets the time unit for the sleep phase.
+     *
+     * @return the time unit
+     */
+    public TimeUnit getTimeUnit() {
+        return timeUnit;
+    }
+
+    /**
      * Sleeps for the specified amount of time.
      */
     public void sleep() {
         try {
-            Thread.sleep(sleepTime);
+            timeUnit.sleep(sleepTime);
         }
         catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
