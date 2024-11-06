@@ -65,8 +65,10 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
         return sleepTime;
     }
 
-    @Override
-    public void process(final T obj) {
+    /**
+     * Sleeps for the specified amount of time.
+     */
+    public void sleep() {
         try {
             Thread.sleep(sleepTime);
         }
@@ -74,6 +76,11 @@ public final class ObjectSleeper<T> extends DefaultObjectPipe<T, ObjectReceiver<
             Thread.currentThread().interrupt();
             throw new MetafactureException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void process(final T obj) {
+        sleep();
         getReceiver().process(obj);
     }
 
