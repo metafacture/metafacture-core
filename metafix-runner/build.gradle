@@ -4,12 +4,8 @@ plugins {
 
 application
   startScripts {
-    doLast {
-        def winScriptFile  = file getWindowsScript()
-        def winFileText = winScriptFile.text
-        winFileText = winFileText.replaceAll('set CLASSPATH=.*', 'rem original CLASSPATH declaration replaced, see https://github.com/metafacture/metafacture-fix/issues/371:\nset CLASSPATH=%APP_HOME%\\\\lib\\\\\\*')
-        winScriptFile.text = winFileText
-    }
+    // See https://github.com/metafacture/metafacture-fix/issues/371
+    classpath = files('*')
   }
 
 dependencies {
