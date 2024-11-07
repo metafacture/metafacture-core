@@ -2,12 +2,6 @@ plugins {
   id 'application'
 }
 
-application
-  startScripts {
-    // See https://github.com/metafacture/metafacture-fix/issues/371
-    classpath = files('*')
-  }
-
 dependencies {
   implementation project(':metafix')
 
@@ -53,5 +47,10 @@ application {
       "-XX:FlightRecorderOptions=stackdepth=${depth}",
       "-XX:StartFlightRecording=dumponexit=true,filename=${file}.jfr,settings=profile"
     ]
+  }
+
+  startScripts {
+    // See https://github.com/metafacture/metafacture-fix/issues/371
+    classpath = files('*')
   }
 }
