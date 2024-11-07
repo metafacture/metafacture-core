@@ -303,6 +303,19 @@ Options:
 
 #### Record-level functions
 
+##### `add_array`
+
+Creates a new array (with optional values).
+
+```perl
+add_array("<targetFieldName>")
+add_array("<targetFieldName>", "<value_1>"[, ...])
+```
+
+[Example in Playground](https://metafacture.org/playground/?example=add_array)
+
+[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+add_array+{")
+
 ##### `add_field`
 
 Creates a field with a defined value.
@@ -314,6 +327,19 @@ add_field("<targetFieldName>", "<fieldValue>")
 [Example in Playground](https://metafacture.org/playground/?example=add_field)
 
 [Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+add_field+{")
+
+##### `add_hash`
+
+Creates a new hash (with optional values).
+
+```perl
+add_hash("<targetFieldName>")
+add_hash("<targetFieldName>", "subfieldName": "<subfieldValue>"[, ...])
+```
+
+[Example in Playground](https://metafacture.org/playground/?example=add_hash)
+
+[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+add_hash+{")
 
 ##### `array`
 
@@ -535,39 +561,21 @@ retain("<sourceField_1>"[, ...])
 
 ##### `set_array`
 
-Creates a new array (with optional values).
+_Currently alias for [`add_array`](#add_array)._
 
-```perl
-set_array("<targetFieldName>")
-set_array("<targetFieldName>", "<value_1>"[, ...])
-```
-
-[Example in Playground](https://metafacture.org/playground/?example=set_array)
-
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+set_array+{")
+We advise you to use [`add_array`](#add_array) instead of `set_array` due to changing behaviour in an upcoming release. For more information see: [#309](https://github.com/metafacture/metafacture-fix/issues/309)
 
 ##### `set_field`
 
-Creates (or replaces) a field with a defined value.
+_Currently alias for [`add_field`](#add_field)._
 
-```perl
-set_field("<targetFieldName>", "<fieldValue>")
-```
-
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+set_field+{")
+We advise you to use [`add_field`](#add_field) instead of `set_field` due to changing behaviour in an upcoming release. For more information see: [#309](https://github.com/metafacture/metafacture-fix/issues/309)
 
 ##### `set_hash`
 
-Creates a new hash (with optional values).
+_Currently alias for [`add_hash`](#add_hash)._
 
-```perl
-set_hash("<targetFieldName>")
-set_hash("<targetFieldName>", "subfieldName": "<subfieldValue>"[, ...])
-```
-
-[Example in Playground](https://metafacture.org/playground/?example=set_hash)
-
-[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-fix+path:FixMethod.java+"+set_hash+{")
+We advise you to use [`add_hash`](#add_hash) instead of `set_hash` due to changing behaviour in an upcoming release. For more information see: [#309](https://github.com/metafacture/metafacture-fix/issues/309)
 
 ##### `timestamp`
 

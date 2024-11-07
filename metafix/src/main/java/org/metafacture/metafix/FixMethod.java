@@ -164,10 +164,27 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
 
     // RECORD-LEVEL METHODS:
 
+    add_array {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String field = params.get(0);
+            final Value newValue = newArray(params.subList(1, params.size()).stream().map(Value::new));
+            record.set(field, newValue);
+            newValue.asArray().forEach(value -> value.withPathSet(newValue.getPath() + "." + value.getPath()));
+        }
+    },
     add_field {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             record.set(params.get(0), new Value(params.get(1)));
+        }
+    },
+    add_hash {
+        @Override
+        public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            final String field = params.get(0);
+            final Value newValue = Value.newHash(h -> options.forEach((f, v) -> h.put(f, new Value(v))));
+            record.set(field, newValue);
         }
     },
     array { // array-from-hash
@@ -391,24 +408,19 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
     set_array {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final String field = params.get(0);
-            final Value newValue = newArray(params.subList(1, params.size()).stream().map(Value::new));
-            record.set(field, newValue);
-            newValue.asArray().forEach(value -> value.withPathSet(newValue.getPath() + "." + value.getPath()));
+            add_array.apply(metafix, record, params, options);
         }
     },
     set_field {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.set(params.get(0), new Value(params.get(1)));
+            add_field.apply(metafix, record, params, options);
         }
     },
     set_hash {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            final String field = params.get(0);
-            final Value newValue = Value.newHash(h -> options.forEach((f, v) -> h.put(f, new Value(v))));
-            record.set(field, newValue);
+            add_hash.apply(metafix, record, params, options);
         }
     },
     timestamp {
