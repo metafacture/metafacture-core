@@ -52,5 +52,6 @@ application {
   startScripts {
     // See https://github.com/metafacture/metafacture-fix/issues/371
     classpath = files('*')
+    doNotTrackState('Accessing unreadable inputs is not supported.')
   }
 }
