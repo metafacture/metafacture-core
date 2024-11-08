@@ -48,4 +48,10 @@ application {
       "-XX:StartFlightRecording=dumponexit=true,filename=${file}.jfr,settings=profile"
     ]
   }
+
+  startScripts {
+    // See https://github.com/metafacture/metafacture-fix/issues/371
+    classpath = files('*')
+    doNotTrackState('Accessing unreadable inputs is not supported.')
+  }
 }
