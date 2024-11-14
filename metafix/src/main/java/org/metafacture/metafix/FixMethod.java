@@ -680,7 +680,13 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
     to_base64 {
         @Override
         public void apply(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
-            record.transform(params.get(0), s -> Base64.getEncoder().encodeToString(s.getBytes()));
+            final boolean urlSafe = getBoolean(options, "url_safe");
+            if (!urlSafe) {
+                record.transform(params.get(0), s -> Base64.getEncoder().encodeToString(s.getBytes()));
+            }
+            else {
+                record.transform(params.get(0), s -> Base64.getUrlEncoder().encodeToString(s.getBytes()));
+            }
         }
     },
     to_json {

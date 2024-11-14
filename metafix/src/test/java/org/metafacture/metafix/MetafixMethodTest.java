@@ -4084,6 +4084,28 @@ public class MetafixMethodTest {
         );
     }
 
+    @Test
+    public void shouldTransformUrlToBase64() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "to_base64('data.title', url_safe:'true')"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                i.literal("title", "https://www.youtube.com/watch?v=daLgsPSvD9A");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().literal("title", "aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g_dj1kYUxnc1BTdkQ5QQ==");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
     @Test // checkstyle-disable-line JavaNCSS
     public void shouldCreateVariableFromLiteralValue() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(

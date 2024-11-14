@@ -905,8 +905,12 @@ to_json("<sourceField>"[, pretty: "<boolean>"][, error_string: "<errorValue>"])
 
 Replaces the value with its Base64 encoding.
 
+Options:
+
+-`url_safe`: Whether to encode a URL. (Default: `false`)
+
 ```perl
-to_base64("<sourceField>")
+to_base64("<sourceField>"[, url_safe: "<boolean>"])
 ```
 
 [Example in Playground](https://metafacture.org/playground/?example=to_base64)
