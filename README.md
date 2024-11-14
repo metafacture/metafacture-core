@@ -907,7 +907,7 @@ Replaces the value with its Base64 encoding.
 
 Options:
 
--`url_safe`: Whether to encode a URL. (Default: `false`)
+-`url_safe`: Perform URL-safe encoding (uses Base64URL format). (Default: `false`)
 
 ```perl
 to_base64("<sourceField>"[, url_safe: "<boolean>"])
