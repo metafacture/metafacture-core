@@ -36,6 +36,8 @@ import java.util.Arrays;
 @ExtendWith(MetafixToDo.Extension.class)
 public class MetafixMethodTest {
 
+    private static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=daLgsPSvD9A";
+
     @Mock
     private StreamReceiver streamReceiver;
 
@@ -4078,6 +4080,37 @@ public class MetafixMethodTest {
                 o.get().startRecord("1");
                 o.get().startEntity("data");
                 o.get().literal("title", "dGhpcy1pcy1hLXRlc3Q=");
+                o.get().endEntity();
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldTransformUrlSafeToBase64() {
+        urlToBase64(",url_safe:'true'", "aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g_dj1kYUxnc1BTdkQ5QQ==");
+    }
+
+    @Test
+    public void shouldTransformNotUrlSafeToBase64AsDefault() {
+        urlToBase64("", "aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1kYUxnc1BTdkQ5QQ==");
+    }
+
+    private void urlToBase64(final String option, final String expected) {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "to_base64('data.title'" + option + ")"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("data");
+                i.literal("title", YOUTUBE_URL);
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("data");
+                o.get().literal("title", expected);
                 o.get().endEntity();
                 o.get().endRecord();
             }
