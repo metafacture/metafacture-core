@@ -81,6 +81,7 @@ public final class Marc21Encoder extends
     private State state = State.IN_STREAM;
 
     private boolean generateIdField;
+    private boolean validateLeader = true;
 
     /**
      * Initializes the encoder with MARC 21 constants and charset.
@@ -106,6 +107,18 @@ public final class Marc21Encoder extends
      */
     public void setGenerateIdField(final boolean generateIdField) {
         this.generateIdField = generateIdField;
+    }
+
+    /**
+     * Controls whether the leader should be validated.
+     * <p>
+     * The default value of {@code validateLeader} is true.
+     * <p>
+     *
+     * @param validateLeader if false the leader is not validated
+     */
+    public void setValidateLeader(final boolean validateLeader) {
+        this.validateLeader = validateLeader;
     }
 
     /**
@@ -259,12 +272,14 @@ public final class Marc21Encoder extends
     }
 
     private void requireValidCode(final char code, final char[] validCodes) {
-        for (final char validCode: validCodes) {
-            if (validCode == code) {
-                return;
+        if (validateLeader) {
+            for (final char validCode : validCodes) {
+                if (validCode == code) {
+                    return;
+                }
             }
+            throw new FormatException("invalid code '" + code + "'; allowed codes are: " + Arrays.toString(validCodes));
         }
-        throw new FormatException("invalid code '" + code + "'; allowed codes are: " + Arrays.toString(validCodes));
     }
 
     private void processTopLevelLiteral(final String name, final String value) {
