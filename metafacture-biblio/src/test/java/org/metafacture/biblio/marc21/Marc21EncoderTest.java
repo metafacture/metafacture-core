@@ -159,8 +159,9 @@ public final class Marc21EncoderTest {
     @Test
     public void issue567ShouldNotValidateLeader() {
         marc21Encoder.setValidateLeader(false);
+
         marc21Encoder.startRecord("");
-        marc21Encoder.literal(LEADER_ENTITY,   BAD_LEADER );
+        marc21Encoder.literal(LEADER_ENTITY, BAD_LEADER );
         marc21Encoder.endRecord();
 
         verify(receiver).process(matches("00026ny  a22000253n 4500\u001e\u001d"));
