@@ -19,7 +19,7 @@ description = 'Modules for processing comma-separated values'
 
 dependencies {
   api project(':metafacture-framework')
-  implementation 'com.opencsv:opencsv:3.9'
+  implementation 'com.opencsv:opencsv:5.9'
   testImplementation "junit:junit:${versions.junit}"
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
 }

@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -50,6 +51,7 @@ public class MarcXmlEncoderTest {
     private static final String RECORD_ID = "92005291";
 
     private static StringBuilder resultCollector;
+    private static int resultCollectorsResetStreamCount;
     private static MarcXmlEncoder encoder;
 
     @Before
@@ -61,6 +63,11 @@ public class MarcXmlEncoderTest {
             public void process(final String obj) {
                 resultCollector.append(obj);
             }
+            @Override
+            public void resetStream() {
+                ++resultCollectorsResetStreamCount;
+            }
+
         });
         resultCollector = new StringBuilder();
     }
@@ -129,10 +136,19 @@ public class MarcXmlEncoderTest {
     @Test
     public void createARecordPrettyPrint() {
         encoder.setFormatted(true);
-        addOneRecord(encoder);
+        encoder.startRecord(RECORD_ID);
+        encoder.startEntity(Marc21EventNames.LEADER_ENTITY);
+        encoder.literal(Marc21EventNames.LEADER_ENTITY, "dummy");
+        encoder.endEntity();
+        encoder.literal("001", RECORD_ID);
+        encoder.startEntity("010  ");
+        encoder.literal("a", RECORD_ID);
+        encoder.endEntity();
+        encoder.endRecord();
         encoder.closeStream();
-        String expected = XML_DECLARATION + "\n" + XML_ROOT_OPEN + "\n"// " <marc:record>\n"
+        String expected = XML_DECLARATION + "\n" + XML_ROOT_OPEN + "\n"
                 + "\t<marc:record>\n"//
+                + "\t\t<marc:leader>dummy</marc:leader>\n"
                 + "\t\t<marc:controlfield tag=\"001\">92005291</marc:controlfield>\n"//
                 + "\t\t<marc:datafield tag=\"010\" ind1=\" \" ind2=\" \">\n"//
                 + "\t\t\t<marc:subfield code=\"a\">92005291</marc:subfield>\n"//
@@ -232,6 +248,21 @@ public class MarcXmlEncoderTest {
     }
 
     @Test
+    public void issue548_createRecordWithTypeAttributeInRecordTagAndLeader() {
+        encoder.startRecord(RECORD_ID);
+        encoder.literal("type", "Bibliographic");
+        encoder.startEntity(Marc21EventNames.LEADER_ENTITY);
+        encoder.literal(Marc21EventNames.LEADER_ENTITY, "dummy");
+        encoder.endEntity();
+        encoder.endRecord();
+        encoder.closeStream();
+        String expected = XML_DECLARATION + XML_ROOT_OPEN +  "<marc:record type=\"Bibliographic\">" +
+            "<marc:leader>dummy</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void issue336_createRecordWithTopLevelLeader_defaultMarc21Xml() {
         issue336_createRecordWithTopLevelLeader(encoder, "00000naa a2200000uc 4500");
     }
@@ -249,10 +280,24 @@ public class MarcXmlEncoderTest {
         encoder.endRecord();
         encoder.closeStream();
         String expected = XML_DECLARATION + XML_ROOT_OPEN
-            + "<marc:record><marc:controlfield tag=\"001\">8u3287432</marc:controlfield>" +
-            "<marc:leader>" + expectedLeader + "</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
+            + "<marc:record><marc:leader>" + expectedLeader + "</marc:leader>" +
+            "<marc:controlfield tag=\"001\">8u3287432</marc:controlfield></marc:record>" + XML_MARC_COLLECTION_END_TAG;
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void issue548_failWhenLeaderIsNotFirst() {
+        encoder.startRecord("1");
+        encoder.literal("001", "8u3287432");
+        encoder.literal(Marc21EventNames.LEADER_ENTITY, "00000naa a2200000uc 4500");
+        encoder.endRecord();
+        encoder.closeStream();
+        String expected = XML_DECLARATION + XML_ROOT_OPEN
+            + "<marc:record><marc:controlfield tag=\"001\">8u3287432</marc:controlfield>" +
+            "<marc:leader>00000naa a2200000uc 4500</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
+        String actual = resultCollector.toString();
+        assertNotEquals(expected, actual);
     }
 
     @Test
@@ -348,6 +393,28 @@ public class MarcXmlEncoderTest {
                 + XML_MARC_COLLECTION_END_TAG;
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void issue543_shouldNotWriteFooterWhenRecordIsEmpty() {
+        encoder.closeStream();
+        String actual = resultCollector.toString();
+        assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    public void issue543_shouldOnlyResetStreamOnce() {
+        resultCollectorsResetStreamCount = 0;
+        encoder.resetStream();
+        assertEquals(resultCollectorsResetStreamCount, 1);
+    }
+
+    @Test
+    public void issue543_shouldOnlyResetStreamOnceUsingWrapper() {
+        resultCollectorsResetStreamCount = 0;
+        encoder.setEnsureCorrectMarc21Xml(true);
+        encoder.resetStream();
+        assertEquals(resultCollectorsResetStreamCount, 1);
     }
 
 }

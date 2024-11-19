@@ -51,11 +51,11 @@ import javax.xml.xpath.XPathFactory;
  * @author Pascal Christoph
  * @author Christoph Böhme
  */
-@Description("Writes the xml into the filesystem. The filename is constructed from the xpath given as 'property'.\n" + // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
-    " Variables are\n" + "- 'target' (determining the output directory)\n" +
-    "- 'property' (the element in the XML entity. Constitutes the main part of the file's name.)\n" +
-    "- 'startIndex' ( a subfolder will be extracted out of the filename. This marks the index' beginning )\n" +
-    "- 'stopIndex' ( a subfolder will be extracted out of the filename. This marks the index' end )\n")
+@Description("Writes the XML into the filesystem. The filename is constructed from the XPATH given as 'property'." + // checkstyle-disable-line ClassDataAbstractionCoupling|ClassFanOutComplexity
+    " Variables are:" + "`target` (determining the output directory)" +
+    ", `property` (the element in the XML entity. Constitutes the main part of the file's name.)" +
+    ", `startIndex` ( a subfolder will be extracted out of the filename. This marks the index' beginning )" +
+    ", `stopIndex` ( a subfolder will be extracted out of the filename. This marks the index' end )")
 @In(StreamReceiver.class)
 @Out(Void.class)
 @FluxCommand("write-xml-files")

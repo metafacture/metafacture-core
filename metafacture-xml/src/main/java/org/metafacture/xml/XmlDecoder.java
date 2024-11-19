@@ -41,28 +41,44 @@ import javax.xml.parsers.SAXParserFactory;
  * @author Christoph Böhme
  *
  */
-@Description("Reads an XML file and passes the XML events to a receiver.")
+@Description("Reads an XML file and passes the XML events to a receiver. Set `totalEntitySizeLimit=\"0\"` to allow unlimited XML entities.")
 @In(Reader.class)
 @Out(XmlReceiver.class)
 @FluxCommand("decode-xml")
 public final class XmlDecoder extends DefaultObjectPipe<Reader, XmlReceiver> {
 
     private static final String SAX_PROPERTY_LEXICAL_HANDLER = "http://xml.org/sax/properties/lexical-handler";
-
+    private static final String TOTAL_ENTITY_SIZE_LIMIT = "http://www.oracle.com/xml/jaxp/properties/totalEntitySizeLimit";
     private final XMLReader saxReader;
 
     /**
-     * Constructs an XmlDecoder by obtaining a new instance of an
+     * Creates an instance of {@link XmlDecoder} by obtaining a new instance of an
      * {@link org.xml.sax.XMLReader}.
      */
     public XmlDecoder() {
         try {
             final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
             parserFactory.setNamespaceAware(true);
-
             saxReader = parserFactory.newSAXParser().getXMLReader();
         }
         catch (final ParserConfigurationException | SAXException e) {
+            throw new MetafactureException(e);
+        }
+    }
+
+    /**
+     * Sets the total entity size limit for the XML parser.
+     * See <a href="https://docs.oracle.com/en/java/javase/13/security/java-api-xml-processing-jaxp-security-guide.html#GUID-82F8C206-F2DF-4204-9544-F96155B1D258__TABLE_RQ1_3PY_HHB">java-api-xml-processing-jaxp-security-guide.html</a>
+     *
+     * Defaults to "50,000,000". Set to "0" to allow unlimited entities.
+     *
+     * @param totalEntitySizeLimit the size of the allowed entities. Set to "0" if entities should be unlimited.
+     */
+    public void setTotalEntitySizeLimit(final String totalEntitySizeLimit) {
+        try {
+            saxReader.setProperty(TOTAL_ENTITY_SIZE_LIMIT, totalEntitySizeLimit);
+        }
+        catch (final SAXException e) {
             throw new MetafactureException(e);
         }
     }
@@ -72,10 +88,7 @@ public final class XmlDecoder extends DefaultObjectPipe<Reader, XmlReceiver> {
         try {
             saxReader.parse(new InputSource(reader));
         }
-        catch (final IOException e) {
-            throw new MetafactureException(e);
-        }
-        catch (final SAXException e) {
+        catch (final IOException | SAXException e) {
             throw new MetafactureException(e);
         }
     }
@@ -89,10 +102,7 @@ public final class XmlDecoder extends DefaultObjectPipe<Reader, XmlReceiver> {
         try {
             saxReader.setProperty(SAX_PROPERTY_LEXICAL_HANDLER, getReceiver());
         }
-        catch (final SAXNotRecognizedException e) {
-            throw new MetafactureException(e);
-        }
-        catch (final SAXNotSupportedException e) {
+        catch (final SAXNotRecognizedException | SAXNotSupportedException e) {
             throw new MetafactureException(e);
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2014 Deutsche Nationalbibliothek
+ * Copyright 2013-2024 Deutsche Nationalbibliothek and hbz
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,10 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.RFC4180Parser;
+import com.opencsv.RFC4180ParserBuilder;
+import com.opencsv.exceptions.CsvException;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -48,6 +52,7 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
     private String[] header = new String[0];
     private int count;
     private boolean hasHeader;
+    private RFC4180Parser parser;
 
     /**
      * Creates an instance of {@link CsvDecoder} with a given separator.
@@ -56,6 +61,7 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
      */
     public CsvDecoder(final String separator) {
         this.separator = separator.charAt(0);
+        initializeCsvParser();
     }
 
     /**
@@ -65,6 +71,7 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
      */
     public CsvDecoder(final char separator) {
         this.separator = separator;
+        initializeCsvParser();
     }
 
     /**
@@ -72,6 +79,13 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
      * {@value #DEFAULT_SEP}.
      */
     public CsvDecoder() {
+        initializeCsvParser();
+    }
+
+    private void initializeCsvParser() {
+        this.parser = new RFC4180ParserBuilder()
+            .withSeparator(separator)
+            .build();
     }
 
     @Override
@@ -105,18 +119,19 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
         }
     }
 
-    private String[] parseCsv(final String string) {
+    private String[] parseCsv(final String csv) {
         String[] parts = new String[0];
         try {
-            final CSVReader reader = new CSVReader(new StringReader(string),
-                    separator);
+            final CSVReader reader = new CSVReaderBuilder(new StringReader(csv))
+                .withCSVParser(parser)
+                .build();
             final List<String[]> lines = reader.readAll();
             if (lines.size() > 0) {
                 parts = lines.get(0);
             }
             reader.close();
         }
-        catch (final IOException e) {
+        catch (final IOException | CsvException e) {
             e.printStackTrace();
         }
         return parts;
@@ -139,5 +154,6 @@ public final class CsvDecoder extends DefaultObjectPipe<String, StreamReceiver> 
      */
     public void setSeparator(final String separator) {
         this.separator = separator.charAt(0);
+        initializeCsvParser();
     }
 }

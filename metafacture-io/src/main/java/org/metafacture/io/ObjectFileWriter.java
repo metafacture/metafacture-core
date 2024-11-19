@@ -18,7 +18,9 @@ package org.metafacture.io;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
+import org.metafacture.framework.annotations.Out;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,7 +38,9 @@ import java.util.regex.Pattern;
  * @author Christoph Böhme
  *
  */
+@Description("Writes objects to one (or more) file(s)")
 @In(Object.class)
+@Out(Void.class)
 @FluxCommand("write-files")
 public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
 
@@ -90,18 +94,21 @@ public final class ObjectFileWriter<T> extends AbstractObjectWriter<T>  {
     @Override
     public void process(final T obj) {
         assert !closed;
-        try {
-            if (firstObject) {
-                getWriter().write(getHeader());
-                firstObject = false;
+        final String objStr = obj.toString();
+        if (!objStr.isEmpty()) {
+            try {
+                if (firstObject) {
+                    getWriter().write(getHeader());
+                    firstObject = false;
+                }
+                else {
+                    getWriter().write(getSeparator());
+                }
+                getWriter().write(objStr);
             }
-            else {
-                getWriter().write(getSeparator());
+            catch (final IOException e) {
+                throw new MetafactureException(e);
             }
-            getWriter().write(obj.toString());
-        }
-        catch (final IOException e) {
-            throw new MetafactureException(e);
         }
     }
 
