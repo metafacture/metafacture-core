@@ -95,6 +95,11 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
 
     private static final int LEADER_ENTITY_LENGTH = 5;
 
+    private static final int LEADER_CONCAT_ENTITIES_LENGTH = 8;
+    private static final int LEADER_CONCAT_ENTITIES_POS_04 = 4;
+    private static final int LEADER_CONCAT_ENTITIES_POS_05 = 5;
+    private static final int LEADER_CONCAT_ENTITIES_POS_07 = 7;
+
     private static final int IND1_BEGIN = 3;
     private static final int IND1_END = 4;
     private static final int IND2_BEGIN = 4;
@@ -445,7 +450,12 @@ public final class MarcXmlEncoder extends DefaultStreamPipe<ObjectReceiver<Strin
                 }
 
                 writeTagLeader(Tag.leader::open);
-                writeRawLeader("0000" + leader.substring(0, 4) + "2200000" + leader.substring(5, 7) + "4500"); // creates a valid leader without counted elements
+                if (leader.length() == LEADER_CONCAT_ENTITIES_LENGTH) {
+                    writeRawLeader("0000" + leader.substring(0, LEADER_CONCAT_ENTITIES_POS_04) + "2200000" + leader.substring(LEADER_CONCAT_ENTITIES_POS_05, LEADER_CONCAT_ENTITIES_POS_07) + "4500"); // creates a valid leader without counted elements
+                }
+                else {
+                    writeRawLeader(leader);
+                }
                 writeTagLeader(Tag.leader::close);
 
                 if (formatted) {

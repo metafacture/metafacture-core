@@ -301,13 +301,13 @@ public class MarcXmlEncoderTest {
     }
 
     @Test
-    public void issue527_shouldEmitLeaderAlwaysAsWholeString() {
+    public void issue527_shouldEmitLeaderAlwaysAsWholeStringWithAddedDefaultLeaderValuesIfLeaderLengthIs8() {
         createRecordWithLeader("1", "a", "o", "a", " ", "a", "z", "u", " ");
         createRecordWithLeader("2", "d", "u", "m", " ", "m", "y", "#", " ");
         encoder.closeStream();
         String expected = XML_DECLARATION + XML_ROOT_OPEN
-                + "<marc:record><marc:leader>aoa azu </marc:leader></marc:record>"
-                + "<marc:record><marc:leader>dum my# </marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
+                + "<marc:record><marc:leader>0000aoa 2200000zu4500</marc:leader></marc:record>"
+                + "<marc:record><marc:leader>0000dum 2200000y#4500</marc:leader></marc:record>" + XML_MARC_COLLECTION_END_TAG;
         String actual = resultCollector.toString();
         assertEquals(expected, actual);
     }
@@ -315,7 +315,7 @@ public class MarcXmlEncoderTest {
     @Test(expected = MissingIdException.class)
     public void issue527_shouldEmitLeaderAlwaysAsWholeString_ensureCorrectMarc21Xml() {
         encoder.setEnsureCorrectMarc21Xml(true);
-        issue527_shouldEmitLeaderAlwaysAsWholeString();
+        issue527_shouldEmitLeaderAlwaysAsWholeStringWithAddedDefaultLeaderValuesIfLeaderLengthIs8();
     }
 
     @Test
