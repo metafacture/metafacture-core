@@ -170,7 +170,7 @@ public final class Marc21Encoder extends
 
     private void startField(final String name) {
         if (name.length() != NAME_LENGTH) {
-            throw new FormatException("invalid entity name: " + name);
+            throw new FormatException("invalid leader entity name: " + name);
         }
         final char[] tag = new char[RecordFormat.TAG_LENGTH];
         final char[] indicators = new char[Marc21Constants.MARC21_FORMAT.getIndicatorLength()];
@@ -227,7 +227,7 @@ public final class Marc21Encoder extends
     private void processLeaderAsSubfields(final String name, final String value) {
         if (value.length() != 1) {
             throw new FormatException(
-                    "literal must only contain a single character:" + name);
+                    "leader literal must only contain a single character:" + name);
         }
         processLeaderAsSubfields(name, value.charAt(0));
     }
@@ -278,7 +278,7 @@ public final class Marc21Encoder extends
                     return;
                 }
             }
-            throw new FormatException("invalid code '" + code + "'; allowed codes are: " + Arrays.toString(validCodes));
+            throw new FormatException("invalid code in leader'" + code + "'; allowed codes are: " + Arrays.toString(validCodes));
         }
     }
 
