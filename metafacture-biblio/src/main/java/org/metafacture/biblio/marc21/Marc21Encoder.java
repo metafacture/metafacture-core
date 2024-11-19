@@ -170,7 +170,7 @@ public final class Marc21Encoder extends
 
     private void startField(final String name) {
         if (name.length() != NAME_LENGTH) {
-            throw new FormatException("invalid leader entity name: " + name);
+            throw new FormatException("invalid entity name: " + name);
         }
         final char[] tag = new char[RecordFormat.TAG_LENGTH];
         final char[] indicators = new char[Marc21Constants.MARC21_FORMAT.getIndicatorLength()];
