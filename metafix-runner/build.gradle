@@ -39,11 +39,15 @@ dependencies {
 application {
   mainClass = 'org.metafacture.runner.Flux'
 
+  applicationDefaultJvmArgs = [
+    "-Dorg.metafacture.metafix.logLevel=INFO"
+  ]
+
   if (project.hasProperty('profile')) {
     def file = project.getProperty('profile') ?: project.name
     def depth = project.hasProperty('profile.depth') ? project.getProperty('profile.depth') : 8
 
-    applicationDefaultJvmArgs = [
+    applicationDefaultJvmArgs += [
       "-XX:FlightRecorderOptions=stackdepth=${depth}",
       "-XX:StartFlightRecording=dumponexit=true,filename=${file}.jfr,settings=profile"
     ]

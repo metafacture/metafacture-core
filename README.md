@@ -28,6 +28,12 @@ To execute a Fix (embedded in a Flux) via CLI:
 
 `./gradlew :metafix-runner:run --args="$PWD/path/to.flux"`
 
+To execute a Fix (embedded in a Flux) via CLI in java debug mode:
+make sure to pipe to `log-stream` after your `fix` command in flux resp. make
+use of `log-object` at the proper location. Then:
+
+`export JAVA_OPTS="-Dorg.metafacture.metafix.logLevel=DEBUG"; ./gradlew installDist;  cd metafix-runner/build/install/metafix-runner; bin/metafix-runner "$PWD/path/to.flux"`
+
 (To import the projects in Eclipse, choose `File > Import > Existing Gradle Project` and select the `metafacture-fix` directory.)
 
 ## Usage
