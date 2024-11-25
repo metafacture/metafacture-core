@@ -14,27 +14,28 @@
  * limitations under the License.
  */
 
- package org.metafacture.flowcontrol;
+package org.metafacture.flowcontrol;
 
- import static org.mockito.ArgumentMatchers.anyString;
- import static org.mockito.Mockito.doThrow;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 
- import org.junit.Before;
- import org.junit.Test;
- import org.metafacture.framework.MetafactureException;
- import org.metafacture.framework.ObjectReceiver;
- import org.mockito.Mock;
- import org.mockito.MockitoAnnotations;
- import java.time.Duration;
- import java.time.Instant;
+import org.junit.Before;
+import org.junit.Test;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.ObjectReceiver;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import java.time.Duration;
+import java.time.Instant;
 
- /**
-  * Tests for class {@link ObjectSleeper}.
-  *
-  * @author Tobias Bülte
-  *
-  */
- public final class ObjectExceptionSleeperTest {
+/**
+ * Tests for class {@link ObjectSleeper}.
+*
+* @author Tobias Bülte
+*
+*/
+public final class ObjectSleeperTest {
 
     @Mock
     private ObjectReceiver<String> sleepTimer;
@@ -44,30 +45,22 @@
         MockitoAnnotations.initMocks(this);
     }
 
-    @After
-    public void cleanup() {
-        bulk.closeStream();
+    @Test
+    public void shouldTestIfClockedTimeExceedsDuration() {
+    long sleepTime = 10;
+
+    ObjectSleeper objectSleeper = new ObjectSleeper();
+    objectSleeper.setSleepTime(sleepTime);
+    Instant start = Instant.now();
+    sleepTimer.objectSleeper;
+    Instant end = Instant.now();
+
+
+    Duration timeElapsed = Duration.between(start, end);
+
+    assertTrue(timeElapsed.toSeconds() >= sleepTime);
+
     }
 
 
-     @Test
-     public void shouldTestIfClockedTimeExceedsDuration() {
-        long sleepTime = 10;
-
-        objectSleeper = new ObjectSleeper();
-        objectSleeper.setSleepTime(sleepTime);
-        Instant start = Instant.now();
-        sleepTimer.objectSleeper();
-        Instant end = Instant.now();
-
-        Duration timeElapsed = Duration.between(start, end);
-
-        if (timeElampse > sleepTime) {
-            exception.expect(MetafactureException.class);
-            exception.expectMessage("Process did not sleep enough.");
-        }
-
-     }
-
-
- }
+}
