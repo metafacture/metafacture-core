@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.metafacture.fix.parser.FixLexer;
 import org.metafacture.fix.parser.FixParser;
+import org.metafacture.fix.parser.RecordTransformer;
 
 import org.antlr.runtime.ANTLRInputStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -40,18 +41,18 @@ public final class FixGrammarTest {
 
     @Test
     public void parseSimpleFix() {
-        assertEquals("add_field ( test )", parseToString("add_field(test)"));
+        assertEquals("add_field ( test )", parse("add_field(test)"));
     }
 
     @Test
     public void parseSimpleFixWithOption() {
-        assertEquals("add_field ( test1 , option : test2 )", parseToString("add_field(test1,option:test2)"));
+        assertEquals("add_field ( test1 , option : test2 )", parse("add_field(test1,option:test2)"));
     }
 
     @Test
     public void parseFixWithIf() {
         assertEquals("if some ( test1 ) add ( something ) elsif some ( test2 ) add ( somethingElse , opt : one ) else add ( anotherThing , opt : two ) end",
-                parseToString(
+                parse(
                     "if some(test1)",
                     "  add(something)",
                     "elsif some(test2)",
@@ -65,19 +66,26 @@ public final class FixGrammarTest {
     @Test
     public void parseError() {
         assertEquals("<unexpected: [@3,14:14='<EOF>',<-1>,1:14], resync=add_field(> <mismatched token: [@3,14:14='<EOF>',<-1>,1:14], resync=test>",
-                parseToString("add_field(test"));
+                parse("add_field(test"));
     }
 
-    private String parseToString(final String... fixLines) {
+    private String parse(final String... fixLines) {
+        final String input = String.join("\n", fixLines);
         try {
-            final ByteArrayInputStream fixInput = createInputStream(String.join("\n", fixLines));
-            final FixLexer lexer = new FixLexer(new ANTLRInputStream(fixInput));
-            final FixParser parser = new FixParser(new CommonTokenStream(lexer));
-            return ((Tree) parser.fix().getTree()).toStringTree();
+            RecordTransformer transformer = Metafix.compile(createInputStream(input), null);
+            System.out.println("Created RecordTransformer for fix: " + transformer);
+            return parseToStringTree(input);
         } catch (IOException | RecognitionException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private String parseToStringTree(final String input) throws IOException, RecognitionException {
+        final ByteArrayInputStream fixInput = createInputStream(input);
+        final FixLexer lexer = new FixLexer(new ANTLRInputStream(fixInput));
+        final FixParser parser = new FixParser(new CommonTokenStream(lexer));
+        return ((Tree) parser.fix().getTree()).toStringTree();
     }
 
     private ByteArrayInputStream createInputStream(final String string) {

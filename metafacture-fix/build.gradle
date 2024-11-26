@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Christoph Böhme
+ * Copyright 2024 Fabian Steeg, hbz
  *
  * Licensed under the Apache License, Version 2.0 the "License";
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-ext.mavenName = 'Metafacture Flux'
-description = 'A domain specific language for building Metafacture pipelines'
+ext.mavenName = 'Metafacture Fix'
+description = 'A domain specific language for building Metafacture transformations'
 
 apply plugin: 'antlr'
 
