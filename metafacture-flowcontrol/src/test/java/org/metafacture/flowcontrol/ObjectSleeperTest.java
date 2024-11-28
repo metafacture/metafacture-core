@@ -16,25 +16,27 @@
 
 package org.metafacture.flowcontrol;
 
-import static org.junit.Assert.assertTrue;
-
 import org.metafacture.framework.ObjectReceiver;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.time.Duration;
-import java.time.Instant;
+import java.util.function.Consumer;
 
 /**
  * Tests for class {@link ObjectSleeper}.
-*
-* @author Tobias Bülte
-*
-*/
+ *
+ * @author Tobias Bülte
+ */
 public final class ObjectSleeperTest {
+
+    private static final int PROCESS_OVERHEAD_MILLISECONDS = 100;
+
+    private static final int MILLISECONDS_PER_SECOND = 1_000;
+    private static final int NANOSECONDS_PER_MILLISECOND = 1_000_000;
 
     @Mock
     private ObjectReceiver<String> receiver;
@@ -46,20 +48,39 @@ public final class ObjectSleeperTest {
 
     @Test
     public void shouldTestIfClockedTimeExceedsDuration() {
-    long sleepTime = 100;
-
-    ObjectSleeper<String> objectSleeper = new ObjectSleeper<>();
-    objectSleeper.setReceiver(receiver);
-    objectSleeper.setSleepTime(sleepTime);
-    Instant start = Instant.now();
-    objectSleeper.process(null);
-    Instant end = Instant.now();
-
-    Duration timeElapsed = Duration.between(start, end);
-
-    assertTrue(timeElapsed.toMillis() >= sleepTime);
-
+        final int sleepTime = 1234;
+        assertSleep(sleepTime, s -> s.setSleepTime(sleepTime));
     }
 
+    @Test
+    public void shouldTestIfClockedTimeExceedsDurationInMilliseconds() {
+        final int sleepTime = 567;
+        assertSleep(sleepTime, s -> {
+            s.setSleepTime(sleepTime);
+            s.setTimeUnit("MILLISECONDS");
+        });
+    }
+
+    @Test
+    public void shouldTestIfClockedTimeExceedsDurationInSeconds() {
+        final int sleepTime = 1;
+        assertSleep(sleepTime * MILLISECONDS_PER_SECOND, s -> {
+            s.setSleepTime(sleepTime);
+            s.setTimeUnit("SECOND");
+        });
+    }
+
+    private void assertSleep(final long expectedMillis, final Consumer<ObjectSleeper> consumer) {
+        final ObjectSleeper<String> objectSleeper = new ObjectSleeper<>();
+        objectSleeper.setReceiver(receiver);
+        consumer.accept(objectSleeper);
+
+        final long startTime = System.nanoTime();
+        objectSleeper.process(null);
+        final long actualMillis = (System.nanoTime() - startTime) / NANOSECONDS_PER_MILLISECOND;
+
+        Assert.assertTrue("sleep time too short: " + actualMillis, actualMillis >= expectedMillis);
+        Assert.assertTrue("sleep time too long: " + actualMillis, actualMillis < expectedMillis + PROCESS_OVERHEAD_MILLISECONDS);
+    }
 
 }
