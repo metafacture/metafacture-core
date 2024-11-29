@@ -2190,10 +2190,9 @@ public class MetafixMethodTest {
         );
     }
 
-    @Test
-    public void replaceAllWithWildcardAfterCopyFieldWithVarInSourceAndTarget() {
+    private void replaceAllWithWildcardAfterCopyFieldWithVarInSourceAndTarget(final boolean explicitArray) {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_array('RSWK[]')",
+                explicitArray ? "set_array('RSWK[]')" : "",
                 "do list(path: '650??', 'var': '$i')",
                 "  copy_field('$i.a', 'RSWK[].$append.subjectTopicName')",
                 "  copy_field('$i.v', 'RSWK[].$last.subjectGenre')",
@@ -2227,6 +2226,16 @@ public class MetafixMethodTest {
                 o.get().endRecord();
             }
         );
+    }
+
+    @Test
+    public void replaceAllWithWildcardAfterCopyFieldWithVarInSourceAndTarget() {
+        replaceAllWithWildcardAfterCopyFieldWithVarInSourceAndTarget(true);
+    }
+
+    @Test
+    public void replaceAllWithWildcardAfterCopyFieldWithVarInSourceAndTargetImplicitArray() {
+        replaceAllWithWildcardAfterCopyFieldWithVarInSourceAndTarget(false);
     }
 
     @Test

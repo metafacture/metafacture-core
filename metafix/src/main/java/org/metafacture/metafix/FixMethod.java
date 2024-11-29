@@ -197,7 +197,7 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
 
                 h.forEach((subField, value) -> {
                     record.addNested(field, new Value(subField));
-                    record.addNested(field, value);
+                    record.addNested(field, value.withPathSet(null));
                 });
             })));
         }
@@ -227,9 +227,9 @@ public enum FixMethod implements FixFunction { // checkstyle-disable-line ClassD
                 oldValue.matchType()
                     .ifArray(a -> {
                         record.remove(newName);
-                        a.forEach(v -> record.addNested(newName, v));
+                        a.forEach(v -> record.addNested(newName, v.withPathSet(null)));
                     })
-                    .orElse(v -> record.set(newName, v));
+                    .orElse(v -> record.set(newName, v.withPathSet(null)));
             }
         }
     },
