@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  * @author Markus Michael Geipel
  *
  */
-@Description("A MARC XML reader. To read marc data without namespace specification set option `namespace=\"\"`")
+@Description("A MARC XML reader. To read marc data without namespace specification set option `namespace=\"\"`. To ignore namespace specification set option `ignorenamespace=\"true\".")
 @In(XmlReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("handle-marcxml")
@@ -51,6 +51,7 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private String currentTag = "";
     private String namespace = NAMESPACE;
     private StringBuilder builder = new StringBuilder();
+    private boolean ignoreNamespace;
 
     /**
      * Creates an instance of {@link MarcXmlHandler}.
@@ -70,8 +71,19 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
         this.namespace = namespace;
     }
 
+    /**
+     * Sets whether to ignore the namespace.
+     *
+     * <strong>Default value: false</strong>
+     *
+     * @param ignoreNamespace true if the namespace should be ignored
+     */
+    public void setIgnoreNamespace(final boolean ignoreNamespace) {
+        this.ignoreNamespace = ignoreNamespace;
+    }
+
     private boolean checkNamespace(final String uri) {
-        return namespace == null || namespace.equals(uri);
+        return namespace == null || ignoreNamespace || namespace.equals(uri);
     }
 
     /**

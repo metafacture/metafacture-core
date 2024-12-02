@@ -147,6 +147,81 @@ public final class MarcXmlHandlerTest {
     }
 
     @Test
+    public void shouldRecognizeRecordsWithoutNamespace()
+            throws SAXException {
+        final AttributesImpl attributes = new AttributesImpl();
+
+        marcXmlHandler.setNamespace("");
+        marcXmlHandler.startElement("", RECORD, "", attributes);
+        marcXmlHandler.endElement("", RECORD, "");
+
+        verify(receiver).startRecord("");
+        verify(receiver).literal(TYPE, null);
+        verify(receiver).endRecord();
+
+        verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
+    public void shouldNotRecognizeRecordsWithNamespaceWhenOptionallyWithoutNamespace()
+            throws SAXException {
+        final AttributesImpl attributes = new AttributesImpl();
+
+        marcXmlHandler.setNamespace("");
+        marcXmlHandler.startElement(NAMESPACE, RECORD, "", attributes);
+        marcXmlHandler.endElement(NAMESPACE, RECORD, "");
+
+        verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
+    public void issue569ShouldRecognizeRecordsWithAndWithoutNamespace()
+            throws SAXException {
+        final AttributesImpl attributes = new AttributesImpl();
+
+        marcXmlHandler.setIgnoreNamespace(true);
+        marcXmlHandler.startElement(null, RECORD, "", attributes);
+        marcXmlHandler.endElement(NAMESPACE, RECORD, "");
+
+        verify(receiver).startRecord("");
+        verify(receiver).literal(TYPE, null);
+        verify(receiver).endRecord();
+
+        verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
+    public void issue569ShouldRecognizeRecordsWithAndWithoutNamespaceOrderIndependently()
+            throws SAXException {
+        final AttributesImpl attributes = new AttributesImpl();
+
+        marcXmlHandler.setIgnoreNamespace(true);
+        marcXmlHandler.setNamespace("");
+        marcXmlHandler.startElement(null, RECORD, "", attributes);
+        marcXmlHandler.endElement(NAMESPACE, RECORD, "");
+
+        verify(receiver).startRecord("");
+        verify(receiver).literal(TYPE, null);
+        verify(receiver).endRecord();
+
+        verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
+    public void issue569ShouldNotRecognizeRecordsWithAndWithoutNamespace()
+            throws SAXException {
+        final AttributesImpl attributes = new AttributesImpl();
+
+        marcXmlHandler.setIgnoreNamespace(false);
+        marcXmlHandler.startElement(null, RECORD, "", attributes);
+        marcXmlHandler.endElement(NAMESPACE, RECORD, "");
+
+        verify(receiver).endRecord();
+
+        verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
     public void shouldNotEncodeTypeAttributeAsMarkedLiteral() throws SAXException {
         final AttributesImpl attributes = new AttributesImpl();
         attributes.addAttribute(NAMESPACE, "type", "type", "CDATA", "bibliographic");
