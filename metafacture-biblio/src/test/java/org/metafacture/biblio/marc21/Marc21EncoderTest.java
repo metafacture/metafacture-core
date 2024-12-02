@@ -38,6 +38,8 @@ import org.mockito.MockitoAnnotations;
  */
 public final class Marc21EncoderTest {
 
+    private static final String BAD_LEADER = "00600ny  a22002053n 4500";
+
     private Marc21Encoder marc21Encoder;
 
     @Mock
@@ -145,6 +147,24 @@ public final class Marc21EncoderTest {
         marc21Encoder.endRecord();
 
         verify(receiver).process(matches("00055pam a2200037 c 4500021001700000\u001e.*\u001d"));
+    }
+
+    @Test(expected = FormatException.class)
+    public void issue567ShouldFailValidateLeaderAsDefault() {
+        marc21Encoder.startRecord("");
+        marc21Encoder.literal(LEADER_ENTITY, BAD_LEADER);
+        marc21Encoder.endRecord();
+    }
+
+    @Test
+    public void issue567ShouldNotValidateLeader() {
+        marc21Encoder.setValidateLeader(false);
+
+        marc21Encoder.startRecord("");
+        marc21Encoder.literal(LEADER_ENTITY, BAD_LEADER );
+        marc21Encoder.endRecord();
+
+        verify(receiver).process(matches("00026ny  a22000253n 4500\u001e\u001d"));
     }
 
 }
