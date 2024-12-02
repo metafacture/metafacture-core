@@ -51,6 +51,7 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
     private String currentTag = "";
     private String namespace = NAMESPACE;
     private StringBuilder builder = new StringBuilder();
+    private boolean ignoreNamespace;
 
     /**
      * Creates an instance of {@link MarcXmlHandler}.
@@ -78,13 +79,11 @@ public final class MarcXmlHandler extends DefaultXmlPipe<StreamReceiver> {
      * @param ignoreNamespace true if the namespace should be ignored
      */
     public void setIgnoreNamespace(final boolean ignoreNamespace) {
-        if (ignoreNamespace) {
-            this.namespace = null;
-        }
+        this.ignoreNamespace = ignoreNamespace;
     }
 
     private boolean checkNamespace(final String uri) {
-        return namespace == null || namespace.equals(uri);
+        return namespace == null || ignoreNamespace || namespace.equals(uri);
     }
 
     /**

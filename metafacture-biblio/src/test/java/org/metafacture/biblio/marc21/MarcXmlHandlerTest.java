@@ -161,6 +161,7 @@ public final class MarcXmlHandlerTest {
 
         verifyNoMoreInteractions(receiver);
     }
+
     @Test
     public void shouldNotRecognizeRecordsWithNamespaceWhenOptionallyWithoutNamespace()
         throws SAXException {
@@ -179,6 +180,23 @@ public final class MarcXmlHandlerTest {
         final AttributesImpl attributes = new AttributesImpl();
 
         marcXmlHandler.setIgnoreNamespace(true);
+        marcXmlHandler.startElement(null, RECORD, "", attributes);
+        marcXmlHandler.endElement(NAMESPACE, RECORD, "");
+
+        verify(receiver).startRecord("");
+        verify(receiver).literal(TYPE, null);
+        verify(receiver).endRecord();
+
+        verifyNoMoreInteractions(receiver);
+    }
+
+    @Test
+    public void issue569ShouldRecognizeRecordsWithAndWithoutNamespaceOrderIndependently()
+        throws SAXException {
+        final AttributesImpl attributes = new AttributesImpl();
+
+        marcXmlHandler.setIgnoreNamespace(true);
+        marcXmlHandler.setNamespace("");
         marcXmlHandler.startElement(null, RECORD, "", attributes);
         marcXmlHandler.endElement(NAMESPACE, RECORD, "");
 
