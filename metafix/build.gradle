@@ -80,6 +80,7 @@ test {
     events 'SKIPPED'
   }
 
+  systemProperties['org.metafacture.metafix.logLevel'] = 'WARN'
   passSystemProperties(systemProperties)
 
   maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
