@@ -76,6 +76,8 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
 
     public static final Map<String, String> NO_VARS = Collections.emptyMap();
 
+    public static final int MAX_ENTITY_COUNT = Integer.getInteger("org.metafacture.metafix.maxEntityCount", -1);
+
     private static final Logger LOG = LoggerFactory.getLogger(Metafix.class);
 
     private static final String ENTITIES_NOT_BALANCED = "Entity starts and ends are not balanced";
@@ -239,7 +241,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         flattener.startRecord(identifier);
         entityCountStack.clear();
         entityCount = 0;
-        entityCountStack.add(Integer.valueOf(entityCount));
+        entityCountStack.add(entityCount);
         recordIdentifier = identifier;
         entities = new ArrayList<>();
     }
@@ -313,22 +315,36 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
             throw new IllegalArgumentException("Entity name must not be null.");
         }
 
+        ++entityCount;
+        if (maxEntityCountExceeded()) {
+            LOG.debug("Maximum number of entities exceeded: {}/{}", entityCount, MAX_ENTITY_COUNT);
+            return;
+        }
+
         final Value value = isArrayName(name) ? Value.newArray() : Value.newHash();
         addValue(name, value);
         entities.add(value);
 
-        entityCountStack.push(Integer.valueOf(++entityCount));
+        entityCountStack.push(entityCount);
         flattener.startEntity(name);
     }
 
     @Override
     public void endEntity() {
-        entityCountStack.pop().intValue();
+        if (maxEntityCountExceeded()) {
+            return;
+        }
+
+        entityCountStack.pop();
         flattener.endEntity();
     }
 
     @Override
     public void literal(final String name, final String value) {
+        if (maxEntityCountExceeded()) {
+            return;
+        }
+
         LOG.debug("Putting '{}': '{}'", name, value);
         flattener.literal(name, value);
     }
@@ -436,6 +452,10 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
 
     public String getEntityMemberName() {
         return entityMemberName;
+    }
+
+    private boolean maxEntityCountExceeded() {
+        return MAX_ENTITY_COUNT >= 0 && entityCount > MAX_ENTITY_COUNT;
     }
 
     public enum Strictness {
