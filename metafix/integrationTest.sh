@@ -74,7 +74,8 @@ function rm_temp() {
 }
 
 function run_metafix() {
-  $gradle_command --console=plain -p "$root_directory" :metafix-runner:run --args="$1" -P${noprofile}profile="${1%.*}"
+  local file=$1; shift
+  $gradle_command --console=plain -p "$root_directory" :metafix-runner:run --args="$file" -P${noprofile}profile="${file%.*}" $@
 }
 
 function run_catmandu() {
@@ -224,10 +225,11 @@ function run_tests() {
 
       metafix_command_output="$test_directory/metafix.out"
       metafix_command_error="$test_directory/metafix.err"
+      metafix_command_args="$test_directory/metafix.args"
 
       metafix_start_time=$(current_time)
 
-      run_metafix "$test_directory/$metafix_file" >"$metafix_command_output" 2>"$metafix_command_error"
+      run_metafix "$test_directory/$metafix_file" $(cat "$metafix_command_args" 2>/dev/null || true) >"$metafix_command_output" 2>"$metafix_command_error"
       metafix_exit_status=$?
 
       metafix_elapsed_time=$(elapsed_time "$metafix_start_time")
