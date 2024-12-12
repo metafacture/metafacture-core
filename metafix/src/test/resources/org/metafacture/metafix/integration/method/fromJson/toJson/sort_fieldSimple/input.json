@@ -1,0 +1,9 @@
+{
+  "animals" : [ "dog", "cat", "cat", "zebra" ],
+  "animals_2" : [ "dog", "cat", "cat", "zebra" ],
+  "animals_3" : [ "dog", "cat", "cat", "zebra" ],
+  "numbers" : [ "7", "2", "7", "1", "10" ],
+  "numbers_2" : [ "7", "2", "7", "1", "10" ],
+  "numbers_3" : [ "7", "2", "7", "1", "10" ],
+  "numbers_4" : [ "7", "2", "7", "1", "10" ]
+}

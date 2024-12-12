@@ -1,0 +1,6 @@
+move_field("g", "m")
+move_field("h", "n")
+move_field("i", "o")
+move_field("j", "p")
+move_field("k", "q")
+move_field("l", "r")

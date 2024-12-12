@@ -1,0 +1,36 @@
+plugins {
+  id 'war'
+}
+
+dependencies {
+  implementation project(':metafix')
+  implementation project(':metafix-ide')
+
+  implementation "org.eclipse.xtend:org.eclipse.xtend.lib:${versions.xtext}"
+  implementation "org.eclipse.xtext:org.eclipse.xtext.web.servlet:${versions.xtext}"
+  implementation "org.eclipse.xtext:org.eclipse.xtext.xbase.web:${versions.xtext}"
+  implementation "org.webjars:ace:${versions.ace}"
+  implementation "org.webjars:jquery:${versions.jquery}"
+  implementation "org.webjars:requirejs:${versions.requirejs}"
+
+  providedCompile "org.eclipse.jetty:jetty-annotations:${versions.jetty}"
+  providedCompile "org.slf4j:slf4j-simple:${versions.slf4j}"
+
+  implementation project(':metafacture-commons')
+  implementation project(':metafacture-formeta')
+  implementation project(':metafacture-mangling')
+  implementation project(':metafacture-runner')
+  implementation project(':metafacture-xml')
+  implementation project(':metamorph')
+}
+
+apply from: "${rootDir}/gradle/metafix.gradle"
+
+task jettyRun(type: JavaExec) {
+  dependsOn(sourceSets.main.runtimeClasspath)
+  classpath = sourceSets.main.runtimeClasspath.filter { it.exists() }
+  mainClass = 'org.metafacture.metafix.web.ServerLauncher'
+  standardInput = System.in
+  group = 'run'
+  description = 'Starts an example Jetty server with your language'
+}

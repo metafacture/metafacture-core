@@ -1,0 +1,1 @@
+copy_field("array[].*.key|array[].*.key_2|array[].*.key_4", "test[].$append")

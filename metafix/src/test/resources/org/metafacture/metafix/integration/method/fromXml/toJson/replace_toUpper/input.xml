@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection xmlns="http://www.loc.gov/MARC21/slim">
+    <record>
+        <datafield tag="700" ind1="1" ind2=" ">
+            <subfield code="a">COLEMAN, Julie</subfield>
+            <subfield code="e">Editor</subfield>
+            <subfield code="a">KAY, Christian J.</subfield>
+            <subfield code="e">NS</subfield>
+        </datafield>
+    </record>
+</collection>

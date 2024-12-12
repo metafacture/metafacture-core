@@ -1,0 +1,23 @@
+{
+  "arrayOfObjects_1" : [ {
+    "name": "red",
+    "type" : "color"
+  }, {
+    "name":"green",
+    "type" : "color"
+  }, {
+    "name":"blue",
+    "type" : "color"
+  } ],
+  "arrayOfObjects_2" : [ {
+    "name": "purple",
+    "type" : "color"
+  }, {
+    "name":"orange",
+    "type" : "color"
+  }, {
+    "name":"yellow",
+    "type" : "color"
+  } ],
+  "test" : [ ]
+}

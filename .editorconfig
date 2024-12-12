@@ -28,8 +28,11 @@ trim_trailing_whitespace = true
 end_of_line = crlf
 trim_trailing_whitespace = false
 
-[*.{g,gradle,json,xml,xsd,yml}]
+[*.{fix,g,gradle,json,md,mwe2,sh,vim,xml,xsd,xtext,yml}]
 indent_size = 2
+
+[*.tmLanguage]
+indent_style = tab
 
 [metafacture-io/src/test/resources/org/metafacture/io/compressed.txt]
 insert_final_newline = false

@@ -1,0 +1,2 @@
+put_var("test","I come from the $[variable]!")
+add_field("test", "$[test]")

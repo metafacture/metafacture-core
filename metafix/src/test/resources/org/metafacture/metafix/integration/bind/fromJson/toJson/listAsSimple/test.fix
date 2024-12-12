@@ -1,0 +1,4 @@
+do list_as(orgId: "ccm:university[]", orgName: "ccm:university_DISPLAYNAME[]")
+  copy_field(orgId, "sourceOrganization[].$append.id")
+  copy_field(orgName, "sourceOrganization[].$last.name")
+end

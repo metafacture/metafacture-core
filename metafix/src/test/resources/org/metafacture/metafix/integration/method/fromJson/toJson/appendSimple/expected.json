@@ -1,0 +1,7 @@
+{
+  "animal" : "bunny is cool",
+  "animal_2" : {
+    "name" : "bird boss",
+    "type" : "TEST"
+  }
+}

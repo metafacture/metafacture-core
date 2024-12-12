@@ -1,0 +1,9 @@
+{ "metadata" : {
+    "real" :
+  {
+    "test" : [ { "animal" : "Jake" },
+      {  "animal" :"Blacky"},
+      { "animal" : "Jens"} ]
+  }
+}
+}

@@ -1,0 +1,3 @@
+unless any_match("type[]", "\\S{3}")
+  add_field("test", "test")
+end

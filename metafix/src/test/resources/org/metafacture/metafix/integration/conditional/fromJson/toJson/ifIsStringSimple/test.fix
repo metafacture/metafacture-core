@@ -1,0 +1,3 @@
+if is_string("elementA|elementA[]")
+  add_field("elementB", "Hello")
+end

@@ -1,0 +1,40 @@
+apply plugin: 'eclipse'
+apply plugin: 'java'
+apply plugin: 'org.xtext.builder'
+
+dependencies {
+  implementation platform("org.eclipse.xtext:xtext-dev-bom:${versions.xtext}")
+}
+
+configurations.all {
+  exclude group: 'asm'
+}
+
+sourceSets {
+  main {
+    java.srcDir 'src/main/xtext-gen'
+    resources.srcDir 'src/main/xtext-gen'
+  }
+  test {
+    java.srcDir 'src/test/xtext-gen'
+    resources.srcDir 'src/test/xtext-gen'
+  }
+}
+
+jar {
+  from('model') {
+    into('model')
+  }
+  from(sourceSets.main.allSource) {
+    include '**/*.xtext'
+  }
+  manifest {
+    attributes 'Bundle-SymbolicName': project.name
+  }
+}
+
+plugins.withId('war') {
+  war {
+    webAppDirectory = file('src/main/webapp')
+  }
+}

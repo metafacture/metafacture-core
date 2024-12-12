@@ -1,0 +1,26 @@
+{
+  "test" : [ {
+    "key" : [ {
+      "word" : "value",
+      "foo" : "bar"
+    }, {
+      "word" : "more_value",
+      "foo" : "bar"
+    }, {
+      "word" : "even_more_value",
+      "foo" : "bar"
+    } ]
+  }, {
+    "key" : [ {
+      "word" : "less_value",
+      "foo" : "bar"
+    }, {
+      "word" : "little_value",
+      "foo" : "bar"
+    }, {
+      "word" : "no_value",
+      "foo" : "bar"
+    } ]
+  } ],
+  "words" : [ ]
+}

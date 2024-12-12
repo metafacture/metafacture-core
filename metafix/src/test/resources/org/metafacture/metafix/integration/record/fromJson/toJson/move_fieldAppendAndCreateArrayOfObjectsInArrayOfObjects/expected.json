@@ -1,0 +1,15 @@
+{
+  "arrayOfObject_1" : [ {
+    "arrayOfObject_2" : [ {
+      "key" : "value"
+    }, {
+      "key" : "more_value"
+    } ]
+  }, {
+    "arrayOfObject_3" : [ {
+      "key" : "even_more_value"
+    }, {
+      "key" : "so_much_value"
+    } ]
+  } ]
+}

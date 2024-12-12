@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>*.fix</string>
+	</array>
+	<key>name</key>
+	<string>fix</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>keyword.control.fix</string>
+			<key>match</key>
+			<string>\b(do|if|elsif|else|end|unless)\b</string>
+			<key>comment</key>
+			<string>The fix grammar can be found here: https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/Fix.xtext</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>entity.name.function.method.fix</string>
+			<key>match</key>
+			<string>\b(include|nothing|put_filemap|put_map|put_rdfmap|put_var|put_vars|add_field|array|call_macro|copy_field|format|hash|move_field|parse_text|paste|print_record|random|reject|rename|retain|set_array|set_field|set_hash|timestamp|vacuum|append|capitalize|count|downcase|filter|flatten|from_json|index|isbn|join_field|lookup|prepend|replace_all|reverse|sort_field|split_field|substring|sum|to_json|trim|uniq|upcase)\b</string>
+			<key>comment</key>
+			<string>The method names are taken from https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/FixMethod.java</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>support.function.conditional.fix</string>
+			<key>match</key>
+			<string>\b(all_contain|any_contain|none_contain|str_contain|all_equal|any_equal|none_equal|str_equal|exists|in|is_contained_in|is_array|is_empty|is_false|is_hash|is_number|is_object|is_sring|is_true|all_match|any_match|none_match|str_match)\b</string>
+			<key>comment</key>
+			<string>The names of the conditionals are taken from https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/FixConditional.java</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>storage.type.bind.fix</string>
+			<key>match</key>
+			<string>\b(list|list_as|once|put_macro)\b</string>
+			<key>comment</key>
+			<string>The names of the fix binds are taken from https://github.com/metafacture/metafacture-core/blob/master/metafix/src/main/java/org/metafacture/metafix/FixBind.java</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>comment.line.number-sign.fix</string>
+			<key>begin</key>
+			<string>#</string>
+			<key>end</key>
+			<string>\n</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>string.quoted.single.fix</string>
+			<key>begin</key>
+			<string>'</string>
+			<key>end</key>
+			<string>'</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>string.quoted.double.fix</string>
+			<key>begin</key>
+			<string>"</string>
+			<key>end</key>
+			<string>"</string>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>text.fix</string>
+</dict>
+</plist>

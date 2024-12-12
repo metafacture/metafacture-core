@@ -1,0 +1,1 @@
+append("animals[].$first.type", " is cool")

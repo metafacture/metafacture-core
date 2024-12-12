@@ -1,0 +1,17 @@
+{
+  "creator" : [
+  {
+    "id" : "test",
+    "name": "Musterfrau, Max"
+  }, {
+    "id" : "test",
+    "name": "Uni Köln"
+  }, {
+    "id" : "test",
+    "name": "Bugs Bunny"
+  },    {
+    "id" : "test",
+    "name": "Santiego, Carmen"
+  }
+  ]
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<collection xmlns="http://www.loc.gov/MARC21/slim">
+    <record>
+        <datafield tag="689" ind1="0" ind2="0">
+            <subfield code="a">Schulhof</subfield>
+            <subfield code="D">s</subfield>
+            <subfield code="0">(DE-588)4131620-4</subfield>
+            <subfield code="0">(uri) https://portal.dnb.de/opac.htm?method=simpleSearch&amp;cqlMode=true&amp;query=idn=041316207</subfield>
+            <subfield code="0">(uri) http://viaf.org/viaf/sourceID/DNB|041316207</subfield>
+            <subfield code="B">GND-041316207</subfield>
+        </datafield>
+        <datafield tag="689" ind1="0" ind2="1">
+            <subfield code="a">Sozialraum</subfield>
+            <subfield code="D">s</subfield>
+            <subfield code="0">(DE-588)4116546-9</subfield>
+            <subfield code="0">(uri) https://portal.dnb.de/opac.htm?method=simpleSearch&amp;cqlMode=true&amp;query=idn=041165462</subfield>
+            <subfield code="0">(uri) http://viaf.org/viaf/sourceID/DNB|041165462</subfield>
+            <subfield code="B">GND-041165462</subfield>
+        </datafield>
+        <datafield tag="689" ind1="0" ind2="2">
+            <subfield code="a">Informelles Lernen</subfield>
+            <subfield code="D">s</subfield>
+            <subfield code="0">(DE-588)4680202-2</subfield>
+            <subfield code="0">(uri) https://portal.dnb.de/opac.htm?method=simpleSearch&amp;cqlMode=true&amp;query=idn=964127970</subfield>
+            <subfield code="0">(uri) http://viaf.org/viaf/sourceID/DNB|964127970</subfield>
+            <subfield code="B">GND-964127970</subfield>
+        </datafield>
+        <datafield tag="689" ind1="0" ind2="3">
+            <subfield code="a">Ganztagsschule</subfield>
+            <subfield code="D">s</subfield>
+            <subfield code="0">(DE-588)4155947-2</subfield>
+            <subfield code="0">(uri) https://portal.dnb.de/opac.htm?method=simpleSearch&amp;cqlMode=true&amp;query=idn=041559479</subfield>
+            <subfield code="0">(uri) http://viaf.org/viaf/sourceID/DNB|041559479</subfield>
+            <subfield code="B">GND-041559479</subfield>
+        </datafield>
+        <datafield tag="689" ind1="0" ind2="4">
+            <subfield code="a">Sportp&#xE4;dagogik</subfield>
+            <subfield code="D">s</subfield>
+            <subfield code="0">(DE-588)4130615-6</subfield>
+            <subfield code="0">(uri) https://portal.dnb.de/opac.htm?method=simpleSearch&amp;cqlMode=true&amp;query=idn=041306155</subfield>
+            <subfield code="0">(uri) http://viaf.org/viaf/sourceID/DNB|041306155</subfield>
+            <subfield code="B">GND-041306155</subfield>
+        </datafield>
+    </record>
+</collection>
