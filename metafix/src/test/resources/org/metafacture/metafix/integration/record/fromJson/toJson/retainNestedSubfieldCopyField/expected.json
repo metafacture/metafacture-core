@@ -1,0 +1,8 @@
+{
+  "node" : {
+    "properties" : {
+      "ccm:educationallearningresourcetype" : [ "https://w3id.org/kim/hcrt/image" ]
+    }
+  },
+  "lrt" : [ "https://w3id.org/kim/hcrt/image" ]
+}

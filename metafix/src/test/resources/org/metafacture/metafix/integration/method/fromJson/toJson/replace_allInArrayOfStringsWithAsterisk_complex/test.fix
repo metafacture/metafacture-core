@@ -1,0 +1,2 @@
+copy_field("nested.object.inLanguage", "inLanguage[].$append")
+replace_all("inLanguage[].*", '-.*', '')

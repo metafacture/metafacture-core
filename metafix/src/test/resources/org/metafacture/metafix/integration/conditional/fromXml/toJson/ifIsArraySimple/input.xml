@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection xmlns="http://www.loc.gov/MARC21/slim">
+    <record>
+        <controlfield tag="123">Test</controlfield>
+    </record>
+    <record>
+        <controlfield tag="123">Test</controlfield>
+        <controlfield tag="123">Another Test</controlfield>
+    </record>
+</collection>

@@ -1,0 +1,2 @@
+move_field("key", "test[].$prepend")
+move_field("key_2", "test[].$prepend")

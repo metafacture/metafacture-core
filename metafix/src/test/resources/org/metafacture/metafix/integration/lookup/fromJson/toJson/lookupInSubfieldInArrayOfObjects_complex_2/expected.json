@@ -1,0 +1,22 @@
+{
+  "metadata" : {
+    "real" : {
+      "test" : [ {
+        "animal" : "dog"
+      }, {
+        "animal" : "parrot"
+      } ]
+    }
+  },
+  "animals" : [ {
+    "animal" : "dog",
+    "classification" : {
+      "type" : "mammal"
+    }
+  }, {
+    "animal" : "parrot",
+    "classification" : {
+      "type" : "bird"
+    }
+  } ]
+}

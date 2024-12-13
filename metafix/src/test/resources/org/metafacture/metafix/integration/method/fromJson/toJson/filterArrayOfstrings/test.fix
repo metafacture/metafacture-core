@@ -1,0 +1,3 @@
+filter("animals[]", "[Zz]ebra")
+filter("investigators[]", "Justus|Bob")
+filter("tools[]", ".*w")

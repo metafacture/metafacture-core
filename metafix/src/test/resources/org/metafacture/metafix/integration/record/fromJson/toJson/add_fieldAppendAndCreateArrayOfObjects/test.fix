@@ -1,0 +1,2 @@
+add_field("arrayOfObjects[].$append.key", "value")
+add_field("arrayOfObjects[].$append.key", "more_value")

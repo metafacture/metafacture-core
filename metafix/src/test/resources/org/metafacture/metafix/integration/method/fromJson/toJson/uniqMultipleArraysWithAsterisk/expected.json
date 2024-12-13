@@ -1,0 +1,7 @@
+{
+  "subject": [ {
+    "keywords" : [ "ETL", "ELT", "Extract", "Load", "Transform", "Data Quality" ]
+    },{
+    "keywords" : [ "dog", "zebra", "cat" ]
+    } ]
+}

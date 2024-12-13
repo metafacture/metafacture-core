@@ -1,0 +1,8 @@
+{
+  "arrayOfObjects" : [ {
+    "test" : "Jake",
+    "test_2" : "dog",
+    "test_3" : "dog",
+    "arrayOfStrings_moved" : [ "fish", "spider" ]
+  } ]
+}

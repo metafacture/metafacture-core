@@ -1,0 +1,3 @@
+unless in("test","animals[]")
+  add_field("this","works")
+end

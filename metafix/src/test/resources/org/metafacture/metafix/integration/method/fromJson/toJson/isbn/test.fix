@@ -1,0 +1,4 @@
+isbn("test_1",to:"clean")
+isbn("test_2",to:"clean",verify_check_digit:"true",error_string:"ungültig")
+isbn("test_3",to:"ISBN13",verify_check_digit:"true",error_string:"ungültig")
+isbn("test_4",to:"ISBN10",verify_check_digit:"true",error_string:"ungültig")

@@ -1,0 +1,10 @@
+{
+  "animal_string_Array" : [ "dog", "elefant", "shark" ],
+  "test": [{
+    "key": "value_1"
+  },{
+    "key": "value_2"
+  },{
+    "key": "value_3"
+  }]
+}

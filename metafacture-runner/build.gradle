@@ -15,6 +15,10 @@
  */
 import org.apache.tools.ant.filters.ReplaceTokens
 
+plugins {
+  id 'application'
+}
+
 ext.mavenName = 'Metafacture Runner'
 description = 'CLI application for data processing with Flux and Metamorph'
 
@@ -60,6 +64,7 @@ dependencies {
   plugins project(':metafacture-xml')
   plugins project(':metafacture-html')
   plugins project(':metafacture-yaml')
+  plugins project(':metafix')
   plugins project(':metamorph')
 
   // In a perfect world the slf4j binding would be a provided dependency so that
@@ -83,6 +88,10 @@ dependencies {
   provided 'simple-jndi:simple-jndi:0.11.4.1'
   // Required for connection pooling with simple-jndi:
   provided 'commons-dbcp:commons-dbcp:1.4'
+
+  implementation('org.antlr:antlr-runtime') {
+    version { strictly versions.antlr }
+  }
 }
 
 jar {
@@ -110,10 +119,6 @@ distributions {
       dirPermissions { unix 0755 }
       filePermissions { unix 0644 }
 
-      into('lib/') {
-        from jar
-        from configurations.runtimeClasspath
-      }
       into('provided-libs') {
         from configurations.provided
       }
@@ -156,4 +161,34 @@ distZip {
 task('fluxCommands', type: JavaExec, description: 'Print available Flux commands') {
   classpath = sourceSets.main.runtimeClasspath
   mainClass = 'org.metafacture.flux.HelpPrinter'
+}
+
+application {
+  mainClass = 'org.metafacture.runner.Flux'
+
+  if (project.hasProperty('profile')) {
+    def file = project.getProperty('profile') ?: project.name
+    def depth = project.hasProperty('profile.depth') ? project.getProperty('profile.depth') : 8
+
+    applicationDefaultJvmArgs += [
+      "-XX:FlightRecorderOptions=stackdepth=${depth}",
+      "-XX:StartFlightRecording=dumponexit=true,filename=${file}.jfr,settings=profile"
+    ]
+  }
+
+  startScripts {
+    doLast {
+      delete outputDir
+    }
+  }
+}
+
+tasks.withType(JavaExec) {
+  doFirst {
+    def prefix = project.group + '.'
+
+    System.properties.each { k, v ->
+      if (k.startsWith(prefix)) systemProperties[k] = v
+    }
+  }
 }

@@ -1,0 +1,3 @@
+unless exists("type")
+  add_field("test", "test")
+end

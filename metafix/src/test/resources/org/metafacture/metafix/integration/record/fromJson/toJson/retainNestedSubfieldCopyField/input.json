@@ -1,0 +1,473 @@
+{
+  "node": {
+    "content": {
+      "url": "https://www.zoerr.de/edu-sharing/components/render/651396b4-db24-44e4-a0f6-76aff3293f90",
+      "hash": "544246969",
+      "version": "1.0"
+    },
+    "license": {
+      "icon": "https://uni-tuebingen.oerbw.de/edu-sharing/ccimages/licenses/cc-by.svg",
+      "url": "https://creativecommons.org/licenses/by/4.0/deed.en"
+    },
+    "isDirectory": "false",
+    "commentCount": "0",
+    "rating": {
+      "overall": {
+        "sum": "0.0",
+        "count": "0",
+        "rating": "0.0"
+      },
+      "affiliation": {
+      },
+      "user": "0.0"
+    },
+    "usedInCollections": [
+
+    ],
+    "ref": {
+      "repo": "uni-tuebingen.de",
+      "id": "651396b4-db24-44e4-a0f6-76aff3293f90",
+      "archived": "false",
+      "isHomeRepo": "true"
+    },
+    "parent": {
+      "repo": "uni-tuebingen.de",
+      "id": "94a86998-e3af-4161-bd37-7e6ad0ca53d7",
+      "archived": "false",
+      "isHomeRepo": "true"
+    },
+    "type": "ccm:io",
+    "aspects": [
+      "cclom:lifecycle",
+      "cclom:technical",
+      "cm:versionable",
+      "ccm:iometadata",
+      "ccm:tracking",
+      "sys:referenceable",
+      "cm:metadataset",
+      "ccm:commonlicenses",
+      "cclom:rights",
+      "cm:thumbnailed",
+      "cm:titled",
+      "cm:auditable",
+      "cclom:meta-metadata",
+      "ccm:educontext",
+      "ccm:permission_history",
+      "ccm:eduscope",
+      "ccm:usageaspect",
+      "sys:localized",
+      "cm:thumbnailModification",
+      "cclom:schema",
+      "exif:exif",
+      "ccm:licenses",
+      "sys:cascadeUpdate",
+      "ccm:lomreplication",
+      "cclom:general",
+      "cm:author"
+    ],
+    "name": "IMG_1866.JPG",
+    "title": "Jubiläumsbrunnen der Universität Tübingen",
+    "metadataset": "default",
+    "repositoryType": "ALFRESCO",
+    "createdAt": "2017-12-06T13:52:35Z",
+    "createdBy": {
+      "firstName": "Peter",
+      "lastName": "Rempis"
+    },
+    "modifiedAt": "2019-07-23T09:26:00Z",
+    "modifiedBy": {
+      "firstName": "unknown",
+      "lastName": "unknown"
+    },
+    "access": [
+      "Read",
+      "ReadAll"
+    ],
+    "downloadUrl": "https://uni-tuebingen.oerbw.de/edu-sharing/eduservlet/download?nodeId=651396b4-db24-44e4-a0f6-76aff3293f90",
+    "properties": {
+      "ccm:lifecyclecontributer_authorVCARD_ORG": [
+        ""
+      ],
+      "ccm:ph_modified": [
+        "1512568989232"
+      ],
+      "cm:created": [
+        "1512568355467"
+      ],
+      "virtual:commentcount": [
+        "0"
+      ],
+      "ccm:metadatacontributer_creatorVCARD_ORG": [
+        ""
+      ],
+      "ccm:university_DISPLAYNAME": [
+        "Universität Tübingen"
+      ],
+      "sys:node-uuid": [
+        "651396b4-db24-44e4-a0f6-76aff3293f90"
+      ],
+      "ccm:lifecyclecontributer_authorVCARD_SURNAME": [
+        ""
+      ],
+      "exif:resolutionUnit": [
+        "Inch"
+      ],
+      "virtual:licenseurl": [
+        "https://creativecommons.org/licenses/by/4.0/deed.de"
+      ],
+      "cclom:title": [
+        "Jubiläumsbrunnen der Universität Tübingen"
+      ],
+      "ccm:lifecyclecontributer_authorVCARD_COUNTRY": [
+        ""
+      ],
+      "ccm:lifecyclecontributer_instructional_designer": [
+        ""
+      ],
+      "ccm:ph_modifiedISO8601": [
+        "2017-12-06T14:03:09.232Z"
+      ],
+      "ccm:lifecyclecontributer_authorVCARD_STREET": [
+        ""
+      ],
+      "ccm:lifecyclecontributer_authorVCARD_PLZ": [
+        ""
+      ],
+      "ccm:height": [
+        "1200"
+      ],
+      "exif:pixelXDimension": [
+        "1600"
+      ],
+      "ccm:version_comment": [
+        "MAIN_FILE_UPLOAD"
+      ],
+      "sys:cascadeTx": [
+        "191514"
+      ],
+      "ccm:create_version": [
+        "true"
+      ],
+      "ccm:university": [
+        "Universität Tübingen"
+      ],
+      "ccm:lifecyclecontributer_content_provider": [
+        ""
+      ],
+      "cm:modifiedISO8601": [
+        "2019-07-23T09:26:00.782Z"
+      ],
+      "ccm:author_freetext": [
+        "Fotograf Peter Rempis"
+      ],
+      "ccm:metadatacontributer_creatorVCARD_REGION": [
+        ""
+      ],
+      "cm:edu_metadataset": [
+        "default"
+      ],
+      "ccm:metadatacontributer_creatorVCARD_PLZ": [
+        ""
+      ],
+      "ccm:lifecyclecontributer_unknown": [
+        ""
+      ],
+      "virtual:permalink": [
+        "https://uni-tuebingen.oerbw.de/edu-sharing/components/render/651396b4-db24-44e4-a0f6-76aff3293f90/1.0"
+      ],
+      "ccm:metadatacontributer_creatorVCARD_GIVENNAME": [
+        "Peter"
+      ],
+      "ccm:lifecyclecontributer_authorVCARD_GIVENNAME": [
+        ""
+      ],
+      "ccm:commonlicense_cc_version": [
+        "4.0"
+      ],
+      "ccm:width": [
+        "1600"
+      ],
+      "exif:dateTimeOriginalISO8601": [
+        "2009-05-29T08:36:46.000Z"
+      ],
+      "ccm:metadatacontributer_creatorVCARD_TEL": [
+        ""
+      ],
+      "ccm:lifecyclecontributer_authorVCARD_CITY": [
+        ""
+      ],
+      "exif:pixelYDimension": [
+        "1200"
+      ],
+      "ccm:ph_action": [
+        "PERMISSION_ADD"
+      ],
+      "ccm:lifecyclecontributer_terminator": [
+        ""
+      ],
+      "ccm:lifecyclecontributer_educational_validator": [
+        ""
+      ],
+      "cclom:general_description": [
+        "Der Brunnen wurde zur Feier des 500jährigen-Gründungsjubiläums der Universität Tübingen im Jahr 1977 gestiftet. Er steht heute vor dem Hauptgebäude der Universitätsbibkliothek. "
+      ],
+      "cm:modified": [
+        "1563873960782"
+      ],
+      "ccm:metadatacontributer_creatorVCARD_CITY": [
+        ""
+      ],
+      "ccm:taxonid": [
+        "https://w3id.org/kim/hochschulfaechersystematik/n9"
+      ],
+      "cm:modifier": [
+        "System"
+      ],
+      "ccm:educationallearningresourcetype_DISPLAYNAME": [
+        "Abbildung"
+      ],
+      "exif:dateTimeOriginal_LONG": [
+        "1243586206000"
+      ],
+      "exif:orientation": [
+        "1"
+      ],
+      "cm:autoVersionOnUpdateProps": [
+        "false"
+      ],
+      "exif:focalLength": [
+        "9.28125"
+      ],
+      "ccm:metadatacontributer_creatorFN": [
+        "Peter Rempis"
+      ],
+      "exif:model": [
+        "Canon DIGITAL IXUS v2"
+      ],
+      "ccm:metadatacontributer_creatorVCARD_TITLE": [
+        ""
+      ],
+      "cm:automaticUpdate": [
+        "true"
+      ],
+      "ccm:ph_users": [
+        "admin"
+      ],
+      "ccm:ph_history": [
+        "{\"notifyUser\":\"admin\",\"notifyAction\":\"PERMISSION_ADD\",\"user\":{\"username\":\"admin\",\"fuzzySearchMode\":false,\"authorityName\":\"admin\",\"authorityType\":\"USER\"},\"created\":\"Dec 6, 2017 3:03:09 PM\",\"acl\":{\"inherited\":false,\"aces\":[{\"authority\":\"e395487b9bdd6e53baf174b4fba68f17e2f4c710@uni-tuebingen.de\",\"permission\":\"All\",\"accessStatus\":\"acepted\",\"authorityType\":\"USER\",\"user\":{\"nodeId\":\"d71702e3-270b-41ab-99be-ba248a3024cc\",\"email\":\"peter.rempis@uni-tuebingen.de\",\"givenName\":\"Peter\",\"surname\":\"Rempis\",\"repositoryId\":\"uni-tuebingen.de\",\"username\":\"e395487b9bdd6e53baf174b4fba68f17e2f4c710@uni-tuebingen.de\",\"fuzzySearchMode\":true,\"authorityName\":\"e395487b9bdd6e53baf174b4fba68f17e2f4c710@uni-tuebingen.de\",\"authorityType\":\"USER\"},\"id\":0,\"isInherited\":false,\"isEdited\":false},{\"authority\":\"ROLE_OWNER\",\"permission\":\"All\",\"accessStatus\":\"acepted\",\"authorityType\":\"OWNER\",\"user\":{\"nodeId\":\"f0653dc4-6920-41ea-b101-d40dbeaee503\",\"email\":\"admin@alfresco.com\",\"givenName\":\"Administrator\",\"surname\":\"\",\"repositoryId\":\"uni-tuebingen.de\",\"username\":\"admin\",\"fuzzySearchMode\":true,\"authorityName\":\"admin\",\"authorityType\":\"USER\"},\"id\":0,\"isInherited\":false,\"isEdited\":false},{\"authority\":\"GROUP_EVERYONE\",\"permission\":\"Consumer\",\"accessStatus\":\"acepted\",\"authorityType\":\"EVERYONE\",\"id\":0,\"isInherited\":false,\"isEdited\":false},{\"authority\":\"GROUP_EVERYONE\",\"permission\":\"CCPublish\",\"accessStatus\":\"acepted\",\"authorityType\":\"EVERYONE\",\"id\":0,\"isInherited\":false,\"isEdited\":false}]}}"
+      ],
+      "ccm:tracking_downloads": [
+        "3"
+      ],
+      "cm:initialVersion": [
+        "false"
+      ],
+      "ccm:lifecyclecontributer_script_writer": [
+        ""
+      ],
+      "ccm:metadatacontributer_creatorVCARD_SURNAME": [
+        "Rempis"
+      ],
+      "ccm:commonlicense_key": [
+        "CC_BY"
+      ],
+      "ccm:lifecyclecontributer_authorVCARD_TITLE": [
+        ""
+      ],
+      "ccm:original": [
+        "651396b4-db24-44e4-a0f6-76aff3293f90"
+      ],
+      "cclom:size": [
+        "841895"
+      ],
+      "cclom:version": [
+        "1.0"
+      ],
+      "ccm:tracking_views": [
+        "85"
+      ],
+      "cclom:general_language": [
+        "de_DE"
+      ],
+      "virtual:licenseicon": [
+        "https://uni-tuebingen.oerbw.de/edu-sharing/ccimages/licenses/cc-by.svg"
+      ],
+      "virtual:usagecount": [
+        "0"
+      ],
+      "ccm:lifecyclecontributer_publisher": [
+        ""
+      ],
+      "ccm:metadatacontributer_provider": [
+        ""
+      ],
+      "ccm:taxonid_DISPLAYNAME": [
+        "Kunst, Kunstwissenschaft"
+      ],
+      "ccm:lifecyclecontributer_authorVCARD_URL": [
+        ""
+      ],
+      "virtual:childobjectcount": [
+        "0"
+      ],
+      "exif:xResolution": [
+        "180.0"
+      ],
+      "sys:cascadeCRC": [
+        "2490900358"
+      ],
+      "ccm:lifecyclecontributer_author": [
+        "BEGIN:VCARD\r\nVERSION:3.0\r\nN:;;;;\r\nFN:\r\nEND:VCARD\r\n"
+      ],
+      "ccm:lifecyclecontributer_authorVCARD_REGION": [
+        ""
+      ],
+      "sys:store-protocol": [
+        "workspace"
+      ],
+      "sys:store-identifier": [
+        "SpacesStore"
+      ],
+      "cclom:general_language_DISPLAYNAME": [
+        "de_DE"
+      ],
+      "cclom:format": [
+        "image/jpeg"
+      ],
+      "ccm:metadatacontributer_creatorVCARD_URL": [
+        ""
+      ],
+      "ccm:educationallearningresourcetype": [
+        "https://w3id.org/kim/hcrt/image"
+      ],
+      "exif:exposureTime": [
+        "0.0025"
+      ],
+      "sys:node-dbid": [
+        "1588"
+      ],
+      "cclom:otherplatformrequirements": [
+        "JPG-Datei. "
+      ],
+      "cm:autoVersion": [
+        "false"
+      ],
+      "ccm:lifecyclecontributer_initiator": [
+        ""
+      ],
+      "cm:creator": [
+        "e395487b9bdd6e53baf174b4fba68f17e2f4c710@uni-tuebingen.de"
+      ],
+      "ccm:lifecyclecontributer_subject_matter_expert": [
+        ""
+      ],
+      "cm:versionLabel": [
+        "1.0"
+      ],
+      "cm:versionable": [
+        "true"
+      ],
+      "exif:yResolution": [
+        "180.0"
+      ],
+      "ccm:metadatacontributer_creatorVCARD_COUNTRY": [
+        ""
+      ],
+      "cm:created_LONG": [
+        "1512568355467"
+      ],
+      "ccm:lifecyclecontributer_authorVCARD_TEL": [
+        ""
+      ],
+      "exif:fNumber": [
+        "3.5"
+      ],
+      "virtual:primaryparent_nodeid": [
+        "94a86998-e3af-4161-bd37-7e6ad0ca53d7"
+      ],
+      "cm:lastThumbnailModification": [
+        "imgpreview:1512568356868"
+      ],
+      "ccm:metadatacontributer_creator": [
+        "BEGIN:VCARD\r\nVERSION:3.0\r\nN:Rempis;Peter;;;\r\nFN:Peter Rempis\r\nTITLE:\r\nORG:\r\nURL:\r\nADR;TYPE=INTL,POSTAL,PARCEL,WORK:;;;;;;\r\nTEL;TYPE=WORK,VOICE:\r\nEND:VCARD\r\n"
+      ],
+      "ccm:lifecyclecontributer_graphical_designer": [
+        ""
+      ],
+      "exif:dateTimeOriginal": [
+        "1243586206000"
+      ],
+      "ccm:metadatacontributer_creatorVCARD_STREET": [
+        ""
+      ],
+      "cm:createdISO8601": [
+        "2017-12-06T13:52:35.467Z"
+      ],
+      "cm:edu_forcemetadataset": [
+        "false"
+      ],
+      "ccm:lifecyclecontributer_editor": [
+        ""
+      ],
+      "ccm:metadatacontributer_validator": [
+        ""
+      ],
+      "cclom:location": [
+        "ccrep://oerbw.uni-tuebingen.de/651396b4-db24-44e4-a0f6-76aff3293f90"
+      ],
+      "ccm:educontextname": [
+        "default"
+      ],
+      "ccm:lifecyclecontributer_authorFN": [
+        ""
+      ],
+      "exif:flash": [
+        "false"
+      ],
+      "ccm:ph_modified_LONG": [
+        "1512568989232"
+      ],
+      "ccm:lifecyclecontributer_technical_implementer": [
+        ""
+      ],
+      "cm:modified_LONG": [
+        "1563873960782"
+      ],
+      "ccm:lifecyclecontributer_validator": [
+        ""
+      ],
+      "ccm:questionsallowed": [
+        "true"
+      ],
+      "exif:manufacturer": [
+        "Canon"
+      ],
+      "cm:name": [
+        "IMG_1866.JPG"
+      ],
+      "ccm:ph_invited": [
+        "ROLE_OWNER",
+        "GROUP_EVERYONE",
+        "e395487b9bdd6e53baf174b4fba68f17e2f4c710@uni-tuebingen.de"
+      ],
+      "cclom:general_keyword": [
+        "Brunnen",
+        "Universität"
+      ]
+    },
+    "mimetype": "image/jpeg",
+    "mediatype": "file-image",
+    "size": "841895",
+    "preview": {
+      "isIcon": "false",
+      "isGenerated": "true",
+      "type": "TYPE_GENERATED",
+      "url": "https://uni-tuebingen.oerbw.de/edu-sharing/preview?nodeId=651396b4-db24-44e4-a0f6-76aff3293f90&storeProtocol=workspace&storeId=SpacesStore&dontcache=1644570252250"
+    },
+    "iconURL": "https://www.zoerr.de/edu-sharing/themes/default/images/common/mime-types/svg/file-image.svg",
+    "owner": {
+      "firstName": "Peter",
+      "lastName": "Rempis"
+    }
+  }
+}

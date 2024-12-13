@@ -1,0 +1,13 @@
+{
+  "animals" : [ {
+    "name" : "Jake",
+    "classification" : {
+      "type" : "mammal"
+    }
+  }, {
+    "name" : "Blacky",
+    "classification" : {
+      "type" : "bird"
+    }
+  } ]
+}

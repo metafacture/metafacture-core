@@ -1,0 +1,2 @@
+remove_field("arrayOfObject_1[].*.arrayOfObject_2[]")
+

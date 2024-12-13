@@ -1,0 +1,2 @@
+^Exception in thread "main" org\.metafacture\.metafix\.FixProcessException: Error while executing Fix expression \(at .*/metafix/src/test/resources/org/metafacture/metafix/integration/record/fromJson/toJson/copy_fieldToArrayOfStringsWithIndex/test\.fix, line 2\): copy_field\("key", "test\[\]\.1"\)$
+^Caused by: java\.lang\.IndexOutOfBoundsException: Index 0 out of bounds for length 0$

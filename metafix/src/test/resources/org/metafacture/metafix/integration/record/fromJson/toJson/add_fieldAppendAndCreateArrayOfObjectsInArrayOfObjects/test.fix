@@ -1,0 +1,4 @@
+add_field("arrayOfObjects_1[].$append.arrayOfObjects_2[].$append.key","value")
+add_field("arrayOfObjects_1[].$last.arrayOfObjects_2[].$append.key","more_value",)
+add_field("arrayOfObjects_1[].$append.arrayOfObjects_3[].$append.key","even_more_value")
+add_field("arrayOfObjects_1[].$last.arrayOfObjects_3[].$append.key","so_much_value")

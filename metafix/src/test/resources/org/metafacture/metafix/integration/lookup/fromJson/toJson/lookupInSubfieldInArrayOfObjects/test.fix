@@ -1,0 +1,1 @@
+lookup("animals[].*.classification.type", "./mapfile.tsv", "sep_char":"\t")

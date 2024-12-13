@@ -1,0 +1,137 @@
+plugins {
+  id 'maven-publish'
+  id 'me.champeau.jmh' version '0.7.2'
+}
+
+def passSystemProperties = {
+  System.properties.each { k, v ->
+    if (k.startsWith(group + '.')) it[k] = v
+  }
+}
+
+dependencies {
+  implementation "com.fasterxml.jackson.core:jackson-core:${versions.jackson}"
+  implementation "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}"
+  implementation "com.google.guava:guava:${versions.guava}"
+  implementation "org.apache.jena:jena-arq:${versions.jena}"
+  implementation "org.apache.jena:jena-core:${versions.jena}"
+  implementation "org.eclipse.emf:org.eclipse.emf.ecore:${versions.xtext}" // Workaround for hbz/lobid-resources#1462
+  implementation "org.eclipse.xtext:org.eclipse.xtext.xbase:${versions.xtext}"
+  implementation "org.eclipse.xtext:org.eclipse.xtext:${versions.xtext}"
+  implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+
+  testImplementation "com.github.tomakehurst:wiremock-jre8:${versions.wiremock}"
+  testImplementation "org.eclipse.xtext:org.eclipse.xtext.testing:${versions.xtext}"
+  testImplementation "org.eclipse.xtext:org.eclipse.xtext.xbase.testing:${versions.xtext}"
+  testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.junit_jupiter}"
+  testImplementation "org.junit.platform:junit-platform-launcher:${versions.junit_platform}"
+  testImplementation "org.simplify4u:slf4j2-mock:${versions.slf4j_mock}"
+
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.junit_jupiter}"
+
+  runtimeOnly "org.slf4j:slf4j-simple:${versions.slf4j}"
+
+  implementation project(':metafacture-commons')
+  implementation project(':metafacture-flowcontrol')
+  implementation project(':metafacture-formatting')
+  implementation project(':metafacture-framework')
+  implementation project(':metafacture-io')
+  implementation project(':metafacture-javaintegration')
+  implementation project(':metafacture-mangling')
+  implementation project(':metafacture-triples')
+  implementation project(':metamorph')
+
+  testImplementation "nl.jqno.equalsverifier:equalsverifier:${versions.equalsverifier}"
+  testImplementation "org.mockito:mockito-inline:${versions.mockito}"
+  testImplementation "org.mockito:mockito-junit-jupiter:${versions.mockito}"
+}
+
+apply from: "${rootDir}/gradle/metafix.gradle"
+
+configurations {
+  mwe2 {
+    extendsFrom implementation
+
+    dependencies {
+      implementation "org.slf4j:slf4j-simple:${versions.slf4j}"
+    }
+  }
+}
+
+dependencies {
+  mwe2 'org.eclipse.emf:org.eclipse.emf.mwe2.launch'
+  mwe2 "org.eclipse.xtext:org.eclipse.xtext.common.types:${versions.xtext}"
+  mwe2 "org.eclipse.xtext:org.eclipse.xtext.xtext.generator:${versions.xtext}"
+  mwe2 'org.eclipse.xtext:xtext-antlr-generator'
+
+  jmh project(':metafacture-io')
+  jmh project(':metafacture-json')
+}
+
+jmhJar {
+  // SLF4J: Class path contains multiple SLF4J bindings.
+  exclude '/org/slf4j/impl/StaticLoggerBinder.class'
+}
+
+test {
+  useJUnitPlatform()
+
+  testLogging {
+    showStandardStreams = true
+    exceptionFormat = 'full'
+    events 'SKIPPED'
+  }
+
+  passSystemProperties(systemProperties)
+
+  maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+}
+
+task integrationTest(type: Exec, group: 'Verification') {
+  executable './integrationTest.sh'
+
+  if (project.hasProperty('args')) {
+    args project.getProperty('args').split()
+  }
+
+  if (project.hasProperty('profile')) {
+    environment.METAFIX_INTEGRATION_TEST_PROFILE = project.getProperty('profile')
+  }
+
+  environment.METAFIX_DISABLE_TO_DO = System.getProperty('org.metafacture.metafix.disableToDo')
+  environment.METAFIX_KEEP_TEMP = System.getProperty('org.metafacture.metafix.keepTemp')
+}
+
+task validateFixFile(type: JavaExec, group: 'Verification') {
+  mainClass = 'org.metafacture.metafix.FixStandaloneSetup'
+  classpath = sourceSets.main.runtimeClasspath
+}
+
+def mwe2File = 'src/main/java/org/metafacture/metafix/GenerateFix.mwe2'
+def xtextFile = 'src/main/java/org/metafacture/metafix/Fix.xtext'
+
+task validateXtextLanguage(type: JavaExec, group: 'Verification') {
+  mainClass = 'org.metafacture.metafix.validation.XtextValidator'
+  classpath = sourceSets.main.runtimeClasspath
+  args += xtextFile
+}
+
+task generateXtextLanguage(type: JavaExec) {
+  mainClass = 'org.eclipse.emf.mwe2.launch.runtime.Mwe2Launcher'
+  classpath = configurations.mwe2
+  inputs.file mwe2File
+  inputs.file xtextFile
+  outputs.dir 'src/main/xtext-gen'
+  args += mwe2File
+  args += '-p'
+  args += "rootPath=/${projectDir}/.."
+}
+
+processResources.dependsOn(generateXtextLanguage)
+generateXtext.dependsOn(generateXtextLanguage)
+compileJava.dependsOn(generateXtextLanguage)
+clean.dependsOn(cleanGenerateXtextLanguage)
+check.dependsOn(validateXtextLanguage)
+check.dependsOn(integrationTest)
+
+eclipse.classpath.plusConfigurations += [configurations.mwe2]

@@ -1,0 +1,2 @@
+add_field("key[].$append", "value")
+add_field("key[].$append", "more_value")

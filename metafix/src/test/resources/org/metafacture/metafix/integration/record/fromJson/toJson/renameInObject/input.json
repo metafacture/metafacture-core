@@ -1,0 +1,18 @@
+{
+  "object" : {
+    "okey" : "word",
+    "key" : "word",
+    "key_2" : "word_2",
+    "object" : {
+      "key_3" : "word_3",
+      "arrayOfStrings" : [ "test", "test_2", "test_3" ]
+    },
+    "arrayOfObjects" : [ {
+      "key_4" : "word_4",
+      "arrayOfStrings_2" : [ "test", "test_2", "test_3" ]
+    }, {
+      "okey_2" : "word_2",
+      "arrayOfStrings" : [ "test", "test_2", "test_3" ]
+    } ]
+  }
+}

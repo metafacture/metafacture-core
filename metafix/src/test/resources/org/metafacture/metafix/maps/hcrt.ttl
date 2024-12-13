@@ -1,0 +1,158 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+
+<https://w3id.org/kim/hcrt/application>
+    a skos:Concept ;
+    skos:prefLabel "Software Application"@en, "Softwareanwendung"@de, "Програмне забезпечення"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/assessment>
+    a skos:Concept ;
+    skos:altLabel "Assessment"@de ;
+    skos:prefLabel "Assessment"@en, "Lernkontrolle"@de, "Оцінювання"@uk ;
+    skos:scopeNote "unter anderem (Selbst-)Tests"@de ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/audio>
+    a skos:Concept ;
+    skos:altLabel "Tonaufnahme"@de, "Звукозапис"@uk ;
+    skos:prefLabel "Audio"@de, "Audio Recording"@en, "Аудіозапис"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/case_study>
+    a skos:Concept ;
+    skos:prefLabel "Case Study"@en, "Fallstudie"@de, "Приклад"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/course>
+    a skos:Concept ;
+    skos:prefLabel "Course"@en, "Kurs"@de, "Курс"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/data>
+    a skos:Concept ;
+    skos:prefLabel "Data"@en, "Daten"@de, "Дані"@uk ;
+    skos:scopeNote "amongst others raw and example data"@en, "unter anderem Roh- oder Beispieldaten"@de, "включно з необробленими даними та зразками"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/diagram>
+    a skos:Concept ;
+    skos:altLabel "Grafik"@de, "Графіка"@uk ;
+    skos:prefLabel "Diagram"@en, "Diagramm"@de, "Діаграма"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/drill_and_practice>
+    a skos:Concept ;
+    skos:prefLabel "Drill and Practice"@en, "Übung"@de, "Практика"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/educational_game>
+    a skos:Concept ;
+    skos:prefLabel "Game"@en, "Lernspiel"@de, "Навчальна гра"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/experiment>
+    a skos:Concept ;
+    skos:prefLabel "Experiment"@de, "Experiment"@en, "Експеримент"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/image>
+    a skos:Concept ;
+    skos:altLabel "Bild"@de, "Зображення"@uk ;
+    skos:prefLabel "Abbildung"@de, "Image"@en, "Ілюстрація"@uk ;
+    skos:scopeNote "Fotos, Grafiken und sonstige Bilder"@de, "photos, graphics, and other images"@en, "Фотографії, графіки та інші зображення"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/index>
+    a skos:Concept ;
+    skos:prefLabel "Nachschlagewerk"@de, "Reference Work"@en, "Довідник"@uk ;
+    skos:scopeNote "e.g.glossary, encyclopedia, dictionary"@en, "zum Beispiel Glossar, Enzyklopädie, Lexikon"@de, "наприклад, глосарій, енциклопедія, словник"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/lesson_plan>
+    a skos:Concept ;
+    skos:prefLabel "Lesson Plan"@en, "Unterrichtsplanung"@de, "План уроку"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/map>
+    a skos:Concept ;
+    skos:prefLabel "Karte"@de, "Map"@en, "Мапа"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/other>
+    a skos:Concept ;
+    skos:prefLabel "Other"@en, "Sonstiges"@de, "Різне"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/portal>
+    a skos:Concept ;
+    skos:prefLabel "Portal"@de, "Web Portal"@en, "Портал"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/questionnaire>
+    a skos:Concept ;
+    skos:prefLabel "Fragebogen"@de, "Questionnaire"@en, "Анкета"@uk ;
+    skos:scopeNote "also research assignment and WebQuest"@en, "auch Rechercheauftrag und WebQuest"@de, "також дослідницьке завдання та веб-квест"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/scheme>
+    dct:description "Eine Wertelliste für Typen von Lernressourcen (Learning Resource Type), entstanden im Kontext des Metadatenschemas \"LOM for Higher Education OER Repositories\" (https://w3id.org/dini-ag-kim/hs-oer-lom-profil/latest/)."@de ;
+    dct:issued "2020-02-07" ;
+    dct:license <http://creativecommons.org/publicdomain/zero/1.0/> ;
+    dct:publisher <https://oerworldmap.org/resource/urn:uuid:fd06253e-fe67-4910-b923-51db9d27e59f> ;
+    dct:title "Higher Education Resource Types"@en, "Hochschulcampus Ressourcentypen"@de, "Типи ресурсів вищої освіти"@uk ;
+    vann:preferredNamespacePrefix "hcrt" ;
+    vann:preferredNamespaceUri "https://w3id.org/kim/hcrt/" ;
+    a skos:ConceptScheme ;
+    skos:hasTopConcept <https://w3id.org/kim/hcrt/application>, <https://w3id.org/kim/hcrt/assessment>, <https://w3id.org/kim/hcrt/audio>, <https://w3id.org/kim/hcrt/case_study>, <https://w3id.org/kim/hcrt/course>, <https://w3id.org/kim/hcrt/data>, <https://w3id.org/kim/hcrt/diagram>, <https://w3id.org/kim/hcrt/drill_and_practice>, <https://w3id.org/kim/hcrt/educational_game>, <https://w3id.org/kim/hcrt/experiment>, <https://w3id.org/kim/hcrt/image>, <https://w3id.org/kim/hcrt/index>, <https://w3id.org/kim/hcrt/lesson_plan>, <https://w3id.org/kim/hcrt/map>, <https://w3id.org/kim/hcrt/other>, <https://w3id.org/kim/hcrt/portal>, <https://w3id.org/kim/hcrt/questionnaire>, <https://w3id.org/kim/hcrt/script>, <https://w3id.org/kim/hcrt/sheet_music>, <https://w3id.org/kim/hcrt/simulation>, <https://w3id.org/kim/hcrt/slide>, <https://w3id.org/kim/hcrt/text>, <https://w3id.org/kim/hcrt/textbook>, <https://w3id.org/kim/hcrt/video>, <https://w3id.org/kim/hcrt/web_page>, <https://w3id.org/kim/hcrt/worksheet> .
+
+<https://w3id.org/kim/hcrt/script>
+    a skos:Concept ;
+    skos:prefLabel "Script"@en, "Skript"@de, "Запис"@uk ;
+    skos:scopeNote "for example lecture notes"@en, "zum Beispiel Vorlesungsskript"@de, "наприклад конспект лекцій"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/sheet_music>
+    a skos:Concept ;
+    skos:prefLabel "Musiknoten"@de, "Sheet Music"@en, "Ноти"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/simulation>
+    a skos:Concept ;
+    skos:prefLabel "Simulation"@de, "Simulation"@en, "Симуляція"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/slide>
+    a skos:Concept ;
+    skos:prefLabel "Presentation"@en, "Präsentation"@de, "Презентація"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/text>
+    a skos:Concept ;
+    skos:prefLabel "Text"@en, "Textdokument"@de, "Текстовий документ"@uk ;
+    skos:scopeNote "for example article, essay"@en, "zum Beispiel Artikel, Aufsatz, Abhandlung"@de, "наприклад, стаття, есе, трактат"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/textbook>
+    a skos:Concept ;
+    skos:prefLabel "Lehrbuch"@de, "Textbook"@en, "Підручник"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/video>
+    a skos:Concept ;
+    skos:prefLabel "Video"@de, "Video"@en, "Відео"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/web_page>
+    a skos:Concept ;
+    skos:prefLabel "Web Page"@en, "Webseite"@de, "Веб-сайт"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+
+<https://w3id.org/kim/hcrt/worksheet>
+    a skos:Concept ;
+    skos:prefLabel "Arbeitsmaterial"@de, "Worksheet"@en, "Робочий матеріал"@uk ;
+    skos:scopeNote "zum Beispiel Arbeitsblatt"@de, "наприклад робочий аркуш"@uk ;
+    skos:topConceptOf <https://w3id.org/kim/hcrt/scheme> .
+

@@ -1,0 +1,67 @@
+grammar org.metafacture.metafix.Fix
+  with org.eclipse.xtext.xbase.Xbase
+
+generate fix "http://www.metafacture.org/metafix/Fix"
+
+Fix:
+  elements += Expression*
+;
+
+Expression:
+  Do |
+  Unless |
+  If |
+  MethodCall |
+  {Expression} SL_COMMENT
+;
+
+Unless:
+  'unless' name = QualifiedName '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* ','? )? ( options = Options )? ')'
+    elements += Expression*
+  'end'
+;
+
+If:
+  'if' name = QualifiedName '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* ','? )? ( options = Options )? ')'
+    elements += Expression*
+  elseIf += ElsIf*
+  else = Else?
+  'end'
+;
+
+ElsIf:
+  'elsif' name = QualifiedName '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* ','? )? ( options = Options )? ')'
+    elements += Expression*
+;
+
+Else:
+  {Else} 'else'
+    elements += Expression*
+;
+
+Do:
+  'do' name = QualifiedName '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* ','? )? ( options = Options )? ')'
+    elements += Expression*
+  'end'
+;
+
+MethodCall:
+  name = QualifiedName '(' ( params += (QualifiedName|STRING) ( ',' params += (QualifiedName|STRING) )* ','? )? ( options = Options )? ')'
+;
+
+Options:
+  keys += (QualifiedName|STRING) ':' values += (QualifiedName|STRING) ( ',' keys += (QualifiedName|STRING) ':' values += (QualifiedName|STRING) )*
+;
+
+terminal fragment ESCAPED_CHAR:
+    '\\' ('n'|'t'|'r'|'\\');
+
+@Override
+terminal STRING:
+    '"' ( ESCAPED_CHAR | !('\\'|'"') )* '"' |
+    "'" ( ESCAPED_CHAR | !('\\'|"'") )* "'";
+
+@Override
+terminal SL_COMMENT:
+  '#' -> ( '\r'? '\n' )
+;

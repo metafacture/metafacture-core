@@ -1,0 +1,8 @@
+{
+  "animals": {
+    "name": "bird",
+    "type": "TEST",
+    "test": "test",
+    "bla": "bla"
+  }
+}

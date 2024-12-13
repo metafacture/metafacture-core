@@ -1,0 +1,1 @@
+Lookup a specific object of predicate return other object in specific language for the same subject.

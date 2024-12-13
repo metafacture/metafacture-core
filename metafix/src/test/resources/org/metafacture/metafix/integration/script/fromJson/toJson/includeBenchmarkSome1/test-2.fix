@@ -1,0 +1,6 @@
+copy_field("a", "g")
+copy_field("b", "h")
+copy_field("c", "i")
+copy_field("d", "j")
+copy_field("e", "k")
+copy_field("f", "l")

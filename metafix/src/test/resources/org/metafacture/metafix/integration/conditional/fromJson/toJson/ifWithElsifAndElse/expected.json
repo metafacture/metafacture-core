@@ -1,0 +1,30 @@
+{
+  "name" : "red",
+  "type" : "color",
+  "test_2" : "true"
+}
+{
+  "name" : "green",
+  "type" : "color",
+  "test" : "false"
+}
+{
+  "name" : "blue",
+  "type" : "color",
+  "test" : "true"
+}
+{
+  "name" : "purple",
+  "type" : "color",
+  "test" : "false"
+}
+{
+  "name" : "orange",
+  "type" : "color",
+  "test" : "false"
+}
+{
+  "name" : "yellow",
+  "type" : "color",
+  "test" : "false"
+}

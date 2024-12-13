@@ -1,0 +1,3 @@
+do list(path: "animals[]")
+  lookup("classification.type", "./mapfile.tsv", "sep_char":"\t")
+end

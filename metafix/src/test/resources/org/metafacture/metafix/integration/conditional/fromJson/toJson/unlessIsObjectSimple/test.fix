@@ -1,0 +1,7 @@
+unless is_object("elementA|elementA[]")
+  add_field("elementB", "Hello")
+end
+
+unless is_hash("elementA|elementA[]")
+  add_field("elementC", "World")
+end

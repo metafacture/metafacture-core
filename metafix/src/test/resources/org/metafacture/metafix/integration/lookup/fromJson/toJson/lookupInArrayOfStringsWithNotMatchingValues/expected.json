@@ -1,0 +1,15 @@
+{
+  "animals" : [ "mammal", "bird", "fish" ]
+}
+{
+  "animals" : [ "human", "bird", "fish" ]
+}
+{
+  "animals" : [ "mammal" ]
+}
+{
+  "animals" : [ "mammal", "human", "fish" ]
+}
+{
+  "animals" : [ "human" ]
+}

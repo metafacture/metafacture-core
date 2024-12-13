@@ -1,0 +1,3 @@
+append("animals[].2", " is big")
+
+append("animals_2[].*", " is cool")

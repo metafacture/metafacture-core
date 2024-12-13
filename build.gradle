@@ -20,21 +20,34 @@ plugins {
   id 'org.ajoberstar.grgit' version '2.3.0'
   //id 'org.ec4j.editorconfig' version '0.0.3'
   id 'org.sonarqube' version '2.6.2'
+  id 'org.xtext.builder' version '4.0.0'
   id 'io.github.gradle-nexus.publish-plugin' version '1.3.0'
 }
 
 subprojects {
   ext {
     versions = [
-      'assertj_core': '3.11.1',
+      'ace':              '1.3.3',
+      'antlr':            '3.2',
+      'assertj_core':     '3.11.1',
       'commons_compress': '1.21',
-      'guava': '32.0.1-jre',
+      'equalsverifier':   '3.8.2',
+      'guava':            '32.0.1-jre',
+      'jackson':          '2.13.3',
       'jackson_databind': '2.15.1',
-      'jdk': '11',
-      'junit': '4.12',
-      'mockito': '2.27.0',
-      'slf4j': '1.7.36',
-      'wiremock_jre': '2.35.0'
+      'jdk':              '11',
+      'jena':             '3.17.0',
+      'jetty':            '9.4.14.v20181114',
+      'jquery':           '3.3.1-1',
+      'junit':            '4.12',
+      'junit_jupiter':    '5.8.2',
+      'junit_platform':   '1.4.2',
+      'mockito':          '2.27.0',
+      'requirejs':        '2.3.6',
+      'slf4j':            '1.7.36',
+      'slf4j_mock':       '2.3.0',
+      'wiremock':         '2.35.0',
+      'xtext':            '2.26.0'
     ]
   }
 }
@@ -61,10 +74,21 @@ project(':metafacture-runner') {
 //    '**/*.bgzf',
 //    '**/*.bz2',
 //    '**/*.bzip2',
+//    '**/*.diff',
+//    '**/*.err',
 //    '**/*.gzip',
+//    '**/*.jfr',
+//    '**/*.out',
+//    '**/*.vsix',
 //    '**/*.xz',
 //    '**/.*',
 //    '**/bin',
+//    '**/generated',
+//    '**/includeBenchmark*100000/expected.json',
+//    '**/node_modules',
+//    '**/out',
+//    '**/output-*',
+//    '**/xtext-gen',
 //    'gradlew*'
 //  ]
 //}
@@ -74,12 +98,19 @@ task editorconfigChecker(type: Exec, group: 'Verification') {
   args('-exclude', '/\\.|/bin/|\\.beacon$|\\.txt\\.|^LICENSE$|^\\.project$|^gradlew.*')
 }
 
-subprojects {
-  apply plugin: 'signing'
-  apply plugin: 'jacoco'
-  apply plugin: 'checkstyle'
-  apply plugin: 'maven-publish'
+task installServer(type: Copy) {
+  dependsOn(':metafix-ide:installDist')
+  from "metafix-ide/build/install/xtext-server"
+  into "metafix-vsc/xtext-server"
+}
 
+subprojects {
+  apply plugin: 'checkstyle'
+  apply plugin: 'jacoco'
+  apply plugin: 'maven-publish'
+  apply plugin: 'signing'
+
+  //editorconfigCheck.dependsOn(editorconfigChecker)
   check.dependsOn(editorconfigChecker)
   check.dependsOn(javadoc)
 
@@ -97,7 +128,7 @@ subprojects {
 
   tasks.withType(JavaCompile) {
     'all -processing -rawtypes -serial'.split().each {
-        options.compilerArgs << "-Xlint:${it}".toString()
+      options.compilerArgs << "-Xlint:${it}"
     }
 
     options.compilerArgs << '-Werror'
@@ -123,6 +154,11 @@ subprojects {
   task allDeps(type: DependencyReportTask) {}
 
   javadoc {
+    // Can't exclude generated files based on source path
+    // (cf. https://stackoverflow.com/a/47711311).
+    //exclude '**/xtext-gen'
+    source = source.filter(f -> !f.getPath().contains('xtext-gen'))
+
     options {
       addBooleanOption 'Xwerror', true
     }

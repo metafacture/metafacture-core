@@ -1,0 +1,4 @@
+do list(path:"colors[]")
+  upcase(".")
+  append(".", " is a nice color")
+end

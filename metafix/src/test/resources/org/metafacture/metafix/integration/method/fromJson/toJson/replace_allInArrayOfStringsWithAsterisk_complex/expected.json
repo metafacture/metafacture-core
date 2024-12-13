@@ -1,0 +1,16 @@
+{
+  "nested" : {
+    "object" : {
+      "inLanguage" : "de-DE"
+    }
+  },
+  "inLanguage" : [ "de" ]
+}
+{
+  "nested" : {
+    "object" : {
+      "inLanguage" : "en-EN"
+    }
+  },
+  "inLanguage" : [ "en" ]
+}

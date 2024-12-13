@@ -1,0 +1,3 @@
+add_field("before", "")
+foo()
+add_field("after", "")

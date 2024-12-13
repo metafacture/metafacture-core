@@ -1,0 +1,12 @@
+put_vars(
+  "test": "arrayOfStrings[]",
+  "test_2": "arrayOfObjects[]"
+)
+do list (path: "$[test]", "var": "$i")
+  copy_field("$i", "test[].$append")
+end
+
+do list (path: "$[test_2]", "var": "$i")
+  upcase("$i.field_3")
+  replace_all("$i.field_4","e","abc")
+end

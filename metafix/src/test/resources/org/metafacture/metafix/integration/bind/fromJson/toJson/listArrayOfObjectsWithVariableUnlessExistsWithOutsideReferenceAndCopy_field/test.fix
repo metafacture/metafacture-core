@@ -1,0 +1,5 @@
+do list(path: "arrayOfObjects[]", "var": "$i")
+  unless exists("test.key")
+    copy_field("$i.name", "test.key")
+  end
+end

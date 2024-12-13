@@ -1,0 +1,46 @@
+plugins {
+  id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+dependencies {
+  implementation project(':metafix')
+
+  implementation "org.eclipse.xtext:org.eclipse.xtext.ide:${versions.xtext}"
+  implementation "org.eclipse.xtext:org.eclipse.xtext.xbase.ide:${versions.xtext}"
+}
+
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+apply from: "${rootDir}/gradle/metafix.gradle"
+
+application {
+  mainClass = 'org.eclipse.xtext.ide.server.ServerLauncher'
+  applicationName = 'xtext-server'
+}
+
+shadowJar {
+  from(sourceSets.main.output)
+  configurations = [project.configurations.runtimeClasspath]
+
+  exclude(
+    '*.html',
+    '*.profile',
+    '.api_description',
+    '.options',
+    'META-INF/*.DSA',
+    'META-INF/*.RSA',
+    'META-INF/*.SF',
+    'META-INF/INDEX.LIST',
+    'about.*',
+    'about_files/*',
+    'modeling32.png',
+    'plugin.xml',
+    'profile.list',
+    'schema/*',
+    'systembundle.properties'
+  )
+
+  archiveClassifier = 'ls'
+  append('plugin.properties')
+}

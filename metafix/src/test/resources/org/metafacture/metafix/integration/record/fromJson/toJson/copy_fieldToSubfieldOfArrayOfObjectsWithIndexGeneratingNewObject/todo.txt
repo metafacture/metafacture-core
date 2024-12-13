@@ -1,0 +1,1 @@
+Do we actually want implicit append? WDCD? See MetafixMethodTest#*WithIndexImplicitAppend tests.

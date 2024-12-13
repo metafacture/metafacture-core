@@ -1,0 +1,6 @@
+put_filemap("./mapfile.tsv", "idLookup", sep_char:"\t",key_column:"1",value_column:"2",expected_columns:"3")
+put_filemap("./mapfile.tsv", "nameLookup", sep_char:"\t",expected_columns:"-1")
+
+lookup("name", "nameLookup")
+copy_field("name","id")
+lookup("id", "idLookup")

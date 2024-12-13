@@ -1,0 +1,1 @@
+copy_field("animal_string_Array[]", "test[].*.animal_string_Array[]")

@@ -1,0 +1,2 @@
+join_field("investigators[]","?")
+move_field("investigators[]","investigators")

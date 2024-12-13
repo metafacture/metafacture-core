@@ -1,0 +1,93 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Language" content="en-us">
+    <title>Fix Web Editor</title>
+    <link rel="stylesheet" type="text/css" href="xtext/2.17.0/xtext-ace.css"/>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script src="webjars/requirejs/2.3.6/require.min.js"></script>
+    <script type="text/javascript">
+        var baseUrl = window.location.pathname;
+        var fileIndex = baseUrl.indexOf("index.html");
+        if (fileIndex > 0) {
+            baseUrl = baseUrl.slice(0, fileIndex);
+        }
+        require.config({
+            baseUrl: baseUrl,
+            paths: {
+                "jquery": "webjars/jquery/3.3.1-1/jquery.min",
+                "ace/ext/language_tools": "webjars/ace/1.3.3/src/ext-language_tools",
+                "xtext/xtext-ace": "xtext/2.17.0/xtext-ace"
+            }
+        });
+        require(["webjars/ace/1.3.3/src/ace"], function() {
+            require(["xtext/xtext-ace"], function(xtext) {
+                xtext.createEditor({
+                    baseUrl: baseUrl,
+                    syntaxDefinition: "xtext-resources/generated/mode-fix"
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <script>
+        function loadContent() {
+            var editor = ace.edit("xtext-editor");
+            editor.setValue('move_field(_id, id)\nmove_field(a,title)\nmove_field(b.n,author)\nretain(id,title,author)\n');
+            document.getElementById("data").value = "1{a: Faust, b {n: Goethe, v: JW}, c: Weimar}\n 2{a: Räuber, b {n: Schiller, v: F}, c: Weimar}";
+            document.getElementById("flux").value = "as-lines|decode-formeta|fix|stream-to-xml(rootTag=\"collection\")";
+            return true;
+        }
+        function sendContent() {
+            var editor = ace.edit("xtext-editor");
+            var fix =  editor.getValue();
+            console.log('Fix from editor: ' + fix);
+            var url = "xtext-service/run";
+            $.post(url, {
+                fix: fix,
+                data: document.getElementById("data").value,
+                flux: document.getElementById("flux").value
+            }).done(function( data ) {
+                console.log("Response: " + data);
+                $( "#result" ).text( data );
+            });
+            return true;
+        }
+    </script>
+    <div class="container">
+        <div class="header">
+            <!-- TODO: use xtext web persistence -->
+            <h1>Fix Web Editor <small>
+                | <a href="#" onclick="return loadContent();">Load sample</a>
+                | <a href="#" onclick="return sendContent();">Process</a></small></h1>
+        </div>
+        <div class="content">
+            <div class="row">
+                <div class="col">
+                    <div>Data: <input type="text" id="data"></input></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div>Flux: <input type="text" id="flux"></input></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <div id="xtext-editor" data-editor-xtext-lang="fix"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <textarea rows="25" cols="80" style="border:none;" id="result">
+                        No result
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

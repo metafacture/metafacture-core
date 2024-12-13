@@ -1,0 +1,5 @@
+add_field(included, "true")
+
+do once()
+  add_field(also_executed, "false")
+end
