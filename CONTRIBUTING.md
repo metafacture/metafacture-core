@@ -105,9 +105,9 @@ As a general rule, we don't change public commit history, i.e. we don’t use ``
 
 #### Code Formatting and Quality
 
-Please format your code according to [this EditorConfig file](https://github.com/metafacture/metafacture-fix/blob/master/.editorconfig) and consider our current [code quality and style guidelines](https://github.com/metafacture/metafacture-core/wiki/Code-Quality-and-Style).
+Please format your code according to [this EditorConfig file](https://github.com/metafacture/metafacture-core/blob/master/.editorconfig) and consider our current [code quality and style guidelines](https://github.com/metafacture/metafacture-core/wiki/Code-Quality-and-Style).
 
-The [metafacture-fix build](https://github.com/metafacture/metafacture-fix/blob/master/build.gradle) performs automated [EditorConfig](https://github.com/metafacture/metafacture-fix/blob/master/.editorconfig) and [Checkstyle](https://github.com/metafacture/metafacture-fix/blob/master/config/checkstyle/checkstyle.xml) checks.
+The [metafacture-core build](https://github.com/metafacture/metafacture-core/blob/master/build.gradle) performs automated [EditorConfig](https://github.com/metafacture/metafacture-core/blob/master/.editorconfig) and [Checkstyle](https://github.com/metafacture/metafacture-core/blob/master/config/checkstyle/checkstyle.xml) checks.
 
 The code is automatically [quality-checked on sonarcloud.io](https://sonarcloud.io/dashboard?id=org.metafacture%3Ametafacture-core) when pushed to GitHub.
 

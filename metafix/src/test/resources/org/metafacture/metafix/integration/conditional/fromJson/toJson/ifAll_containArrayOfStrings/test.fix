@@ -1,0 +1,3 @@
+if all_contain("type[]", "o")
+  add_field("test", "test")
+end

@@ -1,0 +1,13 @@
+{
+  "key" : [ {
+    "word" : "value",
+    "foo" : "bar"
+  }, {
+    "word" : "more_value",
+    "foo" : "bar"
+  }, {
+    "word" : "even_more_value",
+    "foo" : "bar"
+  } ],
+  "words" : [ ]
+}

@@ -1,0 +1,5 @@
+copy_field("author[]","creator[]")
+do list(path:"creator[]")
+  move_field("@type","type")
+end
+retain("creator[]")

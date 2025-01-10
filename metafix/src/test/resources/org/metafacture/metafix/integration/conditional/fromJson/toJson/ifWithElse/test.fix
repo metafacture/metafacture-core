@@ -1,0 +1,5 @@
+if all_equal("name", "blue")
+  add_field("test", "true")
+else
+  add_field("test", "false")
+end

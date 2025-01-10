@@ -1,0 +1,3 @@
+do list(path:"colors[]", "var": "$i")
+  append("$i", " is a nice color")
+end

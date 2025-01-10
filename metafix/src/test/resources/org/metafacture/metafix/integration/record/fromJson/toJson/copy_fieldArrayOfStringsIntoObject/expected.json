@@ -1,0 +1,6 @@
+{
+  "animal_string_Array" : [ "dog", "elefant", "shark" ],
+  "object" : {
+    "test" : [ "dog", "elefant", "shark" ]
+  }
+}

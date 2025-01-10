@@ -18,9 +18,9 @@
 target/
 
 # Ignore temporary gradle files:
-.gradle
+.gradle/
 .gradletasknamecache
-build
+build/
 
 # Ignore tmp directory
 tmp
@@ -53,3 +53,17 @@ buildbot.keyring
 # Ignore files with sensitive data
 gradle.properties
 secring.gpg
+
+# Ignore metafacture-fix files
+*.jfr
+*.vsix
+generated/
+node_modules/
+package-lock.json
+xtext-gen/
+xtext-server/
+/metafix/src/test/resources/org/metafacture/metafix/integration/**/*.diff
+/metafix/src/test/resources/org/metafacture/metafix/integration/**/*.err
+/metafix/src/test/resources/org/metafacture/metafix/integration/**/*.out
+/metafix/src/test/resources/org/metafacture/metafix/integration/**/output-*
+!/metafix/src/test/resources/org/metafacture/metafix/integration/**/expected.err

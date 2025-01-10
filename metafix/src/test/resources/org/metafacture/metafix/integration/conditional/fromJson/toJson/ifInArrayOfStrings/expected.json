@@ -1,0 +1,9 @@
+{
+  "test" : "cat",
+  "animals" : [ "cat", "dog", "zebra" ],
+  "this" : "works"
+}
+{
+  "test" : "cat",
+  "animal" : [ "parrot", "dog", "zebra" ]
+}

@@ -1,0 +1,18 @@
+{
+  "GST" : [ {
+    "a" : "TestA1"
+  }, {
+    "a" : "TestB1",
+    "b" : "TestB2"
+  }, {
+    "a" : "TestC1",
+    "b" : "TestC2",
+    "c" : "TestC3"
+  } ],
+  "subject" : [ {
+    "name" : "Test",
+    "agent" : {
+      "altLabel" : [ "TestA1", "TestB1 ( TestB2 )", "TestC1 ( TestC2 TestC3 )" ]
+    }
+  } ]
+}

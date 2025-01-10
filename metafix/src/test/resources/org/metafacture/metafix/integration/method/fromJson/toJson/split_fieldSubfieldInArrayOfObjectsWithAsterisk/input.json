@@ -1,0 +1,11 @@
+{
+  "adventureDuo": [ {
+      "name" : "Jake",
+      "animal" : "dog",
+      "tools" : "magic--arms--shapeShifting"
+    }, {
+      "name" : "Finn",
+      "animal" : "human",
+      "tools" : "sword--anotherSword--arm"
+    } ]
+}

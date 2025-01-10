@@ -1,0 +1,7 @@
+{
+  "type" : "dog",
+  "test" : "test"
+}
+{
+  "not_type" : "video"
+}

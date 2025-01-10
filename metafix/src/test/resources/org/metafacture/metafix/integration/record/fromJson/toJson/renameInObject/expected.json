@@ -1,0 +1,18 @@
+{
+  "object" : {
+    "__key" : "word",
+    "key" : "word",
+    "key_2" : "word_2",
+    "__bject" : {
+      "key_3" : "word_3",
+      "array##fStrings" : [ "test", "test_2", "test_3" ]
+    },
+    "array##f##bjects" : [ {
+      "key_4" : "word_4",
+      "array##fStrings_2" : [ "test", "test_2", "test_3" ]
+    }, {
+      "__key_2" : "word_2",
+      "array##fStrings" : [ "test", "test_2", "test_3" ]
+    } ]
+  }
+}

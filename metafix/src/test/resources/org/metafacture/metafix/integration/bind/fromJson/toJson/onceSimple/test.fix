@@ -1,0 +1,3 @@
+do once()
+  add_field("@type","test")
+end

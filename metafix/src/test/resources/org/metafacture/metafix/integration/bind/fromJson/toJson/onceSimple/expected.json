@@ -1,0 +1,22 @@
+{
+  "author" : [ {
+    "name" : "RUVIVAL Team",
+    "type" : "Person"
+  }, {
+    "name" : "Samuel Duval",
+    "type" : "Person"
+  } ],
+  "@type" : "test"
+}
+{
+  "author" : [ {
+    "name" : "Jürgen Böhner",
+    "type" : "Person"
+  } ]
+}
+{
+  "author" : [ {
+    "name" : "Peter Müller",
+    "type" : "Person"
+  } ]
+}

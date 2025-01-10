@@ -1,0 +1,3 @@
+if any_equal("type", "book")
+  add_field("test", "test")
+end

@@ -1,0 +1,12 @@
+{
+  "key" : "value",
+  "key_2" : "value_2",
+  "key_3" : "value_3",
+  "test" : [ {
+    "field" : "value"
+  }, {
+    "field" : "value_2"
+  }, {
+    "field" : "value_3"
+  } ]
+}

@@ -1,0 +1,18 @@
+{
+  "test" : [ {
+    "key" : "value_1"
+  }, {
+    "key" : "value_2"
+  }, {
+    "key" : "value_3"
+  } ],
+  "repeatedTest" : {
+    "key" : "value_1"
+  },
+  "repeatedTest" : {
+    "key" : "value_2"
+  },
+  "repeatedTest" : {
+    "key" : "value_3"
+  }
+}

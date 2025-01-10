@@ -1,0 +1,1 @@
+copy_field("key|key_2|key_4", "test[].$append")

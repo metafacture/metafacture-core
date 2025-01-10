@@ -1,0 +1,2 @@
+^Exception in thread "main" org\.metafacture\.metafix\.FixExecutionException: Error while executing Fix expression \(at file:.*/metafix/src/test/resources/org/metafacture/metafix/integration/script/fromJson/toJson/strictnessAbortProcessOnExecutionException/test\.fix, line 2\): upcase\("data"\)$
+^Caused by: java\.lang\.IllegalStateException: Expected String, got Array$

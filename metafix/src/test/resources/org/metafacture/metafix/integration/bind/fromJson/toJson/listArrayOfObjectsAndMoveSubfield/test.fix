@@ -1,0 +1,3 @@
+do list(path:"author[]")
+  move_field("@type","type")
+end

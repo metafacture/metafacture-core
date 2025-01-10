@@ -1,0 +1,2 @@
+append("animal", " is cool")
+append("animal_2.name", " boss")

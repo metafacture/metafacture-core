@@ -1,0 +1,3 @@
+# ---------------keywords----------------------------------
+split_field("keywords",",")
+move_field("keywords","keywords[]")

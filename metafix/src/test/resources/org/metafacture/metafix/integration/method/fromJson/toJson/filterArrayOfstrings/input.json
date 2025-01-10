@@ -1,0 +1,5 @@
+{
+  "animals" : [ "dog", "cat", "zebra", "Zebra" ],
+  "investigators" : [ "Justus", "Peter", "Bob" ],
+  "tools" : [ "hammer", "saw", "bow" ]
+}

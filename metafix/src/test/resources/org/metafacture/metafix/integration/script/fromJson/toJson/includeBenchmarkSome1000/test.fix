@@ -1,0 +1,4 @@
+include("./test-1.fix")
+include("./test-2.fix")
+include("./test-3.fix")
+include("./test-4.fix")

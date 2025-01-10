@@ -1,0 +1,2 @@
+put_map("rswk-indicator", s: "SubjectHeading")
+lookup("subject[].*.componentList[].*.type[].*", "rswk-indicator")

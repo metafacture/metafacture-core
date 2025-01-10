@@ -1,0 +1,11 @@
+{
+  "elementA" : "test",
+  "elementA" : "Another Test"
+}
+{
+  "elementA" : "test"
+}
+{
+  "elementA" : [ "Test", "Another Test" ]
+}
+
