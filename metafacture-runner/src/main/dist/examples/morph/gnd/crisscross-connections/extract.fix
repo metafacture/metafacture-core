@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph"
+    version="1" entityMarker=".">
+
+    <macros>
+        <macro name="pn">
+            <combine name="$[out]" value="${value}" reset="false">
+                <data source="@type">
+                    <regexp match="[pn]" />
+                </data>
+                <combine name="value"
+                    value="${personalname}${surname}${forename}${prefix}${add}"
+                    flushWith="028$[post]" reset="true">
+                    <data source="028$[post].P" name="personalname" />
+                    <data source="028$[post].a" name="surname" />
+                    <data source="028$[post].d" name="forename">
+                        <compose prefix=", " />
+                    </data>
+                    <data source="028$[post].c" name="prefix">
+                        <compose prefix=" " />
+                    </data>
+                    <concat name="add" prefix=" &lt;" postfix="&gt;" delimiter=", "
+                        flushWith="028$[post]" reset="true">
+                        <data source="028$[post].n" />
+                        <data source="028$[post].l" />
+                        <data source="028$[post].g" />
+                    </concat>
+                </combine>
+            </combine>
+        </macro>
+
+        <macro name="b">
+            <combine name="$[out]" value="${value}${add}">
+                <data source="@type">
+                    <equals string="b" />
+                </data>
+                <data source="029$[post].a" name="value" />
+                <choose name="add">
+                    <concat delimiter="" name="">
+                        <data source="029$[post].g">
+                            <compose prefix=" &lt;" postfix="&gt;" />
+                        </data>
+                        <data source="029$[post].b">
+                            <compose prefix=" / " />
+                        </data>
+                    </concat>
+                    <data source="_id">
+                        <constant value="" />
+                    </data>
+                </choose>
+                <postprocess>
+                    <replace pattern="&gt; &lt;" with=", " />
+                </postprocess>
+            </combine>
+        </macro>
+
+        <macro name="f">
+            <combine name="$[out]" value="${value}${add1}${add2}">
+                <data source="@type">
+                    <equals string="f" />
+                </data>
+                <data source="030$[post].a" name="value" />
+                <choose name="add2">
+                    <concat delimiter=", " name="" prefix=" &lt;" postfix="&gt;">
+                        <data source="030$[post].g" />
+                        <data source="030$[post].n" />
+                        <data source="030$[post].d" />
+                        <data source="030$[post].c" />
+                    </concat>
+                    <data source="_id">
+                        <constant value="" />
+                    </data>
+                </choose>
+                <choose name="add1">
+                    <data source="030$[post].b">
+                        <compose prefix=" / " />
+                    </data>
+                    <data source="_id">
+                        <constant value="" />
+                    </data>
+                </choose>
+            </combine>
+        </macro>
+
+        <macro name="g">
+            <combine name="$[out]" value="${value}${add1}${add2}">
+                <data source="@type">
+                    <equals string="g" />
+                </data>
+                <data source="065$[post].a" name="value" />
+                <choose name="add2">
+                    <concat delimiter=", " name="" prefix=" &lt;" postfix="&gt;">
+                        <data source="065$[post].z" />
+                        <data source="065$[post].g" />
+                    </concat>
+                    <data source="_id">
+                        <constant value="" />
+                    </data>
+                </choose>
+                <choose name="add1">
+                    <data source="065$[post].x">
+                        <compose prefix=" / " />
+                    </data>
+                    <data source="_id">
+                        <constant value="" />
+                    </data>
+                </choose>
+            </combine>
+        </macro>
+
+        <macro name="s">
+            <combine name="$[out]" value="${value}${add}">
+                <data source="@type">
+                    <equals string="s" />
+                </data>
+                <data source="041$[post].a" name="value" />
+                <choose name="add">
+                    <concat delimiter=", " name="" prefix=" &lt;" postfix="&gt;">
+                        <data source="041$[post].g" />
+                    </concat>
+                    <data source="_id">
+                        <constant value="" />
+                    </data>
+                </choose>
+            </combine>
+        </macro>
+
+        <macro name="u">
+            <combine name="$[out]" value="${value}${add1}${add2}">
+                <data source="@type">
+                    <equals string="u" />
+                </data>
+                <data source="022$[post].a" name="value" />
+                <choose name="add2">
+                    <concat delimiter=", " name="" prefix=" &lt;" postfix="&gt;">
+                        <data source="022$[post].f" />
+                        <data source="022$[post].g" />
+                        <data source="022$[post].n" />
+                    </concat>
+                    <data source="_id">
+                        <constant value="" />
+                    </data>
+                </choose>
+                <choose name="add1">
+                    <data source="022$[post].p">
+                        <compose prefix=" / " />
+                    </data>
+                    <data source="_id">
+                        <constant value="" />
+                    </data>
+                </choose>
+            </combine>
+        </macro>
+    </macros>
+
+    <rules>
+        <data source="002@.0" name="@type">
+            <substring start="1" end="2" />
+        </data>
+
+        <!-- pn -->
+        <call-macro name="pn" post="A" out="@name" />
+        <call-macro name="pn" post="@" out="@syn" />
+
+
+        <call-macro name="b" post="A" out="@name" />
+        <call-macro name="b" post="@" out="@syn" />
+
+        <!-- f -->
+        <call-macro name="f" post="A" out="@name" />
+        <call-macro name="f" post="@" out="@syn" />
+
+        <!-- s -->
+        <call-macro name="s" post="A" out="@name" />
+        <call-macro name="s" post="@" out="@syn" />
+
+        <!-- g -->
+        <call-macro name="g" post="A" out="@name" />
+        <call-macro name="g" post="@" out="@syn" />
+
+        <!-- u -->
+        <call-macro name="u" post="A" out="@name" />
+        <call-macro name="u" post="@" out="@syn" />
+
+
+
+        <!-- <data source="008A.a" name="teilbest" /> -->
+
+        <combine name="{to:${ref}}refed" value="">
+            <data source="041A*.9" name="ref">
+                <trim />
+                <unique />
+            </data>
+        </combine>
+
+
+        <entity name="gnd">
+            <data source="@name" name="name" />
+
+            <data source="002@.0" name="satzart">
+                <substring end="2" />
+            </data>
+
+            <data source="002@.0" name="katlevel">
+                <substring start="2" end="3" />
+            </data>
+
+            <!-- <data source="003@.0" name="id" /> -->
+
+            <data source="007K.0" name="nid" />
+
+            <choose name="sys">
+                <concat delimiter=" | " name="sys">
+                    <data source="042A.a">
+                        <replace pattern=";" with="," />
+                    </data>
+                </concat>
+                <data source="_id">
+                    <constant value="" />
+                </data>
+            </choose>
+
+            <choose name="ent">
+                <concat delimiter=" | " name="ent">
+                    <data source="004B.a" />
+                </concat>
+                <data source="_id">
+                    <constant value="" />
+                </data>
+            </choose>
+
+            <choose name="syn">
+                <concat delimiter=" | " name="syn">
+                    <data source="@syn" />
+                </concat>
+                <data source="_id">
+                    <constant value="" />
+                </data>
+            </choose>
+
+            <data name="filter1" source="004B.a">
+                <blacklist>
+                    <entry name="gib" />
+                    <entry name="gio" />
+                    <entry name="giw" />
+                </blacklist>
+            </data>
+
+            <data source="002@.0" name="filter2">
+                <whitelist>
+                    <entry name="Ts1" />
+                    <entry name="Tg1" />
+                </whitelist>
+            </data>
+
+            <choose name="filter3">
+                <data source="037G.c" />
+                <data source="_id">
+                    <constant value="ok" />
+                </data>
+                <postprocess>
+                    <equals string="ok" />
+                </postprocess>
+            </choose>
+        </entity>
+    </rules>
+
+    <maps>
+    </maps>
+</metamorph>
