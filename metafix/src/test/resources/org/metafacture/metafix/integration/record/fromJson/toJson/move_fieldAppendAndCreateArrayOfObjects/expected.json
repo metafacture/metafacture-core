@@ -1,0 +1,7 @@
+{
+  "arrayOfObject" : [ {
+    "key" : "value"
+  }, {
+    "key" : "more_value"
+  } ]
+}

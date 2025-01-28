@@ -1,0 +1,48 @@
+# vim:ft=metafacture-fix
+
+# Fix is a macro-language for data transformations
+
+use "strict"
+
+# Simple fixes
+
+add_field(hello, world) # end-of-line comment
+remove_field(my.deep.*.junk.$last)
+copy_field(stats.*, output.$append)
+
+# Conditionals
+
+if exists(error) || bla()
+  set_field(is_valid, no)
+  log(error)
+elsif exists(warning) && blub()
+  set_field(is_valid, yes)
+  log(warning)
+else
+  set_field(is_valid, yes)
+  en ds
+end
+
+# Loops
+
+do list(path)
+  add_field(foo, bar) and foo.bar(key: "val=$1")
+end
+
+# Nested expressions
+
+do marc_each()
+  if marc_has(f700)
+    marc_map(f700a, authors.$append.bla, 'bla')
+  end
+end
+
+// single-line comment
+copy_field(foo, /* in-line comment */ bar)
+
+/*
+multi-line comment
+with a twist \*/
+*/
+
+reject exists(error.field)

@@ -1,0 +1,12 @@
+{
+  "anim" : "cat",
+  "animal" : "cat"
+}
+{
+  "animals" : "zebra",
+  "animal" : "zebra"
+}
+{
+  "any" : "dog",
+  "animal" : "dog"
+}

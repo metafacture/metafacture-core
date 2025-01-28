@@ -1,0 +1,1 @@
+retain("words[]", "test[].*.foo", "test_2.test")

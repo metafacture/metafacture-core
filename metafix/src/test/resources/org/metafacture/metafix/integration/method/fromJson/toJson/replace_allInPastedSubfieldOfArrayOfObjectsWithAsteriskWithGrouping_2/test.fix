@@ -1,0 +1,7 @@
+add_field("subject[].$append.name","Test")
+
+do list(path:"GST[]", "var": "$i")  # Other altLabels have a "," character between $a and $b.
+  paste("subject[].$last.agent.altLabel[].$append", "$i.a", "~(", "$i.b", "$i.c", "~)")
+end
+
+replace_all("subject[].*.agent.altLabel[].*","  | \\( \\)","")

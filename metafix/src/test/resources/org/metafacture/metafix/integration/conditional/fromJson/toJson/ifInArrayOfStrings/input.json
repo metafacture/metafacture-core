@@ -1,0 +1,8 @@
+{
+  "test" : "cat",
+  "animals" : [ "cat", "dog", "zebra" ]
+}
+{
+  "test" : "cat",
+  "animal" : [ "parrot", "dog", "zebra" ]
+}

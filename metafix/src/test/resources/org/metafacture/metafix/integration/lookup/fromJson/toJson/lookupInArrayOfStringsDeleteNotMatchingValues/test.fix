@@ -1,0 +1,1 @@
+lookup("animals[].*", "./mapfile.tsv", "sep_char":"\t", delete:"true")

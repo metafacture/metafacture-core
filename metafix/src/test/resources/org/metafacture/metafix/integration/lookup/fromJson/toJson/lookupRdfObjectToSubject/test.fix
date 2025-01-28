@@ -1,0 +1,2 @@
+put_rdfmap("../../../../../maps/hcrt.ttl", "rdfmap", target: "skos:prefLabel")
+lookup("a", "rdfmap")

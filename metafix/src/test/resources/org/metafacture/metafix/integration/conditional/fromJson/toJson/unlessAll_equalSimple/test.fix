@@ -1,0 +1,3 @@
+unless all_equal("type", "book")
+  add_field("test", "test")
+end

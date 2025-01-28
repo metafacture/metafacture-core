@@ -1,0 +1,3 @@
+put_filemap("./mapfile.tsv", "map", "sep_char":"\t")
+
+lookup("type", "map")

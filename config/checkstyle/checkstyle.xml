@@ -8,6 +8,14 @@
         <property name="checks" value=".*"/>
         <property name="files" value="generated-src"/>
     </module>
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value=".*"/>
+        <property name="files" value="xtext-gen"/>
+    </module>
+    <module name="SuppressionSingleFilter">
+        <property name="checks" value="MultipleStringLiterals|ExecutableStatementCount|MagicNumber"/>
+        <property name="files" value="test"/>
+    </module>
     <module name="TreeWalker">
         <module name="AbstractClassName"/>
         <module name="AnnotationUseStyle"/>
@@ -83,7 +91,7 @@
         <module name="MethodTypeParameterName"/>
         <module name="MissingCtor"/>
         <module name="MissingDeprecated"/>
-        <module name="MissingJavadocMethod"/>
+        <!--<module name="MissingJavadocMethod"/>-->
         <module name="MissingOverride"/>
         <module name="MissingSwitchDefault"/>
         <module name="ModifiedControlVariable"/>
@@ -94,15 +102,15 @@
         </module>
         <module name="MultipleVariableDeclarations"/>
         <module name="MutableException"/>
-        <module name="NeedBraces"/>
         <module name="NPathComplexity"/>
+        <module name="NeedBraces"/>
         <module name="NoArrayTrailingComma"/>
         <module name="NoClone"/>
         <module name="NoEnumTrailingComma"/>
         <module name="NoFinalizer"/>
-        <module name="NonEmptyAtclauseDescription"/>
         <module name="NoWhitespaceAfter"/>
         <module name="NoWhitespaceBefore"/>
+        <module name="NonEmptyAtclauseDescription"/>
         <module name="OneStatementPerLine">
             <property name="treatTryResourcesAsStatement" value="true"/>
         </module>
@@ -138,7 +146,10 @@
         </module>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
-        <module name="StaticVariableName"/>
+        <module name="StaticVariableName">
+            <!-- disallow static, non-final variables -->
+            <!--<property name="format" value="^$"/>-->
+        </module>
         <module name="StringLiteralEquality"/>
         <module name="SuperClone"/>
         <module name="SuperFinalize"/>
@@ -154,8 +165,8 @@
         <module name="ThrowsCount">
             <property name="max" value="2"/>
         </module>
-        <module name="TypecastParenPad"/>
         <module name="TypeName"/>
+        <module name="TypecastParenPad"/>
         <module name="UnnecessaryParentheses"/>
         <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
         <module name="UnnecessarySemicolonInEnumeration"/>

@@ -1,0 +1,3 @@
+unless any_equal("type[]", "dog")
+  add_field("test", "test")
+end

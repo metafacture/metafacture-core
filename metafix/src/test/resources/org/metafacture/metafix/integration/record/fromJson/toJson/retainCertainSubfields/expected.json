@@ -1,0 +1,11 @@
+{
+  "test" : [ {
+    "foo" : "bar"
+  }, {
+    "foo" : "bar"
+  } ],
+  "words" : [ "bla", "bla", "bla" ],
+  "test_2" : {
+    "test" : "test"
+  }
+}

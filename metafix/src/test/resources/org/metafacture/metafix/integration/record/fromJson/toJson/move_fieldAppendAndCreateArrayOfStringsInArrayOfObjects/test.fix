@@ -1,0 +1,4 @@
+copy_field("key", "arrayOfObjects[].$append.test[].$append")
+copy_field("key_2", "arrayOfObjects[].$last.test[].$append")
+copy_field("key_3", "arrayOfObjects[].$append.test[].$append")
+copy_field("key_4", "arrayOfObjects[].$last.test[].$append")

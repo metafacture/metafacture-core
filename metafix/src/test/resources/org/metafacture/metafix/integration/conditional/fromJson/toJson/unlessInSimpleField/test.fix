@@ -1,0 +1,3 @@
+unless in("animal","test")
+  add_field("this","works")
+end

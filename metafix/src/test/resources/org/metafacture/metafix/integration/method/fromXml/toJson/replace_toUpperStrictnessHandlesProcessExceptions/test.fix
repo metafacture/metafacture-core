@@ -1,0 +1,7 @@
+do list(path: "700[01] ", "var": "$i")
+  set_hash("contribution[].$append.agent")
+  copy_field("$i.a", "contribution[].$last.agent.label")
+end
+
+replace_all("contribution[].*.agent.label", "(?<!\\p{Upper})\\.$|[,]$", "")
+retain("contribution[]")

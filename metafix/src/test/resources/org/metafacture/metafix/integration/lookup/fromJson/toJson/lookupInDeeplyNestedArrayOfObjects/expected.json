@@ -1,0 +1,52 @@
+{
+  "subject" : [ {
+    "componentList" : [ {
+      "gndIdentifier" : "(DE-588)4131620-4",
+      "id" : "(DE-588)4131620-4",
+      "label" : "Schulhof",
+      "source" : {
+        "id" : "https://d-nb.info/gnd/7749153-1",
+        "label" : "Gemeinsame Normdatei (GND)"
+      },
+      "type" : [ "SubjectHeading" ]
+    }, {
+      "gndIdentifier" : "(DE-588)4116546-9",
+      "id" : "(DE-588)4116546-9",
+      "label" : "Sozialraum",
+      "source" : {
+        "id" : "https://d-nb.info/gnd/7749153-1",
+        "label" : "Gemeinsame Normdatei (GND)"
+      },
+      "type" : [ "SubjectHeading" ]
+    }, {
+      "gndIdentifier" : "(DE-588)4680202-2",
+      "id" : "(DE-588)4680202-2",
+      "label" : "Informelles Lernen",
+      "source" : {
+        "id" : "https://d-nb.info/gnd/7749153-1",
+        "label" : "Gemeinsame Normdatei (GND)"
+      },
+      "type" : [ "SubjectHeading" ]
+    }, {
+      "gndIdentifier" : "(DE-588)4155947-2",
+      "id" : "(DE-588)4155947-2",
+      "label" : "Ganztagsschule",
+      "source" : {
+        "id" : "https://d-nb.info/gnd/7749153-1",
+        "label" : "Gemeinsame Normdatei (GND)"
+      },
+      "type" : [ "SubjectHeading" ]
+    }, {
+      "gndIdentifier" : "(DE-588)4130615-6",
+      "id" : "(DE-588)4130615-6",
+      "label" : "Sportpädagogik",
+      "source" : {
+        "id" : "https://d-nb.info/gnd/7749153-1",
+        "label" : "Gemeinsame Normdatei (GND)"
+      },
+      "type" : [ "SubjectHeading" ]
+    } ],
+    "label" : [ ],
+    "type" : [ "ComplexSubject" ]
+  } ]
+}

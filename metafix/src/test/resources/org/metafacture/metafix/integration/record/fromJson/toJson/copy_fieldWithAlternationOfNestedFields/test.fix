@@ -1,0 +1,1 @@
+copy_field("object.key|object_2.key_2|object_4.key_4", "test[].$append")
