@@ -16,24 +16,23 @@
 
 package org.metafacture.triples;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.objects.Triple;
+import org.metafacture.framework.objects.Triple.ObjectType;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.objects.Triple;
-import org.metafacture.framework.objects.Triple.ObjectType;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Tests for class {@link TripleObjectRetriever}.
@@ -48,15 +47,17 @@ public final class TripleObjectRetrieverTest {
     private static final String OBJECT_VALUE = "object-data";
     private static final String ENTITY = "{l=v}";
 
-    private TripleObjectRetriever tripleObjectRetriever;
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
 
     @Mock
     private ObjectReceiver<Triple> receiver;
 
-    @Rule
-    public TemporaryFolder tempFolder = new TemporaryFolder();
-
     private String objectUrl;
+    private TripleObjectRetriever tripleObjectRetriever;
+
+    public TripleObjectRetrieverTest() {
+    }
 
     @Before
     public void setup() throws IOException {
@@ -85,7 +86,7 @@ public final class TripleObjectRetrieverTest {
     public void shouldReplaceObjectValueWithResourceContentRetrievedFromUrl() {
         tripleObjectRetriever.process(new Triple(SUBJECT, PREDICATE, objectUrl));
 
-        verify(receiver).process(new Triple(SUBJECT, PREDICATE, OBJECT_VALUE));
+        Mockito.verify(receiver).process(new Triple(SUBJECT, PREDICATE, OBJECT_VALUE));
     }
 
     @Test
@@ -93,7 +94,7 @@ public final class TripleObjectRetrieverTest {
         tripleObjectRetriever.process(
                 new Triple(SUBJECT, PREDICATE, ENTITY, ObjectType.ENTITY));
 
-        verifyZeroInteractions(receiver);
+        Mockito.verifyZeroInteractions(receiver);
     }
 
 }

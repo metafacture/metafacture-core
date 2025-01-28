@@ -16,16 +16,14 @@
 
 package org.metafacture.metamorph.test.validators;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-
-import java.util.function.Consumer;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.util.function.Consumer;
 
 /**
  * Tests for class {@link WellformednessChecker}.
@@ -39,6 +37,9 @@ public final class WellformednessCheckerTest {
     private Consumer<String> errorHandler;
 
     private WellformednessChecker wellformednessChecker;
+
+    public WellformednessCheckerTest() {
+    }
 
     @Before
     public void setup() {
@@ -65,21 +66,21 @@ public final class WellformednessCheckerTest {
         wellformednessChecker.endRecord();
         wellformednessChecker.closeStream();
 
-        verifyZeroInteractions(errorHandler);
+        Mockito.verifyZeroInteractions(errorHandler);
     }
 
     @Test
     public void shouldAcceptEmptyStream() {
         wellformednessChecker.closeStream();
 
-        verifyZeroInteractions(errorHandler);
+        Mockito.verifyZeroInteractions(errorHandler);
     }
 
     @Test
     public void shouldReportNullRecordId() {
         wellformednessChecker.startRecord(null);
 
-        verify(errorHandler).accept(any());
+        Mockito.verify(errorHandler).accept(ArgumentMatchers.any());
     }
 
     @Test
@@ -87,7 +88,7 @@ public final class WellformednessCheckerTest {
         wellformednessChecker.startRecord("id1");
         wellformednessChecker.startEntity(null);
 
-        verify(errorHandler).accept(any());
+        Mockito.verify(errorHandler).accept(ArgumentMatchers.any());
     }
 
     @Test
@@ -95,31 +96,31 @@ public final class WellformednessCheckerTest {
         wellformednessChecker.startRecord("id1");
         wellformednessChecker.literal(null, "value1");
 
-        verify(errorHandler).accept(any());
+        Mockito.verify(errorHandler).accept(ArgumentMatchers.any());
     }
 
     @Test
     public void shouldNotIgnoreStartRecordEventWithNullId() {
         wellformednessChecker.startRecord(null);
-        verify(errorHandler).accept(any());
+        Mockito.verify(errorHandler).accept(ArgumentMatchers.any());
 
         wellformednessChecker.literal("literal", "value");
         wellformednessChecker.endRecord();
 
-        verifyZeroInteractions(errorHandler);
+        Mockito.verifyZeroInteractions(errorHandler);
     }
 
     @Test
     public void shouldNotIgnoreStartEntityEventWithNullName() {
         wellformednessChecker.startRecord("id");
         wellformednessChecker.startEntity(null);
-        verify(errorHandler).accept(any());
+        Mockito.verify(errorHandler).accept(ArgumentMatchers.any());
 
         wellformednessChecker.literal("literal", "value");
         wellformednessChecker.endEntity();
         wellformednessChecker.endRecord();
 
-        verifyZeroInteractions(errorHandler);
+        Mockito.verifyZeroInteractions(errorHandler);
     }
 
     @Test
@@ -127,28 +128,28 @@ public final class WellformednessCheckerTest {
         wellformednessChecker.startRecord("id1");
         wellformednessChecker.startRecord("id2");
 
-        verify(errorHandler).accept(any());
+        Mockito.verify(errorHandler).accept(ArgumentMatchers.any());
     }
 
     @Test
     public void shouldReportEndRecordOutsideRecord() {
         wellformednessChecker.endRecord();
 
-        verify(errorHandler).accept(any());
+        Mockito.verify(errorHandler).accept(ArgumentMatchers.any());
     }
 
     @Test
     public void shouldReportStartEntityOutsideRecord() {
         wellformednessChecker.startEntity("entity1");
 
-        verify(errorHandler).accept(any());
+        Mockito.verify(errorHandler).accept(ArgumentMatchers.any());
     }
 
     @Test
     public void shouldReportEndEntityOutsideRecord() {
         wellformednessChecker.endEntity();
 
-        verify(errorHandler).accept(any());
+        Mockito.verify(errorHandler).accept(ArgumentMatchers.any());
     }
 
     @Test
@@ -156,14 +157,14 @@ public final class WellformednessCheckerTest {
         wellformednessChecker.startRecord("id1");
         wellformednessChecker.endEntity();
 
-        verify(errorHandler).accept(any());
+        Mockito.verify(errorHandler).accept(ArgumentMatchers.any());
     }
 
     @Test
     public void shouldReportLiteralOutsideRecord() {
         wellformednessChecker.literal("literal1", "value1");
 
-        verify(errorHandler).accept(any());
+        Mockito.verify(errorHandler).accept(ArgumentMatchers.any());
     }
 
     @Test
@@ -171,7 +172,7 @@ public final class WellformednessCheckerTest {
         wellformednessChecker.startRecord("id1");
         wellformednessChecker.closeStream();
 
-        verify(errorHandler).accept(any());
+        Mockito.verify(errorHandler).accept(ArgumentMatchers.any());
     }
 
     @Test
@@ -180,7 +181,7 @@ public final class WellformednessCheckerTest {
         wellformednessChecker.startEntity("entity1");
         wellformednessChecker.endRecord();
 
-        verify(errorHandler).accept(any());
+        Mockito.verify(errorHandler).accept(ArgumentMatchers.any());
     }
 
     @Test
@@ -189,7 +190,7 @@ public final class WellformednessCheckerTest {
         wellformednessChecker.startEntity("entity1");
         wellformednessChecker.closeStream();
 
-        verify(errorHandler).accept(any());
+        Mockito.verify(errorHandler).accept(ArgumentMatchers.any());
     }
 
 }

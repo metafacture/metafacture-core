@@ -16,13 +16,13 @@
 
 package org.metafacture.biblio;
 
-import static org.mockito.Mockito.verify;
-
 import org.metafacture.framework.StreamReceiver;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -44,6 +44,9 @@ public final class ComarcXmlHandlerTest {
 
     @Mock
     private StreamReceiver receiver;
+
+    public ComarcXmlHandlerTest() {
+    }
 
     @Before
     public void setup() {
@@ -80,9 +83,9 @@ public final class ComarcXmlHandlerTest {
         this.comarcXmlHandler.endElement(NAMESPACE, DATAFIELD, "");
         this.comarcXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        verify(this.receiver).literal("x", fieldValue);
-        verify(this.receiver).startRecord(fieldValue);
-        verify(this.receiver).endRecord();
+        Mockito.verify(this.receiver).literal("x", fieldValue);
+        Mockito.verify(this.receiver).startRecord(fieldValue);
+        Mockito.verify(this.receiver).endRecord();
     }
 
     @Test
@@ -114,10 +117,10 @@ public final class ComarcXmlHandlerTest {
         this.comarcXmlHandler.endElement(NAMESPACE, DATAFIELD, "");
         this.comarcXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        verify(this.receiver).literal("x", fieldValue1);
-        verify(this.receiver).literal("x", fieldValue2);
-        verify(this.receiver).startRecord(fieldValue1);
-        verify(this.receiver).endRecord();
+        Mockito.verify(this.receiver).literal("x", fieldValue1);
+        Mockito.verify(this.receiver).literal("x", fieldValue2);
+        Mockito.verify(this.receiver).startRecord(fieldValue1);
+        Mockito.verify(this.receiver).endRecord();
     }
 
     @Test
@@ -170,13 +173,13 @@ public final class ComarcXmlHandlerTest {
 
         this.comarcXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        verify(this.receiver).literal("x", fieldValue1);
-        verify(this.receiver).literal("x", fieldValue2);
-        verify(this.receiver).startRecord(fieldValue1);
-        verify(this.receiver).endRecord();
-        verify(this.receiver).startEntity("000  ");
-        verify(this.receiver).startEntity("001 2");
-        verify(this.receiver).literal("a", fieldValue1);
+        Mockito.verify(this.receiver).literal("x", fieldValue1);
+        Mockito.verify(this.receiver).literal("x", fieldValue2);
+        Mockito.verify(this.receiver).startRecord(fieldValue1);
+        Mockito.verify(this.receiver).endRecord();
+        Mockito.verify(this.receiver).startEntity("000  ");
+        Mockito.verify(this.receiver).startEntity("001 2");
+        Mockito.verify(this.receiver).literal("a", fieldValue1);
     }
 
 }

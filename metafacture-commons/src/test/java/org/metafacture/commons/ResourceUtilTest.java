@@ -16,16 +16,13 @@
 
 package org.metafacture.commons;
 
-import static java.util.stream.Collectors.joining;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.metafacture.commons.ResourceUtil.BUFFER_SIZE;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import org.junit.Test;
 
 /**
  * Tests for class {@link ResourceUtil}.
@@ -34,49 +31,51 @@ import org.junit.Test;
  */
 public class ResourceUtilTest {
 
-    @Test
-    public void readAll_shouldReturnEmptyStringIfStreamIsEmpty()
-            throws IOException {
+    public ResourceUtilTest() {
+    }
 
+    @Test
+    public void readAllShouldReturnEmptyStringIfStreamIsEmpty()
+            throws IOException {
         final String result = ResourceUtil.readAll(new StringReader(""));
 
-        assertTrue(result.isEmpty());
+        Assert.assertTrue(result.isEmpty());
     }
 
     @Test
-    public void readAll_shouldReadStreamThatFitsIntoOneBuffer()
+    public void readAllShouldReadStreamThatFitsIntoOneBuffer()
             throws IOException {
-        final String input = repeat("a", BUFFER_SIZE - 1);
+        final String input = repeat("a", ResourceUtil.BUFFER_SIZE - 1);
 
         final String result = ResourceUtil.readAll(new StringReader(input));
 
-        assertEquals(input, result);
+        Assert.assertEquals(input, result);
     }
 
     @Test
-    public void readAll_shouldReadStreamThatFitsExactlyIntoOneBuffer()
+    public void readAllShouldReadStreamThatFitsExactlyIntoOneBuffer()
             throws IOException {
-        final String input = repeat("b", BUFFER_SIZE);
+        final String input = repeat("b", ResourceUtil.BUFFER_SIZE);
 
         final String result = ResourceUtil.readAll(new StringReader(input));
 
-        assertEquals(input, result);
+        Assert.assertEquals(input, result);
     }
 
     @Test
-    public void readAll_shouldReadStreamThatSpansMultipleBuffers()
+    public void readAllShouldReadStreamThatSpansMultipleBuffers()
             throws IOException {
-        final String input = repeat("c", BUFFER_SIZE * 2 + 1);
+        final String input = repeat("c", ResourceUtil.BUFFER_SIZE * 2 + 1);
 
         final String result = ResourceUtil.readAll(new StringReader(input));
 
-        assertEquals(input, result);
+        Assert.assertEquals(input, result);
     }
 
-    private String repeat(String string, int times) {
+    private String repeat(final String string, final int times) {
         return IntStream.range(0, times)
                 .mapToObj(i -> string)
-                .collect(joining());
+                .collect(Collectors.joining());
     }
 
 }

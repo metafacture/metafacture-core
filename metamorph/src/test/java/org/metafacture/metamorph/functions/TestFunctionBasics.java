@@ -16,12 +16,11 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.Metamorph;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -40,9 +39,12 @@ public final class TestFunctionBasics {
     @Mock
     private StreamReceiver receiver;
 
+    public TestFunctionBasics() {
+    }
+
     @Test
     public void shouldSupportFunctionChainingInDataStatements() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='data'>" +
                 "    <trim />" +
@@ -72,7 +74,7 @@ public final class TestFunctionBasics {
 
     @Test
     public void shouldSupportFunctionChainingInEntities() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <choose>" +
                 "    <data source='data'>" +
@@ -104,7 +106,7 @@ public final class TestFunctionBasics {
 
     @Test
     public void shouldUseJavaClassesAsFunctions() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='data'>" +
                 "    <java class='org.metafacture.metamorph.functions.Compose' prefix='Hula ' />" +

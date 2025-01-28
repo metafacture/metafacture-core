@@ -166,7 +166,6 @@ subprojects {
 
   checkstyle {
     toolVersion '10.21.2'
-    checkstyleTest.enabled = false
   }
 
   test {

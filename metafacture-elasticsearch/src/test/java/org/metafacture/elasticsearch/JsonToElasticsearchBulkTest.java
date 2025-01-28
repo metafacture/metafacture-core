@@ -16,14 +16,13 @@
 
 package org.metafacture.elasticsearch;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -55,6 +54,9 @@ public final class JsonToElasticsearchBulkTest {
 
     @Mock
     private ObjectReceiver<String> receiver;
+
+    public JsonToElasticsearchBulkTest() {
+    }
 
     @Before
     public void setup() {
@@ -229,8 +231,8 @@ public final class JsonToElasticsearchBulkTest {
 
         final String metadata = String.format(METADATA, idValue != null ? ",'_id':" + idValue : "");
 
-        verify(receiver).process(fixQuotes(metadata + "\n" + resultObj));
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).process(fixQuotes(metadata + "\n" + resultObj));
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     private void shouldExtractId(final String obj, final String idValue) {

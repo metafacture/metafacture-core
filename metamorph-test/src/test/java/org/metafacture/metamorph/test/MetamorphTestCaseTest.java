@@ -16,15 +16,15 @@
 
 package org.metafacture.metamorph.test;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runners.model.InitializationError;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Test cases for class {@link MetamorphTestCase}.
@@ -41,6 +41,9 @@ public final class MetamorphTestCaseTest {
 
     private Document document;
 
+    public MetamorphTestCaseTest() {
+    }
+
     @Before
     public void createXmlDocument() {
         final DocumentBuilderFactory docBuilderFactory =
@@ -48,7 +51,8 @@ public final class MetamorphTestCaseTest {
         final DocumentBuilder docBuilder;
         try {
             docBuilder = docBuilderFactory.newDocumentBuilder();
-        } catch(final ParserConfigurationException e) {
+        }
+        catch (final ParserConfigurationException e) {
             throw new AssertionError(
                     "No error expected when creating a standard document builder", e);
         }

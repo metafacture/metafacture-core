@@ -16,19 +16,17 @@
 
 package org.metafacture.json;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import org.metafacture.framework.MetafactureException;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
@@ -51,6 +49,9 @@ public final class JsonDecoderTest {
 
     private JsonDecoder jsonDecoder;
 
+    public JsonDecoderTest() {
+    }
+
     @Before
     public void init() {
         jsonDecoder = new JsonDecoder();
@@ -61,7 +62,7 @@ public final class JsonDecoderTest {
     public void testShouldProcessEmptyStrings() {
         jsonDecoder.process("");
 
-        verifyZeroInteractions(receiver);
+        Mockito.verifyZeroInteractions(receiver);
     }
 
     @Test
@@ -77,7 +78,7 @@ public final class JsonDecoderTest {
                 "\"lit5\":null" +
             "}");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("lit1", "value 1");
         ordered.verify(receiver).startEntity(" ent1");
@@ -111,7 +112,7 @@ public final class JsonDecoderTest {
                 "]" +
             "}");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).startEntity("arr1[]");
         ordered.verify(receiver).literal("1", "val1");
@@ -124,16 +125,16 @@ public final class JsonDecoderTest {
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).startEntity("2");
         ordered.verify(receiver).literal("lit3", "val3");
-        ordered.verify(receiver, times(2)).endEntity();
+        ordered.verify(receiver, Mockito.times(2)).endEntity();
         ordered.verify(receiver).startEntity("arr3[]");
         ordered.verify(receiver).startEntity("1[]");
         ordered.verify(receiver).startEntity("1");
         ordered.verify(receiver).literal("lit4", "val4");
-        ordered.verify(receiver, times(2)).endEntity();
+        ordered.verify(receiver, Mockito.times(2)).endEntity();
         ordered.verify(receiver).startEntity("2[]");
         ordered.verify(receiver).startEntity("1");
         ordered.verify(receiver).literal("lit5", "val5");
-        ordered.verify(receiver, times(3)).endEntity();
+        ordered.verify(receiver, Mockito.times(3)).endEntity();
         ordered.verify(receiver).endRecord();
     }
 
@@ -148,7 +149,7 @@ public final class JsonDecoderTest {
             "}"
         );
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("lit1", "false");
         ordered.verify(receiver).literal("lit2", "true");
@@ -156,7 +157,7 @@ public final class JsonDecoderTest {
         ordered.verify(receiver).startEntity("1");
         ordered.verify(receiver).literal("lit3", "true");
         ordered.verify(receiver).literal("lit4", "false");
-        ordered.verify(receiver, times(2)).endEntity();
+        ordered.verify(receiver, Mockito.times(2)).endEntity();
         ordered.verify(receiver).startEntity("arr2[]");
         ordered.verify(receiver).literal("1", "false");
         ordered.verify(receiver).literal("2", "true");
@@ -177,7 +178,7 @@ public final class JsonDecoderTest {
             "}"
         );
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("lit1~", "false");
         ordered.verify(receiver).literal("lit2", "true");
@@ -185,7 +186,7 @@ public final class JsonDecoderTest {
         ordered.verify(receiver).startEntity("1");
         ordered.verify(receiver).literal("lit3~", "true");
         ordered.verify(receiver).literal("lit4", "false");
-        ordered.verify(receiver, times(2)).endEntity();
+        ordered.verify(receiver, Mockito.times(2)).endEntity();
         ordered.verify(receiver).startEntity("arr2[]");
         ordered.verify(receiver).literal("1~", "false");
         ordered.verify(receiver).literal("2~", "true");
@@ -205,7 +206,7 @@ public final class JsonDecoderTest {
             "}"
         );
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("lit1", "23");
         ordered.verify(receiver).literal("lit2", "4.2");
@@ -213,7 +214,7 @@ public final class JsonDecoderTest {
         ordered.verify(receiver).startEntity("1");
         ordered.verify(receiver).literal("lit3", "4.2");
         ordered.verify(receiver).literal("lit4", "23");
-        ordered.verify(receiver, times(2)).endEntity();
+        ordered.verify(receiver, Mockito.times(2)).endEntity();
         ordered.verify(receiver).startEntity("arr2[]");
         ordered.verify(receiver).literal("1", "23");
         ordered.verify(receiver).literal("2", "4.2");
@@ -234,7 +235,7 @@ public final class JsonDecoderTest {
             "}"
         );
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("lit1#", "23");
         ordered.verify(receiver).literal("lit2", "4.2");
@@ -242,7 +243,7 @@ public final class JsonDecoderTest {
         ordered.verify(receiver).startEntity("1");
         ordered.verify(receiver).literal("lit3#", "4.2");
         ordered.verify(receiver).literal("lit4", "23");
-        ordered.verify(receiver, times(2)).endEntity();
+        ordered.verify(receiver, Mockito.times(2)).endEntity();
         ordered.verify(receiver).startEntity("arr2[]");
         ordered.verify(receiver).literal("1#", "23");
         ordered.verify(receiver).literal("2#", "4.2");
@@ -257,7 +258,7 @@ public final class JsonDecoderTest {
             "{\"lit\": \"record 1\"}\n" +
                 "{\"lit\": \"record 2\"}");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("lit", "record 1");
         ordered.verify(receiver).endRecord();
@@ -273,7 +274,7 @@ public final class JsonDecoderTest {
                 "{\"data\":[" + "{\"lit\": \"record 1\"}," +
                         "{\"lit\": \"record 2\"}" + "]}");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("lit", "record 1");
         ordered.verify(receiver).endRecord();
@@ -289,7 +290,7 @@ public final class JsonDecoderTest {
                 "[" + "{\"lit\": \"record 1\"}," +
                         "{\"lit\": \"record 2\"}" + "]");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("lit", "record 1");
         ordered.verify(receiver).endRecord();
@@ -298,7 +299,7 @@ public final class JsonDecoderTest {
         ordered.verify(receiver).endRecord();
     }
 
-    @Test(expected=MetafactureException.class)
+    @Test(expected = MetafactureException.class)
     public void testRootArrayNoRecordPath() {
         jsonDecoder.process(
                 "[" + "{\"lit\": \"record 1\"}," +
@@ -310,7 +311,7 @@ public final class JsonDecoderTest {
         jsonDecoder.process("{\"lit\": \"record 1\"}");
         jsonDecoder.process("{\"lit\": \"record 2\"}");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("lit", "record 1");
         ordered.verify(receiver).endRecord();
@@ -368,7 +369,7 @@ public final class JsonDecoderTest {
 
         jsonDecoder.process("//{\"lit\":\"value\"}");
 
-        verifyZeroInteractions(receiver);
+        Mockito.verifyZeroInteractions(receiver);
     }
 
     @Test
@@ -388,7 +389,7 @@ public final class JsonDecoderTest {
 
         jsonDecoder.process("{\"lit\":/*comment*/\"value\"}");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("lit", "value");
         ordered.verify(receiver).endRecord();

@@ -16,9 +16,10 @@
 
 package org.metafacture.mangling;
 
+import org.metafacture.framework.StreamReceiver;
+
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -33,6 +34,9 @@ public final class RecordPathFilterTest {
 
     @Mock
     private StreamReceiver receiver;
+
+    public RecordPathFilterTest() {
+    }
 
     @Test
     public void shouldFilterRootPath() {

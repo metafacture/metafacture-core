@@ -16,14 +16,12 @@
 
 package org.metafacture.commons;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * Tests for the static methods in {@link StringUtil}.
@@ -43,6 +41,9 @@ public final class StringUtilTest {
 
     private final Map<String, String> vars = new HashMap<String, String>();
 
+    public StringUtilTest() {
+    }
+
     @Before
     public void initvars() {
         vars.put("a", "Aloha");
@@ -57,7 +58,7 @@ public final class StringUtilTest {
 
         final char[] newBuffer = StringUtil.copyToBuffer(str, buffer);
 
-        assertTrue(newBuffer.length >= str.length());
+        Assert.assertTrue(newBuffer.length >= str.length());
     }
 
     @Test
@@ -68,20 +69,20 @@ public final class StringUtilTest {
 
         buffer = StringUtil.copyToBuffer(str, buffer);
 
-        assertEquals(STRING_WITH_4_CHARS, String.valueOf(buffer, 0, bufferLen));
+        Assert.assertEquals(STRING_WITH_4_CHARS, String.valueOf(buffer, 0, bufferLen));
     }
 
     @Test
     public void testFormat() {
 
-        assertEquals(ALOHA_HAWAII, StringUtil.format("${a} ${b}", vars));
-        assertEquals(ALOHAHAWAII, StringUtil.format("${a}${b}", vars));
-        assertEquals("Aloha${b", StringUtil.format("${a}${b", vars));
-        assertEquals("XAloha${b", StringUtil.format("X${a}${b", vars));
-        assertEquals("XX", StringUtil.format("X${ab}X", vars));
-        assertEquals(XHULAXHULAX, StringUtil.format("X${bb}X${bb}X", vars));
-        assertEquals("{a}Hawaii", StringUtil.format("{a}${b}", vars));
-        assertEquals("Hula$Hula", StringUtil.format("${bb}$${bb}", vars));
+        Assert.assertEquals(ALOHA_HAWAII, StringUtil.format("${a} ${b}", vars));
+        Assert.assertEquals(ALOHAHAWAII, StringUtil.format("${a}${b}", vars));
+        Assert.assertEquals("Aloha${b", StringUtil.format("${a}${b", vars));
+        Assert.assertEquals("XAloha${b", StringUtil.format("X${a}${b", vars));
+        Assert.assertEquals("XX", StringUtil.format("X${ab}X", vars));
+        Assert.assertEquals(XHULAXHULAX, StringUtil.format("X${bb}X${bb}X", vars));
+        Assert.assertEquals("{a}Hawaii", StringUtil.format("{a}${b}", vars));
+        Assert.assertEquals("Hula$Hula", StringUtil.format("${bb}$${bb}", vars));
 
     }
 
@@ -90,18 +91,18 @@ public final class StringUtilTest {
 
         final String varStart = "VAR_START";
         final String varEnd = "VAR_END";
-        assertEquals(ALOHA_HAWAII,
+        Assert.assertEquals(ALOHA_HAWAII,
                 StringUtil.format("VAR_STARTaVAR_END VAR_STARTbVAR_END", varStart, varEnd, vars));
-        assertEquals(ALOHAHAWAII, StringUtil.format("VAR_STARTaVAR_ENDVAR_STARTbVAR_END", varStart, varEnd, vars));
-        assertEquals("AlohaVAR_STARTb", StringUtil.format("VAR_STARTaVAR_ENDVAR_STARTb", varStart, varEnd, vars));
-        assertEquals("XAlohaVAR_STARTb", StringUtil.format("XVAR_STARTaVAR_ENDVAR_STARTb", varStart, varEnd, vars));
-        assertEquals("XX", StringUtil.format("XVAR_STARTabVAR_ENDX", varStart, varEnd, vars));
-        assertEquals(XHULAXHULAX,
+        Assert.assertEquals(ALOHAHAWAII, StringUtil.format("VAR_STARTaVAR_ENDVAR_STARTbVAR_END", varStart, varEnd, vars));
+        Assert.assertEquals("AlohaVAR_STARTb", StringUtil.format("VAR_STARTaVAR_ENDVAR_STARTb", varStart, varEnd, vars));
+        Assert.assertEquals("XAlohaVAR_STARTb", StringUtil.format("XVAR_STARTaVAR_ENDVAR_STARTb", varStart, varEnd, vars));
+        Assert.assertEquals("XX", StringUtil.format("XVAR_STARTabVAR_ENDX", varStart, varEnd, vars));
+        Assert.assertEquals(XHULAXHULAX,
                 StringUtil.format("XVAR_STARTbbVAR_ENDXVAR_STARTbbVAR_ENDX", varStart, varEnd, vars));
-        assertEquals("{aVAR_ENDHawaii", StringUtil.format("{aVAR_ENDVAR_STARTbVAR_END", varStart, varEnd, vars));
+        Assert.assertEquals("{aVAR_ENDHawaii", StringUtil.format("{aVAR_ENDVAR_STARTbVAR_END", varStart, varEnd, vars));
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testMissingVars() {
         StringUtil.format("${a}${x}", false, vars);
     }

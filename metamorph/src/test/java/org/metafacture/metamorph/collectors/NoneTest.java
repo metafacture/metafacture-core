@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -38,9 +38,12 @@ public final class NoneTest {
     @Mock
     private StreamReceiver receiver;
 
+    public NoneTest() {
+    }
+
     @Test
     public void shouldFireOnlyifNoElementFired() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <none>" +
                 "    <data source='data1' />" +
@@ -72,7 +75,7 @@ public final class NoneTest {
 
     @Test
     public void shouldSupportUserdefinedNameAndValue() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <none name='NONE' value='found none'>" +
                 "    <data source='data1' />" +
@@ -89,12 +92,12 @@ public final class NoneTest {
                     o.get().literal("NONE", "found none");
                     o.get().endRecord();
                 }
-                );
+        );
     }
 
     @Test
     public void shouldNotFireAgainIfFlushedTwoTimesAndResetIsFalse() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <none flushWith='entity'>" +
                 "    <data source='data2' />" +
@@ -120,7 +123,7 @@ public final class NoneTest {
 
     @Test
     public void shouldFireAgainIfFlushedTwoTimesAndTesetIsTrue() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <none flushWith='entity' reset='true'>" +
                 "    <data source='data2' />" +
@@ -146,7 +149,7 @@ public final class NoneTest {
 
     @Test
     public void shouldResetWhenEntityChangesIfSameEntity() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <none sameEntity='true'>" +
                 "    <data source='entity.data2' />" +

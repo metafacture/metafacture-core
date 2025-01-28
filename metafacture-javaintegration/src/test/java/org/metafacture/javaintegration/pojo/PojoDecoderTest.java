@@ -16,10 +16,16 @@
 
 package org.metafacture.javaintegration.pojo;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import org.metafacture.framework.StreamReceiver;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,14 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InOrder;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 /**
  * Tests for class {@link PojoDecoder}.
  *
@@ -43,10 +41,13 @@ import org.mockito.MockitoAnnotations;
  * @author Christoph Böhme (refactored to Mockito)
  *
  */
-public class PojoDecoderTest {
+public class PojoDecoderTest { // checkstyle-disable-line ClassDataAbstractionCoupling
 
     @Mock
     private StreamReceiver receiver;
+
+    public PojoDecoderTest() {
+    }
 
     @Before
     public void setup() {
@@ -60,7 +61,7 @@ public class PojoDecoderTest {
 
         pojoDecoder.process(null);
 
-        verifyZeroInteractions(receiver);
+        Mockito.verifyZeroInteractions(receiver);
     }
 
     @Test
@@ -70,7 +71,7 @@ public class PojoDecoderTest {
 
         pojoDecoder.process(new EmptyPojo());
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).endRecord();
     }
@@ -85,7 +86,7 @@ public class PojoDecoderTest {
         simplePojo.secondField = "value2";
         pojoDecoder.process(simplePojo);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).literal("secondField", "value2");
         ordered.verify(receiver).literal("firstField", "value1");
@@ -104,7 +105,7 @@ public class PojoDecoderTest {
         nestedPojo.setInnerPojo(simplePojo);
         pojoDecoder.process(nestedPojo);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("innerPojo");
         ordered.verify(receiver).literal("secondField", "value2");
@@ -123,7 +124,7 @@ public class PojoDecoderTest {
                 streamReceiver -> streamReceiver.literal("literal", "value"));
         pojoDecoder.process(mfSourcePojo);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("metafactureSourceField");
         ordered.verify(receiver).literal("literal", "value");
@@ -136,12 +137,12 @@ public class PojoDecoderTest {
         final PojoDecoder<SimpleArrayPojo> pojoDecoder = new PojoDecoder<>();
         pojoDecoder.setReceiver(receiver);
 
-        final String[] valueArray = { "array-value1", "array-value2"};
+        final String[] valueArray = {"array-value1", "array-value2"};
         final SimpleArrayPojo simpleArrayPojo = new SimpleArrayPojo();
         simpleArrayPojo.setArrayField(valueArray);
         pojoDecoder.process(simpleArrayPojo);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).literal("arrayField", "array-value1");
         ordered.verify(receiver).literal("arrayField", "array-value2");
@@ -158,7 +159,7 @@ public class PojoDecoderTest {
         simpleListPojo.setListField(valueList);
         pojoDecoder.process(simpleListPojo);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).literal("listField", "list-value1");
         ordered.verify(receiver).literal("listField", "list-value2");
@@ -176,7 +177,7 @@ public class PojoDecoderTest {
         simpleSetPojo.setSetField(valueSet);
         pojoDecoder.process(simpleSetPojo);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).literal("setField", "set-value1");
         ordered.verify(receiver).literal("setField", "set-value2");
@@ -199,26 +200,34 @@ public class PojoDecoderTest {
                 ArgumentCaptor.forClass(String.class);
         final ArgumentCaptor<String> valueCaptor =
                 ArgumentCaptor.forClass(String.class);
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("mapField");
-        ordered.verify(receiver, times(2)).literal(
+        ordered.verify(receiver, Mockito.times(2)).literal(
                 nameCaptor.capture(), valueCaptor.capture());
-        assertEquals(mapField.get(nameCaptor.getAllValues().get(0)),
+        Assert.assertEquals(mapField.get(nameCaptor.getAllValues().get(0)),
                 valueCaptor.getAllValues().get(0));
-        assertEquals(mapField.get(nameCaptor.getAllValues().get(1)),
+        Assert.assertEquals(mapField.get(nameCaptor.getAllValues().get(1)),
                 valueCaptor.getAllValues().get(1));
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).endRecord();
     }
 
     private static class EmptyPojo {
+
+        private EmptyPojo() {
+        }
+
     }
 
     private static class SimplePojo {
 
+        public String secondField; // checkstyle-disable-line VisibilityModifier
+
         private String firstField;
-        public String secondField;
+
+        private SimplePojo() {
+        }
 
         public String getFirstField() {
             return firstField;
@@ -234,6 +243,9 @@ public class PojoDecoderTest {
 
         private SimplePojo innerPojo;
 
+        private NestedPojo() {
+        }
+
         public SimplePojo getInnerPojo() {
             return innerPojo;
         }
@@ -246,6 +258,9 @@ public class PojoDecoderTest {
     private static class MetafactureSourcePojo {
 
         private MetafactureSource metafactureSourceField;
+
+        private MetafactureSourcePojo() {
+        }
 
         public MetafactureSource getMetafactureSourceField() {
             return metafactureSourceField;
@@ -262,6 +277,9 @@ public class PojoDecoderTest {
 
         private String[] arrayField;
 
+        private SimpleArrayPojo() {
+        }
+
         public String[] getArrayField() {
             return arrayField;
         }
@@ -275,6 +293,9 @@ public class PojoDecoderTest {
     private static class SimpleListPojo {
 
         private List<String> listField;
+
+        private SimpleListPojo() {
+        }
 
         public List<String> getListField() {
             return listField;
@@ -290,6 +311,9 @@ public class PojoDecoderTest {
 
         private Set<String> setField;
 
+        private SimpleSetPojo() {
+        }
+
         public Set<String> getSetField() {
             return setField;
         }
@@ -303,6 +327,9 @@ public class PojoDecoderTest {
     private static class SimpleMapPojo {
 
         private Map<String, String> mapField;
+
+        private SimpleMapPojo() {
+        }
 
         public Map<String, String> getMapField() {
             return mapField;

@@ -16,10 +16,10 @@
 
 package org.metafacture.monitoring;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.metafacture.framework.helpers.DefaultObjectReceiver;
 
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for class {@link ObjectTimer}.
@@ -29,38 +29,11 @@ import org.metafacture.framework.helpers.DefaultObjectReceiver;
  */
 public final class ObjectTimerTest {
 
-    /**
-     * A module with a slow process method.
-     */
-    private static final class BenchmarkedModule extends DefaultObjectReceiver<String> {
-
-        private static final long[] DURATIONS = { 150L, 20L, 30L, 202L };
-
-        private int i;
-
-        @Override
-        public void process(final String obj) {
-            try {
-                Thread.sleep(getDuration());
-            }
-            catch (final InterruptedException e) {
-                return;
-            }
-        }
-
-        private long getDuration() {
-            final long duration = DURATIONS[i];
-            i += 1;
-            if (i == DURATIONS.length) {
-                i = 0;
-            }
-            return duration;
-        }
-
-    }
-
     private ObjectTimer<String> objectTimer;
     private BenchmarkedModule benchmarkedModule;
+
+    public ObjectTimerTest() {
+    }
 
     @Before
     public void setup() {
@@ -83,6 +56,39 @@ public final class ObjectTimerTest {
     public void testShouldHandleImmediateCloseStreamWithNoProcessing() {
 
         objectTimer.closeStream();
+    }
+
+    /**
+     * A module with a slow process method.
+     */
+    private static final class BenchmarkedModule extends DefaultObjectReceiver<String> {
+
+        private static final long[] DURATIONS = {150L, 20L, 30L, 202L};
+
+        private int i;
+
+        private BenchmarkedModule() {
+        }
+
+        @Override
+        public void process(final String obj) {
+            try {
+                Thread.sleep(getDuration());
+            }
+            catch (final InterruptedException e) {
+                return;
+            }
+        }
+
+        private long getDuration() {
+            final long duration = DURATIONS[i];
+            i += 1;
+            if (i == DURATIONS.length) {
+                i = 0;
+            }
+            return duration;
+        }
+
     }
 
 }

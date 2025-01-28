@@ -16,17 +16,15 @@
 
 package org.metafacture.xml;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.metafacture.framework.helpers.DefaultObjectReceiver;
 import org.metafacture.framework.helpers.DefaultXmlPipe;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Tests for class {@link SimpleXmlEncoder}.
@@ -43,6 +41,9 @@ public final class SimpleXmlEncoderTest {
     private SimpleXmlEncoder simpleXmlEncoder;
 
     private StringBuilder resultCollector;
+
+    public SimpleXmlEncoderTest() {
+    }
 
     @Before
     public void initSystemUnderTest() {
@@ -61,23 +62,23 @@ public final class SimpleXmlEncoderTest {
     public void issue249_shouldNotEmitClosingRootTagOnCloseStreamIfNoOutputWasGenerated() {
         simpleXmlEncoder.closeStream();
 
-        assertTrue(getResultXml().isEmpty());
+        Assert.assertTrue(getResultXml().isEmpty());
     }
 
     @Test
     public void shouldNotEmitClosingRootTagOnResetStreamIfNoOutputWasGenerated() {
         simpleXmlEncoder.resetStream();
 
-        assertTrue(getResultXml().isEmpty());
+        Assert.assertTrue(getResultXml().isEmpty());
     }
 
     @Test
     public void shouldOnlyEscapeXmlReservedCharacters() {
         final StringBuilder builder = new StringBuilder();
 
-        SimpleXmlEncoder.writeEscaped(builder , "&<>'\" üäö");
+        SimpleXmlEncoder.writeEscaped(builder, "&<>'\" üäö");
 
-        assertEquals("&amp;&lt;&gt;&apos;&quot; üäö", builder.toString());
+        Assert.assertEquals("&amp;&lt;&gt;&apos;&quot; üäö", builder.toString());
     }
 
     @Test
@@ -86,7 +87,7 @@ public final class SimpleXmlEncoderTest {
 
         emitTwoRecords();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records><record><tag>value</tag></record></records><?xml version=\"1.0\" encoding=\"UTF-8\"?><records><record><tag>value</tag></record></records>",
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records><record><tag>value</tag></record></records><?xml version=\"1.0\" encoding=\"UTF-8\"?><records><record><tag>value</tag></record></records>",
                 getResultXml());
     }
 
@@ -96,7 +97,7 @@ public final class SimpleXmlEncoderTest {
 
         emitTwoRecords();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records><record><tag>value</tag></record><record><tag>value</tag></record></records>",
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records><record><tag>value</tag></record><record><tag>value</tag></record></records>",
                 getResultXml());
     }
 
@@ -108,7 +109,7 @@ public final class SimpleXmlEncoderTest {
 
         emitEmptyRecord();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns:ns=\"http://example.org/ns\"><record /></records>",
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns:ns=\"http://example.org/ns\"><record /></records>",
                 getResultXml());
     }
 
@@ -118,9 +119,10 @@ public final class SimpleXmlEncoderTest {
 
         emitEmptyRecord();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns:ns=\"http://example.org/ns\" xmlns=\"http://default.org/ns\" xmlns:ns1=\"http://example.org/ns1\"><record /></records>",
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns:ns=\"http://example.org/ns\" xmlns=\"http://default.org/ns\" xmlns:ns1=\"http://example.org/ns1\"><record /></records>",
                 getResultXml());
     }
+
     @Test
     public void shouldAddNamespaceWithEmptyKeyAsDefaultNamespaceToRootTag() {
         final Map<String, String> namespaces = new HashMap<String, String>();
@@ -129,7 +131,7 @@ public final class SimpleXmlEncoderTest {
 
         emitEmptyRecord();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns=\"http://example.org/ns\"><record /></records>",
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns=\"http://example.org/ns\"><record /></records>",
                 getResultXml());
     }
 
@@ -141,7 +143,7 @@ public final class SimpleXmlEncoderTest {
 
         emitEmptyRecord();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns=\"http://example.org/ns\"><record /></records>",
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns=\"http://example.org/ns\"><record /></records>",
                 getResultXml());
     }
 
@@ -151,7 +153,7 @@ public final class SimpleXmlEncoderTest {
 
         emitEmptyRecord();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns=\"http://example.org/ns\"><record /></records>",
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><records xmlns=\"http://example.org/ns\"><record /></records>",
                 getResultXml());
     }
 
@@ -161,7 +163,7 @@ public final class SimpleXmlEncoderTest {
 
         emitEmptyRecord();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record />",
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record />",
                 getResultXml());
     }
 
@@ -174,7 +176,7 @@ public final class SimpleXmlEncoderTest {
 
         emitEmptyRecord();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns:ns=\"http://example.org/ns\" />",
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns:ns=\"http://example.org/ns\" />",
                 getResultXml());
     }
 
@@ -187,7 +189,7 @@ public final class SimpleXmlEncoderTest {
 
         emitEmptyRecord();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns=\"http://example.org/ns\" />",
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns=\"http://example.org/ns\" />",
                 getResultXml());
     }
 
@@ -200,7 +202,7 @@ public final class SimpleXmlEncoderTest {
 
         emitEmptyRecord();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns=\"http://example.org/ns\" />",
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns=\"http://example.org/ns\" />",
                 getResultXml());
     }
 
@@ -211,9 +213,10 @@ public final class SimpleXmlEncoderTest {
 
         emitEmptyRecord();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns=\"http://example.org/ns\" />",
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns=\"http://example.org/ns\" />",
                 getResultXml());
     }
+
     @Test
     public void shouldAddNamespaceWithEmptyKeyFromParameterAsDefaultNamespaceToRecordTag() {
         simpleXmlEncoder.setNamespaces("=http://example.org/ns");
@@ -221,7 +224,7 @@ public final class SimpleXmlEncoderTest {
 
         emitEmptyRecord();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns=\"http://example.org/ns\" />",
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><record  xmlns=\"http://example.org/ns\" />",
                 getResultXml());
     }
 
@@ -232,7 +235,7 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record>" +
                 "value" +
@@ -251,7 +254,7 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.closeStream();
 
         // SimpleXmlEncoder.Element.writeElement() does not write child elements with empty name
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record>" +
                 "value" +
@@ -269,7 +272,7 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record>" +
                 "<tag>value</tag>" +
@@ -288,7 +291,7 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record>" +
                 "value" +
@@ -304,7 +307,7 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record>" +
                 "<value>value</value>" +
@@ -321,7 +324,7 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record attr=\"value\">" +
                 "<tag>value</tag>" +
@@ -341,7 +344,7 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record>" +
                 "<~entity>" +
@@ -362,7 +365,7 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record>" +
                 "<tag>value</tag>" +
@@ -383,7 +386,7 @@ public final class SimpleXmlEncoderTest {
         simpleXmlEncoder.endRecord();
         simpleXmlEncoder.closeStream();
 
-        assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+        Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<records>" +
                 "<record attr=\"value\">" +
                 "<tag>value</tag>" +

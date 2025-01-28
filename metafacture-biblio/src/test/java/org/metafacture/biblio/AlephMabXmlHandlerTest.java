@@ -16,10 +16,11 @@
 
 package org.metafacture.biblio;
 
+import org.metafacture.framework.StreamReceiver;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -43,6 +44,9 @@ public final class AlephMabXmlHandlerTest {
     private StreamReceiver receiver;
 
     private AlephMabXmlHandler mabXmlHandler;
+
+    public AlephMabXmlHandlerTest() {
+    }
 
     @Before
     public void setup() {

@@ -16,8 +16,7 @@
 
 package org.metafacture.formeta.formatter;
 
-import static org.junit.Assert.assertEquals;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,6 +42,9 @@ public final class ConciseFormatterTest {
 
     private ConciseFormatter conciseFormatter;
 
+    public ConciseFormatterTest() {
+    }
+
     @Before
     public void setup() {
         conciseFormatter = new ConciseFormatter();
@@ -59,7 +61,7 @@ public final class ConciseFormatterTest {
         conciseFormatter.literal("lit4", "value '3'");
         conciseFormatter.endGroup();
 
-        assertEquals(CONCISE_RECORD, conciseFormatter.toString());
+        Assert.assertEquals(CONCISE_RECORD, conciseFormatter.toString());
     }
 
     @Test
@@ -69,7 +71,7 @@ public final class ConciseFormatterTest {
         conciseFormatter.literal("note", "nested records");
         conciseFormatter.endGroup();
 
-        assertEquals(OUTER_RECORD, conciseFormatter.toString());
+        Assert.assertEquals(OUTER_RECORD, conciseFormatter.toString());
     }
 
 }

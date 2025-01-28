@@ -31,6 +31,9 @@ import java.util.function.Consumer;
 
 public final class TestHelpers {
 
+    private TestHelpers() {
+    }
+
     public static void assertFile(final ObjectReceiver<Reader> receiver, final String expected, final File file, final Consumer<FileOpener> consumer) {
         assertReader(receiver, () -> {
             final FileOpener opener = new FileOpener();

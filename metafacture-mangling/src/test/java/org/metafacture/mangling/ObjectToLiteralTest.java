@@ -16,16 +16,15 @@
 
 package org.metafacture.mangling;
 
-import static org.mockito.Mockito.inOrder;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 
 /**
  * Tests for class {@link ObjectToLiteral}.
@@ -42,6 +41,9 @@ public final class ObjectToLiteralTest {
 
     @Mock
     private StreamReceiver receiver;
+
+    public ObjectToLiteralTest() {
+    }
 
     @Before
     public void setup() {
@@ -60,7 +62,7 @@ public final class ObjectToLiteralTest {
 
         objectToLiteral.process(OBJ_DATA);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).literal(ObjectToLiteral.DEFAULT_LITERAL_NAME, OBJ_DATA);
         ordered.verify(receiver).endRecord();
@@ -72,7 +74,7 @@ public final class ObjectToLiteralTest {
 
         objectToLiteral.process(OBJ_DATA);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).literal(LITERAL_NAME, OBJ_DATA);
         ordered.verify(receiver).endRecord();
@@ -85,7 +87,7 @@ public final class ObjectToLiteralTest {
         objectToLiteral.process(OBJ_DATA);
         objectToLiteral.process(OBJ_DATA);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("Record 1");
         ordered.verify(receiver).literal(ObjectToLiteral.DEFAULT_LITERAL_NAME, OBJ_DATA);
         ordered.verify(receiver).endRecord();

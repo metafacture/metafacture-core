@@ -16,8 +16,7 @@
 
 package org.metafacture.metamorph.test;
 
-import static org.junit.Assert.assertNotNull;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runners.model.InitializationError;
@@ -29,16 +28,23 @@ import org.junit.runners.model.InitializationError;
  */
 public final class TestCaseRunnerMetamorphTest {
 
+    public TestCaseRunnerMetamorphTest() {
+    }
+
     @Test
     public void issue213ShouldNotInitAnnotationsArrayWithNull() throws InitializationError {
-
         final MetamorphTestRunner runner = new MetamorphTestRunner(Dummy.class, "/org/metafacture/metamorph/test/test-case-runner-test-dummy.xml");
         final MetamorphTestCase metamorphTestCase = runner.getChildren().get(0);
         final Description description = runner.describeChild(metamorphTestCase);
 
-        assertNotNull(description.getAnnotations());
+        Assert.assertNotNull(description.getAnnotations());
     }
 
-    public static final class Dummy {};
+    public static final class Dummy {
+
+        public Dummy() {
+        }
+
+    }
 
 }

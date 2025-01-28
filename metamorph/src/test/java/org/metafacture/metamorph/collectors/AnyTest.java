@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -38,9 +38,12 @@ public final class AnyTest {
     @Mock
     private StreamReceiver receiver;
 
+    public AnyTest() {
+    }
+
     @Test
     public void shouldFireOnlyIfAtLeastOneElementFires() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <any>" +
                 "    <data source='data1' />" +
@@ -73,7 +76,7 @@ public final class AnyTest {
 
     @Test
     public void shouldSupportUserdefinedNameAndValue() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <any name='ANY' value='found one'>" +
                 "    <data source='data1' />" +
@@ -95,7 +98,7 @@ public final class AnyTest {
 
     @Test
     public void shouldNotFireAgainIfAdditionalValueIsReceivedAndResetIsFalse() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <any>" +
                 "    <data source='data1' />" +
@@ -119,7 +122,7 @@ public final class AnyTest {
 
     @Test
     public void shouldFireAgainIfAdditionalValueIsReceivedAndResetIsTrue() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <any reset='true'>" +
                 "    <data source='data1' />" +
@@ -143,7 +146,7 @@ public final class AnyTest {
 
     @Test
     public void shouldFireAgainAfterFlushing() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <any flushWith='entity'>" +
                 "    <data source='entity.data1' />" +
@@ -170,7 +173,7 @@ public final class AnyTest {
 
     @Test
     public void shouldNotFireIfFlushingAnUntriggeredCollection() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <any flushWith='entity'>" +
                 "    <data source='entity.data1' />" +

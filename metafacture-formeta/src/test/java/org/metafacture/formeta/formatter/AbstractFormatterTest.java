@@ -16,11 +16,11 @@
 
 package org.metafacture.formeta.formatter;
 
-import static org.junit.Assert.assertEquals;
+import org.metafacture.commons.StringUtil;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.commons.StringUtil;
 
 /**
  * Tests for class {@link AbstractFormatter}.
@@ -28,23 +28,29 @@ import org.metafacture.commons.StringUtil;
  * @author Christoph Böhme
  *
  */
-public final class AbstactFormatterTest {
+public final class AbstractFormatterTest { // checkstyle-disable-line AbstractClassName
 
     private AbstractFormatter abstractFormatter;
+
+    public AbstractFormatterTest() {
+    }
 
     @Before
     public void setup() {
         abstractFormatter = new AbstractFormatter() {
             @Override
-            public void startGroup(final String name) {}
+            public void startGroup(final String name) {
+            }
 
             @Override
-            public void endGroup() {}
+            public void endGroup() {
+            }
 
             @Override
             public void literal(final String name, final String value) {
 
             }
+
             @Override
             protected boolean shouldQuoteText(final char[] buffer, final int len) {
                 return false;
@@ -58,7 +64,7 @@ public final class AbstactFormatterTest {
 
         abstractFormatter.escapeAndAppend(longValue);
 
-        assertEquals(longValue, abstractFormatter.toString());
+        Assert.assertEquals(longValue, abstractFormatter.toString());
     }
 
 }

@@ -16,13 +16,13 @@
 
 package org.metafacture.flowcontrol;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doThrow;
+import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -38,11 +38,14 @@ public final class ObjectExceptionCatcherTest {
 
     private ObjectExceptionCatcher<String> exceptionCatcher;
 
+    public ObjectExceptionCatcherTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        doThrow(new TestException("Exception Message"))
-                .when(exceptionThrowingModule).process(anyString());
+        Mockito.doThrow(new TestException("Exception Message"))
+                .when(exceptionThrowingModule).process(ArgumentMatchers.anyString());
         exceptionCatcher = new ObjectExceptionCatcher<>();
         exceptionCatcher.setReceiver(exceptionThrowingModule);
         exceptionCatcher.setLogExceptionMessage(false);

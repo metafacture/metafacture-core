@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
@@ -40,9 +40,12 @@ public final class EqualsFilterTest {
     @Mock
     private StreamReceiver receiver;
 
+    public EqualsFilterTest() {
+    }
+
     @Test
     public void shouldEmitValueIfAllReceivedValuesAreEqual() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <equalsFilter name='equalsFiltered' value='${one}'>" +
                 "    <data source='data1' name='one' />" +
@@ -67,7 +70,7 @@ public final class EqualsFilterTest {
 
     @Test
     public void shouldEmitNothingIfReceivedValuesDiffer() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <equalsFilter name='equalsFiltered' value='${one}'>" +
                 "    <data source='data1' name='one' />" +
@@ -92,7 +95,7 @@ public final class EqualsFilterTest {
 
     @Test
     public void shouldFireIfOnlyASingleValueIsReceived() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <equalsFilter name='equalsFiltered' value='${one}'>" +
                 "    <data source='data1' name='one' />" +
@@ -113,7 +116,7 @@ public final class EqualsFilterTest {
 
     @Test
     public void shouldIgnoreLiteralsNotListedInStatements() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <equalsFilter name='equalsFiltered' value='${one}'>" +
                 "    <data source='data1' name='one' />" +
@@ -137,7 +140,7 @@ public final class EqualsFilterTest {
 
     @Test
     public void shouldFireIfValuesInEntityAreEqual() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <equalsFilter name='equalsFiltered' value='${one}'>" +
                 "    <data source='field.data1' name='one' />" +
@@ -164,7 +167,7 @@ public final class EqualsFilterTest {
 
     @Test
     public void shouldNotFireIfValuesInEntityAreNotEqual() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <equalsFilter name='equalsFiltered' value='${one}'>" +
                 "    <data source='field.data1' name='one' />" +
@@ -190,7 +193,7 @@ public final class EqualsFilterTest {
 
     @Test
     public void shouldFireIfLiteralsInEntitiesAreReceivedThatAreNotListedInStatements() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <equalsFilter name='equalsFiltered' value='${one}'>" +
                 "    <data source='field1.data1' name='one' />" +
@@ -229,7 +232,7 @@ public final class EqualsFilterTest {
 
     @Test
     public void shouldFireOnFlush() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <equalsFilter name='equalsFiltered' value='${one}' flushWith='field1.data2'>" +
                 "    <data source='field1.data1' name='one' />" +
@@ -269,7 +272,7 @@ public final class EqualsFilterTest {
 
     @Test
     public void shouldNotFireOnFlushIfIncomplete() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <equalsFilter name='equalsFiltered' value='${one}' flushWith='field1.data2' flushIncomplete='false'>" +
                 "    <data source='field1.data1' name='one' />" +

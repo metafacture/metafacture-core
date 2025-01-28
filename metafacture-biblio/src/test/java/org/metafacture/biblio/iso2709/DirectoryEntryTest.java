@@ -16,16 +16,13 @@
 
 package org.metafacture.biblio.iso2709;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.metafacture.commons.StringUtil;
 
-import java.nio.charset.Charset;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.commons.StringUtil;
+
+import java.nio.charset.Charset;
 
 /**
  * Tests for class {@link DirectoryEntry}.
@@ -43,6 +40,9 @@ public class DirectoryEntryTest {
 
     private DirectoryEntry directoryEntry;
 
+    public DirectoryEntryTest() {
+    }
+
     @Before
     public void createSystemUnderTest() {
         final RecordFormat recordFormat = RecordFormat.create()
@@ -55,92 +55,92 @@ public class DirectoryEntryTest {
     }
 
     @Test
-    public void constructor_shouldSetFirstEntryAsCurrentEntry() {
-        assertArrayEquals("001".toCharArray(), directoryEntry.getTag());
+    public void constructorShouldSetFirstEntryAsCurrentEntry() {
+        Assert.assertArrayEquals("001".toCharArray(), directoryEntry.getTag());
     }
 
     @Test
-    public void gotoNext_shouldSetNextEntryAsCurrentEntry() {
+    public void gotoNextShouldSetNextEntryAsCurrentEntry() {
         directoryEntry.gotoNext();
-        assertArrayEquals("002".toCharArray(), directoryEntry.getTag());
+        Assert.assertArrayEquals("002".toCharArray(), directoryEntry.getTag());
     }
 
     @Test
-    public void reset_shouldSetFirstEntryAsCurrentEntry() {
+    public void resetShouldSetFirstEntryAsCurrentEntry() {
         directoryEntry.gotoNext();
         directoryEntry.rewind();
-        assertArrayEquals("001".toCharArray(), directoryEntry.getTag());
+        Assert.assertArrayEquals("001".toCharArray(), directoryEntry.getTag());
     }
 
     @Test
-    public void endOfDirectoryReached_shouldReturnFalseIfNotAtEndOFDirectory() {
-        assertFalse(directoryEntry.endOfDirectoryReached());
+    public void endOfDirectoryReachedShouldReturnFalseIfNotAtEndOFDirectory() {
+        Assert.assertFalse(directoryEntry.endOfDirectoryReached());
     }
 
     @Test
-    public void endOfDirectoryReached_shouldReturnTrueIfAtEndOFDirectory() {
+    public void endOfDirectoryReachedShouldReturnTrueIfAtEndOFDirectory() {
         directoryEntry.gotoNext();
         directoryEntry.gotoNext();
         directoryEntry.gotoNext();
         directoryEntry.gotoNext();
-        assertTrue(directoryEntry.endOfDirectoryReached());
+        Assert.assertTrue(directoryEntry.endOfDirectoryReached());
     }
 
     @Test
-    public void getTag_shouldReturnTagFromCurrentEntry() {
-        assertArrayEquals("001".toCharArray(), directoryEntry.getTag());
+    public void getTagShouldReturnTagFromCurrentEntry() {
+        Assert.assertArrayEquals("001".toCharArray(), directoryEntry.getTag());
         directoryEntry.gotoNext();
-        assertArrayEquals("002".toCharArray(), directoryEntry.getTag());
+        Assert.assertArrayEquals("002".toCharArray(), directoryEntry.getTag());
     }
 
     @Test
-    public void getFieldLength_shouldReturnFieldLengthFromCurrentEntry() {
-        assertEquals(2, directoryEntry.getFieldLength());
+    public void getFieldLengthShouldReturnFieldLengthFromCurrentEntry() {
+        Assert.assertEquals(2, directoryEntry.getFieldLength());
         directoryEntry.gotoNext();
-        assertEquals(5, directoryEntry.getFieldLength());
+        Assert.assertEquals(5, directoryEntry.getFieldLength());
     }
 
     @Test
-    public void getFieldStart_shouldReturnFieldStartFromCurrentEntry() {
-        assertEquals(34, directoryEntry.getFieldStart());
+    public void getFieldStartShouldReturnFieldStartFromCurrentEntry() {
+        Assert.assertEquals(34, directoryEntry.getFieldStart());
         directoryEntry.gotoNext();
-        assertEquals(67, directoryEntry.getFieldStart());
+        Assert.assertEquals(67, directoryEntry.getFieldStart());
     }
 
     @Test
-    public void getImplDefinedPart_shouldReturnImplDefinedPartFromCurrentEntry() {
-        assertArrayEquals("IMP".toCharArray(), directoryEntry.getImplDefinedPart());
+    public void getImplDefinedPartShouldReturnImplDefinedPartFromCurrentEntry() {
+        Assert.assertArrayEquals("IMP".toCharArray(), directoryEntry.getImplDefinedPart());
         directoryEntry.gotoNext();
-        assertArrayEquals("LEM".toCharArray(), directoryEntry.getImplDefinedPart());
+        Assert.assertArrayEquals("LEM".toCharArray(), directoryEntry.getImplDefinedPart());
     }
 
     @Test
-    public void isRecordIdField_shouldReturnOnlyTrueIfTagIs001() {
-        assertTrue(directoryEntry.isRecordIdField());
+    public void isRecordIdFieldShouldReturnOnlyTrueIfTagIs001() {
+        Assert.assertTrue(directoryEntry.isRecordIdField());
         directoryEntry.gotoNext();
-        assertFalse(directoryEntry.isRecordIdField());
+        Assert.assertFalse(directoryEntry.isRecordIdField());
         directoryEntry.gotoNext();
-        assertFalse(directoryEntry.isRecordIdField());
+        Assert.assertFalse(directoryEntry.isRecordIdField());
     }
 
     @Test
-    public void isReferenceField_shouldReturnOnlyTrueIfTagStartsWith00() {
-        assertTrue(directoryEntry.isReferenceField());
+    public void isReferenceFieldShouldReturnOnlyTrueIfTagStartsWith00() {
+        Assert.assertTrue(directoryEntry.isReferenceField());
         directoryEntry.gotoNext();
-        assertTrue(directoryEntry.isReferenceField());
+        Assert.assertTrue(directoryEntry.isReferenceField());
         directoryEntry.gotoNext();
-        assertFalse(directoryEntry.isReferenceField());
+        Assert.assertFalse(directoryEntry.isReferenceField());
     }
 
     @Test
-    public void isContinuedField_shouldReturnTrueIfFieldHasZeroLength() {
-        assertFalse(directoryEntry.isContinuedField());
+    public void isContinuedFieldShouldReturnTrueIfFieldHasZeroLength() {
+        Assert.assertFalse(directoryEntry.isContinuedField());
         directoryEntry.gotoNext();
-        assertFalse(directoryEntry.isContinuedField());
+        Assert.assertFalse(directoryEntry.isContinuedField());
         directoryEntry.gotoNext();
-        assertTrue(directoryEntry.isContinuedField());
+        Assert.assertTrue(directoryEntry.isContinuedField());
         directoryEntry.gotoNext();
-        assertFalse(directoryEntry.isContinuedField());
+        Assert.assertFalse(directoryEntry.isContinuedField());
     }
 
     private static byte[] asBytes(final String str) {

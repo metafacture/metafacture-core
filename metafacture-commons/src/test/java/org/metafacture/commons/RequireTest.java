@@ -16,9 +16,7 @@
 
 package org.metafacture.commons;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -29,6 +27,9 @@ import org.junit.Test;
  */
 public final class RequireTest {
 
+    public RequireTest() {
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void notNullShouldThrowIllegalArgumentExceptionIfArgIsNull() {
         Require.notNull(null);
@@ -37,7 +38,7 @@ public final class RequireTest {
     @Test
     public void notNullShouldReturnArgIfArgIsNotNull() {
         final Object obj = new Object();
-        assertSame(obj, Require.notNull(obj));
+        Assert.assertSame(obj, Require.notNull(obj));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -47,7 +48,7 @@ public final class RequireTest {
 
     @Test
     public void notNegativeShouldReturnArgIfArgIsNotNegative() {
-        assertEquals(0, Require.notNegative(0));
+        Assert.assertEquals(0, Require.notNegative(0));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -72,7 +73,7 @@ public final class RequireTest {
 
     @Test
     public void validArrayIndexShouldDoNothingIfIndexIsWithinArrayBounds() {
-        assertEquals(1, Require.validArrayIndex(1, 2));
+        Assert.assertEquals(1, Require.validArrayIndex(1, 2));
     }
 
     @Test(expected = IndexOutOfBoundsException.class)

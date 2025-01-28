@@ -16,15 +16,14 @@
 
 package org.metafacture.triples;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.objects.Triple;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.objects.Triple;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -43,6 +42,9 @@ public final class TripleFilterTest {
 
     @Mock
     private ObjectReceiver<Triple> receiver;
+
+    public TripleFilterTest() {
+    }
 
     @Before
     public void setup() {
@@ -63,8 +65,8 @@ public final class TripleFilterTest {
         tripleFilter.process(TRIPLE1);
         tripleFilter.process(TRIPLE2);
 
-        verify(receiver).process(TRIPLE1);
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).process(TRIPLE1);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -75,8 +77,8 @@ public final class TripleFilterTest {
         tripleFilter.process(TRIPLE1);
         tripleFilter.process(TRIPLE2);
 
-        verify(receiver).process(TRIPLE2);
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).process(TRIPLE2);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -88,9 +90,9 @@ public final class TripleFilterTest {
         tripleFilter.process(TRIPLE2);
         tripleFilter.process(TRIPLE3);
 
-        verify(receiver).process(TRIPLE1);
-        verify(receiver).process(TRIPLE3);
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).process(TRIPLE1);
+        Mockito.verify(receiver).process(TRIPLE3);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
 }

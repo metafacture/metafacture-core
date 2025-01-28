@@ -16,11 +16,10 @@
 
 package org.metafacture.metamorph;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -38,9 +37,12 @@ public final class TestMetamorphBasics {
     @Mock
     private StreamReceiver receiver;
 
+    public TestMetamorphBasics() {
+    }
+
     @Test
     public void shouldUseCustomEntityMarker() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<metamorph version='1' entityMarker='~'" +
                 "    xmlns='http://www.culturegraph.org/metamorph'>" +
                 "  <rules>" +
@@ -64,7 +66,7 @@ public final class TestMetamorphBasics {
 
     @Test
     public void shouldHandleUnmatchedLiteralsInElseSource() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='Sylt' name='Hawaii' />" +
                 "  <data source='_else' />" +
@@ -97,7 +99,7 @@ public final class TestMetamorphBasics {
     }
 
     private void testElseData(final String elseKeyword) {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity name='Germany'>" +
                 "    <data source='Germany.Sylt' name='Hawaii' />" +
@@ -136,9 +138,9 @@ public final class TestMetamorphBasics {
         );
     }
 
-    @Test
+    @Test // checkstyle-disable-line JavaNCSS
     public void issue338_shouldPreserveSameEntitiesInElseNestedSource() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='_elseNested' />" +
                 "</rules>",
@@ -219,7 +221,7 @@ public final class TestMetamorphBasics {
 
     @Test
     public void issue374_shouldPropagateArrayMarkersInElseNestedSource() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='_elseNested' />" +
                 "</rules>",
@@ -269,9 +271,9 @@ public final class TestMetamorphBasics {
         );
     }
 
-    @Test
+    @Test // checkstyle-disable-line JavaNCSS
     public void issue378_shouldOutputMoreThanTwoLevelsInElseNestedSource() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='_elseNested' />" +
                 "</rules>",
@@ -351,9 +353,9 @@ public final class TestMetamorphBasics {
         );
     }
 
-    @Test
+    @Test // checkstyle-disable-line JavaNCSS
     public void shouldOutputMoreThanTwoLevelsInElseNestedSourceWithModifications() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity name='name' flushWith='record'>" +
                 "    <data source='mods.name.displayForm.value' name='displayForm' />" +
@@ -439,7 +441,7 @@ public final class TestMetamorphBasics {
 
     @Test
     public void shouldHandleUnmatchedLiteralsAndEntitiesInElseNestedSource() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity name='USA' >" +
                 "    <data source='USA.Sylt' name='Hawaii' />" +
@@ -477,9 +479,9 @@ public final class TestMetamorphBasics {
         );
     }
 
-    @Test
+    @Test // checkstyle-disable-line JavaNCSS
     public void shouldHandlePartiallyUnmatchedLiteralsAndEntitiesInElseNestedSource() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity name='USA1'>" +
                 "    <data source='USA1.Sylt' name='Hawaii' />" +
@@ -590,7 +592,7 @@ public final class TestMetamorphBasics {
 
     @Test
     public void shouldNotHandleDataByElseNestedSourceIfDataBelongingToEntityIsRuledByMorph() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity name='USA1'>" +
                 "    <data source='USA1.Sylt' name='Hawaii' />" +
@@ -651,9 +653,9 @@ public final class TestMetamorphBasics {
     }
 
     // https://github.com/hagbeck/metafacture-sandbox/tree/master/else-nested-entities
-    @Test
+    @Test // checkstyle-disable-line JavaNCSS
     public void shouldHandleUseCaseSandboxElseNestedEntities() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                     "<entity name='85640' flushWith='85640.3' reset='true'>" +
                         "<data source='85640.u' name='u'>" +
@@ -758,10 +760,9 @@ public final class TestMetamorphBasics {
         );
     }
 
-
     @Test
     public void shouldMatchCharacterWithQuestionMarkWildcard() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='lit-?' />" +
                 "</rules>",
@@ -783,7 +784,7 @@ public final class TestMetamorphBasics {
 
     @Test
     public void shouldMatchCharactersInCharacterClass() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='lit-[AB]' />" +
                 "</rules>",
@@ -805,7 +806,7 @@ public final class TestMetamorphBasics {
 
     @Test
     public void shouldReplaceVariables() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<vars>" +
                 "  <var name='in' value='Honolulu' />" +
                 "  <var name='out' value='Hawaii' />" +
@@ -828,7 +829,7 @@ public final class TestMetamorphBasics {
 
     @Test
     public void shouldAllowTreatingEntityEndEventsAsLiterals() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='e1' />" +
                 "  <data source='e1.e2' />" +

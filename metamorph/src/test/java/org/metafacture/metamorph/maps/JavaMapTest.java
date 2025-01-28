@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.maps;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -40,9 +40,12 @@ public final class JavaMapTest {
     @Mock
     private StreamReceiver receiver;
 
+    public JavaMapTest() {
+    }
+
     @Test
     public void shouldLookupValuesInJavaBackedMap() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='1'>" +
                 "    <lookup in='map1' />" +

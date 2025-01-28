@@ -16,14 +16,13 @@
 
 package org.metafacture.mangling;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.times;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -38,6 +37,9 @@ public class RecordToEntityTest {
     private StreamReceiver receiver;
 
     private RecordToEntity recordToEntity;
+
+    public RecordToEntityTest() {
+    }
 
     @Before
     public void init() {
@@ -55,38 +57,38 @@ public class RecordToEntityTest {
         recordToEntity.endRecord();
         recordToEntity.closeStream();
 
-        InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver)
                 .startEntity(RecordToEntity.DEFAULT_ENTITY_NAME);
         ordered.verify(receiver).literal("literal", "value");
         ordered.verify(receiver).startEntity("entity");
-        ordered.verify(receiver, times(2)).endEntity();
+        ordered.verify(receiver, Mockito.times(2)).endEntity();
         ordered.verify(receiver).closeStream();
     }
 
     @Test
-    public void setEntityName_shouldChangeNameOfGeneratedEntity() {
+    public void setEntityNameShouldChangeNameOfGeneratedEntity() {
         recordToEntity.setEntityName("container");
 
         recordToEntity.startRecord("1");
         recordToEntity.endRecord();
         recordToEntity.closeStream();
 
-        InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startEntity("container");
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).closeStream();
     }
 
     @Test
-    public void setIdLiteralName_shouldEnableOutputOfRecordIdAsLiteral() {
+    public void setIdLiteralNameShouldEnableOutputOfRecordIdAsLiteral() {
         recordToEntity.setIdLiteralName("record-id");
 
         recordToEntity.startRecord("1");
         receiver.endRecord();
         receiver.closeStream();
 
-        InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver)
                 .startEntity(RecordToEntity.DEFAULT_ENTITY_NAME);
         ordered.verify(receiver).literal("record-id", "1");

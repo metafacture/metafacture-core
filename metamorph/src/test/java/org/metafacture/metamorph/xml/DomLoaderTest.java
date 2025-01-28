@@ -16,21 +16,20 @@
 
 package org.metafacture.metamorph.xml;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.junit.Ignore;
-import org.junit.Test;
 import org.metafacture.commons.ResourceUtil;
 import org.metafacture.framework.MetafactureException;
+
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Tests for class {@link DomLoader}.
@@ -45,6 +44,9 @@ public final class DomLoaderTest {
 
     private static final String SCHEMA_FILE = BASE_PATH + "test-schema.xsd";
 
+    public DomLoaderTest() {
+    }
+
     @Test
     public void shouldCreateDOM() throws FileNotFoundException, MalformedURLException {
         final String inputFile = "should-create-dom.xml";
@@ -54,11 +56,11 @@ public final class DomLoaderTest {
         // We assume DOM creation worked if the root node of the
         // document is found in the generated DOM:
         final Node rootNode = document.getDocumentElement();
-        assertEquals(Node.ELEMENT_NODE, rootNode.getNodeType());
-        assertEquals("test-schema", rootNode.getNodeName());
+        Assert.assertEquals(Node.ELEMENT_NODE, rootNode.getNodeType());
+        Assert.assertEquals("test-schema", rootNode.getNodeName());
     }
 
-    @Test(expected=MetafactureException.class)
+    @Test(expected = MetafactureException.class)
     public void shouldValidateInputAgainstSchema()
             throws FileNotFoundException, MalformedURLException {
 
@@ -84,13 +86,13 @@ public final class DomLoaderTest {
         // whitespace but only an element node for the <string-element>
         // child element:
         final NodeList nodes1 = document.getDocumentElement().getChildNodes();
-        assertEquals(1, nodes1.getLength());
-        assertEquals(Node.ELEMENT_NODE, nodes1.item(0).getNodeType());
+        Assert.assertEquals(1, nodes1.getLength());
+        Assert.assertEquals(Node.ELEMENT_NODE, nodes1.item(0).getNodeType());
 
         // The element node for the <string-element> should not contain
         // any nodes after whitespace has been removed:
         final NodeList nodes2 = nodes1.item(0).getChildNodes();
-        assertEquals(0, nodes2.getLength());
+        Assert.assertEquals(0, nodes2.getLength());
     }
 
     @Test
@@ -105,7 +107,7 @@ public final class DomLoaderTest {
         // should not be included in the DOM, the root node should
         // have no children:
         final NodeList nodes = document.getDocumentElement().getChildNodes();
-        assertEquals(0, nodes.getLength());
+        Assert.assertEquals(0, nodes.getLength());
     }
 
     @Test
@@ -120,9 +122,9 @@ public final class DomLoaderTest {
         // PCDATA text should be coalesced in a single text
         // node in the DOM:
         final NodeList nodes = document.getDocumentElement().getFirstChild().getChildNodes();
-        assertEquals(1, nodes.getLength());
-        assertEquals(Node.TEXT_NODE, nodes.item(0).getNodeType());
-        assertEquals("pcdata-cdata-pcdata", nodes.item(0).getNodeValue());
+        Assert.assertEquals(1, nodes.getLength());
+        Assert.assertEquals(Node.TEXT_NODE, nodes.item(0).getNodeType());
+        Assert.assertEquals("pcdata-cdata-pcdata", nodes.item(0).getNodeValue());
     }
 
     @Test
@@ -138,8 +140,8 @@ public final class DomLoaderTest {
         // If inclusion worked a node representing the <string-element>
         // should be found in the DOM:
         final Node stringElement = document.getDocumentElement().getFirstChild();
-        assertEquals(Node.ELEMENT_NODE, stringElement.getNodeType());
-        assertEquals("string-element", stringElement.getNodeName());
+        Assert.assertEquals(Node.ELEMENT_NODE, stringElement.getNodeType());
+        Assert.assertEquals("string-element", stringElement.getNodeName());
     }
 
     @Test
@@ -152,19 +154,19 @@ public final class DomLoaderTest {
 
         final Node rootNode = document.getDocumentElement();
         final Location location1 = (Location) rootNode.getUserData(Location.USER_DATA_ID);
-        assertTrue(location1.getSystemId().endsWith(inputFile));
-        assertEquals(3, location1.getElementStart().getLineNumber());
-        assertEquals(57, location1.getElementStart().getColumnNumber());
-        assertEquals(5, location1.getElementEnd().getLineNumber());
-        assertEquals(15, location1.getElementEnd().getColumnNumber());
+        Assert.assertTrue(location1.getSystemId().endsWith(inputFile));
+        Assert.assertEquals(3, location1.getElementStart().getLineNumber());
+        Assert.assertEquals(57, location1.getElementStart().getColumnNumber());
+        Assert.assertEquals(5, location1.getElementEnd().getLineNumber());
+        Assert.assertEquals(15, location1.getElementEnd().getColumnNumber());
 
         final Node stringElement = document.getDocumentElement().getFirstChild();
         final Location location2 = (Location) stringElement.getUserData(Location.USER_DATA_ID);
-        assertTrue(location2.getSystemId().endsWith(inputFile));
-        assertEquals(4, location2.getElementStart().getLineNumber());
-        assertEquals(21, location2.getElementStart().getColumnNumber());
-        assertEquals(4, location2.getElementEnd().getLineNumber());
-        assertEquals(42, location2.getElementEnd().getColumnNumber());
+        Assert.assertTrue(location2.getSystemId().endsWith(inputFile));
+        Assert.assertEquals(4, location2.getElementStart().getLineNumber());
+        Assert.assertEquals(21, location2.getElementStart().getColumnNumber());
+        Assert.assertEquals(4, location2.getElementEnd().getLineNumber());
+        Assert.assertEquals(42, location2.getElementEnd().getColumnNumber());
     }
 
     // This test case does not currently succeed on openJDK (version 1.7.0.60) due
@@ -183,19 +185,19 @@ public final class DomLoaderTest {
 
         final Node rootNode = document.getDocumentElement();
         final Location location1 = (Location) rootNode.getUserData(Location.USER_DATA_ID);
-        assertTrue(location1.getSystemId().endsWith(inputFile));
-        assertEquals(4, location1.getElementStart().getLineNumber());
-        assertEquals(46, location1.getElementStart().getColumnNumber());
-        assertEquals(7, location1.getElementEnd().getLineNumber());
-        assertEquals(15, location1.getElementEnd().getColumnNumber());
+        Assert.assertTrue(location1.getSystemId().endsWith(inputFile));
+        Assert.assertEquals(4, location1.getElementStart().getLineNumber());
+        Assert.assertEquals(46, location1.getElementStart().getColumnNumber());
+        Assert.assertEquals(7, location1.getElementEnd().getLineNumber());
+        Assert.assertEquals(15, location1.getElementEnd().getColumnNumber());
 
         final Node stringElement = document.getDocumentElement().getFirstChild();
         final Location location2 = (Location) stringElement.getUserData(Location.USER_DATA_ID);
-        assertTrue(location2.getSystemId().endsWith(baseName + "2.xml"));
-        assertEquals(3, location2.getElementStart().getLineNumber());
-        assertEquals(62, location2.getElementStart().getColumnNumber());
-        assertEquals(3, location2.getElementEnd().getLineNumber());
-        assertEquals(62, location2.getElementEnd().getColumnNumber());
+        Assert.assertTrue(location2.getSystemId().endsWith(baseName + "2.xml"));
+        Assert.assertEquals(3, location2.getElementStart().getLineNumber());
+        Assert.assertEquals(62, location2.getElementStart().getColumnNumber());
+        Assert.assertEquals(3, location2.getElementEnd().getLineNumber());
+        Assert.assertEquals(62, location2.getElementEnd().getColumnNumber());
     }
 
     private static InputSource openStream(final String resource)

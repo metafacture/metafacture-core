@@ -16,15 +16,14 @@
 
 package org.metafacture.monitoring;
 
-import static org.mockito.Mockito.inOrder;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 
 /**
  * Tests for class {@link StreamLogger}.
@@ -39,6 +38,9 @@ public final class StreamLoggerTest {
     private StreamReceiver receiver;
 
     private StreamLogger logger;
+
+    public StreamLoggerTest() {
+    }
 
     @Before
     public void setup() {
@@ -57,7 +59,7 @@ public final class StreamLoggerTest {
         logger.resetStream();
         logger.closeStream();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).startEntity("entity");
         ordered.verify(receiver).literal("literal", "value");

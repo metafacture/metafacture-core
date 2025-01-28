@@ -16,13 +16,13 @@
 
 package org.metafacture.strings;
 
-import static org.mockito.Mockito.inOrder;
+import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -52,6 +52,9 @@ public final class LineRecorderTest {
     @Mock
     private ObjectReceiver<String> receiver;
 
+    public LineRecorderTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -65,7 +68,7 @@ public final class LineRecorderTest {
         lineRecorder.process(RECORD1_PART2);
         lineRecorder.process(RECORD1_ENDMARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).process(
                 RECORD1_PART1 +
                 LINE_SEPARATOR +
@@ -91,7 +94,7 @@ public final class LineRecorderTest {
         lineRecorder.process(RECORD3_PART2);
         lineRecorder.process(RECORD3_ENDMARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).process(
                 RECORD3_PART1 +
                 LINE_SEPARATOR +
@@ -105,7 +108,7 @@ public final class LineRecorderTest {
         lineRecorder.process(RECORD3_PART1);
         lineRecorder.process(RECORD3_PART2);
         lineRecorder.closeStream();
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).process(
                 RECORD3_PART1 +
                 LINE_SEPARATOR +
@@ -117,8 +120,8 @@ public final class LineRecorderTest {
 
     @Test(expected = AssertionError.class)
     public void shouldEmitAsseertionErorWhenProcessingAfterStreamIsClosed() {
-            lineRecorder.closeStream();
-            lineRecorder.process("");
+        lineRecorder.closeStream();
+        lineRecorder.process("");
     }
 
 }

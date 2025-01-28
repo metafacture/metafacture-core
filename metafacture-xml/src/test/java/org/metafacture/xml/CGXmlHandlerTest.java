@@ -16,16 +16,14 @@
 
 package org.metafacture.xml;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import org.metafacture.framework.FormatException;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.FormatException;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -46,6 +44,9 @@ public final class CGXmlHandlerTest {
 
     private CGXmlHandler cgXmlHandler;
 
+    public CGXmlHandlerTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -65,7 +66,7 @@ public final class CGXmlHandlerTest {
         cgXmlHandler.startElement(CGXML_NS, "cgxml", "cgxml:cgxml", attributes);
         cgXmlHandler.endElement(CGXML_NS, "cgxml", "cgxml:cgxml");
 
-        verifyZeroInteractions(receiver);
+        Mockito.verifyZeroInteractions(receiver);
     }
 
     @Test(expected = FormatException.class)
@@ -82,7 +83,7 @@ public final class CGXmlHandlerTest {
         cgXmlHandler.startElement(CGXML_NS, "records", "cgxml:records", attributes);
         cgXmlHandler.endElement(CGXML_NS, "records", "cgxml:records");
 
-        verifyZeroInteractions(receiver);
+        Mockito.verifyZeroInteractions(receiver);
     }
 
     @Test
@@ -91,7 +92,7 @@ public final class CGXmlHandlerTest {
         cgXmlHandler.startElement(CGXML_NS, "record", "cgxml:record", attributes);
         cgXmlHandler.endElement(CGXML_NS, "record", "cgxml:record");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).endRecord();
     }
@@ -100,7 +101,7 @@ public final class CGXmlHandlerTest {
     public void shouldEmitStartRecordWithEmptyIdIfIdAttributeIsMissing() {
         cgXmlHandler.startElement(CGXML_NS, "record", "cgxml:record", attributes);
 
-        verify(receiver).startRecord("");
+        Mockito.verify(receiver).startRecord("");
     }
 
     @Test
@@ -109,7 +110,7 @@ public final class CGXmlHandlerTest {
         cgXmlHandler.startElement(CGXML_NS, "entity", "cgxml:entity", attributes);
         cgXmlHandler.endElement(CGXML_NS, "entity", "cgxml:entity");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startEntity("e-name");
         ordered.verify(receiver).endEntity();
     }
@@ -128,7 +129,7 @@ public final class CGXmlHandlerTest {
         cgXmlHandler.startElement(CGXML_NS, "literal", "cgxml:literal", attributes);
         cgXmlHandler.endElement(CGXML_NS, "literal", "cgxml:literal");
 
-        verify(receiver).literal("l-name", "l-val");
+        Mockito.verify(receiver).literal("l-name", "l-val");
     }
 
     @Test(expected = FormatException.class)

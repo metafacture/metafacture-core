@@ -16,15 +16,14 @@
 
 package org.metafacture.json;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
+import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -57,6 +56,9 @@ public final class JsonEncoderTest {
     @Mock
     private ObjectReceiver<String> receiver;
 
+    public JsonEncoderTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -77,7 +79,7 @@ public final class JsonEncoderTest {
         encoder.literal(LITERAL3, VALUE3);
         encoder.endRecord();
 
-        verify(receiver).process(fixQuotes("{'L1':'V1','L2':'V2','L3':'V3'}"));
+        Mockito.verify(receiver).process(fixQuotes("{'L1':'V1','L2':'V2','L3':'V3'}"));
     }
 
     @Test
@@ -93,7 +95,7 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        verify(receiver).process(fixQuotes("{'En1':{'L1':'V1','L2':'V2'},'En2':{'L1':'V1','L2':'V2'}}"));
+        Mockito.verify(receiver).process(fixQuotes("{'En1':{'L1':'V1','L2':'V2'},'En2':{'L1':'V1','L2':'V2'}}"));
     }
 
     @Test
@@ -106,7 +108,7 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        verify(receiver).process(fixQuotes("{'En1':{'En2':{'L1':'V1'}}}"));
+        Mockito.verify(receiver).process(fixQuotes("{'En1':{'En2':{'L1':'V1'}}}"));
     }
 
     @Test
@@ -119,7 +121,7 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        verify(receiver).process(fixQuotes("{'Li1':['V1','V2','V3']}"));
+        Mockito.verify(receiver).process(fixQuotes("{'Li1':['V1','V2','V3']}"));
     }
 
     @Test
@@ -137,7 +139,7 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        verify(receiver).process(fixQuotes("{'Li1':[{'L1':'V1','L2':'V2'},{'L3':'V3','L4':'V4'}]}"));
+        Mockito.verify(receiver).process(fixQuotes("{'Li1':[{'L1':'V1','L2':'V2'},{'L3':'V3','L4':'V4'}]}"));
     }
 
     @Test
@@ -155,7 +157,7 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        verify(receiver).process(fixQuotes("{'Li1':[['V1','V2'],['V3','V4']]}"));
+        Mockito.verify(receiver).process(fixQuotes("{'Li1':[['V1','V2'],['V3','V4']]}"));
     }
 
     @Test
@@ -170,7 +172,7 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        verify(receiver).process(fixQuotes("{'Li1[]':{'L1':'V1','L2':'V2','L3':'V3'}}"));
+        Mockito.verify(receiver).process(fixQuotes("{'Li1[]':{'L1':'V1','L2':'V2','L3':'V3'}}"));
     }
 
     @Test
@@ -186,7 +188,7 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        verify(receiver).process(fixQuotes("{'Li1':['V1','V2','V3']}"));
+        Mockito.verify(receiver).process(fixQuotes("{'Li1':['V1','V2','V3']}"));
     }
 
     @Test
@@ -207,7 +209,7 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        verify(receiver).process(
+        Mockito.verify(receiver).process(
                 "{" +
                     "\"lit1~\":\"false\"," +
                     "\"lit2\":\"true\"," +
@@ -237,7 +239,7 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        verify(receiver).process(
+        Mockito.verify(receiver).process(
                 "{" +
                     "\"lit1\":false," +
                     "\"lit2\":\"true\"," +
@@ -265,7 +267,7 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        verify(receiver).process(
+        Mockito.verify(receiver).process(
                 "{" +
                     "\"lit1#\":\"23\"," +
                     "\"lit2\":\"4.2\"," +
@@ -295,7 +297,7 @@ public final class JsonEncoderTest {
         encoder.endEntity();
         encoder.endRecord();
 
-        verify(receiver).process(
+        Mockito.verify(receiver).process(
                 "{" +
                     "\"lit1\":23," +
                     "\"lit2\":\"4.2\"," +
@@ -312,7 +314,7 @@ public final class JsonEncoderTest {
         encoder.literal(LITERAL1, VALUE2);
         encoder.endRecord();
 
-        verify(receiver).process(fixQuotes("{'L1':'V1','L1':'V2'}"));
+        Mockito.verify(receiver).process(fixQuotes("{'L1':'V1','L1':'V2'}"));
     }
 
     @Test
@@ -324,7 +326,7 @@ public final class JsonEncoderTest {
         encoder.literal(LITERAL2, VALUE2);
         encoder.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).process(fixQuotes("{'L1':'V1'}"));
         ordered.verify(receiver).process(fixQuotes("{'L2':'V2'}"));
     }
@@ -340,7 +342,7 @@ public final class JsonEncoderTest {
         encoder.literal(LITERAL2, VALUE2);
         encoder.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).process(useSystemSpecificLineSeparator(fixQuotes("{\n  'L1' : 'V1'\n}")));
         ordered.verify(receiver).process(useSystemSpecificLineSeparator(fixQuotes("{\n  'L2' : 'V2'\n}")));
     }

@@ -16,15 +16,14 @@
 
 package org.metafacture.plumbing;
 
-import static org.mockito.Mockito.inOrder;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 
 /**
  * Tests for class {@link StreamTee}.
@@ -42,6 +41,9 @@ public final class StreamTeeTest {
     private StreamReceiver receiver2;
 
     private StreamTee streamTee;
+
+    public StreamTeeTest() {
+    }
 
     @Before
     public void setup() {
@@ -62,7 +64,7 @@ public final class StreamTeeTest {
         streamTee.resetStream();
         streamTee.closeStream();
 
-        final InOrder ordered = inOrder(receiver1, receiver2);
+        final InOrder ordered = Mockito.inOrder(receiver1, receiver2);
         ordered.verify(receiver1).startRecord("1");
         ordered.verify(receiver2).startRecord("1");
         ordered.verify(receiver1).literal("literal", "value");

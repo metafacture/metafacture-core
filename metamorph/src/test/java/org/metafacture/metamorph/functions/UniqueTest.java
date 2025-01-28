@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -39,9 +39,12 @@ public final class UniqueTest {
     @Mock
     private StreamReceiver receiver;
 
+    public UniqueTest() {
+    }
+
     @Test
     public void shouldAllowSelectingTheUniqueScope() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='data' name='inRecord'>" +
                 "    <unique />" +
@@ -93,7 +96,7 @@ public final class UniqueTest {
 
     @Test
     public void shouldAllowSelectingTheUniquePart() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <group name='name'>" +
                 "    <group>" +

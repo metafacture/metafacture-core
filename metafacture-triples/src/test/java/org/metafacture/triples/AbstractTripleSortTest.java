@@ -16,31 +16,34 @@
 
 package org.metafacture.triples;
 
-import static org.junit.Assert.assertTrue;
+import org.metafacture.framework.objects.Triple;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.metafacture.framework.objects.Triple;
 
 /**
  * Tests for class {@link AbstractTripleSort}.
  *
  * @author Christoph Böhme
  */
-public final class AbstractTripleSortTest {
+public final class AbstractTripleSortTest { // checkstyle-disable-line AbstractClassName
 
     private static final Triple T1 = new Triple("s", "p", "o");
 
     private AbstractTripleSort tripleSort;
 
+    public AbstractTripleSortTest() {
+    }
+
     @Before
     public void setup() {
         tripleSort = new AbstractTripleSort() {
             @Override
-            protected void sortedTriple(final Triple namedValue) {}
+            protected void sortedTriple(final Triple namedValue) { }
         };
     }
 
@@ -74,7 +77,7 @@ public final class AbstractTripleSortTest {
         // Wait a tiny bit since GC Thread is not immediately done in Java 8
         Thread.sleep(10);
 
-        assertTrue(weakRef.isEnqueued());
+        Assert.assertTrue(weakRef.isEnqueued());
     }
 
 }

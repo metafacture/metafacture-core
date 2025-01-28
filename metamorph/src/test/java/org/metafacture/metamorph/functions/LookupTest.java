@@ -16,14 +16,13 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
+import org.metafacture.metamorph.api.Maps;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.api.Maps;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
@@ -53,6 +52,9 @@ public final class LookupTest {
     @Mock
     private StreamReceiver receiver;
 
+    public LookupTest() {
+    }
+
     @Test
     public void shouldReturnNullIfMapNameDoesNotExist() {
         final Lookup lookup = new Lookup();
@@ -60,7 +62,7 @@ public final class LookupTest {
 
         lookup.setIn(MAP_NAME_WRONG);
 
-        assertNull(lookup.process(KEY));
+        Assert.assertNull(lookup.process(KEY));
     }
 
     @Test
@@ -71,7 +73,7 @@ public final class LookupTest {
         lookup.setIn(MAP_NAME);
         Mockito.when(maps.getValue(MAP_NAME, KEY)).thenReturn(VALUE);
 
-        assertEquals(VALUE, lookup.process(KEY));
+        Assert.assertEquals(VALUE, lookup.process(KEY));
     }
 
     @Test
@@ -81,12 +83,12 @@ public final class LookupTest {
 
         lookup.setIn(MAP_NAME);
 
-        assertNull(lookup.process(KEY_WRONG));
+        Assert.assertNull(lookup.process(KEY_WRONG));
     }
 
     @Test
     public void shouldLookupValuesInLocalMap() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='1'>" +
                 "    <lookup>" +
@@ -119,7 +121,7 @@ public final class LookupTest {
 
     @Test
     public void shouldLookupValuesInReferencedMap() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='1'>" +
                 "    <lookup in='map1' />" +
@@ -156,7 +158,7 @@ public final class LookupTest {
 
     @Test
     public void shouldLookupValuesInMetadata() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<meta>" +
                 "  <name>Hawaii</name>" +
                 "</meta>" +
@@ -180,7 +182,7 @@ public final class LookupTest {
 
     @Test
     public void issue372_shouldFilterMissingValue() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='litA'>" +
                 "    <lookup>" +

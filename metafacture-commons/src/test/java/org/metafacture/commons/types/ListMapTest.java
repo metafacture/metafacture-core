@@ -16,13 +16,8 @@
 
 package org.metafacture.commons.types;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
+import org.junit.Assert;
 import org.junit.Test;
-
 
 /**
  * Tests for class {@link ListMap}.
@@ -31,38 +26,43 @@ import org.junit.Test;
  *
  */
 public final class ListMapTest {
+
     private static final String VALUE1 = "v1";
     private static final String NAME1 = "n1";
     private static final String VALUE2 = "v2";
     private static final String NAME2 = "n2";
 
+    public ListMapTest() {
+    }
+
     @Test
     public void test() {
         final ListMap<String, String> listMap = new ListMap<String, String>();
 
-        assertNull(listMap.getFirst(NAME1));
+        Assert.assertNull(listMap.getFirst(NAME1));
         listMap.add(NAME1, VALUE1);
-        assertNotNull(listMap.getFirst(NAME1));
-        assertEquals(VALUE1, listMap.getFirst(NAME1));
+        Assert.assertNotNull(listMap.getFirst(NAME1));
+        Assert.assertEquals(VALUE1, listMap.getFirst(NAME1));
 
         listMap.add(NAME1, VALUE2);
-        assertNotNull(listMap.getFirst(NAME1));
-        assertEquals(VALUE1, listMap.getFirst(NAME1));
+        Assert.assertNotNull(listMap.getFirst(NAME1));
+        Assert.assertEquals(VALUE1, listMap.getFirst(NAME1));
 
-        assertNotNull(listMap.get(NAME1));
-        assertEquals(2, listMap.get(NAME1).size());
-        assertTrue(listMap.get(NAME1).contains(VALUE2));
+        Assert.assertNotNull(listMap.get(NAME1));
+        Assert.assertEquals(2, listMap.get(NAME1).size());
+        Assert.assertTrue(listMap.get(NAME1).contains(VALUE2));
 
-        assertNotNull(listMap.get(NAME2));
-        assertEquals(0, listMap.get(NAME2).size());
+        Assert.assertNotNull(listMap.get(NAME2));
+        Assert.assertEquals(0, listMap.get(NAME2).size());
 
         listMap.add(NAME2, VALUE2);
-        assertNotNull(listMap.getFirst(NAME2));
+        Assert.assertNotNull(listMap.getFirst(NAME2));
         listMap.clearKey(NAME2);
-        assertNull(listMap.getFirst(NAME2));
-        assertNotNull(listMap.getFirst(NAME1));
+        Assert.assertNull(listMap.getFirst(NAME2));
+        Assert.assertNotNull(listMap.getFirst(NAME1));
 
         listMap.clearAllKeys();
-        assertNull(listMap.getFirst(NAME1));
+        Assert.assertNull(listMap.getFirst(NAME1));
     }
+
 }

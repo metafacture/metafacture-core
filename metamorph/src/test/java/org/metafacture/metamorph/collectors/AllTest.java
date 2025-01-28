@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -38,9 +38,12 @@ public final class AllTest {
     @Mock
     private StreamReceiver receiver;
 
+    public AllTest() {
+    }
+
     @Test
     public void shouldFireOnlyIfAllElementsFire() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <all>" +
                 "    <data source='data1' />" +
@@ -68,7 +71,7 @@ public final class AllTest {
 
     @Test
     public void shouldSupportUserdefinedNameAndValue() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <all name='ALL' value='found all'>" +
                 "    <data source='data1' />" +
@@ -91,7 +94,7 @@ public final class AllTest {
 
     @Test
     public void shouldFireAgainIfValueChangesAndResetIsFalse() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <all>" +
                 "    <data source='entity.data1' />" +
@@ -119,7 +122,7 @@ public final class AllTest {
 
     @Test
     public void shouldNotFireAgainIfOnlyOneValueChangesAndResetIsTrue() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <all reset='true'>" +
                 "    <data source='entity.data1' />" +
@@ -147,7 +150,7 @@ public final class AllTest {
 
     @Test
     public void shouldNotFireIfFlushingAnIncompleteCollection() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <all flushWith='entity'>" +
                 "    <data source='entity.data1' />" +
@@ -170,7 +173,7 @@ public final class AllTest {
 
     @Test
     public void shouldResetWhenEntityChangesIfSameEntity() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <all sameEntity='true'>" +
                 "    <data source='entity.data2' />" +

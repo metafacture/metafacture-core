@@ -16,8 +16,7 @@
 
 package org.metafacture.formeta.formatter;
 
-import static org.junit.Assert.assertEquals;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,6 +42,9 @@ public final class VerboseFormatterTest {
 
     private VerboseFormatter verboseFormatter;
 
+    public VerboseFormatterTest() {
+    }
+
     @Before
     public void setup() {
         verboseFormatter = new VerboseFormatter();
@@ -59,7 +61,7 @@ public final class VerboseFormatterTest {
         verboseFormatter.literal("lit4", "value '3'");
         verboseFormatter.endGroup();
 
-        assertEquals(VERBOSE_RECORD, verboseFormatter.toString());
+        Assert.assertEquals(VERBOSE_RECORD, verboseFormatter.toString());
     }
 
     @Test
@@ -69,7 +71,7 @@ public final class VerboseFormatterTest {
         verboseFormatter.literal("note", "nested records");
         verboseFormatter.endGroup();
 
-        assertEquals(OUTER_RECORD, verboseFormatter.toString());
+        Assert.assertEquals(OUTER_RECORD, verboseFormatter.toString());
     }
 
 }

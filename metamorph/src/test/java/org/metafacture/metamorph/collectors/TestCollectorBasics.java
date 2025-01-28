@@ -16,12 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.Metamorph;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -42,9 +41,12 @@ public final class TestCollectorBasics {
     @Mock
     private StreamReceiver receiver;
 
+    public TestCollectorBasics() {
+    }
+
     @Test
     public void shouldSupportNestedCollectors() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='d' value='${1}${c}'>" +
                 "    <data source='d1' name='1' />" +
@@ -74,7 +76,7 @@ public final class TestCollectorBasics {
 
     @Test
     public void shouldSupportNestedSameEntity() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='result' value='${value}${ch}' sameEntity='true'>" +
                 "    <data source='rel.value' name='value' />" +
@@ -116,7 +118,7 @@ public final class TestCollectorBasics {
 
     @Test
     public void shouldAllowUsingAnArbitraryLiteralForFlush() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <concat delimiter='' name='d' flushWith='f'>" +
                 "    <data source='d' />" +
@@ -145,7 +147,7 @@ public final class TestCollectorBasics {
 
     @Test
     public void shouldReceiveFlushingLiteralBeforeFlushEvent() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <concat delimiter='' name='d' flushWith='f'>" +
                 "    <data source='d' />" +

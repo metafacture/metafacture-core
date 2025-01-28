@@ -16,13 +16,13 @@
 
 package org.metafacture.strings;
 
-import static org.mockito.Mockito.verify;
+import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -44,6 +44,9 @@ public final class UnicodeNormalizerTest {
     @Mock
     private ObjectReceiver<String> receiver;
 
+    public UnicodeNormalizerTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -60,7 +63,7 @@ public final class UnicodeNormalizerTest {
     public void testShouldReplaceDiacriticsWithPrecomposedChars() {
         normalizer.process(STRING_WITH_DIACRITICS);
 
-        verify(receiver).process(STRING_WITH_PRECOMPOSED_CHARS);
+        Mockito.verify(receiver).process(STRING_WITH_PRECOMPOSED_CHARS);
     }
 
 }

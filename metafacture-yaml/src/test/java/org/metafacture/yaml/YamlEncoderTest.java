@@ -61,6 +61,9 @@ public final class YamlEncoderTest {
     @Mock
     private ObjectReceiver<String> receiver;
 
+    public YamlEncoderTest() {
+    }
+
     @Test
     public void testShouldEncodeLiterals() {
         assertEncode(

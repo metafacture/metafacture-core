@@ -16,15 +16,14 @@
 
 package org.metafacture.mangling;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.inOrder;
+import org.metafacture.framework.StreamReceiver;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -39,6 +38,9 @@ public class StreamFlattenerTest {
     private StreamReceiver receiver;
 
     private StreamFlattener flattener;
+
+    public StreamFlattenerTest() {
+    }
 
     @Before
     public void init() {
@@ -60,7 +62,7 @@ public class StreamFlattenerTest {
         flattener.endRecord();
         flattener.closeStream();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("granny.me", "value1");
         ordered.verify(receiver).literal("granny.mommy.myself", "value2");
@@ -70,59 +72,59 @@ public class StreamFlattenerTest {
     }
 
     @Test
-    public void getCurrentPath_shouldReturnPathToCurrentEntity() {
+    public void getCurrentPathShouldReturnPathToCurrentEntity() {
         flattener.startRecord("1");
-        assertEquals("", flattener.getCurrentPath());
+        Assert.assertEquals("", flattener.getCurrentPath());
         flattener.startEntity("granny");
-        assertEquals("granny", flattener.getCurrentPath());
+        Assert.assertEquals("granny", flattener.getCurrentPath());
         flattener.literal("me", "value1");
-        assertEquals("granny", flattener.getCurrentPath());
+        Assert.assertEquals("granny", flattener.getCurrentPath());
         flattener.startEntity("mommy");
-        assertEquals("granny.mommy", flattener.getCurrentPath());
+        Assert.assertEquals("granny.mommy", flattener.getCurrentPath());
         flattener.literal("myself", "value2");
-        assertEquals("granny.mommy", flattener.getCurrentPath());
+        Assert.assertEquals("granny.mommy", flattener.getCurrentPath());
         flattener.endEntity();
-        assertEquals("granny", flattener.getCurrentPath());
+        Assert.assertEquals("granny", flattener.getCurrentPath());
         flattener.endEntity();
-        assertEquals("", flattener.getCurrentPath());
+        Assert.assertEquals("", flattener.getCurrentPath());
         flattener.literal("andI", "value3");
-        assertEquals("", flattener.getCurrentPath());
+        Assert.assertEquals("", flattener.getCurrentPath());
         flattener.endRecord();
-        assertEquals("", flattener.getCurrentPath());
+        Assert.assertEquals("", flattener.getCurrentPath());
         flattener.closeStream();
     }
 
     @Test
-    public void getCurrentEntityName_shouldReturnNameOfCurrentEntity() {
+    public void getCurrentEntityNameShouldReturnNameOfCurrentEntity() {
         flattener.startRecord("1");
-        assertNull(flattener.getCurrentEntityName());
+        Assert.assertNull(flattener.getCurrentEntityName());
         flattener.startEntity("granny");
-        assertEquals("granny", flattener.getCurrentEntityName());
+        Assert.assertEquals("granny", flattener.getCurrentEntityName());
         flattener.literal("me", "value1");
-        assertEquals("granny", flattener.getCurrentEntityName());
+        Assert.assertEquals("granny", flattener.getCurrentEntityName());
         flattener.startEntity("mommy");
-        assertEquals("mommy", flattener.getCurrentEntityName());
+        Assert.assertEquals("mommy", flattener.getCurrentEntityName());
         flattener.literal("myself", "value2");
-        assertEquals("mommy", flattener.getCurrentEntityName());
+        Assert.assertEquals("mommy", flattener.getCurrentEntityName());
         flattener.endEntity();
-        assertEquals("granny", flattener.getCurrentEntityName());
+        Assert.assertEquals("granny", flattener.getCurrentEntityName());
         flattener.endEntity();
-        assertNull(flattener.getCurrentEntityName());
+        Assert.assertNull(flattener.getCurrentEntityName());
         flattener.literal("andI", "value3");
-        assertNull(flattener.getCurrentEntityName());
+        Assert.assertNull(flattener.getCurrentEntityName());
         flattener.endRecord();
-        assertNull(flattener.getCurrentEntityName());
+        Assert.assertNull(flattener.getCurrentEntityName());
         flattener.closeStream();
     }
 
     @Test
-    public void setEntityMarker_shouldChangeMarkerBetweenEntities() {
+    public void setEntityMarkerShouldChangeMarkerBetweenEntities() {
         flattener.setEntityMarker("-");
 
         flattener.startRecord("1");
         flattener.startEntity("granny");
         flattener.startEntity("mommy");
-        assertEquals("granny-mommy", flattener.getCurrentPath());
+        Assert.assertEquals("granny-mommy", flattener.getCurrentPath());
     }
 
 }

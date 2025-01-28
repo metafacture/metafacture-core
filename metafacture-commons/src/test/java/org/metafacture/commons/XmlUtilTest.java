@@ -16,8 +16,7 @@
 
 package org.metafacture.commons;
 
-import static org.junit.Assert.assertEquals;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -27,39 +26,42 @@ import org.junit.Test;
  */
 public class XmlUtilTest {
 
+    public XmlUtilTest() {
+    }
+
     @Test
-    public void escape_shouldEscapeXmlSpecialChars() {
+    public void shouldEscapeXmlSpecialChars() {
         final String unescaped = "< > ' & \"";
 
         final String result = XmlUtil.escape(unescaped);
 
-        assertEquals("&lt; &gt; &apos; &amp; &quot;", result);
+        Assert.assertEquals("&lt; &gt; &apos; &amp; &quot;", result);
     }
 
     @Test
-    public void escape_shouldNotEscapeAsciiChars() {
-        final String unescaped ="Kafka";
+    public void shouldNotEscapeAsciiChars() {
+        final String unescaped = "Kafka";
 
         final String result = XmlUtil.escape(unescaped);
 
-        assertEquals("Kafka", result);
+        Assert.assertEquals("Kafka", result);
     }
 
     @Test
-    public void escape_shouldEscapeAllNonAsciiChars() {
+    public void shouldEscapeAllNonAsciiChars() {
         final String unescaped = "K\u00f8benhavn";
 
         final String result = XmlUtil.escape(unescaped);
 
-        assertEquals("K&#248;benhavn", result);
+        Assert.assertEquals("K&#248;benhavn", result);
     }
 
     @Test
-    public void issue267_escape_shouldEscapeSurrogatePairsAsSingleEntity() {
+    public void issue267_shouldEscapeSurrogatePairsAsSingleEntity() {
         final String unescaped = "Smile: \ud83d\ude09";
         final String result = XmlUtil.escape(unescaped);
 
-        assertEquals("Smile: &#128521;", result);
+        Assert.assertEquals("Smile: &#128521;", result);
     }
 
 }

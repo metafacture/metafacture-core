@@ -16,20 +16,19 @@
 
 package org.metafacture.statistics;
 
-import static org.mockito.Mockito.inOrder;
-
-import java.util.Arrays;
+import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
 
 /**
  * Tests for class {@link UniformSampler}.
@@ -62,8 +61,8 @@ public final class UniformSamplerTest {
     @Parameters
     public static Iterable<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                { LARGE_SET, new String[] { "93", "43", "78", "35", "42" } },
-                { SMALL_SET, new String[] { "0", "1", "2" } },
+                {LARGE_SET, new String[]{"93", "43", "78", "35", "42"}},
+                {SMALL_SET, new String[]{"0", "1", "2"}}
             });
     }
 
@@ -77,13 +76,13 @@ public final class UniformSamplerTest {
 
     @Test
     public void testShouldEmitARandomSubsetOfTheInputObjects() {
-        for(int i = 0; i < setSize; ++i) {
+        for (int i = 0; i < setSize; ++i) {
             sampler.process(Integer.toString(i));
         }
         sampler.closeStream();
 
-        final InOrder ordered = inOrder(receiver);
-        for(int i = 0; i < expected.length; ++i) {
+        final InOrder ordered = Mockito.inOrder(receiver);
+        for (int i = 0; i < expected.length; ++i) {
             ordered.verify(receiver).process(expected[i]);
         }
         ordered.verify(receiver).closeStream();

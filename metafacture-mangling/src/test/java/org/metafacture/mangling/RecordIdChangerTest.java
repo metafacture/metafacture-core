@@ -16,18 +16,16 @@
 
 package org.metafacture.mangling;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import org.metafacture.framework.StandardEventNames;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StandardEventNames;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 
 /**
  * Tests for class {@link RecordIdChanger}.
@@ -49,6 +47,9 @@ public final class RecordIdChangerTest {
 
     @Mock
     private StreamReceiver receiver;
+
+    public RecordIdChangerTest() {
+    }
 
     @Before
     public void setup() {
@@ -72,7 +73,7 @@ public final class RecordIdChangerTest {
         recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
         recordIdChanger.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
         ordered.verify(receiver).endRecord();
 
@@ -89,7 +90,7 @@ public final class RecordIdChangerTest {
         recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
         recordIdChanger.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(OLD_RECORD_ID1);
         ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
         ordered.verify(receiver).endRecord();
@@ -108,10 +109,10 @@ public final class RecordIdChangerTest {
         recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
         recordIdChanger.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
         ordered.verify(receiver).endRecord();
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -122,7 +123,7 @@ public final class RecordIdChangerTest {
         recordIdChanger.endEntity();
         recordIdChanger.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(OLD_RECORD_ID1);
         ordered.verify(receiver).startEntity(ENTITY);
         ordered.verify(receiver).literal(StandardEventNames.ID, NEW_RECORD_ID1);
@@ -140,7 +141,7 @@ public final class RecordIdChangerTest {
         recordIdChanger.endEntity();
         recordIdChanger.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
         ordered.verify(receiver).startEntity(ENTITY);
         ordered.verify(receiver).endEntity();
@@ -155,10 +156,10 @@ public final class RecordIdChangerTest {
         recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
         recordIdChanger.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
         ordered.verify(receiver).endRecord();
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -170,7 +171,7 @@ public final class RecordIdChangerTest {
         recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID1);
         recordIdChanger.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(NEW_RECORD_ID1);
         ordered.verify(receiver).literal(StandardEventNames.ID, NEW_RECORD_ID1);
         ordered.verify(receiver).endRecord();
@@ -183,7 +184,7 @@ public final class RecordIdChangerTest {
         recordIdChanger.literal(StandardEventNames.ID, NEW_RECORD_ID2);
         recordIdChanger.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(NEW_RECORD_ID2);
         ordered.verify(receiver).endRecord();
     }

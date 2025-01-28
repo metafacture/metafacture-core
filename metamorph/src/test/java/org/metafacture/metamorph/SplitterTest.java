@@ -16,9 +16,10 @@
 
 package org.metafacture.metamorph;
 
+import org.metafacture.framework.StreamReceiver;
+
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -47,6 +48,9 @@ public final class SplitterTest {
 
     @Mock
     private StreamReceiver receiver2;
+
+    public SplitterTest() {
+    }
 
     @Test
     public void shouldPassRecordToReceiverWithMatchingKey() {

@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -38,9 +38,12 @@ public final class SplitTest {
     @Mock
     private StreamReceiver receiver;
 
+    public SplitTest() {
+    }
+
     @Test
     public void issue265_shouldWorkIfLastFunctionInCombineStatement() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='out' value='${v}'>" +
                 "    <data source='in' name='v'>" +

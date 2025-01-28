@@ -16,8 +16,7 @@
 
 package org.metafacture.commons;
 
-import static org.junit.Assert.assertEquals;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -28,13 +27,16 @@ import org.junit.Test;
  */
 public final class TimeUtilTest {
 
+    public TimeUtilTest() {
+    }
+
     @Test
     public void testShouldFormatNanoseconds() {
         final long duration = 29 * TimeUtil.NANOSECONDS;
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
-        assertEquals("29ns", formattedDuration);
+        Assert.assertEquals("29ns", formattedDuration);
     }
 
     @Test
@@ -43,7 +45,7 @@ public final class TimeUtilTest {
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
-        assertEquals("28µs", formattedDuration);
+        Assert.assertEquals("28µs", formattedDuration);
     }
 
     @Test
@@ -52,7 +54,7 @@ public final class TimeUtilTest {
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
-        assertEquals("10s", formattedDuration);
+        Assert.assertEquals("10s", formattedDuration);
     }
 
     @Test
@@ -61,7 +63,7 @@ public final class TimeUtilTest {
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
-        assertEquals("58min", formattedDuration);
+        Assert.assertEquals("58min", formattedDuration);
     }
 
     @Test
@@ -70,7 +72,7 @@ public final class TimeUtilTest {
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
-        assertEquals("28µs 9ns", formattedDuration);
+        Assert.assertEquals("28µs 9ns", formattedDuration);
     }
 
     @Test
@@ -79,7 +81,7 @@ public final class TimeUtilTest {
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
-        assertEquals("10s 8ms", formattedDuration);
+        Assert.assertEquals("10s 8ms", formattedDuration);
     }
 
     @Test
@@ -88,7 +90,7 @@ public final class TimeUtilTest {
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
-        assertEquals("23min 1s", formattedDuration);
+        Assert.assertEquals("23min 1s", formattedDuration);
     }
 
     @Test
@@ -97,7 +99,7 @@ public final class TimeUtilTest {
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
-        assertEquals("23ms 1µs", formattedDuration);
+        Assert.assertEquals("23ms 1µs", formattedDuration);
     }
 
     @Test
@@ -106,7 +108,7 @@ public final class TimeUtilTest {
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
-        assertEquals("23min 1s", formattedDuration);
+        Assert.assertEquals("23min 1s", formattedDuration);
     }
 
     @Test
@@ -115,7 +117,7 @@ public final class TimeUtilTest {
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
-        assertEquals("42min 2s", formattedDuration);
+        Assert.assertEquals("42min 2s", formattedDuration);
     }
 
     @Test
@@ -124,7 +126,7 @@ public final class TimeUtilTest {
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
-        assertEquals("42ms 2µs", formattedDuration);
+        Assert.assertEquals("42ms 2µs", formattedDuration);
     }
 
     @Test
@@ -133,7 +135,7 @@ public final class TimeUtilTest {
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
-        assertEquals("42min 2s", formattedDuration);
+        Assert.assertEquals("42min 2s", formattedDuration);
     }
 
     @Test
@@ -142,7 +144,7 @@ public final class TimeUtilTest {
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
-        assertEquals("0s", formattedDuration);
+        Assert.assertEquals("0s", formattedDuration);
     }
 
     /**
@@ -155,7 +157,7 @@ public final class TimeUtilTest {
 
         final String formattedDuration = TimeUtil.formatDuration(duration);
 
-        assertEquals("1h 1min", formattedDuration);
+        Assert.assertEquals("1h 1min", formattedDuration);
     }
 
 }

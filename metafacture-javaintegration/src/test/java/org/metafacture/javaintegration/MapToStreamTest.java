@@ -16,18 +16,17 @@
 
 package org.metafacture.javaintegration;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Tests for class {@link MapToStream}.
@@ -42,6 +41,9 @@ public final class MapToStreamTest {
 
     private MapToStream mapToStream;
 
+    public MapToStreamTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -53,7 +55,7 @@ public final class MapToStreamTest {
     public void shouldEmitEmptyRecordIfMapIsEmpty() {
         mapToStream.process(new HashMap<>());
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).endRecord();
     }
@@ -64,7 +66,7 @@ public final class MapToStreamTest {
         map.put("key", "value");
         mapToStream.process(map);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).literal("key", "value");
         ordered.verify(receiver).endRecord();
@@ -77,8 +79,8 @@ public final class MapToStreamTest {
         map.put("key-2", "value-2");
         mapToStream.process(map);
 
-        verify(receiver).literal("key-1", "value-1");
-        verify(receiver).literal("key-2", "value-2");
+        Mockito.verify(receiver).literal("key-1", "value-1");
+        Mockito.verify(receiver).literal("key-2", "value-2");
     }
 
     @Test
@@ -89,7 +91,7 @@ public final class MapToStreamTest {
         map.put("id", "id-1");
         mapToStream.process(map);
 
-        verify(receiver).startRecord("id-1");
+        Mockito.verify(receiver).startRecord("id-1");
     }
 
     @Test
@@ -98,7 +100,7 @@ public final class MapToStreamTest {
         map.put("_id", "id-1");
         mapToStream.process(map);
 
-        verify(receiver).startRecord("id-1");
+        Mockito.verify(receiver).startRecord("id-1");
     }
 
     @Test
@@ -107,7 +109,7 @@ public final class MapToStreamTest {
         map.put("noid", "noid");
         mapToStream.process(map);
 
-        verify(receiver).startRecord("");
+        Mockito.verify(receiver).startRecord("");
     }
 
     @Test
@@ -120,9 +122,9 @@ public final class MapToStreamTest {
         map.put(-1, 100);
         mapToStream.process(map);
 
-        verify(receiver).startRecord("100");
-        verify(receiver).literal("1", "11");
-        verify(receiver).literal("2", "12");
+        Mockito.verify(receiver).startRecord("100");
+        Mockito.verify(receiver).literal("1", "11");
+        Mockito.verify(receiver).literal("2", "12");
     }
 
 }

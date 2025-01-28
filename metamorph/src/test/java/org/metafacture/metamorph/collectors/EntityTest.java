@@ -16,12 +16,12 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.Entity;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.Entity;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -40,9 +40,12 @@ public final class EntityTest {
     @Mock
     private StreamReceiver receiver;
 
+    public EntityTest() {
+    }
+
     @Test
     public void shouldEmitEntities() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity name='entity'>" +
                 "    <data source='data1' name='l1' />" +
@@ -80,7 +83,7 @@ public final class EntityTest {
 
     @Test
     public void shouldEmitEntityOnFlushEvent() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity name='entity' flushWith='record'>" +
                 "    <data source='d1' name='l1' />" +
@@ -116,7 +119,7 @@ public final class EntityTest {
 
     @Test
     public void shouldNotEmitEntityOnFlushEventIfIncomplete() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity name='entity' flushWith='record' flushIncomplete='false'>" +
                 "    <data source='d1' name='l1' />" +
@@ -149,7 +152,7 @@ public final class EntityTest {
 
     @Test
     public void shouldEmitEntityOnEachFlushEvent() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<metamorph version='1' entityMarker='.'" +
                 "    xmlns='http://www.culturegraph.org/metamorph'>" +
                 "  <rules>" +
@@ -188,7 +191,7 @@ public final class EntityTest {
 
     @Test
     public void shouldSupportNestedEntities() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity name='e1' flushWith='record'>" +
                 "    <data source='d1' />" +
@@ -245,7 +248,7 @@ public final class EntityTest {
 
     @Test
     public void shouldSupportMultipleNestedEntities() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity name='uber' flushWith='record'>" +
                 "    <data source='d' name='l' />" +
@@ -302,7 +305,7 @@ public final class EntityTest {
 
     @Test
     public void shouldSupportDeeplyNestedEnities() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity name='1'>" +
                 "    <data source='1' />" +
@@ -340,7 +343,7 @@ public final class EntityTest {
 
     @Test
     public void shouldGetNameFromDataInEntityName() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity>" +
                 "    <entity-name>" +
@@ -383,7 +386,7 @@ public final class EntityTest {
 
     @Test
     public void shouldGetNameFromCollectInEntityName() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity>" +
                 "    <entity-name>" +
@@ -427,7 +430,7 @@ public final class EntityTest {
 
     @Test
     public void shouldResetNameToNameAttribute() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity name='defaultName' flushWith='record'>" +
                 "    <entity-name>" +
@@ -462,7 +465,7 @@ public final class EntityTest {
 
     @Test
     public void shouldEmitEmptyStringIfEntityNameIsNotSet() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity>" +
                 "    <data source='in' name='out' />" +
@@ -485,7 +488,7 @@ public final class EntityTest {
 
     @Test
     public void shouldEmitEntityContentsAgainIfResetIsFalse() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity name='entity'>" +
                 "    <data source='lit1' />" +
@@ -517,7 +520,7 @@ public final class EntityTest {
 
     @Test
     public void shouldNotEmitEntityContentsAgainIfResetIsTrue() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <entity name='entity' reset='true'>" +
                 "    <data source='lit1' />" +

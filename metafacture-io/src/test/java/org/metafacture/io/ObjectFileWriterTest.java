@@ -16,15 +16,14 @@
 
 package org.metafacture.io;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeFalse;
+import org.metafacture.commons.ResourceUtil;
 
+import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.metafacture.commons.ResourceUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,6 +50,9 @@ public final class ObjectFileWriterTest
     private File file;
     private ObjectFileWriter<String> writer;
 
+    public ObjectFileWriterTest() {
+    }
+
     @Before
     public void setup() throws IOException {
         file = tempFolder.newFile();
@@ -59,7 +61,7 @@ public final class ObjectFileWriterTest
 
     @Test
     public void shouldWriteUTF8EncodedOutput() throws IOException {
-        assumeFalse("Default encoding is UTF-8: It is not possible to test whether " +
+        Assume.assumeFalse("Default encoding is UTF-8: It is not possible to test whether " +
                 "ObjectFileWriter sets the encoding to UTF-8 correctly.",
                 StandardCharsets.UTF_8.equals(Charset.defaultCharset()));
 
@@ -99,10 +101,10 @@ public final class ObjectFileWriterTest
         final String pathWithVar = tempFolder.getRoot() + "/test-${i}";
         writer = new ObjectFileWriter<String>(pathWithVar);
         writer.process(DATA);
-        assertTrue(new File(tempFolder.getRoot(), "test-0").exists());
+        Assert.assertTrue(new File(tempFolder.getRoot(), "test-0").exists());
         writer.resetStream(); // increments count, starts new file
         writer.process(DATA);
-        assertTrue(new File(tempFolder.getRoot(), "test-1").exists());
+        Assert.assertTrue(new File(tempFolder.getRoot(), "test-1").exists());
     }
 
     @Test
@@ -132,7 +134,7 @@ public final class ObjectFileWriterTest
 
     private void assertOutput(final String expected) throws IOException {
         final byte[] bytesWritten = Files.readAllBytes(file.toPath());
-        assertArrayEquals(expected.getBytes(StandardCharsets.UTF_8),
+        Assert.assertArrayEquals(expected.getBytes(StandardCharsets.UTF_8),
                 bytesWritten); // FileObjectWriter appends new lines
     }
 

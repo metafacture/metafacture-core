@@ -17,6 +17,7 @@
 package org.metafacture.metamorph;
 
 import org.metafacture.framework.StreamReceiver;
+
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
@@ -32,6 +33,9 @@ import java.util.function.Supplier;
  * @author Jens Wille
  */
 public final class TestHelpers {
+
+    private TestHelpers() {
+    }
 
     public static void assertMorph(final StreamReceiver receiver, final String morphDef, final Consumer<Metamorph> in, final Consumer<Supplier<StreamReceiver>> out) {
         assertMorph(receiver, morphDef, in, (s, f) -> out.accept(s));

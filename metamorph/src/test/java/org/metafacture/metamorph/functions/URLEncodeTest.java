@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.functions;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-
-import static org.junit.Assert.*;
-import org.junit.Test;
 
 /**
  * Tests {@link URLEncode}
@@ -42,44 +42,51 @@ public final class URLEncodeTest {
     private static final String WHITESPACE_AS_PLUS_ENCODED = "+";
     private static final String WHITESPACE_PERCENT_ENCODED = "%20";
 
-    @Test
-    public void testUtf8(){
-        final URLEncode urlEncode = new URLEncode();
-        assertEquals(CAFE_ENCODED, urlEncode.process(CAFE_UTF8));
-    }
-    @Test
-    public void testSomeChars(){
-        final URLEncode urlEncode = new URLEncode();
-        assertEquals(SOME_CHARS_ENCODED, urlEncode.process(SOME_CHARS));
-    }
-    @Test
-    public void testEscapeSpaceAsPlus(){
-        final URLEncode urlEncode = new URLEncode();
-        assertEquals(WHITESPACE_AS_PLUS_ENCODED, urlEncode.process(WHITESPACE));
+    public URLEncodeTest() {
     }
 
     @Test
-    public void testEscapeSpaceAsPercentEncoded(){
+    public void testUtf8() {
+        final URLEncode urlEncode = new URLEncode();
+        Assert.assertEquals(CAFE_ENCODED, urlEncode.process(CAFE_UTF8));
+    }
+
+    @Test
+    public void testSomeChars() {
+        final URLEncode urlEncode = new URLEncode();
+        Assert.assertEquals(SOME_CHARS_ENCODED, urlEncode.process(SOME_CHARS));
+    }
+
+    @Test
+    public void testEscapeSpaceAsPlus() {
+        final URLEncode urlEncode = new URLEncode();
+        Assert.assertEquals(WHITESPACE_AS_PLUS_ENCODED, urlEncode.process(WHITESPACE));
+    }
+
+    @Test
+    public void testEscapeSpaceAsPercentEncoded() {
         final URLEncode urlEncode = new URLEncode();
         urlEncode.setPlusForSpace(false);
-        assertEquals(WHITESPACE_PERCENT_ENCODED, urlEncode.process(WHITESPACE));
+        Assert.assertEquals(WHITESPACE_PERCENT_ENCODED, urlEncode.process(WHITESPACE));
     }
 
     @Test
-    public void testSafeChars(){
+    public void testSafeChars() {
         final URLEncode urlEncode = new URLEncode();
         urlEncode.setSafeChars(SOME_CHARS);
-        assertEquals(SOME_CHARS, urlEncode.process(SOME_CHARS));
+        Assert.assertEquals(SOME_CHARS, urlEncode.process(SOME_CHARS));
     }
+
     @Test
-    public void testSpecialChars(){
+    public void testSpecialChars() {
         final URLEncode urlEncode = new URLEncode();
-        assertEquals(SPECIAL_CHARACTERS, urlEncode.process(SPECIAL_CHARACTERS));
+        Assert.assertEquals(SPECIAL_CHARACTERS, urlEncode.process(SPECIAL_CHARACTERS));
     }
+
     @Test
     public void testBackwardsCompatibility() throws UnsupportedEncodingException {
         final URLEncode urlEncode = new URLEncode();
-        assertEquals(urlEncode.process(URL), URLEncoder.encode(URL, "UTF-8"));
+        Assert.assertEquals(urlEncode.process(URL), URLEncoder.encode(URL, "UTF-8"));
     }
 
 }

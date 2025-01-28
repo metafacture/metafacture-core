@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -39,9 +39,12 @@ public final class CombineTest {
     @Mock
     private StreamReceiver receiver;
 
+    public CombineTest() {
+    }
+
     @Test
     public void shouldCombineTwoValues() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='combination' value='${one}${two}'>" +
                 "    <data source='data2' name='one' />" +
@@ -66,7 +69,7 @@ public final class CombineTest {
 
     @Test
     public void shouldOnlyCombineValuesFromTheSameEntityIfSet() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='combination' value='${A}${B}' sameEntity='true'>" +
                 "    <data source='entity.data1' name='B' />" +
@@ -103,7 +106,7 @@ public final class CombineTest {
 
     @Test
     public void shouldResetCombinedValueIfResetIsTrue() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='combination' value='${A}${B}' reset='true'>" +
                 "    <data source='data1' name='B' />" +
@@ -130,7 +133,7 @@ public final class CombineTest {
 
     @Test
     public void shouldEmitCurrentValueOnFlushEvent() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='combi' value='${one}${two}' flushWith='e' reset='true'>" +
                 "    <data source='e.l' name='one' />" +
@@ -163,7 +166,7 @@ public final class CombineTest {
 
     @Test
     public void shouldNotEmitCurrentValueOnFlushEventIfIncomplete() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='combi' value='${one}${two}' flushWith='e' flushIncomplete='false' reset='true'>" +
                 "    <data source='e.l' name='one' />" +
@@ -194,7 +197,7 @@ public final class CombineTest {
 
     @Test
     public void shouldPostprocessCombinedValue() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='outLit' value='${V}' flushWith='record'>" +
                 "    <data name='V' source='inLit' />" +

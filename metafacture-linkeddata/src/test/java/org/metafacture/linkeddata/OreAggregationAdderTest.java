@@ -16,15 +16,14 @@
 
 package org.metafacture.linkeddata;
 
-import static org.mockito.Mockito.inOrder;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 
 /**
  * Tests for class {@link OreAggregationAdder}
@@ -39,6 +38,9 @@ public final class OreAggregationAdderTest {
     private StreamReceiver receiver;
 
     private OreAggregationAdder oreAggregationAdder;
+
+    public OreAggregationAdderTest() {
+    }
 
     @Before
     public void setup() {
@@ -58,7 +60,7 @@ public final class OreAggregationAdderTest {
         oreAggregationAdder.endEntity();
         oreAggregationAdder.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).startEntity("edm:WebResource");
         ordered.verify(receiver).literal("~rdf:about", "hawaii");

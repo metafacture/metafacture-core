@@ -16,13 +16,11 @@
 
 package org.metafacture.biblio.marc21;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -49,6 +47,9 @@ public final class MarcXmlHandlerTest {
     @Mock
     private StreamReceiver receiver;
 
+    public MarcXmlHandlerTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -74,7 +75,7 @@ public final class MarcXmlHandlerTest {
         marcXmlHandler.characters(fieldValue.toCharArray(), 0, fieldValue.length());
         marcXmlHandler.endElement(NAMESPACE, CONTROLFIELD, "");
 
-        verify(receiver).literal("001", fieldValue);
+        Mockito.verify(receiver).literal("001", fieldValue);
     }
 
     @Test
@@ -88,7 +89,7 @@ public final class MarcXmlHandlerTest {
         marcXmlHandler.characters(fieldValue.toCharArray(), 0, fieldValue.length());
         marcXmlHandler.endElement(NAMESPACE, CONTROLFIELD, "");
 
-        verify(receiver).literal("008", fieldValue);
+        Mockito.verify(receiver).literal("008", fieldValue);
     }
 
     @Test
@@ -101,7 +102,7 @@ public final class MarcXmlHandlerTest {
         marcXmlHandler.characters(leaderValue.toCharArray(), 0, leaderValue.length());
         marcXmlHandler.endElement(NAMESPACE, LEADER, "");
 
-        verify(receiver).literal("leader", leaderValue);
+        Mockito.verify(receiver).literal("leader", leaderValue);
     }
 
     @Test
@@ -112,11 +113,11 @@ public final class MarcXmlHandlerTest {
         marcXmlHandler.startElement(NAMESPACE, RECORD, "", attributes);
         marcXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        verify(receiver).startRecord("");
-        verify(receiver).literal(TYPE, null);
-        verify(receiver).endRecord();
+        Mockito.verify(receiver).startRecord("");
+        Mockito.verify(receiver).literal(TYPE, null);
+        Mockito.verify(receiver).endRecord();
 
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -127,7 +128,7 @@ public final class MarcXmlHandlerTest {
         marcXmlHandler.startElement(null, RECORD, "", attributes);
         marcXmlHandler.endElement(null, RECORD, "");
 
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -139,11 +140,11 @@ public final class MarcXmlHandlerTest {
         marcXmlHandler.startElement(null, RECORD, "", attributes);
         marcXmlHandler.endElement(null, RECORD, "");
 
-        verify(receiver).startRecord("");
-        verify(receiver).literal(TYPE, null);
-        verify(receiver).endRecord();
+        Mockito.verify(receiver).startRecord("");
+        Mockito.verify(receiver).literal(TYPE, null);
+        Mockito.verify(receiver).endRecord();
 
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -155,11 +156,11 @@ public final class MarcXmlHandlerTest {
         marcXmlHandler.startElement("", RECORD, "", attributes);
         marcXmlHandler.endElement("", RECORD, "");
 
-        verify(receiver).startRecord("");
-        verify(receiver).literal(TYPE, null);
-        verify(receiver).endRecord();
+        Mockito.verify(receiver).startRecord("");
+        Mockito.verify(receiver).literal(TYPE, null);
+        Mockito.verify(receiver).endRecord();
 
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -171,7 +172,7 @@ public final class MarcXmlHandlerTest {
         marcXmlHandler.startElement(NAMESPACE, RECORD, "", attributes);
         marcXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -183,11 +184,11 @@ public final class MarcXmlHandlerTest {
         marcXmlHandler.startElement(null, RECORD, "", attributes);
         marcXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        verify(receiver).startRecord("");
-        verify(receiver).literal(TYPE, null);
-        verify(receiver).endRecord();
+        Mockito.verify(receiver).startRecord("");
+        Mockito.verify(receiver).literal(TYPE, null);
+        Mockito.verify(receiver).endRecord();
 
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -200,11 +201,11 @@ public final class MarcXmlHandlerTest {
         marcXmlHandler.startElement(null, RECORD, "", attributes);
         marcXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        verify(receiver).startRecord("");
-        verify(receiver).literal(TYPE, null);
-        verify(receiver).endRecord();
+        Mockito.verify(receiver).startRecord("");
+        Mockito.verify(receiver).literal(TYPE, null);
+        Mockito.verify(receiver).endRecord();
 
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -216,9 +217,9 @@ public final class MarcXmlHandlerTest {
         marcXmlHandler.startElement(null, RECORD, "", attributes);
         marcXmlHandler.endElement(NAMESPACE, RECORD, "");
 
-        verify(receiver).endRecord();
+        Mockito.verify(receiver).endRecord();
 
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -234,7 +235,7 @@ public final class MarcXmlHandlerTest {
         ordered.verify(receiver).literal(TYPE, "bibliographic");
         ordered.verify(receiver).endRecord();
         ordered.verifyNoMoreInteractions();
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -253,7 +254,7 @@ public final class MarcXmlHandlerTest {
         ordered.verify(receiver).literal(marker + TYPE, "bibliographic");
         ordered.verify(receiver).endRecord();
         ordered.verifyNoMoreInteractions();
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
 }

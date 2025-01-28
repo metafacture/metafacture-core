@@ -16,18 +16,14 @@
 
 package org.metafacture.strings;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -42,6 +38,9 @@ public final class RegexDecoderTest {
     @Mock
     private StreamReceiver receiver;
 
+    public RegexDecoderTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -54,8 +53,8 @@ public final class RegexDecoderTest {
 
         regexDecoder.process("matching input");
 
-        final InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver).startRecord(any());
+        final InOrder ordered = Mockito.inOrder(receiver);
+        ordered.verify(receiver).startRecord(ArgumentMatchers.any());
         ordered.verify(receiver).endRecord();
     }
 
@@ -66,7 +65,7 @@ public final class RegexDecoderTest {
 
         regexDecoder.process("non-matching input");
 
-        verifyZeroInteractions(receiver);
+        Mockito.verifyZeroInteractions(receiver);
     }
 
     @Test
@@ -76,7 +75,7 @@ public final class RegexDecoderTest {
 
         regexDecoder.process("ID:id-123");
 
-        verify(receiver).startRecord("id-123");
+        Mockito.verify(receiver).startRecord("id-123");
     }
 
     @Test
@@ -86,9 +85,8 @@ public final class RegexDecoderTest {
 
         regexDecoder.process("ID:id-123");
 
-        verify(receiver).startRecord("");
+        Mockito.verify(receiver).startRecord("");
     }
-
 
     @Test
     public void shouldUseEmptyStringAsRecordIdIfRecordIdCaptureGroupDoesNotMatch() {
@@ -97,7 +95,7 @@ public final class RegexDecoderTest {
 
         regexDecoder.process("ID:id-123");
 
-        verify(receiver).startRecord("");
+        Mockito.verify(receiver).startRecord("");
     }
 
     @Test
@@ -108,7 +106,7 @@ public final class RegexDecoderTest {
 
         regexDecoder.process("foo=1234,bar=abcd");
 
-        verify(receiver).literal("input", "foo=1234,bar=abcd");
+        Mockito.verify(receiver).literal("input", "foo=1234,bar=abcd");
     }
 
     @Test
@@ -119,11 +117,10 @@ public final class RegexDecoderTest {
 
         regexDecoder.process("foo=1234,bar=abcd");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).literal("foo", "1234");
         ordered.verify(receiver).literal("bar", "abcd");
     }
-
 
     @Test
     public void shouldOutputLiteralsForEachMatchOfPattern() {
@@ -133,7 +130,7 @@ public final class RegexDecoderTest {
 
         regexDecoder.process("foo=1234,bar=abcd,foo=5678,bar=efgh");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).literal("foo", "1234");
         ordered.verify(receiver).literal("bar", "abcd");
         ordered.verify(receiver).literal("foo", "5678");
@@ -148,11 +145,11 @@ public final class RegexDecoderTest {
 
         regexDecoder.process("foo=1234,bar=abcd,foo=5678,bar=efgh");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).literal("foo", "1234");
-        ordered.verify(receiver, never()).literal("bar", "abcd");
+        ordered.verify(receiver, Mockito.never()).literal("bar", "abcd");
         ordered.verify(receiver).literal("foo", "5678");
-        ordered.verify(receiver, never()).literal("bar", "efgh");
+        ordered.verify(receiver, Mockito.never()).literal("bar", "efgh");
     }
 
     @Test
@@ -163,8 +160,8 @@ public final class RegexDecoderTest {
 
         regexDecoder.process("foo=1234,bar=abcd,foo=5678,bar=efgh");
 
-        verify(receiver, never()).literal(any(), eq("1234"));
-        verify(receiver, never()).literal(any(), eq("5678"));
+        Mockito.verify(receiver, Mockito.never()).literal(ArgumentMatchers.any(), ArgumentMatchers.eq("1234"));
+        Mockito.verify(receiver, Mockito.never()).literal(ArgumentMatchers.any(), ArgumentMatchers.eq("5678"));
     }
 
 }

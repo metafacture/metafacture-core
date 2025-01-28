@@ -41,6 +41,9 @@ public final class ObjectSleeperTest {
     @Mock
     private ObjectReceiver<String> receiver;
 
+    public ObjectSleeperTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);

@@ -16,12 +16,13 @@
 
 package org.metafacture.triples;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.StandardEventNames;
 import org.metafacture.framework.objects.Triple;
 import org.metafacture.framework.objects.Triple.ObjectType;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -39,6 +40,9 @@ public final class StreamToTriplesTest {
     private ObjectReceiver<Triple> receiver;
 
     private StreamToTriples streamToTriples;
+
+    public StreamToTriplesTest() {
+    }
 
     @Before
     public void setup() {
