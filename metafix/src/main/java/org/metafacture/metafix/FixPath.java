@@ -324,6 +324,7 @@ import java.util.Map;
         $prepend, $append, $first, $last;
 
         private static final Map<String, ReservedField> STRING_TO_ENUM = new HashMap<>();
+
         static {
             for (final ReservedField f : values()) {
                 STRING_TO_ENUM.put(f.toString(), f);

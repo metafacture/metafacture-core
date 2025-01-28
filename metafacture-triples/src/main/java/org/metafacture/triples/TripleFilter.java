@@ -134,7 +134,7 @@ public final class TripleFilter extends DefaultObjectPipe<Triple, ObjectReceiver
 
         final boolean matches = subjectMatcher.matches() || predicateMatcher.matches() || objectMatcher.matches();
 
-        if ((matches && passMatches) || (!matches && !passMatches)) {
+        if (matches == passMatches) {
             getReceiver().process(obj);
         }
     }
