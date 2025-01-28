@@ -1,0 +1,8 @@
+do list(path:"041A*","var":"$i")
+  copy_field("$i.9","relevantField.$append")
+end
+
+trim("relevantField.*")
+uniq("relevantField")
+
+retain("relevantField")

@@ -4,7 +4,7 @@ fileName|
 open-file|
 as-lines|
 decode-pica|
-fix(FLUX_DIR + "gnd-type.fix")|
+morph(FLUX_DIR + "gnd-type.xml")|
 stream-to-triples|
 count-triples(countBy="object")|
 template("${s}\t${o}")|

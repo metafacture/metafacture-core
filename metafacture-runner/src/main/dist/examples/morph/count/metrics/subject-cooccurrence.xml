@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1">
+    <rules>
+
+        <data source="041A*.9" name="@subj">
+            <trim />
+            <unique />
+        </data>
+
+        <square delimiter="&amp;" name="">
+            <data source="@subj" name=""/>
+            <postprocess>
+                <compose prefix="2:"/>
+            </postprocess>
+        </square>
+
+        <data source="@subj" name="">
+            <compose prefix="1:"/>
+        </data>
+
+        <data source="@subj" name="">
+            <occurrence only="1" />
+            <constant value="1:" />
+        </data>
+    </rules>
+</metamorph>

@@ -10,9 +10,10 @@ open-file|
 as-lines|
 catch-object-exception|
 decode-pica|
-fix(FLUX_DIR + "references.fix")|
+morph(FLUX_DIR + "references.xml")|
 stream-to-triples|
 count-triples(countBy="object")|
-write(counts);
+
+write("subjects.dat");
 
 
