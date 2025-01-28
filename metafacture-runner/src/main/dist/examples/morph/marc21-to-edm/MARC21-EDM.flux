@@ -12,7 +12,7 @@ open-file|
 //open-http|
 decode-xml|
 handle-marcxml|
-fix(FLUX_DIR + "MARC21-EDM.fix", *)|
+morph(FLUX_DIR + "MARC21-EDM.xml", *)|
 add-oreaggregation|
 rdf-macros|
 encode-xml(roottag="rdf:RDF", recordtag="", namespacefile= FLUX_DIR+"edm-namespaces.properties")|
