@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.metafacture.metafix;
+package org.metafacture.metafix; // checkstyle-disable-line JavaNCSS
 
 import org.metafacture.framework.StreamReceiver;
 
@@ -2541,6 +2541,406 @@ public class MetafixIfTest {
                 o.get().startRecord("3");
                 o.get().literal("type", "Organization: m");
                 o.get().literal("type", "Organization: me");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // checkstyle-disable-line JavaNCSS
+    public void shouldBeGreaterThan() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if greater_than(foo, '0')",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "0");
+                i.endRecord();
+                i.startRecord("3");
+                i.literal("foo", "-1");
+                i.endRecord();
+                i.startRecord("4");
+                i.literal("foo", "1.1");
+                i.endRecord();
+                i.startRecord("5");
+                i.literal("foo", "-1.1");
+                i.endRecord();
+                i.startRecord("6");
+                i.literal("foo", "1.1x");
+                i.endRecord();
+                i.startRecord("7");
+                i.startEntity("foo");
+                i.literal("foo", "1");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("8");
+                i.literal("foo", "1");
+                i.literal("foo", "0");
+                i.endRecord();
+                i.startRecord("9");
+                i.literal("foo", "1");
+                i.literal("foo", "2");
+                i.endRecord();
+                i.startRecord("10");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "0");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().literal("foo", "-1");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().literal("foo", "1.1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("5");
+                o.get().literal("foo", "-1.1");
+                o.get().endRecord();
+                o.get().startRecord("6");
+                o.get().literal("foo", "1.1x");
+                o.get().endRecord();
+                o.get().startRecord("7");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "1");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("8");
+                o.get().literal("foo", "1");
+                o.get().literal("foo", "0");
+                o.get().endRecord();
+                o.get().startRecord("9");
+                o.get().literal("foo", "1");
+                o.get().literal("foo", "2");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("10");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // checkstyle-disable-line JavaNCSS
+    public void shouldBeGreaterThanWildcard() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if greater_than('foo.*', '0')",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "1");
+                i.literal("foo", "0");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "1");
+                i.literal("foo", "2");
+                i.endRecord();
+                i.startRecord("3");
+                i.startEntity("foo");
+                i.literal("foo", "1");
+                i.literal("foo", "0");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("4");
+                i.startEntity("foo");
+                i.literal("foo", "1");
+                i.literal("foo", "2");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("5");
+                i.startEntity("foo");
+                i.literal("foo", "1");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "1");
+                o.get().literal("foo", "0");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "1");
+                o.get().literal("foo", "2");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "1");
+                o.get().literal("foo", "0");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "1");
+                o.get().literal("foo", "2");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("5");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "1");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldBeGreaterThanArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if greater_than('foo[].*', '0')",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("foo[]");
+                i.literal("1", "1");
+                i.literal("2", "0");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("2");
+                i.startEntity("foo[]");
+                i.literal("1", "1");
+                i.literal("2", "2");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("3");
+                i.startEntity("foo[]");
+                i.literal("1", "1");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("foo[]");
+                o.get().literal("1", "1");
+                o.get().literal("2", "0");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().startEntity("foo[]");
+                o.get().literal("1", "1");
+                o.get().literal("2", "2");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().startEntity("foo[]");
+                o.get().literal("1", "1");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // checkstyle-disable-line JavaNCSS
+    public void shouldBeLessThan() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if less_than(foo, '0')",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "1");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "0");
+                i.endRecord();
+                i.startRecord("3");
+                i.literal("foo", "-1");
+                i.endRecord();
+                i.startRecord("4");
+                i.literal("foo", "1.1");
+                i.endRecord();
+                i.startRecord("5");
+                i.literal("foo", "-1.1");
+                i.endRecord();
+                i.startRecord("6");
+                i.literal("foo", "1.1x");
+                i.endRecord();
+                i.startRecord("7");
+                i.startEntity("foo");
+                i.literal("foo", "-1");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("8");
+                i.literal("foo", "-1");
+                i.literal("foo", "0");
+                i.endRecord();
+                i.startRecord("9");
+                i.literal("foo", "-1");
+                i.literal("foo", "-2");
+                i.endRecord();
+                i.startRecord("10");
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "1");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "0");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().literal("foo", "-1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().literal("foo", "1.1");
+                o.get().endRecord();
+                o.get().startRecord("5");
+                o.get().literal("foo", "-1.1");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("6");
+                o.get().literal("foo", "1.1x");
+                o.get().endRecord();
+                o.get().startRecord("7");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "-1");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("8");
+                o.get().literal("foo", "-1");
+                o.get().literal("foo", "0");
+                o.get().endRecord();
+                o.get().startRecord("9");
+                o.get().literal("foo", "-1");
+                o.get().literal("foo", "-2");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("10");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test // checkstyle-disable-line JavaNCSS
+    public void shouldBeLessThanWildcard() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if less_than('foo.*', '0')",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.literal("foo", "-1");
+                i.literal("foo", "0");
+                i.endRecord();
+                i.startRecord("2");
+                i.literal("foo", "-1");
+                i.literal("foo", "-2");
+                i.endRecord();
+                i.startRecord("3");
+                i.startEntity("foo");
+                i.literal("foo", "-1");
+                i.literal("foo", "0");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("4");
+                i.startEntity("foo");
+                i.literal("foo", "-1");
+                i.literal("foo", "-2");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("5");
+                i.startEntity("foo");
+                i.literal("foo", "-1");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().literal("foo", "-1");
+                o.get().literal("foo", "0");
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().literal("foo", "-1");
+                o.get().literal("foo", "-2");
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "-1");
+                o.get().literal("foo", "0");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("4");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "-1");
+                o.get().literal("foo", "-2");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("5");
+                o.get().startEntity("foo");
+                o.get().literal("foo", "-1");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+            }
+        );
+    }
+
+    @Test
+    public void shouldBeLessThanArray() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "if less_than('foo[].*', '0')",
+                "  add_field(test,ok)",
+                "end"
+            ),
+            i -> {
+                i.startRecord("1");
+                i.startEntity("foo[]");
+                i.literal("1", "-1");
+                i.literal("2", "0");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("2");
+                i.startEntity("foo[]");
+                i.literal("1", "-1");
+                i.literal("2", "-2");
+                i.endEntity();
+                i.endRecord();
+                i.startRecord("3");
+                i.startEntity("foo[]");
+                i.literal("1", "-1");
+                i.endEntity();
+                i.endRecord();
+            },
+            o -> {
+                o.get().startRecord("1");
+                o.get().startEntity("foo[]");
+                o.get().literal("1", "-1");
+                o.get().literal("2", "0");
+                o.get().endEntity();
+                o.get().endRecord();
+                o.get().startRecord("2");
+                o.get().startEntity("foo[]");
+                o.get().literal("1", "-1");
+                o.get().literal("2", "-2");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
+                o.get().endRecord();
+                o.get().startRecord("3");
+                o.get().startEntity("foo[]");
+                o.get().literal("1", "-1");
+                o.get().endEntity();
+                o.get().literal("test", "ok");
                 o.get().endRecord();
             }
         );

@@ -40,15 +40,10 @@ public interface FixPredicate {
     Predicate<String> IS_TRUE = s -> "true".equals(s) || "1".equals(s);
     Predicate<String> IS_FALSE = s -> "false".equals(s) || "0".equals(s);
 
-    Predicate<String> IS_NUMBER = s -> {
-        try {
-            new BigDecimal(s);
-            return true;
-        }
-        catch (final NumberFormatException e) {
-            return false;
-        }
-    };
+    Predicate<String> IS_NUMBER = s -> testNumberConditional(s, x -> true);
+
+    BiPredicate<String, String> GREATER_THAN = (s, t) -> testNumberConditional(s, x -> testNumberConditional(t, y -> x.compareTo(y) > 0));
+    BiPredicate<String, String> LESS_THAN = (s, t) -> testNumberConditional(s, x -> testNumberConditional(t, y -> x.compareTo(y) < 0));
 
     Predicate<Value> IS_EMPTY = v -> v.extractType((m, c) -> m
             .ifArray(a -> c.accept(a.isEmpty()))
@@ -86,6 +81,16 @@ public interface FixPredicate {
                     .ifString(s -> c.accept(conditional.test(s)))
                     .orElse(w -> c.accept(false))
         ));
+    }
+
+    static boolean testNumberConditional(final String string, final Predicate<BigDecimal> conditional) {
+        try {
+            final BigDecimal number = new BigDecimal(string);
+            return number != null && conditional.test(number);
+        }
+        catch (final NumberFormatException e) {
+            return false;
+        }
     }
 
 }
