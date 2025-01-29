@@ -109,6 +109,12 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         return new RecordTransformer(metafix, expressions, this);
     }
 
+    /**
+     * Transforms the record.
+     *
+     * @param record      the record to transform
+     * @param dynamicVars the dynamic variables to apply during transformation
+     */
     public void transform(final Record record, final Map<String, String> dynamicVars) {
         final Map<String, String> oldDynamicVars = setVars(Vars.DYNAMIC, dynamicVars);
 
@@ -120,6 +126,11 @@ public class RecordTransformer { // checkstyle-disable-line ClassFanOutComplexit
         }
     }
 
+    /**
+     * Transforms the record.
+     *
+     * @param record the record to transform
+     */
     public void transform(final Record record) {
         consumers.forEach(consumer -> {
             final MetafactureException exception = tryRun(() -> consumer.accept(record));

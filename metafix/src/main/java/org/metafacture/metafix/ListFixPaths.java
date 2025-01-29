@@ -37,16 +37,32 @@ import org.metafacture.triples.AbstractTripleSort.Compare;
 @FluxCommand("list-fix-paths")
 public class ListFixPaths extends MetafixStreamAnalyzer {
 
+    /**
+     * Creates an instance of {@link ListFixPaths}.
+     */
     public ListFixPaths() {
         super("nothing()", Compare.PREDICATE);
         setIndex(false);
     }
 
+    /**
+     * Flags whether to output individual repeated subfields and array elements
+     * with index numbers.
+     *
+     * @param index true if index numbers should be output
+     */
     public void setIndex(final boolean index) {
         getFix().setEntityMemberName(index ? Metafix.DEFAULT_ENTITY_MEMBER_NAME : "*");
     }
 
+    /**
+     * Checks whether to output individual repeated subfields and array elements
+     * with index numbers.
+     *
+     * @return true if index numbers should be output
+     */
     public boolean getIndex() {
         return getFix().getEntityMemberName().equals(Metafix.DEFAULT_ENTITY_MEMBER_NAME);
     }
+
 }

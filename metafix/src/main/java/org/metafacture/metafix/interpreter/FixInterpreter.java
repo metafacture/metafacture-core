@@ -22,9 +22,18 @@ public class FixInterpreter extends XbaseInterpreter {
 
     private Metafix metafix;
 
+    /**
+     * Creates an instance of {@link FixInterpreter}.
+     */
     public FixInterpreter() {
     }
 
+    /**
+     * Interprets the Fix program.
+     *
+     * @param metafixParam the Metafix instance
+     * @param program      the Fix instance
+     */
     public void run(final Metafix metafixParam, final EObject program) {
         if (metafixParam != null && program != null) {
             metafix = metafixParam;

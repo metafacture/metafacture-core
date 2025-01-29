@@ -26,10 +26,21 @@ import org.metafacture.framework.MetafactureException;
  */
 public class FixExecutionException extends MetafactureException {
 
+    /**
+     * Creates an instance of {@link FixExecutionException}.
+     *
+     * @param message the exception message
+     */
     public FixExecutionException(final String message) {
         super(message);
     }
 
+    /**
+     * Creates an instance of {@link FixExecutionException}.
+     *
+     * @param message the exception message
+     * @param cause   the exception cause
+     */
     public FixExecutionException(final String message, final Throwable cause) {
         super(message, cause);
     }

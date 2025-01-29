@@ -8,6 +8,9 @@ package org.metafacture.metafix.scoping;
  */
 public class FixScopeProvider extends AbstractFixScopeProvider {
 
+    /**
+     * Creates an instance of {@link FixScopeProvider}.
+     */
     public FixScopeProvider() {
     }
 

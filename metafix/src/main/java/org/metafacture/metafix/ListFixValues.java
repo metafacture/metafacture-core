@@ -36,6 +36,11 @@ import org.metafacture.triples.AbstractTripleSort.Compare;
 @FluxCommand("list-fix-values")
 public class ListFixValues extends MetafixStreamAnalyzer {
 
+    /**
+     * Creates an instance of {@link ListFixValues}.
+     *
+     * @param path the Fix path to list values for
+     */
     public ListFixValues(final String path) {
         super(fix(path), Compare.OBJECT);
     }

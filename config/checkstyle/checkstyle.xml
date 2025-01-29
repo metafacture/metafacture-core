@@ -13,7 +13,7 @@
         <property name="files" value="xtext-gen"/>
     </module>
     <module name="SuppressionSingleFilter">
-        <property name="checks" value="MultipleStringLiterals|ExecutableStatementCount|MagicNumber"/>
+        <property name="checks" value="ExecutableStatementCount|MagicNumber|MissingJavadocMethod|MultipleStringLiterals"/>
         <property name="files" value="test"/>
     </module>
     <module name="TreeWalker">
@@ -93,7 +93,7 @@
         <module name="MethodTypeParameterName"/>
         <module name="MissingCtor"/>
         <module name="MissingDeprecated"/>
-        <!--<module name="MissingJavadocMethod"/>-->
+        <module name="MissingJavadocMethod"/>
         <module name="MissingOverride"/>
         <module name="MissingSwitchDefault"/>
         <module name="ModifiedControlVariable"/>
