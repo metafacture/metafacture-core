@@ -1,36 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<metamorph xmlns="http://www.culturegraph.org/metamorph"
-    version="1">
-    <meta>
-        <name>Marc21 to EDM</name>
-    </meta>
+
 do once("maps")
-put_map("rights",
-  "DE-101", "http://www.europeana.eu/rights/rr-f/"
-)
-put_map("isils",
-  "DE-101", "Deutsche Nationalbibliothek"
-)
-put_map("urls",
-  "DE-101", "http://d-nb.info/"
-)
-put_map("suffix",
-  "__default":""
-)
-put_map("suffix",
-  "__default", ""
-)
-put_map("mediatype",
-  "__default", "unknown",
-  "mediatype_003" : "Text"
-)
+  put_map("rights",
+    "DE-101": "http://www.europeana.eu/rights/rr-f/"
+  )
+  put_map("isils",
+    "DE-101": "Deutsche Nationalbibliothek"
+  )
+  put_map("urls",
+    "DE-101": "http://d-nb.info/"
+  )
+  put_map("suffix",
+    "__default":""
+  )
+  put_map("mediatype",
+    "__default": "unknown",
+    "mediatype_003" : "Text"
+  )
 
-put_filemap("$[FLUX_DIR]timevoc.txt", "timevoc", sep_char"\t")
+  put_filemap("$[FLUX_DIR]timevoc.txt", "timevoc", sep_char:"\t")
 
 
-put_var(
-"dnb_subject",""
-)
+  put_var(
+  "dnb_subject",""
+  )
 
 end
 
@@ -43,53 +35,24 @@ substring("@leader19","19","1")
 
 copy_field("041? .a","@lang")
 
-        <!-- <data source="041??.a" name="@lang" /> -->
-
-        <data source="001" name="aggregation_id">
-            <compose prefix="http://www.dnb.de/" />
-        </data>
 paste("aggregation_id","~http://www.dnb.de/","001", join_char:"")
 
 if exists("003")
-
-        <!-- mandatory ELIB -->
-copy_field("003", "@isil")
-else            <!-- BSB -->
-            <!-- BSB -->
-copy_field("040","@isil")
+  copy_field("003", "@isil")
+else
+  copy_field("040","@isil")
 end
 
 
-        <data name="edm:dataProvider$de" source="@isil">
-            <lookup in="isils" />
-        </data>
 copy_field("@isil", "edm:dataProvider$de")
 lookup("edm:dataProvider$de","isils")
 
-        <data name="*edm:dataProvider" source="@isil">
-            <compose prefix="http://ld.zdb-services.de/data/organisations/" />
-        </data>
+
 paste("*edm:dataProvider", "~http://ld.zdb-services.de/data/organisations/", "@isil", join_char:"")
 
 
-        <!-- hier Datenprovider immer identisch mit Provider des Objekts? derzeit
-            auch für BSZ so gehandhabt, obwohl Aggregator -->
-        <data name="edm:provider" source="_id">
-            <constant value="Deutsche Digitale Bibliothek" />
-        </data>
-
 add_field("edm:provider", "Deutsche Digitale Bibliothek")
 
-
-        <!-- DC:TYPE -->
-        <combine name="@mat" value="Monografie">
-            <data source="@leader7">
-                <equals string="m" />
-            </data>
-            <data source="@leader19">
-                <regexp match="[ b]" />
-            </data>
-        </combine>
 
 if any_equal("@leader7", "m")
   if any_match("@leader19","[ b]")
@@ -97,44 +60,20 @@ if any_equal("@leader7", "m")
   end
 end
 
-        <data name="@mat" source="@leader7">
-            <equals string="s" />
-            <constant value="fortlaufendes Sammelwerk" />
-        </data>
-
 if any_equal("@leader7", "s")
   add_field("@mat","fortlaufendes Sammelwerk")
 end
 
-        <data name="@mat" source="@leader19">
-            <equals string="a" />
-            <constant value="Mehrbändiges Werk" />
-        </data>
 
 if any_match("@leader19","a")
   add_field("@mat","Mehrbändiges Werk")
 end
 
-        <data name="@mat" source="@leader19">
-            <equals string="c" />
-            <constant value="Band" />
-        </data>
 
 if any_match("@leader19","c")
   add_field("@mat","Band")
 end
 
-
-        <!-- mandatory ELIB, if edm:isShownBy is not provided -->
-        <combine name="edm:isShownAt" value="${url}${id}${suffix}">
-            <data name="id" source="001" />
-            <data name="url" source="@isil">
-                <lookup in="urls" />
-            </data>
-            <data name="suffix" source="@isil">
-                <lookup in="suffix" />
-            </data>
-        </combine>
 copy_field("@isil","@isShownByUrl")
 lookup("@isShownByUrl","urls")
 
@@ -143,68 +82,35 @@ lookup("@isShownBySuffix","suffix")
 
 paste("edm:isShownAt","@isShownByUrl","001","@isShownBySuffix", join_char:"")
 
-        <!-- mandatory ELIB, edm:object für Binärcontent, z. B. Thumbnails für
-            Preview in Europeana, Problem: interner Binärcontent und Frage an Europeana:
-            Ableitung von PDF zu jpg? <data name="edm:object" source="" /> -->
-        <!-- mandatory ELIB, richtig verortet? in ELIB unter WebResource, in EDM
-            Mapping Guidelines unter WebRessource (recommended) und unter ore:aggregation
-            (mandatory) ; values s. http://pro.europeana.eu/documents/900548/0d423921-23e0-45fa-82a4-2ac72b3e6f38
-            ; value für DNB-Objekte mit "Der Zugriff auf das Objekt ist unbeschränkt
-            möglich." = zunächst http://www.europeana.eu/portal/rr-f.html gewählt, zu
-            prüfen, ob ok! -->
+#        <!-- mandatory ELIB, edm:object für Binärcontent, z. B. Thumbnails für
+#            Preview in Europeana, Problem: interner Binärcontent und Frage an Europeana:
+#            Ableitung von PDF zu jpg? <data name="edm:object" source="" /> -->
+#        <!-- mandatory ELIB, richtig verortet? in ELIB unter WebResource, in EDM
+#            Mapping Guidelines unter WebRessource (recommended) und unter ore:aggregation
+#            (mandatory) ; values s. http://pro.europeana.eu/documents/900548/0d423921-23e0-45fa-82a4-2ac72b3e6f38
+#            ; value für DNB-Objekte mit "Der Zugriff auf das Objekt ist unbeschränkt
+#            möglich." = zunächst http://www.europeana.eu/portal/rr-f.html gewählt, zu
+#            prüfen, ob ok! -->
 
-
-        <data
-            source="650?7.0|60017.0|61017.0|61017.0|630??.0|655?7.0|651?7.0|648??.0"
-            name="@conceptID">
-            <regexp match="^\(DE-588\)((.*))" format="${1}" />
-            <compose prefix="http://d-nb.info/gnd/" />
-        </data>
-<entity name="skos:Concept" sameEntity="true">
-            <data source="@conceptID" name="~rdf:about" />
-            <data
-                source="650?7.a|60017.a|61017.a|61017.a|630??.a|655?7.a|651?7.a|648??.a"
-                name="skos:prefLabel$de" />
-        </entity>
 do list(path:"650?7|60017|61017|61017|630??|655?7|651?7|648??","var":"SUBJECT")
   do list(path:"SUBJECT.0","var":"SUBJECT_ID")
-    if any_match("SUBJECT_ID","^\\(DE-588\\)((.*))")
+    if any_match("SUBJECT_ID","^\\(DE-588\\)(.*)$")
       copy_field("SUBJECT_ID","skos:Concept.$append.~rdf:about")
-      replace_all("skos:Concept.$last.~rdf:about","^\\(DE-588\\)((.*))","http://d-nb.info/gnd/$1")
+      replace_all("skos:Concept.$last.~rdf:about","^\\(DE-588\\)(.*)$","http://d-nb.info/gnd/$1")
       copy_field("SUBJECT.a","skos:Concept.$last.~rdf:prefLabel$de")
     end
   end
 end
 
-
-        <combine name="@publisherID" value="#/agent/${id}-${c}" reset="false">
-            <data source="001" name="id" />
-            <data name="c" source="2603 .b">
-                <count />
-            </data>
-            <postprocess>
-                <occurrence only="1" />
-            </postprocess>
-        </combine>
 unless exists("@publisherID")
-  count("2603 .b")
-  paste("@publisherID", "~#/agent/","001","~-","2603 .b", join_char:"")
+  copy_field("2603 .b", "260bcount.$append")
+  count("260bcount")
+  paste("@publisherID", "~#/agent/","001","~-","260bcount", join_char:"")
 end
 
-        <data name="@orgID" source="@isil">
-            <compose prefix="http://ld.zdb-services.de/data/organisations/" />
-        </data>
+paste("@orgID","~http://ld.zdb-services.de/data/organisations/","@isil",join_char:"")
 
-paste("@orgId","~http://ld.zdb-services.de/data/organisations/","@isil",join_char:"")
-
-        <data source="_id" name="@sectorID">
-            <constant value="$[sector]" />
-            <not-equals string="" />
-            <replace pattern="sec_" with="" />
-            <compose prefix="http://ddb.vocnet.org/sparte/sparte" />
-        </data>
-
-unless string_equal("$[sector]","")
+unless str_equal("$[sector]","")
   add_field("@sectorID","http://ddb.vocnet.org/sparte/sparte$[sector]")
 end
 
@@ -215,43 +121,10 @@ copy_field("@orgID","edm:Agent.$last.~rdf:about")
 copy_field("@isil","edm:Agent.$last.skos:prefLabel$de")
 lookup("edm:Agent.$last.skos:prefLabel$de","isils")
 
-        <entity name="edm:Agent">
-            <data source="@sectorID" name="*rdf:type" />
-            <data source="@orgID" name="~rdf:about" />
-            <data name="skos:prefLabel$de" source="@isil">
-                <lookup in="isils" />
-            </data>
-        </entity>
-
-<!--         <entity name="skos:Concept"> -->
-<!--             <data source="@sectorID" name="~rdf:about" /> -->
-<!--             <data source="_id" name="skos:Notation"> -->
-<!--                 <constant value="$[sector]" /> -->
-<!--             </data> -->
-<!--         </entity> -->
-
-        <entity name="skos:Concept">
-            <data source="@sectorID" name="~rdf:about" />
-            <data source="_id" name="skos:notation">
-                <constant value="$[sector]" />
-            </data>
-        </entity>
-
 copy_field("@sectorID", "skos:Concept.$append.~rdf:about")
-unless string_equal("$[sector]","")
+unless str_equal("$[sector]","")
   add_field("skos:Concept.$last.skos:notation","$[sector]")
 end
-
-        <entity name="edm:Agent">
-            <data source="@publisherID" name="~rdf:about" />
-            <data name="skos:prefLabel$de" source="2603 .b">
-                <occurrence only="1" />
-            </data>
-            <combine name="*edm:wasPresent" value="${id}" reset="false">
-                <data name="id" source="@pEventID" />
-                <data source="@publisherID" />
-            </combine>
-        </entity>
 
 copy_field("@publisherID","edm:Agent.$append.~rdf:about")
 do list(path:"2603 .b","var":"$i")
@@ -259,132 +132,24 @@ do list(path:"2603 .b","var":"$i")
     copy_field("$i","edm:Agent.$last.skos:prefLabel$de")
   end
 end
-copy_field("@pEventID","edm:Agent.$last.*edm:wasPresent")
 
-
-do list(path:"1001 |1101 |7001 |7101", "var":"CREATOR")
-  do list(path: "CREATOR.0", "var":"CREATORID")
-    if any match("CREATORID", "^\\(DE-588\\)(.*)")
-      copy_field("CREATORID","edm.Agent.$append.~rdf:about")
-      replace_all("edm.Agent.$last.~rdf:about", "^\\(DE-588\\)(.*)","http://d-nb.info/gnd/$1")
-      copy_field("CREATOR.a","edm.Agent.$last.skos:prefLabel$de")
-      copy_field("@cEventID","edm.Agent.$last.*edm:wasPresent")
-    end
-  end
-end
-
-        <data name="@creatorID" source="1001 .0|1101 .0|7001 .0|7101 .0">
-            <regexp match="^\(DE-588\)(.*)" format="http://d-nb.info/gnd/${1}" />
-        </data>
-        <entity name="edm:Agent" sameEntity="true">
-            <data name="~rdf:about" source="@creatorID" />
-            <data name="skos:prefLabel$de" source="1001 .a|1101 .a|7001 .a|7101 .a" />
-            <combine name="*edm:wasPresent" value="${id}" reset="false">
-                <data name="id" source="@cEventID" />
-                <data source="@creatorID" />
-            </combine>
-        </entity>
-        <data name="@cEventID" source="001">
-            <compose prefix="#/event/" postfix="-c" />
-        </data>
 
 paste("@cEventID", "~#/event/", "001", "~-c", join_char:"")
 
-        <data name="@pEventID" source="001">
-            <compose prefix="#/event/" postfix="-p" />
-        </data>
-paste("@cEventID", "~#/event/", "001", "~-p", join_char:"")
+paste("@pEventID", "~#/event/", "001", "~-p", join_char:"")
 
-        <entity name="edm:Event" flushWith="record">
-            <data name="~rdf:about" source="@cEventID" />
-            <data name="edm:hasType" source="_id">
-                <constant value="http://terminology.lido-schema.org/lido00012" />
-            </data>
-            <data name="*crm:P11_had_participant" source="1001 .0|1101 .0|7001 .0|7101 .0">
-                <regexp match="^\(DE-588\)(.*)" format="http://d-nb.info/gnd/${1}" />
-            </data>
-        </entity>
+copy_field("@pEventID","edm:Agent.$last.*edm:wasPresent")
 
-copy_field("@cEventID","edm:Event.$append.~rdf:about")
-add_field("edm:Event.$last.edm:hasType", "http://terminology.lido-schema.org/lido00012")
-do list(path:"edm.Agent","var":"AGENT")
-  if any_match("AGENT..~rdf:about", "http://d-nb.info/gnd/")
-    copy_field("AGENT.~rdf:about", "edm:Event.$last.*crm:P11_had_participant.$append")
-  end
-end
-
-        <entity name="edm:Event" flushWith="record">
-            <data name="~rdf:about" source="@pEventID" />
-            <!-- <data name="*edm:hasType" source="_id"> -->
-            <!-- <constant value="http://terminology.lido-schema.org/lido00228" /> -->
-            <!-- </data> -->
-            <data name="edm:hasType" source="_id">
-                <constant value="http://terminology.lido-schema.org/lido00228" />
-            </data>
-            <data name="*crm:P11_had_participant" source="@publisherID" />
-            <data name="*edm:occuredAt" source="@timeID" />
-            <data name="*edm:happenedAt" source="@placeID" />
-        </entity>
-      copy_field("@pEventID","edm:Event.$append.~rdf:about")
-      add_field("edm:Event.$last.edm:hasType", "http://terminology.lido-schema.org/lido00228")
-      copy_field("@publisherID", "edm:Event.$last.*crm:P11_had_participant.$append")
-      copy_field("@timeID", "edm:Event.$last.*edm:occuredAt")
-      copy_field("@placeID", "edm:Event.$last.*edm:happenedAt")
-
-        <data name="@place" source="2603 .a">
-            <replace pattern=" \[?u.a.\]?.*$" with="" />
-            <split delimiter=" ; " />
-            <occurrence only="1" />
-        </data>
-
-        copy_field("2603 .a","@place")
-        replace_all("@place"," \\[?u.a.\\]?.*$","")
-        paste("@placeID","~#/place/","001","~_place","@place",join_char:"") # what is the count doing?
-        <combine name="@placeID" value="#/place/${id}_place${c}">
-            <data name="c" source="@place">
-                <count />
-            </data>
-            <data source="001" name="id" />
-        </combine>
-
-
-        <entity name="edm:Place">
-            <data name="~rdf:about" source="@placeID" />
-            <data name="skos:prefLabel" source="@place" />
-        </entity>
-copy_field("@placeID","edm:Place.~rdf:about")
-copy_field("@place","edm:Place.skos:prefLabel")
-
-
-        <combine name="@timeID" value="#/timespan/${id}_timespan${c}">
-            <data name="c" source="260 .c|2603 .c">
-                <count />
-            </data>
-            <data source="001" name="id" />
-            <postprocess>
-                <occurrence only="1" />
-            </postprocess>
-        </combine>
-
+# copy_field("2603 .a","@place")
+# replace_all("@place"," \\[?u.a.\\]?.*$","")
+# paste("@placeID","~#/place/","001","~_place","@place",join_char:"") # what is the count doing?
 paste("@timeID","~#/timespan/","001","~_timespan","260[ 3] .c",join_char:"")
-copy_field("@timeID","edm:TimeSpan.~rdf:about")
-copy_field("260[ 3] .c","edm:TimeSpan.skos:notation")
-        <entity name="edm:TimeSpan">
-            <data name="~rdf:about" source="@timeID" />
-            <data name="skos:notation" source="260 .c|2603 .c" />
-        </entity>
 
+paste("recordID","@recordIDUrl","001","@recordIDSuffix", join_char:"")
 
-        <!-- mandatory ELIB -->
-        <combine name="@recordID" value="${url}${id}">
-            <data name="id" source="001" />
-            <data name="url" source="@isil">
-                <lookup in="urls" />
-            </data>
-            <data name="suffix" source="@isil">
-                <lookup in="suffix" />
-            </data>
-        </combine>
+add_field("@mediatypeID","$[media_type]")
+lookup("@mediatypeID","mediatype")
+prepend("@mediatypeID","http://ddb.vocnet.org/medientyp/")
 
 copy_field("@isil","@recordIDUrl")
 lookup("@recordIDUrl","urls")
@@ -392,236 +157,134 @@ lookup("@recordIDUrl","urls")
 copy_field("@isil","@recordIDSuffix")
 lookup("@recordIDSuffix","suffix")
 
-paste("recordID","@recordIDUrl","001","@recordIDSuffix", join_char:"")
+do list(path:"1001 |1101 |7001 |7101", "var":"CREATOR")
+  do list(path: "CREATOR.0", "var":"CREATORID")
+    if any_match("CREATORID", "^\\(DE-588\\)(.*)$")
+      copy_field("CREATORID","edm:Agent.$append.~rdf:about")
+      replace_all("edm:Agent.$last.~rdf:about", "^\\(DE-588\\)(.*)$","http://d-nb.info/gnd/$1")
+      copy_field("CREATOR.a","edm:Agent.$last.skos:prefLabel$de")
+      copy_field("@cEventID","edm:Agent.$last.*edm:wasPresent")
+    end
+  end
+end
 
-        <data source="_id" name="@mediatypeID">
-            <constant value="$[media_type]" />
-            <lookup in="mediatype" />
-            <compose prefix="http://ddb.vocnet.org/medientyp/" />
-        </data>
+
+copy_field("@cEventID","edm:Event.$append.~rdf:about")
+add_field("edm:Event.$last.edm:hasType", "http://terminology.lido-schema.org/lido00012")
+do list(path:"edm:Agent","var":"AGENT")
+  if any_match("AGENT.~rdf:about", "http://d-nb.info/gnd/.*")
+    copy_field("AGENT.~rdf:about", "edm:Event.$last.*crm:P11_had_participant.$append")
+  end
+end
+
+copy_field("@pEventID","edm:Event.$append.~rdf:about")
+add_field("edm:Event.$last.edm:hasType", "http://terminology.lido-schema.org/lido00228")
+copy_field("@publisherID", "edm:Event.$last.*crm:P11_had_participant.$append")
+copy_field("@timeID", "edm:Event.$last.*edm:occuredAt")
+copy_field("@placeID", "edm:Event.$last.*edm:happenedAt")
 
 
-add_field("@mediatypeID","$[media_type]")
-lookup("@mediatypeID","mediatype")
-prepend("@mediatypeID","http://ddb.vocnet.org/medientyp/")
 
-        <entity name="skos:Concept">
-            <data name="~rdf:about" source="@mediatypeID" />
-            <data source="_id" name="skos:notation">
-                <constant value="$[media_type]" />
-                <not-equals string="" />
-            </data>
-        </entity>
+
+copy_field("@placeID","edm:Place.~rdf:about")
+copy_field("@place","edm:Place.skos:prefLabel")
+
+
+copy_field("@timeID","edm:TimeSpan.~rdf:about")
+copy_field("260[ 3] .c","edm:TimeSpan.skos:notation")
+
+
+
+
 
 copy_field("@mediatypeID","skos:Concept.$append.rdf:about")
 unless str_equal("$[media_type]","")
   add_field("skos:Concept.$last.skos:notation","$[media_type]")
 end
 
-        <entity name="dcterms:LinguisticSystem">
-            <data source="@lang" name="rdf:value">
 
-            </data>
-            <data source="@lang" name="~rdf:about">
-                <compose prefix="http://id.loc.gov/vocabulary/iso639-2/" />
-            </data>
-        </entity>
-
-        copy_field("@lang","dcterms:LinguisticSystem.rdf:value")
-        paste("dcterms:LinguisticSystem.~rdf:about","~http://id.loc.gov/vocabulary/iso639-2/","@lang")
-
-        <data name="edm:rights" source="@isil">
-            <lookup in="rights" />
-        </data>
-
-        copy_field("@isil","edm:rights")
-        lookup("edm:rights","rights")
-
-        <data source="_id" name="*dcterms:rights">
-            <constant value="http://creativecommons.org/publicdomain/zero/1.0/"/>
-        </data>
-
-        add_field("*dcterms:rights","http://creativecommons.org/publicdomain/zero/1.0/")
+copy_field("@lang","dcterms:LinguisticSystem.rdf:value")
+paste("dcterms:LinguisticSystem.~rdf:about","~http://id.loc.gov/vocabulary/iso639-2/","@lang", join_char:"")
 
 
-        <entity name="edm:ProvidedCHO" flushWith="record">
-            <data source="@recordID" name="~rdf:about" />
+copy_field("@isil","edm:rights")
+lookup("edm:rights","rights")
+
+add_field("*dcterms:rights","http://creativecommons.org/publicdomain/zero/1.0/")
+
 copy_field("@recordID","edm:ProvidedCHO.~rdf:about")
 
-            <data name="*edm:wasPresent" source="@pEventID|@cEventID" />
 copy_field("@pEventID|@cEventID","edm:ProvidedCHO.*edm:wasPresent.$append")
 
-            <data source="@mat" name="dc:type" />
 copy_field("@mat","edm:ProvidedCHO.dc:type")
-            <data source="_id" name="edm:type">
-                <constant value="TEXT" />
-            </data>
+
 add_field("edm:ProvidedCHO.edm:type","TEXT")
-            <data name="dc:publisher" source="2603 .b" />
+
 copy_field("2603 .b","edm:ProvidedCHO.dc:publisher")
-            <data name="dcterms:extent" source="300??.a">
-                <not-equals string="Online-Ressource" />
-            </data>
+
 unless any_equal("300??.a","Online-Ressource")
   copy_field("300??.a","edm:ProvidedCHO.dcterms:extent")
 end
 
-            <data source="@lang" name="dc:language" />
+
 copy_field("@lang","edm:ProvidedCHO.dc:language")
-            <data source="@lang" name="*dcterms:language">
-                <compose prefix="http://id.loc.gov/vocabulary/iso639-2/" />
-            </data>
+
 paste("edm:ProvidedCHO.*dcterms:language","~http://id.loc.gov/vocabulary/iso639-2/","@lang",join_char:"")
 
 
-            <combine name="dcterms:bibliographicCitation" value="${a} ; ${v}">
-                <data source="490??.a" name="a" />
-                <data source="490??.v" name="v" />
-            </combine>
-paste("edm:ProvidedCHO.dcterms:bibliographicCitation","490??.a","~ ; ","490??.v", join_char:"")
-            <data name="dc:creator" source="1001 .a|1101 .a" />
-copy_field("1[10]1  .a","edm:ProvidedCHO.dc:creator.$append")
-            <data name="dc:contributor" source="7001 .a|7101 .a" />
-copy_field("7[10]1  .a","edm:ProvidedCHO.dc:contributor.$append")
 
-            <data name="dc:subject"
-                source="650?7.a|60017.a|61017.a|61117.a|630??.a|655?7.a|651?7.a|648??.a" />
-            <data name="*dc:subject" source="@conceptID" />
+paste("edm:ProvidedCHO.dcterms:bibliographicCitation","490??.a","~ ; ","490??.v", join_char:"")
+
+copy_field("1[10]1  .a","edm:ProvidedCHO.dc:creator.$append")
+
+copy_field("7[10]1  .a","edm:ProvidedCHO.dc:contributor.$append")
 
 do list(path:"650?7|60017|61017|61017|630??|655?7|651?7|648??","var":"SUBJECT")
   copy_field("SUBJECT.a", "edm:ProvidedCHO.dc:subject.$append")
 end
 
-            <data name="*dcterms:isPartOf" source="830??.w|800??.w|810??.w|811??.w">
-                <regexp match="^\(DE-101\)((.*))" format="${1}" />
-                <compose prefix="http://d-nb.info/" />
-                <occurrence only="1" />
-            </data>
+
+do list(path:"830??|800??|810??|811??","var":"$i")
+  do list(path:"$i.w","var":"$j")
+    if any_match("$j","^\\(DE-101\\)(.*)$")
+      copy_field("$j","edm:ProvidedCHO.*dcterms:isPartOf.$append")
+    end
+  end
+end
+
+replace_all("edm:ProvidedCHO.*dcterms:isPartOf.*","^\\(DE-101\\)(.*)$","http://d-nb.info/$1")
+
+
+paste("edm:ProvidedCHO.dc:title","24510.a","24510.b",join_char:" : ")
+
+
+copy_field("260[ 3] .c","edm:ProvidedCHO.dcterms:issued")
+
+copy_field("250 .a","edm:ProvidedCHO.dc:description.$append")
+copy_field("502??.a","edm:ProvidedCHO.dc:description.$append")
 
 
 
+unless str_equal("$[dnb_subject]","")
+  add_field("edm:ProvidedCHO.*dc:subject", "$[dnb_subject]")
+  add_field("@dnbSubjectID","$[dnb_subject]")
+end
 
-            <!-- hierarchy: aggregation entity status -->
-            <concat delimiter="; " name="ddb:techinfo">
-                <choose name="dc:description">
-                    <data source="245 ?.n|490 ?.v|800 ?.v|810 ?.v|811 ?.v|830 ?.v">
-                        <compose prefix="position:" />
-                    </data>
-                    <data source="_id">
-                        <constant value="position:-1" />
-                    </data>
-                </choose>
-                <data source="_id">
-                    <constant value="aggregation_entity:false" />
-                </data>
-            </concat>
+do list(path:"85640","var":"$i")
+  if any_match("$i.x","^Langzeitarchivierung.*")
+    copy_field("$i.u","@urn.~rdf:about")
+  elsif any_equal("$i.x","Resolving-System")
+    copy_field("$i.u","@urn.~rdf:about")
+  end
 
-            <combine name="dc:title" value="${title}${othtitleinfo}"
-                flushWith="24510">
-                <data name="title" source="24510.a" />
-                <data name="othtitleinfo" source="24510.b">
-                    <compose prefix=" : " />
-                </data>
-            </combine>
-            <data name="dcterms:issued" source="260 .c|2603 .c" />
+  if any_match("$i.x","^Langzeitarchivierung.*")
+    copy_field("$i.u","edm:WebResource.$append.~rdf:about")
+  elsif any_equal("$i.x","Resolving-System")
+    copy_field("$i.u","edm:WebResource.$append.~rdf:about")
+  end
+  copy_field("@mediatypeID","edm:WebResource.$last.dc:type")
+  add_field("edm:WebResource.$last.dcterms:rights", "http://www.deutsche-digitale-bibliothek.de/lizenzen/rv-fz/")
+end
 
 
-            <data name="dc:description" source="250 .a|502??.a" />
-
-            <!-- dnb subject id -->
-            <data name="*dc:subject" source="@dnbSubjectID" />
-
-            <data name="*dc:subject" source="_id">
-                <constant value="$[dnb_subject]" />
-                <not-equals string="" />
-            </data>
-
-        </entity>
-
-        <!-- <combine name="@dnbSubjectID" value="${dnb}" sameEntity="true"> -->
-        <!-- <data name="dnb" source="084 ?.a"> -->
-        <!-- <compose prefix="http://d-nb.info/ddc-sg/" /> -->
-        <!-- </data> -->
-        <!-- <data source="084 ?.2"> -->
-        <!-- <regexp match="^sdnb" /> -->
-        <!-- </data> -->
-        <!-- </combine> -->
-
-
-
-        <!-- TODO: concordance-call or lookup for 084 ?.a -->
-        <!-- <entity name="skos:Concept"> -->
-        <!-- <data source="@dnbSubjectID" name="~rdf:about" /> -->
-        <!-- <data source="normed_value" name="skos:prefLabel$de" /> -->
-        <!-- </entity> -->
-
-        <choose name="@urn">
-            <combine name="~rdf:about" value="${urn}">
-                <data name="urn" source="85640.u" />
-                <data source="85640.x">
-                    <regexp match="^Langzeitarchivierung" />
-                </data>
-            </combine>
-            <combine name="~rdf:about" value="${urn}">
-                <data name="urn" source="85640.u" />
-                <data source="85640.x">
-                    <equals string="Resolving-System" />
-                </data>
-            </combine>
-        </choose>
-        <entity name="edm:WebResource">
-            <!-- mandatory ELIB, if edm:isShownAt is not provided ; nur if subfield
-                x = "Langzeitarchivierung" - wie abfragen? -->
-            <choose>
-                <combine name="~rdf:about" value="${urn}">
-                    <data name="urn" source="85640.u" />
-                    <data source="85640.x">
-                        <regexp match="^Langzeitarchivierung" />
-                    </data>
-                </combine>
-                <combine name="~rdf:about" value="${urn}">
-                    <data name="urn" source="85640.u" />
-                    <data source="85640.x">
-                        <equals string="Resolving-System" />
-                    </data>
-                </combine>
-            </choose>
-
-            <data source="@mediatypeID" name="dc:type" />
-
-
-
-            <data name="dcterms:rights" source="_id">
-                <constant
-                    value="http://www.deutsche-digitale-bibliothek.de/lizenzen/rv-fz/" />
-            </data>
-            <!-- TODO: mediatype -->
-        </entity>
-
-
-
-    </rules>
-    <maps>
-        <map name="rights">
-            <entry name="DE-101" value="http://www.europeana.eu/rights/rr-f/" />
-        </map>
-        <map name="isils">
-            <entry name="DE-101" value="Deutsche Nationalbibliothek" />
-        </map>
-        <map name="urls">
-            <entry name="DE-101" value="http://d-nb.info/" />
-        </map>
-        <map name="suffix" default="">
-
-        </map>
-
-        <map name="mediatype" default="unknown">
-            <entry name="mediatype_003" value="Text" />
-        </map>
-
-
-
-        <filemap name="timevoc" files="$[FLUX_DIR]timevoc.txt"
-            separator="\t" />
-    </maps>
-</metamorph>
+retain("edm:*","dc*")
