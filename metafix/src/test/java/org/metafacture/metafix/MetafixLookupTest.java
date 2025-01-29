@@ -387,7 +387,7 @@ public class MetafixLookupTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/121
+    // See issue #601
     public void shouldLookupArraySubFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "lookup('animals[].*.Aanimal', '" + TSV_MAP + "', 'sep_char': '\t')"
@@ -594,7 +594,7 @@ public class MetafixLookupTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/149
+    // See issue metafacture-fix#149
     public void shouldKeepOriginalValueIfNotFoundAndNoDefault() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "lookup('title.*', Aloha: 'Alohaeha', 'Moin': 'Moin zäme')"
@@ -685,7 +685,7 @@ public class MetafixLookupTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/149
+    // See issue metafacture-fix#149
     public void shouldDeleteNonFoundLookupOnDemand() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "lookup('title.*', Aloha: Alohaeha, 'Moin': 'Moin zäme', delete: 'true')"
@@ -707,7 +707,7 @@ public class MetafixLookupTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/149
+    // See issue metafacture-fix#149
     public void shouldNotDeleteNonFoundLookupExplicitly() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "lookup('title.*', Aloha: Alohaeha, 'Moin': 'Moin zäme', delete: 'false')"
@@ -773,7 +773,7 @@ public class MetafixLookupTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/149
+    // See issue metafacture-fix#149
     public void shouldDeleteNonFoundLookupOnDemandNonRepeatedField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "lookup('title', Aloha: Alohaeha, 'Moin': 'Moin zäme', delete: 'true')"

@@ -580,7 +580,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/92
+    // See issue metafacture-fix#92
     public void complexAppendWithArrayOfObjects() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "copy_field('others', 'animals[].$append')",
@@ -662,7 +662,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/99
+    // See issue metafacture-fix#99
     public void simpleCopyWithWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "copy_field('?nimal', 'animal')"
@@ -785,7 +785,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/89
+    // See issue metafacture-fix#89
     public void appendWithAsteriksWildcardAtTheEnd() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('stringimals[]')",
@@ -864,7 +864,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/113")
+    @MetafixToDo("See issue metafacture-fix#113")
     public void copyFieldArrayOfObjectsAndListNewArrayOfObjectsAndMoveSubfield() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "copy_field('author[]','creator[]')",
@@ -891,7 +891,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/121
+    // See issue #601
     public void shouldCopyArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('TEST_TWO[]')",
@@ -924,7 +924,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/121
+    // See issue #601
     public void shouldCopyNestedArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('TEST_4[]')",
@@ -979,7 +979,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/121
+    // See issue #601
     public void shouldCopyArraySubFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('TEST_5[]')",
@@ -1631,7 +1631,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/106
+    // See issue metafacture-fix#106
     public void shouldCopyMarkedArrayOfStringsIntoUnmarkedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "copy_field('animal_string_Array[]', 'animals_repeated_SimpleField')"
@@ -1658,7 +1658,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/106
+    // See issue metafacture-fix#106
     public void shouldCopyMarkedArrayOfHashesIntoUnmarkedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "copy_field('animal_object_Array[]', 'animals_repeated_ObjectField')"
@@ -1696,7 +1696,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/106
+    // See issue metafacture-fix#106
     public void shouldCopyMarkedArrayOfHashesIntoMarkedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "copy_field('animal_object_Array[]', 'test_animal_object_Array[]')"
@@ -1870,7 +1870,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/111
+    // See issue metafacture-fix#111
     public void setArrayReplaceExisting() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('foo[]','a','b','c')"),
@@ -1894,7 +1894,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/130
+    // See issue metafacture-fix#130
     public void setArrayInArrayWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('foo[].*.test[]', 'test')"),
@@ -1944,7 +1944,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/111
+    // See issue metafacture-fix#111
     public void setHashReplaceExisting() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_hash('foo','a': 'b','c': 'd')"),
@@ -3338,7 +3338,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/100
+    // See issue metafacture-fix#100
     public void shouldReplaceExistingValueWithRandomNumber() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "random(others, '100')"
@@ -3424,7 +3424,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/100")
+    @MetafixToDo("See issue metafacture-fix#100")
     public void shouldNotAppendRandomNumberToHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "random('animals.$append', '100')"
@@ -3471,7 +3471,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/100
+    // See issue metafacture-fix#100
     public void shouldRecursivelyRenameFieldsInHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "rename(others, ani, QR)"
@@ -3501,7 +3501,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/100
+    // See issue metafacture-fix#100
     public void shouldRecursivelyRenameFieldsInArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "rename('animals[]', ani, XY)"
@@ -3533,7 +3533,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @MetafixToDo("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/100")
+    @MetafixToDo("java.lang.ArrayIndexOutOfBoundsException: 0; see issue metafacture-fix#100")
     public void shouldRenameAllFieldsInHash() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "rename('.', ani, XY)"
@@ -3577,7 +3577,7 @@ public class MetafixRecordTest {
     }
 
     @Test
-    @MetafixToDo("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/121")
+    @MetafixToDo("java.lang.ArrayIndexOutOfBoundsException: 0; see issue #601")
     public void shouldRenameArrayFieldWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "rename('OTHERS[].*', 'd', 'XY')"

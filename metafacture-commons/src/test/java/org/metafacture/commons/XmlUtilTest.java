@@ -54,11 +54,8 @@ public class XmlUtilTest {
         assertEquals("K&#248;benhavn", result);
     }
 
-    /**
-     * Test for <a href="https://github.com/culturegraph/metafacture-core/issues/267">#267</a>.
-     */
     @Test
-    public void escape_shouldEscapeSurrogatePairsAsSingleEntity() {
+    public void issue267_escape_shouldEscapeSurrogatePairsAsSingleEntity() {
         final String unescaped = "Smile: \ud83d\ude09";
         final String result = XmlUtil.escape(unescaped);
 

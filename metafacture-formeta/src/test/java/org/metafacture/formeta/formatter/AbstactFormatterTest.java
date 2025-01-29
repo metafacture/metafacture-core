@@ -52,9 +52,6 @@ public final class AbstactFormatterTest {
         };
     }
 
-    /*
-     * Test for issue https://github.com/culturegraph/metafacture-core/issues/161
-     */
     @Test
     public void issue161() {
         final String longValue = StringUtil.repeatChars('a', AbstractFormatter.BUFFER_SIZE * 2 + 1);
