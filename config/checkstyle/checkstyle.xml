@@ -150,7 +150,7 @@
         <module name="SimplifyBooleanReturn"/>
         <module name="StaticVariableName">
             <!-- disallow static, non-final variables -->
-            <!--<property name="format" value="^$"/>-->
+            <property name="format" value="^$"/>
         </module>
         <module name="StringLiteralEquality"/>
         <module name="SuperClone"/>

@@ -59,7 +59,7 @@ public final class HttpOpenerTest {
     private static final String REQUEST_BODY = "request body";
     private static final String RESPONSE_BODY = "response bödy"; // UTF-8
 
-    private static byte[] gzippedResponseBody;
+    private static byte[] GZIPPED_RESPONSE_BODY; // checkstyle-disable-line StaticVariableName
 
     static {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
@@ -67,7 +67,7 @@ public final class HttpOpenerTest {
             gzip.write(RESPONSE_BODY.getBytes("UTF-8"));
             gzip.close();
 
-            gzippedResponseBody = out.toByteArray();
+            GZIPPED_RESPONSE_BODY = out.toByteArray();
         }
         catch (final IOException e) {
             e.printStackTrace();
@@ -290,7 +290,7 @@ public final class HttpOpenerTest {
     @Test
     public void shouldPerformGetRequestWithGzippedContentEncoding() throws IOException {
         shouldPerformRequest(TEST_URL, HttpOpener.Method.GET, (o, u) -> o.setAcceptEncoding("gzip"),
-                null, null, WireMock.ok().withBody(gzippedResponseBody).withHeader(HttpOpener.CONTENT_ENCODING_HEADER, "gzip"), RESPONSE_BODY);
+                null, null, WireMock.ok().withBody(GZIPPED_RESPONSE_BODY).withHeader(HttpOpener.CONTENT_ENCODING_HEADER, "gzip"), RESPONSE_BODY);
     }
 
     private void shouldPerformRequest(final String input, final HttpOpener.Method method, final BiConsumer<HttpOpener, String> consumer, final String... headers) throws IOException {

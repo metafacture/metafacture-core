@@ -46,9 +46,9 @@ public class MarcXmlEncoderTest {
     private static final String XML_MARC_COLLECTION_END_TAG = "</marc:collection>";
     private static final String RECORD_ID = "92005291";
 
-    private static StringBuilder resultCollector;
-    private static int resultCollectorsResetStreamCount;
-    private static MarcXmlEncoder encoder;
+    private StringBuilder resultCollector;
+    private int resultCollectorsResetStreamCount;
+    private MarcXmlEncoder encoder;
 
     public MarcXmlEncoderTest() {
     }

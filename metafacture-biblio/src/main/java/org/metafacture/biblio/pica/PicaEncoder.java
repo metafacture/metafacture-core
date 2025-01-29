@@ -62,7 +62,7 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     private static final String FIELD_NAME_PATTERN_STRING = "\\d{3}.(/..)?";
     private static final Pattern FIELD_NAME_PATTERN = Pattern.compile(FIELD_NAME_PATTERN_STRING);
 
-    private static StringBuilder builder = new StringBuilder(); //Result of the encoding process
+    private static final StringBuilder BUILDER = new StringBuilder(); // Result of the encoding process
 
     private boolean entityOpen; // Flag to inform whether an entity is opened.
     private boolean idnControlSubField; // Flag to inform whether it is the 003@ field.
@@ -80,7 +80,7 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
     public void startRecord(final String recordId) {
         // the name is a idn, which should be found in the encoded data under 003@.
         //any rest of the previous record is cleared before the new begins.
-        builder.setLength(0);
+        BUILDER.setLength(0);
         this.id = recordId;
         //Now an entity can be opened. But no literal is allowed.
         this.entityOpen = false;
@@ -118,7 +118,7 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
         if (entityOpen) { //No nested entities are allowed in pica+.
             throw new FormatException(name);
         }
-        builder.append(name.trim() + " ");
+        BUILDER.append(name.trim() + " ");
 
         idnControlSubField = !ignoreRecordId && FIELD_IDN_INTERN.equals(name.trim());
         //Now literals can be opened but no more entities.
@@ -142,28 +142,28 @@ public final class PicaEncoder extends DefaultStreamPipe<ObjectReceiver<String>>
             }
             idnControlSubField = false; //only one record ID will be checked.
         }
-        builder.append(SUB_DELIMITER);
-        builder.append(name);
-        builder.append(valueNew);
+        BUILDER.append(SUB_DELIMITER);
+        BUILDER.append(name);
+        BUILDER.append(valueNew);
     }
 
     @Override
     public void endEntity() {
-        builder.append(FIELD_DELIMITER);
+        BUILDER.append(FIELD_DELIMITER);
         //Now an entity can be opened. But no literal is allowed.
         this.entityOpen = false;
     }
 
     @Override
     public void endRecord() {
-        getReceiver().process(builder.toString());
+        getReceiver().process(BUILDER.toString());
         //No literal is allowed.
         this.entityOpen = false;
     }
 
     @Override
     protected void onResetStream() {
-        builder.setLength(0);
+        BUILDER.setLength(0);
     }
 
 }
