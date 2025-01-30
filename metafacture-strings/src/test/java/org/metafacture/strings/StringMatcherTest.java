@@ -16,15 +16,14 @@
 
 package org.metafacture.strings;
 
-import static org.mockito.Mockito.verify;
+import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 
 /**
  * Tests for class {@link StringMatcher}.
@@ -41,6 +40,9 @@ public final class StringMatcherTest {
 
     @Mock
     private ObjectReceiver<String> receiver;
+
+    public StringMatcherTest() {
+    }
 
     @Before
     public void setup() {
@@ -61,7 +63,7 @@ public final class StringMatcherTest {
 
         matcher.process("Hi PLACEHOLDER! -- Goodbye PLACEHOLDER!");
 
-        verify(receiver).process("Hi Karl! -- Goodbye Karl!");
+        Mockito.verify(receiver).process("Hi Karl! -- Goodbye Karl!");
     }
 
     @Test
@@ -71,7 +73,7 @@ public final class StringMatcherTest {
 
         matcher.process("important-bit but this can be ignored");
 
-        verify(receiver).process("important-bit");
+        Mockito.verify(receiver).process("important-bit");
     }
 
     @Test
@@ -80,7 +82,7 @@ public final class StringMatcherTest {
 
         matcher.process(INPUT_STRING);
 
-        verify(receiver).process(INPUT_STRING);
+        Mockito.verify(receiver).process(INPUT_STRING);
     }
 
 }

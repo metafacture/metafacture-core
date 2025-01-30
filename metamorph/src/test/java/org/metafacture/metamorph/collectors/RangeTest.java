@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -38,9 +38,12 @@ public final class RangeTest {
     @Mock
     private StreamReceiver receiver;
 
+    public RangeTest() {
+    }
+
     @Test
     public void shouldOutputAllnNmbersbBetweenFirstAndLastInclusive() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <range name='range' flushWith='record'>" +
                 "    <data source='first' />" +
@@ -68,7 +71,7 @@ public final class RangeTest {
 
     @Test
     public void shouldOutputFirstIfLastEqualsFirst() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <range name='range' flushWith='record'>" +
                 "    <data source='first' />" +
@@ -86,12 +89,12 @@ public final class RangeTest {
                     o.get().literal("range", "1989");
                     o.get().endRecord();
                 }
-                );
+        );
     }
 
     @Test
     public void shouldOutputMultipleRanges() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <range name='range' flushWith='record'>" +
                 "    <data source='first' />" +
@@ -125,7 +128,7 @@ public final class RangeTest {
 
     @Test
     public void shouldRemoveDuplicateNumbersFromOverlappingRanges() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <range name='range' flushWith='record'>" +
                 "    <data source='first' />" +
@@ -153,7 +156,7 @@ public final class RangeTest {
 
     @Test
     public void shouldUseUserdefinedIncrement() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <range name='range' increment='3' flushWith='record'>" +
                 "    <data source='first' />" +
@@ -179,7 +182,7 @@ public final class RangeTest {
 
     @Test
     public void shouldAllowNegativeIncrements() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <range name='range' increment='-3' flushWith='record'>" +
                 "    <data source='first' />" +

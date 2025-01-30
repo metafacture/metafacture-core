@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -39,9 +39,12 @@ public final class ConcatTest {
     @Mock
     private StreamReceiver receiver;
 
+    public ConcatTest() {
+    }
+
     @Test
     public void shouldConcatenateValues() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <concat delimiter=', ' name='concat' prefix='{' postfix='}'>" +
                 "    <data source='data1' />" +
@@ -73,7 +76,7 @@ public final class ConcatTest {
 
     @Test
     public void shouldEmitConcatenatedValueOnFlushEvent() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <concat delimiter=', ' name='concat' prefix='{' postfix='}' flushWith='d' reset='true'>" +
                 "    <data source='d.1' />" +
@@ -105,7 +108,7 @@ public final class ConcatTest {
 
     @Test
     public void shouldEmitEmptyValues() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <concat name='concat' delimiter=', '>" +
                 "    <data source='litA' />" +
@@ -129,7 +132,7 @@ public final class ConcatTest {
 
     @Test
     public void shouldReverseConcatenationIfReverseIsTrue() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <concat name='concat' delimiter=', ' reverse='true'>" +
                 "    <data source='litA' />" +
@@ -153,7 +156,7 @@ public final class ConcatTest {
 
     @Test
     public void prefixAndPostfixShouldWorkAsNormalIfReverseIsTrue() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <concat name='concat' delimiter=', ' prefix='(' postfix=')' reverse='true'>" +
                 "    <data source='litA' />" +
@@ -177,7 +180,7 @@ public final class ConcatTest {
 
     @Test
     public void issue187_shouldUseEmptyDelimiterAsDefault() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <concat name='concat'>" +
                 "    <data source='lit' />" +

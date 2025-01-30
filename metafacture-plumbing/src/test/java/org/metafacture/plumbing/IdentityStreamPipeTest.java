@@ -16,15 +16,14 @@
 
 package org.metafacture.plumbing;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.times;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -47,6 +46,9 @@ public final class IdentityStreamPipeTest {
 
     @Mock
     private StreamReceiver receiver;
+
+    public IdentityStreamPipeTest() {
+    }
 
     @Before
     public void setup() {
@@ -73,7 +75,7 @@ public final class IdentityStreamPipeTest {
         identityPipe.literal(LITERAL_NAME1, LITERAL_VALUE1);
         identityPipe.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID1);
         ordered.verify(receiver).literal(LITERAL_NAME1, LITERAL_VALUE1);
         ordered.verify(receiver).startEntity(ENTITY1);
@@ -81,7 +83,7 @@ public final class IdentityStreamPipeTest {
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).endRecord();
         ordered.verify(receiver).startRecord(RECORD_ID2);
-        ordered.verify(receiver, times(2)).literal(LITERAL_NAME1, LITERAL_VALUE1);
+        ordered.verify(receiver, Mockito.times(2)).literal(LITERAL_NAME1, LITERAL_VALUE1);
         ordered.verify(receiver).endRecord();
     }
 

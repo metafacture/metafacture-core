@@ -40,6 +40,9 @@ public final class TripleSortTest {
     @Mock
     private ObjectReceiver<Triple> receiver;
 
+    public TripleSortTest() {
+    }
+
     @Test
     public void shouldSortByIncreasingSubject() {
         assertSort(
@@ -262,7 +265,7 @@ public final class TripleSortTest {
         );
     }
 
-    @Test(expected=NumberFormatException.class)
+    @Test(expected = NumberFormatException.class)
     public void shouldFailToSortNumericallyWithInvalidNumber() {
         assertSort(
                 t -> {

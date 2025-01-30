@@ -197,11 +197,11 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
     }
 
     private boolean ignore(final String line) {
-        return line.isEmpty() || (ignoreMatcher != null && ignoreMatcher.reset(line).matches());
+        return line.isEmpty() || ignoreMatcher != null && ignoreMatcher.reset(line).matches();
     }
 
     private boolean ignore(final int partsLength, final int minColumns, final int expColumns) {
-        return partsLength < minColumns || (expColumns > 0 && partsLength != expColumns);
+        return partsLength < minColumns || expColumns > 0 && partsLength != expColumns;
     }
 
     private InputStream openStream(final String file) {

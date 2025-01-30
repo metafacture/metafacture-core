@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -39,9 +39,12 @@ public final class ChooseTest {
     @Mock
     private StreamReceiver receiver;
 
+    public ChooseTest() {
+    }
+
     @Test
     public void shouldChooseValueOfTopMostFiringStatement() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <choose>" +
                 "    <data source='data1' />" +
@@ -77,7 +80,7 @@ public final class ChooseTest {
 
     @Test
     public void shouldMakeChooseDecisionOnFlushEvent() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <choose flushWith='entity'>" +
                 "    <data source='entity.data1' />" +
@@ -114,7 +117,7 @@ public final class ChooseTest {
 
     @Test
     public void issue110_shouldOutputFallBackIfFlushedWithEntity() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <choose name='chosen' flushWith='record|entity'>" +
                 "    <data source='entity.data1' />" +
@@ -136,7 +139,7 @@ public final class ChooseTest {
 
     @Test
     public void issue210_issue49_shouldRepeatedlyEmitNamedValueIfResetIsFalse() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <choose flushWith='flush' reset='false'>" +
                 "    <data source='lit1' />" +
@@ -159,7 +162,7 @@ public final class ChooseTest {
 
     @Test
     public void issue210_shouldResetAfterEmittingNamedValueIfResetIsTrue() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <choose flushWith='flush' reset='true'>" +
                 "    <data source='lit1' />" +
@@ -182,7 +185,7 @@ public final class ChooseTest {
 
     @Test
     public void issue210_shouldResetAfterEmittingNamedValueByDefault() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <choose flushWith='flush'>" +
                 "    <data source='lit1' />" +
@@ -205,7 +208,7 @@ public final class ChooseTest {
 
     @Test
     public void issue250_shouldResetOnEntityChangeIfSameEntityIsTrue() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <choose sameEntity='true'>" +
                 "    <data source='entity.lit1' />" +
@@ -232,7 +235,7 @@ public final class ChooseTest {
 
     @Test
     public void issue250_shouldNotResetOnEntityChangeIfSameEntityIsFalse() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <choose sameEntity='false'>" +
                 "    <data source='entity.lit1' />" +
@@ -259,7 +262,7 @@ public final class ChooseTest {
 
     @Test
     public void issue250_shouldNotResetOnEntityChangeByDefault() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <choose>" +
                 "    <data source='entity.lit1' />" +

@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -39,9 +39,12 @@ public final class TuplesTest {
     @Mock
     private StreamReceiver receiver;
 
+    public TuplesTest() {
+    }
+
     @Test
     public void shouldEmitTwoAndThreeTuples() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <tuples name='product'>" +
                 "    <data source='1' />" +
@@ -88,7 +91,7 @@ public final class TuplesTest {
 
     @Test
     public void shouldOnlyEmitTriplesWithMoreThanMinNValues() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <tuples name='product' minN='3'>" +
                 "    <data source='1' />" +
@@ -131,7 +134,7 @@ public final class TuplesTest {
 
     @Test
     public void shouldEmitTuplesWithMinNIfNotAllStatementsFired() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <tuples name='product' minN='1'>" +
                 "    <data source='1' />" +

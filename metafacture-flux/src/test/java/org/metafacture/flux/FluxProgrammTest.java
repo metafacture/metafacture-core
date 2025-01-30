@@ -16,8 +16,9 @@
 
 package org.metafacture.flux;
 
-import org.junit.Test;
 import org.metafacture.flux.parser.FluxProgramm;
+
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,20 +30,21 @@ import java.io.PrintStream;
  * @author markus geipel
  *
  */
-
 public final class FluxProgrammTest {
+
+    public FluxProgrammTest() {
+    }
 
     @Test
     public void testCommandRegistration() throws IOException {
         // all commands must properly load to print the help
         FluxProgramm.printHelp(discardOutput());
-
     }
 
     private PrintStream discardOutput() {
         return new PrintStream(new OutputStream() {
             @Override
-            public void write(int b) throws IOException {
+            public void write(final int b) throws IOException {
                 // Do not write any output.
             }
         });

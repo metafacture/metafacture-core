@@ -16,13 +16,12 @@
 
 package org.metafacture.biblio.iso2709;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import org.metafacture.framework.FormatException;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
-
-import org.junit.Test;
-import org.metafacture.framework.FormatException;
 
 /**
  * Tests for class {@link Iso646ByteBuffer}.
@@ -35,240 +34,243 @@ public final class Iso646ByteBufferTest {
 
     private Iso646ByteBuffer byteBuffer;
 
+    public Iso646ByteBufferTest() {
+    }
+
     @Test
-    public void getLength_shouldReturnRecordLength() {
+    public void getLengthShouldReturnRecordLength() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-        assertEquals(3, byteBuffer.getLength());
+        Assert.assertEquals(3, byteBuffer.getLength());
     }
 
     @Test
-    public void getFreeSpace_shouldReturnBufferLengthIfNothingWasWritten() {
+    public void getFreeSpaceShouldReturnBufferLengthIfNothingWasWritten() {
         byteBuffer = new Iso646ByteBuffer(5);
-        assertEquals(5, byteBuffer.getFreeSpace());
+        Assert.assertEquals(5, byteBuffer.getFreeSpace());
     }
 
     @Test
-    public void getFreeSpace_shouldReturnSpaceBetweenWritePositionAndBufferEnd() {
+    public void getFreeSpaceShouldReturnSpaceBetweenWritePositionAndBufferEnd() {
         byteBuffer = new Iso646ByteBuffer(5);
         byteBuffer.setWritePosition(2);
-        assertEquals(3, byteBuffer.getFreeSpace());
+        Assert.assertEquals(3, byteBuffer.getFreeSpace());
     }
 
     @Test
-    public void getFreeSpace_shouldReturnZeroIfBufferIsFull() {
+    public void getFreeSpaceShouldReturnZeroIfBufferIsFull() {
         byteBuffer = new Iso646ByteBuffer(5);
         byteBuffer.setWritePosition(5);
-        assertEquals(0, byteBuffer.getFreeSpace());
+        Assert.assertEquals(0, byteBuffer.getFreeSpace());
     }
 
     @Test
-    public void distanceTo_byte_shouldReturnDistanceToFirstMatchingByte() {
+    public void distanceToByteShouldReturnDistanceToFirstMatchingByte() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-        assertEquals(2, byteBuffer.distanceTo((byte) 'x', 0));
+        Assert.assertEquals(2, byteBuffer.distanceTo((byte) 'x', 0));
     }
 
     @Test
-    public void distanceTo_byte_shouldReturnDistanceToEndOfBufferIfNoMatchFound() {
+    public void distanceToByteShouldReturnDistanceToEndOfBufferIfNoMatchFound() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-        assertEquals(3, byteBuffer.distanceTo((byte) 'X', 0));
+        Assert.assertEquals(3, byteBuffer.distanceTo((byte) 'X', 0));
     }
 
     @Test
-    public void distanceTo_byte_shouldReturnZeroIfSearchStartsAtMatchingByte() {
+    public void distanceToByteShouldReturnZeroIfSearchStartsAtMatchingByte() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-        assertEquals(0, byteBuffer.distanceTo((byte) 'T', 0));
+        Assert.assertEquals(0, byteBuffer.distanceTo((byte) 'T', 0));
     }
 
     @Test
-    public void distanceTo_byteArray_shouldReturnDistanceToFirstMatchingByte() {
+    public void distanceToByteArrayShouldReturnDistanceToFirstMatchingByte() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-        assertEquals(2, byteBuffer.distanceTo(asBytes("x"), 0));
+        Assert.assertEquals(2, byteBuffer.distanceTo(asBytes("x"), 0));
     }
 
     @Test
-    public void distanceTo_byteArray_shouldReturnDistanceToEndOfBufferIfNoMatchFound() {
+    public void distanceToByteArrayShouldReturnDistanceToEndOfBufferIfNoMatchFound() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-        assertEquals(3, byteBuffer.distanceTo(asBytes("X"), 0));
+        Assert.assertEquals(3, byteBuffer.distanceTo(asBytes("X"), 0));
     }
 
     @Test
-    public void distanceTo_byteArray_shouldReturnZeroIfSearchStartsAtMatchingByte() {
+    public void distanceToByteArrayShouldReturnZeroIfSearchStartsAtMatchingByte() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-        assertEquals(0, byteBuffer.distanceTo(asBytes("T"), 0));
+        Assert.assertEquals(0, byteBuffer.distanceTo(asBytes("T"), 0));
     }
 
     @Test
-    public void distanceTo_byteArray_shouldReturnDistanceToFirstMatchingByteOfTheBytesArray() {
+    public void distanceToByteArrayShouldReturnDistanceToFirstMatchingByteOfTheBytesArray() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-        assertEquals(1, byteBuffer.distanceTo(asBytes("xu"), 0));
+        Assert.assertEquals(1, byteBuffer.distanceTo(asBytes("xu"), 0));
     }
 
     @Test
-    public void stringAt_shouldReturnStringDecodedAsUtf8() {
+    public void stringAtShouldReturnStringDecodedAsUtf8() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tüx Tox"));
-        assertEquals("Tüx Tox", byteBuffer.stringAt(0, byteBuffer.getLength(),
+        Assert.assertEquals("Tüx Tox", byteBuffer.stringAt(0, byteBuffer.getLength(),
                 StandardCharsets.UTF_8));
     }
 
     @Test
-    public void stringAt_shouldReturnEmptyStringIfLengthIsZero() {
+    public void stringAtShouldReturnEmptyStringIfLengthIsZero() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-        assertEquals("", byteBuffer.stringAt(0, 0, StandardCharsets.UTF_8));
+        Assert.assertEquals("", byteBuffer.stringAt(0, 0, StandardCharsets.UTF_8));
     }
 
     @Test
-    public void charAt_shouldReturnCharacterAtIndexDecodedAsIso646() {
+    public void charAtShouldReturnCharacterAtIndexDecodedAsIso646() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-        assertEquals('T', byteBuffer.charAt(0));
+        Assert.assertEquals('T', byteBuffer.charAt(0));
     }
 
     @Test(expected = FormatException.class)
-    public void charAt_shouldThrowFormatExceptionIfByteValueIsNotInIso646() {
+    public void charAtShouldThrowFormatExceptionIfByteValueIsNotInIso646() {
         byteBuffer = new Iso646ByteBuffer(asBytes("ü"));
-        byteBuffer.charAt(0);  // Exception expected
+        byteBuffer.charAt(0); // Exception expected
     }
 
     @Test
-    public void charsAt_shouldReturnBytesAsCharacterArrayDecodedAsIso646() {
+    public void charsAtShouldReturnBytesAsCharacterArrayDecodedAsIso646() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tux Tox"));
-        assertArrayEquals("Tux".toCharArray(), byteBuffer.charsAt(0, 3));
+        Assert.assertArrayEquals("Tux".toCharArray(), byteBuffer.charsAt(0, 3));
     }
 
     @Test(expected = FormatException.class)
-    public void charsAt_shouldThrowFormatExceptionIfByteValueIsNotInIso646() {
+    public void charsAtShouldThrowFormatExceptionIfByteValueIsNotInIso646() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tüx Tox"));
-        byteBuffer.charsAt(0, 4);  // Exception expected
+        byteBuffer.charsAt(0, 4); // Exception expected
     }
 
     @Test
-    public void charsAt_shouldReturnEmptyCharacterArrayIfLengthIsZero() {
+    public void charsAtShouldReturnEmptyCharacterArrayIfLengthIsZero() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-        assertArrayEquals(new char[0], byteBuffer.charsAt(0, 0));
+        Assert.assertArrayEquals(new char[0], byteBuffer.charsAt(0, 0));
     }
 
     @Test
-    public void byteAt_shouldReturnByteAtIndex() {
-        byteBuffer = new Iso646ByteBuffer(new byte[] { 0x01, 0x02 });
-        assertEquals(0x02, byteBuffer.byteAt(1));
+    public void byteAtShouldReturnByteAtIndex() {
+        byteBuffer = new Iso646ByteBuffer(new byte[]{0x01, 0x02});
+        Assert.assertEquals(0x02, byteBuffer.byteAt(1));
     }
 
     @Test
-    public void parseIntAt_shouldReturnIntValueAtIndex() {
+    public void parseIntAtShouldReturnIntValueAtIndex() {
         byteBuffer = new Iso646ByteBuffer(asBytes("299"));
-        assertEquals(2, byteBuffer.parseIntAt(0));
+        Assert.assertEquals(2, byteBuffer.parseIntAt(0));
     }
 
     @Test(expected = NumberFormatException.class)
-    public void parseIntAt_shouldThrowFormatExceptionIfNotADigit() {
+    public void parseIntAtShouldThrowFormatExceptionIfNotADigit() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-        byteBuffer.parseIntAt(0);  // Exception expected
+        byteBuffer.parseIntAt(0); // Exception expected
     }
 
     @Test
-    public void parseIntAt_shouldReturnIntValueForRange() {
+    public void parseIntAtShouldReturnIntValueForRange() {
         byteBuffer = new Iso646ByteBuffer(asBytes("299"));
-        assertEquals(299, byteBuffer.parseIntAt(0, 3));
+        Assert.assertEquals(299, byteBuffer.parseIntAt(0, 3));
     }
 
     @Test
-    public void parseIntAt_shouldReturnZeroIfLengthIsZero() {
+    public void parseIntAtShouldReturnZeroIfLengthIsZero() {
         byteBuffer = new Iso646ByteBuffer(asBytes("123"));
-        assertEquals(0, byteBuffer.parseIntAt(0, 0));
+        Assert.assertEquals(0, byteBuffer.parseIntAt(0, 0));
     }
 
     @Test(expected = NumberFormatException.class)
-    public void parseIntAt_shouldThrowFormatExceptionIfNotANumber() {
+    public void parseIntAtShouldThrowFormatExceptionIfNotANumber() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tux"));
-        byteBuffer.parseIntAt(0, 3);  // Exception expected
+        byteBuffer.parseIntAt(0, 3); // Exception expected
     }
 
     @Test(expected = NumberFormatException.class)
-    public void parseIntAt_shouldThrowFormatExceptionIfNumberIsTooLarge() {
+    public void parseIntAtShouldThrowFormatExceptionIfNumberIsTooLarge() {
         byteBuffer = new Iso646ByteBuffer(asBytes("123456789123456789"));
-        byteBuffer.parseIntAt(0, 18);  // Exception expected
+        byteBuffer.parseIntAt(0, 18); // Exception expected
     }
 
     @Test
-    public void writeChar_shouldWriteCharAtWritePosition() {
+    public void writeCharShouldWriteCharAtWritePosition() {
         byteBuffer = new Iso646ByteBuffer(3);
         byteBuffer.setWritePosition(1);
         byteBuffer.writeChar('c');
 
-        assertArrayEquals(new byte[]{ 0x00, 0x63, 0x00 },
+        Assert.assertArrayEquals(new byte[]{0x00, 0x63, 0x00},
                 byteBuffer.getByteArray());
-        assertEquals(2, byteBuffer.getWritePosition());
+        Assert.assertEquals(2, byteBuffer.getWritePosition());
     }
 
     @Test
-    public void writeChars_shouldWriteCharArrayAtWritePosition() {
+    public void writeCharsShouldWriteCharArrayAtWritePosition() {
         byteBuffer = new Iso646ByteBuffer(4);
         byteBuffer.setWritePosition(1);
-        byteBuffer.writeChars(new char[]{ 'c', 'b' });
+        byteBuffer.writeChars(new char[]{'c', 'b'});
 
-        assertArrayEquals(new byte[]{ 0x00, 0x63, 0x62, 0x00 },
+        Assert.assertArrayEquals(new byte[]{0x00, 0x63, 0x62, 0x00},
                 byteBuffer.getByteArray());
-        assertEquals(3, byteBuffer.getWritePosition());
+        Assert.assertEquals(3, byteBuffer.getWritePosition());
     }
 
     @Test
-    public void writeByte_shouldWriteByteAtWritePosition() {
+    public void writeByteShouldWriteByteAtWritePosition() {
         byteBuffer = new Iso646ByteBuffer(3);
         byteBuffer.setWritePosition(1);
         byteBuffer.writeByte((byte) 0x61);
 
-        assertArrayEquals(new byte[]{ 0x00, 0x61, 0x00 },
+        Assert.assertArrayEquals(new byte[]{0x00, 0x61, 0x00},
                 byteBuffer.getByteArray());
-        assertEquals(2, byteBuffer.getWritePosition());
+        Assert.assertEquals(2, byteBuffer.getWritePosition());
     }
 
     @Test
-    public void writeBytes_shouldWriteByteArrayAtWritePosition() {
+    public void writeBytesShouldWriteByteArrayAtWritePosition() {
         byteBuffer = new Iso646ByteBuffer(4);
         byteBuffer.setWritePosition(1);
         byteBuffer.writeBytes(asBytes("cb"));
 
-        assertArrayEquals(new byte[]{ 0x00, 0x63, 0x62, 0x00 },
+        Assert.assertArrayEquals(new byte[]{0x00, 0x63, 0x62, 0x00},
                 byteBuffer.getByteArray());
-        assertEquals(3, byteBuffer.getWritePosition());
+        Assert.assertEquals(3, byteBuffer.getWritePosition());
     }
 
     @Test
-    public void writeInt_shouldWriteAsciiCodeOfSingleDigitAtWritePosition() {
+    public void writeIntShouldWriteAsciiCodeOfSingleDigitAtWritePosition() {
         byteBuffer = new Iso646ByteBuffer(3);
         byteBuffer.setWritePosition(1);
         byteBuffer.writeInt(3);
 
-        assertArrayEquals(new byte[]{ 0x00, 0x33, 0x00 },
+        Assert.assertArrayEquals(new byte[]{0x00, 0x33, 0x00},
                 byteBuffer.getByteArray());
-        assertEquals(2, byteBuffer.getWritePosition());
+        Assert.assertEquals(2, byteBuffer.getWritePosition());
     }
 
     @Test
-    public void writeInt_shouldWriteAsciiCodesOfDigitsAtWritePosition() {
+    public void writeIntShouldWriteAsciiCodesOfDigitsAtWritePosition() {
         byteBuffer = new Iso646ByteBuffer(5);
         byteBuffer.setWritePosition(1);
         byteBuffer.writeInt(123, 3);
 
-        assertArrayEquals(new byte[]{ 0x00, 0x31, 0x32, 0x33, 0x00 },
+        Assert.assertArrayEquals(new byte[]{0x00, 0x31, 0x32, 0x33, 0x00},
                 byteBuffer.getByteArray());
-        assertEquals(4, byteBuffer.getWritePosition());
+        Assert.assertEquals(4, byteBuffer.getWritePosition());
     }
 
     @Test
-    public void writeInt_shouldAddLeadingZerosIfNumberIsShorterThanDigits() {
+    public void writeIntShouldAddLeadingZerosIfNumberIsShorterThanDigits() {
         byteBuffer = new Iso646ByteBuffer(5);
         byteBuffer.setWritePosition(1);
         byteBuffer.writeInt(3, 3);
 
-        assertArrayEquals(new byte[]{ 0x00, 0x30, 0x30, 0x33, 0x00 },
+        Assert.assertArrayEquals(new byte[]{0x00, 0x30, 0x30, 0x33, 0x00},
                 byteBuffer.getByteArray());
-        assertEquals(4, byteBuffer.getWritePosition());
+        Assert.assertEquals(4, byteBuffer.getWritePosition());
     }
 
     @Test
-    public void toString_shouldReturnBufferContentDecodedAsISO646() {
+    public void toStringShouldReturnBufferContentDecodedAsISO646() {
         byteBuffer = new Iso646ByteBuffer(asBytes("Tux tüt"));
-        assertEquals("Tux t" + ASCII_UNMAPPABLE_CHAR + ASCII_UNMAPPABLE_CHAR + "t",
+        Assert.assertEquals("Tux t" + ASCII_UNMAPPABLE_CHAR + ASCII_UNMAPPABLE_CHAR + "t",
                 byteBuffer.toString());
     }
 

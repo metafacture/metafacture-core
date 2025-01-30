@@ -16,8 +16,7 @@
 
 package org.metafacture.biblio.iso2709;
 
-import static org.junit.Assert.assertEquals;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -28,6 +27,9 @@ import org.junit.Test;
  */
 public final class RecordFormatTest {
 
+    public RecordFormatTest() {
+    }
+
     @Test
     public void shouldCreateRecordFormatFromValidValues() {
         final RecordFormat recordFormat = RecordFormat.create()
@@ -37,12 +39,13 @@ public final class RecordFormatTest {
                 .withFieldStartLength(1)
                 .withImplDefinedPartLength(1)
                 .build();
-        assertEquals(1, recordFormat.getIndicatorLength());
-        assertEquals(1, recordFormat.getIdentifierLength());
-        assertEquals(1, recordFormat.getFieldLengthLength());
-        assertEquals(1, recordFormat.getFieldStartLength());
-        assertEquals(1, recordFormat.getImplDefinedPartLength());
+        Assert.assertEquals(1, recordFormat.getIndicatorLength());
+        Assert.assertEquals(1, recordFormat.getIdentifierLength());
+        Assert.assertEquals(1, recordFormat.getFieldLengthLength());
+        Assert.assertEquals(1, recordFormat.getFieldStartLength());
+        Assert.assertEquals(1, recordFormat.getImplDefinedPartLength());
     }
+
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfIndicatorLengthLessThanZero() {
         RecordFormat.create().withIndicatorLength(-1);
@@ -72,7 +75,6 @@ public final class RecordFormatTest {
     public void shouldThrowIllegalArgumentExceptionIfFieldStartLengthIsGreaterThanNine() {
         RecordFormat.create().withFieldStartLength(10);
     }
-
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfFieldLengthLengthLessThanOne() {

@@ -16,16 +16,15 @@
 
 package org.metafacture.formeta.parser;
 
-import static org.mockito.Mockito.inOrder;
+import org.metafacture.formeta.FormetaDecoder;
+import org.metafacture.framework.FormatException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.formeta.FormetaDecoder;
-import org.metafacture.framework.FormatException;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 
 /**
  * Tests for {@link FormetaDecoder}.
@@ -74,6 +73,9 @@ public final class FormetaParserTest {
     @Mock
     private Emitter emitter;
 
+    public FormetaParserTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -85,7 +87,7 @@ public final class FormetaParserTest {
     public void testShouldParseConciselyFormattedRecords() {
         parser.parse(CONCISE_RECORD);
 
-        final InOrder ordered = inOrder(emitter);
+        final InOrder ordered = Mockito.inOrder(emitter);
         verifyRecord(ordered);
     }
 
@@ -93,7 +95,7 @@ public final class FormetaParserTest {
     public void testShouldParseVerboselyFormattedRecords() {
         parser.parse(VERBOSE_RECORD);
 
-        final InOrder ordered = inOrder(emitter);
+        final InOrder ordered = Mockito.inOrder(emitter);
         verifyRecord(ordered);
     }
 
@@ -101,7 +103,7 @@ public final class FormetaParserTest {
     public void testShouldParseMultilineFormattedRecords() {
         parser.parse(MULTILINE_RECORD);
 
-        final InOrder ordered = inOrder(emitter);
+        final InOrder ordered = Mockito.inOrder(emitter);
         verifyRecord(ordered);
     }
 
@@ -109,16 +111,16 @@ public final class FormetaParserTest {
     public void testShouldIgnoreItemSeparatorAfterRecord() {
         parser.parse(CONCISE_RECORD + ", ");
 
-        final InOrder ordered = inOrder(emitter);
+        final InOrder ordered = Mockito.inOrder(emitter);
         verifyRecord(ordered);
     }
 
-    @Test(expected=FormatException.class)
+    @Test(expected = FormatException.class)
     public void testShouldFailOnDoubleCloseRecord() {
         parser.parse("1 { lit: val }}");
     }
 
-    @Test(expected=FormatException.class)
+    @Test(expected = FormatException.class)
     public void testShouldFailOnGarbageAfterRecord() {
         parser.parse(CONCISE_RECORD + "Garbage");
     }
@@ -127,12 +129,12 @@ public final class FormetaParserTest {
     public void testShouldParseInputsContainingMoreThanOneRecord() {
         parser.parse(CONCISE_RECORD + CONCISE_RECORD);
 
-        final InOrder ordered = inOrder(emitter);
+        final InOrder ordered = Mockito.inOrder(emitter);
         verifyRecord(ordered);
         verifyRecord(ordered);
     }
 
-    @Test(expected=FormatException.class)
+    @Test(expected = FormatException.class)
     public void testShouldFailOnIncompleteRecords() {
         parser.parse(BROKEN_RECORD);
     }
@@ -143,7 +145,7 @@ public final class FormetaParserTest {
         try {
             parser.parse(BROKEN_RECORD);
         }
-        catch (FormatException e) {
+        catch (final FormatException e) {
             // The decoder should recover automatically
         }
 
@@ -151,7 +153,7 @@ public final class FormetaParserTest {
         // afterwards:
         parser.parse(CONCISE_RECORD);
 
-        final InOrder ordered = inOrder(emitter);
+        final InOrder ordered = Mockito.inOrder(emitter);
         verifyRecord(ordered);
     }
 
@@ -159,7 +161,7 @@ public final class FormetaParserTest {
     public void testShouldParseInputContainingNestedRecords() {
         parser.parse(OUTER_RECORD);
 
-        final InOrder ordered = inOrder(emitter);
+        final InOrder ordered = Mockito.inOrder(emitter);
         ordered.verify(emitter).startGroup("outer", 0);
         ordered.verify(emitter).literal("nested", INNER_RECORD, 1);
         ordered.verify(emitter).literal("note", "I can has nezted records", 1);
@@ -170,11 +172,11 @@ public final class FormetaParserTest {
     public void testPartialRecord() {
         parser.parse(PARTIAL_RECORD);
 
-        final InOrder ordered = inOrder(emitter);
+        final InOrder ordered = Mockito.inOrder(emitter);
         verifyRecordContents(ordered, 0);
     }
 
-    @Test(expected=FormatException.class)
+    @Test(expected = FormatException.class)
     public void testIncompletePartialRecord() {
         parser.parse(BROKEN_PARTIAL_RECORD);
     }

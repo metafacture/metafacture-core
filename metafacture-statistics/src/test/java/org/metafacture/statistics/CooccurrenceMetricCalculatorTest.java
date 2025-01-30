@@ -16,12 +16,12 @@
 
 package org.metafacture.statistics;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.helpers.DefaultObjectReceiver;
 import org.metafacture.framework.objects.Triple;
+
+import org.junit.Assert;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
@@ -44,32 +44,35 @@ public final class CooccurrenceMetricCalculatorTest {
     private static final double PRECISSION = 0.099;
     private static final double JACCARD = 0.0714;
 
+    public CooccurrenceMetricCalculatorTest() {
+    }
+
     @Test
     public void testX2() {
-        assertEquals(X2, CooccurrenceMetricCalculator.Metric.X2.calculate(COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL),
+        Assert.assertEquals(X2, CooccurrenceMetricCalculator.Metric.X2.calculate(COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL),
                 DELTA);
     }
 
     @Test
     public void testF() {
-        assertEquals(F, CooccurrenceMetricCalculator.Metric.F.calculate(COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL), DELTA);
+        Assert.assertEquals(F, CooccurrenceMetricCalculator.Metric.F.calculate(COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL), DELTA);
     }
 
     @Test
     public void testPrecission() {
-        assertEquals(PRECISSION,
+        Assert.assertEquals(PRECISSION,
                 CooccurrenceMetricCalculator.Metric.PRECISSION.calculate(COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL), DELTA);
     }
 
     @Test
     public void testRecall() {
-        assertEquals(RECALL,
+        Assert.assertEquals(RECALL,
                 CooccurrenceMetricCalculator.Metric.RECALL.calculate(COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL), DELTA);
     }
 
     @Test
     public void testJaccard() {
-        assertEquals(JACCARD,
+        Assert.assertEquals(JACCARD,
                 CooccurrenceMetricCalculator.Metric.JACCARD.calculate(COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL), DELTA);
     }
 
@@ -87,14 +90,12 @@ public final class CooccurrenceMetricCalculatorTest {
         Mockito.verify(receiver).process(new Triple("A&B", CooccurrenceMetricCalculator.Metric.X2.toString(), Double.toString(CooccurrenceMetricCalculator.Metric.X2.calculate(COUNT_A, COUNT_B, COUNT_A_AND_B, TOTAL))));
     }
 
-
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testIllegalArgument() {
         final CooccurrenceMetricCalculator calculator = new CooccurrenceMetricCalculator("X2");
         calculator.setReceiver(new DefaultObjectReceiver<Triple>());
         calculator.process(new Triple("2:x&x", "", Integer.toString(COUNT_A_AND_B)));
         calculator.process(new Triple("1:x", "", Integer.toString(COUNT_B)));
-
 
     }
 }

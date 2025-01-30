@@ -634,19 +634,19 @@ public class MetafixIfTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/115
+    // See issue metafacture-fix#115
     public void shouldEqualAnyCharacterClass() {
         shouldEqualAny("n[ao]me");
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/115
+    // See issue metafacture-fix#115
     public void shouldEqualAnyAlternation() {
         shouldEqualAny("name|nome");
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/115
+    // See issue metafacture-fix#115
     public void shouldEqualAnyWildcard() {
         shouldEqualAny("n?me");
     }
@@ -685,7 +685,7 @@ public class MetafixIfTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/115
+    // See issue metafacture-fix#115
     public void shouldEqualAnyNestedCharacterClass() {
         shouldEqualAnyNested("data.n[ao]me");
     }
@@ -696,7 +696,7 @@ public class MetafixIfTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/115
+    // See issue metafacture-fix#115
     public void shouldEqualAnyNestedWildcard() {
         shouldEqualAnyNested("data.n?me");
     }
@@ -737,7 +737,7 @@ public class MetafixIfTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/115
+    // See issue metafacture-fix#115
     public void shouldEqualAnyListBindCharacterClass() {
         shouldEqualAnyListBind("$i.n[ao]me");
     }
@@ -748,7 +748,7 @@ public class MetafixIfTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/115
+    // See issue metafacture-fix#115
     public void shouldEqualAnyListBindWildcard() {
         shouldEqualAnyListBind("$i.n?me");
     }
@@ -802,7 +802,7 @@ public class MetafixIfTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/117
+    // See issue metafacture-fix#117
     public void shouldContainNestedField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if exists('data.name')",
@@ -861,7 +861,7 @@ public class MetafixIfTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/117
+    // See issue metafacture-fix#117
     public void shouldContainNestedArrayField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "if exists('data[].*.name')",

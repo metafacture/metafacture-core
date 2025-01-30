@@ -16,11 +16,10 @@
 
 package org.metafacture.metamorph;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -38,9 +37,12 @@ public class TestMetamorphMacros {
     @Mock
     private StreamReceiver receiver;
 
+    public TestMetamorphMacros() {
+    }
+
     @Test
     public void shouldReplaceCallMacroWithMacro() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<macros>" +
                 "  <macro name='simple-macro'>" +
                 "    <data source='$[in]' name='$[out]' />" +
@@ -162,7 +164,7 @@ public class TestMetamorphMacros {
     }
 
     private void testSingleLiteral(final boolean withEntity, final String morphDef) {
-        assertMorph(receiver, morphDef,
+        TestHelpers.assertMorph(receiver, morphDef,
                 i -> {
                     i.startRecord("1");
                     i.literal("Honolulu", "Aloha");

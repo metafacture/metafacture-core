@@ -16,15 +16,13 @@
 
 package org.metafacture.triples;
 
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-
-import org.junit.Before;
-import org.junit.Test;
 import org.metafacture.formeta.Formeta;
 import org.metafacture.framework.StreamReceiver;
 import org.metafacture.framework.objects.Triple;
 import org.metafacture.framework.objects.Triple.ObjectType;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -50,6 +48,9 @@ public final class TripleCollectTest {
     private StreamReceiver receiver;
 
     private TripleCollect collect;
+
+    public TripleCollectTest() {
+    }
 
     @Before
     public void initMocks() {
@@ -78,9 +79,9 @@ public final class TripleCollectTest {
 
     @Test
     public void testShouldDecodeEntities() {
-        collect.process(new Triple(REC_ID,  ENTITY_NAME, Formeta.GROUP_START +NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE
-                + Formeta.ITEM_SEPARATOR + ENTITY_NAME + Formeta.GROUP_START + NAME
-                + Formeta.NAME_VALUE_SEPARATOR + VALUE + Formeta.GROUP_END + Formeta.GROUP_END,
+        collect.process(new Triple(REC_ID,  ENTITY_NAME, Formeta.GROUP_START + NAME + Formeta.NAME_VALUE_SEPARATOR + VALUE +
+                Formeta.ITEM_SEPARATOR + ENTITY_NAME + Formeta.GROUP_START + NAME +
+                Formeta.NAME_VALUE_SEPARATOR + VALUE + Formeta.GROUP_END + Formeta.GROUP_END,
                 ObjectType.ENTITY));
         collect.closeStream();
 
@@ -99,14 +100,14 @@ public final class TripleCollectTest {
     public void shouldNotEmitEndRecordOnCloseStreamIfNoTriplesWereReceived() {
         collect.closeStream();
 
-        verify(receiver, never()).endRecord();
+        Mockito.verify(receiver, Mockito.never()).endRecord();
     }
 
     @Test
     public void shouldNotEmitEndRecordOnResetStreamIfNoTriplesWereReceived() {
         collect.resetStream();
 
-        verify(receiver, never()).endRecord();
+        Mockito.verify(receiver, Mockito.never()).endRecord();
     }
 
 }

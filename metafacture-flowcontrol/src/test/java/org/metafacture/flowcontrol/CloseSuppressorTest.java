@@ -16,9 +16,10 @@
 
 package org.metafacture.flowcontrol;
 
+import org.metafacture.framework.ObjectReceiver;
+
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
@@ -37,6 +38,9 @@ public final class CloseSuppressorTest {
 
     @Mock
     private ObjectReceiver<Object> receiver;
+
+    public CloseSuppressorTest() {
+    }
 
     @Test
     public void testSuppression() {

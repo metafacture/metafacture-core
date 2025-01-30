@@ -158,7 +158,7 @@ public class MetafixTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/79
+    // See issue metafacture-fix#79
     public void shouldThrowExceptionForInvalidFixFile() {
         final String fixFile = "src/test/resources/org/metafacture/metafix/fixes/invalid.fix";
         MetafixTestHelpers.assertThrows(FixParseException.class, "Invalid FixStandaloneSetup resource: " + fixFile, () -> new Metafix(fixFile));

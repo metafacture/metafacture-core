@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -39,9 +39,12 @@ public final class GroupTest {
     @Mock
     private StreamReceiver receiver;
 
+    public GroupTest() {
+    }
+
     @Test
     public void shouldGroupToOverwriteNameAndValueOfContaintStatements() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <group name='group' value='constant'>" +
                 "    <data source='data1' />" +

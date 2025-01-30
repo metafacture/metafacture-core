@@ -16,15 +16,13 @@
 
 package org.metafacture.strings;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -44,6 +42,9 @@ public final class LineSplitterTest {
     @Mock
     private ObjectReceiver<String> receiver;
 
+    public LineSplitterTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -55,7 +56,7 @@ public final class LineSplitterTest {
     public void shouldSplitInputStringAtNewLines() {
         lineSplitter.process(PART1 + "\n" + PART2 + "\n" + PART3);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).process(PART1);
         ordered.verify(receiver).process(PART2);
         ordered.verify(receiver).process(PART3);
@@ -66,15 +67,15 @@ public final class LineSplitterTest {
     public void shouldPassInputWithoutNewLinesUnchanged() {
         lineSplitter.process(PART1);
 
-        verify(receiver).process(PART1);
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).process(PART1);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
     public void shouldOutputEmptyStringsForSequencesOfNewLines() {
         lineSplitter.process(PART1 + "\n\n" + PART2);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).process(PART1);
         ordered.verify(receiver).process("");
         ordered.verify(receiver).process(PART2);
@@ -85,7 +86,7 @@ public final class LineSplitterTest {
     public void shouldOutputEmptyStringForNewLinesAtStartOfTheInput() {
         lineSplitter.process("\n" + PART1);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).process("");
         ordered.verify(receiver).process(PART1);
         ordered.verifyNoMoreInteractions();
@@ -95,8 +96,8 @@ public final class LineSplitterTest {
     public void shouldNotOutputEmptyStringForNewLinesAtEndOfTheInput() {
         lineSplitter.process(PART1 + "\n");
 
-        verify(receiver).process(PART1);
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).process(PART1);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
 }

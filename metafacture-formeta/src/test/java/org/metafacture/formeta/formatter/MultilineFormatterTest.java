@@ -16,8 +16,7 @@
 
 package org.metafacture.formeta.formatter;
 
-import static org.junit.Assert.assertEquals;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,6 +49,9 @@ public final class MultilineFormatterTest {
 
     private MultilineFormatter multilineFormatter;
 
+    public MultilineFormatterTest() {
+    }
+
     @Before
     public void setup() {
         multilineFormatter = new MultilineFormatter();
@@ -66,7 +68,7 @@ public final class MultilineFormatterTest {
         multilineFormatter.literal("lit4", "value '3'");
         multilineFormatter.endGroup();
 
-        assertEquals(MULTILINE_RECORD, multilineFormatter.toString());
+        Assert.assertEquals(MULTILINE_RECORD, multilineFormatter.toString());
     }
 
     @Test
@@ -76,7 +78,7 @@ public final class MultilineFormatterTest {
         multilineFormatter.literal("note", "nested records");
         multilineFormatter.endGroup();
 
-        assertEquals(OUTER_RECORD, multilineFormatter.toString());
+        Assert.assertEquals(OUTER_RECORD, multilineFormatter.toString());
     }
 
 }

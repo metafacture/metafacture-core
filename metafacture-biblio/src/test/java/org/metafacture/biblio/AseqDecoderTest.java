@@ -16,15 +16,14 @@
 
 package org.metafacture.biblio;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.never;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -41,7 +40,7 @@ public final class AseqDecoderTest {
 
     private static final String FIELD_LDR = " LDR   L 00235nM2.01000024------h";
 
-    private static final String FIELD_001_a_TEST = " 001   L $$atest";
+    private static final String FIELD_001_A_TEST = " 001   L $$atest";
 
     private static final String FIELD_200_TEST = "001304760 200   L $$kAckermann-Gemeinde$$9(DE-588)39042-2";
 
@@ -51,6 +50,9 @@ public final class AseqDecoderTest {
 
     @Mock
     private StreamReceiver receiver;
+
+    public AseqDecoderTest() {
+    }
 
     @Before
     public void setup() {
@@ -68,7 +70,7 @@ public final class AseqDecoderTest {
     public void shouldReturnRecordId() {
         this.aseqDecoder.process(RECORD_ID + FIELD_LDR);
 
-        final InOrder ordered = inOrder(this.receiver);
+        final InOrder ordered = Mockito.inOrder(this.receiver);
         ordered.verify(this.receiver).startRecord(RECORD_ID);
     }
 
@@ -76,7 +78,7 @@ public final class AseqDecoderTest {
     public void testShouldParseRecordStartingWithRecordMarker() {
         this.aseqDecoder.process(RECORD_ID + FIELD_LDR);
 
-        final InOrder ordered = inOrder(this.receiver);
+        final InOrder ordered = Mockito.inOrder(this.receiver);
         ordered.verify(this.receiver).startRecord(RECORD_ID);
         verifyLdrTest(ordered);
         ordered.verify(this.receiver).endRecord();
@@ -84,26 +86,26 @@ public final class AseqDecoderTest {
 
     @Test
     public void testShouldParseRecordWithTwoFields() {
-        this.aseqDecoder.process(RECORD_ID + FIELD_LDR + FIELD_MARKER
-                + RECORD_ID + FIELD_001_a_TEST + FIELD_MARKER + FIELD_200_TEST);
-        final InOrder ordered = inOrder(this.receiver);
+        this.aseqDecoder.process(RECORD_ID + FIELD_LDR + FIELD_MARKER +
+                RECORD_ID + FIELD_001_A_TEST + FIELD_MARKER + FIELD_200_TEST);
+        final InOrder ordered = Mockito.inOrder(this.receiver);
         ordered.verify(this.receiver).startRecord(RECORD_ID);
         verifyLdrTest(ordered);
-        verify001_a_Test(ordered);
+        verify001aTest(ordered);
         verify200(ordered);
         ordered.verify(this.receiver).endRecord();
     }
 
     private void verify200(final InOrder ordered) {
         ordered.verify(this.receiver).startEntity("200");
-        ordered.verify(this.receiver, never())
+        ordered.verify(this.receiver, Mockito.never())
                 .literal("0", "01304760 200   L ");
         ordered.verify(this.receiver).literal("k", "Ackermann-Gemeinde");
         ordered.verify(this.receiver).literal("9", "(DE-588)39042-2");
         ordered.verify(this.receiver).endEntity();
     }
 
-    private void verify001_a_Test(final InOrder ordered) {
+    private void verify001aTest(final InOrder ordered) {
         ordered.verify(this.receiver).startEntity("001");
         ordered.verify(this.receiver).literal("a", "test");
         ordered.verify(this.receiver).endEntity();

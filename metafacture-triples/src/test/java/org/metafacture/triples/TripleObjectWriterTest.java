@@ -16,19 +16,19 @@
 
 package org.metafacture.triples;
 
-import static org.junit.Assert.assertEquals;
+import org.metafacture.framework.objects.Triple;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.metafacture.framework.objects.Triple;
 
 /**
  * Tests for class {@link TripleObjectWriter}.
@@ -47,12 +47,14 @@ public final class TripleObjectWriterTest {
     private static final String OBJECT1 = "object-data 1";
     private static final String OBJECT2 = "object-data 2";
 
-    private TripleObjectWriter tripleObjectWriter;
-
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
 
     private Path baseDir;
+    private TripleObjectWriter tripleObjectWriter;
+
+    public TripleObjectWriterTest() {
+    }
 
     @Before
     public void createSystemUnderTest() throws IOException {
@@ -73,22 +75,22 @@ public final class TripleObjectWriterTest {
 
         final Path file1 = baseDir.resolve(Paths.get(SUBJECT1, PREDICATE));
         final Path file2 = baseDir.resolve(Paths.get(SUBJECT2, PREDICATE));
-        assertEquals(OBJECT1, readFileContents(file1));
-        assertEquals(OBJECT2, readFileContents(file2));
+        Assert.assertEquals(OBJECT1, readFileContents(file1));
+        Assert.assertEquals(OBJECT2, readFileContents(file2));
     }
 
     @Test
     public void shouldMapStructuredSubjectsToDirectories() throws IOException {
         tripleObjectWriter.process(new Triple(STRUCTURED_SUBJECT, PREDICATE, OBJECT1));
 
-    final Path file = baseDir.resolve(Paths.get(STRUCTURED_SUBJECT_A,
-        STRUCTURED_SUBJECT_B, PREDICATE));
-        assertEquals(readFileContents(file), OBJECT1);
+        final Path file = baseDir.resolve(Paths.get(STRUCTURED_SUBJECT_A,
+                    STRUCTURED_SUBJECT_B, PREDICATE));
+        Assert.assertEquals(readFileContents(file), OBJECT1);
     }
 
     private String readFileContents(final Path file) throws IOException {
-    final byte[] data = Files.readAllBytes(file);
-    return new String(data, tripleObjectWriter.getEncoding());
+        final byte[] data = Files.readAllBytes(file);
+        return new String(data, tripleObjectWriter.getEncoding());
     }
 
 }

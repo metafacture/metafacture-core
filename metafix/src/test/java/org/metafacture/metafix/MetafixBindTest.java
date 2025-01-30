@@ -697,19 +697,19 @@ public class MetafixBindTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/119
+    // See issue metafacture-fix#119
     public void shouldIterateOverListWithCharacterClass() {
         shouldIterateOverList("n[ao]me", 3);
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/119
+    // See issue metafacture-fix#119
     public void shouldIterateOverListWithAlternation() {
         shouldIterateOverList("name|nome", 3);
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/119
+    // See issue metafacture-fix#119
     public void shouldIterateOverListWithWildcard() {
         shouldIterateOverList("n?me", 3);
     }
@@ -749,26 +749,26 @@ public class MetafixBindTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/119
+    // See issue metafacture-fix#119
     public void shouldIterateOverListOfHashesWithCharacterClass() {
         shouldIterateOverListOfHashes("n[ao]me.value", 3);
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/119
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/143")
+    // See issue metafacture-fix#119
+    @MetafixToDo("See issue #603")
     public void shouldIterateOverListOfHashesWithAlternation() {
         shouldIterateOverListOfHashes("name.value|nome.value", 3);
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/119
+    // See issue metafacture-fix#119
     public void shouldIterateOverListOfHashesWithWildcard() {
         shouldIterateOverListOfHashes("n?me.value", 3);
     }
 
     @Test // checkstyle-disable-line JavaNCSS
-    // See https://github.com/metafacture/metafacture-fix/issues/119
+    // See issue metafacture-fix#119
     public void shouldPerformComplexOperationWithPathWildcard() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('coll[]')",

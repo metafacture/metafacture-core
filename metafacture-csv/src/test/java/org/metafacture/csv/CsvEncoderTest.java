@@ -16,11 +16,10 @@
 
 package org.metafacture.csv;
 
-import org.junit.Rule;
 import org.metafacture.framework.ObjectReceiver;
 
+import org.junit.Rule;
 import org.junit.Test;
-
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -40,8 +39,6 @@ import java.util.function.Consumer;
  */
 public final class CsvEncoderTest {
 
-    @Mock
-    private ObjectReceiver<String> receiver;
     private static final String LITERAL1 = "column 1";
     private static final String LITERAL2 = "column 2";
     private static final String RECORD_ID1 = "1";
@@ -56,6 +53,12 @@ public final class CsvEncoderTest {
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
+
+    @Mock
+    private ObjectReceiver<String> receiver;
+
+    public CsvEncoderTest() {
+    }
 
     @Test
     public void shouldReceiveSingleRecord() {

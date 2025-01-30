@@ -59,6 +59,9 @@ public final class FileOpenerTest {
     @Mock
     private ObjectReceiver<Reader> receiver;
 
+    public FileOpenerTest() {
+    }
+
     @Test
     public void testUtf8IsDefaultEncoding() throws IOException {
         Assume.assumeFalse("Default encoding is UTF-8: It is not possible to test whether FileOpener sets " +
@@ -83,7 +86,7 @@ public final class FileOpenerTest {
 
         try (InputStreamReader r = new InputStreamReader(getClass().getResourceAsStream("compressed.txt"))) {
             final String data = ResourceUtil.readAll(r);
-            for (int i = 0; i < 1525; i++) {
+            for (int i = 0; i < 1525; ++i) {
                 sb.append(data).append("\n");
             }
         }

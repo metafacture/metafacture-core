@@ -16,18 +16,16 @@
 
 package org.metafacture.javaintegration.pojo;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import org.metafacture.framework.ObjectReceiver;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 
 import java.util.List;
 import java.util.Map;
-
-import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
-import org.mockito.ArgumentCaptor;
 
 /**
  * Tests for class {@link PojoEncoder}.
@@ -37,6 +35,9 @@ import org.mockito.ArgumentCaptor;
  *
  */
 public class PojoEncoderTest {
+
+    public PojoEncoderTest() {
+    }
 
     @Test
     public void shouldEncodeEmptyEntityStreamToEmptyPojo() {
@@ -48,7 +49,7 @@ public class PojoEncoderTest {
         pojoEncoder.startRecord("identifier");
         pojoEncoder.endRecord();
 
-        verify(receiver).process(any(EmptyPojo.class));
+        Mockito.verify(receiver).process(ArgumentMatchers.any(EmptyPojo.class));
     }
 
     @Test
@@ -67,13 +68,13 @@ public class PojoEncoderTest {
 
         final ArgumentCaptor<SimplePojo> objectCaptor =
                 ArgumentCaptor.forClass(SimplePojo.class);
-        verify(receiver).process(objectCaptor.capture());
+        Mockito.verify(receiver).process(objectCaptor.capture());
         final SimplePojo encodedPojo = objectCaptor.getValue();
-        assertNotNull(encodedPojo);
-        assertEquals("value1", encodedPojo.stringField1);
-        assertEquals("value2", encodedPojo.getStringField2());
-        assertEquals(42, encodedPojo.intField1);
-        assertEquals(23, encodedPojo.getIntField2());
+        Assert.assertNotNull(encodedPojo);
+        Assert.assertEquals("value1", encodedPojo.stringField1);
+        Assert.assertEquals("value2", encodedPojo.getStringField2());
+        Assert.assertEquals(42, encodedPojo.intField1);
+        Assert.assertEquals(23, encodedPojo.getIntField2());
     }
 
     @Test
@@ -96,14 +97,14 @@ public class PojoEncoderTest {
 
         final ArgumentCaptor<DoubleNestedPojo> objectCaptor =
                 ArgumentCaptor.forClass(DoubleNestedPojo.class);
-        verify(receiver).process(objectCaptor.capture());
+        Mockito.verify(receiver).process(objectCaptor.capture());
         final DoubleNestedPojo encodedPojo = objectCaptor.getValue();
-        assertNotNull(encodedPojo);
-        assertNotNull(encodedPojo.nestedPojo);
-        assertEquals("value3", encodedPojo.nestedPojo.attribute);
-        assertNotNull(encodedPojo.nestedPojo.simplePojo);
-        assertEquals("value1", encodedPojo.nestedPojo.simplePojo.stringField1);
-        assertEquals("value2", encodedPojo.nestedPojo.simplePojo.getStringField2());
+        Assert.assertNotNull(encodedPojo);
+        Assert.assertNotNull(encodedPojo.nestedPojo);
+        Assert.assertEquals("value3", encodedPojo.nestedPojo.attribute);
+        Assert.assertNotNull(encodedPojo.nestedPojo.simplePojo);
+        Assert.assertEquals("value1", encodedPojo.nestedPojo.simplePojo.stringField1);
+        Assert.assertEquals("value2", encodedPojo.nestedPojo.simplePojo.getStringField2());
     }
 
     @Test
@@ -123,14 +124,14 @@ public class PojoEncoderTest {
 
         final ArgumentCaptor<StringListPojo> objectCaptor =
                 ArgumentCaptor.forClass(StringListPojo.class);
-        verify(receiver).process(objectCaptor.capture());
+        Mockito.verify(receiver).process(objectCaptor.capture());
         final StringListPojo encodedPojo = objectCaptor.getValue();
-        assertNotNull(encodedPojo);
-        assertEquals("value3", encodedPojo.attribute);
-        assertNotNull(encodedPojo.stringList);
-        assertEquals(2, encodedPojo.stringList.size());
-        assertEquals("value1", encodedPojo.stringList.get(0));
-        assertEquals("value2", encodedPojo.stringList.get(1));
+        Assert.assertNotNull(encodedPojo);
+        Assert.assertEquals("value3", encodedPojo.attribute);
+        Assert.assertNotNull(encodedPojo.stringList);
+        Assert.assertEquals(2, encodedPojo.stringList.size());
+        Assert.assertEquals("value1", encodedPojo.stringList.get(0));
+        Assert.assertEquals("value2", encodedPojo.stringList.get(1));
     }
 
     @Test
@@ -149,13 +150,13 @@ public class PojoEncoderTest {
 
         final ArgumentCaptor<IntegerListPojo> objectCaptor =
                 ArgumentCaptor.forClass(IntegerListPojo.class);
-        verify(receiver).process(objectCaptor.capture());
+        Mockito.verify(receiver).process(objectCaptor.capture());
         final IntegerListPojo encodedPojo = objectCaptor.getValue();
-        assertNotNull(encodedPojo);
-        assertNotNull(encodedPojo.integerList);
-        assertEquals(2, encodedPojo.integerList.size());
-        assertEquals(42, encodedPojo.integerList.get(0).intValue());
-        assertEquals(23, encodedPojo.integerList.get(1).intValue());
+        Assert.assertNotNull(encodedPojo);
+        Assert.assertNotNull(encodedPojo.integerList);
+        Assert.assertEquals(2, encodedPojo.integerList.size());
+        Assert.assertEquals(42, encodedPojo.integerList.get(0).intValue());
+        Assert.assertEquals(23, encodedPojo.integerList.get(1).intValue());
     }
 
     @Test
@@ -180,14 +181,14 @@ public class PojoEncoderTest {
 
         final ArgumentCaptor<SimplePojoListPojo> objectCaptor =
                 ArgumentCaptor.forClass(SimplePojoListPojo.class);
-        verify(receiver).process(objectCaptor.capture());
+        Mockito.verify(receiver).process(objectCaptor.capture());
         final SimplePojoListPojo encodedPojo = objectCaptor.getValue();
-        assertNotNull(encodedPojo);
-        assertNotNull(encodedPojo.simplePojoList);
-        assertEquals(2, encodedPojo.simplePojoList.size());
-        assertEquals("value1", encodedPojo.simplePojoList.get(0).stringField1);
-        assertEquals("value2", encodedPojo.simplePojoList.get(0).getStringField2());
-        assertEquals("value3", encodedPojo.simplePojoList.get(1).stringField1);
+        Assert.assertNotNull(encodedPojo);
+        Assert.assertNotNull(encodedPojo.simplePojoList);
+        Assert.assertEquals(2, encodedPojo.simplePojoList.size());
+        Assert.assertEquals("value1", encodedPojo.simplePojoList.get(0).stringField1);
+        Assert.assertEquals("value2", encodedPojo.simplePojoList.get(0).getStringField2());
+        Assert.assertEquals("value3", encodedPojo.simplePojoList.get(1).stringField1);
     }
 
     @Test
@@ -207,13 +208,13 @@ public class PojoEncoderTest {
 
         final ArgumentCaptor<StringMapPojo> objectCaptor =
                 ArgumentCaptor.forClass(StringMapPojo.class);
-        verify(receiver).process(objectCaptor.capture());
+        Mockito.verify(receiver).process(objectCaptor.capture());
         final StringMapPojo encodedPojo = objectCaptor.getValue();
-        assertNotNull(encodedPojo);
-        assertNotNull(encodedPojo.stringMap);
-        assertEquals(2, encodedPojo.stringMap.size());
-        assertEquals("mapValue1", encodedPojo.stringMap.get("mapKey1"));
-        assertEquals("mapValue2", encodedPojo.stringMap.get("mapKey2"));
+        Assert.assertNotNull(encodedPojo);
+        Assert.assertNotNull(encodedPojo.stringMap);
+        Assert.assertEquals(2, encodedPojo.stringMap.size());
+        Assert.assertEquals("mapValue1", encodedPojo.stringMap.get("mapKey1"));
+        Assert.assertEquals("mapValue2", encodedPojo.stringMap.get("mapKey2"));
     }
 
     @Test
@@ -239,18 +240,18 @@ public class PojoEncoderTest {
 
         final ArgumentCaptor<SimplePojoMapPojo> objectCaptor =
                 ArgumentCaptor.forClass(SimplePojoMapPojo.class);
-        verify(receiver).process(objectCaptor.capture());
+        Mockito.verify(receiver).process(objectCaptor.capture());
         final SimplePojoMapPojo encodedPojo = objectCaptor.getValue();
-        assertNotNull(encodedPojo);
-        assertNotNull(encodedPojo.simplePojoMap);
-        assertEquals(2, encodedPojo.simplePojoMap.size());
-        assertEquals("stringValueA1", encodedPojo.simplePojoMap.get("mapKeyA")
+        Assert.assertNotNull(encodedPojo);
+        Assert.assertNotNull(encodedPojo.simplePojoMap);
+        Assert.assertEquals(2, encodedPojo.simplePojoMap.size());
+        Assert.assertEquals("stringValueA1", encodedPojo.simplePojoMap.get("mapKeyA")
                 .stringField1);
-        assertEquals("stringValueA2", encodedPojo.simplePojoMap.get("mapKeyA")
+        Assert.assertEquals("stringValueA2", encodedPojo.simplePojoMap.get("mapKeyA")
                 .stringField2);
-        assertEquals("stringValueB1", encodedPojo.simplePojoMap.get("mapKeyB")
+        Assert.assertEquals("stringValueB1", encodedPojo.simplePojoMap.get("mapKeyB")
                 .stringField1);
-        assertEquals("stringValueB2", encodedPojo.simplePojoMap.get("mapKeyB")
+        Assert.assertEquals("stringValueB2", encodedPojo.simplePojoMap.get("mapKeyB")
                 .stringField2);
     }
 
@@ -258,23 +259,31 @@ public class PojoEncoderTest {
     private <T> ObjectReceiver<T> createObjectReceiverMock() {
         // There is no type safe to create a mock with Mockito#mock(Class).
         // Hence, we have to use an unchecked cast here:
-        return (ObjectReceiver<T>) mock(ObjectReceiver.class);
+        return (ObjectReceiver<T>) Mockito.mock(ObjectReceiver.class);
     }
 
     public static class EmptyPojo {
+
+        public EmptyPojo() {
+        }
 
     }
 
     public static class SimplePojo {
 
-        public String stringField1;
+        public String stringField1; // checkstyle-disable-line VisibilityModifier
+        public int intField1; // checkstyle-disable-line VisibilityModifier
+
         private String stringField2;
-        public int intField1;
         private int intField2;
+
+        public SimplePojo() {
+        }
 
         public void setStringField2(final String stringField2) {
             this.stringField2 = stringField2;
         }
+
         public String getStringField2() {
             return stringField2;
         }
@@ -291,33 +300,48 @@ public class PojoEncoderTest {
 
     public static class NestedPojo {
 
-        public String attribute;
-        public SimplePojo simplePojo;
+        public String attribute; // checkstyle-disable-line VisibilityModifier
+        public SimplePojo simplePojo; // checkstyle-disable-line VisibilityModifier
+
+        public NestedPojo() {
+        }
 
     }
 
     public static class DoubleNestedPojo {
 
-        public NestedPojo nestedPojo;
+        public NestedPojo nestedPojo; // checkstyle-disable-line VisibilityModifier
+
+        public DoubleNestedPojo() {
+        }
 
     }
 
     public static class StringListPojo {
 
-        public List<String> stringList;
-        public String attribute;
+        public List<String> stringList; // checkstyle-disable-line VisibilityModifier
+        public String attribute; // checkstyle-disable-line VisibilityModifier
+
+        public StringListPojo() {
+        }
 
     }
 
     public static class IntegerListPojo {
 
-        public List<Integer> integerList;
+        public List<Integer> integerList; // checkstyle-disable-line VisibilityModifier
+
+        public IntegerListPojo() {
+        }
 
     }
 
     public static class SimplePojoListPojo {
 
         private List<SimplePojo> simplePojoList;
+
+        public SimplePojoListPojo() {
+        }
 
         public void setSimplePojoList(final List<SimplePojo> simplePojoList) {
             this.simplePojoList = simplePojoList;
@@ -327,13 +351,19 @@ public class PojoEncoderTest {
 
     public static class StringMapPojo {
 
-        public Map<String, String> stringMap;
+        public Map<String, String> stringMap; // checkstyle-disable-line VisibilityModifier
+
+        public StringMapPojo() {
+        }
 
     }
 
     public static class SimplePojoMapPojo {
 
-        public Map<String, SimplePojo> simplePojoMap;
+        public Map<String, SimplePojo> simplePojoMap; // checkstyle-disable-line VisibilityModifier
+
+        public SimplePojoMapPojo() {
+        }
 
     }
 

@@ -15,8 +15,7 @@
 
 package org.metafacture.commons.tries;
 
-import static org.junit.Assert.assertTrue;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -30,12 +29,15 @@ public final class SimpleRegexTrieTest {
     private static final String AACBB = "aacbb";
     private static final String ABCBB = "abcbb";
 
+    public SimpleRegexTrieTest() {
+    }
+
     @Test
     public void testWithSimpleCharacterClass() {
         final SimpleRegexTrie<String> trie = new SimpleRegexTrie<String>();
         trie.put("a[ab]cbb", "value");
-        assertTrue("Expecting to find: " + AACBB, trie.get(AACBB).size() == 1);
-        assertTrue("Expecting to find: " + ABCBB, trie.get(ABCBB).size() == 1);
+        Assert.assertTrue("Expecting to find: " + AACBB, trie.get(AACBB).size() == 1);
+        Assert.assertTrue("Expecting to find: " + ABCBB, trie.get(ABCBB).size() == 1);
     }
 
     @Test
@@ -44,6 +46,6 @@ public final class SimpleRegexTrieTest {
         // Should not be treated as character class (used for JSON arrays):
         final String key = "a[].1.b[].1";
         trie.put(key, "value");
-        assertTrue("Expecting to find: " + key, trie.get(key).size() == 1);
+        Assert.assertTrue("Expecting to find: " + key, trie.get(key).size() == 1);
     }
 }

@@ -68,20 +68,20 @@ public final class FileOpenerCompressionTest {
     @Parameters
     public static Iterable<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                { "compressed.txt", FileCompression.AUTO },
-                { "compressed.txt.bgzf", FileCompression.AUTO },
-                { "compressed.txt.bz2", FileCompression.AUTO },
-                { "compressed.txt.bzip2", FileCompression.AUTO },
-                { "compressed.txt.gz", FileCompression.AUTO },
-                { "compressed.txt.gzip", FileCompression.AUTO },
-                { "compressed.txt.xz", FileCompression.AUTO },
-                { "compressed.txt", FileCompression.NONE },
-                { "compressed.txt.bz2", FileCompression.BZIP2 },
-                { "compressed.txt.bzip2", FileCompression.BZIP2 },
-                { "compressed.txt.bgzf", FileCompression.GZIP },
-                { "compressed.txt.gz", FileCompression.GZIP },
-                { "compressed.txt.gzip", FileCompression.GZIP },
-                { "compressed.txt.xz", FileCompression.XZ },
+                {"compressed.txt", FileCompression.AUTO},
+                {"compressed.txt.bgzf", FileCompression.AUTO},
+                {"compressed.txt.bz2", FileCompression.AUTO},
+                {"compressed.txt.bzip2", FileCompression.AUTO},
+                {"compressed.txt.gz", FileCompression.AUTO},
+                {"compressed.txt.gzip", FileCompression.AUTO},
+                {"compressed.txt.xz", FileCompression.AUTO},
+                {"compressed.txt", FileCompression.NONE},
+                {"compressed.txt.bz2", FileCompression.BZIP2},
+                {"compressed.txt.bzip2", FileCompression.BZIP2},
+                {"compressed.txt.bgzf", FileCompression.GZIP},
+                {"compressed.txt.gz", FileCompression.GZIP},
+                {"compressed.txt.gzip", FileCompression.GZIP},
+                {"compressed.txt.xz", FileCompression.XZ}
             });
     }
 

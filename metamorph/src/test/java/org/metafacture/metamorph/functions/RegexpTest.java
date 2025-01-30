@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -39,9 +39,12 @@ public final class RegexpTest {
     @Mock
     private StreamReceiver receiver;
 
+    public RegexpTest() {
+    }
+
     @Test
     public void shouldMatchAndReplaceUsingRegularExpressions() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='001.' name='subject'>" +
                 "    <regexp match='.*' format='resource:P${0}' />" +
@@ -72,7 +75,7 @@ public final class RegexpTest {
 
     @Test
     public void shouldIgnoreEmptyMatchGroups() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='s'>" +
                 "    <regexp match='aa(bb*)?(cc*)(dd*)' format='${1}${2}${3}' />" +
@@ -94,7 +97,7 @@ public final class RegexpTest {
 
     @Test
     public void shouldIgnoreNullValues() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='s'>" +
                 "    <regexp match='a.*' />" +

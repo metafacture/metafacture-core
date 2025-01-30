@@ -16,17 +16,16 @@
 
 package org.metafacture.formeta;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-
-import java.io.StringReader;
+import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.io.StringReader;
 
 /**
  * Tests for class {@link FormetaRecordsReader}.
@@ -34,7 +33,7 @@ import org.mockito.MockitoAnnotations;
  * @author Christoph Böhme
  *
  */
-public final  class FormetaRecordsReaderTest {
+public final class FormetaRecordsReaderTest {
 
     private static final String SINGLE_RECORD = "l: v";
 
@@ -57,6 +56,9 @@ public final  class FormetaRecordsReaderTest {
     @Mock
     private ObjectReceiver<String> receiver;
 
+    public FormetaRecordsReaderTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -75,8 +77,8 @@ public final  class FormetaRecordsReaderTest {
 
         formetaRecordsReader.process(reader);
 
-        verify(receiver).process(SINGLE_RECORD);
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).process(SINGLE_RECORD);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -99,19 +101,19 @@ public final  class FormetaRecordsReaderTest {
 
         formetaRecordsReader.process(reader);
 
-        verify(receiver).process(RECORD_LITERAL);
-        verify(receiver).process(RECORD_GROUP);
-        verify(receiver).process(RECORD_NESTED_GROUP);
-        verify(receiver).process(RECORD_QUOTED_LITERAL);
-        verify(receiver).process(RECORD_LEFT_BRACE_IN_QUOTES);
-        verify(receiver).process(RECORD_RIGHT_BRACE_IN_QUOTES);
-        verify(receiver).process(RECORD_COLON_IN_QUOTES);
-        verify(receiver).process(RECORD_COMMA_IN_QUOTES);
-        verify(receiver).process(RECORD_ESCAPED_LEFT_BRACE);
-        verify(receiver).process(RECORD_ESCAPED_RIGHT_BRACE);
-        verify(receiver).process(RECORD_ESCAPED_COLON);
-        verify(receiver).process(RECORD_ESCAPED_COMMA);
-        verify(receiver).process(RECORD_ESCAPED_QUOTE);
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).process(RECORD_LITERAL);
+        Mockito.verify(receiver).process(RECORD_GROUP);
+        Mockito.verify(receiver).process(RECORD_NESTED_GROUP);
+        Mockito.verify(receiver).process(RECORD_QUOTED_LITERAL);
+        Mockito.verify(receiver).process(RECORD_LEFT_BRACE_IN_QUOTES);
+        Mockito.verify(receiver).process(RECORD_RIGHT_BRACE_IN_QUOTES);
+        Mockito.verify(receiver).process(RECORD_COLON_IN_QUOTES);
+        Mockito.verify(receiver).process(RECORD_COMMA_IN_QUOTES);
+        Mockito.verify(receiver).process(RECORD_ESCAPED_LEFT_BRACE);
+        Mockito.verify(receiver).process(RECORD_ESCAPED_RIGHT_BRACE);
+        Mockito.verify(receiver).process(RECORD_ESCAPED_COLON);
+        Mockito.verify(receiver).process(RECORD_ESCAPED_COMMA);
+        Mockito.verify(receiver).process(RECORD_ESCAPED_QUOTE);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 }

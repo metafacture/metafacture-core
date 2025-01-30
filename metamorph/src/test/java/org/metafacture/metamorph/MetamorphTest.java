@@ -17,15 +17,14 @@
 
 package org.metafacture.metamorph;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
 import org.metafacture.framework.helpers.DefaultStreamReceiver;
 import org.metafacture.metamorph.api.Maps;
 import org.metafacture.metamorph.api.NamedValueReceiver;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -52,6 +51,9 @@ public final class MetamorphTest {
     private NamedValueReceiver receiver;
 
     private Metamorph metamorph;
+
+    public MetamorphTest() {
+    }
 
     @Before
     public void createSystemUnderTest() {
@@ -96,6 +98,7 @@ public final class MetamorphTest {
             i.literal("testLiteral", "testValue");
         });
     }
+
     @Test
     public void shouldNotMapLiteralWithoutMatchingEntity() {
         assertNamedValue(false, i -> {
@@ -128,8 +131,8 @@ public final class MetamorphTest {
 
         metamorph.putMap("testMap", map);
 
-        assertNotNull(metamorph.getMap("testMap"));
-        assertEquals("testValue", metamorph.getValue("testMap", "outName"));
+        Assert.assertNotNull(metamorph.getMap("testMap"));
+        Assert.assertEquals("testValue", metamorph.getValue("testMap", "outName"));
     }
 
     @Test
@@ -139,10 +142,10 @@ public final class MetamorphTest {
 
         metamorph.putMap("testMap", map);
 
-        assertEquals("defaultValue", metamorph.getValue("testMap", "nameNotInMap"));
+        Assert.assertEquals("defaultValue", metamorph.getValue("testMap", "nameNotInMap"));
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void shouldThrowIllegalStateExceptionIfEntityIsNotClosed() {
         metamorph.startRecord("");
         metamorph.startEntity("testEntity");

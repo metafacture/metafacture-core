@@ -16,10 +16,8 @@
 
 package org.metafacture.commons.tries;
 
-import static org.junit.Assert.assertEquals;
-
+import org.junit.Assert;
 import org.junit.Test;
-
 
 /**
  * tests {@link SetReplacer}
@@ -29,9 +27,11 @@ import org.junit.Test;
  */
 public final class SetReplaceTest {
 
+    public SetReplaceTest() {
+    }
+
     @Test
     public void testReplace() {
-
         final SetReplacer setReplace = new SetReplacer();
         final String text = "auf sylt mit super krabben entsafter und apfel";
         final String target = "auf hawaii mit Mai Tai und surfboard";
@@ -41,20 +41,18 @@ public final class SetReplaceTest {
         setReplace.addReplacement("krabben", "shirt");
         setReplace.addReplacement("super krabben entsafter", "Mai Tai");
 
-        assertEquals(target, setReplace.replaceIn(text));
+        Assert.assertEquals(target, setReplace.replaceIn(text));
     }
 
     @Test
     public void testReplaceWithInclusion() {
-
         final SetReplacer setReplace = new SetReplacer();
-
 
         setReplace.addReplacement("fünf", "5");
         setReplace.addReplacement("fünfzig", "50");
 
-        assertEquals("50 äpfel", setReplace.replaceIn("fünfzig äpfel"));
-        assertEquals("5 äpfel", setReplace.replaceIn("fünf äpfel"));
+        Assert.assertEquals("50 äpfel", setReplace.replaceIn("fünfzig äpfel"));
+        Assert.assertEquals("5 äpfel", setReplace.replaceIn("fünf äpfel"));
     }
 
 }

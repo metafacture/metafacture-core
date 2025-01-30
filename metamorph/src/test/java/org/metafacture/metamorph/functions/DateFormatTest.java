@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -39,9 +39,12 @@ public final class DateFormatTest {
     @Mock
     private StreamReceiver receiver;
 
+    public DateFormatTest() {
+    }
+
     @Test
     public void shouldMakeOutputFormatConfigurable() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='date'>" +
                 "    <dateformat outputformat='LONG' language='en' />" +

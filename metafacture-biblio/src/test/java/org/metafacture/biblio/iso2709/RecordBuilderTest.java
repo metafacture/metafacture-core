@@ -16,15 +16,14 @@
 
 package org.metafacture.biblio.iso2709;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.nio.charset.StandardCharsets;
-
-import org.junit.Before;
-import org.junit.Test;
 import org.metafacture.commons.StringUtil;
 import org.metafacture.framework.FormatException;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * Tests for class {@link RecordBuilder}.
@@ -36,6 +35,9 @@ public final class RecordBuilderTest {
 
     private RecordFormat format;
     private RecordBuilder builder;
+
+    public RecordBuilderTest() {
+    }
 
     @Before
     public void createSystemUnderTest() {
@@ -63,12 +65,12 @@ public final class RecordBuilderTest {
                 .withFieldLengthLength(5)
                 .withImplDefinedPartLength(6)
                 .build();
-        final RecordBuilder builder = new RecordBuilder(format);
+        builder = new RecordBuilder(format);
 
         final byte[] record = builder.build();
 
-        assertEquals("23", asString(record, 10, 12));
-        assertEquals("546", asString(record, 20, 23));
+        Assert.assertEquals("23", asString(record, 10, 12));
+        Assert.assertEquals("546", asString(record, 20, 23));
     }
 
     @Test
@@ -77,22 +79,22 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals(0x53, record[5]);
+        Assert.assertEquals(0x53, record[5]);
     }
 
     @Test
     public void shouldWriteSpaceIfRecordStatusNotSet() {
         final byte[] record = builder.build();
 
-        assertEquals(0x20, record[5]);
+        Assert.assertEquals(0x20, record[5]);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfRecordStatusIsNot7BitAscii() {
         builder.setRecordStatus('\u00df');  // Exception expected
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfRecordStatusIsInformationSeparator() {
         builder.setRecordStatus('\u001e');  // Exception expected
     }
@@ -103,20 +105,20 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals(0x49, record[6]);
-        assertEquals(0x4d, record[7]);
-        assertEquals(0x50, record[8]);
-        assertEquals(0x4c, record[9]);
+        Assert.assertEquals(0x49, record[6]);
+        Assert.assertEquals(0x4d, record[7]);
+        Assert.assertEquals(0x50, record[8]);
+        Assert.assertEquals(0x4c, record[9]);
     }
 
     @Test
     public void shouldWriteSpacesIfImplCodesNotSet() {
         final byte[] record = builder.build();
 
-        assertEquals(0x20, record[6]);
-        assertEquals(0x20, record[7]);
-        assertEquals(0x20, record[8]);
-        assertEquals(0x20, record[9]);
+        Assert.assertEquals(0x20, record[6]);
+        Assert.assertEquals(0x20, record[7]);
+        Assert.assertEquals(0x20, record[8]);
+        Assert.assertEquals(0x20, record[9]);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -129,7 +131,7 @@ public final class RecordBuilderTest {
         builder.setImplCodes(asChars("12345"));  // Exception expected
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfImplCodesAreNot7BitAscii() {
         builder.setImplCodes(asChars("12\u00df4"));  // Exception expected
     }
@@ -145,18 +147,18 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals(0x55, record[17]);
-        assertEquals(0x53, record[18]);
-        assertEquals(0x43, record[19]);
+        Assert.assertEquals(0x55, record[17]);
+        Assert.assertEquals(0x53, record[18]);
+        Assert.assertEquals(0x43, record[19]);
     }
 
     @Test
     public void shouldWriteSpacesIfSystemCharsNotSet() {
         final byte[] record = builder.build();
 
-        assertEquals(0x20, record[17]);
-        assertEquals(0x20, record[18]);
-        assertEquals(0x20, record[19]);
+        Assert.assertEquals(0x20, record[17]);
+        Assert.assertEquals(0x20, record[18]);
+        Assert.assertEquals(0x20, record[19]);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -169,12 +171,12 @@ public final class RecordBuilderTest {
         builder.setSystemChars(asChars("1234"));  // Exception expected
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfSystemCharsAreNot7BitAscii() {
         builder.setSystemChars(asChars("1\u00df3"));  // Exception expected
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfSystemCharIsInformationSeparator() {
         builder.setSystemChars(asChars("1\u001e3"));  // Exception expected
     }
@@ -192,10 +194,11 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals(0x55, record[17]);
-        assertEquals(0x53, record[18]);
-        assertEquals(0x43, record[19]);
+        Assert.assertEquals(0x55, record[17]);
+        Assert.assertEquals(0x53, record[18]);
+        Assert.assertEquals(0x43, record[19]);
     }
+
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionIfSystemCharIndexGreaterThan2() {
         builder.setSystemChar(3, '1');
@@ -207,22 +210,22 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals(0x52, record[23]);
+        Assert.assertEquals(0x52, record[23]);
     }
 
     @Test
     public void shouldWriteSpaceIfReservedCharNotSet() {
         final byte[] record = builder.build();
 
-        assertEquals(0x20, record[23]);
+        Assert.assertEquals(0x20, record[23]);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfReservedCharIsNot7BitAscii() {
         builder.setReservedChar('\u00df');  // Exception expected
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionIfReservedCharIsInformationSeparator() {
         builder.setReservedChar('\u001d');  // Exception expected
     }
@@ -233,8 +236,8 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals("00206000IM", asString(record, 24, 34));
-        assertEquals("Value\u001e", asString(record, 35, 41));
+        Assert.assertEquals("00206000IM", asString(record, 24, 34));
+        Assert.assertEquals("Value\u001e", asString(record, 35, 41));
     }
 
     @Test
@@ -244,9 +247,9 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals("00200000", asString(record, 24, 32));
-        assertEquals("00212099", asString(record, 34, 42));
-        assertEquals(longValue + '\u001e', asString(record, 45, 156));
+        Assert.assertEquals("00200000", asString(record, 24, 32));
+        Assert.assertEquals("00212099", asString(record, 34, 42));
+        Assert.assertEquals(longValue + '\u001e', asString(record, 45, 156));
     }
 
     @Test
@@ -255,7 +258,7 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals("00206000  ", asString(record, 24, 34));
+        Assert.assertEquals("00206000  ", asString(record, 24, 34));
     }
 
     @Test
@@ -263,12 +266,12 @@ public final class RecordBuilderTest {
         format = RecordFormat.createFrom(format)
                 .withImplDefinedPartLength(0)
                 .build();
-        final RecordBuilder builder = new RecordBuilder(format);
+        builder = new RecordBuilder(format);
         builder.appendReferenceField(asChars("002"), "Value");
 
         final byte[] record = builder.build();
 
-        assertEquals("00206000\u001e", asString(record, 24, 33));
+        Assert.assertEquals("00206000\u001e", asString(record, 24, 33));
     }
 
     @Test(expected = FormatException.class)
@@ -343,8 +346,8 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals("01003000IM", asString(record, 24, 34));
-        assertEquals("IN\u001e", asString(record, 35, 38));
+        Assert.assertEquals("01003000IM", asString(record, 24, 34));
+        Assert.assertEquals("IN\u001e", asString(record, 35, 38));
     }
 
     @Test
@@ -354,7 +357,7 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals("01203000  ", asString(record, 24, 34));
+        Assert.assertEquals("01203000  ", asString(record, 24, 34));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -388,7 +391,7 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals("  \u001e", asString(record, 35, 38));
+        Assert.assertEquals("  \u001e", asString(record, 35, 38));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -448,7 +451,7 @@ public final class RecordBuilderTest {
         builder.build();  // Exception expected
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void shouldNotAllowAppendingReferenceFieldAfterFinishingDataField() {
         builder.startDataField(asChars("020"), asChars("IN"), asChars("IM"));
         builder.endDataField();
@@ -466,8 +469,8 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals("02015000  ", asString(record, 24, 34));
-        assertEquals("\u001fAval1\u001fBval2\u001e", asString(record, 37, 50));
+        Assert.assertEquals("02015000  ", asString(record, 24, 34));
+        Assert.assertEquals("\u001fAval1\u001fBval2\u001e", asString(record, 37, 50));
     }
 
     @Test
@@ -479,8 +482,8 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals("02010000  ", asString(record, 24, 34));
-        assertEquals("\u001fAüber\u001e", asString(record, 37, 45));
+        Assert.assertEquals("02010000  ", asString(record, 24, 34));
+        Assert.assertEquals("\u001fAüber\u001e", asString(record, 37, 45));
     }
 
     @Test
@@ -494,8 +497,8 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals("02000000  ", asString(record, 24, 34));
-        assertEquals("02028099  ", asString(record, 34, 44));
+        Assert.assertEquals("02000000  ", asString(record, 24, 34));
+        Assert.assertEquals("02028099  ", asString(record, 34, 44));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -552,8 +555,8 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertTrue(exceptionThrown);
-        assertEquals("\u001e\u001d", asString(record, 24, 26));
+        Assert.assertTrue(exceptionThrown);
+        Assert.assertEquals("\u001e\u001d", asString(record, 24, 26));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -588,7 +591,7 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals("\u001f Value", asString(record, 37, 44));
+        Assert.assertEquals("\u001f Value", asString(record, 37, 44));
     }
 
     @Test
@@ -596,14 +599,14 @@ public final class RecordBuilderTest {
         format = RecordFormat.createFrom(format)
                 .withIdentifierLength(1)
                 .build();
-        final RecordBuilder builder = new RecordBuilder(format);
+        builder = new RecordBuilder(format);
         builder.startDataField(asChars("200"), asChars("IN"), asChars("IM"));
         builder.appendSubfield("Value");
         builder.endDataField();
 
         final byte[] record = builder.build();
 
-        assertEquals("\u001fValue", asString(record, 37, 43));
+        Assert.assertEquals("\u001fValue", asString(record, 37, 43));
     }
 
     @Test
@@ -611,7 +614,7 @@ public final class RecordBuilderTest {
         format = RecordFormat.createFrom(format)
                 .withIdentifierLength(0)
                 .build();
-        final RecordBuilder builder = new RecordBuilder(format);
+        builder = new RecordBuilder(format);
         builder.startDataField(asChars("200"), asChars("IN"), asChars("IM"));
         builder.appendSubfield("Ada");
         builder.appendSubfield("Lovelace");
@@ -619,17 +622,17 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals("AdaLovelace", asString(record, 37, 48));
+        Assert.assertEquals("AdaLovelace", asString(record, 37, 48));
     }
 
     @Test
     public void baseAddressShouldPointToEndOfDirectory() {
-        final RecordBuilder builder = new RecordBuilder(format);
+        builder = new RecordBuilder(format);
 
         builder.appendReferenceField(asChars("001"), asChars("  "), "value");
 
         final byte[] record = builder.build();
-        assertEquals("00035", asString(record, 12, 17));
+        Assert.assertEquals("00035", asString(record, 12, 17));
     }
 
     @Test(expected = FormatException.class)
@@ -639,7 +642,7 @@ public final class RecordBuilderTest {
                 .withFieldStartLength(9)
                 .withImplDefinedPartLength(9)
                 .build();
-        final RecordBuilder builder = new RecordBuilder(format);
+        builder = new RecordBuilder(format);
         final int dirEntries = Iso2709Constants.MAX_PAYLOAD_LENGTH / (9 * 3 + 3) + 1;
         for (int i = 0; i < dirEntries; ++i) {
             builder.appendReferenceField(asChars("002"), asChars("123456789"), "");
@@ -654,7 +657,7 @@ public final class RecordBuilderTest {
 
         final byte[] record = builder.build();
 
-        assertEquals(String.format("%05d", record.length),
+        Assert.assertEquals(String.format("%05d", record.length),
                 asString(record, 0, 5));
     }
 
@@ -663,7 +666,7 @@ public final class RecordBuilderTest {
         format = RecordFormat.createFrom(format)
                 .withFieldLengthLength(9)
                 .build();
-        final RecordBuilder builder = new RecordBuilder(format);
+        builder = new RecordBuilder(format);
         final String longValue = StringUtil.repeatChars('C', 100000);
         builder.appendReferenceField(asChars("002"), asChars("  "), longValue);
 
@@ -674,7 +677,7 @@ public final class RecordBuilderTest {
     public void shouldEndWithRecordSeparator() {
         final byte[] record = builder.build();
 
-        assertEquals('\u001d', record[record.length - 1]);
+        Assert.assertEquals('\u001d', record[record.length - 1]);
     }
 
     @Test
@@ -687,16 +690,16 @@ public final class RecordBuilderTest {
         builder.reset();
 
         final byte[] record = builder.build();
-        assertEquals(26, record.length);
-        assertEquals(0x20, record[5]);
-        assertEquals(0x20, record[6]);
-        assertEquals(0x20, record[7]);
-        assertEquals(0x20, record[8]);
-        assertEquals(0x20, record[9]);
-        assertEquals(0x20, record[17]);
-        assertEquals(0x20, record[18]);
-        assertEquals(0x20, record[19]);
-        assertEquals(0x20, record[23]);
+        Assert.assertEquals(26, record.length);
+        Assert.assertEquals(0x20, record[5]);
+        Assert.assertEquals(0x20, record[6]);
+        Assert.assertEquals(0x20, record[7]);
+        Assert.assertEquals(0x20, record[8]);
+        Assert.assertEquals(0x20, record[9]);
+        Assert.assertEquals(0x20, record[17]);
+        Assert.assertEquals(0x20, record[18]);
+        Assert.assertEquals(0x20, record[19]);
+        Assert.assertEquals(0x20, record[23]);
     }
 
     private char[] asChars(final String value) {

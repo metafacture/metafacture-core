@@ -16,8 +16,7 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.junit.Assert.assertEquals;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -35,9 +34,13 @@ public final class NormalizeUTF8Test {
     private static final String OUTPUT_STR =
         "Bauer, Sigmund: Über den Einfluß der Ackergeräthe auf den Reinertrag.";
 
+    public NormalizeUTF8Test() {
+    }
+
     @Test
     public void testProcess() {
         final NormalizeUTF8 normalize = new NormalizeUTF8();
-        assertEquals("Normalization incorrect", OUTPUT_STR, normalize.process(INPUT_STR));
+        Assert.assertEquals("Normalization incorrect", OUTPUT_STR, normalize.process(INPUT_STR));
     }
+
 }

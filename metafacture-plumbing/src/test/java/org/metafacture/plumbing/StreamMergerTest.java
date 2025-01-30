@@ -16,15 +16,14 @@
 
 package org.metafacture.plumbing;
 
-import static org.mockito.Mockito.inOrder;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 
 /**
  * Tests for class {@link StreamMerger}.
@@ -38,6 +37,9 @@ public final class StreamMergerTest {
     private StreamReceiver receiver;
 
     private StreamMerger streamMerger;
+
+    public StreamMergerTest() {
+    }
 
     @Before
     public void setup() {
@@ -60,7 +62,7 @@ public final class StreamMergerTest {
         streamMerger.endRecord();
         streamMerger.closeStream();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).startEntity("entity-1");
         ordered.verify(receiver).endEntity();
@@ -81,7 +83,7 @@ public final class StreamMergerTest {
         streamMerger.endRecord();
         streamMerger.closeStream();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("literal-1", "value-1");
         ordered.verify(receiver).endRecord();

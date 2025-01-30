@@ -16,15 +16,13 @@
 
 package org.metafacture.biblio;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -41,6 +39,9 @@ public final class MabDecoderTest {
 
     private MabDecoder mabDecoder;
 
+    public MabDecoderTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -56,7 +57,7 @@ public final class MabDecoderTest {
                 "705b\u001FcSubfield 3\u001FdSubfield 4\u001E" +
                 "\u001D");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1234");
         ordered.verify(receiver).literal("001", "1234");
         ordered.verify(receiver).startEntity("705a");
@@ -75,8 +76,8 @@ public final class MabDecoderTest {
         mabDecoder.process("   ");
         mabDecoder.closeStream();
 
-        verify(receiver).closeStream();
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).closeStream();
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
 }

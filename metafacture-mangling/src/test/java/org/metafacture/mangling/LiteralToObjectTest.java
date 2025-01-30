@@ -16,16 +16,14 @@
 
 package org.metafacture.mangling;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 
 /**
  * Tests for class {@link LiteralToObject}.
@@ -45,6 +43,9 @@ public final class LiteralToObjectTest {
     private ObjectReceiver<String> receiver;
 
     private LiteralToObject literalToObject;
+
+    public LiteralToObjectTest() {
+    }
 
     @Before
     public void setup() {
@@ -68,8 +69,8 @@ public final class LiteralToObjectTest {
         literalToObject.literal("L2", "V2");
         literalToObject.endRecord();
 
-        verify(receiver).process(LITERAL_VALUE1);
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).process(LITERAL_VALUE1);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -82,8 +83,8 @@ public final class LiteralToObjectTest {
         literalToObject.endEntity();
         literalToObject.endRecord();
 
-        verify(receiver).process(LITERAL_VALUE1);
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).process(LITERAL_VALUE1);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -96,9 +97,9 @@ public final class LiteralToObjectTest {
         literalToObject.literal("ex_2", LITERAL_VALUE2);
         literalToObject.endRecord();
 
-        verify(receiver).process(LITERAL_VALUE1);
-        verify(receiver).process(LITERAL_VALUE2);
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).process(LITERAL_VALUE1);
+        Mockito.verify(receiver).process(LITERAL_VALUE2);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
 }

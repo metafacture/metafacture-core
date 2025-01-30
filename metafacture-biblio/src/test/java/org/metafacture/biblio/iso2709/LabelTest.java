@@ -16,10 +16,7 @@
 
 package org.metafacture.biblio.iso2709;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,10 +30,10 @@ public final class LabelTest {
 
     private static final int RECORD_LENGTH = 26;
     private static final char RECORD_STATUS = 'S';
-    private static final char[] IMPL_CODES = { 'I', 'M', 'P', 'L' };
+    private static final char[] IMPL_CODES = {'I', 'M', 'P', 'L'};
     private static final int INDICATOR_LENGTH = 1;
     private static final int IDENTIFIER_LENGTH = 2;
-    private static final char[] SYSTEM_CHARS = { 'S', 'Y', 'S' };
+    private static final char[] SYSTEM_CHARS = {'S', 'Y', 'S'};
     private static final int FIELD_LENGTH_LENGTH = 3;
     private static final int FIELD_START_LENGTH = 4;
     private static final int IMPL_DEFINED_PART_LENGTH = 5;
@@ -57,6 +54,9 @@ public final class LabelTest {
 
     private Label label;
 
+    public LabelTest() {
+    }
+
     @Before
     public void createSystemUnderTest() {
         final byte[] recordLabelBytes = RECORD_LABEL.getBytes(
@@ -66,10 +66,10 @@ public final class LabelTest {
     }
 
     @Test
-    public void getRecordFormat_shouldReturnRecordFormatObject() {
+    public void getRecordFormatShouldReturnRecordFormatObject() {
         final RecordFormat recordFormat = label.getRecordFormat();
 
-        assertNotNull(recordFormat);
+        Assert.assertNotNull(recordFormat);
         final RecordFormat expectedFormat = RecordFormat.create()
                 .withIndicatorLength(INDICATOR_LENGTH)
                 .withIdentifierLength(IDENTIFIER_LENGTH)
@@ -77,67 +77,67 @@ public final class LabelTest {
                 .withFieldLengthLength(FIELD_LENGTH_LENGTH)
                 .withImplDefinedPartLength(IMPL_DEFINED_PART_LENGTH)
                 .build();
-        assertEquals(expectedFormat, recordFormat);
+        Assert.assertEquals(expectedFormat, recordFormat);
     }
 
     @Test
-    public void getRecordLength_shouldReturnRecordLength() {
-        assertEquals(RECORD_LENGTH, label.getRecordLength());
+    public void getRecordLengthShouldReturnRecordLength() {
+        Assert.assertEquals(RECORD_LENGTH, label.getRecordLength());
     }
 
     @Test
-    public void getRecordStatus_shouldReturnRecordStatus() {
-        assertEquals(RECORD_STATUS, label.getRecordStatus());
+    public void getRecordStatusShouldReturnRecordStatus() {
+        Assert.assertEquals(RECORD_STATUS, label.getRecordStatus());
     }
 
     @Test
-    public void getImplCodes_shouldReturnImplCodes() {
-        assertArrayEquals(IMPL_CODES, label.getImplCodes());
+    public void getImplCodesShouldReturnImplCodes() {
+        Assert.assertArrayEquals(IMPL_CODES, label.getImplCodes());
     }
 
     @Test
-    public void getIndicatorLength_shouldReturnIndicatorLength() {
-        assertEquals(INDICATOR_LENGTH, label.getIndicatorLength());
+    public void getIndicatorLengthShouldReturnIndicatorLength() {
+        Assert.assertEquals(INDICATOR_LENGTH, label.getIndicatorLength());
     }
 
     @Test
-    public void getIdentifierLength_shouldReturnIdentifierLength() {
-        assertEquals(IDENTIFIER_LENGTH, label.getIdentifierLength());
+    public void getIdentifierLengthShouldReturnIdentifierLength() {
+        Assert.assertEquals(IDENTIFIER_LENGTH, label.getIdentifierLength());
     }
 
     @Test
-    public void getBaseAddress_shouldReturnBaseAddress() {
-        assertEquals(BASE_ADDRESS, label.getBaseAddress());
+    public void getBaseAddressShouldReturnBaseAddress() {
+        Assert.assertEquals(BASE_ADDRESS, label.getBaseAddress());
     }
 
     @Test
-    public void getSystemChars_shouldReturnUserSystemChars() {
-        assertArrayEquals(SYSTEM_CHARS, label.getSystemChars());
+    public void getSystemCharsShouldReturnUserSystemChars() {
+        Assert.assertArrayEquals(SYSTEM_CHARS, label.getSystemChars());
     }
 
     @Test
-    public void getFieldLengthLength_shouldReturnFieldLengthLength() {
-        assertEquals(FIELD_LENGTH_LENGTH, label.getFieldLengthLength());
+    public void getFieldLengthLengthShouldReturnFieldLengthLength() {
+        Assert.assertEquals(FIELD_LENGTH_LENGTH, label.getFieldLengthLength());
     }
 
     @Test
-    public void getFieldStartLength_shouldReturnFieldStartLength() {
-        assertEquals(FIELD_START_LENGTH, label.getFieldStartLength());
+    public void getFieldStartLengthShouldReturnFieldStartLength() {
+        Assert.assertEquals(FIELD_START_LENGTH, label.getFieldStartLength());
     }
 
     @Test
-    public void getImplDefinedPartLength_shouldReturnImplDefinedPartLength() {
-        assertEquals(IMPL_DEFINED_PART_LENGTH, label.getImplDefinedPartLength());
+    public void getImplDefinedPartLengthShouldReturnImplDefinedPartLength() {
+        Assert.assertEquals(IMPL_DEFINED_PART_LENGTH, label.getImplDefinedPartLength());
     }
 
     @Test
-    public void getReservedChar_shouldReturnReservedChar() {
-        assertEquals(RESERVED_CHAR, label.getReservedChar());
+    public void getReservedCharShouldReturnReservedChar() {
+        Assert.assertEquals(RESERVED_CHAR, label.getReservedChar());
     }
 
     @Test
-    public void toString_shouldReturnRecordLabel() {
-        assertEquals(RECORD_LABEL, label.toString());
+    public void toStringShouldReturnRecordLabel() {
+        Assert.assertEquals(RECORD_LABEL, label.toString());
     }
 
 }

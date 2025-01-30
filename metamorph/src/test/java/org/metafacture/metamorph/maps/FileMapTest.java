@@ -16,12 +16,12 @@
 
 package org.metafacture.metamorph.maps;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -36,15 +36,9 @@ import java.util.function.Consumer;
  */
 public final class FileMapTest {
 
-    @Rule
-    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+    private static final String MAPS = "org/metafacture/metamorph/maps/";
 
-    @Mock
-    private StreamReceiver receiver;
-
-    private static String MAPS = "org/metafacture/metamorph/maps/";
-
-    private static String MORPH =
+    private static final String MORPH =
         "<rules>" +
         "  <data source='1'>" +
         "    <%s='map1' />" +
@@ -54,9 +48,18 @@ public final class FileMapTest {
         "  <filemap name='map1' files='" + MAPS + "%s' %s/>" +
         "</maps>";
 
+    @Rule
+    public final MockitoRule mockitoRule = MockitoJUnit.rule();
+
+    @Mock
+    private StreamReceiver receiver;
+
+    public FileMapTest() {
+    }
+
     @Test
     public void shouldLookupValuesInFileBasedMap() {
-        assertMorph(receiver, buildMorph("lookup in", ""),
+        TestHelpers.assertMorph(receiver, buildMorph("lookup in", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -74,7 +77,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldLookupValuesInFileBasedMapWithColumnOptions() {
-        assertMorph(receiver, buildMorph("lookup in", "keyColumn=\"1\" valueColumn=\"0\" expectedColumns=\"2\""),
+        TestHelpers.assertMorph(receiver, buildMorph("lookup in", "keyColumn=\"1\" valueColumn=\"0\" expectedColumns=\"2\""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "Germany");
@@ -92,7 +95,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldLookupValuesInFileBasedMapWithIgnorePattern() {
-        assertMorph(receiver, buildMorph("lookup in", "ignorePattern=\"g.*\""),
+        TestHelpers.assertMorph(receiver, buildMorph("lookup in", "ignorePattern=\"g.*\""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -111,7 +114,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldWhitelistValuesInFileBasedMap() {
-        assertMorph(receiver, buildMorph("whitelist map", ""),
+        TestHelpers.assertMorph(receiver, buildMorph("whitelist map", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -130,7 +133,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldReplaceValuesUsingFileBasedMap() {
-        assertMorph(receiver, buildMorph("setreplace map", ""),
+        TestHelpers.assertMorph(receiver, buildMorph("setreplace map", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw-fj: 1:1");
@@ -148,7 +151,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldReplaceCommaSeparatedValuesUsingFileBasedMapSetting() {
-        assertMorph(receiver, buildMorph("setreplace map", "separator=\",\""),
+        TestHelpers.assertMorph(receiver, buildMorph("setreplace map", "separator=\",\""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -166,7 +169,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldReplaceEmptyValuesUsingFileBasedMapSetting() {
-        assertMorph(receiver, buildMorph("setreplace map", "allowEmptyValues=\"true\""),
+        TestHelpers.assertMorph(receiver, buildMorph("setreplace map", "allowEmptyValues=\"true\""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "zz");
@@ -182,7 +185,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldNotReplaceEmptyValuesUsingFileBasedMapSetting() {
-        assertMorph(receiver, buildMorph("setreplace map", ""),
+        TestHelpers.assertMorph(receiver, buildMorph("setreplace map", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "zz");
@@ -198,7 +201,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldLookupValuesInGzipFileMap() {
-        assertMorph(receiver, buildMorph("lookup in", "file-map-test.txt.gz", ""),
+        TestHelpers.assertMorph(receiver, buildMorph("lookup in", "file-map-test.txt.gz", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -216,7 +219,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldNotLookupValuesInBlockedGzipFileMapWithoutDecompressConcatenated() {
-        assertMorph(receiver, buildMorph("lookup in", "file-map-test.txt.bgzf", ""),
+        TestHelpers.assertMorph(receiver, buildMorph("lookup in", "file-map-test.txt.bgzf", ""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");
@@ -232,7 +235,7 @@ public final class FileMapTest {
 
     @Test
     public void shouldLookupValuesInBlockedGzipFileMap() {
-        assertMorph(receiver, buildMorph("lookup in", "file-map-test.txt.bgzf", "decompressConcatenated=\"true\""),
+        TestHelpers.assertMorph(receiver, buildMorph("lookup in", "file-map-test.txt.bgzf", "decompressConcatenated=\"true\""),
                 i -> {
                     i.startRecord("1");
                     i.literal("1", "gw");

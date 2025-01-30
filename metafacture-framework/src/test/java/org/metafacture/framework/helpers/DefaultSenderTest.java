@@ -16,15 +16,11 @@
 
 package org.metafacture.framework.helpers;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-import org.junit.Test;
 import org.metafacture.framework.StreamReceiver;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Tests for class {@link DefaultSender}.
@@ -35,23 +31,26 @@ import org.metafacture.framework.StreamReceiver;
  */
 public final class DefaultSenderTest {
 
+    public DefaultSenderTest() {
+    }
+
     @Test
     public void shouldCallOnCloseStreamOnlyOnce() {
         final DefaultSender<StreamReceiver> defaultSender =
-                spy(new DefaultSender<>());
+                Mockito.spy(new DefaultSender<>());
 
-        verify(defaultSender, never()).onCloseStream();
-        assertFalse(defaultSender.isClosed());
-
-        defaultSender.closeStream();
-
-        verify(defaultSender, times(1)).onCloseStream();
-        assertTrue(defaultSender.isClosed());
+        Mockito.verify(defaultSender, Mockito.never()).onCloseStream();
+        Assert.assertFalse(defaultSender.isClosed());
 
         defaultSender.closeStream();
 
-        verify(defaultSender, times(1)).onCloseStream();
-        assertTrue(defaultSender.isClosed());
+        Mockito.verify(defaultSender, Mockito.times(1)).onCloseStream();
+        Assert.assertTrue(defaultSender.isClosed());
+
+        defaultSender.closeStream();
+
+        Mockito.verify(defaultSender, Mockito.times(1)).onCloseStream();
+        Assert.assertTrue(defaultSender.isClosed());
     }
 
 }

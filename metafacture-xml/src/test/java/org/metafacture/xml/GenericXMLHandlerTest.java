@@ -16,13 +16,10 @@
 
 package org.metafacture.xml;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -44,6 +41,9 @@ public final class GenericXMLHandlerTest {
 
     private AttributesImpl attributes;
 
+    public GenericXMLHandlerTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -61,7 +61,7 @@ public final class GenericXMLHandlerTest {
     public void shouldIgnoreElementsOutsideRecordElement() {
         genericXmlHandler.startElement("", "ignore-me", "ignore-me", attributes);
 
-        verifyZeroInteractions(receiver);
+        Mockito.verifyZeroInteractions(receiver);
     }
 
     @Test
@@ -69,7 +69,7 @@ public final class GenericXMLHandlerTest {
         genericXmlHandler.startElement("", "record", "record", attributes);
         genericXmlHandler.endElement("", "record", "record");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).endRecord();
     }
@@ -78,7 +78,7 @@ public final class GenericXMLHandlerTest {
     public void shouldEmitEmptyStringIfRecordTagHasNoIdAttribute() {
         genericXmlHandler.startElement("", "record", "record", attributes);
 
-        verify(receiver).startRecord("");
+        Mockito.verify(receiver).startRecord("");
     }
 
     @Test
@@ -86,7 +86,7 @@ public final class GenericXMLHandlerTest {
         attributes.addAttribute("", "id", "id", "CDATA", "theRecordID");
         genericXmlHandler.startElement("", "record", "record", attributes);
 
-        verify(receiver).startRecord("theRecordID");
+        Mockito.verify(receiver).startRecord("theRecordID");
     }
 
     @Test
@@ -94,7 +94,7 @@ public final class GenericXMLHandlerTest {
         attributes.addAttribute("", "attr", "attr", "CDATA", "attr-value");
         genericXmlHandler.startElement("", "record", "record", attributes);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).literal("attr", "attr-value");
     }
@@ -105,7 +105,7 @@ public final class GenericXMLHandlerTest {
         genericXmlHandler.startElement("", "entity", "entity", attributes);
         genericXmlHandler.endElement("", "entity", "entity");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startEntity("entity");
         ordered.verify(receiver).endEntity();
     }
@@ -116,7 +116,7 @@ public final class GenericXMLHandlerTest {
         attributes.addAttribute("", "attr", "attr", "CDATA", "attr-value");
         genericXmlHandler.startElement("", "entity", "entity", attributes);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startEntity("entity");
         ordered.verify(receiver).literal("attr", "attr-value");
     }
@@ -129,7 +129,7 @@ public final class GenericXMLHandlerTest {
         genericXmlHandler.characters(charData, 0, charData.length);
         genericXmlHandler.endElement("", "entity", "entity");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startEntity("entity");
         ordered.verify(receiver).literal("value", "char-data");
     }
@@ -146,7 +146,7 @@ public final class GenericXMLHandlerTest {
         genericXmlHandler.endElement("", "entity", "entity");
         genericXmlHandler.endElement("", "record", "record");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("entity");
         ordered.verify(receiver).literal(name, "char-data");
@@ -163,7 +163,7 @@ public final class GenericXMLHandlerTest {
         genericXmlHandler.startElement("", "record", "record", attributes);
         genericXmlHandler.startElement("", "entity", "ns:entity", attributes);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startEntity("ns:entity");
         ordered.verify(receiver).literal("ns:attr", "attr-value");
     }
@@ -174,7 +174,7 @@ public final class GenericXMLHandlerTest {
         genericXmlHandler.startElement("", "record", "record", attributes);
         genericXmlHandler.endElement("", "record", "record");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).literal("attr", "attr-value");
         ordered.verify(receiver).endRecord();
@@ -196,7 +196,7 @@ public final class GenericXMLHandlerTest {
         genericXmlHandler.endElement("", "roleTerm", "roleTerm");
         genericXmlHandler.endElement("", "record", "record");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         ordered.verify(receiver).startEntity("roleTerm");
         ordered.verify(receiver).literal(marker + "authority", "marcrelator");

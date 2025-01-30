@@ -16,17 +16,16 @@
 
 package org.metafacture.xml;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 /**
  * Extracts records from an xml file and writes single xml files into
@@ -42,6 +41,9 @@ public class XmlFilenameWriterTest {
     public TemporaryFolder tempFolder = new TemporaryFolder();
 
     private XmlFilenameWriter xmlFilenameWriter;
+
+    public XmlFilenameWriterTest() {
+    }
 
     @Before
     public void createSystemUnderTest() {
@@ -62,8 +64,8 @@ public class XmlFilenameWriterTest {
         xmlFilenameWriter.literal("Element", createXml("2"));
         xmlFilenameWriter.endRecord();
 
-        assertEquals(createXml("1"), readFile("1/1.xml"));
-        assertEquals(createXml("2"), readFile("2/2.xml"));
+        Assert.assertEquals(createXml("1"), readFile("1/1.xml"));
+        Assert.assertEquals(createXml("2"), readFile("2/2.xml"));
     }
 
     private String readFile(final String fileName) throws IOException {

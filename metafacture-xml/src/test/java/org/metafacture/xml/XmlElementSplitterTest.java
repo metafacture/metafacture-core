@@ -16,14 +16,14 @@
 
 package org.metafacture.xml;
 
-import static org.mockito.Mockito.inOrder;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.xml.sax.SAXException;
@@ -49,6 +49,9 @@ public class XmlElementSplitterTest {
 
     private XmlElementSplitter xmlElementSplitter;
 
+    public XmlElementSplitterTest() {
+    }
+
     @Before
     public void setup() {
         xmlElementSplitter = new XmlElementSplitter();
@@ -71,7 +74,7 @@ public class XmlElementSplitterTest {
         xmlElementSplitter.endElement(NAMESPACE, "Description", "rdf:Description");
         xmlElementSplitter.endElement(NAMESPACE, "RDF", "rdf:RDF");
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("0");
         ordered.verify(receiver).literal("Element",
                 "<?xml version = \"1.0\" encoding = \"UTF-8\"?><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><rdf:Description rdf:about=\"1\"><a rdf:resource=\"r1\">1</a></rdf:Description></rdf:RDF>");

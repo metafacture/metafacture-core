@@ -16,10 +16,7 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -47,31 +44,34 @@ public final class ISBNTest {
     private static final String ISBN_INCORRECT_SIZE3 = "123456789";
     private static final String ERROR = "invalid";
 
+    public ISBNTest() {
+    }
+
     @Test
-    public void testProcess(){
+    public void testProcess() {
         final ISBN isbn = new ISBN();
         isbn.setTo("isbn13");
-        assertEquals(ISBN13A, isbn.process(ISBN10A));
+        Assert.assertEquals(ISBN13A, isbn.process(ISBN10A));
         isbn.setTo("isbn10");
-        assertEquals(ISBN10A, isbn.process(ISBN13A));
+        Assert.assertEquals(ISBN10A, isbn.process(ISBN13A));
         isbn.setTo("cleanse");
-        assertEquals(ISBN10A, isbn.process(ISBN10A_DIRTY));
+        Assert.assertEquals(ISBN10A, isbn.process(ISBN10A_DIRTY));
 
     }
 
     @Test
     public void testTo13() {
-        assertEquals(ISBN13A, ISBN.isbn10to13(ISBN10A));
+        Assert.assertEquals(ISBN13A, ISBN.isbn10to13(ISBN10A));
     }
 
     @Test
     public void testTo10() {
-        assertEquals(ISBN10A, ISBN.isbn13to10(ISBN13A));
+        Assert.assertEquals(ISBN10A, ISBN.isbn13to10(ISBN13A));
     }
 
     @Test
     public void testCleanse() {
-        assertEquals(ISBN10A, ISBN.cleanse(ISBN10A_DIRTY));
+        Assert.assertEquals(ISBN10A, ISBN.cleanse(ISBN10A_DIRTY));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -86,30 +86,30 @@ public final class ISBNTest {
 
     @Test
     public void testIsValid() {
-        assertFalse(ISBN.isValid(ISBN_INCORRECT_CHECK13));
-        assertFalse(ISBN.isValid(ISBN_INCORRECT_CHECK10));
-        assertFalse(ISBN.isValid(ISBN_INCORRECT_SIZE1));
-        assertFalse(ISBN.isValid(ISBN_INCORRECT_SIZE2));
-        assertFalse(ISBN.isValid(ISBN_INCORRECT_SIZE3));
+        Assert.assertFalse(ISBN.isValid(ISBN_INCORRECT_CHECK13));
+        Assert.assertFalse(ISBN.isValid(ISBN_INCORRECT_CHECK10));
+        Assert.assertFalse(ISBN.isValid(ISBN_INCORRECT_SIZE1));
+        Assert.assertFalse(ISBN.isValid(ISBN_INCORRECT_SIZE2));
+        Assert.assertFalse(ISBN.isValid(ISBN_INCORRECT_SIZE3));
 
-        assertTrue(ISBN.isValid(ISBN10B));
-        assertTrue(ISBN.isValid(ISBN10A));
-        assertTrue(ISBN.isValid(ISBN13A ));
-        assertTrue(ISBN.isValid(ISBN.cleanse(ISBN10C_DIRTY)));
-        assertTrue(ISBN.isValid(ISBN.cleanse(ISBN13D_DIRTY)));
-        assertTrue(ISBN.isValid(ISBN.cleanse(ISBN10F_DIRTY)));
+        Assert.assertTrue(ISBN.isValid(ISBN10B));
+        Assert.assertTrue(ISBN.isValid(ISBN10A));
+        Assert.assertTrue(ISBN.isValid(ISBN13A));
+        Assert.assertTrue(ISBN.isValid(ISBN.cleanse(ISBN10C_DIRTY)));
+        Assert.assertTrue(ISBN.isValid(ISBN.cleanse(ISBN13D_DIRTY)));
+        Assert.assertTrue(ISBN.isValid(ISBN.cleanse(ISBN10F_DIRTY)));
     }
 
-    public void testCleanseException1(){
+    public void testCleanseException1() {
         final ISBN isbn = new ISBN();
         isbn.setErrorString(ERROR);
-        assertTrue(isbn.process(ISBN_INCORRECT_SIZE3).startsWith(ERROR));
+        Assert.assertTrue(isbn.process(ISBN_INCORRECT_SIZE3).startsWith(ERROR));
     }
 
-    public void testCleanseException2(){
+    public void testCleanseException2() {
         final ISBN isbn = new ISBN();
         isbn.setErrorString(ERROR);
-        assertTrue(isbn.process(ISBN_INCORRECT_SIZE1).startsWith(ERROR));
+        Assert.assertTrue(isbn.process(ISBN_INCORRECT_SIZE1).startsWith(ERROR));
     }
 
 }

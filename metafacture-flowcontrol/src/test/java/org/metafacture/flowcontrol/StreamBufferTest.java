@@ -16,18 +16,14 @@
 
 package org.metafacture.flowcontrol;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 
 /**
  * Tests for class {@link StreamBuffer}.
@@ -42,6 +38,9 @@ public final class StreamBufferTest {
     private StreamReceiver receiver;
 
     private StreamBuffer streamBuffer;
+
+    public StreamBufferTest() {
+    }
 
     @Before
     public void setup() {
@@ -58,11 +57,11 @@ public final class StreamBufferTest {
         streamBuffer.endEntity();
         streamBuffer.endRecord();
 
-        verifyZeroInteractions(receiver);
+        Mockito.verifyZeroInteractions(receiver);
 
         streamBuffer.replay();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("l", "v");
         ordered.verify(receiver).startEntity("e");
@@ -78,7 +77,7 @@ public final class StreamBufferTest {
         streamBuffer.replay();
         streamBuffer.replay();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).endRecord();
         ordered.verify(receiver).startRecord("1");
@@ -93,7 +92,7 @@ public final class StreamBufferTest {
         streamBuffer.clear();
         streamBuffer.replay();
 
-        verifyZeroInteractions(receiver);
+        Mockito.verifyZeroInteractions(receiver);
     }
 
     @Test
@@ -104,8 +103,8 @@ public final class StreamBufferTest {
         streamBuffer.resetStream();
         streamBuffer.replay();
 
-        verify(receiver).resetStream();
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).resetStream();
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
 }

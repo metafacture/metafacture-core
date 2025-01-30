@@ -17,6 +17,7 @@
 package org.metafacture.mangling;
 
 import org.metafacture.framework.StreamReceiver;
+
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.mockito.exceptions.base.MockitoAssertionError;
@@ -27,6 +28,9 @@ import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
 public final class TestHelpers {
+
+    private TestHelpers() {
+    }
 
     public static void assertProcess(final StreamReceiver receiver, final Runnable process, final Consumer<Supplier<StreamReceiver>> out) {
         assertProcess(receiver, process, (s, f) -> out.accept(s));

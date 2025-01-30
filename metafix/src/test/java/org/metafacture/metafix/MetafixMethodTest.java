@@ -721,7 +721,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/121")
+    @MetafixToDo("See issue #601")
     public void wildcardFullFieldNonIndex() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "trim('*')"),
@@ -751,7 +751,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/121")
+    @MetafixToDo("See issue #601")
     public void wildcardNestedFullFieldNonIndex() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "trim('work.*')"),
@@ -902,7 +902,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/100
+    // See issue metafacture-fix#100
     public void shouldAppendValueInEntireArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "append('animals[].*', ' is cool')"
@@ -950,7 +950,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/100
+    // See issue metafacture-fix#100
     public void shouldNotAppendValueToHash() {
         MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Hash", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
@@ -972,7 +972,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/123
+    // See issue metafacture-fix#123
     public void shouldIncludeLocationAndTextInExecutionException() {
         final String text = "append('animals', ' is cool')";
         final String message = "Error while executing Fix expression (at FILE, line 2): " + text;
@@ -1270,7 +1270,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/100
+    // See issue metafacture-fix#100
     public void shouldFilterArrayObjectValues() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "filter('animals[]', '[Cc]at')"
@@ -1611,7 +1611,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/100
+    // See issue metafacture-fix#100
     public void shouldJoinArrayObjectField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "join_field('animals[]', ',')"
@@ -1704,7 +1704,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/100
+    // See issue metafacture-fix#100
     public void shouldPrependValueInEntireArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "prepend('animals[].*', 'cool ')"
@@ -1731,7 +1731,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/121
+    // See issue #601
     public void shouldPrependValueInNestedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "prepend('nestedTest[].*.test[].*', 'Number ')"
@@ -1777,7 +1777,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/121
+    // See issue #601
     public void shouldPrependValueInArraySubField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "prepend('coll[].*.a', 'HELLO ')"
@@ -1825,7 +1825,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/100
+    // See issue metafacture-fix#100
     public void shouldNotPrependValueToArray() {
         MetafixTestHelpers.assertExecutionException(IllegalStateException.class, "Expected String, got Array", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
@@ -1963,7 +1963,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/100
+    // See issue metafacture-fix#100
     public void shouldReplaceAllRegexesInArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "replace_all('animals[].*', a, QR)"
@@ -1990,7 +1990,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/121
+    // See issue #601
     public void shouldReplaceAllRegexesInArraySubField() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "replace_all('coll[].*.a', 'o', '__')"
@@ -2038,7 +2038,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/255
+    // See issue metafacture-fix#255
     public void shouldFailToReplaceAllInRepeatedSubfieldOfObjectWithAsterisk() {
         MetafixTestHelpers.assertProcessException(IllegalArgumentException.class, "Can't find: 2 in: null", () ->
             MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
@@ -2707,7 +2707,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    // See https://github.com/metafacture/metafacture-fix/issues/121
+    // See issue #601
     public void shouldReplaceAllRegexesInNestedArray() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "replace_all('nestedTest[].*.test[].*', 'o', '__')"
@@ -3172,7 +3172,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("See https://github.com/metafacture/metafacture-fix/issues/121")
+    @MetafixToDo("See issue #601")
     public void shouldReverseArrayOfStringsWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "reverse('test[].*')"
@@ -3199,7 +3199,7 @@ public class MetafixMethodTest {
     }
 
     @Test
-    @MetafixToDo("java.lang.ArrayIndexOutOfBoundsException: 0; see https://github.com/metafacture/metafacture-fix/issues/121")
+    @MetafixToDo("java.lang.ArrayIndexOutOfBoundsException: 0; see issue #601")
     public void shouldReverseArrayOfHashesWithAsterisk() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "reverse('ANIMALS[].*')"

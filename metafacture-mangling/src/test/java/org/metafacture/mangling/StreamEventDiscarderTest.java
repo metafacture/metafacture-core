@@ -16,19 +16,17 @@
 
 package org.metafacture.mangling;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-
-import java.util.EnumSet;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.mangling.StreamEventDiscarder.EventType;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.mangling.StreamEventDiscarder.EventType;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.util.EnumSet;
 
 /**
  * Tests for class {@link StreamEventDiscarder}.
@@ -42,6 +40,9 @@ public class StreamEventDiscarderTest {
     private StreamReceiver receiver;
 
     private StreamEventDiscarder discarder;
+
+    public StreamEventDiscarderTest() {
+    }
 
     @Before
     public void init() {
@@ -60,7 +61,7 @@ public class StreamEventDiscarderTest {
         discarder.resetStream();
         discarder.closeStream();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).startEntity("entity");
         ordered.verify(receiver).endEntity();
@@ -71,7 +72,7 @@ public class StreamEventDiscarderTest {
     }
 
     @Test
-    public void setDiscardedEvents_shouldDiscardAllEventsIfAllFlagsAreSet() {
+    public void setDiscardedEventsShouldDiscardAllEventsIfAllFlagsAreSet() {
         discarder.setDiscardedEvents(EnumSet.allOf(EventType.class));
 
         discarder.startRecord("1");
@@ -82,22 +83,22 @@ public class StreamEventDiscarderTest {
         discarder.resetStream();
         discarder.closeStream();
 
-        verifyZeroInteractions(receiver);
+        Mockito.verifyZeroInteractions(receiver);
     }
 
     @Test
-    public void setDiscardedEvents_shouldWorkOnCopyOfThePassedEnumSet() {
+    public void setDiscardedEventsShouldWorkOnCopyOfThePassedEnumSet() {
         final EnumSet<EventType> eventTypes = EnumSet.noneOf(EventType.class);
         discarder.setDiscardedEvents(eventTypes);
         eventTypes.add(EventType.RECORD);
 
         discarder.startRecord("1");
 
-        verify(receiver).startRecord("1");
+        Mockito.verify(receiver).startRecord("1");
     }
 
     @Test
-    public void setDiscardRecordEvents_shouldDiscardStartRecordAndEndRecordIfTrue() {
+    public void setDiscardRecordEventsShouldDiscardStartRecordAndEndRecordIfTrue() {
         discarder.setDiscardRecordEvents(true);
 
         discarder.startRecord("1");
@@ -108,7 +109,7 @@ public class StreamEventDiscarderTest {
         discarder.resetStream();
         discarder.closeStream();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startEntity("entity");
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).literal("literal", "value");
@@ -117,7 +118,7 @@ public class StreamEventDiscarderTest {
     }
 
     @Test
-    public void setDiscardEntityEvents_shouldDiscardStartEntityAndEndEntityIfTrue() {
+    public void setDiscardEntityEventsShouldDiscardStartEntityAndEndEntityIfTrue() {
         discarder.setDiscardEntityEvents(true);
 
         discarder.startRecord("1");
@@ -128,7 +129,7 @@ public class StreamEventDiscarderTest {
         discarder.resetStream();
         discarder.closeStream();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("literal", "value");
         ordered.verify(receiver).endRecord();
@@ -137,7 +138,7 @@ public class StreamEventDiscarderTest {
     }
 
     @Test
-    public void setDiscardLiteralEvents_shouldDiscardLiteralIfTrue() {
+    public void setDiscardLiteralEventsShouldDiscardLiteralIfTrue() {
         discarder.setDiscardLiteralEvents(true);
 
         discarder.startRecord("1");
@@ -148,7 +149,7 @@ public class StreamEventDiscarderTest {
         discarder.resetStream();
         discarder.closeStream();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).startEntity("entity");
         ordered.verify(receiver).endEntity();
@@ -158,7 +159,7 @@ public class StreamEventDiscarderTest {
     }
 
     @Test
-    public void setDiscardLifecycleEvents_shouldDiscardResetStreamAndCloseStreamIfTrue() {
+    public void setDiscardLifecycleEventsShouldDiscardResetStreamAndCloseStreamIfTrue() {
         discarder.setDiscardLifecycleEvents(true);
 
         discarder.startRecord("1");
@@ -169,7 +170,7 @@ public class StreamEventDiscarderTest {
         discarder.resetStream();
         discarder.closeStream();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).startEntity("entity");
         ordered.verify(receiver).endEntity();
@@ -178,13 +179,13 @@ public class StreamEventDiscarderTest {
     }
 
     @Test
-    public void getDiscardedEvents_shouldReturnCopyOfTheInternalEnumSet() {
+    public void getDiscardedEventsShouldReturnCopyOfTheInternalEnumSet() {
         final EnumSet<EventType> discardedEvents = discarder.getDiscardedEvents();
         discardedEvents.add(EventType.RECORD);
 
         discarder.startRecord("1");
 
-        verify(receiver).startRecord("1");
+        Mockito.verify(receiver).startRecord("1");
     }
 
 }

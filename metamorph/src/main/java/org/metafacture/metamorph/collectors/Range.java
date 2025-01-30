@@ -78,7 +78,7 @@ public final class Range extends AbstractFlushingCollect {
         }
         else {
             final int last = Integer.valueOf(value).intValue();
-            for (int i = first.intValue(); (increment > 0 && i <= last) || (increment < 0 && i >= last); i += increment) {
+            for (int i = first.intValue(); i == last || increment > 0 == i < last; i += increment) {
                 values.add(Integer.valueOf(i));
             }
             first = null;

@@ -16,15 +16,13 @@
 
 package org.metafacture.flowcontrol;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -40,6 +38,9 @@ public class StreamDeferrerTest {
 
     private StreamDeferrer streamDeferrer;
 
+    public StreamDeferrerTest() {
+    }
+
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
@@ -54,11 +55,11 @@ public class StreamDeferrerTest {
         streamDeferrer.startEntity("e");
         streamDeferrer.endEntity();
 
-        verifyZeroInteractions(receiver);
+        Mockito.verifyZeroInteractions(receiver);
 
         streamDeferrer.endRecord();
 
-        InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("l", "v");
         ordered.verify(receiver).startEntity("e");
@@ -74,9 +75,9 @@ public class StreamDeferrerTest {
         streamDeferrer.literal("l2", "v2");
         streamDeferrer.endRecord();
 
-        InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver, never()).startRecord("1");
-        ordered.verify(receiver, never()).literal("l1", "v1");
+        final InOrder ordered = Mockito.inOrder(receiver);
+        ordered.verify(receiver, Mockito.never()).startRecord("1");
+        ordered.verify(receiver, Mockito.never()).literal("l1", "v1");
         ordered.verify(receiver).startRecord("2");
         ordered.verify(receiver).literal("l2", "v2");
         ordered.verify(receiver).endRecord();
@@ -89,9 +90,9 @@ public class StreamDeferrerTest {
         streamDeferrer.resetStream();
         streamDeferrer.endRecord();
 
-        InOrder ordered = inOrder(receiver);
-        ordered.verify(receiver, never()).startRecord("1");
-        ordered.verify(receiver, never()).literal("l", "v");
+        final InOrder ordered = Mockito.inOrder(receiver);
+        ordered.verify(receiver, Mockito.never()).startRecord("1");
+        ordered.verify(receiver, Mockito.never()).literal("l", "v");
         ordered.verify(receiver).endRecord();
     }
 

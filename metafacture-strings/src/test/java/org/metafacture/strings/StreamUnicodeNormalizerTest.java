@@ -16,18 +16,17 @@
 
 package org.metafacture.strings;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
-
-import java.text.Normalizer;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.text.Normalizer;
 
 /**
  * Tests for class {@link StreamUnicodeNormalizer}.
@@ -58,6 +57,9 @@ public final class StreamUnicodeNormalizerTest {
     @Mock
     private StreamReceiver receiver;
 
+    public StreamUnicodeNormalizerTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -78,7 +80,7 @@ public final class StreamUnicodeNormalizerTest {
         streamUnicodeNormalizer.endEntity();
         streamUnicodeNormalizer.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         ordered.verify(receiver).startEntity(ENTITY_NAME);
         ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
@@ -92,7 +94,7 @@ public final class StreamUnicodeNormalizerTest {
         streamUnicodeNormalizer.literal(LITERAL_NAME, VALUE_WITH_DIACRITICS);
         streamUnicodeNormalizer.endRecord();
 
-        verify(receiver).literal(LITERAL_NAME, VALUE_WITH_PRECOMPOSED_CHARS);
+        Mockito.verify(receiver).literal(LITERAL_NAME, VALUE_WITH_PRECOMPOSED_CHARS);
     }
 
     @Test
@@ -102,7 +104,7 @@ public final class StreamUnicodeNormalizerTest {
         streamUnicodeNormalizer.literal(LITERAL_NAME, VALUE_WITH_DIACRITICS);
         streamUnicodeNormalizer.endRecord();
 
-        verify(receiver).literal(LITERAL_NAME, VALUE_WITH_DIACRITICS);
+        Mockito.verify(receiver).literal(LITERAL_NAME, VALUE_WITH_DIACRITICS);
     }
 
     @Test
@@ -111,7 +113,7 @@ public final class StreamUnicodeNormalizerTest {
         streamUnicodeNormalizer.literal(LITERAL_NAME, null);
         streamUnicodeNormalizer.endRecord();
 
-        verify(receiver).literal(LITERAL_NAME, null);
+        Mockito.verify(receiver).literal(LITERAL_NAME, null);
     }
 
     @Test
@@ -119,7 +121,7 @@ public final class StreamUnicodeNormalizerTest {
         streamUnicodeNormalizer.startRecord(ID_WITH_DIACRITICS);
         streamUnicodeNormalizer.endRecord();
 
-        verify(receiver).startRecord(ID_WITH_DIACRITICS);
+        Mockito.verify(receiver).startRecord(ID_WITH_DIACRITICS);
     }
 
     @Test
@@ -128,7 +130,7 @@ public final class StreamUnicodeNormalizerTest {
         streamUnicodeNormalizer.startRecord(ID_WITH_DIACRITICS);
         streamUnicodeNormalizer.endRecord();
 
-        verify(receiver).startRecord(ID_WITH_PRECOMPOSED_CHARS);
+        Mockito.verify(receiver).startRecord(ID_WITH_PRECOMPOSED_CHARS);
     }
 
     @Test
@@ -139,8 +141,8 @@ public final class StreamUnicodeNormalizerTest {
         streamUnicodeNormalizer.endEntity();
         streamUnicodeNormalizer.endRecord();
 
-        verify(receiver).literal(KEY_WITH_DIACRITICS, LITERAL_VALUE);
-        verify(receiver).startEntity(KEY_WITH_DIACRITICS);
+        Mockito.verify(receiver).literal(KEY_WITH_DIACRITICS, LITERAL_VALUE);
+        Mockito.verify(receiver).startEntity(KEY_WITH_DIACRITICS);
     }
 
     @Test
@@ -152,8 +154,8 @@ public final class StreamUnicodeNormalizerTest {
         streamUnicodeNormalizer.endEntity();
         streamUnicodeNormalizer.endRecord();
 
-        verify(receiver).literal(KEY_WITH_PRECOMPOSED_CHARS, LITERAL_VALUE);
-        verify(receiver).startEntity(KEY_WITH_PRECOMPOSED_CHARS);
+        Mockito.verify(receiver).literal(KEY_WITH_PRECOMPOSED_CHARS, LITERAL_VALUE);
+        Mockito.verify(receiver).startEntity(KEY_WITH_PRECOMPOSED_CHARS);
     }
 
     @Test
@@ -164,7 +166,7 @@ public final class StreamUnicodeNormalizerTest {
                 KEY_WITH_PRECOMPOSED_CHARS);
         streamUnicodeNormalizer.endRecord();
 
-        verify(receiver).literal(LITERAL_NAME, KEY_WITH_DIACRITICS);
+        Mockito.verify(receiver).literal(LITERAL_NAME, KEY_WITH_DIACRITICS);
     }
 
 }

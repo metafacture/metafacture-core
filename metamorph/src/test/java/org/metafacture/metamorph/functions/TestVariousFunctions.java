@@ -16,12 +16,11 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
-import org.metafacture.metamorph.Metamorph;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -42,9 +41,12 @@ public final class TestVariousFunctions {
     @Mock
     private StreamReceiver receiver;
 
+    public TestVariousFunctions() {
+    }
+
     @Test
     public void testRegexpFunction() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='data' name='island'>" +
                 "    <regexp match='(\\w*) island' format='${1}' />" +
@@ -73,7 +75,7 @@ public final class TestVariousFunctions {
 
     @Test
     public void testIsbnFunction() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='isbn' name='withError'>" +
                 "    <isbn to='isbn13' errorString='error' />" +
@@ -97,7 +99,7 @@ public final class TestVariousFunctions {
 
     @Test
     public void testSplitFunction() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='data' name='island'>" +
                 "    <split delimiter=',' />" +
@@ -120,7 +122,7 @@ public final class TestVariousFunctions {
 
     @Test
     public void testSubstringFunction() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='a'>" +
                 "    <substring start='3' end='5' />" +
@@ -141,7 +143,7 @@ public final class TestVariousFunctions {
 
     @Test
     public void testConstantFunction() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='data'>" +
                 "    <constant value='Hawaii' />" +
@@ -162,7 +164,7 @@ public final class TestVariousFunctions {
 
     @Test
     public void testSetReplaceFunction() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='data'>" +
                 "    <setreplace>" +
@@ -187,7 +189,7 @@ public final class TestVariousFunctions {
 
     @Test
     public void testCaseFunction() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='data'>" +
                 "    <case to='upper' />" +
@@ -212,7 +214,7 @@ public final class TestVariousFunctions {
 
     @Test
     public void testEqualsFunction() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='data' name='data1'>" +
                 "    <equals string='Aloha' />" +
@@ -238,7 +240,7 @@ public final class TestVariousFunctions {
 
     @Test
     public void testContainsFunction() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='data' name='data1'>" +
                 "    <contains string='Periodical' />" +
@@ -264,7 +266,7 @@ public final class TestVariousFunctions {
 
     @Test
     public void testBufferFunction() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='greeting' value='${greet} ${island}' reset='false'>" +
                 "    <data source='d1' name='greet' />" +
@@ -312,7 +314,7 @@ public final class TestVariousFunctions {
 
     @Test
     public void testOccurrenceFunction() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='data' name='l2'>" +
                 "    <occurrence only='lessThan 2' />" +
@@ -353,7 +355,7 @@ public final class TestVariousFunctions {
 
     @Test
     public void testOccurrenceFunctionWithSameEntity() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='e.data' name='l2'>" +
                 "    <occurrence only='lessThan 2' sameEntity='true' />" +
@@ -394,7 +396,7 @@ public final class TestVariousFunctions {
 
     @Test
     public void testOccurrenceFunctionWithSameEntityInNestedEntitiesShouldChangeWithInnerEntities() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='o.i.data' name='l2'>" +
                 "    <occurrence only='lessThan 2' sameEntity='true' />" +
@@ -437,7 +439,7 @@ public final class TestVariousFunctions {
 
     @Test
     public void testCountFunction() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='data' name='count'>" +
                 "    <count />" +
@@ -489,7 +491,7 @@ public final class TestVariousFunctions {
 
     @Test
     public void testNestedCountFunction() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='count' value='${count}' flushWith='record'>" +
                 "    <data source='data' name='count'>" +

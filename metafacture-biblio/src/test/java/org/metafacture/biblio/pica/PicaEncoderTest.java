@@ -16,15 +16,15 @@
 
 package org.metafacture.biblio.pica;
 
-import static org.mockito.Mockito.verify;
+import org.metafacture.framework.FormatException;
+import org.metafacture.framework.MissingIdException;
+import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.FormatException;
-import org.metafacture.framework.MissingIdException;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -39,6 +39,9 @@ public final class PicaEncoderTest {
 
     @Mock
     private ObjectReceiver<String> receiver;
+
+    public PicaEncoderTest() {
+    }
 
     @Before
     public void setup() {
@@ -65,7 +68,7 @@ public final class PicaEncoderTest {
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        verify(receiver).process("003@ \u001f017709958X\u001e028@ \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e028@ \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
 
     @Test
@@ -81,10 +84,10 @@ public final class PicaEncoderTest {
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        verify(receiver).process("003@ \u001f017709958X\u001e028@/30 \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e028@/30 \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
 
-    @Test(expected=FormatException.class)
+    @Test(expected = FormatException.class)
     public void testShouldFailOnInvalidFieldName() {
         picaEncoder.startRecord("17709958X");
         picaEncoder.startEntity("003@");
@@ -97,10 +100,10 @@ public final class PicaEncoderTest {
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        verify(receiver).process("003@ \u001f017709958X\u001e@028 \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e@028 \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
 
-    @Test(expected=FormatException.class)
+    @Test(expected = FormatException.class)
     public void testShouldFailOnInvalidFieldName2() {
         picaEncoder.startRecord("17709958X");
         picaEncoder.startEntity("003@");
@@ -113,46 +116,46 @@ public final class PicaEncoderTest {
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        verify(receiver).process("003@ \u001f017709958X\u001e@028 \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e@028 \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
 
-    @Test(expected=FormatException.class)
+    @Test(expected = FormatException.class)
     public void testShouldFailOnInvalidSubfieldName() {
         picaEncoder.startRecord("17709958X");
         picaEncoder.startEntity("003@");
         picaEncoder.literal("0", "17709958X");
         picaEncoder.endEntity();
         picaEncoder.startEntity("028@");
-        picaEncoder.literal("Pp", "Abläöübolo");//the subfieldname pattern not match!
+        picaEncoder.literal("Pp", "Abläöübolo"); // the subfieldname pattern not match!
         picaEncoder.literal("n", "VIX");
         picaEncoder.literal("l", "Bapst");
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        verify(receiver).process("003@ \u001f017709958X\u001e@028 \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e@028 \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
 
-    @Test(expected=FormatException.class)
+    @Test(expected = FormatException.class)
     public void testShouldFailOnLiteralOutOfEntity() {
         picaEncoder.startRecord("17709958X");
         picaEncoder.startEntity("003@");
         picaEncoder.literal("0", "17709958X");
         picaEncoder.endEntity();
-        picaEncoder.literal("P", "Abläöübolo");//the subfieldname out of entity!
+        picaEncoder.literal("P", "Abläöübolo"); // the subfieldname out of entity!
         picaEncoder.startEntity("028@");
         picaEncoder.literal("n", "VIX");
         picaEncoder.literal("l", "Bapst");
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        verify(receiver).process("003@ \u001f017709958X\u001e@028 \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e@028 \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
 
-    @Test (expected=MissingIdException.class)
+    @Test(expected = MissingIdException.class)
     public void testShouldFailOnWrongRecordId() {
         picaEncoder.startRecord("17709958");
         picaEncoder.startEntity("003@");
-        picaEncoder.literal("0", "17709958X"); //RecordId not match!
+        picaEncoder.literal("0", "17709958X"); // RecordId not match!
         picaEncoder.endEntity();
         picaEncoder.startEntity("028@");
         picaEncoder.literal("P", "Abläöübolo");
@@ -161,15 +164,15 @@ public final class PicaEncoderTest {
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        verify(receiver).process("003@ \u001f017709958X\u001e028@ \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e028@ \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
 
     @Test
     public void testShouldIgnoreRecordId() {
-        picaEncoder.setIgnoreRecordId(true);//Set Ignore to true
+        picaEncoder.setIgnoreRecordId(true); // Set Ignore to true
         picaEncoder.startRecord("17709958");
         picaEncoder.startEntity("003@");
-        picaEncoder.literal("0", "17709958X"); //RecordId not match but should be ignored!
+        picaEncoder.literal("0", "17709958X"); // RecordId not match but should be ignored!
         picaEncoder.endEntity();
         picaEncoder.startEntity("028@");
         picaEncoder.literal("P", "Abläöübolo");
@@ -178,7 +181,7 @@ public final class PicaEncoderTest {
         picaEncoder.endEntity();
         picaEncoder.endRecord();
 
-        verify(receiver).process("003@ \u001f017709958X\u001e028@ \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
+        Mockito.verify(receiver).process("003@ \u001f017709958X\u001e028@ \u001fPAbla\u0308o\u0308u\u0308bolo\u001fnVIX\u001flBapst\u001e");
     }
 
 }

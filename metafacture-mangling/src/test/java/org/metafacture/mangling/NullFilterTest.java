@@ -16,15 +16,14 @@
 
 package org.metafacture.mangling;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -44,6 +43,9 @@ public final class NullFilterTest {
 
     @Mock
     private StreamReceiver receiver;
+
+    public NullFilterTest() {
+    }
 
     @Before
     public void setup() {
@@ -65,14 +67,14 @@ public final class NullFilterTest {
         nullFilter.endEntity();
         nullFilter.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         ordered.verify(receiver).startEntity(ENTITY_NAME);
         ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).endRecord();
 
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -84,14 +86,14 @@ public final class NullFilterTest {
         nullFilter.endEntity();
         nullFilter.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         ordered.verify(receiver).startEntity(ENTITY_NAME);
         ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).endRecord();
 
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -105,7 +107,7 @@ public final class NullFilterTest {
         nullFilter.endEntity();
         nullFilter.endRecord();
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         ordered.verify(receiver).startEntity(ENTITY_NAME);
         ordered.verify(receiver).literal(LITERAL_NAME, LITERAL_VALUE);
@@ -113,7 +115,7 @@ public final class NullFilterTest {
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).endRecord();
 
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
 }

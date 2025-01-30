@@ -16,21 +16,18 @@
 
 package org.metafacture.biblio.iso2709;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.never;
+import org.metafacture.framework.FormatException;
 
-import java.nio.charset.Charset;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.FormatException;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.nio.charset.Charset;
 
 /**
  * Tests for class {@link Record}.
@@ -44,69 +41,72 @@ public class RecordTest {
 
     private Record record;
 
+    public RecordTest() {
+    }
+
     @Before
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void constructor_shouldCreateRecordInstance() {
+    public void constructorShouldCreateRecordInstance() {
         final byte[] data = asBytes("00026SIMPL1200025SYS345R\u001e\u001d");
 
         record = new Record(data);
 
-        assertNotNull(record);
+        Assert.assertNotNull(record);
     }
 
     @Test(expected = FormatException.class)
-    public void constructor_shouldThrowFormatExceptionIfSizeOfRecordDataIsLessThanMinRecordLength() {
+    public void constructorShouldThrowFormatExceptionIfSizeOfRecordDataIsLessThanMinRecordLength() {
         final byte[] data = asBytes("00005");
 
         record = new Record(data);  // Exception expected
     }
 
     @Test
-    public void getIdentifier_shouldReturnRecordIdentifier() {
+    public void getIdentifierShouldReturnRecordIdentifier() {
         final byte[] data = asBytes("00034SIMPL0000030SYS110R" + "00120\u001e" +
                 "ID\u001e\u001d");
 
         record = new Record(data);
 
-        assertEquals("ID", record.getRecordId());
+        Assert.assertEquals("ID", record.getRecordId());
     }
 
     @Test
-    public void getIdentifier_shouldReturnNullIfRecordHasNoIdentifier() {
+    public void getIdentifierShouldReturnNullIfRecordHasNoIdentifier() {
         final byte[] data = asBytes("00034SIMPL0000030SYS110R" + "00220\u001e" +
                 "XY\u001e\u001d");
 
         record = new Record(data);
 
-        assertNull(record.getRecordId());
+        Assert.assertNull(record.getRecordId());
     }
 
     @Test
-    public void processFields_shouldCallHandlerReferenceFieldForReferenceFields() {
+    public void processFieldsShouldCallHandlerReferenceFieldForReferenceFields() {
         final byte[] data = asBytes("00042SIMPL0000035SYS110R" + "00120" +
                 "00223\u001e" + "ID\u001e" + "XY\u001e\u001d");
         record = new Record(data);
 
         record.processFields(fieldHandler);
 
-        final InOrder ordered = inOrder(fieldHandler);
+        final InOrder ordered = Mockito.inOrder(fieldHandler);
         ordered.verify(fieldHandler).referenceField(asChars("001"), asChars(""), "ID");
         ordered.verify(fieldHandler).referenceField(asChars("002"), asChars(""), "XY");
     }
 
     @Test
-    public void processFields_shouldHandleDataFieldsInRecordWithoutIndicatorsAndIdentifiers() {
+    public void processFieldsShouldHandleDataFieldsInRecordWithoutIndicatorsAndIdentifiers() {
         final byte[] data = asBytes("00044SIMPL0000037SYS111R" + "01120X" +
                 "01223Y\u001e" + "F1\u001e" + "F2\u001e\u001d");
         record = new Record(data);
 
         record.processFields(fieldHandler);
 
-        final InOrder ordered = inOrder(fieldHandler);
+        final InOrder ordered = Mockito.inOrder(fieldHandler);
         ordered.verify(fieldHandler).startDataField(asChars("011"), asChars("X"),
                 asChars(""));
         ordered.verify(fieldHandler).data(asChars(""), "F1");
@@ -118,14 +118,14 @@ public class RecordTest {
     }
 
     @Test
-    public void processFields_shouldHandleDataFieldsInRecordWithIndicatorsButWithoutIdentifiers() {
+    public void processFieldsShouldHandleDataFieldsInRecordWithIndicatorsButWithoutIdentifiers() {
         final byte[] data = asBytes("00044SIMPL1000035SYS110R" + "01130" +
                 "01234\u001e" + "XF1\u001e" + "YF2\u001e\u001d");
         record = new Record(data);
 
         record.processFields(fieldHandler);
 
-        final InOrder ordered = inOrder(fieldHandler);
+        final InOrder ordered = Mockito.inOrder(fieldHandler);
         ordered.verify(fieldHandler).startDataField(asChars("011"), asChars(""),
                 asChars("X"));
         ordered.verify(fieldHandler).data(asChars(""), "F1");
@@ -137,14 +137,14 @@ public class RecordTest {
     }
 
     @Test
-    public void processFields_shouldHandleDataFieldsInRecordWithoutIndicatorsButWithTwoOctetIdentifiers() {
+    public void processFieldsShouldHandleDataFieldsInRecordWithoutIndicatorsButWithTwoOctetIdentifiers() {
         final byte[] data = asBytes("00050SIMPL0200035SYS110R" + "01150" +
                 "01295\u001e" + "\u001fXF1\u001e" + "\u001fYF2\u001fZF3\u001e\u001d");
         record = new Record(data);
 
         record.processFields(fieldHandler);
 
-        final InOrder ordered = inOrder(fieldHandler);
+        final InOrder ordered = Mockito.inOrder(fieldHandler);
         ordered.verify(fieldHandler).startDataField(asChars("011"), asChars(""),
                 asChars(""));
         ordered.verify(fieldHandler).data(asChars("X"), "F1");
@@ -157,14 +157,14 @@ public class RecordTest {
     }
 
     @Test
-    public void processFields_shouldHandleDataFieldsInRecordWithoutIndicatorsButWithOneOctetIdentifiers() {
+    public void processFieldsShouldHandleDataFieldsInRecordWithoutIndicatorsButWithOneOctetIdentifiers() {
         final byte[] data = asBytes("00038SIMPL0100030SYS110R" + "01170\u001e" +
                 "\u001fF1\u001fF2\u001e\u001d");
         record = new Record(data);
 
         record.processFields(fieldHandler);
 
-        final InOrder ordered = inOrder(fieldHandler);
+        final InOrder ordered = Mockito.inOrder(fieldHandler);
         ordered.verify(fieldHandler).startDataField(asChars("011"), asChars(""),
                 asChars(""));
         ordered.verify(fieldHandler).data(asChars(""), "F1");
@@ -173,29 +173,29 @@ public class RecordTest {
     }
 
     @Test
-    public void processFields_shouldHandleEmptyDataFieldInRecordWithoutIndicatorsButWithIdentifiers() {
+    public void processFieldsShouldHandleEmptyDataFieldInRecordWithoutIndicatorsButWithIdentifiers() {
         final byte[] data = asBytes("00032SIMPL0200030SYS110R" + "01110\u001e" +
                 "\u001e\u001d");
         record = new Record(data);
 
         record.processFields(fieldHandler);
 
-        final InOrder ordered = inOrder(fieldHandler);
+        final InOrder ordered = Mockito.inOrder(fieldHandler);
         ordered.verify(fieldHandler).startDataField(asChars("011"), asChars(""),
                 asChars(""));
-        ordered.verify(fieldHandler, never()).data(any(char[].class), any(String.class));
+        ordered.verify(fieldHandler, Mockito.never()).data(ArgumentMatchers.any(char[].class), ArgumentMatchers.any(String.class));
         ordered.verify(fieldHandler).endDataField();
     }
 
     @Test
-    public void processFields_shouldHandleDataFieldsWithoutContentInRecordWithoutIndicatorsButWithIdentifiers() {
+    public void processFieldsShouldHandleDataFieldsWithoutContentInRecordWithoutIndicatorsButWithIdentifiers() {
         final byte[] data = asBytes("00036SIMPL0200030SYS110R" + "01150\u001e" +
                 "\u001fX\u001fY\u001e\u001d");
         record = new Record(data);
 
         record.processFields(fieldHandler);
 
-        final InOrder ordered = inOrder(fieldHandler);
+        final InOrder ordered = Mockito.inOrder(fieldHandler);
         ordered.verify(fieldHandler).startDataField(asChars("011"), asChars(""),
                 asChars(""));
         ordered.verify(fieldHandler).data(asChars("X"), "");
@@ -204,7 +204,7 @@ public class RecordTest {
     }
 
     @Test
-    public void processFields_shouldHandleDataFieldsInRecordWithIndicatorsAndOctetIdentifiers() {
+    public void processFieldsShouldHandleDataFieldsInRecordWithIndicatorsAndOctetIdentifiers() {
         final byte[] data = asBytes("00051SIMPL2200035SYS110R" + "01160" +
                 "01296\u001e" + "AB\u001fX1\u001e" + "CD\u001fY2\u001fZ3\u001e" +
                 "\u001d");
@@ -212,7 +212,7 @@ public class RecordTest {
 
         record.processFields(fieldHandler);
 
-        final InOrder ordered = inOrder(fieldHandler);
+        final InOrder ordered = Mockito.inOrder(fieldHandler);
         ordered.verify(fieldHandler).startDataField(asChars("011"), asChars(""),
                 asChars("AB"));
         ordered.verify(fieldHandler).data(asChars("X"), "1");
@@ -225,14 +225,14 @@ public class RecordTest {
     }
 
     @Test
-    public void processFields_shouldConcatenateContinuedReferenceFieldsAndReportAllImplDefinedParts() {
+    public void processFieldsShouldConcatenateContinuedReferenceFieldsAndReportAllImplDefinedParts() {
         final byte[] data = asBytes("00062SIMPL0000046SYS121R" + "001000A" +
                 "001309B" + "002312C\u001e" + "abcdefghijk\u001e" + "XY\u001e\u001d");
         record = new Record(data);
 
         record.processFields(fieldHandler);
 
-        final InOrder ordered = inOrder(fieldHandler);
+        final InOrder ordered = Mockito.inOrder(fieldHandler);
         ordered.verify(fieldHandler).referenceField(asChars("001"), asChars("A"),
                 "abcdefghijk");
         ordered.verify(fieldHandler).additionalImplDefinedPart(asChars("B"));
@@ -240,14 +240,14 @@ public class RecordTest {
     }
 
     @Test
-    public void processFields_shouldConcatenateContinuedFieldsAndReportAllImplDefinedParts() {
+    public void processFieldsShouldConcatenateContinuedFieldsAndReportAllImplDefinedParts() {
         final byte[] data = asBytes("00062SIMPL0000046SYS121R" + "011000A" +
                 "011309B" + "012312C\u001e" + "abcdefghijk\u001e" + "XY\u001e\u001d");
         record = new Record(data);
 
         record.processFields(fieldHandler);
 
-        final InOrder ordered = inOrder(fieldHandler);
+        final InOrder ordered = Mockito.inOrder(fieldHandler);
         ordered.verify(fieldHandler).startDataField(asChars("011"), asChars("A"),
                 asChars(""));
         ordered.verify(fieldHandler).data(asChars(""), "abcdefghijk");

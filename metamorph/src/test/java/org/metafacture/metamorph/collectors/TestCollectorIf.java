@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.collectors;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -40,9 +40,12 @@ public final class TestCollectorIf {
     @Mock
     private StreamReceiver receiver;
 
+    public TestCollectorIf() {
+    }
+
     @Test
     public void shouldOnlyFireIfConditionIsMet() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='combined' value='${data1}-${data2}'>" +
                 "    <if>" +
@@ -76,7 +79,7 @@ public final class TestCollectorIf {
 
     @Test
     public void shouldAllowToUseSameSourceInbodyAndCondition() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='combined' value='${data1}-${data2}'>" +
                 "    <if>" +
@@ -110,7 +113,7 @@ public final class TestCollectorIf {
 
     @Test
     public void shouldAllowQuantorsInIfStatements() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='combined' value='${data1}-${data2}'>" +
                 "    <if>" +
@@ -155,7 +158,7 @@ public final class TestCollectorIf {
 
     @Test
     public void shouldResetConditionWithCollector() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='result' value='${VAL}' reset='true'>" +
                 "    <if>" +
@@ -186,7 +189,7 @@ public final class TestCollectorIf {
 
     @Test
     public void shouldResetConditionWithCollectorOnFlushWith() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='result' value='${VAL1}${VAL2}' reset='true' flushWith='entity'>" +
                 "    <if>" +
@@ -218,7 +221,7 @@ public final class TestCollectorIf {
 
     @Test
     public void shouldResetConditionWithCollectorOnSameEntity() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='result' value='${VAL1}+${VAL2}' sameEntity='true'>" +
                 "    <if>" +
@@ -250,7 +253,7 @@ public final class TestCollectorIf {
 
     @Test
     public void shouldResetOnFlushWithIfConditionWasNotMet() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <combine name='result' value='${V1}${V2}' flushWith='entity' reset='true'>" +
                 "    <if>" +

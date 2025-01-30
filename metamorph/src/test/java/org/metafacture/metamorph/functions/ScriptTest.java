@@ -16,11 +16,11 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.metafacture.metamorph.TestHelpers.assertMorph;
+import org.metafacture.framework.StreamReceiver;
+import org.metafacture.metamorph.TestHelpers;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -39,9 +39,12 @@ public final class ScriptTest {
     @Mock
     private StreamReceiver receiver;
 
+    public ScriptTest() {
+    }
+
     @Test
     public void shouldExecuteJavascriptFunctions() {
-        assertMorph(receiver,
+        TestHelpers.assertMorph(receiver,
                 "<rules>" +
                 "  <data source='data1'>" +
                 "    <script file='org/metafacture/metamorph/functions/script-test.js' invoke='process' />" +

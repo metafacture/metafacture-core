@@ -51,6 +51,9 @@ public final class YamlDecoderTest {
     @Mock
     private StreamReceiver receiver;
 
+    public YamlDecoderTest() {
+    }
+
     @Test
     public void testShouldProcessEmptyStrings() {
         assertDecode(
@@ -300,7 +303,7 @@ public final class YamlDecoderTest {
         exception.expect(MetafactureException.class);
         exception.expectMessage(message);
 
-        assertDecode(in, o -> {});
+        assertDecode(in, o -> { });
     }
 
     private void assertDecode(final Consumer<YamlDecoder> in, final Consumer<Supplier<StreamReceiver>> out) {

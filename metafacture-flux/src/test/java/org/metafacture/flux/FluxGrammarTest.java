@@ -16,20 +16,20 @@
 
 package org.metafacture.flux;
 
-import static java.util.Collections.emptyMap;
-import static org.junit.Assert.assertEquals;
+import org.metafacture.commons.reflection.ReflectionException;
+import org.metafacture.flux.parser.FluxProgramm;
+
+import org.antlr.runtime.RecognitionException;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-
-import org.antlr.runtime.RecognitionException;
-import org.junit.Before;
-import org.junit.Test;
-import org.metafacture.commons.reflection.ReflectionException;
-import org.metafacture.flux.parser.FluxProgramm;
+import java.util.Collections;
 
 /**
  * Tests for the Flux grammar.
@@ -40,6 +40,9 @@ public final class FluxGrammarTest {
 
     private ByteArrayOutputStream stdoutBuffer;
     private ByteArrayOutputStream stderrBuffer;
+
+    public FluxGrammarTest() {
+    }
 
     @Before
     public void setup() {
@@ -57,10 +60,10 @@ public final class FluxGrammarTest {
             throws RecognitionException, IOException {
         final String script = "\"test\"|print; //";
 
-        FluxCompiler.compile(createInputStream(script), emptyMap());
+        FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
 
-        assertEquals("", stderrBuffer.toString());
-        assertEquals("", stdoutBuffer.toString());
+        Assert.assertEquals("", stderrBuffer.toString());
+        Assert.assertEquals("", stdoutBuffer.toString());
     }
 
     @Test
@@ -68,10 +71,10 @@ public final class FluxGrammarTest {
             throws RecognitionException, IOException {
         final String script = "\"test\"|print; //\n";
 
-        FluxCompiler.compile(createInputStream(script), emptyMap());
+        FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
 
-        assertEquals("", stderrBuffer.toString());
-        assertEquals("", stdoutBuffer.toString());
+        Assert.assertEquals("", stderrBuffer.toString());
+        Assert.assertEquals("", stdoutBuffer.toString());
     }
 
     @Test
@@ -82,11 +85,11 @@ public final class FluxGrammarTest {
                         "|print;";
 
         final FluxProgramm program = FluxCompiler.compile(
-                createInputStream(script), emptyMap());
+                createInputStream(script), Collections.emptyMap());
         program.start();
 
-        assertEquals("", stderrBuffer.toString());
-        assertEquals("quot=\" octal1=\7 octal2=0 octal3=C unicode=\u00f8 tab=[\t]\n",
+        Assert.assertEquals("", stderrBuffer.toString());
+        Assert.assertEquals("quot=\" octal1=\7 octal2=0 octal3=C unicode=\u00f8 tab=[\t]\n",
                 stdoutBuffer.toString());
     }
 
@@ -95,10 +98,11 @@ public final class FluxGrammarTest {
         throws RecognitionException, IOException {
         final String script = "\"test\"|print";
         try {
-            FluxCompiler.compile(createInputStream(script), emptyMap());
-        } catch (FluxParseException fpe) {
-            assertEquals("mismatched input '<EOF>' expecting ';' in Flux", fpe.getMessage());
-            throw fpe;
+            FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
+        }
+        catch (final FluxParseException e) {
+            Assert.assertEquals("mismatched input '<EOF>' expecting ';' in Flux", e.getMessage());
+            throw e;
         }
     }
 
@@ -107,10 +111,11 @@ public final class FluxGrammarTest {
         throws RecognitionException, IOException {
         final String script = "foo=42";
         try {
-            FluxCompiler.compile(createInputStream(script), emptyMap());
-        } catch (FluxParseException re) {
-            assertEquals("mismatched input '<EOF>' expecting ';' in Flux", re.getMessage());
-            throw re;
+            FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
+        }
+        catch (final FluxParseException e) {
+            Assert.assertEquals("mismatched input '<EOF>' expecting ';' in Flux", e.getMessage());
+            throw e;
         }
     }
 
@@ -119,10 +124,11 @@ public final class FluxGrammarTest {
         throws RecognitionException, IOException {
         final String script = "\"test\"|prin;";
         try {
-            FluxCompiler.compile(createInputStream(script), emptyMap());
-        } catch (ReflectionException re) {
-            assertEquals("Class not found: prin", re.getMessage());
-            throw re;
+            FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
+        }
+        catch (final ReflectionException e) {
+            Assert.assertEquals("Class not found: prin", e.getMessage());
+            throw e;
         }
     }
 
@@ -131,10 +137,11 @@ public final class FluxGrammarTest {
         throws RecognitionException, IOException {
         final String script =  "\"test\"|";
         try {
-            FluxCompiler.compile(createInputStream(script), emptyMap());
-        } catch (FluxParseException re) {
-            assertEquals("no viable alternative at input '<EOF>' in Flux", re.getMessage());
-            throw re;
+            FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
+        }
+        catch (final FluxParseException e) {
+            Assert.assertEquals("no viable alternative at input '<EOF>' in Flux", e.getMessage());
+            throw e;
         }
     }
 
@@ -143,10 +150,11 @@ public final class FluxGrammarTest {
         throws RecognitionException, IOException {
         final String script =  "\"test\"|;";
         try {
-            FluxCompiler.compile(createInputStream(script), emptyMap());
-        } catch (FluxParseException re) {
-            assertEquals("no viable alternative at input ';' in Flux", re.getMessage());
-            throw re;
+            FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
+        }
+        catch (final FluxParseException e) {
+            Assert.assertEquals("no viable alternative at input ';' in Flux", e.getMessage());
+            throw e;
         }
     }
 
@@ -155,10 +163,11 @@ public final class FluxGrammarTest {
         throws RecognitionException, IOException {
         final String script = "\"test\"|{print}{print} ;";
         try {
-            FluxCompiler.compile(createInputStream(script), emptyMap());
-        } catch (FluxParseException re) {
-            assertEquals("Flow cannot be split without a tee-element.", re.getMessage());
-            throw re;
+            FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
+        }
+        catch (final FluxParseException e) {
+            Assert.assertEquals("Flow cannot be split without a tee-element.", e.getMessage());
+            throw e;
         }
     }
 
@@ -167,10 +176,11 @@ public final class FluxGrammarTest {
         throws RecognitionException, IOException {
         final String script =  "\"test\"|print|object-tee|{print}{print} ;";
         try {
-            FluxCompiler.compile(createInputStream(script), emptyMap());
-        } catch (FluxParseException re) {
-            assertEquals("org.metafacture.io.ObjectStdoutWriter is not a sender", re.getMessage());
-            throw re;
+            FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
+        }
+        catch (final FluxParseException e) {
+            Assert.assertEquals("org.metafacture.io.ObjectStdoutWriter is not a sender", e.getMessage());
+            throw e;
         }
     }
 
@@ -179,15 +189,16 @@ public final class FluxGrammarTest {
         throws RecognitionException, IOException {
         final String script =  "\"test\"|object-tee|{object-tee{print{print} ;";
         try {
-            FluxCompiler.compile(createInputStream(script), emptyMap());
-            String tmp=stdoutBuffer.toString();
-        } catch (FluxParseException re) {
-            assertEquals("missing '}' at '{' in Flux", re.getMessage());
-            throw re;
+            FluxCompiler.compile(createInputStream(script), Collections.emptyMap());
+            final String tmp = stdoutBuffer.toString();
+        }
+        catch (final FluxParseException e) {
+            Assert.assertEquals("missing '}' at '{' in Flux", e.getMessage());
+            throw e;
         }
     }
 
-    private ByteArrayInputStream createInputStream(String script) {
+    private ByteArrayInputStream createInputStream(final String script) {
         return new ByteArrayInputStream(script.getBytes(StandardCharsets.UTF_8));
     }
 

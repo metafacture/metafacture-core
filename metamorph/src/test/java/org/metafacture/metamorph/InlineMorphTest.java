@@ -28,6 +28,9 @@ public final class InlineMorphTest {
 
     private static final String SUFFIX = "\n</metamorph>\n";
 
+    public InlineMorphTest() {
+    }
+
     @Test
     public void shouldProvideEmptyStringRepresentation() {
         Assert.assertEquals("", InlineMorph.in(this).toString());

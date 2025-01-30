@@ -16,9 +16,10 @@
 
 package org.metafacture.xml;
 
+import org.metafacture.framework.MetafactureException;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.MetafactureException;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -31,9 +32,13 @@ import java.io.StringReader;
  */
 public final class XmlDecoderTest {
 
-    private final String TEST_XML_WITH_TWO_ENTITIES = "<record>&gt;&gt;</record>";
+    private static final String TEST_XML_WITH_TWO_ENTITIES = "<record>&gt;&gt;</record>";
+
     private XmlDecoder xmlDecoder;
     private final Reader reader = new StringReader(TEST_XML_WITH_TWO_ENTITIES);
+
+    public XmlDecoderTest() {
+    }
 
     @Before
     public void initSystemUnderTest() {
@@ -42,27 +47,27 @@ public final class XmlDecoderTest {
 
     @Test
     public void issue554_default() {
-        process(xmlDecoder);
+        process();
     }
 
     @Test(expected = MetafactureException.class)
     public void issue554_shouldFail() {
         xmlDecoder.setTotalEntitySizeLimit("1");
-        process(xmlDecoder);
+        process();
     }
 
     @Test
     public void issue554_unlimitedEntities() {
         xmlDecoder.setTotalEntitySizeLimit("0");
-        process(xmlDecoder);
+        process();
     }
 
-    private void process(XmlDecoder xmlDecoder) {
+    private void process() {
         try {
             xmlDecoder.process(reader);
             reader.close();
         }
-        catch (IOException e) {
+        catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }

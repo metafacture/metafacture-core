@@ -16,17 +16,15 @@
 
 package org.metafacture.formeta;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import org.metafacture.formeta.formatter.FormatterStyle;
+import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.formeta.formatter.FormatterStyle;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 
 /**
  * Tests for class {@link FormetaEncoder}.
@@ -52,10 +50,13 @@ public final class FormetaEncoderTest {
             "\t'lit4': 'value \\'3\\''\n" +
             "}";
 
-    private FormetaEncoder encoder;
-
     @Mock
     private ObjectReceiver<String> receiver;
+
+    private FormetaEncoder encoder;
+
+    public FormetaEncoderTest() {
+    }
 
     @Before
     public void setup() {
@@ -75,7 +76,7 @@ public final class FormetaEncoderTest {
 
         executeEvents();
 
-        verify(receiver).process(CONCISE_RECORD);
+        Mockito.verify(receiver).process(CONCISE_RECORD);
     }
 
     @Test
@@ -84,7 +85,7 @@ public final class FormetaEncoderTest {
 
         executeEvents();
 
-        verify(receiver).process(VERBOSE_RECORD);
+        Mockito.verify(receiver).process(VERBOSE_RECORD);
     }
 
     @Test
@@ -93,7 +94,7 @@ public final class FormetaEncoderTest {
 
         executeEvents();
 
-        verify(receiver).process(MULTILINE_RECORD);
+        Mockito.verify(receiver).process(MULTILINE_RECORD);
     }
 
     @Test
@@ -105,8 +106,8 @@ public final class FormetaEncoderTest {
         encoder.startEntity("entity");
         executeEvents();
 
-        verify(receiver).process(CONCISE_RECORD);
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).process(CONCISE_RECORD);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     private void executeEvents() {

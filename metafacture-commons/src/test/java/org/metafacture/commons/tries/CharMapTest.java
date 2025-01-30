@@ -16,13 +16,10 @@
 
 package org.metafacture.commons.tries;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import java.util.Map;
-
+import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Map;
 
 /**
  * tests {@link CharMap}
@@ -34,14 +31,16 @@ public final class CharMapTest {
 
     private static final String UML = "umlaut";
 
+    public CharMapTest() {
+    }
+
     @Test
     public void testEmptyMap() {
         final Map<Character, Integer> map = new CharMap<Integer>();
 
         for (byte i = Byte.MIN_VALUE; i < Byte.MAX_VALUE; ++i) {
-            assertNull(map.get(Byte.valueOf(i)));
+            Assert.assertNull(map.get(Byte.valueOf(i)));
         }
-
     }
 
     @Test
@@ -50,8 +49,7 @@ public final class CharMapTest {
         final char beite = 'ü';
         map.put(Character.valueOf(beite), UML);
 
-        assertEquals(UML,map.get(Character.valueOf(beite)));
-
+        Assert.assertEquals(UML, map.get(Character.valueOf(beite)));
     }
 
     @Test
@@ -63,21 +61,20 @@ public final class CharMapTest {
         }
 
         for (char i = Character.MIN_VALUE; i < Character.MAX_VALUE; ++i) {
-            assertEquals(Integer.valueOf(i),map.get(Character.valueOf(i)));
+            Assert.assertEquals(Integer.valueOf(i), map.get(Character.valueOf(i)));
         }
-
     }
 
     @Test
     public void testMixedMap() {
         final Map<Character, Integer> map = new CharMap<Integer>();
 
-        for (char i = 0; i < Character.MAX_VALUE-1; i+=2) {
+        for (char i = 0; i < Character.MAX_VALUE - 1; i += 2) {
             map.put(Character.valueOf(i), Integer.valueOf(i));
         }
 
-        for (char i = 0; i < Character.MAX_VALUE-1; i+=2) {
-            assertEquals(Integer.valueOf(i),map.get(Character.valueOf(i)));
+        for (char i = 0; i < Character.MAX_VALUE - 1; i += 2) {
+            Assert.assertEquals(Integer.valueOf(i), map.get(Character.valueOf(i)));
         }
     }
 

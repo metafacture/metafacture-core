@@ -16,9 +16,7 @@
 
 package org.metafacture.metamorph.functions;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -33,22 +31,25 @@ public final class StringOperationsTest {
     private static final String VALUE2 = "Kafka";
     private static final String VALUE3 = "Josef";
 
+    public StringOperationsTest() {
+    }
+
     @Test
     public void testSubstring() {
         final Substring substring = new Substring();
-        assertEquals(VALUE1,substring.process(VALUE1));
+        Assert.assertEquals(VALUE1, substring.process(VALUE1));
 
         final int position = 2;
         substring.setStart(String.valueOf(position));
-        assertEquals(VALUE1.substring(position),substring.process(VALUE1));
+        Assert.assertEquals(VALUE1.substring(position), substring.process(VALUE1));
 
         substring.setStart("0");
-        substring.setEnd(String.valueOf(VALUE1.length()+1));
-        assertEquals(VALUE1, substring.process(VALUE1));
+        substring.setEnd(String.valueOf(VALUE1.length() + 1));
+        Assert.assertEquals(VALUE1, substring.process(VALUE1));
 
-        substring.setStart(String.valueOf(VALUE1.length()+1));
+        substring.setStart(String.valueOf(VALUE1.length() + 1));
         substring.setEnd(String.valueOf(position));
-        assertNull(substring.process(VALUE1));
+        Assert.assertNull(substring.process(VALUE1));
 
     }
 
@@ -65,10 +66,10 @@ public final class StringOperationsTest {
     public void testCompose() {
         final Compose compose = new Compose();
         compose.setPrefix(VALUE1);
-        assertEquals(VALUE1+VALUE2, compose.process(VALUE2));
+        Assert.assertEquals(VALUE1 + VALUE2, compose.process(VALUE2));
         compose.setPrefix("");
         compose.setPostfix(VALUE1);
-        assertEquals(VALUE2+VALUE1, compose.process(VALUE2));
+        Assert.assertEquals(VALUE2 + VALUE1, compose.process(VALUE2));
     }
 
     @Test
@@ -76,7 +77,7 @@ public final class StringOperationsTest {
         final Replace replace = new Replace();
         replace.setPattern(VALUE2);
         replace.setWith(VALUE3);
-        assertEquals(VALUE1+VALUE3, replace.process(VALUE1+VALUE2));
+        Assert.assertEquals(VALUE1 + VALUE3, replace.process(VALUE1 + VALUE2));
     }
 
 }

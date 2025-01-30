@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-/**
- *
- */
-
 package org.metafacture.mangling;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -45,6 +40,9 @@ public final class DuplicateObjectFilterTest {
 
     @Mock
     private ObjectReceiver<String> receiver;
+
+    public DuplicateObjectFilterTest() {
+    }
 
     @Before
     public void setup() {
@@ -64,9 +62,9 @@ public final class DuplicateObjectFilterTest {
         duplicateObjectFilter.process(OBJECT1);
         duplicateObjectFilter.process(OBJECT2);
 
-        verify(receiver).process(OBJECT1);
-        verify(receiver).process(OBJECT2);
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).process(OBJECT1);
+        Mockito.verify(receiver).process(OBJECT2);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
 }

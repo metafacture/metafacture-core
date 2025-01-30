@@ -16,11 +16,10 @@
 
 package org.metafacture.io;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
-
-import org.junit.Test;
 
 /**
  * Tests shared by all back end implementations of {@link ObjectWriter}.
@@ -54,7 +53,7 @@ public abstract class AbstractConfigurableObjectWriterTest {
                 DATA2 + "\n" +
                 DATA3 + "\n";
 
-        assertEquals(getOutput(), expectedResult);
+        Assert.assertEquals(getOutput(), expectedResult);
     }
 
     @Test
@@ -75,7 +74,7 @@ public abstract class AbstractConfigurableObjectWriterTest {
                 DATA3 +
                 ObjectWriter.DEFAULT_FOOTER;
 
-        assertEquals(getOutput(), expectedResult);
+        Assert.assertEquals(getOutput(), expectedResult);
     }
 
     @Test
@@ -96,7 +95,7 @@ public abstract class AbstractConfigurableObjectWriterTest {
                 DATA3 +
                 FOOTER;
 
-        assertEquals(getOutput(), expectedResult);
+        Assert.assertEquals(getOutput(), expectedResult);
     }
 
     @Test
@@ -117,7 +116,7 @@ public abstract class AbstractConfigurableObjectWriterTest {
                 DATA3 +
                 ObjectWriter.DEFAULT_FOOTER;
 
-        assertEquals(getOutput(), expectedResult);
+        Assert.assertEquals(getOutput(), expectedResult);
     }
 
     @Test
@@ -136,7 +135,7 @@ public abstract class AbstractConfigurableObjectWriterTest {
                 DATA1 +
                 FOOTER;
 
-        assertEquals(getOutput(), expectedResult);
+        Assert.assertEquals(getOutput(), expectedResult);
     }
 
     @Test
@@ -151,7 +150,7 @@ public abstract class AbstractConfigurableObjectWriterTest {
 
         final String expectedResult = "";
 
-        assertEquals(getOutput(), expectedResult);
+        Assert.assertEquals(getOutput(), expectedResult);
     }
 
     protected abstract ConfigurableObjectWriter<String> getWriter();

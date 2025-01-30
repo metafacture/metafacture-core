@@ -16,14 +16,14 @@
 
 package org.metafacture.csv;
 
-import static org.mockito.Mockito.inOrder;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -38,6 +38,9 @@ public final class CsvDecoderTest {
 
     @Mock
     private StreamReceiver receiver;
+
+    public CsvDecoderTest() {
+    }
 
     @Before
     public void setup() {
@@ -56,7 +59,7 @@ public final class CsvDecoderTest {
     @Test
     public void testSimple() {
         decoder.process("a,b,c");
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("h1", "a");
         ordered.verify(receiver).literal("h2", "b");
@@ -67,7 +70,7 @@ public final class CsvDecoderTest {
     @Test
     public void testQuoted() {
         decoder.process("a,\"b1,b2,b3\",c");
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("h1", "a");
         ordered.verify(receiver).literal("h2", "b1,b2,b3");
@@ -81,7 +84,7 @@ public final class CsvDecoderTest {
         decoder.setSeparator("\t");
 
         decoder.process("a\tb\tc");
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("h1", "a");
         ordered.verify(receiver).literal("h2", "b");
@@ -97,7 +100,7 @@ public final class CsvDecoderTest {
     public void issue496_escaping() {
         decoder.setHasHeader(false);
         decoder.process("\"a\",\"b\t\",\"c\\t\",\"\\\",\"\\cd\\\"");
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("1");
         ordered.verify(receiver).literal("0", "a");
         ordered.verify(receiver).literal("1", "b\t");

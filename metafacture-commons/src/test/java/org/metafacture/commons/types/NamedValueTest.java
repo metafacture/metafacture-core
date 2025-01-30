@@ -19,13 +19,12 @@ package org.metafacture.commons.types;
 import org.junit.Assert;
 import org.junit.Test;
 
-
 /**
  * Tests for class {@link NamedValue}.
  *
  * @author Markus Michael Geipel
  */
-public final class NamedValueTest{
+public final class NamedValueTest {
 
     private static final String NAME = "name";
     private static final String VALUE = "s234234ldkfj";
@@ -33,25 +32,25 @@ public final class NamedValueTest{
     private static final String SMALL = "a";
     private static final String BIG = "b";
 
-
+    public NamedValueTest() {
+    }
 
     @Test
-    public void testNamedValueCompare(){
+    public void testNamedValueCompare() {
         final NamedValue namedValue1 = new NamedValue(SMALL, SMALL);
         final NamedValue namedValue2 = new NamedValue(SMALL, BIG);
         final NamedValue namedValue3 = new NamedValue(BIG, BIG);
         final NamedValue namedValue4 = new NamedValue(SMALL, SMALL);
 
-        Assert.assertTrue(namedValue1.compareTo(namedValue4)==0);
+        Assert.assertTrue(namedValue1.compareTo(namedValue4) == 0);
 
-        Assert.assertTrue(namedValue1.compareTo(namedValue2)==-1);
-        Assert.assertTrue(namedValue2.compareTo(namedValue1)==1);
+        Assert.assertTrue(namedValue1.compareTo(namedValue2) == -1);
+        Assert.assertTrue(namedValue2.compareTo(namedValue1) == 1);
 
-        Assert.assertTrue(namedValue2.compareTo(namedValue3)==-1);
-        Assert.assertTrue(namedValue3.compareTo(namedValue2)==1);
+        Assert.assertTrue(namedValue2.compareTo(namedValue3) == -1);
+        Assert.assertTrue(namedValue3.compareTo(namedValue2) == 1);
 
-
-        Assert.assertTrue(namedValue1.compareTo(namedValue4)==0);
+        Assert.assertTrue(namedValue1.compareTo(namedValue4) == 0);
     }
 
     @Test
@@ -72,4 +71,5 @@ public final class NamedValueTest{
 
         Assert.assertTrue(namedValue1.hashCode() == namedValue2.hashCode());
     }
+
 }

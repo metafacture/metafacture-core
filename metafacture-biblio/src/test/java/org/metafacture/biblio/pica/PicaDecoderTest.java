@@ -16,17 +16,15 @@
 
 package org.metafacture.biblio.pica;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import org.metafacture.framework.MissingIdException;
+import org.metafacture.framework.StreamReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.MissingIdException;
-import org.metafacture.framework.StreamReceiver;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -73,6 +71,9 @@ public final class PicaDecoderTest {
     @Mock
     private StreamReceiver receiver;
 
+    public PicaDecoderTest() {
+    }
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -91,8 +92,7 @@ public final class PicaDecoderTest {
                 RECORD_MARKER + FIELD_001AT_0_TEST +
                 FIELD_MARKER + FIELD_003AT_0_ID);
 
-
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify001At0Test(ordered);
         verify003At0ID(ordered);
@@ -105,8 +105,7 @@ public final class PicaDecoderTest {
                 FIELD_MARKER + FIELD_001AT_0_TEST +
                 FIELD_MARKER + FIELD_003AT_0_ID);
 
-
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify001At0Test(ordered);
         verify003At0ID(ordered);
@@ -119,7 +118,7 @@ public final class PicaDecoderTest {
                 SUBFIELD_MARKER + NAME_A + VALUE_A +
                 FIELD_MARKER + FIELD_003AT_0_ID);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         ordered.verify(receiver).startEntity("");
         ordered.verify(receiver).literal(NAME_A, VALUE_A);
@@ -134,7 +133,7 @@ public final class PicaDecoderTest {
                 SUBFIELD_MARKER +
                 FIELD_MARKER + FIELD_003AT_0_ID);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         ordered.verify(receiver).endRecord();
@@ -146,8 +145,7 @@ public final class PicaDecoderTest {
                 FIELD_END_MARKER + FIELD_001AT_0_TEST +
                 FIELD_MARKER + FIELD_003AT_0_ID);
 
-
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify001At0Test(ordered);
         verify003At0ID(ordered);
@@ -160,8 +158,7 @@ public final class PicaDecoderTest {
                 FIELD_001AT_0_TEST +
                 FIELD_MARKER + FIELD_003AT_0_ID);
 
-
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify001At0Test(ordered);
         verify003At0ID(ordered);
@@ -174,7 +171,7 @@ public final class PicaDecoderTest {
                 FIELD_003AT_0_ID + FIELD_MARKER +
                 FIELD_001AT_0_TEST + RECORD_MARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         verify001At0Test(ordered);
@@ -187,7 +184,7 @@ public final class PicaDecoderTest {
                 FIELD_003AT_0_ID + FIELD_MARKER +
                 FIELD_001AT_0_TEST + FIELD_MARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         verify001At0Test(ordered);
@@ -203,7 +200,7 @@ public final class PicaDecoderTest {
                 SUBFIELD_MARKER + NAME_D + VALUE_D +
                 SUBFIELD_MARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         ordered.verify(receiver).startEntity(ENTITY_028A);
@@ -221,7 +218,7 @@ public final class PicaDecoderTest {
                 SUBFIELD_MARKER + NAME_A + VALUE_A +
                 SUBFIELD_MARKER + NAME_D);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         ordered.verify(receiver).startEntity(ENTITY_028A);
@@ -241,7 +238,7 @@ public final class PicaDecoderTest {
                 FIELD_003AT_0_ID + FIELD_MARKER +
                 FIELD_028A);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         ordered.verify(receiver).startEntity(ENTITY_028A);
@@ -256,7 +253,7 @@ public final class PicaDecoderTest {
                 FIELD_MARKER + FIELD_001AT_0_TEST + FIELD_END_MARKER +
                 FIELD_MARKER + FIELD_003AT_0_ID + FIELD_END_MARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify001At0Test(ordered);
         verify003At0ID(ordered);
@@ -267,87 +264,87 @@ public final class PicaDecoderTest {
     public void shouldExtractPicaProductionNumberAfterRecordMarkerAsRecordId() {
         picaDecoder.process(RECORD_MARKER + FIELD_003AT_0_ID);
 
-        verify(receiver).startRecord(RECORD_ID);
+        Mockito.verify(receiver).startRecord(RECORD_ID);
     }
 
     @Test
     public void shouldExtractPicaProductionNumberAfterFieldMarkerAsRecordId() {
         picaDecoder.process(FIELD_MARKER + FIELD_003AT_0_ID);
 
-        verify(receiver).startRecord(RECORD_ID);
+        Mockito.verify(receiver).startRecord(RECORD_ID);
     }
 
     @Test
     public void shouldExtractPicaProductionNumberAfterFieldEndMarkerAsRecordId() {
         picaDecoder.process(FIELD_END_MARKER + FIELD_003AT_0_ID);
 
-        verify(receiver).startRecord(RECORD_ID);
+        Mockito.verify(receiver).startRecord(RECORD_ID);
     }
 
     @Test
     public void shouldExtractPicaProductionNumberFollowedByRecordMarkerAsRecordId() {
         picaDecoder.process(FIELD_003AT_0_ID + RECORD_MARKER);
 
-        verify(receiver).startRecord(RECORD_ID);
+        Mockito.verify(receiver).startRecord(RECORD_ID);
     }
 
     @Test
     public void shouldExtractPicaProductionNumberFollowedByFieldMarkerAsRecordId() {
         picaDecoder.process(FIELD_003AT_0_ID + FIELD_MARKER);
 
-        verify(receiver).startRecord(RECORD_ID);
+        Mockito.verify(receiver).startRecord(RECORD_ID);
     }
 
     @Test
     public void shouldExtractPicaProductionNumberFollowedBySubfieldMarkerAsRecordId() {
         picaDecoder.process(FIELD_003AT_0_ID + SUBFIELD_MARKER);
 
-        verify(receiver).startRecord(RECORD_ID);
+        Mockito.verify(receiver).startRecord(RECORD_ID);
     }
 
     @Test
     public void shouldExtractPicaProductionNumberFollowedByFieldEndMarkerAsRecordId() {
         picaDecoder.process(FIELD_003AT_0_ID + FIELD_END_MARKER);
 
-        verify(receiver).startRecord(RECORD_ID);
+        Mockito.verify(receiver).startRecord(RECORD_ID);
     }
 
     @Test
     public void shouldExtractPicaProductionNumberAtRecordEndAsRecordId() {
         picaDecoder.process(FIELD_003AT_0_ID);
 
-        verify(receiver).startRecord(RECORD_ID);
+        Mockito.verify(receiver).startRecord(RECORD_ID);
     }
 
     @Test
     public void shouldExtractLocalProductionNumberAsRecordId() {
         picaDecoder.process(FIELD_107F_0_ID);
 
-        verify(receiver).startRecord(RECORD_ID);
+        Mockito.verify(receiver).startRecord(RECORD_ID);
     }
 
     @Test
     public void shouldExtractCopyControlNumberAsRecordId() {
         picaDecoder.process(FIELD_203AT_0_ID);
 
-        verify(receiver).startRecord(RECORD_ID);
+        Mockito.verify(receiver).startRecord(RECORD_ID);
     }
 
     @Test
     public void shouldExtractCopyControlNumberWithOccurrenceAsRecordId() {
         picaDecoder.process(FIELD_203AT_01_0_ID);
 
-        verify(receiver).startRecord(RECORD_ID);
+        Mockito.verify(receiver).startRecord(RECORD_ID);
     }
 
     @Test
     public void shouldExtractCopyControlNumberWithThreeDigitOccurrenceAsRecordId() {
         picaDecoder.process(FIELD_203AT_100_0_ID);
 
-        verify(receiver).startRecord(RECORD_ID);
+        Mockito.verify(receiver).startRecord(RECORD_ID);
     }
 
-    @Test(expected=MissingIdException.class)
+    @Test(expected = MissingIdException.class)
     public void shouldThrowMissingIdExceptionIfNoRecordIdIsFound() {
         picaDecoder.process(FIELD_001AT_0_TEST);
         // Exception expected
@@ -359,7 +356,7 @@ public final class PicaDecoderTest {
 
         picaDecoder.process(FIELD_001AT_0_TEST + FIELD_003AT_0_ID);
 
-        verify(receiver).startRecord("");
+        Mockito.verify(receiver).startRecord("");
     }
 
     @Test
@@ -368,7 +365,7 @@ public final class PicaDecoderTest {
 
         picaDecoder.process("003@ " + FIELD_MARKER + FIELD_001AT_0_TEST);
 
-        verify(receiver).startRecord("");
+        Mockito.verify(receiver).startRecord("");
     }
 
     @Test
@@ -382,11 +379,11 @@ public final class PicaDecoderTest {
                 FIELD_003AT_0_ID + FIELD_MARKER +
                 FIELD_MARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         ordered.verify(receiver).endRecord();
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -400,11 +397,11 @@ public final class PicaDecoderTest {
                 FIELD_003AT_0_ID + FIELD_MARKER +
                 SUBFIELD_MARKER + FIELD_MARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         ordered.verify(receiver).endRecord();
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -414,7 +411,7 @@ public final class PicaDecoderTest {
                 SUBFIELD_MARKER + NAME_A + VALUE_A +
                 FIELD_MARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         ordered.verify(receiver).startEntity("");
@@ -432,14 +429,14 @@ public final class PicaDecoderTest {
                 SUBFIELD_MARKER + NAME_A + VALUE_A +
                 FIELD_MARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         ordered.verify(receiver).startEntity(ENTITY_028A);
         ordered.verify(receiver).literal(NAME_A, VALUE_A);
         ordered.verify(receiver).endEntity();
         ordered.verify(receiver).endRecord();
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -448,11 +445,11 @@ public final class PicaDecoderTest {
                 FIELD_003AT_0_ID + FIELD_MARKER +
                 FIELD_028A + FIELD_MARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         ordered.verify(receiver).endRecord();
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -463,11 +460,11 @@ public final class PicaDecoderTest {
                 SUBFIELD_MARKER +
                 FIELD_MARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         ordered.verify(receiver).endRecord();
-        verifyNoMoreInteractions(receiver);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @Test
@@ -478,7 +475,7 @@ public final class PicaDecoderTest {
                 FIELD_003AT_0_ID + FIELD_MARKER +
                 FIELD_028A + FIELD_MARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         ordered.verify(receiver).startEntity(ENTITY_028A);
@@ -496,7 +493,7 @@ public final class PicaDecoderTest {
                 SUBFIELD_MARKER +
                 FIELD_MARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         ordered.verify(receiver).startEntity(ENTITY_028A);
@@ -504,7 +501,7 @@ public final class PicaDecoderTest {
         ordered.verify(receiver).endRecord();
     }
 
-    @Test(expected=MissingIdException.class)
+    @Test(expected = MissingIdException.class)
     public void shouldFailIfIdIsMissingByDefault() {
         picaDecoder.process(
                 FIELD_001AT_0_TEST + FIELD_MARKER);
@@ -517,7 +514,7 @@ public final class PicaDecoderTest {
         picaDecoder.process(
                 FIELD_001AT_0_TEST + FIELD_MARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord("");
         verify001At0Test(ordered);
         ordered.verify(receiver).endRecord();
@@ -529,7 +526,7 @@ public final class PicaDecoderTest {
                 FIELD_003AT_0_ID + FIELD_MARKER +
                 FIELD_021A_A_UEBER + FIELD_MARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         verify021AAUeber(ordered, COMPOSED_UTF8);
@@ -544,7 +541,7 @@ public final class PicaDecoderTest {
                 FIELD_003AT_0_ID + FIELD_MARKER +
                 FIELD_021A_A_UEBER + FIELD_MARKER);
 
-        final InOrder ordered = inOrder(receiver);
+        final InOrder ordered = Mockito.inOrder(receiver);
         ordered.verify(receiver).startRecord(RECORD_ID);
         verify003At0ID(ordered);
         verify021AAUeber(ordered, STANDARD_UTF8);
@@ -557,7 +554,7 @@ public final class PicaDecoderTest {
                 "  fieldname  " + SUBFIELD_MARKER + "0subfield" +
                         FIELD_MARKER + FIELD_003AT_0_ID);
 
-        verify(receiver).startEntity("fieldname");
+        Mockito.verify(receiver).startEntity("fieldname");
     }
 
     @Test
@@ -568,7 +565,7 @@ public final class PicaDecoderTest {
                 "  fieldname  " + SUBFIELD_MARKER + "0subfield" +
                 FIELD_MARKER + FIELD_003AT_0_ID);
 
-        verify(receiver).startEntity("  fieldname  ");
+        Mockito.verify(receiver).startEntity("  fieldname  ");
     }
 
     @Test
@@ -580,11 +577,12 @@ public final class PicaDecoderTest {
             NONNORMALIZED_FIELD_003AT_0_ID +
             NONNORMALIZED_RECORD_MARKER);
         try {
-            verify(receiver).startEntity("001@");
-            verify(receiver).literal("0", "test");
-            verify(receiver).startEntity("003@");
-            verify(receiver).literal("0", "2809");
-        } finally { //ensure reset to the default used by the other tests
+            Mockito.verify(receiver).startEntity("001@");
+            Mockito.verify(receiver).literal("0", "test");
+            Mockito.verify(receiver).startEntity("003@");
+            Mockito.verify(receiver).literal("0", "2809");
+        }
+        finally { // ensure reset to the default used by the other tests
             picaDecoder.setNormalizedSerialization(true);
         }
     }

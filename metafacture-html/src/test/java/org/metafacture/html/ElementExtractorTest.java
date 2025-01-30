@@ -16,17 +16,16 @@
 
 package org.metafacture.html;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-
-import java.io.StringReader;
+import org.metafacture.framework.ObjectReceiver;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.metafacture.framework.ObjectReceiver;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import java.io.StringReader;
 
 /**
  * Tests for {@link ElementExtractor}.
@@ -36,16 +35,19 @@ import org.mockito.MockitoAnnotations;
  */
 public final class ElementExtractorTest {
 
-    private static final StringReader IN = new StringReader("<html>"
-            + "<script data-test='site-head-data'>{\"code\":\"hey\"}</script>"
-            + "<script data-test='model-linked-data'>{\"code\":\"yo\"}");
+    private static final StringReader IN = new StringReader("<html>" +
+            "<script data-test='site-head-data'>{\"code\":\"hey\"}</script>" +
+            "<script data-test='model-linked-data'>{\"code\":\"yo\"}");
 
     private static final String OUT = "{\"code\":\"yo\"}";
 
-    private ElementExtractor elementExtractor;
-
     @Mock
     private ObjectReceiver<String> receiver;
+
+    private ElementExtractor elementExtractor;
+
+    public ElementExtractorTest() {
+    }
 
     @Before
     public void setup() {
@@ -57,8 +59,8 @@ public final class ElementExtractorTest {
     @Test
     public void testShouldProcessRecordsFollowedbySeparator() {
         elementExtractor.process(IN);
-        verify(receiver).process(OUT);
-        verifyNoMoreInteractions(receiver);
+        Mockito.verify(receiver).process(OUT);
+        Mockito.verifyNoMoreInteractions(receiver);
     }
 
     @After
