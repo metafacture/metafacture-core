@@ -60,7 +60,7 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
     }
 
 
-            /**
+    /**
      * Sets the single char reference marker.
      *
      * @param referenceMarker the reference marker
