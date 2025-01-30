@@ -173,4 +173,4 @@ The *Definition of Done* describes a list of criteria which issues have to meet 
 
 ### Releasing Metafacture
 
-Follow the [wiki's Maintainer-Guidelines](https://github.com/metafacture/metafacture-core/wiki/Maintainer-Guidelines).
+Follow the [MAINTAINING.md](https://github.com/metafacture/metafacture-core/blob/master/MAINTAINING.md).
