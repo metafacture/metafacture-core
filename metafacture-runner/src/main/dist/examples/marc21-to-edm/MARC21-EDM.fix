@@ -48,7 +48,7 @@ copy_field("@isil", "edm:dataProvider$de")
 lookup("edm:dataProvider$de","isils")
 
 
-paste("*edm:dataProvider", "~http://ld.zdb-services.de/data/organisations/", "@isil", join_char:"")
+paste("#edm:dataProvider", "~http://ld.zdb-services.de/data/organisations/", "@isil", join_char:"")
 
 
 add_field("edm:provider", "Deutsche Digitale Bibliothek")
@@ -251,7 +251,7 @@ paste("dcterms:LinguisticSystem.~rdf:about","~http://id.loc.gov/vocabulary/iso63
 copy_field("@isil","edm:rights")
 lookup("edm:rights","rights")
 
-add_field("*dcterms:rights","http://creativecommons.org/publicdomain/zero/1.0/")
+add_field("#dcterms:rights","http://creativecommons.org/publicdomain/zero/1.0/")
 
 copy_field("@recordID","edm:ProvidedCHO.~rdf:about")
 
@@ -276,9 +276,9 @@ paste("edm:ProvidedCHO.#dcterms:language","~http://id.loc.gov/vocabulary/iso639-
 
 paste("edm:ProvidedCHO.dcterms:bibliographicCitation","490??.a","~ ; ","490??.v", join_char:"")
 
-copy_field("1[10]1  .a","edm:ProvidedCHO.dc:creator.$append")
+copy_field("1[10]01 .a","edm:ProvidedCHO.dc:creator.$append")
 
-copy_field("7[10]1  .a","edm:ProvidedCHO.dc:contributor.$append")
+copy_field("7[10]01 .a","edm:ProvidedCHO.dc:contributor.$append")
 
 
 do list(path:"830??|800??|810??|811??","var":"$i")
@@ -333,4 +333,4 @@ do list(path:"85640","var":"$i")
 end
 
 
-retain("edm*","dc*","skos*", "aggregation_id")
+retain("edm*","dc*","skos*", "aggregation_id", "#*")
