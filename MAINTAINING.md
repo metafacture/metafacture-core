@@ -27,17 +27,17 @@ Merge pull-request #PULLREQUEST-ID from cboehme/fix-xy
 We shall make releases quarterly. Approximate timetable is every Januar, April, July, October.
 We may publish `master-SNAPSHOT` builds more frequently.
 
-Releasing involves to first make and test the release candidate before actually making the release. Note that we provide a *GitHub release for manual download* as well as a *release on Maven central* to be consumed as a library. 
+Releasing involves to first make and test the release candidate before actually making the release. Note that we provide a *GitHub release for manual download* as well as a *release on Maven central* to be consumed as a library.
 
 It's good habit to use semantic versioning in release numbers `A`.`B`.`C`, i.e. increase `A` when it's a major release breaking backward compatibility; increase `B` when it got new features; increase `C` indicating bug-fixes. A suffix like `rcN` (where `N` is a number) indicates a release candidate (`rc`).
 
 To upload to Sonatype you need (as well for the release candidate as for the release) a `gradle.properties` in the root directory that looks like this:
 
 ```
-signing.gnupg.executable=gpg  
-signing.gnupg.useLegacyGpg=true  
-signing.gnupg.homeDir=$e.g."~/.gnupg"  
-signing.gnupg.keyName=$yourKeyName  
+signing.gnupg.executable=gpg
+signing.gnupg.useLegacyGpg=true
+signing.gnupg.homeDir=$e.g."~/.gnupg"
+signing.gnupg.keyName=$yourKeyName
 signing.password=$keysPassphrase
 # depending on gradle plugin versions etc. you may need to use:
 # signing.keyId=$yourKeyName
@@ -114,7 +114,7 @@ Note that `Packages` is not the same as [`Releases`](https://github.com/metafact
 ### Consume the SNAPSHOT
 
 1. See e.g. [Example for 5.5.1-rc1-SNAPSHOT](https://oss.sonatype.org/index.html#nexus-search;gav~org.metafacture~~5.5.1*~~) how to configure the dependency.
-1. Configure your build system to use Sonatype's Snapshot Repository to be able to load the dependencies of the release candidate (or master-SNAPSHOT).  
+1. Configure your build system to use Sonatype's Snapshot Repository to be able to load the dependencies of the release candidate (or master-SNAPSHOT).
     For Maven update your `pom.xml` (after `</dependencies>`):
     ```xml
     <repositories>
@@ -156,7 +156,7 @@ a) It's going from your local Git repository to Sonatype to Maven Central. Each 
 
 1. Make sure you have a signed tag locally:
     ```
-    git show metafacture-core-A.B.C 
+    git show metafacture-core-A.B.C
     ```
     If it doesn't exist yet, create it:
     ```
@@ -183,7 +183,7 @@ a) It's going from your local Git repository to Sonatype to Maven Central. Each 
     ```
     git status
     ```
-1. Let the release be built and uploaded (the SCM tag will be detected and the release be built): 
+1. Let the release be built and uploaded (the SCM tag will be detected and the release be built):
     ```
     ./gradlew clean; ./gradlew publishToMavenLocal; ./gradlew publishToSonatype
     ```
@@ -191,5 +191,5 @@ a) It's going from your local Git repository to Sonatype to Maven Central. Each 
 
 ## Release Metafacture-Fix
 
-As long as we have two repos we should immediately also release metafacture-fix: 
+As long as we have two repos we should immediately also release metafacture-fix:
 Go update [Metafacture-Fix](https://github.com/metafacture/metafacture-fix/) and follow https://github.com/metafacture/metafacture-fix/wiki/Maintainer-Guidelines.
