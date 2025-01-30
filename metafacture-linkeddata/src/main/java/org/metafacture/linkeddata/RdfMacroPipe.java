@@ -59,13 +59,14 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
         this.autoAddedSubject = autoAddedSubject;
     }
 
-        /**
+
+            /**
      * Sets the single char reference marker.
      *
      * @param referenceMarker the reference marker
      */
-    public void setReferenceMarker(final char referenceMarker) {
-        this.referenceMarker = referenceMarker;
+    public void setReferenceMarker(final String referenceMarker) {
+        this.referenceMarker = referenceMarker.charAt(0);
     }
 
     /**
@@ -82,8 +83,8 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
      *
      * @param languageMarker the language marker
      */
-    public void setLanguageMarker(final char languageMarker) {
-        this.languageMarker = languageMarker;
+    public void setLanguageMarker(final String languageMarker) {
+        this.languageMarker = languageMarker.charAt(0);
     }
 
     /**
