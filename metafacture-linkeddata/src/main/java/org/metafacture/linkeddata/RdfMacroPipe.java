@@ -59,7 +59,6 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
         this.autoAddedSubject = autoAddedSubject;
     }
 
-
     /**
      * Sets the single char reference marker.
      *
