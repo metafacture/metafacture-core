@@ -41,6 +41,8 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
     public static final String RDF_ABOUT = "~rdf:about";
     public static final String XML_LANG = "~xml:lang";
     private String autoAddedSubject = "";
+    private String refrenceMarker = REFERENCE_MARKER;
+    private String languageMarker = LANGUAGE_MARKER;
 
     /**
      * Creates an instance of {@link RdfMacroPipe}.
@@ -55,6 +57,42 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
      */
     public void setAutoAddedSubject(final String autoAddedSubject) {
         this.autoAddedSubject = autoAddedSubject;
+    }
+
+        /**
+     * Sets the refrence marker.
+     *
+     * @param refrenceMarker the refrence marker
+     */
+    public void setRefrenceMarker(final String refrenceMarker) {
+        this.refrenceMarker = refrenceMarker;
+    }
+
+    /**
+     * Gets the refrence marker.
+     *
+     * @return the refrence marker
+     */
+    public String getRefrenceMarker() {
+        return refrenceMarker;
+    }
+
+    /**
+     * Sets the language marker.
+     *
+     * @param languageMarker the language marker
+     */
+    public void setLanguageMarker(final String languageMarker) {
+        this.languageMarker = languageMarker;
+    }
+
+    /**
+     * Gets the language marker.
+     *
+     * @return the language marker
+     */
+    public String getLanguageMarker() {
+        return languageMarker;
     }
 
     @Override
@@ -87,8 +125,8 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
 
     @Override
     public void literal(final String name, final String value) {
-        final int index = name.indexOf(LANGUAGE_MARKER);
-        if (!name.isEmpty() && name.charAt(0) == REFERENCE_MARKER) {
+        final int index = name.indexOf(languageMarker);
+        if (!name.isEmpty() && name.charAt(0) == refrenceMarker) {
             getReceiver().startEntity(name.substring(1));
             getReceiver().literal(RDF_REFERENCE, value);
             getReceiver().endEntity();
