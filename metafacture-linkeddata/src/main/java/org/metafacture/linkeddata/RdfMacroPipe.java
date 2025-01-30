@@ -41,8 +41,8 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
     public static final String RDF_ABOUT = "~rdf:about";
     public static final String XML_LANG = "~xml:lang";
     private String autoAddedSubject = "";
-    private String refrenceMarker = REFERENCE_MARKER;
-    private String languageMarker = LANGUAGE_MARKER;
+    private char refrenceMarker = REFERENCE_MARKER;
+    private char languageMarker = LANGUAGE_MARKER;
 
     /**
      * Creates an instance of {@link RdfMacroPipe}.
@@ -60,11 +60,11 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
     }
 
         /**
-     * Sets the refrence marker.
+     * Sets the single char refrence marker.
      *
      * @param refrenceMarker the refrence marker
      */
-    public void setRefrenceMarker(final String refrenceMarker) {
+    public void setRefrenceMarker(final char refrenceMarker) {
         this.refrenceMarker = refrenceMarker;
     }
 
@@ -73,16 +73,16 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
      *
      * @return the refrence marker
      */
-    public String getRefrenceMarker() {
+    public char getRefrenceMarker() {
         return refrenceMarker;
     }
 
     /**
-     * Sets the language marker.
+     * Sets the single char language marker.
      *
      * @param languageMarker the language marker
      */
-    public void setLanguageMarker(final String languageMarker) {
+    public void setLanguageMarker(final char languageMarker) {
         this.languageMarker = languageMarker;
     }
 
@@ -91,7 +91,7 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
      *
      * @return the language marker
      */
-    public String getLanguageMarker() {
+    public char getLanguageMarker() {
         return languageMarker;
     }
 
