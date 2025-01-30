@@ -29,7 +29,7 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
  * @author Markus Michael Geipel
  *
  */
-@Description("Expands some macros for RDF/XML")
+@Description("Expands some macros for RDF/XML. When using fix configure `referenceMarker` to any char but the default `*`")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("rdf-macros")
