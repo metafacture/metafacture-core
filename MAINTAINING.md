@@ -100,12 +100,12 @@ The process is equal to the making of a release candidate, but without making an
     ```
     git push origin A.B.C-rcN
     ```
- Because there is `fetch --no-tags` in `actions/checkout@v2` the `-SNAPSHOT` suffix will always be appended (in comparison to doing `./gradlew publishAllPublicationsToGitHubPackagesRepository` locally, which will find the `SCM tag`). The publishing to GitHub packages is triggered then.
+Because there is `fetch --no-tags` in `actions/checkout@v2` the `-SNAPSHOT` suffix will always be appended (in comparison to doing `./gradlew publishAllPublicationsToGitHubPackagesRepository` locally, which will find the `SCM tag`). The publishing to GitHub packages is triggered then.
 
 If we don't want `-SNAPSHOT` we may want to remove the `-SNAPSHOT` in `build.gradle`:
 ```
 if (grgit.branch.current().name.contains('-rc')) { ...
-  return "${grgit.branch.current().name}-SNAPSHOT"
+    return "${grgit.branch.current().name}-SNAPSHOT"
 }
 ```
 
@@ -150,9 +150,9 @@ Note that `Packages` is not the same as [`Releases`](https://github.com/metafact
 a) It's going from your local Git repository to Sonatype to Maven Central. Each station requires some manual actions so you can double check that everything is ok. b) A release should also be published to GitHub.
 
 1. Switch to `master` branch. Merge the approved `rc` into master:
-   ```
-   git switch master; pull --no-ff origin A.B.C-rcN; git push origin master
-   ```
+    ```
+    git switch master; pull --no-ff origin A.B.C-rcN; git push origin master
+    ```
 
 1. Make sure you have a signed tag locally:
     ```
