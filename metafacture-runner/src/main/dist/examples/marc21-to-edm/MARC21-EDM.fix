@@ -97,16 +97,26 @@ do list(path:"650?7|60017|61017|61017|630??|655?7|651?7|648??","var":"SUBJECT")
     if any_match("SUBJECT_ID","^\\(DE-588\\)(.*)$")
       copy_field("SUBJECT_ID","skos:Concept.$append.~rdf:about")
       replace_all("skos:Concept.$last.~rdf:about","^\\(DE-588\\)(.*)$","http://d-nb.info/gnd/$1")
-      copy_field("SUBJECT.a","skos:Concept.$last.~rdf:prefLabel$de")
+      copy_field("SUBJECT.a","skos:Concept.$last.skos:prefLabel$de")
     end
   end
 end
 
-unless exists("@publisherID")
-  copy_field("2603 .b", "260bcount.$append")
-  count("260bcount")
-  paste("@publisherID", "~#/agent/","001","~-","260bcount", join_char:"")
+do list(path:"2603 ","var":"$i")
+  do list(path:"$i.b","var":"$b")
+    unless exists("@publisherID")
+          copy_field("2603 .b", "260bcount.$append")
+          copy_field("@publisherList","@publisherCount")
+          if is_array("@publisherount")
+              count("@publisherCount")
+          else
+              add_field("@publisherCount","1")
+          end
+      paste("@publisherID", "~#/agent/","001","~-","@publisherCount", join_char:"")
+    end
+  end
 end
+
 
 paste("@orgID","~http://ld.zdb-services.de/data/organisations/","@isil",join_char:"")
 
@@ -116,7 +126,7 @@ end
 
 replace_all("@sectorID","sec_","")
 
-copy_field("@sectorID","edm:Agent.$append.*rdf:type")
+copy_field("@sectorID","edm:Agent.$append.#rdf:type")
 copy_field("@orgID","edm:Agent.$last.~rdf:about")
 copy_field("@isil","edm:Agent.$last.skos:prefLabel$de")
 lookup("edm:Agent.$last.skos:prefLabel$de","isils")
@@ -138,12 +148,43 @@ paste("@cEventID", "~#/event/", "001", "~-c", join_char:"")
 
 paste("@pEventID", "~#/event/", "001", "~-p", join_char:"")
 
-copy_field("@pEventID","edm:Agent.$last.*edm:wasPresent")
+copy_field("@pEventID","edm:Agent.$last.#edm:wasPresent")
 
-# copy_field("2603 .a","@place")
-# replace_all("@place"," \\[?u.a.\\]?.*$","")
-# paste("@placeID","~#/place/","001","~_place","@place",join_char:"") # what is the count doing?
-paste("@timeID","~#/timespan/","001","~_timespan","260[ 3] .c",join_char:"")
+do list(path:"2603 ","var":"$i")
+  do list(path:"$i.a","var":"$a")
+    unless exists("@place")
+      copy_field("$a","@place")
+      copy_field("$a","@placeList.$append")
+      copy_field("@placeList","@placeCount")
+      if is_array("@placeCount")
+          count("@placeCount")
+      else
+          add_field("@placeCount","1")
+      end
+    end
+  end
+end
+replace_all("@place"," \\[?u.a.\\]?.*$","")
+
+paste("@placeID","~#/place/","001","~_place","@placeCount",join_char:"")
+
+
+do list(path:"260[ 3] ","var":"$i")
+  do list(path:"$i.c","var":"$c")
+    unless exists("@timeID")
+      copy_field("$c","@timespan")
+      copy_field("$c","@timespanList.$append")
+      copy_field("@timespanList","@timespanCount")
+      if is_array("@timespanCount")
+          count("@timespanCount")
+      else
+          add_field("@timespanCount","1")
+      end
+      paste("@timeID","~#/timespan/","001","~_timespan","@timespanCount",join_char:"")
+    end
+  end
+end
+
 
 paste("recordID","@recordIDUrl","001","@recordIDSuffix", join_char:"")
 
@@ -163,7 +204,7 @@ do list(path:"1001 |1101 |7001 |7101", "var":"CREATOR")
       copy_field("CREATORID","edm:Agent.$append.~rdf:about")
       replace_all("edm:Agent.$last.~rdf:about", "^\\(DE-588\\)(.*)$","http://d-nb.info/gnd/$1")
       copy_field("CREATOR.a","edm:Agent.$last.skos:prefLabel$de")
-      copy_field("@cEventID","edm:Agent.$last.*edm:wasPresent")
+      copy_field("@cEventID","edm:Agent.$last.#edm:wasPresent")
     end
   end
 end
@@ -173,15 +214,15 @@ copy_field("@cEventID","edm:Event.$append.~rdf:about")
 add_field("edm:Event.$last.edm:hasType", "http://terminology.lido-schema.org/lido00012")
 do list(path:"edm:Agent","var":"AGENT")
   if any_match("AGENT.~rdf:about", "http://d-nb.info/gnd/.*")
-    copy_field("AGENT.~rdf:about", "edm:Event.$last.*crm:P11_had_participant.$append")
+    copy_field("AGENT.~rdf:about", "edm:Event.$last.#crm:P11_had_participant.$append")
   end
 end
 
 copy_field("@pEventID","edm:Event.$append.~rdf:about")
 add_field("edm:Event.$last.edm:hasType", "http://terminology.lido-schema.org/lido00228")
-copy_field("@publisherID", "edm:Event.$last.*crm:P11_had_participant.$append")
-copy_field("@timeID", "edm:Event.$last.*edm:occuredAt")
-copy_field("@placeID", "edm:Event.$last.*edm:happenedAt")
+copy_field("@publisherID", "edm:Event.$last.#crm:P11_had_participant.$append")
+copy_field("@timeID", "edm:Event.$last.#edm:occuredAt")
+copy_field("@placeID", "edm:Event.$last.#edm:happenedAt")
 
 
 
@@ -197,7 +238,7 @@ copy_field("260[ 3] .c","edm:TimeSpan.skos:notation")
 
 
 
-copy_field("@mediatypeID","skos:Concept.$append.rdf:about")
+copy_field("@mediatypeID","skos:Concept.$append.~rdf:about")
 unless str_equal("$[media_type]","")
   add_field("skos:Concept.$last.skos:notation","$[media_type]")
 end
@@ -214,7 +255,7 @@ add_field("*dcterms:rights","http://creativecommons.org/publicdomain/zero/1.0/")
 
 copy_field("@recordID","edm:ProvidedCHO.~rdf:about")
 
-copy_field("@pEventID|@cEventID","edm:ProvidedCHO.*edm:wasPresent.$append")
+copy_field("@pEventID|@cEventID","edm:ProvidedCHO.#edm:wasPresent.$append")
 
 copy_field("@mat","edm:ProvidedCHO.dc:type")
 
@@ -229,7 +270,7 @@ end
 
 copy_field("@lang","edm:ProvidedCHO.dc:language")
 
-paste("edm:ProvidedCHO.*dcterms:language","~http://id.loc.gov/vocabulary/iso639-2/","@lang",join_char:"")
+paste("edm:ProvidedCHO.#dcterms:language","~http://id.loc.gov/vocabulary/iso639-2/","@lang",join_char:"")
 
 
 
@@ -239,20 +280,25 @@ copy_field("1[10]1  .a","edm:ProvidedCHO.dc:creator.$append")
 
 copy_field("7[10]1  .a","edm:ProvidedCHO.dc:contributor.$append")
 
-do list(path:"650?7|60017|61017|61017|630??|655?7|651?7|648??","var":"SUBJECT")
-  copy_field("SUBJECT.a", "edm:ProvidedCHO.dc:subject.$append")
-end
-
 
 do list(path:"830??|800??|810??|811??","var":"$i")
   do list(path:"$i.w","var":"$j")
     if any_match("$j","^\\(DE-101\\)(.*)$")
-      copy_field("$j","edm:ProvidedCHO.*dcterms:isPartOf.$append")
+      copy_field("$j","edm:ProvidedCHO.#dcterms:isPartOf.$append")
     end
   end
 end
 
-replace_all("edm:ProvidedCHO.*dcterms:isPartOf.*","^\\(DE-101\\)(.*)$","http://d-nb.info/$1")
+do list(path:"650?7|60017|61017|61017|630??|655?7|651?7|648??","var":"$SUBJECT")
+  do list(path:"$SUBJECT.0","var":"$SUBJECT_ID")
+    if any_match("$SUBJECT_ID","^\\(DE-588\\)(.*)$")
+      copy_field("$SUBJECT.a","edm:ProvidedCHO.dc:subject.$append")
+      copy_field("$SUBJECT_ID","edm:ProvidedCHO.#dc:subject.$append")
+    end
+  end
+end
+
+replace_all("edm:ProvidedCHO.#dcterms:isPartOf.*","^\\(DE-101\\)(.*)$","http://d-nb.info/$1")
 
 
 paste("edm:ProvidedCHO.dc:title","24510.a","24510.b",join_char:" : ")
@@ -266,7 +312,7 @@ copy_field("502??.a","edm:ProvidedCHO.dc:description.$append")
 
 
 unless str_equal("$[dnb_subject]","")
-  add_field("edm:ProvidedCHO.*dc:subject", "$[dnb_subject]")
+  add_field("edm:ProvidedCHO.#dc:subject", "$[dnb_subject]")
   add_field("@dnbSubjectID","$[dnb_subject]")
 end
 
@@ -287,4 +333,4 @@ do list(path:"85640","var":"$i")
 end
 
 
-retain("edm:*","dc*")
+retain("edm*","dc*","skos*", "aggregation_id")

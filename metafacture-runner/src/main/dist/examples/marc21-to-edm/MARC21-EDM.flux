@@ -1,4 +1,4 @@
-default out = "stdout";
+default out = FLUX_DIR + "test-fix.xml";
 default file = FLUX_DIR + "Test_DNB_Mono.xml";
 default id = "1025374754";
 default sector = "sec_002";
@@ -14,6 +14,6 @@ decode-xml|
 handle-marcxml|
 fix(FLUX_DIR + "MARC21-EDM.fix", *)|
 add-oreaggregation|
-rdf-macros|
+rdf-macros(referenceMarker="#")|
 encode-xml(roottag="rdf:RDF", recordtag="", namespacefile= FLUX_DIR+"edm-namespaces.properties")|
 write(out);

@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:ore="http://www.openarchives.org/ore/terms/" xmlns:ddb="http://www.ddb.de/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:oai="http://www.openarchives.org/OAI/2.0/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:edm="http://www.europeana.eu/schemas/edm/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/">
+
+		<edm:Agent rdf:about="http://ld.zdb-services.de/data/organisations/DE-101">
+			<rdf:type rdf:resource="http://ddb.vocnet.org/sparte/sparte002" />
+			<skos:prefLabel xml:lang="de">Deutsche Nationalbibliothek</skos:prefLabel>
+		</edm:Agent>
+		<edm:Agent rdf:about="#/agent/014538970-1">
+			<skos:prefLabel xml:lang="de">Insel-Verl.</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/014538970-p" />
+		</edm:Agent>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/sparte/sparte002">
+			<skos:notation>sec_002</skos:notation>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/medientyp/Text">
+			<skos:notation>mediatype_003</skos:notation>
+		</skos:Concept>
+		<edm:Event rdf:about="#/event/014538970-c">
+			<edm:hasType>http://terminology.lido-schema.org/lido00012</edm:hasType>
+		</edm:Event>
+		<edm:Event rdf:about="#/event/014538970-p">
+			<edm:hasType>http://terminology.lido-schema.org/lido00228</edm:hasType>
+			<crm:P11_had_participant rdf:resource="#/agent/014538970-1" />
+			<edm:occuredAt rdf:resource="#/timespan/014538970_timespan1" />
+			<edm:happenedAt rdf:resource="#/place/014538970_place1" />
+		</edm:Event>
+		<edm:Place rdf:about="#/place/014538970_place1">
+			<skos:prefLabel>Berlin</skos:prefLabel>
+		</edm:Place>
+		<edm:TimeSpan rdf:about="#/timespan/014538970_timespan1">
+			<skos:notation>teils</skos:notation>
+			<skos:notation>teils</skos:notation>
+			<skos:notation>teils</skos:notation>
+			<skos:notation>anfangs</skos:notation>
+		</edm:TimeSpan>
+		<dcterms:LinguisticSystem rdf:about="http://id.loc.gov/vocabulary/iso639-2/ger">
+			<rdf:value>ger</rdf:value>
+		</dcterms:LinguisticSystem>
+		<edm:ProvidedCHO>
+			<edm:wasPresent rdf:resource="#/event/014538970-p" />
+			<edm:wasPresent rdf:resource="#/event/014538970-c" />
+			<dc:type>fortlaufendes Sammelwerk</dc:type>
+			<edm:type>TEXT</edm:type>
+			<dc:publisher>Insel-Verl.</dc:publisher>
+			<dc:language>ger</dc:language>
+			<dcterms:language rdf:resource="http://id.loc.gov/vocabulary/iso639-2/ger" />
+			<dcterms:bibliographicCitation> ; </dcterms:bibliographicCitation>
+			<dc:title>Insel-Bücherei</dc:title>
+			<dcterms:issued>teils</dcterms:issued>
+			<dcterms:issued>teils</dcterms:issued>
+			<dcterms:issued>teils</dcterms:issued>
+			<dcterms:issued>anfangs</dcterms:issued>
+		</edm:ProvidedCHO>
+		<ore:Aggregation rdf:about="http://www.dnb.de/014538970">
+			<edm:dataProvider xml:lang="de">Deutsche Nationalbibliothek</edm:dataProvider>
+			<edm:provider>Deutsche Digitale Bibliothek</edm:provider>
+			<edm:rights>http://www.europeana.eu/rights/rr-f/</edm:rights>
+			<edm:isShownAt>http://d-nb.info/014538970</edm:isShownAt>
+		</ore:Aggregation>
+	
+
+		<edm:Agent rdf:about="http://ld.zdb-services.de/data/organisations/DE-101">
+			<rdf:type rdf:resource="http://ddb.vocnet.org/sparte/sparte002" />
+			<skos:prefLabel xml:lang="de">Deutsche Nationalbibliothek</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/1008216763-p" />
+		</edm:Agent>
+		<edm:Agent rdf:about="http://d-nb.info/gnd/14270850X">
+			<skos:prefLabel xml:lang="de">Rickmers, Peter</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/1008216763-c" />
+		</edm:Agent>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/sparte/sparte002">
+			<skos:notation>sec_002</skos:notation>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/medientyp/Text">
+			<skos:notation>mediatype_003</skos:notation>
+		</skos:Concept>
+		<edm:Event rdf:about="#/event/1008216763-c">
+			<edm:hasType>http://terminology.lido-schema.org/lido00012</edm:hasType>
+			<crm:P11_had_participant rdf:resource="http://d-nb.info/gnd/14270850X" />
+		</edm:Event>
+		<edm:Event rdf:about="#/event/1008216763-p">
+			<edm:hasType>http://terminology.lido-schema.org/lido00228</edm:hasType>
+			<edm:happenedAt rdf:resource="#/place/1008216763_place" />
+		</edm:Event>
+		<edm:Place rdf:about="#/place/1008216763_place" />
+		<dcterms:LinguisticSystem rdf:about="http://id.loc.gov/vocabulary/iso639-2/eng">
+			<rdf:value>eng</rdf:value>
+		</dcterms:LinguisticSystem>
+		<edm:ProvidedCHO>
+			<edm:wasPresent rdf:resource="#/event/1008216763-p" />
+			<edm:wasPresent rdf:resource="#/event/1008216763-c" />
+			<dc:type>Monografie</dc:type>
+			<edm:type>TEXT</edm:type>
+			<dc:language>eng</dc:language>
+			<dcterms:language rdf:resource="http://id.loc.gov/vocabulary/iso639-2/eng" />
+			<dcterms:bibliographicCitation> ; </dcterms:bibliographicCitation>
+			<dc:title>Experimental investigation of the spray
+                autoignition of n-heptane in
+                a jet in cross flow configuration and comparison to single droplet
+                ignition
+                simulations</dc:title>
+			<dc:description>Bremen, Univ., Diss., 2010</dc:description>
+		</edm:ProvidedCHO>
+		<edm:WebResource rdf:about="http://nbn-resolving.de/urn:nbn:de:gbv:46-00101666-18">
+			<dc:type>http://ddb.vocnet.org/medientyp/Text</dc:type>
+			<dcterms:rights>http://www.deutsche-digitale-bibliothek.de/lizenzen/rv-fz/</dcterms:rights>
+		</edm:WebResource>
+		<ore:Aggregation rdf:about="http://www.dnb.de/1008216763">
+			<edm:isShownBy rdf:resource="http://nbn-resolving.de/urn:nbn:de:gbv:46-00101666-18" />
+			<edm:dataProvider xml:lang="de">Deutsche Nationalbibliothek</edm:dataProvider>
+			<edm:provider>Deutsche Digitale Bibliothek</edm:provider>
+			<edm:rights>http://www.europeana.eu/rights/rr-f/</edm:rights>
+			<edm:isShownAt>http://d-nb.info/1008216763</edm:isShownAt>
+		</ore:Aggregation>
+	
+
+		<edm:Agent rdf:about="http://ld.zdb-services.de/data/organisations/DE-101">
+			<rdf:type rdf:resource="http://ddb.vocnet.org/sparte/sparte002" />
+			<skos:prefLabel xml:lang="de">Deutsche Nationalbibliothek</skos:prefLabel>
+		</edm:Agent>
+		<edm:Agent rdf:about="#/agent/998814423-1">
+			<skos:prefLabel xml:lang="de">Amelang</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/998814423-p" />
+		</edm:Agent>
+		<edm:Agent rdf:about="http://d-nb.info/gnd/118540238">
+			<skos:prefLabel xml:lang="de">Goethe, Johann Wolfgang von</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/998814423-c" />
+		</edm:Agent>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/sparte/sparte002">
+			<skos:notation>sec_002</skos:notation>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/medientyp/Text">
+			<skos:notation>mediatype_003</skos:notation>
+		</skos:Concept>
+		<edm:Event rdf:about="#/event/998814423-c">
+			<edm:hasType>http://terminology.lido-schema.org/lido00012</edm:hasType>
+			<crm:P11_had_participant rdf:resource="http://d-nb.info/gnd/118540238" />
+		</edm:Event>
+		<edm:Event rdf:about="#/event/998814423-p">
+			<edm:hasType>http://terminology.lido-schema.org/lido00228</edm:hasType>
+			<crm:P11_had_participant rdf:resource="#/agent/998814423-1" />
+			<edm:occuredAt rdf:resource="#/timespan/998814423_timespan1" />
+			<edm:happenedAt rdf:resource="#/place/998814423_place1" />
+		</edm:Event>
+		<edm:Place rdf:about="#/place/998814423_place1">
+			<skos:prefLabel>Leipzig</skos:prefLabel>
+		</edm:Place>
+		<edm:TimeSpan rdf:about="#/timespan/998814423_timespan1">
+			<skos:notation>1919</skos:notation>
+		</edm:TimeSpan>
+		<dcterms:LinguisticSystem rdf:about="http://id.loc.gov/vocabulary/iso639-2/ger">
+			<rdf:value>ger</rdf:value>
+		</dcterms:LinguisticSystem>
+		<edm:ProvidedCHO>
+			<edm:wasPresent rdf:resource="#/event/998814423-p" />
+			<edm:wasPresent rdf:resource="#/event/998814423-c" />
+			<dc:type>Monografie</dc:type>
+			<edm:type>TEXT</edm:type>
+			<dc:publisher>Amelang</dc:publisher>
+			<dcterms:extent>173 S.</dcterms:extent>
+			<dc:language>ger</dc:language>
+			<dcterms:language rdf:resource="http://id.loc.gov/vocabulary/iso639-2/ger" />
+			<dcterms:bibliographicCitation> ; </dcterms:bibliographicCitation>
+			<dc:title>Faust : eine Tragödie ; Teil 1</dc:title>
+			<dcterms:issued>1919</dcterms:issued>
+		</edm:ProvidedCHO>
+		<edm:WebResource rdf:about="http://nbn-resolving.de/urn:nbn:de:101:2-2009120303">
+			<dc:type>http://ddb.vocnet.org/medientyp/Text</dc:type>
+			<dcterms:rights>http://www.deutsche-digitale-bibliothek.de/lizenzen/rv-fz/</dcterms:rights>
+		</edm:WebResource>
+		<ore:Aggregation rdf:about="http://www.dnb.de/998814423">
+			<edm:isShownBy rdf:resource="http://nbn-resolving.de/urn:nbn:de:101:2-2009120303" />
+			<edm:dataProvider xml:lang="de">Deutsche Nationalbibliothek</edm:dataProvider>
+			<edm:provider>Deutsche Digitale Bibliothek</edm:provider>
+			<edm:rights>http://www.europeana.eu/rights/rr-f/</edm:rights>
+			<edm:isShownAt>http://d-nb.info/998814423</edm:isShownAt>
+		</ore:Aggregation>
+	
+
+		<edm:Agent rdf:about="http://ld.zdb-services.de/data/organisations/DE-101">
+			<rdf:type rdf:resource="http://ddb.vocnet.org/sparte/sparte002" />
+			<skos:prefLabel xml:lang="de">Deutsche Nationalbibliothek</skos:prefLabel>
+		</edm:Agent>
+		<edm:Agent rdf:about="#/agent/999460560-1">
+			<skos:prefLabel xml:lang="de">Insel-Verl.</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/999460560-p" />
+		</edm:Agent>
+		<edm:Agent rdf:about="http://d-nb.info/gnd/118557211">
+			<skos:prefLabel xml:lang="de">Paul, Jean</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/999460560-c" />
+		</edm:Agent>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/sparte/sparte002">
+			<skos:notation>sec_002</skos:notation>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/medientyp/Text">
+			<skos:notation>mediatype_003</skos:notation>
+		</skos:Concept>
+		<edm:Event rdf:about="#/event/999460560-c">
+			<edm:hasType>http://terminology.lido-schema.org/lido00012</edm:hasType>
+			<crm:P11_had_participant rdf:resource="http://d-nb.info/gnd/118557211" />
+		</edm:Event>
+		<edm:Event rdf:about="#/event/999460560-p">
+			<edm:hasType>http://terminology.lido-schema.org/lido00228</edm:hasType>
+			<crm:P11_had_participant rdf:resource="#/agent/999460560-1" />
+			<edm:occuredAt rdf:resource="#/timespan/999460560_timespan1" />
+			<edm:happenedAt rdf:resource="#/place/999460560_place1" />
+		</edm:Event>
+		<edm:Place rdf:about="#/place/999460560_place1">
+			<skos:prefLabel>Leipzig</skos:prefLabel>
+		</edm:Place>
+		<edm:TimeSpan rdf:about="#/timespan/999460560_timespan1">
+			<skos:notation>1913, [1913]</skos:notation>
+		</edm:TimeSpan>
+		<dcterms:LinguisticSystem rdf:about="http://id.loc.gov/vocabulary/iso639-2/ger">
+			<rdf:value>ger</rdf:value>
+		</dcterms:LinguisticSystem>
+		<edm:ProvidedCHO>
+			<edm:wasPresent rdf:resource="#/event/999460560-p" />
+			<edm:wasPresent rdf:resource="#/event/999460560-c" />
+			<dc:type>Monografie</dc:type>
+			<edm:type>TEXT</edm:type>
+			<dc:publisher>Insel-Verl.</dc:publisher>
+			<dcterms:extent>51 S.</dcterms:extent>
+			<dc:language>ger</dc:language>
+			<dcterms:language rdf:resource="http://id.loc.gov/vocabulary/iso639-2/ger" />
+			<dcterms:bibliographicCitation>Insel-Bücherei ; Nr. 51</dcterms:bibliographicCitation>
+			<dcterms:isPartOf rdf:resource="http://d-nb.info/014538970" />
+			<dc:title>Leben des vergnügten Schulmeisterlein Maria
+                Wuz in
+                Auenthal</dc:title>
+			<dcterms:issued>1913, [1913]</dcterms:issued>
+		</edm:ProvidedCHO>
+		<edm:WebResource rdf:about="http://nbn-resolving.de/urn:nbn:de:101:2-2010011268">
+			<dc:type>http://ddb.vocnet.org/medientyp/Text</dc:type>
+			<dcterms:rights>http://www.deutsche-digitale-bibliothek.de/lizenzen/rv-fz/</dcterms:rights>
+		</edm:WebResource>
+		<ore:Aggregation rdf:about="http://www.dnb.de/999460560">
+			<edm:isShownBy rdf:resource="http://nbn-resolving.de/urn:nbn:de:101:2-2010011268" />
+			<edm:dataProvider xml:lang="de">Deutsche Nationalbibliothek</edm:dataProvider>
+			<edm:provider>Deutsche Digitale Bibliothek</edm:provider>
+			<edm:rights>http://www.europeana.eu/rights/rr-f/</edm:rights>
+			<edm:isShownAt>http://d-nb.info/999460560</edm:isShownAt>
+		</ore:Aggregation>
+	
+
+		<edm:Agent rdf:about="http://ld.zdb-services.de/data/organisations/DE-101">
+			<rdf:type rdf:resource="http://ddb.vocnet.org/sparte/sparte002" />
+			<skos:prefLabel xml:lang="de">Deutsche Nationalbibliothek</skos:prefLabel>
+		</edm:Agent>
+		<edm:Agent rdf:about="#/agent/1011131463-1">
+			<skos:prefLabel xml:lang="de">DLR, Bibliotheks- und Informationswesen</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/1011131463-p" />
+		</edm:Agent>
+		<edm:Agent rdf:about="http://d-nb.info/gnd/143070851">
+			<skos:prefLabel xml:lang="de">Mock, Peter</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/1011131463-c" />
+		</edm:Agent>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/sparte/sparte002">
+			<skos:notation>sec_002</skos:notation>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/medientyp/Text">
+			<skos:notation>mediatype_003</skos:notation>
+		</skos:Concept>
+		<edm:Event rdf:about="#/event/1011131463-c">
+			<edm:hasType>http://terminology.lido-schema.org/lido00012</edm:hasType>
+			<crm:P11_had_participant rdf:resource="http://d-nb.info/gnd/143070851" />
+		</edm:Event>
+		<edm:Event rdf:about="#/event/1011131463-p">
+			<edm:hasType>http://terminology.lido-schema.org/lido00228</edm:hasType>
+			<crm:P11_had_participant rdf:resource="#/agent/1011131463-1" />
+			<edm:occuredAt rdf:resource="#/timespan/1011131463_timespan1" />
+			<edm:happenedAt rdf:resource="#/place/1011131463_place1" />
+		</edm:Event>
+		<edm:Place rdf:about="#/place/1011131463_place1">
+			<skos:prefLabel>Köln</skos:prefLabel>
+		</edm:Place>
+		<edm:TimeSpan rdf:about="#/timespan/1011131463_timespan1">
+			<skos:notation>2010</skos:notation>
+		</edm:TimeSpan>
+		<dcterms:LinguisticSystem rdf:about="http://id.loc.gov/vocabulary/iso639-2/ger">
+			<rdf:value>ger</rdf:value>
+		</dcterms:LinguisticSystem>
+		<edm:ProvidedCHO>
+			<edm:wasPresent rdf:resource="#/event/1011131463-p" />
+			<edm:wasPresent rdf:resource="#/event/1011131463-c" />
+			<dc:type>Monografie</dc:type>
+			<edm:type>TEXT</edm:type>
+			<dc:publisher>DLR, Bibliotheks- und Informationswesen</dc:publisher>
+			<dc:publisher>[Univ.-Bibliothek]</dc:publisher>
+			<dcterms:extent>XX, 224 S.</dcterms:extent>
+			<dc:language>ger</dc:language>
+			<dcterms:language rdf:resource="http://id.loc.gov/vocabulary/iso639-2/ger" />
+			<dcterms:bibliographicCitation>Forschungsbericht / Deutsches Zentrum für
+                Luft- und
+                Raumfahrt ; 2010,26</dcterms:bibliographicCitation>
+			<dcterms:isPartOf rdf:resource="http://d-nb.info/019035705" />
+			<dc:title>Entwicklung eines Szenariomodells zur
+                Simulation der zukünftigen
+                Marktanteile und CO_1tn2-Emissionen von Kraftfahrzeugen (VECTOR21)</dc:title>
+			<dcterms:issued>2010</dcterms:issued>
+			<dc:description>Zugl.: Stuttgart, Univ., Diss., 2010</dc:description>
+		</edm:ProvidedCHO>
+		<edm:WebResource rdf:about="http://nbn-resolving.de/urn:nbn:de:bsz:93-opus-58459">
+			<dc:type>http://ddb.vocnet.org/medientyp/Text</dc:type>
+			<dcterms:rights>http://www.deutsche-digitale-bibliothek.de/lizenzen/rv-fz/</dcterms:rights>
+		</edm:WebResource>
+		<ore:Aggregation rdf:about="http://www.dnb.de/1011131463">
+			<edm:isShownBy rdf:resource="http://nbn-resolving.de/urn:nbn:de:bsz:93-opus-58459" />
+			<edm:dataProvider xml:lang="de">Deutsche Nationalbibliothek</edm:dataProvider>
+			<edm:provider>Deutsche Digitale Bibliothek</edm:provider>
+			<edm:rights>http://www.europeana.eu/rights/rr-f/</edm:rights>
+			<edm:isShownAt>http://d-nb.info/1011131463</edm:isShownAt>
+		</ore:Aggregation>
+	
+
+		<skos:Concept rdf:about="http://d-nb.info/gnd/4046811-2">
+			<skos:prefLabel xml:lang="de">Poröser Stoff</skos:prefLabel>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://d-nb.info/gnd/4006684-8">
+			<skos:prefLabel xml:lang="de">Bildverarbeitung</skos:prefLabel>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://d-nb.info/gnd/4150634-0">
+			<skos:prefLabel xml:lang="de">Dreidimensionale Rekonstruktion</skos:prefLabel>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://d-nb.info/gnd/4046811-2">
+			<skos:prefLabel xml:lang="de">Poröser Stoff</skos:prefLabel>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://d-nb.info/gnd/4039238-7">
+			<skos:prefLabel xml:lang="de">Mikroskopie</skos:prefLabel>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://d-nb.info/gnd/4254740-4">
+			<skos:prefLabel xml:lang="de">Grauwertbild</skos:prefLabel>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://d-nb.info/gnd/4403014-9">
+			<skos:prefLabel xml:lang="de">Vorverarbeitung</skos:prefLabel>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://d-nb.info/gnd/4150634-0">
+			<skos:prefLabel xml:lang="de">Dreidimensionale Rekonstruktion</skos:prefLabel>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://d-nb.info/gnd/4145394-3">
+			<skos:prefLabel xml:lang="de">Bildauswertung</skos:prefLabel>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/sparte/sparte002">
+			<skos:notation>sec_002</skos:notation>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/medientyp/Text">
+			<skos:notation>mediatype_003</skos:notation>
+		</skos:Concept>
+		<edm:Agent rdf:about="http://ld.zdb-services.de/data/organisations/DE-101">
+			<rdf:type rdf:resource="http://ddb.vocnet.org/sparte/sparte002" />
+			<skos:prefLabel xml:lang="de">Deutsche Nationalbibliothek</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/954307534-p" />
+		</edm:Agent>
+		<edm:Agent rdf:about="http://d-nb.info/gnd/120402858">
+			<skos:prefLabel xml:lang="de">Scharfenberg, Roland</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/954307534-c" />
+		</edm:Agent>
+		<edm:Event rdf:about="#/event/954307534-c">
+			<edm:hasType>http://terminology.lido-schema.org/lido00012</edm:hasType>
+			<crm:P11_had_participant rdf:resource="http://d-nb.info/gnd/120402858" />
+		</edm:Event>
+		<edm:Event rdf:about="#/event/954307534-p">
+			<edm:hasType>http://terminology.lido-schema.org/lido00228</edm:hasType>
+			<edm:happenedAt rdf:resource="#/place/954307534_place" />
+		</edm:Event>
+		<edm:Place rdf:about="#/place/954307534_place" />
+		<dcterms:LinguisticSystem rdf:about="http://id.loc.gov/vocabulary/iso639-2/ger">
+			<rdf:value>ger</rdf:value>
+		</dcterms:LinguisticSystem>
+		<edm:ProvidedCHO>
+			<edm:wasPresent rdf:resource="#/event/954307534-p" />
+			<edm:wasPresent rdf:resource="#/event/954307534-c" />
+			<dc:type>Monografie</dc:type>
+			<edm:type>TEXT</edm:type>
+			<dc:language>ger</dc:language>
+			<dcterms:language rdf:resource="http://id.loc.gov/vocabulary/iso639-2/ger" />
+			<dcterms:bibliographicCitation> ; </dcterms:bibliographicCitation>
+			<dc:subject>Poröser Stoff</dc:subject>
+			<dc:subject>Bildverarbeitung</dc:subject>
+			<dc:subject>Dreidimensionale Rekonstruktion</dc:subject>
+			<dc:subject>Poröser Stoff</dc:subject>
+			<dc:subject>Mikroskopie</dc:subject>
+			<dc:subject>Grauwertbild</dc:subject>
+			<dc:subject>Vorverarbeitung</dc:subject>
+			<dc:subject>Dreidimensionale Rekonstruktion</dc:subject>
+			<dc:subject>Bildauswertung</dc:subject>
+			<dc:subject rdf:resource="(DE-588)4046811-2" />
+			<dc:subject rdf:resource="(DE-588)4006684-8" />
+			<dc:subject rdf:resource="(DE-588)4150634-0" />
+			<dc:subject rdf:resource="(DE-588)4046811-2" />
+			<dc:subject rdf:resource="(DE-588)4039238-7" />
+			<dc:subject rdf:resource="(DE-588)4254740-4" />
+			<dc:subject rdf:resource="(DE-588)4403014-9" />
+			<dc:subject rdf:resource="(DE-588)4150634-0" />
+			<dc:subject rdf:resource="(DE-588)4145394-3" />
+			<dc:title>Charakterisierung poröser Medien mit Hilfe
+                der digitalen
+                Bildverarbeitung : Methoden der Bildgewinnung und -auswertung</dc:title>
+			<dc:description>Hannover, Univ., Diss., 1998</dc:description>
+		</edm:ProvidedCHO>
+		<edm:WebResource rdf:about="http://nbn-resolving.de/urn:nbn:de:gbv:089-2455540417">
+			<dc:type>http://ddb.vocnet.org/medientyp/Text</dc:type>
+			<dcterms:rights>http://www.deutsche-digitale-bibliothek.de/lizenzen/rv-fz/</dcterms:rights>
+		</edm:WebResource>
+		<ore:Aggregation rdf:about="http://www.dnb.de/954307534">
+			<edm:isShownBy rdf:resource="http://nbn-resolving.de/urn:nbn:de:gbv:089-2455540417" />
+			<edm:dataProvider xml:lang="de">Deutsche Nationalbibliothek</edm:dataProvider>
+			<edm:provider>Deutsche Digitale Bibliothek</edm:provider>
+			<edm:rights>http://www.europeana.eu/rights/rr-f/</edm:rights>
+			<edm:isShownAt>http://d-nb.info/954307534</edm:isShownAt>
+		</ore:Aggregation>
+	
+
+		<edm:Agent rdf:about="http://ld.zdb-services.de/data/organisations/DE-101">
+			<rdf:type rdf:resource="http://ddb.vocnet.org/sparte/sparte002" />
+			<skos:prefLabel xml:lang="de">Deutsche Nationalbibliothek</skos:prefLabel>
+		</edm:Agent>
+		<edm:Agent rdf:about="#/agent/999112503-1">
+			<skos:prefLabel xml:lang="de">Springer</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/999112503-p" />
+		</edm:Agent>
+		<edm:Agent rdf:about="http://d-nb.info/gnd/140064370">
+			<skos:prefLabel xml:lang="de">Václavíková, Miroslava</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/999112503-c" />
+		</edm:Agent>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/sparte/sparte002">
+			<skos:notation>sec_002</skos:notation>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/medientyp/Text">
+			<skos:notation>mediatype_003</skos:notation>
+		</skos:Concept>
+		<edm:Event rdf:about="#/event/999112503-c">
+			<edm:hasType>http://terminology.lido-schema.org/lido00012</edm:hasType>
+			<crm:P11_had_participant rdf:resource="http://d-nb.info/gnd/140064370" />
+		</edm:Event>
+		<edm:Event rdf:about="#/event/999112503-p">
+			<edm:hasType>http://terminology.lido-schema.org/lido00228</edm:hasType>
+			<crm:P11_had_participant rdf:resource="#/agent/999112503-1" />
+			<edm:occuredAt rdf:resource="#/timespan/999112503_timespan1" />
+			<edm:happenedAt rdf:resource="#/place/999112503_place1" />
+		</edm:Event>
+		<edm:Place rdf:about="#/place/999112503_place1">
+			<skos:prefLabel>Dordrecht</skos:prefLabel>
+		</edm:Place>
+		<edm:TimeSpan rdf:about="#/timespan/999112503_timespan1">
+			<skos:notation>2010</skos:notation>
+		</edm:TimeSpan>
+		<dcterms:LinguisticSystem rdf:about="http://id.loc.gov/vocabulary/iso639-2/eng">
+			<rdf:value>eng</rdf:value>
+		</dcterms:LinguisticSystem>
+		<edm:ProvidedCHO>
+			<edm:wasPresent rdf:resource="#/event/999112503-p" />
+			<edm:wasPresent rdf:resource="#/event/999112503-c" />
+			<dc:type>Monografie</dc:type>
+			<edm:type>TEXT</edm:type>
+			<dc:publisher>Springer</dc:publisher>
+			<dc:publisher>Springer</dc:publisher>
+			<dc:language>eng</dc:language>
+			<dcterms:language rdf:resource="http://id.loc.gov/vocabulary/iso639-2/eng" />
+			<dcterms:bibliographicCitation>NATO science for peace and security series :
+                C ; </dcterms:bibliographicCitation>
+			<dc:title>Water treatment technologies for the removal
+                of high toxity
+                pollutants : proceedings of the NATO Advanced Research
+                Workshop on Water Treatment
+                Technologies for the Removal of High Toxity Pollutants, Kosice, Slovak Republic,
+                13
+                - 17 September 2008</dc:title>
+			<dcterms:issued>2010</dcterms:issued>
+		</edm:ProvidedCHO>
+		<edm:WebResource rdf:about="http://nbn-resolving.de/urn:nbn:de:1111-20100730262">
+			<dc:type>http://ddb.vocnet.org/medientyp/Text</dc:type>
+			<dcterms:rights>http://www.deutsche-digitale-bibliothek.de/lizenzen/rv-fz/</dcterms:rights>
+		</edm:WebResource>
+		<ore:Aggregation rdf:about="http://www.dnb.de/999112503">
+			<edm:isShownBy rdf:resource="http://nbn-resolving.de/urn:nbn:de:1111-20100730262" />
+			<edm:dataProvider xml:lang="de">Deutsche Nationalbibliothek</edm:dataProvider>
+			<edm:provider>Deutsche Digitale Bibliothek</edm:provider>
+			<edm:rights>http://www.europeana.eu/rights/rr-f/</edm:rights>
+			<edm:isShownAt>http://d-nb.info/999112503</edm:isShownAt>
+		</ore:Aggregation>
+	
+
+		<edm:Agent rdf:about="http://ld.zdb-services.de/data/organisations/DE-101">
+			<rdf:type rdf:resource="http://ddb.vocnet.org/sparte/sparte002" />
+			<skos:prefLabel xml:lang="de">Deutsche Nationalbibliothek</skos:prefLabel>
+		</edm:Agent>
+		<edm:Agent rdf:about="#/agent/999081810-1">
+			<skos:prefLabel xml:lang="de">Springer</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/999081810-p" />
+		</edm:Agent>
+		<edm:Agent rdf:about="http://d-nb.info/gnd/136372287">
+			<skos:prefLabel xml:lang="de">Noakes, David L. G.</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/999081810-c" />
+		</edm:Agent>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/sparte/sparte002">
+			<skos:notation>sec_002</skos:notation>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/medientyp/Text">
+			<skos:notation>mediatype_003</skos:notation>
+		</skos:Concept>
+		<edm:Event rdf:about="#/event/999081810-c">
+			<edm:hasType>http://terminology.lido-schema.org/lido00012</edm:hasType>
+			<crm:P11_had_participant rdf:resource="http://d-nb.info/gnd/136372287" />
+		</edm:Event>
+		<edm:Event rdf:about="#/event/999081810-p">
+			<edm:hasType>http://terminology.lido-schema.org/lido00228</edm:hasType>
+			<crm:P11_had_participant rdf:resource="#/agent/999081810-1" />
+			<edm:occuredAt rdf:resource="#/timespan/999081810_timespan1" />
+			<edm:happenedAt rdf:resource="#/place/999081810_place1" />
+		</edm:Event>
+		<edm:Place rdf:about="#/place/999081810_place1">
+			<skos:prefLabel>Dordrecht</skos:prefLabel>
+		</edm:Place>
+		<edm:TimeSpan rdf:about="#/timespan/999081810_timespan1">
+			<skos:notation>2010</skos:notation>
+		</edm:TimeSpan>
+		<dcterms:LinguisticSystem rdf:about="http://id.loc.gov/vocabulary/iso639-2/eng">
+			<rdf:value>eng</rdf:value>
+		</dcterms:LinguisticSystem>
+		<edm:ProvidedCHO>
+			<edm:wasPresent rdf:resource="#/event/999081810-p" />
+			<edm:wasPresent rdf:resource="#/event/999081810-c" />
+			<dc:type>Monografie</dc:type>
+			<edm:type>TEXT</edm:type>
+			<dc:publisher>Springer</dc:publisher>
+			<dc:language>eng</dc:language>
+			<dcterms:language rdf:resource="http://id.loc.gov/vocabulary/iso639-2/eng" />
+			<dcterms:bibliographicCitation>Developments in environmental biology of
+                fishes ; 28</dcterms:bibliographicCitation>
+			<dcterms:isPartOf rdf:resource="http://d-nb.info/987446320" />
+			<dc:title>Chinese fishes</dc:title>
+			<dcterms:issued>2010</dcterms:issued>
+		</edm:ProvidedCHO>
+		<edm:WebResource rdf:about="http://nbn-resolving.de/urn:nbn:de:1111-20091214418">
+			<dc:type>http://ddb.vocnet.org/medientyp/Text</dc:type>
+			<dcterms:rights>http://www.deutsche-digitale-bibliothek.de/lizenzen/rv-fz/</dcterms:rights>
+		</edm:WebResource>
+		<ore:Aggregation rdf:about="http://www.dnb.de/999081810">
+			<edm:isShownBy rdf:resource="http://nbn-resolving.de/urn:nbn:de:1111-20091214418" />
+			<edm:dataProvider xml:lang="de">Deutsche Nationalbibliothek</edm:dataProvider>
+			<edm:provider>Deutsche Digitale Bibliothek</edm:provider>
+			<edm:rights>http://www.europeana.eu/rights/rr-f/</edm:rights>
+			<edm:isShownAt>http://d-nb.info/999081810</edm:isShownAt>
+		</ore:Aggregation>
+	
+
+		<edm:Agent rdf:about="http://ld.zdb-services.de/data/organisations/DE-101">
+			<rdf:type rdf:resource="http://ddb.vocnet.org/sparte/sparte002" />
+			<skos:prefLabel xml:lang="de">Deutsche Nationalbibliothek</skos:prefLabel>
+		</edm:Agent>
+		<edm:Agent rdf:about="#/agent/1025134699-1">
+			<skos:prefLabel xml:lang="de">Universitäts- und Landesbibliothek
+                Sachsen-Anhalt</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/1025134699-p" />
+		</edm:Agent>
+		<edm:Agent rdf:about="http://d-nb.info/gnd/129567310">
+			<skos:prefLabel xml:lang="de">Schäfer, Juliane</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/1025134699-c" />
+		</edm:Agent>
+		<edm:Agent rdf:about="http://d-nb.info/gnd/112470246">
+			<skos:prefLabel xml:lang="de">Schleyer, Eberhard</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/1025134699-c" />
+		</edm:Agent>
+		<edm:Agent rdf:about="http://d-nb.info/gnd/177355964">
+			<skos:prefLabel xml:lang="de">Schmoll, Hans-Joachim</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/1025134699-c" />
+		</edm:Agent>
+		<edm:Agent rdf:about="http://d-nb.info/gnd/1025148940">
+			<skos:prefLabel xml:lang="de">Bornhäuser, M.</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/1025134699-c" />
+		</edm:Agent>
+		<edm:Agent rdf:about="http://d-nb.info/gnd/177355964">
+			<skos:prefLabel xml:lang="de">Schmoll, Hans-Joachim</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/1025134699-c" />
+		</edm:Agent>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/sparte/sparte002">
+			<skos:notation>sec_002</skos:notation>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/medientyp/Text">
+			<skos:notation>mediatype_003</skos:notation>
+		</skos:Concept>
+		<edm:Event rdf:about="#/event/1025134699-c">
+			<edm:hasType>http://terminology.lido-schema.org/lido00012</edm:hasType>
+			<crm:P11_had_participant rdf:resource="http://d-nb.info/gnd/129567310" />
+			<crm:P11_had_participant rdf:resource="http://d-nb.info/gnd/112470246" />
+			<crm:P11_had_participant rdf:resource="http://d-nb.info/gnd/177355964" />
+			<crm:P11_had_participant rdf:resource="http://d-nb.info/gnd/1025148940" />
+			<crm:P11_had_participant rdf:resource="http://d-nb.info/gnd/177355964" />
+		</edm:Event>
+		<edm:Event rdf:about="#/event/1025134699-p">
+			<edm:hasType>http://terminology.lido-schema.org/lido00228</edm:hasType>
+			<crm:P11_had_participant rdf:resource="#/agent/1025134699-1" />
+			<edm:occuredAt rdf:resource="#/timespan/1025134699_timespan1" />
+			<edm:happenedAt rdf:resource="#/place/1025134699_place1" />
+		</edm:Event>
+		<edm:Place rdf:about="#/place/1025134699_place1">
+			<skos:prefLabel>Halle, Saale</skos:prefLabel>
+		</edm:Place>
+		<edm:TimeSpan rdf:about="#/timespan/1025134699_timespan1">
+			<skos:notation>2010</skos:notation>
+		</edm:TimeSpan>
+		<dcterms:LinguisticSystem rdf:about="http://id.loc.gov/vocabulary/iso639-2/ger">
+			<rdf:value>ger</rdf:value>
+		</dcterms:LinguisticSystem>
+		<edm:ProvidedCHO>
+			<edm:wasPresent rdf:resource="#/event/1025134699-p" />
+			<edm:wasPresent rdf:resource="#/event/1025134699-c" />
+			<dc:type>Monografie</dc:type>
+			<edm:type>TEXT</edm:type>
+			<dc:publisher>Universitäts- und Landesbibliothek
+                Sachsen-Anhalt</dc:publisher>
+			<dc:language>ger</dc:language>
+			<dcterms:language rdf:resource="http://id.loc.gov/vocabulary/iso639-2/ger" />
+			<dcterms:bibliographicCitation> ; </dcterms:bibliographicCitation>
+			<dc:title>Der Einfluss von
+                Enzym-induzierenden
+                Antiepileptika auf den Talspiegel von Imatinib bei Patienten mit Glioblastoma
+                multiforme</dc:title>
+			<dcterms:issued>2010</dcterms:issued>
+			<dc:description>Halle (Saale), Martin-Luther-Universität
+                Halle-Wittenberg, Diss.,
+                2010</dc:description>
+		</edm:ProvidedCHO>
+		<edm:WebResource rdf:about="http://nbn-resolving.de/urn:nbn:de:gbv:3:4-4745">
+			<dc:type>http://ddb.vocnet.org/medientyp/Text</dc:type>
+			<dcterms:rights>http://www.deutsche-digitale-bibliothek.de/lizenzen/rv-fz/</dcterms:rights>
+		</edm:WebResource>
+		<ore:Aggregation rdf:about="http://www.dnb.de/1025134699">
+			<edm:isShownBy rdf:resource="http://nbn-resolving.de/urn:nbn:de:gbv:3:4-4745" />
+			<edm:dataProvider xml:lang="de">Deutsche Nationalbibliothek</edm:dataProvider>
+			<edm:provider>Deutsche Digitale Bibliothek</edm:provider>
+			<edm:rights>http://www.europeana.eu/rights/rr-f/</edm:rights>
+			<edm:isShownAt>http://d-nb.info/1025134699</edm:isShownAt>
+		</ore:Aggregation>
+	
+
+		<edm:Agent rdf:about="http://ld.zdb-services.de/data/organisations/DE-101">
+			<rdf:type rdf:resource="http://ddb.vocnet.org/sparte/sparte002" />
+			<skos:prefLabel xml:lang="de">Deutsche Nationalbibliothek</skos:prefLabel>
+		</edm:Agent>
+		<edm:Agent rdf:about="#/agent/1000315134-1">
+			<skos:prefLabel xml:lang="de">DLR, Bibliotheks- und Informationswesen</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/1000315134-p" />
+		</edm:Agent>
+		<edm:Agent rdf:about="http://d-nb.info/gnd/139791396">
+			<skos:prefLabel xml:lang="de">Schroedter-Homscheidt, Marion</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/1000315134-c" />
+		</edm:Agent>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/sparte/sparte002">
+			<skos:notation>sec_002</skos:notation>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/medientyp/Text">
+			<skos:notation>mediatype_003</skos:notation>
+		</skos:Concept>
+		<edm:Event rdf:about="#/event/1000315134-c">
+			<edm:hasType>http://terminology.lido-schema.org/lido00012</edm:hasType>
+			<crm:P11_had_participant rdf:resource="http://d-nb.info/gnd/139791396" />
+		</edm:Event>
+		<edm:Event rdf:about="#/event/1000315134-p">
+			<edm:hasType>http://terminology.lido-schema.org/lido00228</edm:hasType>
+			<crm:P11_had_participant rdf:resource="#/agent/1000315134-1" />
+			<edm:occuredAt rdf:resource="#/timespan/1000315134_timespan1" />
+			<edm:happenedAt rdf:resource="#/place/1000315134_place1" />
+		</edm:Event>
+		<edm:Place rdf:about="#/place/1000315134_place1">
+			<skos:prefLabel>Köln</skos:prefLabel>
+		</edm:Place>
+		<edm:TimeSpan rdf:about="#/timespan/1000315134_timespan1">
+			<skos:notation>2009</skos:notation>
+		</edm:TimeSpan>
+		<dcterms:LinguisticSystem rdf:about="http://id.loc.gov/vocabulary/iso639-2/ger">
+			<rdf:value>ger</rdf:value>
+		</dcterms:LinguisticSystem>
+		<edm:ProvidedCHO>
+			<edm:wasPresent rdf:resource="#/event/1000315134-p" />
+			<edm:wasPresent rdf:resource="#/event/1000315134-c" />
+			<dc:type>Monografie</dc:type>
+			<edm:type>TEXT</edm:type>
+			<dc:publisher>DLR, Bibliotheks- und Informationswesen</dc:publisher>
+			<dc:language>ger</dc:language>
+			<dcterms:language rdf:resource="http://id.loc.gov/vocabulary/iso639-2/ger" />
+			<dcterms:bibliographicCitation>Forschungsbericht / Deutsches Zentrum für
+                Luft- und
+                Raumfahrt ; 2009,16</dcterms:bibliographicCitation>
+			<dcterms:isPartOf rdf:resource="http://d-nb.info/019035705" />
+			<dc:title>Beobachtungsoperator zur Assimilation
+                satellitenbasierter Messungen
+                verschiedener Aerosoltypen in ein Chemie-Transportmodell</dc:title>
+			<dcterms:issued>2009</dcterms:issued>
+			<dc:description>Zugl.: Köln, Univ., Diss., 2009</dc:description>
+		</edm:ProvidedCHO>
+		<edm:WebResource rdf:about="http://nbn-resolving.de/urn:nbn:de:hbz:38-28722">
+			<dc:type>http://ddb.vocnet.org/medientyp/Text</dc:type>
+			<dcterms:rights>http://www.deutsche-digitale-bibliothek.de/lizenzen/rv-fz/</dcterms:rights>
+		</edm:WebResource>
+		<ore:Aggregation rdf:about="http://www.dnb.de/1000315134">
+			<edm:isShownBy rdf:resource="http://nbn-resolving.de/urn:nbn:de:hbz:38-28722" />
+			<edm:dataProvider xml:lang="de">Deutsche Nationalbibliothek</edm:dataProvider>
+			<edm:provider>Deutsche Digitale Bibliothek</edm:provider>
+			<edm:rights>http://www.europeana.eu/rights/rr-f/</edm:rights>
+			<edm:isShownAt>http://d-nb.info/1000315134</edm:isShownAt>
+		</ore:Aggregation>
+	
+
+		<skos:Concept rdf:about="http://d-nb.info/gnd/4044820-4">
+			<skos:prefLabel xml:lang="de">Fahrgastschiff</skos:prefLabel>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://d-nb.info/gnd/4007403-1">
+			<skos:prefLabel xml:lang="de">Bodensee</skos:prefLabel>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/sparte/sparte002">
+			<skos:notation>sec_002</skos:notation>
+		</skos:Concept>
+		<skos:Concept rdf:about="http://ddb.vocnet.org/medientyp/Text">
+			<skos:notation>mediatype_003</skos:notation>
+		</skos:Concept>
+		<edm:Agent rdf:about="http://ld.zdb-services.de/data/organisations/DE-101">
+			<rdf:type rdf:resource="http://ddb.vocnet.org/sparte/sparte002" />
+			<skos:prefLabel xml:lang="de">Deutsche Nationalbibliothek</skos:prefLabel>
+		</edm:Agent>
+		<edm:Agent rdf:about="#/agent/1025374754-1">
+			<skos:prefLabel xml:lang="de">Reichert</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/1025374754-p" />
+		</edm:Agent>
+		<edm:Agent rdf:about="http://d-nb.info/gnd/141867167">
+			<skos:prefLabel xml:lang="de">Schmuker, Barbara</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/1025374754-c" />
+		</edm:Agent>
+		<edm:Agent rdf:about="http://d-nb.info/gnd/141867248">
+			<skos:prefLabel xml:lang="de">Lohmann, Kristin</skos:prefLabel>
+			<edm:wasPresent rdf:resource="#/event/1025374754-c" />
+		</edm:Agent>
+		<edm:Event rdf:about="#/event/1025374754-c">
+			<edm:hasType>http://terminology.lido-schema.org/lido00012</edm:hasType>
+			<crm:P11_had_participant rdf:resource="http://d-nb.info/gnd/141867167" />
+			<crm:P11_had_participant rdf:resource="http://d-nb.info/gnd/141867248" />
+		</edm:Event>
+		<edm:Event rdf:about="#/event/1025374754-p">
+			<edm:hasType>http://terminology.lido-schema.org/lido00228</edm:hasType>
+			<crm:P11_had_participant rdf:resource="#/agent/1025374754-1" />
+			<edm:occuredAt rdf:resource="#/timespan/1025374754_timespan1" />
+			<edm:happenedAt rdf:resource="#/place/1025374754_place1" />
+		</edm:Event>
+		<edm:Place rdf:about="#/place/1025374754_place1">
+			<skos:prefLabel>Überlingen</skos:prefLabel>
+		</edm:Place>
+		<edm:TimeSpan rdf:about="#/timespan/1025374754_timespan1">
+			<skos:notation>2010</skos:notation>
+		</edm:TimeSpan>
+		<dcterms:LinguisticSystem rdf:about="http://id.loc.gov/vocabulary/iso639-2/ger">
+			<rdf:value>ger</rdf:value>
+		</dcterms:LinguisticSystem>
+		<edm:ProvidedCHO>
+			<edm:wasPresent rdf:resource="#/event/1025374754-p" />
+			<edm:wasPresent rdf:resource="#/event/1025374754-c" />
+			<dc:type>Monografie</dc:type>
+			<edm:type>TEXT</edm:type>
+			<dc:publisher>Reichert</dc:publisher>
+			<dc:language>ger</dc:language>
+			<dcterms:language rdf:resource="http://id.loc.gov/vocabulary/iso639-2/ger" />
+			<dcterms:bibliographicCitation> ; </dcterms:bibliographicCitation>
+			<dc:subject>Fahrgastschiff</dc:subject>
+			<dc:subject>Bodensee</dc:subject>
+			<dc:subject rdf:resource="(DE-588)4044820-4" />
+			<dc:subject rdf:resource="(DE-588)4007403-1" />
+			<dc:title>Das kleine Schiff : Ein Kinderbuch vom See - eBook</dc:title>
+			<dcterms:issued>2010</dcterms:issued>
+		</edm:ProvidedCHO>
+		<edm:WebResource rdf:about="http://nbn-resolving.de/urn:nbn:de:101:1-2012082311717">
+			<dc:type>http://ddb.vocnet.org/medientyp/Text</dc:type>
+			<dcterms:rights>http://www.deutsche-digitale-bibliothek.de/lizenzen/rv-fz/</dcterms:rights>
+		</edm:WebResource>
+		<ore:Aggregation rdf:about="http://www.dnb.de/1025374754">
+			<edm:isShownBy rdf:resource="http://nbn-resolving.de/urn:nbn:de:101:1-2012082311717" />
+			<edm:dataProvider xml:lang="de">Deutsche Nationalbibliothek</edm:dataProvider>
+			<edm:provider>Deutsche Digitale Bibliothek</edm:provider>
+			<edm:rights>http://www.europeana.eu/rights/rr-f/</edm:rights>
+			<edm:isShownAt>http://d-nb.info/1025374754</edm:isShownAt>
+		</ore:Aggregation>
+	
+
+</rdf:RDF>
