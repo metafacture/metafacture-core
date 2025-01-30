@@ -189,7 +189,3 @@ a) It's going from your local Git repository to Sonatype to Maven Central. Each 
     ```
 1. Finally, go to [oss.sonatype.org](https://oss.sonatype.org), log in, check the [Staging Repositories](https://oss.sonatype.org/#stagingRepositories) and when it's finished, click on `Close`. If everything is good publish with clicking on `Release` - attention, because once published it can't be removed. The artifacts are uploaded to Maven Central (which may take some time. Have a look e.g. [metafacture-biblio](https://repo1.maven.org/maven2/org/metafacture/metafacture-biblio/) ). You can check that it's actually in the publishing pipeline by clicking on `Views/Repositories->Releases`, then type in the `Path lookup` field `org/metafacture/` and click on version.
 
-## Release Metafacture-Fix
-
-As long as we have two repos we should immediately also release metafacture-fix:
-Go update [Metafacture-Fix](https://github.com/metafacture/metafacture-fix/) and follow https://github.com/metafacture/metafacture-fix/wiki/Maintainer-Guidelines.
