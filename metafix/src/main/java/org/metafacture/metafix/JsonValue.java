@@ -43,6 +43,8 @@ public interface JsonValue {
      * Converts the value to JSON without pretty printing.
      *
      * @return the JSON serialization
+     *
+     * @throws IOException if an I/O error occurs
      */
     default String toJson() throws IOException {
         return toJson(false);
@@ -54,6 +56,8 @@ public interface JsonValue {
      * @param prettyPrinting true if pretty printing should be used
      *
      * @return the JSON serialization
+     *
+     * @throws IOException if an I/O error occurs
      */
     default String toJson(final boolean prettyPrinting) throws IOException {
         final StringWriter writer = new StringWriter();
@@ -88,6 +92,8 @@ public interface JsonValue {
          * @param source the JSON serialization
          *
          * @return the deserialized value
+         *
+         * @throws IOException if an I/O error occurs
          */
         public Value parse(final String source) throws IOException {
             return parse(MAPPER.readTree(source));

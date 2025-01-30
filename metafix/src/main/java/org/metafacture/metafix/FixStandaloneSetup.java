@@ -72,6 +72,8 @@ public class FixStandaloneSetup extends FixStandaloneSetupGenerated {
      * @param suffix the file suffix
      *
      * @return the path to the temporary file
+     *
+     * @throws IOException if an I/O error occurs
      */
     public static String absPathToTempFile(final Reader fixDef, final String suffix) throws IOException {
         // TODO: avoid temp file creation

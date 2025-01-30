@@ -125,6 +125,8 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
      * Creates an instance of {@link Metafix}.
      *
      * @param fixDef the Fix definition
+     *
+     * @throws IOException if an I/O error occurs
      */
     public Metafix(final String fixDef) throws IOException {
         this(fixDef, NO_VARS);
@@ -135,6 +137,8 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
      *
      * @param fixDef the Fix definition
      * @param vars   the Fix variables as a Map
+     *
+     * @throws IOException if an I/O error occurs
      */
     public Metafix(final String fixDef, final Map<String, String> vars) throws IOException {
         init(vars);
