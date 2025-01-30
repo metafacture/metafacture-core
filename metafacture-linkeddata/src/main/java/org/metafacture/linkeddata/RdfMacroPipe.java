@@ -41,7 +41,7 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
     public static final String RDF_ABOUT = "~rdf:about";
     public static final String XML_LANG = "~xml:lang";
     private String autoAddedSubject = "";
-    private char refrenceMarker = REFERENCE_MARKER;
+    private char referenceMarker = REFERENCE_MARKER;
     private char languageMarker = LANGUAGE_MARKER;
 
     /**
@@ -60,21 +60,21 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
     }
 
         /**
-     * Sets the single char refrence marker.
+     * Sets the single char reference marker.
      *
-     * @param refrenceMarker the refrence marker
+     * @param referenceMarker the reference marker
      */
-    public void setRefrenceMarker(final char refrenceMarker) {
-        this.refrenceMarker = refrenceMarker;
+    public void setReferenceMarker(final char referenceMarker) {
+        this.referenceMarker = referenceMarker;
     }
 
     /**
-     * Gets the refrence marker.
+     * Gets the reference marker.
      *
-     * @return the refrence marker
+     * @return the reference marker
      */
-    public char getRefrenceMarker() {
-        return refrenceMarker;
+    public char getReferenceMarker() {
+        return referenceMarker;
     }
 
     /**
@@ -126,7 +126,7 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
     @Override
     public void literal(final String name, final String value) {
         final int index = name.indexOf(languageMarker);
-        if (!name.isEmpty() && name.charAt(0) == refrenceMarker) {
+        if (!name.isEmpty() && name.charAt(0) == referenceMarker) {
             getReceiver().startEntity(name.substring(1));
             getReceiver().literal(RDF_REFERENCE, value);
             getReceiver().endEntity();
