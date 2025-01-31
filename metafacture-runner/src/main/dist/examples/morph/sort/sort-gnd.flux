@@ -4,8 +4,8 @@ fileName|
 open-file|
 as-lines|
 decode-pica|
-fix(FLUX_DIR + "gnd-pref-label.fix")|
+morph(FLUX_DIR + "gnd-pref-label.xml")|
 stream-to-triples|
 sort-triples(by="object")|
 template("${s}\t${o}")|
-write(FLUX_DIR + "fix.txt");
+write("stdout");
