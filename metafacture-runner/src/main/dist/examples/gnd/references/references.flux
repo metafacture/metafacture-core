@@ -12,7 +12,7 @@ as-lines|
 catch-object-exception|
 decode-pica|
 batch-log(batchsize="100000")|
-morph(FLUX_DIR + "references.xml")|
+fix(FLUX_DIR + "references.fix")|
 stream-to-triples|
 decouple|
 count-triples(countBy="object")|

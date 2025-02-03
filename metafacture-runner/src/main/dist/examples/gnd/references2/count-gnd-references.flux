@@ -11,12 +11,13 @@ as-lines|
 catch-object-exception|
 decode-pica|
 batch-log(batchsize="100000")|
-morph(FLUX_DIR + "extract.xml")|
+fix(FLUX_DIR + "extract.fix")|
 stream-to-triples(redirect="true")|
 sort-triples(by="subject")|
 collect-triples|
-morph(FLUX_DIR + "output.xml")|
+fix(FLUX_DIR + "output.fix")|
 batch-log(batchsize="100000")|
-stream-to-triples|
-template("${o}")|
+encode-csv(noquotes="true",separator=";")|
 write(out);
+
+

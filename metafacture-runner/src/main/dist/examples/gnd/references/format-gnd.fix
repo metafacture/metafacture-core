@@ -107,23 +107,87 @@ end
 copy_field("002@.0","@type")
 substring("@type","1","1")
 
+
+copy_field("008A.a","teilbest")
+
+copy_field("002@.0","satzart")
+substring("satzart","0","2")
+copy_field("002@.0","katlevel")
+substring("katlevel","2","1")
+
+# copy_field("003@.0","id")
+
+
+copy_field("007K.0","nid")
+
+do list(path:"042A", "var":"$i")
+  do list(path:"$i.a","var":"$a")
+    copy_field("$a","sysnummer.$append")
+  end
+end
+join_field("sysnummer","; ")
+
+
+do list(path:"004B", "var":"$i")
+  do list(path:"$i.a","var":"$a")
+    copy_field("$a","entcode.$append")
+  end
+end
+join_field("entcode"," | ")
+unless exists("entcode")
+  add_field("entcode","")
+end
+
+# pn
 do list(path:"028A","var":"PERSONNAME")
   call_macro("gndPersonCombinedLabel",field:"PERSONNAME",out:"name")
 end
+do list(path:"028@","var":"PERSONNAME")
+  call_macro("gndPersonCombinedLabel",field:"PERSONNAME",out:"@syn.$append")
+end
+
 do list(path:"029A","var":"CORPORATIONNAME")
   call_macro("gndCorporationCombinedLabel",field:"CORPORATIONNAME",out:"name")
 end
+do list(path:"029@","var":"CORPORATIONNAME")
+  call_macro("gndCorporationCombinedLabel",field:"CORPORATIONNAME",out:"@syn.$append")
+end
+
+#f
 do list(path:"030A","var":"CONFERENCENAME")
   call_macro("gndConferenceCombinedLabel",field:"CONFERENCENAME",out:"name")
 end
+do list(path:"030@","var":"CONFERENCENAME")
+  call_macro("gndConferenceCombinedLabel",field:"CONFERENCENAME",out:"@syn.$append")
+end
+
+#s
 do list(path:"065A","var":"GEONAME")
   call_macro("gndGeolocationCombinedLabel",field:"GEONAME",out:"name")
 end
+do list(path:"065@","var":"GEONAME")
+  call_macro("gndGeolocationCombinedLabel",field:"GEONAME",out:"@syn.$append")
+end
+
+# g
 do list(path:"041A","var":"SUBJECTNAME")
   call_macro("gndSubjectCombinedLabel",field:"SUBJECTNAME",out:"name")
 end
+do list(path:"041@","var":"SUBJECTNAME")
+  call_macro("gndSubjectCombinedLabel",field:"SUBJECTNAME",out:"@syn.$append")
+end
+
+#u
 do list(path:"022A","var":"WORKNAME")
   call_macro("gndWorkCombinedLabel",field:"WORKNAME",out:"name")
 end
+do list(path:"022@","var":"WORKNAME")
+  call_macro("gndWorkCombinedLabel",field:"WORKNAME",out:"@syn.$append")
+end
 
-retain("name")
+copy_field("@syn","syn")
+join_field("syn"," | ")
+
+
+vacuum()
+retain("name","syn","nid","entcode","teilbest", "satzart","katlevel","sysnummer")

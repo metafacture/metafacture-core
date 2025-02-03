@@ -8,7 +8,7 @@ do put_macro("gndPersonCombinedLabel") # in contrast to morph this is not normal
     copy_field("$[field].l","$[field].pre.$append")
     copy_field("$[field].g","$[field].pre.$append")
     join_field("$[field].pre",", ")
-    replace_all("$[field].pre","(^.*$)"," <$1>")
+    replace_all("$[field].pre","^(.*)$"," <$1>")
     if exists("$[field].pre")
       paste("$[field].@combinedLabel", "$[field].@combinedLabel", "$[field].pre", join_char:"")
     end

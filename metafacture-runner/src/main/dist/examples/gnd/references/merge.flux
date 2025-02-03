@@ -17,8 +17,7 @@ stream-to-triples|
 decouple|
 sort-triples(by="subject")|
 collect-triples|
-morph(FLUX_DIR + "output.xml")|
+fix(FLUX_DIR + "output.fix")|
 batch-log(batchsize="100000")|
-stream-to-triples|
-template("${o}")|
+encode-csv(separator=";",noQuotes="true")|
 write(out);

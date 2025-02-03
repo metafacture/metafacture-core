@@ -6,7 +6,7 @@ gnd|
 open-file|
 as-lines|
 decode-pica|
-morph(FLUX_DIR + "format-gnd.xml")|
+fix(FLUX_DIR + "format-gnd.fix")|
 encode-formeta(style="concise")|
 write(gndsimple);
 

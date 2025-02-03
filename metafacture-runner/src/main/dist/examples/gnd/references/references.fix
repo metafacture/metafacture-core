@@ -1,0 +1,8 @@
+do list(path:"041A*|041A","var":"$i") # Until https://github.com/metafacture/metafacture-core/issues/651 is fixed one hass to add "041A"
+  copy_field("$i.9","relevantField.$append")
+end
+
+trim("relevantField.*")
+uniq("relevantField")
+
+retain("relevantField")
