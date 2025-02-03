@@ -4,16 +4,16 @@ default id = "1025374754";
 default sector = "sec_002";
 default media_type = "mediatype_003";
 
-file|
-open-file|
-//"1025374754"|
-//id|
-//template("https://portal.dnb.de/opac.htm?method=requestMarcXml&idn=${o}")|
-//open-http|
-decode-xml|
-handle-marcxml|
-fix(FLUX_DIR + "MARC21-EDM.fix", *)|
-add-oreaggregation|
-rdf-macros(referenceMarker="#")|
-encode-xml(roottag="rdf:RDF", recordtag="", namespacefile= FLUX_DIR+"edm-namespaces.properties")|
-write(out);
+file
+| open-file
+// | "1025374754"
+// | id
+// | template("https://portal.dnb.de/opac.htm?method=requestMarcXml&idn=${o}")
+// | open-http
+| decode-xml
+| handle-marcxml
+| fix(FLUX_DIR + "MARC21-EDM.fix", *)
+| add-oreaggregation
+| rdf-macros(referenceMarker="#")
+| encode-xml(roottag="rdf:RDF", recordtag="", namespacefile= FLUX_DIR+"edm-namespaces.properties")
+| write(out);

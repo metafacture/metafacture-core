@@ -12,25 +12,25 @@ header|open-file|as-lines|@Y;
 //count references
 "counting references in " + dump | write("stdout");
 
-dump|
-open-file|
-as-lines|
-catch-object-exception|
-decode-pica|
-batch-log(batchsize="100000")|
-fix(FLUX_DIR + "extract.fix", *)|
-stream-to-triples(redirect="true")|
-sort-triples(by="subject")|
-collect-triples|
-fix(FLUX_DIR + "output.fix")|
-batch-log("merged ${totalRecords}", batchsize="100000")|
-stream-to-triples|
-template("${s}")|
-@Y;
+dump
+| open-file
+| as-lines
+| catch-object-exception
+| decode-pica
+| batch-log(batchsize="100000")
+| fix(FLUX_DIR + "extract.fix", *)
+| stream-to-triples(redirect="true")
+| sort-triples(by="subject")
+| collect-triples
+| fix(FLUX_DIR + "output.fix")
+| batch-log("merged ${totalRecords}", batchsize="100000")
+| stream-to-triples
+| template("${s}")
+| @Y;
 
-@Y|
-wait-for-inputs("2")|
-write(out);
+@Y
+| wait-for-inputs("2")
+| write(out);
 
 
 

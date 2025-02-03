@@ -3,11 +3,11 @@
 
 default fileName = FLUX_DIR + "nonNormalized.pica";
 
-fileName|
-open-file|
-as-lines|
-lines-to-records|
-decode-pica(normalizedSerialization="false", ignoreMissingIdn="true")|
-fix(FLUX_DIR + "morph-pica-to-marcxml.fix")|
-encode-marcxml(ensurecorrectmarc21xml="true")|
-write("stdout");
+fileName
+| open-file
+| as-lines
+| lines-to-records
+| decode-pica(normalizedSerialization="false", ignoreMissingIdn="true")
+| fix(FLUX_DIR + "morph-pica-to-marcxml.fix")
+| encode-marcxml(ensurecorrectmarc21xml="true")
+| write("stdout");
