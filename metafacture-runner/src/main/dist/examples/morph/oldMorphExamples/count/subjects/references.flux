@@ -1,5 +1,5 @@
 
-default counts=FLUX_DIR + "counts.dat";
+default counts="myflux/counts.dat";
 default catalogue = FLUX_DIR + "10.pica";
 
 //count references

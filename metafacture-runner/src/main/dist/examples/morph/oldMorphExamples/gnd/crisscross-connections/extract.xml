@@ -194,7 +194,7 @@
         </combine>
 
 
-        <entity name="gnd">
+        <entity name="gnd" flushWith="record">
             <data source="@name" name="name" />
 
             <data source="002@.0" name="satzart">

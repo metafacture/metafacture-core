@@ -1,4 +1,4 @@
-default out = FLUX_DIR + "morph-test.xml";
+default out = "stdout";
 default file = FLUX_DIR + "Test_DNB_Mono.xml";
 default id = "1025374754";
 default sector = "sec_002";

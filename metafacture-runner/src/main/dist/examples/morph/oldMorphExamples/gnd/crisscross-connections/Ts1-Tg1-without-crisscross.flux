@@ -10,11 +10,11 @@ as-lines|
 catch-object-exception|
 decode-pica|
 batch-log(batchsize="100000")|
-fix(FLUX_DIR + "extract.fix")|
+morph(FLUX_DIR + "extract.xml")|
 stream-to-triples(redirect="true")|
 sort-triples(by="subject")|
 collect-triples|
-fix(FLUX_DIR + "output.fix")|
+morph(FLUX_DIR + "output.xml")|
 batch-log(batchsize="100000")|
 stream-to-triples|
 template("${o}")|
