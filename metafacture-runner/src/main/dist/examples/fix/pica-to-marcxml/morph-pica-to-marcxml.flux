@@ -8,8 +8,6 @@ open-file|
 as-lines|
 lines-to-records|
 decode-pica(normalizedSerialization="false", ignoreMissingIdn="true")|
-morph(FLUX_DIR + "morph-pica-to-marcxml.xml")|
-encode-marc21|
-decode-marc21(emitLeaderAsWhole="true", ignoreMissingId="true")|
-encode-marcxml|
-write(FLUX_DIR + "test.xml");
+fix(FLUX_DIR + "morph-pica-to-marcxml.fix")|
+encode-marcxml(ensurecorrectmarc21xml="true")|
+write("stdout");
