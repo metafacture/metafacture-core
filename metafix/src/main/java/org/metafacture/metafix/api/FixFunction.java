@@ -35,18 +35,50 @@ import java.util.stream.Stream;
 @FunctionalInterface
 public interface FixFunction {
 
+    /**
+     * Applies the Fix function.
+     *
+     * @param metafix the Metafix instance
+     * @param record  the record
+     * @param params  the parameters
+     * @param options the options
+     */
     void apply(Metafix metafix, Record record, List<String> params, Map<String, String> options);
 
+    /**
+     * Performs the consumer on the specified option.
+     *
+     * @param options  the options
+     * @param key      the option name
+     * @param consumer the consumer to perform
+     */
     default void withOption(final Map<String, String> options, final String key, final Consumer<String> consumer) {
         withOption(options, key, consumer, Map::get);
     }
 
+    /**
+     * Performs the consumer on the specified option.
+     *
+     * @param <T>      the type of the option
+     * @param options  the options
+     * @param key      the option name
+     * @param consumer the consumer to perform
+     * @param function the function to retrieve the option
+     */
     default <T> void withOption(final Map<String, String> options, final String key, final Consumer<T> consumer, final BiFunction<Map<String, String>, String, T> function) {
         if (options.containsKey(key)) {
             consumer.accept(function.apply(options, key));
         }
     }
 
+    /**
+     * Performs the consumer on an object writer configured with the given
+     * options.
+     *
+     * @param options  the options
+     * @param operator the optional operator to transform the destination
+     * @param consumer the consumer to perform
+     */
     default void withWriter(final Map<String, String> options, final UnaryOperator<String> operator, final Consumer<ObjectWriter<String>> consumer) {
         final String destination = options.getOrDefault("destination", ObjectWriter.STDOUT);
         final ObjectWriter<String> writer = new ObjectWriter<>(operator != null ? operator.apply(destination) : destination);
@@ -66,6 +98,16 @@ public interface FixFunction {
         }
     }
 
+    /**
+     * Performs the consumer on an object writer configured with the given
+     * options and format directives in the destination.
+     *
+     * @param metafix       the Metafix instance
+     * @param record        the record
+     * @param options       the options
+     * @param scopedCounter the counter
+     * @param consumer      the consumer to perform
+     */
     default void withWriter(final Metafix metafix, final Record record, final Map<String, String> options, final Map<Metafix, LongAdder> scopedCounter, final Consumer<Consumer<String>> consumer) {
         final Value idValue = record.get(options.getOrDefault("id", StandardEventNames.ID));
 
@@ -79,27 +121,72 @@ public interface FixFunction {
         withWriter(options, formatter, w -> consumer.accept(s -> w.process(prefix + s)));
     }
 
+    /**
+     * Parses the specified option as a Boolean.
+     *
+     * @param options  the options
+     * @param key      the option name
+     *
+     * @return the Boolean
+     */
     default boolean getBoolean(final Map<String, String> options, final String key) {
         return Boolean.parseBoolean(options.get(key));
     }
 
+    /**
+     * Parses the specified option as an Integer.
+     *
+     * @param options  the options
+     * @param key      the option name
+     *
+     * @return the Integer
+     */
     default int getInteger(final Map<String, String> options, final String key) {
         return Integer.parseInt(options.get(key));
     }
 
+    /**
+     * Parses the specified parameter as an Integer.
+     *
+     * @param params the parameters
+     * @param index  the parameter index
+     *
+     * @return the Integer
+     */
     default int getInteger(final List<String> params, final int index) {
         return Integer.parseInt(params.get(index));
     }
 
+    /**
+     * Creates a new Array from the given stream.
+     *
+     * @param stream the Value stream
+     *
+     * @return the new Value
+     */
     default Value newArray(final Stream<Value> stream) {
         return Value.newArray(a -> stream.forEach(a::add));
     }
 
+    /**
+     * Removes duplicates from the given stream.
+     *
+     * @param stream the Value stream
+     *
+     * @return the unique Value stream
+     */
     default Stream<Value> unique(final Stream<Value> stream) {
         final Set<Value> set = new HashSet<>();
         return stream.filter(set::add);
     }
 
+    /**
+     * Flattens the given stream.
+     *
+     * @param stream the Value stream
+     *
+     * @return the flattened Value stream
+     */
     default Stream<Value> flatten(final Stream<Value> stream) {
         return stream.flatMap(v -> v.extractType((m, c) -> m
                     .ifArray(a -> c.accept(flatten(a.stream())))

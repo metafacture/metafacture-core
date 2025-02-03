@@ -32,12 +32,33 @@ import java.io.UncheckedIOException;
 @FunctionalInterface
 public interface JsonValue {
 
+    /**
+     * Generates the JSON serialization.
+     *
+     * @param jsonGenerator the JSON generator
+     */
     void toJson(JsonGenerator jsonGenerator);
 
+    /**
+     * Converts the value to JSON without pretty printing.
+     *
+     * @return the JSON serialization
+     *
+     * @throws IOException if an I/O error occurs
+     */
     default String toJson() throws IOException {
         return toJson(false);
     }
 
+    /**
+     * Converts the value to JSON with optional pretty printing.
+     *
+     * @param prettyPrinting true if pretty printing should be used
+     *
+     * @return the JSON serialization
+     *
+     * @throws IOException if an I/O error occurs
+     */
     default String toJson(final boolean prettyPrinting) throws IOException {
         final StringWriter writer = new StringWriter();
         final JsonGenerator jsonGenerator = new JsonFactory().createGenerator(writer);
@@ -59,9 +80,21 @@ public interface JsonValue {
 
         private static final ObjectMapper MAPPER = new ObjectMapper();
 
+        /**
+         * Creates an instance of {@link Parser}.
+         */
         public Parser() {
         }
 
+        /**
+         * Parses the JSON serialization.
+         *
+         * @param source the JSON serialization
+         *
+         * @return the deserialized value
+         *
+         * @throws IOException if an I/O error occurs
+         */
         public Value parse(final String source) throws IOException {
             return parse(MAPPER.readTree(source));
         }

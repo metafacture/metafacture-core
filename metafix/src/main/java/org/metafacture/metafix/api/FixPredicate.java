@@ -57,8 +57,28 @@ public interface FixPredicate {
             .ifString(s -> c.accept(s.isEmpty()))
     );
 
+    /**
+     * Tests the given record against the predicate.
+     *
+     * @param metafix the Metafix instance
+     * @param record  the record
+     * @param params  the parameters
+     * @param options the options
+     *
+     * @return true if the record matches the predicate, otherwise false
+     */
     boolean test(Metafix metafix, Record record, List<String> params, Map<String, String> options);
 
+    /**
+     * Tests the field value against the target string according to the qualified conditional.
+     *
+     * @param record      the record
+     * @param params      the field name and the target string
+     * @param qualifier   the qualifier
+     * @param conditional the conditional
+     *
+     * @return true if the record matches the qualified conditional
+     */
     default boolean testConditional(final Record record, final List<String> params, final BiPredicate<Stream<Value>, Predicate<Value>> qualifier, final BiPredicate<String, String> conditional) {
         final String field = params.get(0);
         final String string = params.get(1);
@@ -70,6 +90,15 @@ public interface FixPredicate {
         ));
     }
 
+    /**
+     * Tests the field value against the conditional.
+     *
+     * @param record      the record
+     * @param params      the field name
+     * @param conditional the conditional
+     *
+     * @return true if the record matches the conditional
+     */
     default boolean testConditional(final Record record, final List<String> params, final Predicate<Value> conditional) {
         final String field = params.get(0);
 
@@ -77,10 +106,27 @@ public interface FixPredicate {
         return value != null && conditional.test(value);
     }
 
+    /**
+     * Tests the parameters against the conditional.
+     *
+     * @param params      the parameters
+     * @param conditional the conditional
+     *
+     * @return true if the parameters match the conditional
+     */
     default boolean testConditional(final List<String> params, final BiPredicate<String, String> conditional) {
         return conditional.test(params.get(0), params.get(1));
     }
 
+    /**
+     * Tests the field value against the conditional.
+     *
+     * @param record      the record
+     * @param params      the field name
+     * @param conditional the conditional
+     *
+     * @return true if the record matches the conditional
+     */
     default boolean testStringConditional(final Record record, final List<String> params, final Predicate<String> conditional) {
         return testConditional(record, params, v -> v.extractType((m, c) -> m
                     .ifString(s -> c.accept(conditional.test(s)))

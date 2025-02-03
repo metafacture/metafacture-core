@@ -5,6 +5,11 @@ package org.metafacture.metafix.web;
  * application.
  */
 public class FixWebModule extends AbstractFixWebModule {
+
+    /**
+     * Creates an instance of {@link FixWebModule}.
+     */
     public FixWebModule() {
     }
+
 }

@@ -12,6 +12,9 @@ import org.eclipse.xtext.util.Modules2;
  */
 public class FixIdeSetup extends FixStandaloneSetup {
 
+    /**
+     * Creates an instance of {@link FixIdeSetup}.
+     */
     public FixIdeSetup() {
     }
 

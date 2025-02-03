@@ -33,6 +33,9 @@ public class FixServlet extends XtextServlet {
 
     private DisposableRegistry disposableRegistry;
 
+    /**
+     * Creates an instance of {@link FixServlet}.
+     */
     public FixServlet() {
     }
 

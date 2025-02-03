@@ -26,6 +26,15 @@ import java.util.Map;
 @FunctionalInterface
 public interface FixContext {
 
+    /**
+     * Executes the Fix context.
+     *
+     * @param metafix           the Metafix instance
+     * @param record            the record
+     * @param params            the parameters
+     * @param options           the options
+     * @param recordTransformer the record transformer
+     */
     void execute(Metafix metafix, Record record, List<String> params, Map<String, String> options, RecordTransformer recordTransformer);
 
 }

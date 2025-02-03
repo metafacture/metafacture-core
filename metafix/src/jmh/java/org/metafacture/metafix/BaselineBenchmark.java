@@ -23,6 +23,9 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 public class BaselineBenchmark extends AbstractBenchmark {
 
+    /**
+     * Creates an instance of {@link BaselineBenchmark}.
+     */
     public BaselineBenchmark() {
     }
 

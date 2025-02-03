@@ -20,10 +20,21 @@ import org.metafacture.framework.MetafactureException;
 
 public class FixParseException extends MetafactureException {
 
+    /**
+     * Creates an instance of {@link FixParseException}.
+     *
+     * @param message the exception message
+     */
     public FixParseException(final String message) {
         super(message);
     }
 
+    /**
+     * Creates an instance of {@link FixParseException}.
+     *
+     * @param message the exception message
+     * @param cause   the exception cause
+     */
     public FixParseException(final String message, final Throwable cause) {
         super(message, cause);
     }

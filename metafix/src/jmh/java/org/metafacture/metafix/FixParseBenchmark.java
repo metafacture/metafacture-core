@@ -32,9 +32,15 @@ public class FixParseBenchmark extends AbstractBenchmark {
     })
     private String fixDef;
 
+    /**
+     * Creates an instance of {@link FixParseBenchmark}.
+     */
     public FixParseBenchmark() {
     }
 
+    /**
+     * Performs the setup.
+     */
     @Setup
     public void setup() {
         fixFile = String.format(FIXES, fixDef);

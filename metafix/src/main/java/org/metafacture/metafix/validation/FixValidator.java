@@ -7,6 +7,9 @@ package org.metafacture.metafix.validation;
  */
 public class FixValidator extends AbstractFixValidator {
 
+    /**
+     * Creates an instance of {@link FixValidator}.
+     */
     public FixValidator() {
     }
 

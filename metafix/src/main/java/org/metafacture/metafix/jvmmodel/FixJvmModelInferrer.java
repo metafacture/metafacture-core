@@ -24,9 +24,19 @@ public class FixJvmModelInferrer extends AbstractModelInferrer {
     @Extension
     private IQualifiedNameProvider iQualifiedNameProvider;
 
+    /**
+     * Creates an instance of {@link FixJvmModelInferrer}.
+     */
     public FixJvmModelInferrer() {
     }
 
+    /**
+     * Infers the JVM model.
+     *
+     * @param fix               the Fix instance
+     * @param acceptor          the acceptor
+     * @param isPrelinkingPhase true if prelinking phase
+     */
     public void infer(final EObject fix, final IJvmDeclaredTypeAcceptor acceptor, final boolean isPrelinkingPhase) {
         if (fix == null) {
             throw new IllegalArgumentException("Unhandled parameter types: " +
