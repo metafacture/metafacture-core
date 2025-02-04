@@ -1,0 +1,6 @@
+if any_match("002@.0","...*")
+  replace_all("002@.0","^(..).*","$1") #only keep the first two letters
+  retain("002@.0") # only keep the relevent element
+else
+  reject()
+end

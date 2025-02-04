@@ -1,0 +1,38 @@
+unless exists("refed")
+  reject()
+end
+
+unless exists("gnd.nid")
+  reject()
+end
+
+if is_array("refed")
+  copy_field("refed","count")
+else
+  copy_field("refed","count.$append")
+end
+
+count("count")
+
+copy_field("_id","id")
+
+
+copy_field("gnd.nid","nid")
+copy_field("gnd.satzart","satzart")
+copy_field("gnd.katlevel","katlevel")
+copy_field("gnd.name","name")
+copy_field("gnd.sys","sys")
+copy_field("gnd.ent","ent")
+copy_field("gnd.syn","syn")
+
+retain("count",
+  "id",
+  "nid",
+  "katlevel",
+  "satzart",
+  "name",
+  "sys",
+  "ent",
+  "syn"
+)
+
