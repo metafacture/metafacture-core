@@ -1,0 +1,7 @@
+if exists("24510.b")
+  paste("dc:title","24510.a","~:","24510.b")
+else
+  copy_field("24510.a","dc:title")
+end
+
+retain("dc:title")

@@ -6,6 +6,6 @@ fileName|
 open-file|
 as-lines|
 decode-pica|
-filter(FLUX_DIR + "filter-morph.xml")|
+fix(FLUX_DIR + "filter.fix")| // Fix does not use the filter function but has its own filter mechanism within fix.
 encode-formeta(style="verbose")|
 write("stdout");

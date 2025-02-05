@@ -10,7 +10,7 @@ open-file|
 as-lines|
 catch-object-exception|
 decode-pica|
-morph(FLUX_DIR + "references.xml")|
+fix(FLUX_DIR + "references.fix")|
 stream-to-triples|
 count-triples(countBy="object")|
 
