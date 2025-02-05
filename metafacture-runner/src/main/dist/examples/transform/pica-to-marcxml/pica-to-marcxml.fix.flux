@@ -9,5 +9,7 @@ as-lines|
 lines-to-records|
 decode-pica(normalizedSerialization="false", ignoreMissingIdn="true")|
 fix(FLUX_DIR + "pica-to-marcxml.fix")|
-encode-marcxml(ensurecorrectmarc21xml="true")|
+encode-marc21|
+decode-marc21(emitLeaderAsWhole="true", ignoreMissingId="true")|
+encode-marcxml|
 write("stdout");

@@ -1,13 +1,10 @@
 # maps PICA+ to marc21Xml -->
 #       setting the encoding scheme is mandatory. This sets it to utf8. -->
 add_field("leader.characterCodingScheme","a")
-# directly invoke "data" creats "controlfields" -->
 
-if exists("003@.0")
-  copy_field("003@.0","001")
-else
-  add_field("001","no_id")
-end
+# directly invoke "data" creats "controlfields" -->
+copy_field("003@.0","001")
+
 # entities triggers creation of "datafields" following the pattern: -->
 # 'entity.name="$fieldname$ind1$ind2"' => '<datafield tag="$fieldname" ind1="$ind1" ind2="$ind2">' -->
 # and 'source.name="$subfield" => <subfield code="$subfield"/> -->
