@@ -1,6 +1,3 @@
-# Hint: This is a translated version of the morph transformation in metafacture-runner/src/main/dist/examples/morph/marc21-to-edm/MARC21-EDM.xml
-# Result is the same. The fix transformation could be adjusted to be even more efficient.
-
 do once("maps")
   put_map("rights",
     "DE-101": "http://www.europeana.eu/rights/rr-f/"
