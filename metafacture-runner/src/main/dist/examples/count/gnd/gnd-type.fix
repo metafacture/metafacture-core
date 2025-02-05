@@ -1,6 +1,3 @@
-if any_match("002@.0","...*")
-  replace_all("002@.0","^(..).*","$1") #only keep the first two letters
-  retain("002@.0") # only keep the relevent element
-else
-  reject()
-end
+replace_all("002@.0","^.(.).*","$1") #only keep the second letter
+copy_field("002@.0","")
+retain("") # only keep the relevent element
