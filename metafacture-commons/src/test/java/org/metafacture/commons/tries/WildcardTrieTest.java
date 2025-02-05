@@ -89,7 +89,7 @@ public final class WildcardTrieTest {
 
     @Test
     public void testWithTrailingStarWildcard() {
-        assertTrie(A_STAR, AABB, AACBB, AB, ABBC, ABC, ACB);
+        assertTrie(A_STAR, A, AABB, AACBB, AB, ABBC, ABC, ACB);
         assertList(AABB, A_STAR, AABB);
         assertList(AACBB, A_STAR, AACBB);
     }
@@ -104,7 +104,7 @@ public final class WildcardTrieTest {
     @Test
     public void testWithMultipleStarWildcards() {
         assertTrie(STAR_B, AABB, AACBB, AB, ACB, B, CCB);
-        assertTrie(A_STAR, AABB, AACBB, AB, ABC, ABBC, ACB);
+        assertTrie(A_STAR, A, AABB, AACBB, AB, ABC, ABBC, ACB);
         assertTrie(A_STAR_B, AABB, AACBB, AB, ACB);
         assertList(AACBB, STAR_B, A_STAR, A_STAR_B, AACBB);
 

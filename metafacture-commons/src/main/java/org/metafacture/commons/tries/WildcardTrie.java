@@ -97,6 +97,10 @@ public final class WildcardTrie<P> {
                 Node<P> temp = node.getNext(key.charAt(i));
                 if (temp != null) {
                     nextNodes.add(temp);
+                    temp = temp.getNext(STAR_WILDCARD);
+                    if (temp != null) {
+                        nextNodes.add(temp);
+                    }
                 }
                 temp = node.getNext(Q_WILDCARD);
                 if (temp != null) {
