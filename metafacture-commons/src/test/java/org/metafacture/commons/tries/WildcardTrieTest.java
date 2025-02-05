@@ -34,16 +34,18 @@ import java.util.List;
  */
 public final class WildcardTrieTest {
 
+    private static final String A = "a";
     private static final String AABB = "aabb";
     private static final String AACBB = "aacbb";
     private static final String AB = "ab";
     private static final String ABBC = "abbc";
     private static final String ABC = "abc";
     private static final String ACB = "acb";
+    private static final String B = "b";
     private static final String CCB = "ccb";
     private static final String EMPTY = "";
     private static final String X = "x";
-    private static final List<String> ALL = List.of(AABB, AACBB, AB, ABBC, ABC, ACB, CCB, EMPTY, X);
+    private static final List<String> ALL = List.of(A, AABB, AACBB, AB, ABBC, ABC, ACB, B, CCB, EMPTY, X);
 
     private static final String AAQBB = "aa?bb";
     private static final String AA_STAR_BB = "aa*bb";
@@ -94,14 +96,14 @@ public final class WildcardTrieTest {
 
     @Test
     public void testWithInitialStarWildcard() {
-        assertTrie(STAR_B, AABB, AACBB, AB, ACB, CCB);
+        assertTrie(STAR_B, AABB, AACBB, AB, ACB, B, CCB);
         assertList(AABB, STAR_B, AABB);
         assertList(AACBB, STAR_B, AACBB);
     }
 
     @Test
     public void testWithMultipleStarWildcards() {
-        assertTrie(STAR_B, AABB, AACBB, AB, ACB, CCB);
+        assertTrie(STAR_B, AABB, AACBB, AB, ACB, B, CCB);
         assertTrie(A_STAR, AABB, AACBB, AB, ABC, ABBC, ACB);
         assertTrie(A_STAR_B, AABB, AACBB, AB, ACB);
         assertList(AACBB, STAR_B, A_STAR, A_STAR_B, AACBB);
