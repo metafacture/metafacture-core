@@ -273,7 +273,19 @@ paste("edm:ProvidedCHO.#dcterms:language","~http://id.loc.gov/vocabulary/iso639-
 
 
 if exists("490??")
-  paste("edm:ProvidedCHO.dcterms:bibliographicCitation","490??.a","~ ; ","490??.v", join_char:"")
+  do list(path:"490??","var":"$i")
+    do list(path:"$i.a", "var":"$j")
+      copy_field("$j", "$i.label.$append")
+    end
+    join_field("$i.label", " / ")
+
+    do list(path:"$i.v", "var":"$j")
+      copy_field("$j", "$i.numbering.$append")
+    end
+    join_field("$i.numbering")
+    prepend("$i.numbering"," ; ")
+    paste("edm:ProvidedCHO.dcterms:bibliographicCitation","$i.label","$i.numbering", join_char:"")
+  end
 end
 
 copy_field("1[10]01 .a","edm:ProvidedCHO.dc:creator.$append")
