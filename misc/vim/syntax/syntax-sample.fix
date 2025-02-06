@@ -25,15 +25,15 @@ end
 
 # Loops
 
-do list(path)
+do list(path:"base")
   add_field(foo, bar) and foo.bar(key: "val=$1")
 end
 
 # Nested expressions
 
-do marc_each()
-  if marc_has(f700)
-    marc_map(f700a, authors.$append.bla, 'bla')
+do list(path:"700","var":"$i")
+  if any_equal("$i.4","aut")
+    copy_field("$i.a", "authors.$append")
   end
 end
 
