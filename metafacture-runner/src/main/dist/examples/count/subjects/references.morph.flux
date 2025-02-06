@@ -13,6 +13,7 @@ decode-pica|
 morph(FLUX_DIR + "references.xml")|
 stream-to-triples|
 count-triples(countBy="object")|
+
 write("subjects.dat");
 
 
