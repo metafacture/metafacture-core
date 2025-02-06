@@ -38,9 +38,9 @@ public class InterpreterTest {
     @Test
     public void shouldInterpretNested() throws Exception {
         interpret(3,
-                "do marc_each()",
-                "\tif marc_has(f700)",
-                "\t\tmarc_map(f700a,authors.$append)",
+                "do list(path:'700??','var':'$i')",
+                "\tif any_equal('$i.4','aut')",
+                "\t\tcopy_field($i.a,authors.$append)",
                 "\tend",
                 "end",
                 ""
