@@ -129,6 +129,14 @@ public interface FixPredicate {
         ));
     }
 
+    /**
+     * Tests the number against the conditional.
+     *
+     * @param string      the number as a String
+     * @param conditional the conditional
+     *
+     * @return true if the string is a number and matches the conditional
+     */
     static boolean testNumberConditional(final String string, final Predicate<BigDecimal> conditional) {
         try {
             final BigDecimal number = new BigDecimal(string);
