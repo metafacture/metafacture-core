@@ -182,6 +182,19 @@ public enum FixConditional implements FixPredicate {
         public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
             return testConditional(params, MATCHES);
         }
+    },
+
+    greater_than {
+        @Override
+        public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            return testConditional(record, params, ALL, GREATER_THAN);
+        }
+    },
+    less_than {
+        @Override
+        public boolean test(final Metafix metafix, final Record record, final List<String> params, final Map<String, String> options) {
+            return testConditional(record, params, ALL, LESS_THAN);
+        }
     }
 
 }
