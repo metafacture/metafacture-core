@@ -1,0 +1,354 @@
+do once("maps")
+  put_map("rights",
+    "DE-101": "http://www.europeana.eu/rights/rr-f/"
+  )
+  put_map("isils",
+    "DE-101": "Deutsche Nationalbibliothek"
+  )
+  put_map("urls",
+    "DE-101": "http://d-nb.info/"
+  )
+  put_map("suffix",
+    "__default":""
+  )
+  put_map("mediatype",
+    "__default": "unknown",
+    "mediatype_003" : "Text"
+  )
+
+  put_filemap("$[FLUX_DIR]timevoc.txt", "timevoc", sep_char:"\t")
+
+  put_var("dnb_subject","")
+end
+
+copy_field("leader","@leader6")
+substring("@leader6","6","1")
+copy_field("leader","@leader7")
+substring("@leader7","7","1")
+copy_field("leader","@leader19")
+substring("@leader19","19","1")
+
+copy_field("041? .a","@lang")
+
+paste("aggregation_id","~http://www.dnb.de/","001", join_char:"")
+
+if exists("003")
+  copy_field("003", "@isil")
+else
+  copy_field("040","@isil")
+end
+
+
+copy_field("@isil", "edm:dataProvider$de")
+lookup("edm:dataProvider$de","isils")
+
+
+paste("#edm:dataProvider", "~http://ld.zdb-services.de/data/organisations/", "@isil", join_char:"")
+
+
+add_field("edm:provider", "Deutsche Digitale Bibliothek")
+
+
+if any_equal("@leader7", "m")
+  if any_match("@leader19","[ b]")
+    add_field("@mat","Monografie")
+  end
+end
+
+if any_equal("@leader7", "s")
+  add_field("@mat","fortlaufendes Sammelwerk")
+end
+
+
+if any_match("@leader19","a")
+  add_field("@mat","Mehrbändiges Werk")
+end
+
+
+if any_match("@leader19","c")
+  add_field("@mat","Band")
+end
+
+copy_field("@isil","@isShownByUrl")
+lookup("@isShownByUrl","urls")
+
+copy_field("@isil","@isShownBySuffix")
+lookup("@isShownBySuffix","suffix")
+
+paste("edm:isShownAt","@isShownByUrl","001","@isShownBySuffix", join_char:"")
+
+#        <!-- mandatory ELIB, edm:object für Binärcontent, z. B. Thumbnails für
+#            Preview in Europeana, Problem: interner Binärcontent und Frage an Europeana:
+#            Ableitung von PDF zu jpg? <data name="edm:object" source="" /> -->
+#        <!-- mandatory ELIB, richtig verortet? in ELIB unter WebResource, in EDM
+#            Mapping Guidelines unter WebRessource (recommended) und unter ore:aggregation
+#            (mandatory) ; values s. http://pro.europeana.eu/documents/900548/0d423921-23e0-45fa-82a4-2ac72b3e6f38
+#            ; value für DNB-Objekte mit "Der Zugriff auf das Objekt ist unbeschränkt
+#            möglich." = zunächst http://www.europeana.eu/portal/rr-f.html gewählt, zu
+#            prüfen, ob ok! -->
+
+do list(path:"650?7|60017|61017|61017|630??|655?7|651?7|648??","var":"SUBJECT")
+  do list(path:"SUBJECT.0","var":"SUBJECT_ID")
+    if any_match("SUBJECT_ID","^\\(DE-588\\)(.*)$")
+      copy_field("SUBJECT.a","skos:Concept.$append.skos:prefLabel$de")
+      copy_field("SUBJECT_ID","skos:Concept.$last.~rdf:about")
+      replace_all("skos:Concept.$last.~rdf:about","^\\(DE-588\\)(.*)$","http://d-nb.info/gnd/$1")
+    end
+  end
+end
+
+do list(path:"2603 ","var":"$i")
+  do list(path:"$i.b","var":"$b")
+    unless exists("@publisherID")
+      copy_field("2603 .b", "260bcount.$append")
+      copy_field("@publisherList","@publisherCount")
+      if is_array("@publisherount")
+        count("@publisherCount")
+      else
+        add_field("@publisherCount","1")
+      end
+      paste("@publisherID", "~#/agent/","001","~-","@publisherCount", join_char:"")
+    end
+  end
+end
+
+
+paste("@orgID","~http://ld.zdb-services.de/data/organisations/","@isil",join_char:"")
+
+unless str_equal("$[sector]","")
+  add_field("@sectorID","http://ddb.vocnet.org/sparte/sparte$[sector]")
+end
+
+replace_all("@sectorID","sec_","")
+
+copy_field("@sectorID","edm:Agent.$append.#rdf:type")
+copy_field("@orgID","edm:Agent.$last.~rdf:about")
+copy_field("@isil","edm:Agent.$last.skos:prefLabel$de")
+lookup("edm:Agent.$last.skos:prefLabel$de","isils")
+
+copy_field("@sectorID", "skos:Concept.$append.~rdf:about")
+unless str_equal("$[sector]","")
+  add_field("skos:Concept.$last.skos:notation","$[sector]")
+end
+
+paste("@cEventID", "~#/event/", "001", "~-c", join_char:"")
+
+paste("@pEventID", "~#/event/", "001", "~-p", join_char:"")
+
+
+copy_field("@publisherID","edm:Agent.$append.~rdf:about")
+do list(path:"2603 .b","var":"$i")
+  unless exists("edm:Agent.$last.skos:prefLabel$de")
+    copy_field("$i","edm:Agent.$last.skos:prefLabel$de")
+    copy_field("@pEventID","edm:Agent.$last.#edm:wasPresent")
+  end
+end
+
+do list(path:"2603 ","var":"$i")
+  do list(path:"$i.a","var":"$a")
+    unless exists("@place")
+      copy_field("$a","@place")
+      copy_field("$a","@placeList.$append")
+      copy_field("@placeList","@placeCount")
+      if is_array("@placeCount")
+        count("@placeCount")
+      else
+        add_field("@placeCount","1")
+      end
+    end
+  end
+end
+replace_all("@place"," \\[?u.a.\\]?.*$","")
+
+if exists("@place")
+  paste("@placeID","~#/place/","001","~_place","@placeCount",join_char:"")
+end
+
+do list(path:"260[ 3] ","var":"$i")
+  do list(path:"$i.c","var":"$c")
+    copy_field("$c","@timespanList.$append")
+  end
+end
+
+if exists("@timespanList")
+  unless exists("@timespanList.2")
+    copy_field("@timespanList.1","@timespan")
+    paste("@timeID","~#/timespan/","001","~_timespan1",join_char:"")
+  end
+end
+
+add_field("@mediatypeID","$[media_type]")
+lookup("@mediatypeID","mediatype")
+prepend("@mediatypeID","http://ddb.vocnet.org/medientyp/")
+
+copy_field("@isil","@recordIDUrl")
+lookup("@recordIDUrl","urls")
+
+copy_field("@isil","@recordIDSuffix")
+lookup("@recordIDSuffix","suffix")
+
+paste("@recordID","@recordIDUrl","001","@recordIDSuffix", join_char:"")
+
+
+do list(path:"1001 |1101 |7001 |7101", "var":"CREATOR")
+  do list(path: "CREATOR.0", "var":"CREATORID")
+    if any_match("CREATORID", "^\\(DE-588\\)(.*)$")
+      copy_field("CREATORID","edm:Agent.$append.~rdf:about")
+      replace_all("edm:Agent.$last.~rdf:about", "^\\(DE-588\\)(.*)$","http://d-nb.info/gnd/$1")
+      copy_field("CREATOR.a","edm:Agent.$last.skos:prefLabel$de")
+      copy_field("@cEventID","edm:Agent.$last.#edm:wasPresent")
+    end
+  end
+end
+
+
+copy_field("@cEventID","edm:Event.$append.~rdf:about")
+add_field("edm:Event.$last.edm:hasType", "http://terminology.lido-schema.org/lido00012")
+do list(path:"edm:Agent","var":"AGENT")
+  if any_match("AGENT.~rdf:about", "http://d-nb.info/gnd/.*")
+    copy_field("AGENT.~rdf:about", "edm:Event.$last.#crm:P11_had_participant.$append")
+  end
+end
+
+copy_field("@pEventID","edm:Event.$append.~rdf:about")
+add_field("edm:Event.$last.edm:hasType", "http://terminology.lido-schema.org/lido00228")
+copy_field("@publisherID", "edm:Event.$last.#crm:P11_had_participant.$append")
+copy_field("@timeID", "edm:Event.$last.#edm:occuredAt")
+copy_field("@placeID", "edm:Event.$last.#edm:happenedAt")
+
+
+
+
+copy_field("@placeID","edm:Place.~rdf:about")
+copy_field("@place","edm:Place.skos:prefLabel")
+
+
+if exists("@timeID")
+  copy_field("@timeID","edm:TimeSpan.~rdf:about")
+  do list(path:"2603 ","var":"$i")
+    copy_field("$i.c","edm:TimeSpan.skos:notation")
+  end
+end
+
+
+
+
+copy_field("@mediatypeID","skos:Concept.$append.~rdf:about")
+unless str_equal("$[media_type]","")
+  add_field("skos:Concept.$last.skos:notation","$[media_type]")
+end
+
+
+copy_field("@lang","dcterms:LinguisticSystem.rdf:value")
+paste("dcterms:LinguisticSystem.~rdf:about","~http://id.loc.gov/vocabulary/iso639-2/","@lang", join_char:"")
+
+
+copy_field("@isil","edm:rights")
+lookup("edm:rights","rights")
+
+add_field("#dcterms:rights","http://creativecommons.org/publicdomain/zero/1.0/")
+
+copy_field("@recordID","edm:ProvidedCHO.~rdf:about")
+
+copy_field("@cEventID","edm:ProvidedCHO.#edm:wasPresent.$append")
+copy_field("@pEventID","edm:ProvidedCHO.#edm:wasPresent.$append")
+
+copy_field("@mat","edm:ProvidedCHO.dc:type")
+
+add_field("edm:ProvidedCHO.edm:type","TEXT")
+
+copy_field("2603 .b","edm:ProvidedCHO.dc:publisher")
+
+unless any_equal("300??.a","Online-Ressource")
+  copy_field("300??.a","edm:ProvidedCHO.dcterms:extent")
+end
+
+
+copy_field("@lang","edm:ProvidedCHO.dc:language")
+
+paste("edm:ProvidedCHO.#dcterms:language","~http://id.loc.gov/vocabulary/iso639-2/","@lang",join_char:"")
+
+
+if exists("490??")
+  do list(path:"490??","var":"$i")
+    do list(path:"$i.a", "var":"$j")
+      copy_field("$j", "$i.label.$append")
+    end
+    join_field("$i.label", " / ")
+
+    do list(path:"$i.v", "var":"$j")
+      copy_field("$j", "$i.numbering.$append")
+    end
+    join_field("$i.numbering")
+    prepend("$i.numbering"," ; ")
+    paste("edm:ProvidedCHO.dcterms:bibliographicCitation","$i.label","$i.numbering", join_char:"")
+  end
+end
+
+copy_field("1[10]01 .a","edm:ProvidedCHO.dc:creator.$append")
+
+copy_field("7[10]01 .a","edm:ProvidedCHO.dc:contributor.$append")
+
+
+do list(path:"830??|800??|810??|811??","var":"$i")
+  do list(path:"$i.w","var":"$j")
+    if any_match("$j","^\\(DE-101\\)(.*)$")
+      copy_field("$j","edm:ProvidedCHO.#dcterms:isPartOf.$append")
+    end
+  end
+end
+
+do list(path:"650?7|60017|61017|61017|630??|655?7|651?7|648??","var":"$SUBJECT")
+  copy_field("$SUBJECT.a","edm:ProvidedCHO.dc:subject.$append")
+  do list(path:"$SUBJECT.0","var":"$SUBJECT_ID")
+    if any_match("$SUBJECT_ID","^\\(DE-588\\)(.*)$")
+      copy_field("$SUBJECT_ID","edm:ProvidedCHO.#dc:subject.$append")
+      replace_all("edm:ProvidedCHO.#dc:subject.$last","^\\(DE-588\\)(.*)$","http://d-nb.info/gnd/$1")
+    end
+  end
+end
+
+replace_all("edm:ProvidedCHO.#dcterms:isPartOf.*","^\\(DE-101\\)(.*)$","http://d-nb.info/$1")
+
+
+paste("edm:ProvidedCHO.dc:title","24510.a","24510.b",join_char:" : ")
+
+if exists("@timeID")
+  copy_field("260[ 3] .c","edm:ProvidedCHO.dcterms:issued")
+end
+
+copy_field("250 .a","edm:ProvidedCHO.dc:description.$append")
+copy_field("502??.a","edm:ProvidedCHO.dc:description.$append")
+
+do list(path:"245 ?|490 ?|800 ?|810 ?|811 ?|830 ?","var":"$i")
+  copy_field("$i.[nv]", "@position")
+end
+
+unless exists("@position")
+  add_field("@position","-1")
+end
+
+paste("edm:ProvidedCHO.ddb:techinfo","~aggregation_entity:false; position:", "@position",join_char:"")
+
+unless str_equal("$[dnb_subject]","")
+  add_field("edm:ProvidedCHO.#dc:subject", "$[dnb_subject]")
+  add_field("@dnbSubjectID","$[dnb_subject]")
+end
+
+do list(path:"85640","var":"$i")
+  if any_match("$i.x","^Langzeitarchivierung.*")
+    copy_field("$i.u","@urn.~rdf:about")
+  elsif any_equal("$i.x","Resolving-System")
+    copy_field("$i.u","@urn.~rdf:about")
+  end
+
+  if any_match("$i.x","^Langzeitarchivierung.*")
+    copy_field("$i.u","edm:WebResource.$append.~rdf:about")
+  elsif any_equal("$i.x","Resolving-System")
+    copy_field("$i.u","edm:WebResource.$append.~rdf:about")
+  end
+  copy_field("@mediatypeID","edm:WebResource.$last.dc:type")
+  add_field("edm:WebResource.$last.dcterms:rights", "http://www.deutsche-digitale-bibliothek.de/lizenzen/rv-fz/")
+end
+
+retain("edm*","dc*","skos*", "aggregation_id", "#*")

@@ -1,0 +1,60 @@
+unless exists("name")
+  reject()
+end
+
+# Undo preexisting order for setting order for CSV.
+move_field("count","@count")
+move_field("nid","@nid")
+move_field("katlevel","@katlevel")
+move_field("satzart","@satzart")
+move_field("name","@name")
+move_field("sysnummer","@sysnummer")
+move_field("entcode","@entcode")
+move_field("syn","@syn")
+
+
+if exists("@count")
+  copy_field("@count","count")
+else
+  add_field("count","0")
+end
+
+copy_field("_id","id")
+
+
+copy_field("@nid","nid")
+copy_field("@satzart","satzart")
+copy_field("@katlevel","katlevel")
+
+if exists("@name")
+  copy_field("@name","name")
+else
+  add_field("name","")
+end
+if exists("@sysnummer")
+  copy_field("@sysnummer","sys")
+  replace_all("sys",";",",")
+else
+  add_field("sys","")
+end
+if exists("@entcode")
+  copy_field("@entcode","ent")
+else
+  add_field("ent","")
+end
+if exists("@syn")
+  copy_field("@syn","syn")
+else
+  add_field("syn","")
+end
+
+retain("count",
+  "id",
+  "nid",
+  "katlevel",
+  "satzart",
+  "name",
+  "sys",
+  "ent",
+  "syn"
+)

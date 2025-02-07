@@ -28,7 +28,7 @@ stream-to-triples|
 sort-triples(by="subject")|
 collect-triples|
 filter(FLUX_DIR + "filter.xml")|
-//encode-formeta|
-//write("stdout");
-stream-to-index(FLUX_DIR + "id.xml", indexpath="Tp_ix");
+encode-formeta|
+write("stdout");
+//stream-to-index(FLUX_DIR + "id.xml", indexpath="Tp_ix");
 

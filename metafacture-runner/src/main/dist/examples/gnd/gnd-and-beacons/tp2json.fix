@@ -1,0 +1,52 @@
+
+# <!-- Accept only Tp records -->
+unless any_match("002@.0", ".p.*")
+  reject()
+end
+
+do put_macro("gndPersonCombinedLabel") # in contrast to morph this is not normalizing utf 8
+  paste("$[field].@combinedLabel","$[field].P", "$[field].a", "~, ", "$[field].d", join_char:"")
+  replace_all("$[field].@combinedLabel",", $","")
+  if exists("$[field].c")
+    paste("$[field].@combinedLabel", "$[field].@combinedLabel", "$[field].c")
+  end
+  copy_field("$[field].n","$[field].pre.$append")
+  copy_field("$[field].l","$[field].pre.$append")
+  copy_field("$[field].g","$[field].pre.$append")
+  join_field("$[field].pre",", ")
+  replace_all("$[field].pre","^(.*)$"," <$1>")
+  if exists("$[field].pre")
+    paste("$[field].@combinedLabel", "$[field].@combinedLabel", "$[field].pre", join_char:"")
+  end
+  copy_field("$[field].@combinedLabel", "$[out]")
+end
+
+
+copy_field("_id","id")
+add_field("type","person")
+add_field("thumbnail.link","http://art-eater.com/wp-content/uploads/2012/08/ecce_mono.jpg")
+add_field("thumbnail.caption","Fresco by Cecilia Giménez (2012)")
+
+move_field("seeAlso","seeAlso[]")
+
+call_macro("gndPersonCombinedLabel", field:"028A", out:"person.name")
+
+copy_field("050G.b","person.description")
+
+do list(path:"028@","var": "VARNAME")
+  call_macro("gndPersonCombinedLabel", field:"VARNAME", out:"person.variantname[].$append")
+end
+
+copy_field("0032Aa.a","person.birth")
+replace_all("person.birth"," ","")
+replace_all("person.birth","^((\\d+?))-","$1")
+replace_all("person.death"," ","")
+replace_all("person.death","-((\\d+?))-$","$1")
+
+do list(path:"032Fa","var":"OCCUPATION")
+  do list(path:"OCCUPATION.a","var":"$a")
+    copy_field("$a","person.occupation[].$append")
+  end
+end
+
+retain("id","type","thumbnail","seeAlso[]","person")

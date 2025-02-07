@@ -1,0 +1,9 @@
+if any_match("002@.0","^Tp.*")
+  if any_match("041R.a",".*[Aa][Rr][Zz][Tt].*")
+    nothing()
+  else
+    reject()
+  end
+else
+  reject()
+end

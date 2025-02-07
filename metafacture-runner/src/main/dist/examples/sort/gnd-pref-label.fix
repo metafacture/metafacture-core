@@ -1,0 +1,129 @@
+do put_macro("gndPersonCombinedLabel") # in contrast to morph this is not normalizing utf 8
+  paste("$[field].@combinedLabel","$[field].P", "$[field].a", "~, ", "$[field].d", join_char:"")
+  replace_all("$[field].@combinedLabel",", $","")
+  if exists("$[field].c")
+    paste("$[field].@combinedLabel", "$[field].@combinedLabel", "$[field].c")
+  end
+  copy_field("$[field].n","$[field].add.$append")
+  copy_field("$[field].l","$[field].add.$append")
+  copy_field("$[field].g","$[field].add.$append")
+  join_field("$[field].add",", ")
+  replace_all("$[field].add","^(.*)$"," <$1>")
+  if exists("$[field].add")
+    paste("$[field].@combinedLabel", "$[field].@combinedLabel", "$[field].add", join_char:"")
+  end
+  copy_field("$[field].@combinedLabel", "$[out]")
+end
+
+do put_macro("gndCorporationCombinedLabel") # in contrast to morph this is not normalizing utf 8
+  if any_equal("@type","b")
+    copy_field("$[field].n","$[field].add.$append")
+    copy_field("$[field].l","$[field].add.$append")
+    copy_field("$[field].g","$[field].add.$append")
+    join_field("$[field].add",", ")
+    replace_all("$[field].add","^(.*)$"," <$1>")
+    copy_field("$[field].a","$[field].@combinedLabel")
+    if exists("$[field].add")
+      paste("$[field].@combinedLabel", "$[field].@combinedLabel", "$[field].add", join_char:"")
+    end
+    if exists("$[field].b")
+      paste("$[field].@combinedLabel", "$[field].@combinedLabel", "~ / ", "$[field].b", join_char:"")
+    end
+    copy_field("$[field].@combinedLabel", "$[out]")
+  end
+end
+
+do put_macro("gndConferenceCombinedLabel") # in contrast to morph this is not normalizing utf 8
+  if any_equal("@type","f")
+    copy_field("$[field].g","$[field].add.$append")
+    copy_field("$[field].n","$[field].add.$append")
+    copy_field("$[field].d","$[field].add.$append")
+    copy_field("$[field].c","$[field].add.$append")
+    join_field("$[field].add",", ")
+    replace_all("$[field].add","^(.*)$"," <$1>")
+    if exists("$[field].b")
+      paste("$[field].@combinedLabel", "$[field].a", "~ / ", "$[field].b", join_char:"")
+    else
+      copy_field("$[field].a","$[field].@combinedLabel")
+    end
+    if exists("$[field].add")
+      paste("$[field].@combinedLabel", "$[field].@combinedLabel", "$[field].add", join_char:"")
+    end
+    copy_field("$[field].@combinedLabel", "$[out]")
+  end
+end
+
+
+do put_macro("gndGeolocationCombinedLabel") # in contrast to morph this is not normalizing utf 8
+  if any_equal("@type","g")
+    copy_field("$[field].z","$[field].add.$append")
+    copy_field("$[field].g","$[field].add.$append")
+    join_field("$[field].add",", ")
+    replace_all("$[field].add","^(.*)$"," <$1>")
+    if exists("$[field].b")
+      paste("$[field].@combinedLabel", "$[field].a", "~ / ", "$[field].x", join_char:"")
+    else
+      copy_field("$[field].a","$[field].@combinedLabel")
+    end
+    if exists("$[field].add")
+      paste("$[field].@combinedLabel", "$[field].@combinedLabel", "$[field].add", join_char:"")
+    end
+    copy_field("$[field].@combinedLabel", "$[out]")
+  end
+end
+
+do put_macro("gndSubjectCombinedLabel") # in contrast to morph this is not normalizing utf 8
+  if any_equal("@type","s")
+    copy_field("$[field].g","$[field].add.$append")
+    join_field("$[field].add",", ")
+    replace_all("$[field].add","^(.*)$"," <$1>")
+    copy_field("$[field].a","$[field].@combinedLabel")
+    if exists("$[field].add")
+      paste("$[field].@combinedLabel", "$[field].@combinedLabel", "$[field].add", join_char:"")
+    end
+    copy_field("$[field].@combinedLabel", "$[out]")
+  end
+end
+
+do put_macro("gndWorkCombinedLabel") # in contrast to morph this is not normalizing utf 8
+  if any_equal("@type","u")
+    copy_field("$[field].f","$[field].add.$append")
+    copy_field("$[field].g","$[field].add.$append")
+    copy_field("$[field].n","$[field].add.$append")
+    join_field("$[field].add",", ")
+    replace_all("$[field].add","^(.*)$"," <$1>")
+    if exists("$[field].p")
+      paste("$[field].@combinedLabel", "$[field].a", "~ / ", "$[field].p", join_char:"")
+    else
+      copy_field("$[field].a","$[field].@combinedLabel")
+    end
+    if exists("$[field].add")
+      paste("$[field].@combinedLabel", "$[field].@combinedLabel", "$[field].add", join_char:"")
+    end
+    copy_field("$[field].@combinedLabel", "$[out]")
+  end
+end
+
+copy_field("002@.0","@type")
+substring("@type","1","1")
+
+do list(path:"028A","var":"PERSONNAME")
+  call_macro("gndPersonCombinedLabel",field:"PERSONNAME",out:"name")
+end
+do list(path:"029A","var":"CORPORATIONNAME")
+  call_macro("gndCorporationCombinedLabel",field:"CORPORATIONNAME",out:"name")
+end
+do list(path:"030A","var":"CONFERENCENAME")
+  call_macro("gndConferenceCombinedLabel",field:"CONFERENCENAME",out:"name")
+end
+do list(path:"065A","var":"GEONAME")
+  call_macro("gndGeolocationCombinedLabel",field:"GEONAME",out:"name")
+end
+do list(path:"041A","var":"SUBJECTNAME")
+  call_macro("gndSubjectCombinedLabel",field:"SUBJECTNAME",out:"name")
+end
+do list(path:"022A","var":"WORKNAME")
+  call_macro("gndWorkCombinedLabel",field:"WORKNAME",out:"name")
+end
+
+retain("name")
