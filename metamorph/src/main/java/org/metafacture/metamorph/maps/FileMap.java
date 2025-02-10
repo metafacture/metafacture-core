@@ -290,4 +290,9 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
         return Collections.unmodifiableSet(map.keySet());
     }
 
+    @Override
+    public void close() throws IOException {
+        map.clear();
+        fileOpener.closeStream();
+    }
 }
