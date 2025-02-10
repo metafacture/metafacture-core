@@ -21,6 +21,7 @@ import org.metafacture.metamorph.api.MorphExecutionException;
 import org.metafacture.metamorph.api.helpers.AbstractReadOnlyMap;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -60,7 +61,7 @@ import java.util.regex.Pattern;
  *
  * @author Markus Michael Geipel
  */
-public final class FileMap extends AbstractReadOnlyMap<String, String> {
+public final class FileMap extends AbstractReadOnlyMap<String, String> implements Closeable {
 
     private final FileOpener fileOpener = new FileOpener();
     private final Map<String, String> map = new HashMap<>();
@@ -290,4 +291,9 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> {
         return Collections.unmodifiableSet(map.keySet());
     }
 
+    @Override
+    public void close() throws IOException {
+        map.clear();
+        fileOpener.closeStream();
+    }
 }
