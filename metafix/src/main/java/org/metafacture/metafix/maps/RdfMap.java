@@ -394,6 +394,12 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
         return conn.getURL().toString();
     }
 
+    @Override
+    public void close() {
+        map.clear();
+        model.close();
+    }
+
     private enum Select {
         SUBJECT, OBJECT, DEFAULT
     }
