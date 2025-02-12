@@ -93,7 +93,7 @@ dependencies {
   provided "commons-dbcp:commons-dbcp:${versions.dbcp}"
 
   implementation('org.antlr:antlr-runtime') {
-    version { strictly versions.antlr }
+    version { strictly '3.2' }
   }
 }
 
