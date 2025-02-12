@@ -22,8 +22,8 @@ dependencies {
   implementation project(':metafacture-commons')
   implementation "org.slf4j:slf4j-api:${versions.slf4j}"
   implementation "org.apache.commons:commons-compress:${versions.commons_compress}"
-  implementation 'commons-io:commons-io:2.7'
-  implementation 'org.jsoup:jsoup:1.15.4'
+  implementation "commons-io:commons-io:${versions.commons_io}"
+  implementation "org.jsoup:jsoup:${versions.jsoup}"
   testImplementation "junit:junit:${versions.junit}"
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
   testRuntimeOnly "org.slf4j:slf4j-simple:${versions.slf4j}"

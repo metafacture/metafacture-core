@@ -24,6 +24,6 @@ dependencies {
   implementation project(':metafacture-commons')
   implementation project(':metafacture-io')
   testRuntimeOnly project(':metafacture-plumbing')
-  antlr 'org.antlr:antlr:3.5.2'
+  antlr "org.antlr:antlr:${versions.antlr}"
   testImplementation "junit:junit:${versions.junit}"
 }

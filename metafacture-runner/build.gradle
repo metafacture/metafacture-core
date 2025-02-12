@@ -88,9 +88,9 @@ dependencies {
   // work out of the box. By including the dependencies in the assembly without
   // putting them on the class path, the user can replace them easily with other
   // implementations if necessary:
-  provided 'simple-jndi:simple-jndi:0.11.4.1'
+  provided "simple-jndi:simple-jndi:${versions.jndi}"
   // Required for connection pooling with simple-jndi:
-  provided 'commons-dbcp:commons-dbcp:1.4'
+  provided "commons-dbcp:commons-dbcp:${versions.dbcp}"
 
   implementation('org.antlr:antlr-runtime') {
     version { strictly versions.antlr }

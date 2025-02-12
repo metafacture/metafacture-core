@@ -21,8 +21,8 @@ dependencies {
   api project(':metafacture-framework')
   implementation project(':metafacture-commons')
   implementation project(':metafacture-flowcontrol')
-  implementation 'org.dspace:oclc-harvester2:1.0.0'
-  implementation ('xalan:xalan:2.7.0') {
+  implementation "org.dspace:oclc-harvester2:${versions.dspace}"
+  implementation ("xalan:xalan:${versions.xalan}") {
     exclude group: 'xalan', module: 'serializer'
     exclude group: 'xercesImpl', module: 'xercesImpl'
     exclude group: 'xml-apis', module: 'xml-apis'

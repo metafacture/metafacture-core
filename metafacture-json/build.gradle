@@ -19,10 +19,10 @@ description = 'Modules for processing JSON data in Metafacture'
 
 dependencies {
   api project(':metafacture-framework')
-  implementation 'com.fasterxml.jackson.core:jackson-core:2.14.2'
-  implementation "com.fasterxml.jackson.core:jackson-databind:${versions.jackson_databind}"
-  implementation 'com.jayway.jsonpath:json-path:2.7.0'
-  implementation 'com.github.erosb:everit-json-schema:1.14.2'
+  implementation "com.fasterxml.jackson.core:jackson-core:${versions.jackson}"
+  implementation "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}"
+  implementation "com.jayway.jsonpath:json-path:${versions.jsonpath}"
+  implementation "com.github.erosb:everit-json-schema:${versions.everit}"
   testImplementation "junit:junit:${versions.junit}"
   testImplementation "org.mockito:mockito-core:${versions.mockito}"
   testImplementation "com.github.tomakehurst:wiremock-jre8:${versions.wiremock}"
