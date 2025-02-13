@@ -13,6 +13,9 @@ import org.eclipse.xtext.util.Modules2;
  */
 public class FixWebSetup extends FixStandaloneSetup {
 
+    /**
+     * Creates an instance of {@link FixWebSetup}.
+     */
     public FixWebSetup() {
     }
 

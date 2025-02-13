@@ -7,9 +7,17 @@ import org.metafacture.metafix.interpreter.FixInterpreter;
  */
 public class FixRuntimeModule extends AbstractFixRuntimeModule {
 
+    /**
+     * Creates an instance of {@link FixRuntimeModule}.
+     */
     public FixRuntimeModule() {
     }
 
+    /**
+     * Returns the class to bind to.
+     *
+     * @return the class
+     */
     public Class<FixInterpreter> bindFixInterpreter() {
         return FixInterpreter.class;
     }

@@ -44,6 +44,14 @@ public class XtextValidator {
         return true;
     }
 
+    /**
+     * Validates the resource.
+     *
+     * @param path  the path to the resource
+     * @param setup the resource setup
+     *
+     * @return true if the resource is valid, otherwise false
+     */
     public static boolean validate(final String path, final ISetup setup) {
         return validate(getResource(path, setup), setup);
     }
@@ -63,6 +71,16 @@ public class XtextValidator {
             .getInstance(XtextResourceSet.class).getResource(URI.createFileURI(absolutePath), true);
     }
 
+    /**
+     * Parses and validates the resource.
+     *
+     * @param path  the path to the resource
+     * @param setup the resource setup
+     *
+     * @return the resource
+     *
+     * @throws FixParseException if the resource is invalid
+     */
     public static XtextResource getValidatedResource(final String path, final ISetup setup) {
         final XtextResource resource = getResource(path, setup);
 
@@ -78,6 +96,12 @@ public class XtextValidator {
         return setup.getClass().getSimpleName();
     }
 
+    /**
+     * Validates the Xtext file. Exits with error code {@code 1} if validation
+     * fails.
+     *
+     * @param args the pathname of the Xtext file to validate
+     */
     public static void main(final String[] args) {
         if (args != null && args.length == 1) {
             System.exit(validate(args[0], new XtextStandaloneSetup()) ? 0 : 1);

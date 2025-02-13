@@ -62,7 +62,7 @@ public class Record extends Value.Hash {
     /**
      * Flags whether this record should be rejected.
      *
-     * @param reject true if this record should not be emitted, false otherwise
+     * @param reject true if this record should not be emitted
      */
     public void setReject(final boolean reject) {
         this.reject = reject;
@@ -71,7 +71,7 @@ public class Record extends Value.Hash {
     /**
      * Checks whether this record should be rejected.
      *
-     * @return true if this record should not be emitted, false otherwise
+     * @return true if this record should not be emitted, otherwise false
      */
     public boolean getReject() {
         return reject;
@@ -81,7 +81,8 @@ public class Record extends Value.Hash {
      * Checks whether this record contains the <i>virtual</i> field.
      *
      * @param field the field name
-     * @return true if this record contains the <i>virtual</i> field, false otherwise
+     *
+     * @return true if this record contains the <i>virtual</i> field, otherwise false
      */
     public boolean containsVirtualField(final String field) {
         return virtualFields.containsKey(field);
@@ -116,6 +117,7 @@ public class Record extends Value.Hash {
      * {@link #containsField(String) present}.
      *
      * @param field the field name
+     *
      * @return the metadata value
      */
     @Override
@@ -141,7 +143,7 @@ public class Record extends Value.Hash {
      * <i>virtual</i> fields into regular metadata fields if they're not already
      * {@link #containsField(String) present}.
      *
-     * @param field the field name
+     * @param field    the field name
      * @param newValue the new metadata value
      */
     @Override
@@ -154,6 +156,12 @@ public class Record extends Value.Hash {
         }
     }
 
+    /**
+     * Adds a nested field/value pair to this record.
+     *
+     * @param field    the field name
+     * @param newValue the new metadata value
+     */
     public void addNested(final String field, final Value newValue) {
         new FixPath(field).insertInto(this, InsertMode.APPEND, newValue);
     }
@@ -162,7 +170,7 @@ public class Record extends Value.Hash {
      * Sets a field/value pair to this record, replacing
      * any previous association of the field with a value.
      *
-     * @param field the field name
+     * @param field    the field name
      * @param newValue the new metadata value
      */
     public void set(final String field, final Value newValue) {
@@ -193,8 +201,8 @@ public class Record extends Value.Hash {
     /**
      * Transform this record by applying the given operator to all matching values for the given field.
      *
-     * @param field The field
-     * @param operator The operator
+     * @param field    the field
+     * @param operator the operator
      */
     public void transform(final String field, final UnaryOperator<String> operator) {
         final FixPath findPath = new FixPath(field);
@@ -219,8 +227,8 @@ public class Record extends Value.Hash {
     /**
      * Transform this record by consuming all matching values for the given field with the given consumer.
      *
-     * @param field The field
-     * @param consumer The consumer
+     * @param field    the field
+     * @param consumer the consumer
      */
     public void transform(final String field, final BiConsumer<TypeMatcher, Consumer<Value>> consumer) {
         final FixPath path = new FixPath(field);

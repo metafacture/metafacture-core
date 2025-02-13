@@ -1,0 +1,3 @@
+replace_all("002@.0","^.(.).*","$1") #only keep the second letter
+copy_field("002@.0","")
+retain("") # only keep the relevent element

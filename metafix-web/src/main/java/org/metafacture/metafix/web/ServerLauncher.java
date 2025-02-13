@@ -22,6 +22,11 @@ public class ServerLauncher { // checkstyle-disable-line ClassDataAbstractionCou
         throw new IllegalAccessError("Utility class");
     }
 
+    /**
+     * Starts an HTTP server for testing the web integration of your DSL.
+     *
+     * @param args unused
+     */
     public static void main(final String[] args) {
         final WebAppContext context = new WebAppContext();
         context.setResourceBase("src/main/webapp");

@@ -104,19 +104,42 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     private boolean strictnessHandlesProcessExceptions;
     private int entityCount;
 
+    /**
+     * Creates an instance of {@link Metafix}.
+     */
     public Metafix() {
         this(NO_VARS);
     }
 
-    public Metafix(final Map<String, String> newVars) {
-        init(newVars);
+    /**
+     * Creates an instance of {@link Metafix}.
+     *
+     * @param vars the Fix variables as a Map
+     */
+    public Metafix(final Map<String, String> vars) {
+        init(vars);
         recordTransformer = null;
     }
 
+    /**
+     * Creates an instance of {@link Metafix}.
+     *
+     * @param fixDef the Fix definition
+     *
+     * @throws IOException if an I/O error occurs
+     */
     public Metafix(final String fixDef) throws IOException {
         this(fixDef, NO_VARS);
     }
 
+    /**
+     * Creates an instance of {@link Metafix}.
+     *
+     * @param fixDef the Fix definition
+     * @param vars   the Fix variables as a Map
+     *
+     * @throws IOException if an I/O error occurs
+     */
     public Metafix(final String fixDef, final Map<String, String> vars) throws IOException {
         init(vars);
 
@@ -131,10 +154,21 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         }
     }
 
+    /**
+     * Creates an instance of {@link Metafix}.
+     *
+     * @param fixDef the Fix definition
+     */
     public Metafix(final Reader fixDef) {
         this(fixDef, NO_VARS);
     }
 
+    /**
+     * Creates an instance of {@link Metafix}.
+     *
+     * @param fixDef the Fix definition
+     * @param vars   the Fix variables as a Map
+     */
     public Metafix(final Reader fixDef, final Map<String, String> vars) {
         init(vars);
         recordTransformer = getRecordTransformer(fixDef);
@@ -160,6 +194,15 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         return fixDef.endsWith(FIX_EXTENSION);
     }
 
+    /**
+     * Resolves the path and caches the result. A valid URL is returned as is; a
+     * path starting with {@code .} is resolved relative to the current Fix
+     * file. The path will be normalized.
+     *
+     * @param path the path to resolve
+     *
+     * @return the resolved (and normalized) path
+     */
     public String resolvePath(final String path) {
         return pathCache.computeIfAbsent(path, this::resolvePathInternal);
     }
@@ -207,6 +250,13 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         return Paths.get(path).toAbsolutePath().normalize();
     }
 
+    /**
+     * Creates a record transformer for the Fix definition and caches the result.
+     *
+     * @param fixDef the Fix definition
+     *
+     * @return the record transformer
+     */
     public RecordTransformer getRecordTransformer(final String fixDef) {
         return fixCache.computeIfAbsent(fixDef, k -> new RecordTransformer(this, FixStandaloneSetup.parseFix(k)));
     }
@@ -215,10 +265,23 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         return new RecordTransformer(this, FixStandaloneSetup.parseFix(fixDef));
     }
 
+    /**
+     * Registers a record transformer as Fix macro under the given name.
+     *
+     * @param name  the name of the macro
+     * @param macro the record transformer
+     */
     public void putMacro(final String name, final RecordTransformer macro) {
         macros.put(name, macro);
     }
 
+    /**
+     * Retrieves the previously registered Fix macro.
+     *
+     * @param name the name of the macro
+     *
+     * @return the record transformer
+     */
     public RecordTransformer getMacro(final String name) {
         final RecordTransformer macro = macros.get(name);
 
@@ -229,6 +292,11 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         return macro;
     }
 
+    /**
+     * Gets the Fix expressions.
+     *
+     * @return the Fix expressions
+     */
     public List<Expression> getExpressions() {
         return expressions;
     }
@@ -380,14 +448,29 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         return streamReceiver;
     }
 
+    /**
+     * Gets the output stream receiver.
+     *
+     * @return the output stream receiver
+     */
     public StreamReceiver getStreamReceiver() {
         return outputStreamReceiver;
     }
 
+    /**
+     * Gets the Fix variables.
+     *
+     * @return the Fix variables
+     */
     public Map<String, String> getVars() {
         return vars;
     }
 
+    /**
+     * Gets the current record.
+     *
+     * @return the current record
+     */
     public Record getCurrentRecord() {
         return currentRecord;
     }
@@ -422,34 +505,78 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         return maps.computeIfAbsent(mapName, k -> new HashMap<>()).put(key, value);
     }
 
+    /**
+     * Sets the desired strictness level.
+     *
+     * @param strictness the strictness level
+     */
     public void setStrictness(final Strictness strictness) {
         this.strictness = strictness != null ? strictness : DEFAULT_STRICTNESS;
     }
 
+    /**
+     * Gets the selected strictness level.
+     *
+     * @return the strictness level
+     */
     public Strictness getStrictness() {
         return strictness;
     }
 
+    /**
+     * Flags whether {@link Strictness} should handle
+     * {@link FixProcessException process exceptions} as well.
+     *
+     * @param strictnessHandlesProcessExceptions true if Strictness should
+     *                                           handle process exceptions
+     */
     public void setStrictnessHandlesProcessExceptions(final boolean strictnessHandlesProcessExceptions) {
         this.strictnessHandlesProcessExceptions = strictnessHandlesProcessExceptions;
     }
 
+    /**
+     * Checks whether {@link Strictness} should handle
+     * {@link FixProcessException process exceptions} as well.
+     *
+     * @return true if Strictness should handle process exceptions
+     */
     public boolean getStrictnessHandlesProcessExceptions() {
         return strictnessHandlesProcessExceptions;
     }
 
+    /**
+     * Flags whether repeated fields should always be emitted as array entities.
+     *
+     * @param repeatedFieldsToEntities true if repeated fields should be emitted
+     *                                 as array entities
+     */
     public void setRepeatedFieldsToEntities(final boolean repeatedFieldsToEntities) {
         this.repeatedFieldsToEntities = repeatedFieldsToEntities;
     }
 
+    /**
+     * Checks whether repeated fields should always be emitted as array entities.
+     *
+     * @return true if repeated fields should be emitted as array entities
+     */
     public boolean getRepeatedFieldsToEntities() {
         return repeatedFieldsToEntities;
     }
 
+    /**
+     * Sets the field name for array entity members.
+     *
+     * @param entityMemberName the field name for array entity members
+     */
     public void setEntityMemberName(final String entityMemberName) {
         this.entityMemberName = entityMemberName;
     }
 
+    /**
+     * Gets the field name for array entity members.
+     *
+     * @return the field name for array entity members
+     */
     public String getEntityMemberName() {
         return entityMemberName;
     }
@@ -461,7 +588,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
     public enum Strictness {
 
         /**
-         * Aborts process by throwing an exception.
+         * Aborts the process by throwing an exception.
          */
         PROCESS {
             @Override
@@ -471,7 +598,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         },
 
         /**
-         * Ignores (skips) record and logs an error.
+         * Ignores (skips) the record and logs an error.
          */
         RECORD {
             @Override
@@ -482,7 +609,7 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
         },
 
         /**
-         * Ignores (skips) expression and logs a warning.
+         * Ignores (skips) the expression and logs a warning.
          */
         EXPRESSION {
             @Override
@@ -491,6 +618,12 @@ public class Metafix implements StreamPipe<StreamReceiver>, Maps {
             }
         };
 
+        /**
+         * Handles the exception based on the selected strictness level.
+         *
+         * @param exception the exception to be handled
+         * @param record    the current record
+         */
         public void handle(final MetafactureException exception, final Record record) {
             LOG.info("Current record: {}", record);
             handleInternal(exception, record);

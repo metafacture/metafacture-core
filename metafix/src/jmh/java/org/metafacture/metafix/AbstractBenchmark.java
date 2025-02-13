@@ -42,9 +42,15 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Thread)
 public abstract class AbstractBenchmark {
 
+    /**
+     * Creates an instance of {@link AbstractBenchmark}.
+     */
     public AbstractBenchmark() {
     }
 
+    /**
+     * Performs the benchmark.
+     */
     @Benchmark
     public void benchmark() {
         workload();

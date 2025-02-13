@@ -44,6 +44,9 @@ public class MetafixBenchmark extends FixParseBenchmark { // checkstyle-disable-
     })
     private String input;
 
+    /**
+     * Creates an instance of {@link MetafixBenchmark}.
+     */
     public MetafixBenchmark() {
     }
 

@@ -1,0 +1,8 @@
+unless exists("refed")
+  remove_field("ok","")
+end
+
+unless exists("ok")
+  remove_field("ok","")
+end
+

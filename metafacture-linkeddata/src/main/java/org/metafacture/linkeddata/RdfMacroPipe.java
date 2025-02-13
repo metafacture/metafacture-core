@@ -29,7 +29,7 @@ import org.metafacture.framework.helpers.DefaultStreamPipe;
  * @author Markus Michael Geipel
  *
  */
-@Description("Expands some macros for RDF/XML")
+@Description("Expands some macros for RDF/XML. When using Fix, configure `referenceMarker` to any char but the default `*`")
 @In(StreamReceiver.class)
 @Out(StreamReceiver.class)
 @FluxCommand("rdf-macros")
@@ -41,6 +41,8 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
     public static final String RDF_ABOUT = "~rdf:about";
     public static final String XML_LANG = "~xml:lang";
     private String autoAddedSubject = "";
+    private char referenceMarker = REFERENCE_MARKER;
+    private char languageMarker = LANGUAGE_MARKER;
 
     /**
      * Creates an instance of {@link RdfMacroPipe}.
@@ -55,6 +57,42 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
      */
     public void setAutoAddedSubject(final String autoAddedSubject) {
         this.autoAddedSubject = autoAddedSubject;
+    }
+
+    /**
+     * Sets the single char reference marker.
+     *
+     * @param referenceMarker the reference marker
+     */
+    public void setReferenceMarker(final String referenceMarker) {
+        this.referenceMarker = referenceMarker.charAt(0);
+    }
+
+    /**
+     * Gets the reference marker.
+     *
+     * @return the reference marker
+     */
+    public char getReferenceMarker() {
+        return referenceMarker;
+    }
+
+    /**
+     * Sets the single char language marker.
+     *
+     * @param languageMarker the language marker
+     */
+    public void setLanguageMarker(final String languageMarker) {
+        this.languageMarker = languageMarker.charAt(0);
+    }
+
+    /**
+     * Gets the language marker.
+     *
+     * @return the language marker
+     */
+    public char getLanguageMarker() {
+        return languageMarker;
     }
 
     @Override
@@ -87,8 +125,8 @@ public final class RdfMacroPipe extends DefaultStreamPipe<StreamReceiver> {
 
     @Override
     public void literal(final String name, final String value) {
-        final int index = name.indexOf(LANGUAGE_MARKER);
-        if (!name.isEmpty() && name.charAt(0) == REFERENCE_MARKER) {
+        final int index = name.indexOf(languageMarker);
+        if (!name.isEmpty() && name.charAt(0) == referenceMarker) {
             getReceiver().startEntity(name.substring(1));
             getReceiver().literal(RDF_REFERENCE, value);
             getReceiver().endEntity();

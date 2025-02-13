@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metamorph xmlns="http://www.culturegraph.org/metamorph" version="1">
+
+  <rules>
+    <combine name="dc:title" value="${title}${othtitleinfo}" flushWith="24510">
+      <data name="title" source="24510.a" />
+      <data name="othtitleinfo" source="24510.b">
+        <compose prefix=" : " />
+      </data>
+    </combine>
+  </rules>
+
+</metamorph>

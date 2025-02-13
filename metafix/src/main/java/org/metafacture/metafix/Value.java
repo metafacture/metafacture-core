@@ -82,10 +82,20 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         this.string = string;
     }
 
+    /**
+     * Creates an instance of {@link Value} representing an {@link Array}.
+     *
+     * @param array the Array
+     */
     public Value(final Array array) {
         this(array != null ? Type.Array : null, array, null, null);
     }
 
+    /**
+     * Creates an instance of {@link Value} representing an {@link Array}.
+     *
+     * @param array the array as a List
+     */
     public Value(final List<Value> array) {
         this(array != null ? new Array() : null);
 
@@ -94,10 +104,20 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         }
     }
 
+    /**
+     * Creates an instance of {@link Value} representing a {@link Hash}.
+     *
+     * @param hash the Hash
+     */
     public Value(final Hash hash) {
         this(hash != null ? Type.Hash : null, null, hash, null);
     }
 
+    /**
+     * Creates an instance of {@link Value} representing a {@link Hash}.
+     *
+     * @param hash the hash as a Map
+     */
     public Value(final Map<String, Value> hash) {
         this(hash != null ? new Hash() : null);
 
@@ -106,18 +126,40 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         }
     }
 
+    /**
+     * Creates an instance of {@link Value} representing a String.
+     *
+     * @param string the String
+     */
     public Value(final String string) {
         this(string != null ? Type.String : null, null, null, string);
     }
 
+    /**
+     * Creates an instance of {@link Value} representing a String.
+     *
+     * @param integer the string as an Integer
+     */
     public Value(final int integer) {
         this(String.valueOf(integer));
     }
 
+    /**
+     * Creates an instance of {@link Value} representing an {@link Array}.
+     *
+     * @return the new Value
+     */
     public static Value newArray() {
         return newArray(null);
     }
 
+    /**
+     * Creates an instance of {@link Value} representing an {@link Array}.
+     *
+     * @param consumer the optional Array consumer
+     *
+     * @return the new Value
+     */
     public static Value newArray(final Consumer<Array> consumer) {
         final Array array = new Array();
 
@@ -128,10 +170,22 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         return new Value(array);
     }
 
+    /**
+     * Creates an instance of {@link Value} representing a {@link Hash}.
+     *
+     * @return the new Value
+     */
     public static Value newHash() {
         return newHash(null);
     }
 
+    /**
+     * Creates an instance of {@link Value} representing a {@link Hash}.
+     *
+     * @param consumer the optional Hash consumer
+     *
+     * @return the new Value
+     */
     public static Value newHash(final Consumer<Hash> consumer) {
         final Hash hash = new Hash();
 
@@ -142,14 +196,29 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         return new Value(hash);
     }
 
+    /**
+     * Checks whether the Value is of type Array.
+     *
+     * @return true if the Value is of type Array, otherwise false
+     */
     public boolean isArray() {
         return isType(Type.Array);
     }
 
+    /**
+     * Checks whether the Value is of type Hash.
+     *
+     * @return true if the Value is of type Hash, otherwise false
+     */
     public boolean isHash() {
         return isType(Type.Hash);
     }
 
+    /**
+     * Checks whether the Value is of type String.
+     *
+     * @return true if the Value is of type String, otherwise false
+     */
     public boolean isString() {
         return isType(Type.String);
     }
@@ -158,10 +227,22 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         return type == targetType;
     }
 
+    /**
+     * Checks whether the Value has no type.
+     *
+     * @return true if the Value has no type, otherwise false
+     */
     public boolean isNull() {
         return isType(null);
     }
 
+    /**
+     * Checks whether the given Value has no type.
+     *
+     * @param value the Value
+     *
+     * @return true if the Value is {@code null} or has no type, otherwise false
+     */
     public static boolean isNull(final Value value) {
         return value == null || value.isNull();
     }
@@ -170,22 +251,60 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         return s.matches("\\d+");
     }
 
+    /**
+     * Extracts the Array from the Value.
+     *
+     * @return the Array
+     *
+     * @throws IllegalStateException if the Value is not an Array
+     */
     public Array asArray() {
         return extractType((m, c) -> m.ifArray(c).orElseThrow());
     }
 
+    /**
+     * Extracts the Hash from the Value.
+     *
+     * @return the Hash
+     *
+     * @throws IllegalStateException if the Value is not a Hash
+     */
     public Hash asHash() {
         return extractType((m, c) -> m.ifHash(c).orElseThrow());
     }
 
+    /**
+     * Extracts the String from the Value.
+     *
+     * @return the String
+     *
+     * @throws IllegalStateException if the Value is not a String
+     */
     public String asString() {
         return extractType((m, c) -> m.ifString(c).orElseThrow());
     }
 
+    /**
+     * Converts the given Value into a new Value representing an Array if it
+     * isn't already.
+     *
+     * @param value    the Value
+     * @param consumer the consumer
+     *
+     * @return the Array
+     */
     public static Value asList(final Value value, final Consumer<Array> consumer) {
         return isNull(value) ? null : value.asList(consumer);
     }
 
+    /**
+     * Converts the Value into a new Value representing an Array if it isn't
+     * already.
+     *
+     * @param consumer the consumer
+     *
+     * @return the Array
+     */
     public Value asList(final Consumer<Array> consumer) {
         if (isArray()) {
             if (consumer != null) {
@@ -205,10 +324,23 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         }
     }
 
+    /**
+     * Creates a TypeMatcher for the Value.
+     *
+     * @return the TypeMatcher
+     */
     public TypeMatcher matchType() {
         return new TypeMatcher(this);
     }
 
+    /**
+     * Extracts a result based on the Value's type.
+     *
+     * @param <T>      the type of the result
+     * @param consumer the consumer
+     *
+     * @return the result
+     */
     public <T> T extractType(final BiConsumer<TypeMatcher, Consumer<T>> consumer) {
         final AtomicReference<T> result = new AtomicReference<>();
         consumer.accept(matchType(), result::set);
@@ -280,6 +412,11 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         return fieldPath.split(FIELD_PATH_SEPARATOR);
     }
 
+    /**
+     * Gets the Value's path.
+     *
+     * @return the path
+     */
     public String getPath() {
         return path;
     }
@@ -327,24 +464,61 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
             this.value = value;
         }
 
+        /**
+         * Performs the consumer if the Value represents an Array.
+         *
+         * @param consumer the consumer
+         *
+         * @return the TypeMatcher
+         *
+         * @throws IllegalStateException if already matching for Array
+         */
         public TypeMatcher ifArray(final Consumer<Array> consumer) {
             return match(Type.Array, consumer, value.array);
         }
 
+        /**
+         * Performs the consumer if the Value represents an Hash.
+         *
+         * @param consumer the consumer
+         *
+         * @return the TypeMatcher
+         *
+         * @throws IllegalStateException if already matching for Hash
+         */
         public TypeMatcher ifHash(final Consumer<Hash> consumer) {
             return match(Type.Hash, consumer, value.hash);
         }
 
+        /**
+         * Performs the consumer if the Value represents an String.
+         *
+         * @param consumer the consumer
+         *
+         * @return the TypeMatcher
+         *
+         * @throws IllegalStateException if already matching for String
+         */
         public TypeMatcher ifString(final Consumer<String> consumer) {
             return match(Type.String, consumer, value.string);
         }
 
+        /**
+         * Performs the consumer if the Value represents an unmatched type.
+         *
+         * @param consumer the consumer
+         */
         public void orElse(final Consumer<Value> consumer) {
             if (!expected.contains(value.type)) {
                 consumer.accept(value);
             }
         }
 
+        /**
+         * Throws an exception if the Value represents an unmatched type.
+         *
+         * @throws IllegalStateException if the Value represents an unmatched type
+         */
         public void orElseThrow() {
             orElse(v -> {
                 final String types = expected.stream().map(Type::name).collect(Collectors.joining(" or "));
@@ -428,6 +602,12 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         private Array() {
         }
 
+        /**
+         * Adds the given Value to the Array and appends the index number to its
+         * path.
+         *
+         * @param value the Value
+         */
         public void add(final Value value) {
             add(value, true);
         }
@@ -454,18 +634,42 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
             }
         }
 
+        /**
+         * Checks whether the Array contains no elements.
+         *
+         * @return true if the Array contains no elements, otherwise false
+         */
         public boolean isEmpty() {
             return list.isEmpty();
         }
 
+        /**
+         * Returns the number of elements in this Array.
+         *
+         * @return the number of elements in this Array
+         */
         public int size() {
             return list.size();
         }
 
+        /**
+         * Returns the element at the specified position in this Array.
+         *
+         * @param index the index of the element to return
+         *
+         * @return the element at the specified position in this Array
+         *
+         * @throws IndexOutOfBoundsException if the index is out of range
+         */
         public Value get(final int index) {
             return list.get(index);
         }
 
+        /**
+         * Returns a sequential Stream with this Array as its source.
+         *
+         * @return a sequential Stream over the elements in this Array
+         */
         public Stream<Value> stream() {
             return list.stream();
         }
@@ -521,6 +725,11 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
             return fieldSet;
         }
 
+        /**
+         * Performs the given consumer for each element of the Array.
+         *
+         * @param consumer the consumer
+         */
         public void forEach(final Consumer<Value> consumer) {
             list.forEach(consumer);
         }
@@ -561,6 +770,13 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
             }
         }
 
+        /**
+         * Removes the element at the specified position in this Array.
+         *
+         * @param index the index of the element to be removed
+         *
+         * @throws IndexOutOfBoundsException if the index is out of range
+         */
         public void remove(final int index) {
             list.remove(index);
         }
@@ -609,12 +825,19 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
          * Checks whether this hash contains the metadata field.
          *
          * @param field the field name
-         * @return true if this hash contains the metadata field, false otherwise
+         * @return true if this hash contains the metadata field, otherwise false
          */
         public boolean containsField(final String field) {
             return !findFields(field).isEmpty();
         }
 
+        /**
+         * Checks whether this Hash contains a Value at the given Fix path.
+         *
+         * @param fieldPath the Fix path
+         *
+         * @return true if this Hash contains a Value at the path, otherwise false
+         */
         public boolean containsPath(final String fieldPath) {
             final String[] path = split(fieldPath);
             final String field = path[0];
@@ -644,7 +867,7 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         /**
          * Checks whether this hash is empty.
          *
-         * @return true if this hash is empty, false otherwise
+         * @return true if this hash is empty, otherwise false
          */
         public boolean isEmpty() {
             return map.isEmpty();
@@ -709,6 +932,13 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
                 ));
         }
 
+        /**
+         * Retrieves the Value for the given field name.
+         *
+         * @param field the field name
+         *
+         * @return the Value
+         */
         public Value getField(final String field) {
             return map.get(field);
         }
@@ -723,14 +953,33 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
             return value;
         }
 
+        /**
+         * Retrieves the Value for the given field name represented as an Array.
+         *
+         * @param field    the field name
+         * @param consumer the consumer
+         *
+         * @return the Value
+         */
         public Value getList(final String field, final Consumer<Array> consumer) {
             return asList(get(field), consumer);
         }
 
+        /**
+         * Adds all values at the given field name.
+         *
+         * @param field  the field name
+         * @param values the values
+         */
         public void addAll(final String field, final List<String> values) {
             values.forEach(value -> add(field, new Value(value)));
         }
 
+        /**
+         * Adds all key/value pairs from the given Hash.
+         *
+         * @param hash the Hash
+         */
         public void addAll(final Hash hash) {
             hash.forEach(this::add);
         }
@@ -762,7 +1011,7 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
         /**
          * Removes the given field/value pair from this hash.
          *
-         * @param field the field name
+         * @param field the Fix path
          */
         public void remove(final String field) {
             final FixPath fixPath = new FixPath(field);
@@ -775,6 +1024,11 @@ public class Value implements JsonValue { // checkstyle-disable-line ClassDataAb
             }
         }
 
+        /**
+         * Removes the given field/value pair from this hash.
+         *
+         * @param field the field name
+         */
         public void removeField(final String field) {
             map.remove(field);
         }

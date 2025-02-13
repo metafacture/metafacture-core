@@ -1,0 +1,50 @@
+# 002@ not repeatable
+
+if any_match("002@.0", "^Tp.*$")
+  copy_field("002@.0","ok")
+end
+
+# DBSM:
+# (006U $0 “04p01*”) or (017A $a “yy”)
+if any_match("006U.0","04p01.*")
+  add_field("@value","DBSM|ALL")
+elsif any_equal("017A.a","yy")
+  add_field("@value","DBSM|ALL")
+
+#  DEA:
+#  (001@ $a 2””) or (209A $f “Exilarchiv” or 209A $f “HB/EB”)
+elsif any_equal("001@.a","2")
+  add_field("@value","DEA|ALL")
+elsif any_equal("209A.f","HB/EB")
+  add_field("@value","DEA|ALL")
+
+#  DMA:
+#  (002@ $0 “G*” or 002@ $0 “M*”) or (006U $0 “10,P01*”)
+
+elsif any_equal("002@.0","^[GM].*")
+  add_field("@value","DMA|ALL")
+
+elsif any_equal("006U.0","^10,P01.*")
+  add_field("@value","DMA|ALL")
+else
+  add_field("@value","ALL")
+end
+
+# Test if type variable fits
+
+if any_contain("@value","$[type]")
+  add_field("@value","$[type]")
+else
+  remove_field("@value")
+end
+
+do list(path: "041A*|028A*|029B*|028C*|028Q*|028P*|028F*|028M*|028D*|028E*", "var":"$i")
+  trim("$i.9")
+  to_var("$i.9","ref")
+  if exists("$i.9")
+    copy_field("@value","{to:$[ref]}refed")
+  end
+end
+
+retain("{to*","ok")
+

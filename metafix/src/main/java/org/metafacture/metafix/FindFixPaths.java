@@ -43,9 +43,15 @@ import java.io.IOException;
 @FluxCommand("find-fix-paths")
 
 public class FindFixPaths extends DefaultStreamPipe<ObjectReceiver<String>> {
+
     private final Metafix fix;
     private String objectPattern;
 
+    /**
+     * Creates an instance of {@link FindFixPaths}.
+     *
+     * @param objectPattern the pattern to match
+     */
     public FindFixPaths(final String objectPattern) {
         this.objectPattern = objectPattern;
         try {
@@ -103,4 +109,5 @@ public class FindFixPaths extends DefaultStreamPipe<ObjectReceiver<String>> {
     protected void onResetStream() {
         fix.resetStream();
     }
+
 }
