@@ -156,7 +156,7 @@ end
 
 # copy_field("008A.a","teilbest")
 
-do list(path:"041A*|041A","var":"$i") # Until https://github.com/metafacture/metafacture-core/issues/651 is fixed one hass to add "041A"
+do list(path:"041A*","var":"$i")
   trim("$i.9")
   to_var("$i.9","ref")
   if exists("$i.9")
