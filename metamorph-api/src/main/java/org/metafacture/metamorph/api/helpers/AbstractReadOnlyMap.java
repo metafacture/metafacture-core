@@ -16,7 +16,6 @@
 
 package org.metafacture.metamorph.api.helpers;
 
-import java.io.Closeable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -30,7 +29,7 @@ import java.util.Set;
  * @param <V> type of values
  * @author Markus Michael Geipel
  */
-public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V>, Closeable {
+public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V>, AutoCloseable {
 
     @Override
     public final int size() {
