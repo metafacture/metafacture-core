@@ -88,6 +88,9 @@ test {
 }
 
 task integrationTest(type: Exec, group: 'Verification') {
+  def installDist = ':metafacture-runner:installDist'
+  dependsOn installDist
+
   executable './integrationTest.sh'
 
   if (project.hasProperty('args')) {
@@ -96,10 +99,15 @@ task integrationTest(type: Exec, group: 'Verification') {
 
   if (project.hasProperty('profile')) {
     environment.METAFACTURE_INTEGRATION_TEST_PROFILE = project.getProperty('profile')
+    environment.METAFACTURE_INTEGRATION_TEST_PROFILE_DEPTH = project.hasProperty('profile.depth') ? project.getProperty('profile.depth') : 8
   }
 
   environment.METAFACTURE_INTEGRATION_TEST_DISABLE_TO_DO = System.getProperty('org.metafacture.metafix.disableToDo')
   environment.METAFACTURE_INTEGRATION_TEST_KEEP_TEMP = System.getProperty('org.metafacture.metafix.keepTemp')
+
+  doFirst {
+    environment.METAFACTURE_HOME = tasks.getByPath(installDist).destinationDir
+  }
 }
 
 task validateFixFile(type: JavaExec, group: 'Verification') {

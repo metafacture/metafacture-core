@@ -21,13 +21,15 @@ root_directory="$PWD"
 data_directory="$root_directory/src/test/resources/org/metafacture/metafix/integration"
 gradle_command="$root_directory/../gradlew"
 
+flux_command="$METAFACTURE_HOME/flux.sh"
+
 function parse_boolean() {
   [ "${1,,}" == true ]
 }
 
 parse_boolean "$METAFACTURE_INTEGRATION_TEST_DISABLE_TO_DO" && disable_todo=1 || disable_todo=
 parse_boolean "$METAFACTURE_INTEGRATION_TEST_KEEP_TEMP" && keep_temp=1 || keep_temp=
-parse_boolean "$METAFACTURE_INTEGRATION_TEST_PROFILE" && noprofile= || noprofile=no
+parse_boolean "$METAFACTURE_INTEGRATION_TEST_PROFILE" && profile=1 || profile=
 parse_boolean "$CI" && ci=1 || ci=
 
 [ -t 1 -a -x /usr/bin/colordiff ] && colordiff=colordiff || colordiff=cat
@@ -74,8 +76,19 @@ function rm_temp() {
 }
 
 function run_metafix() {
-  local file=$1; shift
-  $gradle_command --console=plain -p "$root_directory" :metafacture-runner:run --args="$file" -P${noprofile}profile="${file%.*}" $@
+  local file=$1 args=$2 opts=(); shift 2
+
+  if [ -r "$args" ]; then
+    opts+=($(<"$args"))
+  fi
+
+  if [ -n "$profile" ]; then
+    # See metafacture-runner/build.gradle (application)
+    opts+=("-XX:FlightRecorderOptions=stackdepth=${METAFACTURE_INTEGRATION_TEST_PROFILE_DEPTH:-8}")
+    opts+=("-XX:StartFlightRecording=dumponexit=true,filename=${file%.*}.jfr,settings=profile")
+  fi
+
+  FLUX_JAVA_OPTIONS="${opts[@]}" $flux_command "$file" "$@"
 }
 
 function run_catmandu() {
@@ -229,7 +242,7 @@ function run_tests() {
 
       metafix_start_time=$(current_time)
 
-      run_metafix "$test_directory/$metafix_file" $(cat "$metafix_command_args" 2>/dev/null || true) >"$metafix_command_output" 2>"$metafix_command_error"
+      run_metafix "$test_directory/$metafix_file" "$metafix_command_args" >"$metafix_command_output" 2>"$metafix_command_error"
       metafix_exit_status=$?
 
       metafix_elapsed_time=$(elapsed_time "$metafix_start_time")
@@ -275,6 +288,8 @@ function run_tests() {
 
   return $matched
 }
+
+[ -n "$METAFACTURE_HOME" -a -x "$flux_command" ] || die "Please install the metafacture-core distribution first and set the METAFACTURE_HOME environment variable to its path."
 
 start_time=$(current_time)
 
