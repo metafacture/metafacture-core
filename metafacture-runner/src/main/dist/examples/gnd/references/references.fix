@@ -1,4 +1,4 @@
-do list(path:"041A*|041A","var":"$i") # Until issue #651 is fixed one has to add "041A"
+do list(path:"041A*","var":"$i")
   copy_field("$i.9","relevantField.$append")
 end
 
