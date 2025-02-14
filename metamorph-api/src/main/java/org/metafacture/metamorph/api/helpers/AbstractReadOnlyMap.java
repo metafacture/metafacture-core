@@ -29,7 +29,7 @@ import java.util.Set;
  * @param <V> type of values
  * @author Markus Michael Geipel
  */
-public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V> {
+public abstract class AbstractReadOnlyMap<K, V> implements Map<K, V>, AutoCloseable {
 
     @Override
     public final int size() {
