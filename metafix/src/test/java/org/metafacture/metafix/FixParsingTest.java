@@ -29,7 +29,7 @@ public class FixParsingTest {
     @Test
     public void shouldParseSimple() throws Exception {
         parse(
-                "map(a,b)"
+                "copy_field(a,b)"
         );
     }
 
@@ -41,7 +41,9 @@ public class FixParsingTest {
                 "add_field(hello,\"w-o:r l/d\")",
                 "add_field(hello,'\tw\n\torld')",
                 "add_field(hello,'\\tw\\n\\torld')",
-                "add_field(hello,'\"world\"')"
+                "add_field(hello,'\"world\"')",
+                "add_field(\"hello\",world)",
+                "add_field('hello','world')"
         );
     }
 
@@ -50,17 +52,17 @@ public class FixParsingTest {
         parse(
                 "# simple field name mappings",
                 "",
-                "map(a,b)",
+                "copy_field(a,b)",
                 "",
                 "# nested field structure",
                 "",
-                "map(e1)",
-                "map(e1.e2)",
-                "map(e1.e2.d)",
+                "copy_field(e1,f1)",
+                "copy_field(e1.e2,f1)",
+                "copy_field(e1.e2.d,f1)",
                 "",
-                "# pass-through for unmapped fields",
+                "# pass-through for fields by default, use retain to only keep certain elements",
                 "",
-                "map(_else)",
+                "retain(f1, b)",
                 ""
         );
     }
@@ -90,15 +92,15 @@ public class FixParsingTest {
                 "",
                 "# Loops",
                 "",
-                "do list(path)",
+                "do list(path:'test')",
                 "\tadd_field(foo,bar)",
                 LITERAL_END,
                 "",
                 "# Nested expressions",
                 "",
-                "do marc_each()",
-                "\tif marc_has(f700)",
-                "\t\tmarc_map(f700a,authors.$append)",
+                "do list(path:'700??','var':'$i')",
+                "\tif any_match('$i.4','aut')",
+                "\t\tcopy_field('$i.a','authors.$append')",
                 "\t" + LITERAL_END,
                 LITERAL_END,
                 ""
