@@ -107,4 +107,8 @@ public final class RestMap extends AbstractReadOnlyMap<String, String> {
         charsetName = name;
     }
 
+    @Override
+    public void close() throws IOException {
+
+    }
 }
