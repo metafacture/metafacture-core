@@ -25,9 +25,9 @@ function parse_boolean() {
   [ "${1,,}" == true ]
 }
 
-parse_boolean "$METAFIX_DISABLE_TO_DO" && disable_todo=1 || disable_todo=
-parse_boolean "$METAFIX_INTEGRATION_TEST_PROFILE" && noprofile= || noprofile=no
-parse_boolean "$METAFIX_KEEP_TEMP" && keep_temp=1 || keep_temp=
+parse_boolean "$METAFACTURE_INTEGRATION_TEST_DISABLE_TO_DO" && disable_todo=1 || disable_todo=
+parse_boolean "$METAFACTURE_INTEGRATION_TEST_KEEP_TEMP" && keep_temp=1 || keep_temp=
+parse_boolean "$METAFACTURE_INTEGRATION_TEST_PROFILE" && noprofile= || noprofile=no
 parse_boolean "$CI" && ci=1 || ci=
 
 [ -t 1 -a -x /usr/bin/colordiff ] && colordiff=colordiff || colordiff=cat
@@ -166,7 +166,7 @@ function test_passed() {
 
     ((failed++)) || true
   else
-    if parse_boolean "$METAFIX_LOG_PASSED"; then
+    if parse_boolean "$METAFACTURE_INTEGRATION_TEST_LOG_PASSED"; then
       log "$color_test$1$color_reset: ${color_passed}PASSED$color_reset$3"
     fi
 

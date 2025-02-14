@@ -95,11 +95,11 @@ task integrationTest(type: Exec, group: 'Verification') {
   }
 
   if (project.hasProperty('profile')) {
-    environment.METAFIX_INTEGRATION_TEST_PROFILE = project.getProperty('profile')
+    environment.METAFACTURE_INTEGRATION_TEST_PROFILE = project.getProperty('profile')
   }
 
-  environment.METAFIX_DISABLE_TO_DO = System.getProperty('org.metafacture.metafix.disableToDo')
-  environment.METAFIX_KEEP_TEMP = System.getProperty('org.metafacture.metafix.keepTemp')
+  environment.METAFACTURE_INTEGRATION_TEST_DISABLE_TO_DO = System.getProperty('org.metafacture.metafix.disableToDo')
+  environment.METAFACTURE_INTEGRATION_TEST_KEEP_TEMP = System.getProperty('org.metafacture.metafix.keepTemp')
 }
 
 task validateFixFile(type: JavaExec, group: 'Verification') {
