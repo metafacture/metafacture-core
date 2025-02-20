@@ -31,6 +31,7 @@ import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.shared.PropertyNotFoundException;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -56,7 +57,7 @@ import java.util.function.UnaryOperator;
  *
  * @see org.metafacture.metamorph.maps.FileMap
  */
-public final class RdfMap extends AbstractReadOnlyMap<String, String> {
+public final class RdfMap extends AbstractReadOnlyMap<String, String> implements Closeable {
 
     public static final String SELECT = "select";
     public static final String TARGET = "target";
@@ -392,6 +393,12 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> {
         }
 
         return conn.getURL().toString();
+    }
+
+    @Override
+    public void close() {
+        map.clear();
+        model.close();
     }
 
     private enum Select {
