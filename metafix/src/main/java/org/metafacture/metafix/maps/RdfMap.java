@@ -398,7 +398,10 @@ public final class RdfMap extends AbstractReadOnlyMap<String, String> implements
     @Override
     public void close() {
         map.clear();
-        model.close();
+
+        if (model != null) {
+            model.close();
+        }
     }
 
     private enum Select {

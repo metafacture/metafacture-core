@@ -296,4 +296,5 @@ public final class FileMap extends AbstractReadOnlyMap<String, String> implement
         map.clear();
         fileOpener.closeStream();
     }
+
 }
