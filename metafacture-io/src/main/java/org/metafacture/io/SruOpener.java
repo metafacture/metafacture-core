@@ -1,22 +1,27 @@
 /* Copyright 2013 Pascal Christoph.
  * Licensed under the Eclipse Public License 1.0 */
 
-package org.metafacture.biblio;
+package org.metafacture.io;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.ObjectReceiver;
+import org.metafacture.framework.XmlReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
+import org.xml.sax.XMLReader;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 
 /**
  * Opens an SRU (Search Retrieval by URL) stream and passes a reader to the receiver.
@@ -26,9 +31,9 @@ import java.net.URL;
  */
 @Description("Opens a SRU stream and passes a reader to the receiver. The input should be the base URL of the SRU service to be retrieved from. Mandatory argument is: QUERY.")
 @In(String.class)
-@Out(Reader.class)
+@Out(XmlReceiver.class)
 @FluxCommand("open-sru")
-public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
+public final class SruOpener extends DefaultObjectPipe<String, XmlReceiver> {
 
     private static final String OPERATION = "searchRetrieve";
     private static final String RECORD_SCHEMA = "MARC21-xml";
@@ -38,6 +43,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     private static final int CONNECTION_TIMEOUT = 11000;
     private static final int MAXIMUM_RECORDS = 10;
     private static final int START_RECORD = 1;
+    private final XMLReader saxReader;
 
     private String operation = OPERATION;
     private String query;
@@ -56,6 +62,14 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
      * Creates an instance of {@link SruOpener}
      */
     public SruOpener() {
+        try {
+            final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+            parserFactory.setNamespaceAware(true);
+            saxReader = parserFactory.newSAXParser().getXMLReader();
+        }
+        catch (final ParserConfigurationException | SAXException e) {
+            throw new MetafactureException(e);
+        }
     }
 
     /**
@@ -171,20 +185,24 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         if (!userAgent.isEmpty()) {
             connection.setRequestProperty("User-Agent", userAgent);
         }
-        InputStream istream = getInputStream(connection);
-        try (
-            InputStreamReader inputStreamReader = new InputStreamReader(istream);
-        ) {
+        InputStream inputStream = getInputStream(connection);
+        try {
+            InputSource inputSource = new InputSource(inputStream);
+            saxReader.parse(inputSource);
+           // String sr = saxReader.getProperty("huhu").toString();
+           // System.out.println(sr);
+        }
+        catch (final IOException | SAXException e) {
+            throw new MetafactureException(e);
+        }
             System.out.println("srUrl="+srUrl);
             System.out.println("startRecord="+startRecord);
-            System.out.println("istream.length="+istream.available());
-            if (istream.available() < 768){ // we take it that this is a result without a record
+            System.out.println("istream.length="+inputStream.available());
+            if (inputStream.available() < 768){ // we take it that this is a result without a record
                 stopRetrieving = true;
             }
-
-            getReceiver().process(inputStreamReader);
+        //    getReceiver().process(saxReader);
         }
-    }
 
     private InputStream getInputStream(final HttpURLConnection connection) {
         try {
@@ -193,6 +211,21 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         catch (final IOException e) {
             stopRetrieving = true;
             return connection.getErrorStream();
+        }
+    }
+
+    private static final String SAX_PROPERTY_LEXICAL_HANDLER = "http://xml.org/sax/properties/lexical-handler";
+    @Override
+    protected void onSetReceiver() {
+        saxReader.setContentHandler(getReceiver());
+        saxReader.setDTDHandler(getReceiver());
+        saxReader.setEntityResolver(getReceiver());
+        saxReader.setErrorHandler(getReceiver());
+        try {
+            saxReader.setProperty(SAX_PROPERTY_LEXICAL_HANDLER, getReceiver());
+        }
+        catch (final SAXNotRecognizedException | SAXNotSupportedException e) {
+            throw new MetafactureException(e);
         }
     }
 
