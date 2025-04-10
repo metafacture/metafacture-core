@@ -91,6 +91,7 @@ Building metafacture-core from source is easy. All you need is git and JDK 11:
     ```bash
     $ ./gradlew publishToMavenLocal
     ```
+   In case you are building locally from a tag and you have no signing credentials you need to `touch .temp` before `./gradlew publishToMavenLocal` otherwise it will try to build a release and break due to missing signing.
 
 3. Create a distribution if you need one. The resulting distribution can be found in `metafacture-core/metafacture-runner/build/distributions/`:
     ```bash
