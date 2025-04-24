@@ -5,23 +5,31 @@ package org.metafacture.io;
 
 import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
-import org.metafacture.framework.XmlReceiver;
+import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
 import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
-import org.xml.sax.InputSource;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
-import org.xml.sax.XMLReader;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.Result;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 /**
  * Opens an SRU (Search Retrieval by URL) stream and passes a reader to the receiver.
@@ -31,9 +39,9 @@ import javax.xml.parsers.SAXParserFactory;
  */
 @Description("Opens a SRU stream and passes a reader to the receiver. The input should be the base URL of the SRU service to be retrieved from. Mandatory argument is: QUERY.")
 @In(String.class)
-@Out(XmlReceiver.class)
+@Out(java.io.Reader.class)
 @FluxCommand("open-sru")
-public final class SruOpener extends DefaultObjectPipe<String, XmlReceiver> {
+public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
     private static final String OPERATION = "searchRetrieve";
     private static final String RECORD_SCHEMA = "MARC21-xml";
@@ -43,8 +51,6 @@ public final class SruOpener extends DefaultObjectPipe<String, XmlReceiver> {
     private static final int CONNECTION_TIMEOUT = 11000;
     private static final int MAXIMUM_RECORDS = 10;
     private static final int START_RECORD = 1;
-    private final XMLReader saxReader;
-
     private String operation = OPERATION;
     private String query;
     private String recordSchema = RECORD_SCHEMA;
@@ -59,17 +65,9 @@ public final class SruOpener extends DefaultObjectPipe<String, XmlReceiver> {
 
 
     /**
-     * Creates an instance of {@link SruOpener}
+     * Default constructor
      */
     public SruOpener() {
-        try {
-            final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-            parserFactory.setNamespaceAware(true);
-            saxReader = parserFactory.newSAXParser().getXMLReader();
-        }
-        catch (final ParserConfigurationException | SAXException e) {
-            throw new MetafactureException(e);
-        }
     }
 
     /**
@@ -160,24 +158,42 @@ public final class SruOpener extends DefaultObjectPipe<String, XmlReceiver> {
                 throw new IllegalArgumentException("Missing mandatory parameter 'query'");
             }
             int retrievedRecords = 0;
-            while (!stopRetrieving && (totalRecords==0 || retrievedRecords < totalRecords)) {
-                if (totalRecords >0) {
-                    int yetToRetrieveRecords = retrievedRecords - totalRecords;
-                    if (yetToRetrieveRecords > maximumRecords) {
+            while (!stopRetrieving && (retrievedRecords < totalRecords)) {
+                if (totalRecords >0)  {
+                    int yetToRetrieveRecords = totalRecords - retrievedRecords;
+                    if (yetToRetrieveRecords < maximumRecords) {
                         maximumRecords = yetToRetrieveRecords;
                     }
                 }
-                retrieve(srUrl, startRecord); //todo: bis max lookup zuviel (bis der nämlich sehr klein ist => keine Ergebnisse mehr)
+                ByteArrayInputStream byteArrayInputStream = retrieve(srUrl, startRecord, maximumRecords);
+
+                TransformerFactory tf = TransformerFactory.newInstance();
+                Transformer t = tf.newTransformer();
+                DocumentBuilderFactory factory =DocumentBuilderFactory.newInstance();
+                DocumentBuilder docBuilder = factory.newDocumentBuilder();
+                Document xmldoc = docBuilder.parse(byteArrayInputStream);
+
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                Result result = new StreamResult(os);
+                t.transform(new DOMSource(xmldoc), result);
+
+                ByteArrayInputStream inputStream = new ByteArrayInputStream(os.toByteArray());
+
+                getReceiver().process(
+                    new InputStreamReader(inputStream));
+                t.setOutputProperty("omit-xml-declaration", "yes");
+                 //todo: bis max lookup zuviel (bis der nämlich sehr klein ist => keine Ergebnisse mehr)
                 startRecord = startRecord + maximumRecords;
                 retrievedRecords = retrievedRecords + maximumRecords;
             }
         }
-        catch (final IOException e) {
+        catch (final IOException | TransformerException | SAXException | ParserConfigurationException e) {
             throw new MetafactureException(e);
         }
+
     }
 
-    private void retrieve(StringBuilder srUrl, int startRecord) throws IOException {
+    private ByteArrayInputStream retrieve(StringBuilder srUrl, int startRecord, int maximumRecords) throws IOException {
         final URL urlToOpen = new URL(srUrl.toString() + "&maximumRecords=" + maximumRecords+"&startRecord=" + startRecord);
         final HttpURLConnection connection = (HttpURLConnection) urlToOpen.openConnection();
 
@@ -186,22 +202,16 @@ public final class SruOpener extends DefaultObjectPipe<String, XmlReceiver> {
             connection.setRequestProperty("User-Agent", userAgent);
         }
         InputStream inputStream = getInputStream(connection);
-        try {
-            InputSource inputSource = new InputSource(inputStream);
-            saxReader.parse(inputSource);
-           // String sr = saxReader.getProperty("huhu").toString();
-           // System.out.println(sr);
-        }
-        catch (final IOException | SAXException e) {
-            throw new MetafactureException(e);
-        }
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
             System.out.println("srUrl="+srUrl);
             System.out.println("startRecord="+startRecord);
             System.out.println("istream.length="+inputStream.available());
             if (inputStream.available() < 768){ // we take it that this is a result without a record
                 stopRetrieving = true;
             }
-        //    getReceiver().process(saxReader);
+        inputStream.transferTo(outputStream);
+        return new ByteArrayInputStream(outputStream.toByteArray());
         }
 
     private InputStream getInputStream(final HttpURLConnection connection) {
@@ -211,21 +221,6 @@ public final class SruOpener extends DefaultObjectPipe<String, XmlReceiver> {
         catch (final IOException e) {
             stopRetrieving = true;
             return connection.getErrorStream();
-        }
-    }
-
-    private static final String SAX_PROPERTY_LEXICAL_HANDLER = "http://xml.org/sax/properties/lexical-handler";
-    @Override
-    protected void onSetReceiver() {
-        saxReader.setContentHandler(getReceiver());
-        saxReader.setDTDHandler(getReceiver());
-        saxReader.setEntityResolver(getReceiver());
-        saxReader.setErrorHandler(getReceiver());
-        try {
-            saxReader.setProperty(SAX_PROPERTY_LEXICAL_HANDLER, getReceiver());
-        }
-        catch (final SAXNotRecognizedException | SAXNotSupportedException e) {
-            throw new MetafactureException(e);
         }
     }
 

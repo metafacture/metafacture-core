@@ -1,16 +1,6 @@
 package org.metafacture.io;
 
 import org.junit.Test;
-import org.metafacture.formatting.StreamLiteralFormatter;
-import org.metafacture.framework.ObjectReceiver;
-import org.metafacture.framework.XmlReceiver;
-import org.metafacture.xml.XmlDecoder;
-import org.metafacture.xml.XmlElementSplitter;
-import org.xml.sax.XMLReader;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
 
 public class SruOpenerTest {
 
@@ -21,12 +11,14 @@ public class SruOpenerTest {
     @Test
     public void test(){
         SruOpener    sruOpener = new SruOpener();
-        sruOpener.setReceiver(new ObjectReceiver<XmlReceiver> () {
+        RecordReader recordReader = new RecordReader();
+        recordReader.setReceiver(new ObjectStdoutWriter<String>());
+        sruOpener.setReceiver(recordReader);// {
 
 
-            @Override
+           /* @Override
             public void process(final XmlReceiver obj) {
-     /*           BufferedReader in = new BufferedReader(obj);
+              BufferedReader in = new BufferedReader(obj);
                 String line = null;
                 StringBuilder rslt = new StringBuilder();
                 while (true) {
@@ -38,38 +30,27 @@ public class SruOpenerTest {
                     }
                     rslt.append(line);
                 }*/
-                StreamLiteralFormatter streamLiteralFormatter = new StreamLiteralFormatter();
+      /*          StreamLiteralFormatter streamLiteralFormatter = new StreamLiteralFormatter();
                 ObjectStdoutWriter<String> objectStdoutWriter = new ObjectStdoutWriter<String>();
                 XmlElementSplitter xmlElementSplitter = new XmlElementSplitter();
                 streamLiteralFormatter.setReceiver(objectStdoutWriter);
                 xmlElementSplitter.setReceiver(streamLiteralFormatter);
-                xmlDecoder.setReceiver(xmlElementSplitter);
+                xmlDecoder.setReceiver(xmlElementSplitter);*/
+             //   System.out.println(rslt.toString());
+            //    resultCollector.append(obj);
+            //}
 
-
-                //    System.out.println(rslt.toString());
-                resultCollector.append(obj);
-            }
-
-            @Override
-            public void resetStream() {
-                ++resultCollectorsResetStreamCount;
-            }
-
-            @Override
-            public void closeStream() {
-
-            }
-        });
-
-       // sruOpener.setQuery("dnb.isil%3DDE-Sol1");
-        sruOpener.setQuery("WVN%3D24A05");
+        sruOpener.setQuery("dnb.isil%3DDE-Sol1");
+      //  sruOpener.setQuery("WVN%3D24A05");
         sruOpener.setRecordSchema("MARC21plus-xml");
         sruOpener.setVersion("1.1");
-        sruOpener.setStartRecord("1890");
-       // sruOpener.process("https://services.dnb.de/sru/dnb");
-        sruOpener.process("https://amsquery.stadt-zuerich.ch/sru/");
+      //  sruOpener.setStartRecord("5");
+        sruOpener.setMaximumRecords("5");
+        sruOpener.setTotal("6");
+      //  sruOpener.process("https://services.dnb.de/sru/dnb");
+        sruOpener.process("https://services.dnb.de/sru/zdb");
+       // sruOpener.process("https://amsquery.stadt-zuerich.ch/sru/");
 
-System.out.println(resultCollector.toString());
-        System.out.println(resultCollector.toString());
+//        System.out.println(resultCollector.toString());
     }
 }
