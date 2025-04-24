@@ -11,6 +11,7 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
@@ -59,7 +60,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
 
     private int maximumRecords = MAXIMUM_RECORDS;
     private int startRecord = START_RECORD;
-    private int totalRecords;
+    private int totalRecords = Integer.MAX_VALUE;
 
     private boolean stopRetrieving;
 
@@ -157,34 +158,37 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
             else {
                 throw new IllegalArgumentException("Missing mandatory parameter 'query'");
             }
-            int retrievedRecords = 0;
-            while (!stopRetrieving && (retrievedRecords < totalRecords)) {
-                if (totalRecords >0)  {
-                    int yetToRetrieveRecords = totalRecords - retrievedRecords;
+            int numberOfRecords = Integer.MAX_VALUE;
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer t = tf.newTransformer();
+            while (!stopRetrieving && (startRecord <  numberOfRecords)) {
+        /*        if (totalRecords >0)  {
+                    yetToRetrieveRecords = totalRecords - retrievedRecords;
                     if (yetToRetrieveRecords < maximumRecords) {
                         maximumRecords = yetToRetrieveRecords;
                     }
-                }
+                }*/
                 ByteArrayInputStream byteArrayInputStream = retrieve(srUrl, startRecord, maximumRecords);
 
-                TransformerFactory tf = TransformerFactory.newInstance();
-                Transformer t = tf.newTransformer();
+
                 DocumentBuilderFactory factory =DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = factory.newDocumentBuilder();
                 Document xmldoc = docBuilder.parse(byteArrayInputStream);
 
-                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                Element element = (Element)xmldoc.getElementsByTagName("numberOfRecords").item(0);
+                numberOfRecords=Integer.parseInt(element.getTextContent());
+
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
                 Result result = new StreamResult(os);
                 t.transform(new DOMSource(xmldoc), result);
-
                 ByteArrayInputStream inputStream = new ByteArrayInputStream(os.toByteArray());
 
                 getReceiver().process(
                     new InputStreamReader(inputStream));
+                tf = TransformerFactory.newInstance();
+                t = tf.newTransformer();
                 t.setOutputProperty("omit-xml-declaration", "yes");
-                 //todo: bis max lookup zuviel (bis der nämlich sehr klein ist => keine Ergebnisse mehr)
                 startRecord = startRecord + maximumRecords;
-                retrievedRecords = retrievedRecords + maximumRecords;
             }
         }
         catch (final IOException | TransformerException | SAXException | ParserConfigurationException e) {

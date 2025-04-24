@@ -44,7 +44,7 @@ public class SruOpenerTest {
       //  sruOpener.setQuery("WVN%3D24A05");
         sruOpener.setRecordSchema("MARC21plus-xml");
         sruOpener.setVersion("1.1");
-      //  sruOpener.setStartRecord("5");
+        sruOpener.setStartRecord("3029");
         sruOpener.setMaximumRecords("5");
         sruOpener.setTotal("6");
       //  sruOpener.process("https://services.dnb.de/sru/dnb");
