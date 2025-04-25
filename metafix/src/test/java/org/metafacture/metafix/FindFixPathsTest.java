@@ -46,7 +46,7 @@ public final class FindFixPathsTest {
     @Test
     public void testShouldFindPaths() {
         verify(
-                "a\t|\tAn ETL test",
+                "a.1\t|\tAn ETL test",
                 "c.2\t|\tETL what?");
     }
 
@@ -59,6 +59,7 @@ public final class FindFixPathsTest {
         finder.literal("b", "Dog");
         finder.literal("c", "");
         finder.literal("c", "ETL what?");
+        finder.literal("a", "An ETL test");
         finder.endRecord();
         finder.closeStream();
     }
@@ -72,7 +73,6 @@ public final class FindFixPathsTest {
             }
             ordered.verify(receiver, Mockito.times(2)).closeStream();
             ordered.verifyNoMoreInteractions();
-            Mockito.verifyNoMoreInteractions(receiver);
         }
         catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());
