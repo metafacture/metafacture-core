@@ -14,21 +14,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -61,9 +53,13 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     private int maximumRecords = MAXIMUM_RECORDS;
     private int startRecord = START_RECORD;
     private int totalRecords = Integer.MAX_VALUE;
+    int numberOfRecords = Integer.MAX_VALUE;
 
     private boolean stopRetrieving;
+    private int recordsRetrieved;
 
+    private String xmlDeclarationTemplate ="<?xml version=\"%s\" encoding=\"%s\"?>";
+    private String xmlDeclaration;
 
     /**
      * Default constructor
@@ -149,51 +145,83 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
     @Override
     public void process(final String baseUrl) {
 
-        try {
-
-            StringBuilder srUrl = new StringBuilder(baseUrl);
-            if (query != null) {
-                srUrl.append("?query=").append(query).append("&operation=").append(operation).append("&recordSchema=").append(recordSchema).append("&version=").append(version);
-            }
-            else {
-                throw new IllegalArgumentException("Missing mandatory parameter 'query'");
-            }
-            int numberOfRecords = Integer.MAX_VALUE;
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer t = tf.newTransformer();
-            while (!stopRetrieving && (startRecord <  numberOfRecords)) {
-        /*        if (totalRecords >0)  {
-                    yetToRetrieveRecords = totalRecords - retrievedRecords;
-                    if (yetToRetrieveRecords < maximumRecords) {
-                        maximumRecords = yetToRetrieveRecords;
-                    }
-                }*/
-                ByteArrayInputStream byteArrayInputStream = retrieve(srUrl, startRecord, maximumRecords);
-
-
-                DocumentBuilderFactory factory =DocumentBuilderFactory.newInstance();
-                DocumentBuilder docBuilder = factory.newDocumentBuilder();
-                Document xmldoc = docBuilder.parse(byteArrayInputStream);
-
-                Element element = (Element)xmldoc.getElementsByTagName("numberOfRecords").item(0);
-                numberOfRecords=Integer.parseInt(element.getTextContent());
-
-                ByteArrayOutputStream os = new ByteArrayOutputStream();
-                Result result = new StreamResult(os);
-                t.transform(new DOMSource(xmldoc), result);
-                ByteArrayInputStream inputStream = new ByteArrayInputStream(os.toByteArray());
-
-                getReceiver().process(
-                    new InputStreamReader(inputStream));
-                tf = TransformerFactory.newInstance();
-                t = tf.newTransformer();
-                t.setOutputProperty("omit-xml-declaration", "yes");
-                startRecord = startRecord + maximumRecords;
-            }
+        StringBuilder srUrl = new StringBuilder(baseUrl);
+        if (query != null) {
+            srUrl.append("?query=").append(query).append("&operation=").append(operation).append("&recordSchema=")
+                 .append(recordSchema).append("&version=").append(version);
+        } else {
+            throw new IllegalArgumentException("Missing mandatory parameter 'query'");
         }
-        catch (final IOException | TransformerException | SAXException | ParserConfigurationException e) {
+
+        try {
+            //get first document and add a starting root tag
+            Transformer t = TransformerFactory.newInstance().newTransformer();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getXmlDocsViaSru(srUrl)));
+            String line;
+            StringBuilder stringBuilder = new StringBuilder(1024 * 1024);
+            boolean rootTagAdded = false;
+            while ((line = bufferedReader.readLine()) != null) {
+                if(!rootTagAdded) {
+                    if (line.matches(".*searchRetrieveResponse.*")) {
+                        stringBuilder.append(xmlDeclaration+"\n");
+                        stringBuilder.append("<harvest>\n");
+                        rootTagAdded = true;
+                    }
+                }
+                stringBuilder.append(line+"\n");
+            }
+            getReceiver().process(new InputStreamReader(new ByteArrayInputStream(stringBuilder.toString().getBytes())));
+            while (!stopRetrieving && recordsRetrieved < totalRecords && (startRecord < numberOfRecords)) {
+                InputStream inputStream = getXmlDocsViaSru(srUrl);
+                getReceiver().process(new InputStreamReader(inputStream));
+            }
+            //close root tag
+            getReceiver().process(new InputStreamReader(new ByteArrayInputStream("</harvest>\n\n".getBytes())));
+        }
+        catch (TransformerConfigurationException | IOException e) {
             throw new MetafactureException(e);
         }
+    }
+
+    private InputStream  getXmlDocsViaSru(final StringBuilder srUrl ){
+         try {
+            ByteArrayInputStream byteArrayInputStream = retrieve(srUrl, startRecord, maximumRecords);
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = factory.newDocumentBuilder();
+            Document xmldoc = docBuilder.parse(byteArrayInputStream);
+
+        /*    Element newRoot = xmldoc.createElement("harvest");
+            newRoot.appendChild(xmldoc.getFirstChild());
+            xmldoc.appendChild(newRoot);*/
+
+             numberOfRecords =
+                     Integer.parseInt(((Element) xmldoc.getElementsByTagName("numberOfRecords").item(0)).getTextContent());
+             int recordPosition =
+                     Integer.parseInt(((Element) xmldoc.getElementsByTagName("recordPosition").item(0)).getTextContent());
+             int nextRecordPosition =
+                     Integer.parseInt(((Element) xmldoc.getElementsByTagName("nextRecordPosition").item(0)).getTextContent());
+
+             String xmlEncoding = xmldoc.getXmlEncoding();
+        String     xmlVersion  = xmldoc.getXmlVersion();
+        //<?xml version="1.0" encoding="UTF-8"?>
+             xmlDeclaration=String.format(xmlDeclarationTemplate,xmldoc.getXmlVersion(),xmldoc.getXmlEncoding());
+             recordsRetrieved = recordsRetrieved + nextRecordPosition - recordPosition;
+
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+            Result result = new StreamResult(os);
+            Transformer t = TransformerFactory.newInstance().newTransformer();
+             t.setOutputProperty("omit-xml-declaration", "yes");
+            t.transform(new DOMSource(xmldoc), result);
+
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(os.toByteArray());
+            startRecord = startRecord + maximumRecords;
+            return inputStream;
+
+        }       catch (final IOException | TransformerException | SAXException | ParserConfigurationException e) {
+            throw new MetafactureException(e);
+        }
+
 
     }
 
@@ -206,14 +234,9 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
             connection.setRequestProperty("User-Agent", userAgent);
         }
         InputStream inputStream = getInputStream(connection);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-            System.out.println("srUrl="+srUrl);
-            System.out.println("startRecord="+startRecord);
-            System.out.println("istream.length="+inputStream.available());
-            if (inputStream.available() < 768){ // we take it that this is a result without a record
-                stopRetrieving = true;
-            }
         inputStream.transferTo(outputStream);
         return new ByteArrayInputStream(outputStream.toByteArray());
         }

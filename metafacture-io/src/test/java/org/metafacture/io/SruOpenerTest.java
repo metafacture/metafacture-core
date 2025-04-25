@@ -44,9 +44,9 @@ public class SruOpenerTest {
       //  sruOpener.setQuery("WVN%3D24A05");
         sruOpener.setRecordSchema("MARC21plus-xml");
         sruOpener.setVersion("1.1");
-        sruOpener.setStartRecord("3029");
-        sruOpener.setMaximumRecords("5");
-        sruOpener.setTotal("6");
+        sruOpener.setStartRecord("4");
+        sruOpener.setMaximumRecords("1");
+        sruOpener.setTotal("2");
       //  sruOpener.process("https://services.dnb.de/sru/dnb");
         sruOpener.process("https://services.dnb.de/sru/zdb");
        // sruOpener.process("https://amsquery.stadt-zuerich.ch/sru/");
