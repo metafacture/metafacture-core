@@ -27,10 +27,10 @@ import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultStreamPipe;
 import org.metafacture.mangling.DuplicateObjectFilter;
 import org.metafacture.mangling.StreamFlattener;
-import org.metafacture.triples.StreamToTriples;
-import org.metafacture.triples.TripleSort;
 import org.metafacture.triples.AbstractTripleSort.Compare;
+import org.metafacture.triples.StreamToTriples;
 import org.metafacture.triples.TripleFilter;
+import org.metafacture.triples.TripleSort;
 
 import java.io.IOException;
 
@@ -70,7 +70,7 @@ public class FindFixPaths extends DefaultStreamPipe<ObjectReceiver<String>> {
     protected void onSetReceiver() {
         final TripleFilter tripleFilter = new TripleFilter();
         tripleFilter.setObjectPattern(objectPattern);
-        TripleSort tripleSort = new TripleSort();
+        final TripleSort tripleSort = new TripleSort();
         tripleSort.setBy(Compare.PREDICATE);
         fix
                 .setReceiver(new StreamFlattener())
