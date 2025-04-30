@@ -40,7 +40,7 @@ import java.io.IOException;
  *
  * @author Tobias Bülte
  */
-@Description("Finds all paths that have values that match the given pattern. Allows for regex. These paths can be used in a Fix to address fields.")
+@Description("Finds all paths that have values that match the given pattern. Allows for regex. These paths can be used in a Fix to address fields.") // checkstyle-disable-line ClassDataAbstractionCoupling
 @In(StreamReceiver.class)
 @Out(String.class)
 @FluxCommand("find-fix-paths")
