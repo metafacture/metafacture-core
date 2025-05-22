@@ -46,7 +46,6 @@ Regardless if you've built or downloaded, go on with:
 
 The `examples` folder contains many more examples which provide a good starting point for learning Metafacture. If you have any questions please join our [mailing list](http://lists.dnb.de/mailman/listinfo/metafacture) or use our issue-based discussion forum over at [metafacture-documentation](https://github.com/metafacture/metafacture-documentation).
 
-
 ## Using Metafacture as a Java library
 
 If you want to use Metafacture in your own Java projects all you need is to add some dependencies to your project. As of Metafacture 5, the single metafacture-core package has been replaced with a number of domain-specific packages. You can find the list of packages on [Maven Central](https://search.maven.org/search?q=g:org.metafacture).
@@ -74,7 +73,6 @@ Occasionally, we publish snapshot builds on [Sonatype OSS Repository](https://os
 <!--
 TODO: Link to getting started tutorial
 -->
-
 
 <a name="build_from_source"></a>
 # Building metafacture-core from source
@@ -1294,6 +1292,12 @@ if exists("<sourceField>")
 
 [Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+exists+{")
 
+#### `greater_than`
+
+Executes the functions if/unless the field value is greater than the given value.
+
+[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+greater_than+{")
+
 #### `in`
 
 Executes the functions if/unless the field value [is contained in](https://perldoc.perl.org/perlop#Smartmatch-Operator) the value of the other field.
@@ -1370,6 +1374,11 @@ Executes the functions if/unless the field value equals `true` or `1`.
 
 [Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+is_true+{")
 
+#### `less_than`
+
+Executes the functions if/unless the field value is less than the given value.
+
+[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+less_than+{")
 
 #### `match`
 
