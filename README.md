@@ -1296,7 +1296,6 @@ if exists("<sourceField>")
 
 Executes the functions if/unless the field value is greater than the given value.
 
-
 [Example in Playground](https://metafacture.org/playground/?example=greater_than)
 
 [Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixConditional.java+"+greater_than+{")
