@@ -59,7 +59,7 @@ public class FindFixPaths extends DefaultStreamPipe<ObjectReceiver<String>> {
         this.objectPattern = objectPattern;
         try {
             this.fix = new Metafix("nothing()");
-            this.fix.setRepeatedFieldsToEntities(true);
+            this.fix.setRepeatedFieldsToEntities(false);
         }
         catch (final IOException e) {
             throw new MetafactureException(e);
