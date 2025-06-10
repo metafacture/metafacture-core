@@ -15,7 +15,6 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -176,10 +175,10 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
 
     private InputStream getXmlDocsViaSru(final StringBuilder srUrl) {
         try {
-            ByteArrayInputStream byteArrayInputStream = retrieve(srUrl, startRecord, maximumRecords);
+            InputStream inputStreamOfURl = retrieveUrl(srUrl, startRecord, maximumRecords);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = factory.newDocumentBuilder();
-            Document xmldoc = docBuilder.parse(byteArrayInputStream);
+            Document xmldoc = docBuilder.parse(inputStreamOfURl);
 
             Transformer t = TransformerFactory.newInstance().newTransformer();
             StringWriter stringWriter = new StringWriter();
@@ -193,6 +192,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
             startRecord = nextRecordPosition; // grenzwert : wenn maximumRcords > als in echt
 
             return new ByteArrayInputStream(stringWriter.toString().getBytes());
+
         }
         catch (final IOException | TransformerException | SAXException | ParserConfigurationException e) {
             throw new MetafactureException(e);
@@ -207,7 +207,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         return 0;
     }
 
-    private ByteArrayInputStream retrieve(StringBuilder srUrl, int startRecord, int maximumRecords) throws IOException {
+    private InputStream retrieveUrl(StringBuilder srUrl, int startRecord, int maximumRecords) throws IOException {
         final URL urlToOpen =
                 new URL(srUrl.toString() + "&maximumRecords=" + maximumRecords + "&startRecord=" + startRecord);
         final HttpURLConnection connection = (HttpURLConnection) urlToOpen.openConnection();
@@ -218,10 +218,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         }
         InputStream inputStream = getInputStream(connection);
 
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        inputStream.transferTo(outputStream);
-        return new ByteArrayInputStream(outputStream.toByteArray());
+        return inputStream;
     }
 
     private InputStream getInputStream(final HttpURLConnection connection) {
