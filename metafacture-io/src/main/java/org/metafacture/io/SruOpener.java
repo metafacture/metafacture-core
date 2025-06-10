@@ -11,16 +11,25 @@ import org.metafacture.framework.annotations.In;
 import org.metafacture.framework.annotations.Out;
 import org.metafacture.framework.helpers.DefaultObjectPipe;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.Result;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -34,7 +43,7 @@ import javax.xml.transform.stream.StreamResult;
                 "to be retrieved from. Mandatory argument is: QUERY.\n" +
                 "The output is an XML document holding the user defined \"maximumRecords\" as documents. If there are" +
                 "more documents than defined by MAXIMUM_RECORDS and there are more documents wanted (defined by " +
-                "\"totalRecords\") there will be consecutives XML documents output.")
+                "\"totalRecords\") there will be consecutive XML documents output.")
 @In(String.class)
 @Out(java.io.Reader.class)
 @FluxCommand("open-sru")
@@ -173,16 +182,21 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
             DocumentBuilder docBuilder = factory.newDocumentBuilder();
             Document xmldoc = docBuilder.parse(byteArrayInputStream);
 
-            numberOfRecords =
-                    Integer.parseInt(
-                            ((Element) xmldoc.getElementsByTagName("numberOfRecords").item(0)).getTextContent());
-            int recordPosition =
-                    Integer.parseInt(
-                            ((Element) xmldoc.getElementsByTagName("recordPosition").item(0)).getTextContent());
-            int nextRecordPosition =
-                    Integer.parseInt(
-                            ((Element) xmldoc.getElementsByTagName("nextRecordPosition").item(0)).getTextContent());
+            Node node = xmldoc.getElementsByTagName("numberOfRecords").item(0);
+            if (node!= null) {
+                numberOfRecords = Integer.parseInt(node.getTextContent());
+            }
 
+            int recordPosition=0;
+            node = xmldoc.getElementsByTagName("recordPosition").item(0);
+            if (node!= null) {
+                recordPosition = Integer.parseInt(node.getTextContent());
+            }
+                int nextRecordPosition =recordPosition+1;
+              node =      xmldoc.getElementsByTagName("nextRecordPosition").item(0);
+            if (node!= null) {
+                nextRecordPosition = Integer.parseInt(node.getTextContent());
+            }
             String xmlEncoding = xmldoc.getXmlEncoding();
             String xmlVersion = xmldoc.getXmlVersion();
             xmlDeclaration = String.format(xmlDeclarationTemplate, xmldoc.getXmlVersion(), xmldoc.getXmlEncoding());
@@ -209,7 +223,7 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
             return new ByteArrayInputStream(stringBuilder.toString().getBytes());
 
         }
-        catch (final IOException | TransformerException | SAXException | ParserConfigurationException e) {
+        catch (final IOException | TransformerException| SAXException | ParserConfigurationException e) {
             stopRetrieving = true;
             throw new MetafactureException(e);
         }
