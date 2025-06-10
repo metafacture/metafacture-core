@@ -14,19 +14,18 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -34,16 +33,16 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 /**
- * Opens an SRU (Search Retrieval by URL) stream and passes a reader to the receiver.
+ * Opens an SRU (Search Retrieval by URL) stream and passes a reader to the receiver. Pages through the SRU.
  *
  * @author Pascal Christoph (dr0i)
  */
 @Description(
-        "Opens a SRU stream and passes a reader to the receiver. The input is be the base URL of the SRU service " +
+        "Opens a SRU stream and passes a reader to the receiver. The input is the base URL of the SRU service " +
                 "to be retrieved from. Mandatory argument is: QUERY.\n" +
                 "The output is an XML document holding the user defined \"maximumRecords\" as documents. If there are" +
                 "more documents than defined by MAXIMUM_RECORDS and there are more documents wanted (defined by " +
-                "\"totalRecords\") there will be consecutive XML documents output.")
+                "\"totalRecords\") there will be consecutive XML documents output as it pages through the SRU.")
 @In(String.class)
 @Out(java.io.Reader.class)
 @FluxCommand("open-sru")
@@ -162,9 +161,9 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         StringBuilder srUrl = new StringBuilder(baseUrl);
         if (query != null) {
             srUrl.append("?query=").append(query).append("&operation=").append(operation).append("&recordSchema=")
-                 .append(recordSchema).append("&version=").append(version);
-        } else {
-            stopRetrieving = true;
+                .append(recordSchema).append("&version=").append(version);
+        }
+        else {
             throw new IllegalArgumentException("Missing mandatory parameter 'query'");
         }
 
@@ -182,51 +181,30 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
             DocumentBuilder docBuilder = factory.newDocumentBuilder();
             Document xmldoc = docBuilder.parse(byteArrayInputStream);
 
-            Node node = xmldoc.getElementsByTagName("numberOfRecords").item(0);
-            if (node!= null) {
-                numberOfRecords = Integer.parseInt(node.getTextContent());
-            }
-
-            int recordPosition=0;
-            node = xmldoc.getElementsByTagName("recordPosition").item(0);
-            if (node!= null) {
-                recordPosition = Integer.parseInt(node.getTextContent());
-            }
-                int nextRecordPosition =recordPosition+1;
-              node =      xmldoc.getElementsByTagName("nextRecordPosition").item(0);
-            if (node!= null) {
-                nextRecordPosition = Integer.parseInt(node.getTextContent());
-            }
-            String xmlEncoding = xmldoc.getXmlEncoding();
-            String xmlVersion = xmldoc.getXmlVersion();
-            xmlDeclaration = String.format(xmlDeclarationTemplate, xmldoc.getXmlVersion(), xmldoc.getXmlEncoding());
-            recordsRetrieved = recordsRetrieved + nextRecordPosition - recordPosition;
-
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-
-            Result result = new StreamResult(os);
             Transformer t = TransformerFactory.newInstance().newTransformer();
-            t.setOutputProperty("omit-xml-declaration", "yes");
-            t.transform(new DOMSource(xmldoc), result);
+            StringWriter stringWriter = new StringWriter();
+            t.transform(new DOMSource(xmldoc), new StreamResult(stringWriter));
 
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(os.toByteArray());
-            startRecord = startRecord + maximumRecords;
+            numberOfRecords = getIntegerValueFromElement(xmldoc,"numberOfRecords");
+            int recordPosition = getIntegerValueFromElement(xmldoc,"recordPosition");
+            int nextRecordPosition  = getIntegerValueFromElement(xmldoc,"nextRecordPosition");
 
-            //get searchRetrieveResponse and add XML declaration
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            StringBuilder stringBuilder = new StringBuilder(1024 * 1024);
-            stringBuilder.append(xmlDeclaration + "\n");
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line + "\n");
-            }
-            return new ByteArrayInputStream(stringBuilder.toString().getBytes());
+            recordsRetrieved = recordsRetrieved + nextRecordPosition - recordPosition;
+            startRecord = nextRecordPosition; // grenzwert : wenn maximumRcords > als in echt
 
+            return new ByteArrayInputStream(stringWriter.toString().getBytes());
         }
-        catch (final IOException | TransformerException| SAXException | ParserConfigurationException e) {
-            stopRetrieving = true;
+        catch (final IOException | TransformerException | SAXException | ParserConfigurationException e) {
             throw new MetafactureException(e);
         }
+    }
+
+    private int getIntegerValueFromElement(final Document xmlDoc, final String tagName) {
+        Node node = xmlDoc.getElementsByTagName(tagName).item(0);
+        if (node != null) {
+            return Integer.parseInt(node.getTextContent());
+        }
+        return 0;
     }
 
     private ByteArrayInputStream retrieve(StringBuilder srUrl, int startRecord, int maximumRecords) throws IOException {
