@@ -184,9 +184,9 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
             StringWriter stringWriter = new StringWriter();
             t.transform(new DOMSource(xmldoc), new StreamResult(stringWriter));
 
-            numberOfRecords = getIntegerValueFromElement(xmldoc,"numberOfRecords");
-            int recordPosition = getIntegerValueFromElement(xmldoc,"recordPosition");
-            int nextRecordPosition  = getIntegerValueFromElement(xmldoc,"nextRecordPosition");
+            numberOfRecords = getIntegerValueFromElement(xmldoc,"numberOfRecords", 0);
+            int recordPosition = getIntegerValueFromElement(xmldoc,"recordPosition", 0);
+            int nextRecordPosition  = getIntegerValueFromElement(xmldoc,"nextRecordPosition", totalRecords);
 
             recordsRetrieved = recordsRetrieved + nextRecordPosition - recordPosition;
             startRecord = nextRecordPosition; // grenzwert : wenn maximumRcords > als in echt
@@ -199,12 +199,12 @@ public final class SruOpener extends DefaultObjectPipe<String, ObjectReceiver<Re
         }
     }
 
-    private int getIntegerValueFromElement(final Document xmlDoc, final String tagName) {
+    private int getIntegerValueFromElement(final Document xmlDoc, final String tagName, final int fallback) {
         Node node = xmlDoc.getElementsByTagName(tagName).item(0);
         if (node != null) {
             return Integer.parseInt(node.getTextContent());
         }
-        return 0;
+        return fallback;
     }
 
     private InputStream retrieveUrl(StringBuilder srUrl, int startRecord, int maximumRecords) throws IOException {
