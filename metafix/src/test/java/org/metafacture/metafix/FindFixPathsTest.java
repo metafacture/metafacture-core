@@ -52,8 +52,16 @@ public final class FindFixPathsTest {
 
     private void processRecord() {
         finder.setReceiver(receiver);
-        finder.startRecord("");
+        finder.startRecord("1");
         finder.literal("a", "An ETL test");
+        finder.literal("b", "");
+        finder.literal("b", "Dummi");
+        finder.literal("b", "Dog");
+        finder.literal("c", "");
+        finder.literal("c", "ETL what?");
+        finder.endRecord();
+        finder.startRecord("2");
+        finder.literal("a", "An another test");
         finder.literal("b", "");
         finder.literal("b", "Dummi");
         finder.literal("b", "Dog");
@@ -72,7 +80,6 @@ public final class FindFixPathsTest {
             }
             ordered.verify(receiver, Mockito.times(2)).closeStream();
             ordered.verifyNoMoreInteractions();
-            Mockito.verifyNoMoreInteractions(receiver);
         }
         catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());
