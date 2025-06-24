@@ -63,6 +63,7 @@ subprojects {
 }
 
 ext.scmInfo = getScmInfo()
+logger.lifecycle("Making ${scmInfo.type()} build: ${scmInfo.version}")
 
 allprojects {
   group = 'org.metafacture'
@@ -270,7 +271,7 @@ subprojects {
           password = System.getenv("GITHUB_TOKEN")
         }
       }
-      if (scmInfo.isRelease() && project.hasProperty('releaseRepositoryUrl')) {
+      if (scmInfo.isRelease && project.hasProperty('releaseRepositoryUrl')) {
         maven {
           url = releaseRepositoryUrl
           credentials {
@@ -284,7 +285,7 @@ subprojects {
 
   signing {
     required {
-      scmInfo.isRelease()
+      scmInfo.isRelease
     }
     sign publishing.publications.mavenArtifacts
   }
@@ -310,114 +311,60 @@ nexusPublishing {
 class ScmInfo {
   def version
   def tag
+  def isRelease
 
-  ScmInfo(version, tag) {
+  ScmInfo(version, tag, isRelease) {
+    if (!isRelease) version += '-SNAPSHOT'
+
     this.version = version
     this.tag = tag
+    this.isRelease = isRelease
   }
 
-  def isRelease() {
-    return tag != null
+  def type() {
+    return isRelease ? 'release' : tag != null ? 'release candidate' : 'snapshot'
   }
 }
 
 def getScmInfo() {
-  def tag = getGitTag()
-  if (tag != null) {
-    logger.lifecycle('SCM tag found. Making a release build')
-    version = extractVersionFromTag(tag)
-  } else {
-    logger.lifecycle('No SCM tag found. Making a snapshot build')
-    version = getSnapshotVersion()
-  }
-  logger.lifecycle("Version is $version")
-  return new ScmInfo(version, tag)
-}
+  def version = null
+  def tag = null
+  def isRelease = false
 
-def getSnapshotVersion() {
-  if (grgit == null) {
-    logger.warn('No Git repository found')
-    return 'non-scm-build-SNAPSHOT'
-  }
-  if (grgit.branch.current().fullName == 'HEAD') {
-    logger.lifecycle('Detached HEAD found')
-    return "commit-${grgit.head().id}-SNAPSHOT"
-  }
-  if (grgit.branch.current().name == 'master') {
-    logger.lifecycle('On master branch')
-    return 'master-SNAPSHOT'
-  }
-  if (grgit.branch.current().name.startsWith('releases/')) {
-    logger.lifecycle('Release branch found')
-    return "${extractVersionFromBranch(grgit.branch.current().name)}-SNAPSHOT"
-  }
-  if (grgit.branch.current().name.contains('-rc')) {
-    logger.lifecycle('Release candidate branch found')
-    return "${grgit.branch.current().name}-SNAPSHOT"
-  }
-  logger.lifecycle('Feature branch found')
-  return "feature-${grgit.branch.current().name}-SNAPSHOT"
-}
+  if (project.hasProperty('publishVersion')) {
+    version = publishVersion
 
-def getGitTag() {
-  if (grgit == null) {
-    logger.warn('No Git repository found')
-    return null
-  }
-  if (!grgit.status().isClean()) {
-    logger.warn('Working copy has modifications. Will not look for tags')
-    return null
-  }
-  def tags = getAnnotatedTags()
-  if (tags.isEmpty()) {
-    logger.lifecycle('HEAD has no annotated tags')
-    return null
-  }
-  if (tags.size() > 1) {
-    logger.warn("HEAD has ${tags.size()} annotated tags")
-    return null
-  }
-  def tag = tags[0]
-  logger.lifecycle("Found annotated tag $tag.name")
-  return tag.name
-}
-
-def getAnnotatedTags() {
-  def tags = []
-  for (tag in grgit.tag.list()) {
-    if (tag.commit == grgit.head()
-        && tag.tagger != null
-        && tag.dateTime != null) {
-      tags.add tag
+    def matcher = version =~ /\d+(?:\.\d+)+(-rc\d+)?/
+    if (matcher.matches()) {
+      tag = getGitTag(version)
+      isRelease = matcher.group(1) == null
     }
   }
-  return tags
+  else {
+    version = grgit != null ? grgit.branch.current().name : rootProject.name
+  }
+
+  return new ScmInfo(version, tag, isRelease)
 }
 
-def static extractVersionFromTag(tag) {
-  Matcher matcher =
-      tag =~ /metafacture-core-(\d+\.\d+\.\d+(-[-A-Za-z0-9]+)?)/
-  if (!matcher.matches()) {
-    throw new GradleException("""\
-        Unsupported tag format: $tag
-        Could not extract version from tag. Supported tag formats are
-            metafacture-core-X.Y.Z and
-            metafacture-core-X.Y.Z-QUALIFIER
-        """.stripIndent())
+def getGitTag(version) {
+  if (grgit == null) {
+    throw new GradleException('No Git repository found')
   }
-  return matcher.group(1)
-}
+  if (!grgit.status().isClean()) {
+    throw new GradleException('Working copy has modifications')
+  }
 
-def static extractVersionFromBranch(branch) {
-  Matcher matcher =
-      branch =~ /releases\/metafacture-core-(\d+\.\d+\.\d+(-[-A-Za-z0-9]+)?)/
-  if (!matcher.matches()) {
-    throw new GradleException("""\
-        Unsupported branch format: $branch
-        Could not extract version from branch. Supported branch formats are
-            releases/metafacture-core-X.Y.Z and
-            releases/metafacture-core-X.Y.Z-QUALIFIER
-        """.stripIndent())
+  def tagName = "${rootProject.name}-$version"
+  for (tag in grgit.tag.list()) {
+    if (
+      tag.name == tagName && // matching name
+      tag.commit == grgit.head() && // pointing at HEAD
+      tag.tagger != null && tag.dateTime != null // annotated
+    ) {
+      return tagName
+    }
   }
-  return matcher.group(1)
+
+  throw new GradleException("HEAD has no matching annotated tag: $tagName")
 }

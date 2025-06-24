@@ -1,18 +1,20 @@
 name: Publish package to GitHub Packages
 on:
   push:
-    branches:
+    tags:
       - '*-rc*'
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          fetch-tags: true
       - uses: actions/setup-java@v1
         with:
           java-version: 11
       - name: Publish package
-        run: ./gradlew publishAllPublicationsToGitHubPackagesRepository
+        run: ./gradlew publishAllPublicationsToGitHubPackagesRepository -PpublishVersion=${{ github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
