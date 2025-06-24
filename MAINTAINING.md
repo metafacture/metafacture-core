@@ -60,7 +60,7 @@ The process is equal to the making of a release candidate, but without making an
     ```
     git pull; git checkout master;
     ```
-1. proceed as described in [Release candidate - Upload to Sonatype](https://github.com/metafacture/metafacture-core/wiki/Maintainer-Guidelines#upload-to-sonatype)
+1. proceed as described in [Release candidate - Upload to Sonatype](#upload-to-sonatype)
 
 ## Release candidate
 
