@@ -3,6 +3,7 @@
 
 package org.metafacture.biblio;
 
+import org.metafacture.framework.FluxCommand;
 import org.metafacture.framework.MetafactureException;
 import org.metafacture.framework.ObjectReceiver;
 import org.metafacture.framework.annotations.Description;
@@ -30,6 +31,7 @@ import javax.xml.xpath.XPathException;
 @Description("Opens an OAI-PMH stream and passes a reader to the receiver. Mandatory arguments are: BASE_URL, DATE_FROM, DATE_UNTIL, METADATA_PREFIX, SET_SPEC .")
 @In(String.class)
 @Out(java.io.Reader.class)
+@FluxCommand("open-oaipmh")
 public final class OaiPmhOpener extends DefaultObjectPipe<String, ObjectReceiver<Reader>> {
 
     private String encoding = "UTF-8";
