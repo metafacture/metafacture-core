@@ -80,6 +80,7 @@ public final class FindFixPathsTest {
             }
             ordered.verify(receiver, Mockito.times(2)).closeStream();
             ordered.verifyNoMoreInteractions();
+            Mockito.verifyNoMoreInteractions(receiver);
         }
         catch (final MockitoAssertionError e) {
             System.out.println(Mockito.mockingDetails(receiver).printInvocations());
