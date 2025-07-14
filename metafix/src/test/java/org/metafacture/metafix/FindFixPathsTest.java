@@ -47,13 +47,22 @@ public final class FindFixPathsTest {
     public void testShouldFindPaths() {
         verify(
                 "a\t|\tAn ETL test",
+                "a\t|\tAnother ETL test",
                 "c.2\t|\tETL what?");
     }
 
     private void processRecord() {
         finder.setReceiver(receiver);
-        finder.startRecord("");
+        finder.startRecord("1");
         finder.literal("a", "An ETL test");
+        finder.literal("b", "");
+        finder.literal("b", "Dummi");
+        finder.literal("b", "Dog");
+        finder.literal("c", "");
+        finder.literal("c", "ETL what?");
+        finder.endRecord();
+        finder.startRecord("2");
+        finder.literal("a", "Another ETL test");
         finder.literal("b", "");
         finder.literal("b", "Dummi");
         finder.literal("b", "Dog");
