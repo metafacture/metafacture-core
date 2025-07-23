@@ -34,6 +34,10 @@ import java.util.Map;
 /*package-private*/ class FixPath {
 
     private static final String ASTERISK = "*";
+
+    private static final String INDEX_SUBPATH_PATTERN = Value.FIELD_PATH_SEPARATOR_PATTERN + "\\d" + Value.FIELD_PATH_SEPARATOR_PATTERN;
+    private static final String ASTERISK_SUBPATH = Value.FIELD_PATH_SEPARATOR + ASTERISK + Value.FIELD_PATH_SEPARATOR;
+
     private String[] path;
 
     /*package-private*/ FixPath(final String path) {
@@ -111,7 +115,7 @@ import java.util.Map;
 
     @Override
     public String toString() {
-        return String.join(".", path);
+        return String.join(Value.FIELD_PATH_SEPARATOR, path);
     }
 
     /*package-private*/ int size() {
@@ -141,7 +145,9 @@ import java.util.Map;
     }
 
     private boolean matches(final String thatPath) {
-        return thatPath != null && thatPath.replaceAll("\\.\\d+\\.", ".*.").equals(String.join(".", this.path));
+        return thatPath != null && thatPath
+            .replaceAll(INDEX_SUBPATH_PATTERN, ASTERISK_SUBPATH)
+            .equals(String.join(Value.FIELD_PATH_SEPARATOR, this.path));
     }
 
     private String[] replaceInPath(final String find, final int i) {
