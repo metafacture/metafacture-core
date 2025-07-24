@@ -12,7 +12,5 @@
   }, {
     "name" : "Blacky",
     "type" : "bird"
-  }, { }, {
-    "test" : [ "test", "test", "test" ]
   } ]
 }

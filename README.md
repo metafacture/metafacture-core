@@ -642,21 +642,41 @@ retain("<sourceField_1>"[, ...])
 
 ##### `set_array`
 
-_Currently alias for [`add_array`](#add_array)._
+Creates a new array (with optional values), provided that the intermediate structures (i.e. parent fields) exist.
 
-We advise you to use [`add_array`](#add_array) instead of `set_array` due to changing behaviour in an upcoming release. For more information see: [#309](https://github.com/metafacture/metafacture-fix/issues/309)
+```perl
+set_array("<targetFieldName>")
+set_array("<targetFieldName>", "<value_1>"[, ...])
+```
+
+[Example in Playground](https://metafacture.org/playground/?example=set_array)
+
+[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixMethod.java+"+set_array+{")
 
 ##### `set_field`
 
-_Currently alias for [`add_field`](#add_field)._
+Creates a field with a defined value, provided that the intermediate structures (i.e. parent fields) exist.
 
-We advise you to use [`add_field`](#add_field) instead of `set_field` due to changing behaviour in an upcoming release. For more information see: [#309](https://github.com/metafacture/metafacture-fix/issues/309)
+```perl
+set_field("<targetFieldName>", "<fieldValue>")
+```
+
+[Example in Playground](https://metafacture.org/playground/?example=set_field)
+
+[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixMethod.java+"+set_field+{")
 
 ##### `set_hash`
 
-_Currently alias for [`add_hash`](#add_hash)._
+Creates a new hash (with optional values), provided that the intermediate structures (i.e. parent fields) exist.
 
-We advise you to use [`add_hash`](#add_hash) instead of `set_hash` due to changing behaviour in an upcoming release. For more information see: [#309](https://github.com/metafacture/metafacture-fix/issues/309)
+```perl
+set_hash("<targetFieldName>")
+set_hash("<targetFieldName>", "subfieldName": "<subfieldValue>"[, ...])
+```
+
+[Example in Playground](https://metafacture.org/playground/?example=set_hash)
+
+[Java Code](https://github.com/search?type=code&q=repo:metafacture/metafacture-core+path:FixMethod.java+"+set_hash+{")
 
 ##### `timestamp`
 

@@ -194,4 +194,17 @@ public interface FixFunction {
         ));
     }
 
+    /**
+     * Checks whether the given field's parent field exists in the record.
+     *
+     * @param record the record
+     * @param field the field
+     *
+     * @return true if the given field's parent field exists in the record
+     */
+    default boolean parentFieldExists(final Record record, final String field) {
+        final int index = field.lastIndexOf(Value.FIELD_PATH_SEPARATOR);
+        return index < 1 || record.containsPath(field.substring(0, index));
+    }
+
 }

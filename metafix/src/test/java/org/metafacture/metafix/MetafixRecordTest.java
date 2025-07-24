@@ -164,10 +164,10 @@ public class MetafixRecordTest {
     }
 
     @Test
-    public void setEmpty() {
+    public void addEmpty() {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
-                "set_field('my.nested.name','patrick')",
-                "set_field('your.nested.name','nicolas')"),
+                "add_field('my.nested.name','patrick')",
+                "add_field('your.nested.name','nicolas')"),
             i -> {
                 i.startRecord("1");
                 i.endRecord();
@@ -181,6 +181,20 @@ public class MetafixRecordTest {
                 o.get().startEntity("nested");
                 o.get().literal("name", "nicolas");
                 f.apply(2).endEntity();
+                o.get().endRecord();
+            });
+    }
+
+    @Test
+    public void setEmpty() {
+        MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
+                "set_field('my.nested.name','patrick')",
+                "set_field('your.nested.name','nicolas')"),
+            i -> {
+                i.startRecord("1");
+                i.endRecord();
+            }, (o, f) -> {
+                o.get().startRecord("1");
                 o.get().endRecord();
             });
     }
