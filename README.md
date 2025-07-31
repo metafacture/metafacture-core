@@ -642,7 +642,7 @@ retain("<sourceField_1>"[, ...])
 
 ##### `set_array`
 
-Creates a new array (with optional values), provided that the intermediate structures (i.e. parent fields) exist.
+Creates a new array (with optional values), provided that the intermediate structures (i.e. parent fields) exist. To create any missing intermediate structures, use [`add_array`](#add_array) instead.
 
 ```perl
 set_array("<targetFieldName>")
@@ -655,7 +655,7 @@ set_array("<targetFieldName>", "<value_1>"[, ...])
 
 ##### `set_field`
 
-Creates a field with a defined value, provided that the intermediate structures (i.e. parent fields) exist.
+Creates a field with a defined value, provided that the intermediate structures (i.e. parent fields) exist. To create any missing intermediate structures, use [`add_field`](#add_field) instead.
 
 ```perl
 set_field("<targetFieldName>", "<fieldValue>")
@@ -667,7 +667,7 @@ set_field("<targetFieldName>", "<fieldValue>")
 
 ##### `set_hash`
 
-Creates a new hash (with optional values), provided that the intermediate structures (i.e. parent fields) exist.
+Creates a new hash (with optional values), provided that the intermediate structures (i.e. parent fields) exist. To create any missing intermediate structures, use [`add_hash`](#add_hash) instead.
 
 ```perl
 set_hash("<targetFieldName>")
