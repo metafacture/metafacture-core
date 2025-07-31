@@ -18,6 +18,7 @@ package org.metafacture.metafix.api;
 
 import org.metafacture.framework.StandardEventNames;
 import org.metafacture.io.ObjectWriter;
+import org.metafacture.metafix.FixPath;
 import org.metafacture.metafix.Metafix;
 import org.metafacture.metafix.Record;
 import org.metafacture.metafix.Value;
@@ -203,8 +204,9 @@ public interface FixFunction {
      * @return true if the given field's parent field exists in the record
      */
     default boolean parentFieldExists(final Record record, final String field) {
-        final int index = field.lastIndexOf(Value.FIELD_PATH_SEPARATOR);
-        return index < 1 || record.containsPath(field.substring(0, index));
+        final FixPath path = new FixPath(field);
+        final FixPath parentPath = path.getParentPath();
+        return parentPath == null || !path.isAddingToArray() && record.containsPath(parentPath.toString());
     }
 
 }

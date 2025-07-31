@@ -810,7 +810,7 @@ public class MetafixBindTest {
         MetafixTestHelpers.assertFix(streamReceiver, Arrays.asList(
                 "set_array('sourceOrga[]')",
                 "do list_as(orgId: 'ccm:university[]', orgName: 'ccm:university_DISPLAYNAME[]', orgLoc: 'ccm:university_LOCATION[]')",
-                "  set_hash('sourceOrga[].$append')",
+                "  add_hash('sourceOrga[].$append')",
                 "  copy_field(orgId, 'sourceOrga[].$last.id')",
                 "  copy_field(orgName, 'sourceOrga[].$last.name')",
                 "  copy_field(orgLoc, 'sourceOrga[].$last.location')",
